@@ -1,0 +1,77 @@
+# Plan d'Implémentation — Module d'Upload PDF d'Emploi du Temps & Analyse IA
+
+## Description
+Après l'enregistrement ou la connexion avec son compte Google, l'étudiant est immédiatement redirigé vers la page centrale du produit : **l'Upload de son Emploi du Temps Scolaire/Universitaire au format PDF**. 
+
+L'Intelligence Artificielle de **KONAN AI** analyse le document PDF pour :
+1. Détecter et extraire automatiquement tous les cours, créneaux horaires, types de séances (CM, TD, TP), salles et professeurs.
+2. Déterminer intelligemment les coefficients académiques et la charge cognitive requise pour chaque matière selon les exigences académiques.
+3. Présenter une prévisualisation interactive permettant à l'étudiant de vérifier/ajuster les données extraites.
+4. Générer un **planning d'étude personnel ultra-optimisé** (avec répétition espacée, pauses anti-burnout et créneaux adaptés à son chronotype).
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Parcours Utilisateur Cible :**
+> 1. **Inscription / Connexion Google** sur `AuthPage.tsx`.
+> 2. **Redirection Immédiate** vers `PdfUploadView.tsx` (`activeView = 'upload-schedule'`).
+> 3. **Dépôt du fichier PDF** (drag & drop ou sélection de fichier `.pdf`, avec modèles PDF universitaires démo prêts au clic).
+> 4. **Analyse IA en direct** avec indicateur d'étapes (Extraction du texte → Détection de la grille → Identification sémantique des coefficients & matières → Équilibrage neurocognitif).
+> 5. **Validation / Ajustement** des matières & cours détectés.
+> 6. **Génération instantanée** du planning d'étude personnel et redirection vers le Tableau de Bord / Planning IA avec célébration visuelle.
+
+---
+
+## Proposed Changes
+
+### 1. Types & Modèles de Données
+#### [MODIFY] [`src/types/index.ts`](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/types/index.ts)
+- Ajouter `'upload-schedule'` dans `ActiveAppView`.
+- Ajouter l'interface `ExtractedPdfSchedule` et `AiAnalysisProgressState` pour le suivi du scan.
+
+---
+
+### 2. Moteur de Lecture & Analyse IA
+#### [NEW] [`src/services/pdfParserService.ts`](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/services/pdfParserService.ts)
+- Extraction de flux texte depuis des fichiers PDF (`application/pdf`).
+- Algorithme de reconnaissance sémantique des grilles horaires (regex multi-formats, détection des jours, heures de début/fin, intitulé de cours, type CM/TD/TP).
+- 4 modèles de PDF universitaires et scolaires intégrés pour test instantané (Licence Info, Médecine PASS, Droit & Eco, Lycée Terminale).
+
+#### [NEW] [`src/services/aiAcademicAnalyzer.ts`](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/services/aiAcademicAnalyzer.ts)
+- Déduction intelligente des coefficients et de la difficulté cognitive selon la typologie de chaque matière (Maths, Informatique, Droit civil, Anatomie, etc.).
+- Calcul du volume horaire hebdomadaire d'étude recommandé.
+- Génération d'un diagnostic d'équilibre et de conseils neurocognitifs personnalisés.
+
+---
+
+### 3. Interface Utilisateur & Composants
+#### [NEW] [`src/features/schedule/PdfUploadView.tsx`](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/features/schedule/PdfUploadView.tsx)
+- Zone de téléversement Drag & Drop interactive avec validation stricte du format PDF.
+- Animation de scan IA haute technologie avec progression en 4 étapes.
+- Tableau de révision interactif permettant d'ajuster les cours et coefficients détectés avant validation.
+- Synthèse visuelle des métriques (Volume de cours détecté, Nombre de matières, Heures d'étude suggérées).
+
+#### [MODIFY] [`src/features/auth/AuthPage.tsx`](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/features/auth/AuthPage.tsx)
+- Rediriger automatiquement vers l'étape d'upload PDF dès la connexion Google validée.
+
+#### [MODIFY] [`src/components/layout/Navbar.tsx`](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/components/layout/Navbar.tsx)
+- Ajouter un bouton d'accès direct « Importer PDF » pour permettre à l'étudiant de mettre à jour son emploi du temps à tout moment dans le semestre.
+
+#### [MODIFY] [`src/App.tsx`](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/App.tsx)
+- Intégrer la vue `upload-schedule` dans le routeur principal et connecter les handlers d'application du planning généré.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- `npm.cmd run build` : Vérification de la compilation TypeScript et du bundling Vite sans erreur.
+
+### Manual Verification
+1. Tester la connexion Google : vérifier la redirection automatique vers la page d'upload PDF.
+2. Tester le drag & drop d'un fichier PDF ainsi que la sélection d'un modèle PDF démo.
+3. Observer l'animation d'analyse IA et la progression des étapes.
+4. Vérifier que les cours, matières, horaires et coefficients sont correctement extraits et éditables dans le tableau de revue.
+5. Cliquer sur "Générer mon Planning d'Étude Personnalisé" et confirmer la génération des blocs d'étude équilibrés et la persistance dans `localStorage`.

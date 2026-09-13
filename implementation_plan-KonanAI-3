@@ -1,0 +1,78 @@
+# Plan d'Amélioration & Refonte de l'Emploi du Temps, de l'Analyse PDF et du Planning IA
+
+## Description du Problème & Objectifs
+1. **Positionnement des Boutons & Visibilité des Titres** : Les boutons "Importer", "Filières" et "Focus" dans la Navbar et les vues créent un encombrement visuel et peuvent masquer ou chevaucher les en-têtes (headings).
+2. **Chevauchements & Conflits d'Horaires dans l'Emploi du Temps** : L'analyse ou la gestion de l'emploi du temps signale des chevauchements d'horaires disgracieux et confus.
+3. **Mélange des Jours de la Semaine et des Matières / Analyse PDF IA** : Le nettoyeur de titres incluait les noms de jours (ex: "Lundi Mathématiques", "Mardi Algorithmique"), ce qui dégradait la qualité de la détection et la génération des sessions d'étude personnelles.
+4. **Cohérence entre le Bouton "Emploi du Temps" et le Planning Généré** : La vue "Emploi du temps" affichait uniquement les cours bruts sans refléter de manière intégrée les sessions de révision IA générées.
+5. **Grille d'Emploi du Temps Haute Définition & Téléchargement** : Le tableau doit être parfaitement structuré, spacieux, ultra-lisible avec un contraste soigné, et offrir des options de téléchargement (Image HD PNG, Document Imprimable / PDF, Fichier Calendrier .ics).
+
+---
+
+## Modifications Proposées
+
+### 1. Interface & Navigation (`src/components/layout/Navbar.tsx` & `src/App.tsx`)
+- [MODIFY] [Navbar.tsx](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/components/layout/Navbar.tsx) :
+  - Restructurer la barre supérieure avec un espacement équilibré et une hiérarchie claire.
+  - Regrouper élégamment les boutons d'action rapide ("Importer PDF", "Filières", "Focus") pour éviter tout chevauchement ou wrap désordonné.
+  - Ajouter un menu déroulant / panneau d'actions secondaires pour les outils d'export/import/reset afin d'épurer la barre de navigation sur toutes les résolutions.
+  - S'assurer que le header sticky ne masque jamais les titres de page en ajustant les marges (`pt-6` / `pt-8`) et z-index.
+- [MODIFY] [App.tsx](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/App.tsx) :
+  - Transmettre `studySessions` à `ScheduleManager` pour une synchronisation totale entre cours fixes et sessions d'étude.
+
+---
+
+### 2. Moteur d'Analyse PDF & Nettoyage Sémantique (`src/services/pdfParserService.ts` & `src/services/aiAcademicAnalyzer.ts`)
+- [MODIFY] [pdfParserService.ts](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/services/pdfParserService.ts) :
+  - **Suppression rigoureuse des noms de jours** (Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche, Lun, Mar, Mer, Jeu, Ven, Sam, Dim, Monday, Tuesday, etc.) et dates dans les titres de matières.
+  - **Filtrage des termes parasites** (semestre, groupe A/B, mention, salle, prof, etc.) et détection du nom canonique de la matière (ex: "Algorithmique Avancée", "Mathématiques Discrètes", "Physique-Chimie").
+  - **Algorithme d'Auto-Harmonisation & Résolution de Chevauchements** : Détecter et fusionner les doublons ou ajuster les créneaux en cas de chevauchement d'horaires pour garantir un emploi du temps 100% propre et sans conflit.
+  - Génération automatique de chapitres d'étude pertinents et réalistes selon la discipline détectée.
+- [MODIFY] [aiAcademicAnalyzer.ts](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/services/aiAcademicAnalyzer.ts) :
+  - Assurer la conversion fidèle des matières et créneaux nettoyés vers le modèle d'état.
+
+---
+
+### 3. Algorithme de Génération du Planning Personnel (`src/services/plannerAlgorithm.ts`)
+- [MODIFY] [plannerAlgorithm.ts](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/services/plannerAlgorithm.ts) :
+  - Générer des sessions de révision avec des titres précis, professionnels et contextuels (ex: "Révision espacée : Analyse & Démonstrations", "Exercices ciblés : Programmation Dynamique") sans aucun résidu de jour de la semaine.
+  - Vérifier l'insertion parfaite des créneaux dans les temps libres entre les cours réels.
+
+---
+
+### 4. Vue & Tableau de l'Emploi du Temps Pro (`src/features/schedule/ScheduleManager.tsx` & `src/features/schedule/PdfUploadView.tsx`)
+- [MODIFY] [ScheduleManager.tsx](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/features/schedule/ScheduleManager.tsx) :
+  - **Sélecteur de Mode d'Affichage** :
+    1. *Vue Combinée (Cours Fixes + Révisions IA)* : Vision intégrale de la semaine avec code couleur distinct.
+    2. *Cours Universitaires Fixes* : Seulement les cours (CM, TD, TP).
+    3. *Planning d'Étude Personnel IA* : Seulement les sessions de révision.
+  - **Grille Hebdomadaire Spacieuse & Ultra-Lisible** : Axe horaire vertical clair (08h00 à 20h00/22h00), typographie nette, badges bien dimensionnés, pas de textes compressés ou tronqués.
+  - **Fonctionnalités de Téléchargement & Export** :
+    - 📥 **Télécharger en Image HD (PNG)** via rendu Canvas personnalisé avec en-tête et légende.
+    - 📄 **Imprimer / Sauvegarder en PDF** avec feuille de style d'impression optimisée.
+    - 📅 **Exporter en Fichier Calendrier (.ics)** compatible Google Calendar, Apple Calendar et Outlook.
+- [MODIFY] [PdfUploadView.tsx](file:///c:/Users/BONI%20CHRIST/Konan-AI%20application/src/features/schedule/PdfUploadView.tsx) :
+  - Supprimer les bandeaux d'avertissement de conflits au profit d'un indicateur de synchronisation harmonieuse, avec bouton d'ajustement en 1 clic.
+
+---
+
+## Plan de Vérification
+
+### Tests Automatisés & Lint
+- Lancer `oxlint` et `tsc` pour vérifier l'absence d'erreurs de typage TypeScript.
+  ```powershell
+  npx oxlint
+  npm run build
+  ```
+
+### Vérification Fonctionnelle & Visuelle
+1. **Navbar & En-têtes** :
+   - Vérifier sur desktop, tablette et mobile que les boutons "Importer PDF", "Filières", "Focus" ne masquent aucun heading et sont harmonieusement disposés.
+2. **Import PDF & Détection Matières** :
+   - Tester l'importation de texte/PDF et les modèles démo.
+   - Vérifier que les noms de jours (Lundi, Mardi...) ne sont PLUS jamais intégrés aux noms de matières ni aux titres de sessions générées.
+   - Vérifier qu'aucun chevauchement d'horaire disgracieux ne subsiste.
+3. **Vue Emploi du Temps** :
+   - Vérifier la bascule entre "Vue Combinée", "Cours uniquement" et "Révisions IA".
+   - Vérifier la lisibilité, l'espacement et la structure de la grille.
+   - Tester le téléchargement en Image PNG, l'export PDF et l'export .ics.

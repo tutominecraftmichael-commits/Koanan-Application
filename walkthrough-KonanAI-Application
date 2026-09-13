@@ -1,0 +1,83 @@
+# Walkthrough — KONAN AI (Copilote Académique Intelligent)
+
+**KONAN AI** est une application web moderne et performante de gestion académique qui transforme l’emploi du temps scolaire ou universitaire de l’utilisateur en un **planning d’étude personnalisé, réaliste et optimisé** selon ses horaires, objectifs, matières et temps disponible.
+
+---
+
+## 🚀 Fonctionnalités Clés Implémentées
+
+### 1. Landing Page & Hero Interactive
+- **Hero Section Premium** : Titre accrocheur, badges dynamiques, métriques d'impact (rétention mnésique x2.3, charge mentale -40%).
+- **Démonstrateur Interactif "Avant vs Après"** : Comparaison en direct entre l'organisation classique chaotique et la répartition intelligente KONAN AI.
+- **Sélecteur de Filières Démo** : Possibilité de tester immédiatement un cursus prédéfini (Informatique, Droit, Médecine).
+
+### 2. Gestionnaire d'Emploi du Temps Universitaire
+- **Grille Hebdomadaire Visuelle** : Affichage clair des cours fixes (CM, TD, TP, Examens) du lundi au dimanche, avec code couleur par matière.
+- **Ajout & Modification de Cours** : Formulaire complet avec sélection du type de séance, horaires, salle et enseignant.
+- **Smart Text Parser** : Import rapide par simple copier-coller d'extraits d'emploi du temps ou de syllabi.
+
+### 3. Gestionnaire de Matières & Pondération Cognitive
+- **Coefficients & ECTS** : Paramétrage du poids réel de chaque matière dans l'année.
+- **Difficulté Ressentie & Charge Mentale** : Évaluation de 1 à 5 pour adapter les durées et la fraîcheur mentale requise.
+- **Objectifs de Notes & Compte à Rebours d'Examens** : Badges dynamiques d'urgence (J-X) pour intensifier les révisions à l'approche des partiels.
+- **Thèmes & Chapitres Clés** : Tags utilisés par l'IA pour nommer précisément les sessions d'étude.
+
+### 4. Moteur Algorithmique de Planning d'Étude IA
+- **Détection des Plages Libres** : Calcul des créneaux disponibles entre les cours et en soirée, avec respect du rythme biologique (chronotype matin/soir) et des pauses.
+- **Répartition Spaced Repetition & Active Recall** : Alternance automatique entre révision espacée, fiches de synthèse, exercices d'annales et flashcards.
+- **Équilibrage Anti-Burnout** : Plafond d'heures quotidiennes pour préserver le sommeil et la récupération.
+- **Régénération Instantanée** : Recalcul en temps réel lors de toute modification d'emploi du temps ou de matière.
+
+### 5. Mode Focus & Deep Work Immersif
+- **Minuteur Pomodoro / Deep Work** : Décompte visuel fluide avec anneau de progression.
+- **Carillon Audio Web Audio API** : Sonnerie de fin de session générée localement sans dépendance externe.
+- **Célébration Confetti** : Animation de réussite à la fin de la séance.
+- **Checklist d'Objectifs & Bloc-Notes** : Validation des sous-tâches et prise de notes rapides intégrées.
+- **Évaluation de Satisfaction** : Notation par étoiles (1 à 5) enregistrée dans le journal académique.
+
+### 6. Analytics & Tableau de Bord de Progression
+- **Métriques d'Accomplissement** : Heures réalisées vs programmées, taux de complétion global.
+- **Couverture par Matière** : Barres de progression individuelles pour vérifier l'équilibre des révisions.
+- **Conseils Neurocognitifs** : Recommandations personnalisées générées selon le profil étudiant.
+- **Journal d'Historique** : Liste détaillée des sessions passées et bilans.
+
+### 7. Sauvegarde & Portabilité des Données
+- **Persistance Locale Automatique** : Sauvegarde continue dans le `localStorage` du navigateur.
+- **Export & Import JSON** : Sauvegarde et restauration complète en un clic.
+
+---
+
+## 🛠️ Architecture Logicielle
+
+```text
+src/
+├── types/
+│   └── index.ts                 # Modèles TypeScript stricts (Subject, ClassSlot, StudySession, etc.)
+├── lib/
+│   ├── utils.ts                 # Calculs horaires, formats de date, classes Tailwind
+│   └── presets.ts               # Modèles académiques (Informatique, Droit, Médecine)
+├── services/
+│   ├── storage.ts               # Persistance localStorage, export/import JSON
+│   └── plannerAlgorithm.ts      # Algorithme d'optimisation cognitive et d'espacement
+├── components/
+│   ├── ui/                      # Design System (Button, Card, Badge, Modal, FormControls...)
+│   └── layout/                  # Navbar persistante avec sélecteurs et export
+├── features/
+│   ├── landing/                 # Landing Page & Hero
+│   ├── dashboard/               # Cockpit du jour & vue d'ensemble
+│   ├── schedule/                # Gestionnaire d'emploi du temps & import
+│   ├── subjects/                # Gestion des matières, coeffs et dates d'examens
+│   ├── planner/                 # Vue calendrier du planning d'étude généré
+│   ├── focus/                   # Mode Focus Pomodoro & Deep Work
+│   ├── analytics/               # Dashboard de rétention et statistiques
+│   └── onboarding/              # Modale de choix de filière
+└── App.tsx                      # Composant racine et routage fluide
+```
+
+---
+
+## 🧪 Validation & Compilation
+
+- **TypeScript** : 0 erreur de typage (`tsc -b` passe sans avertissement).
+- **Bundle Production** : Compilé avec succès via Vite (`dist/index.html`, `dist/assets/`).
+- **Serveur de Développement** : Opérationnel sur `http://localhost:5173/`.
