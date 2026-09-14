@@ -3,6 +3,12 @@ import {
   getAuth, 
   GoogleAuthProvider, 
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendPasswordResetEmail,
   signOut as firebaseSignOut, 
   onAuthStateChanged,
   type User as FirebaseUser
@@ -25,8 +31,6 @@ export const DEFAULT_FIREBASE_CONFIG: FirebaseConfig = {
   messagingSenderId: "928627074050",
   appId: "1:928627074050:web:a5bc9ace090ba9347df31b",
 };
-
-const STORAGE_CONFIG_KEY = 'konan_ai_custom_firebase_config';
 
 /**
  * Retrieves the Firebase configuration from environment variables or default project config.
@@ -71,17 +75,27 @@ googleProvider.setCustomParameters({
   prompt: 'select_account'
 });
 
-/**
- * Real Google Sign-in with Popup via Firebase Authentication
- */
-export async function signInWithGoogleReal(): Promise<{
+export interface RealAuthUser {
   uid: string;
   displayName: string | null;
   email: string | null;
   photoURL: string | null;
-}> {
+}
+
+/**
+ * Helper to detect mobile browsers where popups might be blocked or undesirable
+ */
+export function isMobileBrowser(): boolean {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') return false;
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
+/**
+ * Real Google Sign-in with Popup via Firebase Authentication
+ */
+export async function signInWithGoogleReal(): Promise<RealAuthUser> {
   if (!auth) {
-    throw new Error('CONFIG_MISSING: Firebase n\'est pas encore configuré avec vos clés de projet. Veuillez renseigner votre configuration Firebase.');
+    throw new Error('CONFIG_MISSING: Firebase n\'est pas encore configuré.');
   }
 
   try {
@@ -96,22 +110,18 @@ export async function signInWithGoogleReal(): Promise<{
   } catch (error: any) {
     console.error('Firebase Google Sign-In Error:', error);
 
-    if (
-      error.message?.includes('api-keys-are-not-supported') ||
-      error.code === 'auth/api-keys-are-not-supported-by-this-api' ||
-      error.code === 'auth/invalid-api-key'
-    ) {
-      try {
-        localStorage.removeItem(STORAGE_CONFIG_KEY);
-      } catch {}
-      throw new Error('API_KEY_RESTRICTED');
-    }
-
     if (error.code === 'auth/popup-closed-by-user') {
       throw new Error('La fenêtre de connexion Google a été fermée avant la validation.');
     }
     if (error.code === 'auth/unauthorized-domain') {
-      throw new Error('UNAUTHORIZED_DOMAIN');
+      const err = new Error('UNAUTHORIZED_DOMAIN');
+      (err as any).code = 'auth/unauthorized-domain';
+      throw err;
+    }
+    if (error.code === 'auth/popup-blocked') {
+      const err = new Error('POPUP_BLOCKED');
+      (err as any).code = 'auth/popup-blocked';
+      throw err;
     }
     if (error.code === 'auth/cancelled-popup-request') {
       throw new Error('Requête annulée suite à une ouverture concurrente.');
@@ -121,6 +131,180 @@ export async function signInWithGoogleReal(): Promise<{
     }
 
     throw new Error(error.message || 'Une erreur est survenue lors de la connexion Google.');
+  }
+}
+
+/**
+ * Real Google Sign-in via Redirect (ideal for Mobile Safari / Chrome Mobile)
+ */
+export async function signInWithGoogleRedirectReal(): Promise<void> {
+  if (!auth) {
+    throw new Error('CONFIG_MISSING: Firebase n\'est pas configuré.');
+  }
+
+  try {
+    await signInWithRedirect(auth, googleProvider);
+  } catch (error: any) {
+    console.error('Firebase Google Redirect Error:', error);
+    if (error.code === 'auth/unauthorized-domain') {
+      const err = new Error('UNAUTHORIZED_DOMAIN');
+      (err as any).code = 'auth/unauthorized-domain';
+      throw err;
+    }
+    throw new Error(error.message || 'Une erreur est survenue lors de la redirection Google.');
+  }
+}
+
+/**
+ * Check redirect result when app reloads after a Google redirect
+ */
+export async function checkGoogleRedirectResult(): Promise<RealAuthUser | null> {
+  if (!auth) return null;
+  try {
+    const result = await getRedirectResult(auth);
+    if (result && result.user) {
+      return {
+        uid: result.user.uid,
+        displayName: result.user.displayName,
+        email: result.user.email,
+        photoURL: result.user.photoURL,
+      };
+    }
+    return null;
+  } catch (error: any) {
+    console.error('Firebase Redirect Result Error:', error);
+    if (error.code === 'auth/unauthorized-domain') {
+      const err = new Error('UNAUTHORIZED_DOMAIN');
+      (err as any).code = 'auth/unauthorized-domain';
+      throw err;
+    }
+    return null;
+  }
+}
+
+/**
+ * Real Firebase Sign-In with Email & Password
+ */
+export async function signInWithEmailReal(
+  email: string, 
+  password: string
+): Promise<RealAuthUser> {
+  if (!auth) {
+    throw new Error('CONFIG_MISSING: Firebase n\'est pas configuré.');
+  }
+
+  try {
+    const result = await signInWithEmailAndPassword(auth, email.trim(), password);
+    const user = result.user;
+    return {
+      uid: user.uid,
+      displayName: user.displayName || user.email?.split('@')[0] || 'Étudiant',
+      email: user.email,
+      photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(user.email || 'User')}`,
+    };
+  } catch (error: any) {
+    console.error('Firebase Email Sign-In Error:', error);
+
+    if (
+      error.code === 'auth/user-not-found' || 
+      error.code === 'auth/wrong-password' || 
+      error.code === 'auth/invalid-credential'
+    ) {
+      throw new Error('Email ou mot de passe incorrect. Vérifiez vos identifiants ou créez un compte.');
+    }
+    if (error.code === 'auth/invalid-email') {
+      throw new Error('Adresse email invalide.');
+    }
+    if (error.code === 'auth/user-disabled') {
+      throw new Error('Ce compte étudiant a été désactivé.');
+    }
+    if (error.code === 'auth/too-many-requests') {
+      throw new Error('Trop de tentatives infructueuses. Veuillez patienter un instant avant de réessayer.');
+    }
+    if (error.code === 'auth/network-request-failed') {
+      throw new Error('Erreur de réseau : vérifiez votre connexion Internet.');
+    }
+
+    throw new Error(error.message || 'Erreur lors de la connexion par email.');
+  }
+}
+
+/**
+ * Real Firebase Sign-Up (Account Creation) with Email & Password
+ */
+export async function signUpWithEmailReal(
+  email: string, 
+  password: string, 
+  displayName?: string
+): Promise<RealAuthUser> {
+  if (!auth) {
+    throw new Error('CONFIG_MISSING: Firebase n\'est pas configuré.');
+  }
+
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email.trim(), password);
+    const user = result.user;
+
+    const finalName = displayName?.trim() || email.split('@')[0] || 'Étudiant';
+    const finalAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(finalName)}`;
+
+    try {
+      await updateProfile(user, {
+        displayName: finalName,
+        photoURL: finalAvatar,
+      });
+    } catch (profileErr) {
+      console.warn('Could not update initial profile fields:', profileErr);
+    }
+
+    return {
+      uid: user.uid,
+      displayName: finalName,
+      email: user.email,
+      photoURL: finalAvatar,
+    };
+  } catch (error: any) {
+    console.error('Firebase Email Sign-Up Error:', error);
+
+    if (error.code === 'auth/email-already-in-use') {
+      throw new Error('Cette adresse email est déjà enregistrée. Connectez-vous directement avec votre mot de passe.');
+    }
+    if (error.code === 'auth/weak-password') {
+      throw new Error('Le mot de passe doit comporter au moins 6 caractères.');
+    }
+    if (error.code === 'auth/invalid-email') {
+      throw new Error('Format d\'adresse email invalide.');
+    }
+    if (error.code === 'auth/operation-not-allowed') {
+      throw new Error('Le fournisseur Email/Mot de passe n\'a pas encore été activé dans votre console Firebase.');
+    }
+    if (error.code === 'auth/network-request-failed') {
+      throw new Error('Erreur de réseau : vérifiez votre connexion Internet.');
+    }
+
+    throw new Error(error.message || 'Erreur lors de la création de votre compte.');
+  }
+}
+
+/**
+ * Real Firebase Password Reset Email
+ */
+export async function resetPasswordReal(email: string): Promise<void> {
+  if (!auth) {
+    throw new Error('CONFIG_MISSING: Firebase n\'est pas configuré.');
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email.trim());
+  } catch (error: any) {
+    console.error('Firebase Password Reset Error:', error);
+    if (error.code === 'auth/user-not-found') {
+      throw new Error('Aucun compte n\'est associé à cette adresse email.');
+    }
+    if (error.code === 'auth/invalid-email') {
+      throw new Error('Adresse email invalide.');
+    }
+    throw new Error(error.message || 'Impossible d\'envoyer l\'email de réinitialisation.');
   }
 }
 

@@ -280,7 +280,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => onNavigate('auth')}
                   className="text-xs font-semibold px-3 py-1.5 cursor-pointer"
                 >
-                  Connexion Google
+                  Connexion
                 </Button>
               </div>
             )}
