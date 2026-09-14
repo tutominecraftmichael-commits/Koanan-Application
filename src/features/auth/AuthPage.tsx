@@ -21,7 +21,6 @@ import {
   resetPasswordReal,
   isMobileBrowser
 } from '../../lib/firebase';
-import { ProfileSetupModal } from './ProfileSetupModal';
 
 export interface AuthPageProps {
   onLoginSuccess: (profile: UserAccount, preferences?: { chronotype: Chronotype }) => void;
@@ -55,15 +54,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   // Unauthorized domain dialog state
   const [showDomainHelp, setShowDomainHelp] = useState(false);
 
-  // Profile setup modal for first-time or finalized profiles
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [pendingUser, setPendingUser] = useState<{
-    uid: string;
-    displayName: string;
-    email: string;
-    photoURL: string;
-  } | null>(null);
-
   const isMobile = isMobileBrowser();
 
   // Check if returning from Google OAuth redirect (especially on mobile)
@@ -72,13 +62,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({
       try {
         const redirectedUser = await checkGoogleRedirectResult();
         if (redirectedUser) {
-          setPendingUser({
-            uid: redirectedUser.uid,
-            displayName: redirectedUser.displayName || 'Étudiant',
+          const profile: UserAccount = {
+            name: redirectedUser.displayName || 'Étudiant',
             email: redirectedUser.email || '',
-            photoURL: redirectedUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(redirectedUser.displayName || 'User')}`,
-          });
-          setIsProfileModalOpen(true);
+            avatar: redirectedUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(redirectedUser.displayName || 'User')}`,
+            googleId: redirectedUser.uid,
+            academicLevel: 'Licence Universitaire',
+            isLoggedIn: true,
+            isDemo: false,
+            lastSyncedAt: new Date().toISOString(),
+          };
+          onLoginSuccess(profile);
         }
       } catch (err: any) {
         console.error('Redirect check error:', err);
@@ -91,10 +85,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     };
 
     handleRedirect();
-  }, []);
+  }, [onLoginSuccess]);
 
   /**
-   * Real Google Authentication via Popup
+   * Real Google Authentication via Popup (Direct login with saved Google profile)
    */
   const handleGoogleLoginPopup = async () => {
     setIsLoading(true);
@@ -103,13 +97,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
     try {
       const googleUser = await signInWithGoogleReal();
-      setPendingUser({
-        uid: googleUser.uid,
-        displayName: googleUser.displayName || 'Étudiant',
+      const profile: UserAccount = {
+        name: googleUser.displayName || 'Étudiant',
         email: googleUser.email || '',
-        photoURL: googleUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(googleUser.displayName || 'User')}`,
-      });
-      setIsProfileModalOpen(true);
+        avatar: googleUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(googleUser.displayName || 'User')}`,
+        googleId: googleUser.uid,
+        academicLevel: 'Licence Universitaire',
+        isLoggedIn: true,
+        isDemo: false,
+        lastSyncedAt: new Date().toISOString(),
+      };
+      onLoginSuccess(profile);
     } catch (err: any) {
       console.error('Google Sign-In Error:', err);
       if (err.message === 'UNAUTHORIZED_DOMAIN' || err.code === 'auth/unauthorized-domain') {
@@ -146,7 +144,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   };
 
   /**
-   * Real Firebase Email & Password Authentication (Login or Sign-Up)
+   * Real Firebase Email & Password Authentication (Login or Sign-Up with automatic profile persistence)
    */
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -173,25 +171,34 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
     try {
       if (authMode === 'signin') {
-        // Real Firebase Sign In
+        // Real Firebase Sign In: Directly enter using existing saved credentials
         const user = await signInWithEmailReal(email, password);
-        setPendingUser({
-          uid: user.uid,
-          displayName: user.displayName || email.split('@')[0],
+        const profile: UserAccount = {
+          name: user.displayName || email.split('@')[0],
           email: user.email || email,
-          photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(user.displayName || email)}`,
-        });
-        setIsProfileModalOpen(true);
+          avatar: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(user.displayName || email)}`,
+          googleId: user.uid,
+          academicLevel: 'Licence Universitaire',
+          isLoggedIn: true,
+          isDemo: false,
+          lastSyncedAt: new Date().toISOString(),
+        };
+        onLoginSuccess(profile);
       } else {
-        // Real Firebase Sign Up
+        // Real Firebase Sign Up: Register with full name and immediately log in
         const user = await signUpWithEmailReal(email, password, fullName);
-        setPendingUser({
-          uid: user.uid,
-          displayName: user.displayName || fullName || email.split('@')[0],
+        const finalName = fullName.trim() || user.displayName || email.split('@')[0];
+        const profile: UserAccount = {
+          name: finalName,
           email: user.email || email,
-          photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(fullName || email)}`,
-        });
-        setIsProfileModalOpen(true);
+          avatar: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(finalName)}`,
+          googleId: user.uid,
+          academicLevel: 'Licence Universitaire',
+          isLoggedIn: true,
+          isDemo: false,
+          lastSyncedAt: new Date().toISOString(),
+        };
+        onLoginSuccess(profile);
       }
     } catch (err: any) {
       console.error('Email Auth Error:', err);
@@ -223,14 +230,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
-
-  /**
-   * Finalize profile setup and trigger real login success
-   */
-  const handleProfileFinalized = (profile: UserAccount, preferences?: { chronotype: Chronotype }) => {
-    setIsProfileModalOpen(false);
-    onLoginSuccess(profile, preferences);
   };
 
   return (
@@ -575,19 +574,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         </div>
 
       </div>
-
-      {/* Profile Setup Modal: Displays after real Google or Email login to confirm academic level & display name */}
-      {pendingUser && (
-        <ProfileSetupModal
-          isOpen={isProfileModalOpen}
-          initialName={pendingUser.displayName}
-          initialEmail={pendingUser.email}
-          initialAvatar={pendingUser.photoURL}
-          googleId={pendingUser.uid}
-          onSaveProfile={handleProfileFinalized}
-          onCancel={() => setIsProfileModalOpen(false)}
-        />
-      )}
 
     </div>
   );

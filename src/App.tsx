@@ -27,13 +27,11 @@ import type {
   UserAccount,
   Chronotype
 } from './types';
-import { DAYS_OF_WEEK } from './types';
 import { soundFX } from './lib/audioEffects';
 
 // Layout
 import { Navbar } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
-import { BlueFlameStreakModal } from './features/streak/BlueFlameStreakModal';
 
 // Views
 import { LandingHero } from './features/landing/LandingHero';
@@ -54,24 +52,6 @@ export function App() {
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [streakModalData, setStreakModalData] = useState<{
-    isOpen: boolean;
-    streakCount: number;
-    bestStreak?: number;
-    dayName?: string;
-    completedSubjects: string[];
-    isCelebration: boolean;
-    isFlameActive?: boolean;
-    rendezvousMessage?: string;
-  }>({
-    isOpen: false,
-    streakCount: 0,
-    bestStreak: 0,
-    completedSubjects: [],
-    isCelebration: false,
-    isFlameActive: false,
-    rendezvousMessage: 'Rendez-vous demain !',
-  });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -138,25 +118,29 @@ export function App() {
    * Strictly isolates real user data (ZERO demo courses, clean workspace)
    */
   const handleLoginSuccess = (profile: UserAccount, preferences?: { chronotype: Chronotype }) => {
+    const userState = loadUserState(profile.googleId, profile);
+    
+    // Retain previously saved student name if customized, or use profile.name
+    const finalName = userState.studentName || profile.name || 'Étudiant';
+
     setActiveSession({
       uid: profile.googleId,
       isDemo: false,
-      name: profile.name,
+      name: finalName,
       email: profile.email,
       avatar: profile.avatar,
       academicLevel: profile.academicLevel,
     });
 
-    const userState = loadUserState(profile.googleId, profile);
-    
     // Apply chronotype preference if specified
     if (preferences?.chronotype) {
       userState.preferences.chronotype = preferences.chronotype;
     }
     userState.academicLevel = profile.academicLevel || userState.academicLevel;
-    userState.studentName = profile.name;
+    userState.studentName = finalName;
     userState.userAccount = {
       ...profile,
+      name: finalName,
       isLoggedIn: true,
       isDemo: false,
     };
@@ -165,8 +149,14 @@ export function App() {
     saveUserState(profile.googleId, userState);
     setState(userState);
 
-    showToast(`✨ Bienvenue ${profile.name} ! Importez votre emploi du temps.`);
-    setActiveView('upload-schedule');
+    // If user already has subjects or completed onboarding, navigate straight to dashboard!
+    if (userState.completedOnboarding || userState.subjects.length > 0) {
+      showToast(`✨ Bon retour ${finalName} !`);
+      setActiveView('dashboard');
+    } else {
+      showToast(`✨ Bienvenue ${finalName} ! Importez votre emploi du temps.`);
+      setActiveView('upload-schedule');
+    }
   };
 
   /**
@@ -313,97 +303,6 @@ export function App() {
     showToast('✨ Votre planning d’étude a été réorganisé avec succès !');
   };
 
-  const checkAndTriggerStreakCelebration = (
-    updatedSessions: StudySession[],
-    targetSession: StudySession
-  ): boolean => {
-    // Check if all sessions for that day of week are now completed
-    const daySessions = updatedSessions.filter(s => s.dayOfWeek === targetSession.dayOfWeek);
-    const isDayFullyComplete = daySessions.length > 0 && daySessions.every(s => s.completed);
-
-    if (isDayFullyComplete) {
-      const dayLabel = DAYS_OF_WEEK.find(d => d.id === targetSession.dayOfWeek)?.label || 'Aujourd’hui';
-      const todayDateStr = new Date().toISOString().split('T')[0];
-      const sessionDateStr = targetSession.date || todayDateStr;
-
-      const currentStreak = state.streak?.currentStreak || 0;
-      const bestStreak = state.streak?.bestStreak || 0;
-      const completedDates = state.streak?.completedDates || [];
-      const alreadyCelebrated = completedDates.includes(sessionDateStr);
-
-      const newStreak = alreadyCelebrated ? Math.max(1, currentStreak) : currentStreak + 1;
-      const newBest = Math.max(bestStreak, newStreak);
-      const newCompletedDates = alreadyCelebrated ? completedDates : [...completedDates, sessionDateStr];
-
-      // Retrieve unique subject names completed for this day
-      const subjectNames = Array.from(new Set(
-        daySessions.map(s => {
-          const sub = state.subjects.find(m => m.id === s.subjectId);
-          return sub ? sub.name : s.title;
-        })
-      ));
-
-      // Calculate next scheduled revision day (e.g. "Rendez-vous Lundi !" if finishing Saturday)
-      const daysWithSessions = Array.from(new Set(state.studySessions.map(s => s.dayOfWeek)));
-      let rendezvousMsg = 'Rendez-vous demain !';
-      if (daysWithSessions.length > 0) {
-        for (let offset = 1; offset <= 7; offset++) {
-          const candidateDay = ((targetSession.dayOfWeek + offset) % 7);
-          if (daysWithSessions.includes(candidateDay as any)) {
-            const nextDayObj = DAYS_OF_WEEK.find(d => d.id === candidateDay);
-            if (offset === 1) {
-              rendezvousMsg = `Rendez-vous demain (${nextDayObj?.label}) !`;
-            } else {
-              rendezvousMsg = `Rendez-vous ${nextDayObj?.label} !`;
-            }
-            break;
-          }
-        }
-      }
-
-      // Check 72h streak freeze recharge
-      let currentFreezes = state.streak?.freezesAvailable ?? 3;
-      let lastFreezeAt = state.streak?.lastFreezeUsedAt;
-      if (lastFreezeAt && currentFreezes < 3) {
-        const elapsedHours = (Date.now() - new Date(lastFreezeAt).getTime()) / (1000 * 3600);
-        const restored = Math.floor(elapsedHours / 72);
-        if (restored > 0) {
-          currentFreezes = Math.min(3, currentFreezes + restored);
-          if (currentFreezes >= 3) {
-            lastFreezeAt = undefined;
-          }
-        }
-      }
-
-      setState(prev => ({
-        ...prev,
-        studySessions: updatedSessions,
-        streak: {
-          currentStreak: newStreak,
-          bestStreak: newBest,
-          lastCelebratedDate: sessionDateStr,
-          completedDates: newCompletedDates,
-          freezesAvailable: currentFreezes,
-          freezeDates: prev.streak?.freezeDates || [],
-          lastFreezeUsedAt: lastFreezeAt,
-        }
-      }));
-
-      setStreakModalData({
-        isOpen: true,
-        streakCount: newStreak,
-        bestStreak: newBest,
-        dayName: dayLabel,
-        completedSubjects: subjectNames,
-        isCelebration: true,
-        rendezvousMessage: rendezvousMsg,
-      });
-
-      return true;
-    }
-    return false;
-  };
-
   const handleToggleSessionComplete = (sessionId: string) => {
     const target = state.studySessions.find(s => s.id === sessionId);
     if (!target) return;
@@ -417,58 +316,18 @@ export function App() {
     );
 
     if (willBeCompleted) {
-      const celebrated = checkAndTriggerStreakCelebration(updatedSessions, target);
-      if (celebrated) return;
+      const daySessions = updatedSessions.filter(s => s.dayOfWeek === target.dayOfWeek);
+      const isDayFullyComplete = daySessions.length > 0 && daySessions.every(s => s.completed);
+      if (isDayFullyComplete) {
+        soundFX.playCelebrationFanfare();
+        showToast('🎉 Bravo ! Toutes les révisions prévues aujourd’hui sont terminées !');
+      }
     }
 
     setState(prev => ({
       ...prev,
       studySessions: updatedSessions,
     }));
-  };
-
-  const handleOpenStreakModal = () => {
-    const currentDayIndex = (new Date().getDay() + 6) % 7;
-    const currentDayLabel = DAYS_OF_WEEK.find(d => d.id === currentDayIndex)?.label || 'Aujourd’hui';
-    const todaysSessions = state.studySessions.filter(s => s.dayOfWeek === currentDayIndex);
-    const completedToday = todaysSessions.filter(s => s.completed);
-    const subjectNames = Array.from(new Set(
-      completedToday.map(s => {
-        const sub = state.subjects.find(m => m.id === s.subjectId);
-        return sub ? sub.name : s.title;
-      })
-    ));
-
-    // Calculate rendezvous next study day
-    const daysWithSessions = Array.from(new Set(state.studySessions.map(s => s.dayOfWeek)));
-    let rendezvousMsg = 'Rendez-vous demain !';
-    if (daysWithSessions.length > 0) {
-      for (let offset = 1; offset <= 7; offset++) {
-        const candidateDay = ((currentDayIndex + offset) % 7);
-        if (daysWithSessions.includes(candidateDay as any)) {
-          const nextDayObj = DAYS_OF_WEEK.find(d => d.id === candidateDay);
-          if (offset === 1) {
-            rendezvousMsg = `Rendez-vous demain (${nextDayObj?.label}) !`;
-          } else {
-            rendezvousMsg = `Rendez-vous ${nextDayObj?.label} !`;
-          }
-          break;
-        }
-      }
-    }
-
-    const isTodayComplete = todaysSessions.length > 0 && completedToday.length === todaysSessions.length;
-
-    setStreakModalData({
-      isOpen: true,
-      streakCount: state.streak?.currentStreak || 0,
-      bestStreak: state.streak?.bestStreak || 0,
-      dayName: currentDayLabel,
-      completedSubjects: subjectNames,
-      isCelebration: false,
-      isFlameActive: isTodayComplete,
-      rendezvousMessage: rendezvousMsg,
-    });
   };
 
   const handleAddCustomSession = (session: StudySession) => {
@@ -485,29 +344,18 @@ export function App() {
   };
 
   const handleCompleteFocusSession = (sessionId: string, log: StudyLog) => {
-    const target = state.studySessions.find(s => s.id === sessionId);
     const updatedSessions = state.studySessions.map(s => 
       s.id === sessionId ? { ...s, completed: true, completedAt: new Date().toISOString() } : s
     );
 
-    if (target) {
-      const celebrated = checkAndTriggerStreakCelebration(updatedSessions, target);
-      if (celebrated) {
-        setState(prev => ({
-          ...prev,
-          logs: [log, ...prev.logs],
-        }));
-        showToast('🎉 Bravo ! Session terminée et Flamme Bleue allumée !');
-        return;
-      }
-    }
+    soundFX.playCelebrationFanfare();
 
     setState(prev => ({
       ...prev,
       studySessions: updatedSessions,
       logs: [log, ...prev.logs],
     }));
-    showToast('🎉 Bravo ! Session enregistrée dans vos analytics.');
+    showToast('🎉 Bravo ! Session de focus terminée avec succès !');
   };
 
   /**
@@ -692,8 +540,6 @@ export function App() {
               onNavigate={handleNavigate}
               onStartFocus={handleStartFocusSession}
               onToggleSessionComplete={handleToggleSessionComplete}
-              streak={state.streak}
-              onOpenStreakModal={handleOpenStreakModal}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
@@ -865,23 +711,6 @@ export function App() {
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}
         onResetData={handleResetData}
-      />
-
-      {/* Duolingo-style Blue Flame Streak Celebration & Status Modal */}
-      <BlueFlameStreakModal
-        isOpen={streakModalData.isOpen}
-        onClose={() => setStreakModalData(prev => ({ ...prev, isOpen: false }))}
-        streakCount={streakModalData.streakCount}
-        bestStreak={streakModalData.bestStreak}
-        studentName={state.studentName}
-        dayName={streakModalData.dayName}
-        completedSubjects={streakModalData.completedSubjects}
-        isCelebration={streakModalData.isCelebration}
-        isFlameActive={streakModalData.isCelebration || (streakModalData.isFlameActive ?? false)}
-        rendezvousMessage={streakModalData.rendezvousMessage}
-        freezesAvailable={state.streak?.freezesAvailable ?? 3}
-        completedDates={state.streak?.completedDates || []}
-        freezeDates={state.streak?.freezeDates || []}
       />
 
       {/* Floating Notification Toast */}

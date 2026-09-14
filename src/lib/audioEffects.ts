@@ -77,6 +77,13 @@ class SoundFX {
   }
 
   /**
+   * Sparkling victory celebration sound
+   */
+  public playCelebrationFanfare() {
+    this.playStreakIgniteChime();
+  }
+
+  /**
    * Subtle pleasant pop for checkboxes and pill taps
    */
   public playCheckmarkPop() {

@@ -4,8 +4,7 @@ import type {
   ClassSlot, 
   StudySession, 
   StudyPreferences, 
-  ActiveAppView,
-  UserStreak
+  ActiveAppView
 } from '../../types';
 import { DAYS_OF_WEEK } from '../../types';
 import { Button } from '../../components/ui/Button';
@@ -22,13 +21,10 @@ import {
   ArrowRight, 
   TrendingUp,
   FileText,
-  GraduationCap,
-  ChevronRight,
-  Snowflake
+  GraduationCap
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
-import { BlueFlame } from '../../components/common/BlueFlame';
 import { useLanguage, t } from '../../lib/i18n';
 import type { SessionType } from '../../types';
 
@@ -43,8 +39,6 @@ export interface DashboardOverviewProps {
   onStartFocus: (session: StudySession) => void;
   onToggleSessionComplete: (sessionId: string) => void;
   onOpenPresetModal?: () => void;
-  onOpenStreakModal?: () => void;
-  streak?: UserStreak;
   isDemoMode?: boolean;
 }
 
@@ -59,8 +53,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onStartFocus,
   onToggleSessionComplete,
   onOpenPresetModal,
-  onOpenStreakModal,
-  streak,
   isDemoMode = false,
 }) => {
   const [lang] = useLanguage();
@@ -84,29 +76,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     .filter(s => s.examDate)
     .map(s => ({ ...s, daysRemaining: getDaysRemaining(s.examDate) }))
     .sort((a, b) => (a.daysRemaining || 999) - (b.daysRemaining || 999));
-
-  // Next scheduled study day calculation (e.g. "Rendez-vous Lundi !")
-  const daysWithSessions = Array.from(new Set(studySessions.map(s => s.dayOfWeek)));
-  let rendezvousText = 'Rendez-vous demain !';
-  if (daysWithSessions.length > 0) {
-    for (let offset = 1; offset <= 7; offset++) {
-      const candidateDay = ((currentDayIndex + offset) % 7);
-      if (daysWithSessions.includes(candidateDay as any)) {
-        const nextDayObj = DAYS_OF_WEEK.find(d => d.id === candidateDay);
-        if (offset === 1) {
-          rendezvousText = `Rendez-vous demain (${nextDayObj?.label}) !`;
-        } else {
-          rendezvousText = `Rendez-vous ${nextDayObj?.label} !`;
-        }
-        break;
-      }
-    }
-  }
-
-  const freezesCount = streak?.freezesAvailable ?? 3;
-
-  // Check if today's study revisions quota is reached
-  const isTodayQuotaReached = todaysStudySessions.length > 0 && completedToday === todaysStudySessions.length;
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
@@ -155,78 +124,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               </Button>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* DUOLINGO-STYLE STREAK & BLUE FLAME STATUS CARD */}
-      <div 
-        onClick={onOpenStreakModal}
-        className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-blue-950/70 via-slate-900 to-slate-900/90 border border-sky-500/30 shadow-xl flex flex-col gap-3.5 sm:gap-4 cursor-pointer hover:border-sky-400/60 transition-all group interactive-card"
-        title="Consulter ma série, mon calendrier et ma flamme bleue"
-      >
-        {/* Top Header: Flame + Série & Badges */}
-        <div className="flex items-start sm:items-center gap-3.5 sm:gap-4">
-          <div className="relative shrink-0 flex items-center justify-center w-12 h-14 sm:w-14 sm:h-16">
-            <BlueFlame size="md" active={isTodayQuotaReached} showEmbers={isTodayQuotaReached} />
-          </div>
-          
-          <div className="space-y-1.5 flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <span className="text-[11px] sm:text-xs uppercase font-extrabold text-sky-400 tracking-wider">
-                Série Régularité
-              </span>
-              {isTodayQuotaReached ? (
-                <Badge variant="cyan" size="sm" dot>Flamme Allumée 🔥</Badge>
-              ) : (
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800/80 border border-slate-700 text-slate-400 font-semibold">
-                  Flamme Éteinte (En cours)
-                </span>
-              )}
-              <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 font-bold">
-                <Snowflake className="w-3 h-3" />
-                {freezesCount}/3 gels
-              </span>
-            </div>
-            
-            <h3 className="text-sm sm:text-base md:text-lg font-black text-white group-hover:text-sky-300 transition-colors break-words leading-snug">
-              {isTodayQuotaReached
-                ? `Jour ${streak?.currentStreak || 1} • Flamme Allumée & Active 🔥`
-                : (streak?.currentStreak || 0) > 0
-                ? `Jour ${streak?.currentStreak} • Validez vos révisions pour rallumer la flamme`
-                : 'Validez toutes vos révisions pour allumer la flamme !'}
-            </h3>
-          </div>
-        </div>
-
-        {/* Middle Status Text & Rendez-vous Pill */}
-        <div className="space-y-2 pt-2 border-t border-slate-800/60">
-          <p className="text-xs text-slate-300 leading-relaxed break-words">
-            {todaysStudySessions.length === 0
-              ? 'Aucune révision requise ce jour. Votre flamme est préservée !'
-              : completedToday === todaysStudySessions.length
-              ? `Bravo ! Toutes les révisions de ce ${currentDayInfo.label} (${completedToday}/${todaysStudySessions.length}) sont validées.`
-              : `${completedToday}/${todaysStudySessions.length} révision(s) validée(s) aujourd’hui.`}
-          </p>
-          <div className="inline-flex items-center gap-1.5 text-xs text-sky-400 font-bold bg-blue-950/80 px-2.5 py-1 rounded-lg border border-sky-500/30">
-            <span>📅 {rendezvousText}</span>
-          </div>
-        </div>
-
-        {/* Footer: Record & Action Button */}
-        <div className="flex items-center justify-between gap-3 pt-2.5 border-t border-slate-800/80">
-          <div className="text-left">
-            <span className="text-[10px] text-slate-400 uppercase font-bold block">Record</span>
-            <span className="text-xs sm:text-sm font-mono font-bold text-sky-400">
-              {streak?.bestStreak || 0} jour(s)
-            </span>
-          </div>
-          <button
-            type="button"
-            className="px-3.5 py-2 rounded-xl bg-sky-500/20 group-hover:bg-sky-500/30 text-sky-300 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shrink-0"
-          >
-            <span>Calendrier & Flamme</span>
-            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </button>
         </div>
       </div>
 
