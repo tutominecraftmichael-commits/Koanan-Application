@@ -498,9 +498,9 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-950/40 border border-indigo-500/40 text-indigo-300 hover:text-white hover:border-indigo-400 text-xs font-semibold cursor-pointer transition-all shadow-sm"
             title="Consulter l'explication de la méthode d'espacement appliquée à votre emploi du temps"
           >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="truncate max-w-[180px] sm:max-w-none">Méthode : {activeStrategy.title}</span>
-            <span className="text-[10px] text-cyan-400 font-mono ml-0.5">({activeStrategy.focusBlockDuration}m)</span>
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+            <span className="break-words">Méthode : {activeStrategy.title}</span>
+            <span className="text-[10px] text-cyan-400 font-mono ml-0.5 shrink-0">({activeStrategy.focusBlockDuration}m)</span>
           </button>
 
           <div className="flex items-center gap-2">
@@ -569,9 +569,9 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                         <span className="font-mono font-bold text-cyan-400">{slot.startTime} - {slot.endTime}</span>
                         <Badge variant="slate" size="sm">{typeInfo.badge}</Badge>
                       </div>
-                      <h4 className="text-sm font-bold text-white truncate">{subject.name}</h4>
+                      <h4 className="text-sm font-bold text-white break-words leading-snug">{subject.name}</h4>
                       {(slot.room || slot.professor) && (
-                        <p className="text-[11px] text-slate-400 truncate">
+                        <p className="text-[11px] text-slate-400 break-words mt-0.5">
                           {slot.room ? `Salle: ${slot.room}` : ''} {slot.professor ? `• Prof: ${slot.professor}` : ''}
                         </p>
                       )}
@@ -611,13 +611,13 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     className="p-4 rounded-2xl bg-cyan-950/20 border border-cyan-500/30 flex items-center justify-between gap-3 shadow-md interactive-card"
                     style={{ borderLeftColor: '#06B6D4', borderLeftWidth: '5px' }}
                   >
-                    <div className="min-w-0 space-y-1">
+                    <div className="min-w-0 space-y-1 flex-1">
                       <div className="flex items-center gap-2 text-xs">
                         <span className="font-mono font-bold text-cyan-300">{session.startTime} - {session.endTime}</span>
                         <Badge variant="cyan" size="sm">Révision</Badge>
                       </div>
-                      <h4 className="text-sm font-bold text-white truncate">{session.title}</h4>
-                      <p className="text-[11px] text-slate-400 truncate">Matière : {subject.name} • {session.durationMinutes} min</p>
+                      <h4 className="text-sm font-bold text-white break-words leading-snug">{session.title}</h4>
+                      <p className="text-[11px] text-slate-400 break-words mt-0.5">Matière : {subject.name} • {session.durationMinutes} min</p>
                     </div>
                   </div>
                 );

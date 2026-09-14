@@ -62,7 +62,7 @@ export const StreakCalendar: React.FC<StreakCalendarProps> = ({
     <div className={`p-4 sm:p-5 rounded-2xl bg-slate-950/90 border border-slate-800/90 shadow-xl space-y-4 ${className}`}>
       
       {/* Month & Year Navigation Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <CalendarIcon className="w-4 h-4 text-sky-400" />
           <h3 className="text-sm sm:text-base font-bold text-white capitalize">

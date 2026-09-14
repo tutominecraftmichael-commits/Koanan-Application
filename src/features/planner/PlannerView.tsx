@@ -229,7 +229,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               <span>Méthode</span>
               <span className="text-[9px] text-cyan-400 underline">(Détails)</span>
             </p>
-            <p className="text-xs sm:text-sm font-bold text-cyan-300 font-mono truncate">
+            <p className="text-xs sm:text-sm font-bold text-cyan-300 font-mono break-words">
               {activePacing.focusBlockDuration}m • {activePacing.title.replace(/^(La Technique|L'|Le)\s+/i, '')}
             </p>
           </div>
@@ -391,7 +391,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       {session.objectives.map((obj, i) => (
                         <div key={i} className="flex items-center gap-2 text-slate-300 text-[11px]">
                           <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" />
-                          <span className="truncate">{obj}</span>
+                          <span className="break-words">{obj}</span>
                         </div>
                       ))}
                     </div>

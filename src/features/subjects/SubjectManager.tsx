@@ -237,7 +237,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                         {subject.code}
                       </span>
                     )}
-                    <h3 className="text-sm sm:text-base font-bold text-white leading-snug truncate">
+                    <h3 className="text-sm sm:text-base font-bold text-white leading-snug break-words">
                       {subject.name}
                     </h3>
                   </div>
@@ -326,7 +326,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                       {subject.topics.slice(0, 3).map((topic, i) => (
                         <span
                           key={i}
-                          className="text-[10px] px-2 py-0.5 rounded-md bg-slate-800/70 border border-slate-700/60 text-slate-300 truncate max-w-full"
+                          className="text-[10px] px-2 py-0.5 rounded-md bg-slate-800/70 border border-slate-700/60 text-slate-300 break-words max-w-full"
                         >
                           {topic}
                         </span>

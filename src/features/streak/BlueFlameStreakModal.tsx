@@ -238,7 +238,7 @@ export const BlueFlameStreakModal: React.FC<BlueFlameStreakModalProps> = ({
                   }`}
                 >
                   <Snowflake className={`w-3.5 h-3.5 ${isAvailable ? 'text-cyan-400' : 'text-slate-600'}`} />
-                  <span className="text-[11px] truncate">
+                  <span className="text-[10px] sm:text-[11px] whitespace-nowrap">
                     {isAvailable ? `Gel ${slot} Prêt` : 'Recharge 72h'}
                   </span>
                 </div>

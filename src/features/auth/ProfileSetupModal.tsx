@@ -75,7 +75,7 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
                 Finalisation de votre Profil
               </h2>
             </div>
-            <p className="text-xs text-slate-400 font-mono truncate max-w-xs">{initialEmail}</p>
+            <p className="text-xs text-slate-400 font-mono break-all">{initialEmail}</p>
           </div>
         </div>
 

@@ -53,31 +53,31 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         <div className="text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto pt-2 sm:pt-6">
           
           {/* Release Badge - Luxurious interactive pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-blue-500/30 text-blue-200 text-xs font-semibold shadow-lg shadow-blue-950/30 interactive-pill max-w-full">
-            <span className="flex h-2 w-2 rounded-full bg-sky-400 animate-ping" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel border border-blue-500/30 text-blue-200 text-[11px] sm:text-xs font-semibold shadow-lg shadow-blue-950/30 interactive-pill max-w-full text-center">
+            <span className="flex h-2 w-2 rounded-full bg-sky-400 animate-ping shrink-0" />
             <Sparkles className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-            <span className="truncate">Méthode Pédagogique Active • Répétition Espacée & Sérénité</span>
+            <span className="break-words">Méthode Pédagogique Active & Répétition Espacée</span>
           </div>
 
           {/* Main Title */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.15] break-words">
+          <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.2] break-words px-1">
             Transformez votre emploi du temps en un{' '}
             <span className="text-gradient-primary">planning d'étude parfait</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-sm sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed px-1">
+          <p className="text-xs xs:text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed px-2 break-words">
             KONAN analyse vos cours, coefficients d’examens, niveau de difficulté et rythme biologique pour générer un <strong className="text-white font-semibold">programme d'étude équilibré, réaliste et anti-burnout</strong>.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-3 sm:pt-4 max-w-md sm:max-w-none mx-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-3 sm:pt-4 max-w-md sm:max-w-none mx-auto w-full px-2 sm:px-0">
             <Button
               variant="glow"
               size="lg"
               rightIcon={<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
               onClick={onStartApp}
-              className="w-full sm:w-auto shadow-xl shadow-blue-950/50 cursor-pointer text-sm sm:text-base py-3.5 px-7 font-bold hover:scale-105 active:scale-95 transition-all"
+              className="w-full sm:w-auto shadow-xl shadow-blue-950/50 cursor-pointer text-xs xs:text-sm sm:text-base py-3.5 px-6 font-bold hover:scale-105 active:scale-95 transition-all text-center flex items-center justify-center"
             >
               Générer mon Planning d'Étude
             </Button>
@@ -89,21 +89,21 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 onSelectPreset('cs-engineering');
                 onStartApp();
               }}
-              className="w-full sm:w-auto cursor-pointer text-sm sm:text-base py-3.5 px-6 font-semibold hover:border-blue-400/40 transition-all"
+              className="w-full sm:w-auto cursor-pointer text-xs xs:text-sm sm:text-base py-3.5 px-5 font-semibold hover:border-blue-400/40 transition-all text-center flex items-center justify-center"
             >
               Découvrir un Exemple Prédéfini
             </Button>
           </div>
 
           {/* Google Sign-in Micro-Note */}
-          <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400 pt-1">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-400 pt-1 text-center px-2">
             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 shrink-0">
               <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
               <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.27 21.37 7.35 24 12 24z" />
               <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.97 0 12s.46 3.84 1.26 5.42l4.02-3.15z" />
               <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.63 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
             </svg>
-            <span>Connexion Google instantanée • Sauvegarde automatique en temps réel</span>
+            <span className="break-words">Connexion Google instantanée • Sauvegarde automatique</span>
           </div>
 
           {/* Social Proof & Metrics with SCROLL COUNT-UP ANIMATION */}
@@ -252,14 +252,14 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                           <span>08:30 - 10:30</span>
                           <span className="text-blue-400">CM</span>
                         </div>
-                        <p className="text-slate-300 mt-1 font-semibold truncate">{activePreset.subjects[0]?.name}</p>
+                        <p className="text-slate-300 mt-1 font-semibold break-words leading-snug">{activePreset.subjects[0]?.name}</p>
                       </div>
                       <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-xs">
                         <div className="flex justify-between font-bold text-slate-200">
                           <span>10:45 - 12:45</span>
                           <span className="text-sky-400">TD</span>
                         </div>
-                        <p className="text-slate-300 mt-1 font-semibold truncate">{activePreset.subjects[0]?.name}</p>
+                        <p className="text-slate-300 mt-1 font-semibold break-words leading-snug">{activePreset.subjects[0]?.name}</p>
                       </div>
                     </div>
                   </div>
@@ -288,7 +288,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                           </span>
                           <span className="text-amber-400 font-mono text-[11px]">Spaced Review</span>
                         </div>
-                        <p className="text-white font-medium mt-1 truncate">
+                        <p className="text-white font-medium mt-1 break-words leading-snug">
                           {activePreset.subjects[0]?.topics?.[0] || 'Points clés du cours'}
                         </p>
                         {activeTestSlot === 1 && (
@@ -318,7 +318,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                           </span>
                           <span className="text-emerald-400 font-mono text-[11px]">Deep Work</span>
                         </div>
-                        <p className="text-white font-medium mt-1 truncate">
+                        <p className="text-white font-medium mt-1 break-words leading-snug">
                           {activePreset.subjects[1]?.name || 'Exercices d\'application'}
                         </p>
                         {activeTestSlot === 2 && (

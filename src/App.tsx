@@ -601,7 +601,11 @@ export function App() {
       />
 
       {/* Main View Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className={`flex-1 w-full mx-auto overflow-x-hidden ${
+        activeView === 'landing'
+          ? 'max-w-full p-0'
+          : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8'
+      }`}>
         
         {/* Landing Page */}
         {activeView === 'landing' && (

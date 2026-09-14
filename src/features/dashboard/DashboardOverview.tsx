@@ -133,11 +133,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           {/* Quick Launch Card */}
           {nextStudySession && (
             <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-slate-900/95 border border-indigo-500/40 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
-              <div className="space-y-0.5 text-left min-w-0">
+              <div className="space-y-1 text-left min-w-0 flex-1 w-full">
                 <span className="text-[10px] uppercase font-bold text-indigo-300 tracking-wider block">
                   Prochaine Session
                 </span>
-                <p className="text-xs sm:text-sm font-bold text-white max-w-[200px] truncate">
+                <p className="text-xs sm:text-sm font-bold text-white break-words leading-snug">
                   {nextStudySession.title}
                 </p>
                 <p className="text-[11px] font-mono text-cyan-400">
@@ -149,7 +149,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 size="sm"
                 leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
                 onClick={() => onStartFocus(nextStudySession)}
-                className="w-full sm:w-auto cursor-pointer text-xs font-bold whitespace-nowrap py-2 hover:scale-105 active:scale-95 transition-transform"
+                className="w-full sm:w-auto cursor-pointer text-xs font-bold whitespace-nowrap py-2.5 px-4 hover:scale-105 active:scale-95 transition-transform shrink-0"
               >
                 Démarrer Focus
               </Button>
@@ -161,59 +161,62 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       {/* DUOLINGO-STYLE STREAK & BLUE FLAME STATUS CARD */}
       <div 
         onClick={onOpenStreakModal}
-        className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-blue-950/70 via-slate-900 to-slate-900/90 border border-sky-500/30 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer hover:border-sky-400/60 transition-all group interactive-card"
+        className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-blue-950/70 via-slate-900 to-slate-900/90 border border-sky-500/30 shadow-xl flex flex-col gap-3.5 sm:gap-4 cursor-pointer hover:border-sky-400/60 transition-all group interactive-card"
         title="Consulter ma série, mon calendrier et ma flamme bleue"
       >
-        <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
+        {/* Top Header: Flame + Série & Badges */}
+        <div className="flex items-start sm:items-center gap-3.5 sm:gap-4">
           <div className="relative shrink-0 flex items-center justify-center w-12 h-14 sm:w-14 sm:h-16">
             <BlueFlame size="md" active={isTodayQuotaReached} showEmbers={isTodayQuotaReached} />
           </div>
-          <div className="space-y-1 min-w-0 text-left">
-            <div className="flex flex-wrap items-center gap-2">
+          
+          <div className="space-y-1.5 flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <span className="text-[11px] sm:text-xs uppercase font-extrabold text-sky-400 tracking-wider">
-                Série Régularité • Flamme Bleue
+                Série Régularité
               </span>
               {isTodayQuotaReached ? (
                 <Badge variant="cyan" size="sm" dot>Flamme Allumée 🔥</Badge>
               ) : (
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800/80 border border-slate-700 text-slate-400 font-semibold">
-                  Flamme Éteinte (Révisions en cours)
+                  Flamme Éteinte (En cours)
                 </span>
               )}
-              {/* Gel de série badge */}
               <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 font-bold">
                 <Snowflake className="w-3 h-3" />
-                {freezesCount}/3 gels de série
+                {freezesCount}/3 gels
               </span>
             </div>
             
-            <h3 className="text-base sm:text-lg font-black text-white group-hover:text-sky-300 transition-colors truncate">
+            <h3 className="text-sm sm:text-base md:text-lg font-black text-white group-hover:text-sky-300 transition-colors break-words leading-snug">
               {isTodayQuotaReached
                 ? `Jour ${streak?.currentStreak || 1} • Flamme Allumée & Active 🔥`
                 : (streak?.currentStreak || 0) > 0
                 ? `Jour ${streak?.currentStreak} • Validez vos révisions pour rallumer la flamme`
                 : 'Validez toutes vos révisions pour allumer la flamme !'}
             </h3>
-            
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300">
-              <span>
-                {todaysStudySessions.length === 0
-                  ? 'Aucune révision requise ce jour. Votre flamme est préservée !'
-                  : completedToday === todaysStudySessions.length
-                  ? `Bravo ! Toutes les révisions de ce ${currentDayInfo.label} (${completedToday}/${todaysStudySessions.length}) sont validées.`
-                  : `${completedToday}/${todaysStudySessions.length} révision(s) validée(s) aujourd’hui.`}
-              </span>
-              <span className="text-sky-400 font-bold bg-blue-950/80 px-2 py-0.5 rounded-lg border border-sky-500/30">
-                {rendezvousText}
-              </span>
-            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-slate-800/80 pt-3 sm:pt-0 shrink-0">
-          <div className="text-left sm:text-right">
+        {/* Middle Status Text & Rendez-vous Pill */}
+        <div className="space-y-2 pt-2 border-t border-slate-800/60">
+          <p className="text-xs text-slate-300 leading-relaxed break-words">
+            {todaysStudySessions.length === 0
+              ? 'Aucune révision requise ce jour. Votre flamme est préservée !'
+              : completedToday === todaysStudySessions.length
+              ? `Bravo ! Toutes les révisions de ce ${currentDayInfo.label} (${completedToday}/${todaysStudySessions.length}) sont validées.`
+              : `${completedToday}/${todaysStudySessions.length} révision(s) validée(s) aujourd’hui.`}
+          </p>
+          <div className="inline-flex items-center gap-1.5 text-xs text-sky-400 font-bold bg-blue-950/80 px-2.5 py-1 rounded-lg border border-sky-500/30">
+            <span>📅 {rendezvousText}</span>
+          </div>
+        </div>
+
+        {/* Footer: Record & Action Button */}
+        <div className="flex items-center justify-between gap-3 pt-2.5 border-t border-slate-800/80">
+          <div className="text-left">
             <span className="text-[10px] text-slate-400 uppercase font-bold block">Record</span>
-            <span className="text-sm font-mono font-bold text-sky-400">
+            <span className="text-xs sm:text-sm font-mono font-bold text-sky-400">
               {streak?.bestStreak || 0} jour(s)
             </span>
           </div>
@@ -244,9 +247,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-cyan-300 transition-colors">
                   Importer un Emploi du Temps
                 </h3>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 group-hover:translate-x-1.5 transition-all" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
               </div>
-              <p className="text-[11px] text-slate-400 truncate">
+              <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
                 Synchroniser votre emploi du temps
               </p>
             </div>
@@ -264,9 +267,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
                   Exemples d'EDT Démo
                 </h3>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
               </div>
-              <p className="text-[11px] text-slate-400 truncate">
+              <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
                 Modèles ESATIC, Médecine, Informatique, Lycée...
               </p>
             </div>
@@ -286,9 +289,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
                 Planning d'Étude
               </h3>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
             </div>
-            <p className="text-[11px] text-slate-400 truncate">
+            <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
               Consulter vos séances optimisées
             </p>
           </div>
@@ -307,9 +310,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-violet-300 transition-colors">
                 Mode Focus Pomodoro
               </h3>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-violet-400 group-hover:translate-x-1.5 transition-all" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-violet-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
             </div>
-            <p className="text-[11px] text-slate-400 truncate">
+            <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
               Chrono d'étude intensive sans distraction
             </p>
           </div>
@@ -355,16 +358,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     return (
                       <div
                         key={c.id}
-                        className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs flex justify-between items-center"
+                        className="p-3 sm:p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2"
                         style={{ borderLeftColor: sub?.color || '#6366F1', borderLeftWidth: '3px' }}
                       >
-                        <div className="min-w-0 pr-2">
-                          <p className="font-bold text-white truncate">{sub?.name}</p>
-                          <p className="text-slate-400 text-[11px] truncate">{c.room || 'Salle de cours'}</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-bold text-white text-xs sm:text-sm break-words leading-snug">{sub?.name}</p>
+                          <p className="text-slate-400 text-[11px] mt-0.5 break-words">{c.room || 'Salle de cours'}</p>
                         </div>
-                        <div className="text-right font-mono shrink-0">
-                          <span className="text-slate-300 font-semibold">{c.startTime} - {c.endTime}</span>
-                          <span className="block text-[10px] text-cyan-400 uppercase font-bold">{c.type}</span>
+                        <div className="flex items-center sm:flex-col justify-between sm:justify-center sm:text-right font-mono shrink-0 pt-1 sm:pt-0 border-t border-slate-800/60 sm:border-t-0">
+                          <span className="text-slate-300 font-semibold text-xs">{c.startTime} - {c.endTime}</span>
+                          <span className="text-[10px] text-cyan-400 uppercase font-bold">{c.type}</span>
                         </div>
                       </div>
                     );
@@ -407,8 +410,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       }`}
                       style={{ borderLeftColor: sub?.color || '#6366F1', borderLeftWidth: '4px' }}
                     >
-                      <div className="space-y-1 min-w-0">
-                        <div className="flex items-center gap-2">
+                      <div className="space-y-1.5 min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className="text-[11px] font-mono font-bold text-cyan-400">
                             {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                           </span>
@@ -428,16 +431,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             </Badge>
                           </button>
                         </div>
-                        <h4 className={`text-xs sm:text-sm font-bold text-white truncate ${session.completed ? 'line-through text-slate-400' : ''}`}>
+
+                        <h4 className={`text-xs sm:text-sm font-bold text-white break-words leading-snug ${session.completed ? 'line-through text-slate-400' : ''}`}>
                           {session.title}
                         </h4>
-                        <p className="text-[11px] sm:text-xs text-slate-400 truncate">{sub?.name}</p>
+                        <p className="text-[11px] sm:text-xs text-slate-400 break-words leading-snug">{sub?.name}</p>
                       </div>
 
-                      <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                      <div className="flex items-center gap-2 self-stretch sm:self-center justify-end shrink-0 pt-2 sm:pt-0 border-t border-slate-800/60 sm:border-t-0">
                         <button
                           onClick={() => onToggleSessionComplete(session.id)}
-                          className={`p-1.5 sm:p-2 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer min-h-[36px] ${
+                          className={`flex-1 sm:flex-initial px-3 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer min-h-[38px] ${
                             session.completed
                               ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                               : 'bg-slate-800 text-slate-300 border-slate-700 hover:text-white'
@@ -453,7 +457,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             size="sm"
                             leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
                             onClick={() => onStartFocus(session)}
-                            className="cursor-pointer text-xs py-1.5 px-3 min-h-[36px]"
+                            className="flex-1 sm:flex-initial cursor-pointer text-xs py-2 px-3.5 min-h-[38px] flex items-center justify-center"
                           >
                             Lancer
                           </Button>
@@ -485,11 +489,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 {upcomingExams.slice(0, 4).map(sub => (
                   <div
                     key={sub.id}
-                    className="p-2.5 sm:p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between text-xs gap-2"
+                    className="p-2.5 sm:p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between text-xs gap-2.5"
                   >
-                    <div className="space-y-0.5 min-w-0">
-                      <p className="font-bold text-white truncate">{sub.name}</p>
-                      <p className="text-[11px] text-slate-400 truncate">Coeff {sub.coefficient} • Cible : {sub.targetGrade}/20</p>
+                    <div className="space-y-0.5 min-w-0 flex-1">
+                      <p className="font-bold text-white break-words leading-snug">{sub.name}</p>
+                      <p className="text-[11px] text-slate-400 break-words">Coeff {sub.coefficient} • Cible : {sub.targetGrade}/20</p>
                     </div>
                     {sub.daysRemaining !== null && (
                       <Badge

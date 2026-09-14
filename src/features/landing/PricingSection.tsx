@@ -162,13 +162,13 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
 
         {/* 2. PLAN KONAN PRO (RECOMMANDÉ) */}
         <div 
-          className={`relative flex flex-col justify-between rounded-2xl bg-gradient-to-b from-slate-900/95 via-slate-900 to-blue-950/60 border-2 border-sky-400 p-6 sm:p-8 shadow-[0_0_40px_rgba(56,189,248,0.22)] hover:shadow-[0_0_55px_rgba(56,189,248,0.32)] transition-all duration-700 ease-out transform hover:-translate-y-2.5 z-10 ${
-            isVisible ? 'opacity-100 translate-y-0 scale-[1.02] lg:-translate-y-2' : 'opacity-0 translate-y-16 scale-95'
+          className={`relative flex flex-col justify-between rounded-2xl bg-gradient-to-b from-slate-900/95 via-slate-900 to-blue-950/60 border-2 border-sky-400 p-5 sm:p-8 shadow-[0_0_40px_rgba(56,189,248,0.22)] hover:shadow-[0_0_55px_rgba(56,189,248,0.32)] transition-all duration-700 ease-out transform hover:-translate-y-2.5 z-10 w-full max-w-full ${
+            isVisible ? 'opacity-100 translate-y-0 lg:scale-[1.02] lg:-translate-y-2' : 'opacity-0 translate-y-16 scale-95'
           }`}
           style={{ transitionDelay: isVisible ? '250ms' : '0ms' }}
         >
           {/* Top Recommended Pill: HIGH CONTRAST AMBER BADGE CLEARLY SEPARATED FROM BORDER */}
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 text-xs font-black uppercase tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.6)] flex items-center gap-1.5 ring-4 ring-[#080B11] z-30">
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 text-xs font-black uppercase tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.6)] flex items-center gap-1.5 ring-4 ring-[#080B11] z-30 whitespace-nowrap">
             <Star className="w-3.5 h-3.5 fill-current text-slate-950" />
             <span>Recommandé</span>
           </div>
