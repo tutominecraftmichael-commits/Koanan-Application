@@ -168,12 +168,13 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
 
           <div className="space-y-5 pt-2">
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-400">
-                  Performance & Concours
+                  Performance
                 </span>
-                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-200 border border-sky-400/40 font-bold">
-                  ⭐ Populaire
+                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-200 border border-sky-400/40 font-bold whitespace-nowrap inline-flex items-center gap-1 shrink-0">
+                  <span>⭐</span>
+                  <span>Populaire</span>
                 </span>
               </div>
               
@@ -253,11 +254,11 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
         >
           <div className="space-y-5">
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">
-                  Haute Ambition
+                  Fonctionnalités Complètes
                 </span>
-                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-indigo-950/80 text-indigo-200 border border-indigo-500/40 font-semibold flex items-center gap-1">
+                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-indigo-950/80 text-indigo-200 border border-indigo-500/40 font-semibold flex items-center gap-1 whitespace-nowrap shrink-0">
                   <Crown className="w-3 h-3 text-amber-300" />
                   Coaching VIP
                 </span>
