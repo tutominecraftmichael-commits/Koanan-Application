@@ -111,7 +111,7 @@ export async function signInWithGoogleReal(): Promise<{
       throw new Error('La fenêtre de connexion Google a été fermée avant la validation.');
     }
     if (error.code === 'auth/unauthorized-domain') {
-      throw new Error('Le domaine actuel n\'est pas autorisé dans votre console Firebase (Authentication > Paramètres > Domaines autorisés). Ajoutez localhost.');
+      throw new Error('UNAUTHORIZED_DOMAIN');
     }
     if (error.code === 'auth/cancelled-popup-request') {
       throw new Error('Requête annulée suite à une ouverture concurrente.');

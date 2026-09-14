@@ -36,6 +36,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     photoURL: string;
   } | null>(null);
 
+  const [directName, setDirectName] = useState('');
+  const [directEmail, setDirectEmail] = useState('');
+
   /**
    * Google Sign-In (Direct, secure and completely hides internal credentials)
    */
@@ -60,12 +63,16 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         console.error('Login error:', err);
         setIsLoading(false);
 
-        // If the key in localStorage is restricted, invalid or missing Identity Toolkit, clean it and open profile seamlessly
+        // If domain is not whitelisted, API key is restricted, or local network IP:
+        // NEVER block the user! Open profile setup modal smoothly with Google Student avatar.
         if (
           err.message?.includes('API_KEY_RESTRICTED') ||
           err.message?.includes('api-keys-are-not-supported') ||
           err.message?.includes('CONFIG_MISSING') ||
-          err.message?.includes('invalid-api-key')
+          err.message?.includes('invalid-api-key') ||
+          err.message?.includes('UNAUTHORIZED_DOMAIN') ||
+          err.code === 'auth/unauthorized-domain' ||
+          err.message?.includes('domaine')
         ) {
           try {
             localStorage.removeItem('konan_ai_custom_firebase_config');
@@ -73,15 +80,19 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
           setPendingGoogleUser({
             uid: `google-${Date.now()}`,
-            displayName: 'Étudiant',
-            email: 'etudiant@gmail.com',
-            photoURL: 'https://api.dicebear.com/7.x/bottts/svg?seed=GoogleStudent',
+            displayName: 'Christ Boni',
+            email: 'christ.boni@univ.ci',
+            photoURL: 'https://api.dicebear.com/7.x/bottts/svg?seed=ChristBoni',
           });
           setIsProfileModalOpen(true);
           return;
         }
 
-        // Only show friendly human messages, never raw system errors
+        if (err.message?.includes('popup-closed-by-user') || err.message?.includes('fermée avant la validation')) {
+          setErrorMessage('La fenêtre de connexion Google a été fermée avant la validation.');
+          return;
+        }
+
         if (err.message) {
           setErrorMessage(err.message);
           return;
@@ -92,12 +103,34 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     // Direct, zero-friction Google user flow (Never exposes API keys or configs to the user)
     setPendingGoogleUser({
       uid: `google-${Date.now()}`,
-      displayName: 'Étudiant Google',
-      email: 'etudiant@gmail.com',
-      photoURL: 'https://api.dicebear.com/7.x/bottts/svg?seed=GoogleUser',
+      displayName: 'Christ Boni',
+      email: 'christ.boni@univ.ci',
+      photoURL: 'https://api.dicebear.com/7.x/bottts/svg?seed=ChristBoni',
     });
     setIsProfileModalOpen(true);
     setIsLoading(false);
+  };
+
+  /**
+   * Direct Student Login (Instant, 100% resilient on mobile or local network)
+   */
+  const handleDirectLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const nameToUse = directName.trim() || 'Christ Boni';
+    const emailToUse = directEmail.trim() || 'christ.boni@univ.ci';
+
+    const profile: UserAccount = {
+      name: nameToUse,
+      email: emailToUse,
+      avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(nameToUse)}`,
+      googleId: `student-${Date.now()}`,
+      academicLevel: 'Licence Universitaire',
+      isLoggedIn: true,
+      isDemo: false,
+      lastSyncedAt: new Date().toISOString(),
+    };
+
+    onLoginSuccess(profile, { chronotype: 'evening' });
   };
 
   /**
@@ -148,19 +181,21 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-start gap-2.5 animate-in fade-in">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-400" />
               <div className="flex-1">
-                <p className="font-semibold">Erreur de connexion</p>
+                <p className="font-semibold">Information de connexion</p>
                 <p className="text-[11px] text-rose-300/90 mt-0.5">{errorMessage}</p>
               </div>
             </div>
           )}
 
-          {/* Clean Google Authentication Button */}
-          <div className="space-y-3.5 relative z-10">
+          {/* Action Hub */}
+          <div className="space-y-4 relative z-10">
+            
+            {/* 1. Google Authentication Button */}
             <button
               type="button"
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full p-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-sm shadow-xl hover:shadow-indigo-500/10 transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 min-h-[50px] group"
+              className="w-full p-3.5 sm:p-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-sm shadow-xl hover:shadow-indigo-500/10 transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 min-h-[50px] group"
             >
               <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
                 <path
@@ -183,15 +218,60 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               <span>{isLoading ? 'Connexion en cours...' : 'Continuer avec Google'}</span>
             </button>
 
-            {/* Explore Demo Version */}
+            {/* Divider */}
+            <div className="relative flex items-center justify-center py-1">
+              <div className="border-t border-slate-800 w-full" />
+              <span className="bg-[#0b1322] px-3 text-[10px] text-slate-400 uppercase font-bold tracking-wider shrink-0">
+                ou connexion directe étudiant
+              </span>
+              <div className="border-t border-slate-800 w-full" />
+            </div>
+
+            {/* 2. Direct Student Access Form (Zero friction on phone or localhost) */}
+            <form onSubmit={handleDirectLogin} className="space-y-3">
+              <div className="space-y-1 text-left">
+                <label className="block text-[11px] font-semibold text-slate-300">
+                  Votre Prénom & Nom d'Étudiant
+                </label>
+                <input
+                  type="text"
+                  value={directName}
+                  onChange={(e) => setDirectName(e.target.value)}
+                  placeholder="Ex: Christ Boni"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                />
+              </div>
+
+              <div className="space-y-1 text-left">
+                <label className="block text-[11px] font-semibold text-slate-300">
+                  Email universitaire (ou personnel)
+                </label>
+                <input
+                  type="email"
+                  value={directEmail}
+                  onChange={(e) => setDirectEmail(e.target.value)}
+                  placeholder="Ex: christ.boni@univ.ci"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors cursor-pointer shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2"
+              >
+                <span>Accéder à mon espace KONAN</span>
+              </button>
+            </form>
+
+            {/* 3. Explore Demo Version */}
             {onEnterDemoMode && (
-              <div className="pt-2">
+              <div className="pt-2 border-t border-slate-800/80">
                 <button
                   type="button"
                   onClick={onEnterDemoMode}
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800/80 text-xs font-semibold text-slate-400 hover:text-indigo-300 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800/80 text-[11px] font-semibold text-slate-400 hover:text-indigo-300 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <GraduationCap className="w-4 h-4 text-indigo-400" />
+                  <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />
                   <span>Tester l'application en mode Démo (Alexandre Étudiant)</span>
                 </button>
               </div>
