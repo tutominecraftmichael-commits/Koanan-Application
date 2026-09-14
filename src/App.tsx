@@ -32,6 +32,7 @@ import { soundFX } from './lib/audioEffects';
 // Layout
 import { Navbar } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
+import { ProFeatureModal } from './components/common/ProFeatureModal';
 
 // Views
 import { LandingHero } from './features/landing/LandingHero';
@@ -51,6 +52,8 @@ export function App() {
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isProModalOpen, setIsProModalOpen] = useState(false);
+  const [proModalFeature, setProModalFeature] = useState<{ title: string; desc: string } | undefined>(undefined);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -156,6 +159,56 @@ export function App() {
     } else {
       showToast(`✨ Bienvenue ${finalName} ! Importez votre emploi du temps.`);
       setActiveView('upload-schedule');
+    }
+  };
+
+  /**
+   * Plan selection from Landing Hero / Pricing:
+   * When connected user selects "free", directly access free features.
+   */
+  const handleSelectPlan = (planId: 'free' | 'pro' | 'plus') => {
+    if (state.userAccount?.isLoggedIn) {
+      if (planId === 'free') {
+        const updated: AppState = {
+          ...state,
+          planTier: 'free',
+          userAccount: state.userAccount ? {
+            ...state.userAccount,
+            planTier: 'free',
+          } : undefined,
+        };
+
+        if (state.preferences.pacing === 'feynman' || state.preferences.pacing === 'time_blocking') {
+          updated.preferences = {
+            ...state.preferences,
+            pacing: 'pomodoro',
+            focusBlockDuration: 25,
+            breakBlockDuration: 5,
+          };
+        }
+
+        if (state.userAccount?.googleId && !state.isDemoMode) {
+          saveUserState(state.userAccount.googleId, updated);
+        }
+        setState(updated);
+
+        showToast('✨ Vous êtes sur KONAN (Modèle Gratuit - Free) !');
+        if (state.completedOnboarding || state.subjects.length > 0) {
+          setActiveView('dashboard');
+        } else {
+          setActiveView('upload-schedule');
+        }
+      } else {
+        setProModalFeature({
+          title: planId === 'pro' ? 'Formule KONAN PRO' : 'Formule KONAN PLUS',
+          desc: planId === 'pro'
+            ? 'Passez à KONAN PRO (1 200 F CFA / mois) pour débloquer les méthodes Feynman et Time Blocking, le suivi automatique des dates d’examen et les rappels intelligents Google Agenda.'
+            : 'Passez à KONAN PLUS (2 500 F CFA / mois) pour bénéficier du coaching VIP Konan, du calibrage par objectif scolaire (12, 16 ou Major) et des tête-à-tête bimensuels.'
+        });
+        setIsProModalOpen(true);
+      }
+    } else {
+      setActiveView('auth');
     }
   };
 
@@ -458,9 +511,16 @@ export function App() {
         {/* Landing Page */}
         {activeView === 'landing' && (
           <LandingHero
+            isLoggedIn={Boolean(state.userAccount?.isLoggedIn)}
+            currentPlan={state.planTier || state.userAccount?.planTier || 'free'}
+            onSelectPlan={handleSelectPlan}
             onStartApp={() => {
               if (state.userAccount?.isLoggedIn) {
-                setActiveView('upload-schedule');
+                if (state.completedOnboarding || state.subjects.length > 0) {
+                  setActiveView('dashboard');
+                } else {
+                  setActiveView('upload-schedule');
+                }
               } else {
                 setActiveView('auth');
               }
@@ -484,8 +544,10 @@ export function App() {
           (state.userAccount?.isLoggedIn && !state.isDemoMode) ? (
             <PdfUploadView
               studentName={state.studentName}
+              planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onApplyExtractedSchedule={handleApplyExtractedSchedule}
               onCancel={() => setActiveView('dashboard')}
+              onViewPricing={() => setActiveView('landing')}
             />
           ) : state.isDemoMode ? (
             <div className="text-center py-16 space-y-4 glass-panel max-w-md mx-auto p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl">
@@ -537,6 +599,7 @@ export function App() {
               studySessions={state.studySessions}
               preferences={state.preferences}
               isDemoMode={state.isDemoMode}
+              planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onNavigate={handleNavigate}
               onStartFocus={handleStartFocusSession}
               onToggleSessionComplete={handleToggleSessionComplete}
@@ -568,12 +631,14 @@ export function App() {
               studySessions={state.studySessions}
               preferences={state.preferences}
               isDemoMode={state.isDemoMode}
+              planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onUpdateClassSlots={handleUpdateClassSlots}
               onUpdateSubjects={handleUpdateSubjects}
               onUpdatePreferences={handleUpdatePreferences}
               onTriggerPlanner={() => setActiveView('planner')}
               onStartFocusSession={handleStartFocusSession}
               onNavigate={handleNavigate}
+              onViewPricing={() => setActiveView('landing')}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
@@ -597,8 +662,10 @@ export function App() {
             <SubjectManager
               subjects={state.subjects}
               isDemoMode={state.isDemoMode}
+              planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onUpdateSubjects={handleUpdateSubjects}
               onTriggerPlanner={() => setActiveView('planner')}
+              onViewPricing={() => setActiveView('landing')}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
@@ -624,11 +691,13 @@ export function App() {
               classSlots={state.classSlots}
               studySessions={state.studySessions}
               preferences={state.preferences}
+              planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onRegeneratePlan={handleRegeneratePlan}
               onToggleSessionComplete={handleToggleSessionComplete}
               onStartFocusSession={handleStartFocusSession}
               onAddCustomSession={handleAddCustomSession}
               onUpdatePreferences={handleUpdatePreferences}
+              onViewPricing={() => setActiveView('landing')}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -711,6 +780,18 @@ export function App() {
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}
         onResetData={handleResetData}
+      />
+
+      {/* Pro Upgrade Modal */}
+      <ProFeatureModal
+        isOpen={isProModalOpen}
+        onClose={() => setIsProModalOpen(false)}
+        featureTitle={proModalFeature?.title}
+        featureDescription={proModalFeature?.desc}
+        onViewPricing={() => {
+          setIsProModalOpen(false);
+          setActiveView('landing');
+        }}
       />
 
       {/* Floating Notification Toast */}

@@ -117,6 +117,8 @@ export interface StudyLog {
   createdAt: string;
 }
 
+export type PlanTier = 'free' | 'pro' | 'plus';
+
 export interface UserAccount {
   name: string;
   email: string;
@@ -127,6 +129,7 @@ export interface UserAccount {
   countryCode?: string;
   isLoggedIn: boolean;
   isDemo?: boolean;
+  planTier?: PlanTier;
   lastSyncedAt: string;
 }
 

@@ -159,7 +159,20 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   </div>
                 )}
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-sm font-bold text-white truncate">{displayName}</h4>
+                  <div className="flex items-center justify-between gap-2">
+                    <h4 className="text-sm font-bold text-white truncate">{displayName}</h4>
+                    <span 
+                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0 border ${
+                        userAccount?.planTier === 'pro'
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                          : userAccount?.planTier === 'plus'
+                          ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
+                          : 'bg-slate-800 text-sky-300 border-sky-500/30'
+                      }`}
+                    >
+                      {userAccount?.planTier === 'pro' ? '⭐ PRO' : userAccount?.planTier === 'plus' ? '👑 PLUS' : 'FREE'}
+                    </span>
+                  </div>
                   <p className="text-xs text-slate-400 font-mono truncate">{displayEmail}</p>
                   <div className="flex items-center gap-1.5 mt-1 text-[11px] text-cyan-400">
                     <ShieldCheck className="w-3 h-3 text-cyan-400" />

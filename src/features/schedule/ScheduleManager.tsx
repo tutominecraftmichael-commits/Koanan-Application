@@ -19,6 +19,7 @@ import {
   parseStructuredScheduleTruth 
 } from '../../services/pdfParserService';
 import { getPacingStrategy, PACING_STRATEGIES, recommendPacingStrategies } from '../../lib/pacingStrategies';
+import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 import { 
   Plus, 
   Trash2, 
@@ -51,6 +52,8 @@ export interface ScheduleManagerProps {
   onNavigate?: (view: any) => void;
   onOpenPresetModal?: () => void;
   isDemoMode?: boolean;
+  planTier?: 'free' | 'pro' | 'plus';
+  onViewPricing?: () => void;
 }
 
 export type TimetableFilterMode = 'combined' | 'classes_only' | 'study_only';
@@ -191,6 +194,8 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
   onNavigate,
   onOpenPresetModal,
   isDemoMode = false,
+  planTier = 'free',
+  onViewPricing,
 }) => {
   const [filterMode, setFilterMode] = useState<TimetableFilterMode>('combined');
   const [isAddSlotOpen, setIsAddSlotOpen] = useState(false);
@@ -198,6 +203,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [importText, setImportText] = useState('');
   const [importError, setImportError] = useState<string | null>(null);
+  const [proModalInfo, setProModalInfo] = useState<{ title: string; desc: string } | null>(null);
   const [importSuccess, setImportSuccess] = useState<string | null>(null);
   const [activeMobileDay, setActiveMobileDay] = useState<DayOfWeek>(0);
   const [isSourceTruthModalOpen, setIsSourceTruthModalOpen] = useState(false);
@@ -1133,18 +1139,31 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 const isPrimaryRec = (rec.primaryId === s.id);
                 const isRecommended = rec.recommendedIds.includes(s.id);
                 const isNotRecommended = rec.notRecommendedIds?.includes(s.id);
+                const isProMethod = s.planRequired === 'pro';
+                const isLocked = isProMethod && planTier === 'free';
 
                 return (
                   <button
                     key={s.id}
                     type="button"
-                    onClick={() => setSelectedModalStrategy(s.id)}
+                    onClick={() => {
+                      if (isLocked) {
+                        setProModalInfo({
+                          title: `${s.title}`,
+                          desc: `La méthode "${s.title}" (${s.tagline}) fait partie intégrante du modèle KONAN PRO. Sur votre version Gratuite (Free), vous disposez d'un accès illimité aux techniques Pomodoro, Active Recall & Répétition Espacée et la Règle des 2 Minutes.`
+                        });
+                        return;
+                      }
+                      setSelectedModalStrategy(s.id);
+                    }}
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer relative ${
                       isCurrent
                         ? 'bg-slate-900 border-cyan-400 ring-1 ring-cyan-400/50 shadow-md'
-                        : isPrimaryRec
-                          ? 'bg-slate-950/80 border-amber-500/40 text-slate-300 hover:border-amber-400'
-                          : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
+                        : isLocked
+                          ? 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-amber-500/40'
+                          : isPrimaryRec
+                            ? 'bg-slate-950/80 border-amber-500/40 text-slate-300 hover:border-amber-400'
+                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1 mb-1">
@@ -1152,6 +1171,11 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                         {s.number}. {s.title}
                       </span>
                       <div className="flex items-center gap-1">
+                        {isLocked && (
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                            ⭐ PRO
+                          </span>
+                        )}
                         {isPrimaryRec && (
                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-0.5">
                             <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" /> Idéal
@@ -1243,24 +1267,40 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   </Button>
 
                   {!isAlreadyActive && (
-                    <Button
-                      variant="glow"
-                      size="sm"
-                      onClick={() => {
-                        const stratInfo = getPacingStrategy(selectedModalStrategy);
-                        onUpdatePreferences({
-                          ...preferences,
-                          pacing: stratInfo.id,
-                          focusBlockDuration: stratInfo.focusBlockDuration,
-                          breakBlockDuration: stratInfo.breakBlockDuration,
-                        });
-                        onTriggerPlanner();
-                        setIsStrategyModalOpen(false);
-                      }}
-                      className="text-xs font-bold cursor-pointer"
-                    >
-                      Appliquer cette méthode à mon planning
-                    </Button>
+                    strat.planRequired === 'pro' && planTier === 'free' ? (
+                      <Button
+                        variant="glow"
+                        size="sm"
+                        onClick={() => {
+                          setProModalInfo({
+                            title: `${strat.title}`,
+                            desc: `La méthode "${strat.title}" fait partie du modèle KONAN PRO. Passez à KONAN PRO pour synchroniser votre emploi du temps avec cette méthode avancée.`
+                          });
+                        }}
+                        className="text-xs font-bold cursor-pointer bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 border-amber-400"
+                      >
+                        ⭐ Débloquer avec KONAN PRO
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="glow"
+                        size="sm"
+                        onClick={() => {
+                          const stratInfo = getPacingStrategy(selectedModalStrategy);
+                          onUpdatePreferences({
+                            ...preferences,
+                            pacing: stratInfo.id,
+                            focusBlockDuration: stratInfo.focusBlockDuration,
+                            breakBlockDuration: stratInfo.breakBlockDuration,
+                          });
+                          onTriggerPlanner();
+                          setIsStrategyModalOpen(false);
+                        }}
+                        className="text-xs font-bold cursor-pointer"
+                      >
+                        Appliquer cette méthode à mon planning
+                      </Button>
+                    )
                   )}
                 </div>
               </div>
@@ -1268,6 +1308,15 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           })()}
         </div>
       </Modal>
+
+      {/* Pro Upgrade Modal */}
+      <ProFeatureModal
+        isOpen={Boolean(proModalInfo)}
+        onClose={() => setProModalInfo(null)}
+        featureTitle={proModalInfo?.title}
+        featureDescription={proModalInfo?.desc}
+        onViewPricing={onViewPricing}
+      />
 
     </div>
   );

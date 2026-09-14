@@ -234,7 +234,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={onOpenSettings}
                     title="Voir mon profil et paramètres"
-                    className="flex items-center gap-2 pl-1 sm:pl-2 border-l border-slate-800/80 hover:opacity-90 transition-opacity cursor-pointer text-left"
+                    className="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-800/80 hover:opacity-90 transition-opacity cursor-pointer text-left"
                   >
                     <img
                       src={userAccount.avatar}
@@ -247,6 +247,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                         {userAccount.isDemo ? t('demoAccount', lang) : userAccount.email || 'Connecté'}
                       </p>
                     </div>
+                    {/* Badge de version : Free, Pro, ou Plus */}
+                    <span 
+                      className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border ${
+                        userAccount.planTier === 'pro'
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                          : userAccount.planTier === 'plus'
+                          ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
+                          : 'bg-slate-800/90 text-sky-300 border-sky-500/30'
+                      }`}
+                      title={
+                        userAccount.planTier === 'pro' 
+                          ? 'Modèle KONAN Pro' 
+                          : userAccount.planTier === 'plus' 
+                          ? 'Modèle KONAN Plus' 
+                          : 'Modèle KONAN Gratuit (Free)'
+                      }
+                    >
+                      {userAccount.planTier === 'pro' ? 'Pro' : userAccount.planTier === 'plus' ? 'Plus' : 'Free'}
+                    </span>
                   </button>
                 ) : (
                   <button

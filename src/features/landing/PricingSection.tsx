@@ -19,9 +19,15 @@ import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 
 export interface PricingSectionProps {
   onSelectPlan?: (planId: 'free' | 'pro' | 'plus') => void;
+  isLoggedIn?: boolean;
+  currentPlan?: 'free' | 'pro' | 'plus';
 }
 
-export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) => {
+export const PricingSection: React.FC<PricingSectionProps> = ({ 
+  onSelectPlan, 
+  isLoggedIn = false,
+  currentPlan: _currentPlan = 'free'
+}) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -148,7 +154,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
               className="w-full text-xs sm:text-sm font-bold py-3 hover:bg-slate-800 border-slate-700 active:scale-95 transition-transform cursor-pointer"
               onClick={() => onSelectPlan?.('free')}
             >
-              Commencer avec Konan
+              {isLoggedIn ? 'Aller sur KONAN (Gratuit)' : 'Commencer avec Konan'}
             </Button>
           </div>
         </div>

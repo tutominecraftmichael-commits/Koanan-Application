@@ -25,11 +25,17 @@ import { PricingSection } from './PricingSection';
 export interface LandingHeroProps {
   onStartApp: () => void;
   onSelectPreset: (presetId: string) => void;
+  onSelectPlan?: (planId: 'free' | 'pro' | 'plus') => void;
+  isLoggedIn?: boolean;
+  currentPlan?: 'free' | 'pro' | 'plus';
 }
 
 export const LandingHero: React.FC<LandingHeroProps> = ({
   onStartApp,
   onSelectPreset,
+  onSelectPlan,
+  isLoggedIn = false,
+  currentPlan = 'free',
 }) => {
   // Demonstrator initially starts on "before" (Sans KONAN) as requested
   const [selectedDemoTab, setSelectedDemoTab] = useState<'before' | 'after'>('before');
@@ -551,7 +557,11 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         </div>
 
         {/* PRICING PLANS SECTION (KONAN, KONAN PRO, KONAN PLUS) */}
-        <PricingSection onSelectPlan={() => onStartApp()} />
+        <PricingSection 
+          onSelectPlan={onSelectPlan ? onSelectPlan : () => onStartApp()} 
+          isLoggedIn={isLoggedIn}
+          currentPlan={currentPlan}
+        />
 
         {/* BOTTOM CALL TO ACTION */}
         <div className="relative rounded-3xl p-6 sm:p-12 overflow-hidden border border-blue-500/30 bg-gradient-to-br from-blue-950/50 via-slate-900 to-slate-950 text-center space-y-4 sm:space-y-6 shadow-2xl">

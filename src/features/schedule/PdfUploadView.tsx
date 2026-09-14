@@ -54,6 +54,7 @@ import {
   buildStateFromExtractedSchedule 
 } from '../../services/aiAcademicAnalyzer';
 import { PACING_STRATEGIES, getPacingStrategy, recommendPacingStrategies } from '../../lib/pacingStrategies';
+import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 import confetti from 'canvas-confetti';
 
 // ─── FORMAT TYPES & EXAMPLES ─────────────────────────────────────────────────
@@ -171,6 +172,7 @@ LUNDI :
 
 export interface PdfUploadViewProps {
   studentName: string;
+  planTier?: 'free' | 'pro' | 'plus';
   onApplyExtractedSchedule: (payload: {
     subjects: Subject[];
     classSlots: ClassSlot[];
@@ -178,12 +180,15 @@ export interface PdfUploadViewProps {
     studySessions: StudySession[];
   }) => void;
   onCancel?: () => void;
+  onViewPricing?: () => void;
 }
 
 export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   studentName,
+  planTier = 'free',
   onApplyExtractedSchedule,
   onCancel,
+  onViewPricing,
 }) => {
   // Format selection
   const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType | null>(null);
@@ -234,12 +239,19 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     );
   }, [extractedData]);
 
+  const [proModalInfo, setProModalInfo] = useState<{ title: string; desc: string } | null>(null);
+
   // Pre-select the recommended pacing strategy when schedule is analyzed
   useEffect(() => {
     if (pacingRecommendation) {
-      setSelectedPacing(pacingRecommendation.primaryId);
+      if (planTier === 'free' && (pacingRecommendation.primaryId === 'feynman' || pacingRecommendation.primaryId === 'time_blocking')) {
+        const freeFallback = pacingRecommendation.recommendedIds.find(id => id !== 'feynman' && id !== 'time_blocking') || 'active_recall_spaced';
+        setSelectedPacing(freeFallback);
+      } else {
+        setSelectedPacing(pacingRecommendation.primaryId);
+      }
     }
-  }, [pacingRecommendation]);
+  }, [pacingRecommendation, planTier]);
 
   const stepsList = [
     { title: 'Lecture du texte structuré', desc: 'Décodage de la grille horaire saisie' },
@@ -1441,20 +1453,33 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                         const isPrimaryRec = pacingRecommendation?.primaryId === strategy.id;
                         const isRecommended = pacingRecommendation?.recommendedIds.includes(strategy.id);
                         const isNotRecommended = pacingRecommendation?.notRecommendedIds?.includes(strategy.id);
+                        const isProMethod = strategy.planRequired === 'pro';
+                        const isLocked = isProMethod && planTier === 'free';
 
                         return (
                           <button
                             key={strategy.id}
                             type="button"
-                            onClick={() => setSelectedPacing(strategy.id)}
+                            onClick={() => {
+                              if (isLocked) {
+                                setProModalInfo({
+                                  title: `${strategy.title}`,
+                                  desc: `La méthode "${strategy.title}" (${strategy.tagline}) fait partie intégrante du modèle KONAN PRO. Sur votre version Gratuite (Free), vous disposez d'un accès illimité aux techniques Pomodoro, Active Recall & Répétition Espacée et la Règle des 2 Minutes.`
+                                });
+                                return;
+                              }
+                              setSelectedPacing(strategy.id);
+                            }}
                             className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between gap-2.5 ${
                               isSelected
                                 ? 'bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-950 border-cyan-400/80 shadow-lg shadow-cyan-500/20 ring-1 ring-cyan-400/50'
-                                : isPrimaryRec
-                                  ? 'bg-slate-950/80 border-amber-500/50 text-slate-300 hover:border-amber-400 hover:bg-slate-900/60'
-                                  : isRecommended
-                                    ? 'bg-slate-950/80 border-indigo-500/40 text-slate-300 hover:border-indigo-400 hover:bg-slate-900/60'
-                                    : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900/50'
+                                : isLocked
+                                  ? 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-amber-500/40 hover:bg-slate-900/40'
+                                  : isPrimaryRec
+                                    ? 'bg-slate-950/80 border-amber-500/50 text-slate-300 hover:border-amber-400 hover:bg-slate-900/60'
+                                    : isRecommended
+                                      ? 'bg-slate-950/80 border-indigo-500/40 text-slate-300 hover:border-indigo-400 hover:bg-slate-900/60'
+                                      : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900/50'
                             }`}
                           >
                             <div className="space-y-1.5">
@@ -1462,7 +1487,11 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                                 <span className={`text-xs font-black tracking-wide ${isSelected ? 'text-cyan-300' : 'text-white'}`}>
                                   {strategy.number}. {strategy.title}
                                 </span>
-                                {isSelected ? (
+                                {isLocked ? (
+                                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
+                                    ⭐ PRO
+                                  </span>
+                                ) : isSelected ? (
                                   <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0" />
                                 ) : isPrimaryRec ? (
                                   <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 flex items-center gap-0.5">
@@ -1471,22 +1500,24 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                                 ) : null}
                               </div>
 
-                              {isPrimaryRec && (
+                              {isLocked ? (
+                                <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-300/90">
+                                  <span>🔒 Inclus dans le modèle KONAN PRO</span>
+                                </div>
+                              ) : isPrimaryRec ? (
                                 <div className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-300">
                                   <Star className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0" />
                                   <span>Recommandé pour votre emploi du temps</span>
                                 </div>
-                              )}
-                              {!isPrimaryRec && isRecommended && (
+                              ) : isRecommended ? (
                                 <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400">
                                   <span>✓ Alternative conseillée</span>
                                 </div>
-                              )}
-                              {isNotRecommended && (
+                              ) : isNotRecommended ? (
                                 <div className="inline-flex items-center gap-1 text-[10px] text-rose-400/80">
                                   <span>⚠️ Déconseillé (journées trop denses)</span>
                                 </div>
-                              )}
+                              ) : null}
 
                               <p className="text-[11px] text-slate-300 line-clamp-2 leading-relaxed">
                                 <span className="font-semibold text-slate-400">En bref : </span>
@@ -1498,8 +1529,14 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                               <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700 text-cyan-300">
                                 {strategy.badge}
                               </span>
-                              <span className={`text-[10px] flex items-center gap-1 font-medium ${isSelected ? 'text-cyan-400 font-bold' : 'text-slate-400 hover:text-slate-200'}`}>
-                                {isSelected ? 'Sélectionné ✓' : 'Choisir →'}
+                              <span className={`text-[10px] flex items-center gap-1 font-medium ${
+                                isLocked 
+                                  ? 'text-amber-400 font-semibold' 
+                                  : isSelected 
+                                  ? 'text-cyan-400 font-bold' 
+                                  : 'text-slate-400 hover:text-slate-200'
+                              }`}>
+                                {isLocked ? 'Débloquer PRO ↗' : isSelected ? 'Sélectionné ✓' : 'Choisir →'}
                               </span>
                             </div>
                           </button>
@@ -1796,6 +1833,15 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           </div>
         </form>
       </Modal>
+
+      {/* PRO FEATURE MODAL */}
+      <ProFeatureModal
+        isOpen={Boolean(proModalInfo)}
+        onClose={() => setProModalInfo(null)}
+        featureTitle={proModalInfo?.title}
+        featureDescription={proModalInfo?.desc}
+        onViewPricing={onViewPricing}
+      />
 
     </div>
   );

@@ -1,4 +1,4 @@
-import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak } from '../types';
+import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier } from '../types';
 import { ACADEMIC_PRESETS, DEFAULT_PREFERENCES } from '../lib/presets';
 import { generateId } from '../lib/utils';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
@@ -20,6 +20,7 @@ export interface AppState {
   completedOnboarding: boolean;
   isDemoMode?: boolean;
   streak?: UserStreak;
+  planTier?: PlanTier;
 }
 
 /**
@@ -44,6 +45,7 @@ export function createEmptyUserState(
       ...user,
       isDemo: false,
       isLoggedIn: true,
+      planTier: user.planTier || 'free',
     },
     subjects: [],
     classSlots: [],
@@ -52,6 +54,7 @@ export function createEmptyUserState(
     logs: [],
     completedOnboarding: false,
     isDemoMode: false,
+    planTier: user.planTier || 'free',
     streak: {
       currentStreak: 0,
       bestStreak: 0,
@@ -131,12 +134,16 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
     const raw = localStorage.getItem(`${USER_STORAGE_PREFIX}${uid}`);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed) {
-        return {
-          ...parsed,
-          isDemoMode: false,
-        };
-      }
+      const planTier = parsed.planTier || parsed.userAccount?.planTier || 'free';
+      return {
+        ...parsed,
+        planTier,
+        userAccount: parsed.userAccount ? {
+          ...parsed.userAccount,
+          planTier,
+        } : undefined,
+        isDemoMode: false,
+      };
     }
   } catch (err) {
     console.warn(`Failed to load state for user ${uid}, creating empty state`, err);

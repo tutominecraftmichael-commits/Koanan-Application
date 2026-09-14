@@ -14,6 +14,7 @@ export interface PacingStrategyInfo {
   borderColor: string;
   bgColor: string;
   textColor: string;
+  planRequired: 'free' | 'pro';
 }
 
 export const PACING_STRATEGIES: PacingStrategyInfo[] = [
@@ -31,6 +32,7 @@ export const PACING_STRATEGIES: PacingStrategyInfo[] = [
     borderColor: 'border-rose-500/40',
     bgColor: 'bg-rose-950/20',
     textColor: 'text-rose-400',
+    planRequired: 'free',
   },
   {
     id: 'active_recall_spaced',
@@ -46,6 +48,7 @@ export const PACING_STRATEGIES: PacingStrategyInfo[] = [
     borderColor: 'border-cyan-500/40',
     bgColor: 'bg-cyan-950/20',
     textColor: 'text-cyan-400',
+    planRequired: 'free',
   },
   {
     id: 'feynman',
@@ -61,6 +64,7 @@ export const PACING_STRATEGIES: PacingStrategyInfo[] = [
     borderColor: 'border-purple-500/40',
     bgColor: 'bg-purple-950/20',
     textColor: 'text-purple-400',
+    planRequired: 'pro',
   },
   {
     id: 'time_blocking',
@@ -76,6 +80,7 @@ export const PACING_STRATEGIES: PacingStrategyInfo[] = [
     borderColor: 'border-indigo-500/40',
     bgColor: 'bg-indigo-950/20',
     textColor: 'text-indigo-400',
+    planRequired: 'pro',
   },
   {
     id: 'two_minutes_rule',
@@ -91,8 +96,17 @@ export const PACING_STRATEGIES: PacingStrategyInfo[] = [
     borderColor: 'border-emerald-500/40',
     bgColor: 'bg-emerald-950/20',
     textColor: 'text-emerald-400',
+    planRequired: 'free',
   },
 ];
+
+export const FREE_PACING_IDS: StudyPacing[] = ['pomodoro', 'active_recall_spaced', 'two_minutes_rule'];
+export const PRO_PACING_IDS: StudyPacing[] = ['feynman', 'time_blocking'];
+
+export function isPacingAllowedForPlan(id: StudyPacing | string, planTier: 'free' | 'pro' | 'plus' = 'free'): boolean {
+  if (planTier === 'pro' || planTier === 'plus') return true;
+  return FREE_PACING_IDS.includes(id as StudyPacing);
+}
 
 export function getPacingStrategy(id: StudyPacing | string): PacingStrategyInfo {
   // Normalize legacy values

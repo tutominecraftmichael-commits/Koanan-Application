@@ -18,6 +18,7 @@ import {
   Flame,
   GraduationCap
 } from 'lucide-react';
+import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 
 export interface SubjectManagerProps {
   subjects: Subject[];
@@ -25,6 +26,8 @@ export interface SubjectManagerProps {
   onTriggerPlanner: () => void;
   onOpenPresetModal?: () => void;
   isDemoMode?: boolean;
+  planTier?: 'free' | 'pro' | 'plus';
+  onViewPricing?: () => void;
 }
 
 const PRESET_COLORS = [
@@ -43,8 +46,11 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   onUpdateSubjects,
   onOpenPresetModal,
   isDemoMode = false,
+  planTier = 'free',
+  onViewPricing,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isProModalOpen, setIsProModalOpen] = useState(false);
   const [editingSubjectId, setEditingSubjectId] = useState<string | null>(null);
 
   const [name, setName] = useState('');
@@ -100,7 +106,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         coefficient,
         difficulty,
         targetGrade,
-        examDate: examDate || undefined,
+        examDate: planTier === 'free' ? undefined : (examDate || undefined),
         topics: parsedTopics.length > 0 ? parsedTopics : s.topics,
       } : s);
       onUpdateSubjects(updated);
@@ -113,7 +119,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         coefficient,
         difficulty,
         targetGrade,
-        examDate: examDate || undefined,
+        examDate: planTier === 'free' ? undefined : (examDate || undefined),
         topics: parsedTopics.length > 0 ? parsedTopics : ['Introduction & concepts clés', 'Exercices d’application'],
       };
       onUpdateSubjects([...subjects, newSub]);
@@ -436,12 +442,28 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
               onChange={(e) => setTargetGrade(Number(e.target.value))}
             />
 
-            <Input
-              label="Date Examen"
-              type="date"
-              value={examDate}
-              onChange={(e) => setExamDate(e.target.value)}
-            />
+            {planTier === 'free' ? (
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-300">
+                  Date Examen <span className="text-[10px] font-black text-amber-400 ml-1">⭐ KONAN PRO</span>
+                </label>
+                <div 
+                  onClick={() => setIsProModalOpen(true)}
+                  className="w-full bg-slate-900/60 border border-slate-800 hover:border-amber-500/40 rounded-xl px-3 py-2.5 text-xs text-slate-400 cursor-pointer flex items-center justify-between transition-colors"
+                  title="Disponible avec l'offre KONAN PRO"
+                >
+                  <span className="truncate">Priorisation automatique d'examen</span>
+                  <span className="text-[10px] font-bold text-amber-400 shrink-0 ml-1">🔒 PRO</span>
+                </div>
+              </div>
+            ) : (
+              <Input
+                label="Date Examen"
+                type="date"
+                value={examDate}
+                onChange={(e) => setExamDate(e.target.value)}
+              />
+            )}
           </div>
 
           <Input
@@ -472,6 +494,15 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
           </div>
         </form>
       </Modal>
+
+      {/* Pro Upgrade Modal */}
+      <ProFeatureModal
+        isOpen={isProModalOpen}
+        onClose={() => setIsProModalOpen(false)}
+        featureTitle="Dates d'examens & Priorisation Partiels (KONAN PRO)"
+        featureDescription="L'intégration des dates d'épreuves et l'adaptation intelligente de l'emploi du temps fait partie du modèle KONAN PRO. Vos matières, coefficients et notes cibles restent 100% opérationnels en illimité dans votre modèle Gratuit."
+        onViewPricing={onViewPricing}
+      />
 
     </div>
   );

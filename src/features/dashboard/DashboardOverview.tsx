@@ -40,6 +40,7 @@ export interface DashboardOverviewProps {
   onToggleSessionComplete: (sessionId: string) => void;
   onOpenPresetModal?: () => void;
   isDemoMode?: boolean;
+  planTier?: 'free' | 'pro' | 'plus';
 }
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
@@ -54,6 +55,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onToggleSessionComplete,
   onOpenPresetModal,
   isDemoMode = false,
+  planTier = 'free',
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -374,12 +376,28 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           
           {/* Upcoming Exam Countdown */}
           <Card className="border-slate-800 bg-slate-900/60 p-4 sm:p-6 space-y-3 sm:space-y-4">
-            <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <Target className="w-4 h-4 text-rose-400" />
-              Prochains Examens & Partiels
-            </h3>
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <Target className="w-4 h-4 text-rose-400" />
+                Prochains Examens & Partiels
+              </h3>
+              {planTier === 'free' && (
+                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
+                  ⭐ PRO
+                </span>
+              )}
+            </div>
 
-            {upcomingExams.length === 0 ? (
+            {planTier === 'free' ? (
+              <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-2 text-xs">
+                <p className="text-slate-300 leading-relaxed">
+                  Le compte à rebours et l'adaptation automatique du planning aux dates de partiels sont réservés à l'offre <strong>KONAN PRO</strong>.
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  Toutes vos matières et leurs coefficients sont déjà parfaitement intégrés dans votre planning d'étude gratuit.
+                </p>
+              </div>
+            ) : upcomingExams.length === 0 ? (
               <p className="text-xs text-slate-400 italic">Aucune date d'examen renseignée.</p>
             ) : (
               <div className="space-y-2.5">
