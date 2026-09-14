@@ -94,13 +94,6 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
               </div>
               
               <h3 className="text-2xl sm:text-3xl font-black text-white">KONAN</h3>
-              
-              {/* Highlighted Plan Explanation */}
-              <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/80 shadow-xs">
-                <p className="text-xs sm:text-sm text-slate-100 leading-relaxed font-medium">
-                  🎯 <strong>Pour qui ?</strong> Étudiants souhaitant organiser leurs cours et révisions de manière autonome sans risquer le surmenage.
-                </p>
-              </div>
             </div>
 
             {/* Price with Counter Animation */}
@@ -122,7 +115,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
               <ul className="space-y-3 text-xs sm:text-sm text-slate-200">
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Importation de votre EDT</strong> académique (PDF, photo ou manuel).</span>
+                  <span><strong>Importation de votre EDT</strong> académique à l'aide d'un tableau texte.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
@@ -180,7 +173,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
                   Performance & Concours
                 </span>
                 <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-200 border border-sky-400/40 font-bold">
-                  ⭐ Plus Populaire
+                  ⭐ Populaire
                 </span>
               </div>
               
@@ -188,13 +181,6 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
                 KONAN PRO
                 <Sparkles className="w-5 h-5 text-sky-400 animate-spin-slow" />
               </h3>
-              
-              {/* Highlighted Plan Explanation */}
-              <div className="p-3 rounded-xl bg-blue-950/90 border border-sky-400/50 shadow-xs">
-                <p className="text-xs sm:text-sm text-sky-100 leading-relaxed font-medium">
-                  ⚡ <strong>Pour qui ?</strong> Étudiants préparant activement leurs partiels et concours avec dates d'examens ciblées et rappels automatiques.
-                </p>
-              </div>
             </div>
 
             {/* Price with Rolling Counter Animation */}
@@ -280,13 +266,6 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
               <h3 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
                 KONAN PLUS
               </h3>
-              
-              {/* Highlighted Plan Explanation */}
-              <div className="p-3 rounded-xl bg-indigo-950/90 border border-indigo-500/50 shadow-xs">
-                <p className="text-xs sm:text-sm text-indigo-100 leading-relaxed font-medium">
-                  👑 <strong>Pour qui ?</strong> Étudiants visant l'excellence (12, 16 ou Major de promo) avec coaching quotidien personnalisé et débriefings.
-                </p>
-              </div>
             </div>
 
             {/* Price with Rolling Counter Animation */}
