@@ -64,12 +64,21 @@ function getFirebaseApp() {
   return initializeApp(config);
 }
 
+import { 
+  getFirestore, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  onSnapshot 
+} from 'firebase/firestore';
+
 export function isFirebaseConfigured(): boolean {
   return true;
 }
 
 export const app = getFirebaseApp();
 export const auth = getAuth(app);
+export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
   prompt: 'select_account'
@@ -330,3 +339,67 @@ export function onFirebaseAuthStateChange(callback: (user: FirebaseUser | null) 
   }
   return onAuthStateChanged(auth, callback);
 }
+
+let lastSyncedHashByUid: Record<string, string> = {};
+
+/**
+ * Persists user state directly to Cloud Firestore so all devices (PC, mobile, tablet)
+ * share the exact same schedule, subjects, and study plans.
+ */
+export async function syncUserStateToCloud(uid: string, data: any): Promise<void> {
+  if (!db || !uid) return;
+  try {
+    const userRef = doc(db, 'users', uid);
+    // Sanitize data (remove undefined fields that Firestore doesn't like)
+    const sanitized = JSON.parse(JSON.stringify(data));
+    const currentHash = JSON.stringify(sanitized);
+    if (lastSyncedHashByUid[uid] === currentHash) {
+      return;
+    }
+    lastSyncedHashByUid[uid] = currentHash;
+    await setDoc(userRef, {
+      ...sanitized,
+      lastSyncedAt: new Date().toISOString()
+    }, { merge: true });
+  } catch (err) {
+    console.warn('Firestore sync failed (offline or permissions):', err);
+  }
+}
+
+/**
+ * Loads the user state from Cloud Firestore.
+ */
+export async function loadUserStateFromCloud(uid: string): Promise<any | null> {
+  if (!db || !uid) return null;
+  try {
+    const userRef = doc(db, 'users', uid);
+    const snap = await getDoc(userRef);
+    if (snap.exists()) {
+      return snap.data();
+    }
+  } catch (err) {
+    console.warn('Firestore load failed (offline or permissions):', err);
+  }
+  return null;
+}
+
+/**
+ * Listens in real-time to Cloud Firestore user state updates across all connected devices.
+ */
+export function listenToUserCloudState(uid: string, onUpdate: (data: any) => void): () => void {
+  if (!db || !uid) return () => {};
+  try {
+    const userRef = doc(db, 'users', uid);
+    return onSnapshot(userRef, (snap) => {
+      if (snap.exists()) {
+        onUpdate(snap.data());
+      }
+    }, (err) => {
+      console.warn('Firestore snapshot listener warning:', err);
+    });
+  } catch (err) {
+    console.warn('Failed to attach Firestore listener:', err);
+    return () => {};
+  }
+}
+

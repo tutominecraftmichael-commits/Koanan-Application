@@ -1424,8 +1424,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       </span>
                     </div>
 
-                    {/* Contextual AI Recommendation Banner */}
-                    {pacingRecommendation && (
+                    {/* Contextual AI Recommendation Banner - RESERVED TO PRO / PLUS */}
+                    {planTier !== 'free' && pacingRecommendation ? (
                       <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-indigo-950/70 via-slate-900 to-indigo-950/40 border border-indigo-500/40 flex items-start gap-3 shadow-md">
                         <div className="p-2 rounded-xl bg-indigo-500/20 text-cyan-300 shrink-0 mt-0.5">
                           <Sparkles className="w-4 h-4 text-cyan-400" />
@@ -1444,15 +1444,32 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                           </p>
                         </div>
                       </div>
-                    )}
+                    ) : planTier === 'free' ? (
+                      <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                          <span>Les recommandations personnalisées de méthode selon votre emploi du temps sont réservées au modèle <strong>KONAN PRO</strong>.</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => onViewPricing ? onViewPricing() : setProModalInfo({
+                            title: "Recommandations Intelligentes KONAN PRO",
+                            desc: "Sur KONAN PRO, notre algorithme analyse en détail les heures de fin de vos cours et le volume de vos matières pour vous recommander automatiquement la méthode d'espacement optimale."
+                          })}
+                          className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 cursor-pointer hover:bg-amber-500/30 transition-colors ml-2"
+                        >
+                          ⭐ Découvrir PRO
+                        </button>
+                      </div>
+                    ) : null}
 
                     {/* 5 Interactive Strategy Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                       {PACING_STRATEGIES.map((strategy) => {
                         const isSelected = selectedPacing === strategy.id;
-                        const isPrimaryRec = pacingRecommendation?.primaryId === strategy.id;
-                        const isRecommended = pacingRecommendation?.recommendedIds.includes(strategy.id);
-                        const isNotRecommended = pacingRecommendation?.notRecommendedIds?.includes(strategy.id);
+                        const isPrimaryRec = planTier !== 'free' && pacingRecommendation?.primaryId === strategy.id;
+                        const isRecommended = planTier !== 'free' && pacingRecommendation?.recommendedIds.includes(strategy.id);
+                        const isNotRecommended = planTier !== 'free' && pacingRecommendation?.notRecommendedIds?.includes(strategy.id);
                         const isProMethod = strategy.planRequired === 'pro';
                         const isLocked = isProMethod && planTier === 'free';
 

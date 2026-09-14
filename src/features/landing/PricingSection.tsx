@@ -134,12 +134,15 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-semibold text-white">Modèles d'espacement Freemium :</span>
+                    <span className="font-semibold text-white">Techniques d'espacement Freemium :</span>
                     <ul className="mt-1.5 space-y-1 pl-1 text-xs text-slate-300 border-l border-slate-800 ml-1">
                       <li className="pl-2">• Technique Pomodoro classique</li>
                       <li className="pl-2">• Active Recall & Spaced Repetition (Répétition espacée)</li>
                       <li className="pl-2">• La technique des 2 minutes</li>
                     </ul>
+                    <p className="text-[11px] text-slate-400 mt-1.5 italic">
+                      (Choix libre en toute autonomie — sans recommandation algorithmique de Konan)
+                    </p>
                   </div>
                 </li>
               </ul>
@@ -227,7 +230,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Sparkles className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Recommandations de Konan :</strong> Conseils personnalisés de Konan pour choisir la meilleure méthode ou combinaison adaptée à chaque matière.</span>
+                  <span><strong>Recommandations de Konan :</strong> Recommandations intelligentes et personnalisées de la meilleure technique d'espacement selon la fatigue et les heures de fin de vos cours (Idéal ⭐, Conseillé, Déconseillé selon la densité de vos journées).</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />

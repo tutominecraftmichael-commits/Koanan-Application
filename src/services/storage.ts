@@ -165,8 +165,11 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
   return emptyState;
 }
 
+import { syncUserStateToCloud, loadUserStateFromCloud } from '../lib/firebase';
+
 /**
- * Saves a real user's private state to localStorage.
+ * Saves a real user's private state to localStorage and syncs to Cloud Firestore
+ * so all devices (PC, mobile, tablet) share the exact same timetable and subjects.
  */
 export function saveUserState(uid: string, state: AppState): void {
   try {
@@ -174,6 +177,59 @@ export function saveUserState(uid: string, state: AppState): void {
   } catch (err) {
     console.error(`Failed to persist user state for ${uid}`, err);
   }
+
+  // Cross-device Cloud Sync
+  if (!state.isDemoMode && uid && uid !== 'google-demo') {
+    syncUserStateToCloud(uid, {
+      studentName: state.studentName,
+      academicLevel: state.academicLevel,
+      planTier: state.planTier || 'free',
+      subjects: state.subjects,
+      classSlots: state.classSlots,
+      preferences: state.preferences,
+      studySessions: state.studySessions,
+      logs: state.logs,
+      completedOnboarding: state.completedOnboarding,
+      userAccount: state.userAccount,
+    }).catch(() => {});
+  }
+}
+
+/**
+ * Fetches user data from Cloud Firestore and merges into local state.
+ * Solves cross-device desync between phone and PC.
+ */
+export async function fetchAndMergeCloudState(uid: string, currentState: AppState): Promise<AppState> {
+  if (!uid || uid === 'google-demo') return currentState;
+  try {
+    const cloudData = await loadUserStateFromCloud(uid);
+    if (cloudData && (cloudData.subjects?.length > 0 || cloudData.completedOnboarding || cloudData.studentName)) {
+      const merged: AppState = {
+        ...currentState,
+        studentName: cloudData.studentName || currentState.studentName,
+        academicLevel: cloudData.academicLevel || currentState.academicLevel,
+        planTier: cloudData.planTier || currentState.planTier || 'free',
+        completedOnboarding: cloudData.completedOnboarding ?? currentState.completedOnboarding,
+        subjects: cloudData.subjects || currentState.subjects,
+        classSlots: cloudData.classSlots || currentState.classSlots,
+        preferences: cloudData.preferences ? { ...currentState.preferences, ...cloudData.preferences } : currentState.preferences,
+        studySessions: cloudData.studySessions || currentState.studySessions,
+        logs: cloudData.logs || currentState.logs,
+        userAccount: currentState.userAccount ? {
+          ...currentState.userAccount,
+          planTier: cloudData.planTier || currentState.planTier || 'free',
+          name: cloudData.studentName || currentState.userAccount.name,
+        } : undefined,
+      };
+      try {
+        localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(merged));
+      } catch {}
+      return merged;
+    }
+  } catch (err) {
+    console.warn('Could not merge cloud state:', err);
+  }
+  return currentState;
 }
 
 /**

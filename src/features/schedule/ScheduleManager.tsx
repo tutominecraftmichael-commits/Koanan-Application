@@ -1104,8 +1104,28 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             Découvrez chaque méthode d'espacement et son fonctionnement neuroscientifique. Cliquez sur une méthode pour lire son explication détaillée et l'appliquer à vos séances d'étude.
           </p>
 
-          {/* AI Recommendation Context Box */}
+          {/* AI Recommendation Context Box - RESERVED TO PRO / PLUS */}
           {(() => {
+            if (planTier === 'free') {
+              return (
+                <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span>Les recommandations personnalisées selon votre emploi du temps sont réservées à <strong>KONAN PRO</strong>.</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsStrategyModalOpen(false);
+                      if (onViewPricing) onViewPricing();
+                    }}
+                    className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 cursor-pointer hover:bg-amber-500/30 transition-colors ml-2"
+                  >
+                    ⭐ Découvrir PRO
+                  </button>
+                </div>
+              );
+            }
             const rec = recommendPacingStrategies(subjects.length, classSlots);
             return (
               <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-950/60 via-slate-900 to-indigo-950/40 border border-indigo-500/40 flex items-start gap-3 shadow-md text-xs">
@@ -1136,9 +1156,9 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               return PACING_STRATEGIES.map(s => {
                 const isCurrent = (selectedModalStrategy === s.id);
                 const isActiveInPrefs = (preferences.pacing === s.id);
-                const isPrimaryRec = (rec.primaryId === s.id);
-                const isRecommended = rec.recommendedIds.includes(s.id);
-                const isNotRecommended = rec.notRecommendedIds?.includes(s.id);
+                const isPrimaryRec = planTier !== 'free' && (rec.primaryId === s.id);
+                const isRecommended = planTier !== 'free' && rec.recommendedIds.includes(s.id);
+                const isNotRecommended = planTier !== 'free' && rec.notRecommendedIds?.includes(s.id);
                 const isProMethod = s.planRequired === 'pro';
                 const isLocked = isProMethod && planTier === 'free';
 

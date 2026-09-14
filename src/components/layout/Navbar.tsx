@@ -68,8 +68,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), icon: Layers },
     { id: 'schedule' as ActiveAppView, label: t('navSchedule', lang), icon: Calendar },
-    { id: 'subjects' as ActiveAppView, label: 'Matières & Coeffs', icon: BookOpen },
-    { id: 'planner' as ActiveAppView, label: t('navAiRevision', lang), icon: Clock },
+    { id: 'subjects' as ActiveAppView, label: lang === 'fr' ? 'Matières' : 'Subjects', icon: BookOpen },
+    { id: 'planner' as ActiveAppView, label: lang === 'fr' ? 'Planning' : 'Study Plan', icon: Clock },
     { id: 'analytics' as ActiveAppView, label: t('navAnalytics', lang), icon: BarChart3 },
   ];
 
@@ -83,7 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-16 sm:h-[68px] gap-2 lg:gap-4">
           
           {/* Logo & Brand */}
-          <div className="flex items-center gap-3 lg:gap-5 min-w-0">
+          <div className="flex items-center shrink-0">
             <button
               onClick={() => onNavigate('landing')}
               className="flex items-center gap-2.5 sm:gap-3 group text-left cursor-pointer focus:outline-none shrink-0"
@@ -106,37 +106,37 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <p className="text-[10px] sm:text-[11px] text-slate-400 hidden sm:block truncate">Compagnon Académique</p>
               </div>
             </button>
-
-            {/* Desktop Navigation Links */}
-            {activeView !== 'landing' && activeView !== 'auth' && (
-              <nav className="hidden lg:flex items-center gap-1 bg-slate-900/70 p-1 rounded-xl border border-slate-800/80">
-                {navItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeView === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        if (!userAccount?.isLoggedIn && !isDemoMode) {
-                          onNavigate('auth');
-                        } else {
-                          onNavigate(item.id);
-                        }
-                      }}
-                      className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                        isActive
-                          ? 'bg-blue-600 text-white shadow-sm shadow-blue-900/40'
-                          : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
-                      }`}
-                    >
-                      <Icon className="w-3.5 h-3.5 shrink-0" />
-                      <span className="whitespace-nowrap">{item.label}</span>
-                    </button>
-                  );
-                })}
-              </nav>
-            )}
           </div>
+
+          {/* Desktop Navigation Links - Centered, shrink-0, perfectly spaced */}
+          {activeView !== 'landing' && activeView !== 'auth' && (
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 bg-slate-900/80 p-1 rounded-xl border border-slate-800/80 shrink-0 mx-2 shadow-xs">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeView === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      if (!userAccount?.isLoggedIn && !isDemoMode) {
+                        onNavigate('auth');
+                      } else {
+                        onNavigate(item.id);
+                      }
+                    }}
+                    className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
+                      isActive
+                        ? 'bg-blue-600 text-white shadow-sm shadow-blue-900/40'
+                        : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5 shrink-0" />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          )}
 
           {/* Right Action Controls */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
@@ -148,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={onOpenSettings}
                     title={t('navSettings', lang)}
                     aria-label={t('navSettings', lang)}
-                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/80 border border-slate-800 hover:border-indigo-500/60 hover:bg-slate-800/80 text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xs ml-1 sm:ml-1.5 shrink-0 group"
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/80 border border-slate-800 hover:border-indigo-500/60 hover:bg-slate-800/80 text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 group"
                   >
                     <Settings className="w-4 h-4 text-indigo-400 group-hover:rotate-45 transition-transform duration-300" />
                   </button>

@@ -12,11 +12,12 @@ import {
   getActiveSession,
   setActiveSession,
   exportStateToJson,
-  importStateFromJson 
+  importStateFromJson,
+  fetchAndMergeCloudState
 } from './services/storage';
 import { generateOptimizedStudyPlan } from './services/plannerAlgorithm';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
-import { onFirebaseAuthStateChange, signOutReal } from './lib/firebase';
+import { onFirebaseAuthStateChange, signOutReal, listenToUserCloudState } from './lib/firebase';
 import type { 
   ActiveAppView, 
   Subject, 
@@ -63,9 +64,11 @@ export function App() {
     saveAppState(state);
   }, [state]);
 
-  // Listen to Firebase auth state changes on mount
+  // Listen to Firebase auth state changes on mount and sync with Cloud Firestore
   useEffect(() => {
-    const unsubscribe = onFirebaseAuthStateChange((firebaseUser) => {
+    let unsubscribeCloudListener: (() => void) | null = null;
+
+    const unsubscribeAuth = onFirebaseAuthStateChange(async (firebaseUser) => {
       if (firebaseUser) {
         // User is logged into Firebase
         const session = getActiveSession();
@@ -81,11 +84,50 @@ export function App() {
             lastSyncedAt: new Date().toISOString(),
           });
           setState(loaded);
+
+          // 1. Cross-device sync: fetch latest Firestore cloud state
+          const synced = await fetchAndMergeCloudState(firebaseUser.uid, loaded);
+          setState(synced);
+
+          // 2. Real-time multi-device synchronization
+          if (unsubscribeCloudListener) unsubscribeCloudListener();
+          unsubscribeCloudListener = listenToUserCloudState(firebaseUser.uid, (cloudData) => {
+            if (cloudData) {
+              setState(prev => {
+                if (prev.isDemoMode) return prev;
+                return {
+                  ...prev,
+                  studentName: cloudData.studentName || prev.studentName,
+                  academicLevel: cloudData.academicLevel || prev.academicLevel,
+                  planTier: cloudData.planTier || prev.planTier || 'free',
+                  completedOnboarding: cloudData.completedOnboarding ?? prev.completedOnboarding,
+                  subjects: cloudData.subjects || prev.subjects,
+                  classSlots: cloudData.classSlots || prev.classSlots,
+                  preferences: cloudData.preferences ? { ...prev.preferences, ...cloudData.preferences } : prev.preferences,
+                  studySessions: cloudData.studySessions || prev.studySessions,
+                  logs: cloudData.logs || prev.logs,
+                  userAccount: prev.userAccount ? {
+                    ...prev.userAccount,
+                    planTier: cloudData.planTier || prev.planTier || 'free',
+                    name: cloudData.studentName || prev.userAccount.name,
+                  } : undefined,
+                };
+              });
+            }
+          });
+        }
+      } else {
+        if (unsubscribeCloudListener) {
+          unsubscribeCloudListener();
+          unsubscribeCloudListener = null;
         }
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeCloudListener) unsubscribeCloudListener();
+    };
   }, []);
 
   const showToast = (msg: string) => {
@@ -120,8 +162,8 @@ export function App() {
    * Real Google / Custom Profile Login Success:
    * Strictly isolates real user data (ZERO demo courses, clean workspace)
    */
-  const handleLoginSuccess = (profile: UserAccount, preferences?: { chronotype: Chronotype }) => {
-    const userState = loadUserState(profile.googleId, profile);
+  const handleLoginSuccess = async (profile: UserAccount, preferences?: { chronotype: Chronotype }) => {
+    let userState = loadUserState(profile.googleId, profile);
     
     // Retain previously saved student name if customized, or use profile.name
     const finalName = userState.studentName || profile.name || 'Étudiant';
@@ -148,6 +190,10 @@ export function App() {
       isDemo: false,
     };
     userState.isDemoMode = false;
+
+    // Cross-device sync: merge any data saved from other devices (e.g. mobile or PC)
+    const mergedFromCloud = await fetchAndMergeCloudState(profile.googleId, userState);
+    userState = mergedFromCloud;
 
     saveUserState(profile.googleId, userState);
     setState(userState);
