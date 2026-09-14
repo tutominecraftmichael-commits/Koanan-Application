@@ -61,7 +61,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
         }`}
       >
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700 text-slate-300 text-xs font-semibold tracking-wide uppercase shadow-sm">
-          <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+          <img src="/konan-logo.png" alt="KONAN" className="w-4 h-4 object-contain rounded-full" />
           <span>Formules & Modèles d'Accompagnement</span>
         </div>
         <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">

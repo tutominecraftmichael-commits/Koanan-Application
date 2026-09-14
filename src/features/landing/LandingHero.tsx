@@ -52,10 +52,23 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         {/* HERO HEADER */}
         <div className="text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto pt-2 sm:pt-6">
           
+          {/* Official Konan 3D Logo Emblem */}
+          <div className="flex justify-center pb-1">
+            <div className="relative group">
+              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 opacity-50 blur-lg group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2px] bg-slate-950 border border-sky-400/40 shadow-2xl shadow-sky-500/20 flex items-center justify-center overflow-hidden">
+                <img
+                  src="/konan-logo.png"
+                  alt="Logo Officiel KONAN"
+                  className="w-full h-full object-contain rounded-full"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Release Badge - Luxurious interactive pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel border border-blue-500/30 text-blue-200 text-[11px] sm:text-xs font-semibold shadow-lg shadow-blue-950/30 interactive-pill max-w-full text-center">
             <span className="flex h-2 w-2 rounded-full bg-sky-400 animate-ping shrink-0" />
-            <Sparkles className="w-3.5 h-3.5 text-sky-400 shrink-0" />
             <span className="break-words">Méthode Pédagogique Active & Répétition Espacée</span>
           </div>
 

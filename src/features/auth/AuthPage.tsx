@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Sparkles, 
   ArrowLeft, 
   AlertCircle, 
   GraduationCap,
@@ -255,10 +254,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
           {/* Header */}
           <div className="text-center space-y-2 relative z-10">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-400 p-[1px] mx-auto shadow-lg shadow-indigo-500/25">
-              <div className="w-full h-full bg-slate-950 rounded-[15px] flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-cyan-400" />
-              </div>
+            <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 mx-auto shadow-xl shadow-sky-500/25 flex items-center justify-center overflow-hidden">
+              <img
+                src="/konan-logo.png"
+                alt="Logo Officiel KONAN"
+                className="w-full h-full object-contain rounded-full bg-slate-950/80"
+              />
             </div>
 
             <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight pt-1">

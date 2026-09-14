@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  Sparkles, 
   Calendar, 
   Clock, 
   BookOpen, 
@@ -90,10 +89,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-2.5 sm:gap-3 group text-left cursor-pointer focus:outline-none shrink-0"
               title="Retour à l'accueil KONAN"
             >
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-sky-400 p-[1px] shadow-md shadow-blue-950/40 group-hover:scale-105 transition-transform duration-200 shrink-0">
-                <div className="w-full h-full bg-slate-950 rounded-[11px] flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-sky-400" />
-                </div>
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0 flex items-center justify-center overflow-hidden">
+                <img
+                  src="/konan-logo.png"
+                  alt="Logo Officiel KONAN"
+                  className="w-full h-full object-contain rounded-full bg-slate-950/80"
+                />
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
