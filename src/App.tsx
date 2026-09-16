@@ -59,6 +59,7 @@ export function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const lastRescheduledSignature = useRef<string>('');
 
   // Persist state whenever it changes
   useEffect(() => {
@@ -80,8 +81,14 @@ export function App() {
         );
 
         if (rescheduledCount > 0) {
-          const first = rescheduledSessions[0];
-          showToast(`🔄 Konan a adapté votre journée : session replacée à ${first.startTime} ce soir pour rattrapage !`);
+          const signature = rescheduledSessions.map(s => `${s.id}-${s.startTime}`).sort().join('|');
+          if (signature !== lastRescheduledSignature.current) {
+            lastRescheduledSignature.current = signature;
+            const detailMsg = rescheduledSessions.length === 1
+              ? `🔄 Planning réorganisé : "${rescheduledSessions[0].title}" a été replacée à ${rescheduledSessions[0].startTime} ce soir pour rattrapage.`
+              : `🔄 Planning réorganisé : ${rescheduledSessions.length} sessions non validées replacées ce soir pour rattrapage.`;
+            showToast(detailMsg);
+          }
           return {
             ...prev,
             studySessions: updatedSessions,
@@ -89,6 +96,7 @@ export function App() {
         }
 
         if (restoredCount > 0) {
+          lastRescheduledSignature.current = '';
           return {
             ...prev,
             studySessions: updatedSessions,

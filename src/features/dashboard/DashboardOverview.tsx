@@ -10,7 +10,7 @@ import { DAYS_OF_WEEK } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
-import { formatMinutesToHours, getDaysRemaining } from '../../lib/utils';
+import { formatMinutesToHours, getDaysRemaining, parseTimeToMinutes } from '../../lib/utils';
 import { 
   Sparkles, 
   Calendar, 
@@ -21,7 +21,10 @@ import {
   ArrowRight, 
   TrendingUp,
   FileText,
-  GraduationCap
+  GraduationCap,
+  AlertCircle,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
@@ -62,20 +65,44 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
 
-  const currentDayIndex = (new Date().getDay() + 6) % 7;
+  const [showCompletedSessions, setShowCompletedSessions] = useState(false);
+
+  const now = new Date();
+  const currentDayIndex = (now.getDay() + 6) % 7;
+  const currentMinute = now.getHours() * 60 + now.getMinutes();
   const currentDayInfo = DAYS_OF_WEEK.find(d => d.id === currentDayIndex) || DAYS_OF_WEEK[0];
 
   const todaysClasses = classSlots
     .filter(c => c.dayOfWeek === currentDayIndex)
     .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-  const todaysStudySessions = studySessions
-    .filter(s => s.dayOfWeek === currentDayIndex)
+  const allTodaysStudySessions = studySessions
+    .filter(s => s.dayOfWeek === currentDayIndex);
+
+  // Sessions en rattrapage aujourd'hui
+  const rescheduledTodaySessions = allTodaysStudySessions.filter(s => s.isRescheduledToday && !s.completed);
+
+  // Sessions terminées aujourd'hui
+  const completedTodaySessions = allTodaysStudySessions.filter(s => s.completed);
+
+  // SESSIONS ACTIVES DU TABLEAU DE BORD (Règle d'or de l'utilisateur) :
+  // Lorsqu'une heure n'a pas été respectée, ne plus l'afficher à son ancienne heure dépassée.
+  // Afficher uniquement les séances à venir ou replacées pour rattrapage, strictement ordonnées chronologiquement.
+  const activeDisplaySessions = allTodaysStudySessions
+    .filter(s => {
+      if (s.completed) return false;
+      const endMin = parseTimeToMinutes(s.endTime);
+      // Maintenir uniquement si l'heure n'est pas expirée ou si c'est un créneau replacé actif
+      return endMin >= currentMinute || s.isRescheduledToday;
+    })
     .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-  const rescheduledTodaySessions = todaysStudySessions.filter(s => s.isRescheduledToday);
-  const nextStudySession = todaysStudySessions.find(s => !s.completed) || studySessions.find(s => !s.completed);
-  const completedToday = todaysStudySessions.filter(s => s.completed).length;
+  // Prochaine session chronologique exacte :
+  // Toujours la 1ère session active chronologiquement (ex: 19h30 avant un rattrapage à 22h00)
+  const nextStudySession = activeDisplaySessions[0] || allTodaysStudySessions.find(s => !s.completed);
+  const completedToday = completedTodaySessions.length;
+  const totalMissedMinutes = rescheduledTodaySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
+  const totalMissedHoursText = formatMinutesToHours(totalMissedMinutes);
 
   const upcomingExams = subjects
     .filter(s => s.examDate)
@@ -98,8 +125,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
               Votre cursus <strong className="text-white">{academicLevel}</strong> est synchronisé en temps réel.
-              {todaysStudySessions.length > 0
-                ? ` ${todaysStudySessions.length} session(s) d'étude prévues aujourd'hui.`
+              {allTodaysStudySessions.length > 0
+                ? ` ${activeDisplaySessions.length} session(s) active(s) aujourd'hui (${completedToday} terminée(s)).`
                 : ` Journée d'assimilation libre.`}
             </p>
           </div>
@@ -113,7 +140,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     Prochaine Session
                   </span>
                   {nextStudySession.isRescheduledToday && (
-                    <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0">
+                    <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold animate-pulse">
                       🔄 Rattrapage ce soir
                     </Badge>
                   )}
@@ -126,13 +153,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </p>
               </div>
               <Button
-                variant="glow"
+                variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
                 size="sm"
                 leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
                 onClick={() => onStartFocus(nextStudySession)}
-                className="w-full sm:w-auto cursor-pointer text-xs font-bold whitespace-nowrap py-2.5 px-4 hover:scale-105 active:scale-95 transition-transform shrink-0"
+                className={`w-full sm:w-auto cursor-pointer text-xs font-bold whitespace-nowrap py-2.5 px-4 hover:scale-105 active:scale-95 transition-transform shrink-0 ${
+                  nextStudySession.isRescheduledToday
+                    ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-lg shadow-amber-600/20'
+                    : ''
+                }`}
               >
-                Démarrer Focus
+                {nextStudySession.isRescheduledToday ? '⚡ Rattraper (Chrono)' : 'Démarrer Focus'}
               </Button>
             </div>
           )}
@@ -290,49 +321,104 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                  Sessions d'Étude ({completedToday}/{todaysStudySessions.length} faites)
+                  Sessions d'Étude ({completedToday}/{allTodaysStudySessions.length} faites)
                 </span>
+                {rescheduledTodaySessions.length > 0 && (
+                  <span className="text-[10px] font-bold text-amber-300 uppercase">
+                    {rescheduledTodaySessions.length} à rattraper
+                  </span>
+                )}
               </div>
 
-              {/* Daily Catch-up Rescheduled Banner */}
+              {/* Daily Catch-up Rescheduled Banner with Clear Breakdown */}
               {rescheduledTodaySessions.length > 0 && (
-                <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-indigo-950/40 border border-amber-500/40 shadow-md flex items-start justify-between gap-3 text-xs">
-                  <div className="flex items-start gap-2.5 min-w-0">
-                    <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
-                      <Sparkles className="w-4 h-4 text-amber-400" />
-                    </div>
-                    <div className="space-y-1 min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-amber-300 uppercase tracking-wide text-[11px]">
-                          🔄 Réaménagement intelligent activé ({rescheduledTodaySessions.length})
-                        </span>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 border border-amber-500/40">
-                          Rattrapage du jour
-                        </span>
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-indigo-950/50 border border-amber-500/50 shadow-xl space-y-3.5 text-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-start gap-2.5 min-w-0">
+                      <div className="p-2 rounded-xl bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
+                        <AlertCircle className="w-5 h-5 text-amber-400" />
                       </div>
-                      <p className="text-slate-300 text-xs leading-relaxed">
-                        {rescheduledTodaySessions[0].rescheduledReason || `Créneau initial passé. Session replacée à ${rescheduledTodaySessions[0].startTime} ce soir pour rattrapage.`}
-                      </p>
-                      <p className="text-[10px] text-slate-400 italic">
-                        Ce réaménagement est éphémère et s'applique uniquement à aujourd'hui. Vos horaires récurrents des semaines futures restent intacts.
-                      </p>
+                      <div className="space-y-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-extrabold text-amber-300 uppercase tracking-wide text-xs">
+                            ⚠️ Réaménagement intelligent : {rescheduledTodaySessions.length} session(s) non validée(s)
+                          </span>
+                          <Badge variant="amber" size="sm" className="font-bold px-2 py-0.5 animate-pulse">
+                            {totalMissedHoursText} à rattraper aujourd'hui
+                          </Badge>
+                        </div>
+                        <p className="text-slate-300 text-xs leading-relaxed">
+                          Vos créneaux non respectés ont été replacés pour ce soir afin de ne perdre aucune heure de révision.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                      {/* Clic sur Rétablir / Rattraper = Chrono Spécial Rattrapage */}
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
+                        onClick={() => onStartFocus(rescheduledTodaySessions[0])}
+                        className="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs py-2 px-3.5 shadow-lg shadow-amber-600/30 cursor-pointer hover:scale-105 active:scale-95 transition-all"
+                        title="Démarrer le chrono de révision spécial rattrapage"
+                      >
+                        ⚡ Rétablir & Rattraper (Chrono)
+                      </Button>
+                      {onResetDailyCatchup && (
+                        <button
+                          onClick={onResetDailyCatchup}
+                          className="px-2.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold shrink-0 cursor-pointer transition-colors"
+                          title="Rétablir les horaires initiaux de base sans lancer le chrono"
+                        >
+                          Horaires de base
+                        </button>
+                      )}
                     </div>
                   </div>
-                  {onResetDailyCatchup && (
-                    <button
-                      onClick={onResetDailyCatchup}
-                      className="px-2.5 py-1 rounded-lg bg-slate-850 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-[10px] font-bold shrink-0 cursor-pointer transition-colors"
-                      title="Rétablir les horaires initiaux de base"
-                    >
-                      Rétablir
-                    </button>
-                  )}
+
+                  {/* DÉTAIL CLAIR DE CE QUI N'A PAS ÉTÉ VALIDÉ */}
+                  <div className="space-y-1.5 pt-2 border-t border-slate-800/80">
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                      Détail des séances à rattraper :
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {rescheduledTodaySessions.map(s => {
+                        return (
+                          <div
+                            key={s.id}
+                            className="p-2.5 rounded-xl bg-slate-950/60 border border-amber-500/30 flex items-center justify-between gap-2 text-xs"
+                          >
+                            <div className="min-w-0 flex-1">
+                              <p className="font-bold text-white truncate">{s.title}</p>
+                              <p className="text-[11px] text-slate-400">
+                                Horaire initial : <span className="line-through text-rose-400 font-mono font-bold">{s.originalStartTime || 'matin'}</span>
+                                <span className="text-amber-300 font-mono font-bold ml-1.5">➔ Replacée à {s.startTime}</span>
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => onStartFocus(s)}
+                              className="p-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 cursor-pointer shrink-0 transition-colors"
+                              title="Lancer le chrono spécial rattrapage"
+                            >
+                              <Play className="w-3.5 h-3.5 fill-current" />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
               )}
 
-              {todaysStudySessions.length === 0 ? (
+              {/* SESSIONS ACTIVES & RATTRAPAGES EN ORDRE CHRONOLOGIQUE STRICT */}
+              {activeDisplaySessions.length === 0 ? (
                 <Card className="text-center py-6 sm:py-8 border-slate-800 bg-slate-900/40">
-                  <p className="text-xs text-slate-400">Aucune session d'étude aujourd'hui.</p>
+                  <p className="text-xs text-slate-400">
+                    {completedToday > 0 
+                      ? '✨ Bravo ! Toutes vos sessions prévues aujourd’hui sont complétées.'
+                      : 'Aucune session d’étude active pour aujourd’hui.'}
+                  </p>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -343,25 +429,26 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   </Button>
                 </Card>
               ) : (
-                todaysStudySessions.map(session => {
+                activeDisplaySessions.map(session => {
                   const sub = subjects.find(s => s.id === session.subjectId);
+                  const isRescheduled = Boolean(session.isRescheduledToday);
                   return (
                     <div
                       key={session.id}
                       className={`p-3.5 sm:p-4 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                        session.completed
-                          ? 'bg-slate-900/30 border-slate-800/80 opacity-70'
+                        isRescheduled
+                          ? 'bg-gradient-to-r from-slate-900 via-amber-950/20 to-slate-900 border-amber-500/40 shadow-lg shadow-amber-950/20'
                           : 'bg-slate-900/80 border-slate-700/80 hover:border-indigo-500/50 shadow-md'
                       }`}
-                      style={{ borderLeftColor: sub?.color || '#6366F1', borderLeftWidth: '4px' }}
+                      style={{ borderLeftColor: isRescheduled ? '#F59E0B' : (sub?.color || '#6366F1'), borderLeftWidth: '4px' }}
                     >
                       <div className="space-y-1.5 min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="text-[11px] font-mono font-bold text-cyan-400">
                             {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                           </span>
-                          {session.isRescheduledToday && (
-                            <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold" title={session.rescheduledReason}>
+                          {isRescheduled && (
+                            <Badge variant="amber" size="sm" className="text-[10px] px-2 py-0.5 font-bold animate-pulse" title={session.rescheduledReason}>
                               🔄 Rattrapage (Init. {session.originalStartTime})
                             </Badge>
                           )}
@@ -382,7 +469,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           </button>
                         </div>
 
-                        <h4 className={`text-xs sm:text-sm font-bold text-white break-words leading-snug ${session.completed ? 'line-through text-slate-400' : ''}`}>
+                        <h4 className="text-xs sm:text-sm font-bold text-white break-words leading-snug">
                           {session.title}
                         </h4>
                         <p className="text-[11px] sm:text-xs text-slate-400 break-words leading-snug">{sub?.name}</p>
@@ -391,31 +478,72 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       <div className="flex items-center gap-2 self-stretch sm:self-center justify-end shrink-0 pt-2 sm:pt-0 border-t border-slate-800/60 sm:border-t-0">
                         <button
                           onClick={() => onToggleSessionComplete(session.id)}
-                          className={`flex-1 sm:flex-initial px-3 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer min-h-[38px] ${
-                            session.completed
-                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                              : 'bg-slate-800 text-slate-300 border-slate-700 hover:text-white'
-                          }`}
+                          className="flex-1 sm:flex-initial px-3 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer min-h-[38px] bg-slate-800 text-slate-300 border-slate-700 hover:text-white"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>{session.completed ? 'Fait' : 'Valider'}</span>
+                          <span>Valider</span>
                         </button>
 
-                        {!session.completed && (
-                          <Button
-                            variant="glow"
-                            size="sm"
-                            leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
-                            onClick={() => onStartFocus(session)}
-                            className="flex-1 sm:flex-initial cursor-pointer text-xs py-2 px-3.5 min-h-[38px] flex items-center justify-center"
-                          >
-                            Lancer
-                          </Button>
-                        )}
+                        <Button
+                          variant={isRescheduled ? "secondary" : "glow"}
+                          size="sm"
+                          leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
+                          onClick={() => onStartFocus(session)}
+                          className={`flex-1 sm:flex-initial cursor-pointer text-xs py-2 px-3.5 min-h-[38px] flex items-center justify-center font-bold ${
+                            isRescheduled
+                              ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
+                              : ''
+                          }`}
+                        >
+                          {isRescheduled ? '⚡ Rattraper (Chrono)' : 'Lancer'}
+                        </Button>
                       </div>
                     </div>
                   );
                 })
+              )}
+
+              {/* SÉANCES DÉJÀ VALIDÉES AUJOURD'HUI (RÉDUITES / REPLIABLES) */}
+              {completedTodaySessions.length > 0 && (
+                <div className="pt-2">
+                  <button
+                    onClick={() => setShowCompletedSessions(!showCompletedSessions)}
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold cursor-pointer transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <span>Séances validées aujourd'hui ({completedTodaySessions.length})</span>
+                    </div>
+                    {showCompletedSessions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </button>
+
+                  {showCompletedSessions && (
+                    <div className="mt-2 space-y-2 pl-2">
+                      {completedTodaySessions.map(session => {
+                        const sub = subjects.find(s => s.id === session.subjectId);
+                        return (
+                          <div
+                            key={session.id}
+                            className="p-3 rounded-xl bg-slate-950/40 border border-slate-850 opacity-75 flex items-center justify-between gap-3 text-xs"
+                            style={{ borderLeftColor: sub?.color || '#10B981', borderLeftWidth: '3px' }}
+                          >
+                            <div className="min-w-0 flex-1">
+                              <p className="line-through text-slate-300 font-semibold truncate">{session.title}</p>
+                              <p className="text-[11px] text-slate-500 font-mono">{session.startTime} - {session.endTime} ({session.durationMinutes} min)</p>
+                            </div>
+                            <button
+                              onClick={() => onToggleSessionComplete(session.id)}
+                              className="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white text-[10px]"
+                              title="Décocher"
+                            >
+                              Annuler
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
 

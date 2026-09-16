@@ -147,6 +147,8 @@ export const FocusMode: React.FC<FocusModeProps> = ({
   const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   const progressPercent = totalSeconds > 0 ? ((totalSeconds - secondsRemaining) / totalSeconds) * 100 : 0;
 
+  const isCatchupMode = Boolean(session?.isRescheduledToday);
+
   return (
     <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-300 px-1">
       
@@ -170,7 +172,13 @@ export const FocusMode: React.FC<FocusModeProps> = ({
           >
             {soundEnabled ? <Volume2 className="w-4 h-4 text-cyan-400" /> : <VolumeX className="w-4 h-4" />}
           </button>
-          <Badge variant="cyan" dot size="sm">Deep Work</Badge>
+          {isCatchupMode ? (
+            <Badge variant="amber" size="sm" className="font-bold px-2.5 py-0.5 border border-amber-500/50 bg-amber-500/20 text-amber-200 animate-pulse">
+              🔄 Chrono Spécial Rattrapage
+            </Badge>
+          ) : (
+            <Badge variant="cyan" dot size="sm">Deep Work</Badge>
+          )}
         </div>
       </div>
 
@@ -178,27 +186,49 @@ export const FocusMode: React.FC<FocusModeProps> = ({
         <div className="space-y-6 sm:space-y-8">
           
           {/* Main Focus Centerpiece */}
-          <div className={`relative rounded-3xl p-6 sm:p-12 glass-panel border border-slate-800 text-center overflow-hidden shadow-2xl transition-all duration-500 ${
-            isActive ? 'timer-active-aura border-blue-500/40' : ''
+          <div className={`relative rounded-3xl p-6 sm:p-12 glass-panel border text-center overflow-hidden shadow-2xl transition-all duration-500 ${
+            isCatchupMode 
+              ? (isActive ? 'border-amber-500/60 shadow-amber-500/20 bg-slate-900/90' : 'border-amber-500/30 bg-slate-900/70')
+              : (isActive ? 'timer-active-aura border-blue-500/40' : 'border-slate-800')
           }`}>
             <div
               className="absolute -top-32 left-1/2 -translate-x-1/2 w-80 sm:w-96 h-80 sm:h-96 rounded-full blur-3xl opacity-20 pointer-events-none"
-              style={{ backgroundColor: currentSubject?.color || '#6366F1' }}
+              style={{ backgroundColor: isCatchupMode ? '#F59E0B' : (currentSubject?.color || '#6366F1') }}
             />
 
             <div className="relative z-10 space-y-4 sm:space-y-6">
               
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-700/80 text-xs font-semibold max-w-full interactive-pill">
-                <span
-                  className="w-2 h-2 rounded-full shrink-0 animate-pulse"
-                  style={{ backgroundColor: currentSubject?.color || '#6366F1' }}
-                />
-                <span className="text-white truncate">{currentSubject?.name || 'Session libre'}</span>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-700/80 text-xs font-semibold max-w-full interactive-pill">
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0 animate-pulse"
+                    style={{ backgroundColor: isCatchupMode ? '#F59E0B' : (currentSubject?.color || '#6366F1') }}
+                  />
+                  <span className="text-white truncate">{currentSubject?.name || 'Session libre'}</span>
+                </div>
+                {isCatchupMode && (
+                  <span className="px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-[11px]">
+                    Rattrapage du créneau {session?.originalStartTime || 'initial'}
+                  </span>
+                )}
               </div>
 
               <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-white tracking-tight break-words px-2">
                 {session?.title || 'Session de Concentration Approfondie'}
               </h1>
+
+              {/* Special Catch-up Motivational Banner */}
+              {isCatchupMode && (
+                <div className="p-3 sm:p-4 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs max-w-lg mx-auto space-y-1 shadow-lg">
+                  <div className="flex items-center justify-center gap-2 font-bold text-amber-300">
+                    <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span>Mode Spécial Rattrapage Activé</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 leading-relaxed">
+                    Vous rattrapez votre créneau de <strong className="text-amber-200">{session?.originalStartTime || 'ce matin'}</strong>. Chaque minute vous rapproche de la maîtrise sans accumuler de retard !
+                  </p>
+                </div>
+              )}
 
               {/* GIANT COUNTDOWN TIMER (Responsive for all phones) */}
               <div className="py-2 sm:py-6">
@@ -208,7 +238,11 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                 
                 <div className="w-full max-w-xs sm:max-w-md mx-auto h-2 bg-slate-800 rounded-full mt-4 sm:mt-6 overflow-hidden border border-slate-700/50">
                   <div
-                    className="h-full bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 transition-all duration-1000 ease-linear"
+                    className={`h-full transition-all duration-1000 ease-linear ${
+                      isCatchupMode
+                        ? 'bg-gradient-to-r from-amber-500 via-orange-400 to-emerald-400'
+                        : 'bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400'
+                    }`}
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
@@ -312,9 +346,13 @@ export const FocusMode: React.FC<FocusModeProps> = ({
           </div>
 
           <div className="space-y-1">
-            <h2 className="text-xl sm:text-3xl font-extrabold text-white">Session accomplie avec succès !</h2>
+            <h2 className="text-xl sm:text-3xl font-extrabold text-white">
+              {isCatchupMode ? '🎉 Rattrapage réussi et validé avec succès !' : 'Session accomplie avec succès !'}
+            </h2>
             <p className="text-xs sm:text-sm text-slate-400">
-              Votre temps d'étude effectif a été sauvegardé en temps réel.
+              {isCatchupMode 
+                ? `Votre séance initialement prévue à ${session?.originalStartTime || 'ce matin'} a été officiellement rattrapée et enregistrée.`
+                : "Votre temps d'étude effectif a été sauvegardé en temps réel."}
             </p>
           </div>
 

@@ -256,7 +256,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
       {/* Daily Catch-up Rescheduled Banner */}
       {studySessions.some(s => s.isRescheduledToday) && (
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-indigo-950/40 border border-amber-500/40 shadow-md flex items-start justify-between gap-3 text-xs">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-indigo-950/40 border border-amber-500/40 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
           <div className="flex items-start gap-2.5 min-w-0">
             <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
               <Sparkles className="w-4 h-4 text-amber-400" />
@@ -275,15 +275,31 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               </p>
             </div>
           </div>
-          {onResetDailyCatchup && (
-            <button
-              onClick={onResetDailyCatchup}
-              className="px-2.5 py-1 rounded-lg bg-slate-850 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-[10px] font-bold shrink-0 cursor-pointer transition-colors"
-              title="Rétablir les horaires initiaux"
-            >
-              Rétablir
-            </button>
-          )}
+          <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+            {(() => {
+              const firstCatchup = studySessions.find(s => s.isRescheduledToday && !s.completed);
+              return firstCatchup ? (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
+                  onClick={() => onStartFocusSession(firstCatchup)}
+                  className="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs py-2 px-3 shadow-md shadow-amber-600/30 cursor-pointer"
+                >
+                  ⚡ Rattraper (Chrono)
+                </Button>
+              ) : null;
+            })()}
+            {onResetDailyCatchup && (
+              <button
+                onClick={onResetDailyCatchup}
+                className="px-2.5 py-1.5 rounded-lg bg-slate-850 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-[10px] font-bold shrink-0 cursor-pointer transition-colors"
+                title="Rétablir les horaires initiaux"
+              >
+                Rétablir
+              </button>
+            )}
+          </div>
         </div>
       )}
 
@@ -460,13 +476,17 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
                     {!session.completed && (
                       <Button
-                        variant="glow"
+                        variant={session.isRescheduledToday ? "secondary" : "glow"}
                         size="sm"
                         leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
                         onClick={() => onStartFocusSession(session)}
-                        className="cursor-pointer text-xs font-bold py-1.5 px-3 min-h-[36px] hover:scale-105 active:scale-95 transition-transform"
+                        className={`cursor-pointer text-xs font-bold py-1.5 px-3 min-h-[36px] hover:scale-105 active:scale-95 transition-transform ${
+                          session.isRescheduledToday
+                            ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
+                            : ''
+                        }`}
                       >
-                        Lancer Focus
+                        {session.isRescheduledToday ? '⚡ Rattraper (Chrono)' : 'Lancer Focus'}
                       </Button>
                     )}
 

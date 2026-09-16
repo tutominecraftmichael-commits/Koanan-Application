@@ -74,9 +74,19 @@ interface TimeInterval {
 }
 
 /**
+ * Checks if an uncompleted study session's scheduled time has elapsed
+ */
+export function isSessionElapsed(session: StudySession, currentMinute: number): boolean {
+  if (session.completed) return false;
+  const endMin = parseTimeToMinutes(session.endTime);
+  return currentMinute >= endMin;
+}
+
+/**
  * Cherche le premier créneau libre viable aujourd'hui après l'heure courante.
  * Évite les cours (avec sas de 35 min après), les pauses méridiennes, les créneaux bloqués
  * et les autres sessions de révision planifiées plus tard.
+ * Si le créneau complet ne rentre pas, cherche la plus grande plage libre viable (>= 30 min).
  */
 export function findNextFreeSlotToday(
   dayOfWeek: DayOfWeek,
@@ -85,19 +95,21 @@ export function findNextFreeSlotToday(
   classes: ClassSlot[],
   preferences: StudyPreferences,
   otherTodaySessions: StudySession[]
-): { startTime: string; endTime: string } | null {
-  // Démarre au moins 10 minutes après l'heure actuelle, arrondi aux 15 min supérieures
-  const searchStartMin = roundUpTo15(Math.max(currentMinute + 10, 0));
+): { startTime: string; endTime: string; durationMinutes: number } | null {
+  // Démarre 5 à 10 minutes après l'heure actuelle, arrondi aux 15 min supérieures
+  const searchStartMin = roundUpTo15(Math.max(currentMinute + 5, 0));
 
   // Heure maximale de fin d'étude le soir :
-  // Jusqu'à 23h00 (1380 min) pour permettre un rattrapage en soirée (ex: 20h-21h30 ou 21h-22h30)
-  let dayEndMin = 1380; // 23:00
+  // Jusqu'à 23h30 - 23h45 pour permettre un rattrapage complet en soirée
+  let dayEndMin = 1410; // 23:30
   if (preferences.chronotype === 'morning') {
-    dayEndMin = 1320; // 22:00
+    dayEndMin = 1350; // 22:30
+  } else if (preferences.chronotype === 'night') {
+    dayEndMin = 1425; // 23:45
   }
 
-  // S'il ne reste plus assez de temps aujourd'hui
-  if (searchStartMin + durationMinutes > dayEndMin) {
+  // S'il ne reste même pas 30 minutes avant la fin de journée
+  if (searchStartMin + 30 > dayEndMin) {
     return null;
   }
 
@@ -137,7 +149,7 @@ export function findNextFreeSlotToday(
   otherTodaySessions.forEach(other => {
     const start = parseTimeToMinutes(other.startTime);
     const end = parseTimeToMinutes(other.endTime);
-    // On ne bloque que les sessions prévues dans le futur ou toujours valides
+    // On ne bloque que les sessions prévues dans le futur par rapport à searchStartMin
     if (end > searchStartMin) {
       busyIntervals.push({
         start: Math.max(0, start - 5),
@@ -162,37 +174,52 @@ export function findNextFreeSlotToday(
     }
   });
 
-  // Balayage des créneaux libres à partir de searchStartMin
-  let currentPointer = searchStartMin;
+  // Helper pour scanner un intervalle disponible
+  const findSlotForTargetDuration = (targetDuration: number) => {
+    let currentPointer = searchStartMin;
 
-  for (const busy of mergedBusy) {
-    if (busy.end <= currentPointer) continue;
+    for (const busy of mergedBusy) {
+      if (busy.end <= currentPointer) continue;
 
-    if (busy.start > currentPointer) {
-      const availableDuration = busy.start - currentPointer;
-      if (availableDuration >= durationMinutes) {
-        const slotStart = currentPointer;
-        const slotEnd = slotStart + durationMinutes;
-        return {
-          startTime: minutesToTimeString(slotStart),
-          endTime: minutesToTimeString(slotEnd),
-        };
+      if (busy.start > currentPointer) {
+        const availableDuration = busy.start - currentPointer;
+        if (availableDuration >= targetDuration) {
+          const slotStart = currentPointer;
+          const slotEnd = slotStart + targetDuration;
+          return {
+            startTime: minutesToTimeString(slotStart),
+            endTime: minutesToTimeString(slotEnd),
+            durationMinutes: targetDuration,
+          };
+        }
+      }
+      currentPointer = Math.max(currentPointer, busy.end);
+      if (currentPointer + targetDuration > dayEndMin) {
+        return null;
       }
     }
-    currentPointer = Math.max(currentPointer, busy.end);
-    if (currentPointer + durationMinutes > dayEndMin) {
-      return null;
-    }
-  }
 
-  // Après le dernier créneau occupé
-  if (currentPointer + durationMinutes <= dayEndMin) {
-    const slotStart = currentPointer;
-    const slotEnd = slotStart + durationMinutes;
-    return {
-      startTime: minutesToTimeString(slotStart),
-      endTime: minutesToTimeString(slotEnd),
-    };
+    if (currentPointer + targetDuration <= dayEndMin) {
+      const slotStart = currentPointer;
+      const slotEnd = slotStart + targetDuration;
+      return {
+        startTime: minutesToTimeString(slotStart),
+        endTime: minutesToTimeString(slotEnd),
+        durationMinutes: targetDuration,
+      };
+    }
+
+    return null;
+  };
+
+  // 1ère tentative : essayer de placer la totalité de la durée demandée
+  const fullSlot = findSlotForTargetDuration(durationMinutes);
+  if (fullSlot) return fullSlot;
+
+  // 2ème tentative (si la soirée est contrainte) : trouver la plus grande durée disponible (>= 30 min)
+  for (let adjusted = durationMinutes - 15; adjusted >= 30; adjusted -= 15) {
+    const candidate = findSlotForTargetDuration(adjusted);
+    if (candidate) return candidate;
   }
 
   return null;
@@ -202,9 +229,9 @@ export function findNextFreeSlotToday(
  * Moteur d'Adaptabilité Dynamique & Rattrapage Intelligent en Cas d'Oubli :
  * 
  * 1. Restaure d'abord toute session réaménagée d'un jour précédent (sanctuarisation de la maquette).
- * 2. Identifie les sessions non complétées d'aujourd'hui dont l'heure de fin est dépassée.
- * 3. Cherche un créneau libre plus tard dans la journée (ex: 18h, 20h ou 21h).
- * 4. Déplace la session pour aujourd'hui avec métadonnées d'origine.
+ * 2. Identifie toutes les sessions non complétées d'aujourd'hui dont l'heure est dépassée.
+ * 3. Cherche un créneau libre plus tard dans la journée (ex: 18h, 20h ou 21h) pour CHACUNE séquentiellement.
+ * 4. Déplace chaque session pour aujourd'hui avec métadonnées d'origine et durée garantie.
  * 5. Si aucun créneau n'est disponible ou si la journée se termine : oublie sans dette accumulée.
  */
 export function evaluateDailyCatchup(
@@ -227,19 +254,22 @@ export function evaluateDailyCatchup(
   const rescheduledSessions: StudySession[] = [];
   const updatedSessions = [...cleanedSessions];
 
-  // Sessions prévues pour le jour actuel
-  const todaysSessions = updatedSessions.filter(s => s.dayOfWeek === todayDayOfWeek);
+  // Sessions prévues pour le jour actuel, triées chronologiquement
+  const todaysSessions = updatedSessions
+    .filter(s => s.dayOfWeek === todayDayOfWeek)
+    .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-  todaysSessions.forEach(session => {
+  // Traiter toutes les sessions non complétées dont l'heure de fin est dépassée
+  for (const session of todaysSessions) {
     // Si la session est déjà terminée, rien à adapter
-    if (session.completed) return;
+    if (session.completed) continue;
 
     const sessionEndMin = parseTimeToMinutes(session.endTime);
 
     // Détection : l'heure de fin de la session est dépassée !
     // (ex: session 08h00 - 10h00, et il est actuellement 10h01 ou plus)
-    if (currentMinute > sessionEndMin) {
-      // Trouver les autres sessions d'aujourd'hui pour éviter tout conflit
+    if (currentMinute >= sessionEndMin) {
+      // Trouver les autres sessions d'aujourd'hui pour éviter tout conflit (incluant celles déjà replacées)
       const otherSessions = updatedSessions.filter(
         s => s.dayOfWeek === todayDayOfWeek && s.id !== session.id
       );
@@ -264,11 +294,12 @@ export function evaluateDailyCatchup(
             ...updatedSessions[sessionIndex],
             startTime: freeSlot.startTime,
             endTime: freeSlot.endTime,
+            durationMinutes: freeSlot.durationMinutes,
             isRescheduledToday: true,
             originalStartTime: originalStart,
             originalEndTime: originalEnd,
             rescheduledDate: todayDateStr,
-            rescheduledReason: `Créneau de ${originalStart} dépassé. Replacée automatiquement à ${freeSlot.startTime} ce soir pour rattrapage.`,
+            rescheduledReason: `Créneau de ${originalStart} non validé. Replacée automatiquement à ${freeSlot.startTime} ce soir pour rattrapage.`,
           };
 
           updatedSessions[sessionIndex] = adaptedSession;
@@ -281,7 +312,7 @@ export function evaluateDailyCatchup(
         // On ne fait pas de décalage vers demain, aucune dette infinie.
       }
     }
-  });
+  }
 
   return {
     updatedSessions,
