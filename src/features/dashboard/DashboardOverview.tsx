@@ -41,6 +41,7 @@ export interface DashboardOverviewProps {
   onOpenPresetModal?: () => void;
   isDemoMode?: boolean;
   planTier?: 'free' | 'pro' | 'plus';
+  onResetDailyCatchup?: () => void;
 }
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
@@ -56,6 +57,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onOpenPresetModal,
   isDemoMode = false,
   planTier = 'free',
+  onResetDailyCatchup,
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -71,6 +73,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     .filter(s => s.dayOfWeek === currentDayIndex)
     .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
+  const rescheduledTodaySessions = todaysStudySessions.filter(s => s.isRescheduledToday);
   const nextStudySession = todaysStudySessions.find(s => !s.completed) || studySessions.find(s => !s.completed);
   const completedToday = todaysStudySessions.filter(s => s.completed).length;
 
@@ -105,9 +108,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           {nextStudySession && (
             <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-slate-900/95 border border-indigo-500/40 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
               <div className="space-y-1 text-left min-w-0 flex-1 w-full">
-                <span className="text-[10px] uppercase font-bold text-indigo-300 tracking-wider block">
-                  Prochaine Session
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase font-bold text-indigo-300 tracking-wider block">
+                    Prochaine Session
+                  </span>
+                  {nextStudySession.isRescheduledToday && (
+                    <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0">
+                      🔄 Rattrapage ce soir
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-xs sm:text-sm font-bold text-white break-words leading-snug">
                   {nextStudySession.title}
                 </p>
@@ -276,13 +286,49 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             )}
 
             {/* 2. Study Sessions */}
-            <div className="space-y-2 pt-1">
+            <div className="space-y-2.5 pt-1">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                   Sessions d'Étude ({completedToday}/{todaysStudySessions.length} faites)
                 </span>
               </div>
+
+              {/* Daily Catch-up Rescheduled Banner */}
+              {rescheduledTodaySessions.length > 0 && (
+                <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-indigo-950/40 border border-amber-500/40 shadow-md flex items-start justify-between gap-3 text-xs">
+                  <div className="flex items-start gap-2.5 min-w-0">
+                    <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                    </div>
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-bold text-amber-300 uppercase tracking-wide text-[11px]">
+                          🔄 Réaménagement intelligent activé ({rescheduledTodaySessions.length})
+                        </span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 border border-amber-500/40">
+                          Rattrapage du jour
+                        </span>
+                      </div>
+                      <p className="text-slate-300 text-xs leading-relaxed">
+                        {rescheduledTodaySessions[0].rescheduledReason || `Créneau initial passé. Session replacée à ${rescheduledTodaySessions[0].startTime} ce soir pour rattrapage.`}
+                      </p>
+                      <p className="text-[10px] text-slate-400 italic">
+                        Ce réaménagement est éphémère et s'applique uniquement à aujourd'hui. Vos horaires récurrents des semaines futures restent intacts.
+                      </p>
+                    </div>
+                  </div>
+                  {onResetDailyCatchup && (
+                    <button
+                      onClick={onResetDailyCatchup}
+                      className="px-2.5 py-1 rounded-lg bg-slate-850 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-[10px] font-bold shrink-0 cursor-pointer transition-colors"
+                      title="Rétablir les horaires initiaux de base"
+                    >
+                      Rétablir
+                    </button>
+                  )}
+                </div>
+              )}
 
               {todaysStudySessions.length === 0 ? (
                 <Card className="text-center py-6 sm:py-8 border-slate-800 bg-slate-900/40">
@@ -314,6 +360,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           <span className="text-[11px] font-mono font-bold text-cyan-400">
                             {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                           </span>
+                          {session.isRescheduledToday && (
+                            <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold" title={session.rescheduledReason}>
+                              🔄 Rattrapage (Init. {session.originalStartTime})
+                            </Badge>
+                          )}
                           <button
                             type="button"
                             onClick={() => setSelectedExplainerType(session.type)}

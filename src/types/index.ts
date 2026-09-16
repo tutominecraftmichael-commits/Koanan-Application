@@ -104,6 +104,12 @@ export interface StudySession {
   actualDurationMinutes?: number;
   rating?: 1 | 2 | 3 | 4 | 5;
   reflectionNotes?: string;
+  // Adaptive daily catch-up fields (ephemeral for today only)
+  isRescheduledToday?: boolean;
+  originalStartTime?: string;
+  originalEndTime?: string;
+  rescheduledDate?: string; // YYYY-MM-DD
+  rescheduledReason?: string;
 }
 
 export interface StudyLog {

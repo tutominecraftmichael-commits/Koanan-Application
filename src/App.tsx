@@ -18,6 +18,7 @@ import {
 import { generateOptimizedStudyPlan } from './services/plannerAlgorithm';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import { onFirebaseAuthStateChange, signOutReal, listenToUserCloudState } from './lib/firebase';
+import { evaluateDailyCatchup, resetDailyRescheduling } from './services/sessionRescheduler';
 import type { 
   ActiveAppView, 
   Subject, 
@@ -63,6 +64,67 @@ export function App() {
   useEffect(() => {
     saveAppState(state);
   }, [state]);
+
+  // Dynamic Real-Time Adaptability: Detect missed sessions of today and reschedule for evening catch-up
+  useEffect(() => {
+    if (!state.studySessions || state.studySessions.length === 0) return;
+
+    const performCatchupCheck = () => {
+      setState(prev => {
+        if (!prev.studySessions || prev.studySessions.length === 0) return prev;
+
+        const { updatedSessions, rescheduledCount, restoredCount, rescheduledSessions } = evaluateDailyCatchup(
+          prev.studySessions,
+          prev.classSlots,
+          prev.preferences
+        );
+
+        if (rescheduledCount > 0) {
+          const first = rescheduledSessions[0];
+          showToast(`🔄 Konan a adapté votre journée : session replacée à ${first.startTime} ce soir pour rattrapage !`);
+          return {
+            ...prev,
+            studySessions: updatedSessions,
+          };
+        }
+
+        if (restoredCount > 0) {
+          return {
+            ...prev,
+            studySessions: updatedSessions,
+          };
+        }
+
+        return prev;
+      });
+    };
+
+    // Run check on mount and view transitions
+    performCatchupCheck();
+
+    // Check periodically every 60 seconds
+    const interval = setInterval(performCatchupCheck, 60000);
+
+    // Re-check on window/tab focus (e.g. user unlocks mobile phone or refocuses browser tab)
+    const handleFocus = () => performCatchupCheck();
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [state.studySessions.length, state.classSlots.length, activeView]);
+
+  const handleResetDailyCatchup = () => {
+    setState(prev => {
+      const restored = resetDailyRescheduling(prev.studySessions);
+      return {
+        ...prev,
+        studySessions: restored,
+      };
+    });
+    showToast('🔄 Planning standard d’aujourd’hui rétabli.');
+  };
 
   // Listen to Firebase auth state changes on mount and sync with Cloud Firestore
   useEffect(() => {
@@ -652,6 +714,7 @@ export function App() {
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
+              onResetDailyCatchup={handleResetDailyCatchup}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -744,6 +807,7 @@ export function App() {
               onAddCustomSession={handleAddCustomSession}
               onUpdatePreferences={handleUpdatePreferences}
               onViewPricing={() => setActiveView('landing')}
+              onResetDailyCatchup={handleResetDailyCatchup}
             />
           ) : (
             <div className="text-center py-16 space-y-4">

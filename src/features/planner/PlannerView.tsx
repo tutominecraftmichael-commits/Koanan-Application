@@ -46,6 +46,7 @@ export interface PlannerViewProps {
   onUpdatePreferences?: (preferences: StudyPreferences) => void;
   planTier?: 'free' | 'pro' | 'plus';
   onViewPricing?: () => void;
+  onResetDailyCatchup?: () => void;
 }
 
 export const PlannerView: React.FC<PlannerViewProps> = ({
@@ -60,6 +61,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   onUpdatePreferences,
   planTier = 'free',
   onViewPricing,
+  onResetDailyCatchup,
 }) => {
   const [selectedDayFilter, setSelectedDayFilter] = useState<number | 'all'>('all');
   const [selectedSubjectFilter, setSelectedSubjectFilter] = useState<string>('all');
@@ -252,6 +254,39 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         </Card>
       </div>
 
+      {/* Daily Catch-up Rescheduled Banner */}
+      {studySessions.some(s => s.isRescheduledToday) && (
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-indigo-950/40 border border-amber-500/40 shadow-md flex items-start justify-between gap-3 text-xs">
+          <div className="flex items-start gap-2.5 min-w-0">
+            <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+            </div>
+            <div className="space-y-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-bold text-amber-300 uppercase tracking-wide text-[11px]">
+                  🔄 Réaménagement de rattrapage actif ({studySessions.filter(s => s.isRescheduledToday).length})
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 border border-amber-500/40">
+                  Aujourd'hui uniquement
+                </span>
+              </div>
+              <p className="text-slate-300 text-xs leading-relaxed">
+                Une ou plusieurs sessions manquées plus tôt ont été replacées ce soir aux moments où vous êtes libre. Ce réaménagement est éphémère et n'altère pas vos semaines futures.
+              </p>
+            </div>
+          </div>
+          {onResetDailyCatchup && (
+            <button
+              onClick={onResetDailyCatchup}
+              className="px-2.5 py-1 rounded-lg bg-slate-850 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-[10px] font-bold shrink-0 cursor-pointer transition-colors"
+              title="Rétablir les horaires initiaux"
+            >
+              Rétablir
+            </button>
+          )}
+        </div>
+      )}
+
       {/* FILTER BAR (Mobile Carousel + Subject Dropdown) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl glass-panel border border-slate-800">
         
@@ -346,13 +381,18 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                   
                   {/* Top line: Day, Time, Badges */}
                   <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 sm:gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                       <span className="text-xs font-bold text-slate-200">
                         {dayInfo.label}
                       </span>
                       <span className="text-[11px] sm:text-xs font-mono text-cyan-400 font-bold">
                         {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                       </span>
+                      {session.isRescheduledToday && (
+                        <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold" title={session.rescheduledReason}>
+                          🔄 Rattrapage (Init. {session.originalStartTime})
+                        </Badge>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-1.5 shrink-0">
