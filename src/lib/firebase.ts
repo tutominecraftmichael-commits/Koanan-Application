@@ -352,6 +352,16 @@ export async function syncUserStateToCloud(uid: string, data: any): Promise<void
     const userRef = doc(db, 'users', uid);
     // Sanitize data (remove undefined fields that Firestore doesn't like)
     const sanitized = JSON.parse(JSON.stringify(data));
+
+    // Guard: Prevent a freshly opened unhydrated device from wiping existing cloud subjects
+    if ((!sanitized.subjects || sanitized.subjects.length === 0) && !sanitized.completedOnboarding) {
+      const existing = await loadUserStateFromCloud(uid);
+      if (existing && existing.subjects && existing.subjects.length > 0) {
+        console.warn('Prevented accidental overwrite of cloud state by empty local state');
+        return;
+      }
+    }
+
     const currentHash = JSON.stringify(sanitized);
     if (lastSyncedHashByUid[uid] === currentHash) {
       return;

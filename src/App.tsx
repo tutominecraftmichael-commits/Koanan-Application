@@ -170,10 +170,12 @@ export function App() {
 
           // 2. Cross-device sync in background: non-blocking
           fetchAndMergeCloudState(firebaseUser.uid, loaded).then(synced => {
-            if (synced) setState(synced);
+            if (synced && (synced.subjects.length > 0 || synced.completedOnboarding)) {
+              setState(synced);
+            }
           }).catch(console.warn);
 
-          // 2. Real-time multi-device synchronization
+          // 3. Real-time multi-device synchronization
           if (unsubscribeCloudListener) unsubscribeCloudListener();
           unsubscribeCloudListener = listenToUserCloudState(firebaseUser.uid, (cloudData) => {
             if (cloudData) {
@@ -185,10 +187,10 @@ export function App() {
                   academicLevel: cloudData.academicLevel || prev.academicLevel,
                   planTier: cloudData.planTier || prev.planTier || 'free',
                   completedOnboarding: cloudData.completedOnboarding ?? prev.completedOnboarding,
-                  subjects: cloudData.subjects || prev.subjects,
-                  classSlots: cloudData.classSlots || prev.classSlots,
+                  subjects: (cloudData.subjects && cloudData.subjects.length > 0) ? cloudData.subjects : prev.subjects,
+                  classSlots: (cloudData.classSlots && cloudData.classSlots.length > 0) ? cloudData.classSlots : prev.classSlots,
                   preferences: cloudData.preferences ? { ...prev.preferences, ...cloudData.preferences } : prev.preferences,
-                  studySessions: cloudData.studySessions || prev.studySessions,
+                  studySessions: (cloudData.studySessions && cloudData.studySessions.length > 0) ? cloudData.studySessions : prev.studySessions,
                   logs: cloudData.logs || prev.logs,
                   userAccount: prev.userAccount ? {
                     ...prev.userAccount,
@@ -286,7 +288,7 @@ export function App() {
     // 2. Background cross-device sync: merges cloud state without delaying navigation
     fetchAndMergeCloudState(profile.googleId, userState)
       .then(mergedFromCloud => {
-        if (mergedFromCloud) {
+        if (mergedFromCloud && (mergedFromCloud.subjects?.length > 0 || mergedFromCloud.completedOnboarding)) {
           saveUserState(profile.googleId, mergedFromCloud);
           setState(mergedFromCloud);
         }

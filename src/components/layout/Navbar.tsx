@@ -251,34 +251,39 @@ export const Navbar: React.FC<NavbarProps> = ({
                         {userAccount.isDemo ? t('demoAccount', lang) : userAccount.email || 'Connecté'}
                       </p>
                     </div>
-                    {/* Badge de version : Free, Pro, ou Plus -> clic direct sur les tarifs */}
-                    <button 
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (onViewPricing) {
-                          onViewPricing();
-                        } else {
-                          onNavigate('landing');
+                    {/* Badge de version : Free (statique), Pro ou Plus (cliquable vers tarifs) */}
+                    {userAccount.planTier === 'free' ? (
+                      <span
+                        className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-slate-800/90 text-sky-300 border-sky-500/30 cursor-default select-none"
+                        title="Modèle KONAN Gratuit (Free)"
+                      >
+                        Free
+                      </span>
+                    ) : (
+                      <button 
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onViewPricing) {
+                            onViewPricing();
+                          } else {
+                            onNavigate('landing');
+                          }
+                        }}
+                        className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border cursor-pointer hover:scale-105 active:scale-95 transition-transform ${
+                          userAccount.planTier === 'pro'
+                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30'
+                            : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 hover:bg-indigo-500/30'
+                        }`}
+                        title={
+                          userAccount.planTier === 'pro' 
+                            ? 'Modèle KONAN Pro - Cliquez pour voir les formules' 
+                            : 'Modèle KONAN Plus - Cliquez pour voir les formules'
                         }
-                      }}
-                      className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border cursor-pointer hover:scale-105 active:scale-95 transition-transform ${
-                        userAccount.planTier === 'pro'
-                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30'
-                          : userAccount.planTier === 'plus'
-                          ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 hover:bg-indigo-500/30'
-                          : 'bg-slate-800/90 text-sky-300 border-sky-500/30 hover:border-sky-400'
-                      }`}
-                      title={
-                        userAccount.planTier === 'pro' 
-                          ? 'Modèle KONAN Pro - Cliquez pour voir les formules' 
-                          : userAccount.planTier === 'plus' 
-                          ? 'Modèle KONAN Plus - Cliquez pour voir les formules' 
-                          : 'Modèle KONAN Gratuit (Free) - Cliquez pour passer à Pro'
-                      }
-                    >
-                      {userAccount.planTier === 'pro' ? 'Pro' : userAccount.planTier === 'plus' ? 'Plus' : 'Free'}
-                    </button>
+                      >
+                        {userAccount.planTier === 'pro' ? 'Pro' : 'Plus'}
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <button

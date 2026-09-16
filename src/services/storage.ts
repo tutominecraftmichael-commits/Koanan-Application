@@ -161,7 +161,9 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
   };
 
   const emptyState = createEmptyUserState(user);
-  saveUserState(uid, emptyState);
+  try {
+    localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(emptyState));
+  } catch {}
   return emptyState;
 }
 
@@ -225,6 +227,11 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(merged));
       } catch {}
       return merged;
+    } else if (!cloudData || (!cloudData.subjects?.length && !cloudData.completedOnboarding)) {
+      // If Cloud Firestore is empty but this device has subjects, push local state to Cloud so other devices can access it!
+      if (currentState.subjects && currentState.subjects.length > 0) {
+        saveUserState(uid, currentState);
+      }
     }
   } catch (err) {
     console.warn('Could not merge cloud state:', err);
