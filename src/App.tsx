@@ -160,17 +160,18 @@ export function App() {
           });
           setState(loaded);
 
-          // 1. Cross-device sync: fetch latest Firestore cloud state
-          const synced = await fetchAndMergeCloudState(firebaseUser.uid, loaded);
-          setState(synced);
-
-          // Greeting upon reconnect: ensure the user reliably sees "Bonne Arrivée ! [Nom]"
-          const greetingName = synced.studentName || loaded.studentName || firebaseUser.displayName || 'Étudiant';
+          // 1. Instant greeting and redirection to dashboard (0ms latency, never wait for network)
+          const greetingName = loaded.studentName || firebaseUser.displayName || 'Étudiant';
           if (hasGreetedAuthRef.current !== firebaseUser.uid) {
             hasGreetedAuthRef.current = firebaseUser.uid;
             showToast(`✨ Bonne Arrivée ! ${greetingName}`);
           }
           setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
+
+          // 2. Cross-device sync in background: non-blocking
+          fetchAndMergeCloudState(firebaseUser.uid, loaded).then(synced => {
+            if (synced) setState(synced);
+          }).catch(console.warn);
 
           // 2. Real-time multi-device synchronization
           if (unsubscribeCloudListener) unsubscribeCloudListener();
@@ -274,19 +275,23 @@ export function App() {
     };
     userState.isDemoMode = false;
 
-    // Cross-device sync: merge any data saved from other devices (e.g. mobile or PC)
-    const mergedFromCloud = await fetchAndMergeCloudState(profile.googleId, userState);
-    userState = mergedFromCloud;
-
     saveUserState(profile.googleId, userState);
     setState(userState);
 
-    // Always display the requested "Bonne Arrivée !" message upon reconnecting
+    // 1. Instant greeting and direct redirection to dashboard (0ms latency, no blocking)
     hasGreetedAuthRef.current = profile.googleId;
     showToast(`✨ Bonne Arrivée ! ${finalName}`);
-
-    // Automatically and immediately redirect to dashboard
     setActiveView('dashboard');
+
+    // 2. Background cross-device sync: merges cloud state without delaying navigation
+    fetchAndMergeCloudState(profile.googleId, userState)
+      .then(mergedFromCloud => {
+        if (mergedFromCloud) {
+          saveUserState(profile.googleId, mergedFromCloud);
+          setState(mergedFromCloud);
+        }
+      })
+      .catch(console.warn);
   };
 
   /**
@@ -657,13 +662,7 @@ export function App() {
             isLoggedIn={Boolean(state.userAccount?.isLoggedIn)}
             currentPlan={state.planTier || state.userAccount?.planTier || 'free'}
             onSelectPlan={handleSelectPlan}
-            onStartApp={() => {
-              if (state.userAccount?.isLoggedIn) {
-                setActiveView('dashboard');
-              } else {
-                setActiveView('auth');
-              }
-            }}
+            onStartApp={() => setActiveView('auth')}
             onSelectPreset={handleEnterDemoMode}
           />
         )}

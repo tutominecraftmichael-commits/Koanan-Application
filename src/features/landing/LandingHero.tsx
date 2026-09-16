@@ -104,10 +104,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               variant="secondary"
               size="lg"
               leftIcon={<GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />}
-              onClick={() => {
-                onSelectPreset('cs-engineering');
-                onStartApp();
-              }}
+              onClick={() => onSelectPreset('cs-engineering')}
               className="w-full sm:w-auto cursor-pointer text-xs xs:text-sm sm:text-base py-3.5 px-5 font-semibold hover:border-blue-400/40 transition-all text-center flex items-center justify-center"
             >
               Découvrir un Exemple Prédéfini

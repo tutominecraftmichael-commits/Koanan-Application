@@ -373,8 +373,10 @@ export async function loadUserStateFromCloud(uid: string): Promise<any | null> {
   if (!db || !uid) return null;
   try {
     const userRef = doc(db, 'users', uid);
-    const snap = await getDoc(userRef);
-    if (snap.exists()) {
+    const snapPromise = getDoc(userRef);
+    const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500));
+    const snap: any = await Promise.race([snapPromise, timeoutPromise]);
+    if (snap && typeof snap.exists === 'function' && snap.exists()) {
       return snap.data();
     }
   } catch (err) {
