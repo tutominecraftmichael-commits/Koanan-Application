@@ -164,13 +164,13 @@ export function App() {
           const synced = await fetchAndMergeCloudState(firebaseUser.uid, loaded);
           setState(synced);
 
-          // Greeting upon reconnect: ensure the user reliably sees "Bon retour [Nom] !"
+          // Greeting upon reconnect: ensure the user reliably sees "Bonne Arrivée ! [Nom]"
           const greetingName = synced.studentName || loaded.studentName || firebaseUser.displayName || 'Étudiant';
           if (hasGreetedAuthRef.current !== firebaseUser.uid) {
             hasGreetedAuthRef.current = firebaseUser.uid;
-            showToast(`✨ Bon retour ${greetingName} !`);
-            setActiveView(prev => (prev === 'auth' ? 'dashboard' : prev));
+            showToast(`✨ Bonne Arrivée ! ${greetingName}`);
           }
+          setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
 
           // 2. Real-time multi-device synchronization
           if (unsubscribeCloudListener) unsubscribeCloudListener();
@@ -281,15 +281,12 @@ export function App() {
     saveUserState(profile.googleId, userState);
     setState(userState);
 
-    // Always display the requested "Bon retour" message upon reconnecting
+    // Always display the requested "Bonne Arrivée !" message upon reconnecting
     hasGreetedAuthRef.current = profile.googleId;
-    showToast(`✨ Bon retour ${finalName} !`);
+    showToast(`✨ Bonne Arrivée ! ${finalName}`);
 
-    if (userState.completedOnboarding || userState.subjects.length > 0) {
-      setActiveView('dashboard');
-    } else {
-      setActiveView('upload-schedule');
-    }
+    // Automatically and immediately redirect to dashboard
+    setActiveView('dashboard');
   };
 
   /**
@@ -323,11 +320,7 @@ export function App() {
         setState(updated);
 
         showToast('✨ Vous êtes sur KONAN (Modèle Gratuit - Free) !');
-        if (state.completedOnboarding || state.subjects.length > 0) {
-          setActiveView('dashboard');
-        } else {
-          setActiveView('upload-schedule');
-        }
+        setActiveView('dashboard');
       } else {
         setProModalFeature({
           title: planId === 'pro' ? 'Formule KONAN PRO' : 'Formule KONAN PLUS',
@@ -666,11 +659,7 @@ export function App() {
             onSelectPlan={handleSelectPlan}
             onStartApp={() => {
               if (state.userAccount?.isLoggedIn) {
-                if (state.completedOnboarding || state.subjects.length > 0) {
-                  setActiveView('dashboard');
-                } else {
-                  setActiveView('upload-schedule');
-                }
+                setActiveView('dashboard');
               } else {
                 setActiveView('auth');
               }
