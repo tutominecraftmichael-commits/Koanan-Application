@@ -56,9 +56,10 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
 
   return (
     <section 
+      id="pricing"
+      data-section="pricing"
       ref={sectionRef}
-      className="relative py-8 sm:py-16 space-y-10 sm:space-y-14 overflow-hidden" 
-      id="tarifs"
+      className="relative py-8 sm:py-16 space-y-10 sm:space-y-14 overflow-hidden scroll-mt-12" 
     >
       {/* Section Header with smooth entrance animation */}
       <div 

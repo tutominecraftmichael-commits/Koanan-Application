@@ -45,6 +45,7 @@ export interface DashboardOverviewProps {
   isDemoMode?: boolean;
   planTier?: 'free' | 'pro' | 'plus';
   onResetDailyCatchup?: () => void;
+  onViewPricing?: () => void;
 }
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
@@ -61,6 +62,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   isDemoMode = false,
   planTier = 'free',
   onResetDailyCatchup,
+  onViewPricing,
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -561,20 +563,30 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 Prochains Examens & Partiels
               </h3>
               {planTier === 'free' && (
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
+                <button
+                  type="button"
+                  onClick={onViewPricing}
+                  className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                  title="Voir les formules et tarifs"
+                >
                   ⭐ PRO
-                </span>
+                </button>
               )}
             </div>
 
             {planTier === 'free' ? (
-              <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-2 text-xs">
+              <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-2.5 text-xs">
                 <p className="text-slate-300 leading-relaxed">
                   Le compte à rebours et l'adaptation automatique du planning aux dates de partiels sont réservés à l'offre <strong>KONAN PRO</strong>.
                 </p>
-                <p className="text-[11px] text-slate-400">
-                  Toutes vos matières et leurs coefficients sont déjà parfaitement intégrés dans votre planning d'étude gratuit.
-                </p>
+                <button
+                  type="button"
+                  onClick={onViewPricing}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
+                >
+                  <span>Passer à KONAN PRO (Tarifs)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
               </div>
             ) : upcomingExams.length === 0 ? (
               <p className="text-xs text-slate-400 italic">Aucune date d'examen renseignée.</p>

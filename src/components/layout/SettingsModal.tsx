@@ -11,14 +11,13 @@ import {
   RotateCcw,
   ShieldCheck,
   Sparkles,
-  Phone,
   GraduationCap,
   Save
 } from 'lucide-react';
 import type { UserAccount } from '../../types';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
-import { useLanguage, t, COUNTRIES } from '../../lib/i18n';
+import { useLanguage, t } from '../../lib/i18n';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -54,19 +53,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 }) => {
   const [lang, setLang] = useLanguage();
 
-  // Local form state for editable profile fields only (name, filiere, phone with country)
+  // Local form state for editable profile fields only (name, filiere)
   const [editName, setEditName] = useState('');
   const [editFiliere, setEditFiliere] = useState('');
-  const [editPhone, setEditPhone] = useState('');
-  const [editCountryCode, setEditCountryCode] = useState('+225');
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setEditName(studentName || userAccount?.name || '');
       setEditFiliere(academicLevel || userAccount?.academicLevel || '');
-      setEditPhone(userAccount?.phoneNumber || '');
-      setEditCountryCode(userAccount?.countryCode || '+225');
       setSaveSuccess(false);
     }
   }, [isOpen, studentName, academicLevel, userAccount]);
@@ -82,8 +77,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       onUpdateProfile({
         name: editName.trim() || 'Étudiant',
         academicLevel: editFiliere.trim() || 'Licence Universitaire',
-        phoneNumber: editPhone.trim(),
-        countryCode: editCountryCode,
       });
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
@@ -124,7 +117,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         {/* Modal Body with Scroll */}
         <div className="p-5 sm:p-6 space-y-6 overflow-y-auto flex-1 custom-scrollbar">
 
-          {/* SECTION 1: PROFIL UTILISATEUR (ÉDITION RESTREINTE : NOM, FILIÈRE, TÉLÉPHONE AVEC PAYS) */}
+          {/* SECTION 1: PROFIL UTILISATEUR (ÉDITION RESTREINTE : NOM, FILIÈRE) */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div>
@@ -181,7 +174,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
               </div>
 
-              {/* Formulaire d'édition STRICTE : 1. Nom, 2. Filière, 3. Téléphone avec choix du Pays */}
+              {/* Formulaire d'édition STRICTE : 1. Nom, 2. Filière */}
               <form onSubmit={handleSaveProfile} className="space-y-3.5">
                 
                 {/* 1. Nom complet */}
@@ -217,41 +210,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       required
                     />
                     <GraduationCap className="w-4 h-4 text-indigo-400 absolute left-3 top-2.5 pointer-events-none" />
-                  </div>
-                </div>
-
-                {/* 3. Choix du Pays + Numéro de Téléphone */}
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 uppercase mb-1">
-                    {t('phoneLabel', lang)} ({t('countryLabel', lang)})
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    {/* Country Selector */}
-                    <div className="sm:col-span-1">
-                      <select
-                        value={editCountryCode}
-                        onChange={(e) => setEditCountryCode(e.target.value)}
-                        className="w-full px-2.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
-                      >
-                        {COUNTRIES.map((c) => (
-                          <option key={c.code + c.country} value={c.code} className="bg-slate-900 text-white">
-                            {c.flag} {c.code} ({c.name})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Phone Number Input */}
-                    <div className="sm:col-span-2 relative">
-                      <input
-                        type="tel"
-                        value={editPhone}
-                        onChange={(e) => setEditPhone(e.target.value)}
-                        placeholder={t('phonePlaceholder', lang)}
-                        className="w-full px-3 py-2 pl-9 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                      />
-                      <Phone className="w-4 h-4 text-cyan-400 absolute left-3 top-2.5 pointer-events-none" />
-                    </div>
                   </div>
                 </div>
 

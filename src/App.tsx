@@ -60,6 +60,7 @@ export function App() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const lastRescheduledSignature = useRef<string>('');
+  const hasGreetedAuthRef = useRef<string>('');
 
   // Persist state whenever it changes
   useEffect(() => {
@@ -68,10 +69,14 @@ export function App() {
 
   // Dynamic Real-Time Adaptability: Detect missed sessions of today and reschedule for evening catch-up
   useEffect(() => {
+    // Never run catch-up checks if user is logged out or guest
+    if (!state.userAccount?.isLoggedIn && !state.isDemoMode) return;
     if (!state.studySessions || state.studySessions.length === 0) return;
 
     const performCatchupCheck = () => {
       setState(prev => {
+        // Strict guard: Never trigger reorganization toasts when user is logged out
+        if (!prev.userAccount?.isLoggedIn && !prev.isDemoMode) return prev;
         if (!prev.studySessions || prev.studySessions.length === 0) return prev;
 
         const { updatedSessions, rescheduledCount, restoredCount, rescheduledSessions } = evaluateDailyCatchup(
@@ -158,6 +163,14 @@ export function App() {
           // 1. Cross-device sync: fetch latest Firestore cloud state
           const synced = await fetchAndMergeCloudState(firebaseUser.uid, loaded);
           setState(synced);
+
+          // Greeting upon reconnect: ensure the user reliably sees "Bon retour [Nom] !"
+          const greetingName = synced.studentName || loaded.studentName || firebaseUser.displayName || 'Étudiant';
+          if (hasGreetedAuthRef.current !== firebaseUser.uid) {
+            hasGreetedAuthRef.current = firebaseUser.uid;
+            showToast(`✨ Bon retour ${greetingName} !`);
+            setActiveView(prev => (prev === 'auth' ? 'dashboard' : prev));
+          }
 
           // 2. Real-time multi-device synchronization
           if (unsubscribeCloudListener) unsubscribeCloudListener();
@@ -268,12 +281,13 @@ export function App() {
     saveUserState(profile.googleId, userState);
     setState(userState);
 
-    // If user already has subjects or completed onboarding, navigate straight to dashboard!
+    // Always display the requested "Bon retour" message upon reconnecting
+    hasGreetedAuthRef.current = profile.googleId;
+    showToast(`✨ Bon retour ${finalName} !`);
+
     if (userState.completedOnboarding || userState.subjects.length > 0) {
-      showToast(`✨ Bon retour ${finalName} !`);
       setActiveView('dashboard');
     } else {
-      showToast(`✨ Bienvenue ${finalName} ! Importez votre emploi du temps.`);
       setActiveView('upload-schedule');
     }
   };
@@ -329,6 +343,23 @@ export function App() {
   };
 
   /**
+   * Instant and complete redirection to the pricing section:
+   * Closes any modals, switches to 'landing', and smoothly scrolls down to '#pricing'
+   */
+  const handleViewPricing = () => {
+    setIsProModalOpen(false);
+    if (activeView !== 'landing') {
+      setActiveView('landing');
+    }
+    setTimeout(() => {
+      const pricingEl = document.getElementById('pricing') || document.querySelector('[data-section="pricing"]');
+      if (pricingEl) {
+        pricingEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 80);
+  };
+
+  /**
    * Explicit Demo Mode (Alexandre Étudiant):
    * Strictly segregated and only place where changing presets/filières is allowed.
    */
@@ -350,6 +381,8 @@ export function App() {
    * Disconnects Firebase and resets to unauthenticated Guest state.
    */
   const handleLogout = async () => {
+    hasGreetedAuthRef.current = '';
+    lastRescheduledSignature.current = '';
     await signOutReal();
     setActiveSession(null);
 
@@ -599,6 +632,7 @@ export function App() {
       <Navbar
         activeView={activeView}
         onNavigate={handleNavigate}
+        onViewPricing={handleViewPricing}
         studentName={state.studentName}
         academicLevel={state.academicLevel}
         userAccount={state.userAccount}
@@ -663,7 +697,7 @@ export function App() {
               planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onApplyExtractedSchedule={handleApplyExtractedSchedule}
               onCancel={() => setActiveView('dashboard')}
-              onViewPricing={() => setActiveView('landing')}
+              onViewPricing={handleViewPricing}
             />
           ) : state.isDemoMode ? (
             <div className="text-center py-16 space-y-4 glass-panel max-w-md mx-auto p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl">
@@ -717,6 +751,7 @@ export function App() {
               isDemoMode={state.isDemoMode}
               planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onNavigate={handleNavigate}
+              onViewPricing={handleViewPricing}
               onStartFocus={handleStartFocusSession}
               onToggleSessionComplete={handleToggleSessionComplete}
               onOpenPresetModal={() => {
@@ -755,7 +790,7 @@ export function App() {
               onTriggerPlanner={() => setActiveView('planner')}
               onStartFocusSession={handleStartFocusSession}
               onNavigate={handleNavigate}
-              onViewPricing={() => setActiveView('landing')}
+              onViewPricing={handleViewPricing}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
@@ -782,7 +817,7 @@ export function App() {
               planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onUpdateSubjects={handleUpdateSubjects}
               onTriggerPlanner={() => setActiveView('planner')}
-              onViewPricing={() => setActiveView('landing')}
+              onViewPricing={handleViewPricing}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
@@ -814,7 +849,7 @@ export function App() {
               onStartFocusSession={handleStartFocusSession}
               onAddCustomSession={handleAddCustomSession}
               onUpdatePreferences={handleUpdatePreferences}
-              onViewPricing={() => setActiveView('landing')}
+              onViewPricing={handleViewPricing}
               onResetDailyCatchup={handleResetDailyCatchup}
             />
           ) : (
@@ -906,10 +941,7 @@ export function App() {
         onClose={() => setIsProModalOpen(false)}
         featureTitle={proModalFeature?.title}
         featureDescription={proModalFeature?.desc}
-        onViewPricing={() => {
-          setIsProModalOpen(false);
-          setActiveView('landing');
-        }}
+        onViewPricing={handleViewPricing}
       />
 
       {/* Floating Notification Toast */}

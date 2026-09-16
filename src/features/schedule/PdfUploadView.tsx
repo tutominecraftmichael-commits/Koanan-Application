@@ -493,23 +493,24 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   return (
     <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-300 py-2">
       
+      {/* TOP NAVIGATION: Dedicated Back Button */}
+      {onCancel && (
+        <div className="flex items-center justify-start mb-4">
+          <button
+            onClick={onCancel}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-xs font-semibold text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Retour</span>
+          </button>
+        </div>
+      )}
+
       {/* HEADER SECTION */}
-      <div className="text-center space-y-2.5 max-w-3xl mx-auto">
-        <div className="flex items-center justify-between mb-1">
-          {onCancel ? (
-            <button
-              onClick={onCancel}
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Retour</span>
-            </button>
-          ) : <div />}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border border-indigo-500/30 text-indigo-300 text-xs font-semibold shadow-lg shadow-indigo-500/10">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Analyse Pédagogique • Emploi du Temps Étudiant</span>
-          </div>
-          <div />
+      <div className="text-center space-y-3.5 max-w-3xl mx-auto">
+        <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-panel border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 text-xs font-semibold shadow-lg shadow-indigo-500/10 mx-auto">
+          <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
+          <span>Analyse Pédagogique • Emploi du Temps Étudiant</span>
         </div>
 
         <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">

@@ -35,6 +35,7 @@ export interface NavbarProps {
   totalStudySessions: number;
   completedSessions: number;
   isDemoMode?: boolean;
+  onViewPricing?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -49,7 +50,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   onResetData,
   onLogout: _onLogout,
   onOpenSettings,
+  totalStudySessions: _totalStudySessions,
+  completedSessions: _completedSessions,
   isDemoMode = false,
+  onViewPricing,
 }) => {
   const [lang] = useLanguage();
   const [isToolsOpen, setIsToolsOpen] = useState(false);
@@ -231,7 +235,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                 {/* User / Google Profile Pill -> opens Settings Modal on click */}
                 {userAccount && userAccount.isLoggedIn ? (
-                  <button
+                  <div
                     onClick={onOpenSettings}
                     title="Voir mon profil et paramètres"
                     className="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-800/80 hover:opacity-90 transition-opacity cursor-pointer text-left"
@@ -247,26 +251,35 @@ export const Navbar: React.FC<NavbarProps> = ({
                         {userAccount.isDemo ? t('demoAccount', lang) : userAccount.email || 'Connecté'}
                       </p>
                     </div>
-                    {/* Badge de version : Free, Pro, ou Plus */}
-                    <span 
-                      className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border ${
+                    {/* Badge de version : Free, Pro, ou Plus -> clic direct sur les tarifs */}
+                    <button 
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onViewPricing) {
+                          onViewPricing();
+                        } else {
+                          onNavigate('landing');
+                        }
+                      }}
+                      className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border cursor-pointer hover:scale-105 active:scale-95 transition-transform ${
                         userAccount.planTier === 'pro'
-                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30'
                           : userAccount.planTier === 'plus'
-                          ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
-                          : 'bg-slate-800/90 text-sky-300 border-sky-500/30'
+                          ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 hover:bg-indigo-500/30'
+                          : 'bg-slate-800/90 text-sky-300 border-sky-500/30 hover:border-sky-400'
                       }`}
                       title={
                         userAccount.planTier === 'pro' 
-                          ? 'Modèle KONAN Pro' 
+                          ? 'Modèle KONAN Pro - Cliquez pour voir les formules' 
                           : userAccount.planTier === 'plus' 
-                          ? 'Modèle KONAN Plus' 
-                          : 'Modèle KONAN Gratuit (Free)'
+                          ? 'Modèle KONAN Plus - Cliquez pour voir les formules' 
+                          : 'Modèle KONAN Gratuit (Free) - Cliquez pour passer à Pro'
                       }
                     >
                       {userAccount.planTier === 'pro' ? 'Pro' : userAccount.planTier === 'plus' ? 'Plus' : 'Free'}
-                    </span>
-                  </button>
+                    </button>
+                  </div>
                 ) : (
                   <button
                     onClick={() => onNavigate('auth')}
