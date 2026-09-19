@@ -540,7 +540,7 @@ export function App() {
 
       if (willAllBeCompleted) {
         setIsUltimateCelebrationOpen(true);
-        showToast(`🏆 EXCEPTIONNEL ! Tu as accompli 100% de tes objectifs et validé la totalité de tes heures d'étude !`, 7000);
+        showToast(`🏆 Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
       } else if (isDayFullyComplete) {
         soundFX.playCelebrationFanfare();
         showToast(`🎉 Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
@@ -554,6 +554,21 @@ export function App() {
       ...prev,
       studySessions: updatedSessions,
     }));
+  };
+
+  const handleContinueNewCycle = () => {
+    setState(prev => ({
+      ...prev,
+      studySessions: prev.studySessions.map(s => ({
+        ...s,
+        completed: false,
+        completedAt: undefined,
+        actualDurationMinutes: undefined,
+        isRescheduledToday: false,
+      })),
+    }));
+    setIsUltimateCelebrationOpen(false);
+    showToast('🌱 Nouveau cycle commencé : toutes les progressions ont été remises à zéro !', 5000);
   };
 
   const handleAddCustomSession = (session: StudySession) => {
@@ -581,7 +596,7 @@ export function App() {
 
     if (willAllBeCompleted) {
       setIsUltimateCelebrationOpen(true);
-      showToast(`🏆 EXCEPTIONNEL ! Tu as accompli 100% de tes objectifs et validé la totalité de tes heures d'étude !`, 7000);
+      showToast(`🏆 Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
     } else {
       soundFX.playCelebrationFanfare();
       showToast(`🎉 Félicitations ! Tu as terminé la leçon "${targetSession?.title || 'Session Focus'}" avec succès !`, 5000);
@@ -782,7 +797,6 @@ export function App() {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
               onResetDailyCatchup={handleResetDailyCatchup}
-              onOpenCelebrationModal={() => setIsUltimateCelebrationOpen(true)}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -876,7 +890,6 @@ export function App() {
               onUpdatePreferences={handleUpdatePreferences}
               onViewPricing={handleViewPricing}
               onResetDailyCatchup={handleResetDailyCatchup}
-              onOpenCelebrationModal={() => setIsUltimateCelebrationOpen(true)}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -970,10 +983,11 @@ export function App() {
         onViewPricing={handleViewPricing}
       />
 
-      {/* Ultimate 100% Completion Celebration Modal (Minecraft Advancement Fanfare) */}
+      {/* Ultimate 100% Completion Celebration Modal */}
       <UltimateCompletionCelebrationModal
         isOpen={isUltimateCelebrationOpen}
-        onClose={() => setIsUltimateCelebrationOpen(false)}
+        onClose={handleContinueNewCycle}
+        onContinue={handleContinueNewCycle}
         studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
         totalPlannedMinutes={state.studySessions.reduce((acc, s) => acc + s.durationMinutes, 0)}
         totalSessionsCount={state.studySessions.length}
