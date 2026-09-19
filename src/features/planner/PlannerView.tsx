@@ -26,7 +26,8 @@ import {
   Layers,
   Plus,
   Star,
-  Brain
+  Brain,
+  Moon
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
@@ -45,6 +46,8 @@ export interface PlannerViewProps {
   planTier?: 'free' | 'pro' | 'plus';
   onViewPricing?: () => void;
   onResetDailyCatchup?: () => void;
+  cycleCompletedDate?: string;
+  onStartNewCycleEarly?: () => void;
 }
 
 export const PlannerView: React.FC<PlannerViewProps> = ({
@@ -59,6 +62,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   planTier = 'free',
   onViewPricing,
   onResetDailyCatchup,
+  cycleCompletedDate,
+  onStartNewCycleEarly,
 }) => {
   const [selectedDayFilter, setSelectedDayFilter] = useState<number | 'all'>('all');
   const [selectedSubjectFilter, setSelectedSubjectFilter] = useState<string>('all');
@@ -118,6 +123,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
     if (selectedSubjectFilter !== 'all' && session.subjectId !== selectedSubjectFilter) return false;
     return true;
   });
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const isCycleCompletedToday = cycleCompletedDate === todayStr;
 
   const totalMinutes = studySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
   const completedSessions = studySessions.filter(s => s.completed);
@@ -251,8 +259,40 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         </Card>
       </div>
 
+      {/* À Demain Banner in Planner */}
+      {isCycleCompletedToday && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/70 via-slate-900 to-indigo-950/60 border border-emerald-500/40 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+          <div className="flex items-start gap-3 min-w-0">
+            <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-300 shrink-0 mt-0.5 border border-emerald-500/30">
+              <Moon className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div className="space-y-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-extrabold text-emerald-300 uppercase tracking-wide text-xs">
+                  🌙 Cycle 100% validé — À demain !
+                </span>
+                <Badge variant="emerald" size="sm" className="font-bold">
+                  Barres à 0%
+                </Badge>
+              </div>
+              <p className="text-slate-300 text-xs leading-relaxed">
+                Toutes les progressions sont remises à zéro pour entamer le nouveau cycle dès demain. Reposez-vous bien !
+              </p>
+            </div>
+          </div>
+          {onStartNewCycleEarly && (
+            <button
+              onClick={onStartNewCycleEarly}
+              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold shrink-0 cursor-pointer transition-colors"
+            >
+              Reprendre dès aujourd'hui
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Daily Catch-up Rescheduled Banner */}
-      {studySessions.some(s => s.isRescheduledToday) && (
+      {studySessions.some(s => s.isRescheduledToday) && !isCycleCompletedToday && (
         <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-indigo-950/40 border border-amber-500/40 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
           <div className="flex items-start gap-2.5 min-w-0">
             <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">

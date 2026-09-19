@@ -21,6 +21,7 @@ export interface AppState {
   isDemoMode?: boolean;
   streak?: UserStreak;
   planTier?: PlanTier;
+  cycleCompletedDate?: string; // YYYY-MM-DD
 }
 
 /**
@@ -237,6 +238,7 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         preferences: mergedPreferences,
         studySessions: mergedStudySessions,
         logs: Array.isArray(cloudData.logs) ? cloudData.logs : currentState.logs,
+        cycleCompletedDate: cloudData.cycleCompletedDate !== undefined ? cloudData.cycleCompletedDate : currentState.cycleCompletedDate,
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
           planTier: cloudData.planTier || currentState.planTier || 'free',

@@ -84,6 +84,10 @@ export function App() {
         if (!prev.userAccount?.isLoggedIn && !prev.isDemoMode) return prev;
         if (!prev.studySessions || prev.studySessions.length === 0) return prev;
 
+        // If weekly cycle was completed today, student has finished all tasks: wait until tomorrow
+        const todayStr = new Date().toISOString().slice(0, 10);
+        if (prev.cycleCompletedDate === todayStr) return prev;
+
         const { updatedSessions, rescheduledCount, restoredCount, rescheduledSessions } = evaluateDailyCatchup(
           prev.studySessions,
           prev.classSlots,
@@ -197,6 +201,7 @@ export function App() {
                   preferences: cloudData.preferences ? { ...prev.preferences, ...cloudData.preferences } : prev.preferences,
                   studySessions: (cloudData.studySessions && cloudData.studySessions.length > 0) ? cloudData.studySessions : prev.studySessions,
                   logs: cloudData.logs || prev.logs,
+                  cycleCompletedDate: cloudData.cycleCompletedDate !== undefined ? cloudData.cycleCompletedDate : prev.cycleCompletedDate,
                   userAccount: prev.userAccount ? {
                     ...prev.userAccount,
                     planTier: cloudData.planTier || prev.planTier || 'free',
@@ -554,32 +559,26 @@ export function App() {
   };
 
   const handleContinueNewCycle = () => {
-    const currentDayIndex = (new Date().getDay() + 6) % 7; // 0 = Lundi, 5 = Samedi, 6 = Dimanche
-    const dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-    const celebrationDayName = dayNames[currentDayIndex];
+    const todayStr = new Date().toISOString().slice(0, 10);
 
     setState(prev => {
-      const updatedSessions = prev.studySessions.map(s => {
-        // If session belongs to the day the animation took place (e.g. Saturday), it stays validated!
-        if (s.dayOfWeek === currentDayIndex) {
-          return {
-            ...s,
-            completed: true,
-          };
-        }
-        // All other days of the week are invalidated (reset to 0)
-        return {
-          ...s,
-          completed: false,
-          completedAt: undefined,
-          actualDurationMinutes: undefined,
-          isRescheduledToday: false,
-        };
-      });
+      // All sessions are reset to completed: false so all progress bars strictly drop to 0%
+      const updatedSessions = prev.studySessions.map(s => ({
+        ...s,
+        completed: false,
+        completedAt: undefined,
+        actualDurationMinutes: undefined,
+        isRescheduledToday: false,
+        rescheduledDate: undefined,
+        originalStartTime: undefined,
+        originalEndTime: undefined,
+      }));
 
       const nextState: AppState = {
         ...prev,
         studySessions: updatedSessions,
+        logs: [], // Reset logs so subject and global progress bars drop strictly to 0%
+        cycleCompletedDate: todayStr,
       };
 
       if (prev.userAccount?.googleId && !prev.isDemoMode) {
@@ -590,7 +589,21 @@ export function App() {
     });
 
     setIsUltimateCelebrationOpen(false);
-    showToast(`🌱 Nouveau cycle initié : seules vos révisions du ${celebrationDayName} restent validées !`, 6000);
+    showToast(`🌟 Félicitations ! Toutes les barres de progression sont à zéro. Reposez-vous bien, à demain !`, 6000);
+  };
+
+  const handleStartNewCycleEarly = () => {
+    setState(prev => {
+      const nextState: AppState = {
+        ...prev,
+        cycleCompletedDate: undefined,
+      };
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+      return nextState;
+    });
+    showToast('🚀 Révisions réactivées pour aujourd’hui !');
   };
 
   const handleAddCustomSession = (session: StudySession) => {
@@ -788,6 +801,8 @@ export function App() {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
               onResetDailyCatchup={handleResetDailyCatchup}
+              cycleCompletedDate={state.cycleCompletedDate}
+              onStartNewCycleEarly={handleStartNewCycleEarly}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -879,6 +894,8 @@ export function App() {
               onUpdatePreferences={handleUpdatePreferences}
               onViewPricing={handleViewPricing}
               onResetDailyCatchup={handleResetDailyCatchup}
+              cycleCompletedDate={state.cycleCompletedDate}
+              onStartNewCycleEarly={handleStartNewCycleEarly}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
