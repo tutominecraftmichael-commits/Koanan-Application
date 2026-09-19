@@ -342,12 +342,92 @@ export function onFirebaseAuthStateChange(callback: (user: FirebaseUser | null) 
 
 let lastSyncedHashByUid: Record<string, string> = {};
 
+export type CloudSyncStatus = 'connected' | 'needs_activation' | 'offline' | 'checking';
+
+export interface CloudStatusInfo {
+  status: CloudSyncStatus;
+  message?: string;
+  consoleUrl: string;
+  lastCheckedAt?: string;
+}
+
+export const FIREBASE_CONSOLE_FIRESTORE_URL = 'https://console.firebase.google.com/project/konanai-ed046/firestore';
+
+/**
+ * Checks the real-time operational status of Cloud Firestore on project konanai-ed046.
+ * Distinguishes between:
+ * - 'connected': Firestore database is created and ready for multi-device sync.
+ * - 'needs_activation': Cloud Firestore API is disabled or database not created in Firebase Console.
+ * - 'offline': Device has no active Internet connection.
+ */
+export async function checkCloudSyncStatus(uid?: string): Promise<CloudStatusInfo> {
+  if (!db) {
+    return {
+      status: 'needs_activation',
+      message: 'Firestore non initialisé.',
+      consoleUrl: FIREBASE_CONSOLE_FIRESTORE_URL,
+      lastCheckedAt: new Date().toISOString(),
+    };
+  }
+
+  const targetUid = uid || auth?.currentUser?.uid || 'health-check-probe';
+
+  try {
+    const probeRef = doc(db, 'users', targetUid);
+    const snapPromise = getDoc(probeRef);
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('TIMEOUT_OFFLINE')), 6000)
+    );
+    await Promise.race([snapPromise, timeoutPromise]);
+
+    return {
+      status: 'connected',
+      message: 'Cloud Firestore opérationnel. Synchronisation multi-appareils active.',
+      consoleUrl: FIREBASE_CONSOLE_FIRESTORE_URL,
+      lastCheckedAt: new Date().toISOString(),
+    };
+  } catch (err: any) {
+    const errMsg = String(err?.message || '');
+    const errCode = String(err?.code || '');
+
+    if (
+      errMsg.includes('Cloud Firestore API has not been used') ||
+      errMsg.includes('disabled') ||
+      errCode === 'permission-denied'
+    ) {
+      return {
+        status: 'needs_activation',
+        message: 'Base Cloud Firestore non créée dans la Console Firebase. Cliquez pour l’activer en 1 clic.',
+        consoleUrl: FIREBASE_CONSOLE_FIRESTORE_URL,
+        lastCheckedAt: new Date().toISOString(),
+      };
+    }
+
+    if (errMsg === 'TIMEOUT_OFFLINE' || errCode === 'unavailable' || !navigator.onLine) {
+      return {
+        status: 'offline',
+        message: 'Connexion Internet instable ou hors ligne.',
+        consoleUrl: FIREBASE_CONSOLE_FIRESTORE_URL,
+        lastCheckedAt: new Date().toISOString(),
+      };
+    }
+
+    return {
+      status: 'needs_activation',
+      message: errMsg || 'Accès Cloud Firestore en attente de configuration.',
+      consoleUrl: FIREBASE_CONSOLE_FIRESTORE_URL,
+      lastCheckedAt: new Date().toISOString(),
+    };
+  }
+}
+
 /**
  * Persists user state directly to Cloud Firestore so all devices (PC, mobile, tablet)
  * share the exact same schedule, subjects, and study plans.
  */
-export async function syncUserStateToCloud(uid: string, data: any): Promise<void> {
-  if (!db || !uid) return;
+export async function syncUserStateToCloud(uid: string, data: any): Promise<{ success: boolean; error?: string }> {
+  if (!db || !uid) return { success: false, error: 'Database or UID missing' };
+
   try {
     const userRef = doc(db, 'users', uid);
     // Sanitize data (remove undefined fields that Firestore doesn't like)
@@ -358,33 +438,39 @@ export async function syncUserStateToCloud(uid: string, data: any): Promise<void
       const existing = await loadUserStateFromCloud(uid);
       if (existing && existing.subjects && existing.subjects.length > 0) {
         console.warn('Prevented accidental overwrite of cloud state by empty local state');
-        return;
+        return { success: false, error: 'BLOCKED_OVERWRITE_PROTECTION' };
       }
     }
 
     const currentHash = JSON.stringify(sanitized);
     if (lastSyncedHashByUid[uid] === currentHash) {
-      return;
+      return { success: true };
     }
-    lastSyncedHashByUid[uid] = currentHash;
+
     await setDoc(userRef, {
       ...sanitized,
       lastSyncedAt: new Date().toISOString()
     }, { merge: true });
-  } catch (err) {
-    console.warn('Firestore sync failed (offline or permissions):', err);
+
+    // CRITICAL FIX: Only update hash after successful setDoc to allow retries on temporary failures
+    lastSyncedHashByUid[uid] = currentHash;
+    return { success: true };
+  } catch (err: any) {
+    console.warn('Firestore sync failed (offline or permissions):', err?.message || err);
+    return { success: false, error: err?.message || 'SYNC_ERROR' };
   }
 }
 
 /**
- * Loads the user state from Cloud Firestore.
+ * Loads the user state from Cloud Firestore with a resilient timeout.
  */
 export async function loadUserStateFromCloud(uid: string): Promise<any | null> {
   if (!db || !uid) return null;
   try {
     const userRef = doc(db, 'users', uid);
     const snapPromise = getDoc(userRef);
-    const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500));
+    // 8-second resilient timeout for mobile networks
+    const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 8000));
     const snap: any = await Promise.race([snapPromise, timeoutPromise]);
     if (snap && typeof snap.exists === 'function' && snap.exists()) {
       return snap.data();
@@ -398,7 +484,11 @@ export async function loadUserStateFromCloud(uid: string): Promise<any | null> {
 /**
  * Listens in real-time to Cloud Firestore user state updates across all connected devices.
  */
-export function listenToUserCloudState(uid: string, onUpdate: (data: any) => void): () => void {
+export function listenToUserCloudState(
+  uid: string, 
+  onUpdate: (data: any) => void,
+  onError?: (err: any) => void
+): () => void {
   if (!db || !uid) return () => {};
   try {
     const userRef = doc(db, 'users', uid);
@@ -408,10 +498,12 @@ export function listenToUserCloudState(uid: string, onUpdate: (data: any) => voi
       }
     }, (err) => {
       console.warn('Firestore snapshot listener warning:', err);
+      if (onError) onError(err);
     });
   } catch (err) {
     console.warn('Failed to attach Firestore listener:', err);
     return () => {};
   }
 }
+
 

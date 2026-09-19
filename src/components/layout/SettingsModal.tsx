@@ -12,7 +12,8 @@ import {
   ShieldCheck,
   Sparkles,
   GraduationCap,
-  Save
+  Save,
+  Cloud
 } from 'lucide-react';
 import type { UserAccount } from '../../types';
 import { Badge } from '../ui/Badge';
@@ -36,6 +37,7 @@ interface SettingsModalProps {
   onExportData?: () => void;
   onImportData?: () => void;
   onResetData?: () => void;
+  onOpenCloudSync?: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -50,6 +52,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onExportData,
   onImportData,
   onResetData,
+  onOpenCloudSync,
 }) => {
   const [lang, setLang] = useLanguage();
 
@@ -343,6 +346,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </span>
 
             <div className="space-y-2">
+              {onOpenCloudSync && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenCloudSync();
+                  }}
+                  className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-950/40 to-cyan-950/40 border border-cyan-500/30 hover:border-cyan-400 hover:bg-slate-900/80 transition-colors text-xs text-white cursor-pointer text-left font-semibold"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Cloud className="w-4 h-4 text-cyan-400" />
+                    <span>Synchronisation Multi-Appareils (PC & Mobile)</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-cyan-300">Cloud / Code</span>
+                </button>
+              )}
+
               {onExportData && (
                 <button
                   type="button"

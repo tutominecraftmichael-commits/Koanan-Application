@@ -17,7 +17,14 @@ import {
 } from './services/storage';
 import { generateOptimizedStudyPlan } from './services/plannerAlgorithm';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
-import { onFirebaseAuthStateChange, signOutReal, listenToUserCloudState } from './lib/firebase';
+import { 
+  onFirebaseAuthStateChange, 
+  signOutReal, 
+  listenToUserCloudState, 
+  checkCloudSyncStatus, 
+  syncUserStateToCloud,
+  type CloudSyncStatus 
+} from './lib/firebase';
 import { evaluateDailyCatchup, resetDailyRescheduling } from './services/sessionRescheduler';
 import type { 
   ActiveAppView, 
@@ -35,6 +42,7 @@ import { soundFX } from './lib/audioEffects';
 import { Navbar } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { ProFeatureModal } from './components/common/ProFeatureModal';
+import { CloudSyncModal } from './components/common/CloudSyncModal';
 
 // Views
 import { LandingHero } from './features/landing/LandingHero';
@@ -54,6 +62,8 @@ export function App() {
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCloudSyncOpen, setIsCloudSyncOpen] = useState(false);
+  const [cloudStatus, setCloudStatus] = useState<CloudSyncStatus>('checking');
   const [isProModalOpen, setIsProModalOpen] = useState(false);
   const [proModalFeature, setProModalFeature] = useState<{ title: string; desc: string } | undefined>(undefined);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -221,6 +231,32 @@ export function App() {
     setTimeout(() => {
       setToastMessage(null);
     }, 4000);
+  };
+
+  // Check Cloud Firestore multi-device operational status
+  useEffect(() => {
+    const uid = state.userAccount?.googleId;
+    if (state.userAccount?.isLoggedIn && !state.isDemoMode && uid) {
+      checkCloudSyncStatus(uid)
+        .then(res => setCloudStatus(res.status))
+        .catch(() => setCloudStatus('needs_activation'));
+    }
+  }, [state.userAccount?.googleId, state.userAccount?.isLoggedIn]);
+
+  const handleApplyImportedState = (imported: AppState) => {
+    setState(imported);
+    if (imported.userAccount?.googleId) {
+      saveUserState(imported.userAccount.googleId, imported);
+    }
+    showToast('✨ Configuration synchronisée avec succès sur cet appareil !');
+  };
+
+  const handleForceCloudSync = async () => {
+    if (state.userAccount?.googleId && !state.isDemoMode) {
+      await syncUserStateToCloud(state.userAccount.googleId, state);
+      const res = await checkCloudSyncStatus(state.userAccount.googleId);
+      setCloudStatus(res.status);
+    }
   };
 
   /**
@@ -647,6 +683,8 @@ export function App() {
         onResetData={handleResetData}
         onLogout={handleLogout}
         onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenCloudSync={() => setIsCloudSyncOpen(true)}
+        cloudStatus={cloudStatus}
         totalStudySessions={state.studySessions.length}
         completedSessions={state.studySessions.filter(s => s.completed).length}
       />
@@ -748,6 +786,8 @@ export function App() {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
               onResetDailyCatchup={handleResetDailyCatchup}
+              onOpenCloudSync={() => setIsCloudSyncOpen(true)}
+              cloudStatus={cloudStatus}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -923,6 +963,19 @@ export function App() {
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}
         onResetData={handleResetData}
+        onOpenCloudSync={() => setIsCloudSyncOpen(true)}
+      />
+
+      {/* Cloud & Multi-Device Sync Modal */}
+      <CloudSyncModal
+        isOpen={isCloudSyncOpen}
+        onClose={() => setIsCloudSyncOpen(false)}
+        currentState={state}
+        onApplyState={handleApplyImportedState}
+        onExportBackup={handleExportData}
+        onImportBackup={() => fileInputRef.current?.click()}
+        onForceCloudSync={handleForceCloudSync}
+        showToast={showToast}
       />
 
       {/* Pro Upgrade Modal */}

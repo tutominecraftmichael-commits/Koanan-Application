@@ -24,7 +24,8 @@ import {
   GraduationCap,
   AlertCircle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Cloud
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
@@ -46,6 +47,8 @@ export interface DashboardOverviewProps {
   planTier?: 'free' | 'pro' | 'plus';
   onResetDailyCatchup?: () => void;
   onViewPricing?: () => void;
+  onOpenCloudSync?: () => void;
+  cloudStatus?: 'connected' | 'needs_activation' | 'offline' | 'checking';
 }
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
@@ -63,6 +66,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   planTier = 'free',
   onResetDailyCatchup,
   onViewPricing,
+  onOpenCloudSync,
+  cloudStatus = 'checking',
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -171,6 +176,60 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           )}
         </div>
       </div>
+
+      {/* MULTI-DEVICE CLOUD SYNC CALLOUT */}
+      {!isDemoMode && onOpenCloudSync && (
+        <div 
+          onClick={onOpenCloudSync}
+          className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg ${
+            cloudStatus === 'needs_activation'
+              ? 'bg-amber-950/30 border-amber-500/40 hover:border-amber-400 hover:bg-amber-950/50 text-amber-200'
+              : cloudStatus === 'connected'
+              ? 'bg-emerald-950/20 border-emerald-500/30 hover:border-emerald-400/50 hover:bg-emerald-950/30 text-emerald-200'
+              : 'bg-slate-900/60 border-slate-800 hover:border-indigo-500/40 hover:bg-slate-900 text-slate-200'
+          }`}
+        >
+          <div className="flex items-center gap-3.5">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${
+              cloudStatus === 'needs_activation'
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                : cloudStatus === 'connected'
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
+            }`}>
+              <Cloud className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-xs sm:text-sm font-bold text-white">
+                  Synchronisation Multi-Appareils (PC & Mobile)
+                </h3>
+                {cloudStatus === 'needs_activation' ? (
+                  <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold">
+                    Action Requise
+                  </Badge>
+                ) : cloudStatus === 'connected' ? (
+                  <Badge variant="emerald" size="sm" className="text-[10px] px-1.5 py-0 font-bold">
+                    🟢 Cloud Actif
+                  </Badge>
+                ) : null}
+              </div>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                {cloudStatus === 'needs_activation'
+                  ? 'Pour retrouver automatiquement vos cours sur votre PC, activez le Cloud en 1 clic ou utilisez le code de transfert immédiat.'
+                  : cloudStatus === 'connected'
+                  ? 'Vos données sont synchronisées en temps réel sur tous vos écrans avec votre compte Google.'
+                  : 'Transférez votre emploi du temps et vos matières sur votre PC ou un autre appareil en un clic.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-xs font-bold text-cyan-400 hover:text-cyan-300 shrink-0 self-end sm:self-center">
+            <span>Ouvrir la synchronisation</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </div>
+        </div>
+      )}
 
       {/* QUICK ACTIONS HUB */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">

@@ -356,3 +356,91 @@ export function importStateFromJson(jsonString: string): AppState | null {
   }
   return null;
 }
+
+/**
+ * Generates an instant, portable cross-device transfer code (Mobile ➔ PC).
+ * Enables instantaneous sync without waiting for cloud database provisioning.
+ */
+export function generateSyncCode(state: AppState): string {
+  try {
+    const payload = {
+      v: 1,
+      t: new Date().toISOString(),
+      studentName: state.studentName,
+      academicLevel: state.academicLevel,
+      planTier: state.planTier || 'free',
+      subjects: state.subjects || [],
+      classSlots: state.classSlots || [],
+      preferences: state.preferences || DEFAULT_PREFERENCES,
+      studySessions: state.studySessions || [],
+      logs: state.logs || [],
+      completedOnboarding: state.completedOnboarding,
+    };
+    const json = JSON.stringify(payload);
+    // Safe UTF-8 Base64 encoding
+    const base64 = btoa(
+      encodeURIComponent(json).replace(/%([0-9A-F]{2})/g, (_, p1) =>
+        String.fromCharCode(parseInt(p1, 16))
+      )
+    );
+    return `KONAN-SYNC-${base64}`;
+  } catch (err) {
+    console.error('Failed to generate sync code:', err);
+    return '';
+  }
+}
+
+/**
+ * Imports an instant sync code generated from another device (e.g. phone)
+ * and reconstructs the complete student environment on this device (e.g. PC).
+ */
+export function importSyncCode(rawInput: string, currentAccount?: UserAccount): AppState | null {
+  try {
+    const input = rawInput.trim();
+    let data: any = null;
+
+    if (input.startsWith('KONAN-SYNC-')) {
+      const base64 = input.replace(/^KONAN-SYNC-/, '');
+      const decoded = decodeURIComponent(
+        Array.prototype.map
+          .call(atob(base64), (c: string) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      data = JSON.parse(decoded);
+    } else if (input.startsWith('{')) {
+      // Fallback: direct JSON paste
+      data = JSON.parse(input);
+    }
+
+    if (!data || !Array.isArray(data.subjects)) {
+      return null;
+    }
+
+    const importedState: AppState = {
+      studentName: data.studentName || currentAccount?.name || 'Étudiant',
+      academicLevel: data.academicLevel || currentAccount?.academicLevel || 'Licence Universitaire',
+      planTier: data.planTier || currentAccount?.planTier || 'free',
+      subjects: data.subjects || [],
+      classSlots: data.classSlots || [],
+      preferences: data.preferences || DEFAULT_PREFERENCES,
+      studySessions: data.studySessions || [],
+      logs: data.logs || [],
+      completedOnboarding: data.completedOnboarding ?? (data.subjects.length > 0),
+      isDemoMode: false,
+      userAccount: currentAccount
+        ? {
+            ...currentAccount,
+            name: data.studentName || currentAccount.name,
+            academicLevel: data.academicLevel || currentAccount.academicLevel,
+            planTier: data.planTier || currentAccount.planTier || 'free',
+          }
+        : undefined,
+    };
+
+    return importedState;
+  } catch (err) {
+    console.error('Failed to import sync code:', err);
+    return null;
+  }
+}
+
