@@ -27,7 +27,9 @@ import {
   Layers,
   Plus,
   Star,
-  Brain
+  Brain,
+  Trophy,
+  ArrowRight
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
@@ -47,6 +49,7 @@ export interface PlannerViewProps {
   planTier?: 'free' | 'pro' | 'plus';
   onViewPricing?: () => void;
   onResetDailyCatchup?: () => void;
+  onOpenCelebrationModal?: () => void;
 }
 
 export const PlannerView: React.FC<PlannerViewProps> = ({
@@ -62,6 +65,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   planTier = 'free',
   onViewPricing,
   onResetDailyCatchup,
+  onOpenCelebrationModal,
 }) => {
   const [selectedDayFilter, setSelectedDayFilter] = useState<number | 'all'>('all');
   const [selectedSubjectFilter, setSelectedSubjectFilter] = useState<string>('all');
@@ -197,6 +201,43 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         </div>
       </div>
 
+      {/* 100% ACHIEVEMENT BANNER (MINECRAFT FULL NETHERITE READY) */}
+      {completionRate === 100 && onOpenCelebrationModal && (
+        <button
+          type="button"
+          onClick={onOpenCelebrationModal}
+          className="w-full p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-slate-950 via-amber-950/40 to-slate-950 border-2 border-amber-400/80 shadow-2xl shadow-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer group"
+        >
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-300 p-0.5 shadow-lg shrink-0 group-hover:scale-110 transition-transform">
+              <div className="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center">
+                <Trophy className="w-6 h-6 text-amber-400 animate-bounce" />
+              </div>
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-black uppercase tracking-widest text-amber-400 drop-shadow-xs">
+                  ⚡ 100% ATTEINT ! PLEIN SUCCÈS
+                </span>
+                <Badge variant="amber" size="sm" className="text-[10px] font-mono px-1.5 py-0 font-bold">
+                  FULL NETHERITE
+                </Badge>
+              </div>
+              <h3 className="text-sm sm:text-base font-extrabold text-white mt-0.5 truncate">
+                Toutes les sessions de travail ont été validées !
+              </h3>
+              <p className="text-xs text-slate-300 mt-0.5">
+                Cliquez pour revoir l'animation de complétion et faire retentir la fanfare Minecraft.
+              </p>
+            </div>
+          </div>
+          <div className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shrink-0 flex items-center gap-2 shadow-lg shadow-amber-500/30 self-end sm:self-center transition-colors">
+            <span>Revoir l'animation</span>
+            <ArrowRight className="w-4 h-4" />
+          </div>
+        </button>
+      )}
+
       {/* METRIC STRIP */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
         <Card className="p-3 sm:p-4 bg-slate-900/60 border-slate-800 flex items-center gap-2.5 interactive-card">
@@ -209,13 +250,19 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
           </div>
         </Card>
 
-        <Card className="p-3 sm:p-4 bg-slate-900/60 border-slate-800 flex items-center gap-2.5 interactive-card">
-          <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 shrink-0">
-            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+        <Card 
+          onClick={completionRate === 100 && onOpenCelebrationModal ? onOpenCelebrationModal : undefined}
+          className={`p-3 sm:p-4 bg-slate-900/60 border-slate-800 flex items-center gap-2.5 interactive-card ${
+            completionRate === 100 ? 'border-amber-400/60 hover:border-amber-400 cursor-pointer shadow-lg shadow-amber-500/10' : ''
+          }`}
+          title={completionRate === 100 ? "Cliquez pour admirer l'animation 100%" : undefined}
+        >
+          <div className={`p-2 rounded-xl shrink-0 ${completionRate === 100 ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
+            {completionRate === 100 ? <Trophy className="w-4 h-4 sm:w-5 sm:h-5 animate-bounce" /> : <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />}
           </div>
           <div className="min-w-0">
             <p className="text-[10px] sm:text-xs text-slate-400 truncate">Accomplissement</p>
-            <p className="text-sm sm:text-lg font-bold text-emerald-400 font-mono">
+            <p className={`text-sm sm:text-lg font-bold font-mono ${completionRate === 100 ? 'text-amber-300' : 'text-emerald-400'}`}>
               <AnimatedCounter value={completionRate} suffix="%" /> (<AnimatedCounter value={completedSessions.length} />/{studySessions.length})
             </p>
           </div>

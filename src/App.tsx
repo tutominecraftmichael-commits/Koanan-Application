@@ -33,12 +33,14 @@ import type {
   UserAccount,
   Chronotype
 } from './types';
+import { Sparkles, X } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
 
 // Layout
 import { Navbar } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { ProFeatureModal } from './components/common/ProFeatureModal';
+import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 
 // Views
 import { LandingHero } from './features/landing/LandingHero';
@@ -59,12 +61,14 @@ export function App() {
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
+  const [isUltimateCelebrationOpen, setIsUltimateCelebrationOpen] = useState(false);
   const [proModalFeature, setProModalFeature] = useState<{ title: string; desc: string } | undefined>(undefined);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const lastRescheduledSignature = useRef<string>('');
   const hasGreetedAuthRef = useRef<string>('');
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Persist state whenever it changes
   useEffect(() => {
@@ -220,11 +224,14 @@ export function App() {
     };
   }, []);
 
-  const showToast = (msg: string) => {
+  const showToast = (msg: string, duration = 5000) => {
     setToastMessage(msg);
-    setTimeout(() => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    toastTimeoutRef.current = setTimeout(() => {
       setToastMessage(null);
-    }, 4000);
+    }, duration);
   };
 
   /**
@@ -527,9 +534,19 @@ export function App() {
     if (willBeCompleted) {
       const daySessions = updatedSessions.filter(s => s.dayOfWeek === target.dayOfWeek);
       const isDayFullyComplete = daySessions.length > 0 && daySessions.every(s => s.completed);
-      if (isDayFullyComplete) {
+      const totalSessions = updatedSessions.length;
+      const completedSessions = updatedSessions.filter(s => s.completed).length;
+      const willAllBeCompleted = totalSessions > 0 && completedSessions === totalSessions;
+
+      if (willAllBeCompleted) {
+        setIsUltimateCelebrationOpen(true);
+        showToast(`🏆 EXCEPTIONNEL ! Tu as accompli 100% de tes objectifs et validé la totalité de tes heures d'étude !`, 7000);
+      } else if (isDayFullyComplete) {
         soundFX.playCelebrationFanfare();
-        showToast('🎉 Bravo ! Toutes les révisions prévues aujourd’hui sont terminées !');
+        showToast(`🎉 Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
+      } else {
+        soundFX.playCelebrationFanfare();
+        showToast(`🎉 Félicitations ! Tu as validé la leçon "${target.title}" avec succès !`, 5000);
       }
     }
 
@@ -553,18 +570,28 @@ export function App() {
   };
 
   const handleCompleteFocusSession = (sessionId: string, log: StudyLog) => {
+    const targetSession = state.studySessions.find(s => s.id === sessionId);
     const updatedSessions = state.studySessions.map(s => 
       s.id === sessionId ? { ...s, completed: true, completedAt: new Date().toISOString() } : s
     );
 
-    soundFX.playCelebrationFanfare();
+    const totalSessions = updatedSessions.length;
+    const completedSessions = updatedSessions.filter(s => s.completed).length;
+    const willAllBeCompleted = totalSessions > 0 && completedSessions === totalSessions;
+
+    if (willAllBeCompleted) {
+      setIsUltimateCelebrationOpen(true);
+      showToast(`🏆 EXCEPTIONNEL ! Tu as accompli 100% de tes objectifs et validé la totalité de tes heures d'étude !`, 7000);
+    } else {
+      soundFX.playCelebrationFanfare();
+      showToast(`🎉 Félicitations ! Tu as terminé la leçon "${targetSession?.title || 'Session Focus'}" avec succès !`, 5000);
+    }
 
     setState(prev => ({
       ...prev,
       studySessions: updatedSessions,
       logs: [log, ...prev.logs],
     }));
-    showToast('🎉 Bravo ! Session de focus terminée avec succès !');
   };
 
   /**
@@ -755,6 +782,7 @@ export function App() {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
               onResetDailyCatchup={handleResetDailyCatchup}
+              onOpenCelebrationModal={() => setIsUltimateCelebrationOpen(true)}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -848,6 +876,7 @@ export function App() {
               onUpdatePreferences={handleUpdatePreferences}
               onViewPricing={handleViewPricing}
               onResetDailyCatchup={handleResetDailyCatchup}
+              onOpenCelebrationModal={() => setIsUltimateCelebrationOpen(true)}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -941,11 +970,37 @@ export function App() {
         onViewPricing={handleViewPricing}
       />
 
-      {/* Floating Notification Toast */}
+      {/* Ultimate 100% Completion Celebration Modal (Minecraft Advancement Fanfare) */}
+      <UltimateCompletionCelebrationModal
+        isOpen={isUltimateCelebrationOpen}
+        onClose={() => setIsUltimateCelebrationOpen(false)}
+        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        totalPlannedMinutes={state.studySessions.reduce((acc, s) => acc + s.durationMinutes, 0)}
+        totalSessionsCount={state.studySessions.length}
+      />
+
+      {/* Floating Notification Toast (Full multi-line sentence, zero truncation) */}
       {toastMessage && (
-        <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-4 sm:right-6 z-50 bg-slate-900 border border-blue-500/50 text-white px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl shadow-2xl shadow-blue-950/40 text-xs font-semibold flex items-center gap-2 animate-in slide-in-from-bottom-5 duration-200 max-w-[90vw]">
-          <span className="w-2 h-2 rounded-full bg-sky-400 animate-ping shrink-0" />
-          <span className="truncate">{toastMessage}</span>
+        <div 
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-50 bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-950 border border-sky-400/50 text-white px-4 py-3 rounded-2xl shadow-2xl shadow-indigo-950/70 text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in slide-in-from-bottom-5 duration-200 max-w-[94vw] sm:max-w-md w-auto backdrop-blur-md"
+        >
+          <div className="p-1.5 rounded-xl bg-sky-500/20 text-sky-300 shrink-0 mt-0.5 border border-sky-500/30">
+            <Sparkles className="w-4 h-4 text-sky-300" />
+          </div>
+          <div className="flex-1 min-w-0 pr-1">
+            <p className="text-white text-xs sm:text-sm font-medium leading-relaxed break-words whitespace-normal">
+              {toastMessage}
+            </p>
+          </div>
+          <button
+            onClick={() => setToastMessage(null)}
+            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors shrink-0 -mr-1 -mt-1 cursor-pointer"
+            aria-label="Fermer"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
       )}
 
