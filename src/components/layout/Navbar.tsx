@@ -13,8 +13,7 @@ import {
   FileText,
   Settings,
   Settings2,
-  ChevronDown,
-  Cloud
+  ChevronDown
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount } from '../../types';
 import { Button } from '../ui/Button';
@@ -33,8 +32,6 @@ export interface NavbarProps {
   onResetData: () => void;
   onLogout?: () => void;
   onOpenSettings?: () => void;
-  onOpenCloudSync?: () => void;
-  cloudStatus?: 'connected' | 'needs_activation' | 'offline' | 'checking';
   totalStudySessions: number;
   completedSessions: number;
   isDemoMode?: boolean;
@@ -53,8 +50,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onResetData,
   onLogout: _onLogout,
   onOpenSettings,
-  onOpenCloudSync,
-  cloudStatus = 'checking',
   totalStudySessions: _totalStudySessions,
   completedSessions: _completedSessions,
   isDemoMode = false,
@@ -163,30 +158,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </button>
                 )}
 
-                {/* Cloud Multi-Device Sync Icon */}
-                {userAccount?.isLoggedIn && onOpenCloudSync && (
-                  <button
-                    onClick={onOpenCloudSync}
-                    title={
-                      cloudStatus === 'connected'
-                        ? 'Synchronisé sur le Cloud (PC & Mobile liés)'
-                        : cloudStatus === 'needs_activation'
-                        ? 'Synchronisation multi-appareils : activation requise (cliquez ici)'
-                        : 'Synchronisation Multi-Appareils (PC & Mobile)'
-                    }
-                    aria-label="Synchronisation Multi-Appareils"
-                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full border flex items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 ${
-                      cloudStatus === 'connected'
-                        ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-400 hover:bg-emerald-900/50 hover:border-emerald-400 shadow-emerald-950/20'
-                        : cloudStatus === 'needs_activation'
-                        ? 'bg-amber-950/40 border-amber-500/50 text-amber-300 hover:bg-amber-900/50 hover:border-amber-400 shadow-amber-950/20 animate-pulse'
-                        : 'bg-slate-900/80 border-slate-800 text-slate-300 hover:text-white hover:border-cyan-500/60'
-                    }`}
-                  >
-                    <Cloud className="w-4 h-4" />
-                  </button>
-                )}
-
                 {/* Secondary Tools Menu (Data Export, Import, Reset) */}
                 <div className="relative" ref={toolsMenuRef}>
                   <button
@@ -234,16 +205,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                       )}
 
                       <div className="my-1 border-t border-slate-800/60" />
-
-                      {onOpenCloudSync && (
-                        <button
-                          onClick={() => { onOpenCloudSync(); setIsToolsOpen(false); }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-cyan-300 hover:text-white hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left font-semibold"
-                        >
-                          <Cloud className="w-3.5 h-3.5 text-cyan-400" />
-                          <span>Synchroniser PC & Mobile</span>
-                        </button>
-                      )}
                       
                       <button
                         onClick={() => { onExportData(); setIsToolsOpen(false); }}
