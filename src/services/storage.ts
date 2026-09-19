@@ -199,24 +199,72 @@ export function saveUserState(uid: string, state: AppState): void {
 
 /**
  * Fetches user data from Cloud Firestore and merges into local state.
- * Solves cross-device desync between phone and PC.
+ * Enables seamless multi-device synchronization (Wave8, any smartphone, tablet, or PC).
  */
 export async function fetchAndMergeCloudState(uid: string, currentState: AppState): Promise<AppState> {
   if (!uid || uid === 'google-demo') return currentState;
   try {
     const cloudData = await loadUserStateFromCloud(uid);
-    if (cloudData && (cloudData.subjects?.length > 0 || cloudData.completedOnboarding || cloudData.studentName)) {
+
+    const hasCloudSubjects = Array.isArray(cloudData?.subjects) && cloudData.subjects.length > 0;
+    const hasLocalSubjects = Array.isArray(currentState.subjects) && currentState.subjects.length > 0;
+
+    // Case 1: Cloud already has subjects saved from another device (e.g. Wave8, other phone or PC)
+    if (hasCloudSubjects) {
+      const mergedSubjects: Subject[] = cloudData.subjects;
+      const mergedClassSlots: ClassSlot[] = Array.isArray(cloudData.classSlots) ? cloudData.classSlots : currentState.classSlots;
+      const mergedPreferences: StudyPreferences = cloudData.preferences
+        ? { ...currentState.preferences, ...cloudData.preferences }
+        : currentState.preferences;
+
+      let mergedStudySessions: StudySession[] = Array.isArray(cloudData.studySessions) && cloudData.studySessions.length > 0
+        ? cloudData.studySessions
+        : currentState.studySessions;
+
+      // If study sessions are empty on cloud, generate them from the subjects and slots!
+      if ((!mergedStudySessions || mergedStudySessions.length === 0) && mergedSubjects.length > 0) {
+        mergedStudySessions = generateOptimizedStudyPlan(mergedSubjects, mergedClassSlots, mergedPreferences);
+      }
+
       const merged: AppState = {
         ...currentState,
         studentName: cloudData.studentName || currentState.studentName,
         academicLevel: cloudData.academicLevel || currentState.academicLevel,
         planTier: cloudData.planTier || currentState.planTier || 'free',
-        completedOnboarding: cloudData.completedOnboarding ?? currentState.completedOnboarding,
-        subjects: cloudData.subjects || currentState.subjects,
-        classSlots: cloudData.classSlots || currentState.classSlots,
-        preferences: cloudData.preferences ? { ...currentState.preferences, ...cloudData.preferences } : currentState.preferences,
-        studySessions: cloudData.studySessions || currentState.studySessions,
-        logs: cloudData.logs || currentState.logs,
+        completedOnboarding: cloudData.completedOnboarding ?? true,
+        subjects: mergedSubjects,
+        classSlots: mergedClassSlots,
+        preferences: mergedPreferences,
+        studySessions: mergedStudySessions,
+        logs: Array.isArray(cloudData.logs) ? cloudData.logs : currentState.logs,
+        userAccount: currentState.userAccount ? {
+          ...currentState.userAccount,
+          planTier: cloudData.planTier || currentState.planTier || 'free',
+          name: cloudData.studentName || currentState.userAccount.name,
+        } : undefined,
+      };
+
+      try {
+        localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(merged));
+      } catch {}
+
+      return merged;
+    }
+
+    // Case 2: Cloud has no subjects, but THIS device (e.g. the phone that created the planning) has subjects
+    if (!hasCloudSubjects && hasLocalSubjects) {
+      console.log(`[Sync] Pushing timetable from current device to Cloud Firestore for user ${uid}`);
+      saveUserState(uid, currentState);
+      return currentState;
+    }
+
+    // Case 3: Cloud has profile meta
+    if (cloudData && (cloudData.studentName || cloudData.academicLevel || cloudData.planTier)) {
+      const merged: AppState = {
+        ...currentState,
+        studentName: cloudData.studentName || currentState.studentName,
+        academicLevel: cloudData.academicLevel || currentState.academicLevel,
+        planTier: cloudData.planTier || currentState.planTier || 'free',
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
           planTier: cloudData.planTier || currentState.planTier || 'free',
@@ -227,11 +275,6 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(merged));
       } catch {}
       return merged;
-    } else if (!cloudData || (!cloudData.subjects?.length && !cloudData.completedOnboarding)) {
-      // If Cloud Firestore is empty but this device has subjects, push local state to Cloud so other devices can access it!
-      if (currentState.subjects && currentState.subjects.length > 0) {
-        saveUserState(uid, currentState);
-      }
     }
   } catch (err) {
     console.warn('Could not merge cloud state:', err);

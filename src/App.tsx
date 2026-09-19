@@ -313,7 +313,10 @@ export function App() {
     };
     userState.isDemoMode = false;
 
-    saveUserState(profile.googleId, userState);
+    // Only push to cloud immediately if local device already has subjects
+    if (userState.subjects && userState.subjects.length > 0) {
+      saveUserState(profile.googleId, userState);
+    }
     setState(userState);
 
     // 1. Instant greeting and direct redirection to dashboard (0ms latency, no blocking)
