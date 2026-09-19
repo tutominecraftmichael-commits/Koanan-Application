@@ -30,12 +30,9 @@ export const UltimateCompletionCelebrationModal: React.FC<UltimateCompletionCele
 }) => {
   const [progress, setProgress] = useState(0); // 0 to 100
   const [isSuspense, setIsSuspense] = useState(false);
-  const [isFinished, setIsFinished] = useState(false);
 
-  const animationFrameRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number | null>(null);
-  const lastTickPercentRef = useRef<number>(0);
-  const hasTriggeredFanfareRef = useRef<boolean>(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Target minutes and hours format
   const targetMinutes = Math.max(totalPlannedMinutes, 60);
@@ -45,109 +42,84 @@ export const UltimateCompletionCelebrationModal: React.FC<UltimateCompletionCele
   const currentMinutes = Math.min(targetMinutes, Math.round((progress / 100) * targetMinutes));
   const currentHoursText = formatMinutesToHours(currentMinutes);
 
-  const fireConfettiSalvo = () => {
-    confetti({
-      particleCount: 80,
-      angle: 60,
-      spread: 70,
-      origin: { x: 0.1, y: 0.7 },
-      colors: ['#F59E0B', '#10B981', '#06B6D4', '#8B5CF6', '#FFFFFF'],
-    });
-    confetti({
-      particleCount: 80,
-      angle: 120,
-      spread: 70,
-      origin: { x: 0.9, y: 0.7 },
-      colors: ['#F59E0B', '#10B981', '#06B6D4', '#8B5CF6', '#FFFFFF'],
-    });
-    setTimeout(() => {
+  const fireConfetti = () => {
+    try {
       confetti({
-        particleCount: 100,
-        spread: 90,
-        origin: { y: 0.5 },
-        colors: ['#F59E0B', '#FBBF24', '#34D399', '#60A5FA'],
+        particleCount: 70,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#F59E0B', '#10B981', '#06B6D4', '#8B5CF6', '#FFFFFF'],
+        disableForReducedMotion: true,
       });
-    }, 250);
+    } catch {
+      // Safe fallback if canvas-confetti fails
+    }
+  };
+
+  const cleanupTimers = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   };
 
   const startAnimation = () => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
+    cleanupTimers();
 
     setProgress(0);
     setIsSuspense(false);
-    setIsFinished(false);
-    lastTickPercentRef.current = 0;
-    hasTriggeredFanfareRef.current = false;
-    startTimeRef.current = performance.now();
 
-    const animate = (now: number) => {
-      if (!startTimeRef.current) startTimeRef.current = now;
-      const elapsed = now - startTimeRef.current;
+    let current = 0;
 
-      let currentPct = 0;
-
-      if (elapsed < 2200) {
-        // Fast energetic climb to 98%
-        const t = elapsed / 2200;
-        currentPct = Math.min(98, Math.round(t * 98));
-        setIsSuspense(false);
-
-        if (currentPct - lastTickPercentRef.current >= 6) {
-          lastTickPercentRef.current = currentPct;
-          soundFX.playTensionTick(currentPct / 100);
-        }
-      } else if (elapsed < 3000) {
-        // Slowing down at 98% -> 99%
-        setIsSuspense(true);
-        if (lastTickPercentRef.current < 98) {
-          lastTickPercentRef.current = 98;
-          soundFX.playSuspenseHeartbeat();
-        }
-        const phase2Elapsed = elapsed - 2200;
-        const subT = phase2Elapsed / 800;
-        currentPct = 98 + subT * 1;
-      } else if (elapsed < 3800) {
-        // Crawling 99% -> 100%
-        setIsSuspense(true);
-        const phase3Elapsed = elapsed - 3000;
-        const subT = phase3Elapsed / 800;
-        currentPct = 99 + subT * 1;
+    // Phase 1: Smooth fast progression 0% -> 98% (~1.8 seconds)
+    intervalRef.current = setInterval(() => {
+      if (current < 98) {
+        current = Math.min(98, current + 2.2);
+        setProgress(current);
       } else {
-        // 100% ACHIEVED!
-        currentPct = 100;
-        setProgress(100);
-        setIsSuspense(false);
-        setIsFinished(true);
-
-        if (!hasTriggeredFanfareRef.current) {
-          hasTriggeredFanfareRef.current = true;
-          soundFX.playMinecraftAdvancementSound();
-          fireConfettiSalvo();
+        // Reached 98%: pause and enter suspense phase cleanly
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
         }
-        return;
+
+        setIsSuspense(true);
+        current = 98;
+        setProgress(98);
+
+        // Phase 2: Slow climb from 98% to 99% in 700ms
+        timeoutRef.current = setTimeout(() => {
+          current = 99;
+          setProgress(99);
+
+          // Phase 3: Climax leap to 100% in 600ms
+          timeoutRef.current = setTimeout(() => {
+            current = 100;
+            setProgress(100);
+            setIsSuspense(false);
+
+            // Triumphant sound and confetti
+            soundFX.playMinecraftAdvancementSound();
+            fireConfetti();
+          }, 600);
+
+        }, 700);
       }
-
-      setProgress(Math.min(100, currentPct));
-      animationFrameRef.current = requestAnimationFrame(animate);
-    };
-
-    animationFrameRef.current = requestAnimationFrame(animate);
+    }, 40);
   };
 
   useEffect(() => {
     if (isOpen) {
       startAnimation();
     } else {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      cleanupTimers();
     }
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      cleanupTimers();
     };
   }, [isOpen]);
 
@@ -244,12 +216,6 @@ export const UltimateCompletionCelebrationModal: React.FC<UltimateCompletionCele
                 <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/80 rounded-full blur-[1px] shadow-sm" />
               </div>
             </div>
-
-            {isSuspense && !isFinished && (
-              <p className="text-[10px] text-amber-300/90 font-mono italic animate-pulse text-right">
-                ⏳ Décélération finale... 98%... 99%...
-              </p>
-            )}
           </div>
 
           {/* BAR 2: HEURES RÉALISÉES (0h00 -> TOTAL HEURES DEMANDÉES) */}

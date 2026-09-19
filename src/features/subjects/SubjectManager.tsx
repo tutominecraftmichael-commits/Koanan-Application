@@ -60,7 +60,10 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   const [difficulty, setDifficulty] = useState<1 | 2 | 3 | 4 | 5>(3);
   const [targetGrade, setTargetGrade] = useState<number>(15);
   const [examDate, setExamDate] = useState<string>('');
-  const [topicsString, setTopicsString] = useState<string>('');
+  
+  // Real-time topic / theme list management
+  const [topicsList, setTopicsList] = useState<string[]>([]);
+  const [newTopicInput, setNewTopicInput] = useState<string>('');
 
   const handleOpenAdd = () => {
     setEditingSubjectId(null);
@@ -71,7 +74,8 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     setDifficulty(3);
     setTargetGrade(15);
     setExamDate('');
-    setTopicsString('');
+    setTopicsList(['Introduction & concepts clés', 'Exercices d’application']);
+    setNewTopicInput('');
     setIsModalOpen(true);
   };
 
@@ -84,43 +88,67 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     setDifficulty(sub.difficulty);
     setTargetGrade(sub.targetGrade);
     setExamDate(sub.examDate || '');
-    setTopicsString((sub.topics || []).join(', '));
+    setTopicsList(sub.topics && sub.topics.length > 0 ? [...sub.topics] : ['Généralités & Notions clés']);
+    setNewTopicInput('');
     setIsModalOpen(true);
+  };
+
+  const handleAddTopic = () => {
+    const trimmed = newTopicInput.trim();
+    if (!trimmed) return;
+    if (topicsList.includes(trimmed)) {
+      setNewTopicInput('');
+      return;
+    }
+    setTopicsList(prev => [...prev, trimmed]);
+    setNewTopicInput('');
+  };
+
+  const handleDeleteTopic = (indexToDelete: number) => {
+    setTopicsList(prev => prev.filter((_, idx) => idx !== indexToDelete));
+  };
+
+  const handleEditTopic = (indexToEdit: number, newText: string) => {
+    setTopicsList(prev => prev.map((t, idx) => idx === indexToEdit ? newText : t));
   };
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
-    const parsedTopics = topicsString
-      .split(',')
+    // Filter valid non-empty topics
+    const cleanTopics = topicsList
       .map(t => t.trim())
       .filter(t => t.length > 0);
+
+    const finalTopics = cleanTopics.length > 0 
+      ? cleanTopics 
+      : ['Introduction & révisions'];
 
     if (editingSubjectId) {
       const updated = subjects.map(s => s.id === editingSubjectId ? {
         ...s,
-        name,
-        code: code || undefined,
+        name: name.trim(),
+        code: code.trim() || undefined,
         color,
         coefficient,
         difficulty,
         targetGrade,
         examDate: planTier === 'free' ? undefined : (examDate || undefined),
-        topics: parsedTopics.length > 0 ? parsedTopics : s.topics,
+        topics: finalTopics,
       } : s);
       onUpdateSubjects(updated);
     } else {
       const newSub: Subject = {
         id: generateId(),
-        name,
-        code: code || undefined,
+        name: name.trim(),
+        code: code.trim() || undefined,
         color,
         coefficient,
         difficulty,
         targetGrade,
         examDate: planTier === 'free' ? undefined : (examDate || undefined),
-        topics: parsedTopics.length > 0 ? parsedTopics : ['Introduction & concepts clés', 'Exercices d’application'],
+        topics: finalTopics,
       };
       onUpdateSubjects([...subjects, newSub]);
     }
@@ -133,8 +161,11 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
       alert("Vous devez conserver au moins une matière dans votre cursus.");
       return;
     }
-    if (confirm("Supprimer cette matière de votre cursus ?")) {
+    if (confirm("Supprimer cette matière de votre cursus ? Toutes ses informations et thèmes associés seront supprimés.")) {
       onUpdateSubjects(subjects.filter(s => s.id !== id));
+      if (editingSubjectId === id) {
+        setIsModalOpen(false);
+      }
     }
   };
 
@@ -325,14 +356,24 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                 {/* Topics Tags */}
                 {subject.topics && subject.topics.length > 0 && (
                   <div className="pt-2 border-t border-slate-800/60">
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-1">
-                      Thèmes clés :
-                    </span>
-                    <div className="flex flex-wrap gap-1">
-                      {subject.topics.slice(0, 3).map((topic, i) => (
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                        Thèmes & Chapitres ({subject.topics.length}) :
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEdit(subject)}
+                        className="text-[10px] font-bold text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer"
+                        title="Modifier ou supprimer les thèmes"
+                      >
+                        + Gérer
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto pr-0.5">
+                      {subject.topics.map((topic, i) => (
                         <span
                           key={i}
-                          className="text-[10px] px-2 py-0.5 rounded-md bg-slate-800/70 border border-slate-700/60 text-slate-300 break-words max-w-full"
+                          className="text-[10px] px-2 py-0.5 rounded-md bg-slate-800/80 border border-slate-700/60 text-slate-300 break-words max-w-full"
                         >
                           {topic}
                         </span>
@@ -466,31 +507,117 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
             )}
           </div>
 
-          <Input
-            label="Thèmes clés (séparés par des virgules)"
-            placeholder="Arbres binaires, Graphes, Complexité..."
-            value={topicsString}
-            onChange={(e) => setTopicsString(e.target.value)}
-          />
+          {/* GESTIONNAIRE INTERACTIF DES THÈMES & CHAPITRES */}
+          <div className="space-y-2 pt-2 border-t border-slate-800">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-200">
+                Thèmes & Chapitres de révision ({topicsList.length})
+              </label>
+              <span className="text-[10px] text-slate-400">
+                Modifiables et supprimables en 1 clic
+              </span>
+            </div>
 
-          <div className="pt-4 flex items-center justify-end gap-2 sm:gap-3 border-t border-slate-800">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsModalOpen(false)}
-              className="text-xs"
-            >
-              Annuler
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              size="sm"
-              className="text-xs font-bold"
-            >
-              {editingSubjectId ? "Enregistrer" : "Créer"}
-            </Button>
+            {/* Saisie d'un nouveau thème */}
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                placeholder="Ajouter un chapitre (ex. Graphes, Suites numériques...)"
+                value={newTopicInput}
+                onChange={(e) => setNewTopicInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddTopic();
+                  }
+                }}
+                className="flex-1 bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+              />
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                onClick={handleAddTopic}
+                leftIcon={<Plus className="w-3.5 h-3.5" />}
+                className="text-xs font-bold py-2 px-3 shrink-0 cursor-pointer hover:bg-slate-800 border-slate-700"
+              >
+                Ajouter
+              </Button>
+            </div>
+
+            {/* Liste unitaire des thèmes avec modification et suppression en temps réel */}
+            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1 pt-1">
+              {topicsList.length === 0 ? (
+                <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 text-center">
+                  <p className="text-xs text-slate-400 italic">
+                    Aucun thème spécifique. Utilisez le champ ci-dessus pour ajouter vos chapitres.
+                  </p>
+                </div>
+              ) : (
+                topicsList.map((topic, index) => (
+                  <div 
+                    key={index}
+                    className="flex items-center justify-between gap-2 p-2 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition-colors group"
+                  >
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <span className="w-5 h-5 rounded-full bg-slate-800 text-[10px] font-mono font-bold text-slate-400 flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </span>
+                      <input
+                        type="text"
+                        value={topic}
+                        onChange={(e) => handleEditTopic(index, e.target.value)}
+                        className="bg-transparent border-none text-slate-200 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500/50 rounded px-1.5 py-0.5 w-full truncate"
+                        title="Modifier directement l'intitulé de ce chapitre"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteTopic(index)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/15 transition-colors cursor-pointer shrink-0"
+                      title="Supprimer ce thème"
+                      aria-label="Supprimer ce thème"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Modal Footer Controls */}
+          <div className="pt-4 flex items-center justify-between gap-2 sm:gap-3 border-t border-slate-800">
+            {editingSubjectId ? (
+              <button
+                type="button"
+                onClick={() => handleDelete(editingSubjectId)}
+                className="px-3 py-2 rounded-xl text-xs font-semibold text-rose-400 hover:text-white hover:bg-rose-500/20 border border-rose-500/30 transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Supprimer la matière</span>
+              </button>
+            ) : <div />}
+
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsModalOpen(false)}
+                className="text-xs"
+              >
+                Annuler
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                className="text-xs font-bold bg-indigo-600 hover:bg-indigo-500"
+              >
+                {editingSubjectId ? "Enregistrer" : "Créer"}
+              </Button>
+            </div>
           </div>
         </form>
       </Modal>

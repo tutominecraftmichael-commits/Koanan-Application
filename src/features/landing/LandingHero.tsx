@@ -311,7 +311,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                           <div className="mt-2 pt-2 border-t border-blue-400/30 flex items-center justify-between text-[11px] text-sky-200 font-semibold animate-fadeIn">
                             <span className="flex items-center gap-1">
                               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                              Focus complété !
+                              Session validée !
                             </span>
                             <span className="text-sky-300 font-bold">Mémorisation validée</span>
                           </div>
@@ -534,9 +534,9 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               <div className="w-10 h-10 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30 group-hover:scale-110 transition-transform">
                 <Zap className="w-5 h-5" />
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-white">Mode Focus Immersif</h3>
+              <h3 className="text-sm sm:text-base font-bold text-white">Validation & Révisions Ciblées</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Minuteur Pomodoro / Deep Work synchronisé avec chaque session, objectifs clairs et validation d'avancement sans distraction.
+                Suivi précis séance par séance, découpage par matières et thèmes, et validation de votre progression quotidienne en un clic.
               </p>
             </Card>
 

@@ -29,7 +29,6 @@ import type {
   ClassSlot, 
   StudySession, 
   StudyPreferences, 
-  StudyLog,
   UserAccount,
   Chronotype
 } from './types';
@@ -50,14 +49,12 @@ import { DashboardOverview } from './features/dashboard/DashboardOverview';
 import { ScheduleManager } from './features/schedule/ScheduleManager';
 import { SubjectManager } from './features/subjects/SubjectManager';
 import { PlannerView } from './features/planner/PlannerView';
-import { FocusMode } from './features/focus/FocusMode';
 import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
 import { PresetModal } from './features/onboarding/PresetModal';
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
   const [activeView, setActiveView] = useState<ActiveAppView>('landing');
-  const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
@@ -557,18 +554,43 @@ export function App() {
   };
 
   const handleContinueNewCycle = () => {
-    setState(prev => ({
-      ...prev,
-      studySessions: prev.studySessions.map(s => ({
-        ...s,
-        completed: false,
-        completedAt: undefined,
-        actualDurationMinutes: undefined,
-        isRescheduledToday: false,
-      })),
-    }));
+    const currentDayIndex = (new Date().getDay() + 6) % 7; // 0 = Lundi, 5 = Samedi, 6 = Dimanche
+    const dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+    const celebrationDayName = dayNames[currentDayIndex];
+
+    setState(prev => {
+      const updatedSessions = prev.studySessions.map(s => {
+        // If session belongs to the day the animation took place (e.g. Saturday), it stays validated!
+        if (s.dayOfWeek === currentDayIndex) {
+          return {
+            ...s,
+            completed: true,
+          };
+        }
+        // All other days of the week are invalidated (reset to 0)
+        return {
+          ...s,
+          completed: false,
+          completedAt: undefined,
+          actualDurationMinutes: undefined,
+          isRescheduledToday: false,
+        };
+      });
+
+      const nextState: AppState = {
+        ...prev,
+        studySessions: updatedSessions,
+      };
+
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+
+      return nextState;
+    });
+
     setIsUltimateCelebrationOpen(false);
-    showToast('🌱 Nouveau cycle commencé : toutes les progressions ont été remises à zéro !', 5000);
+    showToast(`🌱 Nouveau cycle initié : seules vos révisions du ${celebrationDayName} restent validées !`, 6000);
   };
 
   const handleAddCustomSession = (session: StudySession) => {
@@ -577,36 +599,6 @@ export function App() {
       studySessions: [...prev.studySessions, session],
     }));
     showToast('Nouvelle session ajoutée au planning !');
-  };
-
-  const handleStartFocusSession = (session: StudySession) => {
-    setFocusSession(session);
-    setActiveView('focus');
-  };
-
-  const handleCompleteFocusSession = (sessionId: string, log: StudyLog) => {
-    const targetSession = state.studySessions.find(s => s.id === sessionId);
-    const updatedSessions = state.studySessions.map(s => 
-      s.id === sessionId ? { ...s, completed: true, completedAt: new Date().toISOString() } : s
-    );
-
-    const totalSessions = updatedSessions.length;
-    const completedSessions = updatedSessions.filter(s => s.completed).length;
-    const willAllBeCompleted = totalSessions > 0 && completedSessions === totalSessions;
-
-    if (willAllBeCompleted) {
-      setIsUltimateCelebrationOpen(true);
-      showToast(`🏆 Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
-    } else {
-      soundFX.playCelebrationFanfare();
-      showToast(`🎉 Félicitations ! Tu as terminé la leçon "${targetSession?.title || 'Session Focus'}" avec succès !`, 5000);
-    }
-
-    setState(prev => ({
-      ...prev,
-      studySessions: updatedSessions,
-      logs: [log, ...prev.logs],
-    }));
   };
 
   /**
@@ -791,7 +783,6 @@ export function App() {
               planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onNavigate={handleNavigate}
               onViewPricing={handleViewPricing}
-              onStartFocus={handleStartFocusSession}
               onToggleSessionComplete={handleToggleSessionComplete}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
@@ -827,7 +818,6 @@ export function App() {
               onUpdateSubjects={handleUpdateSubjects}
               onUpdatePreferences={handleUpdatePreferences}
               onTriggerPlanner={() => setActiveView('planner')}
-              onStartFocusSession={handleStartFocusSession}
               onNavigate={handleNavigate}
               onViewPricing={handleViewPricing}
               onOpenPresetModal={() => {
@@ -885,7 +875,6 @@ export function App() {
               planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onRegeneratePlan={handleRegeneratePlan}
               onToggleSessionComplete={handleToggleSessionComplete}
-              onStartFocusSession={handleStartFocusSession}
               onAddCustomSession={handleAddCustomSession}
               onUpdatePreferences={handleUpdatePreferences}
               onViewPricing={handleViewPricing}
@@ -904,27 +893,6 @@ export function App() {
           )
         )}
 
-        {/* Focus Mode: STRICTLY PROTECTED */}
-        {activeView === 'focus' && (
-          (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
-            <FocusMode
-              session={focusSession || state.studySessions[0] || null}
-              subjects={state.subjects}
-              onCompleteSession={handleCompleteFocusSession}
-              onExit={() => setActiveView('planner')}
-            />
-          ) : (
-            <div className="text-center py-16 space-y-4">
-              <p className="text-lg text-white font-bold">Connexion requise pour lancer une session focus.</p>
-              <button
-                onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
-              >
-                Se connecter avec Google
-              </button>
-            </div>
-          )
-        )}
 
         {/* Analytics: STRICTLY PROTECTED */}
         {activeView === 'analytics' && (

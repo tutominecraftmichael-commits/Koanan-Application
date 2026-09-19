@@ -15,16 +15,15 @@ import {
   Sparkles, 
   Calendar, 
   Clock, 
-  Play, 
   CheckCircle2, 
   Target, 
   ArrowRight, 
   TrendingUp,
-  FileText,
   GraduationCap,
   AlertCircle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  BookOpen
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
@@ -39,7 +38,6 @@ export interface DashboardOverviewProps {
   studySessions: StudySession[];
   preferences: StudyPreferences;
   onNavigate: (view: ActiveAppView) => void;
-  onStartFocus: (session: StudySession) => void;
   onToggleSessionComplete: (sessionId: string) => void;
   onOpenPresetModal?: () => void;
   isDemoMode?: boolean;
@@ -56,7 +54,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   studySessions,
   preferences,
   onNavigate,
-  onStartFocus,
   onToggleSessionComplete,
   onOpenPresetModal,
   isDemoMode = false,
@@ -157,15 +154,15 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <Button
                 variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
                 size="sm"
-                leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
-                onClick={() => onStartFocus(nextStudySession)}
+                leftIcon={<CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+                onClick={() => onToggleSessionComplete(nextStudySession.id)}
                 className={`w-full sm:w-auto cursor-pointer text-xs font-bold whitespace-nowrap py-2.5 px-4 hover:scale-105 active:scale-95 transition-transform shrink-0 ${
                   nextStudySession.isRescheduledToday
                     ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-lg shadow-amber-600/20'
-                    : ''
+                    : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border-emerald-500/50 shadow-lg shadow-emerald-600/20'
                 }`}
               >
-                {nextStudySession.isRescheduledToday ? '⚡ Rattraper (Chrono)' : 'Démarrer Focus'}
+                {nextStudySession.isRescheduledToday ? '⚡ Valider Rattrapage' : 'Valider la séance'}
               </Button>
             </div>
           )}
@@ -179,20 +176,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {!isDemoMode ? (
           <div 
             onClick={() => onNavigate('upload-schedule')}
-            className="group p-4 rounded-2xl bg-slate-900/70 hover:bg-slate-850 border border-slate-800 hover:border-cyan-500/40 transition-all cursor-pointer shadow-lg hover:shadow-cyan-500/10 flex items-center gap-3.5 interactive-card"
+            className="group p-4 rounded-2xl bg-slate-900/70 hover:bg-slate-850 border border-slate-800 hover:border-indigo-500/40 transition-all cursor-pointer shadow-lg hover:shadow-indigo-500/10 flex items-center gap-3.5 interactive-card"
           >
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
-              <FileText className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
+              <Calendar className="w-5 h-5" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-cyan-300 transition-colors">
-                  Importer un Emploi du Temps
+                <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
+                  Importer Emploi du Temps
                 </h3>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-cyan-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
               </div>
               <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
-                Synchroniser votre emploi du temps
+                PDF, Photo ou saisie manuelle de vos cours
               </p>
             </div>
           </div>
@@ -239,23 +236,23 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
         </div>
 
-        {/* 3. Lancer une Session Focus */}
+        {/* 3. Matières & Thèmes */}
         <div 
-          onClick={() => onNavigate('focus')}
-          className="group p-4 rounded-2xl bg-slate-900/70 hover:bg-slate-850 border border-slate-800 hover:border-violet-500/40 transition-all cursor-pointer shadow-lg hover:shadow-violet-500/10 flex items-center gap-3.5 interactive-card"
+          onClick={() => onNavigate('subjects')}
+          className="group p-4 rounded-2xl bg-slate-900/70 hover:bg-slate-850 border border-slate-800 hover:border-emerald-500/40 transition-all cursor-pointer shadow-lg hover:shadow-emerald-500/10 flex items-center gap-3.5 interactive-card"
         >
-          <div className="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-400 group-hover:bg-violet-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
-            <Play className="w-5 h-5 fill-current" />
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
+            <BookOpen className="w-5 h-5" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-violet-300 transition-colors">
-                Mode Focus Pomodoro
+              <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
+                Matières & Thèmes
               </h3>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-violet-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
             </div>
             <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
-              Chrono d'étude intensive sans distraction
+              Coefficients, chapitres et révisions
             </p>
           </div>
         </div>
@@ -356,22 +353,21 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
-                      {/* Clic sur Rétablir / Rattraper = Chrono Spécial Rattrapage */}
                       <Button
                         variant="secondary"
                         size="sm"
-                        leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
-                        onClick={() => onStartFocus(rescheduledTodaySessions[0])}
+                        leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
+                        onClick={() => onToggleSessionComplete(rescheduledTodaySessions[0].id)}
                         className="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs py-2 px-3.5 shadow-lg shadow-amber-600/30 cursor-pointer hover:scale-105 active:scale-95 transition-all"
-                        title="Démarrer le chrono de révision spécial rattrapage"
+                        title="Valider la première séance de rattrapage"
                       >
-                        ⚡ Rétablir & Rattraper (Chrono)
+                        ⚡ Valider le Rattrapage
                       </Button>
                       {onResetDailyCatchup && (
                         <button
                           onClick={onResetDailyCatchup}
                           className="px-2.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold shrink-0 cursor-pointer transition-colors"
-                          title="Rétablir les horaires initiaux de base sans lancer le chrono"
+                          title="Rétablir les horaires initiaux de base"
                         >
                           Horaires de base
                         </button>
@@ -399,11 +395,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                               </p>
                             </div>
                             <button
-                              onClick={() => onStartFocus(s)}
+                              onClick={() => onToggleSessionComplete(s.id)}
                               className="p-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 cursor-pointer shrink-0 transition-colors"
-                              title="Lancer le chrono spécial rattrapage"
+                              title="Valider cette séance de rattrapage"
                             >
-                              <Play className="w-3.5 h-3.5 fill-current" />
+                              <CheckCircle2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         );
@@ -478,26 +474,18 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       </div>
 
                       <div className="flex items-center gap-2 self-stretch sm:self-center justify-end shrink-0 pt-2 sm:pt-0 border-t border-slate-800/60 sm:border-t-0">
-                        <button
-                          onClick={() => onToggleSessionComplete(session.id)}
-                          className="flex-1 sm:flex-initial px-3 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer min-h-[38px] bg-slate-800 text-slate-300 border-slate-700 hover:text-white"
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>Valider</span>
-                        </button>
-
                         <Button
                           variant={isRescheduled ? "secondary" : "glow"}
                           size="sm"
-                          leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
-                          onClick={() => onStartFocus(session)}
-                          className={`flex-1 sm:flex-initial cursor-pointer text-xs py-2 px-3.5 min-h-[38px] flex items-center justify-center font-bold ${
+                          leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
+                          onClick={() => onToggleSessionComplete(session.id)}
+                          className={`w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[38px] ${
                             isRescheduled
                               ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
-                              : ''
+                              : 'bg-indigo-600 hover:bg-indigo-500 text-white border-indigo-400/30 shadow-md shadow-indigo-600/20'
                           }`}
                         >
-                          {isRescheduled ? '⚡ Rattraper (Chrono)' : 'Lancer'}
+                          <span>{isRescheduled ? '⚡ Valider Rattrapage' : 'Valider la séance'}</span>
                         </Button>
                       </div>
                     </div>

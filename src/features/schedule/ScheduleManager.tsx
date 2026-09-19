@@ -48,7 +48,6 @@ export interface ScheduleManagerProps {
   onUpdateSubjects?: (subjects: Subject[]) => void;
   onUpdatePreferences: (pref: StudyPreferences) => void;
   onTriggerPlanner: () => void;
-  onStartFocusSession?: (session: StudySession) => void;
   onNavigate?: (view: any) => void;
   onOpenPresetModal?: () => void;
   isDemoMode?: boolean;

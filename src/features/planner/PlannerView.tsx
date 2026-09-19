@@ -19,7 +19,6 @@ import {
   Sparkles, 
   Clock, 
   CheckCircle2, 
-  Play, 
   RefreshCw, 
   Flame, 
   Filter, 
@@ -41,7 +40,6 @@ export interface PlannerViewProps {
   preferences: StudyPreferences;
   onRegeneratePlan: () => void;
   onToggleSessionComplete: (sessionId: string) => void;
-  onStartFocusSession: (session: StudySession) => void;
   onAddCustomSession: (session: StudySession) => void;
   onUpdatePreferences?: (preferences: StudyPreferences) => void;
   planTier?: 'free' | 'pro' | 'plus';
@@ -56,7 +54,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   preferences,
   onRegeneratePlan,
   onToggleSessionComplete,
-  onStartFocusSession,
   onAddCustomSession,
   onUpdatePreferences,
   planTier = 'free',
@@ -282,11 +279,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 <Button
                   variant="secondary"
                   size="sm"
-                  leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
-                  onClick={() => onStartFocusSession(firstCatchup)}
+                  leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
+                  onClick={() => onToggleSessionComplete(firstCatchup.id)}
                   className="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs py-2 px-3 shadow-md shadow-amber-600/30 cursor-pointer"
                 >
-                  ⚡ Rattraper (Chrono)
+                  ⚡ Valider le rattrapage
                 </Button>
               ) : null;
             })()}
@@ -464,32 +461,17 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                     
                     <button
                       onClick={() => onToggleSessionComplete(session.id)}
-                      className={`p-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer min-h-[36px] interactive-pill ${
+                      className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer min-h-[36px] interactive-pill ${
                         session.completed
                           ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-sm animate-check-pop'
-                          : 'bg-slate-800 text-slate-300 border-slate-700 hover:text-white hover:border-slate-600'
+                          : session.isRescheduledToday
+                          ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
+                          : 'bg-indigo-600/30 text-indigo-200 border-indigo-500/40 hover:bg-indigo-600 hover:text-white'
                       }`}
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>{session.completed ? 'Validé' : 'Valider'}</span>
+                      <span>{session.completed ? 'Validé' : session.isRescheduledToday ? '⚡ Valider Rattrapage' : 'Valider'}</span>
                     </button>
-
-                    {!session.completed && (
-                      <Button
-                        variant={session.isRescheduledToday ? "secondary" : "glow"}
-                        size="sm"
-                        leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
-                        onClick={() => onStartFocusSession(session)}
-                        className={`cursor-pointer text-xs font-bold py-1.5 px-3 min-h-[36px] hover:scale-105 active:scale-95 transition-transform ${
-                          session.isRescheduledToday
-                            ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
-                            : ''
-                        }`}
-                      >
-                        {session.isRescheduledToday ? '⚡ Rattraper (Chrono)' : 'Lancer Focus'}
-                      </Button>
-                    )}
-
                   </div>
 
                 </div>
