@@ -181,6 +181,7 @@ export interface PdfUploadViewProps {
   }) => void;
   onCancel?: () => void;
   onViewPricing?: () => void;
+  onUpgradeToPro?: () => void;
 }
 
 export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
@@ -189,6 +190,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   onApplyExtractedSchedule,
   onCancel,
   onViewPricing,
+  onUpgradeToPro,
 }) => {
   // Format selection
   const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType | null>(null);
@@ -1859,6 +1861,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
         featureTitle={proModalInfo?.title}
         featureDescription={proModalInfo?.desc}
         onViewPricing={onViewPricing}
+        onUpgradeToPro={onUpgradeToPro}
       />
 
     </div>

@@ -53,6 +53,7 @@ export interface ScheduleManagerProps {
   isDemoMode?: boolean;
   planTier?: 'free' | 'pro' | 'plus';
   onViewPricing?: () => void;
+  onUpgradeToPro?: () => void;
 }
 
 export type TimetableFilterMode = 'combined' | 'classes_only' | 'study_only';
@@ -195,6 +196,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
   isDemoMode = false,
   planTier = 'free',
   onViewPricing,
+  onUpgradeToPro,
 }) => {
   const [filterMode, setFilterMode] = useState<TimetableFilterMode>('combined');
   const [isAddSlotOpen, setIsAddSlotOpen] = useState(false);
@@ -1335,6 +1337,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         featureTitle={proModalInfo?.title}
         featureDescription={proModalInfo?.desc}
         onViewPricing={onViewPricing}
+        onUpgradeToPro={onUpgradeToPro}
       />
 
     </div>

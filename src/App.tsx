@@ -61,7 +61,6 @@ export function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
   const [isUltimateCelebrationOpen, setIsUltimateCelebrationOpen] = useState(false);
-  const [proModalFeature, setProModalFeature] = useState<{ title: string; desc: string } | undefined>(undefined);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -284,8 +283,17 @@ export function App() {
     }
     userState.academicLevel = profile.academicLevel || userState.academicLevel;
     userState.studentName = finalName;
+
+    const pendingPlan = (localStorage.getItem('konan_pending_plan') as 'free' | 'pro' | 'plus' | null);
+    const effectivePlan = pendingPlan || userState.planTier || profile.planTier || 'free';
+    if (pendingPlan) {
+      localStorage.removeItem('konan_pending_plan');
+    }
+
+    userState.planTier = effectivePlan;
     userState.userAccount = {
       ...profile,
+      planTier: effectivePlan,
       name: finalName,
       isLoggedIn: true,
       isDemo: false,
@@ -300,7 +308,13 @@ export function App() {
 
     // 1. Instant greeting and direct redirection to dashboard (0ms latency, no blocking)
     hasGreetedAuthRef.current = profile.googleId;
-    showToast(`✨ Bonne Arrivée ! ${finalName}`);
+    if (effectivePlan === 'pro') {
+      showToast(`⭐ Bonne Arrivée ! ${finalName} — Votre modèle KONAN PRO est actif.`);
+    } else if (effectivePlan === 'plus') {
+      showToast(`👑 Bonne Arrivée ! ${finalName} — Votre modèle KONAN PLUS est actif.`);
+    } else {
+      showToast(`✨ Bonne Arrivée ! ${finalName}`);
+    }
     setActiveView('dashboard');
 
     // 2. Background cross-device sync: merges cloud state without delaying navigation
@@ -315,11 +329,13 @@ export function App() {
   };
 
   /**
-   * Plan selection from Landing Hero / Pricing:
-   * When connected user selects "free", directly access free features.
+   * Plan selection from Landing Hero / Pricing / Modals:
+   * Directly activates the chosen model on the student account.
    */
   const handleSelectPlan = (planId: 'free' | 'pro' | 'plus') => {
-    if (state.userAccount?.isLoggedIn) {
+    setIsProModalOpen(false);
+
+    if (state.userAccount?.isLoggedIn || state.isDemoMode) {
       if (planId === 'free') {
         const updated: AppState = {
           ...state,
@@ -344,18 +360,52 @@ export function App() {
         }
         setState(updated);
 
-        showToast('✨ Vous êtes sur KONAN (Modèle Gratuit - Free) !');
-        setActiveView('dashboard');
-      } else {
-        setProModalFeature({
-          title: planId === 'pro' ? 'Formule KONAN PRO' : 'Formule KONAN PLUS',
-          desc: planId === 'pro'
-            ? 'Passez à KONAN PRO (1 200 F CFA / mois) pour débloquer les méthodes Feynman et Time Blocking, le suivi automatique des dates d’examen et les rappels intelligents Google Agenda.'
-            : 'Passez à KONAN PLUS (2 500 F CFA / mois) pour bénéficier du coaching VIP Konan, du calibrage par objectif scolaire (12, 16 ou Major) et des tête-à-tête bimensuels.'
-        });
-        setIsProModalOpen(true);
+        showToast('✨ Vous êtes sur le modèle KONAN Gratuit (Free).');
+        if (activeView === 'landing' || activeView === 'auth') {
+          setActiveView('dashboard');
+        }
+      } else if (planId === 'pro') {
+        const updated: AppState = {
+          ...state,
+          planTier: 'pro',
+          userAccount: state.userAccount ? {
+            ...state.userAccount,
+            planTier: 'pro',
+          } : undefined,
+        };
+
+        if (state.userAccount?.googleId && !state.isDemoMode) {
+          saveUserState(state.userAccount.googleId, updated);
+        }
+        setState(updated);
+
+        showToast('⭐ Félicitations ! Le modèle KONAN PRO est activé ! Méthodes Feynman, Time Blocking et suivi des examens débloqués.');
+        if (activeView === 'landing' || activeView === 'auth') {
+          setActiveView('dashboard');
+        }
+      } else if (planId === 'plus') {
+        const updated: AppState = {
+          ...state,
+          planTier: 'plus',
+          userAccount: state.userAccount ? {
+            ...state.userAccount,
+            planTier: 'plus',
+          } : undefined,
+        };
+
+        if (state.userAccount?.googleId && !state.isDemoMode) {
+          saveUserState(state.userAccount.googleId, updated);
+        }
+        setState(updated);
+
+        showToast('👑 Félicitations ! Le modèle KONAN PLUS est activé ! Coaching VIP débloqué.');
+        if (activeView === 'landing' || activeView === 'auth') {
+          setActiveView('dashboard');
+        }
       }
     } else {
+      localStorage.setItem('konan_pending_plan', planId);
+      showToast(`⭐ Connectez-vous avec Google ou démarrez la démo pour activer le modèle ${planId === 'pro' ? 'KONAN PRO' : planId === 'plus' ? 'KONAN PLUS' : 'KONAN Gratuit'}.`);
       setActiveView('auth');
     }
   };
@@ -383,6 +433,15 @@ export function App() {
    */
   const handleEnterDemoMode = () => {
     const demo = loadDemoState();
+    const pendingPlan = (localStorage.getItem('konan_pending_plan') as 'free' | 'pro' | 'plus' | null);
+    if (pendingPlan) {
+      demo.planTier = pendingPlan;
+      if (demo.userAccount) {
+        demo.userAccount.planTier = pendingPlan;
+      }
+      localStorage.removeItem('konan_pending_plan');
+    }
+
     setActiveSession({
       isDemo: true,
       name: 'Alexandre Étudiant (Compte Démo)',
@@ -390,7 +449,11 @@ export function App() {
     });
 
     setState(demo);
-    showToast('🎓 Mode Démo activé (Alexandre Étudiant). Les modèles de filières sont disponibles.');
+    if (demo.planTier === 'pro') {
+      showToast('⭐ Mode Démo activé avec le modèle KONAN PRO ! Méthodes Feynman et Time Blocking débloquées.');
+    } else {
+      showToast('🎓 Mode Démo activé (Alexandre Étudiant). Les modèles de filières sont disponibles.');
+    }
     setActiveView('dashboard');
   };
 
@@ -780,6 +843,7 @@ export function App() {
               onApplyExtractedSchedule={handleApplyExtractedSchedule}
               onCancel={() => setActiveView('dashboard')}
               onViewPricing={handleViewPricing}
+              onUpgradeToPro={() => handleSelectPlan('pro')}
             />
           ) : state.isDemoMode ? (
             <div className="text-center py-16 space-y-4 glass-panel max-w-md mx-auto p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl">
@@ -834,6 +898,7 @@ export function App() {
               planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onNavigate={handleNavigate}
               onViewPricing={handleViewPricing}
+              onUpgradeToPro={() => handleSelectPlan('pro')}
               onToggleSessionComplete={handleToggleSessionComplete}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
@@ -873,6 +938,7 @@ export function App() {
               onTriggerPlanner={() => setActiveView('planner')}
               onNavigate={handleNavigate}
               onViewPricing={handleViewPricing}
+              onUpgradeToPro={() => handleSelectPlan('pro')}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
@@ -900,6 +966,7 @@ export function App() {
               onUpdateSubjects={handleUpdateSubjects}
               onTriggerPlanner={() => setActiveView('planner')}
               onViewPricing={handleViewPricing}
+              onUpgradeToPro={() => handleSelectPlan('pro')}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
@@ -931,6 +998,7 @@ export function App() {
               onAddCustomSession={handleAddCustomSession}
               onUpdatePreferences={handleUpdatePreferences}
               onViewPricing={handleViewPricing}
+              onUpgradeToPro={() => handleSelectPlan('pro')}
               onResetDailyCatchup={handleResetDailyCatchup}
               cycleCompletedDate={state.cycleCompletedDate}
               onStartNewCycleEarly={handleStartNewCycleEarly}
@@ -995,15 +1063,16 @@ export function App() {
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}
         onResetData={handleResetData}
+        onSelectPlan={handleSelectPlan}
+        onUpgradeToPro={() => handleSelectPlan('pro')}
       />
 
       {/* Pro Upgrade Modal */}
       <ProFeatureModal
         isOpen={isProModalOpen}
         onClose={() => setIsProModalOpen(false)}
-        featureTitle={proModalFeature?.title}
-        featureDescription={proModalFeature?.desc}
         onViewPricing={handleViewPricing}
+        onUpgradeToPro={() => handleSelectPlan('pro')}
       />
 
       {/* Ultimate 100% Completion Celebration Modal */}

@@ -45,6 +45,7 @@ export interface DashboardOverviewProps {
   planTier?: 'free' | 'pro' | 'plus';
   onResetDailyCatchup?: () => void;
   onViewPricing?: () => void;
+  onUpgradeToPro?: () => void;
   cycleCompletedDate?: string;
   onStartNewCycleEarly?: () => void;
 }
@@ -63,6 +64,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   planTier = 'free',
   onResetDailyCatchup,
   onViewPricing,
+  onUpgradeToPro,
   cycleCompletedDate,
   onStartNewCycleEarly,
 }) => {
@@ -616,9 +618,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               {planTier === 'free' && (
                 <button
                   type="button"
-                  onClick={onViewPricing}
+                  onClick={onUpgradeToPro || onViewPricing}
                   className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                  title="Voir les formules et tarifs"
+                  title="Activer le modèle KONAN PRO"
                 >
                   ⭐ PRO
                 </button>
@@ -632,10 +634,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </p>
                 <button
                   type="button"
-                  onClick={onViewPricing}
+                  onClick={onUpgradeToPro || onViewPricing}
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
                 >
-                  <span>Passer à KONAN PRO (Tarifs)</span>
+                  <span>Activer le modèle KONAN PRO</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>

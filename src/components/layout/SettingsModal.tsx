@@ -12,7 +12,8 @@ import {
   ShieldCheck,
   Sparkles,
   GraduationCap,
-  Save
+  Save,
+  Star
 } from 'lucide-react';
 import type { UserAccount } from '../../types';
 import { Badge } from '../ui/Badge';
@@ -36,6 +37,8 @@ interface SettingsModalProps {
   onExportData?: () => void;
   onImportData?: () => void;
   onResetData?: () => void;
+  onSelectPlan?: (planId: 'free' | 'pro' | 'plus') => void;
+  onUpgradeToPro?: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -50,6 +53,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onExportData,
   onImportData,
   onResetData,
+  onSelectPlan,
+  onUpgradeToPro,
 }) => {
   const [lang, setLang] = useLanguage();
 
@@ -172,6 +177,58 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <span>{isDemoMode ? t('demoIsolated', lang) : t('secureSession', lang)}</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Formule / Modèle de compte */}
+              <div className="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center justify-between gap-3 shadow-xs">
+                <div className="space-y-0.5 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <Sparkles className={`w-3.5 h-3.5 ${userAccount?.planTier === 'pro' ? 'text-amber-400' : userAccount?.planTier === 'plus' ? 'text-indigo-400' : 'text-sky-400'}`} />
+                    <span className="text-[11px] font-extrabold uppercase tracking-wide text-white">
+                      {userAccount?.planTier === 'pro' ? 'Modèle KONAN PRO' : userAccount?.planTier === 'plus' ? 'Modèle KONAN PLUS' : 'Modèle KONAN Gratuit'}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 leading-tight">
+                    {userAccount?.planTier === 'pro'
+                      ? 'Méthodes Feynman & Time Blocking, dates d’examens actives.'
+                      : userAccount?.planTier === 'plus'
+                      ? 'Accompagnement VIP, tête-à-tête et calibration par objectif.'
+                      : 'Passez à KONAN PRO pour débloquer Feynman, Time Blocking et examens.'}
+                  </p>
+                </div>
+
+                {userAccount?.planTier === 'free' ? (
+                  <Button
+                    type="button"
+                    variant="glow"
+                    size="sm"
+                    className="text-xs font-bold shrink-0"
+                    leftIcon={<Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />}
+                    onClick={() => {
+                      if (onUpgradeToPro) {
+                        onUpgradeToPro();
+                      } else if (onSelectPlan) {
+                        onSelectPlan('pro');
+                      }
+                      onClose();
+                    }}
+                  >
+                    Activer PRO
+                  </Button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onSelectPlan) {
+                        onSelectPlan('free');
+                      }
+                      onClose();
+                    }}
+                    className="text-[11px] font-semibold text-slate-400 hover:text-slate-200 underline shrink-0 cursor-pointer"
+                  >
+                    Passer sur Gratuit
+                  </button>
+                )}
               </div>
 
               {/* Formulaire d'édition STRICTE : 1. Nom, 2. Filière */}

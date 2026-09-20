@@ -8,6 +8,7 @@ export interface ProFeatureModalProps {
   featureTitle?: string;
   featureDescription?: string;
   onViewPricing?: () => void;
+  onUpgradeToPro?: () => void;
 }
 
 export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
@@ -16,6 +17,7 @@ export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
   featureTitle = 'Fonctionnalité KONAN PRO',
   featureDescription = 'Cette fonctionnalité est réservée aux abonnés du modèle KONAN PRO.',
   onViewPricing,
+  onUpgradeToPro,
 }) => {
   if (!isOpen) return null;
 
@@ -105,29 +107,47 @@ export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-5 sm:p-6 pt-3 border-t border-slate-800/80 flex items-center justify-end gap-3 relative z-10 bg-slate-900/40">
+        <div className="p-5 sm:p-6 pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3 relative z-10 bg-slate-900/40">
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-xs"
+            className="text-xs text-slate-400 hover:text-white"
           >
-            Continuer avec KONAN Gratuit
+            Continuer avec Gratuit
           </Button>
-          {onViewPricing && (
+          <div className="flex items-center gap-2">
+            {onViewPricing && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  onClose();
+                  onViewPricing();
+                }}
+                className="text-xs"
+              >
+                Voir les formules
+              </Button>
+            )}
             <Button
               variant="glow"
               size="sm"
+              leftIcon={<Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />}
               rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               onClick={() => {
                 onClose();
-                onViewPricing();
+                if (onUpgradeToPro) {
+                  onUpgradeToPro();
+                } else if (onViewPricing) {
+                  onViewPricing();
+                }
               }}
               className="text-xs font-bold"
             >
-              Voir les formules
+              Activer KONAN PRO
             </Button>
-          )}
+          </div>
         </div>
       </div>
     </div>

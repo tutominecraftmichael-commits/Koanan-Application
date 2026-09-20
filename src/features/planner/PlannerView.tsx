@@ -46,6 +46,7 @@ export interface PlannerViewProps {
   onUpdatePreferences?: (preferences: StudyPreferences) => void;
   planTier?: 'free' | 'pro' | 'plus';
   onViewPricing?: () => void;
+  onUpgradeToPro?: () => void;
   onResetDailyCatchup?: () => void;
   cycleCompletedDate?: string;
   onStartNewCycleEarly?: () => void;
@@ -62,6 +63,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   onUpdatePreferences,
   planTier = 'free',
   onViewPricing,
+  onUpgradeToPro,
   onResetDailyCatchup,
   cycleCompletedDate,
   onStartNewCycleEarly,
@@ -880,6 +882,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         featureTitle={proModalInfo?.title}
         featureDescription={proModalInfo?.desc}
         onViewPricing={onViewPricing}
+        onUpgradeToPro={onUpgradeToPro}
       />
 
       {/* Session Method Explainer Modal */}

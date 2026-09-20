@@ -28,6 +28,7 @@ export interface SubjectManagerProps {
   isDemoMode?: boolean;
   planTier?: 'free' | 'pro' | 'plus';
   onViewPricing?: () => void;
+  onUpgradeToPro?: () => void;
 }
 
 const PRESET_COLORS = [
@@ -48,6 +49,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   isDemoMode = false,
   planTier = 'free',
   onViewPricing,
+  onUpgradeToPro,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
@@ -629,6 +631,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         featureTitle="Dates d'examens & Priorisation Partiels (KONAN PRO)"
         featureDescription="L'intégration des dates d'épreuves et l'adaptation intelligente de l'emploi du temps fait partie du modèle KONAN PRO. Vos matières, coefficients et notes cibles restent 100% opérationnels en illimité dans votre modèle Gratuit."
         onViewPricing={onViewPricing}
+        onUpgradeToPro={onUpgradeToPro}
       />
 
     </div>

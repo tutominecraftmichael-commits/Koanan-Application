@@ -26,7 +26,7 @@ export interface PricingSectionProps {
 export const PricingSection: React.FC<PricingSectionProps> = ({ 
   onSelectPlan, 
   isLoggedIn = false,
-  currentPlan: _currentPlan = 'free'
+  currentPlan = 'free'
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -158,7 +158,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               className="w-full text-xs sm:text-sm font-bold py-3 hover:bg-slate-800 border-slate-700 active:scale-95 transition-transform cursor-pointer"
               onClick={() => onSelectPlan?.('free')}
             >
-              {isLoggedIn ? 'Aller sur KONAN (Gratuit)' : 'Commencer avec Konan'}
+              {currentPlan === 'free' ? '✓ Modèle Actif (Gratuit)' : isLoggedIn ? 'Revenir à KONAN (Gratuit)' : 'Commencer avec Konan'}
             </Button>
           </div>
         </div>
@@ -182,10 +182,17 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-400">
                   Performance
                 </span>
-                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-200 border border-sky-400/40 font-bold whitespace-nowrap inline-flex items-center gap-1 shrink-0">
-                  <span>⭐</span>
-                  <span>Populaire</span>
-                </span>
+                {currentPlan === 'pro' ? (
+                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-bold whitespace-nowrap inline-flex items-center gap-1 shrink-0">
+                    <Check className="w-3 h-3 text-emerald-400" />
+                    <span>Modèle Actif</span>
+                  </span>
+                ) : (
+                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-200 border border-sky-400/40 font-bold whitespace-nowrap inline-flex items-center gap-1 shrink-0">
+                    <span>⭐</span>
+                    <span>Populaire</span>
+                  </span>
+                )}
               </div>
               
               <h3 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2">
@@ -246,11 +253,13 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <Button
               variant="glow"
               size="md"
-              rightIcon={<ArrowRight className="w-4 h-4" />}
-              className="w-full text-xs sm:text-sm font-extrabold py-3.5 shadow-lg shadow-sky-950/60 hover:scale-[1.03] active:scale-95 transition-transform cursor-pointer"
+              rightIcon={currentPlan === 'pro' ? <Check className="w-4 h-4 text-emerald-300" /> : <ArrowRight className="w-4 h-4" />}
+              className={`w-full text-xs sm:text-sm font-extrabold py-3.5 shadow-lg shadow-sky-950/60 hover:scale-[1.03] active:scale-95 transition-transform cursor-pointer ${
+                currentPlan === 'pro' ? '!bg-emerald-600/30 !border-emerald-400/60 !text-emerald-200' : ''
+              }`}
               onClick={() => onSelectPlan?.('pro')}
             >
-              Choisir Konan Pro
+              {currentPlan === 'pro' ? '✓ Modèle KONAN PRO Actif' : 'Choisir Konan Pro'}
             </Button>
           </div>
         </div>
@@ -329,10 +338,11 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <Button
               variant="secondary"
               size="md"
+              rightIcon={currentPlan === 'plus' ? <Check className="w-4 h-4 text-emerald-400" /> : undefined}
               className="w-full text-xs sm:text-sm font-bold py-3 hover:bg-slate-800 border-indigo-500/40 text-indigo-200 hover:text-white active:scale-95 transition-transform cursor-pointer"
               onClick={() => onSelectPlan?.('plus')}
             >
-              Passer à Konan Plus
+              {currentPlan === 'plus' ? '✓ Modèle KONAN PLUS Actif' : 'Passer à Konan Plus'}
             </Button>
           </div>
         </div>
