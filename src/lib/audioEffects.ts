@@ -84,6 +84,13 @@ class SoundFX {
   }
 
   /**
+   * Sparkling success chime for actions like PRO activation & Google Agenda sync
+   */
+  public playSuccessChime() {
+    this.playStreakIgniteChime();
+  }
+
+  /**
    * Subtle pleasant pop for checkboxes and pill taps
    */
   public playCheckmarkPop() {

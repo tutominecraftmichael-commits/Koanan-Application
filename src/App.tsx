@@ -41,7 +41,9 @@ import { soundFX } from './lib/audioEffects';
 import { Navbar } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { ProFeatureModal } from './components/common/ProFeatureModal';
+import { GoogleCalendarSyncModal } from './components/common/GoogleCalendarSyncModal';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
+import { downloadStudyPlanICS } from './services/googleCalendarService';
 
 // Views
 import { LandingHero } from './features/landing/LandingHero';
@@ -60,8 +62,32 @@ export function App() {
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
+  const [isGoogleCalendarModalOpen, setIsGoogleCalendarModalOpen] = useState(false);
+  const [googleCalendarReason, setGoogleCalendarReason] = useState<'pro_activated' | 'plan_applied' | null>(null);
   const [isUltimateCelebrationOpen, setIsUltimateCelebrationOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  /**
+   * Automatic Google Calendar & 15-min reminder sync for ALL days of the week:
+   * Downloads the recurring .ics file and opens the interactive Google Agenda sync modal.
+   */
+  const triggerAutoGoogleCalendarSync = (
+    sessions: StudySession[],
+    subjects: Subject[],
+    studentName: string,
+    reason: 'pro_activated' | 'plan_applied'
+  ) => {
+    if (sessions && sessions.length > 0) {
+      try {
+        downloadStudyPlanICS(sessions, subjects, studentName);
+      } catch (err) {
+        console.warn('ICS auto-download error:', err);
+      }
+    }
+    setGoogleCalendarReason(reason);
+    setIsGoogleCalendarModalOpen(true);
+    soundFX.playSuccessChime();
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const lastRescheduledSignature = useRef<string>('');
@@ -315,6 +341,17 @@ export function App() {
     } else {
       showToast(`✨ Bonne Arrivée ! ${finalName}`);
     }
+
+    // If PRO or PLUS was chosen/pending and sessions exist, automatically sync Google Agenda for all days
+    if ((effectivePlan === 'pro' || effectivePlan === 'plus') && userState.studySessions && userState.studySessions.length > 0) {
+      triggerAutoGoogleCalendarSync(
+        userState.studySessions,
+        userState.subjects,
+        finalName,
+        'pro_activated'
+      );
+    }
+
     setActiveView('dashboard');
 
     // 2. Background cross-device sync: merges cloud state without delaying navigation
@@ -323,6 +360,14 @@ export function App() {
         if (mergedFromCloud && (mergedFromCloud.subjects?.length > 0 || mergedFromCloud.completedOnboarding)) {
           saveUserState(profile.googleId, mergedFromCloud);
           setState(mergedFromCloud);
+          if ((effectivePlan === 'pro' || effectivePlan === 'plus') && (!userState.studySessions || userState.studySessions.length === 0) && mergedFromCloud.studySessions?.length > 0) {
+            triggerAutoGoogleCalendarSync(
+              mergedFromCloud.studySessions,
+              mergedFromCloud.subjects,
+              finalName,
+              'pro_activated'
+            );
+          }
         }
       })
       .catch(console.warn);
@@ -379,7 +424,15 @@ export function App() {
         }
         setState(updated);
 
-        showToast('⭐ Félicitations ! Le modèle KONAN PRO est activé ! Méthodes Feynman, Time Blocking et suivi des examens débloqués.');
+        // 🌟 AUTOMATIC SYNC TO GOOGLE AGENDA FOR ALL DAYS WITH 15-MIN PHONE ALERTS
+        triggerAutoGoogleCalendarSync(
+          state.studySessions,
+          state.subjects,
+          state.studentName || state.userAccount?.name || 'Étudiant',
+          'pro_activated'
+        );
+
+        showToast('⭐ Félicitations ! Le modèle KONAN PRO est activé ! Synchronisation Google Agenda automatique déclenchée pour TOUS LES JOURS (Alertes 15 min).');
         if (activeView === 'landing' || activeView === 'auth') {
           setActiveView('dashboard');
         }
@@ -398,7 +451,15 @@ export function App() {
         }
         setState(updated);
 
-        showToast('👑 Félicitations ! Le modèle KONAN PLUS est activé ! Coaching VIP débloqué.');
+        // 🌟 AUTOMATIC SYNC TO GOOGLE AGENDA FOR ALL DAYS WITH 15-MIN PHONE ALERTS
+        triggerAutoGoogleCalendarSync(
+          state.studySessions,
+          state.subjects,
+          state.studentName || state.userAccount?.name || 'Étudiant',
+          'pro_activated'
+        );
+
+        showToast('👑 Félicitations ! Le modèle KONAN PLUS est activé ! Coaching VIP & Synchronisation Google Agenda pour tous les jours.');
         if (activeView === 'landing' || activeView === 'auth') {
           setActiveView('dashboard');
         }
@@ -449,8 +510,14 @@ export function App() {
     });
 
     setState(demo);
-    if (demo.planTier === 'pro') {
-      showToast('⭐ Mode Démo activé avec le modèle KONAN PRO ! Méthodes Feynman et Time Blocking débloquées.');
+    if (demo.planTier === 'pro' || demo.planTier === 'plus') {
+      triggerAutoGoogleCalendarSync(
+        demo.studySessions,
+        demo.subjects,
+        'Alexandre Étudiant',
+        'pro_activated'
+      );
+      showToast('⭐ Mode Démo KONAN PRO : Synchronisation Google Agenda automatique déclenchée pour TOUS LES JOURS (Alertes 15 min) !');
     } else {
       showToast('🎓 Mode Démo activé (Alexandre Étudiant). Les modèles de filières sont disponibles.');
     }
@@ -503,6 +570,17 @@ export function App() {
       };
       return updated;
     });
+
+    // 🌟 If on KONAN PRO, automatically trigger Google Agenda sync for all days
+    const isPro = state.planTier === 'pro' || state.userAccount?.planTier === 'pro' || state.planTier === 'plus' || state.userAccount?.planTier === 'plus';
+    if (isPro && payload.studySessions.length > 0) {
+      triggerAutoGoogleCalendarSync(
+        payload.studySessions,
+        payload.subjects,
+        state.studentName || state.userAccount?.name || 'Étudiant',
+        'plan_applied'
+      );
+    }
 
     showToast('🎉 Emploi du temps synchronisé & planning d’étude optimisé généré !');
     setActiveView('planner');
@@ -1073,6 +1151,19 @@ export function App() {
         onClose={() => setIsProModalOpen(false)}
         onViewPricing={handleViewPricing}
         onUpgradeToPro={() => handleSelectPlan('pro')}
+      />
+
+      {/* Google Calendar Sync Modal (ALL DAYS + 15-MIN PHONE ALERTS) */}
+      <GoogleCalendarSyncModal
+        isOpen={isGoogleCalendarModalOpen}
+        onClose={() => setIsGoogleCalendarModalOpen(false)}
+        sessions={state.studySessions}
+        subjects={state.subjects}
+        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        planTier={state.planTier || state.userAccount?.planTier || 'free'}
+        autoOpenedReason={googleCalendarReason}
+        onUpgradeToPro={() => handleSelectPlan('pro')}
+        onViewPricing={handleViewPricing}
       />
 
       {/* Ultimate 100% Completion Celebration Modal */}

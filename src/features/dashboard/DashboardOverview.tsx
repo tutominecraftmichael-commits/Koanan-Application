@@ -130,11 +130,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       <div className="relative rounded-3xl p-5 sm:p-8 overflow-hidden border border-indigo-500/30 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-slate-950 shadow-2xl">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 relative z-10">
           <div className="space-y-1.5 sm:space-y-2">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Badge variant={isCycleCompletedToday ? "emerald" : "cyan"} size="sm" dot>
                 {isCycleCompletedToday ? "Cycle Validé 100%" : "Copilote Actif"}
               </Badge>
               <span className="text-[11px] sm:text-xs text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
+              <button
+                type="button"
+                onClick={() => setIsGoogleCalendarOpen(true)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 text-[11px] font-bold cursor-pointer transition-all hover:scale-105 active:scale-95 shadow-sm"
+                title="Synchroniser avec Google Agenda (Tous les jours & Alertes 15 min)"
+              >
+                <Calendar className="w-3 h-3 text-sky-400" />
+                <span>Google Agenda (15 min)</span>
+              </button>
             </div>
             <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
               Bonjour, <span className="text-gradient-primary">{studentName}</span> 👋

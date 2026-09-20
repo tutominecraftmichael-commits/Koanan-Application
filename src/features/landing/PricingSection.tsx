@@ -234,7 +234,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Bell className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Rappel intelligent Google Agenda :</strong> Alerte 15 min avant chaque session de révision directement sur votre téléphone.</span>
+                  <span><strong>Rappel intelligent Google Agenda (Tous les jours) :</strong> Synchronisation automatique quotidienne de tout l'agenda avec alerte push 15 min avant chaque session de révision directement sur votre téléphone.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Sparkles className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
