@@ -27,7 +27,8 @@ import {
   Plus,
   Star,
   Brain,
-  Moon
+  Moon,
+  Lock
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
@@ -125,6 +126,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   });
 
   const todayStr = new Date().toISOString().slice(0, 10);
+  const currentDayIndex = (new Date().getDay() + 6) % 7;
   const isCycleCompletedToday = cycleCompletedDate === todayStr;
 
   const totalMinutes = studySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
@@ -418,6 +420,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
             const dayInfo = DAYS_OF_WEEK.find(d => d.id === session.dayOfWeek) || DAYS_OF_WEEK[0];
             const badgeType = sessionTypeBadges[session.type] || { label: 'Étude', variant: 'primary' };
+            const isToday = session.dayOfWeek === currentDayIndex;
 
             return (
               <Card
@@ -441,6 +444,15 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       <span className="text-[11px] sm:text-xs font-mono text-cyan-400 font-bold">
                         {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                       </span>
+                      {isToday ? (
+                        <Badge variant="cyan" size="sm" className="text-[10px] px-1.5 py-0 font-bold">
+                          ✨ Aujourd'hui
+                        </Badge>
+                      ) : !session.completed ? (
+                        <Badge variant="slate" size="sm" className="text-[10px] px-1.5 py-0 text-slate-400 border border-slate-750">
+                          🔒 À venir
+                        </Badge>
+                      ) : null}
                       {session.isRescheduledToday && (
                         <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold" title={session.rescheduledReason}>
                           🔄 Rattrapage (Init. {session.originalStartTime})
@@ -498,20 +510,39 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
                   {/* Actions footer */}
                   <div className="pt-2 sm:pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                    
-                    <button
-                      onClick={() => onToggleSessionComplete(session.id)}
-                      className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer min-h-[36px] interactive-pill ${
-                        session.completed
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-sm animate-check-pop'
-                          : session.isRescheduledToday
-                          ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
-                          : 'bg-indigo-600/30 text-indigo-200 border-indigo-500/40 hover:bg-indigo-600 hover:text-white'
-                      }`}
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>{session.completed ? 'Validé' : session.isRescheduledToday ? '⚡ Valider Rattrapage' : 'Valider'}</span>
-                    </button>
+                    {session.completed ? (
+                      <button
+                        onClick={() => isToday && onToggleSessionComplete(session.id)}
+                        disabled={!isToday}
+                        className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all min-h-[36px] bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-sm ${
+                          isToday ? 'cursor-pointer hover:bg-emerald-500/30' : 'cursor-default opacity-90'
+                        }`}
+                        title={isToday ? "Cliquer pour annuler la validation" : "Session validée"}
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Validé</span>
+                      </button>
+                    ) : isToday ? (
+                      <button
+                        onClick={() => onToggleSessionComplete(session.id)}
+                        className={`px-3.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer min-h-[36px] interactive-pill ${
+                          session.isRescheduledToday
+                            ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
+                            : 'bg-indigo-600/30 text-indigo-200 border-indigo-500/40 hover:bg-indigo-600 hover:text-white'
+                        }`}
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>{session.isRescheduledToday ? '⚡ Valider Rattrapage' : 'Valider'}</span>
+                      </button>
+                    ) : (
+                      <div
+                        className="px-3 py-1.5 rounded-xl border border-slate-800/90 bg-slate-950/60 text-slate-400 text-xs font-medium flex items-center gap-1.5 cursor-not-allowed select-none min-h-[36px]"
+                        title={`🔒 Anti-triche : Vous pourrez valider cette séance uniquement le ${dayInfo.label}.`}
+                      >
+                        <Lock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                        <span>Disponible le {dayInfo.label}</span>
+                      </div>
+                    )}
                   </div>
 
                 </div>

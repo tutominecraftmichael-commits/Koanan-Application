@@ -118,6 +118,13 @@ class SoundFX {
   }
 
   /**
+   * Alert or notification ping for soft warnings (e.g. anti-cheat)
+   */
+  public playNotificationPing() {
+    this.playCheckmarkPop();
+  }
+
+  /**
    * Subtle ascending tick sound during progress bar climb (0-98%)
    */
   public playTensionTick(pitchRatio = 0.5) {

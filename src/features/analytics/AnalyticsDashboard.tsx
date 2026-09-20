@@ -33,23 +33,31 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const [lang] = useLanguage();
   const completedSessions = studySessions.filter(s => s.completed);
   const totalPlannedMinutes = studySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
-  const totalCompletedMinutes = completedSessions.reduce((acc, s) => acc + s.durationMinutes, 0) +
-    logs.reduce((acc, l) => acc + l.durationMinutes, 0);
+  const totalCompletedMinutes = completedSessions.reduce((acc, s) => acc + s.durationMinutes, 0);
 
   const completionRate = studySessions.length > 0 
     ? Math.round((completedSessions.length / studySessions.length) * 100) 
     : 0;
 
-  const averageRating = logs.length > 0
-    ? (logs.reduce((acc, l) => acc + l.satisfactionRating, 0) / logs.length).toFixed(1)
-    : '4.8';
+  // Real Focus Calculation:
+  // If user has not completed any sessions in their study plan, average rating is strictly 0.0
+  const validCompletedLogs = logs.filter(l => 
+    studySessions.some(s => s.id === l.sessionId && s.completed) ||
+    (completedSessions.length > 0 && l.satisfactionRating > 0)
+  );
+
+  const hasCompletedWork = completedSessions.length > 0;
+  const hasValidLogs = hasCompletedWork && validCompletedLogs.length > 0;
+
+  const numericAverageRating = hasValidLogs
+    ? Number((validCompletedLogs.reduce((acc, l) => acc + l.satisfactionRating, 0) / validCompletedLogs.length).toFixed(1))
+    : 0;
 
   const subjectStats = subjects.map(sub => {
     const subSessions = studySessions.filter(s => s.subjectId === sub.id);
     const subCompleted = subSessions.filter(s => s.completed);
     const plannedMins = subSessions.reduce((acc, s) => acc + s.durationMinutes, 0);
-    const doneMins = subCompleted.reduce((acc, s) => acc + s.durationMinutes, 0) +
-      logs.filter(l => l.subjectId === sub.id).reduce((acc, l) => acc + l.durationMinutes, 0);
+    const doneMins = subCompleted.reduce((acc, s) => acc + s.durationMinutes, 0);
 
     const progress = (plannedMins > 0 && doneMins > 0) 
       ? Math.min(100, Math.round((doneMins / plannedMins) * 100)) 
@@ -119,22 +127,32 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <Card className="p-3.5 sm:p-5 bg-slate-900/60 border-slate-800 flex flex-col justify-between space-y-2 sm:space-y-3 interactive-card">
           <div className="flex items-center justify-between text-slate-400 text-[10px] sm:text-xs font-semibold uppercase">
             <span>Focus Moyen</span>
-            <div className="p-1.5 sm:p-2 rounded-lg bg-amber-500/10 text-amber-400">
-              <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-amber-400" />
+            <div className={`p-1.5 sm:p-2 rounded-lg ${hasValidLogs ? 'bg-amber-500/10 text-amber-400' : 'bg-slate-800 text-slate-500'}`}>
+              <Star className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${hasValidLogs ? 'fill-amber-400 text-amber-400' : 'text-slate-600'}`} />
             </div>
           </div>
           <div>
-            <span className="text-xl sm:text-3xl font-extrabold text-amber-300 font-mono">
-              <AnimatedCounter value={parseFloat(averageRating)} suffix=" / 5" decimals={1} className="text-amber-300" />
+            <span className={`text-xl sm:text-3xl font-extrabold font-mono ${hasValidLogs ? 'text-amber-300' : 'text-slate-500'}`}>
+              {hasValidLogs ? (
+                <AnimatedCounter value={numericAverageRating} suffix=" / 5" decimals={1} className="text-amber-300" />
+              ) : (
+                '0.0 / 5'
+              )}
             </span>
             <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5 truncate">
-              Sur {logs.length} sessions
+              {hasValidLogs ? `Sur ${validCompletedLogs.length} session${validCompletedLogs.length > 1 ? 's' : ''}` : 'Aucun cours effectué'}
             </p>
           </div>
           <div className="flex items-center gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
-            ))}
+            {Array.from({ length: 5 }).map((_, i) => {
+              const isFilled = hasValidLogs && i < Math.round(numericAverageRating);
+              return (
+                <Star 
+                  key={i} 
+                  className={`w-3 h-3 ${isFilled ? 'fill-amber-400 text-amber-400' : 'text-slate-700 fill-none'}`} 
+                />
+              );
+            })}
           </div>
         </Card>
 
@@ -242,7 +260,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
         {logs.length === 0 ? (
           <p className="text-xs text-slate-400 italic py-4 text-center">
-            Aucun historique de session. Lancez le Mode Focus pour enregistrer votre première séance !
+            Aucun historique de session. Validez vos séances du jour dans votre planning pour créer votre historique !
           </p>
         ) : (
           <div className="divide-y divide-slate-800/80">

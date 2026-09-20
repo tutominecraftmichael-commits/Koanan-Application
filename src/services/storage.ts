@@ -136,8 +136,10 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
     if (raw) {
       const parsed = JSON.parse(raw);
       const planTier = parsed.planTier || parsed.userAccount?.planTier || 'free';
+      const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
       return {
         ...parsed,
+        logs: hasCompleted ? (parsed.logs || []) : [],
         planTier,
         userAccount: parsed.userAccount ? {
           ...parsed.userAccount,
@@ -293,7 +295,12 @@ export function loadDemoState(): AppState {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed.subjects && parsed.subjects.length > 0) {
-        return { ...parsed, isDemoMode: true };
+        const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
+        return { 
+          ...parsed, 
+          logs: hasCompleted ? (parsed.logs || []) : [],
+          isDemoMode: true 
+        };
       }
     }
   } catch (err) {

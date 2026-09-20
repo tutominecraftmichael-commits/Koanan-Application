@@ -28,10 +28,12 @@ import type {
   Subject, 
   ClassSlot, 
   StudySession, 
+  StudyLog,
   StudyPreferences, 
   UserAccount,
   Chronotype
 } from './types';
+import { generateId } from './lib/utils';
 import { Sparkles, X } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
 
@@ -525,6 +527,18 @@ export function App() {
     const target = state.studySessions.find(s => s.id === sessionId);
     if (!target) return;
 
+    const currentDayIndex = (new Date().getDay() + 6) % 7;
+    const dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+    const currentDayName = dayNames[currentDayIndex];
+    const targetDayName = dayNames[target.dayOfWeek] || 'ce jour';
+
+    // Anti-cheat verification: Only allow validating today's study sessions
+    if (target.dayOfWeek !== currentDayIndex) {
+      soundFX.playNotificationPing();
+      showToast(`🔒 Anti-triche : Vous pouvez uniquement valider les révisions prévues pour aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
+      return;
+    }
+
     soundFX.playCheckmarkPop();
     const willBeCompleted = !target.completed;
     const updatedSessions = state.studySessions.map(s => 
@@ -532,6 +546,17 @@ export function App() {
         ? { ...s, completed: willBeCompleted, completedAt: willBeCompleted ? new Date().toISOString() : undefined } 
         : s
     );
+
+    const newLog: StudyLog = {
+      id: generateId(),
+      sessionId: target.id,
+      subjectId: target.subjectId,
+      date: new Date().toISOString().slice(0, 10),
+      durationMinutes: target.durationMinutes,
+      satisfactionRating: 5,
+      summary: `Session de ${target.durationMinutes} min validée : ${target.title}`,
+      createdAt: new Date().toISOString(),
+    };
 
     if (willBeCompleted) {
       const daySessions = updatedSessions.filter(s => s.dayOfWeek === target.dayOfWeek);
@@ -552,10 +577,23 @@ export function App() {
       }
     }
 
-    setState(prev => ({
-      ...prev,
-      studySessions: updatedSessions,
-    }));
+    setState(prev => {
+      const filteredLogs = prev.logs.filter(l => l.sessionId !== target.id);
+      const nextLogs = willBeCompleted ? [newLog, ...filteredLogs] : filteredLogs;
+      const totalCompleted = updatedSessions.filter(s => s.completed).length;
+
+      const nextState: AppState = {
+        ...prev,
+        studySessions: updatedSessions,
+        logs: totalCompleted === 0 ? [] : nextLogs,
+      };
+
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+
+      return nextState;
+    });
   };
 
   const handleContinueNewCycle = () => {
