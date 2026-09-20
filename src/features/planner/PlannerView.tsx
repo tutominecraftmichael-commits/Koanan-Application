@@ -5,7 +5,8 @@ import type {
   StudySession, 
   StudyPreferences, 
   SessionType, 
-  DayOfWeek 
+  DayOfWeek,
+  StudyPacing
 } from '../../types';
 import { DAYS_OF_WEEK } from '../../types';
 import { Button } from '../../components/ui/Button';
@@ -23,7 +24,6 @@ import {
   Flame, 
   Filter, 
   Calendar, 
-  Layers,
   Plus,
   Star,
   Brain,
@@ -32,6 +32,8 @@ import {
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
+import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
+import { generateGoogleCalendarUrl } from '../../services/googleCalendarService';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { useLanguage, t } from '../../lib/i18n';
 
@@ -73,7 +75,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [isAddCustomOpen, setIsAddCustomOpen] = useState(false);
   const [isStrategyModalOpen, setIsStrategyModalOpen] = useState(false);
+  const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);
   const [selectedModalStrategy, setSelectedModalStrategy] = useState<string>(preferences.pacing || 'active_recall_spaced');
+  const [selectedCombinedPacings, setSelectedCombinedPacings] = useState<StudyPacing[]>(() => {
+    if (preferences.combinedPacings && preferences.combinedPacings.length > 0) {
+      return preferences.combinedPacings;
+    }
+    return [preferences.pacing || 'active_recall_spaced'];
+  });
   const [proModalInfo, setProModalInfo] = useState<{ title: string; desc: string } | null>(null);
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
   const [lang] = useLanguage();
@@ -159,7 +168,21 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<Calendar className="w-3.5 h-3.5 text-sky-400" />}
+            onClick={() => setIsGoogleCalendarOpen(true)}
+            className="cursor-pointer text-xs flex-1 sm:flex-initial py-2 border-sky-500/30 text-sky-200 hover:text-white"
+            title="Synchroniser avec Google Agenda & Alertes 15 min"
+          >
+            <span className="flex items-center gap-1.5">
+              <span>Google Agenda</span>
+              <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">15 min</span>
+            </span>
+          </Button>
+
           <Button
             variant="secondary"
             size="sm"
@@ -233,21 +256,30 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         <Card 
           onClick={() => {
             setSelectedModalStrategy(preferences.pacing || 'active_recall_spaced');
+            if (preferences.combinedPacings && preferences.combinedPacings.length > 0) {
+              setSelectedCombinedPacings(preferences.combinedPacings);
+            }
             setIsStrategyModalOpen(true);
           }}
           className="p-3 sm:p-4 bg-slate-900/60 border-slate-800 flex items-center gap-2.5 hover:border-cyan-500/50 cursor-pointer transition-all group interactive-card"
           title="Cliquez pour consulter ou changer la méthode d'espacement active"
         >
-          <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 shrink-0 group-hover:bg-cyan-500/20 group-hover:scale-110 transition-all">
-            <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
+          <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:scale-110 transition-transform shrink-0">
+            <Brain className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] sm:text-xs text-slate-400 truncate flex items-center gap-1">
-              <span>Méthode</span>
-              <span className="text-[9px] text-cyan-400 underline">(Détails)</span>
-            </p>
-            <p className="text-xs sm:text-sm font-bold text-cyan-300 font-mono break-words">
-              {activePacing.focusBlockDuration}m • {activePacing.title.replace(/^(La Technique|L'|Le)\s+/i, '')}
+            <div className="flex items-center gap-1">
+              <p className="text-[10px] sm:text-xs text-slate-400 truncate">Méthode d'espacement</p>
+              {preferences.combinedPacings && preferences.combinedPacings.length > 1 && (
+                <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300">
+                  ×{preferences.combinedPacings.length}
+                </span>
+              )}
+            </div>
+            <p className="text-xs sm:text-sm font-bold text-white truncate group-hover:text-cyan-300 transition-colors">
+              {preferences.combinedPacings && preferences.combinedPacings.length > 1
+                ? `${preferences.combinedPacings.length} Méthodes Combinées`
+                : activePacing.title}
             </p>
           </div>
         </Card>
@@ -415,9 +447,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           {filteredSessions.map(session => {
-            const subject = subjects.find(s => s.id === session.subjectId) || {
+            const realSubject = subjects.find(s => s.id === session.subjectId);
+            const subject: Subject = realSubject || {
+              id: session.subjectId,
               name: 'Matière',
               color: '#6366F1',
+              coefficient: 1,
+              difficulty: 3,
+              targetGrade: 10,
             };
 
             const dayInfo = DAYS_OF_WEEK.find(d => d.id === session.dayOfWeek) || DAYS_OF_WEEK[0];
@@ -455,6 +492,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold" title={session.rescheduledReason}>
                           🔄 Rattrapage (Init. {session.originalStartTime})
                         </Badge>
+                      )}
+                      {session.pacingMethod && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-950/80 border border-slate-800 text-slate-300 flex items-center gap-1 shadow-xs">
+                          <span>🧠</span>
+                          <span className="truncate max-w-[120px]">
+                            {getPacingStrategy(session.pacingMethod).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
+                          </span>
+                        </span>
                       )}
                     </div>
 
@@ -508,39 +553,63 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
                   {/* Actions footer */}
                   <div className="pt-2 sm:pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                    {session.completed ? (
-                      <button
-                        onClick={() => isToday && onToggleSessionComplete(session.id)}
-                        disabled={!isToday}
-                        className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all min-h-[36px] bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-sm ${
-                          isToday ? 'cursor-pointer hover:bg-emerald-500/30' : 'cursor-default opacity-90'
-                        }`}
-                        title={isToday ? "Cliquer pour annuler la validation" : "Session validée"}
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Validé</span>
-                      </button>
-                    ) : isToday ? (
-                      <button
-                        onClick={() => onToggleSessionComplete(session.id)}
-                        className={`px-3.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer min-h-[36px] interactive-pill ${
-                          session.isRescheduledToday
-                            ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
-                            : 'bg-indigo-600/30 text-indigo-200 border-indigo-500/40 hover:bg-indigo-600 hover:text-white'
-                        }`}
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>{session.isRescheduledToday ? '⚡ Valider Rattrapage' : 'Valider'}</span>
-                      </button>
-                    ) : (
-                      <div
-                        className="px-3 py-1.5 rounded-xl border border-slate-800/90 bg-slate-950/60 text-slate-400 text-xs font-medium flex items-center gap-1.5 cursor-not-allowed select-none min-h-[36px]"
-                        title={`🔒 Anti-triche : Vous pourrez valider cette séance uniquement le ${dayInfo.label}.`}
-                      >
-                        <Lock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                        <span>Disponible le {dayInfo.label}</span>
-                      </div>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {session.completed ? (
+                        <button
+                          onClick={() => isToday && onToggleSessionComplete(session.id)}
+                          disabled={!isToday}
+                          className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all min-h-[36px] bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-sm ${
+                            isToday ? 'cursor-pointer hover:bg-emerald-500/30' : 'cursor-default opacity-90'
+                          }`}
+                          title={isToday ? "Cliquer pour annuler la validation" : "Session validée"}
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Validé</span>
+                        </button>
+                      ) : isToday ? (
+                        <button
+                          onClick={() => onToggleSessionComplete(session.id)}
+                          className={`px-3.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer min-h-[36px] interactive-pill ${
+                            session.isRescheduledToday
+                              ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
+                              : 'bg-indigo-600/30 text-indigo-200 border-indigo-500/40 hover:bg-indigo-600 hover:text-white'
+                          }`}
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>{session.isRescheduledToday ? '⚡ Valider Rattrapage' : 'Valider'}</span>
+                        </button>
+                      ) : (
+                        <div
+                          className="px-3 py-1.5 rounded-xl border border-slate-800/90 bg-slate-950/60 text-slate-400 text-xs font-medium flex items-center gap-1.5 cursor-not-allowed select-none min-h-[36px]"
+                          title={`🔒 Anti-triche : Vous pourrez valider cette séance uniquement le ${dayInfo.label}.`}
+                        >
+                          <Lock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                          <span>Disponible le {dayInfo.label}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Bouton Rappel Intelligent Google Agenda (Alerte 15 min avant) */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (planTier === 'free') {
+                          setProModalInfo({
+                            title: "Rappels Intelligents Google Agenda (15 min)",
+                            desc: "L'intégration Google Agenda et les alertes push automatiques 15 min avant vos révisions sont réservées au modèle KONAN PRO."
+                          });
+                        } else {
+                          const url = generateGoogleCalendarUrl(session, subject);
+                          window.open(url, '_blank', 'noopener,noreferrer');
+                        }
+                      }}
+                      className="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-sky-500/50 hover:bg-sky-950/30 text-slate-400 hover:text-sky-300 transition-colors cursor-pointer flex items-center gap-1.5 text-[11px] font-medium shrink-0 min-h-[36px]"
+                      title="Ajouter à Google Agenda avec alerte 15 min avant"
+                    >
+                      <Calendar className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                      <span className="hidden sm:inline">Rappel 15 min</span>
+                    </button>
                   </div>
 
                 </div>
@@ -695,12 +764,40 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             );
           })()}
 
+          {/* Contextual Triple Pacing Combination Banner - RESERVED TO PRO / PLUS */}
+          {planTier !== 'free' && (
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-sky-500/15 border border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs shadow-md">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-1.5 font-black text-amber-300 uppercase tracking-wide text-[11px]">
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
+                  <span>Combinaison Triple KONAN PRO : {selectedCombinedPacings.length} / 3 sélectionnées</span>
+                </div>
+                <p className="text-[11px] text-slate-300">
+                  Sélectionnez 1, 2 ou 3 méthodes. Vos séances alterneront automatiquement selon la difficulté et vos créneaux.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                {selectedCombinedPacings.map((id, idx) => {
+                  const p = getPacingStrategy(id);
+                  return (
+                    <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
+                      <span>#{idx + 1}</span>
+                      <span>{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Strategy Selector Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {(() => {
               const rec = recommendPacingStrategies(subjects.length, classSlots);
               return PACING_STRATEGIES.map(s => {
                 const isCurrent = (selectedModalStrategy === s.id);
+                const isCombined = selectedCombinedPacings.includes(s.id);
+                const comboIndex = selectedCombinedPacings.indexOf(s.id) + 1;
                 const isActiveInPrefs = (preferences.pacing === s.id);
                 const isPrimaryRec = planTier !== 'free' && (rec.primaryId === s.id);
                 const isRecommended = planTier !== 'free' && rec.recommendedIds.includes(s.id);
@@ -721,33 +818,56 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         return;
                       }
                       setSelectedModalStrategy(s.id);
+                      if (planTier === 'free') {
+                        setSelectedCombinedPacings([s.id]);
+                      } else {
+                        // Multi-selection (up to 3 methods on PRO)
+                        setSelectedCombinedPacings(prev => {
+                          if (prev.includes(s.id)) {
+                            if (prev.length === 1) return prev; // Keep at least one
+                            return prev.filter(id => id !== s.id);
+                          } else {
+                            if (prev.length >= 3) {
+                              return [...prev.slice(0, 2), s.id];
+                            }
+                            return [...prev, s.id];
+                          }
+                        });
+                      }
                     }}
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer relative ${
-                      isCurrent
-                        ? 'bg-slate-900 border-cyan-400 ring-1 ring-cyan-400/50 shadow-md'
-                        : isLocked
-                          ? 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-amber-500/40'
-                          : isPrimaryRec
-                            ? 'bg-slate-950/80 border-amber-500/40 text-slate-300 hover:border-amber-400'
-                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
+                      isCombined
+                        ? 'bg-slate-900 border-amber-400 ring-1 ring-amber-400/50 shadow-md'
+                        : isCurrent
+                          ? 'bg-slate-900 border-cyan-400 ring-1 ring-cyan-400/50 shadow-md'
+                          : isLocked
+                            ? 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-amber-500/40'
+                            : isPrimaryRec
+                              ? 'bg-slate-950/80 border-amber-500/40 text-slate-300 hover:border-amber-400'
+                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1 mb-1">
-                      <span className={`text-xs font-bold ${isCurrent ? 'text-cyan-300' : 'text-slate-200'}`}>
+                      <span className={`text-xs font-bold ${isCombined ? 'text-amber-300' : isCurrent ? 'text-cyan-300' : 'text-slate-200'}`}>
                         {s.number}. {s.title}
                       </span>
                       <div className="flex items-center gap-1">
+                        {isCombined && (
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                            ✓ Activée #{comboIndex}
+                          </span>
+                        )}
                         {isLocked && (
                           <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
                             ⭐ PRO
                           </span>
                         )}
-                        {isPrimaryRec && (
+                        {isPrimaryRec && !isCombined && (
                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-0.5">
                             <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" /> Idéal
                           </span>
                         )}
-                        {!isPrimaryRec && isRecommended && (
+                        {!isPrimaryRec && isRecommended && !isCombined && (
                           <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                             Conseillé
                           </span>
@@ -757,7 +877,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                             Déconseillé
                           </span>
                         )}
-                        {isActiveInPrefs && (
+                        {isActiveInPrefs && !isCombined && (
                           <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                             Actif
                           </span>
@@ -777,7 +897,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
           {(() => {
             const strat = getPacingStrategy(selectedModalStrategy);
             const isIdeaLabel = strat.number <= 2;
-            const isAlreadyActive = preferences.pacing === strat.id;
 
             return (
               <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/90 via-indigo-950/40 to-slate-950 border border-indigo-500/40 space-y-3.5 shadow-xl">
@@ -832,7 +951,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                     Fermer
                   </Button>
 
-                  {!isAlreadyActive && onUpdatePreferences && (
+                  {onUpdatePreferences && (
                     strat.planRequired === 'pro' && planTier === 'free' ? (
                       <Button
                         variant="glow"
@@ -852,19 +971,20 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         variant="glow"
                         size="sm"
                         onClick={() => {
-                          const stratInfo = getPacingStrategy(selectedModalStrategy);
+                          const primary = getPacingStrategy(selectedCombinedPacings[0] || selectedModalStrategy);
                           onUpdatePreferences({
                             ...preferences,
-                            pacing: stratInfo.id,
-                            focusBlockDuration: stratInfo.focusBlockDuration,
-                            breakBlockDuration: stratInfo.breakBlockDuration,
+                            pacing: primary.id,
+                            combinedPacings: selectedCombinedPacings.length > 0 ? selectedCombinedPacings : [primary.id],
+                            focusBlockDuration: primary.focusBlockDuration,
+                            breakBlockDuration: primary.breakBlockDuration,
                           });
                           onRegeneratePlan();
                           setIsStrategyModalOpen(false);
                         }}
                         className="text-xs font-bold cursor-pointer"
                       >
-                        Appliquer & Recalculer le planning
+                        Appliquer au planning ({selectedCombinedPacings.length} méthode{selectedCombinedPacings.length > 1 ? 's' : ''})
                       </Button>
                     )
                   )}
@@ -883,6 +1003,17 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         featureDescription={proModalInfo?.desc}
         onViewPricing={onViewPricing}
         onUpgradeToPro={onUpgradeToPro}
+      />
+
+      {/* Google Calendar Sync Modal with 15-min alerts */}
+      <GoogleCalendarSyncModal
+        isOpen={isGoogleCalendarOpen}
+        onClose={() => setIsGoogleCalendarOpen(false)}
+        sessions={studySessions}
+        subjects={subjects}
+        planTier={planTier}
+        onUpgradeToPro={onUpgradeToPro}
+        onViewPricing={onViewPricing}
       />
 
       {/* Session Method Explainer Modal */}

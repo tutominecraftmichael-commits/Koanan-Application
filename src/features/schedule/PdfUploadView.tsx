@@ -22,7 +22,8 @@ import {
   School,
   FileText,
   ClipboardPaste,
-  Star
+  Star,
+  Check
 } from 'lucide-react';
 import type { 
   ExtractedPdfSchedule, 
@@ -229,6 +230,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const [copiedTruthText, setCopiedTruthText] = useState(false);
   const [selectedChronotype, setSelectedChronotype] = useState<Chronotype>('evening');
   const [selectedPacing, setSelectedPacing] = useState<StudyPacing>('active_recall_spaced');
+  const [selectedCombinedPacings, setSelectedCombinedPacings] = useState<StudyPacing[]>(['active_recall_spaced']);
   const [copiedRawText, setCopiedRawText] = useState(false);
 
   // Dynamic recommendation engine based on class finish times, weekly volume, and subject count
@@ -249,8 +251,15 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       if (planTier === 'free' && (pacingRecommendation.primaryId === 'feynman' || pacingRecommendation.primaryId === 'time_blocking')) {
         const freeFallback = pacingRecommendation.recommendedIds.find(id => id !== 'feynman' && id !== 'time_blocking') || 'active_recall_spaced';
         setSelectedPacing(freeFallback);
+        setSelectedCombinedPacings([freeFallback]);
       } else {
         setSelectedPacing(pacingRecommendation.primaryId);
+        if (planTier !== 'free' && pacingRecommendation.recommendedIds.length > 0) {
+          const combo = [pacingRecommendation.primaryId, ...pacingRecommendation.recommendedIds.filter(id => id !== pacingRecommendation.primaryId)].slice(0, 2);
+          setSelectedCombinedPacings(combo);
+        } else {
+          setSelectedCombinedPacings([pacingRecommendation.primaryId]);
+        }
       }
     }
   }, [pacingRecommendation, planTier]);
@@ -452,7 +461,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       harmonizedData,
       studentName,
       selectedChronotype,
-      selectedPacing
+      selectedPacing,
+      selectedCombinedPacings
     );
 
     confetti({
@@ -1466,10 +1476,38 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       </div>
                     ) : null}
 
+                    {/* Triple Pacing Combination Banner - RESERVED TO PRO / PLUS */}
+                    {planTier !== 'free' && (
+                      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-sky-500/15 border border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs shadow-md">
+                        <div className="space-y-0.5">
+                          <div className="flex items-center gap-1.5 font-black text-amber-300 uppercase tracking-wide text-[11px]">
+                            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
+                            <span>Combinaison Triple KONAN PRO : {selectedCombinedPacings.length} / 3 sélectionnées</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300">
+                            Sélectionnez 1, 2 ou 3 méthodes. Vos séances de révision alterneront automatiquement selon la difficulté et vos créneaux libres.
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                          {selectedCombinedPacings.map((id, idx) => {
+                            const p = getPacingStrategy(id);
+                            return (
+                              <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
+                                <span>#{idx + 1}</span>
+                                <span>{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
                     {/* 5 Interactive Strategy Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                       {PACING_STRATEGIES.map((strategy) => {
                         const isSelected = selectedPacing === strategy.id;
+                        const isCombined = selectedCombinedPacings.includes(strategy.id);
+                        const comboIndex = selectedCombinedPacings.indexOf(strategy.id) + 1;
                         const isPrimaryRec = planTier !== 'free' && pacingRecommendation?.primaryId === strategy.id;
                         const isRecommended = planTier !== 'free' && pacingRecommendation?.recommendedIds.includes(strategy.id);
                         const isNotRecommended = planTier !== 'free' && pacingRecommendation?.notRecommendedIds?.includes(strategy.id);
@@ -1489,25 +1527,46 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                                 return;
                               }
                               setSelectedPacing(strategy.id);
+                              if (planTier === 'free') {
+                                setSelectedCombinedPacings([strategy.id]);
+                              } else {
+                                setSelectedCombinedPacings(prev => {
+                                  if (prev.includes(strategy.id)) {
+                                    if (prev.length === 1) return prev; // Garder au moins 1 méthode
+                                    return prev.filter(id => id !== strategy.id);
+                                  } else {
+                                    if (prev.length >= 3) {
+                                      return [...prev.slice(0, 2), strategy.id];
+                                    }
+                                    return [...prev, strategy.id];
+                                  }
+                                });
+                              }
                             }}
                             className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between gap-2.5 ${
-                              isSelected
-                                ? 'bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-950 border-cyan-400/80 shadow-lg shadow-cyan-500/20 ring-1 ring-cyan-400/50'
-                                : isLocked
-                                  ? 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-amber-500/40 hover:bg-slate-900/40'
-                                  : isPrimaryRec
-                                    ? 'bg-slate-950/80 border-amber-500/50 text-slate-300 hover:border-amber-400 hover:bg-slate-900/60'
-                                    : isRecommended
-                                      ? 'bg-slate-950/80 border-indigo-500/40 text-slate-300 hover:border-indigo-400 hover:bg-slate-900/60'
-                                      : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900/50'
+                              isCombined
+                                ? 'bg-gradient-to-br from-slate-900 via-amber-950/25 to-slate-950 border-amber-400 ring-1 ring-amber-400/50 shadow-lg shadow-amber-500/20'
+                                : isSelected
+                                  ? 'bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-950 border-cyan-400/80 shadow-lg shadow-cyan-500/20 ring-1 ring-cyan-400/50'
+                                  : isLocked
+                                    ? 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-amber-500/40 hover:bg-slate-900/40'
+                                    : isPrimaryRec
+                                      ? 'bg-slate-950/80 border-amber-500/50 text-slate-300 hover:border-amber-400 hover:bg-slate-900/60'
+                                      : isRecommended
+                                        ? 'bg-slate-950/80 border-indigo-500/40 text-slate-300 hover:border-indigo-400 hover:bg-slate-900/60'
+                                        : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900/50'
                             }`}
                           >
                             <div className="space-y-1.5">
                               <div className="flex items-center justify-between gap-2">
-                                <span className={`text-xs font-black tracking-wide ${isSelected ? 'text-cyan-300' : 'text-white'}`}>
+                                <span className={`text-xs font-black tracking-wide ${isCombined ? 'text-amber-300' : isSelected ? 'text-cyan-300' : 'text-white'}`}>
                                   {strategy.number}. {strategy.title}
                                 </span>
-                                {isLocked ? (
+                                {isCombined ? (
+                                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
+                                    ✓ Activée #{comboIndex}
+                                  </span>
+                                ) : isLocked ? (
                                   <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
                                     ⭐ PRO
                                   </span>
@@ -1523,6 +1582,11 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                               {isLocked ? (
                                 <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-300/90">
                                   <span>🔒 Inclus dans le modèle KONAN PRO</span>
+                                </div>
+                              ) : isCombined ? (
+                                <div className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-300">
+                                  <Check className="w-3 h-3 text-amber-400" />
+                                  <span>Méthode active dans votre combinaison ({comboIndex}/3)</span>
                                 </div>
                               ) : isPrimaryRec ? (
                                 <div className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-300">
@@ -1552,11 +1616,13 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                               <span className={`text-[10px] flex items-center gap-1 font-medium ${
                                 isLocked 
                                   ? 'text-amber-400 font-semibold' 
+                                  : isCombined
+                                  ? 'text-amber-300 font-bold'
                                   : isSelected 
                                   ? 'text-cyan-400 font-bold' 
                                   : 'text-slate-400 hover:text-slate-200'
                               }`}>
-                                {isLocked ? 'Débloquer PRO ↗' : isSelected ? 'Sélectionné ✓' : 'Choisir →'}
+                                {isLocked ? 'Débloquer PRO ↗' : isCombined ? `Activée #${comboIndex} ✓` : 'Ajouter / Choisir →'}
                               </span>
                             </div>
                           </button>

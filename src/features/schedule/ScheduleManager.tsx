@@ -5,7 +5,8 @@ import type {
   CourseType, 
   DayOfWeek, 
   StudyPreferences,
-  StudySession
+  StudySession,
+  StudyPacing
 } from '../../types';
 import { COURSE_TYPE_LABELS, DAYS_OF_WEEK } from '../../types';
 import { Button } from '../../components/ui/Button';
@@ -20,6 +21,7 @@ import {
 } from '../../services/pdfParserService';
 import { getPacingStrategy, PACING_STRATEGIES, recommendPacingStrategies } from '../../lib/pacingStrategies';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
+import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
 import { 
   Plus, 
   Trash2, 
@@ -213,6 +215,13 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
   const [isEditingTruthDirect, setIsEditingTruthDirect] = useState(false);
   const [isStrategyModalOpen, setIsStrategyModalOpen] = useState(false);
   const [selectedModalStrategy, setSelectedModalStrategy] = useState<string>(preferences.pacing || 'active_recall_spaced');
+  const [selectedCombinedPacings, setSelectedCombinedPacings] = useState<StudyPacing[]>(() => {
+    if (preferences.combinedPacings && preferences.combinedPacings.length > 0) {
+      return preferences.combinedPacings;
+    }
+    return [preferences.pacing || 'active_recall_spaced'];
+  });
+  const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);
 
   const activeStrategy = getPacingStrategy(preferences.pacing);
 
@@ -437,6 +446,18 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             </Button>
           )}
 
+          {/* Google Agenda Button */}
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<Calendar className="w-3.5 h-3.5 text-cyan-400" />}
+            onClick={() => setIsGoogleCalendarOpen(true)}
+            title="Synchroniser avec Google Agenda et activer les alertes 15 min sur votre téléphone"
+            className="cursor-pointer text-xs font-semibold py-2 px-3 text-cyan-300 hover:text-white border-cyan-500/30 hover:border-cyan-400"
+          >
+            📅 Google Agenda (15 min)
+          </Button>
+
           {/* Add Course Button */}
           <Button
             variant="secondary"
@@ -500,14 +521,29 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             type="button"
             onClick={() => {
               setSelectedModalStrategy(preferences.pacing || 'active_recall_spaced');
+              if (preferences.combinedPacings && preferences.combinedPacings.length > 0) {
+                setSelectedCombinedPacings(preferences.combinedPacings);
+              } else {
+                setSelectedCombinedPacings([preferences.pacing || 'active_recall_spaced']);
+              }
               setIsStrategyModalOpen(true);
             }}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-950/40 border border-indigo-500/40 text-indigo-300 hover:text-white hover:border-indigo-400 text-xs font-semibold cursor-pointer transition-all shadow-sm"
             title="Consulter l'explication de la méthode d'espacement appliquée à votre emploi du temps"
           >
             <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-            <span className="break-words">Méthode : {activeStrategy.title}</span>
-            <span className="text-[10px] text-cyan-400 font-mono ml-0.5 shrink-0">({activeStrategy.focusBlockDuration}m)</span>
+            <span className="break-words">
+              Méthode : {preferences.combinedPacings && preferences.combinedPacings.length > 1
+                ? `${preferences.combinedPacings.length} Méthodes Combinées`
+                : activeStrategy.title}
+            </span>
+            {preferences.combinedPacings && preferences.combinedPacings.length > 1 ? (
+              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                ×{preferences.combinedPacings.length}
+              </span>
+            ) : (
+              <span className="text-[10px] text-cyan-400 font-mono ml-0.5 shrink-0">({activeStrategy.focusBlockDuration}m)</span>
+            )}
           </button>
 
           <div className="flex items-center gap-2">
@@ -1150,12 +1186,40 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             );
           })()}
 
+          {/* Contextual Triple Pacing Combination Banner - RESERVED TO PRO / PLUS */}
+          {planTier !== 'free' && (
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-sky-500/15 border border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs shadow-md">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-1.5 font-black text-amber-300 uppercase tracking-wide text-[11px]">
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
+                  <span>Combinaison Triple KONAN PRO : {selectedCombinedPacings.length} / 3 sélectionnées</span>
+                </div>
+                <p className="text-[11px] text-slate-300">
+                  Sélectionnez 1, 2 ou 3 méthodes. Vos séances de révision alterneront automatiquement selon la difficulté et vos créneaux.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                {selectedCombinedPacings.map((id, idx) => {
+                  const p = getPacingStrategy(id);
+                  return (
+                    <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
+                      <span>#{idx + 1}</span>
+                      <span>{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Strategy Selector Pills */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {(() => {
               const rec = recommendPacingStrategies(subjects.length, classSlots);
               return PACING_STRATEGIES.map(s => {
                 const isCurrent = (selectedModalStrategy === s.id);
+                const isCombined = selectedCombinedPacings.includes(s.id);
+                const comboIndex = selectedCombinedPacings.indexOf(s.id) + 1;
                 const isActiveInPrefs = (preferences.pacing === s.id);
                 const isPrimaryRec = planTier !== 'free' && (rec.primaryId === s.id);
                 const isRecommended = planTier !== 'free' && rec.recommendedIds.includes(s.id);
@@ -1176,33 +1240,55 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                         return;
                       }
                       setSelectedModalStrategy(s.id);
+                      if (planTier === 'free') {
+                        setSelectedCombinedPacings([s.id]);
+                      } else {
+                        setSelectedCombinedPacings(prev => {
+                          if (prev.includes(s.id)) {
+                            if (prev.length === 1) return prev; // Au moins 1 méthode
+                            return prev.filter(id => id !== s.id);
+                          } else {
+                            if (prev.length >= 3) {
+                              return [...prev.slice(0, 2), s.id];
+                            }
+                            return [...prev, s.id];
+                          }
+                        });
+                      }
                     }}
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer relative ${
-                      isCurrent
-                        ? 'bg-slate-900 border-cyan-400 ring-1 ring-cyan-400/50 shadow-md'
-                        : isLocked
-                          ? 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-amber-500/40'
-                          : isPrimaryRec
-                            ? 'bg-slate-950/80 border-amber-500/40 text-slate-300 hover:border-amber-400'
-                            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
+                      isCombined
+                        ? 'bg-slate-900 border-amber-400 ring-1 ring-amber-400/50 shadow-md'
+                        : isCurrent
+                          ? 'bg-slate-900 border-cyan-400 ring-1 ring-cyan-400/50 shadow-md'
+                          : isLocked
+                            ? 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-amber-500/40'
+                            : isPrimaryRec
+                              ? 'bg-slate-950/80 border-amber-500/40 text-slate-300 hover:border-amber-400'
+                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1 mb-1">
-                      <span className={`text-xs font-bold ${isCurrent ? 'text-cyan-300' : 'text-slate-200'}`}>
+                      <span className={`text-xs font-bold ${isCombined ? 'text-amber-300' : isCurrent ? 'text-cyan-300' : 'text-slate-200'}`}>
                         {s.number}. {s.title}
                       </span>
                       <div className="flex items-center gap-1">
+                        {isCombined && (
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                            ✓ Activée #{comboIndex}
+                          </span>
+                        )}
                         {isLocked && (
                           <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
                             ⭐ PRO
                           </span>
                         )}
-                        {isPrimaryRec && (
+                        {isPrimaryRec && !isCombined && (
                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-0.5">
                             <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" /> Idéal
                           </span>
                         )}
-                        {!isPrimaryRec && isRecommended && (
+                        {!isPrimaryRec && isRecommended && !isCombined && (
                           <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                             Conseillé
                           </span>
@@ -1212,7 +1298,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                             Déconseillé
                           </span>
                         )}
-                        {isActiveInPrefs && (
+                        {isActiveInPrefs && !isCombined && (
                           <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                             Actif
                           </span>
@@ -1232,7 +1318,6 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           {(() => {
             const strat = getPacingStrategy(selectedModalStrategy);
             const isIdeaLabel = strat.number <= 2;
-            const isAlreadyActive = preferences.pacing === strat.id;
 
             return (
               <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/90 via-indigo-950/40 to-slate-950 border border-indigo-500/40 space-y-3.5 shadow-xl">
@@ -1287,41 +1372,40 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     Fermer
                   </Button>
 
-                  {!isAlreadyActive && (
-                    strat.planRequired === 'pro' && planTier === 'free' ? (
-                      <Button
-                        variant="glow"
-                        size="sm"
-                        onClick={() => {
-                          setProModalInfo({
-                            title: `${strat.title}`,
-                            desc: `La méthode "${strat.title}" fait partie du modèle KONAN PRO. Passez à KONAN PRO pour synchroniser votre emploi du temps avec cette méthode avancée.`
-                          });
-                        }}
-                        className="text-xs font-bold cursor-pointer bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 border-amber-400"
-                      >
-                        ⭐ Débloquer avec KONAN PRO
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="glow"
-                        size="sm"
-                        onClick={() => {
-                          const stratInfo = getPacingStrategy(selectedModalStrategy);
-                          onUpdatePreferences({
-                            ...preferences,
-                            pacing: stratInfo.id,
-                            focusBlockDuration: stratInfo.focusBlockDuration,
-                            breakBlockDuration: stratInfo.breakBlockDuration,
-                          });
-                          onTriggerPlanner();
-                          setIsStrategyModalOpen(false);
-                        }}
-                        className="text-xs font-bold cursor-pointer"
-                      >
-                        Appliquer cette méthode à mon planning
-                      </Button>
-                    )
+                  {strat.planRequired === 'pro' && planTier === 'free' ? (
+                    <Button
+                      variant="glow"
+                      size="sm"
+                      onClick={() => {
+                        setProModalInfo({
+                          title: `${strat.title}`,
+                          desc: `La méthode "${strat.title}" fait partie du modèle KONAN PRO. Passez à KONAN PRO pour synchroniser votre emploi du temps avec cette méthode avancée.`
+                        });
+                      }}
+                      className="text-xs font-bold cursor-pointer bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 border-amber-400"
+                    >
+                      ⭐ Débloquer avec KONAN PRO
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="glow"
+                      size="sm"
+                      onClick={() => {
+                        const primary = getPacingStrategy(selectedCombinedPacings[0] || selectedModalStrategy);
+                        onUpdatePreferences({
+                          ...preferences,
+                          pacing: primary.id,
+                          combinedPacings: selectedCombinedPacings.length > 0 ? selectedCombinedPacings : [primary.id],
+                          focusBlockDuration: primary.focusBlockDuration,
+                          breakBlockDuration: primary.breakBlockDuration,
+                        });
+                        onTriggerPlanner();
+                        setIsStrategyModalOpen(false);
+                      }}
+                      className="text-xs font-bold cursor-pointer"
+                    >
+                      Appliquer au planning ({selectedCombinedPacings.length} méthode{selectedCombinedPacings.length > 1 ? 's' : ''})
+                    </Button>
                   )}
                 </div>
               </div>
@@ -1338,6 +1422,17 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         featureDescription={proModalInfo?.desc}
         onViewPricing={onViewPricing}
         onUpgradeToPro={onUpgradeToPro}
+      />
+
+      {/* Google Calendar Sync Modal with 15-min alerts */}
+      <GoogleCalendarSyncModal
+        isOpen={isGoogleCalendarOpen}
+        onClose={() => setIsGoogleCalendarOpen(false)}
+        sessions={studySessions}
+        subjects={subjects}
+        planTier={planTier}
+        onUpgradeToPro={onUpgradeToPro}
+        onViewPricing={onViewPricing}
       />
 
     </div>

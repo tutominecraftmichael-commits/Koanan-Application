@@ -32,7 +32,6 @@ export function generateOptimizedStudyPlan(
   const pacingStrategy = getPacingStrategy(preferences.pacing);
   const sessionBlock = preferences.focusBlockDuration || pacingStrategy.focusBlockDuration;
   const breakBlock = preferences.breakBlockDuration || pacingStrategy.breakBlockDuration;
-  const stepMinutes = sessionBlock + breakBlock;
 
   // 1. Calcul des scores académiques pondérés pour chaque matière
   const subjectScores = subjects.map(sub => {
@@ -263,6 +262,46 @@ export function generateOptimizedStudyPlan(
           : 'Chapitre clé & Fondamentaux';
 
         const sessionType = sessionTypeCycle[bestCandidate.scheduledCount % sessionTypeCycle.length];
+        const daysUntilExam = getDaysRemaining(subject.examDate);
+
+        // Stratégie d'espacement active pour cette session (Mono-méthode ou Combinaison Triple KONAN PRO)
+        let sessionPacing = pacingStrategy;
+        let sessionDuration = sessionBlock;
+        let sessionBreak = breakBlock;
+
+        if (preferences.combinedPacings && preferences.combinedPacings.length > 1) {
+          const chosen = preferences.combinedPacings.slice(0, 3).map(id => getPacingStrategy(id));
+          const hasFeynman = chosen.find(p => p.id === 'feynman');
+          const hasTimeBlocking = chosen.find(p => p.id === 'time_blocking');
+          const hasActiveRecall = chosen.find(p => p.id === 'active_recall_spaced');
+          const hasPomodoro = chosen.find(p => p.id === 'pomodoro');
+          const hasTwoMin = chosen.find(p => p.id === 'two_minutes_rule');
+
+          // Allocation cognitive intelligente :
+          // 1. Matière très difficile (diff >= 4) ou examen proche (<= 10 jours) -> Feynman si présente (assimilation profonde)
+          if ((subject.difficulty >= 4 || (daysUntilExam !== null && daysUntilExam <= 10)) && hasFeynman) {
+            sessionPacing = hasFeynman;
+          }
+          // 2. Matière à fort coefficient (>= 5) avec créneau large -> Time Blocking si présent
+          else if (slot.end - slotCurrentStart >= 75 && subject.coefficient >= 5 && hasTimeBlocking) {
+            sessionPacing = hasTimeBlocking;
+          }
+          // 3. Fin d'après-midi / soirée (>= 18h) -> Micro-sessions Pomodoro ou 2-Minutes si présentes
+          else if (slotCurrentStart >= 1080 && (hasPomodoro || hasTwoMin)) {
+            sessionPacing = hasPomodoro || hasTwoMin!;
+          }
+          // 4. Session de révision espacée ou auto-test -> Active Recall si présent
+          else if (hasActiveRecall && (sessionType === 'spaced_review' || sessionType === 'flashcards')) {
+            sessionPacing = hasActiveRecall;
+          }
+          // 5. Sinon, alternance harmonieuse équilibrée entre les méthodes choisies
+          else {
+            sessionPacing = chosen[bestCandidate.scheduledCount % chosen.length];
+          }
+
+          sessionDuration = sessionPacing.focusBlockDuration;
+          sessionBreak = sessionPacing.breakBlockDuration;
+        }
 
         // Titres et descriptions contextualisés selon la méthode d'étude retenue
         let sessionTitle = '';
@@ -271,7 +310,7 @@ export function generateOptimizedStudyPlan(
 
         const displaySubjectName = subject.name;
 
-        if (pacingStrategy.id === 'pomodoro') {
+        if (sessionPacing.id === 'pomodoro') {
           sessionTitle = `Pomodoro (25m) : ${displaySubjectName} - ${topicName}`;
           sessionDescription = `Micro-session Pomodoro de 25 min à fond, coupure nette de 5 min de pause pour éviter la fatigue cérébrale.`;
           sessionObjectives = [
@@ -279,7 +318,7 @@ export function generateOptimizedStudyPlan(
             `Terminer un micro-objectif précis sur ${topicName}`,
             'Pause obligatoire de 5 min sans écran pour reposer le cerveau',
           ];
-        } else if (pacingStrategy.id === 'feynman') {
+        } else if (sessionPacing.id === 'feynman') {
           sessionTitle = `Technique de Feynman : ${displaySubjectName} - ${topicName}`;
           sessionDescription = `Expliquer simplement pour comprendre à fond : vulgarisation avec des mots simples comme pour un enfant de 10 ans.`;
           sessionObjectives = [
@@ -287,15 +326,15 @@ export function generateOptimizedStudyPlan(
             'Repérer immédiatement le mot ou la formule précise qui pose blocage',
             'Reprendre le cours pour clarifier et éliminer définitivement ce point d’achoppement',
           ];
-        } else if (pacingStrategy.id === 'time_blocking') {
-          sessionTitle = `Time Blocking (${sessionBlock}m) : ${displaySubjectName}`;
+        } else if (sessionPacing.id === 'time_blocking') {
+          sessionTitle = `Time Blocking (${sessionDuration}m) : ${displaySubjectName}`;
           sessionDescription = `Plage horaire fixe et obligatoire dédiée à 100% à cette matière. Plus besoin d'hésiter en ouvrant votre sac.`;
           sessionObjectives = [
             'Remplir ce bloc horaire sanctuarisé sans changer de sujet',
             `Attaquer directement sans délai le programme clé : ${topicName}`,
             'Résolution continue des exercices et validation des acquis du bloc',
           ];
-        } else if (pacingStrategy.id === 'two_minutes_rule') {
+        } else if (sessionPacing.id === 'two_minutes_rule') {
           sessionTitle = `Règle des 2 Min & Sprint : ${displaySubjectName}`;
           sessionDescription = `Vaincre la flemme immédiatement : amorçage de 2 minutes pour lancer le mouvement sans friction.`;
           sessionObjectives = [
@@ -323,9 +362,9 @@ export function generateOptimizedStudyPlan(
         const dateString = `${yyyy}-${mm}-${dd}`;
 
         const startMin = slotCurrentStart;
-        const endMin = startMin + sessionBlock;
+        const endMin = Math.min(startMin + sessionDuration, slot.end);
+        const actualDuration = endMin - startMin;
 
-        const daysUntilExam = getDaysRemaining(subject.examDate);
         let priority: 'urgent' | 'high' | 'medium' | 'maintenance' = 'medium';
         if (daysUntilExam !== null && daysUntilExam <= 7) priority = 'urgent';
         else if (subject.difficulty >= 4 || subject.coefficient >= 5) priority = 'high';
@@ -341,7 +380,8 @@ export function generateOptimizedStudyPlan(
           date: dateString,
           startTime: minutesToTimeString(startMin),
           endTime: minutesToTimeString(endMin),
-          durationMinutes: sessionBlock,
+          durationMinutes: actualDuration,
+          pacingMethod: sessionPacing.id,
           type: sessionType,
           title: sessionTitle,
           description: sessionDescription,
@@ -358,8 +398,8 @@ export function generateOptimizedStudyPlan(
         bestCandidate.lastScheduledDay = day;
         bestCandidate.topicIndex++;
 
-        // Avancement du créneau horaire
-        slotCurrentStart += stepMinutes;
+        // Avancement du créneau horaire avec la pause spécifique
+        slotCurrentStart += (actualDuration + sessionBreak);
       }
     }
   }

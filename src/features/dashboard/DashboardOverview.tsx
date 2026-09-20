@@ -27,6 +27,8 @@ import {
   Moon
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
+import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
+import { generateGoogleCalendarUrl } from '../../services/googleCalendarService';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { useLanguage, t } from '../../lib/i18n';
 import type { SessionType } from '../../types';
@@ -70,6 +72,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
+  const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);
 
   const [showCompletedSessions, setShowCompletedSessions] = useState(false);
 
@@ -381,16 +384,27 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               </div>
             ) : (
               <div className="space-y-2.5 pt-1">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                     Sessions d'Étude ({completedToday}/{allTodaysStudySessions.length} faites)
                   </span>
-                  {rescheduledTodaySessions.length > 0 && (
-                    <span className="text-[10px] font-bold text-amber-300 uppercase">
-                      {rescheduledTodaySessions.length} à rattraper
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsGoogleCalendarOpen(true)}
+                      className="px-2.5 py-1 rounded-lg bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-500/40 text-cyan-300 hover:text-white text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors shadow-xs"
+                      title="Activer les alertes 15 min Google Agenda sur votre téléphone"
+                    >
+                      <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>Google Agenda (15 min)</span>
+                    </button>
+                    {rescheduledTodaySessions.length > 0 && (
+                      <span className="text-[10px] font-bold text-amber-300 uppercase">
+                        {rescheduledTodaySessions.length} à rattraper
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Daily Catch-up Rescheduled Banner with Clear Breakdown */}
@@ -514,6 +528,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                 🔄 Rattrapage (Init. {session.originalStartTime})
                               </Badge>
                             )}
+                            {session.pacingMethod && (
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-500/20 text-cyan-300 border border-indigo-500/30 font-mono">
+                                🧠 {session.pacingMethod === 'feynman' ? 'Feynman' : session.pacingMethod === 'time_blocking' ? 'Time Blocking' : session.pacingMethod === 'pomodoro' ? 'Pomodoro' : session.pacingMethod === 'two_minutes_rule' ? '2-Min' : 'Répétition'}
+                              </span>
+                            )}
                             <button
                               type="button"
                               onClick={() => setSelectedExplainerType(session.type)}
@@ -538,6 +557,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         </div>
 
                         <div className="flex items-center gap-2 self-stretch sm:self-center justify-end shrink-0 pt-2 sm:pt-0 border-t border-slate-800/60 sm:border-t-0">
+                          {sub && (
+                            <a
+                              href={generateGoogleCalendarUrl(session, sub)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Ajouter à Google Agenda avec alerte 15 min avant révision"
+                              className="p-2 sm:px-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-750 text-cyan-400 hover:text-cyan-300 border border-slate-700 hover:border-cyan-500/40 transition-colors flex items-center gap-1.5 text-xs font-semibold shrink-0 cursor-pointer min-h-[38px]"
+                            >
+                              <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+                              <span className="hidden sm:inline">Alerte 15 min</span>
+                            </a>
+                          )}
+
                           <Button
                             variant={isRescheduled ? "secondary" : "glow"}
                             size="sm"
@@ -723,6 +755,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         isOpen={!!selectedExplainerType}
         onClose={() => setSelectedExplainerType(null)}
         sessionType={selectedExplainerType}
+      />
+
+      {/* Google Calendar Sync Modal with 15-min alerts */}
+      <GoogleCalendarSyncModal
+        isOpen={isGoogleCalendarOpen}
+        onClose={() => setIsGoogleCalendarOpen(false)}
+        sessions={studySessions}
+        subjects={subjects}
+        planTier={planTier}
+        onUpgradeToPro={onUpgradeToPro}
+        onViewPricing={onViewPricing}
       />
 
     </div>

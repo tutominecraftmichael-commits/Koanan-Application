@@ -311,7 +311,8 @@ export function buildStateFromExtractedSchedule(
   schedule: ExtractedPdfSchedule,
   studentName: string,
   chronotype: Chronotype = 'evening',
-  pacing: StudyPacing = 'active_recall_spaced'
+  pacing: StudyPacing = 'active_recall_spaced',
+  combinedPacings?: StudyPacing[]
 ): {
   subjects: Subject[];
   classSlots: ClassSlot[];
@@ -355,6 +356,7 @@ export function buildStateFromExtractedSchedule(
     targetDailyStudyMinutes: recommendedDailyMinutes,
     chronotype,
     pacing: pacingStrategy.id,
+    combinedPacings: combinedPacings && combinedPacings.length > 0 ? combinedPacings : [pacingStrategy.id],
     focusBlockDuration: pacingStrategy.focusBlockDuration,
     breakBlockDuration: pacingStrategy.breakBlockDuration,
     weekendStudyEnabled: true,

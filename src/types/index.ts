@@ -70,6 +70,7 @@ export interface StudyPreferences {
   targetDailyStudyMinutes: number;
   chronotype: Chronotype;
   pacing: StudyPacing;
+  combinedPacings?: StudyPacing[]; // Option KONAN PRO : jusqu'à 3 méthodes combinées simultanément
   focusBlockDuration: number;
   breakBlockDuration: number;
   weekendStudyEnabled: boolean;
@@ -104,6 +105,7 @@ export interface StudySession {
   actualDurationMinutes?: number;
   rating?: 1 | 2 | 3 | 4 | 5;
   reflectionNotes?: string;
+  pacingMethod?: StudyPacing; // Méthode spécifique appliquée à cette séance (ex: 'feynman', 'time_blocking', 'pomodoro')
   // Adaptive daily catch-up fields (ephemeral for today only)
   isRescheduledToday?: boolean;
   originalStartTime?: string;
