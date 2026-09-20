@@ -43,6 +43,7 @@ import { SettingsModal } from './components/layout/SettingsModal';
 import { ProFeatureModal } from './components/common/ProFeatureModal';
 import { GoogleCalendarSyncModal } from './components/common/GoogleCalendarSyncModal';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
+import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { downloadStudyPlanICS } from './services/googleCalendarService';
 
 // Views
@@ -62,6 +63,7 @@ export function App() {
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
+  const [isSuperProModalOpen, setIsSuperProModalOpen] = useState(false);
   const [isGoogleCalendarModalOpen, setIsGoogleCalendarModalOpen] = useState(false);
   const [googleCalendarReason, setGoogleCalendarReason] = useState<'pro_activated' | 'plan_applied' | null>(null);
   const [isUltimateCelebrationOpen, setIsUltimateCelebrationOpen] = useState(false);
@@ -424,15 +426,24 @@ export function App() {
         }
         setState(updated);
 
-        // 🌟 AUTOMATIC SYNC TO GOOGLE AGENDA FOR ALL DAYS WITH 15-MIN PHONE ALERTS
-        triggerAutoGoogleCalendarSync(
-          state.studySessions,
-          state.subjects,
-          state.studentName || state.userAccount?.name || 'Étudiant',
-          'pro_activated'
-        );
+        // 🌟 AUTOMATIC SYNC TO GOOGLE AGENDA FOR ALL DAYS
+        if (state.studySessions && state.studySessions.length > 0) {
+          try {
+            downloadStudyPlanICS(
+              state.studySessions,
+              state.subjects,
+              state.studentName || state.userAccount?.name || 'Étudiant'
+            );
+          } catch (err) {
+            console.warn('ICS auto-download error:', err);
+          }
+        }
 
-        showToast('⭐ Félicitations ! Le modèle KONAN PRO est activé ! Synchronisation Google Agenda automatique déclenchée pour TOUS LES JOURS (Alertes 15 min).');
+        // 🌟 DUOLINGO SUPER CELEBRATION MODAL
+        setIsSuperProModalOpen(true);
+        soundFX.playVictoryCelebration();
+
+        showToast('⭐ Félicitations ! Le modèle KONAN PRO est activé ! Synchronisation Google Agenda automatique déclenchée pour tous les jours.');
         if (activeView === 'landing' || activeView === 'auth') {
           setActiveView('dashboard');
         }
@@ -511,13 +522,20 @@ export function App() {
 
     setState(demo);
     if (demo.planTier === 'pro' || demo.planTier === 'plus') {
-      triggerAutoGoogleCalendarSync(
-        demo.studySessions,
-        demo.subjects,
-        'Alexandre Étudiant',
-        'pro_activated'
-      );
-      showToast('⭐ Mode Démo KONAN PRO : Synchronisation Google Agenda automatique déclenchée pour TOUS LES JOURS (Alertes 15 min) !');
+      if (demo.studySessions && demo.studySessions.length > 0) {
+        try {
+          downloadStudyPlanICS(
+            demo.studySessions,
+            demo.subjects,
+            'Alexandre Étudiant'
+          );
+        } catch (err) {
+          console.warn('ICS auto-download error:', err);
+        }
+      }
+      setIsSuperProModalOpen(true);
+      soundFX.playVictoryCelebration();
+      showToast('⭐ Mode Démo KONAN PRO : Synchronisation Google Agenda automatique déclenchée pour tous les jours !');
     } else {
       showToast('🎓 Mode Démo activé (Alexandre Étudiant). Les modèles de filières sont disponibles.');
     }
@@ -850,7 +868,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090E17] text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-[#090E17] text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white w-full max-w-full overflow-x-hidden">
       
       {/* Hidden file input for JSON configuration backup imports */}
       <input
@@ -1153,7 +1171,14 @@ export function App() {
         onUpgradeToPro={() => handleSelectPlan('pro')}
       />
 
-      {/* Google Calendar Sync Modal (ALL DAYS + 15-MIN PHONE ALERTS) */}
+      {/* Duolingo Super-style Celebration Modal for KONAN PRO */}
+      <SuperProActivationModal
+        isOpen={isSuperProModalOpen}
+        onClose={() => setIsSuperProModalOpen(false)}
+        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+      />
+
+      {/* Google Calendar Sync Modal (ALL DAYS) */}
       <GoogleCalendarSyncModal
         isOpen={isGoogleCalendarModalOpen}
         onClose={() => setIsGoogleCalendarModalOpen(false)}

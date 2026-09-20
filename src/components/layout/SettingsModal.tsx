@@ -158,7 +158,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 )}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <h4 className="text-sm font-bold text-white truncate">{displayName}</h4>
+                    <h4 className={`text-sm font-bold truncate ${userAccount?.planTier !== 'free' ? 'gold-shimmer-text font-black' : 'text-white'}`}>{displayName}</h4>
                     <span 
                       className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0 border ${
                         userAccount?.planTier === 'pro'

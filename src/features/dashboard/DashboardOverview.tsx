@@ -24,11 +24,11 @@ import {
   ChevronDown,
   ChevronUp,
   BookOpen,
-  Moon
+  Moon,
+  Zap
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
-import { generateGoogleCalendarUrl } from '../../services/googleCalendarService';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { useLanguage, t } from '../../lib/i18n';
 import type { SessionType } from '../../types';
@@ -135,18 +135,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 {isCycleCompletedToday ? "Cycle Validé 100%" : "Copilote Actif"}
               </Badge>
               <span className="text-[11px] sm:text-xs text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
-              <button
-                type="button"
-                onClick={() => setIsGoogleCalendarOpen(true)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 text-[11px] font-bold cursor-pointer transition-all hover:scale-105 active:scale-95 shadow-sm"
-                title="Synchroniser avec Google Agenda (Tous les jours & Alertes 15 min)"
-              >
-                <Calendar className="w-3 h-3 text-sky-400" />
-                <span>Google Agenda (15 min)</span>
-              </button>
             </div>
             <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Bonjour, <span className="text-gradient-primary">{studentName}</span> 👋
+              Bonjour, <span className={planTier !== 'free' ? 'gold-shimmer-text font-black' : 'text-gradient-primary'}>{studentName}</span> 👋
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
               {isCycleCompletedToday ? (
@@ -399,15 +390,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     Sessions d'Étude ({completedToday}/{allTodaysStudySessions.length} faites)
                   </span>
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setIsGoogleCalendarOpen(true)}
-                      className="px-2.5 py-1 rounded-lg bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-500/40 text-cyan-300 hover:text-white text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors shadow-xs"
-                      title="Activer les alertes 15 min Google Agenda sur votre téléphone"
-                    >
-                      <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>Google Agenda (15 min)</span>
-                    </button>
                     {rescheduledTodaySessions.length > 0 && (
                       <span className="text-[10px] font-bold text-amber-300 uppercase">
                         {rescheduledTodaySessions.length} à rattraper
@@ -566,18 +548,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         </div>
 
                         <div className="flex items-center gap-2 self-stretch sm:self-center justify-end shrink-0 pt-2 sm:pt-0 border-t border-slate-800/60 sm:border-t-0">
-                          {sub && (
-                            <a
-                              href={generateGoogleCalendarUrl(session, sub)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title="Ajouter à Google Agenda avec alerte 15 min avant révision"
-                              className="p-2 sm:px-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-750 text-cyan-400 hover:text-cyan-300 border border-slate-700 hover:border-cyan-500/40 transition-colors flex items-center gap-1.5 text-xs font-semibold shrink-0 cursor-pointer min-h-[38px]"
-                            >
-                              <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-                              <span className="hidden sm:inline">Alerte 15 min</span>
-                            </a>
-                          )}
 
                           <Button
                             variant={isRescheduled ? "secondary" : "glow"}
@@ -654,9 +624,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <div className="flex items-center justify-between gap-2">
               <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                 <Target className="w-4 h-4 text-rose-400" />
-                Prochains Examens & Partiels
+                Examens & Devoirs Surveillés
               </h3>
-              {planTier === 'free' && (
+              {planTier === 'free' ? (
                 <button
                   type="button"
                   onClick={onUpgradeToPro || onViewPricing}
@@ -665,13 +635,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 >
                   ⭐ PRO
                 </button>
+              ) : (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  Planning adapté
+                </span>
               )}
             </div>
 
             {planTier === 'free' ? (
               <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-2.5 text-xs">
                 <p className="text-slate-300 leading-relaxed">
-                  Le compte à rebours et l'adaptation automatique du planning aux dates de partiels sont réservés à l'offre <strong>KONAN PRO</strong>.
+                  Le compte à rebours et l'adaptation automatique du planning aux dates de partiels et devoirs surveillés sont réservés à l'offre <strong>KONAN PRO</strong>.
                 </p>
                 <button
                   type="button"
@@ -683,7 +657,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </button>
               </div>
             ) : upcomingExams.length === 0 ? (
-              <p className="text-xs text-slate-400 italic">Aucune date d'examen renseignée.</p>
+              <p className="text-xs text-slate-400 italic">Aucune date d'examen ou devoir renseignée.</p>
             ) : (
               <div className="space-y-2.5">
                 {upcomingExams.slice(0, 4).map(sub => (
@@ -692,8 +666,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     className="p-2.5 sm:p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between text-xs gap-2.5"
                   >
                     <div className="space-y-0.5 min-w-0 flex-1">
-                      <p className="font-bold text-white break-words leading-snug">{sub.name}</p>
-                      <p className="text-[11px] text-slate-400 break-words">Coeff {sub.coefficient} • Cible : {sub.targetGrade}/20</p>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <p className="font-bold text-white break-words leading-snug">{sub.name}</p>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                          sub.examType === 'devoir' 
+                            ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' 
+                            : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                        }`}>
+                          {sub.examType === 'devoir' ? 'Devoir (DS)' : 'Examen'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-400 break-words">
+                        Coeff {sub.coefficient} • Cible : {sub.targetGrade}/20
+                        {sub.examTime ? ` • ${sub.examTime}` : ''}
+                      </p>
                     </div>
                     {sub.daysRemaining !== null && (
                       <Badge
@@ -706,6 +692,18 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     )}
                   </div>
                 ))}
+
+                {upcomingExams.length > 0 && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<Zap className="w-3.5 h-3.5 text-amber-400" />}
+                    onClick={() => onNavigate('planner')}
+                    className="w-full text-xs font-bold py-2 border-amber-500/30 text-amber-300 hover:bg-amber-500/10 cursor-pointer"
+                  >
+                    ⚡ Réviser en priorité selon mes épreuves
+                  </Button>
+                )}
               </div>
             )}
 

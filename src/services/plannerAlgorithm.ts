@@ -38,13 +38,14 @@ export function generateOptimizedStudyPlan(
     const daysUntilExam = getDaysRemaining(sub.examDate);
     let examUrgencyFactor = 1.0;
     if (daysUntilExam !== null) {
-      if (daysUntilExam <= 7) examUrgencyFactor = 2.4;
-      else if (daysUntilExam <= 14) examUrgencyFactor = 1.8;
-      else if (daysUntilExam <= 30) examUrgencyFactor = 1.4;
-      else examUrgencyFactor = 1.1;
+      if (daysUntilExam <= 3) examUrgencyFactor = 3.2; // Urgence critique J-3
+      else if (daysUntilExam <= 7) examUrgencyFactor = 2.4; // Semaine d'épreuve J-7
+      else if (daysUntilExam <= 14) examUrgencyFactor = 1.8; // Quinzaine pré-examen J-14
+      else if (daysUntilExam <= 30) examUrgencyFactor = 1.3;
+      else examUrgencyFactor = 1.05;
     }
 
-    // Formule basée sur la difficulté cognitive, le coefficient et l'urgence des examens
+    // Formule basée sur la difficulté cognitive, le coefficient et l'urgence des examens/devoirs
     const rawScore = (Math.pow(sub.difficulty, 1.35) * Math.pow(sub.coefficient, 1.25)) * examUrgencyFactor;
     return {
       subject: sub,
@@ -373,6 +374,33 @@ export function generateOptimizedStudyPlan(
         const energy: 'high' | 'medium' | 'low' = 
           subject.difficulty >= 4 ? 'high' : subject.difficulty === 3 ? 'medium' : 'low';
 
+        const isExamApproaching = daysUntilExam !== null && daysUntilExam <= 14 && daysUntilExam >= 0;
+        const examLabel = subject.examType === 'devoir' ? 'Devoir' : subject.examType === 'rattrapage' ? 'Rattrapage' : 'Examen';
+
+        let finalTitle = sessionTitle;
+        let finalDesc = sessionDescription;
+        let finalObjectives = sessionObjectives;
+
+        if (isExamApproaching) {
+          if (daysUntilExam <= 1) {
+            finalTitle = `🔥 Ultime Révision (J-1) : ${displaySubjectName} - Synthèse`;
+            finalDesc = `Séance prioritaire veille de votre ${examLabel} de ${displaySubjectName}. Réactivation des points clés et stabilisation mentale.`;
+            finalObjectives = [
+              `Révision flash des formules et concepts capitaux de ${displaySubjectName}`,
+              'Auto-évaluation à blanc sur 2 exercices types sans notes',
+              'Repos cérébral anticipé pour être à 100% de lucidité le jour J',
+            ];
+          } else if (daysUntilExam <= 5) {
+            finalTitle = `⚡ Prépa Intensive ${examLabel} (J-${daysUntilExam}) : ${displaySubjectName}`;
+            finalDesc = `Échéance imminente : votre ${examLabel} est dans ${daysUntilExam} jours. Focalisation sur ${topicName} et sujets d'épreuves.`;
+            finalObjectives = [
+              `Focalisation sur les chapitres à fort coefficient : ${topicName}`,
+              'Simulation d\'épreuves et entraînement chronométré',
+              'Élimination des dernières hésitations méthodologiques',
+            ];
+          }
+        }
+
         generatedSessions.push({
           id: generateId(),
           subjectId: subject.id,
@@ -382,13 +410,16 @@ export function generateOptimizedStudyPlan(
           endTime: minutesToTimeString(endMin),
           durationMinutes: actualDuration,
           pacingMethod: sessionPacing.id,
-          type: sessionType,
-          title: sessionTitle,
-          description: sessionDescription,
-          objectives: sessionObjectives,
+          type: isExamApproaching ? 'exam_simulation' : sessionType,
+          title: finalTitle,
+          description: finalDesc,
+          objectives: finalObjectives,
           priority,
           energyRequired: energy,
           completed: false,
+          isExamPrep: isExamApproaching,
+          examDaysRemaining: daysUntilExam !== null ? daysUntilExam : undefined,
+          examType: subject.examType || 'examen',
         });
 
         // Mise à jour des compteurs

@@ -21,6 +21,8 @@ export const COURSE_TYPE_LABELS: Record<CourseType, { label: string; badge: stri
   other: { label: 'Autre engagement', badge: 'AUTRE' },
 };
 
+export type EvaluationType = 'examen' | 'devoir' | 'rattrapage';
+
 export interface Subject {
   id: string;
   name: string;
@@ -31,6 +33,8 @@ export interface Subject {
   targetGrade: number; // e.g. 16/20
   currentGrade?: number;
   examDate?: string; // YYYY-MM-DD
+  examType?: EvaluationType; // Examen final vs Devoir Surveillé (DS) vs Rattrapage
+  examTime?: string; // e.g. "08:30"
   topics?: string[];
 }
 
@@ -106,6 +110,10 @@ export interface StudySession {
   rating?: 1 | 2 | 3 | 4 | 5;
   reflectionNotes?: string;
   pacingMethod?: StudyPacing; // Méthode spécifique appliquée à cette séance (ex: 'feynman', 'time_blocking', 'pomodoro')
+  // Dynamic Exam / Devoir adaptation fields
+  isExamPrep?: boolean;
+  examDaysRemaining?: number;
+  examType?: EvaluationType;
   // Adaptive daily catch-up fields (ephemeral for today only)
   isRescheduledToday?: boolean;
   originalStartTime?: string;

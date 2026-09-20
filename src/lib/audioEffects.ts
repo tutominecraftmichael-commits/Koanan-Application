@@ -84,6 +84,13 @@ class SoundFX {
   }
 
   /**
+   * Triumphant orchestral brass fanfare for PRO celebration
+   */
+  public playVictoryCelebration() {
+    this.playMinecraftAdvancementSound();
+  }
+
+  /**
    * Sparkling success chime for actions like PRO activation & Google Agenda sync
    */
   public playSuccessChime() {

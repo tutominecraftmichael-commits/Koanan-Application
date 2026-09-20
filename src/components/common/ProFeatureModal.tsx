@@ -100,7 +100,7 @@ export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
               </li>
               <li className="flex items-center gap-2">
                 <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
-                <span>Rappels intelligents Google Agenda (15 min avant révision sur votre téléphone)</span>
+                <span>Synchronisation automatique Google Agenda (Tous les jours sur votre téléphone)</span>
               </li>
               <li className="flex items-center gap-2">
                 <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />

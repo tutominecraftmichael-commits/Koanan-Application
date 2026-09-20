@@ -33,7 +33,6 @@ import {
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
-import { generateGoogleCalendarUrl } from '../../services/googleCalendarService';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { useLanguage, t } from '../../lib/i18n';
 
@@ -169,20 +168,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            leftIcon={<Calendar className="w-3.5 h-3.5 text-sky-400" />}
-            onClick={() => setIsGoogleCalendarOpen(true)}
-            className="cursor-pointer text-xs flex-1 sm:flex-initial py-2 border-sky-500/30 text-sky-200 hover:text-white"
-            title="Synchroniser avec Google Agenda & Alertes 15 min"
-          >
-            <span className="flex items-center gap-1.5">
-              <span>Google Agenda</span>
-              <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">15 min</span>
-            </span>
-          </Button>
-
           <Button
             variant="secondary"
             size="sm"
@@ -517,6 +502,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                           {badgeType.label} ℹ️
                         </Badge>
                       </button>
+                      {session.isExamPrep && (
+                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
+                          <span>⚡ {session.examType === 'devoir' ? 'Devoir' : 'Examen'}</span>
+                          {session.examDaysRemaining !== undefined && (
+                            <span className="font-mono">J-{session.examDaysRemaining}</span>
+                          )}
+                        </span>
+                      )}
                       {session.priority === 'urgent' && (
                         <Badge variant="rose" size="sm" className="text-[10px] px-1.5 py-0">Urgent</Badge>
                       )}
@@ -563,8 +556,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                           }`}
                           title={isToday ? "Cliquer pour annuler la validation" : "Session validée"}
                         >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>Validé</span>
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Terminé</span>
                         </button>
                       ) : isToday ? (
                         <button
@@ -588,28 +581,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         </div>
                       )}
                     </div>
-
-                    {/* Bouton Rappel Intelligent Google Agenda (Alerte 15 min avant) */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (planTier === 'free') {
-                          setProModalInfo({
-                            title: "Rappels Intelligents Google Agenda (15 min)",
-                            desc: "L'intégration Google Agenda et les alertes push automatiques 15 min avant vos révisions sont réservées au modèle KONAN PRO."
-                          });
-                        } else {
-                          const url = generateGoogleCalendarUrl(session, subject);
-                          window.open(url, '_blank', 'noopener,noreferrer');
-                        }
-                      }}
-                      className="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-sky-500/50 hover:bg-sky-950/30 text-slate-400 hover:text-sky-300 transition-colors cursor-pointer flex items-center gap-1.5 text-[11px] font-medium shrink-0 min-h-[36px]"
-                      title="Ajouter à Google Agenda avec alerte 15 min avant"
-                    >
-                      <Calendar className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-                      <span className="hidden sm:inline">Rappel 15 min</span>
-                    </button>
                   </div>
 
                 </div>
@@ -766,23 +737,24 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
           {/* Contextual Triple Pacing Combination Banner - RESERVED TO PRO / PLUS */}
           {planTier !== 'free' && (
-            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-sky-500/15 border border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs shadow-md">
-              <div className="space-y-0.5">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-sky-500/15 border border-amber-500/40 flex flex-col gap-2.5 text-xs shadow-md">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                 <div className="flex items-center gap-1.5 font-black text-amber-300 uppercase tracking-wide text-[11px]">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
                   <span>Combinaison Triple KONAN PRO : {selectedCombinedPacings.length} / 3 sélectionnées</span>
                 </div>
-                <p className="text-[11px] text-slate-300">
-                  Sélectionnez 1, 2 ou 3 méthodes. Vos séances alterneront automatiquement selon la difficulté et vos créneaux.
-                </p>
+                <span className="text-[10px] text-amber-400/80 font-mono">Alternance automatique</span>
               </div>
-              <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                Sélectionnez 1, 2 ou 3 méthodes ci-dessous. Vos séances alterneront automatiquement selon la difficulté et vos créneaux.
+              </p>
+              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-amber-500/20">
                 {selectedCombinedPacings.map((id, idx) => {
                   const p = getPacingStrategy(id);
                   return (
-                    <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
-                      <span>#{idx + 1}</span>
-                      <span>{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
+                    <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1 max-w-full">
+                      <span className="font-mono text-amber-400 shrink-0">#{idx + 1}</span>
+                      <span className="truncate">{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
                     </span>
                   );
                 })}

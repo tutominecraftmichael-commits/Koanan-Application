@@ -79,7 +79,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                 <span className="text-[9px] font-black px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">⭐ TOUS LES JOURS</span>
               </div>
               <h3 className="text-base sm:text-lg font-black text-white leading-tight">
-                Google Agenda • Alertes 15 min
+                Google Agenda • Rappels Automatiques
               </h3>
             </div>
           </div>
@@ -103,7 +103,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                 <span>⭐ Modèle KONAN PRO Activé : Synchronisation Quotidienne Déclenchée !</span>
               </div>
               <p className="text-slate-200 text-xs leading-relaxed">
-                Toutes vos séances d'étude de <strong>tous les jours de la semaine</strong> ont été programmées avec répétition hebdomadaire et <strong>alerte 15 min</strong> avant chaque session directement sur votre téléphone.
+                Toutes vos séances d'étude de <strong>tous les jours de la semaine</strong> ont été programmées avec répétition hebdomadaire et <strong>rappels automatiques</strong> avant chaque session directement sur votre téléphone.
               </p>
             </div>
           )}
@@ -116,7 +116,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                 <span>⭐ Nouvel Emploi du Temps : Synchronisation Quotidienne Déclenchée !</span>
               </div>
               <p className="text-slate-200 text-xs leading-relaxed">
-                Votre planning d'étude pour <strong>tous les jours de la semaine</strong> a été synchronisé avec récurrence hebdomadaire et <strong>alerte 15 min</strong> avant chaque session sur votre téléphone.
+                Votre planning d'étude pour <strong>tous les jours de la semaine</strong> a été synchronisé avec récurrence hebdomadaire et <strong>rappels automatiques</strong> avant chaque session sur votre téléphone.
               </p>
             </div>
           )}
@@ -126,14 +126,14 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 text-sky-300 font-bold text-xs uppercase tracking-wide">
                 <Bell className="w-4 h-4 text-amber-400 animate-bounce" />
-                <span>Alerte 15 min avant chaque session • Tous les jours</span>
+                <span>Rappels automatiques avant chaque session • Tous les jours</span>
               </div>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 shrink-0">
                 Répétition active
               </span>
             </div>
             <p className="text-slate-200 text-xs sm:text-[13px] leading-relaxed">
-              L'agenda ne s'arrête pas à aujourd'hui : il s'applique <strong>automatiquement à tous les jours de la semaine</strong> avec récurrence perpétuelle. Vous recevez une alerte push sonore sur votre téléphone <strong>15 minutes avant chaque matière</strong>.
+              L'agenda ne s'arrête pas à aujourd'hui : il s'applique <strong>automatiquement à tous les jours de la semaine</strong> avec récurrence perpétuelle. Vous recevez une notification sonore sur votre téléphone avant chaque matière.
             </p>
           </div>
 
@@ -166,7 +166,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                 <span>Fonctionnalité automatique réservée au modèle KONAN PRO</span>
               </div>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Les alertes push automatiques 15 minutes et la synchronisation continue pour tous les jours font partie intégrante de <strong>KONAN PRO</strong> (1 200 F CFA / mois).
+                Les rappels automatiques et la synchronisation continue pour tous les jours font partie intégrante de <strong>KONAN PRO</strong> (1 200 F CFA / mois).
               </p>
               <Button
                 variant="glow"
@@ -200,7 +200,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                       </h4>
                     </div>
                     <p className="text-[11px] text-slate-400 leading-relaxed">
-                      Télécharge le planning complet avec récurrence hebdomadaire et alertes 15 min pour vos <strong>{sessions.length} séances</strong>.
+                      Télécharge le planning complet avec récurrence hebdomadaire et rappels automatiques pour vos <strong>{sessions.length} séances</strong>.
                     </p>
                   </div>
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0">
@@ -245,7 +245,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                     <span className="text-[10px] font-mono text-cyan-300">{nextSession.startTime}</span>
                   </div>
                   <p className="text-[11px] text-slate-400">
-                    Prochaine révision : <strong className="text-white">{nextSubject.name}</strong> avec rappel 15 min préconfiguré.
+                    Prochaine révision : <strong className="text-white">{nextSubject.name}</strong> avec synchronisation automatique.
                   </p>
                   <Button
                     variant="secondary"
@@ -268,7 +268,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                 <ol className="list-decimal list-inside space-y-1 pl-1 text-slate-300">
                   <li>Ouvrez le fichier <code className="text-sky-300 font-mono">.ics</code> téléchargé sur votre téléphone.</li>
                   <li>Sélectionnez <strong>"Ajouter à Google Agenda"</strong> ou <strong>"Ajouter à Calendrier"</strong>.</li>
-                  <li>Tous les créneaux de tous les jours s'enregistrent en un instant avec l'alarme <strong>15 minutes avant</strong> chaque séance !</li>
+                  <li>Tous les créneaux de tous les jours s'enregistrent en un instant avec notifications de rappel !</li>
                 </ol>
               </div>
 

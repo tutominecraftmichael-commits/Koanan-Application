@@ -385,7 +385,11 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="cyan" size="sm" dot>Synchronisé</Badge>
-            <span className="text-xs text-slate-400 font-mono">{studentName} • {academicLevel}</span>
+            <span className="text-xs text-slate-400 font-mono flex items-center gap-1.5">
+              <span className={planTier !== 'free' ? 'gold-shimmer-text font-bold' : 'text-slate-300 font-semibold'}>{studentName}</span>
+              <span>•</span>
+              <span>{academicLevel}</span>
+            </span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-3">
             <Calendar className="w-7 h-7 sm:w-8 sm:h-8 text-indigo-400 shrink-0" />
@@ -445,18 +449,6 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               Filières (Démo)
             </Button>
           )}
-
-          {/* Google Agenda Button */}
-          <Button
-            variant="secondary"
-            size="sm"
-            leftIcon={<Calendar className="w-3.5 h-3.5 text-cyan-400" />}
-            onClick={() => setIsGoogleCalendarOpen(true)}
-            title="Synchroniser avec Google Agenda et activer les alertes 15 min sur votre téléphone"
-            className="cursor-pointer text-xs font-semibold py-2 px-3 text-cyan-300 hover:text-white border-cyan-500/30 hover:border-cyan-400"
-          >
-            📅 Google Agenda (15 min)
-          </Button>
 
           {/* Add Course Button */}
           <Button
@@ -1188,23 +1180,24 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
 
           {/* Contextual Triple Pacing Combination Banner - RESERVED TO PRO / PLUS */}
           {planTier !== 'free' && (
-            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-sky-500/15 border border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs shadow-md">
-              <div className="space-y-0.5">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-sky-500/15 border border-amber-500/40 flex flex-col gap-2.5 text-xs shadow-md">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                 <div className="flex items-center gap-1.5 font-black text-amber-300 uppercase tracking-wide text-[11px]">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
                   <span>Combinaison Triple KONAN PRO : {selectedCombinedPacings.length} / 3 sélectionnées</span>
                 </div>
-                <p className="text-[11px] text-slate-300">
-                  Sélectionnez 1, 2 ou 3 méthodes. Vos séances de révision alterneront automatiquement selon la difficulté et vos créneaux.
-                </p>
+                <span className="text-[10px] text-amber-400/80 font-mono">Alternance automatique</span>
               </div>
-              <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                Sélectionnez 1, 2 ou 3 méthodes ci-dessous. Vos séances de révision alterneront automatiquement selon la difficulté et vos créneaux.
+              </p>
+              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-amber-500/20">
                 {selectedCombinedPacings.map((id, idx) => {
                   const p = getPacingStrategy(id);
                   return (
-                    <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
-                      <span>#{idx + 1}</span>
-                      <span>{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
+                    <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1 max-w-full">
+                      <span className="font-mono text-amber-400 shrink-0">#{idx + 1}</span>
+                      <span className="truncate">{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
                     </span>
                   );
                 })}

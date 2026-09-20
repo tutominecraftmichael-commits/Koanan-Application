@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { Subject } from '../../types';
+import type { Subject, EvaluationType } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
@@ -23,12 +23,13 @@ import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 export interface SubjectManagerProps {
   subjects: Subject[];
   onUpdateSubjects: (subjects: Subject[]) => void;
-  onTriggerPlanner: () => void;
+  onNavigate?: (view: any) => void;
   onOpenPresetModal?: () => void;
   isDemoMode?: boolean;
   planTier?: 'free' | 'pro' | 'plus';
   onViewPricing?: () => void;
   onUpgradeToPro?: () => void;
+  onTriggerPlanner?: () => void;
 }
 
 const PRESET_COLORS = [
@@ -39,6 +40,7 @@ const PRESET_COLORS = [
   '#EC4899', // Pink
   '#8B5CF6', // Purple
   '#3B82F6', // Blue
+  '#14B8A6', // Teal
   '#EF4444', // Red
 ];
 
@@ -50,11 +52,13 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   planTier = 'free',
   onViewPricing,
   onUpgradeToPro,
+  onTriggerPlanner,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
   const [editingSubjectId, setEditingSubjectId] = useState<string | null>(null);
 
+  // Form State
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [color, setColor] = useState(PRESET_COLORS[0]);
@@ -62,6 +66,8 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   const [difficulty, setDifficulty] = useState<1 | 2 | 3 | 4 | 5>(3);
   const [targetGrade, setTargetGrade] = useState<number>(15);
   const [examDate, setExamDate] = useState<string>('');
+  const [examType, setExamType] = useState<EvaluationType>('examen');
+  const [examTime, setExamTime] = useState<string>('08:30');
   
   // Real-time topic / theme list management
   const [topicsList, setTopicsList] = useState<string[]>([]);
@@ -76,6 +82,8 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     setDifficulty(3);
     setTargetGrade(15);
     setExamDate('');
+    setExamType('examen');
+    setExamTime('08:30');
     setTopicsList(['Introduction & concepts clés', 'Exercices d’application']);
     setNewTopicInput('');
     setIsModalOpen(true);
@@ -90,6 +98,8 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     setDifficulty(sub.difficulty);
     setTargetGrade(sub.targetGrade);
     setExamDate(sub.examDate || '');
+    setExamType(sub.examType || 'examen');
+    setExamTime(sub.examTime || '08:30');
     setTopicsList(sub.topics && sub.topics.length > 0 ? [...sub.topics] : ['Généralités & Notions clés']);
     setNewTopicInput('');
     setIsModalOpen(true);
@@ -137,6 +147,8 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         difficulty,
         targetGrade,
         examDate: planTier === 'free' ? undefined : (examDate || undefined),
+        examType: planTier === 'free' ? undefined : (examDate ? examType : undefined),
+        examTime: planTier === 'free' ? undefined : (examDate ? examTime : undefined),
         topics: finalTopics,
       } : s);
       onUpdateSubjects(updated);
@@ -150,11 +162,14 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         difficulty,
         targetGrade,
         examDate: planTier === 'free' ? undefined : (examDate || undefined),
+        examType: planTier === 'free' ? undefined : (examDate ? examType : undefined),
+        examTime: planTier === 'free' ? undefined : (examDate ? examTime : undefined),
         topics: finalTopics,
       };
       onUpdateSubjects([...subjects, newSub]);
     }
 
+    onTriggerPlanner?.();
     setIsModalOpen(false);
   };
 
@@ -165,6 +180,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     }
     if (confirm("Supprimer cette matière de votre cursus ? Toutes ses informations et thèmes associés seront supprimés.")) {
       onUpdateSubjects(subjects.filter(s => s.id !== id));
+      onTriggerPlanner?.();
       if (editingSubjectId === id) {
         setIsModalOpen(false);
       }
@@ -337,10 +353,11 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                     <div className="flex items-center justify-between text-slate-300">
                       <span className="flex items-center gap-1.5 text-slate-400 text-[11px]">
                         <Calendar className="w-3 h-3 text-cyan-400" />
-                        Partiel :
+                        {subject.examType === 'devoir' ? 'Devoir (DS)' : subject.examType === 'rattrapage' ? 'Rattrapage' : 'Examen'} :
                       </span>
-                      <span className="font-medium text-slate-200 text-[11px]">
+                      <span className="font-medium text-slate-200 text-[11px] flex items-center">
                         {new Date(subject.examDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                        {subject.examTime && <span className="text-slate-400 text-[10px] ml-1">à {subject.examTime}</span>}
                         {daysToExam !== null && (
                           <Badge
                             variant={daysToExam <= 7 ? 'rose' : daysToExam <= 15 ? 'amber' : 'cyan'}
@@ -488,26 +505,67 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
             {planTier === 'free' ? (
               <div className="space-y-1">
                 <label className="block text-xs font-medium text-slate-300">
-                  Date Examen <span className="text-[10px] font-black text-amber-400 ml-1">⭐ KONAN PRO</span>
+                  Date & Type d'épreuve <span className="text-[10px] font-black text-amber-400 ml-1">⭐ KONAN PRO</span>
                 </label>
                 <div 
                   onClick={() => setIsProModalOpen(true)}
                   className="w-full bg-slate-900/60 border border-slate-800 hover:border-amber-500/40 rounded-xl px-3 py-2.5 text-xs text-slate-400 cursor-pointer flex items-center justify-between transition-colors"
                   title="Disponible avec l'offre KONAN PRO"
                 >
-                  <span className="truncate">Priorisation automatique d'examen</span>
+                  <span className="truncate">Adaptation auto selon examens & devoirs</span>
                   <span className="text-[10px] font-bold text-amber-400 shrink-0 ml-1">🔒 PRO</span>
                 </div>
               </div>
             ) : (
               <Input
-                label="Date Examen"
+                label="Date de l'épreuve"
                 type="date"
                 value={examDate}
                 onChange={(e) => setExamDate(e.target.value)}
               />
             )}
           </div>
+
+          {planTier !== 'free' && examDate && (
+            <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                  ⚡ Adaptation de l'emploi du temps
+                </span>
+                <span className="text-[10px] font-semibold text-amber-300/80 uppercase">KONAN PRO</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-300 mb-1">
+                    Nature de l'épreuve
+                  </label>
+                  <select
+                    value={examType}
+                    onChange={(e) => setExamType(e.target.value as EvaluationType)}
+                    className="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-amber-400"
+                  >
+                    <option value="examen">Examen final / Partiel</option>
+                    <option value="devoir">Devoir surveillé (DS)</option>
+                    <option value="rattrapage">Session de Rattrapage</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-300 mb-1">
+                    Heure de début
+                  </label>
+                  <input
+                    type="time"
+                    value={examTime}
+                    onChange={(e) => setExamTime(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+              </div>
+              <p className="text-[10px] text-amber-200/70">
+                L'algorithme réorganisera automatiquement vos créneaux libres pour intensifier vos révisions à J-14, J-7, J-3 et J-1 avant ce {examType === 'devoir' ? 'devoir' : 'examen'}.
+              </p>
+            </div>
+          )}
 
           {/* GESTIONNAIRE INTERACTIF DES THÈMES & CHAPITRES */}
           <div className="space-y-2 pt-2 border-t border-slate-800">

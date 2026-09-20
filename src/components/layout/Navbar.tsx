@@ -246,7 +246,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-indigo-500/40 shadow-xs shrink-0"
                     />
                     <div className="hidden xl:block">
-                      <p className="text-xs font-bold text-white leading-tight truncate max-w-[120px]">{displayName}</p>
+                      <p className={`text-xs font-bold leading-tight truncate max-w-[120px] ${userAccount.planTier !== 'free' ? 'gold-shimmer-text font-black' : 'text-white'}`}>{displayName}</p>
                       <p className="text-[10px] text-cyan-400 font-mono truncate max-w-[120px]">
                         {userAccount.isDemo ? t('demoAccount', lang) : userAccount.email || 'Connecté'}
                       </p>
