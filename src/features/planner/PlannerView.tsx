@@ -444,15 +444,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       <span className="text-[11px] sm:text-xs font-mono text-cyan-400 font-bold">
                         {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                       </span>
-                      {isToday ? (
+                      {isToday && (
                         <Badge variant="cyan" size="sm" className="text-[10px] px-1.5 py-0 font-bold">
                           ✨ Aujourd'hui
                         </Badge>
-                      ) : !session.completed ? (
-                        <Badge variant="slate" size="sm" className="text-[10px] px-1.5 py-0 text-slate-400 border border-slate-750">
-                          🔒 À venir
-                        </Badge>
-                      ) : null}
+                      )}
                       {session.isRescheduledToday && (
                         <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold" title={session.rescheduledReason}>
                           🔄 Rattrapage (Init. {session.originalStartTime})
