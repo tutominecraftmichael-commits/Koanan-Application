@@ -391,7 +391,7 @@
 /* Golden Flow Animation for KONAN PRO student name */
 @keyframes gold-shimmer-flow {
   0% {
-    background-position: 200% center;
+    background-position: 0% center;
   }
   100% {
     background-position: -200% center;
@@ -400,22 +400,24 @@
 
 .gold-shimmer-text {
   background: linear-gradient(
-    110deg,
-    #d97706 0%,
-    #f59e0b 15%,
-    #fef08a 35%,
+    90deg,
+    #b45309 0%,
+    #d97706 12%,
+    #f59e0b 25%,
+    #fef08a 40%,
     #ffffff 50%,
-    #fef08a 65%,
-    #f59e0b 85%,
-    #d97706 100%
+    #fef08a 60%,
+    #f59e0b 75%,
+    #d97706 88%,
+    #b45309 100%
   ) !important;
-  background-size: 200% auto !important;
-  color: transparent !important;
+  background-size: 200% 100% !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
-  animation: gold-shimmer-flow 3.5s linear infinite !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  animation: gold-shimmer-flow 2.6s linear infinite !important;
   display: inline-block;
-  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
   font-weight: 800;
 }
 

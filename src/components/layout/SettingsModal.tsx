@@ -19,6 +19,17 @@ import type { UserAccount } from '../../types';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
+import { soundFX } from '../../lib/audioEffects';
+
+const COMMON_FILIERES = [
+  'Licence Informatique',
+  'Médecine & Santé (PASS)',
+  'Droit & Sciences Politiques',
+  'Classes Préparatoires (CPGE)',
+  'Économie & Gestion',
+  'École d’Ingénieurs',
+  'Lycée (Baccalauréat)',
+];
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -79,12 +90,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     if (onUpdateProfile) {
+      const finalName = editName.trim() || studentName || userAccount?.name || 'Étudiant';
+      const finalFiliere = editFiliere.trim() || academicLevel || userAccount?.academicLevel || 'Licence Universitaire';
       onUpdateProfile({
-        name: editName.trim() || 'Étudiant',
-        academicLevel: editFiliere.trim() || 'Licence Universitaire',
+        name: finalName,
+        academicLevel: finalFiliere,
       });
+      soundFX.playCheckmarkPop();
       setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3000);
+      setTimeout(() => setSaveSuccess(false), 3500);
     }
   };
 
@@ -171,6 +185,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       {userAccount?.planTier === 'pro' ? '⭐ PRO' : userAccount?.planTier === 'plus' ? '👑 PLUS' : 'FREE'}
                     </span>
                   </div>
+                  <p className="text-xs text-indigo-300 font-semibold truncate flex items-center gap-1.5 mt-0.5">
+                    <GraduationCap className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                    <span>{editFiliere || academicLevel || userAccount?.academicLevel || 'Filière non renseignée'}</span>
+                  </p>
                   <p className="text-xs text-slate-400 font-mono truncate">{displayEmail}</p>
                   <div className="flex items-center gap-1.5 mt-1 text-[11px] text-cyan-400">
                     <ShieldCheck className="w-3 h-3 text-cyan-400" />
@@ -232,62 +250,105 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
 
               {/* Formulaire d'édition STRICTE : 1. Nom, 2. Filière */}
-              <form onSubmit={handleSaveProfile} className="space-y-3.5">
-                
-                {/* 1. Nom complet */}
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 uppercase mb-1">
-                    {t('nameLabel', lang)}
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      placeholder={t('namePlaceholder', lang)}
-                      className="w-full px-3 py-2 pl-9 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                      required
-                    />
-                    <User className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
-                  </div>
-                </div>
-
-                {/* 2. Filière */}
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 uppercase mb-1">
-                    {t('filiereLabel', lang)}
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={editFiliere}
-                      onChange={(e) => setEditFiliere(e.target.value)}
-                      placeholder={t('filierePlaceholder', lang)}
-                      className="w-full px-3 py-2 pl-9 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                      required
-                    />
-                    <GraduationCap className="w-4 h-4 text-indigo-400 absolute left-3 top-2.5 pointer-events-none" />
-                  </div>
-                </div>
-
-                {/* Submit button & Success Feedback */}
-                <div className="pt-2 flex items-center justify-between gap-3">
-                  {saveSuccess ? (
-                    <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1.5 animate-in fade-in">
-                      <Check className="w-4 h-4" />
-                      {t('profileSavedSuccess', lang)}
+              <form onSubmit={handleSaveProfile} className="space-y-3.5 pt-1">
+                <div className="p-4 rounded-2xl bg-indigo-950/20 border border-indigo-500/30 space-y-3.5 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-indigo-400" />
+                      Modifier mon Nom & ma Filière
                     </span>
-                  ) : <div />}
+                    <span className="text-[10px] font-semibold text-indigo-300/80">Profil Étudiant</span>
+                  </div>
 
-                  <Button
-                    type="submit"
-                    variant="glow"
-                    size="sm"
-                    leftIcon={<Save className="w-3.5 h-3.5" />}
-                    className="cursor-pointer text-xs"
-                  >
-                    {t('saveProfile', lang)}
-                  </Button>
+                  {/* Live Preview Bar */}
+                  <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between gap-2">
+                    <span className="text-[11px] text-slate-400 font-medium">Aperçu en direct :</span>
+                    <div className="flex items-center gap-1.5 text-right min-w-0">
+                      <span className={`text-xs font-black truncate ${userAccount?.planTier !== 'free' ? 'gold-shimmer-text' : 'text-white'}`}>
+                        {editName.trim() || 'Étudiant'}
+                      </span>
+                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shrink-0">
+                        {editFiliere.trim() || 'Filière'}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* 1. Nom complet */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                      Nom de l'étudiant
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        placeholder="Ex : Alexandre Étudiant"
+                        className="w-full px-3 py-2.5 pl-9 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-400 transition-colors"
+                        required
+                      />
+                      <User className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* 2. Filière */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                      Filière ou Niveau d'études
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={editFiliere}
+                        onChange={(e) => setEditFiliere(e.target.value)}
+                        placeholder="Ex : Licence Informatique, Droit, Médecine..."
+                        className="w-full px-3 py-2.5 pl-9 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-400 transition-colors"
+                        required
+                      />
+                      <GraduationCap className="w-4 h-4 text-indigo-400 absolute left-3 top-2.5 pointer-events-none" />
+                    </div>
+
+                    {/* Suggestions de filières en 1 clic */}
+                    <div className="mt-2">
+                      <span className="text-[10px] text-slate-400 block mb-1">Suggestions rapides :</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {COMMON_FILIERES.map((f, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => setEditFiliere(f)}
+                            className={`text-[10px] px-2 py-0.5 rounded-lg border transition-colors cursor-pointer ${
+                              editFiliere === f 
+                                ? 'bg-indigo-600 text-white border-indigo-400 font-bold' 
+                                : 'bg-slate-900/80 hover:bg-indigo-950 text-slate-300 border-slate-800 hover:border-indigo-500/40'
+                            }`}
+                          >
+                            {f}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Submit button & Success Feedback */}
+                  <div className="pt-2 space-y-2">
+                    <Button
+                      type="submit"
+                      variant="glow"
+                      size="md"
+                      leftIcon={<Save className="w-4 h-4" />}
+                      className="w-full cursor-pointer text-xs sm:text-sm font-bold py-2.5 shadow-lg shadow-indigo-600/20"
+                    >
+                      {saveSuccess ? '✓ Nom & Filière Enregistrés !' : 'Enregistrer mon Nom et ma Filière'}
+                    </Button>
+
+                    {saveSuccess && (
+                      <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-semibold flex items-center justify-center gap-2 animate-in fade-in">
+                        <Check className="w-4 h-4 text-emerald-400" />
+                        <span>Modifications appliquées immédiatement à toute l'application !</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </form>
 

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { 
   Sparkles, 
-  Crown, 
   Brain, 
   Calendar, 
   Target, 
@@ -36,7 +35,7 @@ export const SuperProActivationModal: React.FC<SuperProActivationModalProps> = (
       icon: Brain,
       title: "Combinaison Triple d'Espacement",
       desc: "Combinez jusqu'à 3 techniques simultanément (Feynman, Time Blocking, Active Recall). Vos séances alternent automatiquement.",
-      tag: "Exclusivité PRO",
+      tag: "Techniques Avancées",
       color: "from-amber-500/20 to-yellow-500/10 border-amber-500/30 text-amber-300",
       badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40",
     },
@@ -57,11 +56,11 @@ export const SuperProActivationModal: React.FC<SuperProActivationModalProps> = (
       badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
     },
     {
-      icon: Crown,
-      title: "Statut Membre d'Élite & Nom Doré",
-      desc: "Votre nom brille désormais d'un éclat d'or métallique animé sur toute l'application. Vous êtes prêt pour l'excellence académique.",
-      tag: "Prestige 24K",
-      color: "from-purple-500/20 to-pink-500/10 border-purple-500/30 text-purple-300",
+      icon: Sparkles,
+      title: "Recommandations Intelligentes Konan",
+      desc: "Analyse continue de votre emploi du temps et sélection de la meilleure méthode selon votre niveau de fatigue et vos heures de cours.",
+      tag: "Guidage Personnalisé",
+      color: "from-purple-500/20 to-indigo-500/10 border-purple-500/30 text-purple-300",
       badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40",
     },
   ];
@@ -94,28 +93,28 @@ export const SuperProActivationModal: React.FC<SuperProActivationModalProps> = (
 
         <div className="p-6 sm:p-8 space-y-6 overflow-y-auto relative z-10 text-center">
           
-          {/* Duolingo Super-style Emblem & Badge */}
+          {/* Emblem & Title */}
           <div className="flex flex-col items-center space-y-3 pt-2">
             <div className="relative">
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr from-amber-600 via-yellow-500 to-amber-300 p-0.5 shadow-2xl shadow-amber-500/40 flex items-center justify-center animate-bounce-slow">
                 <div className="w-full h-full rounded-[22px] bg-slate-950/90 flex items-center justify-center">
-                  <Crown className="w-10 h-10 sm:w-12 sm:h-12 text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]" />
+                  <Sparkles className="w-10 h-10 sm:w-12 sm:h-12 text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]" />
                 </div>
               </div>
               <div className="absolute -bottom-2 -right-2 p-1.5 rounded-xl bg-amber-400 text-slate-950 shadow-md">
-                <Sparkles className="w-4 h-4 fill-slate-950" />
+                <Target className="w-4 h-4 text-slate-950" />
               </div>
             </div>
 
             <div className="space-y-1">
               <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                ⭐ MODÈLE DÉBLOQUÉ
+                ⭐ FONCTIONNALITÉS ACTIVÉES
               </span>
               <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight pt-1">
                 Bienvenue dans <span className="gold-shimmer-text">KONAN PRO</span> !
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto pt-1 leading-relaxed">
-                Félicitations <span className="gold-shimmer-text font-bold">{studentName}</span>, votre compte est désormais propulsé avec tous les super-pouvoirs académiques.
+                Félicitations <span className="gold-shimmer-text font-bold">{studentName}</span>, vos outils avancés de révision et d'organisation sont maintenant disponibles.
               </p>
             </div>
           </div>

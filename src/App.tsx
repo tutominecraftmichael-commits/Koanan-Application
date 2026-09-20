@@ -642,16 +642,24 @@ export function App() {
     countryCode?: string 
   }) => {
     setState(prev => {
-      const nextUserAccount = prev.userAccount ? {
+      const nextUserAccount: UserAccount = prev.userAccount ? {
         ...prev.userAccount,
         name: updated.name,
         academicLevel: updated.academicLevel,
         phoneNumber: updated.phoneNumber,
         countryCode: updated.countryCode,
         lastSyncedAt: new Date().toISOString(),
-      } : undefined;
+      } : {
+        isLoggedIn: false,
+        name: updated.name,
+        email: '',
+        avatar: '',
+        googleId: '',
+        academicLevel: updated.academicLevel,
+        lastSyncedAt: new Date().toISOString(),
+      };
 
-      const next = {
+      const next: AppState = {
         ...prev,
         studentName: updated.name,
         academicLevel: updated.academicLevel,
@@ -663,6 +671,8 @@ export function App() {
         }
       };
 
+      saveAppState(next);
+
       if (prev.userAccount?.googleId && !prev.isDemoMode) {
         saveUserState(prev.userAccount.googleId, next);
       }
@@ -670,7 +680,7 @@ export function App() {
       return next;
     });
 
-    showToast('✅ Profil mis à jour avec succès !');
+    showToast(`✅ Nom et filière enregistrés : ${updated.name} (${updated.academicLevel})`);
   };
 
   const handleRegeneratePlan = () => {
