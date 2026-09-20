@@ -100,6 +100,7 @@ export function createInitialStateFromPreset(presetId: string = 'cs-engineering'
   return {
     studentName: preferences.studentName,
     academicLevel: preset.level,
+    planTier: 'pro',
     userAccount: {
       name: 'Alexandre Étudiant (Compte Démo)',
       email: 'alexandre.universite@etudiant.univ.fr',
@@ -108,6 +109,7 @@ export function createInitialStateFromPreset(presetId: string = 'cs-engineering'
       academicLevel: preset.level,
       isLoggedIn: true,
       isDemo: true,
+      planTier: 'pro',
       lastSyncedAt: new Date().toISOString(),
     },
     subjects,

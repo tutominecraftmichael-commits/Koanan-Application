@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Calendar, Bell, Download, ExternalLink, Smartphone, Star, CheckCircle, Sparkles } from 'lucide-react';
+import { X, Calendar, Bell, Download, ExternalLink, Smartphone, Star, CheckCircle } from 'lucide-react';
 import { Button } from '../ui/Button';
 import type { StudySession, Subject } from '../../types';
 import { DAYS_OF_WEEK } from '../../types';
@@ -76,7 +76,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] uppercase font-black tracking-wider text-sky-400">Rappels Automatiques Quotidiens</span>
-                <span className="text-[9px] font-black px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">⭐ TOUS LES JOURS</span>
+                <span className="text-[9px] font-black px-1.5 py-0.2 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">TOUS LES JOURS</span>
               </div>
               <h3 className="text-base sm:text-lg font-black text-white leading-tight">
                 Google Agenda • Rappels Automatiques
@@ -97,10 +97,9 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
           
           {/* Automatic Pro Onboarding Banner */}
           {autoOpenedReason === 'pro_activated' && (
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-sky-950/80 border border-emerald-500/50 space-y-2 shadow-lg animate-in slide-in-from-top-2 duration-300">
-              <div className="flex items-center gap-2 text-emerald-300 font-extrabold text-xs uppercase tracking-wide">
-                <Sparkles className="w-4 h-4 text-emerald-400" />
-                <span>⭐ Modèle KONAN PRO Activé : Synchronisation Quotidienne Déclenchée !</span>
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-sky-950/80 border border-emerald-500/50 space-y-1.5 shadow-lg animate-in slide-in-from-top-2 duration-300">
+              <div className="text-emerald-300 font-extrabold text-xs uppercase tracking-wide">
+                Modèle KONAN PRO Activé : Synchronisation Quotidienne Déclenchée !
               </div>
               <p className="text-slate-200 text-xs leading-relaxed">
                 Toutes vos séances d'étude de <strong>tous les jours de la semaine</strong> ont été programmées avec répétition hebdomadaire et <strong>rappels automatiques</strong> avant chaque session directement sur votre téléphone.
@@ -110,10 +109,9 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
 
           {/* Automatic Schedule Applied Banner */}
           {autoOpenedReason === 'plan_applied' && (
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-950/80 via-slate-900 to-sky-950/80 border border-indigo-500/50 space-y-2 shadow-lg animate-in slide-in-from-top-2 duration-300">
-              <div className="flex items-center gap-2 text-indigo-300 font-extrabold text-xs uppercase tracking-wide">
-                <Sparkles className="w-4 h-4 text-indigo-400" />
-                <span>⭐ Nouvel Emploi du Temps : Synchronisation Quotidienne Déclenchée !</span>
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-950/80 via-slate-900 to-sky-950/80 border border-indigo-500/50 space-y-1.5 shadow-lg animate-in slide-in-from-top-2 duration-300">
+              <div className="text-indigo-300 font-extrabold text-xs uppercase tracking-wide">
+                Nouvel Emploi du Temps : Synchronisation Quotidienne Déclenchée !
               </div>
               <p className="text-slate-200 text-xs leading-relaxed">
                 Votre planning d'étude pour <strong>tous les jours de la semaine</strong> a été synchronisé avec récurrence hebdomadaire et <strong>rappels automatiques</strong> avant chaque session sur votre téléphone.
@@ -122,12 +120,11 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
           )}
 
           {/* Main Hero Card */}
-          <div className="p-4 rounded-2xl bg-sky-950/40 border border-sky-500/30 space-y-2.5">
+          <div className="p-4 rounded-2xl bg-sky-950/40 border border-sky-500/30 space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 text-sky-300 font-bold text-xs uppercase tracking-wide">
-                <Bell className="w-4 h-4 text-amber-400 animate-bounce" />
-                <span>Rappels automatiques avant chaque session • Tous les jours</span>
-              </div>
+              <span className="text-sky-300 font-bold text-xs uppercase tracking-wide">
+                Rappels automatiques avant chaque session • Tous les jours
+              </span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 shrink-0">
                 Répétition active
               </span>

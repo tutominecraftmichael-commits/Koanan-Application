@@ -234,18 +234,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     Activer PRO
                   </Button>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (onSelectPlan) {
-                        onSelectPlan('free');
-                      }
-                      onClose();
-                    }}
-                    className="text-[11px] font-semibold text-slate-400 hover:text-slate-200 underline shrink-0 cursor-pointer"
-                  >
-                    Passer sur Gratuit
-                  </button>
+                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0 flex items-center gap-1">
+                    <Check className="w-3 h-3" />
+                    <span>Actif</span>
+                  </span>
                 )}
               </div>
 
