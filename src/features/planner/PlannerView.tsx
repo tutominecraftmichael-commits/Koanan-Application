@@ -503,14 +503,18 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         </Badge>
                       </button>
                       {session.isExamPrep && (
-                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
-                          <span>⚡ {session.examType === 'devoir' ? 'Devoir' : 'Examen'}</span>
+                        <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                          session.examType === 'devoir'
+                            ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                        }`}>
+                          <span>{session.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
                           {session.examDaysRemaining !== undefined && (
                             <span className="font-mono">J-{session.examDaysRemaining}</span>
                           )}
                         </span>
                       )}
-                      {session.priority === 'urgent' && (
+                      {session.priority === 'urgent' && session.examType !== 'devoir' && (
                         <Badge variant="rose" size="sm" className="text-[10px] px-1.5 py-0">Urgent</Badge>
                       )}
                     </div>

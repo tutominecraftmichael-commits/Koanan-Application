@@ -6,7 +6,7 @@ import type {
   SessionType, 
   DayOfWeek 
 } from '../types';
-import { parseTimeToMinutes, minutesToTimeString, generateId, getDaysRemaining } from '../lib/utils';
+import { parseTimeToMinutes, minutesToTimeString, generateId, getDaysRemaining, getDaysRemainingFrom } from '../lib/utils';
 import { getPacingStrategy } from '../lib/pacingStrategies';
 
 interface TimeRange {
@@ -38,11 +38,17 @@ export function generateOptimizedStudyPlan(
     const daysUntilExam = getDaysRemaining(sub.examDate);
     let examUrgencyFactor = 1.0;
     if (daysUntilExam !== null) {
-      if (daysUntilExam <= 3) examUrgencyFactor = 3.2; // Urgence critique J-3
-      else if (daysUntilExam <= 7) examUrgencyFactor = 2.4; // Semaine d'épreuve J-7
-      else if (daysUntilExam <= 14) examUrgencyFactor = 1.8; // Quinzaine pré-examen J-14
-      else if (daysUntilExam <= 30) examUrgencyFactor = 1.3;
-      else examUrgencyFactor = 1.05;
+      if (daysUntilExam < 0) {
+        examUrgencyFactor = 0.6; // Épreuve déjà passée : ne pas surcharger la semaine
+      } else if (daysUntilExam <= 3) {
+        examUrgencyFactor = 2.4; // Urgence critique J-3
+      } else if (daysUntilExam <= 7) {
+        examUrgencyFactor = 1.8; // Semaine d'épreuve J-7
+      } else if (daysUntilExam <= 14) {
+        examUrgencyFactor = 1.4; // Quinzaine pré-examen J-14
+      } else if (daysUntilExam <= 30) {
+        examUrgencyFactor = 1.15;
+      }
     }
 
     // Formule basée sur la difficulté cognitive, le coefficient et l'urgence des examens/devoirs
@@ -217,6 +223,15 @@ export function generateOptimizedStudyPlan(
       return a.start - b.start;
     });
 
+    // Calcul propre et net de la date locale sans décalage pour ce jour de la semaine
+    const sessionDate = new Date(mondayDate);
+    sessionDate.setDate(mondayDate.getDate() + day);
+    sessionDate.setHours(0, 0, 0, 0);
+    const yyyy = sessionDate.getFullYear();
+    const mm = String(sessionDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(sessionDate.getDate()).padStart(2, '0');
+    const dateString = `${yyyy}-${mm}-${dd}`;
+
     let daySessionsCount = 0;
     const scheduledSubjectsToday = new Set<string>();
 
@@ -227,13 +242,60 @@ export function generateOptimizedStudyPlan(
 
       while (slotCurrentStart + sessionBlock <= slot.end && daySessionsCount < targetSessionsPerDay) {
         // Sélection optimale de la matière :
-        // 1. Priorité aux matières NON encore étudiées aujourd'hui (diversité cognitive)
-        // 2. Priorité aux matières ayant le plus de retard sur leur quota (targetSessions - scheduledCount)
-        // 3. Priorité à l'espacement dans le temps (Spaced Repetition : distance depuis la dernière session)
-        // 4. Poids académique
+        // 1. Éviter d'étudier deux fois la même matière le même jour (diversité cognitive)
+        // 2. Si une matière a déjà composé (épreuve passée par rapport à sessionDate), NE PAS la surcharger
+        // 3. Priorité absolue aux épreuves imminentes (J-1 ou J-2) pour réviser avant l'épreuve
+        // 4. Si c'est le jour J de l'épreuve, ne pas réviser après l'heure de l'épreuve
         let bestCandidate = subjectPool
-          .filter(item => !scheduledSubjectsToday.has(item.subject.id))
+          .filter(item => {
+            if (scheduledSubjectsToday.has(item.subject.id)) return false;
+
+            const daysToExam = getDaysRemainingFrom(item.subject.examDate, sessionDate);
+            // Épreuve déjà passée par rapport à ce jour : si d'autres matières ont des examens ou du retard, laisser la priorité
+            if (daysToExam !== null && daysToExam < 0) {
+              const hasActiveUpcomingSubjects = subjectPool.some(other => {
+                if (other.subject.id === item.subject.id) return false;
+                const otherDays = getDaysRemainingFrom(other.subject.examDate, sessionDate);
+                const isStillUpcoming = otherDays === null || otherDays >= 0;
+                return isStillUpcoming && other.scheduledCount < other.targetSessions;
+              });
+              if (hasActiveUpcomingSubjects && item.scheduledCount >= 1) {
+                return false;
+              }
+            }
+
+            // Jour J de l'épreuve : si l'heure d'épreuve est passée, l'étudiant a déjà composé !
+            if (daysToExam === 0) {
+              if (item.subject.examTime) {
+                const examMin = parseTimeToMinutes(item.subject.examTime);
+                if (slotCurrentStart >= examMin) return false;
+              } else {
+                // Par défaut, si pas d'heure précisée, considérer que l'épreuve a eu lieu en matinée (12h)
+                if (slotCurrentStart >= 720) return false;
+              }
+            }
+
+            return true;
+          })
           .sort((a, b) => {
+            const aDaysToExam = getDaysRemainingFrom(a.subject.examDate, sessionDate);
+            const bDaysToExam = getDaysRemainingFrom(b.subject.examDate, sessionDate);
+
+            // Priorité absolue aux épreuves imminentes (J-1 ou J-2) par rapport à CE jour
+            const aIsImminent = aDaysToExam !== null && aDaysToExam >= 0 && aDaysToExam <= 2;
+            const bIsImminent = bDaysToExam !== null && bDaysToExam >= 0 && bDaysToExam <= 2;
+            if (aIsImminent && !bIsImminent) return -1;
+            if (!aIsImminent && bIsImminent) return 1;
+            if (aIsImminent && bIsImminent && aDaysToExam !== bDaysToExam) {
+              return aDaysToExam! - bDaysToExam!;
+            }
+
+            // Si une épreuve est déjà passée et pas l'autre, privilégier celle non passée
+            const aHasPassed = aDaysToExam !== null && aDaysToExam < 0;
+            const bHasPassed = bDaysToExam !== null && bDaysToExam < 0;
+            if (aHasPassed && !bHasPassed) return 1;
+            if (!aHasPassed && bHasPassed) return -1;
+
             const aDeficit = a.targetSessions - a.scheduledCount;
             const bDeficit = b.targetSessions - b.scheduledCount;
             if (aDeficit !== bDeficit) return bDeficit - aDeficit;
@@ -245,14 +307,30 @@ export function generateOptimizedStudyPlan(
             return b.score - a.score;
           })[0];
 
-        // Si toutes les matières ont déjà été étudiées aujourd'hui, autoriser une 2e session pour la matière majeure
+        // Si toutes les matières ont déjà été étudiées aujourd'hui, autoriser une 2e session pour la matière majeure encore active
         if (!bestCandidate) {
-          bestCandidate = subjectPool.sort((a, b) => {
-            const aDeficit = a.targetSessions - a.scheduledCount;
-            const bDeficit = b.targetSessions - b.scheduledCount;
-            if (aDeficit !== bDeficit) return bDeficit - aDeficit;
-            return b.score - a.score;
-          })[0];
+          bestCandidate = subjectPool
+            .filter(item => {
+              const daysToExam = getDaysRemainingFrom(item.subject.examDate, sessionDate);
+              // Ne jamais réviser après l'épreuve le jour J
+              if (daysToExam === 0) {
+                if (item.subject.examTime) {
+                  return slotCurrentStart < parseTimeToMinutes(item.subject.examTime);
+                }
+                return slotCurrentStart < 720;
+              }
+              // Ne pas insister sur une épreuve passée
+              if (daysToExam !== null && daysToExam < 0 && item.scheduledCount >= 2) {
+                return false;
+              }
+              return true;
+            })
+            .sort((a, b) => {
+              const aDeficit = a.targetSessions - a.scheduledCount;
+              const bDeficit = b.targetSessions - b.scheduledCount;
+              if (aDeficit !== bDeficit) return bDeficit - aDeficit;
+              return b.score - a.score;
+            })[0];
         }
 
         if (!bestCandidate) break;
@@ -263,7 +341,7 @@ export function generateOptimizedStudyPlan(
           : 'Chapitre clé & Fondamentaux';
 
         const sessionType = sessionTypeCycle[bestCandidate.scheduledCount % sessionTypeCycle.length];
-        const daysUntilExam = getDaysRemaining(subject.examDate);
+        const daysUntilExamOnDate = getDaysRemainingFrom(subject.examDate, sessionDate);
 
         // Stratégie d'espacement active pour cette session (Mono-méthode ou Combinaison Triple KONAN PRO)
         let sessionPacing = pacingStrategy;
@@ -280,7 +358,7 @@ export function generateOptimizedStudyPlan(
 
           // Allocation cognitive intelligente :
           // 1. Matière très difficile (diff >= 4) ou examen proche (<= 10 jours) -> Feynman si présente (assimilation profonde)
-          if ((subject.difficulty >= 4 || (daysUntilExam !== null && daysUntilExam <= 10)) && hasFeynman) {
+          if ((subject.difficulty >= 4 || (daysUntilExamOnDate !== null && daysUntilExamOnDate >= 0 && daysUntilExamOnDate <= 10)) && hasFeynman) {
             sessionPacing = hasFeynman;
           }
           // 2. Matière à fort coefficient (>= 5) avec créneau large -> Time Blocking si présent
@@ -354,49 +432,74 @@ export function generateOptimizedStudyPlan(
           ];
         }
 
-        // Calcul propre et net de la date locale sans décalage
-        const sessionDate = new Date(mondayDate);
-        sessionDate.setDate(mondayDate.getDate() + day);
-        const yyyy = sessionDate.getFullYear();
-        const mm = String(sessionDate.getMonth() + 1).padStart(2, '0');
-        const dd = String(sessionDate.getDate()).padStart(2, '0');
-        const dateString = `${yyyy}-${mm}-${dd}`;
-
         const startMin = slotCurrentStart;
         const endMin = Math.min(startMin + sessionDuration, slot.end);
         const actualDuration = endMin - startMin;
 
+        // Détermination intelligente de l'imminence : UNIQUEMENT si l'épreuve est à venir (J-0 à J-14)
+        // STRICTEMENT IMPOSSIBLE si l'épreuve est déjà passée (daysUntilExamOnDate < 0) !
+        const isExamApproaching = daysUntilExamOnDate !== null && daysUntilExamOnDate >= 0 && daysUntilExamOnDate <= 14;
+        const examLabel = subject.examType === 'devoir' ? 'Devoir' : subject.examType === 'rattrapage' ? 'Rattrapage' : 'Examen';
+
         let priority: 'urgent' | 'high' | 'medium' | 'maintenance' = 'medium';
-        if (daysUntilExam !== null && daysUntilExam <= 7) priority = 'urgent';
-        else if (subject.difficulty >= 4 || subject.coefficient >= 5) priority = 'high';
-        else if (subject.difficulty <= 2) priority = 'maintenance';
+        if (isExamApproaching && daysUntilExamOnDate <= 7) {
+          priority = 'urgent';
+        } else if (daysUntilExamOnDate !== null && daysUntilExamOnDate < 0) {
+          priority = 'maintenance'; // L'épreuve est passée, simple maintien tranquille
+        } else if (subject.difficulty >= 4 || subject.coefficient >= 5) {
+          priority = 'high';
+        } else if (subject.difficulty <= 2) {
+          priority = 'maintenance';
+        }
 
         const energy: 'high' | 'medium' | 'low' = 
           subject.difficulty >= 4 ? 'high' : subject.difficulty === 3 ? 'medium' : 'low';
-
-        const isExamApproaching = daysUntilExam !== null && daysUntilExam <= 14 && daysUntilExam >= 0;
-        const examLabel = subject.examType === 'devoir' ? 'Devoir' : subject.examType === 'rattrapage' ? 'Rattrapage' : 'Examen';
 
         let finalTitle = sessionTitle;
         let finalDesc = sessionDescription;
         let finalObjectives = sessionObjectives;
 
         if (isExamApproaching) {
-          if (daysUntilExam <= 1) {
-            finalTitle = `🔥 Ultime Révision (J-1) : ${displaySubjectName} - Synthèse`;
-            finalDesc = `Séance prioritaire veille de votre ${examLabel} de ${displaySubjectName}. Réactivation des points clés et stabilisation mentale.`;
+          if (daysUntilExamOnDate === 0) {
+            finalTitle = subject.examType === 'devoir'
+              ? `Dernière Relecture Devoir : ${displaySubjectName}`
+              : `⚡ Réveil Flash Examen : ${displaySubjectName}`;
+            finalDesc = `Dernière mise en condition avant votre ${examLabel} de ${displaySubjectName} aujourd'hui.`;
+            finalObjectives = [
+              `Revue éclair des formules clés de ${displaySubjectName}`,
+              'Respiration et stabilisation mentale avant de composer',
+              'Vérification du matériel et lucidité maximale',
+            ];
+          } else if (daysUntilExamOnDate === 1) {
+            finalTitle = subject.examType === 'devoir'
+              ? `Préparation Devoir (J-1) : ${displaySubjectName} - Synthèse`
+              : `🔥 Ultime Révision Examen (J-1) : ${displaySubjectName} - Synthèse`;
+            finalDesc = `Séance prioritaire veille de votre ${examLabel} de ${displaySubjectName}. Réactivation des points clés et repos cérébral anticipé.`;
             finalObjectives = [
               `Révision flash des formules et concepts capitaux de ${displaySubjectName}`,
               'Auto-évaluation à blanc sur 2 exercices types sans notes',
               'Repos cérébral anticipé pour être à 100% de lucidité le jour J',
             ];
-          } else if (daysUntilExam <= 5) {
-            finalTitle = `⚡ Prépa Intensive ${examLabel} (J-${daysUntilExam}) : ${displaySubjectName}`;
-            finalDesc = `Échéance imminente : votre ${examLabel} est dans ${daysUntilExam} jours. Focalisation sur ${topicName} et sujets d'épreuves.`;
+          } else if (daysUntilExamOnDate <= 5) {
+            finalTitle = subject.examType === 'devoir'
+              ? `Préparation Devoir (J-${daysUntilExamOnDate}) : ${displaySubjectName}`
+              : `⚡ Prépa Intensive ${examLabel} (J-${daysUntilExamOnDate}) : ${displaySubjectName}`;
+            finalDesc = `Échéance imminente : votre ${examLabel} est dans ${daysUntilExamOnDate} jours. Focalisation sur ${topicName} et sujets d'épreuves.`;
             finalObjectives = [
               `Focalisation sur les chapitres à fort coefficient : ${topicName}`,
               'Simulation d\'épreuves et entraînement chronométré',
               'Élimination des dernières hésitations méthodologiques',
+            ];
+          } else {
+            // J-6 à J-14
+            finalTitle = subject.examType === 'devoir'
+              ? `Révision Devoir (J-${daysUntilExamOnDate}) : ${displaySubjectName} - ${topicName}`
+              : `Révision Approfondie Examen (J-${daysUntilExamOnDate}) : ${displaySubjectName} - ${topicName}`;
+            finalDesc = `Anticipation stratégique : consolidation approfondie des chapitres avant l'épreuve.`;
+            finalObjectives = [
+              `Maîtrise complète du chapitre : ${topicName}`,
+              'Fiche synthèse et résolution des cas complexes',
+              'Auto-test sans antisèche pour valider l\'assimilation',
             ];
           }
         }
@@ -418,7 +521,7 @@ export function generateOptimizedStudyPlan(
           energyRequired: energy,
           completed: false,
           isExamPrep: isExamApproaching,
-          examDaysRemaining: daysUntilExam !== null ? daysUntilExam : undefined,
+          examDaysRemaining: isExamApproaching ? daysUntilExamOnDate : undefined,
           examType: subject.examType || 'examen',
         });
 

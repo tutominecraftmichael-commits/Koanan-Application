@@ -668,12 +668,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     <div className="space-y-0.5 min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <p className="font-bold text-white break-words leading-snug">{sub.name}</p>
-                        <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
                           sub.examType === 'devoir' 
-                            ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' 
-                            : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                            ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' 
+                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                         }`}>
-                          {sub.examType === 'devoir' ? 'Devoir (DS)' : 'Examen'}
+                          {sub.examType === 'devoir' ? 'Devoir' : 'Examen'}
                         </span>
                       </div>
                       <p className="text-[11px] text-slate-400 break-words">

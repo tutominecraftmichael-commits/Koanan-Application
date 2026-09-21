@@ -29,12 +29,22 @@ export function generateId(): string {
   return Math.random().toString(36).substring(2, 9) + Date.now().toString(36).substring(4);
 }
 
-export function getDaysRemaining(targetDateStr?: string): number | null {
+export function getDaysRemainingFrom(targetDateStr?: string, fromDate: Date = new Date()): number | null {
   if (!targetDateStr) return null;
-  const target = new Date(targetDateStr);
-  const now = new Date();
-  target.setHours(0, 0, 0, 0);
-  now.setHours(0, 0, 0, 0);
-  const diffTime = target.getTime() - now.getTime();
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const parts = targetDateStr.split('-');
+  if (parts.length < 3) return null;
+  const targetYear = parseInt(parts[0], 10);
+  const targetMonth = parseInt(parts[1], 10) - 1;
+  const targetDay = parseInt(parts[2], 10);
+  const target = new Date(targetYear, targetMonth, targetDay, 0, 0, 0, 0);
+
+  const from = new Date(fromDate);
+  from.setHours(0, 0, 0, 0);
+
+  const diffTime = target.getTime() - from.getTime();
+  return Math.round(diffTime / (1000 * 60 * 60 * 24));
+}
+
+export function getDaysRemaining(targetDateStr?: string): number | null {
+  return getDaysRemainingFrom(targetDateStr, new Date());
 }

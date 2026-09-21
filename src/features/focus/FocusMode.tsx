@@ -24,6 +24,7 @@ export interface FocusModeProps {
   subjects: Subject[];
   onCompleteSession: (sessionId: string, log: StudyLog) => void;
   onExit: () => void;
+  backLabel?: string;
 }
 
 export const FocusMode: React.FC<FocusModeProps> = ({
@@ -31,6 +32,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
   subjects,
   onCompleteSession,
   onExit,
+  backLabel,
 }) => {
   const currentSubject = session 
     ? subjects.find(s => s.id === session.subjectId)
@@ -161,7 +163,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
           onClick={onExit}
           className="cursor-pointer text-slate-400 hover:text-white text-xs px-2.5"
         >
-          Planning
+          {backLabel || 'Matières'}
         </Button>
 
         <div className="flex items-center gap-2">

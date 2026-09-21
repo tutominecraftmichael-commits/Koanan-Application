@@ -31,7 +31,8 @@ import type {
   StudyLog,
   StudyPreferences, 
   UserAccount,
-  Chronotype
+  Chronotype,
+  DayOfWeek
 } from './types';
 import { generateId } from './lib/utils';
 import { Sparkles, X } from 'lucide-react';
@@ -56,10 +57,13 @@ import { SubjectManager } from './features/subjects/SubjectManager';
 import { PlannerView } from './features/planner/PlannerView';
 import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
 import { PresetModal } from './features/onboarding/PresetModal';
+import { FocusMode } from './features/focus/FocusMode';
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
   const [activeView, setActiveView] = useState<ActiveAppView>('landing');
+  const [focusSubject, setFocusSubject] = useState<Subject | null>(null);
+  const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
@@ -821,6 +825,77 @@ export function App() {
     showToast('Nouvelle session ajoutée au planning !');
   };
 
+  const handleStartFocusFromSubject = (subject: Subject) => {
+    const todayDayOfWeek = ((new Date().getDay() + 6) % 7) as DayOfWeek;
+    const existingSession = state.studySessions.find(
+      s => s.subjectId === subject.id && s.dayOfWeek === todayDayOfWeek && !s.completed
+    ) || state.studySessions.find(
+      s => s.subjectId === subject.id && !s.completed
+    );
+
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const dateString = `${yyyy}-${mm}-${dd}`;
+    const duration = state.preferences.focusBlockDuration || 45;
+    const startMins = today.getHours() * 60 + today.getMinutes();
+    const endMins = startMins + duration;
+    const endHours = Math.floor(endMins / 60) % 24;
+    const endMinutes = endMins % 60;
+    const endTimeString = `${String(endHours).padStart(2, '0')}:${String(endMinutes).padStart(2, '0')}`;
+
+    const targetSession: StudySession = existingSession || {
+      id: generateId(),
+      subjectId: subject.id,
+      title: `Révision Focus : ${subject.name}`,
+      description: `Session de révision autonome en mode focus sur ${subject.name}.`,
+      date: dateString,
+      dayOfWeek: todayDayOfWeek,
+      startTime: today.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      endTime: endTimeString,
+      durationMinutes: duration,
+      completed: false,
+      type: 'deep_summary',
+      priority: subject.difficulty >= 4 ? 'high' : 'medium',
+      energyRequired: subject.difficulty >= 4 ? 'high' : 'medium',
+      objectives: subject.topics && subject.topics.length > 0
+        ? subject.topics.slice(0, 3).map(t => `Maîtriser : ${t}`)
+        : [
+            `Assimilation active des concepts de ${subject.name}`,
+            `Exercices d'application et validation des acquis`,
+            `Fiche mémo et auto-évaluation`,
+          ],
+      pacingMethod: state.preferences.pacing || 'active_recall_spaced',
+    };
+
+    setFocusSubject(subject);
+    setFocusSession(targetSession);
+    setActiveView('focus');
+  };
+
+  const handleCompleteFocusSession = (sessionId: string, log: StudyLog) => {
+    setState(prev => {
+      const updatedSessions = prev.studySessions.map(s => 
+        s.id === sessionId ? { ...s, completed: true } : s
+      );
+      const updatedLogs = [log, ...prev.logs];
+      const nextState: AppState = {
+        ...prev,
+        studySessions: updatedSessions,
+        logs: updatedLogs,
+      };
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+      return nextState;
+    });
+
+    soundFX.playSuccessChime();
+    showToast(`Session Focus sur ${focusSubject?.name || 'la matière'} enregistrée avec succès ! 🎯`);
+    setActiveView('subjects');
+  };
+
   /**
    * Only allowed in Demo mode!
    */
@@ -1076,6 +1151,7 @@ export function App() {
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
+              onStartFocus={handleStartFocusFromSubject}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -1135,6 +1211,29 @@ export function App() {
           ) : (
             <div className="text-center py-16 space-y-4">
               <p className="text-lg text-white font-bold">Connexion requise pour consulter vos analytics de progression.</p>
+              <button
+                onClick={() => setActiveView('auth')}
+                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+              >
+                Se connecter avec Google
+              </button>
+            </div>
+          )
+        )}
+
+        {/* Focus Mode: STRICTLY ACCESSIBLE FROM SUBJECT CARDS */}
+        {activeView === 'focus' && (
+          (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
+            <FocusMode
+              session={focusSession}
+              subjects={state.subjects}
+              onCompleteSession={handleCompleteFocusSession}
+              onExit={() => setActiveView('subjects')}
+              backLabel="Matières"
+            />
+          ) : (
+            <div className="text-center py-16 space-y-4">
+              <p className="text-lg text-white font-bold">Connexion requise pour le mode focus.</p>
               <button
                 onClick={() => setActiveView('auth')}
                 className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
