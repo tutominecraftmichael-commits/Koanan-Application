@@ -167,8 +167,7 @@ export type ActiveAppView =
   | 'schedule' 
   | 'subjects' 
   | 'planner' 
-  | 'analytics'
-  | 'focus';
+  | 'analytics';
 
 export type AiAnalysisStep = 
   | 'idle'

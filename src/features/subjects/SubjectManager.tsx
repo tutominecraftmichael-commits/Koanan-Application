@@ -16,8 +16,7 @@ import {
   Target, 
   Zap, 
   Flame,
-  GraduationCap,
-  Play
+  GraduationCap
 } from 'lucide-react';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 
@@ -31,7 +30,6 @@ export interface SubjectManagerProps {
   onViewPricing?: () => void;
   onUpgradeToPro?: () => void;
   onTriggerPlanner?: () => void;
-  onStartFocus?: (subject: Subject) => void;
 }
 
 const PRESET_COLORS = [
@@ -55,7 +53,6 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   onViewPricing,
   onUpgradeToPro,
   onTriggerPlanner,
-  onStartFocus,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
@@ -416,19 +413,6 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                 <span className="font-bold text-indigo-300">
                   {subject.difficulty >= 4 ? 'Élevée' : subject.difficulty === 3 ? 'Équilibrée' : 'Entretien'}
                 </span>
-              </div>
-
-              {/* Bouton Réviser -> Mode Focus spécifique à cette matière */}
-              <div className="mt-2.5 pt-2 border-t border-slate-800/80">
-                <button
-                  type="button"
-                  onClick={() => onStartFocus && onStartFocus(subject)}
-                  className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-blue-950/40 hover:shadow-blue-500/20 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98"
-                  title={`Lancer une session de révision en Mode Focus sur ${subject.name}`}
-                >
-                  <Play className="w-3.5 h-3.5 fill-current text-white" />
-                  <span>Réviser</span>
-                </button>
               </div>
             </Card>
           );
