@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import type { 
   Subject, 
   ClassSlot, 
@@ -77,31 +77,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);
 
   const [showCompletedSessions, setShowCompletedSessions] = useState(false);
-  const [scrollBeamPos, setScrollBeamPos] = useState<number>(10);
-  const [isScrolling, setIsScrolling] = useState<boolean>(false);
-  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Écouteur de défilement (Scroll) pour animer la bande de lumière verticale sur la carte principale
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolling(true);
-      const scrollY = window.scrollY || document.documentElement.scrollTop;
-      const cycle = 280;
-      const progress = ((scrollY % cycle) / cycle) * 100;
-      setScrollBeamPos(progress);
-
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 700);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-    };
-  }, []);
 
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
@@ -155,35 +131,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       
       {/* WELCOME BANNER */}
       <div className="relative rounded-3xl p-5 sm:p-8 overflow-hidden border border-indigo-500/30 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-slate-950 shadow-2xl">
-        {/* BANDE DE LUMIÈRE VERTICALE AU DÉFILEMENT (Scroll Luminous Beam) */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl z-0">
-          {/* Faisceau lumineux horizontal circulant du haut vers le bas au défilement */}
-          <div
-            className={`absolute left-0 right-0 h-16 transition-opacity duration-300 pointer-events-none ${
-              isScrolling ? 'opacity-100' : 'opacity-35'
-            }`}
-            style={{
-              top: `${scrollBeamPos}%`,
-              transform: 'translateY(-50%)',
-              background: 'linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.15) 25%, rgba(56, 189, 248, 0.5) 48%, rgba(255, 255, 255, 0.95) 50%, rgba(56, 189, 248, 0.5) 52%, rgba(99, 102, 241, 0.15) 75%, transparent 100%)',
-              filter: 'drop-shadow(0 0 16px rgba(56, 189, 248, 0.8))',
-            }}
-          />
-          {/* Filets laser verticaux latéraux */}
-          <div
-            className={`absolute top-0 bottom-0 w-0.5 bg-gradient-to-b from-transparent via-cyan-400 to-transparent transition-opacity duration-300 ${
-              isScrolling ? 'opacity-70' : 'opacity-25'
-            }`}
-            style={{ left: '6%' }}
-          />
-          <div
-            className={`absolute top-0 bottom-0 w-0.5 bg-gradient-to-b from-transparent via-indigo-400 to-transparent transition-opacity duration-300 ${
-              isScrolling ? 'opacity-70' : 'opacity-25'
-            }`}
-            style={{ right: '6%' }}
-          />
-        </div>
-
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 relative z-10">
           <div className="space-y-1.5 sm:space-y-2">
             <div className="flex flex-wrap items-center gap-2">
