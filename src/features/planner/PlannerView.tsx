@@ -43,6 +43,7 @@ export interface PlannerViewProps {
   preferences: StudyPreferences;
   onRegeneratePlan: () => void;
   onToggleSessionComplete: (sessionId: string) => void;
+  onStartFocusSession?: (session: StudySession) => void;
   onAddCustomSession: (session: StudySession) => void;
   onUpdatePreferences?: (preferences: StudyPreferences) => void;
   planTier?: 'free' | 'pro' | 'plus';
@@ -60,6 +61,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   preferences,
   onRegeneratePlan,
   onToggleSessionComplete,
+  onStartFocusSession,
   onAddCustomSession,
   onUpdatePreferences,
   planTier = 'free',
@@ -460,7 +462,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 <div className="space-y-3">
                   
                   {/* Top line: Day, Time, Badges */}
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                       <span className="text-xs font-bold text-slate-200">
                         {dayInfo.label}
@@ -488,14 +490,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       )}
                     </div>
 
-                    <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex flex-wrap items-center gap-1.5 shrink-0">
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedExplainerType(session.type);
                         }}
-                        className="cursor-pointer hover:scale-105 transition-transform"
+                        className="cursor-pointer hover:scale-105 transition-transform shrink-0"
                         title={t('clickForGuide', lang)}
                       >
                         <Badge variant={badgeType.variant} size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
@@ -503,19 +505,21 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         </Badge>
                       </button>
                       {session.isExamPrep && (
-                        <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                        <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-xs ${
                           session.examType === 'devoir'
-                            ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                            ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
                             : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
                         }`}>
                           <span>{session.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
                           {session.examDaysRemaining !== undefined && (
-                            <span className="font-mono">J-{session.examDaysRemaining}</span>
+                            <span className="font-mono bg-rose-950/60 text-rose-200 px-1 rounded text-[9px] border border-rose-500/30">
+                              J-{session.examDaysRemaining}
+                            </span>
                           )}
                         </span>
                       )}
                       {session.priority === 'urgent' && session.examType !== 'devoir' && (
-                        <Badge variant="rose" size="sm" className="text-[10px] px-1.5 py-0">Urgent</Badge>
+                        <Badge variant="rose" size="sm" className="text-[10px] px-1.5 py-0 shrink-0">Urgent</Badge>
                       )}
                     </div>
                   </div>
@@ -565,7 +569,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         </button>
                       ) : isToday ? (
                         <button
-                          onClick={() => onToggleSessionComplete(session.id)}
+                          onClick={() => {
+                            if (onStartFocusSession) {
+                              onStartFocusSession(session);
+                            } else {
+                              onToggleSessionComplete(session.id);
+                            }
+                          }}
                           className={`px-3.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer min-h-[36px] interactive-pill ${
                             session.isRescheduledToday
                               ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'

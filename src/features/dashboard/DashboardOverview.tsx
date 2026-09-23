@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { 
   Subject, 
   ClassSlot, 
@@ -42,6 +42,7 @@ export interface DashboardOverviewProps {
   preferences: StudyPreferences;
   onNavigate: (view: ActiveAppView) => void;
   onToggleSessionComplete: (sessionId: string) => void;
+  onStartFocusSession?: (session: StudySession) => void;
   onOpenPresetModal?: () => void;
   isDemoMode?: boolean;
   planTier?: 'free' | 'pro' | 'plus';
@@ -61,6 +62,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   preferences,
   onNavigate,
   onToggleSessionComplete,
+  onStartFocusSession,
   onOpenPresetModal,
   isDemoMode = false,
   planTier = 'free',
@@ -75,6 +77,31 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);
 
   const [showCompletedSessions, setShowCompletedSessions] = useState(false);
+  const [scrollBeamPos, setScrollBeamPos] = useState<number>(10);
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Écouteur de défilement (Scroll) pour animer la bande de lumière verticale sur la carte principale
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolling(true);
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      const cycle = 280;
+      const progress = ((scrollY % cycle) / cycle) * 100;
+      setScrollBeamPos(progress);
+
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 700);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
+  }, []);
 
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
@@ -128,6 +155,35 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       
       {/* WELCOME BANNER */}
       <div className="relative rounded-3xl p-5 sm:p-8 overflow-hidden border border-indigo-500/30 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-slate-950 shadow-2xl">
+        {/* BANDE DE LUMIÈRE VERTICALE AU DÉFILEMENT (Scroll Luminous Beam) */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl z-0">
+          {/* Faisceau lumineux horizontal circulant du haut vers le bas au défilement */}
+          <div
+            className={`absolute left-0 right-0 h-16 transition-opacity duration-300 pointer-events-none ${
+              isScrolling ? 'opacity-100' : 'opacity-35'
+            }`}
+            style={{
+              top: `${scrollBeamPos}%`,
+              transform: 'translateY(-50%)',
+              background: 'linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.15) 25%, rgba(56, 189, 248, 0.5) 48%, rgba(255, 255, 255, 0.95) 50%, rgba(56, 189, 248, 0.5) 52%, rgba(99, 102, 241, 0.15) 75%, transparent 100%)',
+              filter: 'drop-shadow(0 0 16px rgba(56, 189, 248, 0.8))',
+            }}
+          />
+          {/* Filets laser verticaux latéraux */}
+          <div
+            className={`absolute top-0 bottom-0 w-0.5 bg-gradient-to-b from-transparent via-cyan-400 to-transparent transition-opacity duration-300 ${
+              isScrolling ? 'opacity-70' : 'opacity-25'
+            }`}
+            style={{ left: '6%' }}
+          />
+          <div
+            className={`absolute top-0 bottom-0 w-0.5 bg-gradient-to-b from-transparent via-indigo-400 to-transparent transition-opacity duration-300 ${
+              isScrolling ? 'opacity-70' : 'opacity-25'
+            }`}
+            style={{ right: '6%' }}
+          />
+        </div>
+
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 relative z-10">
           <div className="space-y-1.5 sm:space-y-2">
             <div className="flex flex-wrap items-center gap-2">
@@ -173,10 +229,24 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           ) : nextStudySession && (
             <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-slate-900/95 border border-indigo-500/40 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
               <div className="space-y-1 text-left min-w-0 flex-1 w-full">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="text-[10px] uppercase font-bold text-indigo-300 tracking-wider block">
                     Prochaine Session
                   </span>
+                  {nextStudySession.isExamPrep && (
+                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 whitespace-nowrap shrink-0 shadow-xs ${
+                      nextStudySession.examType === 'devoir'
+                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                    }`}>
+                      <span>{nextStudySession.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
+                      {nextStudySession.examDaysRemaining !== undefined && (
+                        <span className="font-mono bg-rose-950/60 text-rose-200 px-1 rounded text-[9px] border border-rose-500/30">
+                          J-{nextStudySession.examDaysRemaining}
+                        </span>
+                      )}
+                    </span>
+                  )}
                   {nextStudySession.isRescheduledToday && (
                     <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold animate-pulse">
                       🔄 Rattrapage ce soir
@@ -194,7 +264,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
                 size="sm"
                 leftIcon={<CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
-                onClick={() => onToggleSessionComplete(nextStudySession.id)}
+                onClick={() => {
+                  if (onStartFocusSession) {
+                    onStartFocusSession(nextStudySession);
+                  } else {
+                    onToggleSessionComplete(nextStudySession.id);
+                  }
+                }}
                 className={`w-full sm:w-auto cursor-pointer text-xs font-bold whitespace-nowrap py-2.5 px-4 hover:scale-105 active:scale-95 transition-transform shrink-0 ${
                   nextStudySession.isRescheduledToday
                     ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-lg shadow-amber-600/20'
@@ -514,6 +590,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             <span className="text-[11px] font-mono font-bold text-cyan-400">
                               {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                             </span>
+                            {session.isExamPrep && (
+                              <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-xs ${
+                                session.examType === 'devoir'
+                                  ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                                  : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                              }`}>
+                                <span>{session.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
+                                {session.examDaysRemaining !== undefined && (
+                                  <span className="font-mono bg-rose-950/60 text-rose-200 px-1 rounded text-[9px] border border-rose-500/30">
+                                    J-{session.examDaysRemaining}
+                                  </span>
+                                )}
+                              </span>
+                            )}
                             {isRescheduled && (
                               <Badge variant="amber" size="sm" className="text-[10px] px-2 py-0.5 font-bold animate-pulse" title={session.rescheduledReason}>
                                 🔄 Rattrapage (Init. {session.originalStartTime})
@@ -553,7 +643,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             variant={isRescheduled ? "secondary" : "glow"}
                             size="sm"
                             leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
-                            onClick={() => onToggleSessionComplete(session.id)}
+                            onClick={() => {
+                              if (onStartFocusSession) {
+                                onStartFocusSession(session);
+                              } else {
+                                onToggleSessionComplete(session.id);
+                              }
+                            }}
                             className={`w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[38px] ${
                               isRescheduled
                                 ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
@@ -626,7 +722,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <Target className="w-4 h-4 text-rose-400" />
                 Examens & Devoirs Surveillés
               </h3>
-              {planTier === 'free' ? (
+              {planTier === 'free' && (
                 <button
                   type="button"
                   onClick={onUpgradeToPro || onViewPricing}
@@ -635,10 +731,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 >
                   ⭐ PRO
                 </button>
-              ) : (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  Planning adapté
-                </span>
               )}
             </div>
 

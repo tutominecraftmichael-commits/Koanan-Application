@@ -55,11 +55,13 @@ import { ScheduleManager } from './features/schedule/ScheduleManager';
 import { SubjectManager } from './features/subjects/SubjectManager';
 import { PlannerView } from './features/planner/PlannerView';
 import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
+import { FocusMode } from './features/focus/FocusMode';
 import { PresetModal } from './features/onboarding/PresetModal';
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
   const [activeView, setActiveView] = useState<ActiveAppView>('landing');
+  const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
@@ -765,6 +767,80 @@ export function App() {
     });
   };
 
+  /**
+   * Focus Chronometer Handler :
+   * Directly redirects the user to the interactive focus chronometer
+   * upon clicking "Valider la séance" / "Valider".
+   */
+  const handleStartFocusSession = (session: StudySession) => {
+    const currentDayIndex = (new Date().getDay() + 6) % 7;
+    const dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+    const currentDayName = dayNames[currentDayIndex];
+    const targetDayName = dayNames[session.dayOfWeek] || 'ce jour';
+
+    // Anti-cheat verification: Only allow launching today's study sessions
+    if (session.dayOfWeek !== currentDayIndex) {
+      soundFX.playNotificationPing();
+      showToast(`🔒 Anti-triche : Vous pouvez uniquement lancer le chronomètre pour les révisions d'aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
+      return;
+    }
+
+    setFocusSession(session);
+    setActiveView('focus');
+    soundFX.playCheckmarkPop();
+  };
+
+  /**
+   * Completion callback from the FocusMode chronometer:
+   * Marks the session complete, records the study log, updates streak & celebrations.
+   */
+  const handleCompleteFocusSession = (sessionId: string, log: StudyLog) => {
+    const target = state.studySessions.find(s => s.id === sessionId);
+    if (!target) return;
+
+    soundFX.playCelebrationFanfare();
+    const updatedSessions = state.studySessions.map(s => 
+      s.id === sessionId 
+        ? { ...s, completed: true, completedAt: new Date().toISOString() } 
+        : s
+    );
+
+    const daySessions = updatedSessions.filter(s => s.dayOfWeek === target.dayOfWeek);
+    const isDayFullyComplete = daySessions.length > 0 && daySessions.every(s => s.completed);
+    const totalSessions = updatedSessions.length;
+    const completedSessions = updatedSessions.filter(s => s.completed).length;
+    const willAllBeCompleted = totalSessions > 0 && completedSessions === totalSessions;
+
+    if (willAllBeCompleted) {
+      setIsUltimateCelebrationOpen(true);
+      showToast(`🏆 Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
+    } else if (isDayFullyComplete) {
+      showToast(`🎉 Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
+    } else {
+      showToast(`🎉 Félicitations ! Séance "${target.title}" validée avec succès dans le chronomètre Focus !`, 5000);
+    }
+
+    setState(prev => {
+      const filteredLogs = prev.logs.filter(l => l.sessionId !== target.id);
+      const nextLogs = [log, ...filteredLogs];
+
+      const nextState: AppState = {
+        ...prev,
+        studySessions: updatedSessions,
+        logs: nextLogs,
+      };
+
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+
+      return nextState;
+    });
+
+    setFocusSession(null);
+    setActiveView('dashboard');
+  };
+
   const handleContinueNewCycle = () => {
     const todayStr = new Date().toISOString().slice(0, 10);
 
@@ -1006,6 +1082,7 @@ export function App() {
               onViewPricing={handleViewPricing}
               onUpgradeToPro={() => handleSelectPlan('pro')}
               onToggleSessionComplete={handleToggleSessionComplete}
+              onStartFocusSession={handleStartFocusSession}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
@@ -1101,6 +1178,7 @@ export function App() {
               planTier={state.planTier || state.userAccount?.planTier || 'free'}
               onRegeneratePlan={handleRegeneratePlan}
               onToggleSessionComplete={handleToggleSessionComplete}
+              onStartFocusSession={handleStartFocusSession}
               onAddCustomSession={handleAddCustomSession}
               onUpdatePreferences={handleUpdatePreferences}
               onViewPricing={handleViewPricing}
@@ -1122,6 +1200,31 @@ export function App() {
           )
         )}
 
+        {/* Focus Mode Chronometer: STRICTLY INTEGRATED */}
+        {activeView === 'focus' && (
+          (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
+            <FocusMode
+              session={focusSession}
+              subjects={state.subjects}
+              onCompleteSession={handleCompleteFocusSession}
+              onExit={() => {
+                setFocusSession(null);
+                setActiveView('dashboard');
+              }}
+              backLabel="Retour au tableau de bord"
+            />
+          ) : (
+            <div className="text-center py-16 space-y-4">
+              <p className="text-lg text-white font-bold">Connexion requise pour accéder au chronomètre Focus.</p>
+              <button
+                onClick={() => setActiveView('auth')}
+                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+              >
+                Se connecter avec Google
+              </button>
+            </div>
+          )
+        )}
 
         {/* Analytics: STRICTLY PROTECTED */}
         {activeView === 'analytics' && (

@@ -240,10 +240,10 @@ export function generateOptimizedStudyPlan(
 
       let slotCurrentStart = slot.start;
 
-      while (slotCurrentStart + sessionBlock <= slot.end && daySessionsCount < targetSessionsPerDay) {
+      while (slotCurrentStart + 20 <= slot.end && daySessionsCount < targetSessionsPerDay) {
         // Sélection optimale de la matière :
         // 1. Éviter d'étudier deux fois la même matière le même jour (diversité cognitive)
-        // 2. Si une matière a déjà composé (épreuve passée par rapport à sessionDate), NE PAS la surcharger
+        // 2. RÈGLE STRICTE : INTERDICTION ABSOLUE de réviser une matière dont l'épreuve est déjà passée (daysToExam < 0) !
         // 3. Priorité absolue aux épreuves imminentes (J-1 ou J-2) pour réviser avant l'épreuve
         // 4. Si c'est le jour J de l'épreuve, ne pas réviser après l'heure de l'épreuve
         let bestCandidate = subjectPool
@@ -251,17 +251,9 @@ export function generateOptimizedStudyPlan(
             if (scheduledSubjectsToday.has(item.subject.id)) return false;
 
             const daysToExam = getDaysRemainingFrom(item.subject.examDate, sessionDate);
-            // Épreuve déjà passée par rapport à ce jour : si d'autres matières ont des examens ou du retard, laisser la priorité
+            // Épreuve passée par rapport à ce jour : STRICTEMENT INTERDIT de réviser pour une épreuve déjà passée !
             if (daysToExam !== null && daysToExam < 0) {
-              const hasActiveUpcomingSubjects = subjectPool.some(other => {
-                if (other.subject.id === item.subject.id) return false;
-                const otherDays = getDaysRemainingFrom(other.subject.examDate, sessionDate);
-                const isStillUpcoming = otherDays === null || otherDays >= 0;
-                return isStillUpcoming && other.scheduledCount < other.targetSessions;
-              });
-              if (hasActiveUpcomingSubjects && item.scheduledCount >= 1) {
-                return false;
-              }
+              return false;
             }
 
             // Jour J de l'épreuve : si l'heure d'épreuve est passée, l'étudiant a déjà composé !
@@ -290,11 +282,11 @@ export function generateOptimizedStudyPlan(
               return aDaysToExam! - bDaysToExam!;
             }
 
-            // Si une épreuve est déjà passée et pas l'autre, privilégier celle non passée
-            const aHasPassed = aDaysToExam !== null && aDaysToExam < 0;
-            const bHasPassed = bDaysToExam !== null && bDaysToExam < 0;
-            if (aHasPassed && !bHasPassed) return 1;
-            if (!aHasPassed && bHasPassed) return -1;
+            // Priorité générale aux épreuves prévues dans les 14 jours
+            const aIsExamSoon = aDaysToExam !== null && aDaysToExam >= 0 && aDaysToExam <= 14;
+            const bIsExamSoon = bDaysToExam !== null && bDaysToExam >= 0 && bDaysToExam <= 14;
+            if (aIsExamSoon && !bIsExamSoon) return -1;
+            if (!aIsExamSoon && bIsExamSoon) return 1;
 
             const aDeficit = a.targetSessions - a.scheduledCount;
             const bDeficit = b.targetSessions - b.scheduledCount;
@@ -307,21 +299,21 @@ export function generateOptimizedStudyPlan(
             return b.score - a.score;
           })[0];
 
-        // Si toutes les matières ont déjà été étudiées aujourd'hui, autoriser une 2e session pour la matière majeure encore active
+        // Si toutes les matières ont déjà été étudiées aujourd'hui, autoriser une 2e session pour une matière majeure ENCORE ACTIVE
         if (!bestCandidate) {
           bestCandidate = subjectPool
             .filter(item => {
               const daysToExam = getDaysRemainingFrom(item.subject.examDate, sessionDate);
+              // RÈGLE STRICTE : INTERDICTION ABSOLUE de réviser une matière dont l'épreuve est déjà passée
+              if (daysToExam !== null && daysToExam < 0) {
+                return false;
+              }
               // Ne jamais réviser après l'épreuve le jour J
               if (daysToExam === 0) {
                 if (item.subject.examTime) {
                   return slotCurrentStart < parseTimeToMinutes(item.subject.examTime);
                 }
                 return slotCurrentStart < 720;
-              }
-              // Ne pas insister sur une épreuve passée
-              if (daysToExam !== null && daysToExam < 0 && item.scheduledCount >= 2) {
-                return false;
               }
               return true;
             })
@@ -342,6 +334,7 @@ export function generateOptimizedStudyPlan(
 
         const sessionType = sessionTypeCycle[bestCandidate.scheduledCount % sessionTypeCycle.length];
         const daysUntilExamOnDate = getDaysRemainingFrom(subject.examDate, sessionDate);
+        const isExamApproaching = daysUntilExamOnDate !== null && daysUntilExamOnDate >= 0 && daysUntilExamOnDate <= 14;
 
         // Stratégie d'espacement active pour cette session (Mono-méthode ou Combinaison Triple KONAN PRO)
         let sessionPacing = pacingStrategy;
@@ -380,6 +373,24 @@ export function generateOptimizedStudyPlan(
 
           sessionDuration = sessionPacing.focusBlockDuration;
           sessionBreak = sessionPacing.breakBlockDuration;
+        }
+
+        // 🧠 CALIBRAGE INTELLIGENT DE LA DURÉE POUR LES EXAMENS ET DEVOIRS (Règle utilisateur) :
+        // Soit J le jour actuel, épreuve à J+X :
+        // - J à J+3 (échéance dans 3 à 5+ jours) : 45 min de révision approfondie et entraînement aux exercices
+        // - J+3 à J+4 (échéance dans 1 à 2 jours, veille d'épreuve) : 25 min de synthèse ciblée et révision flash
+        // - Jour J (0 jour avant épreuve) : 20 min de réveil flash des formules avant l'épreuve
+        if (isExamApproaching) {
+          if (daysUntilExamOnDate >= 3) {
+            sessionDuration = 45;
+            sessionBreak = Math.max(sessionBreak, 10);
+          } else if (daysUntilExamOnDate === 1 || daysUntilExamOnDate === 2) {
+            sessionDuration = 25;
+            sessionBreak = Math.max(sessionBreak, 5);
+          } else if (daysUntilExamOnDate === 0) {
+            sessionDuration = 20;
+            sessionBreak = 5;
+          }
         }
 
         // Titres et descriptions contextualisés selon la méthode d'étude retenue
@@ -433,19 +444,15 @@ export function generateOptimizedStudyPlan(
         }
 
         const startMin = slotCurrentStart;
-        const endMin = Math.min(startMin + sessionDuration, slot.end);
-        const actualDuration = endMin - startMin;
+        const availableInSlot = slot.end - startMin;
+        const actualDuration = Math.min(sessionDuration, Math.max(20, availableInSlot));
+        const endMin = startMin + actualDuration;
 
-        // Détermination intelligente de l'imminence : UNIQUEMENT si l'épreuve est à venir (J-0 à J-14)
-        // STRICTEMENT IMPOSSIBLE si l'épreuve est déjà passée (daysUntilExamOnDate < 0) !
-        const isExamApproaching = daysUntilExamOnDate !== null && daysUntilExamOnDate >= 0 && daysUntilExamOnDate <= 14;
         const examLabel = subject.examType === 'devoir' ? 'Devoir' : subject.examType === 'rattrapage' ? 'Rattrapage' : 'Examen';
 
         let priority: 'urgent' | 'high' | 'medium' | 'maintenance' = 'medium';
         if (isExamApproaching && daysUntilExamOnDate <= 7) {
           priority = 'urgent';
-        } else if (daysUntilExamOnDate !== null && daysUntilExamOnDate < 0) {
-          priority = 'maintenance'; // L'épreuve est passée, simple maintien tranquille
         } else if (subject.difficulty >= 4 || subject.coefficient >= 5) {
           priority = 'high';
         } else if (subject.difficulty <= 2) {
@@ -470,11 +477,11 @@ export function generateOptimizedStudyPlan(
               'Respiration et stabilisation mentale avant de composer',
               'Vérification du matériel et lucidité maximale',
             ];
-          } else if (daysUntilExamOnDate === 1) {
+          } else if (daysUntilExamOnDate === 1 || daysUntilExamOnDate === 2) {
             finalTitle = subject.examType === 'devoir'
-              ? `Préparation Devoir (J-1) : ${displaySubjectName} - Synthèse`
-              : `🔥 Ultime Révision Examen (J-1) : ${displaySubjectName} - Synthèse`;
-            finalDesc = `Séance prioritaire veille de votre ${examLabel} de ${displaySubjectName}. Réactivation des points clés et repos cérébral anticipé.`;
+              ? `Synthèse Devoir (25m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`
+              : `🔥 Ultime Révision (25m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`;
+            finalDesc = `Veille d'épreuve : séance de synthèse ciblée de 25 minutes sur ${displaySubjectName}. Réactivation des points clés et repos cérébral sans surchauffe.`;
             finalObjectives = [
               `Révision flash des formules et concepts capitaux de ${displaySubjectName}`,
               'Auto-évaluation à blanc sur 2 exercices types sans notes',
@@ -482,9 +489,9 @@ export function generateOptimizedStudyPlan(
             ];
           } else if (daysUntilExamOnDate <= 5) {
             finalTitle = subject.examType === 'devoir'
-              ? `Préparation Devoir (J-${daysUntilExamOnDate}) : ${displaySubjectName}`
-              : `⚡ Prépa Intensive ${examLabel} (J-${daysUntilExamOnDate}) : ${displaySubjectName}`;
-            finalDesc = `Échéance imminente : votre ${examLabel} est dans ${daysUntilExamOnDate} jours. Focalisation sur ${topicName} et sujets d'épreuves.`;
+              ? `Préparation Devoir (45m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`
+              : `⚡ Prépa Intensive ${examLabel} (45m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`;
+            finalDesc = `Échéance à J-${daysUntilExamOnDate} : session approfondie de 45 minutes sur ${topicName} et entraînement aux exercices types.`;
             finalObjectives = [
               `Focalisation sur les chapitres à fort coefficient : ${topicName}`,
               'Simulation d\'épreuves et entraînement chronométré',
@@ -493,9 +500,9 @@ export function generateOptimizedStudyPlan(
           } else {
             // J-6 à J-14
             finalTitle = subject.examType === 'devoir'
-              ? `Révision Devoir (J-${daysUntilExamOnDate}) : ${displaySubjectName} - ${topicName}`
-              : `Révision Approfondie Examen (J-${daysUntilExamOnDate}) : ${displaySubjectName} - ${topicName}`;
-            finalDesc = `Anticipation stratégique : consolidation approfondie des chapitres avant l'épreuve.`;
+              ? `Révision Devoir (45m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`
+              : `Révision Approfondie Examen (45m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`;
+            finalDesc = `Anticipation stratégique : consolidation approfondie de 45 minutes avant l'épreuve.`;
             finalObjectives = [
               `Maîtrise complète du chapitre : ${topicName}`,
               'Fiche synthèse et résolution des cas complexes',
