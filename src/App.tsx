@@ -22,7 +22,7 @@ import {
   signOutReal, 
   listenToUserCloudState 
 } from './lib/firebase';
-import { evaluateDailyCatchup, resetDailyRescheduling } from './services/sessionRescheduler';
+import { evaluateDailyCatchup } from './services/sessionRescheduler';
 import type { 
   ActiveAppView, 
   Subject, 
@@ -44,7 +44,14 @@ import { ProFeatureModal } from './components/common/ProFeatureModal';
 import { GoogleCalendarSyncModal } from './components/common/GoogleCalendarSyncModal';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
+import { DuolingoCompanionNotification } from './components/common/DuolingoCompanionNotification';
 import { downloadStudyPlanICS } from './services/googleCalendarService';
+import { 
+  type DuolingoNudgePayload, 
+  generateDuolingoCompanionMessage, 
+  triggerNativeWebNotification 
+} from './services/companionNotificationService';
+import { getTodayDayOfWeek, getTodayDateString } from './services/sessionRescheduler';
 
 // Views
 import { LandingHero } from './features/landing/LandingHero';
@@ -62,6 +69,7 @@ export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
   const [activeView, setActiveView] = useState<ActiveAppView>('landing');
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
+  const [duolingoNudge, setDuolingoNudge] = useState<DuolingoNudgePayload | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
@@ -122,17 +130,66 @@ export function App() {
         const { updatedSessions, rescheduledCount, restoredCount, rescheduledSessions } = evaluateDailyCatchup(
           prev.studySessions,
           prev.classSlots,
-          prev.preferences
+          prev.preferences,
+          new Date(),
+          prev.subjects
         );
 
         if (rescheduledCount > 0) {
           const signature = rescheduledSessions.map(s => `${s.id}-${s.startTime}`).sort().join('|');
           if (signature !== lastRescheduledSignature.current) {
             lastRescheduledSignature.current = signature;
-            const detailMsg = rescheduledSessions.length === 1
-              ? `🔄 Planning réorganisé : "${rescheduledSessions[0].title}" a été replacée à ${rescheduledSessions[0].startTime} ce soir pour rattrapage.`
-              : `🔄 Planning réorganisé : ${rescheduledSessions.length} sessions non validées replacées ce soir pour rattrapage.`;
-            showToast(detailMsg);
+
+            const todayDateStr = getTodayDateString();
+            const todayDayOfWeek = getTodayDayOfWeek();
+
+            // Total des séances en rattrapage aujourd'hui
+            const missedTodaySessions = updatedSessions.filter(
+              s => s.isRescheduledToday && s.rescheduledDate === todayDateStr
+            );
+            const missedCount = missedTodaySessions.length;
+
+            // Matière manquée
+            const lastMissed = rescheduledSessions[rescheduledSessions.length - 1];
+            const missedSub = prev.subjects.find(s => s.id === lastMissed.subjectId);
+            const missedSubName = missedSub?.name || lastMissed.title;
+
+            // Prochaine séance aujourd'hui
+            const upcomingTodaySessions = updatedSessions
+              .filter(s => s.dayOfWeek === todayDayOfWeek && !s.completed)
+              .sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+            const nextSession = upcomingTodaySessions[0] || lastMissed;
+            const nextSub = prev.subjects.find(s => s.id === nextSession.subjectId);
+            const nextSubName = nextSub?.name || nextSession.title;
+            const newTime = lastMissed.startTime;
+
+            // Génération du message complice style Duolingo (ton motivateur si >= 2 sessions)
+            const companionMessage = generateDuolingoCompanionMessage(
+              missedCount,
+              missedSubName,
+              nextSubName,
+              newTime
+            );
+
+            // Alerte compagnon in-app (HORS AGENDA)
+            setDuolingoNudge({
+              id: `catchup-${Date.now()}`,
+              missedCount,
+              missedSubject: missedSubName,
+              nextSubject: nextSubName,
+              rescheduledTime: newTime,
+              message: companionMessage,
+              isUrgent: missedCount >= 2,
+              nextSessionId: nextSession.id,
+              timestamp: Date.now(),
+            });
+
+            // Notification système native du navigateur (HORS AGENDA)
+            const notifTitle = missedCount >= 2
+              ? `🔥 KONAN • Alerte motivation (${missedCount} séances reportées)`
+              : '🦉 KONAN • Ton compagnon complice';
+            triggerNativeWebNotification(notifTitle, companionMessage);
           }
           return {
             ...prev,
@@ -168,15 +225,35 @@ export function App() {
     };
   }, [state.studySessions.length, state.classSlots.length, activeView]);
 
-  const handleResetDailyCatchup = () => {
-    setState(prev => {
-      const restored = resetDailyRescheduling(prev.studySessions);
-      return {
-        ...prev,
-        studySessions: restored,
-      };
+  /**
+   * Aperçu/Test de la notification complice Duolingo :
+   * Permet d'expérimenter le message d'encouragement complice (1 séance) ou l'alerte motivatrice (2 séances).
+   */
+  const handleTestDuolingoNudge = (count: number = 1) => {
+    const todayDayOfWeek = getTodayDayOfWeek();
+    const todaySessions = state.studySessions.filter(s => s.dayOfWeek === todayDayOfWeek);
+    const targetSession = todaySessions[0] || state.studySessions[0];
+    const subName = state.subjects.find(s => s.id === targetSession?.subjectId)?.name || 'Mathématiques';
+    const nextSub = state.subjects.find(s => s.id !== targetSession?.subjectId)?.name || 'Physique-Chimie';
+    const newTime = '20:00';
+
+    const msg = generateDuolingoCompanionMessage(count, subName, nextSub, newTime);
+    setDuolingoNudge({
+      id: `test-nudge-${Date.now()}`,
+      missedCount: count,
+      missedSubject: subName,
+      nextSubject: nextSub,
+      rescheduledTime: newTime,
+      message: msg,
+      isUrgent: count >= 2,
+      nextSessionId: targetSession?.id,
+      timestamp: Date.now(),
     });
-    showToast('🔄 Planning standard d’aujourd’hui rétabli.');
+
+    const notifTitle = count >= 2 
+      ? `🔥 KONAN • Alerte motivation (${count} séances reportées)` 
+      : '🦉 KONAN • Ton compagnon complice';
+    triggerNativeWebNotification(notifTitle, msg);
   };
 
   // Listen to Firebase auth state changes on mount and sync with Cloud Firestore
@@ -1086,9 +1163,9 @@ export function App() {
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
               }}
-              onResetDailyCatchup={handleResetDailyCatchup}
               cycleCompletedDate={state.cycleCompletedDate}
               onStartNewCycleEarly={handleStartNewCycleEarly}
+              onTestCompanionNudge={handleTestDuolingoNudge}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -1183,7 +1260,6 @@ export function App() {
               onUpdatePreferences={handleUpdatePreferences}
               onViewPricing={handleViewPricing}
               onUpgradeToPro={() => handleSelectPlan('pro')}
-              onResetDailyCatchup={handleResetDailyCatchup}
               cycleCompletedDate={state.cycleCompletedDate}
               onStartNewCycleEarly={handleStartNewCycleEarly}
             />
@@ -1312,6 +1388,27 @@ export function App() {
         studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
         totalPlannedMinutes={state.studySessions.reduce((acc, s) => acc + s.durationMinutes, 0)}
         totalSessionsCount={state.studySessions.length}
+      />
+
+      {/* Notification Compagnon Complice (Style Duolingo - HORS AGENDA) */}
+      <DuolingoCompanionNotification
+        nudge={duolingoNudge}
+        onDismiss={() => setDuolingoNudge(null)}
+        onStartFocus={(sessionId) => {
+          setDuolingoNudge(null);
+          const target = sessionId 
+            ? state.studySessions.find(s => s.id === sessionId)
+            : state.studySessions.find(s => s.isRescheduledToday && !s.completed);
+          if (target) {
+            handleStartFocusSession(target);
+          } else {
+            setActiveView('focus');
+          }
+        }}
+        onNavigateToPlanner={() => {
+          setDuolingoNudge(null);
+          setActiveView('planner');
+        }}
       />
 
       {/* Floating Notification Toast (Full multi-line sentence, zero truncation) */}

@@ -210,7 +210,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                 </div>
                 {isCatchupMode && (
                   <span className="px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-[11px]">
-                    Rattrapage du créneau {session?.originalStartTime || 'initial'}
+                    Séance de rattrapage • {currentSubject?.name || 'Matière'}
                   </span>
                 )}
               </div>
@@ -227,7 +227,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                     <span>Mode Spécial Rattrapage Activé</span>
                   </div>
                   <p className="text-[11px] text-slate-300 leading-relaxed">
-                    Vous rattrapez votre créneau de <strong className="text-amber-200">{session?.originalStartTime || 'ce matin'}</strong>. Chaque minute vous rapproche de la maîtrise sans accumuler de retard !
+                    Vous rattrapez votre séance de <strong className="text-amber-200">{currentSubject?.name || 'révision'}</strong>. Chaque minute vous rapproche de la maîtrise sans accumuler de retard !
                   </p>
                 </div>
               )}
@@ -353,7 +353,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
             </h2>
             <p className="text-xs sm:text-sm text-slate-400">
               {isCatchupMode 
-                ? `Votre séance initialement prévue à ${session?.originalStartTime || 'ce matin'} a été officiellement rattrapée et enregistrée.`
+                ? `Votre séance de ${currentSubject?.name || 'révision'} a été officiellement rattrapée et enregistrée.`
                 : "Votre temps d'étude effectif a été sauvegardé en temps réel."}
             </p>
           </div>

@@ -238,7 +238,8 @@ export function evaluateDailyCatchup(
   sessions: StudySession[],
   classes: ClassSlot[],
   preferences: StudyPreferences,
-  currentDate: Date = new Date()
+  currentDate: Date = new Date(),
+  subjects: Array<{ id: string; name: string }> = []
 ): RescheduleResult {
   const todayDayOfWeek = getTodayDayOfWeek(currentDate);
   const todayDateStr = getTodayDateString(currentDate);
@@ -287,6 +288,7 @@ export function evaluateDailyCatchup(
         // Enregistrer l'horaire d'origine uniquement si la session n'avait pas déjà été déplacée
         const originalStart = session.originalStartTime || session.startTime;
         const originalEnd = session.originalEndTime || session.endTime;
+        const subjectName = subjects.find(sub => sub.id === session.subjectId)?.name || session.title;
 
         const sessionIndex = updatedSessions.findIndex(s => s.id === session.id);
         if (sessionIndex !== -1) {
@@ -299,7 +301,7 @@ export function evaluateDailyCatchup(
             originalStartTime: originalStart,
             originalEndTime: originalEnd,
             rescheduledDate: todayDateStr,
-            rescheduledReason: `Créneau de ${originalStart} non validé. Replacée automatiquement à ${freeSlot.startTime} ce soir pour rattrapage.`,
+            rescheduledReason: `Séance de ${subjectName} non validée. Replacée à ${freeSlot.startTime} ce soir pour rattrapage sans stress.`,
           };
 
           updatedSessions[sessionIndex] = adaptedSession;

@@ -49,7 +49,6 @@ export interface PlannerViewProps {
   planTier?: 'free' | 'pro' | 'plus';
   onViewPricing?: () => void;
   onUpgradeToPro?: () => void;
-  onResetDailyCatchup?: () => void;
   cycleCompletedDate?: string;
   onStartNewCycleEarly?: () => void;
 }
@@ -67,7 +66,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   planTier = 'free',
   onViewPricing,
   onUpgradeToPro,
-  onResetDailyCatchup,
   cycleCompletedDate,
   onStartNewCycleEarly,
 }) => {
@@ -321,7 +319,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
               <Sparkles className="w-4 h-4 text-amber-400" />
             </div>
-            <div className="space-y-1 min-w-0">
+            <div className="space-y-1.5 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-bold text-amber-300 uppercase tracking-wide text-[11px]">
                   🔄 Réaménagement de rattrapage actif ({studySessions.filter(s => s.isRescheduledToday).length})
@@ -330,9 +328,24 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                   Aujourd'hui uniquement
                 </span>
               </div>
-              <p className="text-slate-300 text-xs leading-relaxed">
-                Une ou plusieurs sessions manquées plus tôt ont été replacées ce soir aux moments où vous êtes libre. Ce réaménagement est éphémère et n'altère pas vos semaines futures.
-              </p>
+              <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                <span className="text-slate-400 font-semibold">Matière(s) oubliée(s) :</span>
+                {(() => {
+                  const rescheduledList = studySessions.filter(s => s.isRescheduledToday && !s.completed);
+                  const missedNames = Array.from(new Set(rescheduledList.map(s => {
+                    const sb = subjects.find(sub => sub.id === s.subjectId);
+                    return sb?.name || s.title;
+                  })));
+                  return missedNames.map(name => (
+                    <span key={name} className="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold text-[11px] flex items-center gap-1">
+                      <span>⚠️</span> {name}
+                    </span>
+                  ));
+                })()}
+                <span className="text-amber-300 font-medium text-[11px] ml-1">
+                  ➔ Replacée(s) ce soir pour rattraper sans stress
+                </span>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
@@ -350,15 +363,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 </Button>
               ) : null;
             })()}
-            {onResetDailyCatchup && (
-              <button
-                onClick={onResetDailyCatchup}
-                className="px-2.5 py-1.5 rounded-lg bg-slate-850 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-[10px] font-bold shrink-0 cursor-pointer transition-colors"
-                title="Rétablir les horaires initiaux"
-              >
-                Rétablir
-              </button>
-            )}
           </div>
         </div>
       )}
@@ -477,7 +481,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       )}
                       {session.isRescheduledToday && (
                         <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold" title={session.rescheduledReason}>
-                          🔄 Rattrapage (Init. {session.originalStartTime})
+                          🔄 Reportée ce soir ({subject.name})
                         </Badge>
                       )}
                       {session.pacingMethod && (

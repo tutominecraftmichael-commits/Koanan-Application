@@ -46,11 +46,11 @@ export interface DashboardOverviewProps {
   onOpenPresetModal?: () => void;
   isDemoMode?: boolean;
   planTier?: 'free' | 'pro' | 'plus';
-  onResetDailyCatchup?: () => void;
   onViewPricing?: () => void;
   onUpgradeToPro?: () => void;
   cycleCompletedDate?: string;
   onStartNewCycleEarly?: () => void;
+  onTestCompanionNudge?: (count: number) => void;
 }
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
@@ -66,11 +66,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onOpenPresetModal,
   isDemoMode = false,
   planTier = 'free',
-  onResetDailyCatchup,
   onViewPricing,
   onUpgradeToPro,
   cycleCompletedDate,
   onStartNewCycleEarly,
+  onTestCompanionNudge,
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -455,43 +455,63 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         >
                           ⚡ Valider le Rattrapage
                         </Button>
-                        {onResetDailyCatchup && (
-                          <button
-                            onClick={onResetDailyCatchup}
-                            className="px-2.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold shrink-0 cursor-pointer transition-colors"
-                            title="Rétablir les horaires initiaux de base"
-                          >
-                            Horaires de base
-                          </button>
+                        {onTestCompanionNudge && (
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              onClick={() => onTestCompanionNudge(1)}
+                              className="px-2.5 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 text-[11px] font-bold cursor-pointer transition-colors flex items-center gap-1"
+                              title="Tester la notification complice Duolingo (1 séance manquée)"
+                            >
+                              <span>🦉</span>
+                              <span>Notif. complice</span>
+                            </button>
+                            <button
+                              onClick={() => onTestCompanionNudge(2)}
+                              className="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-[11px] font-bold cursor-pointer transition-colors flex items-center gap-1"
+                              title="Tester l'alerte motivation Duolingo (2 séances manquées)"
+                            >
+                              <span>🔥</span>
+                              <span>Alerte 2 séances</span>
+                            </button>
+                          </div>
                         )}
                       </div>
                     </div>
 
-                    {/* DÉTAIL CLAIR DE CE QUI N'A PAS ÉTÉ VALIDÉ */}
+                    {/* DÉTAIL CLAIR DES MATIÈRES OUBLIÉES ET REPORTÉES CE SOIR */}
                     <div className="space-y-1.5 pt-2 border-t border-slate-800/80">
                       <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                        Détail des séances à rattraper :
+                        Matières oubliées réaménagées ce soir :
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {rescheduledTodaySessions.map(s => {
+                          const missedSub = subjects.find(sub => sub.id === s.subjectId);
                           return (
                             <div
                               key={s.id}
-                              className="p-2.5 rounded-xl bg-slate-950/60 border border-amber-500/30 flex items-center justify-between gap-2 text-xs"
+                              className="p-2.5 rounded-xl bg-slate-950/70 border border-amber-500/30 flex items-center justify-between gap-2 text-xs shadow-sm"
                             >
-                              <div className="min-w-0 flex-1">
-                                <p className="font-bold text-white truncate">{s.title}</p>
-                                <p className="text-[11px] text-slate-400">
-                                  Horaire initial : <span className="line-through text-rose-400 font-mono font-bold">{s.originalStartTime || 'matin'}</span>
-                                  <span className="text-amber-300 font-mono font-bold ml-1.5">➔ Replacée à {s.startTime}</span>
+                              <div className="min-w-0 flex-1 space-y-1">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <span className="text-[10px] uppercase font-extrabold text-rose-300 px-1.5 py-0.5 rounded bg-rose-500/20 border border-rose-500/30">
+                                    Oubliée
+                                  </span>
+                                  <p className="font-extrabold text-white truncate text-xs">{missedSub?.name || s.title}</p>
+                                </div>
+                                <p className="text-[11px] text-amber-300 flex items-center gap-1 font-medium">
+                                  <span>⏰ Reportée ce soir à</span>
+                                  <span className="font-mono font-bold text-amber-200 bg-amber-500/20 px-1.5 py-0.2 rounded border border-amber-500/30">
+                                    {s.startTime}
+                                  </span>
+                                  <span className="text-slate-400 text-[10px]">({s.durationMinutes} min)</span>
                                 </p>
                               </div>
                               <button
                                 onClick={() => onToggleSessionComplete(s.id)}
-                                className="p-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 cursor-pointer shrink-0 transition-colors"
+                                className="p-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 hover:text-white cursor-pointer shrink-0 transition-colors"
                                 title="Valider cette séance de rattrapage"
                               >
-                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                <CheckCircle2 className="w-4 h-4" />
                               </button>
                             </div>
                           );
@@ -553,7 +573,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             )}
                             {isRescheduled && (
                               <Badge variant="amber" size="sm" className="text-[10px] px-2 py-0.5 font-bold animate-pulse" title={session.rescheduledReason}>
-                                🔄 Rattrapage (Init. {session.originalStartTime})
+                                🔄 Reportée ce soir ({sub?.name || 'Rattrapage'})
                               </Badge>
                             )}
                             {session.pacingMethod && (
