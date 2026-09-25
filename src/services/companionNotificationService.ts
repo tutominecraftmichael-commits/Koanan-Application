@@ -1,26 +1,17 @@
 /**
- * Service de Notifications Compagnon Complice (Style Duolingo) - KONAN AI
+ * Service de Notifications Téléphone pour KONAN AI
  * 
- * Envoie des messages courts, directs, bienveillants et motivants lorsque l'utilisateur
- * manque une session d'étude. 
+ * Envoie des messages directs et motivants sur le téléphone de l'étudiant
+ * dès qu'une séance est manquée et reportée.
  * 
- * RÈGLE ABSOLUE : Les messages ne sont JAMAIS envoyés dans Google Agenda / Agenda.
- * Ils sont gérés exclusivement in-app et via l'API Web Notification du navigateur.
+ * RÈGLES CRUCIALES :
+ * 1. Les notifications sont envoyées au TÉLÉPHONE (via l'API Web Notification du système),
+ *    et NON affichées sous forme de pop-up encombrante dans l'interface de l'application.
+ * 2. L'application demande l'autorisation à l'utilisateur pour autoriser les alertes sur son mobile.
+ * 3. AUCUN message n'est envoyé dans l'agenda / calendrier Google.
  */
 
-export interface DuolingoNudgePayload {
-  id: string;
-  missedCount: number;
-  missedSubject: string;
-  nextSubject: string;
-  rescheduledTime: string;
-  message: string;
-  isUrgent: boolean;
-  nextSessionId?: string;
-  timestamp: number;
-}
-
-// Templates pour 1 session manquée (ton complice, zéro culpabilité, compagnon d'étude)
+// Templates pour 1 session manquée (ton complice, déculpabilisant)
 const SINGLE_MISSED_TEMPLATES: Array<(missedSubject: string, nextSubject: string, newTime: string) => string> = [
   // Le rappel pratique :
   (_missed, nextSubject, newTime) =>
@@ -31,45 +22,37 @@ const SINGLE_MISSED_TEMPLATES: Array<(missedSubject: string, nextSubject: string
     `📚 Zéro pression : j'ai réajusté ton créneau à ${newTime}. Prends 5 petites minutes pour survoler ${nextSubject} avec moi ! 💙`,
 
   // Le réflexe d'étude :
-  (missedSubject, nextSubject, newTime) =>
-    `🔔 Ta session de ${missedSubject} a sauté, mais je l'ai déjà replacée à ${newTime}. Viens valider ${nextSubject} avant la fin de la journée ! 🎯`,
+  (_missed, nextSubject, newTime) =>
+    `🔔 Ta session précédente a sauté, mais je l'ai déjà replacée à ${newTime}. Viens valider ${nextSubject} avant la fin de la journée ! 🎯`,
 
   // Le coup de pouce anti-flemme :
   (_missed, nextSubject, _newTime) =>
     `👀 Je garde ton planning à jour, pas de souci ! Fais juste un petit exercice sur ${nextSubject} et on est bons pour aujourd'hui. 👊`,
-
-  // Variante bonus complice :
-  (missedSubject, nextSubject, newTime) =>
-    `⚡ Pas d'inquiétude pour ${missedSubject}, c'est reporté à ${newTime} ! Fais un mini-sprint de 5 min sur ${nextSubject} pour garder le rythme ! ✨`,
 ];
 
-// Templates pour 2 sessions ou plus manquées (ton plus motivateur, brise-l'inertie, protection de la flamme)
+// Templates pour 2 sessions ou plus manquées (ton motivateur renforcé, coup de boost)
 const MULTI_MISSED_TEMPLATES: Array<(missedSubject: string, nextSubject: string, newTime: string, count: number) => string> = [
-  // L'appel au sursaut d'énergie :
+  // Le sursaut de motivation :
   (_missed, nextSubject, newTime, count) =>
     `🔥 Déjà ${count} séances manquées aujourd'hui : on ne laisse pas le retard s'accumuler ! Ton créneau t'attend à ${newTime}. Fais au moins 15 minutes sur ${nextSubject} maintenant pour protéger ta flamme d'assiduité ! 💪`,
 
-  // Le réveil du champion :
+  // L'appel à l'action :
   (_missed, nextSubject, newTime, count) =>
     `🚨 Attention champion : ${count} sessions ont sauté aujourd'hui. Je les ai replacées à ${newTime}, mais c'est le moment de réagir ! Viens valider ${nextSubject} pour reprendre le contrôle immédiat. Tu en es capable ! ⚡`,
 
-  // Le bouclier anti-décrochage :
-  (missedSubject, nextSubject, newTime, _count) =>
-    `🛡️ Alerte assiduité : ${missedSubject} et ta session précédente ont glissé à ${newTime}. Ne laisse pas la flemme décider pour toi : donne 15 minutes sur ${nextSubject} et finis ta journée avec fierté ! 🎯`,
-
-  // Le coup de boost décisif :
+  // Le pacte anti-décrochage :
   (_missed, nextSubject, newTime, _count) =>
-    `💥 Stop à la flemme ! Les séances ont été reportées à ${newTime}. Viens faire une session express sur ${nextSubject} dès maintenant : prouve-toi que rien ne peut casser ta discipline ! 👊`,
+    `🛡️ Deuxième alerte du jour : ne laisse pas la flemme décider pour toi ! Planning réajusté à ${newTime}. Donne 15 minutes sur ${nextSubject} et finis ta journée avec fierté ! 🎯`,
 
-  // Le déclic gagnant :
-  (_missed, nextSubject, newTime, count) =>
-    `🌟 ${count} séances reportées à ${newTime} ! C'est exactement là que les meilleurs font la différence : 10 à 15 minutes sur ${nextSubject} pour relancer la machine ! 🚀`,
+  // L'énergie combative :
+  (_missed, nextSubject, newTime, _count) =>
+    `💥 Stop à la flemme ! 2 séances reportées à ${newTime}. Viens faire une session express sur ${nextSubject} dès maintenant : prouve-toi que rien ne peut casser ta discipline ! 👊`,
 ];
 
 let lastTemplateIndex = -1;
 
 /**
- * Génère un message complice style Duolingo adapté au nombre de séances manquées.
+ * Génère le texte de la notification envoyé au téléphone.
  */
 export function generateDuolingoCompanionMessage(
   missedCount: number,
@@ -80,7 +63,6 @@ export function generateDuolingoCompanionMessage(
   const isMulti = missedCount >= 2;
   const templates = isMulti ? MULTI_MISSED_TEMPLATES : SINGLE_MISSED_TEMPLATES;
 
-  // Sélection aléatoire non répétitive
   let nextIndex: number;
   do {
     nextIndex = Math.floor(Math.random() * templates.length);
@@ -94,70 +76,71 @@ export function generateDuolingoCompanionMessage(
 }
 
 /**
- * Joue un carillon doux et motivant style Duolingo via l'API Web Audio native.
- * Fonctionne 100% hors-ligne, sans asset audio externe, sans risque d'erreur 404.
+ * Indique si le navigateur / téléphone supporte l'API des notifications.
  */
-export function playDuolingoChime(isUrgent: boolean = false): void {
-  if (typeof window === 'undefined') return;
+export function isPhoneNotificationSupported(): boolean {
+  return typeof window !== 'undefined' && 'Notification' in window;
+}
 
+/**
+ * Récupère le statut actuel de permission de notification ('granted', 'denied', 'default').
+ */
+export function getPhoneNotificationPermission(): NotificationPermission {
+  if (!isPhoneNotificationSupported()) return 'denied';
+  return Notification.permission;
+}
+
+/**
+ * Demande formellement l'autorisation à l'utilisateur pour recevoir les notifications sur son téléphone.
+ */
+export async function requestPhoneNotificationPermission(): Promise<NotificationPermission> {
+  if (!isPhoneNotificationSupported()) return 'denied';
   try {
-    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
-
-    const ctx = new AudioContextClass();
-    if (ctx.state === 'suspended') {
-      ctx.resume().catch(() => {});
-    }
-
-    const now = ctx.currentTime;
-    // Notes douces : Do5 (523Hz), Mi5 (659Hz), Sol5 (784Hz) ou Do5 - Sol5 - Do6 si motivateur
-    const frequencies = isUrgent 
-      ? [523.25, 659.25, 783.99, 1046.50] 
-      : [523.25, 659.25, 783.99];
-
-    frequencies.forEach((freq, idx) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, now + idx * 0.09);
-
-      const startTime = now + idx * 0.09;
-      const duration = isUrgent ? 0.35 : 0.4;
-
-      gain.gain.setValueAtTime(0, startTime);
-      gain.gain.linearRampToValueAtTime(0.12, startTime + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(startTime);
-      osc.stop(startTime + duration);
-    });
-  } catch {
-    // Si l'audio n'est pas encore autorisé par interaction utilisateur, échec silencieux
+    const permission = await Notification.requestPermission();
+    return permission;
+  } catch (err) {
+    console.warn('Erreur demande permission notification téléphone:', err);
+    return 'denied';
   }
 }
 
 /**
- * Déclenche une notification système native du navigateur (Web Notification)
- * UNIQUEMENT si l'utilisateur a accordé l'autorisation.
- * AUCUN événement n'est créé dans Google Calendar.
+ * Envoie la notification directement au téléphone de l'utilisateur.
+ * Elle apparaît dans le volet de notification / l'écran de verrouillage du smartphone.
  */
-export function triggerNativeWebNotification(title: string, body: string): void {
-  if (typeof window === 'undefined' || !('Notification' in window)) return;
+export function sendPhoneNotification(title: string, body: string): void {
+  if (!isPhoneNotificationSupported()) return;
 
   if (Notification.permission === 'granted') {
     try {
-      new Notification(title, {
-        body,
-        icon: '/icon-192.png',
-        badge: '/icon-192.png',
-        tag: 'konan-companion-duolingo-nudge',
-      });
-    } catch {
-      // Ignorer silencieusement si bloqué en arrière-plan
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.ready.then(reg => {
+          reg.showNotification(title, {
+            body,
+            icon: '/icon-192.png',
+            badge: '/icon-192.png',
+            vibrate: [200, 100, 200],
+            tag: 'konan-rescheduled-session',
+            renotify: true,
+          } as NotificationOptions);
+        }).catch(() => {
+          new Notification(title, {
+            body,
+            icon: '/icon-192.png',
+            badge: '/icon-192.png',
+            tag: 'konan-rescheduled-session',
+          });
+        });
+      } else {
+        new Notification(title, {
+          body,
+          icon: '/icon-192.png',
+          badge: '/icon-192.png',
+          tag: 'konan-rescheduled-session',
+        });
+      }
+    } catch (err) {
+      console.warn('Erreur envoi notification téléphone:', err);
     }
   }
 }

@@ -328,24 +328,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                   Aujourd'hui uniquement
                 </span>
               </div>
-              <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                <span className="text-slate-400 font-semibold">Matière(s) oubliée(s) :</span>
-                {(() => {
-                  const rescheduledList = studySessions.filter(s => s.isRescheduledToday && !s.completed);
-                  const missedNames = Array.from(new Set(rescheduledList.map(s => {
-                    const sb = subjects.find(sub => sub.id === s.subjectId);
-                    return sb?.name || s.title;
-                  })));
-                  return missedNames.map(name => (
-                    <span key={name} className="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold text-[11px] flex items-center gap-1">
-                      <span>⚠️</span> {name}
-                    </span>
-                  ));
-                })()}
-                <span className="text-amber-300 font-medium text-[11px] ml-1">
-                  ➔ Replacée(s) ce soir pour rattraper sans stress
-                </span>
-              </div>
+              <p className="text-slate-300 text-xs leading-relaxed">
+                Vos séances non validées plus tôt ont été automatiquement décalées ce soir pour vous permettre de réviser sans accumuler de retard.
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
