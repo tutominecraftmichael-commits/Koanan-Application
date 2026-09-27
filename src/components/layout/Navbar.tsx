@@ -18,6 +18,7 @@ import {
 import type { ActiveAppView, UserAccount } from '../../types';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
+import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
 
 export interface NavbarProps {
@@ -232,6 +233,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </div>
                   )}
                 </div>
+
+                {/* Ambient Focus Audio Player for KONAN PLUS */}
+                {userAccount && userAccount.isLoggedIn && userAccount.planTier === 'plus' && (
+                  <FocusAudioPlayerWidget compact className="hidden lg:inline-flex mr-1" />
+                )}
 
                 {/* User / Google Profile Pill -> opens Settings Modal on click */}
                 {userAccount && userAccount.isLoggedIn ? (

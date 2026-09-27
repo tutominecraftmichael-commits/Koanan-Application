@@ -135,6 +135,8 @@ export interface StudyLog {
 
 export type PlanTier = 'free' | 'pro' | 'plus';
 
+export type AcademicGoal = 'target_12' | 'target_16' | 'major_promotion';
+
 export interface UserAccount {
   name: string;
   email: string;
@@ -146,6 +148,11 @@ export interface UserAccount {
   isLoggedIn: boolean;
   isDemo?: boolean;
   planTier?: PlanTier;
+  // KONAN PLUS additions
+  invitedEmails?: string[]; // Up to 4 invited members
+  academicGoal?: AcademicGoal; // 12, 16, or Major
+  coachingSessionsRemaining?: number; // 2 per week
+  lastCoachingDate?: string;
   lastSyncedAt: string;
 }
 

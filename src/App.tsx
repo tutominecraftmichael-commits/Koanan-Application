@@ -31,7 +31,8 @@ import type {
   StudyLog,
   StudyPreferences, 
   UserAccount,
-  Chronotype
+  Chronotype,
+  AcademicGoal
 } from './types';
 import { generateId } from './lib/utils';
 import { Sparkles, X } from 'lucide-react';
@@ -44,6 +45,10 @@ import { ProFeatureModal } from './components/common/ProFeatureModal';
 import { GoogleCalendarSyncModal } from './components/common/GoogleCalendarSyncModal';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
+import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
+import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
+import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelectorModal';
+import { CoachKonanOneOnOneModal } from './components/plus/CoachKonanOneOnOneModal';
 import { downloadStudyPlanICS } from './services/googleCalendarService';
 import { 
   generateDuolingoCompanionMessage, 
@@ -74,6 +79,10 @@ export function App() {
   const [isGoogleCalendarModalOpen, setIsGoogleCalendarModalOpen] = useState(false);
   const [googleCalendarReason, setGoogleCalendarReason] = useState<'pro_activated' | 'plan_applied' | null>(null);
   const [isUltimateCelebrationOpen, setIsUltimateCelebrationOpen] = useState(false);
+  const [isPlusActivationModalOpen, setIsPlusActivationModalOpen] = useState(false);
+  const [isPlusGroupModalOpen, setIsPlusGroupModalOpen] = useState(false);
+  const [isAcademicGoalModalOpen, setIsAcademicGoalModalOpen] = useState(false);
+  const [isCoachingModalOpen, setIsCoachingModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   /**
@@ -267,6 +276,10 @@ export function App() {
                     ...prev.userAccount,
                     planTier: cloudData.planTier || prev.planTier || 'free',
                     name: cloudData.studentName || prev.userAccount.name,
+                    invitedEmails: cloudData.invitedEmails || prev.userAccount.invitedEmails,
+                    academicGoal: cloudData.academicGoal || prev.userAccount.academicGoal,
+                    coachingSessionsRemaining: cloudData.coachingSessionsRemaining !== undefined ? cloudData.coachingSessionsRemaining : prev.userAccount.coachingSessionsRemaining,
+                    lastCoachingDate: cloudData.lastCoachingDate || prev.userAccount.lastCoachingDate,
                   } : undefined,
                 };
               });
@@ -486,6 +499,9 @@ export function App() {
           userAccount: state.userAccount ? {
             ...state.userAccount,
             planTier: 'plus',
+            academicGoal: state.userAccount.academicGoal || 'target_16',
+            coachingSessionsRemaining: state.userAccount.coachingSessionsRemaining ?? 2,
+            invitedEmails: state.userAccount.invitedEmails || [],
           } : undefined,
         };
 
@@ -502,6 +518,10 @@ export function App() {
           'pro_activated'
         );
 
+        // 👑 DUOLINGO-STYLE / ROYAL CELEBRATION MODAL FOR KONAN PLUS
+        setIsPlusActivationModalOpen(true);
+        soundFX.playVictoryCelebration();
+
         showToast('👑 Félicitations ! Le modèle KONAN PLUS est activé ! Invitez jusqu\'à 4 amis (4 comptes inclus) & profitez de l\'expérience complète.');
         if (activeView === 'landing' || activeView === 'auth') {
           setActiveView('dashboard');
@@ -512,6 +532,118 @@ export function App() {
       showToast(`⭐ Connectez-vous avec Google ou démarrez la démo pour activer le modèle ${planId === 'pro' ? 'KONAN PRO' : planId === 'plus' ? 'KONAN PLUS' : 'KONAN Gratuit'}.`);
       setActiveView('auth');
     }
+  };
+
+  /**
+   * Konan Plus: Manage 4 invited accounts
+   */
+  const handleUpdateInvitedEmails = (emails: string[]) => {
+    setState(prev => {
+      const nextUserAccount: UserAccount = prev.userAccount ? {
+        ...prev.userAccount,
+        invitedEmails: emails,
+        lastSyncedAt: new Date().toISOString(),
+      } : {
+        isLoggedIn: false,
+        name: prev.studentName || 'Étudiant',
+        email: '',
+        avatar: '',
+        googleId: '',
+        academicLevel: prev.academicLevel,
+        planTier: 'plus',
+        invitedEmails: emails,
+        lastSyncedAt: new Date().toISOString(),
+      };
+
+      const next: AppState = {
+        ...prev,
+        userAccount: nextUserAccount,
+      };
+
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, next);
+      }
+      return next;
+    });
+    showToast(`👥 Groupe KONAN PLUS mis à jour (${emails.length}/4 membres actifs).`);
+  };
+
+  /**
+   * Konan Plus: Change 1 of the 3 Academic Goals
+   */
+  const handleSelectAcademicGoal = (goal: AcademicGoal) => {
+    setState(prev => {
+      const nextUserAccount: UserAccount = prev.userAccount ? {
+        ...prev.userAccount,
+        academicGoal: goal,
+        lastSyncedAt: new Date().toISOString(),
+      } : {
+        isLoggedIn: false,
+        name: prev.studentName || 'Étudiant',
+        email: '',
+        avatar: '',
+        googleId: '',
+        academicLevel: prev.academicLevel,
+        planTier: 'plus',
+        academicGoal: goal,
+        lastSyncedAt: new Date().toISOString(),
+      };
+
+      const next: AppState = {
+        ...prev,
+        userAccount: nextUserAccount,
+      };
+
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, next);
+      }
+      return next;
+    });
+
+    const goalLabels: Record<AcademicGoal, string> = {
+      target_12: 'Validation Sereine (12/20)',
+      target_16: 'Mention Très Bien (16/20)',
+      major_promotion: 'Major de Promotion (Excellence)',
+    };
+    showToast(`🎯 Objectif académique activé : ${goalLabels[goal]} !`);
+  };
+
+  /**
+   * Konan Plus: Consume 1 coaching session (2/week)
+   */
+  const handleConsumeCoachingSession = () => {
+    setState(prev => {
+      const currentRemaining = prev.userAccount?.coachingSessionsRemaining ?? 2;
+      const nextRemaining = Math.max(0, currentRemaining - 1);
+      const nextUserAccount: UserAccount = prev.userAccount ? {
+        ...prev.userAccount,
+        coachingSessionsRemaining: nextRemaining,
+        lastCoachingDate: new Date().toISOString(),
+        lastSyncedAt: new Date().toISOString(),
+      } : {
+        isLoggedIn: false,
+        name: prev.studentName || 'Étudiant',
+        email: '',
+        avatar: '',
+        googleId: '',
+        academicLevel: prev.academicLevel,
+        planTier: 'plus',
+        coachingSessionsRemaining: nextRemaining,
+        lastCoachingDate: new Date().toISOString(),
+        lastSyncedAt: new Date().toISOString(),
+      };
+
+      const next: AppState = {
+        ...prev,
+        userAccount: nextUserAccount,
+      };
+
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, next);
+      }
+      return next;
+    });
+    showToast('🦉 Tête-à-tête validé ! Votre diagnostic et vos conseils sont appliqués.');
   };
 
   /**
@@ -553,7 +685,22 @@ export function App() {
     });
 
     setState(demo);
-    if (demo.planTier === 'pro' || demo.planTier === 'plus') {
+    if (demo.planTier === 'plus') {
+      if (demo.studySessions && demo.studySessions.length > 0) {
+        try {
+          downloadStudyPlanICS(
+            demo.studySessions,
+            demo.subjects,
+            'Alexandre Étudiant'
+          );
+        } catch (err) {
+          console.warn('ICS auto-download error:', err);
+        }
+      }
+      setIsPlusActivationModalOpen(true);
+      soundFX.playVictoryCelebration();
+      showToast('👑 Mode Démo KONAN PLUS : Accès complet aux 4 comptes, objectifs et coach Konan !');
+    } else if (demo.planTier === 'pro') {
       if (demo.studySessions && demo.studySessions.length > 0) {
         try {
           downloadStudyPlanICS(
@@ -1118,6 +1265,12 @@ export function App() {
               }}
               cycleCompletedDate={state.cycleCompletedDate}
               onStartNewCycleEarly={handleStartNewCycleEarly}
+              invitedEmails={state.userAccount?.invitedEmails || []}
+              academicGoal={state.userAccount?.academicGoal || 'target_16'}
+              coachingSessionsRemaining={state.userAccount?.coachingSessionsRemaining ?? 2}
+              onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
+              onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
+              onOpenCoachingModal={() => setIsCoachingModalOpen(true)}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -1302,6 +1455,12 @@ export function App() {
         onResetData={handleResetData}
         onSelectPlan={handleSelectPlan}
         onUpgradeToPro={() => handleSelectPlan('pro')}
+        invitedEmails={state.userAccount?.invitedEmails || []}
+        academicGoal={state.userAccount?.academicGoal || 'target_16'}
+        coachingSessionsRemaining={state.userAccount?.coachingSessionsRemaining ?? 2}
+        onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
+        onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
+        onOpenCoachingModal={() => setIsCoachingModalOpen(true)}
       />
 
       {/* Pro Upgrade Modal */}
@@ -1317,6 +1476,48 @@ export function App() {
         isOpen={isSuperProModalOpen}
         onClose={() => setIsSuperProModalOpen(false)}
         studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+      />
+
+      {/* 👑 Royal Celebration Modal for KONAN PLUS */}
+      <KonanPlusActivationModal
+        isOpen={isPlusActivationModalOpen}
+        onClose={() => setIsPlusActivationModalOpen(false)}
+        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
+        onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
+        onOpenCoachingModal={() => setIsCoachingModalOpen(true)}
+      />
+
+      {/* 👑 KONAN PLUS: 4 COMPTES INVITÉS / GROUPE MODAL */}
+      <KonanPlusGroupModal
+        isOpen={isPlusGroupModalOpen}
+        onClose={() => setIsPlusGroupModalOpen(false)}
+        invitedEmails={state.userAccount?.invitedEmails || []}
+        onUpdateInvitedEmails={handleUpdateInvitedEmails}
+        maxAccounts={4}
+        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+      />
+
+      {/* 👑 KONAN PLUS: 3 OBJECTIFS SCOLAIRES MODAL */}
+      <AcademicGoalSelectorModal
+        isOpen={isAcademicGoalModalOpen}
+        onClose={() => setIsAcademicGoalModalOpen(false)}
+        currentGoal={state.userAccount?.academicGoal || 'target_16'}
+        onSelectGoal={handleSelectAcademicGoal}
+        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+      />
+
+      {/* 👑 KONAN PLUS: TÊTE-À-TÊTE COACH KONAN (15 MIN) MODAL */}
+      <CoachKonanOneOnOneModal
+        isOpen={isCoachingModalOpen}
+        onClose={() => setIsCoachingModalOpen(false)}
+        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        academicLevel={state.academicLevel}
+        academicGoal={state.userAccount?.academicGoal || 'target_16'}
+        subjects={state.subjects}
+        studySessions={state.studySessions}
+        coachingSessionsRemaining={state.userAccount?.coachingSessionsRemaining ?? 2}
+        onConsumeSession={handleConsumeCoachingSession}
       />
 
       {/* Google Calendar Sync Modal (ALL DAYS) */}

@@ -4,7 +4,8 @@ import type {
   ClassSlot, 
   StudySession, 
   StudyPreferences, 
-  ActiveAppView
+  ActiveAppView,
+  AcademicGoal
 } from '../../types';
 import { DAYS_OF_WEEK } from '../../types';
 import { Button } from '../../components/ui/Button';
@@ -25,11 +26,15 @@ import {
   ChevronUp,
   BookOpen,
   Moon,
-  Zap
+  Zap,
+  Crown,
+  Users,
+  MessageSquare
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
+import { FocusAudioPlayerWidget } from '../../components/plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
 import type { SessionType } from '../../types';
 
@@ -50,6 +55,13 @@ export interface DashboardOverviewProps {
   onUpgradeToPro?: () => void;
   cycleCompletedDate?: string;
   onStartNewCycleEarly?: () => void;
+  // KONAN PLUS callbacks & state
+  invitedEmails?: string[];
+  academicGoal?: AcademicGoal;
+  coachingSessionsRemaining?: number;
+  onOpenGroupModal?: () => void;
+  onOpenGoalModal?: () => void;
+  onOpenCoachingModal?: () => void;
 }
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
@@ -69,6 +81,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onUpgradeToPro,
   cycleCompletedDate,
   onStartNewCycleEarly,
+  invitedEmails = [],
+  academicGoal = 'target_16',
+  coachingSessionsRemaining = 2,
+  onOpenGroupModal,
+  onOpenGoalModal,
+  onOpenCoachingModal,
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -253,6 +271,113 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           )}
         </div>
       </div>
+
+      {/* 🌟 ESPACE ÉLITE KONAN PLUS (Uniquement actif pour les abonnés Konan Plus) */}
+      {planTier === 'plus' && (
+        <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-indigo-950/70 via-slate-900 to-purple-950/60 border-2 border-indigo-500/40 shadow-2xl space-y-4 animate-in fade-in duration-300">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-indigo-500/30">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 shadow-md">
+                <Crown className="w-5 h-5 text-amber-300" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm sm:text-base font-black text-white">
+                    Votre Espace KONAN PLUS
+                  </h3>
+                  <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    ✓ Actif
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300">
+                  Accès complet débloqué pour vous et vos 4 amis invités.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <FocusAudioPlayerWidget compact />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {/* Widget 1 : 4 Comptes / Groupe */}
+            <div 
+              onClick={onOpenGroupModal}
+              className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-indigo-400/60 transition-all cursor-pointer interactive-card shadow-sm space-y-2"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5" />
+                  Groupe d'Étude
+                </span>
+                <span className="text-[11px] font-mono font-bold text-emerald-400">
+                  {invitedEmails.length}/4 invités
+                </span>
+              </div>
+              <p className="text-xs font-bold text-white">
+                {invitedEmails.length === 0 
+                  ? "Invitez vos 4 camarades via email" 
+                  : `${invitedEmails.length} ami(s) connecté(s) à votre formule`}
+              </p>
+              <p className="text-[11px] text-indigo-400 flex items-center gap-1 font-semibold">
+                <span>Gérer les 4 comptes</span>
+                <ArrowRight className="w-3 h-3" />
+              </p>
+            </div>
+
+            {/* Widget 2 : Objectif Scolaire */}
+            <div 
+              onClick={onOpenGoalModal}
+              className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-purple-400/60 transition-all cursor-pointer interactive-card shadow-sm space-y-2"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300 flex items-center gap-1.5">
+                  <Target className="w-3.5 h-3.5" />
+                  Objectif Scolaire
+                </span>
+                <span className="text-[11px] font-black text-amber-300">
+                  {academicGoal === 'major_promotion' ? 'Major' : academicGoal === 'target_12' ? '12/20' : '16/20'}
+                </span>
+              </div>
+              <p className="text-xs font-bold text-white truncate">
+                {academicGoal === 'major_promotion' 
+                  ? "Devenir Major de Promotion" 
+                  : academicGoal === 'target_12' 
+                  ? "Passer l'année à 12/20" 
+                  : "Passer avec 16/20"}
+              </p>
+              <p className="text-[11px] text-purple-400 flex items-center gap-1 font-semibold">
+                <span>Ajuster l'objectif</span>
+                <ArrowRight className="w-3 h-3" />
+              </p>
+            </div>
+
+            {/* Widget 3 : Tête-à-tête Coach */}
+            <div 
+              onClick={onOpenCoachingModal}
+              className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-amber-400/60 transition-all cursor-pointer interactive-card shadow-sm space-y-2"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  Coach Konan
+                </span>
+                <span className="text-[11px] font-bold text-amber-300">
+                  {coachingSessionsRemaining}/2 hebdo
+                </span>
+              </div>
+              <p className="text-xs font-bold text-white">
+                Tête-à-tête de 15 min dans votre EDT
+              </p>
+              <p className="text-[11px] text-amber-400 flex items-center gap-1 font-semibold">
+                <span>Lancer le débrief (15 min)</span>
+                <ArrowRight className="w-3 h-3" />
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* QUICK ACTIONS HUB */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">

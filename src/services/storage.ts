@@ -1,4 +1,4 @@
-import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier } from '../types';
+import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier, AcademicGoal } from '../types';
 import { ACADEMIC_PRESETS, DEFAULT_PREFERENCES } from '../lib/presets';
 import { generateId } from '../lib/utils';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
@@ -22,6 +22,11 @@ export interface AppState {
   streak?: UserStreak;
   planTier?: PlanTier;
   cycleCompletedDate?: string; // YYYY-MM-DD
+  // KONAN PLUS fields
+  invitedEmails?: string[]; // Up to 4 invited emails
+  academicGoal?: AcademicGoal; // 'target_12' | 'target_16' | 'major_promotion'
+  coachingSessionsRemaining?: number; // 2 per week
+  lastCoachingDate?: string;
 }
 
 /**
@@ -198,6 +203,10 @@ export function saveUserState(uid: string, state: AppState): void {
       logs: state.logs,
       completedOnboarding: state.completedOnboarding,
       userAccount: state.userAccount,
+      invitedEmails: state.invitedEmails,
+      academicGoal: state.academicGoal,
+      coachingSessionsRemaining: state.coachingSessionsRemaining,
+      lastCoachingDate: state.lastCoachingDate,
     }).catch(() => {});
   }
 }
@@ -243,10 +252,16 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         studySessions: mergedStudySessions,
         logs: Array.isArray(cloudData.logs) ? cloudData.logs : currentState.logs,
         cycleCompletedDate: cloudData.cycleCompletedDate !== undefined ? cloudData.cycleCompletedDate : currentState.cycleCompletedDate,
+        invitedEmails: Array.isArray(cloudData.invitedEmails) ? cloudData.invitedEmails : currentState.invitedEmails,
+        academicGoal: cloudData.academicGoal || currentState.academicGoal,
+        coachingSessionsRemaining: cloudData.coachingSessionsRemaining !== undefined ? cloudData.coachingSessionsRemaining : currentState.coachingSessionsRemaining,
+        lastCoachingDate: cloudData.lastCoachingDate || currentState.lastCoachingDate,
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
           planTier: cloudData.planTier || currentState.planTier || 'free',
           name: cloudData.studentName || currentState.userAccount.name,
+          invitedEmails: Array.isArray(cloudData.invitedEmails) ? cloudData.invitedEmails : currentState.userAccount.invitedEmails,
+          academicGoal: cloudData.academicGoal || currentState.userAccount.academicGoal,
         } : undefined,
       };
 

@@ -14,7 +14,8 @@ import {
   Save,
   Bell
 } from 'lucide-react';
-import type { UserAccount } from '../../types';
+import type { UserAccount, AcademicGoal } from '../../types';
+import { Crown, Users, Target, MessageSquare } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
 import { soundFX } from '../../lib/audioEffects';
@@ -53,6 +54,13 @@ interface SettingsModalProps {
   onResetData?: () => void;
   onSelectPlan?: (planId: 'free' | 'pro' | 'plus') => void;
   onUpgradeToPro?: () => void;
+  // PLUS features props:
+  invitedEmails?: string[];
+  academicGoal?: AcademicGoal;
+  coachingSessionsRemaining?: number;
+  onOpenGroupModal?: () => void;
+  onOpenGoalModal?: () => void;
+  onOpenCoachingModal?: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -67,8 +75,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onExportData,
   onImportData,
   onResetData,
-  onSelectPlan: _onSelectPlan,
+  onSelectPlan,
   onUpgradeToPro: _onUpgradeToPro,
+  invitedEmails = [],
+  academicGoal = 'target_16',
+  coachingSessionsRemaining = 2,
+  onOpenGroupModal,
+  onOpenGoalModal,
+  onOpenCoachingModal,
 }) => {
   const [lang] = useLanguage();
 
@@ -337,6 +351,125 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
               )}
             </div>
+          </div>
+
+          {/* SECTION 1.5: FORMULE & PRIVILÈGES KONAN PLUS */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <Crown className="w-3.5 h-3.5 text-amber-400" />
+                  Formule & Privilèges {userAccount?.planTier === 'plus' ? 'KONAN PLUS' : 'Abonnement'}
+                </span>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  {userAccount?.planTier === 'plus' 
+                    ? 'Accès complet au groupe de 4 invités, objectifs et coaching 1-sur-1.' 
+                    : 'Passez à la vitesse supérieure avec les fonctionnalités d\'élite.'}
+                </p>
+              </div>
+            </div>
+
+            {userAccount?.planTier === 'plus' ? (
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 via-indigo-950/40 to-slate-950 border border-amber-500/30 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                      <Crown className="w-4 h-4 text-amber-400" />
+                      Modèle KONAN PLUS Actif
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
+                      VIP
+                    </span>
+                  </div>
+                  <span className="text-xs font-bold text-amber-300 font-mono">2 500 F CFA/m</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {/* Groupe 4 comptes */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenGroupModal?.();
+                    }}
+                    className="p-3 rounded-xl bg-slate-900/90 hover:bg-slate-850 border border-indigo-500/30 hover:border-indigo-400 transition-all text-left flex items-center gap-3 cursor-pointer group"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <Users className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold text-white truncate">Groupe (4 comptes)</p>
+                      <p className="text-[10px] text-slate-400 truncate">{invitedEmails.length} / 4 invités actifs</p>
+                    </div>
+                  </button>
+
+                  {/* 3 Objectifs Scolaires */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenGoalModal?.();
+                    }}
+                    className="p-3 rounded-xl bg-slate-900/90 hover:bg-slate-850 border border-amber-500/30 hover:border-amber-400 transition-all text-left flex items-center gap-3 cursor-pointer group"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <Target className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold text-white truncate">Objectif Scolaire</p>
+                      <p className="text-[10px] text-amber-300 truncate font-semibold">
+                        {academicGoal === 'major_promotion' ? 'Major de Promo' : academicGoal === 'target_16' ? 'Objectif 16/20' : 'Objectif 12/20'}
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Tête-à-tête Coach Konan */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenCoachingModal?.();
+                    }}
+                    className="p-3 rounded-xl bg-slate-900/90 hover:bg-slate-850 border border-cyan-500/30 hover:border-cyan-400 transition-all text-left flex items-center gap-3 cursor-pointer group sm:col-span-2"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <MessageSquare className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold text-white">Tête-à-tête Coach Konan (15 min chrono)</p>
+                      <p className="text-[10px] text-slate-400">
+                        {coachingSessionsRemaining} séance{coachingSessionsRemaining > 1 ? 's' : ''} restante{coachingSessionsRemaining > 1 ? 's' : ''} cette semaine
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-purple-950/30 to-slate-950 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="space-y-1 text-center sm:text-left">
+                  <div className="flex items-center justify-center sm:justify-start gap-1.5">
+                    <Crown className="w-4 h-4 text-amber-400" />
+                    <span className="text-xs font-bold text-white">Découvrez KONAN PLUS</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    4 comptes invités inclus, 3 objectifs ciblés, coach privé 1-sur-1 & musiques de révision.
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="glow"
+                  size="sm"
+                  leftIcon={<Crown className="w-3.5 h-3.5 text-amber-400" />}
+                  onClick={() => {
+                    onClose();
+                    onSelectPlan?.('plus');
+                  }}
+                  className="whitespace-nowrap text-xs font-bold shrink-0 cursor-pointer"
+                >
+                  Passer à Konan Plus
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* SECTION 2: NOTIFICATIONS SUR VOTRE TÉLÉPHONE */}
