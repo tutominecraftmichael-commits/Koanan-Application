@@ -149,7 +149,9 @@ export interface UserAccount {
   isDemo?: boolean;
   planTier?: PlanTier;
   // KONAN PLUS additions
-  invitedEmails?: string[]; // Up to 4 invited members
+  konanId?: string; // Unique permanent ID (e.g. KN-948201)
+  invitedIds?: string[]; // Up to 4 invited members by ID
+  invitedEmails?: string[]; // Up to 4 invited members by email
   academicGoal?: AcademicGoal; // 12, 16, or Major
   coachingSessionsRemaining?: number; // 2 per week
   lastCoachingDate?: string;

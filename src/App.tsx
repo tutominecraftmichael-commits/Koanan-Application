@@ -22,6 +22,7 @@ import {
   signOutReal, 
   listenToUserCloudState 
 } from './lib/firebase';
+import { generateKonanId } from './lib/konanId';
 import { evaluateDailyCatchup } from './services/sessionRescheduler';
 import type { 
   ActiveAppView, 
@@ -493,15 +494,21 @@ export function App() {
           setActiveView('dashboard');
         }
       } else if (planId === 'plus') {
+        const studentKonanId = state.userAccount?.konanId || state.konanId || generateKonanId(state.userAccount?.googleId || state.userAccount?.email);
         const updated: AppState = {
           ...state,
           planTier: 'plus',
+          konanId: studentKonanId,
+          invitedIds: state.userAccount?.invitedIds || state.invitedIds || [],
+          invitedEmails: state.userAccount?.invitedEmails || state.invitedEmails || [],
           userAccount: state.userAccount ? {
             ...state.userAccount,
             planTier: 'plus',
+            konanId: studentKonanId,
             academicGoal: state.userAccount.academicGoal || 'target_16',
             coachingSessionsRemaining: state.userAccount.coachingSessionsRemaining ?? 2,
-            invitedEmails: state.userAccount.invitedEmails || [],
+            invitedIds: state.userAccount.invitedIds || state.invitedIds || [],
+            invitedEmails: state.userAccount.invitedEmails || state.invitedEmails || [],
           } : undefined,
         };
 
@@ -535,7 +542,42 @@ export function App() {
   };
 
   /**
-   * Konan Plus: Manage 4 invited accounts
+   * Konan Plus: Manage invited student IDs
+   */
+  const handleUpdateInvitedIds = (ids: string[]) => {
+    setState(prev => {
+      const nextUserAccount: UserAccount = prev.userAccount ? {
+        ...prev.userAccount,
+        invitedIds: ids,
+        lastSyncedAt: new Date().toISOString(),
+      } : {
+        isLoggedIn: false,
+        name: prev.studentName || 'Étudiant',
+        email: '',
+        avatar: '',
+        googleId: '',
+        academicLevel: prev.academicLevel,
+        planTier: 'plus',
+        invitedIds: ids,
+        lastSyncedAt: new Date().toISOString(),
+      };
+
+      const next: AppState = {
+        ...prev,
+        invitedIds: ids,
+        userAccount: nextUserAccount,
+      };
+
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, next);
+      }
+      return next;
+    });
+    showToast(`👥 Groupe KONAN PLUS : ${ids.length}/4 IDs rattachés avec succès.`);
+  };
+
+  /**
+   * Konan Plus: Manage 4 invited accounts (by email or ID)
    */
   const handleUpdateInvitedEmails = (emails: string[]) => {
     setState(prev => {
@@ -557,6 +599,7 @@ export function App() {
 
       const next: AppState = {
         ...prev,
+        invitedEmails: emails,
         userAccount: nextUserAccount,
       };
 
@@ -1265,7 +1308,9 @@ export function App() {
               }}
               cycleCompletedDate={state.cycleCompletedDate}
               onStartNewCycleEarly={handleStartNewCycleEarly}
-              invitedEmails={state.userAccount?.invitedEmails || []}
+              konanId={state.userAccount?.konanId || state.konanId || 'KN-849201'}
+              invitedIds={state.userAccount?.invitedIds || state.invitedIds || []}
+              invitedEmails={state.userAccount?.invitedEmails || state.invitedEmails || []}
               academicGoal={state.userAccount?.academicGoal || 'target_16'}
               coachingSessionsRemaining={state.userAccount?.coachingSessionsRemaining ?? 2}
               onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
@@ -1478,11 +1523,19 @@ export function App() {
         studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
       />
 
-      {/* 👑 Royal Celebration Modal for KONAN PLUS */}
+      {/* 👑 Royal Step-by-Step Celebration & Onboarding Modal for KONAN PLUS */}
       <KonanPlusActivationModal
         isOpen={isPlusActivationModalOpen}
         onClose={() => setIsPlusActivationModalOpen(false)}
         studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        konanId={state.userAccount?.konanId || state.konanId || 'KN-849201'}
+        invitedIds={state.userAccount?.invitedIds || state.invitedIds || []}
+        invitedEmails={state.userAccount?.invitedEmails || state.invitedEmails || []}
+        onUpdateInvitedIds={handleUpdateInvitedIds}
+        onUpdateInvitedEmails={handleUpdateInvitedEmails}
+        academicGoal={state.userAccount?.academicGoal || 'target_16'}
+        onSelectAcademicGoal={handleSelectAcademicGoal}
+        coachingSessionsRemaining={state.userAccount?.coachingSessionsRemaining ?? 2}
         onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
         onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
         onOpenCoachingModal={() => setIsCoachingModalOpen(true)}
@@ -1492,8 +1545,12 @@ export function App() {
       <KonanPlusGroupModal
         isOpen={isPlusGroupModalOpen}
         onClose={() => setIsPlusGroupModalOpen(false)}
-        invitedEmails={state.userAccount?.invitedEmails || []}
+        invitedEmails={state.userAccount?.invitedEmails || state.invitedEmails || []}
+        invitedIds={state.userAccount?.invitedIds || state.invitedIds || []}
         onUpdateInvitedEmails={handleUpdateInvitedEmails}
+        onUpdateInvitedIds={handleUpdateInvitedIds}
+        ownerKonanId={state.userAccount?.konanId || state.konanId || 'KN-849201'}
+        ownerEmail={state.userAccount?.email}
         maxAccounts={4}
         studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
       />

@@ -56,6 +56,8 @@ export interface DashboardOverviewProps {
   cycleCompletedDate?: string;
   onStartNewCycleEarly?: () => void;
   // KONAN PLUS callbacks & state
+  konanId?: string;
+  invitedIds?: string[];
   invitedEmails?: string[];
   academicGoal?: AcademicGoal;
   coachingSessionsRemaining?: number;
@@ -81,6 +83,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onUpgradeToPro,
   cycleCompletedDate,
   onStartNewCycleEarly,
+  konanId = 'KN-849201',
+  invitedIds = [],
   invitedEmails = [],
   academicGoal = 'target_16',
   coachingSessionsRemaining = 2,
@@ -312,18 +316,21 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   Groupe d'Étude
                 </span>
                 <span className="text-[11px] font-mono font-bold text-emerald-400">
-                  {invitedEmails.length}/4 invités
+                  {Math.min(4, new Set([...invitedEmails, ...invitedIds]).size)}/4 invités
                 </span>
               </div>
               <p className="text-xs font-bold text-white">
-                {invitedEmails.length === 0 
-                  ? "Invitez vos 4 camarades via email" 
-                  : `${invitedEmails.length} ami(s) connecté(s) à votre formule`}
+                {new Set([...invitedEmails, ...invitedIds]).size === 0 
+                  ? "Invitez jusqu'à 4 amis via leur ID Konan" 
+                  : `${new Set([...invitedEmails, ...invitedIds]).size} ami(s) connecté(s) à votre groupe`}
               </p>
-              <p className="text-[11px] text-indigo-400 flex items-center gap-1 font-semibold">
-                <span>Gérer les 4 comptes</span>
-                <ArrowRight className="w-3 h-3" />
-              </p>
+              <div className="flex items-center justify-between gap-1 text-[11px]">
+                <span className="text-amber-300 font-mono text-[10px] font-bold">Mon ID : {konanId}</span>
+                <span className="text-indigo-400 flex items-center gap-1 font-semibold">
+                  <span>Gérer</span>
+                  <ArrowRight className="w-3 h-3" />
+                </span>
+              </div>
             </div>
 
             {/* Widget 2 : Objectif Scolaire */}

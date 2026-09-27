@@ -2,6 +2,7 @@ import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, User
 import { ACADEMIC_PRESETS, DEFAULT_PREFERENCES } from '../lib/presets';
 import { generateId } from '../lib/utils';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
+import { generateKonanId } from '../lib/konanId';
 
 const LEGACY_STORAGE_KEY = 'konan_ai_academic_state_v1';
 const USER_STORAGE_PREFIX = 'konan_ai_user_';
@@ -23,6 +24,8 @@ export interface AppState {
   planTier?: PlanTier;
   cycleCompletedDate?: string; // YYYY-MM-DD
   // KONAN PLUS fields
+  konanId?: string; // Personal student ID
+  invitedIds?: string[]; // Up to 4 invited student IDs
   invitedEmails?: string[]; // Up to 4 invited emails
   academicGoal?: AcademicGoal; // 'target_12' | 'target_16' | 'major_promotion'
   coachingSessionsRemaining?: number; // 2 per week
@@ -44,11 +47,15 @@ export function createEmptyUserState(
     ...preferencesOverrides,
   };
 
+  const assignedKonanId = user.konanId || generateKonanId(user.googleId || user.email);
+
   return {
     studentName: user.name,
     academicLevel: user.academicLevel || 'Licence Universitaire',
+    konanId: assignedKonanId,
     userAccount: {
       ...user,
+      konanId: assignedKonanId,
       isDemo: false,
       isLoggedIn: true,
       planTier: user.planTier || 'free',
@@ -106,11 +113,13 @@ export function createInitialStateFromPreset(presetId: string = 'cs-engineering'
     studentName: preferences.studentName,
     academicLevel: preset.level,
     planTier: 'pro',
+    konanId: 'KN-784201',
     userAccount: {
       name: 'Alexandre Étudiant (Compte Démo)',
       email: 'alexandre.universite@etudiant.univ.fr',
       avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
       googleId: 'google-demo',
+      konanId: 'KN-784201',
       academicLevel: preset.level,
       isLoggedIn: true,
       isDemo: true,
@@ -204,6 +213,8 @@ export function saveUserState(uid: string, state: AppState): void {
       completedOnboarding: state.completedOnboarding,
       userAccount: state.userAccount,
       invitedEmails: state.invitedEmails,
+      invitedIds: state.invitedIds,
+      konanId: state.konanId || state.userAccount?.konanId,
       academicGoal: state.academicGoal,
       coachingSessionsRemaining: state.coachingSessionsRemaining,
       lastCoachingDate: state.lastCoachingDate,
@@ -240,6 +251,8 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         mergedStudySessions = generateOptimizedStudyPlan(mergedSubjects, mergedClassSlots, mergedPreferences);
       }
 
+      const assignedKonanId = cloudData.konanId || currentState.konanId || currentState.userAccount?.konanId || generateKonanId(uid);
+
       const merged: AppState = {
         ...currentState,
         studentName: cloudData.studentName || currentState.studentName,
@@ -252,6 +265,8 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         studySessions: mergedStudySessions,
         logs: Array.isArray(cloudData.logs) ? cloudData.logs : currentState.logs,
         cycleCompletedDate: cloudData.cycleCompletedDate !== undefined ? cloudData.cycleCompletedDate : currentState.cycleCompletedDate,
+        konanId: assignedKonanId,
+        invitedIds: Array.isArray(cloudData.invitedIds) ? cloudData.invitedIds : currentState.invitedIds,
         invitedEmails: Array.isArray(cloudData.invitedEmails) ? cloudData.invitedEmails : currentState.invitedEmails,
         academicGoal: cloudData.academicGoal || currentState.academicGoal,
         coachingSessionsRemaining: cloudData.coachingSessionsRemaining !== undefined ? cloudData.coachingSessionsRemaining : currentState.coachingSessionsRemaining,
@@ -260,6 +275,8 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
           ...currentState.userAccount,
           planTier: cloudData.planTier || currentState.planTier || 'free',
           name: cloudData.studentName || currentState.userAccount.name,
+          konanId: assignedKonanId,
+          invitedIds: Array.isArray(cloudData.invitedIds) ? cloudData.invitedIds : currentState.userAccount.invitedIds,
           invitedEmails: Array.isArray(cloudData.invitedEmails) ? cloudData.invitedEmails : currentState.userAccount.invitedEmails,
           academicGoal: cloudData.academicGoal || currentState.userAccount.academicGoal,
         } : undefined,

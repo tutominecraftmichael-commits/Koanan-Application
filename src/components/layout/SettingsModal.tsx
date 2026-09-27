@@ -234,6 +234,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <span className="font-medium text-slate-300">Compte Google connecté</span>
                   </div>
 
+                  {/* ID Konan Personnel */}
+                  {userAccount?.konanId && (
+                    <div className="flex items-center gap-1.5 mt-1 text-[11px] text-amber-300 font-mono font-bold">
+                      <span>🔑 ID Konan : {userAccount.konanId}</span>
+                    </div>
+                  )}
+
                   <div className="flex items-center gap-1.5 mt-1 text-[11px] text-cyan-400">
                     <ShieldCheck className="w-3 h-3 text-cyan-400" />
                     <span>{isDemoMode ? t('demoIsolated', lang) : t('secureSession', lang)}</span>
