@@ -114,7 +114,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
   // Prochaine session chronologique exacte :
-  const nextStudySession = isCycleCompletedToday ? null : (activeDisplaySessions[0] || allTodaysStudySessions.find(s => !s.completed));
+  const isDayFullyComplete = allTodaysStudySessions.length > 0 && allTodaysStudySessions.every(s => s.completed);
+
+  // Prochaine session chronologique exacte parmi les sessions actives d'aujourd'hui uniquement :
+  // Si la journée ou le cycle est validé, aucune session résiduelle n'est affichée.
+  const nextStudySession = (isCycleCompletedToday || isDayFullyComplete) 
+    ? null 
+    : (activeDisplaySessions[0] || null);
+
   const completedToday = completedTodaySessions.length;
   const totalMissedMinutes = rescheduledTodaySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
   const totalMissedHoursText = formatMinutesToHours(totalMissedMinutes);
@@ -132,8 +139,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 relative z-10">
           <div className="space-y-1.5 sm:space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant={isCycleCompletedToday ? "emerald" : "cyan"} size="sm" dot>
-                {isCycleCompletedToday ? "Cycle Validé 100%" : "Copilote Actif"}
+              <Badge variant={isCycleCompletedToday || isDayFullyComplete ? "emerald" : "cyan"} size="sm" dot>
+                {isCycleCompletedToday ? "Cycle Validé 100%" : isDayFullyComplete ? "Journée Validée 100%" : "Copilote Actif"}
               </Badge>
               <span className="text-[11px] sm:text-xs text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
             </div>
@@ -143,6 +150,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
               {isCycleCompletedToday ? (
                 <span>🌟 <strong className="text-emerald-300">Programme 100% validé !</strong> Toutes les barres de progression sont à zéro. Repos bien mérité, <strong className="text-white">on reprend tout demain</strong> !</span>
+              ) : isDayFullyComplete ? (
+                <span>🎉 <strong className="text-emerald-300">Toutes les matières du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} sessions terminées). Bravo pour votre assiduité !</span>
               ) : (
                 <>
                   Votre cursus <strong className="text-white">{academicLevel}</strong> est synchronisé en temps réel.
@@ -168,6 +177,22 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </h3>
                 <p className="text-xs text-slate-300 max-w-xs leading-relaxed">
                   Toutes les matières sont accomplies. On reprend tout demain avec les compteurs à zéro !
+                </p>
+              </div>
+            </div>
+          ) : isDayFullyComplete ? (
+            <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-teal-950/70 border border-emerald-500/50 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
+              <div className="space-y-1 text-left min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <Badge variant="emerald" size="sm" dot>Journée 100% Validée</Badge>
+                  <span className="text-[10px] text-emerald-300 font-bold uppercase tracking-wider">Bravo !</span>
+                </div>
+                <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  <span>Toutes les sessions du jour sont terminées !</span>
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                </h3>
+                <p className="text-xs text-slate-300 max-w-xs leading-relaxed">
+                  Félicitations ! Vous avez validé l'intégralité de vos révisions prévues pour aujourd'hui ({completedToday}/{allTodaysStudySessions.length}).
                 </p>
               </div>
             </div>

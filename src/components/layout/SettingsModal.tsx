@@ -238,19 +238,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <span className="text-[10px] font-semibold text-indigo-300/80">Profil Étudiant</span>
                   </div>
 
-                  {/* Live Preview Bar */}
-                  <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between gap-2">
-                    <span className="text-[11px] text-slate-400 font-medium">Aperçu en direct :</span>
-                    <div className="flex items-center gap-1.5 text-right min-w-0">
-                      <span className={`text-xs font-black truncate ${userAccount?.planTier !== 'free' ? 'gold-shimmer-text' : 'text-white'}`}>
-                        {editName.trim() || 'Étudiant'}
-                      </span>
-                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shrink-0">
-                        {editFiliere.trim() || 'Filière'}
-                      </span>
-                    </div>
-                  </div>
-                  
                   {/* 1. Nom complet */}
                   <div>
                     <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">

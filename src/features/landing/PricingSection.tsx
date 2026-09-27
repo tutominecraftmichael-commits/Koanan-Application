@@ -170,9 +170,9 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           }`}
           style={{ transitionDelay: isVisible ? '250ms' : '0ms' }}
         >
-          {/* Top Recommended Pill: HIGH CONTRAST AMBER BADGE CLEARLY SEPARATED FROM BORDER */}
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 text-xs font-black uppercase tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.6)] flex items-center gap-1.5 ring-4 ring-[#080B11] z-30 whitespace-nowrap">
-            <Star className="w-3.5 h-3.5 fill-current text-slate-950" />
+          {/* Top Recommended Pill: Subtle, sleek and elegant */}
+          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-slate-900/95 border border-sky-400/50 text-sky-200 text-[11px] font-semibold tracking-wide shadow-sm flex items-center gap-1.5 z-30 whitespace-nowrap backdrop-blur-sm">
+            <Star className="w-3 h-3 text-sky-400 fill-sky-400/20" />
             <span>Recommandé</span>
           </div>
 
