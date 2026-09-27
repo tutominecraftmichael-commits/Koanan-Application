@@ -13,7 +13,10 @@ import {
   setActiveSession,
   exportStateToJson,
   importStateFromJson,
-  fetchAndMergeCloudState
+  fetchAndMergeCloudState,
+  getPendingInvitationsForUser,
+  updateInvitationStatus,
+  registerPlusUser
 } from './services/storage';
 import { generateOptimizedStudyPlan } from './services/plannerAlgorithm';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
@@ -33,7 +36,8 @@ import type {
   StudyPreferences, 
   UserAccount,
   Chronotype,
-  AcademicGoal
+  AcademicGoal,
+  PlusInvitationNotification
 } from './types';
 import { generateId } from './lib/utils';
 import { Sparkles, X } from 'lucide-react';
@@ -85,6 +89,57 @@ export function App() {
   const [isAcademicGoalModalOpen, setIsAcademicGoalModalOpen] = useState(false);
   const [isCoachingModalOpen, setIsCoachingModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [pendingInvitations, setPendingInvitations] = useState<PlusInvitationNotification[]>([]);
+
+  // Sync pending invitations for current user
+  useEffect(() => {
+    const myId = state.userAccount?.konanId || state.konanId;
+    const myEmail = state.userAccount?.email;
+    const invites = getPendingInvitationsForUser(myId, myEmail);
+    setPendingInvitations(invites);
+  }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email, isPlusGroupModalOpen]);
+
+  const handleAcceptInvitation = (invitation: PlusInvitationNotification) => {
+    updateInvitationStatus(invitation.id, 'accepted');
+    registerPlusUser(state.konanId || state.userAccount?.konanId, state.userAccount?.email);
+
+    setState(prev => {
+      const nextAccount = prev.userAccount ? {
+        ...prev.userAccount,
+        planTier: 'plus' as const,
+        isGroupGuest: true,
+        invitedBy: {
+          name: invitation.senderName,
+          konanId: invitation.senderKonanId,
+          email: invitation.senderEmail,
+        },
+      } : undefined;
+
+      return {
+        ...prev,
+        planTier: 'plus' as const,
+        isGroupGuest: true,
+        invitedBy: {
+          name: invitation.senderName,
+          konanId: invitation.senderKonanId,
+          email: invitation.senderEmail,
+        },
+        userAccount: nextAccount,
+      };
+    });
+
+    setPendingInvitations(prev => prev.filter(i => i.id !== invitation.id));
+    soundFX.playCelebrationFanfare();
+    setToastMessage(`🎉 Félicitations ! Vous avez rejoint le groupe KONAN PLUS de ${invitation.senderName}. Accès complet débloqué.`);
+    setIsPlusActivationModalOpen(true);
+  };
+
+  const handleDeclineInvitation = (invitation: PlusInvitationNotification) => {
+    updateInvitationStatus(invitation.id, 'declined');
+    setPendingInvitations(prev => prev.filter(i => i.id !== invitation.id));
+    soundFX.playNotificationPing();
+    setToastMessage(`Invitation de ${invitation.senderName} refusée.`);
+  };
 
   /**
    * Automatic Google Calendar & 15-min reminder sync for ALL days of the week:
@@ -1206,6 +1261,9 @@ export function App() {
         onOpenSettings={() => setIsSettingsOpen(true)}
         totalStudySessions={state.studySessions.length}
         completedSessions={state.studySessions.filter(s => s.completed).length}
+        pendingInvitations={pendingInvitations}
+        onAcceptInvitation={handleAcceptInvitation}
+        onDeclineInvitation={handleDeclineInvitation}
       />
 
       {/* Main View Container */}
@@ -1316,6 +1374,8 @@ export function App() {
               onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
               onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
               onOpenCoachingModal={() => setIsCoachingModalOpen(true)}
+              isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
+              invitedBy={state.invitedBy || state.userAccount?.invitedBy}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -1539,6 +1599,8 @@ export function App() {
         onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
         onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
         onOpenCoachingModal={() => setIsCoachingModalOpen(true)}
+        isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
+        invitedBy={state.invitedBy || state.userAccount?.invitedBy}
       />
 
       {/* 👑 KONAN PLUS: 4 COMPTES INVITÉS / GROUPE MODAL */}
@@ -1553,6 +1615,8 @@ export function App() {
         ownerEmail={state.userAccount?.email}
         maxAccounts={4}
         studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
+        invitedBy={state.invitedBy || state.userAccount?.invitedBy}
       />
 
       {/* 👑 KONAN PLUS: 3 OBJECTIFS SCOLAIRES MODAL */}

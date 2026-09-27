@@ -1,4 +1,4 @@
-import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier, AcademicGoal } from '../types';
+import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier, AcademicGoal, PlusInvitationNotification } from '../types';
 import { ACADEMIC_PRESETS, DEFAULT_PREFERENCES } from '../lib/presets';
 import { generateId } from '../lib/utils';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
@@ -8,6 +8,8 @@ const LEGACY_STORAGE_KEY = 'konan_ai_academic_state_v1';
 const USER_STORAGE_PREFIX = 'konan_ai_user_';
 const DEMO_STORAGE_KEY = 'konan_ai_demo_state_v1';
 const ACTIVE_SESSION_KEY = 'konan_ai_active_session_v1';
+export const PLUS_REGISTRY_KEY = 'konan_plus_registry_v1';
+export const INVITATIONS_STORAGE_KEY = 'konan_plus_invitations_v1';
 
 export interface AppState {
   studentName: string;
@@ -30,6 +32,12 @@ export interface AppState {
   academicGoal?: AcademicGoal; // 'target_12' | 'target_16' | 'major_promotion'
   coachingSessionsRemaining?: number; // 2 per week
   lastCoachingDate?: string;
+  isGroupGuest?: boolean;
+  invitedBy?: {
+    name: string;
+    konanId: string;
+    email?: string;
+  };
 }
 
 /**
@@ -529,4 +537,136 @@ export function importSyncCode(rawInput: string, currentAccount?: UserAccount): 
     return null;
   }
 }
+
+/**
+ * Registers an ID or email as a known KONAN PLUS subscriber in local storage registry.
+ */
+export function registerPlusUser(konanId?: string, email?: string): void {
+  try {
+    const raw = localStorage.getItem(PLUS_REGISTRY_KEY);
+    const registry: string[] = raw ? JSON.parse(raw) : [];
+    if (konanId && !registry.includes(konanId.toUpperCase())) {
+      registry.push(konanId.toUpperCase());
+    }
+    if (email && !registry.includes(email.toLowerCase())) {
+      registry.push(email.toLowerCase());
+    }
+    localStorage.setItem(PLUS_REGISTRY_KEY, JSON.stringify(registry));
+  } catch (e) {
+    console.warn('Failed to register plus user:', e);
+  }
+}
+
+/**
+ * Checks whether an ID or email ALREADY has KONAN PLUS active.
+ * Used to reject invitations to people who already have Plus.
+ */
+export function isTargetAlreadyPlus(identifier: string): boolean {
+  if (!identifier) return false;
+  const clean = identifier.trim().toLowerCase();
+  const cleanUpper = identifier.trim().toUpperCase();
+
+  // 1. Check registry
+  try {
+    const raw = localStorage.getItem(PLUS_REGISTRY_KEY);
+    if (raw) {
+      const registry: string[] = JSON.parse(raw);
+      if (registry.some(r => r.toLowerCase() === clean || r.toUpperCase() === cleanUpper)) {
+        return true;
+      }
+    }
+  } catch {}
+
+  // 2. Check local user accounts in localStorage
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith(USER_STORAGE_PREFIX)) {
+      try {
+        const item = localStorage.getItem(key);
+        if (item) {
+          const state = JSON.parse(item);
+          const kId = (state.konanId || state.userAccount?.konanId || '').toLowerCase();
+          const em = (state.userAccount?.email || '').toLowerCase();
+          const plan = state.planTier || state.userAccount?.planTier;
+          if ((kId === clean || em === clean) && plan === 'plus') {
+            return true;
+          }
+        }
+      } catch {}
+    }
+  }
+
+  // 3. Check legacy or demo state
+  try {
+    const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (legacy) {
+      const parsed = JSON.parse(legacy);
+      const kId = (parsed.konanId || parsed.userAccount?.konanId || '').toLowerCase();
+      const em = (parsed.userAccount?.email || '').toLowerCase();
+      if ((kId === clean || em === clean) && (parsed.planTier === 'plus' || parsed.userAccount?.planTier === 'plus')) {
+        return true;
+      }
+    }
+  } catch {}
+
+  return false;
+}
+
+/**
+ * Loads all invitations from storage.
+ */
+export function getPlusInvitations(): PlusInvitationNotification[] {
+  try {
+    const raw = localStorage.getItem(INVITATIONS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Saves a new invitation to storage.
+ */
+export function savePlusInvitation(invitation: PlusInvitationNotification): void {
+  try {
+    const existing = getPlusInvitations();
+    // Replace if already exists with same id or target
+    const filtered = existing.filter(i => i.id !== invitation.id);
+    filtered.push(invitation);
+    localStorage.setItem(INVITATIONS_STORAGE_KEY, JSON.stringify(filtered));
+  } catch (err) {
+    console.error('Failed to save invitation:', err);
+  }
+}
+
+/**
+ * Gets all pending invitations for a specific user (by konanId or email).
+ */
+export function getPendingInvitationsForUser(konanId?: string, email?: string): PlusInvitationNotification[] {
+  const invitations = getPlusInvitations();
+  const cleanId = konanId?.trim().toLowerCase();
+  const cleanEmail = email?.trim().toLowerCase();
+
+  return invitations.filter(inv => {
+    if (inv.status !== 'pending') return false;
+    const target = inv.targetKonanIdOrEmail.trim().toLowerCase();
+    if (cleanId && target === cleanId) return true;
+    if (cleanEmail && target === cleanEmail) return true;
+    return false;
+  });
+}
+
+/**
+ * Updates status of an invitation ('accepted' or 'declined').
+ */
+export function updateInvitationStatus(id: string, status: 'accepted' | 'declined'): void {
+  try {
+    const existing = getPlusInvitations();
+    const updated = existing.map(inv => inv.id === id ? { ...inv, status } : inv);
+    localStorage.setItem(INVITATIONS_STORAGE_KEY, JSON.stringify(updated));
+  } catch (err) {
+    console.error('Failed to update invitation status:', err);
+  }
+}
+
 

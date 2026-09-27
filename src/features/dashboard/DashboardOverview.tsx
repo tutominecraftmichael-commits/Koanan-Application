@@ -64,6 +64,8 @@ export interface DashboardOverviewProps {
   onOpenGroupModal?: () => void;
   onOpenGoalModal?: () => void;
   onOpenCoachingModal?: () => void;
+  isGroupGuest?: boolean;
+  invitedBy?: { name: string; konanId: string; email?: string };
 }
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
@@ -91,6 +93,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onOpenGroupModal,
   onOpenGoalModal,
   onOpenCoachingModal,
+  isGroupGuest = false,
+  invitedBy,
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -313,21 +317,23 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
                   <Users className="w-3.5 h-3.5" />
-                  Groupe d'Étude
+                  {isGroupGuest ? 'Membre Invité' : "Groupe d'Étude"}
                 </span>
                 <span className="text-[11px] font-mono font-bold text-emerald-400">
-                  {Math.min(4, new Set([...invitedEmails, ...invitedIds]).size)}/4 invités
+                  {isGroupGuest ? '✓ Actif' : `${Math.min(4, new Set([...invitedEmails, ...invitedIds]).size)}/4 invités`}
                 </span>
               </div>
               <p className="text-xs font-bold text-white">
-                {new Set([...invitedEmails, ...invitedIds]).size === 0 
-                  ? "Invitez jusqu'à 4 amis via leur ID Konan" 
-                  : `${new Set([...invitedEmails, ...invitedIds]).size} ami(s) connecté(s) à votre groupe`}
+                {isGroupGuest 
+                  ? `Groupe de ${invitedBy?.name || 'votre titulaire'} (Accès complet)`
+                  : (new Set([...invitedEmails, ...invitedIds]).size === 0 
+                    ? "Invitez jusqu'à 4 amis via leur ID Konan" 
+                    : `${new Set([...invitedEmails, ...invitedIds]).size} ami(s) connecté(s) à votre groupe`)}
               </p>
               <div className="flex items-center justify-between gap-1 text-[11px]">
                 <span className="text-amber-300 font-mono text-[10px] font-bold">Mon ID : {konanId}</span>
                 <span className="text-indigo-400 flex items-center gap-1 font-semibold">
-                  <span>Gérer</span>
+                  <span>{isGroupGuest ? 'Voir' : 'Gérer'}</span>
                   <ArrowRight className="w-3 h-3" />
                 </span>
               </div>

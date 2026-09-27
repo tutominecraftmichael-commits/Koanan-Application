@@ -16,14 +16,17 @@ import {
   Pause,
   Clock,
   BookOpen,
-  Volume2
+  Volume2,
+  ShieldCheck
 } from 'lucide-react';
-import type { AcademicGoal } from '../../types';
+import type { AcademicGoal, PlusInvitationNotification } from '../../types';
 import { Button } from '../ui/Button';
 import { soundFX } from '../../lib/audioEffects';
 import { validateKonanId, formatKonanId } from '../../lib/konanId';
 import { focusAudioEngine, FOCUS_SOUNDTRACKS } from '../../lib/focusAudioEngine';
 import type { FocusSoundtrackId } from '../../lib/focusAudioEngine';
+import { isTargetAlreadyPlus, savePlusInvitation } from '../../services/storage';
+import { generateId } from '../../lib/utils';
 
 export interface KonanPlusActivationModalProps {
   isOpen: boolean;
@@ -40,6 +43,12 @@ export interface KonanPlusActivationModalProps {
   onOpenGroupModal?: () => void;
   onOpenGoalModal?: () => void;
   onOpenCoachingModal?: () => void;
+  isGroupGuest?: boolean;
+  invitedBy?: {
+    name: string;
+    konanId: string;
+    email?: string;
+  };
 }
 
 export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> = ({
@@ -57,6 +66,8 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
   onOpenGroupModal,
   onOpenGoalModal: _onOpenGoalModal,
   onOpenCoachingModal,
+  isGroupGuest = false,
+  invitedBy,
 }) => {
   // Step 0: Welcome Royal Screen
   // Step 1: 4 Accounts via Konan ID
@@ -127,10 +138,28 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
       return;
     }
 
+    // Strict validation: Only Free or Pro users can be invited.
+    // If the person being invited already has Konan Plus, reject with red error:
+    if (isTargetAlreadyPlus(finalVal)) {
+      setStep1Error("Non, cet utilisateur a déjà Konan Plus.");
+      return;
+    }
+
     if (currentList.length >= 4) {
       setStep1Error("La limite de 4 comptes invités est atteinte.");
       return;
     }
+
+    // Create persistent invitation notification
+    const newInvitation: PlusInvitationNotification = {
+      id: generateId(),
+      senderName: studentName,
+      senderKonanId: konanId,
+      targetKonanIdOrEmail: finalVal,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+    };
+    savePlusInvitation(newInvitation);
 
     if (isIdCandidate) {
       const nextIds = [...invitedIds, finalVal];
@@ -142,7 +171,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
 
     soundFX.playCheckmarkPop();
     setFriendIdInput('');
-    setStep1Success(`Compte "${finalVal}" rattaché avec succès à votre groupe !`);
+    setStep1Success(`Invitation envoyée ! "${finalVal}" a reçu la notification pour activer son accès Konan Plus.`);
     setTimeout(() => setStep1Success(null), 3000);
   };
 
@@ -356,10 +385,12 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                     Étape 1 sur 4 • Multi-comptes
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                    Invitez jusqu'à 4 amis avec leur ID Konan
+                    {isGroupGuest ? "Votre Groupe d'Étude Konan Plus" : "Invitez jusqu'à 4 amis avec leur ID Konan"}
                   </h3>
                   <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                    Chaque étudiant possède un <strong>ID Konan personnel et fixe</strong>. Renseignez l'ID de votre ami pour lui débloquer un compte Konan Plus complet et gratuit.
+                    {isGroupGuest 
+                      ? "Vous êtes membre invité. Votre accès à toutes les fonctionnalités Konan Plus est 100% garanti."
+                      : "Chaque étudiant possède un ID Konan personnel et fixe. Renseignez l'ID de votre ami pour lui débloquer un compte Konan Plus complet et gratuit."}
                   </p>
                 </div>
               </div>
@@ -371,7 +402,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                     <Hash className="w-3.5 h-3.5 text-amber-400" />
                     Votre ID Konan Personnel :
                   </span>
-                  <span className="text-[10px] text-amber-300 font-semibold">À donner à vos amis</span>
+                  <span className="text-[10px] text-amber-300 font-semibold">Fixe & Unique</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="px-3 py-1.5 rounded-xl bg-slate-950 border border-amber-500/40 text-amber-300 font-mono font-black text-sm tracking-widest shadow-inner">
@@ -388,46 +419,70 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 </div>
               </div>
 
-              {/* ADD FRIEND INPUT */}
-              <form onSubmit={handleAddFriend} className="space-y-2">
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
-                  Entrez l'ID Konan de votre ami (ex: KN-948201) :
-                </label>
-                <div className="flex items-center gap-2">
-                  <div className="relative flex-1">
-                    <input
-                      type="text"
-                      value={friendIdInput}
-                      onChange={(e) => {
-                        setFriendIdInput(e.target.value);
-                        setStep1Error(null);
-                      }}
-                      placeholder="Ex: KN-849201 ou email"
-                      className="w-full px-3.5 py-2.5 pl-10 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 transition-colors"
-                    />
-                    <UserPlus className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
+              {/* If user is guest */}
+              {isGroupGuest ? (
+                <div className="p-4 sm:p-5 rounded-2xl bg-indigo-950/40 border border-indigo-500/40 space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <Crown className="w-4 h-4 text-amber-400" />
+                    <span className="text-xs font-bold text-white uppercase tracking-wider">
+                      Membre Invité • Accès Débloqué
+                    </span>
                   </div>
-                  <Button
-                    type="submit"
-                    variant="glow"
-                    size="sm"
-                    className="shrink-0 text-xs font-bold py-2.5 cursor-pointer"
-                  >
-                    Ajouter
-                  </Button>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Vous avez rejoint le groupe d'étude de{' '}
+                    <strong className="text-white">{invitedBy?.name || 'votre titulaire'}</strong>{' '}
+                    {invitedBy?.konanId && <span className="text-amber-300 font-mono font-bold">({invitedBy.konanId})</span>}.
+                    Toutes les fonctionnalités KONAN PLUS vous sont 100% ouvertes.
+                  </p>
+                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
+                    <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                    <span>
+                      <strong>Règle de gestion :</strong> Seul le titulaire principal du compte a le droit d'ajouter ou d'inviter d'autres membres au groupe.
+                    </span>
+                  </div>
                 </div>
+              ) : (
+                /* ADD FRIEND INPUT - Full width and centered on mobile */
+                <form onSubmit={handleAddFriend} className="space-y-3">
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                    Entrez l'ID Konan de votre ami (ex: KN-948201) :
+                  </label>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
+                    <div className="relative flex-1 w-full">
+                      <input
+                        type="text"
+                        value={friendIdInput}
+                        onChange={(e) => {
+                          setFriendIdInput(e.target.value);
+                          setStep1Error(null);
+                        }}
+                        placeholder="Ex: KN-849201 ou email"
+                        className="w-full px-4 py-3 pl-11 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 transition-colors text-left"
+                      />
+                      <UserPlus className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
+                    </div>
+                    <Button
+                      type="submit"
+                      variant="glow"
+                      size="md"
+                      className="w-full sm:w-auto px-5 py-3 text-xs font-bold shrink-0 justify-center cursor-pointer shadow-md"
+                    >
+                      Ajouter au groupe
+                    </Button>
+                  </div>
 
-                {step1Error && (
-                  <p className="text-xs text-rose-400 font-medium animate-in fade-in">
-                    ⚠️ {step1Error}
-                  </p>
-                )}
-                {step1Success && (
-                  <p className="text-xs text-emerald-400 font-medium animate-in fade-in">
-                    ✅ {step1Success}
-                  </p>
-                )}
-              </form>
+                  {step1Error && (
+                    <p className="text-xs text-rose-400 font-medium animate-in fade-in">
+                      ⚠️ {step1Error}
+                    </p>
+                  )}
+                  {step1Success && (
+                    <p className="text-xs text-emerald-400 font-medium animate-in fade-in">
+                      ✅ {step1Success}
+                    </p>
+                  )}
+                </form>
+              )}
 
               {/* ACTIVE INVITED LIST */}
               <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-2">
@@ -680,7 +735,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                     onClick={handleToggleAudio}
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-md ${
                       isPlayingAudio
-                        ? 'bg-amber-500 text-slate-950 animate-pulse'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
                         : 'bg-indigo-600 hover:bg-indigo-500 text-white'
                     }`}
                   >
@@ -689,29 +744,44 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                   </button>
                 </div>
 
-                {/* 5 Sound Chips */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {FOCUS_SOUNDTRACKS.map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => handleSelectSoundtrack(t.id)}
-                      className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center gap-2.5 ${
-                        selectedTrack === t.id
-                          ? 'bg-purple-950/40 border-purple-400 text-white shadow-md shadow-purple-500/20'
-                          : 'bg-slate-950/50 border-slate-800 hover:border-slate-700 text-slate-300'
-                      }`}
-                    >
-                      <span className="text-lg shrink-0">{t.icon}</span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold truncate">{t.name}</p>
-                        <p className="text-[10px] text-slate-400 truncate">{t.tagline}</p>
-                      </div>
-                      {selectedTrack === t.id && isPlayingAudio && (
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
-                      )}
-                    </button>
-                  ))}
+                {/* 5 Sound Chips with dedicated scrollable container for mobile */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400">
+                    <span className="font-semibold uppercase tracking-wider">Ambiances Disponibles (5) :</span>
+                    <span className="text-[10px] text-purple-300 font-mono">Défilez pour voir tout</span>
+                  </div>
+                  <div className="max-h-48 sm:max-h-56 overflow-y-auto pr-1 space-y-1.5 custom-scrollbar">
+                    {FOCUS_SOUNDTRACKS.map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => handleSelectSoundtrack(t.id)}
+                        className={`w-full p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                          selectedTrack === t.id
+                            ? 'bg-purple-950/40 border-purple-400 text-white shadow-md shadow-purple-500/20 ring-1 ring-purple-400/40'
+                            : 'bg-slate-950/50 border-slate-800 hover:border-slate-700 text-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                          <span className="text-xl shrink-0">{t.icon}</span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-bold truncate text-white">{t.name}</p>
+                            <p className="text-[10px] text-slate-400 truncate">{t.tagline}</p>
+                          </div>
+                        </div>
+                        {selectedTrack === t.id && (
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span className="text-[10px] font-bold text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-500/30">
+                              Sélectionné
+                            </span>
+                            {isPlayingAudio && (
+                              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                            )}
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Volume slider */}

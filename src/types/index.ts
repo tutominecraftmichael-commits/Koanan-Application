@@ -155,7 +155,23 @@ export interface UserAccount {
   academicGoal?: AcademicGoal; // 12, 16, or Major
   coachingSessionsRemaining?: number; // 2 per week
   lastCoachingDate?: string;
+  isGroupGuest?: boolean; // True if this user was invited by another KONAN PLUS subscriber
+  invitedBy?: {
+    name: string;
+    konanId: string;
+    email?: string;
+  };
   lastSyncedAt: string;
+}
+
+export interface PlusInvitationNotification {
+  id: string;
+  senderName: string;
+  senderKonanId: string;
+  senderEmail?: string;
+  targetKonanIdOrEmail: string;
+  status: 'pending' | 'accepted' | 'declined';
+  createdAt: string;
 }
 
 export interface UserStreak {

@@ -16,6 +16,9 @@ import {
 import { Button } from '../ui/Button';
 import { soundFX } from '../../lib/audioEffects';
 import { validateKonanId, formatKonanId } from '../../lib/konanId';
+import { isTargetAlreadyPlus, savePlusInvitation } from '../../services/storage';
+import { generateId } from '../../lib/utils';
+import type { PlusInvitationNotification } from '../../types';
 
 export interface KonanPlusGroupModalProps {
   isOpen: boolean;
@@ -29,6 +32,12 @@ export interface KonanPlusGroupModalProps {
   ownerKonanId?: string;
   maxAccounts?: number;
   studentName?: string;
+  isGroupGuest?: boolean;
+  invitedBy?: {
+    name: string;
+    konanId: string;
+    email?: string;
+  };
 }
 
 export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
@@ -43,6 +52,8 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
   ownerKonanId = 'KN-849201',
   maxAccounts = 4,
   studentName,
+  isGroupGuest = false,
+  invitedBy,
 }) => {
   const [inputIdentifier, setInputIdentifier] = useState('');
   const [inputError, setInputError] = useState<string | null>(null);
@@ -115,10 +126,29 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
       return;
     }
 
+    // Strict validation: Only Free or Pro users can be invited.
+    // If the person being invited already has Konan Plus, reject with red error:
+    if (isTargetAlreadyPlus(finalValue)) {
+      setInputError("Non, cet utilisateur a déjà Konan Plus.");
+      return;
+    }
+
     if (currentCount >= MAX_INVITES) {
       setInputError(`La limite de ${MAX_INVITES} comptes invités est atteinte.`);
       return;
     }
+
+    // Create persistent invitation notification for the target user
+    const newInvitation: PlusInvitationNotification = {
+      id: generateId(),
+      senderName: ownerName,
+      senderKonanId: ownerKonanId,
+      senderEmail: ownerEmail,
+      targetKonanIdOrEmail: finalValue,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+    };
+    savePlusInvitation(newInvitation);
 
     if (isId) {
       const updatedIds = [...invitedIds, finalValue];
@@ -132,11 +162,12 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
 
     soundFX.playCheckmarkPop();
     setInputIdentifier('');
-    setSuccessBanner(`🎉 Membre ajouté ! "${finalValue}" a désormais un accès complet et immédiat à Konan Plus.`);
+    setSuccessBanner(`🎉 Invitation envoyée ! "${finalValue}" a reçu la notification pour activer son accès Konan Plus.`);
     setTimeout(() => setSuccessBanner(null), 4000);
   };
 
   const handleRemoveMember = (member: { value: string; type: 'id' | 'email' }) => {
+    if (isGroupGuest) return;
     if (member.type === 'id') {
       const updated = invitedIds.filter(id => id !== member.value);
       onUpdateInvitedIds?.(updated);
@@ -186,7 +217,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
         </button>
 
         {/* Content */}
-        <div className="p-6 sm:p-8 space-y-6 overflow-y-auto custom-scrollbar">
+        <div className="p-5 sm:p-8 space-y-6 overflow-y-auto custom-scrollbar">
           
           {/* Header */}
           <div className="flex items-start gap-3.5">
@@ -207,7 +238,9 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                 Groupe d'Étude & 4 Comptes Inclus
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 mt-1">
-                Invitez jusqu'à 4 amis via leur <strong>ID Konan</strong> personnel pour leur octroyer un accès complet et immédiat à Konan Plus.
+                {isGroupGuest 
+                  ? "Vous êtes membre de ce groupe d'étude Konan Plus."
+                  : "Invitez jusqu'à 4 amis via leur ID Konan personnel pour leur octroyer un accès complet et immédiat à Konan Plus."}
               </p>
             </div>
           </div>
@@ -224,7 +257,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
               <span className="text-[10px] font-semibold text-amber-300/80">Fixe & Sécurisé</span>
             </div>
             <p className="text-[11px] text-slate-300 leading-relaxed">
-              Cet identifiant est strictement le vôtre. Donnez-le à vos amis ou demandez leur ID Konan pour les ajouter directement ci-dessous.
+              Cet identifiant est strictement le vôtre. Donnez-le à vos amis ou partagez-le pour être identifié sur le réseau d'excellence Konan.
             </p>
             <div className="flex items-center gap-2 pt-1">
               <div className="px-3.5 py-2 rounded-xl bg-slate-950 border border-amber-500/40 text-amber-300 font-mono font-black text-sm tracking-widest shadow-inner">
@@ -249,46 +282,69 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
             </div>
           )}
 
-          {/* Input Form: Add Friend by ID or Email */}
-          <form onSubmit={handleAddMember} className="space-y-3">
-            <div>
-              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                Ajouter un ami avec son ID Konan (ou son email) :
-              </label>
+          {/* If the current user is an invited guest */}
+          {isGroupGuest ? (
+            <div className="p-4 sm:p-5 rounded-2xl bg-indigo-950/40 border border-indigo-500/40 space-y-2.5">
               <div className="flex items-center gap-2">
-                <div className="relative flex-1">
-                  <input
-                    type="text"
-                    value={inputIdentifier}
-                    onChange={(e) => {
-                      setInputIdentifier(e.target.value);
-                      setInputError(null);
-                    }}
-                    placeholder="Ex: KN-849201 ou ami@etudiant.univ.edu"
-                    disabled={remainingSlots === 0}
-                    className="w-full px-3.5 py-2.5 pl-10 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-colors disabled:opacity-50"
-                  />
-                  <UserPlus className="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" />
-                </div>
-                <Button
-                  type="submit"
-                  variant="glow"
-                  size="md"
-                  disabled={remainingSlots === 0 || !inputIdentifier.trim()}
-                  className="shrink-0 text-xs font-bold cursor-pointer"
-                >
-                  Ajouter au groupe
-                </Button>
+                <Crown className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-bold text-white uppercase tracking-wider">
+                  Votre Statut : Membre Invité KONAN PLUS
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Vous bénéficiez de l'ensemble des privilèges KONAN PLUS grâce au compte de{' '}
+                <strong className="text-white">{invitedBy?.name || 'votre titulaire'}</strong>{' '}
+                {invitedBy?.konanId && <span className="text-amber-300 font-mono font-bold">({invitedBy.konanId})</span>}.
+              </p>
+              <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
+                <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                <span>
+                  <strong>Règle du groupe :</strong> En tant que membre invité, vous avez un accès complet aux outils de révision, coaching et musiques. Seul le titulaire principal a le droit d'ajouter ou d'inviter d'autres personnes.
+                </span>
               </div>
             </div>
-
-            {inputError && (
-              <div className="p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2 animate-in fade-in">
-                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-                <span>{inputError}</span>
+          ) : (
+            /* Input Form: Add Friend by ID or Email (Centered & Responsive for Mobile) */
+            <form onSubmit={handleAddMember} className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                  Ajouter un ami avec son ID Konan (ou son email) :
+                </label>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
+                  <div className="relative flex-1 w-full">
+                    <input
+                      type="text"
+                      value={inputIdentifier}
+                      onChange={(e) => {
+                        setInputIdentifier(e.target.value);
+                        setInputError(null);
+                      }}
+                      placeholder="Ex: KN-849201 ou ami@univ.edu"
+                      disabled={remainingSlots === 0}
+                      className="w-full px-4 py-3 pl-11 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-colors disabled:opacity-50 text-left"
+                    />
+                    <UserPlus className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
+                  </div>
+                  <Button
+                    type="submit"
+                    variant="glow"
+                    size="md"
+                    disabled={remainingSlots === 0 || !inputIdentifier.trim()}
+                    className="w-full sm:w-auto px-5 py-3 text-xs font-bold shrink-0 justify-center cursor-pointer shadow-md"
+                  >
+                    Ajouter au groupe
+                  </Button>
+                </div>
               </div>
-            )}
-          </form>
+
+              {inputError && (
+                <div className="p-3.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                  <span>{inputError}</span>
+                </div>
+              )}
+            </form>
+          )}
 
           {/* Members List */}
           <div className="space-y-3 pt-2">
@@ -353,14 +409,16 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                     </div>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveMember(member)}
-                    className="p-2 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer shrink-0"
-                    title="Retirer ce compte du groupe"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  {!isGroupGuest && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveMember(member)}
+                      className="p-2 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer shrink-0"
+                      title="Retirer ce compte du groupe"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               ))}
 

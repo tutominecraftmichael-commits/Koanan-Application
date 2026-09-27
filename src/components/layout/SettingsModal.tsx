@@ -405,8 +405,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       <Users className="w-4 h-4" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-white truncate">Groupe (4 comptes)</p>
-                      <p className="text-[10px] text-slate-400 truncate">{invitedEmails.length} / 4 invités actifs</p>
+                      <p className="text-xs font-bold text-white truncate">
+                        {userAccount?.isGroupGuest ? 'Membre Invité' : 'Groupe (4 comptes)'}
+                      </p>
+                      <p className="text-[10px] text-slate-400 truncate">
+                        {userAccount?.isGroupGuest 
+                          ? `Invité par ${userAccount.invitedBy?.name || 'Titulaire'}` 
+                          : `${invitedEmails.length} / 4 invités actifs`}
+                      </p>
                     </div>
                   </button>
 
