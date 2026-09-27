@@ -502,7 +502,7 @@ export function App() {
           'pro_activated'
         );
 
-        showToast('👑 Félicitations ! Le modèle KONAN PLUS est activé ! Coaching VIP & Synchronisation Google Agenda pour tous les jours.');
+        showToast('👑 Félicitations ! Le modèle KONAN PLUS est activé ! Invitez jusqu\'à 4 amis (4 comptes inclus) & profitez de l\'expérience complète.');
         if (activeView === 'landing' || activeView === 'auth') {
           setActiveView('dashboard');
         }

@@ -8,7 +8,7 @@ import {
   Clock, 
   Layers, 
   Target, 
-  MessageSquare, 
+  UserPlus, 
   Headphones, 
   Bell, 
   ShieldCheck,
@@ -279,7 +279,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 </span>
                 <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-indigo-950/80 text-indigo-200 border border-indigo-500/40 font-semibold flex items-center gap-1 whitespace-nowrap shrink-0">
                   <Crown className="w-3 h-3 text-amber-300" />
-                  Coaching VIP
+                  4 Comptes Inclus & VIP
                 </span>
               </div>
               
@@ -296,7 +296,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 </span>
                 <span className="text-xs text-slate-400 font-medium">CFA / mois</span>
               </div>
-              <p className="text-[11px] text-indigo-400 font-semibold mt-1">L'expérience complète sans compromis</p>
+              <p className="text-[11px] text-indigo-400 font-semibold mt-1">L'expérience complète • Jusqu'à 5 étudiants (vous + 4 invités)</p>
             </div>
 
             {/* Features List */}
@@ -318,8 +318,13 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <MessageSquare className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-                  <span><strong>Coach Konan Quotidien :</strong> Notification d'encouragement personnalisée chaque jour avec ton adapté à votre objectif (chill et bienveillant pour 12, ferme et disciplinaire pour Major).</span>
+                  <UserPlus className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                  <div>
+                    <span><strong>Capacité d'inviter 4 personnes (4 comptes inclus) :</strong></span>
+                    <p className="text-slate-300 mt-0.5">
+                      Invitez jusqu'à 4 de vos amis ou camarades via leur adresse email. Ils sont connectés directement à Konan Plus et bénéficient de l'intégralité des fonctionnalités pour réussir ensemble.
+                    </p>
+                  </div>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Clock className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
