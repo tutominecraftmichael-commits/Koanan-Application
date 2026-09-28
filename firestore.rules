@@ -5,5 +5,10 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+
+    // Invitations KONAN PLUS partagées en temps réel entre étudiants (PC, mobile, tablettes)
+    match /plus_invitations/{invitationId} {
+      allow read, write: if true;
+    }
   }
 }

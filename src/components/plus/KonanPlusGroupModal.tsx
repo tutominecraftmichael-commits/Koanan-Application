@@ -11,12 +11,20 @@ import {
   Users,
   CheckCircle2,
   AlertCircle,
-  Hash
+  Hash,
+  Clock
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { soundFX } from '../../lib/audioEffects';
 import { validateKonanId, formatKonanId } from '../../lib/konanId';
-import { isTargetAlreadyPlus, savePlusInvitation } from '../../services/storage';
+import { 
+  isTargetAlreadyPlus, 
+  savePlusInvitation, 
+  getPlusInvitations, 
+  mergeInvitationsFromCloud, 
+  invitationBroadcastChannel 
+} from '../../services/storage';
+import { listenToAllCloudInvitations } from '../../lib/firebase';
 import { generateId } from '../../lib/utils';
 import type { PlusInvitationNotification } from '../../types';
 
@@ -60,6 +68,30 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
   const [successBanner, setSuccessBanner] = useState<string | null>(null);
+  const [invitations, setInvitations] = useState<PlusInvitationNotification[]>(() => getPlusInvitations());
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const refresh = () => setInvitations(getPlusInvitations());
+    refresh();
+
+    window.addEventListener('storage', refresh);
+    const handleBc = () => refresh();
+    invitationBroadcastChannel?.addEventListener('message', handleBc);
+
+    const unsubscribeCloud = listenToAllCloudInvitations((cloudInvites) => {
+      if (Array.isArray(cloudInvites) && cloudInvites.length > 0) {
+        mergeInvitationsFromCloud(cloudInvites);
+        setInvitations(getPlusInvitations());
+      }
+    });
+
+    return () => {
+      window.removeEventListener('storage', refresh);
+      invitationBroadcastChannel?.removeEventListener('message', handleBc);
+      unsubscribeCloud();
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -72,6 +104,17 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
     ...invitedEmails.filter(e => !invitedIds.includes(e)).map(email => ({ value: email, type: 'email' as const }))
   ];
 
+  const isMemberAccepted = (targetVal: string) => {
+    const cleanTarget = targetVal.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+    const invite = invitations.find(i => {
+      const it = i.targetKonanIdOrEmail.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+      return it === cleanTarget;
+    });
+    return invite?.status === 'accepted';
+  };
+
+  const acceptedCount = allInvited.filter(m => isMemberAccepted(m.value)).length;
+  const pendingCount = allInvited.length - acceptedCount;
   const currentCount = allInvited.length;
   const remainingSlots = Math.max(0, MAX_INVITES - currentCount);
 
@@ -149,6 +192,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
       createdAt: new Date().toISOString(),
     };
     savePlusInvitation(newInvitation);
+    setInvitations(getPlusInvitations());
 
     if (isId) {
       const updatedIds = [...invitedIds, finalValue];
@@ -162,7 +206,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
 
     soundFX.playCheckmarkPop();
     setInputIdentifier('');
-    setSuccessBanner(`🎉 Invitation envoyée ! "${finalValue}" a reçu la notification pour activer son accès Konan Plus.`);
+    setSuccessBanner(`🎉 Invitation envoyée à "${finalValue}" ! En attente d'acceptation sur son appareil.`);
     setTimeout(() => setSuccessBanner(null), 4000);
   };
 
@@ -231,7 +275,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                   KONAN PLUS • MULTI-COMPTES
                 </span>
                 <span className="text-xs font-bold text-slate-400">
-                  {currentCount} / {MAX_INVITES} membres actifs
+                  {acceptedCount} actif{acceptedCount > 1 ? 's' : ''} {pendingCount > 0 ? `• ${pendingCount} en attente` : ''} / {MAX_INVITES}
                 </span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-1">
@@ -384,43 +428,67 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
               </div>
 
               {/* Invited Members */}
-              {allInvited.map((member, idx) => (
-                <div 
-                  key={idx}
-                  className="p-3 sm:p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 flex items-center justify-between gap-3 transition-colors group"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-300 font-bold text-xs flex items-center justify-center shrink-0">
-                      {idx + 1}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-xs sm:text-sm font-bold text-slate-200 font-mono truncate">
-                          {member.value}
-                        </p>
-                        <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-semibold uppercase">
-                          {member.type === 'id' ? 'ID Konan' : 'Email'}
-                        </span>
+              {allInvited.map((member, idx) => {
+                const isAccepted = isMemberAccepted(member.value);
+
+                return (
+                  <div 
+                    key={idx}
+                    className="p-3 sm:p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 flex items-center justify-between gap-3 transition-colors group"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-300 font-bold text-xs flex items-center justify-center shrink-0">
+                        {idx + 1}
                       </div>
-                      <p className="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
-                        <Check className="w-3 h-3" />
-                        Accès Konan Plus Actif & Gratuit
-                      </p>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs sm:text-sm font-bold text-slate-200 font-mono truncate">
+                            {member.value}
+                          </p>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-semibold uppercase">
+                            {member.type === 'id' ? 'ID Konan' : 'Email'}
+                          </span>
+                        </div>
+                        {isAccepted ? (
+                          <p className="text-[10px] text-emerald-400 font-medium flex items-center gap-1 mt-0.5">
+                            <Check className="w-3 h-3" />
+                            Accès Konan Plus Actif & Confirmé
+                          </p>
+                        ) : (
+                          <p className="text-[10px] text-amber-400 font-medium flex items-center gap-1 mt-0.5">
+                            <Clock className="w-3 h-3 animate-pulse" />
+                            Invitation envoyée • En attente d'acceptation
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      {isAccepted ? (
+                        <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+                          Actif
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 flex items-center gap-1">
+                          <Clock className="w-3 h-3 animate-pulse" />
+                          En attente
+                        </span>
+                      )}
+
+                      {!isGroupGuest && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveMember(member)}
+                          className="p-2 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer shrink-0"
+                          title="Retirer ce compte du groupe"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
                   </div>
-
-                  {!isGroupGuest && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveMember(member)}
-                      className="p-2 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer shrink-0"
-                      title="Retirer ce compte du groupe"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              ))}
+                );
+              })}
 
               {/* Empty Placeholder Slots */}
               {Array.from({ length: remainingSlots }).map((_, slotIdx) => (

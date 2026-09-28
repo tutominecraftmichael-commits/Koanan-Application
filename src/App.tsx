@@ -16,14 +16,18 @@ import {
   fetchAndMergeCloudState,
   getPendingInvitationsForUser,
   updateInvitationStatus,
-  registerPlusUser
+  registerPlusUser,
+  mergeInvitationsFromCloud,
+  invitationBroadcastChannel
 } from './services/storage';
 import { generateOptimizedStudyPlan } from './services/plannerAlgorithm';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import { 
   onFirebaseAuthStateChange, 
   signOutReal, 
-  listenToUserCloudState 
+  listenToUserCloudState,
+  listenToCloudInvitationsForUser,
+  listenToAllCloudInvitations
 } from './lib/firebase';
 import { generateKonanId } from './lib/konanId';
 import { evaluateDailyCatchup } from './services/sessionRescheduler';
@@ -91,13 +95,88 @@ export function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [pendingInvitations, setPendingInvitations] = useState<PlusInvitationNotification[]>([]);
 
-  // Sync pending invitations for current user
+  // 1. Real-time synchronization of pending invitations (Firestore Cloud + BroadcastChannel + LocalStorage)
   useEffect(() => {
     const myId = state.userAccount?.konanId || state.konanId;
     const myEmail = state.userAccount?.email;
-    const invites = getPendingInvitationsForUser(myId, myEmail);
-    setPendingInvitations(invites);
+    const identifiers = [myId, myEmail].filter(Boolean) as string[];
+
+    // Initial check from local storage
+    const initialInvites = getPendingInvitationsForUser(myId, myEmail);
+    setPendingInvitations(initialInvites);
+
+    // Cross-device Cloud Firestore Listener (instant notification on phone / other device)
+    const unsubscribeCloud = listenToCloudInvitationsForUser(identifiers, (cloudInvites) => {
+      if (Array.isArray(cloudInvites) && cloudInvites.length > 0) {
+        mergeInvitationsFromCloud(cloudInvites);
+        const myPending = getPendingInvitationsForUser(myId, myEmail);
+        setPendingInvitations(myPending);
+        if (myPending.length > 0) {
+          soundFX.playNotificationPing();
+        }
+      }
+    });
+
+    // Cross-tab BroadcastChannel listener
+    const handleBcMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'INVITATION_SAVED' || event.data?.type === 'STATUS_UPDATED') {
+        const updated = getPendingInvitationsForUser(myId, myEmail);
+        setPendingInvitations(updated);
+      }
+    };
+    invitationBroadcastChannel?.addEventListener('message', handleBcMessage);
+
+    // Storage event & window focus fallback
+    const handleStorage = () => {
+      setPendingInvitations(getPendingInvitationsForUser(myId, myEmail));
+    };
+    window.addEventListener('storage', handleStorage);
+    window.addEventListener('focus', handleStorage);
+
+    return () => {
+      unsubscribeCloud();
+      invitationBroadcastChannel?.removeEventListener('message', handleBcMessage);
+      window.removeEventListener('storage', handleStorage);
+      window.removeEventListener('focus', handleStorage);
+    };
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email, isPlusGroupModalOpen]);
+
+  // 2. If current user is group owner (Plus tier), listen to ALL cloud invitations
+  // so when an invited friend clicks "Accepter" on their phone, the owner immediately gets updated
+  useEffect(() => {
+    const isOwner = (state.planTier === 'plus' || state.userAccount?.planTier === 'plus') && !state.isGroupGuest;
+    if (!isOwner) return;
+
+    const unsubscribe = listenToAllCloudInvitations((allCloudInvites) => {
+      if (Array.isArray(allCloudInvites) && allCloudInvites.length > 0) {
+        mergeInvitationsFromCloud(allCloudInvites);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest]);
+
+  // 3. Direct invite link detection (?invite_id=KN-XXXXXX)
+  useEffect(() => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const inviteIdParam = urlParams.get('invite_id');
+      if (inviteIdParam) {
+        const cleanSenderId = inviteIdParam.trim();
+        const myId = state.userAccount?.konanId || state.konanId;
+        const myEmail = state.userAccount?.email;
+        const existing = getPendingInvitationsForUser(myId, myEmail);
+        const match = existing.find(i => i.senderKonanId.toUpperCase() === cleanSenderId.toUpperCase());
+        if (match) {
+          setToastMessage(`📬 Invitation KONAN PLUS reçue de ${match.senderName} (${cleanSenderId}) !`);
+        }
+      }
+    } catch (e) {
+      console.warn('Error reading invite_id from URL:', e);
+    }
+  }, [state.userAccount?.konanId, state.konanId]);
 
   const handleAcceptInvitation = (invitation: PlusInvitationNotification) => {
     updateInvitationStatus(invitation.id, 'accepted');

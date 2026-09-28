@@ -194,7 +194,12 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
   return emptyState;
 }
 
-import { syncUserStateToCloud, loadUserStateFromCloud } from '../lib/firebase';
+import { 
+  syncUserStateToCloud, 
+  loadUserStateFromCloud, 
+  syncCloudPlusInvitation, 
+  updateCloudInvitationStatus 
+} from '../lib/firebase';
 
 /**
  * Saves a real user's private state to localStorage and syncs to Cloud Firestore
@@ -410,10 +415,23 @@ export function loadAppState(): AppState {
 
   // If no session exists, the app is in unauthenticated Guest state
   const demo = loadDemoState();
+  let deviceStudentId = '';
+  try {
+    deviceStudentId = localStorage.getItem('konan_device_student_id') || '';
+    if (!deviceStudentId) {
+      deviceStudentId = generateKonanId();
+      localStorage.setItem('konan_device_student_id', deviceStudentId);
+    }
+  } catch {
+    deviceStudentId = generateKonanId();
+  }
+
   return {
     ...demo,
+    konanId: deviceStudentId,
     userAccount: {
       ...demo.userAccount!,
+      konanId: deviceStudentId,
       isLoggedIn: false,
     },
     isDemoMode: false,
@@ -612,6 +630,10 @@ export function isTargetAlreadyPlus(identifier: string): boolean {
   return false;
 }
 
+export const invitationBroadcastChannel = typeof window !== 'undefined' && typeof BroadcastChannel !== 'undefined'
+  ? new BroadcastChannel('konan_plus_invitations_channel')
+  : null;
+
 /**
  * Loads all invitations from storage.
  */
@@ -625,7 +647,27 @@ export function getPlusInvitations(): PlusInvitationNotification[] {
 }
 
 /**
- * Saves a new invitation to storage.
+ * Merges cloud invitations from Firestore with local invitations.
+ */
+export function mergeInvitationsFromCloud(cloudInvitations: PlusInvitationNotification[]): PlusInvitationNotification[] {
+  if (!Array.isArray(cloudInvitations) || cloudInvitations.length === 0) return getPlusInvitations();
+  try {
+    const local = getPlusInvitations();
+    const map = new Map<string, PlusInvitationNotification>();
+    local.forEach(inv => map.set(inv.id, inv));
+    cloudInvitations.forEach(inv => {
+      map.set(inv.id, { ...(map.get(inv.id) || {}), ...inv });
+    });
+    const merged = Array.from(map.values());
+    localStorage.setItem(INVITATIONS_STORAGE_KEY, JSON.stringify(merged));
+    return merged;
+  } catch {
+    return getPlusInvitations();
+  }
+}
+
+/**
+ * Saves a new invitation to storage and immediately syncs to Cloud Firestore and BroadcastChannel.
  */
 export function savePlusInvitation(invitation: PlusInvitationNotification): void {
   try {
@@ -634,9 +676,17 @@ export function savePlusInvitation(invitation: PlusInvitationNotification): void
     const filtered = existing.filter(i => i.id !== invitation.id);
     filtered.push(invitation);
     localStorage.setItem(INVITATIONS_STORAGE_KEY, JSON.stringify(filtered));
+    
+    // Broadcast across tabs in the same browser
+    invitationBroadcastChannel?.postMessage({ type: 'INVITATION_SAVED', invitation });
   } catch (err) {
     console.error('Failed to save invitation:', err);
   }
+
+  // Cross-device synchronization via Cloud Firestore
+  syncCloudPlusInvitation(invitation).catch((err) => {
+    console.warn('Cloud invitation sync error:', err);
+  });
 }
 
 /**
@@ -644,29 +694,40 @@ export function savePlusInvitation(invitation: PlusInvitationNotification): void
  */
 export function getPendingInvitationsForUser(konanId?: string, email?: string): PlusInvitationNotification[] {
   const invitations = getPlusInvitations();
-  const cleanId = konanId?.trim().toLowerCase();
-  const cleanEmail = email?.trim().toLowerCase();
+  const cleanId = (konanId || '').trim().toLowerCase();
+  const cleanIdAlpha = cleanId.replace(/[^a-z0-9]/g, '');
+  const cleanEmail = (email || '').trim().toLowerCase();
 
   return invitations.filter(inv => {
     if (inv.status !== 'pending') return false;
-    const target = inv.targetKonanIdOrEmail.trim().toLowerCase();
-    if (cleanId && target === cleanId) return true;
+    const target = (inv.targetKonanIdOrEmail || '').trim().toLowerCase();
+    const targetAlpha = target.replace(/[^a-z0-9]/g, '');
+
+    if (cleanId && (target === cleanId || (cleanIdAlpha && targetAlpha === cleanIdAlpha))) return true;
     if (cleanEmail && target === cleanEmail) return true;
     return false;
   });
 }
 
 /**
- * Updates status of an invitation ('accepted' or 'declined').
+ * Updates status of an invitation ('accepted' or 'declined') locally and in Cloud Firestore.
  */
 export function updateInvitationStatus(id: string, status: 'accepted' | 'declined'): void {
   try {
     const existing = getPlusInvitations();
     const updated = existing.map(inv => inv.id === id ? { ...inv, status } : inv);
     localStorage.setItem(INVITATIONS_STORAGE_KEY, JSON.stringify(updated));
+
+    // Broadcast across tabs in the same browser
+    invitationBroadcastChannel?.postMessage({ type: 'STATUS_UPDATED', id, status });
   } catch (err) {
     console.error('Failed to update invitation status:', err);
   }
+
+  // Cross-device update via Cloud Firestore
+  updateCloudInvitationStatus(id, status).catch((err) => {
+    console.warn('Cloud invitation status update error:', err);
+  });
 }
 
 

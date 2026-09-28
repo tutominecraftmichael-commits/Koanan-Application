@@ -69,6 +69,7 @@ import {
   doc, 
   getDoc, 
   setDoc, 
+  collection,
   onSnapshot 
 } from 'firebase/firestore';
 
@@ -505,5 +506,101 @@ export function listenToUserCloudState(
     return () => {};
   }
 }
+
+/**
+ * Persists an invitation to Cloud Firestore for cross-device real-time sync.
+ */
+export async function syncCloudPlusInvitation(invitation: any): Promise<boolean> {
+  if (!db || !invitation?.id) return false;
+  try {
+    const invRef = doc(db, 'plus_invitations', invitation.id);
+    await setDoc(invRef, {
+      ...invitation,
+      targetNormalized: (invitation.targetKonanIdOrEmail || '').trim().toLowerCase(),
+      targetUpper: (invitation.targetKonanIdOrEmail || '').trim().toUpperCase(),
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+    return true;
+  } catch (err) {
+    console.warn('Failed to sync invitation to Cloud Firestore:', err);
+    return false;
+  }
+}
+
+/**
+ * Updates status of an invitation in Cloud Firestore.
+ */
+export async function updateCloudInvitationStatus(id: string, status: 'accepted' | 'declined'): Promise<boolean> {
+  if (!db || !id) return false;
+  try {
+    const invRef = doc(db, 'plus_invitations', id);
+    await setDoc(invRef, {
+      status,
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+    return true;
+  } catch (err) {
+    console.warn('Failed to update invitation status in Cloud Firestore:', err);
+    return false;
+  }
+}
+
+/**
+ * Listens in real-time to Cloud Firestore for invitations matching this student's IDs or email.
+ * This guarantees instant notification delivery on mobile phones, tablets, or other PCs.
+ */
+export function listenToCloudInvitationsForUser(
+  identifiers: string[], 
+  onUpdate: (invitations: any[]) => void
+): () => void {
+  if (!db) return () => {};
+  const cleanIds = identifiers.map(id => (id || '').trim().toLowerCase()).filter(Boolean);
+  const cleanIdsAlpha = cleanIds.map(id => id.replace(/[^a-z0-9@.]/g, '')).filter(Boolean);
+  if (cleanIds.length === 0) return () => {};
+
+  try {
+    const colRef = collection(db, 'plus_invitations');
+    return onSnapshot(colRef, (snapshot) => {
+      const matches: any[] = [];
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const rawTarget = (data.targetNormalized || data.targetKonanIdOrEmail || '').trim().toLowerCase();
+        const targetAlpha = rawTarget.replace(/[^a-z0-9@.]/g, '');
+        if (cleanIds.includes(rawTarget) || (targetAlpha && cleanIdsAlpha.includes(targetAlpha))) {
+          matches.push(data);
+        }
+      });
+      onUpdate(matches);
+    }, (err) => {
+      console.warn('Real-time cloud invitations listener error:', err);
+    });
+  } catch (err) {
+    console.warn('Failed to attach real-time cloud invitations listener:', err);
+    return () => {};
+  }
+}
+
+/**
+ * Listens in real-time to ALL cloud invitations so the sender can see status changes (accepted/declined).
+ */
+export function listenToAllCloudInvitations(onUpdate: (invitations: any[]) => void): () => void {
+  if (!db) return () => {};
+  try {
+    const colRef = collection(db, 'plus_invitations');
+    return onSnapshot(colRef, (snapshot) => {
+      const all: any[] = [];
+      snapshot.forEach(docSnap => {
+        all.push(docSnap.data());
+      });
+      onUpdate(all);
+    }, (err) => {
+      console.warn('Real-time all cloud invitations listener error:', err);
+    });
+  } catch (err) {
+    console.warn('Failed to attach all cloud invitations listener:', err);
+    return () => {};
+  }
+}
+
 
 

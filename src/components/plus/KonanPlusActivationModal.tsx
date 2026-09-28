@@ -25,7 +25,7 @@ import { soundFX } from '../../lib/audioEffects';
 import { validateKonanId, formatKonanId } from '../../lib/konanId';
 import { focusAudioEngine, FOCUS_SOUNDTRACKS } from '../../lib/focusAudioEngine';
 import type { FocusSoundtrackId } from '../../lib/focusAudioEngine';
-import { isTargetAlreadyPlus, savePlusInvitation } from '../../services/storage';
+import { isTargetAlreadyPlus, savePlusInvitation, getPlusInvitations } from '../../services/storage';
 import { generateId } from '../../lib/utils';
 
 export interface KonanPlusActivationModalProps {
@@ -171,8 +171,8 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
 
     soundFX.playCheckmarkPop();
     setFriendIdInput('');
-    setStep1Success(`Invitation envoyée ! "${finalVal}" a reçu la notification pour activer son accès Konan Plus.`);
-    setTimeout(() => setStep1Success(null), 3000);
+    setStep1Success(`Invitation envoyée ! En attente d'acceptation par votre camarade sur son appareil.`);
+    setTimeout(() => setStep1Success(null), 3500);
   };
 
   const handleCopyMyId = () => {
@@ -496,12 +496,25 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                   </p>
                 ) : (
                   <div className="flex flex-wrap gap-1.5">
-                    {allMembers.map((m, idx) => (
-                      <span key={idx} className="px-2.5 py-1 rounded-lg bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 text-xs font-mono font-bold flex items-center gap-1.5">
-                        <span>👤 {m}</span>
-                        <span className="text-[10px] text-emerald-400">✓ Actif</span>
-                      </span>
-                    ))}
+                    {allMembers.map((m, idx) => {
+                      const allInv = getPlusInvitations();
+                      const clean = m.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+                      const inv = allInv.find(i => i.targetKonanIdOrEmail.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '') === clean);
+                      const isAccepted = inv ? inv.status === 'accepted' : false;
+
+                      return (
+                        <span key={idx} className="px-2.5 py-1 rounded-lg bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 text-xs font-mono font-bold flex items-center gap-1.5">
+                          <span>👤 {m}</span>
+                          {isAccepted ? (
+                            <span className="text-[10px] text-emerald-400 font-sans font-bold">✓ Actif</span>
+                          ) : (
+                            <span className="text-[10px] text-amber-400 font-sans font-bold flex items-center gap-1">
+                              <Clock className="w-2.5 h-2.5" /> En attente
+                            </span>
+                          )}
+                        </span>
+                      );
+                    })}
                   </div>
                 )}
               </div>
