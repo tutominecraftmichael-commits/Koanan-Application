@@ -382,13 +382,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-white flex items-center gap-1.5">
                       <Crown className="w-4 h-4 text-amber-400" />
-                      Modèle KONAN PLUS Actif
+                      {userAccount?.isGroupGuest ? '🤝 Compte Invité KONAN PLUS' : '👑 Compte Titulaire KONAN PLUS'}
                     </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
-                      VIP
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold ${
+                      userAccount?.isGroupGuest
+                        ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                        : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    }`}>
+                      {userAccount?.isGroupGuest ? 'Invité' : 'Titulaire'}
                     </span>
                   </div>
-                  <span className="text-xs font-bold text-amber-300 font-mono">2 500 F CFA/m</span>
+                  <span className="text-xs font-bold text-amber-300 font-mono">
+                    {userAccount?.isGroupGuest ? `Offert par ${userAccount.invitedBy?.name || 'Titulaire'}` : '2 500 F CFA/m'}
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -406,12 +412,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-xs font-bold text-white truncate">
-                        {userAccount?.isGroupGuest ? 'Membre Invité' : 'Groupe (4 comptes)'}
+                        {userAccount?.isGroupGuest ? "🤝 Mon Statut d'Invité" : '👑 Groupe (4 comptes inclus)'}
                       </p>
                       <p className="text-[10px] text-slate-400 truncate">
                         {userAccount?.isGroupGuest 
-                          ? `Invité par ${userAccount.invitedBy?.name || 'Titulaire'}` 
-                          : `${invitedEmails.length} / 4 invités actifs`}
+                          ? `Invité par ${userAccount.invitedBy?.name || 'Titulaire'} (Voir)` 
+                          : `${invitedEmails.length} / 4 invités actifs (Gérer)`}
                       </p>
                     </div>
                   </button>

@@ -265,26 +265,38 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
           
           {/* Header */}
           <div className="flex items-start gap-3.5">
-            <div className="p-3 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 shadow-lg shadow-indigo-500/20 shrink-0">
-              <Users className="w-6 h-6 text-indigo-400" />
+            <div className={`p-3 rounded-2xl border shadow-lg shrink-0 ${
+              isGroupGuest 
+                ? 'bg-purple-500/20 border-purple-500/40 text-purple-300 shadow-purple-500/20'
+                : 'bg-indigo-500/20 border-indigo-500/40 text-indigo-300 shadow-indigo-500/20'
+            }`}>
+              <Users className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 inline-flex items-center gap-1">
-                  <Crown className="w-3 h-3 text-amber-300" />
-                  KONAN PLUS • MULTI-COMPTES
+                <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border inline-flex items-center gap-1 ${
+                  isGroupGuest
+                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                    : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                }`}>
+                  <Crown className="w-3 h-3" />
+                  {isGroupGuest ? '🤝 KONAN PLUS • ESPACE INVITÉ' : '👑 KONAN PLUS • ESPACE TITULAIRE'}
                 </span>
                 <span className="text-xs font-bold text-slate-400">
-                  {acceptedCount} actif{acceptedCount > 1 ? 's' : ''} {pendingCount > 0 ? `• ${pendingCount} en attente` : ''} / {MAX_INVITES}
+                  {isGroupGuest 
+                    ? '✓ Accès Partagé Actif' 
+                    : `${acceptedCount} actif${acceptedCount > 1 ? 's' : ''} ${pendingCount > 0 ? `• ${pendingCount} en attente` : ''} / ${MAX_INVITES}`}
                 </span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-1">
-                Groupe d'Étude & 4 Comptes Inclus
+                {isGroupGuest 
+                  ? "Mon Statut d'Invité & Membres du Groupe" 
+                  : "Gestion du Groupe & 4 Comptes Inclus (Titulaire)"}
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 mt-1">
                 {isGroupGuest 
-                  ? "Vous êtes membre de ce groupe d'étude Konan Plus."
-                  : "Invitez jusqu'à 4 amis via leur ID Konan personnel pour leur octroyer un accès complet et immédiat à Konan Plus."}
+                  ? `Vous bénéficiez de l'accès KONAN PLUS en tant que membre invité par ${invitedBy?.name || 'votre titulaire'}.`
+                  : "En tant que Titulaire, vous pouvez inviter jusqu'à 4 amis via leur ID Konan personnel pour leur octroyer un accès complet et immédiat à Konan Plus."}
               </p>
             </div>
           </div>
@@ -503,26 +515,28 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
             </div>
           </div>
 
-          {/* Quick Invite Link Card */}
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-            <div className="space-y-0.5">
-              <p className="text-xs font-bold text-white flex items-center gap-1.5 justify-center sm:justify-start">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                Lien d'invitation direct
-              </p>
-              <p className="text-[11px] text-slate-400">
-                Partagez ce lien à vos amis pour qu'ils rejoignent directement avec votre ID.
-              </p>
+          {/* Quick Invite Link Card (Réservé au Titulaire) */}
+          {!isGroupGuest && (
+            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+              <div className="space-y-0.5">
+                <p className="text-xs font-bold text-white flex items-center gap-1.5 justify-center sm:justify-start">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                  Lien d'invitation direct
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  Partagez ce lien à vos amis pour qu'ils rejoignent directement avec votre ID.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyInviteLink}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-850 text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-semibold transition-all cursor-pointer shrink-0 shadow-xs"
+              >
+                {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedLink ? 'Lien Copié !' : 'Copier le lien d\'invitation'}</span>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={handleCopyInviteLink}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-850 text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-semibold transition-all cursor-pointer shrink-0 shadow-xs"
-            >
-              {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copiedLink ? 'Lien Copié !' : 'Copier le lien d\'invitation'}</span>
-            </button>
-          </div>
+          )}
 
           <div className="flex items-center gap-2 text-[11px] text-slate-400 pt-1">
             <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />

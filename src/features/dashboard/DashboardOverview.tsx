@@ -291,14 +291,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm sm:text-base font-black text-white">
-                    Votre Espace KONAN PLUS
+                    {isGroupGuest ? '🤝 Espace Invité KONAN PLUS' : '👑 Espace Titulaire KONAN PLUS'}
                   </h3>
-                  <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                    ✓ Actif
+                  <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                    isGroupGuest
+                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                      : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                  }`}>
+                    {isGroupGuest ? '✓ Invité Actif' : '✓ Titulaire Actif'}
                   </span>
                 </div>
                 <p className="text-xs text-slate-300">
-                  Accès complet débloqué pour vous et vos 4 amis invités.
+                  {isGroupGuest 
+                    ? `Membre rattaché au groupe de ${invitedBy?.name || 'votre titulaire'} • Accès complet débloqué`
+                    : 'Propriétaire du groupe • Accès complet pour vous et vos 4 amis invités'}
                 </p>
               </div>
             </div>
@@ -317,15 +323,15 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
                   <Users className="w-3.5 h-3.5" />
-                  {isGroupGuest ? 'Membre Invité' : "Groupe d'Étude"}
+                  {isGroupGuest ? '🤝 Membre Invité' : '👑 Titulaire du Groupe'}
                 </span>
                 <span className="text-[11px] font-mono font-bold text-emerald-400">
-                  {isGroupGuest ? '✓ Actif' : `${Math.min(4, new Set([...invitedEmails, ...invitedIds]).size)}/4 invités`}
+                  {isGroupGuest ? '✓ Rattaché' : `${Math.min(4, new Set([...invitedEmails, ...invitedIds]).size)}/4 invités`}
                 </span>
               </div>
               <p className="text-xs font-bold text-white">
                 {isGroupGuest 
-                  ? `Groupe de ${invitedBy?.name || 'votre titulaire'} (Accès complet)`
+                  ? `Groupe de ${invitedBy?.name || 'votre titulaire'} (Accès partagé)`
                   : (new Set([...invitedEmails, ...invitedIds]).size === 0 
                     ? "Invitez jusqu'à 4 amis via leur ID Konan" 
                     : `${new Set([...invitedEmails, ...invitedIds]).size} ami(s) connecté(s) à votre groupe`)}
@@ -333,7 +339,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <div className="flex items-center justify-between gap-1 text-[11px]">
                 <span className="text-amber-300 font-mono text-[10px] font-bold">Mon ID : {konanId}</span>
                 <span className="text-indigo-400 flex items-center gap-1 font-semibold">
-                  <span>{isGroupGuest ? 'Voir' : 'Gérer'}</span>
+                  <span>{isGroupGuest ? 'Voir mon groupe' : 'Gérer mes 4 invités'}</span>
                   <ArrowRight className="w-3 h-3" />
                 </span>
               </div>
