@@ -338,7 +338,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
             </div>
           )}
 
-          {/* If the current user is an invited guest */}
+          {/* Role Status Banner */}
           {isGroupGuest ? (
             <div className="p-4 sm:p-5 rounded-2xl bg-indigo-950/40 border border-indigo-500/40 space-y-2.5">
               <div className="flex items-center gap-2">
@@ -352,21 +352,21 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                 <strong className="text-white">{invitedBy?.name || 'votre titulaire'}</strong>{' '}
                 {invitedBy?.konanId && <span className="text-amber-300 font-mono font-bold">({invitedBy.konanId})</span>}.
               </p>
-              <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                <span>
-                  <strong>Règle du groupe :</strong> En tant que membre invité, vous avez un accès complet aux outils de révision, coaching et musiques. Seul le titulaire principal a le droit d'ajouter ou d'inviter d'autres personnes.
-                </span>
-              </div>
             </div>
           ) : (
-            /* Input Form: Add Friend by ID or Email (Centered & Responsive for Mobile) */
-            <form onSubmit={handleAddMember} className="space-y-3">
-              <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-                  Ajouter un ami avec son ID Konan (ou son email) :
-                </label>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
+            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-2.5 text-xs text-amber-200">
+              <Crown className="w-4 h-4 text-amber-400 shrink-0" />
+              <span><strong>Compte Titulaire Actif :</strong> Vous disposez de 4 comptes invités inclus dans votre formule.</span>
+            </div>
+          )}
+
+          {/* Input Form: Add Friend by ID or Email (Always active and responsive for Mobile & Desktop) */}
+          <form onSubmit={handleAddMember} className="space-y-3">
+            <div>
+              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                Ajouter un ami avec son ID Konan (ou son email) :
+              </label>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
                   <div className="relative flex-1 w-full">
                     <input
                       type="text"
@@ -400,7 +400,6 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                 </div>
               )}
             </form>
-          )}
 
           {/* Members List */}
           <div className="space-y-3 pt-2">
@@ -515,28 +514,26 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
             </div>
           </div>
 
-          {/* Quick Invite Link Card (Réservé au Titulaire) */}
-          {!isGroupGuest && (
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-              <div className="space-y-0.5">
-                <p className="text-xs font-bold text-white flex items-center gap-1.5 justify-center sm:justify-start">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                  Lien d'invitation direct
-                </p>
-                <p className="text-[11px] text-slate-400">
-                  Partagez ce lien à vos amis pour qu'ils rejoignent directement avec votre ID.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={handleCopyInviteLink}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-850 text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-semibold transition-all cursor-pointer shrink-0 shadow-xs"
-              >
-                {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copiedLink ? 'Lien Copié !' : 'Copier le lien d\'invitation'}</span>
-              </button>
+          {/* Quick Invite Link Card */}
+          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div className="space-y-0.5">
+              <p className="text-xs font-bold text-white flex items-center gap-1.5 justify-center sm:justify-start">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                Lien d'invitation direct
+              </p>
+              <p className="text-[11px] text-slate-400">
+                Partagez ce lien à vos amis pour qu'ils rejoignent directement avec votre ID.
+              </p>
             </div>
-          )}
+            <button
+              type="button"
+              onClick={handleCopyInviteLink}
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-850 text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-semibold transition-all cursor-pointer shrink-0 shadow-xs"
+            >
+              {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copiedLink ? 'Lien Copié !' : 'Copier le lien d\'invitation'}</span>
+            </button>
+          </div>
 
           <div className="flex items-center gap-2 text-[11px] text-slate-400 pt-1">
             <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />

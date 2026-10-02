@@ -16,8 +16,7 @@ import {
   Pause,
   Clock,
   BookOpen,
-  Volume2,
-  ShieldCheck
+  Volume2
 } from 'lucide-react';
 import type { AcademicGoal, PlusInvitationNotification } from '../../types';
 import { Button } from '../ui/Button';
@@ -425,44 +424,22 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 </div>
               </div>
 
-              {/* If user is guest */}
-              {isGroupGuest ? (
-                <div className="p-4 sm:p-5 rounded-2xl bg-indigo-950/40 border border-indigo-500/40 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Crown className="w-4 h-4 text-amber-400" />
-                    <span className="text-xs font-bold text-white uppercase tracking-wider">
-                      Accès Membre Invité Confirmé
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Vous avez rejoint le groupe d'étude de{' '}
-                    <strong className="text-white">{invitedBy?.name || 'votre titulaire'}</strong>{' '}
-                    {invitedBy?.konanId && <span className="text-amber-300 font-mono font-bold">({invitedBy.konanId})</span>}.
-                    Toutes les fonctionnalités d'étude et de coaching vous sont ouvertes.
-                  </p>
-                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
-                    <ShieldCheck className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
-                    <span>
-                      <strong>Règle de gestion :</strong> Seul le titulaire principal du compte a le droit d'ajouter ou d'inviter d'autres membres au groupe.
-                    </span>
-                  </div>
-                  <Button
-                    variant="glow"
-                    size="md"
-                    onClick={() => setCurrentStep(2)}
-                    rightIcon={<ArrowRight className="w-4 h-4" />}
-                    className="w-full text-xs font-bold py-3 mt-1 cursor-pointer"
-                  >
-                    Passer au Choix de l'Objectif Scolaire (Étape 2/4)
-                  </Button>
+              {/* Status Note */}
+              {isGroupGuest && (
+                <div className="p-3.5 rounded-xl bg-purple-500/15 border border-purple-500/30 text-xs text-purple-200 flex items-center gap-2">
+                  <Crown className="w-4 h-4 text-amber-300 shrink-0" />
+                  <span>
+                    <strong>Membre Invité :</strong> Rattaché au groupe de {invitedBy?.name || 'votre titulaire'}.
+                  </span>
                 </div>
-              ) : (
-                /* ADD FRIEND INPUT - Full width and centered on mobile */
-                <form onSubmit={handleAddFriend} className="space-y-3">
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                    Entrez l'ID Konan de votre ami (ex: KN-948201) :
-                  </label>
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
+              )}
+
+              {/* ADD FRIEND INPUT - Always active, full width and centered on mobile & desktop */}
+              <form onSubmit={handleAddFriend} className="space-y-3">
+                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  Entrez l'ID Konan de votre ami (ex: KN-948201) :
+                </label>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
                     <div className="relative flex-1 w-full">
                       <input
                         type="text"
@@ -497,7 +474,6 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                     </p>
                   )}
                 </form>
-              )}
 
               {/* ACTIVE INVITED LIST */}
               <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-2">
@@ -533,6 +509,16 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                   </div>
                 )}
               </div>
+
+              <Button
+                variant="glow"
+                size="md"
+                onClick={() => setCurrentStep(2)}
+                rightIcon={<ArrowRight className="w-4 h-4" />}
+                className="w-full text-xs font-bold py-3 mt-2 cursor-pointer shadow-md shadow-indigo-600/20"
+              >
+                Passer au Choix de l'Objectif Scolaire (Étape 2/4)
+              </Button>
 
               {onOpenGroupModal && (
                 <div className="text-center pt-1">
