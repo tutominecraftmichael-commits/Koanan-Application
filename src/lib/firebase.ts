@@ -9,6 +9,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   sendPasswordResetEmail,
+  sendEmailVerification,
   signOut as firebaseSignOut, 
   onAuthStateChanged,
   type User as FirebaseUser
@@ -88,6 +89,7 @@ export interface RealAuthUser {
   displayName: string | null;
   email: string | null;
   photoURL: string | null;
+  emailVerified?: boolean;
 }
 
 /**
@@ -265,11 +267,19 @@ export async function signUpWithEmailReal(
       console.warn('Could not update initial profile fields:', profileErr);
     }
 
+    // Automatically send verification email upon registration
+    try {
+      await sendEmailVerification(user);
+    } catch (emailVerifErr) {
+      console.warn('Could not send initial email verification:', emailVerifErr);
+    }
+
     return {
       uid: user.uid,
       displayName: finalName,
       email: user.email,
       photoURL: finalAvatar,
+      emailVerified: user.emailVerified,
     };
   } catch (error: any) {
     console.error('Firebase Email Sign-Up Error:', error);
@@ -312,8 +322,21 @@ export async function resetPasswordReal(email: string): Promise<void> {
     if (error.code === 'auth/invalid-email') {
       throw new Error('Adresse email invalide.');
     }
+    if (error.code === 'auth/too-many-requests') {
+      throw new Error('Trop de demandes récentes. Veuillez patienter quelques minutes avant de renouveler la réinitialisation.');
+    }
     throw new Error(error.message || 'Impossible d\'envoyer l\'email de réinitialisation.');
   }
+}
+
+/**
+ * Resends email verification to the currently logged in user
+ */
+export async function sendVerificationEmailToCurrentUser(): Promise<void> {
+  if (!auth?.currentUser) {
+    throw new Error('Aucun utilisateur connecté.');
+  }
+  await sendEmailVerification(auth.currentUser);
 }
 
 /**
