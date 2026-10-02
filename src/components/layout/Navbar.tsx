@@ -366,16 +366,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-indigo-500/40 shadow-xs shrink-0"
                     />
                     <div className="hidden xl:block">
-                      <p className={`text-xs font-bold leading-tight truncate max-w-[130px] ${userAccount.planTier !== 'free' ? 'gold-shimmer-text font-black' : 'text-white'}`}>{displayName}</p>
-                      <p className="text-[10px] text-cyan-400 font-mono truncate max-w-[130px]">
-                        {userAccount.isDemo 
-                          ? t('demoAccount', lang) 
-                          : userAccount.planTier === 'plus' 
-                            ? (userAccount.isGroupGuest ? `🤝 Invité de ${userAccount.invitedBy?.name || 'Titulaire'}` : '👑 Titulaire du Groupe')
-                            : (userAccount.email || 'Connecté')}
+                      <p className={`text-xs font-bold leading-tight truncate max-w-[120px] ${userAccount.planTier !== 'free' ? 'gold-shimmer-text font-black' : 'text-white'}`}>{displayName}</p>
+                      <p className="text-[10px] text-cyan-400 font-mono truncate max-w-[120px]">
+                        {userAccount.isDemo ? t('demoAccount', lang) : userAccount.email || 'Connecté'}
                       </p>
                     </div>
-                    {/* Badge de version : Free (statique), Pro ou Titulaire/Invité Plus (cliquable vers tarifs) */}
+                    {/* Badge de version : Free (statique), Pro ou Plus (cliquable vers tarifs) */}
                     {userAccount.planTier === 'free' ? (
                       <span
                         className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-slate-800/90 text-sky-300 border-sky-500/30 cursor-default select-none"
@@ -394,26 +390,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                             onNavigate('landing');
                           }
                         }}
-                        className={`inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border cursor-pointer hover:scale-105 active:scale-95 transition-transform ${
+                        className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border cursor-pointer hover:scale-105 active:scale-95 transition-transform ${
                           userAccount.planTier === 'pro'
                             ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30'
-                            : userAccount.isGroupGuest
-                            ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 hover:bg-purple-500/30'
                             : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 hover:bg-indigo-500/30'
                         }`}
                         title={
                           userAccount.planTier === 'pro' 
                             ? 'Modèle KONAN Pro - Cliquez pour voir les formules' 
-                            : userAccount.isGroupGuest
-                            ? `Modèle KONAN Plus (Invité par ${userAccount.invitedBy?.name || 'Titulaire'}) - Cliquez pour voir les formules`
-                            : 'Modèle KONAN Plus (Titulaire du Groupe) - Cliquez pour voir les formules'
+                            : 'Modèle KONAN Plus - Cliquez pour voir les formules'
                         }
                       >
-                        {userAccount.planTier === 'pro' 
-                          ? '⭐ Pro' 
-                          : userAccount.isGroupGuest 
-                            ? '🤝 Invité Plus' 
-                            : '👑 Titulaire Plus'}
+                        {userAccount.planTier === 'pro' ? 'Pro' : 'Plus'}
                       </button>
                     )}
                   </div>

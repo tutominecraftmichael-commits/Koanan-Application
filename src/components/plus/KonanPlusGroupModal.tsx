@@ -265,38 +265,26 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
           
           {/* Header */}
           <div className="flex items-start gap-3.5">
-            <div className={`p-3 rounded-2xl border shadow-lg shrink-0 ${
-              isGroupGuest 
-                ? 'bg-purple-500/20 border-purple-500/40 text-purple-300 shadow-purple-500/20'
-                : 'bg-indigo-500/20 border-indigo-500/40 text-indigo-300 shadow-indigo-500/20'
-            }`}>
-              <Users className="w-6 h-6" />
+            <div className="p-3 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 shadow-lg shadow-indigo-500/20 shrink-0">
+              <Users className="w-6 h-6 text-indigo-400" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border inline-flex items-center gap-1 ${
-                  isGroupGuest
-                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
-                    : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                }`}>
-                  <Crown className="w-3 h-3" />
-                  {isGroupGuest ? '🤝 KONAN PLUS • ESPACE INVITÉ' : '👑 KONAN PLUS • ESPACE TITULAIRE'}
+                <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 inline-flex items-center gap-1">
+                  <Crown className="w-3 h-3 text-amber-300" />
+                  KONAN PLUS • MULTI-COMPTES
                 </span>
                 <span className="text-xs font-bold text-slate-400">
-                  {isGroupGuest 
-                    ? '✓ Accès Partagé Actif' 
-                    : `${acceptedCount} actif${acceptedCount > 1 ? 's' : ''} ${pendingCount > 0 ? `• ${pendingCount} en attente` : ''} / ${MAX_INVITES}`}
+                  {acceptedCount} actif{acceptedCount > 1 ? 's' : ''} {pendingCount > 0 ? `• ${pendingCount} en attente` : ''} / {MAX_INVITES}
                 </span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-1">
-                {isGroupGuest 
-                  ? "Mon Statut d'Invité & Membres du Groupe" 
-                  : "Gestion du Groupe & 4 Comptes Inclus (Titulaire)"}
+                Groupe d'Étude & 4 Comptes Inclus
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 mt-1">
                 {isGroupGuest 
-                  ? `Vous bénéficiez de l'accès KONAN PLUS en tant que membre invité par ${invitedBy?.name || 'votre titulaire'}.`
-                  : "En tant que Titulaire, vous pouvez inviter jusqu'à 4 amis via leur ID Konan personnel pour leur octroyer un accès complet et immédiat à Konan Plus."}
+                  ? "Vous êtes membre de ce groupe d'étude Konan Plus."
+                  : "Invitez jusqu'à 4 amis via leur ID Konan personnel pour leur octroyer un accès complet et immédiat à Konan Plus."}
               </p>
             </div>
           </div>
@@ -338,7 +326,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
             </div>
           )}
 
-          {/* Role Status Banner */}
+          {/* If the current user is an invited guest */}
           {isGroupGuest ? (
             <div className="p-4 sm:p-5 rounded-2xl bg-indigo-950/40 border border-indigo-500/40 space-y-2.5">
               <div className="flex items-center gap-2">
@@ -352,21 +340,21 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                 <strong className="text-white">{invitedBy?.name || 'votre titulaire'}</strong>{' '}
                 {invitedBy?.konanId && <span className="text-amber-300 font-mono font-bold">({invitedBy.konanId})</span>}.
               </p>
+              <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
+                <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                <span>
+                  <strong>Règle du groupe :</strong> En tant que membre invité, vous avez un accès complet aux outils de révision, coaching et musiques. Seul le titulaire principal a le droit d'ajouter ou d'inviter d'autres personnes.
+                </span>
+              </div>
             </div>
           ) : (
-            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-2.5 text-xs text-amber-200">
-              <Crown className="w-4 h-4 text-amber-400 shrink-0" />
-              <span><strong>Compte Titulaire Actif :</strong> Vous disposez de 4 comptes invités inclus dans votre formule.</span>
-            </div>
-          )}
-
-          {/* Input Form: Add Friend by ID or Email (Always active and responsive for Mobile & Desktop) */}
-          <form onSubmit={handleAddMember} className="space-y-3">
-            <div>
-              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-                Ajouter un ami avec son ID Konan (ou son email) :
-              </label>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
+            /* Input Form: Add Friend by ID or Email (Centered & Responsive for Mobile) */
+            <form onSubmit={handleAddMember} className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                  Ajouter un ami avec son ID Konan (ou son email) :
+                </label>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
                   <div className="relative flex-1 w-full">
                     <input
                       type="text"
@@ -400,6 +388,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                 </div>
               )}
             </form>
+          )}
 
           {/* Members List */}
           <div className="space-y-3 pt-2">

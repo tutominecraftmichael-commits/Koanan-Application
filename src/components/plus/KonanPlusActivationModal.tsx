@@ -16,7 +16,8 @@ import {
   Pause,
   Clock,
   BookOpen,
-  Volume2
+  Volume2,
+  ShieldCheck
 } from 'lucide-react';
 import type { AcademicGoal, PlusInvitationNotification } from '../../types';
 import { Button } from '../ui/Button';
@@ -303,7 +304,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
         <div className="p-6 sm:p-8 space-y-6 overflow-y-auto relative z-10 custom-scrollbar flex-1">
           
           {/* ========================================================= */}
-          {/* ÉTAPE 0 : CÉLÉBRATION & BIENVENUE                         */}
+          {/* ÉTAPE 0 : CÉLÉBRATION ROYALE & BIENVENUE                   */}
           {/* ========================================================= */}
           {currentStep === 0 && (
             <div className="space-y-6 text-center animate-in fade-in zoom-in-95 duration-300">
@@ -320,21 +321,15 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 </div>
 
                 <div className="space-y-1">
-                  <span className={`text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3 py-1 rounded-full border inline-flex items-center gap-1.5 ${
-                    isGroupGuest
-                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
-                      : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                  }`}>
-                    <Crown className="w-3.5 h-3.5" />
-                    {isGroupGuest ? '🤝 MEMBRE INVITÉ • FORMULE PLUS ACTIVÉE' : '👑 TITULAIRE DU COMPTE • FORMULE PLUS ACTIVÉE'}
+                  <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 inline-flex items-center gap-1.5">
+                    <Crown className="w-3.5 h-3.5 text-amber-300" />
+                    FORMULE COMPLÈTE & ÉLITE ACTIVÉE
                   </span>
                   <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight pt-1">
                     Félicitations <span className="gold-shimmer-text">{studentName}</span> !
                   </h2>
                   <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto pt-1 leading-relaxed">
-                    {isGroupGuest
-                      ? `Bienvenue dans KONAN PLUS ! Votre accès complet est activé grâce au compte de ${invitedBy?.name || 'votre titulaire'}.`
-                      : 'Bienvenue dans KONAN PLUS. En tant que Titulaire, vous disposez de 4 comptes invités à partager avec vos camarades.'}
+                    Bienvenue dans <strong>KONAN PLUS</strong>. Vous venez de débloquer l'expérience d'excellence académique la plus complète.
                   </p>
                 </div>
               </div>
@@ -342,12 +337,12 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
               {/* 4 Super Exclusive Features summary teaser */}
               <div className="p-4 rounded-2xl bg-indigo-950/20 border border-indigo-500/30 text-left space-y-2.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 block">
-                  {isGroupGuest ? 'Vos privilèges d’excellence académique débloqués :' : 'Configurons ensemble vos 4 super-pouvoirs étape par étape :'}
+                  Configurons ensemble vos 4 super-pouvoirs étape par étape :
                 </span>
                 <div className="grid grid-cols-2 gap-2 text-xs text-slate-200">
                   <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                     <Users className="w-4 h-4 text-indigo-400 shrink-0" />
-                    <span className="truncate">{isGroupGuest ? '1. Membre du Groupe' : '1. Inviter 4 amis'}</span>
+                    <span className="truncate">1. Inviter 4 amis</span>
                   </div>
                   <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                     <Target className="w-4 h-4 text-amber-400 shrink-0" />
@@ -371,30 +366,30 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 onClick={() => setCurrentStep(1)}
                 className="w-full font-black text-sm py-3.5 shadow-xl shadow-indigo-600/30 cursor-pointer"
               >
-                {isGroupGuest ? 'Découvrir mon espace d’étude (Étape 1/4)' : 'Démarrer la configuration guidée (Étape 1/4)'}
+                Démarrer la configuration guidée (Étape 1/4)
               </Button>
             </div>
           )}
 
           {/* ========================================================= */}
-          {/* ÉTAPE 1 : GROUPE D'ÉTUDE & STATUT (TITULAIRE VS INVITÉ)    */}
+          {/* ÉTAPE 1 : GROUPE D'ÉTUDE & 4 COMPTES VIA ID KONAN         */}
           {/* ========================================================= */}
           {currentStep === 1 && (
-            <div className="space-y-5 animate-in fade-in duration-200 text-left">
+            <div className="space-y-5 animate-in slide-in-from-right duration-300 text-left">
               <div className="flex items-start gap-3">
                 <div className="p-3 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 shrink-0">
                   <Users className="w-6 h-6 text-indigo-400" />
                 </div>
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400">
-                    Étape 1 sur 4 • {isGroupGuest ? 'Statut Invité' : 'Gestion Titulaire'}
+                    Étape 1 sur 4 • Multi-comptes
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                    {isGroupGuest ? "Votre Statut : Membre Invité" : "Invitez jusqu'à 4 amis avec leur ID Konan"}
+                    {isGroupGuest ? "Votre Groupe d'Étude Konan Plus" : "Invitez jusqu'à 4 amis avec leur ID Konan"}
                   </h3>
                   <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
                     {isGroupGuest 
-                      ? `Vous êtes rattaché au groupe d'étude de ${invitedBy?.name || 'votre titulaire'}. Votre accès complet à Konan Plus est 100% opérationnel.`
+                      ? "Vous êtes membre invité. Votre accès à toutes les fonctionnalités Konan Plus est 100% garanti."
                       : "Chaque étudiant possède un ID Konan personnel et fixe. Renseignez l'ID de votre ami pour lui débloquer un compte Konan Plus complet et gratuit."}
                   </p>
                 </div>
@@ -424,22 +419,35 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 </div>
               </div>
 
-              {/* Status Note */}
-              {isGroupGuest && (
-                <div className="p-3.5 rounded-xl bg-purple-500/15 border border-purple-500/30 text-xs text-purple-200 flex items-center gap-2">
-                  <Crown className="w-4 h-4 text-amber-300 shrink-0" />
-                  <span>
-                    <strong>Membre Invité :</strong> Rattaché au groupe de {invitedBy?.name || 'votre titulaire'}.
-                  </span>
+              {/* If user is guest */}
+              {isGroupGuest ? (
+                <div className="p-4 sm:p-5 rounded-2xl bg-indigo-950/40 border border-indigo-500/40 space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <Crown className="w-4 h-4 text-amber-400" />
+                    <span className="text-xs font-bold text-white uppercase tracking-wider">
+                      Membre Invité • Accès Débloqué
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Vous avez rejoint le groupe d'étude de{' '}
+                    <strong className="text-white">{invitedBy?.name || 'votre titulaire'}</strong>{' '}
+                    {invitedBy?.konanId && <span className="text-amber-300 font-mono font-bold">({invitedBy.konanId})</span>}.
+                    Toutes les fonctionnalités KONAN PLUS vous sont 100% ouvertes.
+                  </p>
+                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
+                    <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                    <span>
+                      <strong>Règle de gestion :</strong> Seul le titulaire principal du compte a le droit d'ajouter ou d'inviter d'autres membres au groupe.
+                    </span>
+                  </div>
                 </div>
-              )}
-
-              {/* ADD FRIEND INPUT - Always active, full width and centered on mobile & desktop */}
-              <form onSubmit={handleAddFriend} className="space-y-3">
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                  Entrez l'ID Konan de votre ami (ex: KN-948201) :
-                </label>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
+              ) : (
+                /* ADD FRIEND INPUT - Full width and centered on mobile */
+                <form onSubmit={handleAddFriend} className="space-y-3">
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                    Entrez l'ID Konan de votre ami (ex: KN-948201) :
+                  </label>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
                     <div className="relative flex-1 w-full">
                       <input
                         type="text"
@@ -474,6 +482,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                     </p>
                   )}
                 </form>
+              )}
 
               {/* ACTIVE INVITED LIST */}
               <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-2">
@@ -510,16 +519,6 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 )}
               </div>
 
-              <Button
-                variant="glow"
-                size="md"
-                onClick={() => setCurrentStep(2)}
-                rightIcon={<ArrowRight className="w-4 h-4" />}
-                className="w-full text-xs font-bold py-3 mt-2 cursor-pointer shadow-md shadow-indigo-600/20"
-              >
-                Passer au Choix de l'Objectif Scolaire (Étape 2/4)
-              </Button>
-
               {onOpenGroupModal && (
                 <div className="text-center pt-1">
                   <button
@@ -540,7 +539,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
           {/* ÉTAPE 2 : 3 OBJECTIFS SCOLAIRES                           */}
           {/* ========================================================= */}
           {currentStep === 2 && (
-            <div className="space-y-5 animate-in fade-in duration-200 text-left">
+            <div className="space-y-5 animate-in slide-in-from-right duration-300 text-left">
               <div className="flex items-start gap-3">
                 <div className="p-3 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-300 shrink-0">
                   <Target className="w-6 h-6 text-amber-400" />
@@ -651,7 +650,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
           {/* ÉTAPE 3 : TÊTE-À-TÊTE COACH KONAN (15 MIN)                 */}
           {/* ========================================================= */}
           {currentStep === 3 && (
-            <div className="space-y-5 animate-in fade-in duration-200 text-left">
+            <div className="space-y-5 animate-in slide-in-from-right duration-300 text-left">
               <div className="flex items-start gap-3">
                 <div className="p-3 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 shrink-0">
                   <Clock className="w-6 h-6 text-cyan-400" />
@@ -717,7 +716,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
           {/* ÉTAPE 4 : MUSIQUES DE FOCUS & RÉVISION                     */}
           {/* ========================================================= */}
           {currentStep === 4 && (
-            <div className="space-y-5 animate-in fade-in duration-200 text-left">
+            <div className="space-y-5 animate-in slide-in-from-right duration-300 text-left">
               <div className="flex items-start gap-3">
                 <div className="p-3 rounded-2xl bg-purple-500/20 border border-purple-500/40 text-purple-300 shrink-0">
                   <Headphones className="w-6 h-6 text-purple-400" />
