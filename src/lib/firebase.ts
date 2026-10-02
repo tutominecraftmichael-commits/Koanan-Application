@@ -23,33 +23,44 @@ export interface FirebaseConfig {
   appId: string;
 }
 
-export const DEFAULT_FIREBASE_CONFIG: FirebaseConfig = {
-  apiKey: "AIzaSyA4Azn3VXwTC2xdAsCm1yMKq0QEoDalzg4",
-  authDomain: "konanai-ed046.firebaseapp.com",
-  projectId: "konanai-ed046",
-  storageBucket: "konanai-ed046.firebasestorage.app",
-  messagingSenderId: "928627074050",
-  appId: "1:928627074050:web:a5bc9ace090ba9347df31b",
-};
-
 /**
- * Retrieves the Firebase configuration from environment variables or default project config.
+ * Retrieves the Firebase configuration strictly from environment variables.
  */
 export function getFirebaseConfig(): FirebaseConfig {
   const env = import.meta.env;
-  if (env.VITE_FIREBASE_API_KEY && env.VITE_FIREBASE_AUTH_DOMAIN && env.VITE_FIREBASE_PROJECT_ID) {
-    return {
-      apiKey: env.VITE_FIREBASE_API_KEY,
-      authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: env.VITE_FIREBASE_PROJECT_ID,
-      storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET || DEFAULT_FIREBASE_CONFIG.storageBucket,
-      messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID || DEFAULT_FIREBASE_CONFIG.messagingSenderId,
-      appId: env.VITE_FIREBASE_APP_ID || DEFAULT_FIREBASE_CONFIG.appId,
-    };
-  }
+  const apiKey = env.VITE_FIREBASE_API_KEY || '';
+  const authDomain = env.VITE_FIREBASE_AUTH_DOMAIN || '';
+  const projectId = env.VITE_FIREBASE_PROJECT_ID || '';
+  const storageBucket = env.VITE_FIREBASE_STORAGE_BUCKET || '';
+  const messagingSenderId = env.VITE_FIREBASE_MESSAGING_SENDER_ID || '';
+  const appId = env.VITE_FIREBASE_APP_ID || '';
 
-  return DEFAULT_FIREBASE_CONFIG;
+  return {
+    apiKey,
+    authDomain,
+    projectId,
+    storageBucket,
+    messagingSenderId,
+    appId,
+  };
 }
+
+/**
+ * Checks if Firebase configuration environment variables are present and valid.
+ */
+export function isFirebaseConfigured(): boolean {
+  const config = getFirebaseConfig();
+  return Boolean(config.apiKey && config.projectId && config.authDomain);
+}
+
+import { 
+  getFirestore, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  collection,
+  onSnapshot 
+} from 'firebase/firestore';
 
 /**
  * Initializes or retrieves the Firebase app instance safely.
@@ -62,19 +73,6 @@ function getFirebaseApp() {
   }
 
   return initializeApp(config);
-}
-
-import { 
-  getFirestore, 
-  doc, 
-  getDoc, 
-  setDoc, 
-  collection,
-  onSnapshot 
-} from 'firebase/firestore';
-
-export function isFirebaseConfigured(): boolean {
-  return true;
 }
 
 export const app = getFirebaseApp();

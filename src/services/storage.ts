@@ -459,10 +459,71 @@ export function exportStateToJson(state: AppState): string {
 export function importStateFromJson(jsonString: string): AppState | null {
   try {
     const parsed = JSON.parse(jsonString);
-    if (parsed.subjects && Array.isArray(parsed.subjects)) {
-      saveAppState(parsed);
-      return parsed;
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return null;
     }
+
+    if (!Array.isArray(parsed.subjects)) {
+      return null;
+    }
+
+    // Clean and validate subjects
+    const validSubjects = parsed.subjects
+      .filter((s: any) => s && typeof s === 'object' && typeof s.name === 'string' && s.name.trim().length > 0)
+      .map((s: any) => ({
+        id: typeof s.id === 'string' && s.id.length > 0 ? s.id.slice(0, 50) : generateId(),
+        name: String(s.name).trim().slice(0, 100),
+        code: typeof s.code === 'string' ? s.code.trim().slice(0, 30) : undefined,
+        color: typeof s.color === 'string' && /^#[0-9A-Fa-f]{3,8}$/.test(s.color) ? s.color : '#6366F1',
+        coefficient: typeof s.coefficient === 'number' && !isNaN(s.coefficient) ? Math.max(1, Math.min(20, s.coefficient)) : 1,
+        difficulty: typeof s.difficulty === 'number' && !isNaN(s.difficulty) ? Math.max(1, Math.min(5, s.difficulty)) : 3,
+        targetHoursPerWeek: typeof s.targetHoursPerWeek === 'number' && !isNaN(s.targetHoursPerWeek) ? Math.max(0, Math.min(50, s.targetHoursPerWeek)) : 4,
+        description: typeof s.description === 'string' ? s.description.slice(0, 300) : undefined,
+      }));
+
+    // Clean and validate class slots
+    const validClassSlots = Array.isArray(parsed.classSlots)
+      ? parsed.classSlots.filter((cs: any) => cs && typeof cs === 'object' && typeof cs.subjectId === 'string')
+      : [];
+
+    // Clean and validate study sessions
+    const validStudySessions = Array.isArray(parsed.studySessions)
+      ? parsed.studySessions.filter((ss: any) => ss && typeof ss === 'object' && typeof ss.id === 'string')
+      : [];
+
+    // Clean logs
+    const validLogs = Array.isArray(parsed.logs)
+      ? parsed.logs.filter((lg: any) => lg && typeof lg === 'object' && typeof lg.id === 'string')
+      : [];
+
+    const defaultState = loadDemoState();
+
+    const sanitizedState: AppState = {
+      studentName: typeof parsed.studentName === 'string' && parsed.studentName.trim().length > 0
+        ? parsed.studentName.trim().slice(0, 80)
+        : defaultState.studentName,
+      academicLevel: typeof parsed.academicLevel === 'string' && parsed.academicLevel.trim().length > 0
+        ? parsed.academicLevel.trim().slice(0, 60)
+        : defaultState.academicLevel,
+      planTier: parsed.planTier === 'plus' || parsed.planTier === 'pro' || parsed.planTier === 'free'
+        ? parsed.planTier
+        : 'free',
+      konanId: typeof parsed.konanId === 'string' && /^KN-[A-Z0-9]{4,10}$/i.test(parsed.konanId.trim())
+        ? parsed.konanId.trim().toUpperCase()
+        : defaultState.konanId,
+      subjects: validSubjects,
+      classSlots: validClassSlots,
+      preferences: parsed.preferences && typeof parsed.preferences === 'object'
+        ? { ...DEFAULT_PREFERENCES, ...parsed.preferences }
+        : DEFAULT_PREFERENCES,
+      studySessions: validStudySessions,
+      logs: validLogs,
+      completedOnboarding: Boolean(parsed.completedOnboarding),
+      isDemoMode: Boolean(parsed.isDemoMode),
+    };
+
+    saveAppState(sanitizedState);
+    return sanitizedState;
   } catch (err) {
     console.error('Invalid JSON structure for import', err);
   }
