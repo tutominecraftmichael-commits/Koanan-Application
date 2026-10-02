@@ -24,25 +24,27 @@ export interface FirebaseConfig {
   appId: string;
 }
 
+export const DEFAULT_FIREBASE_CONFIG: FirebaseConfig = {
+  apiKey: "AIzaSyA4Azn3VXwTC2xdAsCm1yMKq0QEoDalzg4",
+  authDomain: "konanai-ed046.firebaseapp.com",
+  projectId: "konanai-ed046",
+  storageBucket: "konanai-ed046.firebasestorage.app",
+  messagingSenderId: "928627074050",
+  appId: "1:928627074050:web:a5bc9ace090ba9347df31b",
+};
+
 /**
- * Retrieves the Firebase configuration strictly from environment variables.
+ * Retrieves the Firebase configuration strictly from environment variables or project fallback.
  */
 export function getFirebaseConfig(): FirebaseConfig {
   const env = import.meta.env;
-  const apiKey = env.VITE_FIREBASE_API_KEY || '';
-  const authDomain = env.VITE_FIREBASE_AUTH_DOMAIN || '';
-  const projectId = env.VITE_FIREBASE_PROJECT_ID || '';
-  const storageBucket = env.VITE_FIREBASE_STORAGE_BUCKET || '';
-  const messagingSenderId = env.VITE_FIREBASE_MESSAGING_SENDER_ID || '';
-  const appId = env.VITE_FIREBASE_APP_ID || '';
-
   return {
-    apiKey,
-    authDomain,
-    projectId,
-    storageBucket,
-    messagingSenderId,
-    appId,
+    apiKey: env.VITE_FIREBASE_API_KEY || DEFAULT_FIREBASE_CONFIG.apiKey,
+    authDomain: env.VITE_FIREBASE_AUTH_DOMAIN || DEFAULT_FIREBASE_CONFIG.authDomain,
+    projectId: env.VITE_FIREBASE_PROJECT_ID || DEFAULT_FIREBASE_CONFIG.projectId,
+    storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET || DEFAULT_FIREBASE_CONFIG.storageBucket,
+    messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID || DEFAULT_FIREBASE_CONFIG.messagingSenderId,
+    appId: env.VITE_FIREBASE_APP_ID || DEFAULT_FIREBASE_CONFIG.appId,
   };
 }
 
@@ -64,21 +66,27 @@ import {
 } from 'firebase/firestore';
 
 /**
- * Initializes or retrieves the Firebase app instance safely.
+ * Initializes or retrieves the Firebase app instance safely without throwing unhandled top-level errors.
  */
 function getFirebaseApp() {
-  const config = getFirebaseConfig();
-
-  if (getApps().length > 0) {
-    return getApp();
+  try {
+    if (getApps().length > 0) {
+      return getApp();
+    }
+    const config = getFirebaseConfig();
+    if (config.apiKey && config.projectId) {
+      return initializeApp(config);
+    }
+  } catch (err) {
+    console.warn('[Firebase] Safe initialization warning:', err);
   }
-
-  return initializeApp(config);
+  return null;
 }
 
-export const app = getFirebaseApp();
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+const safeApp = getFirebaseApp();
+export const app = safeApp;
+export const auth = safeApp ? getAuth(safeApp) : null;
+export const db = safeApp ? getFirestore(safeApp) : null;
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
   prompt: 'select_account'

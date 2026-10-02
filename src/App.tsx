@@ -534,6 +534,19 @@ export function App() {
       );
     }
 
+    // 🌟 L'animation & guide s'affichent uniquement lors de la PREMIÈRE connexion de l'utilisateur
+    const firstLoginKey = `konan_welcomed_v1_${profile.googleId}`;
+    const isFirstTimeLogin = !localStorage.getItem(firstLoginKey) && !userState.completedOnboarding;
+    if (isFirstTimeLogin) {
+      localStorage.setItem(firstLoginKey, 'true');
+      soundFX.playVictoryCelebration();
+      if (effectivePlan === 'plus') {
+        setIsPlusActivationModalOpen(true);
+      } else if (effectivePlan === 'pro') {
+        setIsSuperProModalOpen(true);
+      }
+    }
+
     setActiveView('dashboard');
 
     // 2. Background cross-device sync: merges cloud state without delaying navigation
@@ -619,9 +632,8 @@ export function App() {
           }
         }
 
-        // 🌟 DUOLINGO SUPER CELEBRATION MODAL
-        setIsSuperProModalOpen(true);
-        soundFX.playVictoryCelebration();
+        // Pas d'animation au moment du paiement de l'abonnement (audio 1)
+        soundFX.playCheckmarkPop();
 
         showToast('⭐ Félicitations ! Le modèle KONAN PRO est activé ! Synchronisation Google Agenda automatique déclenchée pour tous les jours.');
         if (activeView === 'landing' || activeView === 'auth') {
@@ -659,9 +671,8 @@ export function App() {
           'pro_activated'
         );
 
-        // 👑 DUOLINGO-STYLE / ROYAL CELEBRATION MODAL FOR KONAN PLUS
-        setIsPlusActivationModalOpen(true);
-        soundFX.playVictoryCelebration();
+        // Pas d'animation au moment du paiement de l'abonnement (audio 1)
+        soundFX.playCheckmarkPop();
 
         showToast('👑 Félicitations ! Le modèle KONAN PLUS est activé ! Invitez jusqu\'à 4 amis (4 comptes inclus) & profitez de l\'expérience complète.');
         if (activeView === 'landing' || activeView === 'auth') {
