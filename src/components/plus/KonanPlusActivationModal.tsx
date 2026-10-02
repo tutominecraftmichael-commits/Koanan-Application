@@ -499,7 +499,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                     {allMembers.map((m, idx) => {
                       const allInv = getPlusInvitations();
                       const clean = m.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
-                      const inv = allInv.find(i => i.targetKonanIdOrEmail.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '') === clean);
+                      const inv = allInv.find(i => (i.targetKonanIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '') === clean);
                       const isAccepted = inv ? inv.status === 'accepted' : false;
 
                       return (

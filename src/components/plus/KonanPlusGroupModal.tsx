@@ -107,7 +107,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
   const isMemberAccepted = (targetVal: string) => {
     const cleanTarget = targetVal.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
     const invite = invitations.find(i => {
-      const it = i.targetKonanIdOrEmail.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+      const it = (i.targetKonanIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
       return it === cleanTarget;
     });
     return invite?.status === 'accepted';
