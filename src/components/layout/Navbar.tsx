@@ -458,7 +458,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Prominent Header Invitation Banner */}
-        {pendingInvitations.length > 0 && (
+        {pendingInvitations.length > 0 && pendingInvitations[0] && (
           <div className="bg-gradient-to-r from-amber-500/15 via-slate-900 to-indigo-950/40 border-t border-b border-amber-500/40 px-3 sm:px-4 py-2 text-xs text-white flex flex-col sm:flex-row items-center justify-between gap-2.5 animate-in slide-in-from-top-2">
             <div className="flex items-center gap-2.5 text-center sm:text-left min-w-0">
               <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
@@ -466,8 +466,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               <p className="leading-snug text-xs">
                 <strong>Invitation KONAN PLUS :</strong> Vous avez reçu une invitation de la part de{' '}
-                <strong className="text-amber-300">{pendingInvitations[0].senderName}</strong>{' '}
-                (ID : <span className="font-mono text-amber-300 font-bold">{pendingInvitations[0].senderKonanId}</span>). Accepter l'accès complet ?
+                <strong className="text-amber-300">{pendingInvitations[0]?.senderName || 'un ami'}</strong>{' '}
+                {pendingInvitations[0]?.senderKonanId && (
+                  <>(ID : <span className="font-mono text-amber-300 font-bold">{pendingInvitations[0].senderKonanId}</span>)</>
+                )}. Accepter l'accès complet ?
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">

@@ -155,33 +155,6 @@ export function createInitialStateFromPreset(presetId: string = 'cs-engineering'
  * Loads the state for a specific authenticated user.
  */
 export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState {
-  try {
-    const raw = localStorage.getItem(`${USER_STORAGE_PREFIX}${uid}`);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      const planTier = parsed.planTier || parsed.userAccount?.planTier || 'free';
-      const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
-      const assignedKonanId = (typeof parsed.konanId === 'string' && parsed.konanId.trim())
-        ? parsed.konanId.trim().toUpperCase()
-        : (parsed.userAccount?.konanId?.trim()?.toUpperCase() || fallbackUser?.konanId || generateKonanId(uid));
-
-      return {
-        ...parsed,
-        konanId: assignedKonanId,
-        logs: hasCompleted ? (parsed.logs || []) : [],
-        planTier,
-        userAccount: parsed.userAccount ? {
-          ...parsed.userAccount,
-          konanId: assignedKonanId,
-          planTier,
-        } : undefined,
-        isDemoMode: false,
-      };
-    }
-  } catch (err) {
-    console.warn(`Failed to load state for user ${uid}, creating empty state`, err);
-  }
-
   const assignedKonanId = fallbackUser?.konanId || generateKonanId(uid);
   const user = fallbackUser || {
     name: 'Étudiant',
@@ -195,15 +168,56 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
     lastSyncedAt: new Date().toISOString(),
   };
 
-  const emptyState = createEmptyUserState({ ...user, konanId: assignedKonanId });
-  emptyState.konanId = assignedKonanId;
-  if (emptyState.userAccount) {
-    emptyState.userAccount.konanId = assignedKonanId;
-  }
+  const baseEmptyState = createEmptyUserState({ ...user, konanId: assignedKonanId });
+
   try {
-    localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(emptyState));
+    const raw = localStorage.getItem(`${USER_STORAGE_PREFIX}${uid}`);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        const planTier = parsed.planTier || parsed.userAccount?.planTier || 'free';
+        const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
+        const resolvedKonanId = (typeof parsed.konanId === 'string' && parsed.konanId.trim())
+          ? parsed.konanId.trim().toUpperCase()
+          : (parsed.userAccount?.konanId?.trim()?.toUpperCase() || assignedKonanId);
+
+        return {
+          ...baseEmptyState,
+          ...parsed,
+          studentName: parsed.studentName || user.name,
+          academicLevel: parsed.academicLevel || user.academicLevel || 'Licence Universitaire',
+          konanId: resolvedKonanId,
+          subjects: Array.isArray(parsed.subjects) ? parsed.subjects : [],
+          classSlots: Array.isArray(parsed.classSlots) ? parsed.classSlots : [],
+          studySessions: Array.isArray(parsed.studySessions) ? parsed.studySessions : [],
+          logs: hasCompleted ? (Array.isArray(parsed.logs) ? parsed.logs : []) : [],
+          preferences: parsed.preferences ? { ...baseEmptyState.preferences, ...parsed.preferences } : baseEmptyState.preferences,
+          streak: parsed.streak ? { ...baseEmptyState.streak, ...parsed.streak } : baseEmptyState.streak,
+          invitedIds: Array.isArray(parsed.invitedIds) ? parsed.invitedIds : [],
+          invitedEmails: Array.isArray(parsed.invitedEmails) ? parsed.invitedEmails : [],
+          planTier,
+          userAccount: parsed.userAccount ? {
+            ...user,
+            ...parsed.userAccount,
+            konanId: resolvedKonanId,
+            planTier,
+          } : {
+            ...user,
+            konanId: resolvedKonanId,
+            planTier,
+          },
+          isDemoMode: false,
+        };
+      }
+    }
+  } catch (err) {
+    console.warn(`Failed to load state for user ${uid}, falling back to base empty state`, err);
+  }
+
+  try {
+    localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(baseEmptyState));
   } catch {}
-  return emptyState;
+  return baseEmptyState;
 }
 
 import { 
@@ -417,37 +431,55 @@ export function setActiveSession(session: ActiveSession | null): void {
  * Backward compatibility functions
  */
 export function loadAppState(): AppState {
-  const session = getActiveSession();
-  if (session && !session.isDemo && session.uid) {
-    return loadUserState(session.uid);
-  }
-  if (session && session.isDemo) {
-    return loadDemoState();
-  }
-
-  // If no session exists, the app is in unauthenticated Guest state
-  const demo = loadDemoState();
-  let deviceStudentId = '';
   try {
-    deviceStudentId = localStorage.getItem('konan_device_student_id') || '';
-    if (!deviceStudentId) {
-      deviceStudentId = generateKonanId();
-      localStorage.setItem('konan_device_student_id', deviceStudentId);
+    const session = getActiveSession();
+    if (session && !session.isDemo && session.uid) {
+      return loadUserState(session.uid);
     }
-  } catch {
-    deviceStudentId = generateKonanId();
-  }
+    if (session && session.isDemo) {
+      return loadDemoState();
+    }
 
-  return {
-    ...demo,
-    konanId: deviceStudentId,
-    userAccount: {
-      ...demo.userAccount!,
+    // If no session exists, the app is in unauthenticated Guest state
+    const demo = loadDemoState();
+    let deviceStudentId = '';
+    try {
+      deviceStudentId = localStorage.getItem('konan_device_student_id') || '';
+      if (!deviceStudentId) {
+        deviceStudentId = generateKonanId();
+        localStorage.setItem('konan_device_student_id', deviceStudentId);
+      }
+    } catch {
+      deviceStudentId = generateKonanId();
+    }
+
+    return {
+      ...demo,
       konanId: deviceStudentId,
-      isLoggedIn: false,
-    },
-    isDemoMode: false,
-  };
+      userAccount: {
+        ...(demo.userAccount || {
+          name: 'Étudiant',
+          email: '',
+          avatar: '',
+          googleId: 'guest',
+          academicLevel: demo.academicLevel,
+          planTier: 'free' as const,
+          isDemo: false,
+          lastSyncedAt: new Date().toISOString()
+        }),
+        konanId: deviceStudentId,
+        isLoggedIn: false,
+      },
+      isDemoMode: false,
+    };
+  } catch (err) {
+    console.error('loadAppState error, returning fallback demo state:', err);
+    try {
+      return loadDemoState();
+    } catch {
+      return createInitialStateFromPreset();
+    }
+  }
 }
 
 export function saveAppState(state: AppState): void {

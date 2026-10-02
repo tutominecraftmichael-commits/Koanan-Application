@@ -168,9 +168,9 @@ export function App() {
         const myId = state.userAccount?.konanId || state.konanId;
         const myEmail = state.userAccount?.email;
         const existing = getPendingInvitationsForUser(myId, myEmail);
-        const match = existing.find(i => i.senderKonanId.toUpperCase() === cleanSenderId.toUpperCase());
+        const match = existing.find(i => (i?.senderKonanId || '').toUpperCase() === cleanSenderId.toUpperCase());
         if (match) {
-          setToastMessage(`📬 Invitation KONAN PLUS reçue de ${match.senderName} (${cleanSenderId}) !`);
+          setToastMessage(`📬 Invitation KONAN PLUS reçue de ${match.senderName || 'un ami'} (${cleanSenderId}) !`);
         }
       }
     } catch (e) {
@@ -1354,8 +1354,8 @@ export function App() {
         onResetData={handleResetData}
         onLogout={handleLogout}
         onOpenSettings={() => setIsSettingsOpen(true)}
-        totalStudySessions={state.studySessions.length}
-        completedSessions={state.studySessions.filter(s => s.completed).length}
+        totalStudySessions={state.studySessions?.length || 0}
+        completedSessions={state.studySessions ? state.studySessions.filter(s => s.completed).length : 0}
         pendingInvitations={pendingInvitations}
         onAcceptInvitation={handleAcceptInvitation}
         onDeclineInvitation={handleDeclineInvitation}
