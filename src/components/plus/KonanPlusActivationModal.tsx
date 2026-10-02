@@ -797,20 +797,22 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                   </div>
                 </div>
 
-                {/* Volume slider */}
+                {/* Volume slider (Up to 200% Max) */}
                 <div className="flex items-center gap-3 pt-1 border-t border-slate-800/80">
                   <span className="text-[11px] text-slate-400 font-semibold shrink-0">Volume :</span>
                   <input
                     type="range"
                     min="0"
-                    max="1"
+                    max="2"
                     step="0.05"
                     value={audioVolume}
                     onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
                     className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-500"
                   />
-                  <span className="text-[11px] font-mono text-purple-300 shrink-0">
-                    {Math.round(audioVolume * 100)}%
+                  <span className={`text-[11px] font-mono shrink-0 ${
+                    audioVolume > 1.0 ? 'text-amber-300 font-bold' : 'text-purple-300'
+                  }`}>
+                    {audioVolume > 1.0 ? `⚡ ${Math.round(audioVolume * 100)}% (Boost)` : `${Math.round(audioVolume * 100)}%`}
                   </span>
                 </div>
               </div>

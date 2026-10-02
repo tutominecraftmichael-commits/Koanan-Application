@@ -21,6 +21,7 @@ import {
   resetPasswordReal,
   isMobileBrowser
 } from '../../lib/firebase';
+import { generateKonanId } from '../../lib/konanId';
 
 export interface AuthPageProps {
   onLoginSuccess: (profile: UserAccount, preferences?: { chronotype: Chronotype }) => void;
@@ -67,6 +68,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             email: redirectedUser.email || '',
             avatar: redirectedUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(redirectedUser.displayName || 'User')}`,
             googleId: redirectedUser.uid,
+            konanId: generateKonanId(redirectedUser.uid || redirectedUser.email || undefined),
             academicLevel: 'Licence Universitaire',
             isLoggedIn: true,
             isDemo: false,
@@ -102,6 +104,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         email: googleUser.email || '',
         avatar: googleUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(googleUser.displayName || 'User')}`,
         googleId: googleUser.uid,
+        konanId: generateKonanId(googleUser.uid || googleUser.email || undefined),
         academicLevel: 'Licence Universitaire',
         isLoggedIn: true,
         isDemo: false,
@@ -178,6 +181,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
           email: user.email || email,
           avatar: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(user.displayName || email)}`,
           googleId: user.uid,
+          konanId: generateKonanId(user.uid || user.email || email),
           academicLevel: 'Licence Universitaire',
           isLoggedIn: true,
           isDemo: false,
@@ -193,6 +197,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
           email: user.email || email,
           avatar: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(finalName)}`,
           googleId: user.uid,
+          konanId: generateKonanId(user.uid || user.email || email),
           academicLevel: 'Licence Universitaire',
           isLoggedIn: true,
           isDemo: false,

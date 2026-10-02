@@ -498,9 +498,13 @@ export function App() {
       localStorage.removeItem('konan_pending_plan');
     }
 
+    const studentKonanId = profile.konanId || userState.konanId || userState.userAccount?.konanId || generateKonanId(profile.googleId || profile.email);
+
     userState.planTier = effectivePlan;
+    userState.konanId = studentKonanId;
     userState.userAccount = {
       ...profile,
+      konanId: studentKonanId,
       planTier: effectivePlan,
       name: finalName,
       isLoggedIn: true,
@@ -514,14 +518,14 @@ export function App() {
     }
     setState(userState);
 
-    // 1. Instant greeting and direct redirection to dashboard (0ms latency, no blocking)
+    // 1. Instant greeting with permanent unique Konan Code (always visible for all users)
     hasGreetedAuthRef.current = profile.googleId;
     if (effectivePlan === 'pro') {
-      showToast(`⭐ Bonne Arrivée ! ${finalName} — Votre modèle KONAN PRO est actif.`);
+      showToast(`⭐ Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PRO actif)`);
     } else if (effectivePlan === 'plus') {
-      showToast(`👑 Bonne Arrivée ! ${finalName} — Votre modèle KONAN PLUS est actif.`);
+      showToast(`👑 Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PLUS actif)`);
     } else {
-      showToast(`✨ Bonne Arrivée ! ${finalName}`);
+      showToast(`✨ Bonne Arrivée ! ${finalName} — Votre Code Konan : ${studentKonanId}`);
     }
 
     // If PRO or PLUS was chosen/pending and sessions exist, automatically sync Google Agenda for all days
@@ -1338,6 +1342,7 @@ export function App() {
         studentName={state.studentName}
         academicLevel={state.academicLevel}
         userAccount={state.userAccount}
+        konanId={state.konanId || state.userAccount?.konanId}
         isDemoMode={state.isDemoMode}
         onOpenPresetModal={() => {
           if (state.isDemoMode) {

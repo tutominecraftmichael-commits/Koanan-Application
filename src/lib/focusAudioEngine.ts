@@ -97,7 +97,7 @@ class FocusAudioEngine {
   }
 
   public setVolume(v: number) {
-    this.volume = Math.max(0, Math.min(1, v));
+    this.volume = Math.max(0, Math.min(2.0, v));
     if (this.masterGain && this.ctx) {
       this.masterGain.gain.setTargetAtTime(this.volume, this.ctx.currentTime, 0.05);
     }
@@ -132,7 +132,17 @@ class FocusAudioEngine {
 
     this.masterGain = ctx.createGain();
     this.masterGain.gain.setValueAtTime(this.volume, ctx.currentTime);
-    this.masterGain.connect(ctx.destination);
+
+    // Dynamic Limiter / Compressor prevents digital clipping when boosted up to 200%
+    const compressor = ctx.createDynamicsCompressor();
+    compressor.threshold.setValueAtTime(-12, ctx.currentTime);
+    compressor.knee.setValueAtTime(10, ctx.currentTime);
+    compressor.ratio.setValueAtTime(6, ctx.currentTime);
+    compressor.attack.setValueAtTime(0.003, ctx.currentTime);
+    compressor.release.setValueAtTime(0.25, ctx.currentTime);
+
+    this.masterGain.connect(compressor);
+    compressor.connect(ctx.destination);
 
     this.currentTrack = trackId;
     this.isPlayingState = true;
@@ -198,15 +208,15 @@ class FocusAudioEngine {
     rightOsc.type = 'sine';
     rightOsc.frequency.setValueAtTime(226, ctx.currentTime); // +10 Hz Binaural Beat (Alpha)
 
-    leftGain.gain.setValueAtTime(0.22, ctx.currentTime);
-    rightGain.gain.setValueAtTime(0.22, ctx.currentTime);
+    leftGain.gain.setValueAtTime(0.40, ctx.currentTime);
+    rightGain.gain.setValueAtTime(0.40, ctx.currentTime);
 
     // Warm sub-bass harmonic for comforting drone
     const subOsc = ctx.createOscillator();
     subOsc.type = 'triangle';
     subOsc.frequency.setValueAtTime(108, ctx.currentTime);
     const subGain = ctx.createGain();
-    subGain.gain.setValueAtTime(0.12, ctx.currentTime);
+    subGain.gain.setValueAtTime(0.24, ctx.currentTime);
 
     leftOsc.connect(leftGain);
     rightOsc.connect(rightGain);
@@ -234,7 +244,7 @@ class FocusAudioEngine {
       const white = Math.random() * 2 - 1;
       output[i] = (lastOut + 0.02 * white) / 1.02; // Brownian noise
       lastOut = output[i];
-      output[i] *= 3.5;
+      output[i] *= 4.5;
     }
 
     const whiteNoise = ctx.createBufferSource();
@@ -244,11 +254,11 @@ class FocusAudioEngine {
     // Filter to simulate raindrops
     const filter = ctx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(750, ctx.currentTime);
+    filter.frequency.setValueAtTime(800, ctx.currentTime);
     filter.Q.setValueAtTime(1.2, ctx.currentTime);
 
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.4, ctx.currentTime);
+    gain.gain.setValueAtTime(0.70, ctx.currentTime);
 
     whiteNoise.connect(filter);
     filter.connect(gain);
@@ -270,7 +280,7 @@ class FocusAudioEngine {
       b0 = 0.99886 * b0 + white * 0.0555179;
       b1 = 0.99332 * b1 + white * 0.0750759;
       b2 = 0.96900 * b2 + white * 0.1538520;
-      output[i] = (b0 + b1 + b2) * 0.15; // Pink noise
+      output[i] = (b0 + b1 + b2) * 0.25; // Pink noise
     }
 
     const noise = ctx.createBufferSource();
@@ -279,16 +289,16 @@ class FocusAudioEngine {
 
     const filter = ctx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(320, ctx.currentTime);
+    filter.frequency.setValueAtTime(360, ctx.currentTime);
 
     const swellGain = ctx.createGain();
-    swellGain.gain.setValueAtTime(0.15, ctx.currentTime);
+    swellGain.gain.setValueAtTime(0.30, ctx.currentTime);
 
     // LFO for ocean wave swell (period ~10 seconds)
     const lfo = ctx.createOscillator();
     lfo.frequency.setValueAtTime(0.1, ctx.currentTime); // 0.1Hz = 10s wave period
     const lfoGain = ctx.createGain();
-    lfoGain.gain.setValueAtTime(0.25, ctx.currentTime);
+    lfoGain.gain.setValueAtTime(0.40, ctx.currentTime);
 
     lfo.connect(lfoGain);
     lfoGain.connect(swellGain.gain);
@@ -319,7 +329,7 @@ class FocusAudioEngine {
     filter.frequency.setValueAtTime(180, ctx.currentTime);
     filter.Q.setValueAtTime(0.8, ctx.currentTime);
 
-    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.setValueAtTime(0.32, ctx.currentTime);
 
     osc1.connect(filter);
     osc2.connect(filter);
@@ -343,7 +353,7 @@ class FocusAudioEngine {
     let chordIdx = 0;
     const currentOscs: OscillatorNode[] = [];
     const chordGain = ctx.createGain();
-    chordGain.gain.setValueAtTime(0.14, ctx.currentTime);
+    chordGain.gain.setValueAtTime(0.28, ctx.currentTime);
     chordGain.connect(dest);
     this.activeNodes.push(chordGain);
 
@@ -366,7 +376,7 @@ class FocusAudioEngine {
 
         const g = ctx.createGain();
         g.gain.setValueAtTime(0.01, ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.6);
+        g.gain.exponentialRampToValueAtTime(0.32, ctx.currentTime + 0.6);
         g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3.8);
 
         osc.connect(g);

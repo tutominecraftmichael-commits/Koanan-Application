@@ -94,8 +94,7 @@ export const FocusAudioPlayerWidget: React.FC<FocusAudioPlayerWidgetProps> = ({
               >
                 <X className="w-3 h-3" />
               </button>
-            </div>
-            <div className="space-y-1 py-1">
+            </div>            <div className="space-y-1 py-1">
               {FOCUS_SOUNDTRACKS.map(t => (
                 <button
                   key={t.id}
@@ -116,6 +115,31 @@ export const FocusAudioPlayerWidget: React.FC<FocusAudioPlayerWidgetProps> = ({
                   )}
                 </button>
               ))}
+            </div>
+
+            {/* Compact Volume Slider & Boost (Up to 200%) */}
+            <div className="pt-2 mt-1 border-t border-slate-800/80 px-1">
+              <div className="flex items-center justify-between text-[10px] font-semibold mb-1">
+                <span className="text-slate-400 flex items-center gap-1">
+                  <Volume2 className="w-3 h-3 text-indigo-400" />
+                  Volume sonore
+                </span>
+                <span className={`font-mono text-[10px] font-bold ${
+                  volume > 1.0 ? 'text-amber-400 animate-pulse' : 'text-slate-300'
+                }`}>
+                  {volume > 1.0 ? `⚡ ${Math.round(volume * 100)}% (Boost)` : `${Math.round(volume * 100)}%`}
+                </span>
+              </div>
+              <input 
+                type="range"
+                min="0"
+                max="2"
+                step="0.05"
+                value={volume}
+                onChange={handleVolumeChange}
+                className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                aria-label="Volume audio"
+              />
             </div>
           </div>
         )}
@@ -198,30 +222,33 @@ export const FocusAudioPlayerWidget: React.FC<FocusAudioPlayerWidgetProps> = ({
         ))}
       </div>
 
-      {/* Volume Control */}
+      {/* Volume Control (Up to 200% Max) */}
       <div className="flex items-center gap-2 pt-1 border-t border-slate-800/80 text-slate-400">
         <button 
           onClick={() => {
-            const nv = volume > 0 ? 0 : 0.6;
+            const nv = volume > 0 ? 0 : 0.8;
             setVolume(nv);
             focusAudioEngine.setVolume(nv);
           }}
-          className="text-slate-400 hover:text-white"
+          className="text-slate-400 hover:text-white cursor-pointer"
+          title={volume === 0 ? "Réactiver le son" : "Couper le son"}
         >
-          {volume === 0 ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+          {volume === 0 ? <VolumeX className="w-3.5 h-3.5 text-rose-400" /> : <Volume2 className="w-3.5 h-3.5" />}
         </button>
         <input 
           type="range"
           min="0"
-          max="1"
+          max="2"
           step="0.05"
           value={volume}
           onChange={handleVolumeChange}
-          className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+          className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
           aria-label="Volume audio"
         />
-        <span className="text-[10px] font-mono text-slate-400 w-8 text-right">
-          {Math.round(volume * 100)}%
+        <span className={`text-[10px] font-mono shrink-0 text-right ${
+          volume > 1.0 ? 'text-amber-400 font-bold' : 'text-slate-400'
+        }`}>
+          {volume > 1.0 ? `⚡ ${Math.round(volume * 100)}%` : `${Math.round(volume * 100)}%`}
         </span>
       </div>
     </div>

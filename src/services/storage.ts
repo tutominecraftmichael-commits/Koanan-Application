@@ -161,12 +161,18 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
       const parsed = JSON.parse(raw);
       const planTier = parsed.planTier || parsed.userAccount?.planTier || 'free';
       const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
+      const assignedKonanId = (typeof parsed.konanId === 'string' && parsed.konanId.trim())
+        ? parsed.konanId.trim().toUpperCase()
+        : (parsed.userAccount?.konanId?.trim()?.toUpperCase() || fallbackUser?.konanId || generateKonanId(uid));
+
       return {
         ...parsed,
+        konanId: assignedKonanId,
         logs: hasCompleted ? (parsed.logs || []) : [],
         planTier,
         userAccount: parsed.userAccount ? {
           ...parsed.userAccount,
+          konanId: assignedKonanId,
           planTier,
         } : undefined,
         isDemoMode: false,
@@ -176,18 +182,24 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
     console.warn(`Failed to load state for user ${uid}, creating empty state`, err);
   }
 
+  const assignedKonanId = fallbackUser?.konanId || generateKonanId(uid);
   const user = fallbackUser || {
     name: 'Étudiant',
     email: '',
     avatar: '',
     googleId: uid,
     academicLevel: 'Licence Universitaire',
+    konanId: assignedKonanId,
     isLoggedIn: true,
     isDemo: false,
     lastSyncedAt: new Date().toISOString(),
   };
 
-  const emptyState = createEmptyUserState(user);
+  const emptyState = createEmptyUserState({ ...user, konanId: assignedKonanId });
+  emptyState.konanId = assignedKonanId;
+  if (emptyState.userAccount) {
+    emptyState.userAccount.konanId = assignedKonanId;
+  }
   try {
     localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(emptyState));
   } catch {}

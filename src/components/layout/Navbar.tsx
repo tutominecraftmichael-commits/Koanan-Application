@@ -17,7 +17,9 @@ import {
   Bell,
   Crown,
   Check,
-  X
+  X,
+  Key,
+  Copy
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount, PlusInvitationNotification } from '../../types';
 import { Button } from '../ui/Button';
@@ -31,6 +33,7 @@ export interface NavbarProps {
   studentName: string;
   academicLevel: string;
   userAccount?: UserAccount;
+  konanId?: string;
   onOpenPresetModal: () => void;
   onExportData: () => void;
   onImportData: () => void;
@@ -52,6 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   studentName,
   academicLevel: _academicLevel,
   userAccount,
+  konanId,
   onOpenPresetModal,
   onExportData,
   onImportData,
@@ -69,6 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [lang] = useLanguage();
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [copiedKonanId, setCopiedKonanId] = useState(false);
   const toolsMenuRef = useRef<HTMLDivElement>(null);
   const notificationsMenuRef = useRef<HTMLDivElement>(null);
 
@@ -355,22 +360,57 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                 {/* User / Google Profile Pill -> opens Settings Modal on click */}
                 {userAccount && userAccount.isLoggedIn ? (
-                  <div
-                    onClick={onOpenSettings}
-                    title="Voir mon profil et paramètres"
-                    className="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-800/80 hover:opacity-90 transition-opacity cursor-pointer text-left"
-                  >
-                    <img
-                      src={userAccount.avatar}
-                      alt={displayName}
-                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-indigo-500/40 shadow-xs shrink-0"
-                    />
-                    <div className="hidden xl:block">
-                      <p className={`text-xs font-bold leading-tight truncate max-w-[120px] ${userAccount.planTier !== 'free' ? 'gold-shimmer-text font-black' : 'text-white'}`}>{displayName}</p>
-                      <p className="text-[10px] text-cyan-400 font-mono truncate max-w-[120px]">
-                        {userAccount.isDemo ? t('demoAccount', lang) : userAccount.email || 'Connecté'}
-                      </p>
+                  <div className="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-800/80">
+                    <div
+                      onClick={onOpenSettings}
+                      title="Voir mon profil et paramètres"
+                      className="flex items-center gap-1.5 sm:gap-2 hover:opacity-90 transition-opacity cursor-pointer text-left"
+                    >
+                      <img
+                        src={userAccount.avatar}
+                        alt={displayName}
+                        className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-indigo-500/40 shadow-xs shrink-0"
+                      />
+                      <div className="hidden xl:block">
+                        <p className={`text-xs font-bold leading-tight truncate max-w-[120px] ${
+                          userAccount.planTier === 'plus'
+                            ? 'plus-multicolor-shimmer-text font-black'
+                            : userAccount.planTier === 'pro'
+                            ? 'gold-shimmer-text font-black'
+                            : 'text-white'
+                        }`}>{displayName}</p>
+                        <p className="text-[10px] text-cyan-400 font-mono truncate max-w-[120px]">
+                          {userAccount.isDemo ? t('demoAccount', lang) : userAccount.email || 'Connecté'}
+                        </p>
+                      </div>
                     </div>
+
+                    {/* Permanent Unique Konan Code for ANY connected user (Free, Pro, Plus) */}
+                    {(userAccount.konanId || konanId) && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const idToCopy = userAccount.konanId || konanId || '';
+                          if (idToCopy) {
+                            navigator.clipboard.writeText(idToCopy);
+                            setCopiedKonanId(true);
+                            setTimeout(() => setCopiedKonanId(false), 2000);
+                          }
+                        }}
+                        title="Code Konan unique - Cliquez pour copier"
+                        className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-lg text-[9px] sm:text-[10px] font-mono font-bold shrink-0 border bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30 cursor-pointer transition-all active:scale-95"
+                      >
+                        <Key className="w-2.5 h-2.5 text-amber-400" />
+                        <span>{userAccount.konanId || konanId}</span>
+                        {copiedKonanId ? (
+                          <Check className="w-2.5 h-2.5 text-emerald-400" />
+                        ) : (
+                          <Copy className="w-2.5 h-2.5 text-amber-400/60" />
+                        )}
+                      </button>
+                    )}
+
                     {/* Badge de version : Free (statique), Pro ou Plus (cliquable vers tarifs) */}
                     {userAccount.planTier === 'free' ? (
                       <span

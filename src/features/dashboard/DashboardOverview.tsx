@@ -29,13 +29,17 @@ import {
   Zap,
   Crown,
   Users,
-  MessageSquare
+  MessageSquare,
+  Key,
+  Copy,
+  Check
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { FocusAudioPlayerWidget } from '../../components/plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
+import { soundFX } from '../../lib/audioEffects';
 import type { SessionType } from '../../types';
 
 export interface DashboardOverviewProps {
@@ -101,6 +105,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);
 
   const [showCompletedSessions, setShowCompletedSessions] = useState(false);
+  const [copiedKonanId, setCopiedKonanId] = useState(false);
 
 
   const now = new Date();
@@ -169,9 +174,39 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 {isCycleCompletedToday ? "Cycle Validé 100%" : isDayFullyComplete ? "Journée Validée 100%" : "Copilote Actif"}
               </Badge>
               <span className="text-[11px] sm:text-xs text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
+              {konanId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(konanId);
+                    setCopiedKonanId(true);
+                    soundFX.playCheckmarkPop();
+                    setTimeout(() => setCopiedKonanId(false), 2000);
+                  }}
+                  title="Votre Code Konan Unique — Cliquez pour copier"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-mono font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/35 cursor-pointer transition-all active:scale-95 shadow-xs"
+                >
+                  <Key className="w-3 h-3 text-amber-400" />
+                  <span>Code : {konanId}</span>
+                  {copiedKonanId ? (
+                    <span className="text-emerald-400 text-[10px] flex items-center gap-0.5">
+                      <Check className="w-3 h-3" />
+                      Copié
+                    </span>
+                  ) : (
+                    <Copy className="w-3 h-3 text-amber-400/70" />
+                  )}
+                </button>
+              )}
             </div>
             <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Bonjour, <span className={planTier !== 'free' ? 'gold-shimmer-text font-black' : 'text-gradient-primary'}>{studentName}</span> 👋
+              Bonjour, <span className={
+                planTier === 'plus' 
+                  ? 'plus-multicolor-shimmer-text font-black' 
+                  : planTier === 'pro' 
+                  ? 'gold-shimmer-text font-black' 
+                  : 'text-gradient-primary'
+              }>{studentName}</span> 👋
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
               {isCycleCompletedToday ? (
