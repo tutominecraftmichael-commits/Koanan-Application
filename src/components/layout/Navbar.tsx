@@ -17,9 +17,7 @@ import {
   Bell,
   Crown,
   Check,
-  X,
-  Key,
-  Copy
+  X
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount, PlusInvitationNotification } from '../../types';
 import { Button } from '../ui/Button';
@@ -55,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   studentName,
   academicLevel: _academicLevel,
   userAccount,
-  konanId,
+  konanId: _konanId,
   onOpenPresetModal,
   onExportData,
   onImportData,
@@ -73,7 +71,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [lang] = useLanguage();
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [copiedKonanId, setCopiedKonanId] = useState(false);
   const toolsMenuRef = useRef<HTMLDivElement>(null);
   const notificationsMenuRef = useRef<HTMLDivElement>(null);
 
@@ -384,32 +381,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                         </p>
                       </div>
                     </div>
-
-                    {/* Permanent Unique Konan Code for ANY connected user (Free, Pro, Plus) */}
-                    {(userAccount.konanId || konanId) && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const idToCopy = userAccount.konanId || konanId || '';
-                          if (idToCopy) {
-                            navigator.clipboard.writeText(idToCopy);
-                            setCopiedKonanId(true);
-                            setTimeout(() => setCopiedKonanId(false), 2000);
-                          }
-                        }}
-                        title="Code Konan unique - Cliquez pour copier"
-                        className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-lg text-[9px] sm:text-[10px] font-mono font-bold shrink-0 border bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30 cursor-pointer transition-all active:scale-95"
-                      >
-                        <Key className="w-2.5 h-2.5 text-amber-400" />
-                        <span>{userAccount.konanId || konanId}</span>
-                        {copiedKonanId ? (
-                          <Check className="w-2.5 h-2.5 text-emerald-400" />
-                        ) : (
-                          <Copy className="w-2.5 h-2.5 text-amber-400/60" />
-                        )}
-                      </button>
-                    )}
 
                     {/* Badge de version : Free (statique), Pro ou Plus (cliquable vers tarifs) */}
                     {userAccount.planTier === 'free' ? (

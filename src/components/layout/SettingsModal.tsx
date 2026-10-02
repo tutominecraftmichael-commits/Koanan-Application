@@ -13,7 +13,6 @@ import {
   GraduationCap,
   Save,
   Bell,
-  Key,
   Copy
 } from 'lucide-react';
 import type { UserAccount, AcademicGoal } from '../../types';
@@ -243,43 +242,25 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <span className="font-medium text-slate-300">Compte connecté</span>
                   </div>
 
-                  {/* ID Konan Personnel Permanent pour tous les utilisateurs */}
+                  {/* Code Konan Secret (Sans bordure ni carré, texte jaune) */}
                   {userAccount?.konanId && (
-                    <div className="flex items-center justify-between p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                      <div className="flex items-center gap-2">
-                        <Key className="w-4 h-4 text-amber-400 shrink-0" />
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-amber-300">
-                            Code Konan Unique
-                          </p>
-                          <p className="font-mono text-xs font-black text-white">
-                            {userAccount.konanId}
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          navigator.clipboard.writeText(userAccount.konanId || '');
-                          setCopiedKonanId(true);
-                          soundFX.playCheckmarkPop();
-                          setTimeout(() => setCopiedKonanId(false), 2000);
-                        }}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold cursor-pointer border border-amber-500/40 transition-all active:scale-95"
-                        title="Copier mon Code Konan"
-                      >
-                        {copiedKonanId ? (
-                          <>
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
-                            <span className="text-emerald-400 font-bold">Copié !</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-3.5 h-3.5" />
-                            <span>Copier</span>
-                          </>
-                        )}
-                      </button>
+                    <div 
+                      onClick={() => {
+                        navigator.clipboard.writeText(userAccount.konanId || '');
+                        setCopiedKonanId(true);
+                        soundFX.playCheckmarkPop();
+                        setTimeout(() => setCopiedKonanId(false), 2000);
+                      }}
+                      className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer select-none pt-0.5"
+                      title="Cliquez pour copier"
+                    >
+                      <span className="text-slate-300 font-medium">Code Konan Secret :</span>
+                      <span className="text-amber-400 font-mono font-bold tracking-wider">{userAccount.konanId}</span>
+                      {copiedKonanId ? (
+                        <span className="text-[10px] text-emerald-400 font-semibold ml-1">(copié !)</span>
+                      ) : (
+                        <Copy className="w-3 h-3 text-amber-400/60 ml-0.5 hover:text-amber-300 transition-colors" />
+                      )}
                     </div>
                   )}
 
