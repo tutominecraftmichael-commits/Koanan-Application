@@ -575,15 +575,33 @@ export async function syncCloudPlusInvitation(invitation: any): Promise<boolean>
 /**
  * Updates status of an invitation in Cloud Firestore.
  */
-export async function updateCloudInvitationStatus(id: string, status: 'accepted' | 'declined'): Promise<boolean> {
+export async function updateCloudInvitationStatus(
+  id: string, 
+  status: 'accepted' | 'declined',
+  metadata?: { acceptedByName?: string; acceptedByKonanId?: string }
+): Promise<boolean> {
   if (!db || !id) return false;
   try {
     const invRef = doc(db, 'plus_invitations', id);
-    await setDoc(invRef, {
+    const payload: any = {
       status,
       updatedAt: new Date().toISOString()
-    }, { merge: true });
-    return true;
+    };
+    if (metadata?.acceptedByName) payload.acceptedByName = metadata.acceptedByName;
+    if (metadata?.acceptedByKonanId) payload.acceptedByKonanId = metadata.acceptedByKonanId;
+
+    try {
+      await setDoc(invRef, payload, { merge: true });
+      return true;
+    } catch (detailErr) {
+      // Safe fallback: if security rules only allow status + updatedAt, perform minimal update
+      console.warn('Detailed cloud status update failed, falling back to minimal status:', detailErr);
+      await setDoc(invRef, {
+        status,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+      return true;
+    }
   } catch (err) {
     console.warn('Failed to update invitation status in Cloud Firestore:', err);
     return false;

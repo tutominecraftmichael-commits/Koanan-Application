@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   Crown, 
@@ -48,6 +48,16 @@ export interface KonanPlusGroupModalProps {
   };
 }
 
+interface GroupMemberItem {
+  id: string;
+  name: string;
+  identifier: string;
+  type: 'id' | 'email';
+  isAccepted: boolean;
+  isCurrentStudent: boolean;
+  rawInvitation?: PlusInvitationNotification;
+}
+
 export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
   isOpen,
   onClose,
@@ -70,7 +80,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
   const [successBanner, setSuccessBanner] = useState<string | null>(null);
   const [invitations, setInvitations] = useState<PlusInvitationNotification[]>(() => getPlusInvitations());
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isOpen) return;
     const refresh = () => setInvitations(getPlusInvitations());
     refresh();
@@ -95,10 +105,16 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
 
   if (!isOpen) return null;
 
-  const ownerName = studentName || initialOwnerName || 'Titulaire du compte';
+  const isGuest = Boolean(isGroupGuest);
   const MAX_INVITES = maxAccounts;
-  
-  // Combine IDs and emails for unified group display
+
+  // Real Titulaire Credentials:
+  // If user is a guest, the true titulaire is invitedBy. If owner, it is studentName/ownerName.
+  const realOwnerName = isGuest ? (invitedBy?.name || 'Titulaire principal') : (studentName || initialOwnerName || 'Titulaire du compte');
+  const realOwnerKonanId = isGuest ? (invitedBy?.konanId || 'KN-TITULAIRE') : ownerKonanId;
+  const realOwnerEmail = isGuest ? invitedBy?.email : ownerEmail;
+
+  // Combine IDs and emails for owner's local list
   const allInvited = [
     ...invitedIds.map(id => ({ value: id, type: 'id' as const })),
     ...invitedEmails.filter(e => !invitedIds.includes(e)).map(email => ({ value: email, type: 'email' as const }))
@@ -113,10 +129,86 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
     return invite?.status === 'accepted';
   };
 
-  const acceptedCount = allInvited.filter(m => isMemberAccepted(m.value)).length;
-  const pendingCount = allInvited.length - acceptedCount;
-  const currentCount = allInvited.length;
+  // Build the unified list of group members
+  const groupMembers: GroupMemberItem[] = [];
+
+  if (isGuest) {
+    // 1. Current student as confirmed member
+    groupMembers.push({
+      id: 'current-guest-self',
+      name: studentName || 'Étudiant (Vous)',
+      identifier: ownerKonanId,
+      type: 'id',
+      isAccepted: true,
+      isCurrentStudent: true,
+    });
+
+    // 2. Other invitations sent by this same titulaire
+    const titulaireId = (invitedBy?.konanId || '').trim().toUpperCase();
+    const otherInvites = invitations.filter(inv => {
+      const sId = (inv.senderKonanId || '').trim().toUpperCase();
+      if (!titulaireId || sId !== titulaireId) return false;
+      const targetClean = (inv.targetKonanIdOrEmail || '').trim().toLowerCase();
+      const myIdClean = (ownerKonanId || '').trim().toLowerCase();
+      const acceptedIdClean = (inv.acceptedByKonanId || '').trim().toLowerCase();
+      // Skip the current guest since already added as member 1
+      if (targetClean === myIdClean || (acceptedIdClean && acceptedIdClean === myIdClean)) return false;
+      return true;
+    });
+
+    otherInvites.forEach(inv => {
+      const isEmail = inv.targetKonanIdOrEmail.includes('@');
+      const displayName = inv.acceptedByName || inv.targetName || (inv.targetKonanIdOrEmail.startsWith('KN-') ? `Étudiant ${inv.targetKonanIdOrEmail}` : inv.targetKonanIdOrEmail);
+      const displayId = inv.acceptedByKonanId || inv.targetKonanIdOrEmail;
+      groupMembers.push({
+        id: inv.id,
+        name: displayName,
+        identifier: displayId,
+        type: isEmail ? 'email' : 'id',
+        isAccepted: inv.status === 'accepted',
+        isCurrentStudent: false,
+        rawInvitation: inv,
+      });
+    });
+  } else {
+    // Owner view: list all invited members with their actual names & badges
+    const ownerCleanId = (ownerKonanId || '').trim().toUpperCase();
+    const ownerInvites = invitations.filter(i => (i.senderKonanId || '').trim().toUpperCase() === ownerCleanId);
+
+    allInvited.forEach((item, idx) => {
+      const cleanVal = item.value.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+      const match = ownerInvites.find(i => {
+        const it = (i.targetKonanIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+        return it === cleanVal;
+      });
+
+      const isAcc = match ? match.status === 'accepted' : isMemberAccepted(item.value);
+      const displayName = match?.acceptedByName || match?.targetName || item.value;
+      const displayId = match?.acceptedByKonanId || item.value;
+
+      groupMembers.push({
+        id: match?.id || `invited-${idx}`,
+        name: displayName,
+        identifier: displayId,
+        type: item.type,
+        isAccepted: isAcc,
+        isCurrentStudent: false,
+        rawInvitation: match,
+      });
+    });
+  }
+
+  // Count active / remaining places
+  const acceptedCount = groupMembers.filter(m => m.isAccepted).length;
+  const pendingCount = groupMembers.length - acceptedCount;
+  const currentCount = groupMembers.length;
   const remainingSlots = Math.max(0, MAX_INVITES - currentCount);
+
+  // For the titulaire: list of accepted invitations to display the notification
+  const acceptedInvitationsForOwner = !isGuest ? invitations.filter(i => {
+    const isMine = (i.senderKonanId || '').trim().toUpperCase() === (ownerKonanId || '').trim().toUpperCase();
+    return isMine && i.status === 'accepted';
+  }) : [];
 
   const validateEmail = (email: string) => {
     return String(email)
@@ -126,6 +218,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
 
   const handleAddMember = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isGuest) return;
     setInputError(null);
     const trimmed = inputIdentifier.trim();
 
@@ -134,7 +227,6 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
       return;
     }
 
-    // Check if it's an ID or an Email
     const isIdCandidate = trimmed.toUpperCase().startsWith('KN-') || /^[0-9]{5,8}$/.test(trimmed);
     let finalValue = trimmed;
     let isId = false;
@@ -163,14 +255,11 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
       finalValue = trimmed.toLowerCase();
     }
 
-    // Check duplicates
     if (allInvited.some(m => m.value.toLowerCase() === finalValue.toLowerCase())) {
       setInputError(`Cet identifiant "${finalValue}" est déjà rattaché à votre groupe.`);
       return;
     }
 
-    // Strict validation: Only Free or Pro users can be invited.
-    // If the person being invited already has Konan Plus, reject with red error:
     if (isTargetAlreadyPlus(finalValue)) {
       setInputError("Non, cet utilisateur a déjà Konan Plus.");
       return;
@@ -181,10 +270,9 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
       return;
     }
 
-    // Create persistent invitation notification for the target user
     const newInvitation: PlusInvitationNotification = {
       id: generateId(),
-      senderName: ownerName,
+      senderName: realOwnerName,
       senderKonanId: ownerKonanId,
       senderEmail: ownerEmail,
       targetKonanIdOrEmail: finalValue,
@@ -197,7 +285,6 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
     if (isId) {
       const updatedIds = [...invitedIds, finalValue];
       onUpdateInvitedIds?.(updatedIds);
-      // Also sync to emails array for backwards compatibility
       onUpdateInvitedEmails?.([...invitedEmails, finalValue]);
     } else {
       const updatedEmails = [...invitedEmails, finalValue];
@@ -211,7 +298,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
   };
 
   const handleRemoveMember = (member: { value: string; type: 'id' | 'email' }) => {
-    if (isGroupGuest) return;
+    if (isGuest) return;
     if (member.type === 'id') {
       const updated = invitedIds.filter(id => id !== member.value);
       onUpdateInvitedIds?.(updated);
@@ -233,7 +320,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
   };
 
   const handleCopyInviteLink = () => {
-    const inviteLink = `${window.location.origin}/?plan=plus&invite_id=${encodeURIComponent(ownerKonanId)}`;
+    const inviteLink = `${window.location.origin}/?plan=plus&invite_id=${encodeURIComponent(realOwnerKonanId)}`;
     navigator.clipboard.writeText(inviteLink).then(() => {
       setCopiedLink(true);
       soundFX.playCheckmarkPop();
@@ -282,8 +369,8 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                 Groupe d'Étude & 4 Comptes Inclus
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 mt-1">
-                {isGroupGuest 
-                  ? "Vous êtes membre de ce groupe d'étude Konan Plus."
+                {isGuest 
+                  ? `Vous êtes membre invité du groupe d'étude de ${realOwnerName}.`
                   : "Invitez jusqu'à 4 amis via leur ID Konan personnel pour leur octroyer un accès complet et immédiat à Konan Plus."}
               </p>
             </div>
@@ -295,13 +382,13 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
               <div className="flex items-center gap-2">
                 <Hash className="w-4 h-4 text-amber-400" />
                 <span className="text-xs font-bold text-white uppercase tracking-wider">
-                  Votre ID Konan Unique & Personnel
+                  Votre ID Konan Unique & Personnel {isGuest ? '(Membre)' : '(Titulaire)'}
                 </span>
               </div>
               <span className="text-[10px] font-semibold text-amber-300/80">Fixe & Sécurisé</span>
             </div>
             <p className="text-[11px] text-slate-300 leading-relaxed">
-              Cet identifiant est strictement le vôtre. Donnez-le à vos amis ou partagez-le pour être identifié sur le réseau d'excellence Konan.
+              Cet identifiant est strictement le vôtre. Partagez-le pour être identifié ou parrainé sur le réseau KONAN.
             </p>
             <div className="flex items-center gap-2 pt-1">
               <div className="px-3.5 py-2 rounded-xl bg-slate-950 border border-amber-500/40 text-amber-300 font-mono font-black text-sm tracking-widest shadow-inner">
@@ -318,6 +405,37 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
             </div>
           </div>
 
+          {/* NOTIFICATION POUR LE TITULAIRE : INVITATION ACCEPTÉE */}
+          {!isGuest && acceptedInvitationsForOwner.length > 0 && (
+            <div className="space-y-2">
+              {acceptedInvitationsForOwner.map((inv) => {
+                const guestName = inv.acceptedByName || inv.targetName || (inv.targetKonanIdOrEmail.startsWith('KN-') ? `Étudiant ${inv.targetKonanIdOrEmail}` : inv.targetKonanIdOrEmail);
+                const guestId = inv.acceptedByKonanId || (inv.targetKonanIdOrEmail.startsWith('KN-') ? inv.targetKonanIdOrEmail : '');
+
+                return (
+                  <div 
+                    key={inv.id}
+                    className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/30 border border-emerald-500/40 text-emerald-200 text-xs sm:text-sm font-medium flex items-center justify-between gap-3 shadow-md animate-in fade-in"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      </div>
+                      <p className="truncate text-xs sm:text-sm text-white">
+                        L'utilisateur : <strong className="text-emerald-300 font-bold">{guestName}</strong>{' '}
+                        {guestId && <span className="font-mono text-amber-300 font-bold">[{guestId}]</span>}{' '}
+                        a accepté votre invitation
+                      </p>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/15 px-2.5 py-1 rounded-lg border border-emerald-500/20 uppercase tracking-wider shrink-0">
+                      Confirmé
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {/* Success Banner */}
           {successBanner && (
             <div className="p-3.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
@@ -327,7 +445,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
           )}
 
           {/* If the current user is an invited guest */}
-          {isGroupGuest ? (
+          {isGuest ? (
             <div className="p-4 sm:p-5 rounded-2xl bg-indigo-950/40 border border-indigo-500/40 space-y-2.5">
               <div className="flex items-center gap-2">
                 <Crown className="w-4 h-4 text-amber-400" />
@@ -336,19 +454,19 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Vous bénéficiez de l'ensemble des privilèges KONAN PLUS grâce au compte de{' '}
-                <strong className="text-white">{invitedBy?.name || 'votre titulaire'}</strong>{' '}
-                {invitedBy?.konanId && <span className="text-amber-300 font-mono font-bold">({invitedBy.konanId})</span>}.
+                Vous bénéficiez de l'ensemble des privilèges KONAN PLUS grâce au compte titulaire de{' '}
+                <strong className="text-white">{realOwnerName}</strong>{' '}
+                {realOwnerKonanId && <span className="text-amber-300 font-mono font-bold">({realOwnerKonanId})</span>}.
               </p>
               <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
                 <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                 <span>
-                  <strong>Règle du groupe :</strong> En tant que membre invité, vous avez un accès complet aux outils de révision, coaching et musiques. Seul le titulaire principal a le droit d'ajouter ou d'inviter d'autres personnes.
+                  <strong>Règle du groupe :</strong> En tant que membre invité, vous avez un accès complet aux outils de révision, coaching et musiques. Seul le titulaire principal a le droit d'ajouter ou de retirer des membres.
                 </span>
               </div>
             </div>
           ) : (
-            /* Input Form: Add Friend by ID or Email (Centered & Responsive for Mobile) */
+            /* Input Form: Add Friend by ID or Email */
             <form onSubmit={handleAddMember} className="space-y-3">
               <div>
                 <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
@@ -402,21 +520,21 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
             </div>
 
             <div className="space-y-2">
-              {/* Account Owner Card */}
-              <div className="p-3 sm:p-3.5 rounded-2xl bg-indigo-950/30 border border-indigo-500/40 flex items-center justify-between gap-3">
+              {/* Account Real Titulaire Card */}
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-indigo-950/30 border border-indigo-500/40 flex items-center justify-between gap-3 shadow-sm">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-md">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-md">
                     👑
                   </div>
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-xs sm:text-sm font-bold text-white truncate">{ownerName}</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-xs sm:text-sm font-bold text-white truncate">{realOwnerName}</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold uppercase tracking-wider">
                         Titulaire
                       </span>
                     </div>
-                    <p className="text-[11px] text-indigo-300 font-mono">
-                      ID : {ownerKonanId} {ownerEmail ? `• ${ownerEmail}` : ''}
+                    <p className="text-[11px] text-indigo-300 font-mono mt-0.5">
+                      ID : {realOwnerKonanId} {realOwnerEmail ? `• ${realOwnerEmail}` : ''}
                     </p>
                   </div>
                 </div>
@@ -427,68 +545,70 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                 </div>
               </div>
 
-              {/* Invited Members */}
-              {allInvited.map((member, idx) => {
-                const isAccepted = isMemberAccepted(member.value);
-
-                return (
-                  <div 
-                    key={idx}
-                    className="p-3 sm:p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 flex items-center justify-between gap-3 transition-colors group"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-300 font-bold text-xs flex items-center justify-center shrink-0">
-                        {idx + 1}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="text-xs sm:text-sm font-bold text-slate-200 font-mono truncate">
-                            {member.value}
-                          </p>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-semibold uppercase">
-                            {member.type === 'id' ? 'ID Konan' : 'Email'}
-                          </span>
-                        </div>
-                        {isAccepted ? (
-                          <p className="text-[10px] text-emerald-400 font-medium flex items-center gap-1 mt-0.5">
-                            <Check className="w-3 h-3" />
-                            Accès Konan Plus Actif & Confirmé
-                          </p>
-                        ) : (
-                          <p className="text-[10px] text-amber-400 font-medium flex items-center gap-1 mt-0.5">
-                            <Clock className="w-3 h-3 animate-pulse" />
-                            Invitation envoyée • En attente d'acceptation
-                          </p>
-                        )}
-                      </div>
+              {/* Group Members List */}
+              {groupMembers.map((member, idx) => (
+                <div 
+                  key={member.id}
+                  className="p-3 sm:p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 flex items-center justify-between gap-3 transition-colors group"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-300 font-bold text-xs flex items-center justify-center shrink-0">
+                      {idx + 1}
                     </div>
-
-                    <div className="flex items-center gap-2 shrink-0">
-                      {isAccepted ? (
-                        <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
-                          Actif
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-xs sm:text-sm font-bold text-slate-100 truncate">
+                          {member.name}
+                          {member.isCurrentStudent && (
+                            <span className="text-indigo-400 font-semibold ml-1.5">(Vous)</span>
+                          )}
+                        </p>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-bold uppercase tracking-wider">
+                          Membre
                         </span>
+                      </div>
+                      <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                        {member.identifier}
+                      </p>
+                      {member.isAccepted ? (
+                        <p className="text-[10px] text-emerald-400 font-medium flex items-center gap-1 mt-0.5">
+                          <Check className="w-3 h-3" />
+                          Accès Konan Plus Actif & Confirmé
+                        </p>
                       ) : (
-                        <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 flex items-center gap-1">
+                        <p className="text-[10px] text-amber-400 font-medium flex items-center gap-1 mt-0.5">
                           <Clock className="w-3 h-3 animate-pulse" />
-                          En attente
-                        </span>
-                      )}
-
-                      {!isGroupGuest && (
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveMember(member)}
-                          className="p-2 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer shrink-0"
-                          title="Retirer ce compte du groupe"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                          Invitation envoyée • En attente d'acceptation
+                        </p>
                       )}
                     </div>
                   </div>
-                );
-              })}
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    {member.isAccepted ? (
+                      <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+                        Actif
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 flex items-center gap-1">
+                        <Clock className="w-3 h-3 animate-pulse" />
+                        En attente
+                      </span>
+                    )}
+
+                    {!isGuest && !member.isCurrentStudent && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveMember({ value: member.identifier, type: member.type })}
+                        className="p-2 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer shrink-0"
+                        title="Retirer ce compte du groupe"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
 
               {/* Empty Placeholder Slots */}
               {Array.from({ length: remainingSlots }).map((_, slotIdx) => (
@@ -503,26 +623,28 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
             </div>
           </div>
 
-          {/* Quick Invite Link Card */}
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-            <div className="space-y-0.5">
-              <p className="text-xs font-bold text-white flex items-center gap-1.5 justify-center sm:justify-start">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                Lien d'invitation direct
-              </p>
-              <p className="text-[11px] text-slate-400">
-                Partagez ce lien à vos amis pour qu'ils rejoignent directement avec votre ID.
-              </p>
+          {/* Quick Invite Link Card (Only for Titulaire) */}
+          {!isGuest && (
+            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+              <div className="space-y-0.5">
+                <p className="text-xs font-bold text-white flex items-center gap-1.5 justify-center sm:justify-start">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                  Lien d'invitation direct
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  Partagez ce lien à vos amis pour qu'ils rejoignent directement avec votre ID.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyInviteLink}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-850 text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-semibold transition-all cursor-pointer shrink-0 shadow-xs"
+              >
+                {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedLink ? 'Lien Copié !' : 'Copier le lien d\'invitation'}</span>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={handleCopyInviteLink}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-850 text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-semibold transition-all cursor-pointer shrink-0 shadow-xs"
-            >
-              {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copiedLink ? 'Lien Copié !' : 'Copier le lien d\'invitation'}</span>
-            </button>
-          </div>
+          )}
 
           <div className="flex items-center gap-2 text-[11px] text-slate-400 pt-1">
             <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />

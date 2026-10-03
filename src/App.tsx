@@ -15,6 +15,7 @@ import {
   importStateFromJson,
   fetchAndMergeCloudState,
   getPendingInvitationsForUser,
+  getPlusInvitations,
   updateInvitationStatus,
   registerPlusUser,
   mergeInvitationsFromCloud,
@@ -95,6 +96,7 @@ export function App() {
   const [isCoachingModalOpen, setIsCoachingModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [pendingInvitations, setPendingInvitations] = useState<PlusInvitationNotification[]>([]);
+  const [allInvitations, setAllInvitations] = useState<PlusInvitationNotification[]>(() => getPlusInvitations());
 
   const knownInvitationIdsRef = useRef<Set<string>>(new Set());
 
@@ -179,25 +181,49 @@ export function App() {
     };
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
-  // 2. If current user is group owner (Plus tier), listen to ALL cloud invitations
-  // so when an invited friend clicks "Accepter" on their phone, the owner immediately gets updated
+  // 2. Real-time synchronization of all invitations for the owner & accepted notifications
   useEffect(() => {
-    const isOwner = (state.planTier === 'plus' || state.userAccount?.planTier === 'plus') && !state.isGroupGuest;
-    if (!isOwner) return;
+    const handleUpdate = () => setAllInvitations(getPlusInvitations());
+    window.addEventListener('storage', handleUpdate);
+    invitationBroadcastChannel?.addEventListener('message', handleUpdate);
 
-    const unsubscribe = listenToAllCloudInvitations((allCloudInvites) => {
-      if (Array.isArray(allCloudInvites) && allCloudInvites.length > 0) {
-        mergeInvitationsFromCloud(allCloudInvites);
-      }
-    });
+    const isGroupOwner = (state.planTier === 'plus' || state.userAccount?.planTier === 'plus') && !state.isGroupGuest;
+    let unsubscribe: () => void = () => {};
+
+    if (isGroupOwner) {
+      unsubscribe = listenToAllCloudInvitations((allCloudInvites) => {
+        if (Array.isArray(allCloudInvites) && allCloudInvites.length > 0) {
+          mergeInvitationsFromCloud(allCloudInvites);
+          setAllInvitations(getPlusInvitations());
+        }
+      });
+    }
 
     return () => {
+      window.removeEventListener('storage', handleUpdate);
+      invitationBroadcastChannel?.removeEventListener('message', handleUpdate);
       unsubscribe();
     };
   }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest]);
 
+  const isGroupOwner = (state.planTier === 'plus' || state.userAccount?.planTier === 'plus') && !state.isGroupGuest;
+  const currentOwnerKonanId = (state.userAccount?.konanId || state.konanId || '').trim().toUpperCase();
+
+  const acceptedNotificationsForOwner = isGroupOwner ? allInvitations
+    .filter(inv => (inv.senderKonanId || '').trim().toUpperCase() === currentOwnerKonanId && inv.status === 'accepted')
+    .map(inv => ({
+      id: `acc-${inv.id}`,
+      name: inv.acceptedByName || inv.targetName || (inv.targetKonanIdOrEmail.startsWith('KN-') ? `Étudiant ${inv.targetKonanIdOrEmail}` : inv.targetKonanIdOrEmail),
+      konanId: inv.acceptedByKonanId || (inv.targetKonanIdOrEmail.startsWith('KN-') ? inv.targetKonanIdOrEmail : ''),
+    })) : [];
+
   const handleAcceptInvitation = (invitation: PlusInvitationNotification) => {
-    updateInvitationStatus(invitation.id, 'accepted');
+    const guestName = state.userAccount?.name || state.studentName || 'Étudiant';
+    const guestKonanId = state.userAccount?.konanId || state.konanId || '';
+    updateInvitationStatus(invitation.id, 'accepted', {
+      acceptedByName: guestName,
+      acceptedByKonanId: guestKonanId,
+    });
     registerPlusUser(state.konanId || state.userAccount?.konanId, state.userAccount?.email);
 
     setState(prev => {
@@ -1375,6 +1401,7 @@ export function App() {
         totalStudySessions={state.studySessions?.length || 0}
         completedSessions={state.studySessions ? state.studySessions.filter(s => s.completed).length : 0}
         pendingInvitations={pendingInvitations}
+        acceptedNotifications={acceptedNotificationsForOwner}
         onAcceptInvitation={handleAcceptInvitation}
         onDeclineInvitation={handleDeclineInvitation}
       />

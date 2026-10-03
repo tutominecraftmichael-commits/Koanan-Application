@@ -34,7 +34,7 @@ service cloud.firestore {
         && request.resource.data.senderKonanId == resource.data.senderKonanId
         && request.resource.data.targetKonanIdOrEmail == resource.data.targetKonanIdOrEmail
         && request.resource.data.status in ['accepted', 'declined']
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt']);
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'acceptedByName', 'acceptedByKonanId']);
 
       // Suppression directe non autorisée aux attaquants anonymes
       allow delete: if request.auth != null;

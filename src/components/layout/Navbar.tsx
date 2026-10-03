@@ -17,6 +17,7 @@ import {
   Bell,
   Crown,
   Check,
+  CheckCircle2,
   X
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount, PlusInvitationNotification } from '../../types';
@@ -43,6 +44,7 @@ export interface NavbarProps {
   isDemoMode?: boolean;
   onViewPricing?: () => void;
   pendingInvitations?: PlusInvitationNotification[];
+  acceptedNotifications?: { id: string; name: string; konanId?: string }[];
   onAcceptInvitation?: (invitation: PlusInvitationNotification) => void;
   onDeclineInvitation?: (invitation: PlusInvitationNotification) => void;
 }
@@ -67,6 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   isDemoMode = false,
   onViewPricing,
   pendingInvitations = [],
+  acceptedNotifications = [],
   onAcceptInvitation,
   onDeclineInvitation,
 }) => {
@@ -100,7 +103,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   });
 
-  const hasUnreadNotifications = pendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id));
+  const hasUnreadNotifications = pendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
+    || acceptedNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id));
 
   // Opening the panel marks every visible notification as read
   useEffect(() => {
@@ -108,6 +112,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     setSeenNotificationIds(prev => {
       const next = new Set(prev);
       pendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
+      acceptedNotifications.forEach(notif => notif?.id && next.add(notif.id));
       try {
         localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
       } catch {
@@ -115,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       return next;
     });
-  }, [isNotificationsOpen, hasUnreadNotifications, pendingInvitations]);
+  }, [isNotificationsOpen, hasUnreadNotifications, pendingInvitations, acceptedNotifications]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), icon: Layers },
@@ -314,13 +319,37 @@ export const Navbar: React.FC<NavbarProps> = ({
                         )}
                       </div>
 
-                      {pendingInvitations.length === 0 ? (
+                      {pendingInvitations.length === 0 && acceptedNotifications.length === 0 ? (
                         <div className="py-6 text-center text-xs text-slate-400">
                           <Bell className="w-6 h-6 mx-auto text-slate-600 mb-2 opacity-50" />
                           <p>Aucune notification pour le moment.</p>
                         </div>
                       ) : (
                         <div className="space-y-2 max-h-72 overflow-y-auto custom-scrollbar">
+                          {/* Accepted Notifications for Owner */}
+                          {acceptedNotifications.map((notif) => (
+                            <div 
+                              key={notif.id}
+                              className="p-3 rounded-xl bg-gradient-to-br from-emerald-950/40 via-slate-950 to-indigo-950/30 border border-emerald-500/30 flex items-start gap-2.5 shadow-sm text-left animate-in fade-in"
+                            >
+                              <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 shrink-0 mt-0.5">
+                                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <span className="text-[9px] font-black uppercase tracking-wider text-emerald-400">
+                                  Invitation Acceptée
+                                </span>
+                                <p className="text-xs font-bold text-white leading-snug mt-0.5">
+                                  L'utilisateur : <span className="text-emerald-300 font-bold">{notif.name}</span>{' '}
+                                  {notif.konanId && <span className="font-mono text-amber-300 font-bold">[{notif.konanId}]</span>} a accepté votre invitation
+                                </p>
+                                <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                                  Ce membre a rejoint votre groupe KONAN PLUS.
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+
                           {pendingInvitations.map((inv) => (
                             <div 
                               key={inv.id}

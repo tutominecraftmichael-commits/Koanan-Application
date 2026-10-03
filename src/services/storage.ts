@@ -816,21 +816,38 @@ export function getPendingInvitationsForUser(konanId?: string, email?: string): 
 
 /**
  * Updates status of an invitation ('accepted' or 'declined') locally and in Cloud Firestore.
+ * Carries the accepted user's name and ID so the owner is notified with full credentials.
  */
-export function updateInvitationStatus(id: string, status: 'accepted' | 'declined'): void {
+export function updateInvitationStatus(
+  id: string, 
+  status: 'accepted' | 'declined',
+  metadata?: { acceptedByName?: string; acceptedByKonanId?: string }
+): void {
   try {
     const existing = getPlusInvitations();
-    const updated = existing.map(inv => inv.id === id ? { ...inv, status } : inv);
+    const updated = existing.map(inv => inv.id === id ? { 
+      ...inv, 
+      status,
+      ...(metadata?.acceptedByName ? { acceptedByName: metadata.acceptedByName } : {}),
+      ...(metadata?.acceptedByKonanId ? { acceptedByKonanId: metadata.acceptedByKonanId } : {}),
+      acceptedAt: status === 'accepted' ? (inv.acceptedAt || new Date().toISOString()) : inv.acceptedAt,
+      updatedAt: new Date().toISOString()
+    } : inv);
     localStorage.setItem(INVITATIONS_STORAGE_KEY, JSON.stringify(updated));
 
     // Broadcast across tabs in the same browser
-    invitationBroadcastChannel?.postMessage({ type: 'STATUS_UPDATED', id, status });
+    invitationBroadcastChannel?.postMessage({ 
+      type: 'STATUS_UPDATED', 
+      id, 
+      status,
+      metadata 
+    });
   } catch (err) {
     console.error('Failed to update invitation status:', err);
   }
 
   // Cross-device update via Cloud Firestore
-  updateCloudInvitationStatus(id, status).catch((err) => {
+  updateCloudInvitationStatus(id, status, metadata).catch((err) => {
     console.warn('Cloud invitation status update error:', err);
   });
 }

@@ -170,8 +170,15 @@ export interface PlusInvitationNotification {
   senderKonanId: string;
   senderEmail?: string;
   targetKonanIdOrEmail: string;
+  targetNormalized?: string;
+  targetAlpha?: string;
+  targetName?: string;
   status: 'pending' | 'accepted' | 'declined';
+  acceptedByName?: string;
+  acceptedByKonanId?: string;
+  acceptedAt?: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface UserStreak {
