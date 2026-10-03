@@ -12,7 +12,6 @@ import {
   Sparkles,
   GraduationCap,
   Save,
-  Bell,
   Copy
 } from 'lucide-react';
 import type { UserAccount, AcademicGoal } from '../../types';
@@ -20,11 +19,7 @@ import { Crown, Users, Target, MessageSquare } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
 import { soundFX } from '../../lib/audioEffects';
-import { 
-  getPhoneNotificationPermission, 
-  requestPhoneNotificationPermission, 
-  sendPhoneNotification 
-} from '../../services/companionNotificationService';
+
 
 const COMMON_FILIERES = [
   'Licence Informatique',
@@ -91,7 +86,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [editName, setEditName] = useState('');
   const [editFiliere, setEditFiliere] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [notifPermission, setNotifPermission] = useState<NotificationPermission>(() => getPhoneNotificationPermission());
   const [copiedKonanId, setCopiedKonanId] = useState(false);
 
   useEffect(() => {
@@ -99,7 +93,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       setEditName(studentName || userAccount?.name || '');
       setEditFiliere(academicLevel || userAccount?.academicLevel || '');
       setSaveSuccess(false);
-      setNotifPermission(getPhoneNotificationPermission());
     }
   }, [isOpen, studentName, academicLevel, userAccount]);
 
@@ -120,26 +113,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3500);
     }
-  };
-
-  const handleRequestPermission = async () => {
-    const res = await requestPhoneNotificationPermission();
-    setNotifPermission(res);
-    if (res === 'granted') {
-      soundFX.playCheckmarkPop();
-      sendPhoneNotification(
-        '🦉 KONAN • Notifications autorisées',
-        'Parfait ! Vos alertes et réaménagements arriveront directement sur votre téléphone.'
-      );
-    }
-  };
-
-  const handleSendTestNotif = () => {
-    soundFX.playNotificationPing();
-    sendPhoneNotification(
-      '🦉 KONAN • Rappel complice',
-      '⏰ Vos séances décalées sont directement transmises sur votre mobile sans encombrer votre écran !'
-    );
   };
 
   return (
@@ -402,16 +375,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             {userAccount?.planTier === 'plus' ? (
               <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 via-indigo-950/40 to-slate-950 border border-amber-500/30 space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                      <Crown className="w-4 h-4 text-amber-400" />
-                      Modèle KONAN PLUS Actif
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
-                      VIP
-                    </span>
-                  </div>
-                  <span className="text-xs font-bold text-amber-300 font-mono">2 500 F CFA/m</span>
+                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <Crown className="w-4 h-4 text-amber-400" />
+                    Modèle KONAN PLUS Actif
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -508,64 +475,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             )}
           </div>
 
-          {/* SECTION 2: NOTIFICATIONS SUR VOTRE TÉLÉPHONE */}
-          <div className="space-y-3">
-            <div>
-              <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                <Bell className="w-3.5 h-3.5 text-amber-400" />
-                Notifications sur votre téléphone
-              </span>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                Recevez directement vos rappels d'étude et séances reportées sur votre mobile (Android, iOS ou navigateur).
-              </p>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-3">
-              <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-                  notifPermission === 'granted' 
-                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
-                    : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                }`}>
-                  {notifPermission === 'granted' ? <Check className="w-4 h-4" /> : <Bell className="w-4 h-4" />}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-white">
-                    {notifPermission === 'granted' ? 'Autorisation accordée sur cet appareil' : 'Autorisation requise pour votre téléphone'}
-                  </p>
-                  <p className="text-[11px] text-slate-400">
-                    {notifPermission === 'granted'
-                      ? 'Vos rappels et séances décalées arrivent directement dans vos notifications système.'
-                      : 'Permet à Konan de vous avertir discrètement sur votre mobile sans encombrer votre écran.'}
-                  </p>
-                </div>
-              </div>
-
-              {notifPermission !== 'granted' ? (
-                <Button
-                  type="button"
-                  variant="primary"
-                  size="sm"
-                  leftIcon={<Bell className="w-4 h-4" />}
-                  onClick={handleRequestPermission}
-                  className="w-full cursor-pointer text-xs font-bold py-2.5"
-                >
-                  📲 Autoriser les notifications sur mon téléphone
-                </Button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleSendTestNotif}
-                  className="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-850 text-slate-300 hover:text-white border border-slate-800 text-xs font-semibold cursor-pointer transition-colors flex items-center justify-center gap-2"
-                >
-                  <span>📲</span>
-                  <span>Envoyer une notification test au téléphone</span>
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* SECTION 3: GESTION DES DONNÉES */}
+          {/* SECTION 2: GESTION DES DONNÉES */}
           <div className="space-y-3">
             <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
