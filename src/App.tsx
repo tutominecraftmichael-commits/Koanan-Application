@@ -105,7 +105,7 @@ export function App() {
     const identifiers = [myId, myEmail].filter(Boolean) as string[];
     let disposed = false;
 
-    // Updates UI; pings + toasts only for invitations never seen before
+    // Updates the bell list; a discreet ping only for invitations never seen before (no pop-up)
     const refreshPending = () => {
       if (disposed) return;
       const myPending = getPendingInvitationsForUser(myId, myEmail);
@@ -114,7 +114,6 @@ export function App() {
       setPendingInvitations(myPending);
       if (fresh.length > 0) {
         soundFX.playNotificationPing();
-        setToastMessage(`📬 Nouvelle invitation KONAN PLUS de ${fresh[0].senderName || 'un ami'} !`);
       }
     };
 
@@ -196,26 +195,6 @@ export function App() {
       unsubscribe();
     };
   }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest]);
-
-  // 3. Direct invite link detection (?invite_id=KN-XXXXXX)
-  useEffect(() => {
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const inviteIdParam = urlParams.get('invite_id');
-      if (inviteIdParam) {
-        const cleanSenderId = inviteIdParam.trim();
-        const myId = state.userAccount?.konanId || state.konanId;
-        const myEmail = state.userAccount?.email;
-        const existing = getPendingInvitationsForUser(myId, myEmail);
-        const match = existing.find(i => (i?.senderKonanId || '').toUpperCase() === cleanSenderId.toUpperCase());
-        if (match) {
-          setToastMessage(`📬 Invitation KONAN PLUS reçue de ${match.senderName || 'un ami'} (${cleanSenderId}) !`);
-        }
-      }
-    } catch (e) {
-      console.warn('Error reading invite_id from URL:', e);
-    }
-  }, [state.userAccount?.konanId, state.konanId]);
 
   const handleAcceptInvitation = (invitation: PlusInvitationNotification) => {
     updateInvitationStatus(invitation.id, 'accepted');

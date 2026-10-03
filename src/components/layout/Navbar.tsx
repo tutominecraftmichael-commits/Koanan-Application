@@ -47,6 +47,8 @@ export interface NavbarProps {
   onDeclineInvitation?: (invitation: PlusInvitationNotification) => void;
 }
 
+const SEEN_NOTIFICATIONS_KEY = 'konan_seen_notification_ids';
+
 export const Navbar: React.FC<NavbarProps> = ({
   activeView,
   onNavigate,
@@ -86,6 +88,34 @@ export const Navbar: React.FC<NavbarProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Read/unread tracking for the bell (persisted so the red dot survives reloads)
+  const [seenNotificationIds, setSeenNotificationIds] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem(SEEN_NOTIFICATIONS_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return new Set(Array.isArray(parsed) ? parsed : []);
+    } catch {
+      return new Set();
+    }
+  });
+
+  const hasUnreadNotifications = pendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id));
+
+  // Opening the panel marks every visible notification as read
+  useEffect(() => {
+    if (!isNotificationsOpen || !hasUnreadNotifications) return;
+    setSeenNotificationIds(prev => {
+      const next = new Set(prev);
+      pendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
+      try {
+        localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
+      } catch {
+        /* storage full or unavailable: dot simply won't persist */
+      }
+      return next;
+    });
+  }, [isNotificationsOpen, hasUnreadNotifications, pendingInvitations]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), icon: Layers },
@@ -256,18 +286,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsNotificationsOpen(prev => !prev)}
-                    className={`relative p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center ${
-                      pendingInvitations.length > 0
-                        ? 'bg-amber-500/20 text-amber-300 border-amber-400 shadow-md shadow-amber-500/20'
-                        : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700'
-                    }`}
-                    title={pendingInvitations.length > 0 ? `${pendingInvitations.length} invitation(s) en attente` : 'Notifications'}
-                    aria-label="Notifications"
+                    className="relative p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center bg-slate-900/80 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700"
+                    title={hasUnreadNotifications ? 'Nouvelles notifications non lues' : 'Notifications'}
+                    aria-label={hasUnreadNotifications ? 'Notifications (non lues)' : 'Notifications'}
                   >
                     <Bell className="w-4 h-4" />
-                    {pendingInvitations.length > 0 && (
-                      <span className="absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full bg-amber-400 text-slate-950 font-black text-[9px] shadow-sm">
-                        {pendingInvitations.length}
+                    {hasUnreadNotifications && (
+                      <span className="absolute top-1 right-1 flex h-2.5 w-2.5" aria-hidden="true">
+                        <span className="absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-60 animate-ping" />
+                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-slate-950" />
                       </span>
                     )}
                   </button>
@@ -456,42 +483,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
         </div>
-
-        {/* Prominent Header Invitation Banner */}
-        {pendingInvitations.length > 0 && pendingInvitations[0] && (
-          <div className="bg-gradient-to-r from-amber-500/15 via-slate-900 to-indigo-950/40 border-t border-b border-amber-500/40 px-3 sm:px-4 py-2 text-xs text-white flex flex-col sm:flex-row items-center justify-between gap-2.5 animate-in slide-in-from-top-2">
-            <div className="flex items-center gap-2.5 text-center sm:text-left min-w-0">
-              <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
-                <Crown className="w-4 h-4 text-amber-300" />
-              </div>
-              <p className="leading-snug text-xs">
-                <strong>Invitation KONAN PLUS :</strong> Vous avez reçu une invitation de la part de{' '}
-                <strong className="text-amber-300">{pendingInvitations[0]?.senderName || 'un ami'}</strong>{' '}
-                {pendingInvitations[0]?.senderKonanId && (
-                  <>(ID : <span className="font-mono text-amber-300 font-bold">{pendingInvitations[0].senderKonanId}</span>)</>
-                )}. Accepter l'accès complet ?
-              </p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={() => onAcceptInvitation?.(pendingInvitations[0])}
-                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md cursor-pointer transition-colors flex items-center gap-1.5"
-              >
-                <Check className="w-3.5 h-3.5" />
-                <span>Accepter</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => onDeclineInvitation?.(pendingInvitations[0])}
-                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-900/40 text-slate-300 hover:text-rose-300 font-semibold text-xs cursor-pointer transition-colors flex items-center gap-1"
-              >
-                <X className="w-3.5 h-3.5" />
-                <span>Refuser</span>
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Mobile Sub-Navigation Bar (Only for active dashboard pages) */}
         {activeView !== 'landing' && activeView !== 'auth' && (
