@@ -21,10 +21,11 @@ import {
   isTargetAlreadyPlus, 
   savePlusInvitation, 
   getPlusInvitations, 
+  removePlusInvitation,
   mergeInvitationsFromCloud, 
   invitationBroadcastChannel 
 } from '../../services/storage';
-import { listenToAllCloudInvitations } from '../../lib/firebase';
+import { listenToAllCloudInvitations, deleteCloudPlusInvitation } from '../../lib/firebase';
 import { generateId } from '../../lib/utils';
 import type { PlusInvitationNotification } from '../../types';
 
@@ -122,11 +123,11 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
 
   const isMemberAccepted = (targetVal: string) => {
     const cleanTarget = targetVal.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
-    const invite = invitations.find(i => {
+    return invitations.some(i => {
       const it = (i.targetKonanIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
-      return it === cleanTarget;
+      const ia = (i.acceptedByKonanId || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+      return (it === cleanTarget || ia === cleanTarget) && i.status === 'accepted';
     });
-    return invite?.status === 'accepted';
   };
 
   // Build the unified list of group members
@@ -173,28 +174,92 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
   } else {
     // Owner view: list all invited members with their actual names & badges
     const ownerCleanId = (ownerKonanId || '').trim().toUpperCase();
-    const ownerInvites = invitations.filter(i => (i.senderKonanId || '').trim().toUpperCase() === ownerCleanId);
+    const ownerInvites = invitations.filter(i => {
+      const sId = (i.senderKonanId || '').trim().toUpperCase();
+      return sId === ownerCleanId && i.status !== 'declined';
+    });
 
+    const membersMap = new Map<string, GroupMemberItem>();
+
+    // 1. Process all owner invites from storage / Firestore
+    ownerInvites.forEach((inv) => {
+      const targetClean = (inv.targetKonanIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+      const acceptedClean = (inv.acceptedByKonanId || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+      const key = acceptedClean || targetClean;
+      if (!key) return;
+
+      const isEmail = inv.targetKonanIdOrEmail.includes('@');
+      const displayName = inv.acceptedByName || inv.targetName || (inv.targetKonanIdOrEmail.startsWith('KN-') ? `Étudiant ${inv.targetKonanIdOrEmail}` : inv.targetKonanIdOrEmail);
+      const displayId = inv.acceptedByKonanId || inv.targetKonanIdOrEmail;
+      const isAcc = inv.status === 'accepted';
+
+      // Check if this member is already in our map
+      let existingKey: string | null = null;
+      for (const [k, item] of membersMap.entries()) {
+        const itemTargetClean = (item.rawInvitation?.targetKonanIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+        const itemAcceptedClean = (item.rawInvitation?.acceptedByKonanId || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+        const itemIdClean = item.identifier.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+
+        if (k === key || k === targetClean || (acceptedClean && k === acceptedClean) ||
+            itemIdClean === targetClean || (acceptedClean && itemIdClean === acceptedClean) ||
+            itemTargetClean === targetClean || (acceptedClean && itemAcceptedClean === acceptedClean)) {
+          existingKey = k;
+          break;
+        }
+      }
+
+      if (existingKey) {
+        const existing = membersMap.get(existingKey)!;
+        // If this invitation is accepted, mark accepted and update details
+        if (isAcc) {
+          existing.isAccepted = true;
+          existing.name = displayName;
+          existing.identifier = displayId;
+          existing.rawInvitation = inv;
+        }
+      } else {
+        membersMap.set(key, {
+          id: inv.id,
+          name: displayName,
+          identifier: displayId,
+          type: isEmail ? 'email' : 'id',
+          isAccepted: isAcc,
+          isCurrentStudent: false,
+          rawInvitation: inv,
+        });
+      }
+    });
+
+    // 2. Also ensure any explicitly invited item from props (allInvited) is included if not yet present
     allInvited.forEach((item, idx) => {
       const cleanVal = item.value.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
-      const match = ownerInvites.find(i => {
-        const it = (i.targetKonanIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
-        return it === cleanVal;
-      });
+      if (!cleanVal) return;
 
-      const isAcc = match ? match.status === 'accepted' : isMemberAccepted(item.value);
-      const displayName = match?.acceptedByName || match?.targetName || item.value;
-      const displayId = match?.acceptedByKonanId || item.value;
+      let found = false;
+      for (const [, m] of membersMap.entries()) {
+        const mId = m.identifier.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+        const mTarget = (m.rawInvitation?.targetKonanIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+        const mAccepted = (m.rawInvitation?.acceptedByKonanId || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+        if (mId === cleanVal || mTarget === cleanVal || mAccepted === cleanVal) {
+          found = true;
+          break;
+        }
+      }
 
-      groupMembers.push({
-        id: match?.id || `invited-${idx}`,
-        name: displayName,
-        identifier: displayId,
-        type: item.type,
-        isAccepted: isAcc,
-        isCurrentStudent: false,
-        rawInvitation: match,
-      });
+      if (!found) {
+        membersMap.set(cleanVal, {
+          id: `invited-${idx}`,
+          name: item.value.startsWith('KN-') ? `Étudiant ${item.value}` : item.value,
+          identifier: item.value,
+          type: item.type,
+          isAccepted: isMemberAccepted(item.value),
+          isCurrentStudent: false,
+        });
+      }
+    });
+
+    membersMap.forEach((member) => {
+      groupMembers.push(member);
     });
   }
 
@@ -203,12 +268,6 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
   const pendingCount = groupMembers.length - acceptedCount;
   const currentCount = groupMembers.length;
   const remainingSlots = Math.max(0, MAX_INVITES - currentCount);
-
-  // For the titulaire: list of accepted invitations to display the notification
-  const acceptedInvitationsForOwner = !isGuest ? invitations.filter(i => {
-    const isMine = (i.senderKonanId || '').trim().toUpperCase() === (ownerKonanId || '').trim().toUpperCase();
-    return isMine && i.status === 'accepted';
-  }) : [];
 
   const validateEmail = (email: string) => {
     return String(email)
@@ -297,17 +356,43 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
     setTimeout(() => setSuccessBanner(null), 4000);
   };
 
-  const handleRemoveMember = (member: { value: string; type: 'id' | 'email' }) => {
+  const handleRemoveMember = (member: GroupMemberItem) => {
     if (isGuest) return;
-    if (member.type === 'id') {
-      const updated = invitedIds.filter(id => id !== member.value);
-      onUpdateInvitedIds?.(updated);
+
+    const targetVal = member.identifier;
+    const rawTarget = member.rawInvitation?.targetKonanIdOrEmail;
+    const inviteId = member.rawInvitation?.id;
+
+    // 1. Remove from local storage invitations & Cloud Firestore
+    removePlusInvitation(targetVal, ownerKonanId);
+    if (rawTarget && rawTarget !== targetVal) {
+      removePlusInvitation(rawTarget, ownerKonanId);
     }
-    const updatedEmails = invitedEmails.filter(e => e !== member.value);
+    if (inviteId) {
+      deleteCloudPlusInvitation(inviteId).catch(() => {});
+    }
+
+    // 2. Remove from invitedIds / invitedEmails
+    const cleanTarget = targetVal.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+    const cleanRaw = (rawTarget || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+
+    const updatedIds = invitedIds.filter(id => {
+      const c = id.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+      return c !== cleanTarget && c !== cleanRaw;
+    });
+    onUpdateInvitedIds?.(updatedIds);
+
+    const updatedEmails = invitedEmails.filter(e => {
+      const c = e.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+      return c !== cleanTarget && c !== cleanRaw;
+    });
     onUpdateInvitedEmails?.(updatedEmails);
 
+    // 3. Immediately refresh local state
+    setInvitations(getPlusInvitations());
+
     soundFX.playNotificationPing();
-    setSuccessBanner(`L'identifiant "${member.value}" a été retiré du groupe.`);
+    setSuccessBanner(`Le membre "${member.name}" a été retiré du groupe.`);
     setTimeout(() => setSuccessBanner(null), 3000);
   };
 
@@ -405,36 +490,6 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
             </div>
           </div>
 
-          {/* NOTIFICATION POUR LE TITULAIRE : INVITATION ACCEPTÉE */}
-          {!isGuest && acceptedInvitationsForOwner.length > 0 && (
-            <div className="space-y-2">
-              {acceptedInvitationsForOwner.map((inv) => {
-                const guestName = inv.acceptedByName || inv.targetName || (inv.targetKonanIdOrEmail.startsWith('KN-') ? `Étudiant ${inv.targetKonanIdOrEmail}` : inv.targetKonanIdOrEmail);
-                const guestId = inv.acceptedByKonanId || (inv.targetKonanIdOrEmail.startsWith('KN-') ? inv.targetKonanIdOrEmail : '');
-
-                return (
-                  <div 
-                    key={inv.id}
-                    className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/30 border border-emerald-500/40 text-emerald-200 text-xs sm:text-sm font-medium flex items-center justify-between gap-3 shadow-md animate-in fade-in"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 border border-emerald-500/30">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                      </div>
-                      <p className="truncate text-xs sm:text-sm text-white">
-                        L'utilisateur : <strong className="text-emerald-300 font-bold">{guestName}</strong>{' '}
-                        {guestId && <span className="font-mono text-amber-300 font-bold">[{guestId}]</span>}{' '}
-                        a accepté votre invitation
-                      </p>
-                    </div>
-                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/15 px-2.5 py-1 rounded-lg border border-emerald-500/20 uppercase tracking-wider shrink-0">
-                      Confirmé
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
 
           {/* Success Banner */}
           {successBanner && (
@@ -599,7 +654,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
                     {!isGuest && !member.isCurrentStudent && (
                       <button
                         type="button"
-                        onClick={() => handleRemoveMember({ value: member.identifier, type: member.type })}
+                        onClick={() => handleRemoveMember(member)}
                         className="p-2 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer shrink-0"
                         title="Retirer ce compte du groupe"
                       >

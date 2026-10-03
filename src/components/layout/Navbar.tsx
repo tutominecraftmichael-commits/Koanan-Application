@@ -306,7 +306,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                   {/* Dropdown Menu for Notifications */}
                   {isNotificationsOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 space-y-2.5">
+                    <div className="fixed left-3 right-3 top-[68px] sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 w-auto sm:w-96 max-w-sm sm:max-w-none mx-auto sm:mx-0 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-slate-800 shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 space-y-2.5">
                       <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-xs">
                         <span className="font-bold text-white flex items-center gap-1.5">
                           <Bell className="w-3.5 h-3.5 text-amber-400" />

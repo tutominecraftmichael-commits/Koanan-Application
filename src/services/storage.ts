@@ -224,7 +224,8 @@ import {
   syncUserStateToCloud, 
   loadUserStateFromCloud, 
   syncCloudPlusInvitation, 
-  updateCloudInvitationStatus 
+  updateCloudInvitationStatus,
+  deleteCloudPlusInvitation
 } from '../lib/firebase';
 
 /**
@@ -681,6 +682,24 @@ export function registerPlusUser(konanId?: string, email?: string): void {
 }
 
 /**
+ * Deregisters an ID or email from the PLUS local registry when revoked/removed.
+ */
+export function deregisterPlusUser(identifier?: string): void {
+  if (!identifier) return;
+  try {
+    const raw = localStorage.getItem(PLUS_REGISTRY_KEY);
+    if (!raw) return;
+    const registry: string[] = JSON.parse(raw);
+    const cleanUpper = identifier.trim().toUpperCase();
+    const cleanLower = identifier.trim().toLowerCase();
+    const filtered = registry.filter(item => item !== cleanUpper && item !== cleanLower);
+    localStorage.setItem(PLUS_REGISTRY_KEY, JSON.stringify(filtered));
+  } catch (e) {
+    console.warn('Failed to deregister plus user:', e);
+  }
+}
+
+/**
  * Checks whether an ID or email ALREADY has KONAN PLUS active.
  * Used to reject invitations to people who already have Plus.
  */
@@ -850,6 +869,55 @@ export function updateInvitationStatus(
   updateCloudInvitationStatus(id, status, metadata).catch((err) => {
     console.warn('Cloud invitation status update error:', err);
   });
+}
+
+/**
+ * Removes an invitation completely from local storage and Cloud Firestore,
+ * revokes access, and frees up the slot for a new member.
+ */
+export function removePlusInvitation(targetIdOrEmail: string, ownerKonanId?: string): void {
+  try {
+    const existing = getPlusInvitations();
+    const cleanTarget = (targetIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+    const cleanOwnerId = (ownerKonanId || '').trim().toUpperCase();
+
+    const toRemove: PlusInvitationNotification[] = [];
+    const remaining = existing.filter(inv => {
+      const invTarget = (inv.targetKonanIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+      const invAcceptedId = (inv.acceptedByKonanId || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+      const invSenderId = (inv.senderKonanId || '').trim().toUpperCase();
+
+      const matchesTarget = invTarget === cleanTarget || (invAcceptedId && invAcceptedId === cleanTarget);
+      const matchesOwner = !cleanOwnerId || invSenderId === cleanOwnerId;
+
+      if (matchesTarget && matchesOwner) {
+        toRemove.push(inv);
+        return false;
+      }
+      return true;
+    });
+
+    localStorage.setItem(INVITATIONS_STORAGE_KEY, JSON.stringify(remaining));
+
+    // Deregister from Plus registry
+    deregisterPlusUser(targetIdOrEmail);
+
+    // Broadcast across tabs in the same browser
+    invitationBroadcastChannel?.postMessage({ 
+      type: 'STATUS_UPDATED', 
+      targetIdOrEmail,
+      removed: true 
+    });
+
+    // Delete or revoke in Cloud Firestore
+    toRemove.forEach(inv => {
+      deleteCloudPlusInvitation(inv.id).catch((err) => {
+        console.warn('Cloud invitation deletion warning:', err);
+      });
+    });
+  } catch (err) {
+    console.error('Failed to remove invitation:', err);
+  }
 }
 
 

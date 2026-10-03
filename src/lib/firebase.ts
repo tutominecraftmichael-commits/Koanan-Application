@@ -61,6 +61,7 @@ import {
   doc, 
   getDoc, 
   setDoc, 
+  deleteDoc,
   collection,
   onSnapshot,
   query,
@@ -604,6 +605,32 @@ export async function updateCloudInvitationStatus(
     }
   } catch (err) {
     console.warn('Failed to update invitation status in Cloud Firestore:', err);
+    return false;
+  }
+}
+
+/**
+ * Deletes or revokes an invitation from Cloud Firestore so removed members lose access.
+ */
+export async function deleteCloudPlusInvitation(id: string): Promise<boolean> {
+  if (!db || !id) return false;
+  try {
+    const invRef = doc(db, 'plus_invitations', id);
+    // 1. First set status to 'declined' so any real-time listener immediately knows they are removed
+    await setDoc(invRef, {
+      status: 'declined',
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+
+    // 2. Also try deleteDoc
+    try {
+      await deleteDoc(invRef);
+    } catch {
+      // If Firestore rules only permit status update, status: declined is already active
+    }
+    return true;
+  } catch (err) {
+    console.warn('Failed to delete invitation in Cloud Firestore:', err);
     return false;
   }
 }
