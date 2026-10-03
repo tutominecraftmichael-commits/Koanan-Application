@@ -386,10 +386,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                                     }`}>
                                       {isAcc ? 'Invitation Acceptée' : 'Invitation Refusée'}
                                     </span>
-                                    <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1 shrink-0">
-                                      <Clock className="w-3 h-3 text-slate-500" />
-                                      {timeFormatted}
-                                    </span>
+                                    <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-bold shrink-0 shadow-xs ${
+                                      isAcc ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300' : 'bg-rose-500/20 border-rose-500/40 text-rose-300'
+                                    }`}>
+                                      <Clock className={`w-3 h-3 ${isAcc ? 'text-emerald-400' : 'text-rose-400'}`} />
+                                      <span>{timeFormatted}</span>
+                                    </div>
                                   </div>
                                   <p className="text-xs font-bold text-white leading-snug mt-1">
                                     L'utilisateur : <span className={`font-bold ${isAcc ? 'text-emerald-300' : 'text-rose-300'}`}>{notif.name}</span>{' '}
@@ -424,10 +426,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                                       <span className="text-[9px] font-black uppercase tracking-wider text-amber-400">
                                         Invitation Officielle
                                       </span>
-                                      <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1 shrink-0">
-                                        <Clock className="w-3 h-3 text-slate-500" />
-                                        {timeFormatted}
-                                      </span>
+                                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-bold shrink-0 shadow-xs">
+                                        <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                                        <span>{timeFormatted}</span>
+                                      </div>
                                     </div>
                                     <p className="text-xs font-bold text-white leading-snug mt-1">
                                       Vous avez reçu une invitation de la part de{' '}
@@ -445,22 +447,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                                     type="button"
                                     onClick={(e) => {
                                       e.stopPropagation();
+                                      e.preventDefault();
                                       onAcceptInvitation?.(inv);
                                       setIsNotificationsOpen(false);
                                     }}
-                                    className="flex-1 py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm active:scale-95"
+                                    className="flex-1 py-2 px-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-950/40 cursor-pointer active:scale-95"
                                   >
                                     <Check className="w-3.5 h-3.5" />
-                                    <span>Accepter</span>
+                                    <span>Accepter l'invitation</span>
                                   </button>
                                   <button
                                     type="button"
                                     onClick={(e) => {
                                       e.stopPropagation();
+                                      e.preventDefault();
                                       onDeclineInvitation?.(inv);
                                       setIsNotificationsOpen(false);
                                     }}
-                                    className="py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-rose-900/40 text-slate-300 hover:text-rose-300 font-semibold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer active:scale-95"
+                                    className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-rose-950/50 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 text-slate-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95"
                                   >
                                     <X className="w-3.5 h-3.5" />
                                     <span>Refuser</span>
@@ -545,10 +549,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                                       }`}>
                                         {isAcc ? 'Invitation Acceptée' : 'Invitation Refusée'}
                                       </span>
-                                      <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1 shrink-0">
-                                        <Clock className="w-3 h-3 text-slate-500" />
-                                        {timeFormatted}
-                                      </span>
+                                      <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-bold shrink-0 shadow-xs ${
+                                        isAcc ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300' : 'bg-rose-500/20 border-rose-500/40 text-rose-300'
+                                      }`}>
+                                        <Clock className={`w-3 h-3 ${isAcc ? 'text-emerald-400' : 'text-rose-400'}`} />
+                                        <span>{timeFormatted}</span>
+                                      </div>
                                     </div>
                                     <p className="text-xs font-bold text-white leading-snug mt-1">
                                       L'utilisateur : <span className={`font-bold ${isAcc ? 'text-emerald-300' : 'text-rose-300'}`}>{notif.name}</span>{' '}
@@ -583,10 +589,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                                         <span className="text-[9px] font-black uppercase tracking-wider text-amber-400">
                                           Invitation Officielle
                                         </span>
-                                        <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1 shrink-0">
-                                          <Clock className="w-3 h-3 text-slate-500" />
-                                          {timeFormatted}
-                                        </span>
+                                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-bold shrink-0 shadow-xs">
+                                          <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                                          <span>{timeFormatted}</span>
+                                        </div>
                                       </div>
                                       <p className="text-xs font-bold text-white leading-snug mt-1">
                                         Vous avez reçu une invitation de la part de{' '}
@@ -604,22 +610,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                                       type="button"
                                       onClick={(e) => {
                                         e.stopPropagation();
+                                        e.preventDefault();
                                         onAcceptInvitation?.(inv);
                                         setIsNotificationsOpen(false);
                                       }}
-                                      className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm active:scale-95"
+                                      className="flex-1 py-2 px-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-950/40 cursor-pointer active:scale-95"
                                     >
                                       <Check className="w-4 h-4" />
-                                      <span>Accepter</span>
+                                      <span>Accepter l'invitation</span>
                                     </button>
                                     <button
                                       type="button"
                                       onClick={(e) => {
                                         e.stopPropagation();
+                                        e.preventDefault();
                                         onDeclineInvitation?.(inv);
                                         setIsNotificationsOpen(false);
                                       }}
-                                      className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-rose-900/40 text-slate-300 hover:text-rose-300 font-semibold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer active:scale-95"
+                                      className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-rose-950/50 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 text-slate-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95"
                                     >
                                       <X className="w-4 h-4" />
                                       <span>Refuser</span>

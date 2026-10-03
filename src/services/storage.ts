@@ -780,7 +780,22 @@ export function mergeInvitationsFromCloud(cloudInvitations: PlusInvitationNotifi
     const map = new Map<string, PlusInvitationNotification>();
     local.forEach(inv => map.set(inv.id, inv));
     cloudInvitations.forEach(inv => {
-      map.set(inv.id, { ...(map.get(inv.id) || {}), ...inv });
+      const existing = map.get(inv.id);
+      if (existing) {
+        // Prevent stale cloud 'pending' status from reverting an already 'accepted' or 'declined' invitation
+        if ((existing.status === 'accepted' || existing.status === 'declined') && inv.status === 'pending') {
+          map.set(inv.id, {
+            ...inv,
+            status: existing.status,
+            acceptedByName: existing.acceptedByName || inv.acceptedByName,
+            acceptedByKonanId: existing.acceptedByKonanId || inv.acceptedByKonanId,
+            acceptedAt: existing.acceptedAt || inv.acceptedAt,
+            updatedAt: existing.updatedAt || inv.updatedAt,
+          });
+          return;
+        }
+      }
+      map.set(inv.id, { ...(existing || {}), ...inv });
     });
     const merged = Array.from(map.values());
     localStorage.setItem(INVITATIONS_STORAGE_KEY, JSON.stringify(merged));

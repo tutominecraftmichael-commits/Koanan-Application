@@ -743,5 +743,26 @@ export function listenToAllCloudInvitations(onUpdate: (invitations: any[]) => vo
   }
 }
 
+/**
+ * Direct server-side fetch of ALL invitations from Cloud Firestore.
+ * Bypasses local Firestore cache completely, guaranteeing fresh cross-device state.
+ */
+export async function fetchAllCloudInvitations(): Promise<any[]> {
+  if (!db) return [];
+  try {
+    const colRef = collection(db, 'plus_invitations');
+    const snap = await getDocsFromServer(colRef);
+    const all: any[] = [];
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      all.push({ ...data, id: data.id || docSnap.id });
+    });
+    return all;
+  } catch (err) {
+    console.warn('fetchAllCloudInvitations error:', err);
+    return [];
+  }
+}
+
 
 

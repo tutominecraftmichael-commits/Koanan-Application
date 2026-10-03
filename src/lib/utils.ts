@@ -54,37 +54,40 @@ export function getDaysRemaining(targetDateStr?: string): number | null {
  * Example: "À l'instant (22:45)", "Il y a 3 min (22:42)", "Aujourd'hui à 14:30"
  */
 export function formatNotificationTime(isoString?: string): string {
-  if (!isoString) return "À l'instant";
   try {
-    const date = new Date(isoString);
-    if (isNaN(date.getTime())) return "À l'instant";
     const now = new Date();
-    const diffMs = Math.max(0, now.getTime() - date.getTime());
+    const date = isoString ? new Date(isoString) : now;
+    const targetDate = isNaN(date.getTime()) ? now : date;
+
+    const hours = targetDate.getHours().toString().padStart(2, '0');
+    const minutes = targetDate.getMinutes().toString().padStart(2, '0');
+    const timeFormatted = `${hours}:${minutes}`;
+
+    const diffMs = Math.max(0, now.getTime() - targetDate.getTime());
     const diffSec = Math.floor(diffMs / 1000);
     const diffMin = Math.floor(diffSec / 60);
     const diffHours = Math.floor(diffMin / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const timeFormatted = `${hours}:${minutes}`;
-
-    if (diffSec < 45) {
+    if (diffSec < 60) {
       return `À l'instant (${timeFormatted})`;
     }
     if (diffMin < 60) {
       return `Il y a ${diffMin} min (${timeFormatted})`;
     }
-    if (diffHours < 24 && date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
+    if (diffHours < 24 && targetDate.getDate() === now.getDate() && targetDate.getMonth() === now.getMonth() && targetDate.getFullYear() === now.getFullYear()) {
       return `Aujourd'hui à ${timeFormatted}`;
     }
-    if (diffDays === 1 || (diffHours < 48 && date.getDate() === now.getDate() - 1)) {
+    if (diffDays === 1 || (diffHours < 48 && targetDate.getDate() === now.getDate() - 1)) {
       return `Hier à ${timeFormatted}`;
     }
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    return `${day}/${month} à ${timeFormatted}`;
+    const day = targetDate.getDate().toString().padStart(2, '0');
+    const month = (targetDate.getMonth() + 1).toString().padStart(2, '0');
+    return `Le ${day}/${month} à ${timeFormatted}`;
   } catch {
-    return "À l'instant";
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `À l'instant (${hours}:${minutes})`;
   }
 }

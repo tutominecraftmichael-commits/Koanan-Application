@@ -31,6 +31,7 @@ import {
   listenToCloudInvitationsForUser,
   fetchCloudInvitationsForUser,
   listenToAllCloudInvitations,
+  fetchAllCloudInvitations,
   syncUserStateToCloud
 } from './lib/firebase';
 import { generateKonanId } from './lib/konanId';
@@ -146,10 +147,15 @@ export function App() {
     // Safety net: periodic direct server fetch (covers sleeping mobile browsers, VPN switches)
     let fetching = false;
     const pullFromServer = async () => {
-      if (fetching || identifiers.length === 0) return;
+      if (fetching) return;
       fetching = true;
       try {
-        applyCloud(await fetchCloudInvitationsForUser(identifiers));
+        const allCloud = await fetchAllCloudInvitations();
+        if (Array.isArray(allCloud) && allCloud.length > 0) {
+          applyCloud(allCloud);
+        } else if (identifiers.length > 0) {
+          applyCloud(await fetchCloudInvitationsForUser(identifiers));
+        }
       } catch (err) {
         console.warn('Invitation server fetch failed:', err);
       } finally {
@@ -159,7 +165,7 @@ export function App() {
     pullFromServer();
     const pollTimer = window.setInterval(() => {
       if (document.visibilityState === 'visible') pullFromServer();
-    }, 4000);
+    }, 2000);
 
     // Cross-tab BroadcastChannel listener
     const handleBcMessage = (event: MessageEvent) => {
@@ -271,16 +277,27 @@ export function App() {
     const guestKonanId = state.userAccount?.konanId || state.konanId || generateKonanId(state.userAccount?.googleId);
     const guestEmail = state.userAccount?.email || '';
 
-    // 1. Update status to 'accepted' with metadata in Firestore & localStorage
+    // 1. Instantly update UI states (0ms lag)
+    setPendingInvitations(prev => prev.filter(i => i.id !== invitation.id));
+    setAllInvitations(prev => prev.map(i => i.id === invitation.id ? {
+      ...i,
+      status: 'accepted' as const,
+      acceptedByName: guestName,
+      acceptedByKonanId: guestKonanId,
+      acceptedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    } : i));
+
+    // 2. Update status to 'accepted' with metadata in Firestore & localStorage
     updateInvitationStatus(invitation.id, 'accepted', {
       acceptedByName: guestName,
       acceptedByKonanId: guestKonanId,
     });
 
-    // 2. Register user as Plus in registry
+    // 3. Register user as Plus in registry
     registerPlusUser(guestKonanId, guestEmail);
 
-    // 3. Immediately transition student to Plus
+    // 4. Immediately transition student to Plus
     setState(prev => {
       const nextAccount = prev.userAccount ? {
         ...prev.userAccount,
@@ -325,7 +342,7 @@ export function App() {
       return nextState;
     });
 
-    // 4. Update cloud user state if logged in
+    // 5. Update cloud user state if logged in
     const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
     if (currentUid && currentUid !== 'google-demo') {
       syncUserStateToCloud(currentUid, {
@@ -344,7 +361,6 @@ export function App() {
       }).catch(console.warn);
     }
 
-    setPendingInvitations(prev => prev.filter(i => i.id !== invitation.id));
     soundFX.playCelebrationFanfare();
     setToastMessage(`🎉 Félicitations ! Vous bénéficiez désormais de KONAN PLUS grâce au groupe de ${invitation.senderName}. Accès complet débloqué.`);
     setIsPlusActivationModalOpen(true);
@@ -354,13 +370,22 @@ export function App() {
     const guestName = state.userAccount?.name || state.studentName || 'Étudiant';
     const guestKonanId = state.userAccount?.konanId || state.konanId || '';
 
-    // 1. Update status to 'declined' with metadata in Firestore & localStorage
+    // 1. Instantly update UI states (0ms lag)
+    setPendingInvitations(prev => prev.filter(i => i.id !== invitation.id));
+    setAllInvitations(prev => prev.map(i => i.id === invitation.id ? {
+      ...i,
+      status: 'declined' as const,
+      acceptedByName: guestName,
+      acceptedByKonanId: guestKonanId,
+      updatedAt: new Date().toISOString(),
+    } : i));
+
+    // 2. Update status to 'declined' with metadata in Firestore & localStorage
     updateInvitationStatus(invitation.id, 'declined', {
       acceptedByName: guestName,
       acceptedByKonanId: guestKonanId,
     });
 
-    setPendingInvitations(prev => prev.filter(i => i.id !== invitation.id));
     soundFX.playNotificationPing();
     setToastMessage(`Invitation de ${invitation.senderName} refusée.`);
   };
