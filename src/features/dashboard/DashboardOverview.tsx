@@ -418,7 +418,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
               </div>
               <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
-                PDF, Photo ou saisie manuelle de vos cours
+                Fichier texte ou saisie manuelle de vos cours
               </p>
             </div>
           </div>

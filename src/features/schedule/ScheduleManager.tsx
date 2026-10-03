@@ -386,7 +386,13 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="cyan" size="sm" dot>Synchronisé</Badge>
             <span className="text-xs text-slate-400 font-mono flex items-center gap-1.5">
-              <span className={planTier !== 'free' ? 'gold-shimmer-text font-bold' : 'text-slate-300 font-semibold'}>{studentName}</span>
+              <span className={
+                planTier === 'plus'
+                  ? 'plus-multicolor-shimmer-text font-black'
+                  : planTier === 'pro'
+                  ? 'gold-shimmer-text font-bold'
+                  : 'text-slate-300 font-semibold'
+              }>{studentName}</span>
               <span>•</span>
               <span>{academicLevel}</span>
             </span>

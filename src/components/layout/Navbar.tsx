@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Calendar, 
   Clock, 
@@ -304,9 +305,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     )}
                   </button>
 
-                  {/* Dropdown Menu for Notifications */}
+                  {/* Desktop Dropdown Menu for Notifications */}
                   {isNotificationsOpen && (
-                    <div className="fixed left-3 right-3 top-[68px] sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 w-auto sm:w-96 max-w-sm sm:max-w-none mx-auto sm:mx-0 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-slate-800 shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 space-y-2.5">
+                    <div className="hidden sm:block absolute right-0 top-full mt-2 w-96 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 space-y-2.5">
                       <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-xs">
                         <span className="font-bold text-white flex items-center gap-1.5">
                           <Bell className="w-3.5 h-3.5 text-amber-400" />
@@ -403,6 +404,131 @@ export const Navbar: React.FC<NavbarProps> = ({
                         </div>
                       )}
                     </div>
+                  )}
+
+                  {/* Mobile Portal Dropdown Menu for Notifications (Immune to header overflow & clipping) */}
+                  {isNotificationsOpen && typeof document !== 'undefined' && createPortal(
+                    <div className="fixed inset-0 z-[9999] sm:hidden flex flex-col items-center justify-start pt-20 px-3">
+                      {/* Semi-transparent backdrop */}
+                      <div 
+                        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200"
+                        onClick={() => setIsNotificationsOpen(false)}
+                        aria-hidden="true"
+                      />
+                      
+                      {/* Centered Modal Card on Mobile */}
+                      <div 
+                        className="relative w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-700/80 shadow-2xl p-4 z-10 animate-in fade-in zoom-in-95 duration-200 space-y-3"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-xs">
+                          <span className="font-bold text-white flex items-center gap-1.5">
+                            <Bell className="w-4 h-4 text-amber-400" />
+                            Notifications & Invitations
+                          </span>
+                          <div className="flex items-center gap-2">
+                            {pendingInvitations.length > 0 && (
+                              <span className="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
+                                {pendingInvitations.length} en attente
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => setIsNotificationsOpen(false)}
+                              className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                              aria-label="Fermer"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {pendingInvitations.length === 0 && acceptedNotifications.length === 0 ? (
+                          <div className="py-6 text-center text-xs text-slate-400">
+                            <Bell className="w-7 h-7 mx-auto text-slate-600 mb-2 opacity-50" />
+                            <p>Aucune notification pour le moment.</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-2.5 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                            {/* Accepted Notifications for Owner */}
+                            {acceptedNotifications.map((notif) => (
+                              <div 
+                                key={`mob-${notif.id}`}
+                                className="p-3 rounded-xl bg-gradient-to-br from-emerald-950/40 via-slate-950 to-indigo-950/30 border border-emerald-500/30 flex items-start gap-2.5 shadow-sm text-left animate-in fade-in"
+                              >
+                                <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 shrink-0 mt-0.5">
+                                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <span className="text-[9px] font-black uppercase tracking-wider text-emerald-400">
+                                    Invitation Acceptée
+                                  </span>
+                                  <p className="text-xs font-bold text-white leading-snug mt-0.5">
+                                    L'utilisateur : <span className="text-emerald-300 font-bold">{notif.name}</span>{' '}
+                                    {notif.konanId && <span className="font-mono text-amber-300 font-bold">[{notif.konanId}]</span>} a accepté votre invitation
+                                  </p>
+                                  <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                                    Ce membre a rejoint votre groupe KONAN PLUS.
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+
+                            {pendingInvitations.map((inv) => (
+                              <div 
+                                key={`mob-${inv.id}`}
+                                className="p-3.5 rounded-xl bg-gradient-to-br from-amber-500/10 via-slate-950 to-indigo-950/30 border border-amber-500/40 space-y-2.5 shadow-md text-left"
+                              >
+                                <div className="flex items-start gap-2.5">
+                                  <div className="p-2 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
+                                    <Crown className="w-4 h-4" />
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <span className="text-[9px] font-black uppercase tracking-wider text-amber-400">
+                                      Invitation Officielle
+                                    </span>
+                                    <p className="text-xs font-bold text-white leading-snug mt-0.5">
+                                      Vous avez reçu une invitation de la part de{' '}
+                                      <span className="text-amber-300">{inv.senderName}</span>{' '}
+                                      (ID : <span className="font-mono text-amber-300">{inv.senderKonanId}</span>).
+                                    </p>
+                                    <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                                      Acceptez pour activer immédiatement votre accès complet et gratuit à KONAN PLUS.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 pt-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      onAcceptInvitation?.(inv);
+                                      setIsNotificationsOpen(false);
+                                    }}
+                                    className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                                  >
+                                    <Check className="w-4 h-4" />
+                                    <span>Accepter</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      onDeclineInvitation?.(inv);
+                                      setIsNotificationsOpen(false);
+                                    }}
+                                    className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-rose-900/40 text-slate-300 hover:text-rose-300 font-semibold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                                  >
+                                    <X className="w-4 h-4" />
+                                    <span>Refuser</span>
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>,
+                    document.body
                   )}
                 </div>
 
