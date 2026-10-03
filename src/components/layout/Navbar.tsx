@@ -19,13 +19,23 @@ import {
   Crown,
   Check,
   CheckCircle2,
-  X
+  X,
+  XCircle
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount, PlusInvitationNotification } from '../../types';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
+import { formatNotificationTime } from '../../lib/utils';
+
+export interface OwnerNotificationItem {
+  id: string;
+  type: 'accepted' | 'declined';
+  name: string;
+  konanId?: string;
+  timestamp?: string;
+}
 
 export interface NavbarProps {
   activeView: ActiveAppView;
@@ -45,7 +55,8 @@ export interface NavbarProps {
   isDemoMode?: boolean;
   onViewPricing?: () => void;
   pendingInvitations?: PlusInvitationNotification[];
-  acceptedNotifications?: { id: string; name: string; konanId?: string }[];
+  acceptedNotifications?: { id: string; name: string; konanId?: string; timestamp?: string }[];
+  ownerNotifications?: OwnerNotificationItem[];
   onAcceptInvitation?: (invitation: PlusInvitationNotification) => void;
   onDeclineInvitation?: (invitation: PlusInvitationNotification) => void;
 }
@@ -71,6 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onViewPricing,
   pendingInvitations = [],
   acceptedNotifications = [],
+  ownerNotifications,
   onAcceptInvitation,
   onDeclineInvitation,
 }) => {
@@ -79,13 +91,31 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const toolsMenuRef = useRef<HTMLDivElement>(null);
   const notificationsMenuRef = useRef<HTMLDivElement>(null);
+  const mobileNotificationsMenuRef = useRef<HTMLDivElement>(null);
+
+  // Normalize all owner notifications (support both ownerNotifications & acceptedNotifications)
+  const normalizedOwnerNotifications: OwnerNotificationItem[] = React.useMemo(() => {
+    if (ownerNotifications && ownerNotifications.length > 0) {
+      return ownerNotifications;
+    }
+    return (acceptedNotifications || []).map(a => ({
+      id: a.id,
+      type: 'accepted' as const,
+      name: a.name,
+      konanId: a.konanId,
+      timestamp: a.timestamp,
+    }));
+  }, [ownerNotifications, acceptedNotifications]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (toolsMenuRef.current && !toolsMenuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (toolsMenuRef.current && !toolsMenuRef.current.contains(target)) {
         setIsToolsOpen(false);
       }
-      if (notificationsMenuRef.current && !notificationsMenuRef.current.contains(event.target as Node)) {
+      const insideDesktop = notificationsMenuRef.current?.contains(target);
+      const insideMobile = mobileNotificationsMenuRef.current?.contains(target);
+      if (!insideDesktop && !insideMobile) {
         setIsNotificationsOpen(false);
       }
     };
@@ -105,7 +135,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   });
 
   const hasUnreadNotifications = pendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
-    || acceptedNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id));
+    || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id));
 
   // Opening the panel marks every visible notification as read
   useEffect(() => {
@@ -113,7 +143,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     setSeenNotificationIds(prev => {
       const next = new Set(prev);
       pendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
-      acceptedNotifications.forEach(notif => notif?.id && next.add(notif.id));
+      normalizedOwnerNotifications.forEach(notif => notif?.id && next.add(notif.id));
       try {
         localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
       } catch {
@@ -121,7 +151,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       return next;
     });
-  }, [isNotificationsOpen, hasUnreadNotifications, pendingInvitations, acceptedNotifications]);
+  }, [isNotificationsOpen, hasUnreadNotifications, pendingInvitations, normalizedOwnerNotifications]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), icon: Layers },
@@ -291,8 +321,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="relative" ref={notificationsMenuRef}>
                   <button
                     type="button"
-                    onClick={() => setIsNotificationsOpen(prev => !prev)}
-                    className="relative p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center bg-slate-900/80 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsNotificationsOpen(prev => !prev);
+                    }}
+                    className="relative p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center bg-slate-900/80 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700 active:scale-95"
                     title={hasUnreadNotifications ? 'Nouvelles notifications non lues' : 'Notifications'}
                     aria-label={hasUnreadNotifications ? 'Notifications (non lues)' : 'Notifications'}
                   >
@@ -320,87 +353,122 @@ export const Navbar: React.FC<NavbarProps> = ({
                         )}
                       </div>
 
-                      {pendingInvitations.length === 0 && acceptedNotifications.length === 0 ? (
+                      {pendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
                         <div className="py-6 text-center text-xs text-slate-400">
                           <Bell className="w-6 h-6 mx-auto text-slate-600 mb-2 opacity-50" />
                           <p>Aucune notification pour le moment.</p>
                         </div>
                       ) : (
-                        <div className="space-y-2 max-h-72 overflow-y-auto custom-scrollbar">
-                          {/* Accepted Notifications for Owner */}
-                          {acceptedNotifications.map((notif) => (
-                            <div 
-                              key={notif.id}
-                              className="p-3 rounded-xl bg-gradient-to-br from-emerald-950/40 via-slate-950 to-indigo-950/30 border border-emerald-500/30 flex items-start gap-2.5 shadow-sm text-left animate-in fade-in"
-                            >
-                              <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 shrink-0 mt-0.5">
-                                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <span className="text-[9px] font-black uppercase tracking-wider text-emerald-400">
-                                  Invitation Acceptée
-                                </span>
-                                <p className="text-xs font-bold text-white leading-snug mt-0.5">
-                                  L'utilisateur : <span className="text-emerald-300 font-bold">{notif.name}</span>{' '}
-                                  {notif.konanId && <span className="font-mono text-amber-300 font-bold">[{notif.konanId}]</span>} a accepté votre invitation
-                                </p>
-                                <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
-                                  Ce membre a rejoint votre groupe KONAN PLUS.
-                                </p>
-                              </div>
-                            </div>
-                          ))}
+                        <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
+                          {/* Owner Notifications (Accepted or Declined) */}
+                          {normalizedOwnerNotifications.map((notif) => {
+                            const isAcc = notif.type === 'accepted';
+                            const timeFormatted = formatNotificationTime(notif.timestamp);
 
-                          {pendingInvitations.map((inv) => (
-                            <div 
-                              key={inv.id}
-                              className="p-3.5 rounded-xl bg-gradient-to-br from-amber-500/10 via-slate-950 to-indigo-950/30 border border-amber-500/40 space-y-2.5 shadow-md text-left"
-                            >
-                              <div className="flex items-start gap-2.5">
-                                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
-                                  <Crown className="w-4 h-4" />
+                            return (
+                              <div 
+                                key={notif.id}
+                                className={`p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left animate-in fade-in transition-all ${
+                                  isAcc
+                                    ? 'bg-gradient-to-br from-emerald-950/40 via-slate-950 to-indigo-950/30 border-emerald-500/30'
+                                    : 'bg-gradient-to-br from-rose-950/40 via-slate-950 to-slate-900 border-rose-500/30'
+                                }`}
+                              >
+                                <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${
+                                  isAcc ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'
+                                }`}>
+                                  {isAcc ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-rose-400" />}
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                  <span className="text-[9px] font-black uppercase tracking-wider text-amber-400">
-                                    Invitation Officielle
-                                  </span>
-                                  <p className="text-xs font-bold text-white leading-snug mt-0.5">
-                                    Vous avez reçu une invitation de la part de{' '}
-                                    <span className="text-amber-300">{inv.senderName}</span>{' '}
-                                    (ID : <span className="font-mono text-amber-300">{inv.senderKonanId}</span>).
+                                  <div className="flex items-center justify-between gap-1">
+                                    <span className={`text-[9px] font-black uppercase tracking-wider ${
+                                      isAcc ? 'text-emerald-400' : 'text-rose-400'
+                                    }`}>
+                                      {isAcc ? 'Invitation Acceptée' : 'Invitation Refusée'}
+                                    </span>
+                                    <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1 shrink-0">
+                                      <Clock className="w-3 h-3 text-slate-500" />
+                                      {timeFormatted}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs font-bold text-white leading-snug mt-1">
+                                    L'utilisateur : <span className={`font-bold ${isAcc ? 'text-emerald-300' : 'text-rose-300'}`}>{notif.name}</span>{' '}
+                                    {notif.konanId && <span className="font-mono text-amber-300 font-bold">[{notif.konanId}]</span>}{' '}
+                                    {isAcc ? 'a accepté votre invitation' : 'a refusé votre invitation'}
                                   </p>
                                   <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
-                                    Acceptez pour activer immédiatement votre accès complet et gratuit à KONAN PLUS.
+                                    {isAcc 
+                                      ? 'Ce membre a rejoint votre groupe KONAN PLUS.' 
+                                      : 'Cette place est de nouveau libre dans votre groupe d\'étude (4 comptes inclus).'}
                                   </p>
                                 </div>
                               </div>
+                            );
+                          })}
 
-                              <div className="flex items-center gap-2 pt-1">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    onAcceptInvitation?.(inv);
-                                    setIsNotificationsOpen(false);
-                                  }}
-                                  className="flex-1 py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm"
-                                >
-                                  <Check className="w-3.5 h-3.5" />
-                                  <span>Accepter</span>
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    onDeclineInvitation?.(inv);
-                                    setIsNotificationsOpen(false);
-                                  }}
-                                  className="py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-rose-900/40 text-slate-300 hover:text-rose-300 font-semibold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer"
-                                >
-                                  <X className="w-3.5 h-3.5" />
-                                  <span>Refuser</span>
-                                </button>
+                          {/* Guest Pending Invitations */}
+                          {pendingInvitations.map((inv) => {
+                            const timeFormatted = formatNotificationTime(inv.createdAt);
+
+                            return (
+                              <div 
+                                key={inv.id}
+                                className="p-3.5 rounded-xl bg-gradient-to-br from-amber-500/10 via-slate-950 to-indigo-950/30 border border-amber-500/40 space-y-2.5 shadow-md text-left"
+                              >
+                                <div className="flex items-start gap-2.5">
+                                  <div className="p-2 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
+                                    <Crown className="w-4 h-4" />
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center justify-between gap-1">
+                                      <span className="text-[9px] font-black uppercase tracking-wider text-amber-400">
+                                        Invitation Officielle
+                                      </span>
+                                      <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1 shrink-0">
+                                        <Clock className="w-3 h-3 text-slate-500" />
+                                        {timeFormatted}
+                                      </span>
+                                    </div>
+                                    <p className="text-xs font-bold text-white leading-snug mt-1">
+                                      Vous avez reçu une invitation de la part de{' '}
+                                      <span className="text-amber-300 font-bold">{inv.senderName}</span>{' '}
+                                      (ID : <span className="font-mono text-amber-300 font-bold">{inv.senderKonanId}</span>).
+                                    </p>
+                                    <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                                      Acceptez pour activer immédiatement votre accès complet et gratuit à KONAN PLUS.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 pt-1">
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onAcceptInvitation?.(inv);
+                                      setIsNotificationsOpen(false);
+                                    }}
+                                    className="flex-1 py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm active:scale-95"
+                                  >
+                                    <Check className="w-3.5 h-3.5" />
+                                    <span>Accepter</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onDeclineInvitation?.(inv);
+                                      setIsNotificationsOpen(false);
+                                    }}
+                                    className="py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-rose-900/40 text-slate-300 hover:text-rose-300 font-semibold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer active:scale-95"
+                                  >
+                                    <X className="w-3.5 h-3.5" />
+                                    <span>Refuser</span>
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       )}
                     </div>
@@ -408,17 +476,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                   {/* Mobile Portal Dropdown Menu for Notifications (Immune to header overflow & clipping) */}
                   {isNotificationsOpen && typeof document !== 'undefined' && createPortal(
-                    <div className="fixed inset-0 z-[9999] sm:hidden flex flex-col items-center justify-start pt-20 px-3">
+                    <div className="fixed inset-0 z-[99999] sm:hidden flex flex-col items-center justify-start pt-16 px-3">
                       {/* Semi-transparent backdrop */}
                       <div 
-                        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200"
+                        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-150"
                         onClick={() => setIsNotificationsOpen(false)}
                         aria-hidden="true"
                       />
                       
                       {/* Centered Modal Card on Mobile */}
                       <div 
-                        className="relative w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-700/80 shadow-2xl p-4 z-10 animate-in fade-in zoom-in-95 duration-200 space-y-3"
+                        ref={mobileNotificationsMenuRef}
+                        className="relative w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-700/80 shadow-2xl p-4 z-10 animate-in fade-in zoom-in-95 duration-150 space-y-3"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-xs">
@@ -443,87 +512,122 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </div>
                         </div>
 
-                        {pendingInvitations.length === 0 && acceptedNotifications.length === 0 ? (
+                        {pendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
                           <div className="py-6 text-center text-xs text-slate-400">
                             <Bell className="w-7 h-7 mx-auto text-slate-600 mb-2 opacity-50" />
                             <p>Aucune notification pour le moment.</p>
                           </div>
                         ) : (
                           <div className="space-y-2.5 max-h-[60vh] overflow-y-auto custom-scrollbar">
-                            {/* Accepted Notifications for Owner */}
-                            {acceptedNotifications.map((notif) => (
-                              <div 
-                                key={`mob-${notif.id}`}
-                                className="p-3 rounded-xl bg-gradient-to-br from-emerald-950/40 via-slate-950 to-indigo-950/30 border border-emerald-500/30 flex items-start gap-2.5 shadow-sm text-left animate-in fade-in"
-                              >
-                                <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 shrink-0 mt-0.5">
-                                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <span className="text-[9px] font-black uppercase tracking-wider text-emerald-400">
-                                    Invitation Acceptée
-                                  </span>
-                                  <p className="text-xs font-bold text-white leading-snug mt-0.5">
-                                    L'utilisateur : <span className="text-emerald-300 font-bold">{notif.name}</span>{' '}
-                                    {notif.konanId && <span className="font-mono text-amber-300 font-bold">[{notif.konanId}]</span>} a accepté votre invitation
-                                  </p>
-                                  <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
-                                    Ce membre a rejoint votre groupe KONAN PLUS.
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
+                            {/* Owner Notifications (Accepted or Declined) */}
+                            {normalizedOwnerNotifications.map((notif) => {
+                              const isAcc = notif.type === 'accepted';
+                              const timeFormatted = formatNotificationTime(notif.timestamp);
 
-                            {pendingInvitations.map((inv) => (
-                              <div 
-                                key={`mob-${inv.id}`}
-                                className="p-3.5 rounded-xl bg-gradient-to-br from-amber-500/10 via-slate-950 to-indigo-950/30 border border-amber-500/40 space-y-2.5 shadow-md text-left"
-                              >
-                                <div className="flex items-start gap-2.5">
-                                  <div className="p-2 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
-                                    <Crown className="w-4 h-4" />
+                              return (
+                                <div 
+                                  key={`mob-${notif.id}`}
+                                  className={`p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left animate-in fade-in transition-all ${
+                                    isAcc
+                                      ? 'bg-gradient-to-br from-emerald-950/40 via-slate-950 to-indigo-950/30 border-emerald-500/30'
+                                      : 'bg-gradient-to-br from-rose-950/40 via-slate-950 to-slate-900 border-rose-500/30'
+                                  }`}
+                                >
+                                  <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${
+                                    isAcc ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'
+                                  }`}>
+                                    {isAcc ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-rose-400" />}
                                   </div>
                                   <div className="min-w-0 flex-1">
-                                    <span className="text-[9px] font-black uppercase tracking-wider text-amber-400">
-                                      Invitation Officielle
-                                    </span>
-                                    <p className="text-xs font-bold text-white leading-snug mt-0.5">
-                                      Vous avez reçu une invitation de la part de{' '}
-                                      <span className="text-amber-300">{inv.senderName}</span>{' '}
-                                      (ID : <span className="font-mono text-amber-300">{inv.senderKonanId}</span>).
+                                    <div className="flex items-center justify-between gap-1">
+                                      <span className={`text-[9px] font-black uppercase tracking-wider ${
+                                        isAcc ? 'text-emerald-400' : 'text-rose-400'
+                                      }`}>
+                                        {isAcc ? 'Invitation Acceptée' : 'Invitation Refusée'}
+                                      </span>
+                                      <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1 shrink-0">
+                                        <Clock className="w-3 h-3 text-slate-500" />
+                                        {timeFormatted}
+                                      </span>
+                                    </div>
+                                    <p className="text-xs font-bold text-white leading-snug mt-1">
+                                      L'utilisateur : <span className={`font-bold ${isAcc ? 'text-emerald-300' : 'text-rose-300'}`}>{notif.name}</span>{' '}
+                                      {notif.konanId && <span className="font-mono text-amber-300 font-bold">[{notif.konanId}]</span>}{' '}
+                                      {isAcc ? 'a accepté votre invitation' : 'a refusé votre invitation'}
                                     </p>
                                     <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
-                                      Acceptez pour activer immédiatement votre accès complet et gratuit à KONAN PLUS.
+                                      {isAcc 
+                                        ? 'Ce membre a rejoint votre groupe KONAN PLUS.' 
+                                        : 'Cette place est de nouveau libre dans votre groupe d\'étude (4 comptes inclus).'}
                                     </p>
                                   </div>
                                 </div>
+                              );
+                            })}
 
-                                <div className="flex items-center gap-2 pt-1">
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      onAcceptInvitation?.(inv);
-                                      setIsNotificationsOpen(false);
-                                    }}
-                                    className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm"
-                                  >
-                                    <Check className="w-4 h-4" />
-                                    <span>Accepter</span>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      onDeclineInvitation?.(inv);
-                                      setIsNotificationsOpen(false);
-                                    }}
-                                    className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-rose-900/40 text-slate-300 hover:text-rose-300 font-semibold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer"
-                                  >
-                                    <X className="w-4 h-4" />
-                                    <span>Refuser</span>
-                                  </button>
+                            {/* Guest Pending Invitations */}
+                            {pendingInvitations.map((inv) => {
+                              const timeFormatted = formatNotificationTime(inv.createdAt);
+
+                              return (
+                                <div 
+                                  key={`mob-${inv.id}`}
+                                  className="p-3.5 rounded-xl bg-gradient-to-br from-amber-500/10 via-slate-950 to-indigo-950/30 border border-amber-500/40 space-y-2.5 shadow-md text-left"
+                                >
+                                  <div className="flex items-start gap-2.5">
+                                    <div className="p-2 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
+                                      <Crown className="w-4 h-4" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex items-center justify-between gap-1">
+                                        <span className="text-[9px] font-black uppercase tracking-wider text-amber-400">
+                                          Invitation Officielle
+                                        </span>
+                                        <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1 shrink-0">
+                                          <Clock className="w-3 h-3 text-slate-500" />
+                                          {timeFormatted}
+                                        </span>
+                                      </div>
+                                      <p className="text-xs font-bold text-white leading-snug mt-1">
+                                        Vous avez reçu une invitation de la part de{' '}
+                                        <span className="text-amber-300 font-bold">{inv.senderName}</span>{' '}
+                                        (ID : <span className="font-mono text-amber-300 font-bold">{inv.senderKonanId}</span>).
+                                      </p>
+                                      <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                                        Acceptez pour activer immédiatement votre accès complet et gratuit à KONAN PLUS.
+                                      </p>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-2 pt-1">
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        onAcceptInvitation?.(inv);
+                                        setIsNotificationsOpen(false);
+                                      }}
+                                      className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm active:scale-95"
+                                    >
+                                      <Check className="w-4 h-4" />
+                                      <span>Accepter</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDeclineInvitation?.(inv);
+                                        setIsNotificationsOpen(false);
+                                      }}
+                                      className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-rose-900/40 text-slate-300 hover:text-rose-300 font-semibold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer active:scale-95"
+                                    >
+                                      <X className="w-4 h-4" />
+                                      <span>Refuser</span>
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         )}
                       </div>

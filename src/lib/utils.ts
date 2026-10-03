@@ -48,3 +48,43 @@ export function getDaysRemainingFrom(targetDateStr?: string, fromDate: Date = ne
 export function getDaysRemaining(targetDateStr?: string): number | null {
   return getDaysRemainingFrom(targetDateStr, new Date());
 }
+
+/**
+ * Formats a notification ISO date string into both exact time and relative instant.
+ * Example: "À l'instant (22:45)", "Il y a 3 min (22:42)", "Aujourd'hui à 14:30"
+ */
+export function formatNotificationTime(isoString?: string): string {
+  if (!isoString) return "À l'instant";
+  try {
+    const date = new Date(isoString);
+    if (isNaN(date.getTime())) return "À l'instant";
+    const now = new Date();
+    const diffMs = Math.max(0, now.getTime() - date.getTime());
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHours = Math.floor(diffMin / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const timeFormatted = `${hours}:${minutes}`;
+
+    if (diffSec < 45) {
+      return `À l'instant (${timeFormatted})`;
+    }
+    if (diffMin < 60) {
+      return `Il y a ${diffMin} min (${timeFormatted})`;
+    }
+    if (diffHours < 24 && date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
+      return `Aujourd'hui à ${timeFormatted}`;
+    }
+    if (diffDays === 1 || (diffHours < 48 && date.getDate() === now.getDate() - 1)) {
+      return `Hier à ${timeFormatted}`;
+    }
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    return `${day}/${month} à ${timeFormatted}`;
+  } catch {
+    return "À l'instant";
+  }
+}

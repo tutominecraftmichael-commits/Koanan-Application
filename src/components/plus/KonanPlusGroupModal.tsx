@@ -235,6 +235,15 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
       const cleanVal = item.value.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
       if (!cleanVal) return;
 
+      // Ignore any item whose invitation was declined by the guest
+      const isDeclined = invitations.some(i => {
+        const sId = (i.senderKonanId || '').trim().toUpperCase();
+        const it = (i.targetKonanIdOrEmail || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+        const ia = (i.acceptedByKonanId || '').trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');
+        return sId === ownerCleanId && (it === cleanVal || ia === cleanVal) && i.status === 'declined';
+      });
+      if (isDeclined) return;
+
       let found = false;
       for (const [, m] of membersMap.entries()) {
         const mId = m.identifier.trim().toLowerCase().replace(/[^a-z0-9@.]/g, '');

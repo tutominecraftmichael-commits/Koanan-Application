@@ -61,6 +61,7 @@ import {
   doc, 
   getDoc, 
   setDoc, 
+  updateDoc,
   deleteDoc,
   collection,
   onSnapshot,
@@ -592,16 +593,26 @@ export async function updateCloudInvitationStatus(
     if (metadata?.acceptedByKonanId) payload.acceptedByKonanId = metadata.acceptedByKonanId;
 
     try {
-      await setDoc(invRef, payload, { merge: true });
+      await updateDoc(invRef, payload);
       return true;
-    } catch (detailErr) {
-      // Safe fallback: if security rules only allow status + updatedAt, perform minimal update
-      console.warn('Detailed cloud status update failed, falling back to minimal status:', detailErr);
-      await setDoc(invRef, {
-        status,
-        updatedAt: new Date().toISOString()
-      }, { merge: true });
-      return true;
+    } catch {
+      try {
+        await setDoc(invRef, payload, { merge: true });
+        return true;
+      } catch (detailErr) {
+        // Safe fallback: if security rules only allow status + updatedAt, perform minimal update
+        console.warn('Detailed cloud status update failed, falling back to minimal status:', detailErr);
+        await updateDoc(invRef, {
+          status,
+          updatedAt: new Date().toISOString()
+        }).catch(async () => {
+          await setDoc(invRef, {
+            status,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+        });
+        return true;
+      }
     }
   } catch (err) {
     console.warn('Failed to update invitation status in Cloud Firestore:', err);

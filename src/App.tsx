@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { GraduationCap } from 'lucide-react';
 import type { AppState } from './services/storage';
 import { 
@@ -24,12 +24,14 @@ import {
 import { generateOptimizedStudyPlan } from './services/plannerAlgorithm';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import { 
+  auth,
   onFirebaseAuthStateChange, 
   signOutReal, 
   listenToUserCloudState,
   listenToCloudInvitationsForUser,
   fetchCloudInvitationsForUser,
-  listenToAllCloudInvitations
+  listenToAllCloudInvitations,
+  syncUserStateToCloud
 } from './lib/firebase';
 import { generateKonanId } from './lib/konanId';
 import { evaluateDailyCatchup } from './services/sessionRescheduler';
@@ -50,7 +52,7 @@ import { Sparkles, X } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
 
 // Layout
-import { Navbar } from './components/layout/Navbar';
+import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { ProFeatureModal } from './components/common/ProFeatureModal';
 import { GoogleCalendarSyncModal } from './components/common/GoogleCalendarSyncModal';
@@ -100,16 +102,15 @@ export function App() {
 
   const knownInvitationIdsRef = useRef<Set<string>>(new Set());
 
-  // 1. Real-time synchronization of pending invitations (Firestore Cloud + BroadcastChannel + LocalStorage)
+  // 1. Real-time universal synchronization of all invitations (Firestore Cloud + BroadcastChannel + LocalStorage)
   useEffect(() => {
-    const myId = state.userAccount?.konanId || state.konanId;
-    const myEmail = state.userAccount?.email;
-    const identifiers = [myId, myEmail].filter(Boolean) as string[];
     let disposed = false;
 
     // Updates the bell list; a discreet ping only for invitations never seen before (no pop-up)
     const refreshPending = () => {
       if (disposed) return;
+      const myId = state.userAccount?.konanId || state.konanId;
+      const myEmail = state.userAccount?.email;
       const myPending = getPendingInvitationsForUser(myId, myEmail);
       const fresh = myPending.filter(inv => !knownInvitationIdsRef.current.has(inv.id));
       myPending.forEach(inv => knownInvitationIdsRef.current.add(inv.id));
@@ -121,19 +122,28 @@ export function App() {
 
     const applyCloud = (cloudInvites: any[]) => {
       if (disposed || !Array.isArray(cloudInvites)) return;
-      if (cloudInvites.length > 0) mergeInvitationsFromCloud(cloudInvites);
+      if (cloudInvites.length > 0) {
+        mergeInvitationsFromCloud(cloudInvites);
+        setAllInvitations(getPlusInvitations());
+      }
       refreshPending();
     };
 
     // Initial check from local storage (no ping for invitations already known on load)
+    const myId = state.userAccount?.konanId || state.konanId;
+    const myEmail = state.userAccount?.email;
     const initialInvites = getPendingInvitationsForUser(myId, myEmail);
     initialInvites.forEach(inv => knownInvitationIdsRef.current.add(inv.id));
     setPendingInvitations(initialInvites);
 
-    // Real-time targeted Firestore listener (instant delivery on any device)
-    const unsubscribeCloud = listenToCloudInvitationsForUser(identifiers, applyCloud);
+    // CRITICAL: Real-time universal Firestore listener (instant delivery on ANY device, 0 refresh required)
+    const unsubscribeAll = listenToAllCloudInvitations(applyCloud);
 
-    // Safety net: direct server fetch (covers stalled realtime channel: VPN, sleep, mobile)
+    // Also targeted listener as redundant channel
+    const identifiers = [myId, myEmail].filter(Boolean) as string[];
+    const unsubscribeTargeted = listenToCloudInvitationsForUser(identifiers, applyCloud);
+
+    // Safety net: periodic direct server fetch (covers sleeping mobile browsers, VPN switches)
     let fetching = false;
     const pullFromServer = async () => {
       if (fetching || identifiers.length === 0) return;
@@ -149,18 +159,22 @@ export function App() {
     pullFromServer();
     const pollTimer = window.setInterval(() => {
       if (document.visibilityState === 'visible') pullFromServer();
-    }, 5000);
+    }, 4000);
 
     // Cross-tab BroadcastChannel listener
     const handleBcMessage = (event: MessageEvent) => {
       if (event.data?.type === 'INVITATION_SAVED' || event.data?.type === 'STATUS_UPDATED') {
+        setAllInvitations(getPlusInvitations());
         refreshPending();
       }
     };
     invitationBroadcastChannel?.addEventListener('message', handleBcMessage);
 
     // Storage event (other tab) → local refresh; focus / visibility / reconnect → server pull
-    const handleStorage = () => refreshPending();
+    const handleStorage = () => {
+      setAllInvitations(getPlusInvitations());
+      refreshPending();
+    };
     const handleWake = () => {
       if (document.visibilityState === 'visible') pullFromServer();
     };
@@ -171,7 +185,8 @@ export function App() {
 
     return () => {
       disposed = true;
-      unsubscribeCloud();
+      unsubscribeAll();
+      unsubscribeTargeted();
       window.clearInterval(pollTimer);
       invitationBroadcastChannel?.removeEventListener('message', handleBcMessage);
       window.removeEventListener('storage', handleStorage);
@@ -181,51 +196,91 @@ export function App() {
     };
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
-  // 2. Real-time synchronization of all invitations for the owner & accepted notifications
-  useEffect(() => {
-    const handleUpdate = () => setAllInvitations(getPlusInvitations());
-    window.addEventListener('storage', handleUpdate);
-    invitationBroadcastChannel?.addEventListener('message', handleUpdate);
-
-    const isGroupOwner = (state.planTier === 'plus' || state.userAccount?.planTier === 'plus') && !state.isGroupGuest;
-    let unsubscribe: () => void = () => {};
-
-    if (isGroupOwner) {
-      unsubscribe = listenToAllCloudInvitations((allCloudInvites) => {
-        if (Array.isArray(allCloudInvites) && allCloudInvites.length > 0) {
-          mergeInvitationsFromCloud(allCloudInvites);
-          setAllInvitations(getPlusInvitations());
-        }
-      });
-    }
-
-    return () => {
-      window.removeEventListener('storage', handleUpdate);
-      invitationBroadcastChannel?.removeEventListener('message', handleUpdate);
-      unsubscribe();
-    };
-  }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest]);
-
   const isGroupOwner = (state.planTier === 'plus' || state.userAccount?.planTier === 'plus') && !state.isGroupGuest;
   const currentOwnerKonanId = (state.userAccount?.konanId || state.konanId || '').trim().toUpperCase();
+  const currentOwnerEmail = (state.userAccount?.email || '').trim().toLowerCase();
 
-  const acceptedNotificationsForOwner = isGroupOwner ? allInvitations
-    .filter(inv => (inv.senderKonanId || '').trim().toUpperCase() === currentOwnerKonanId && inv.status === 'accepted')
-    .map(inv => ({
-      id: `acc-${inv.id}`,
-      name: inv.acceptedByName || inv.targetName || (inv.targetKonanIdOrEmail.startsWith('KN-') ? `Étudiant ${inv.targetKonanIdOrEmail}` : inv.targetKonanIdOrEmail),
-      konanId: inv.acceptedByKonanId || (inv.targetKonanIdOrEmail.startsWith('KN-') ? inv.targetKonanIdOrEmail : ''),
-    })) : [];
+  // Feedback notifications for the owner (both accepted and declined, with exact timestamps)
+  const ownerFeedbackNotifications = useMemo<OwnerNotificationItem[]>(() => {
+    if (!isGroupOwner) return [];
+    return allInvitations
+      .filter(inv => {
+        const sId = (inv.senderKonanId || '').trim().toUpperCase();
+        const sEmail = (inv.senderEmail || '').trim().toLowerCase();
+        const matchesOwner = (currentOwnerKonanId && sId === currentOwnerKonanId) || (currentOwnerEmail && sEmail === currentOwnerEmail);
+        return matchesOwner && (inv.status === 'accepted' || inv.status === 'declined');
+      })
+      .map(inv => {
+        const isAcc = inv.status === 'accepted';
+        const displayName = inv.acceptedByName || inv.targetName || (inv.targetKonanIdOrEmail.startsWith('KN-') ? `Étudiant ${inv.targetKonanIdOrEmail}` : inv.targetKonanIdOrEmail);
+        const displayId = inv.acceptedByKonanId || (inv.targetKonanIdOrEmail.startsWith('KN-') ? inv.targetKonanIdOrEmail : undefined);
+        const time = inv.updatedAt || inv.acceptedAt || inv.createdAt;
+        return {
+          id: `${isAcc ? 'acc' : 'dec'}-${inv.id}`,
+          type: isAcc ? 'accepted' as const : 'declined' as const,
+          name: displayName,
+          konanId: displayId,
+          timestamp: time,
+        };
+      })
+      .sort((a, b) => new Date(b.timestamp || 0).getTime() - new Date(a.timestamp || 0).getTime());
+  }, [allInvitations, isGroupOwner, currentOwnerKonanId, currentOwnerEmail]);
+
+  // When an invitation is declined, automatically clear the target from invitedIds / invitedEmails so the slot is immediately freed
+  useEffect(() => {
+    if (!isGroupOwner) return;
+    const ownerCleanId = currentOwnerKonanId;
+    const declinedInvites = allInvitations.filter(inv => {
+      const sId = (inv.senderKonanId || '').trim().toUpperCase();
+      return sId === ownerCleanId && inv.status === 'declined';
+    });
+
+    if (declinedInvites.length === 0) return;
+
+    const declinedTargets = new Set(
+      declinedInvites.flatMap(inv => [
+        (inv.targetKonanIdOrEmail || '').trim().toLowerCase(),
+        (inv.acceptedByKonanId || '').trim().toLowerCase(),
+      ]).filter(Boolean)
+    );
+
+    const currentInvitedIds = state.userAccount?.invitedIds || state.invitedIds || [];
+    const currentInvitedEmails = state.userAccount?.invitedEmails || state.invitedEmails || [];
+
+    const hasDeclinedId = currentInvitedIds.some(id => declinedTargets.has(id.trim().toLowerCase()));
+    const hasDeclinedEmail = currentInvitedEmails.some(em => declinedTargets.has(em.trim().toLowerCase()));
+
+    if (hasDeclinedId || hasDeclinedEmail) {
+      const nextIds = currentInvitedIds.filter(id => !declinedTargets.has(id.trim().toLowerCase()));
+      const nextEmails = currentInvitedEmails.filter(em => !declinedTargets.has(em.trim().toLowerCase()));
+      setState(prev => ({
+        ...prev,
+        invitedIds: nextIds,
+        invitedEmails: nextEmails,
+        userAccount: prev.userAccount ? {
+          ...prev.userAccount,
+          invitedIds: nextIds,
+          invitedEmails: nextEmails,
+        } : undefined,
+      }));
+    }
+  }, [allInvitations, isGroupOwner, currentOwnerKonanId]);
 
   const handleAcceptInvitation = (invitation: PlusInvitationNotification) => {
     const guestName = state.userAccount?.name || state.studentName || 'Étudiant';
-    const guestKonanId = state.userAccount?.konanId || state.konanId || '';
+    const guestKonanId = state.userAccount?.konanId || state.konanId || generateKonanId(state.userAccount?.googleId);
+    const guestEmail = state.userAccount?.email || '';
+
+    // 1. Update status to 'accepted' with metadata in Firestore & localStorage
     updateInvitationStatus(invitation.id, 'accepted', {
       acceptedByName: guestName,
       acceptedByKonanId: guestKonanId,
     });
-    registerPlusUser(state.konanId || state.userAccount?.konanId, state.userAccount?.email);
 
+    // 2. Register user as Plus in registry
+    registerPlusUser(guestKonanId, guestEmail);
+
+    // 3. Immediately transition student to Plus
     setState(prev => {
       const nextAccount = prev.userAccount ? {
         ...prev.userAccount,
@@ -236,9 +291,25 @@ export function App() {
           konanId: invitation.senderKonanId,
           email: invitation.senderEmail,
         },
-      } : undefined;
+      } : {
+        isLoggedIn: true,
+        name: prev.studentName || 'Étudiant Invité',
+        email: guestEmail,
+        googleId: 'guest-' + (guestKonanId || invitation.id),
+        konanId: guestKonanId,
+        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(prev.studentName || 'Guest')}`,
+        academicLevel: prev.academicLevel || 'Licence Universitaire',
+        planTier: 'plus' as const,
+        isGroupGuest: true,
+        invitedBy: {
+          name: invitation.senderName,
+          konanId: invitation.senderKonanId,
+          email: invitation.senderEmail,
+        },
+        lastSyncedAt: new Date().toISOString(),
+      };
 
-      return {
+      const nextState: AppState = {
         ...prev,
         planTier: 'plus' as const,
         isGroupGuest: true,
@@ -249,16 +320,46 @@ export function App() {
         },
         userAccount: nextAccount,
       };
+
+      saveAppState(nextState);
+      return nextState;
     });
+
+    // 4. Update cloud user state if logged in
+    const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
+    if (currentUid && currentUid !== 'google-demo') {
+      syncUserStateToCloud(currentUid, {
+        planTier: 'plus',
+        studentName: guestName,
+        konanId: guestKonanId,
+        userAccount: {
+          planTier: 'plus',
+          isGroupGuest: true,
+          invitedBy: {
+            name: invitation.senderName,
+            konanId: invitation.senderKonanId,
+            email: invitation.senderEmail,
+          },
+        }
+      }).catch(console.warn);
+    }
 
     setPendingInvitations(prev => prev.filter(i => i.id !== invitation.id));
     soundFX.playCelebrationFanfare();
-    setToastMessage(`🎉 Félicitations ! Vous avez rejoint le groupe KONAN PLUS de ${invitation.senderName}. Accès complet débloqué.`);
+    setToastMessage(`🎉 Félicitations ! Vous bénéficiez désormais de KONAN PLUS grâce au groupe de ${invitation.senderName}. Accès complet débloqué.`);
     setIsPlusActivationModalOpen(true);
   };
 
   const handleDeclineInvitation = (invitation: PlusInvitationNotification) => {
-    updateInvitationStatus(invitation.id, 'declined');
+    const guestName = state.userAccount?.name || state.studentName || 'Étudiant';
+    const guestKonanId = state.userAccount?.konanId || state.konanId || '';
+
+    // 1. Update status to 'declined' with metadata in Firestore & localStorage
+    updateInvitationStatus(invitation.id, 'declined', {
+      acceptedByName: guestName,
+      acceptedByKonanId: guestKonanId,
+    });
+
     setPendingInvitations(prev => prev.filter(i => i.id !== invitation.id));
     soundFX.playNotificationPing();
     setToastMessage(`Invitation de ${invitation.senderName} refusée.`);
@@ -1401,7 +1502,7 @@ export function App() {
         totalStudySessions={state.studySessions?.length || 0}
         completedSessions={state.studySessions ? state.studySessions.filter(s => s.completed).length : 0}
         pendingInvitations={pendingInvitations}
-        acceptedNotifications={acceptedNotificationsForOwner}
+        ownerNotifications={ownerFeedbackNotifications}
         onAcceptInvitation={handleAcceptInvitation}
         onDeclineInvitation={handleDeclineInvitation}
       />
