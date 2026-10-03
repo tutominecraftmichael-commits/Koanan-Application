@@ -62,8 +62,23 @@ import {
   getDoc, 
   setDoc, 
   collection,
-  onSnapshot 
+  onSnapshot,
+  query,
+  where,
+  getDocsFromServer,
+  type QuerySnapshot,
+  type DocumentData
 } from 'firebase/firestore';
+
+/** Normalizes an identifier (Konan ID or email) for invitation matching. */
+function normalizeInviteTarget(value: string | undefined | null): string {
+  return (value || '').trim().toLowerCase();
+}
+
+/** Alphanumeric-only variant (tolerates dashes/spaces typed in Konan IDs). */
+function alphaInviteTarget(value: string | undefined | null): string {
+  return normalizeInviteTarget(value).replace(/[^a-z0-9@.]/g, '');
+}
 
 /**
  * Initializes or retrieves the Firebase app instance safely without throwing unhandled top-level errors.
@@ -545,7 +560,8 @@ export async function syncCloudPlusInvitation(invitation: any): Promise<boolean>
     const invRef = doc(db, 'plus_invitations', invitation.id);
     await setDoc(invRef, {
       ...invitation,
-      targetNormalized: (invitation.targetKonanIdOrEmail || '').trim().toLowerCase(),
+      targetNormalized: normalizeInviteTarget(invitation.targetKonanIdOrEmail),
+      targetAlpha: alphaInviteTarget(invitation.targetKonanIdOrEmail),
       targetUpper: (invitation.targetKonanIdOrEmail || '').trim().toUpperCase(),
       updatedAt: new Date().toISOString()
     }, { merge: true });
@@ -575,38 +591,78 @@ export async function updateCloudInvitationStatus(id: string, status: 'accepted'
 }
 
 /**
+ * Builds server-side filtered queries matching a student's Konan ID / email.
+ * Legacy docs (no targetAlpha) are still matched through targetNormalized.
+ */
+function buildInvitationQueries(identifiers: string[]) {
+  if (!db) return [];
+  const cleanIds = Array.from(new Set(identifiers.map(normalizeInviteTarget).filter(Boolean))).slice(0, 30);
+  const alphaIds = Array.from(new Set(identifiers.map(alphaInviteTarget).filter(Boolean))).slice(0, 30);
+  if (cleanIds.length === 0) return [];
+  const colRef = collection(db, 'plus_invitations');
+  // Server-side filtering: only this student's invitations travel over the network.
+  return [
+    query(colRef, where('targetNormalized', 'in', cleanIds)),
+    ...(alphaIds.length > 0 ? [query(colRef, where('targetAlpha', 'in', alphaIds))] : []),
+  ];
+}
+
+function collectSnapshotDocs(snapshot: QuerySnapshot<DocumentData>, into: Map<string, any>) {
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    into.set(data.id || docSnap.id, { ...data, id: data.id || docSnap.id });
+  });
+}
+
+/**
  * Listens in real-time to Cloud Firestore for invitations matching this student's IDs or email.
- * This guarantees instant notification delivery on mobile phones, tablets, or other PCs.
+ * Uses targeted server-side queries so delivery is near-instant regardless of collection size.
  */
 export function listenToCloudInvitationsForUser(
   identifiers: string[], 
   onUpdate: (invitations: any[]) => void
 ): () => void {
-  if (!db) return () => {};
-  const cleanIds = identifiers.map(id => (id || '').trim().toLowerCase()).filter(Boolean);
-  const cleanIdsAlpha = cleanIds.map(id => id.replace(/[^a-z0-9@.]/g, '')).filter(Boolean);
-  if (cleanIds.length === 0) return () => {};
+  const queries = buildInvitationQueries(identifiers);
+  if (queries.length === 0) return () => {};
 
-  try {
-    const colRef = collection(db, 'plus_invitations');
-    return onSnapshot(colRef, (snapshot) => {
-      const matches: any[] = [];
-      snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        const rawTarget = (data.targetNormalized || data.targetKonanIdOrEmail || '').trim().toLowerCase();
-        const targetAlpha = rawTarget.replace(/[^a-z0-9@.]/g, '');
-        if (cleanIds.includes(rawTarget) || (targetAlpha && cleanIdsAlpha.includes(targetAlpha))) {
-          matches.push(data);
-        }
+  const perQuery: Map<string, any>[] = queries.map(() => new Map());
+  const emit = () => {
+    const merged = new Map<string, any>();
+    perQuery.forEach(m => m.forEach((v, k) => merged.set(k, v)));
+    onUpdate(Array.from(merged.values()));
+  };
+
+  const unsubscribers = queries.map((q, idx) => {
+    try {
+      return onSnapshot(q, (snapshot) => {
+        perQuery[idx] = new Map();
+        collectSnapshotDocs(snapshot, perQuery[idx]);
+        emit();
+      }, (err) => {
+        console.warn('Real-time cloud invitations listener error:', err);
       });
-      onUpdate(matches);
-    }, (err) => {
-      console.warn('Real-time cloud invitations listener error:', err);
-    });
-  } catch (err) {
-    console.warn('Failed to attach real-time cloud invitations listener:', err);
-    return () => {};
-  }
+    } catch (err) {
+      console.warn('Failed to attach real-time cloud invitations listener:', err);
+      return () => {};
+    }
+  });
+
+  return () => unsubscribers.forEach(unsub => unsub());
+}
+
+/**
+ * One-shot fetch straight from the server (bypasses local cache).
+ * Safety net when the real-time channel is stalled (VPN, sleeping tab, mobile network).
+ */
+export async function fetchCloudInvitationsForUser(identifiers: string[]): Promise<any[]> {
+  const queries = buildInvitationQueries(identifiers);
+  if (queries.length === 0) return [];
+  const merged = new Map<string, any>();
+  const results = await Promise.allSettled(queries.map(q => getDocsFromServer(q)));
+  results.forEach(r => {
+    if (r.status === 'fulfilled') collectSnapshotDocs(r.value, merged);
+  });
+  return Array.from(merged.values());
 }
 
 /**

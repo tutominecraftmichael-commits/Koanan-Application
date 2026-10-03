@@ -27,6 +27,7 @@ import {
   signOutReal, 
   listenToUserCloudState,
   listenToCloudInvitationsForUser,
+  fetchCloudInvitationsForUser,
   listenToAllCloudInvitations
 } from './lib/firebase';
 import { generateKonanId } from './lib/konanId';
@@ -95,51 +96,89 @@ export function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [pendingInvitations, setPendingInvitations] = useState<PlusInvitationNotification[]>([]);
 
+  const knownInvitationIdsRef = useRef<Set<string>>(new Set());
+
   // 1. Real-time synchronization of pending invitations (Firestore Cloud + BroadcastChannel + LocalStorage)
   useEffect(() => {
     const myId = state.userAccount?.konanId || state.konanId;
     const myEmail = state.userAccount?.email;
     const identifiers = [myId, myEmail].filter(Boolean) as string[];
+    let disposed = false;
 
-    // Initial check from local storage
+    // Updates UI; pings + toasts only for invitations never seen before
+    const refreshPending = () => {
+      if (disposed) return;
+      const myPending = getPendingInvitationsForUser(myId, myEmail);
+      const fresh = myPending.filter(inv => !knownInvitationIdsRef.current.has(inv.id));
+      myPending.forEach(inv => knownInvitationIdsRef.current.add(inv.id));
+      setPendingInvitations(myPending);
+      if (fresh.length > 0) {
+        soundFX.playNotificationPing();
+        setToastMessage(`📬 Nouvelle invitation KONAN PLUS de ${fresh[0].senderName || 'un ami'} !`);
+      }
+    };
+
+    const applyCloud = (cloudInvites: any[]) => {
+      if (disposed || !Array.isArray(cloudInvites)) return;
+      if (cloudInvites.length > 0) mergeInvitationsFromCloud(cloudInvites);
+      refreshPending();
+    };
+
+    // Initial check from local storage (no ping for invitations already known on load)
     const initialInvites = getPendingInvitationsForUser(myId, myEmail);
+    initialInvites.forEach(inv => knownInvitationIdsRef.current.add(inv.id));
     setPendingInvitations(initialInvites);
 
-    // Cross-device Cloud Firestore Listener (instant notification on phone / other device)
-    const unsubscribeCloud = listenToCloudInvitationsForUser(identifiers, (cloudInvites) => {
-      if (Array.isArray(cloudInvites) && cloudInvites.length > 0) {
-        mergeInvitationsFromCloud(cloudInvites);
-        const myPending = getPendingInvitationsForUser(myId, myEmail);
-        setPendingInvitations(myPending);
-        if (myPending.length > 0) {
-          soundFX.playNotificationPing();
-        }
+    // Real-time targeted Firestore listener (instant delivery on any device)
+    const unsubscribeCloud = listenToCloudInvitationsForUser(identifiers, applyCloud);
+
+    // Safety net: direct server fetch (covers stalled realtime channel: VPN, sleep, mobile)
+    let fetching = false;
+    const pullFromServer = async () => {
+      if (fetching || identifiers.length === 0) return;
+      fetching = true;
+      try {
+        applyCloud(await fetchCloudInvitationsForUser(identifiers));
+      } catch (err) {
+        console.warn('Invitation server fetch failed:', err);
+      } finally {
+        fetching = false;
       }
-    });
+    };
+    pullFromServer();
+    const pollTimer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') pullFromServer();
+    }, 5000);
 
     // Cross-tab BroadcastChannel listener
     const handleBcMessage = (event: MessageEvent) => {
       if (event.data?.type === 'INVITATION_SAVED' || event.data?.type === 'STATUS_UPDATED') {
-        const updated = getPendingInvitationsForUser(myId, myEmail);
-        setPendingInvitations(updated);
+        refreshPending();
       }
     };
     invitationBroadcastChannel?.addEventListener('message', handleBcMessage);
 
-    // Storage event & window focus fallback
-    const handleStorage = () => {
-      setPendingInvitations(getPendingInvitationsForUser(myId, myEmail));
+    // Storage event (other tab) → local refresh; focus / visibility / reconnect → server pull
+    const handleStorage = () => refreshPending();
+    const handleWake = () => {
+      if (document.visibilityState === 'visible') pullFromServer();
     };
     window.addEventListener('storage', handleStorage);
-    window.addEventListener('focus', handleStorage);
+    window.addEventListener('focus', handleWake);
+    window.addEventListener('online', handleWake);
+    document.addEventListener('visibilitychange', handleWake);
 
     return () => {
+      disposed = true;
       unsubscribeCloud();
+      window.clearInterval(pollTimer);
       invitationBroadcastChannel?.removeEventListener('message', handleBcMessage);
       window.removeEventListener('storage', handleStorage);
-      window.removeEventListener('focus', handleStorage);
+      window.removeEventListener('focus', handleWake);
+      window.removeEventListener('online', handleWake);
+      document.removeEventListener('visibilitychange', handleWake);
     };
-  }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email, isPlusGroupModalOpen]);
+  }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
   // 2. If current user is group owner (Plus tier), listen to ALL cloud invitations
   // so when an invited friend clicks "Accepter" on their phone, the owner immediately gets updated
