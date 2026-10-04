@@ -5,12 +5,10 @@ import {
   Star, 
   Crown, 
   Calendar, 
-  Clock, 
   Layers, 
   Target, 
   UserPlus, 
   Headphones, 
-  Bell, 
   ShieldCheck,
   ArrowRight
 } from 'lucide-react';
@@ -75,7 +73,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           Investissez dans votre <span className="text-gradient-primary">réussite académique</span>
         </h2>
         <p className="text-xs sm:text-base text-slate-400 leading-relaxed max-w-2xl mx-auto">
-          Du modèle gratuit autonome jusqu'au coaching d'élite personnalisé, choisissez le niveau d'accompagnement qui correspond à votre ambition.
+          Du modèle gratuit jusqu'à la formule d'élite complète, choisissez le niveau d'accompagnement qui correspond à votre ambition.
         </p>
       </div>
 
@@ -141,9 +139,6 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                       <li className="pl-2">• Active Recall & Spaced Repetition (Répétition espacée)</li>
                       <li className="pl-2">• La technique des 2 minutes</li>
                     </ul>
-                    <p className="text-[11px] text-slate-400 mt-1.5 italic">
-                      (Choix libre en toute autonomie — sans recommandation algorithmique de Konan)
-                    </p>
                   </div>
                 </li>
               </ul>
@@ -231,10 +226,6 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                       <li className="pl-2">• <strong>Technique de Feynman</strong> (assimilation profonde)</li>
                     </ul>
                   </div>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <Bell className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Synchronisation automatique Google Agenda (Tous les jours) :</strong> Synchronisation automatique quotidienne de tout l'agenda de révisions directement sur votre smartphone, avec rappels automatiques.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Sparkles className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
@@ -325,10 +316,6 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                       Invitez jusqu'à 4 de vos amis ou camarades via leur adresse email. Ils sont connectés directement à Konan Plus et bénéficient de l'intégralité des fonctionnalités pour réussir ensemble.
                     </p>
                   </div>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <Clock className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-                  <span><strong>Tête-à-tête Coach Konan (2x / semaine) :</strong> Discussion exclusive de 15 min chrono dans votre EDT avec Konan pour débloquer, conseiller et remotiver.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Headphones className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />

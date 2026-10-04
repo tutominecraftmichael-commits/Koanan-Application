@@ -15,7 +15,7 @@ import {
   Copy
 } from 'lucide-react';
 import type { UserAccount, AcademicGoal } from '../../types';
-import { Crown, Users, Target, MessageSquare } from 'lucide-react';
+import { Crown, Users, Target } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
 import { soundFX } from '../../lib/audioEffects';
@@ -53,10 +53,8 @@ interface SettingsModalProps {
   // PLUS features props:
   invitedEmails?: string[];
   academicGoal?: AcademicGoal;
-  coachingSessionsRemaining?: number;
   onOpenGroupModal?: () => void;
   onOpenGoalModal?: () => void;
-  onOpenCoachingModal?: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -75,10 +73,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onUpgradeToPro: _onUpgradeToPro,
   invitedEmails = [],
   academicGoal = 'target_16',
-  coachingSessionsRemaining = 2,
   onOpenGroupModal,
   onOpenGoalModal,
-  onOpenCoachingModal,
 }) => {
   const [lang] = useLanguage();
 
@@ -366,7 +362,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </span>
                 <p className="text-[11px] text-slate-400 mt-0.5">
                   {userAccount?.planTier === 'plus' 
-                    ? 'Accès complet au groupe de 4 invités, objectifs et coaching 1-sur-1.' 
+                    ? 'Accès complet au groupe de 4 invités, objectifs et musiques de révision.' 
                     : 'Passez à la vitesse supérieure avec les fonctionnalités d\'élite.'}
                 </p>
               </div>
@@ -425,26 +421,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       </p>
                     </div>
                   </button>
-
-                  {/* Tête-à-tête Coach Konan */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onOpenCoachingModal?.();
-                    }}
-                    className="p-3 rounded-xl bg-slate-900/90 hover:bg-slate-850 border border-cyan-500/30 hover:border-cyan-400 transition-all text-left flex items-center gap-3 cursor-pointer group sm:col-span-2"
-                  >
-                    <div className="w-9 h-9 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                      <MessageSquare className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-white">Tête-à-tête Coach Konan (15 min chrono)</p>
-                      <p className="text-[10px] text-slate-400">
-                        {coachingSessionsRemaining} séance{coachingSessionsRemaining > 1 ? 's' : ''} restante{coachingSessionsRemaining > 1 ? 's' : ''} cette semaine
-                      </p>
-                    </div>
-                  </button>
                 </div>
               </div>
             ) : (
@@ -455,7 +431,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <span className="text-xs font-bold text-white">Découvrez KONAN PLUS</span>
                   </div>
                   <p className="text-[11px] text-slate-400">
-                    4 comptes invités inclus, 3 objectifs ciblés, coach privé 1-sur-1 & musiques de révision.
+                    4 comptes invités inclus, 3 objectifs ciblés & musiques de révision.
                   </p>
                 </div>
                 <Button

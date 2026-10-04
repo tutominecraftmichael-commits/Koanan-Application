@@ -527,7 +527,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
               <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
                 <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                 <span>
-                  <strong>Règle du groupe :</strong> En tant que membre invité, vous avez un accès complet aux outils de révision, coaching et musiques. Seul le titulaire principal a le droit d'ajouter ou de retirer des membres.
+                  <strong>Règle du groupe :</strong> En tant que membre invité, vous avez un accès complet aux outils de révision, aux objectifs ciblés et aux musiques. Seul le titulaire principal a le droit d'ajouter ou de retirer des membres.
                 </span>
               </div>
             </div>

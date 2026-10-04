@@ -15,7 +15,6 @@ import {
   Play,
   Pause,
   Clock,
-  BookOpen,
   Volume2,
   ShieldCheck
 } from 'lucide-react';
@@ -39,10 +38,8 @@ export interface KonanPlusActivationModalProps {
   onUpdateInvitedEmails?: (emails: string[]) => void;
   academicGoal?: AcademicGoal;
   onSelectAcademicGoal?: (goal: AcademicGoal) => void;
-  coachingSessionsRemaining?: number;
   onOpenGroupModal?: () => void;
   onOpenGoalModal?: () => void;
-  onOpenCoachingModal?: () => void;
   isGroupGuest?: boolean;
   invitedBy?: {
     name: string;
@@ -62,19 +59,16 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
   onUpdateInvitedEmails,
   academicGoal = 'target_16',
   onSelectAcademicGoal,
-  coachingSessionsRemaining = 2,
   onOpenGroupModal,
   onOpenGoalModal: _onOpenGoalModal,
-  onOpenCoachingModal,
   isGroupGuest = false,
   invitedBy,
 }) => {
   // Step 0: Welcome Royal Screen
   // Step 1: 4 Accounts via Konan ID
   // Step 2: 3 Academic Goals
-  // Step 3: Coach 1-on-1 (15 min)
-  // Step 4: Focus Soundscapes
-  const [currentStep, setCurrentStep] = useState<0 | 1 | 2 | 3 | 4>(0);
+  // Step 3: Focus Soundscapes
+  const [currentStep, setCurrentStep] = useState<0 | 1 | 2 | 3>(0);
 
   // Step 1 state
   const [friendIdInput, setFriendIdInput] = useState('');
@@ -216,8 +210,8 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
 
   const handleNextStep = () => {
     soundFX.playCheckmarkPop();
-    if (currentStep < 4) {
-      setCurrentStep((prev) => (prev + 1) as 0 | 1 | 2 | 3 | 4);
+    if (currentStep < 3) {
+      setCurrentStep((prev) => (prev + 1) as 0 | 1 | 2 | 3);
     } else {
       handleFinalFinish();
     }
@@ -226,7 +220,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
   const handlePrevStep = () => {
     soundFX.playCheckmarkPop();
     if (currentStep > 0) {
-      setCurrentStep((prev) => (prev - 1) as 0 | 1 | 2 | 3 | 4);
+      setCurrentStep((prev) => (prev - 1) as 0 | 1 | 2 | 3);
     }
   };
 
@@ -267,11 +261,11 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
           {currentStep > 0 && (
             <div className="px-6 py-2.5 flex items-center justify-between text-xs border-b border-slate-800/40 bg-slate-900/40">
               <div className="flex items-center gap-1.5 sm:gap-2">
-                {[1, 2, 3, 4].map((stepNum) => (
+                {[1, 2, 3].map((stepNum) => (
                   <button
                     key={stepNum}
                     type="button"
-                    onClick={() => setCurrentStep(stepNum as 1 | 2 | 3 | 4)}
+                    onClick={() => setCurrentStep(stepNum as 1 | 2 | 3)}
                     className={`w-6 h-6 rounded-full text-[11px] font-black flex items-center justify-center transition-all cursor-pointer ${
                       currentStep === stepNum
                         ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-400/30 ring-2 ring-amber-400/40'
@@ -285,7 +279,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 ))}
               </div>
               <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">
-                Étape {currentStep} sur 4
+                Étape {currentStep} sur 3
               </span>
             </div>
           )}
@@ -334,12 +328,12 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 </div>
               </div>
 
-              {/* 4 Super Exclusive Features summary teaser */}
+              {/* 3 Super Exclusive Features summary teaser */}
               <div className="p-4 rounded-2xl bg-indigo-950/20 border border-indigo-500/30 text-left space-y-2.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 block">
-                  Configurons ensemble vos 4 super-pouvoirs étape par étape :
+                  Configurons ensemble vos 3 super-pouvoirs étape par étape :
                 </span>
-                <div className="grid grid-cols-2 gap-2 text-xs text-slate-200">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-200">
                   <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                     <Users className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span className="truncate">1. Inviter 4 amis</span>
@@ -349,12 +343,8 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                     <span className="truncate">2. Objectif Scolaire</span>
                   </div>
                   <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-900/60 border border-slate-800">
-                    <Clock className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span className="truncate">3. Coach 15 min</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-900/60 border border-slate-800">
                     <Headphones className="w-4 h-4 text-purple-400 shrink-0" />
-                    <span className="truncate">4. Musiques de Focus</span>
+                    <span className="truncate">3. Musiques de Focus</span>
                   </div>
                 </div>
               </div>
@@ -366,7 +356,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 onClick={() => setCurrentStep(1)}
                 className="w-full font-black text-sm py-3.5 shadow-xl shadow-indigo-600/30 cursor-pointer"
               >
-                Démarrer la configuration guidée (Étape 1/4)
+                Démarrer la configuration guidée (Étape 1/3)
               </Button>
             </div>
           )}
@@ -647,75 +637,9 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
           )}
 
           {/* ========================================================= */}
-          {/* ÉTAPE 3 : TÊTE-À-TÊTE COACH KONAN (15 MIN)                 */}
+          {/* ÉTAPE 3 : MUSIQUES DE FOCUS & RÉVISION                     */}
           {/* ========================================================= */}
           {currentStep === 3 && (
-            <div className="space-y-5 animate-in slide-in-from-right duration-300 text-left">
-              <div className="flex items-start gap-3">
-                <div className="p-3 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 shrink-0">
-                  <Clock className="w-6 h-6 text-cyan-400" />
-                </div>
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400">
-                    Étape 3 sur 4 • Coaching Privé
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                    Tête-à-tête Coach Konan (2x / semaine)
-                  </h3>
-                  <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                    15 minutes chrono exclusives avec votre copilote pour débloquer les matières difficiles, poser vos questions et booster votre moral.
-                  </p>
-                </div>
-              </div>
-
-              {/* Coach Interactive Card Preview */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-cyan-950/30 via-slate-900 to-indigo-950/30 border border-cyan-500/40 space-y-4 shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-10 h-10 rounded-xl bg-slate-950 border border-cyan-500/40 flex items-center justify-center text-xl">
-                      🦉
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-white">Chrono Débriefing Actif</p>
-                      <p className="text-[11px] text-cyan-300">{coachingSessionsRemaining}/2 séances restantes cette semaine</p>
-                    </div>
-                  </div>
-                  <div className="px-3 py-1.5 rounded-xl bg-slate-950 border border-cyan-500/30 font-mono font-black text-cyan-400 text-lg">
-                    15:00
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-xs text-slate-200 space-y-1.5">
-                  <p className="font-semibold text-cyan-300 flex items-center gap-1.5">
-                    <BookOpen className="w-3.5 h-3.5" />
-                    Diagnostic Personnalisé par Konan :
-                  </p>
-                  <p className="text-slate-300 text-[11px] leading-relaxed italic">
-                    « Pour votre objectif choisi ({selectedGoal === 'major_promotion' ? 'Major de Promo' : selectedGoal === 'target_16' ? 'Mention 16/20' : 'Validation 12/20'}), nous analysons automatiquement vos matières à plus fort coefficient et vos échéances pour vous donner les pistes de révision prioritaires. »
-                  </p>
-                </div>
-
-                {onOpenCoachingModal && (
-                  <Button
-                    variant="glow"
-                    size="sm"
-                    leftIcon={<Clock className="w-3.5 h-3.5" />}
-                    onClick={() => {
-                      onOpenCoachingModal();
-                    }}
-                    className="w-full text-xs font-bold py-2.5 cursor-pointer"
-                  >
-                    🦉 Tester la session tête-à-tête (15 min chrono)
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* ========================================================= */}
-          {/* ÉTAPE 4 : MUSIQUES DE FOCUS & RÉVISION                     */}
-          {/* ========================================================= */}
-          {currentStep === 4 && (
             <div className="space-y-5 animate-in slide-in-from-right duration-300 text-left">
               <div className="flex items-start gap-3">
                 <div className="p-3 rounded-2xl bg-purple-500/20 border border-purple-500/40 text-purple-300 shrink-0">
@@ -723,7 +647,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 </div>
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-purple-400">
-                    Étape 4 sur 4 • Ambiance Neuro-Focus
+                    Étape 3 sur 3 • Ambiance Neuro-Focus
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                     Musiques de Révision & Ondes Alpha 40Hz
@@ -837,7 +761,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
             <div />
           )}
 
-          {currentStep > 0 && currentStep < 4 ? (
+          {currentStep > 0 && currentStep < 3 ? (
             <Button
               variant="glow"
               size="sm"
@@ -845,9 +769,9 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
               onClick={handleNextStep}
               className="text-xs font-bold py-2.5 px-4 cursor-pointer"
             >
-              Continuer (Étape {currentStep + 1}/4) →
+              Continuer (Étape {currentStep + 1}/3) →
             </Button>
-          ) : currentStep === 4 ? (
+          ) : currentStep === 3 ? (
             <Button
               variant="glow"
               size="md"

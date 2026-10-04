@@ -63,9 +63,7 @@ import { SuperProActivationModal } from './components/pro/SuperProActivationModa
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
 import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
 import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelectorModal';
-import { CoachKonanOneOnOneModal } from './components/plus/CoachKonanOneOnOneModal';
 import { downloadStudyPlanICS } from './services/googleCalendarService';
-import { sendPhoneNotification } from './services/companionNotificationService';
 
 // Views
 import { LandingHero } from './features/landing/LandingHero';
@@ -93,19 +91,10 @@ export function App() {
   const [isPlusActivationModalOpen, setIsPlusActivationModalOpen] = useState(false);
   const [isPlusGroupModalOpen, setIsPlusGroupModalOpen] = useState(false);
   const [isAcademicGoalModalOpen, setIsAcademicGoalModalOpen] = useState(false);
-  const [isCoachingModalOpen, setIsCoachingModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [pendingInvitations, setPendingInvitations] = useState<PlusInvitationNotification[]>([]);
   const [allInvitations, setAllInvitations] = useState<PlusInvitationNotification[]>(() => getPlusInvitations());
 
-  // 🚨 RED ALERT: active study session start alert (triggers when session start time is reached)
-  const [activeStudyAlert, setActiveStudyAlert] = useState<{
-    session: StudySession;
-    subjectName: string;
-  } | null>(null);
-
-  const notified30mSessionKeysRef = useRef<Set<string>>(new Set());
-  const notifiedExactSessionKeysRef = useRef<Set<string>>(new Set());
   const knownInvitationIdsRef = useRef<Set<string>>(new Set());
 
   // 1. Real-time universal synchronization of all invitations (Firestore Cloud + BroadcastChannel + LocalStorage)
@@ -537,73 +526,6 @@ export function App() {
       window.removeEventListener('focus', handleFocus);
     };
   }, [state.studySessions.length, state.classSlots.length, activeView]);
-
-  // 🔔 REAL-TIME STUDY SESSION REMINDERS:
-  // 1) 30 minutes before: Preparation reminder toast & phone notification
-  // 2) Exact start time: Striking RED ALERT banner with direct 1-click Focus launch & alarm sound
-  useEffect(() => {
-    const checkStudyReminders = () => {
-      const now = new Date();
-      const currentDay = now.getDay();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      const currentTotalMinutes = currentHour * 60 + currentMinute;
-      const todayDateStr = now.toISOString().slice(0, 10);
-
-      const todaysSessions = (state.studySessions || []).filter(
-        s => s.dayOfWeek === currentDay && !s.completed
-      );
-
-      for (const session of todaysSessions) {
-        if (!session.startTime) continue;
-        const [startH, startM] = session.startTime.split(':').map(Number);
-        if (isNaN(startH) || isNaN(startM)) continue;
-
-        const sessionStartMinutes = startH * 60 + startM;
-        const diffMinutes = sessionStartMinutes - currentTotalMinutes; // minutes remaining
-
-        const subject = state.subjects.find(sub => sub.id === session.subjectId);
-        const subjectName = subject?.name || session.title;
-        const keyPrefix = `${todayDateStr}_${session.id}`;
-
-        // 1. Rappel de préparation : 30 minutes avant (fenêtre diff entre 20 et 31 min)
-        if (diffMinutes <= 30 && diffMinutes >= 20) {
-          const key30m = `${keyPrefix}_30m`;
-          if (!notified30mSessionKeysRef.current.has(key30m)) {
-            notified30mSessionKeysRef.current.add(key30m);
-            soundFX.playNotificationPing();
-            setToastMessage(`⏳ Rappel d'étude : Votre séance de ${subjectName} commence dans 30 minutes (à ${session.startTime}). Préparez vos cours ! 📚`);
-            sendPhoneNotification(
-              `⏳ RAPPEL D'ÉTUDE • Dans 30 minutes`,
-              `Préparez-vous ! Votre séance de ${subjectName} commence à ${session.startTime}. Installez-vous confortablement ! 📚`
-            );
-          }
-        }
-
-        // 2. ALERTE ROUGE VIVE : C'est l'heure exacte (diffMinutes <= 0 et diffMinutes >= -15 min)
-        if (diffMinutes <= 0 && diffMinutes >= -15) {
-          const keyExact = `${keyPrefix}_exact`;
-          if (!notifiedExactSessionKeysRef.current.has(keyExact)) {
-            notifiedExactSessionKeysRef.current.add(keyExact);
-            soundFX.playStudyAlertAlarm();
-            setActiveStudyAlert({ session, subjectName });
-            sendPhoneNotification(
-              `🚨 ALERTE KONAN • C'EST L'HEURE !`,
-              `⏰ Le moment est arrivé ! Votre séance de ${subjectName} démarre MAINTENANT (${session.startTime}). Au travail ! ⚡`
-            );
-          }
-        }
-      }
-    };
-
-    checkStudyReminders();
-    const interval = setInterval(checkStudyReminders, 15000); // Check every 15s
-    window.addEventListener('focus', checkStudyReminders);
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('focus', checkStudyReminders);
-    };
-  }, [state.studySessions, state.subjects]);
 
   // Listen to Firebase auth state changes on mount and sync with Cloud Firestore
   useEffect(() => {
@@ -1052,43 +974,6 @@ export function App() {
     showToast(`🎯 Objectif académique activé : ${goalLabels[goal]} !`);
   };
 
-  /**
-   * Konan Plus: Consume 1 coaching session (2/week)
-   */
-  const handleConsumeCoachingSession = () => {
-    setState(prev => {
-      const currentRemaining = prev.userAccount?.coachingSessionsRemaining ?? 2;
-      const nextRemaining = Math.max(0, currentRemaining - 1);
-      const nextUserAccount: UserAccount = prev.userAccount ? {
-        ...prev.userAccount,
-        coachingSessionsRemaining: nextRemaining,
-        lastCoachingDate: new Date().toISOString(),
-        lastSyncedAt: new Date().toISOString(),
-      } : {
-        isLoggedIn: false,
-        name: prev.studentName || 'Étudiant',
-        email: '',
-        avatar: '',
-        googleId: '',
-        academicLevel: prev.academicLevel,
-        planTier: 'plus',
-        coachingSessionsRemaining: nextRemaining,
-        lastCoachingDate: new Date().toISOString(),
-        lastSyncedAt: new Date().toISOString(),
-      };
-
-      const next: AppState = {
-        ...prev,
-        userAccount: nextUserAccount,
-      };
-
-      if (prev.userAccount?.googleId && !prev.isDemoMode) {
-        saveUserState(prev.userAccount.googleId, next);
-      }
-      return next;
-    });
-    showToast('🦉 Tête-à-tête validé ! Votre diagnostic et vos conseils sont appliqués.');
-  };
 
   /**
    * Instant and complete redirection to the pricing section:
@@ -1143,7 +1028,7 @@ export function App() {
       }
       setIsPlusActivationModalOpen(true);
       soundFX.playVictoryCelebration();
-      showToast('👑 Mode Démo KONAN PLUS : Accès complet aux 4 comptes, objectifs et coach Konan !');
+      showToast('👑 Mode Démo KONAN PLUS : Accès complet aux 4 comptes, objectifs et musiques alpha !');
     } else if (demo.planTier === 'pro') {
       if (demo.studySessions && demo.studySessions.length > 0) {
         try {
@@ -1719,10 +1604,8 @@ export function App() {
               invitedIds={state.userAccount?.invitedIds || state.invitedIds || []}
               invitedEmails={state.userAccount?.invitedEmails || state.invitedEmails || []}
               academicGoal={state.userAccount?.academicGoal || 'target_16'}
-              coachingSessionsRemaining={state.userAccount?.coachingSessionsRemaining ?? 2}
               onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
               onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
-              onOpenCoachingModal={() => setIsCoachingModalOpen(true)}
               isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
             />
@@ -1911,10 +1794,8 @@ export function App() {
         onUpgradeToPro={() => handleSelectPlan('pro')}
         invitedEmails={state.userAccount?.invitedEmails || []}
         academicGoal={state.userAccount?.academicGoal || 'target_16'}
-        coachingSessionsRemaining={state.userAccount?.coachingSessionsRemaining ?? 2}
         onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
         onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
-        onOpenCoachingModal={() => setIsCoachingModalOpen(true)}
       />
 
       {/* Pro Upgrade Modal */}
@@ -1944,10 +1825,8 @@ export function App() {
         onUpdateInvitedEmails={handleUpdateInvitedEmails}
         academicGoal={state.userAccount?.academicGoal || 'target_16'}
         onSelectAcademicGoal={handleSelectAcademicGoal}
-        coachingSessionsRemaining={state.userAccount?.coachingSessionsRemaining ?? 2}
         onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
         onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
-        onOpenCoachingModal={() => setIsCoachingModalOpen(true)}
         isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
         invitedBy={state.invitedBy || state.userAccount?.invitedBy}
       />
@@ -1977,19 +1856,6 @@ export function App() {
         studentName={effectiveStudentName}
       />
 
-      {/* 👑 KONAN PLUS: TÊTE-À-TÊTE COACH KONAN (15 MIN) MODAL */}
-      <CoachKonanOneOnOneModal
-        isOpen={isCoachingModalOpen}
-        onClose={() => setIsCoachingModalOpen(false)}
-        studentName={effectiveStudentName}
-        academicLevel={state.academicLevel}
-        academicGoal={state.userAccount?.academicGoal || 'target_16'}
-        subjects={state.subjects}
-        studySessions={state.studySessions}
-        coachingSessionsRemaining={state.userAccount?.coachingSessionsRemaining ?? 2}
-        onConsumeSession={handleConsumeCoachingSession}
-      />
-
       {/* Google Calendar Sync Modal (ALL DAYS) */}
       <GoogleCalendarSyncModal
         isOpen={isGoogleCalendarModalOpen}
@@ -2012,72 +1878,6 @@ export function App() {
         totalPlannedMinutes={state.studySessions.reduce((acc, s) => acc + s.durationMinutes, 0)}
         totalSessionsCount={state.studySessions.length}
       />
-
-      {/* 🚨 RED ALERT BANNER: C'EST L'HEURE D'ÉTUDIER ! */}
-      {activeStudyAlert && (
-        <div 
-          role="alert"
-          aria-live="assertive"
-          className="fixed top-4 left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-lg z-[999999] animate-in slide-in-from-top duration-300"
-        >
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-red-600 p-0.5 shadow-2xl shadow-red-950/90 ring-2 ring-red-400">
-            <div className="rounded-[14px] bg-slate-950/95 p-4 sm:p-5 backdrop-blur-xl border border-red-500/50 flex flex-col gap-3">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-3 w-3 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-red-500/20 border border-red-400/50 text-red-200 text-[10px] sm:text-[11px] font-black uppercase tracking-wider animate-pulse">
-                    🚨 ALERTE ROUGE • C'EST L'HEURE !
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActiveStudyAlert(null)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-                  title="Fermer l'alerte"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="space-y-1 text-left">
-                <h4 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                  <span className="text-red-400">⏰ Le moment est arrivé !</span>
-                </h4>
-                <p className="text-xs sm:text-sm text-red-100/90 leading-snug">
-                  Votre séance de <strong className="text-white underline decoration-red-400 font-black">{activeStudyAlert.subjectName}</strong> démarre <strong>MAINTENANT ({activeStudyAlert.session.startTime} - {activeStudyAlert.session.endTime})</strong>.
-                </p>
-                <p className="text-[11px] text-red-200/80">
-                  ⚡ Ne perdez pas une seconde pour valider vos objectifs du jour !
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const s = activeStudyAlert.session;
-                    setActiveStudyAlert(null);
-                    handleStartFocusSession(s);
-                  }}
-                  className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-950/60 transition-transform active:scale-95 cursor-pointer"
-                >
-                  <span>🔥 Démarrer le Chrono Focus</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveStudyAlert(null)}
-                  className="py-2.5 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold cursor-pointer active:scale-95"
-                >
-                  Compris
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Floating Notification Toast (Full multi-line sentence, zero truncation) */}
       {toastMessage && (

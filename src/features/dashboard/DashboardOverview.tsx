@@ -56,10 +56,8 @@ export interface DashboardOverviewProps {
   invitedIds?: string[];
   invitedEmails?: string[];
   academicGoal?: AcademicGoal;
-  coachingSessionsRemaining?: number;
   onOpenGroupModal?: () => void;
   onOpenGoalModal?: () => void;
-  onOpenCoachingModal?: () => void;
   isGroupGuest?: boolean;
   invitedBy?: { name: string; konanId: string; email?: string };
 }
@@ -85,10 +83,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   invitedIds: _invitedIds = [],
   invitedEmails: _invitedEmails = [],
   academicGoal: _academicGoal = 'target_16',
-  coachingSessionsRemaining: _coachingSessionsRemaining = 2,
   onOpenGroupModal: _onOpenGroupModal,
   onOpenGoalModal: _onOpenGoalModal,
-  onOpenCoachingModal: _onOpenCoachingModal,
   isGroupGuest: _isGroupGuest = false,
   invitedBy: _invitedBy,
 }) => {
