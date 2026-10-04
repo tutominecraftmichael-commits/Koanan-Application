@@ -769,19 +769,41 @@ export const invitationBroadcastChannel = typeof window !== 'undefined' && typeo
   : null;
 
 /**
- * Loads all invitations from storage.
+ * Notifications and invitations strictly expire and disappear after 24 hours.
+ */
+export const NOTIFICATION_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+export function isInvitationExpired(inv: { createdAt: string; updatedAt?: string; acceptedAt?: string }): boolean {
+  const timestamp = inv.updatedAt || inv.acceptedAt || inv.createdAt;
+  if (!timestamp) return false;
+  const time = new Date(timestamp).getTime();
+  if (isNaN(time)) return false;
+  return (Date.now() - time) > NOTIFICATION_TTL_MS;
+}
+
+/**
+ * Loads all invitations from storage and automatically purges items older than 24 hours.
  */
 export function getPlusInvitations(): PlusInvitationNotification[] {
   try {
     const raw = localStorage.getItem(INVITATIONS_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const list: PlusInvitationNotification[] = JSON.parse(raw);
+    if (!Array.isArray(list)) return [];
+    
+    // Automatically purge notifications older than 24 hours
+    const fresh = list.filter(inv => !isInvitationExpired(inv));
+    if (fresh.length !== list.length) {
+      localStorage.setItem(INVITATIONS_STORAGE_KEY, JSON.stringify(fresh));
+    }
+    return fresh;
   } catch {
     return [];
   }
 }
 
 /**
- * Merges cloud invitations from Firestore with local invitations.
+ * Merges cloud invitations from Firestore with local invitations, ignoring expired ones.
  */
 export function mergeInvitationsFromCloud(cloudInvitations: PlusInvitationNotification[]): PlusInvitationNotification[] {
   if (!Array.isArray(cloudInvitations) || cloudInvitations.length === 0) return getPlusInvitations();
@@ -790,6 +812,9 @@ export function mergeInvitationsFromCloud(cloudInvitations: PlusInvitationNotifi
     const map = new Map<string, PlusInvitationNotification>();
     local.forEach(inv => map.set(inv.id, inv));
     cloudInvitations.forEach(inv => {
+      // Discard invitations older than 24 hours
+      if (isInvitationExpired(inv)) return;
+
       const existing = map.get(inv.id);
       if (existing) {
         // Prevent stale cloud 'pending' status from reverting an already 'accepted' or 'declined' invitation
@@ -807,7 +832,7 @@ export function mergeInvitationsFromCloud(cloudInvitations: PlusInvitationNotifi
       }
       map.set(inv.id, { ...(existing || {}), ...inv });
     });
-    const merged = Array.from(map.values());
+    const merged = Array.from(map.values()).filter(inv => !isInvitationExpired(inv));
     localStorage.setItem(INVITATIONS_STORAGE_KEY, JSON.stringify(merged));
     return merged;
   } catch {
@@ -839,7 +864,7 @@ export function savePlusInvitation(invitation: PlusInvitationNotification): void
 }
 
 /**
- * Gets all pending invitations for a specific user (by konanId or email).
+ * Gets all pending invitations for a specific user (by konanId or email) strictly within 24 hours.
  */
 export function getPendingInvitationsForUser(konanId?: string, email?: string): PlusInvitationNotification[] {
   const invitations = getPlusInvitations();
@@ -849,6 +874,7 @@ export function getPendingInvitationsForUser(konanId?: string, email?: string): 
 
   return invitations.filter(inv => {
     if (inv.status !== 'pending') return false;
+    if (isInvitationExpired(inv)) return false;
     const target = (inv.targetKonanIdOrEmail || '').trim().toLowerCase();
     const targetAlpha = target.replace(/[^a-z0-9]/g, '');
 

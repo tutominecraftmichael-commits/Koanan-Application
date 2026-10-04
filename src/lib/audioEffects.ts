@@ -139,6 +139,46 @@ class SoundFX {
   }
 
   /**
+   * Punchy, energetic alarm sound for the exact study start time alert
+   */
+  public playStudyAlertAlarm() {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+
+    const beeps = [
+      { f: 880, d: 0.0, dur: 0.12 },
+      { f: 1174.66, d: 0.15, dur: 0.18 },
+      { f: 880, d: 0.38, dur: 0.12 },
+      { f: 1318.51, d: 0.52, dur: 0.35 }
+    ];
+
+    const now = ctx.currentTime;
+    beeps.forEach(({ f, d, dur }) => {
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(f, now + d);
+        gain.gain.setValueAtTime(0.0001, now + d);
+        gain.gain.linearRampToValueAtTime(0.25, now + d + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + d + dur);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now + d);
+        osc.stop(now + d + dur + 0.05);
+      } catch {
+        // Safe fail
+      }
+    });
+  }
+
+  /**
    * Subtle ascending tick sound during progress bar climb (0-98%)
    */
   public playTensionTick(pitchRatio = 0.5) {

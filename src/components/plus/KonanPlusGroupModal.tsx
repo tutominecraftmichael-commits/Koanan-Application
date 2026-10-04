@@ -338,6 +338,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
       return;
     }
 
+    const nowIso = new Date().toISOString();
     const newInvitation: PlusInvitationNotification = {
       id: generateId(),
       senderName: realOwnerName,
@@ -345,7 +346,8 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
       senderEmail: ownerEmail,
       targetKonanIdOrEmail: finalValue,
       status: 'pending',
-      createdAt: new Date().toISOString(),
+      createdAt: nowIso,
+      updatedAt: nowIso,
     };
     savePlusInvitation(newInvitation);
     setInvitations(getPlusInvitations());

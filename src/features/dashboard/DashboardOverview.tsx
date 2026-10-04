@@ -14,7 +14,6 @@ import { Card } from '../../components/ui/Card';
 import { formatMinutesToHours, getDaysRemaining, parseTimeToMinutes } from '../../lib/utils';
 import { 
   Sparkles, 
-  Crown,
   Calendar, 
   Clock, 
   CheckCircle2, 
@@ -166,23 +165,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 {isCycleCompletedToday ? "Cycle Validé 100%" : isDayFullyComplete ? "Journée Validée 100%" : "Copilote Actif"}
               </Badge>
               <span className="text-[11px] sm:text-xs text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
-
-              {/* Modèle officiel de l'étudiant */}
-              {planTier === 'plus' ? (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-cyan-500/20 border border-amber-500/40 text-amber-300 shadow-sm">
-                  <Crown className="w-3 h-3 text-amber-400" />
-                  <span>KONAN PLUS</span>
-                </span>
-              ) : planTier === 'pro' ? (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider bg-amber-500/20 border border-amber-500/40 text-amber-300 shadow-sm">
-                  <Sparkles className="w-3 h-3 text-amber-400" />
-                  <span>KONAN PRO</span>
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-slate-800/90 border border-slate-700/80 text-slate-300">
-                  <span>Modèle Gratuit</span>
-                </span>
-              )}
             </div>
             <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
               Bonjour, <span className={

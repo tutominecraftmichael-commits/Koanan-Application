@@ -99,18 +99,37 @@ export const Navbar: React.FC<NavbarProps> = ({
   // Single source of truth for current active tier in Navbar
   const effectivePlan: 'free' | 'pro' | 'plus' = planTier || userAccount?.planTier || 'free';
 
-  // Normalize all owner notifications (support both ownerNotifications & acceptedNotifications)
+  // Notifications strictly disappear after 24 hours (24h TTL)
+  const activePendingInvitations = React.useMemo(() => {
+    const now = Date.now();
+    const TTL_24H = 24 * 60 * 60 * 1000;
+    return pendingInvitations.filter(inv => {
+      const time = inv.updatedAt || inv.acceptedAt || inv.createdAt;
+      if (!time) return true;
+      const t = new Date(time).getTime();
+      return !isNaN(t) && (now - t) <= TTL_24H;
+    });
+  }, [pendingInvitations]);
+
+  // Normalize all owner notifications and strictly purge those older than 24 hours
   const normalizedOwnerNotifications: OwnerNotificationItem[] = React.useMemo(() => {
-    if (ownerNotifications && ownerNotifications.length > 0) {
-      return ownerNotifications;
-    }
-    return (acceptedNotifications || []).map(a => ({
-      id: a.id,
-      type: 'accepted' as const,
-      name: a.name,
-      konanId: a.konanId,
-      timestamp: a.timestamp,
-    }));
+    const raw = (ownerNotifications && ownerNotifications.length > 0)
+      ? ownerNotifications
+      : (acceptedNotifications || []).map(a => ({
+          id: a.id,
+          type: 'accepted' as const,
+          name: a.name,
+          konanId: a.konanId,
+          timestamp: a.timestamp,
+        }));
+
+    const now = Date.now();
+    const TTL_24H = 24 * 60 * 60 * 1000;
+    return raw.filter(item => {
+      if (!item.timestamp) return true;
+      const t = new Date(item.timestamp).getTime();
+      return !isNaN(t) && (now - t) <= TTL_24H;
+    });
   }, [ownerNotifications, acceptedNotifications]);
 
   useEffect(() => {
@@ -140,7 +159,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   });
 
-  const hasUnreadNotifications = pendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
+  const hasUnreadNotifications = activePendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
     || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id));
 
   // Opening the panel marks every visible notification as read
@@ -148,7 +167,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     if (!isNotificationsOpen || !hasUnreadNotifications) return;
     setSeenNotificationIds(prev => {
       const next = new Set(prev);
-      pendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
+      activePendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
       normalizedOwnerNotifications.forEach(notif => notif?.id && next.add(notif.id));
       try {
         localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
@@ -157,7 +176,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       return next;
     });
-  }, [isNotificationsOpen, hasUnreadNotifications, pendingInvitations, normalizedOwnerNotifications]);
+  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), icon: Layers },
@@ -352,14 +371,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                           <Bell className="w-3.5 h-3.5 text-amber-400" />
                           Notifications & Invitations
                         </span>
-                        {pendingInvitations.length > 0 && (
+                        {activePendingInvitations.length > 0 && (
                           <span className="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
-                            {pendingInvitations.length} en attente
+                            {activePendingInvitations.length} en attente
                           </span>
                         )}
                       </div>
 
-                      {pendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
+                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
                         <div className="py-6 text-center text-xs text-slate-400">
                           <Bell className="w-6 h-6 mx-auto text-slate-600 mb-2 opacity-50" />
                           <p>Aucune notification pour le moment.</p>
@@ -415,7 +434,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           })}
 
                           {/* Guest Pending Invitations */}
-                          {pendingInvitations.map((inv) => {
+                          {activePendingInvitations.map((inv) => {
                             const timeFormatted = formatNotificationTime(inv.createdAt);
 
                             return (
@@ -506,9 +525,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                             Notifications & Invitations
                           </span>
                           <div className="flex items-center gap-2">
-                            {pendingInvitations.length > 0 && (
+                            {activePendingInvitations.length > 0 && (
                               <span className="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
-                                {pendingInvitations.length} en attente
+                                {activePendingInvitations.length} en attente
                               </span>
                             )}
                             <button
@@ -522,7 +541,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </div>
                         </div>
 
-                        {pendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
+                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
                           <div className="py-6 text-center text-xs text-slate-400">
                             <Bell className="w-7 h-7 mx-auto text-slate-600 mb-2 opacity-50" />
                             <p>Aucune notification pour le moment.</p>
@@ -578,7 +597,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             })}
 
                             {/* Guest Pending Invitations */}
-                            {pendingInvitations.map((inv) => {
+                            {activePendingInvitations.map((inv) => {
                               const timeFormatted = formatNotificationTime(inv.createdAt);
 
                               return (

@@ -108,7 +108,7 @@ export async function requestPhoneNotificationPermission(): Promise<Notification
  * Envoie la notification directement au téléphone de l'utilisateur.
  * Elle apparaît dans le volet de notification / l'écran de verrouillage du smartphone.
  */
-export function sendPhoneNotification(title: string, body: string): void {
+export function sendPhoneNotification(title: string, body: string, tag: string = 'konan-study-alert'): void {
   if (!isPhoneNotificationSupported()) return;
 
   if (Notification.permission === 'granted') {
@@ -119,8 +119,8 @@ export function sendPhoneNotification(title: string, body: string): void {
             body,
             icon: '/icon-192.png',
             badge: '/icon-192.png',
-            vibrate: [200, 100, 200],
-            tag: 'konan-rescheduled-session',
+            vibrate: [300, 150, 300],
+            tag,
             renotify: true,
           } as NotificationOptions);
         }).catch(() => {
@@ -128,7 +128,7 @@ export function sendPhoneNotification(title: string, body: string): void {
             body,
             icon: '/icon-192.png',
             badge: '/icon-192.png',
-            tag: 'konan-rescheduled-session',
+            tag,
           });
         });
       } else {
@@ -136,7 +136,7 @@ export function sendPhoneNotification(title: string, body: string): void {
           body,
           icon: '/icon-192.png',
           badge: '/icon-192.png',
-          tag: 'konan-rescheduled-session',
+          tag,
         });
       }
     } catch (err) {

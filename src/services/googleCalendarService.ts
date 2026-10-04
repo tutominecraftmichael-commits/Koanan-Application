@@ -189,11 +189,17 @@ export function generateStudyPlanICS(
       `DESCRIPTION:${escapeIcsText(description)}`,
       `LOCATION:Espace d'étude Konan AI`,
       'STATUS:CONFIRMED',
-      // VALARM: RAPPEL 15 MINUTES AVANT CHAQUE SESSION SUR SMARTPHONE & GOOGLE AGENDA
+      // VALARM 1: RAPPEL 30 MINUTES AVANT POUR SE PRÉPARER
       'BEGIN:VALARM',
-      'TRIGGER:-PT15M',
+      'TRIGGER:-PT30M',
       'ACTION:DISPLAY',
-      `DESCRIPTION:${escapeIcsText(`Rappel Konan AI : Votre révision de ${subject.name} débute dans 15 minutes !`)}`,
+      `DESCRIPTION:${escapeIcsText(`⏳ Rappel Konan AI : Votre révision de ${subject.name} commence dans 30 minutes ! Préparez vos cours. 📚`)}`,
+      'END:VALARM',
+      // VALARM 2: ALERTE ROUGE EXACTEMENT À L'HEURE DE DÉBUT (T = 0)
+      'BEGIN:VALARM',
+      'TRIGGER:PT0M',
+      'ACTION:DISPLAY',
+      `DESCRIPTION:${escapeIcsText(`🚨 ALERTE KONAN AI : C'EST L'HEURE ! Votre séance de ${subject.name} démarre MAINTENANT. Au travail ! ⚡`)}`,
       'END:VALARM',
       'END:VEVENT'
     );

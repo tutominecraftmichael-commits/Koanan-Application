@@ -67,6 +67,7 @@ import {
   onSnapshot,
   query,
   where,
+  getDocs,
   getDocsFromServer,
   type QuerySnapshot,
   type DocumentData
@@ -562,6 +563,7 @@ export async function syncCloudPlusInvitation(invitation: any): Promise<boolean>
     const invRef = doc(db, 'plus_invitations', invitation.id);
     await setDoc(invRef, {
       ...invitation,
+      id: invitation.id,
       targetNormalized: normalizeInviteTarget(invitation.targetKonanIdOrEmail),
       targetAlpha: alphaInviteTarget(invitation.targetKonanIdOrEmail),
       targetUpper: (invitation.targetKonanIdOrEmail || '').trim().toUpperCase(),
@@ -731,7 +733,8 @@ export function listenToAllCloudInvitations(onUpdate: (invitations: any[]) => vo
     return onSnapshot(colRef, (snapshot) => {
       const all: any[] = [];
       snapshot.forEach(docSnap => {
-        all.push(docSnap.data());
+        const data = docSnap.data();
+        all.push({ ...data, id: data.id || docSnap.id });
       });
       onUpdate(all);
     }, (err) => {
@@ -744,16 +747,20 @@ export function listenToAllCloudInvitations(onUpdate: (invitations: any[]) => vo
 }
 
 /**
- * Direct server-side fetch of ALL invitations from Cloud Firestore.
- * Bypasses local Firestore cache completely, guaranteeing fresh cross-device state.
+ * Direct fast fetch of ALL invitations from Cloud Firestore.
+ * Delivers instantly from cache and server in parallel with a 3.5s timeout.
  */
 export async function fetchAllCloudInvitations(): Promise<any[]> {
   if (!db) return [];
   try {
     const colRef = collection(db, 'plus_invitations');
-    const snap = await getDocsFromServer(colRef);
+    const fetchPromise = getDocs(colRef);
+    const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 3500));
+    const snap: any = await Promise.race([fetchPromise, timeoutPromise]);
+    if (!snap) return [];
+
     const all: any[] = [];
-    snap.forEach(docSnap => {
+    snap.forEach((docSnap: any) => {
       const data = docSnap.data();
       all.push({ ...data, id: data.id || docSnap.id });
     });
