@@ -1919,6 +1919,50 @@ export function formatStructuredScheduleTruth(
   return lines.join('\n');
 }
 
+export type ScheduleFormatType = 'lmd' | 'tpcm' | 'scolaire';
+
+/**
+ * Formats extracted schedule data into a clean, canonical text representation
+ * strictly formatted according to the selected academic level / format.
+ */
+export function formatExtractedScheduleToFormatText(
+  extracted: ExtractedPdfSchedule,
+  format: ScheduleFormatType
+): string {
+  const dayNames = ['LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI', 'DIMANCHE'];
+  const lines: string[] = [];
+
+  for (let day = 0; day <= 6; day++) {
+    const daySlots = extracted.slots
+      .filter(s => s.dayOfWeek === day)
+      .sort((a, b) => parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime));
+
+    if (daySlots.length === 0) continue;
+
+    lines.push(`${dayNames[day]} :`);
+
+    for (const slot of daySlots) {
+      const subject = extracted.subjects.find(sub => sub.id === slot.subjectId);
+      const subjectName = (slot.subjectName || subject?.name || 'Matière').trim();
+      const code = subject?.code ? ` [${subject.code}]` : '';
+      const room = slot.room ? ` | ${slot.room}` : '';
+      const prof = slot.professor ? ` | ${slot.professor}` : '';
+
+      if (format === 'lmd') {
+        lines.push(`${slot.startTime} - ${slot.endTime} | ${subjectName}${code}${room}${prof}`);
+      } else if (format === 'tpcm') {
+        const typeBadge = slot.type === 'lab' ? 'TP ' : slot.type === 'tutorial' ? 'TD ' : 'CM ';
+        lines.push(`${slot.startTime} - ${slot.endTime} ${typeBadge}${subjectName}${room}`);
+      } else {
+        // format scolaire (Lycée / Collège)
+        lines.push(`${slot.startTime} - ${slot.endTime} ${subjectName}`);
+      }
+    }
+  }
+
+  return lines.join('\n');
+}
+
 /**
  * Parses directly a structured text representation of the timetable into an ExtractedPdfSchedule.
  */

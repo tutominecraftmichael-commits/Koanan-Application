@@ -21,9 +21,14 @@ import {
   FlaskConical,
   School,
   FileText,
-  ClipboardPaste,
   Star,
-  Check
+  Check,
+  Camera,
+  FileUp,
+  Image as ImageIcon,
+  Scan,
+  RotateCcw,
+  FileCheck
 } from 'lucide-react';
 import type { 
   ExtractedPdfSchedule, 
@@ -48,7 +53,11 @@ import { generateId, parseTimeToMinutes } from '../../lib/utils';
 import { 
   formatStructuredScheduleTruth,
   parseStructuredScheduleTruth,
-  harmonizeAndDeduplicateSlots
+  harmonizeAndDeduplicateSlots,
+  parseTimetableDocument,
+  formatExtractedScheduleToFormatText,
+  loadDemoPdfTemplate,
+  type ScheduleFormatType
 } from '../../services/pdfParserService';
 import { 
   generateAcademicAnalysisReport, 
@@ -56,11 +65,10 @@ import {
 } from '../../services/aiAcademicAnalyzer';
 import { PACING_STRATEGIES, getPacingStrategy, recommendPacingStrategies } from '../../lib/pacingStrategies';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
+import { soundFX } from '../../lib/audioEffects';
 import confetti from 'canvas-confetti';
 
-// ─── FORMAT TYPES & EXAMPLES ─────────────────────────────────────────────────
-
-type ScheduleFormatType = 'lmd' | 'tpcm' | 'scolaire';
+// ─── FORMAT DEFINITIONS & EXAMPLES ───────────────────────────────────────────
 
 interface FormatDefinition {
   id: ScheduleFormatType;
@@ -193,14 +201,33 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   onViewPricing,
   onUpgradeToPro,
 }) => {
-  // Format selection
-  const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType | null>(null);
+  // Steps state machine:
+  // 1. upload_file -> 2. select_level -> 3. scanning -> 4. review_text -> 5. review_planning
+  type UploadStep = 'upload_file' | 'select_level' | 'scanning' | 'review_text' | 'review_planning';
+  const [uploadStep, setUploadStep] = useState<UploadStep>('upload_file');
+
+  // File upload state
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [filePreviewUrl, setFilePreviewUrl] = useState<string | null>(null);
+  const [fileType, setFileType] = useState<'pdf' | 'image' | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [manualTextMode, setManualTextMode] = useState(false);
+
+  // Hidden file inputs
+  const pdfInputRef = React.useRef<HTMLInputElement>(null);
+  const cameraInputRef = React.useRef<HTMLInputElement>(null);
+  const galleryInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Format selection (default LMD)
+  const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType>('lmd');
   const [scheduleText, setScheduleText] = useState('');
 
-  // Analysis pipeline
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisStep, setAnalysisStep] = useState<number>(0);
+  // Scanning progress & logs
+  const [scanProgress, setScanProgress] = useState(0);
+  const [scanStatus, setScanStatus] = useState('');
   const [analysisLogs, setAnalysisLogs] = useState<string[]>([]);
+
+  // Extracted schedule & error state
   const [extractedData, setExtractedData] = useState<ExtractedPdfSchedule | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -264,13 +291,6 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     }
   }, [pacingRecommendation, planTier]);
 
-  const stepsList = [
-    { title: 'Lecture du texte structuré', desc: 'Décodage de la grille horaire saisie' },
-    { title: 'Extraction de la Source de Vérité', desc: 'Reconnaissance exacte des cours sans inventer de données' },
-    { title: 'Pondération des matières réelles', desc: 'Évaluation des coefficients et exigences académiques' },
-    { title: 'Génération du planning personnalisé', desc: 'Organisation chronologique dans les créneaux libres' },
-  ];
-
   const recalculateSummary = (data: ExtractedPdfSchedule): ExtractedPdfSchedule => {
     const totalWeeklyClassMinutes = data.slots.reduce((acc, slot) => {
       return acc + Math.max(0, (parseTimeToMinutes(slot.endTime) - parseTimeToMinutes(slot.startTime)));
@@ -286,59 +306,134 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     };
   };
 
-  const triggerAnalysisPipeline = async (processSchedule: () => Promise<ExtractedPdfSchedule>) => {
-    setIsAnalyzing(true);
+  const handleFileSelected = (file: File) => {
+    if (!file) return;
     setErrorMessage(null);
-    setAnalysisStep(0);
-    setAnalysisLogs(['[1/4] 📋 Lecture et structuration du texte saisi...']);
+
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+    const isImage = file.type.startsWith('image/') || /\.(png|jpe?g|webp|bmp)$/i.test(file.name);
+
+    if (!isPdf && !isImage) {
+      setErrorMessage('Format de fichier non pris en charge. Veuillez importer un document PDF ou une photo (PNG, JPG, WEBP).');
+      return;
+    }
+
+    setUploadedFile(file);
+    setFileType(isPdf ? 'pdf' : 'image');
+
+    if (isImage) {
+      try {
+        const url = URL.createObjectURL(file);
+        setFilePreviewUrl(url);
+      } catch (e) {
+        console.warn('Could not create preview URL', e);
+      }
+    } else {
+      setFilePreviewUrl(null);
+    }
+
+    // Advance to Step 2: Demander le niveau d'étude
+    setUploadStep('select_level');
+  };
+
+  const handleSelectDemoTemplate = (templateId: string) => {
+    const demo = loadDemoPdfTemplate(templateId);
+    let format: ScheduleFormatType = 'lmd';
+    if (templateId.includes('technique') || templateId.includes('bts')) format = 'tpcm';
+    if (templateId.includes('scolaire') || templateId.includes('lycee')) format = 'scolaire';
+
+    setSelectedFormat(format);
+    const generatedText = formatExtractedScheduleToFormatText(demo, format);
+    setScheduleText(generatedText || demo.rawText || '');
+    setUploadedFile(new File([demo.rawText || ''], demo.fileName, { type: 'application/pdf' }));
+    setFileType('pdf');
+    setFilePreviewUrl(null);
+    setUploadStep('select_level');
+  };
+
+  const startScanningPipeline = async () => {
+    if (!uploadedFile) {
+      setErrorMessage('Veuillez sélectionner un fichier PDF ou une photo.');
+      return;
+    }
+
+    setUploadStep('scanning');
+    setErrorMessage(null);
+    setScanProgress(10);
+    setScanStatus('Initialisation des moteurs de vision...');
+    setAnalysisLogs([
+      `[1/4] 🚀 Démarrage de l'analyse : ${uploadedFile.name} (${Math.round(uploadedFile.size / 1024)} Ko)...`
+    ]);
 
     try {
-      // Step 1
-      await new Promise(r => setTimeout(r, 600));
-      setAnalysisStep(1);
-      setAnalysisLogs(prev => [...prev, '[2/4] 🗓️ Détection des jours, créneaux horaires et matières...']);
-
-      // Step 2
-      const rawResult = await processSchedule();
-      const result: ExtractedPdfSchedule = recalculateSummary({
-        ...rawResult,
-        slots: harmonizeAndDeduplicateSlots(rawResult.slots)
+      const extractedRaw = await parseTimetableDocument(uploadedFile, (status, percent) => {
+        setScanStatus(status);
+        setScanProgress(Math.max(10, Math.min(95, percent)));
+        setAnalysisLogs(prev => [...prev.slice(-3), `› ${status}`]);
       });
-      await new Promise(r => setTimeout(r, 700));
-      setAnalysisStep(2);
-      setAnalysisLogs(prev => [
-        ...prev, 
-        `[3/4] ⚖️ ${result.subjects.length} matières distinctes détectées et pondérées dynamiquement...`
-      ]);
 
-      // Step 3
+      setScanProgress(98);
+      setScanStatus(`Structuration du fichier texte au format ${FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || 'officiel'}...`);
+
+      let structuredText = formatExtractedScheduleToFormatText(extractedRaw, selectedFormat);
+
+      if (!structuredText.trim()) {
+        const fallbackDef = FORMAT_DEFINITIONS.find(f => f.id === selectedFormat) || FORMAT_DEFINITIONS[0];
+        structuredText = fallbackDef.example;
+        setAnalysisLogs(prev => [...prev, '⚠️ Document peu lisible : nous avons préparé la structure officielle pour vous.']);
+      }
+
+      setScheduleText(structuredText);
+      setScanProgress(100);
+      setScanStatus('Numérisation et conversion terminées avec succès !');
+
       await new Promise(r => setTimeout(r, 600));
-      setAnalysisStep(3);
-      setAnalysisLogs(prev => [
-        ...prev, 
-        `[4/4] 🧠 ${result.slots.length} créneaux fixes enregistrés. Optimisation des plages d'étude...`
-      ]);
-
-      // Complete
-      await new Promise(r => setTimeout(r, 400));
-      setIsAnalyzing(false);
-      setExtractedData(result);
-    } catch (err) {
-      console.error('Extraction error:', err);
-      setIsAnalyzing(false);
-      setErrorMessage("Impossible d'extraire les cours de ce texte. Vérifiez le format (Jour : HH:MM - HH:MM Matière) puis réessayez.");
+      soundFX.playCheckmarkPop();
+      setUploadStep('review_text');
+    } catch (err: any) {
+      console.error('Scanning failed:', err);
+      const fallbackDef = FORMAT_DEFINITIONS.find(f => f.id === selectedFormat) || FORMAT_DEFINITIONS[0];
+      setScheduleText(fallbackDef.example);
+      setUploadStep('review_text');
+      setErrorMessage("La lecture automatique a rencontré une difficulté sur ce document. Nous avons pré-rempli la structure officielle ci-dessous pour que vous puissiez ajuster vos cours.");
     }
   };
 
-  const handleAnalyzeText = () => {
+  const handleGeneratePlanningFromText = () => {
     if (!scheduleText.trim()) {
-      setErrorMessage('Veuillez coller ou saisir votre emploi du temps avant de lancer l\'analyse.');
+      setErrorMessage('Le fichier texte ne peut pas être vide.');
       return;
     }
-    triggerAnalysisPipeline(async () => {
-      const formatLabel = FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || 'Emploi du Temps';
-      return parseStructuredScheduleTruth(scheduleText, `Emploi_du_Temps_${formatLabel}.txt`);
-    });
+
+    try {
+      const formatLabel = FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || 'Emploi_du_Temps';
+      const parsed = parseStructuredScheduleTruth(scheduleText, `${uploadedFile?.name || 'Emploi_du_Temps'}_${formatLabel}.txt`);
+      const harmonized = recalculateSummary({
+        ...parsed,
+        slots: harmonizeAndDeduplicateSlots(parsed.slots),
+      });
+
+      setExtractedData(harmonized);
+      soundFX.playCheckmarkPop();
+      setUploadStep('review_planning');
+    } catch (err: any) {
+      console.error('Text parsing error:', err);
+      setErrorMessage("Impossible de générer le planning. Assurez-vous que chaque jour commence par 'JOUR :' et chaque cours par 'HH:MM - HH:MM'.");
+    }
+  };
+
+  const handleResetToUpload = () => {
+    setUploadedFile(null);
+    if (filePreviewUrl) {
+      URL.revokeObjectURL(filePreviewUrl);
+      setFilePreviewUrl(null);
+    }
+    setFileType(null);
+    setScheduleText('');
+    setExtractedData(null);
+    setUploadStep('upload_file');
+    setManualTextMode(false);
+    setErrorMessage(null);
   };
 
   // Subject management
@@ -500,8 +595,6 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     return generateAcademicAnalysisReport(extractedData, selectedChronotype, selectedPacing);
   }, [extractedData, selectedChronotype, selectedPacing]);
 
-  const activeFormatDef = FORMAT_DEFINITIONS.find(f => f.id === selectedFormat) || null;
-
   return (
     <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-300 py-2">
       
@@ -551,16 +644,241 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       )}
 
       {/* ════════════════════════════════════════════════════════════════════ */}
-      {/* STAGE 1: FORMAT SELECTION + TEXT INPUT                              */}
+      {/* STEP 1: IMPORTATION INITIALE DU DOCUMENT (PDF OU PHOTO)             */}
       {/* ════════════════════════════════════════════════════════════════════ */}
-      {!isAnalyzing && !extractedData && (
-        <div className="space-y-6 sm:space-y-8">
+      {uploadStep === 'upload_file' && !manualTextMode && (
+        <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
           
-          {/* ── STEP 1: FORMAT SELECTOR ───────────────────────────────────── */}
+          {/* Hidden inputs for real file picker / camera / gallery */}
+          <input 
+            type="file" 
+            ref={pdfInputRef} 
+            accept=".pdf,application/pdf" 
+            onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} 
+            className="hidden" 
+          />
+          <input 
+            type="file" 
+            ref={cameraInputRef} 
+            accept="image/*" 
+            capture="environment" 
+            onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} 
+            className="hidden" 
+          />
+          <input 
+            type="file" 
+            ref={galleryInputRef} 
+            accept="image/*,.png,.jpg,.jpeg,.webp,.bmp" 
+            onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} 
+            className="hidden" 
+          />
+
+          {/* TWO MAIN TILES: PDF VS PHOTO */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            
+            {/* TILE 1: PDF IMPORT */}
+            <div
+              onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+              onDragLeave={() => setIsDragOver(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDragOver(false);
+                const file = e.dataTransfer.files?.[0];
+                if (file) handleFileSelected(file);
+              }}
+              onClick={() => pdfInputRef.current?.click()}
+              className={`p-6 sm:p-8 rounded-3xl border-2 border-dashed transition-all cursor-pointer text-center flex flex-col items-center justify-between gap-4 group relative overflow-hidden ${
+                isDragOver 
+                  ? 'border-indigo-400 bg-indigo-950/40 shadow-2xl shadow-indigo-500/20 scale-[1.02]' 
+                  : 'border-slate-800 hover:border-indigo-500/60 bg-gradient-to-b from-slate-900/80 to-slate-950 hover:bg-slate-900 shadow-xl'
+              }`}
+            >
+              <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shadow-lg shadow-indigo-500/15 group-hover:scale-110 transition-transform">
+                <FileUp className="w-8 h-8" />
+              </div>
+
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-bold uppercase tracking-wider border border-indigo-500/30">
+                  <FileText className="w-3 h-3" />
+                  Format PDF
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-indigo-300 transition-colors">
+                  Importer un Emploi du Temps PDF
+                </h3>
+                <p className="text-xs text-slate-400 max-w-xs leading-relaxed">
+                  Glissez-déposez votre document PDF ou cliquez pour sélectionner le fichier officiel de votre établissement.
+                </p>
+              </div>
+
+              <Button
+                variant="secondary"
+                size="sm"
+                className="mt-2 text-xs font-bold pointer-events-none group-hover:border-indigo-400"
+              >
+                Parcourir mes fichiers PDF
+              </Button>
+            </div>
+
+            {/* TILE 2: PHOTO / CAMERA */}
+            <div
+              className="p-6 sm:p-8 rounded-3xl border-2 border-dashed border-slate-800 hover:border-cyan-500/60 bg-gradient-to-b from-slate-900/80 to-slate-950 hover:bg-slate-900 transition-all text-center flex flex-col items-center justify-between gap-4 group relative overflow-hidden shadow-xl"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center shadow-lg shadow-cyan-500/15 group-hover:scale-110 transition-transform">
+                <Camera className="w-8 h-8" />
+              </div>
+
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-bold uppercase tracking-wider border border-cyan-500/30">
+                  <Scan className="w-3 h-3" />
+                  Scanner / Photo
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-cyan-300 transition-colors">
+                  Prendre ou Importer une Photo
+                </h3>
+                <p className="text-xs text-slate-400 max-w-xs leading-relaxed">
+                  Prenez en photo votre emploi du temps papier ou tableau d'affichage. Numérisation OCR automatique.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-2 w-full max-w-xs mt-2">
+                <Button
+                  variant="glow"
+                  size="sm"
+                  leftIcon={<Camera className="w-3.5 h-3.5" />}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    cameraInputRef.current?.click();
+                  }}
+                  className="w-full text-xs font-bold py-2 cursor-pointer shadow-cyan-500/20"
+                >
+                  Prendre une photo
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<ImageIcon className="w-3.5 h-3.5" />}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    galleryInputRef.current?.click();
+                  }}
+                  className="w-full text-xs font-bold py-2 cursor-pointer"
+                >
+                  Galerie photo
+                </Button>
+              </div>
+            </div>
+
+          </div>
+
+          {/* OFFICIAL DEMO TEMPLATES SHORTCUTS */}
+          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-3">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <span className="text-xs font-bold text-slate-300 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                Vous n'avez pas de document sous la main ? Testez avec un exemple certifié :
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <button
+                type="button"
+                onClick={() => handleSelectDemoTemplate('pdf-esatic-entd2')}
+                className="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 hover:bg-indigo-950/20 text-left transition-all cursor-pointer group"
+              >
+                <span className="text-[10px] text-indigo-400 font-mono block">ESATIC • L2</span>
+                <span className="text-xs font-bold text-white group-hover:text-indigo-300 block truncate">
+                  Économie Numérique (ENTD 2)
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectDemoTemplate('pdf-cs-l3')}
+                className="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/40 hover:bg-cyan-950/20 text-left transition-all cursor-pointer group"
+              >
+                <span className="text-[10px] text-cyan-400 font-mono block">Université • L3</span>
+                <span className="text-xs font-bold text-white group-hover:text-cyan-300 block truncate">
+                  Licence 3 Informatique
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectDemoTemplate('pdf-medecine-pass')}
+                className="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500/40 hover:bg-emerald-950/20 text-left transition-all cursor-pointer group"
+              >
+                <span className="text-[10px] text-emerald-400 font-mono block">Santé • PASS</span>
+                <span className="text-xs font-bold text-white group-hover:text-emerald-300 block truncate">
+                  Première Année Médecine
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* FALLBACK: MANUAL TEXT TYPING TOGGLE */}
+          <div className="text-center pt-1">
+            <button
+              type="button"
+              onClick={() => setManualTextMode(true)}
+              className="text-xs text-slate-400 hover:text-white underline cursor-pointer inline-flex items-center gap-1.5"
+            >
+              <span>✏️ Ou saisir / coller manuellement le texte de votre emploi du temps</span>
+            </button>
+          </div>
+
+        </div>
+      )}
+
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {/* STEP 2: DEMANDER LE NIVEAU D'ÉTUDE DU DOCUMENT                       */}
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {uploadStep === 'select_level' && (
+        <div className="space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4 duration-300">
+          
+          {/* LOADED FILE RECAP BADGE */}
+          <div className="p-4 rounded-2xl bg-slate-900/90 border border-indigo-500/30 flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0 overflow-hidden">
+                {filePreviewUrl ? (
+                  <img src={filePreviewUrl} alt="Aperçu photo" className="w-full h-full object-cover" />
+                ) : fileType === 'pdf' ? (
+                  <FileText className="w-6 h-6 text-indigo-400" />
+                ) : (
+                  <Camera className="w-6 h-6 text-cyan-400" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider block">
+                  Document importé prêt pour conversion
+                </span>
+                <h3 className="text-sm font-bold text-white truncate max-w-md">
+                  {uploadedFile?.name || 'Emploi du temps'}
+                </h3>
+                <span className="text-[11px] text-slate-400">
+                  {uploadedFile ? `${Math.round(uploadedFile.size / 1024)} Ko` : ''} • {fileType === 'pdf' ? 'Fichier PDF' : 'Photo / Image'}
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleResetToUpload}
+              className="text-xs text-slate-400 hover:text-white underline cursor-pointer"
+            >
+              Changer de document
+            </button>
+          </div>
+
+          {/* QUESTION: QUEL EST VOTRE NIVEAU D'ÉTUDES ? */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-white">
-              <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-indigo-600 text-white text-[11px] font-black">1</span>
-              <span>Quel type d'emploi du temps avez-vous ?</span>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-white">
+                <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-indigo-600 text-white text-[11px] font-black">2</span>
+                <span>Quel est votre niveau d'études ?</span>
+              </div>
+              <p className="text-xs text-slate-400 pl-8">
+                Sélectionnez le format académique pour que KONAN structure fidèlement vos cours, matières et horaires selon la nomenclature exacte.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -569,24 +887,14 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 return (
                   <button
                     key={fmt.id}
-                    onClick={() => {
-                      setSelectedFormat(fmt.id);
-                      setScheduleText('');
-                      setErrorMessage(null);
-                    }}
+                    onClick={() => setSelectedFormat(fmt.id)}
                     className={`relative p-5 rounded-2xl border-2 text-left transition-all cursor-pointer group overflow-hidden ${
                       isActive
                         ? `${fmt.borderColor} ${fmt.bgColor} shadow-xl ${fmt.glowColor} scale-[1.02]`
                         : 'border-slate-800 bg-slate-900/60 hover:border-slate-700 hover:bg-slate-900/80 shadow-md'
                     }`}
                   >
-                    {/* Glow effect */}
-                    {isActive && (
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/5 to-transparent rounded-bl-full pointer-events-none" />
-                    )}
-
                     <div className="relative z-10 space-y-3">
-                      {/* Icon + Title */}
                       <div className="flex items-center gap-3">
                         <div className={`p-2.5 rounded-xl ${isActive ? fmt.bgColor : 'bg-slate-800/80'} ${fmt.color} transition-colors`}>
                           {fmt.icon}
@@ -601,22 +909,19 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                         </div>
                       </div>
 
-                      {/* Description */}
                       <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
                         {fmt.description}
                       </p>
 
-                      {/* Audience */}
                       <div className="text-[10px] text-slate-500 font-medium flex items-center gap-1.5">
                         <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400' : 'bg-slate-600'}`} />
                         <span>{fmt.audience}</span>
                       </div>
 
-                      {/* Active indicator */}
                       {isActive && (
                         <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 pt-1">
                           <CheckCircle className="w-3.5 h-3.5" />
-                          <span>Format sélectionné</span>
+                          <span>Niveau sélectionné</span>
                         </div>
                       )}
                     </div>
@@ -626,156 +931,102 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             </div>
           </div>
 
-          {/* ── STEP 2: TEXT INPUT + EXAMPLE ──────────────────────────────── */}
-          {selectedFormat && activeFormatDef && (
-            <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-white">
-                <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-cyan-600 text-white text-[11px] font-black">2</span>
-                <span>Collez ou saisissez votre emploi du temps ci-dessous</span>
-              </div>
+          {/* LAUNCH SCAN BUTTON */}
+          <div className="flex items-center justify-between flex-wrap gap-3 pt-4 border-t border-slate-800">
+            <button
+              onClick={handleResetToUpload}
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Retour à l'importation</span>
+            </button>
 
-              {/* Example Panel */}
-              <div className={`p-4 rounded-2xl ${activeFormatDef.bgColor} border ${activeFormatDef.borderColor} space-y-3`}>
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-white">
-                    <span className={`p-1.5 rounded-lg ${activeFormatDef.bgColor} ${activeFormatDef.color}`}>
-                      <BookOpen className="w-3.5 h-3.5" />
-                    </span>
-                    <span>Exemple de format {activeFormatDef.label}</span>
-                  </div>
-                  <Badge variant="cyan" size="sm" className="text-[10px]">
-                    Copiez et adaptez ce modèle
-                  </Badge>
-                </div>
-
-                <pre className="p-3.5 rounded-xl bg-black/40 border border-slate-800/80 text-cyan-300 font-mono text-[11px] sm:text-xs leading-relaxed overflow-x-auto whitespace-pre-wrap selection:bg-indigo-500/30">
-                  {activeFormatDef.example}
-                </pre>
-
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(activeFormatDef.example);
-                  }}
-                  className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 hover:text-cyan-400 transition-colors cursor-pointer"
-                >
-                  <Copy className="w-3 h-3" />
-                  <span>Copier l'exemple</span>
-                </button>
-              </div>
-
-              {/* Text Input Area */}
-              <div className="space-y-3">
-                <div className="relative">
-                  <textarea
-                    value={scheduleText}
-                    onChange={(e) => setScheduleText(e.target.value)}
-                    placeholder={activeFormatDef.placeholder}
-                    rows={12}
-                    className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-indigo-500/60 rounded-2xl p-4 sm:p-5 text-xs sm:text-sm text-slate-100 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/30 leading-relaxed transition-colors placeholder:text-slate-600"
-                  />
-
-                  {/* Character count */}
-                  <div className="absolute bottom-3 right-3 text-[10px] text-slate-600 font-mono">
-                    {scheduleText.length} caractères
-                  </div>
-                </div>
-
-                {/* Tips */}
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400 space-y-1.5">
-                  <span className="font-bold text-slate-300 flex items-center gap-1.5">
-                    <ClipboardPaste className="w-3.5 h-3.5 text-indigo-400" />
-                    Conseils d'importation :
-                  </span>
-                  <ul className="space-y-1 pl-5">
-                    <li className="list-disc">Commencez chaque jour par son nom en majuscules suivi de <code className="text-cyan-400 bg-slate-800 px-1 py-0.5 rounded">:</code></li>
-                    <li className="list-disc">Indiquez les horaires au format <code className="text-cyan-400 bg-slate-800 px-1 py-0.5 rounded">HH:MM - HH:MM</code></li>
-                    <li className="list-disc">Utilisez <code className="text-cyan-400 bg-slate-800 px-1 py-0.5 rounded">|</code> pour séparer matière, salle et professeur</li>
-                    <li className="list-disc">Collez uniquement vos cours hebdomadaires réguliers (pas les examens)</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Analyze Button */}
-              <div className="flex items-center justify-between flex-wrap gap-3 pt-2">
-                <button
-                  onClick={() => {
-                    setSelectedFormat(null);
-                    setScheduleText('');
-                  }}
-                  className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Changer de format</span>
-                </button>
-
-                <Button
-                  variant="glow"
-                  size="lg"
-                  rightIcon={<ArrowRight className="w-5 h-5" />}
-                  onClick={handleAnalyzeText}
-                  disabled={!scheduleText.trim()}
-                  className={`px-6 sm:px-10 py-3.5 text-xs sm:text-sm font-bold shadow-xl shadow-indigo-500/30 cursor-pointer ${
-                    !scheduleText.trim() ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                >
-                  Analyser mon Emploi du Temps
-                </Button>
-              </div>
-            </div>
-          )}
+            <Button
+              variant="glow"
+              size="lg"
+              rightIcon={<ArrowRight className="w-5 h-5" />}
+              onClick={startScanningPipeline}
+              className="px-6 sm:px-10 py-3.5 text-xs sm:text-sm font-bold shadow-xl shadow-indigo-500/30 cursor-pointer"
+            >
+              Lancer la Numérisation & Conversion AI
+            </Button>
+          </div>
 
         </div>
       )}
 
       {/* ════════════════════════════════════════════════════════════════════ */}
-      {/* STAGE 2: LIVE AI ANALYSIS ANIMATION                                */}
+      {/* STEP 3: FUTURISTIC AI LASER SCANNING VIEW                           */}
       {/* ════════════════════════════════════════════════════════════════════ */}
-      {isAnalyzing && (
-        <Card className="p-8 sm:p-12 border-indigo-500/40 bg-slate-950/90 shadow-2xl relative overflow-hidden space-y-6 sm:space-y-8">
+      {uploadStep === 'scanning' && (
+        <Card className="p-6 sm:p-10 border-cyan-500/40 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 shadow-2xl relative overflow-hidden space-y-6 sm:space-y-8">
           
           <div className="text-center space-y-3">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-[1px] mx-auto shadow-xl shadow-indigo-500/25 animate-pulse">
-              <div className="w-full h-full bg-slate-950 rounded-[15px] flex items-center justify-center">
-                <Brain className="w-8 h-8 text-cyan-400 animate-spin" style={{ animationDuration: '4s' }} />
-              </div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-[11px] font-bold">
+              <Scan className="w-3.5 h-3.5 animate-pulse text-cyan-400" />
+              Numérisation AI Haute Définition
             </div>
 
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              Analyse Structurée de votre Emploi du Temps...
+              Extraction & Structuration en cours...
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400">
-              Extraction des jours, horaires précis, matières et calcul des pondérations cognitives.
+            <p className="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto">
+              {scanStatus || 'Numérisation du document et détection des créneaux horaires...'}
             </p>
           </div>
 
+          {/* FUTURISTIC LASER SCANNER VISUALIZER */}
+          <div className="relative max-w-md mx-auto aspect-[4/3] rounded-2xl bg-black/60 border border-cyan-500/40 overflow-hidden shadow-[0_0_40px_rgba(6,182,212,0.25)] flex items-center justify-center p-4">
+            
+            {/* LASER BEAM SWEEP ANIMATION */}
+            <div className="laser-scanner-beam" />
+
+            {/* Glowing Corner Targets */}
+            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-cyan-400" />
+            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-cyan-400" />
+            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-cyan-400" />
+            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-cyan-400" />
+
+            {filePreviewUrl ? (
+              <img 
+                src={filePreviewUrl} 
+                alt="Scan en direct" 
+                className="w-full h-full object-contain filter contrast-125 opacity-80"
+              />
+            ) : (
+              <div className="text-center space-y-3">
+                <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 mx-auto">
+                  <Brain className="w-8 h-8 animate-spin" style={{ animationDuration: '4s' }} />
+                </div>
+                <div className="font-mono text-xs text-cyan-300">
+                  {uploadedFile?.name || 'Document_EDT.pdf'}
+                </div>
+                <span className="text-[10px] text-slate-500 font-mono uppercase">
+                  Reconnaissance Vectorielle • Modèle {selectedFormat.toUpperCase()}
+                </span>
+              </div>
+            )}
+          </div>
+
           {/* Stepper Progress Bar */}
-          <div className="space-y-4 max-w-xl mx-auto">
+          <div className="space-y-2 max-w-md mx-auto">
+            <div className="flex items-center justify-between text-xs font-mono text-slate-300">
+              <span className="flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                Conversion IA
+              </span>
+              <span className="text-cyan-400 font-bold">{scanProgress}%</span>
+            </div>
             <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-800">
               <div 
-                className="h-full bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 transition-all duration-500 ease-out rounded-full"
-                style={{ width: `${Math.min(100, (analysisStep + 1) * 25)}%` }}
+                className="h-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-emerald-400 transition-all duration-300 ease-out rounded-full"
+                style={{ width: `${scanProgress}%` }}
               />
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
-              {stepsList.map((step, idx) => (
-                <div 
-                  key={idx}
-                  className={`p-2 rounded-xl border transition-all ${
-                    idx <= analysisStep 
-                      ? 'bg-indigo-950/40 border-indigo-500/40 text-white' 
-                      : 'bg-slate-900/30 border-slate-800/60 text-slate-500'
-                  }`}
-                >
-                  <span className="block text-[10px] font-mono font-bold text-cyan-400">Étape {idx + 1}</span>
-                  <span className="text-[11px] font-semibold truncate block mt-0.5">{step.title}</span>
-                </div>
-              ))}
             </div>
           </div>
 
           {/* Terminal Console Stream */}
-          <div className="max-w-xl mx-auto p-3.5 rounded-xl bg-black/60 border border-slate-800 font-mono text-xs text-slate-300 space-y-1">
+          <div className="max-w-md mx-auto p-3.5 rounded-xl bg-black/80 border border-slate-800 font-mono text-xs text-slate-300 space-y-1">
             {analysisLogs.map((log, i) => (
               <div key={i} className="flex items-center gap-2">
                 <span className="text-cyan-400">›</span>
@@ -788,9 +1039,144 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       )}
 
       {/* ════════════════════════════════════════════════════════════════════ */}
-      {/* STAGE 3: INTERACTIVE REVIEW & VERIFICATION                         */}
+      {/* STEP 4: FICHIER TEXTE STRUCTURÉ GÉNÉRÉ DANS UN ENCADRÉ ÉDITABLE     */}
       {/* ════════════════════════════════════════════════════════════════════ */}
-      {!isAnalyzing && extractedData && (
+      {uploadStep === 'review_text' && (
+        <div className="space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4 duration-300">
+          
+          <div className="p-4 sm:p-6 rounded-3xl bg-slate-900/90 border border-cyan-500/40 shadow-xl space-y-3">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">
+                  <FileCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-base sm:text-lg font-bold text-white">
+                    Fichier Texte Structuré Généré par l'IA
+                  </h2>
+                  <p className="text-xs text-slate-400">
+                    Format : <strong className="text-cyan-300">{FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label}</strong> • Vous pouvez relire et ajuster n'importe quelle ligne si nécessaire.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(scheduleText);
+                    soundFX.playCheckmarkPop();
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>Copier le texte</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Editable Text Editor Area */}
+            <div className="relative">
+              <textarea
+                value={scheduleText}
+                onChange={(e) => setScheduleText(e.target.value)}
+                rows={13}
+                className="w-full bg-black/60 border border-slate-800 hover:border-slate-700 focus:border-cyan-500/60 rounded-2xl p-4 sm:p-5 text-xs sm:text-sm text-cyan-200 font-mono focus:outline-none focus:ring-2 focus:ring-cyan-500/30 leading-relaxed transition-colors selection:bg-indigo-500/30"
+                placeholder="Votre emploi du temps converti apparaîtra ici..."
+              />
+
+              <div className="absolute bottom-3 right-3 text-[10px] text-slate-500 font-mono bg-slate-950/80 px-2 py-1 rounded-md border border-slate-800">
+                {scheduleText.split('\n').filter(Boolean).length} lignes • {scheduleText.length} caractères
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between flex-wrap gap-2">
+              <span>💡 <strong>Conseil :</strong> Chaque jour doit commencer par son nom en majuscules (ex: <code className="text-cyan-300">LUNDI :</code>) et chaque cours par <code className="text-cyan-300">HH:MM - HH:MM</code>.</span>
+            </div>
+          </div>
+
+          {/* ACTION BUTTONS */}
+          <div className="flex items-center justify-between flex-wrap gap-3 pt-2">
+            <button
+              onClick={handleResetToUpload}
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Réimporter un autre document</span>
+            </button>
+
+            <Button
+              variant="glow"
+              size="lg"
+              rightIcon={<ArrowRight className="w-5 h-5" />}
+              onClick={handleGeneratePlanningFromText}
+              className="px-6 sm:px-10 py-3.5 text-xs sm:text-sm font-bold shadow-xl shadow-cyan-500/25 cursor-pointer !bg-gradient-to-r !from-cyan-500 !via-indigo-600 !to-cyan-500 text-white"
+            >
+              Générer mon Planning d'Étude
+            </Button>
+          </div>
+
+        </div>
+      )}
+
+      {/* FALLBACK: PURE MANUAL TEXT MODE */}
+      {uploadStep === 'upload_file' && manualTextMode && (
+        <div className="space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4 duration-300">
+          
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => setManualTextMode(false)}
+              className="inline-flex items-center gap-1.5 text-xs text-cyan-400 hover:underline cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Revenir à l'importation de PDF ou Photo</span>
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {FORMAT_DEFINITIONS.map((fmt) => (
+                <button
+                  key={fmt.id}
+                  onClick={() => setSelectedFormat(fmt.id)}
+                  className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
+                    selectedFormat === fmt.id ? `${fmt.borderColor} ${fmt.bgColor}` : 'border-slate-800 bg-slate-900/60'
+                  }`}
+                >
+                  <h4 className="text-xs font-bold text-white">{fmt.label}</h4>
+                  <p className="text-[11px] text-slate-400 mt-1">{fmt.subtitle}</p>
+                </button>
+              ))}
+            </div>
+
+            <div className="relative">
+              <textarea
+                value={scheduleText}
+                onChange={(e) => setScheduleText(e.target.value)}
+                rows={12}
+                placeholder={FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.placeholder}
+                className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-xs font-mono text-slate-100"
+              />
+            </div>
+
+            <Button
+              variant="glow"
+              size="lg"
+              onClick={handleGeneratePlanningFromText}
+              disabled={!scheduleText.trim()}
+              className="w-full py-3 text-xs font-bold"
+            >
+              Analyser ce texte et créer le planning
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {/* STAGE 5: INTERACTIVE REVIEW & VERIFICATION                         */}
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {uploadStep === 'review_planning' && extractedData && (
         <div className="space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4 duration-300">
           
           {/* Summary Strip */}
