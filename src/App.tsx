@@ -33,7 +33,8 @@ import {
   fetchCloudInvitationsForUser,
   listenToAllCloudInvitations,
   fetchAllCloudInvitations,
-  syncUserStateToCloud
+  syncUserStateToCloud,
+  loadUserStateFromCloud
 } from './lib/firebase';
 import { generateKonanId } from './lib/konanId';
 import { evaluateDailyCatchup } from './services/sessionRescheduler';
@@ -58,6 +59,7 @@ import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { ProFeatureModal } from './components/common/ProFeatureModal';
 import { GoogleCalendarSyncModal } from './components/common/GoogleCalendarSyncModal';
+import { PrivacyPolicyModal } from './components/common/PrivacyPolicyModal';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
@@ -91,6 +93,7 @@ export function App() {
   const [isPlusActivationModalOpen, setIsPlusActivationModalOpen] = useState(false);
   const [isPlusGroupModalOpen, setIsPlusGroupModalOpen] = useState(false);
   const [isAcademicGoalModalOpen, setIsAcademicGoalModalOpen] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [pendingInvitations, setPendingInvitations] = useState<PlusInvitationNotification[]>([]);
   const [allInvitations, setAllInvitations] = useState<PlusInvitationNotification[]>(() => getPlusInvitations());
@@ -548,13 +551,46 @@ export function App() {
           });
           setState(loaded);
 
-          // 1. Instant greeting and redirection to dashboard (0ms latency, never wait for network)
-          const greetingName = loaded.studentName || firebaseUser.displayName || 'Étudiant';
-          if (hasGreetedAuthRef.current !== firebaseUser.uid) {
-            hasGreetedAuthRef.current = firebaseUser.uid;
-            showToast(`✨ Bonne Arrivée ! ${greetingName}`);
+          // 1. Check if privacy policy was already accepted (first-time vs returning user)
+          const hasLocalAccepted = Boolean(loaded.privacyPolicyAccepted || loaded.userAccount?.privacyPolicyAccepted);
+
+          if (hasLocalAccepted) {
+            // Already accepted: seamless direct entry to dashboard
+            const greetingName = loaded.studentName || firebaseUser.displayName || 'Étudiant';
+            if (hasGreetedAuthRef.current !== firebaseUser.uid) {
+              hasGreetedAuthRef.current = firebaseUser.uid;
+              showToast(`✨ Bonne Arrivée ! ${greetingName}`);
+            }
+            setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
+          } else {
+            // Check Firestore Cloud just in case this is a returning user on a new device or cleared cache
+            loadUserStateFromCloud(firebaseUser.uid).then(cloudData => {
+              if (cloudData?.privacyPolicyAccepted) {
+                // Cloud already has acceptance recorded!
+                setState(prev => ({
+                  ...prev,
+                  privacyPolicyAccepted: true,
+                  privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt,
+                  userAccount: prev.userAccount ? {
+                    ...prev.userAccount,
+                    privacyPolicyAccepted: true,
+                    privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt,
+                  } : undefined,
+                }));
+                const greetingName = loaded.studentName || firebaseUser.displayName || 'Étudiant';
+                if (hasGreetedAuthRef.current !== firebaseUser.uid) {
+                  hasGreetedAuthRef.current = firebaseUser.uid;
+                  showToast(`✨ Bonne Arrivée ! ${greetingName}`);
+                }
+                setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
+              } else {
+                // First-time user: display the mandatory Privacy Policy & Data Security Agreement
+                setIsPrivacyModalOpen(true);
+              }
+            }).catch(() => {
+              setIsPrivacyModalOpen(true);
+            });
           }
-          setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
 
           // 2. Cross-device sync in background: non-blocking
           fetchAndMergeCloudState(firebaseUser.uid, loaded).then(synced => {
@@ -725,7 +761,31 @@ export function App() {
       }
     }
 
-    setActiveView('dashboard');
+    const hasAcceptedPrivacy = Boolean(userState.privacyPolicyAccepted || userState.userAccount?.privacyPolicyAccepted);
+
+    if (hasAcceptedPrivacy) {
+      setActiveView('dashboard');
+    } else {
+      loadUserStateFromCloud(profile.googleId).then(cloudData => {
+        if (cloudData?.privacyPolicyAccepted) {
+          setState(prev => ({
+            ...prev,
+            privacyPolicyAccepted: true,
+            privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt,
+            userAccount: prev.userAccount ? {
+              ...prev.userAccount,
+              privacyPolicyAccepted: true,
+              privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt,
+            } : undefined,
+          }));
+          setActiveView('dashboard');
+        } else {
+          setIsPrivacyModalOpen(true);
+        }
+      }).catch(() => {
+        setIsPrivacyModalOpen(true);
+      });
+    }
 
     // 2. Background cross-device sync: merges cloud state without delaying navigation
     fetchAndMergeCloudState(profile.googleId, userState)
@@ -972,6 +1032,57 @@ export function App() {
       major_promotion: 'Major de Promotion (Excellence)',
     };
     showToast(`🎯 Objectif académique activé : ${goalLabels[goal]} !`);
+  };
+
+  /**
+   * Acceptance of the Privacy Policy & Firebase Cloud Data Security Agreement
+   */
+  const handleAcceptPrivacyPolicy = () => {
+    const timestamp = new Date().toISOString();
+    const currentUid = state.userAccount?.googleId;
+
+    setState(prev => {
+      const nextUserAccount: UserAccount | undefined = prev.userAccount ? {
+        ...prev.userAccount,
+        privacyPolicyAccepted: true,
+        privacyPolicyAcceptedAt: timestamp,
+        lastSyncedAt: timestamp,
+      } : undefined;
+
+      const nextState: AppState = {
+        ...prev,
+        privacyPolicyAccepted: true,
+        privacyPolicyAcceptedAt: timestamp,
+        userAccount: nextUserAccount,
+      };
+
+      if (currentUid && !prev.isDemoMode) {
+        saveUserState(currentUid, nextState);
+        syncUserStateToCloud(currentUid, {
+          privacyPolicyAccepted: true,
+          privacyPolicyAcceptedAt: timestamp,
+        }).catch(console.warn);
+      }
+      return nextState;
+    });
+
+    setIsPrivacyModalOpen(false);
+    soundFX.playVictoryCelebration();
+    showToast(`✨ Bienvenue sur KONAN AI ! Vos données sont sécurisées sur Firebase.`);
+    setActiveView('dashboard');
+  };
+
+  /**
+   * Decline the Privacy Policy:
+   * Mandatory gatekeeper requires disconnecting and returning to landing.
+   */
+  const handleDeclinePrivacyPolicy = async () => {
+    setIsPrivacyModalOpen(false);
+    await signOutReal();
+    setActiveSession(null);
+    setState(loadDemoState());
+    showToast("⚠️ L'acceptation de la politique de confidentialité est obligatoire pour utiliser KONAN AI.", 6000);
+    setActiveView('landing');
   };
 
 
@@ -1796,6 +1907,7 @@ export function App() {
         academicGoal={state.userAccount?.academicGoal || 'target_16'}
         onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
         onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
+        onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
       />
 
       {/* Pro Upgrade Modal */}
@@ -1877,6 +1989,17 @@ export function App() {
         studentName={effectiveStudentName}
         totalPlannedMinutes={state.studySessions.reduce((acc, s) => acc + s.durationMinutes, 0)}
         totalSessionsCount={state.studySessions.length}
+      />
+
+      {/* 🛡️ PRIVACY & FIREBASE CLOUD DATA PROTECTION MODAL (Mandatory on 1st login) */}
+      <PrivacyPolicyModal
+        isOpen={isPrivacyModalOpen}
+        onClose={() => setIsPrivacyModalOpen(false)}
+        onAccept={handleAcceptPrivacyPolicy}
+        onDecline={handleDeclinePrivacyPolicy}
+        isGatekeeper={Boolean(state.userAccount?.isLoggedIn && !state.privacyPolicyAccepted)}
+        studentName={effectiveStudentName}
+        studentEmail={state.userAccount?.email}
       />
 
       {/* Floating Notification Toast (Full multi-line sentence, zero truncation) */}

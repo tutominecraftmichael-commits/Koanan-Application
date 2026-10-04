@@ -38,6 +38,8 @@ export interface AppState {
     konanId: string;
     email?: string;
   };
+  privacyPolicyAccepted?: boolean;
+  privacyPolicyAcceptedAt?: string;
 }
 
 /**
@@ -61,12 +63,16 @@ export function createEmptyUserState(
     studentName: user.name,
     academicLevel: user.academicLevel || 'Licence Universitaire',
     konanId: assignedKonanId,
+    privacyPolicyAccepted: user.privacyPolicyAccepted ?? false,
+    privacyPolicyAcceptedAt: user.privacyPolicyAcceptedAt,
     userAccount: {
       ...user,
       konanId: assignedKonanId,
       isDemo: false,
       isLoggedIn: true,
       planTier: user.planTier || 'free',
+      privacyPolicyAccepted: user.privacyPolicyAccepted ?? false,
+      privacyPolicyAcceptedAt: user.privacyPolicyAcceptedAt,
     },
     subjects: [],
     classSlots: [],
@@ -204,16 +210,22 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           invitedEmails: Array.isArray(parsed.invitedEmails) ? parsed.invitedEmails : [],
           planTier,
           isGroupGuest: isPlus ? (parsed.isGroupGuest ?? parsed.userAccount?.isGroupGuest ?? false) : false,
+          privacyPolicyAccepted: parsed.privacyPolicyAccepted ?? parsed.userAccount?.privacyPolicyAccepted ?? false,
+          privacyPolicyAcceptedAt: parsed.privacyPolicyAcceptedAt ?? parsed.userAccount?.privacyPolicyAcceptedAt,
           userAccount: parsed.userAccount ? {
             ...user,
             ...parsed.userAccount,
             konanId: resolvedKonanId,
             planTier,
+            privacyPolicyAccepted: parsed.privacyPolicyAccepted ?? parsed.userAccount?.privacyPolicyAccepted ?? false,
+            privacyPolicyAcceptedAt: parsed.privacyPolicyAcceptedAt ?? parsed.userAccount?.privacyPolicyAcceptedAt,
             isGroupGuest: isPlus ? (parsed.isGroupGuest ?? parsed.userAccount?.isGroupGuest ?? false) : false,
           } : {
             ...user,
             konanId: resolvedKonanId,
             planTier,
+            privacyPolicyAccepted: parsed.privacyPolicyAccepted ?? false,
+            privacyPolicyAcceptedAt: parsed.privacyPolicyAcceptedAt,
             isGroupGuest: isPlus ? (parsed.isGroupGuest ?? false) : false,
           },
           isDemoMode: false,
@@ -268,6 +280,8 @@ export function saveUserState(uid: string, state: AppState): void {
       academicGoal: state.academicGoal,
       coachingSessionsRemaining: state.coachingSessionsRemaining,
       lastCoachingDate: state.lastCoachingDate,
+      privacyPolicyAccepted: state.privacyPolicyAccepted ?? state.userAccount?.privacyPolicyAccepted,
+      privacyPolicyAcceptedAt: state.privacyPolicyAcceptedAt ?? state.userAccount?.privacyPolicyAcceptedAt,
     }).catch(() => {});
   }
 }
@@ -321,6 +335,8 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         academicGoal: cloudData.academicGoal || currentState.academicGoal,
         coachingSessionsRemaining: cloudData.coachingSessionsRemaining !== undefined ? cloudData.coachingSessionsRemaining : currentState.coachingSessionsRemaining,
         lastCoachingDate: cloudData.lastCoachingDate || currentState.lastCoachingDate,
+        privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.privacyPolicyAccepted,
+        privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.privacyPolicyAcceptedAt,
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
           planTier: cloudData.planTier || currentState.planTier || 'free',
@@ -329,6 +345,8 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
           invitedIds: Array.isArray(cloudData.invitedIds) ? cloudData.invitedIds : currentState.userAccount.invitedIds,
           invitedEmails: Array.isArray(cloudData.invitedEmails) ? cloudData.invitedEmails : currentState.userAccount.invitedEmails,
           academicGoal: cloudData.academicGoal || currentState.userAccount.academicGoal,
+          privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.userAccount.privacyPolicyAccepted,
+          privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.userAccount.privacyPolicyAcceptedAt,
         } : undefined,
       };
 
@@ -353,10 +371,14 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         studentName: cloudData.studentName || currentState.studentName,
         academicLevel: cloudData.academicLevel || currentState.academicLevel,
         planTier: cloudData.planTier || currentState.planTier || 'free',
+        privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.privacyPolicyAccepted,
+        privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.privacyPolicyAcceptedAt,
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
           planTier: cloudData.planTier || currentState.planTier || 'free',
           name: cloudData.studentName || currentState.userAccount.name,
+          privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.userAccount.privacyPolicyAccepted,
+          privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.userAccount.privacyPolicyAcceptedAt,
         } : undefined,
       };
       try {

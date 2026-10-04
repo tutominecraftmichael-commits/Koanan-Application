@@ -161,6 +161,8 @@ export interface UserAccount {
     konanId: string;
     email?: string;
   };
+  privacyPolicyAccepted?: boolean;
+  privacyPolicyAcceptedAt?: string;
   lastSyncedAt: string;
 }
 

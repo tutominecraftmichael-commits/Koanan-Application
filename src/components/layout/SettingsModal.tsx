@@ -55,6 +55,7 @@ interface SettingsModalProps {
   academicGoal?: AcademicGoal;
   onOpenGroupModal?: () => void;
   onOpenGoalModal?: () => void;
+  onOpenPrivacyModal?: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -75,6 +76,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   academicGoal = 'target_16',
   onOpenGroupModal,
   onOpenGoalModal,
+  onOpenPrivacyModal,
 }) => {
   const [lang] = useLanguage();
 
@@ -505,6 +507,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <RotateCcw className="w-4 h-4 text-rose-400" />
                     <span>{t('resetDefault', lang)}</span>
                   </div>
+                </button>
+              )}
+
+              {onOpenPrivacyModal && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenPrivacyModal();
+                  }}
+                  className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-950/50 border border-slate-800 hover:border-slate-700 hover:bg-slate-900/60 transition-colors text-xs text-slate-200 cursor-pointer text-left"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    <span>Politique de Confidentialité & Sécurité Firebase</span>
+                  </div>
+                  <span className="text-[10px] text-emerald-400 font-semibold">Consultée</span>
                 </button>
               )}
             </div>
