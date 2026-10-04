@@ -175,11 +175,18 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === 'object') {
-        const planTier = parsed.planTier || parsed.userAccount?.planTier || 'free';
-        const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
         const resolvedKonanId = (typeof parsed.konanId === 'string' && parsed.konanId.trim())
           ? parsed.konanId.trim().toUpperCase()
           : (parsed.userAccount?.konanId?.trim()?.toUpperCase() || assignedKonanId);
+
+        const isPlus = isTargetAlreadyPlus(resolvedKonanId) 
+          || isTargetAlreadyPlus(user.email) 
+          || isTargetAlreadyPlus(parsed.userAccount?.email)
+          || Boolean(parsed.isGroupGuest) 
+          || Boolean(parsed.userAccount?.isGroupGuest);
+
+        const planTier = isPlus ? 'plus' : (parsed.planTier || parsed.userAccount?.planTier || 'free');
+        const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
 
         return {
           ...baseEmptyState,
@@ -196,15 +203,18 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           invitedIds: Array.isArray(parsed.invitedIds) ? parsed.invitedIds : [],
           invitedEmails: Array.isArray(parsed.invitedEmails) ? parsed.invitedEmails : [],
           planTier,
+          isGroupGuest: isPlus ? (parsed.isGroupGuest ?? parsed.userAccount?.isGroupGuest ?? false) : false,
           userAccount: parsed.userAccount ? {
             ...user,
             ...parsed.userAccount,
             konanId: resolvedKonanId,
             planTier,
+            isGroupGuest: isPlus ? (parsed.isGroupGuest ?? parsed.userAccount?.isGroupGuest ?? false) : false,
           } : {
             ...user,
             konanId: resolvedKonanId,
             planTier,
+            isGroupGuest: isPlus ? (parsed.isGroupGuest ?? false) : false,
           },
           isDemoMode: false,
         };

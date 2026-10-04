@@ -17,6 +17,7 @@ import {
   ChevronDown,
   Bell,
   Crown,
+  Sparkles,
   Check,
   CheckCircle2,
   X,
@@ -44,6 +45,7 @@ export interface NavbarProps {
   academicLevel: string;
   userAccount?: UserAccount;
   konanId?: string;
+  planTier?: 'free' | 'pro' | 'plus';
   onOpenPresetModal: () => void;
   onExportData: () => void;
   onImportData: () => void;
@@ -70,6 +72,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   academicLevel: _academicLevel,
   userAccount,
   konanId: _konanId,
+  planTier,
   onOpenPresetModal,
   onExportData,
   onImportData,
@@ -92,6 +95,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   const toolsMenuRef = useRef<HTMLDivElement>(null);
   const notificationsMenuRef = useRef<HTMLDivElement>(null);
   const mobileNotificationsMenuRef = useRef<HTMLDivElement>(null);
+
+  // Single source of truth for current active tier in Navbar
+  const effectivePlan: 'free' | 'pro' | 'plus' = planTier || userAccount?.planTier || 'free';
 
   // Normalize all owner notifications (support both ownerNotifications & acceptedNotifications)
   const normalizedOwnerNotifications: OwnerNotificationItem[] = React.useMemo(() => {
@@ -645,7 +651,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
 
                 {/* Ambient Focus Audio Player for KONAN PLUS */}
-                {userAccount && userAccount.isLoggedIn && userAccount.planTier === 'plus' && (
+                {userAccount && userAccount.isLoggedIn && effectivePlan === 'plus' && (
                   <FocusAudioPlayerWidget compact className="hidden lg:inline-flex mr-1" />
                 )}
 
@@ -664,9 +670,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                       />
                       <div className="hidden xl:block">
                         <p className={`text-xs font-bold leading-tight truncate max-w-[120px] ${
-                          userAccount.planTier === 'plus'
+                          effectivePlan === 'plus'
                             ? 'plus-multicolor-shimmer-text font-black'
-                            : userAccount.planTier === 'pro'
+                            : effectivePlan === 'pro'
                             ? 'gold-shimmer-text font-black'
                             : 'text-white'
                         }`}>{displayName}</p>
@@ -676,38 +682,42 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                     </div>
 
-                    {/* Badge de version : Free (statique), Pro ou Plus (cliquable vers tarifs) */}
-                    {userAccount.planTier === 'free' ? (
-                      <span
-                        className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-slate-800/90 text-sky-300 border-sky-500/30 cursor-default select-none"
-                        title="Modèle KONAN Gratuit (Free)"
-                      >
-                        Free
-                      </span>
-                    ) : (
+                    {/* Badge de version : Gratuit (statique), Pro ou Plus (cliquable vers tarifs) */}
+                    {effectivePlan === 'plus' ? (
                       <button 
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (onViewPricing) {
-                            onViewPricing();
-                          } else {
-                            onNavigate('landing');
-                          }
+                          if (onViewPricing) onViewPricing();
+                          else onNavigate('landing');
                         }}
-                        className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border cursor-pointer hover:scale-105 active:scale-95 transition-transform ${
-                          userAccount.planTier === 'pro'
-                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30'
-                            : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 hover:bg-indigo-500/30'
-                        }`}
-                        title={
-                          userAccount.planTier === 'pro' 
-                            ? 'Modèle KONAN Pro - Cliquez pour voir les formules' 
-                            : 'Modèle KONAN Plus - Cliquez pour voir les formules'
-                        }
+                        className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-cyan-500/20 text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                        title="Modèle KONAN PLUS Actif - Cliquez pour voir les formules"
                       >
-                        {userAccount.planTier === 'pro' ? 'Pro' : 'Plus'}
+                        <Crown className="w-3 h-3 text-amber-400" />
+                        <span>PLUS</span>
                       </button>
+                    ) : effectivePlan === 'pro' ? (
+                      <button 
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onViewPricing) onViewPricing();
+                          else onNavigate('landing');
+                        }}
+                        className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/20 text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                        title="Modèle KONAN PRO Actif - Cliquez pour voir les formules"
+                      >
+                        <Sparkles className="w-3 h-3 text-amber-400" />
+                        <span>PRO</span>
+                      </button>
+                    ) : (
+                      <span
+                        className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-slate-800/90 text-slate-300 border-slate-700/80 cursor-default select-none"
+                        title="Modèle KONAN Gratuit"
+                      >
+                        Gratuit
+                      </span>
                     )}
                   </div>
                 ) : (

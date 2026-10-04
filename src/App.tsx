@@ -18,6 +18,7 @@ import {
   getPlusInvitations,
   updateInvitationStatus,
   registerPlusUser,
+  isTargetAlreadyPlus,
   mergeInvitationsFromCloud,
   invitationBroadcastChannel
 } from './services/storage';
@@ -202,7 +203,46 @@ export function App() {
     };
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
-  const isGroupOwner = (state.planTier === 'plus' || state.userAccount?.planTier === 'plus') && !state.isGroupGuest;
+  // Unified, resilient single source of truth for plan tier (prevents "Free" vs "Plus" glitches)
+  const effectivePlanTier: 'free' | 'pro' | 'plus' = useMemo(() => {
+    const myId = state.userAccount?.konanId || state.konanId;
+    const myEmail = state.userAccount?.email;
+    const isPlusRegistered = Boolean(myId && isTargetAlreadyPlus(myId)) || Boolean(myEmail && isTargetAlreadyPlus(myEmail));
+    if (
+      state.planTier === 'plus' ||
+      state.userAccount?.planTier === 'plus' ||
+      state.isGroupGuest ||
+      state.userAccount?.isGroupGuest ||
+      isPlusRegistered
+    ) {
+      return 'plus';
+    }
+    if (state.planTier === 'pro' || state.userAccount?.planTier === 'pro') {
+      return 'pro';
+    }
+    return 'free';
+  }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest, state.userAccount?.isGroupGuest, state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
+
+  // Unified display name
+  const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
+    ? state.userAccount.name
+    : (state.studentName || 'Étudiant');
+
+  // Eradicate any "Free" vs "Plus" discrepancy by keeping state and userAccount strictly in sync
+  useEffect(() => {
+    if (state.planTier !== effectivePlanTier || (state.userAccount && state.userAccount.planTier !== effectivePlanTier)) {
+      setState(prev => ({
+        ...prev,
+        planTier: effectivePlanTier,
+        userAccount: prev.userAccount ? {
+          ...prev.userAccount,
+          planTier: effectivePlanTier,
+        } : undefined,
+      }));
+    }
+  }, [effectivePlanTier, state.planTier, state.userAccount?.planTier]);
+
+  const isGroupOwner = effectivePlanTier === 'plus' && !state.isGroupGuest && !state.userAccount?.isGroupGuest;
   const currentOwnerKonanId = (state.userAccount?.konanId || state.konanId || '').trim().toUpperCase();
   const currentOwnerEmail = (state.userAccount?.email || '').trim().toLowerCase();
 
@@ -1509,9 +1549,10 @@ export function App() {
         activeView={activeView}
         onNavigate={handleNavigate}
         onViewPricing={handleViewPricing}
-        studentName={state.studentName}
+        studentName={effectiveStudentName}
         academicLevel={state.academicLevel}
         userAccount={state.userAccount}
+        planTier={effectivePlanTier}
         konanId={state.konanId || state.userAccount?.konanId}
         isDemoMode={state.isDemoMode}
         onOpenPresetModal={() => {
@@ -1543,7 +1584,7 @@ export function App() {
         {activeView === 'landing' && (
           <LandingHero
             isLoggedIn={Boolean(state.userAccount?.isLoggedIn)}
-            currentPlan={state.planTier || state.userAccount?.planTier || 'free'}
+            currentPlan={effectivePlanTier}
             onSelectPlan={handleSelectPlan}
             onStartApp={() => setActiveView('auth')}
             onSelectPreset={handleEnterDemoMode}
@@ -1564,8 +1605,8 @@ export function App() {
         {activeView === 'upload-schedule' && (
           (state.userAccount?.isLoggedIn && !state.isDemoMode) ? (
             <PdfUploadView
-              studentName={state.studentName}
-              planTier={state.planTier || state.userAccount?.planTier || 'free'}
+              studentName={effectiveStudentName}
+              planTier={effectivePlanTier}
               onApplyExtractedSchedule={handleApplyExtractedSchedule}
               onCancel={() => setActiveView('dashboard')}
               onViewPricing={handleViewPricing}
@@ -1614,14 +1655,14 @@ export function App() {
         {activeView === 'dashboard' && (
           (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
             <DashboardOverview
-              studentName={state.studentName}
+              studentName={effectiveStudentName}
               academicLevel={state.academicLevel}
               subjects={state.subjects}
               classSlots={state.classSlots}
               studySessions={state.studySessions}
               preferences={state.preferences}
               isDemoMode={state.isDemoMode}
-              planTier={state.planTier || state.userAccount?.planTier || 'free'}
+              planTier={effectivePlanTier}
               onNavigate={handleNavigate}
               onViewPricing={handleViewPricing}
               onUpgradeToPro={() => handleSelectPlan('pro')}
@@ -1660,14 +1701,14 @@ export function App() {
         {activeView === 'schedule' && (
           (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
             <ScheduleManager
-              studentName={state.studentName}
+              studentName={effectiveStudentName}
               academicLevel={state.academicLevel}
               subjects={state.subjects}
               classSlots={state.classSlots}
               studySessions={state.studySessions}
               preferences={state.preferences}
               isDemoMode={state.isDemoMode}
-              planTier={state.planTier || state.userAccount?.planTier || 'free'}
+              planTier={effectivePlanTier}
               onUpdateClassSlots={handleUpdateClassSlots}
               onUpdateSubjects={handleUpdateSubjects}
               onUpdatePreferences={handleUpdatePreferences}
@@ -1698,7 +1739,7 @@ export function App() {
             <SubjectManager
               subjects={state.subjects}
               isDemoMode={state.isDemoMode}
-              planTier={state.planTier || state.userAccount?.planTier || 'free'}
+              planTier={effectivePlanTier}
               onUpdateSubjects={handleUpdateSubjects}
               onTriggerPlanner={() => setActiveView('planner')}
               onViewPricing={handleViewPricing}
@@ -1728,7 +1769,7 @@ export function App() {
               classSlots={state.classSlots}
               studySessions={state.studySessions}
               preferences={state.preferences}
-              planTier={state.planTier || state.userAccount?.planTier || 'free'}
+              planTier={effectivePlanTier}
               onRegeneratePlan={handleRegeneratePlan}
               onToggleSessionComplete={handleToggleSessionComplete}
               onStartFocusSession={handleStartFocusSession}
@@ -1816,7 +1857,7 @@ export function App() {
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         userAccount={state.userAccount}
-        studentName={state.studentName}
+        studentName={effectiveStudentName}
         academicLevel={state.academicLevel}
         isDemoMode={state.isDemoMode}
         onLogout={handleLogout}
@@ -1846,14 +1887,14 @@ export function App() {
       <SuperProActivationModal
         isOpen={isSuperProModalOpen}
         onClose={() => setIsSuperProModalOpen(false)}
-        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        studentName={effectiveStudentName}
       />
 
       {/* 👑 Royal Step-by-Step Celebration & Onboarding Modal for KONAN PLUS */}
       <KonanPlusActivationModal
         isOpen={isPlusActivationModalOpen}
         onClose={() => setIsPlusActivationModalOpen(false)}
-        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        studentName={effectiveStudentName}
         konanId={state.userAccount?.konanId || state.konanId || 'KN-849201'}
         invitedIds={state.userAccount?.invitedIds || state.invitedIds || []}
         invitedEmails={state.userAccount?.invitedEmails || state.invitedEmails || []}
@@ -1880,7 +1921,7 @@ export function App() {
         ownerKonanId={state.userAccount?.konanId || state.konanId || 'KN-849201'}
         ownerEmail={state.userAccount?.email}
         maxAccounts={4}
-        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        studentName={effectiveStudentName}
         isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
         invitedBy={state.invitedBy || state.userAccount?.invitedBy}
       />
@@ -1891,14 +1932,14 @@ export function App() {
         onClose={() => setIsAcademicGoalModalOpen(false)}
         currentGoal={state.userAccount?.academicGoal || 'target_16'}
         onSelectGoal={handleSelectAcademicGoal}
-        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        studentName={effectiveStudentName}
       />
 
       {/* 👑 KONAN PLUS: TÊTE-À-TÊTE COACH KONAN (15 MIN) MODAL */}
       <CoachKonanOneOnOneModal
         isOpen={isCoachingModalOpen}
         onClose={() => setIsCoachingModalOpen(false)}
-        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        studentName={effectiveStudentName}
         academicLevel={state.academicLevel}
         academicGoal={state.userAccount?.academicGoal || 'target_16'}
         subjects={state.subjects}
@@ -1913,8 +1954,8 @@ export function App() {
         onClose={() => setIsGoogleCalendarModalOpen(false)}
         sessions={state.studySessions}
         subjects={state.subjects}
-        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
-        planTier={state.planTier || state.userAccount?.planTier || 'free'}
+        studentName={effectiveStudentName}
+        planTier={effectivePlanTier}
         autoOpenedReason={googleCalendarReason}
         onUpgradeToPro={() => handleSelectPlan('pro')}
         onViewPricing={handleViewPricing}
@@ -1925,7 +1966,7 @@ export function App() {
         isOpen={isUltimateCelebrationOpen}
         onClose={handleContinueNewCycle}
         onContinue={handleContinueNewCycle}
-        studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
+        studentName={effectiveStudentName}
         totalPlannedMinutes={state.studySessions.reduce((acc, s) => acc + s.durationMinutes, 0)}
         totalSessionsCount={state.studySessions.length}
       />
