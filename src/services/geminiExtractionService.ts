@@ -59,12 +59,18 @@ N'inclus AUCUN commentaire, AUCUNE balise Markdown.
 import { 
   executeOcrForAllExtraction, 
   checkOcrForAllServer, 
-  sanitizeAndAlignScheduleText
+  sanitizeAndAlignScheduleText,
+  convertAnyOcrOutputToOfficialTextFile
 } from "./ocrForAllEngine";
 import type { OcrForAllProgressCallback } from "./ocrForAllEngine";
 import type { ScheduleFormatType } from "./pdfParserService";
 
-export { executeOcrForAllExtraction, checkOcrForAllServer, sanitizeAndAlignScheduleText };
+export { 
+  executeOcrForAllExtraction, 
+  checkOcrForAllServer, 
+  sanitizeAndAlignScheduleText,
+  convertAnyOcrOutputToOfficialTextFile
+};
 export type { OcrForAllProgressCallback };
 
 /**
@@ -125,8 +131,7 @@ export async function extraireEmploiDuTemps(
     });
 
     let raw = responseFallback.text ? responseFallback.text.trim() : "";
-    raw = raw.replace(/^```[a-z]*\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
-    return sanitizeAndAlignScheduleText(raw);
+    return convertAnyOcrOutputToOfficialTextFile(raw, format);
   }
 }
 

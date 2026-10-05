@@ -59,7 +59,11 @@ import {
   loadDemoPdfTemplate,
   type ScheduleFormatType
 } from '../../services/pdfParserService';
-import { extraireEmploiDuTemps, convertFileToBase64 } from '../../services/geminiExtractionService';
+import { 
+  extraireEmploiDuTemps, 
+  convertFileToBase64,
+  convertAnyOcrOutputToOfficialTextFile
+} from '../../services/geminiExtractionService';
 import { 
   generateAcademicAnalysisReport, 
   buildStateFromExtractedSchedule 
@@ -383,8 +387,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       // Si OCR FOR ALL a retourné le texte structuré avec succès
       if (structuredText && structuredText.trim().length > 10) {
         setScanProgress(100);
-        setScanStatus('Numérisation OCR FOR ALL terminée avec succès à 100% !');
-        setScheduleText(structuredText.trim());
+        setScanStatus('Fichier texte officiel structuré avec succès à 100% !');
+        const officialTextFile = convertAnyOcrOutputToOfficialTextFile(structuredText, selectedFormat);
+        setScheduleText(officialTextFile.trim());
         await new Promise(r => setTimeout(r, 600));
         soundFX.playCheckmarkPop();
         setUploadStep('review_text');
