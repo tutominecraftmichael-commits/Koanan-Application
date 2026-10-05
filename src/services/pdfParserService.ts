@@ -402,15 +402,168 @@ export function isDayHeaderToken(str: string): DayOfWeek | null {
 
 /**
  * Finds a day of the week mentioned within a line of text.
+ * Requires word boundaries or explicit day prefix to avoid false triggers
+ * inside professor names (e.g. "M. MEYER JEAN-MARC", "Dr ADINGRA FODJO MARIUS", "Mme. Mercier")
+ * or course words (e.g. "Commerce", "Marketing").
  */
 export function findDayInLine(text: string): DayOfWeek | null {
+  const clean = text.trim();
+  if (!clean || clean.length < 3) return null;
+
+  // A line that starts with a time interval (e.g. "07:30 - 10:00" or "8h - 10h") is a course slot, NOT a day header!
+  if (/^(\d{1,2})[h:H:](\d{2})?\s*[-–—àaA/to]/i.test(clean)) {
+    return null;
+  }
+
   for (const entry of DAYS_DICTIONARY) {
     for (const key of entry.keys) {
-      const regex = new RegExp(`(^|[^a-zÀ-ÿ])${key}([^a-zÀ-ÿ]|$)`, 'i');
-      if (regex.test(text)) return entry.day;
+      if (key.length <= 3) {
+        // Short 3-letter keys ('lun', 'mar', 'mer', 'jeu', 'ven', 'sam', 'dim')
+        const shortRegex = new RegExp(`^[\\s|•*-]*${key}[.:\\s|]`, 'i');
+        if (shortRegex.test(clean)) return entry.day;
+      } else {
+        // Full day names (e.g. "lundi", "mardi", "mercredi", "monday")
+        // Either at start of line: "Lundi :", "Lundi |", etc.
+        const startRegex = new RegExp(`^[\\s|•*-]*${key}([^a-zÀ-ÿ]|$)`, 'i');
+        if (startRegex.test(clean)) return entry.day;
+
+        // Or on a header-like line without any time intervals (e.g. "JOUR DE LA SEMAINE : MERCREDI", "--- MARDI ---")
+        const timeIntervalRegex = /(\d{1,2})[h:H:](\d{2})?\s*[-–—àaA/to]+\s*(\d{1,2})[h:H:](\d{2})?/i;
+        if (!timeIntervalRegex.test(clean)) {
+          const generalRegex = new RegExp(`(^|[^a-zÀ-ÿ])${key}([^a-zÀ-ÿ]|$)`, 'i');
+          if (generalRegex.test(clean)) return entry.day;
+        }
+      }
     }
   }
   return null;
+}
+
+/**
+ * Reconstructs page text column-by-column (by day) when day columns are detected,
+ * completely preventing multi-column horizontal row bleed across days.
+ */
+function reconstructPdfPageText(pageItems: SpatialTextItem[]): string {
+  // 1. Detect Day column headers on the page
+  interface DayHeader {
+    day: DayOfWeek;
+    label: string;
+    xCenter: number;
+    y: number;
+  }
+
+  const detectedHeaders: DayHeader[] = [];
+
+  pageItems.forEach(item => {
+    const raw = item.str.trim();
+    if (raw.length < 3) return;
+
+    for (const entry of DAYS_DICTIONARY) {
+      for (const key of entry.keys) {
+        let isMatch = false;
+        if (key.length <= 3) {
+          isMatch = new RegExp(`(^|[\\s|•*-])${key}[.:\\s|]?$`, 'i').test(raw);
+        } else {
+          isMatch = new RegExp(`(^|[^a-zÀ-ÿ])${key}([^a-zÀ-ÿ]|$)`, 'i').test(raw);
+        }
+
+        if (isMatch) {
+          const xCenter = item.x + item.width / 2;
+          const exists = detectedHeaders.some(d => d.day === entry.day && Math.abs(d.xCenter - xCenter) < 50);
+          if (!exists) {
+            detectedHeaders.push({
+              day: entry.day,
+              label: entry.label.toUpperCase(),
+              xCenter,
+              y: item.y,
+            });
+          }
+          break;
+        }
+      }
+    }
+  });
+
+  // Check if at least 2 days form horizontal columns across the page
+  const isHorizontalColumns = detectedHeaders.length >= 2 &&
+    (Math.max(...detectedHeaders.map(d => d.xCenter)) - Math.min(...detectedHeaders.map(d => d.xCenter)) > 100);
+
+  if (isHorizontalColumns) {
+    detectedHeaders.sort((a, b) => a.xCenter - b.xCenter);
+
+    const columns = detectedHeaders.map((dh, idx, arr) => {
+      const prev = arr[idx - 1];
+      const next = arr[idx + 1];
+      const xMin = prev ? (prev.xCenter + dh.xCenter) / 2 : 0;
+      const xMax = next ? (dh.xCenter + next.xCenter) / 2 : 50000;
+      const maxY = dh.y - 5; // Course items are below the header
+      return {
+        day: dh.day,
+        label: dh.label,
+        xMin,
+        xMax,
+        maxY,
+      };
+    });
+
+    const daySections: string[] = [];
+
+    columns.forEach(col => {
+      const colItems = pageItems
+        .filter(it => it.x >= col.xMin && it.x < col.xMax && it.y <= col.maxY)
+        .sort((a, b) => b.y - a.y || a.x - b.x);
+
+      if (colItems.length === 0) return;
+
+      const lineBuckets: Array<{ y: number; items: SpatialTextItem[] }> = [];
+      colItems.forEach(it => {
+        let b = lineBuckets.find(bucket => Math.abs(bucket.y - it.y) <= 6);
+        if (!b) {
+          b = { y: it.y, items: [] };
+          lineBuckets.push(b);
+        }
+        b.items.push(it);
+      });
+
+      lineBuckets.sort((a, b) => b.y - a.y);
+
+      const lines: string[] = [];
+      lines.push(`${col.label} :`);
+
+      lineBuckets.forEach(b => {
+        b.items.sort((a, b) => a.x - b.x);
+        const lineStr = b.items.map(it => it.str).join(' ').trim();
+        if (lineStr.length > 1) {
+          lines.push(lineStr);
+        }
+      });
+
+      daySections.push(lines.join('\n'));
+    });
+
+    if (daySections.length >= 2) {
+      return daySections.join('\n\n');
+    }
+  }
+
+  // Standard line-by-line fallback
+  const pageLineMap = new Map<number, { x: number; str: string }[]>();
+  for (const item of pageItems) {
+    let matchedY = Array.from(pageLineMap.keys()).find(existingY => Math.abs(existingY - item.y) <= 4);
+    if (matchedY === undefined) {
+      matchedY = item.y;
+      pageLineMap.set(matchedY, []);
+    }
+    pageLineMap.get(matchedY)!.push({ x: item.x, str: item.str });
+  }
+
+  const sortedYs = Array.from(pageLineMap.keys()).sort((a, b) => b - a);
+  const pageLines = sortedYs.map(y => {
+    const lineItems = pageLineMap.get(y)!.sort((a, b) => a.x - b.x);
+    return lineItems.map(item => item.str).join(' ');
+  });
+
+  return pageLines.join('\n');
 }
 
 /**
@@ -438,8 +591,7 @@ export async function extractDetailedPdfContent(file: File): Promise<{
     for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
       const page = await pdfDoc.getPage(pageNum);
       const textContent = await page.getTextContent();
-      
-      const pageLineMap = new Map<number, { x: number; str: string }[]>();
+      const pageItems: SpatialTextItem[] = [];
 
       for (const item of textContent.items) {
         if ('str' in item && item.str.trim().length > 0) {
@@ -449,35 +601,22 @@ export async function extractDetailedPdfContent(file: File): Promise<{
           const width = Math.round(item.width || 10);
           const height = Math.round(item.height || 10);
 
-          spatialItems.push({
+          const sItem: SpatialTextItem = {
             str,
             x: tx,
             y: ty,
             width,
             height,
             pageNum,
-          });
+          };
 
-          // Group by horizontal line for readable raw text representation
-          // We group items with Y within a 4px tolerance to handle slight misalignments
-          let matchedY = Array.from(pageLineMap.keys()).find(existingY => Math.abs(existingY - ty) <= 4);
-          if (matchedY === undefined) {
-            matchedY = ty;
-            pageLineMap.set(matchedY, []);
-          }
-          pageLineMap.get(matchedY)!.push({ x: tx, str });
+          spatialItems.push(sItem);
+          pageItems.push(sItem);
         }
       }
 
-      // Sort lines top to bottom (Y descending in PDF coordinate space)
-      const sortedYs = Array.from(pageLineMap.keys()).sort((a, b) => b - a);
-      const pageLines = sortedYs.map(y => {
-        // Within each line, sort words left to right (X ascending)
-        const lineItems = pageLineMap.get(y)!.sort((a, b) => a.x - b.x);
-        return lineItems.map(item => item.str).join(' ');
-      });
-
-      pageTextList.push(`--- PAGE ${pageNum} ---\n` + pageLines.join('\n'));
+      const reconstructedPageText = reconstructPdfPageText(pageItems);
+      pageTextList.push(`--- PAGE ${pageNum} ---\n` + reconstructedPageText);
     }
 
     const fullRawText = pageTextList.join('\n\n');
@@ -1062,101 +1201,45 @@ export function harmonizeAndDeduplicateSlots<T extends {
         continue;
       }
 
+      // Check if exact duplicate already exists
+      const isDuplicate = cleanDaySlots.some(existing => {
+        const extStart = parseTimeToMinutes(existing.startTime);
+        const extEnd = parseTimeToMinutes(existing.endTime);
+        const nameA = (current.subjectName || current.rawSubject || '').toLowerCase().trim();
+        const nameB = (existing.subjectName || existing.rawSubject || '').toLowerCase().trim();
+        const sameSubject = nameA.replace(/[^a-z0-9à-ÿ]/g, '') === nameB.replace(/[^a-z0-9à-ÿ]/g, '');
+
+        if (sameSubject && Math.abs(curStart - extStart) <= 15 && Math.abs(curEnd - extEnd) <= 15) {
+          if (!existing.room && current.room) existing.room = current.room;
+          if (!existing.professor && current.professor) existing.professor = current.professor;
+          return true;
+        }
+        return false;
+      });
+
+      if (isDuplicate) continue;
+
+      // Check for contiguous blocks of the EXACT same subject (e.g. 08:00 - 08:50 and 08:50 - 09:40)
       const prev = cleanDaySlots[cleanDaySlots.length - 1];
       const prevStart = parseTimeToMinutes(prev.startTime);
       const prevEnd = parseTimeToMinutes(prev.endTime);
 
-      // Subject similarity comparison:
-      // STRICT exact canonical match only. NEVER use substring includes() which destroys courses like
-      // "Physique" vs "Physique-Chimie" or "Mathématiques" vs "Mathématiques Appliquées"!
       const nameA = (current.subjectName || current.rawSubject || '').toLowerCase().trim();
       const nameB = (prev.subjectName || prev.rawSubject || '').toLowerCase().trim();
-      const normA = nameA.replace(/[^a-z0-9à-ÿ]/g, '');
-      const normB = nameB.replace(/[^a-z0-9à-ÿ]/g, '');
-      const sameSubject = 
-        Boolean(current.subjectId && prev.subjectId && current.subjectId === prev.subjectId) ||
-        (normA.length > 1 && normA === normB);
+      const sameSubject = nameA.replace(/[^a-z0-9à-ÿ]/g, '') === nameB.replace(/[^a-z0-9à-ÿ]/g, '');
 
-      // 1. Same subject contiguous OR overlapping blocks:
-      // (e.g. 08h00-08h55 SVT followed by 08h55-09h50 SVT -> curStart <= prevEnd + 20)
-      if (sameSubject && (curStart <= prevEnd + 20) && curEnd > prevStart) {
-        const mergedEnd = Math.max(prevEnd, curEnd);
-        prev.endTime = minutesToTimeString(mergedEnd);
+      if (sameSubject && Math.abs(curStart - prevEnd) <= 15 && curEnd > prevStart) {
+        prev.endTime = minutesToTimeString(Math.max(prevEnd, curEnd));
         if (!prev.room && current.room) prev.room = current.room;
         if (!prev.professor && current.professor) prev.professor = current.professor;
         continue;
       }
 
-      // 2. Conflict & Overlap handling between DIFFERENT subjects (ZERO silent drops):
-      if (curStart < prevEnd) {
-        if (curStart === prevStart) {
-          // Stagger current slot so both courses are preserved
-          const newStart = Math.min(prevEnd, prevStart + 45);
-          current.startTime = minutesToTimeString(newStart);
-          if (curEnd <= newStart) {
-            current.endTime = minutesToTimeString(newStart + 45);
-          }
-          cleanDaySlots.push(current);
-          continue;
-        }
-
-        // Current starts during previous slot: clamp prev.endTime cleanly
-        if (curStart - prevStart >= 35) {
-          prev.endTime = current.startTime;
-        } else {
-          // Prev just started: give at least 45 min to prev, then begin current
-          const splitMin = Math.min(prevEnd, prevStart + 45);
-          prev.endTime = minutesToTimeString(splitMin);
-          current.startTime = minutesToTimeString(splitMin);
-          if (curEnd - splitMin < 25) {
-            current.endTime = minutesToTimeString(splitMin + 45);
-          }
-        }
-      }
-
-      // Ensure minimum duration (at least 25 minutes)
-      if (parseTimeToMinutes(current.endTime) - parseTimeToMinutes(current.startTime) >= 25) {
-        cleanDaySlots.push(current);
-      }
+      // Preserve authentic hours without artificial truncation or chopping
+      cleanDaySlots.push(current);
     }
 
-    // Strict multi-pass clamp to guarantee 100% zero mathematical overlaps
-    for (let i = 0; i < cleanDaySlots.length - 1; i++) {
-      const sA = cleanDaySlots[i];
-      const sB = cleanDaySlots[i + 1];
-      const endA = parseTimeToMinutes(sA.endTime);
-      const startB = parseTimeToMinutes(sB.startTime);
-
-      if (startB < endA) {
-        if (startB - parseTimeToMinutes(sA.startTime) >= 25) {
-          sA.endTime = sB.startTime;
-        } else {
-          sB.startTime = sA.endTime;
-          const durB = parseTimeToMinutes(sB.endTime) - parseTimeToMinutes(sB.startTime);
-          if (durB < 25) {
-            sB.endTime = minutesToTimeString(parseTimeToMinutes(sB.startTime) + 45);
-          }
-        }
-      }
-    }
-
-    // Filter out any micro fragments (< 25 min)
-    const validDaySlots = cleanDaySlots.filter(
-      s => parseTimeToMinutes(s.endTime) - parseTimeToMinutes(s.startTime) >= 25
-    );
-
-    // Final safety clamp: verify all consecutive pairs
-    for (let i = 0; i < validDaySlots.length - 1; i++) {
-      const sA = validDaySlots[i];
-      const sB = validDaySlots[i + 1];
-      const endA = parseTimeToMinutes(sA.endTime);
-      const startB = parseTimeToMinutes(sB.startTime);
-      if (startB < endA) {
-        sA.endTime = sB.startTime;
-      }
-    }
-
-    harmonized.push(...validDaySlots);
+    harmonized.push(...cleanDaySlots);
   }
 
   return harmonized.sort((a, b) => {
@@ -1613,12 +1696,6 @@ export function parseSequentialSchedule(
       const matches = Array.from(clause.matchAll(/(\d{1,2})[h:H:](\d{2})?\s*[-–—àaA/to]+\s*(\d{1,2})[h:H:](\d{2})?/gi));
 
       if (matches.length > 0) {
-        // Multi-day horizontal row detection:
-        // If a row contains 2+ time matches with identical or near start times, each column belongs to a different day!
-        const isMultiDayHorizontalRow = matches.length >= 2 && 
-          (Math.abs(parseTimeToMinutes(normalizeTimeString(matches[0][1], matches[0][2])) - 
-                    parseTimeToMinutes(normalizeTimeString(matches[1][1], matches[1][2]))) <= 45);
-
         for (let mIdx = 0; mIdx < matches.length; mIdx++) {
           const match = matches[mIdx];
           const startH = match[1];
@@ -1661,10 +1738,8 @@ export function parseSequentialSchedule(
           const type = detectCourseType(contextText);
           const cleanSub = cleanSubjectTitle(contextText, dynamicEcueMap, format);
 
-          // If this was a horizontal matrix row across multiple days, distribute each match to its column day!
-          const slotDay: DayOfWeek = isMultiDayHorizontalRow
-            ? (((currentDay + mIdx) % 6) as DayOfWeek)
-            : currentDay;
+          // All courses under the current day header belong to currentDay
+          const slotDay: DayOfWeek = currentDay;
 
           if (cleanSub && cleanSub.length >= 2 && parseTimeToMinutes(endTime) > parseTimeToMinutes(startTime)) {
             detectedSlots.push({

@@ -222,10 +222,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType>('lmd');
   const [scheduleText, setScheduleText] = useState('');
 
-  // Scanning progress & logs
+  // Scanning progress
   const [scanProgress, setScanProgress] = useState(0);
   const [scanStatus, setScanStatus] = useState('');
-  const [analysisLogs, setAnalysisLogs] = useState<string[]>([]);
 
   // Extracted schedule & error state
   const [extractedData, setExtractedData] = useState<ExtractedPdfSchedule | null>(null);
@@ -360,16 +359,12 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     setUploadStep('scanning');
     setErrorMessage(null);
     setScanProgress(10);
-    setScanStatus('Initialisation des moteurs de vision...');
-    setAnalysisLogs([
-      `[1/4] 🚀 Démarrage de l'analyse : ${uploadedFile.name} (${Math.round(uploadedFile.size / 1024)} Ko)...`
-    ]);
+    setScanStatus('Initialisation de la lecture...');
 
     try {
       const extractedRaw = await parseTimetableDocument(uploadedFile, (status, percent) => {
         setScanStatus(status);
         setScanProgress(Math.max(10, Math.min(95, percent)));
-        setAnalysisLogs(prev => [...prev.slice(-3), `› ${status}`]);
       }, selectedFormat);
 
       setScanProgress(98);
@@ -380,7 +375,6 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       if (!structuredText.trim()) {
         const fallbackDef = FORMAT_DEFINITIONS.find(f => f.id === selectedFormat) || FORMAT_DEFINITIONS[0];
         structuredText = fallbackDef.example;
-        setAnalysisLogs(prev => [...prev, '⚠️ Document peu lisible : nous avons préparé la structure officielle pour vous.']);
       }
 
       setScheduleText(structuredText);
@@ -960,97 +954,64 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       )}
 
       {/* ════════════════════════════════════════════════════════════════════ */}
-      {/* STEP 3: FUTURISTIC AI LASER SCANNING VIEW                           */}
+      {/* STEP 3: MINIMALIST & PROFESSIONAL SCANNING VIEW                      */}
       {/* ════════════════════════════════════════════════════════════════════ */}
       {uploadStep === 'scanning' && (
-        <Card className="p-6 sm:p-10 border-cyan-500/40 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 shadow-2xl relative overflow-hidden space-y-6 sm:space-y-8">
+        <Card className="p-8 sm:p-12 border border-slate-800 bg-slate-900/60 backdrop-blur-md rounded-3xl shadow-xl max-w-xl mx-auto space-y-8 animate-in fade-in duration-300">
           
           <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-[11px] font-bold">
-              <Scan className="w-3.5 h-3.5 animate-pulse text-cyan-400" />
-              Numérisation AI Haute Définition
+            <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto shadow-sm">
+              <FileText className="w-7 h-7 text-indigo-400 animate-pulse" />
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              Extraction & Structuration en cours...
+            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Traitement de votre emploi du temps
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto">
-              {scanStatus || 'Numérisation du document et détection des créneaux horaires...'}
+
+            <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
+              {scanStatus || 'Extraction des cours et structuration en cours...'}
             </p>
           </div>
 
-          {/* FUTURISTIC LASER SCANNER VISUALIZER */}
-          <div className="relative max-w-md mx-auto aspect-[4/3] rounded-2xl bg-black/75 border border-cyan-500/40 overflow-hidden shadow-[0_0_45px_rgba(6,182,212,0.3)] flex items-center justify-center p-4">
-            
-            {/* Holographic Background Grid Pattern */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#06b6d40d_1px,transparent_1px),linear-gradient(to_bottom,#06b6d40d_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
-
-            {/* Top HUD Status Bar */}
-            <div className="absolute top-2.5 left-4 right-4 flex items-center justify-between text-[10px] font-mono text-cyan-400/80 z-20 pointer-events-none">
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-                OCR MATRIX ACTIVE
-              </span>
-              <span className="px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/30 uppercase tracking-wider text-cyan-300">
-                {FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || selectedFormat.toUpperCase()}
-              </span>
-            </div>
-
-            {/* SILKY SMOOTH LASER BEAM SWEEP ANIMATION */}
-            <div className="laser-scanner-beam" />
-
-            {/* Glowing Corner Targets */}
-            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-cyan-400" />
-            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-cyan-400" />
-            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-cyan-400" />
-            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-cyan-400" />
-
+          {/* Clean Document Preview Card */}
+          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex items-center gap-3.5">
             {filePreviewUrl ? (
               <img 
                 src={filePreviewUrl} 
-                alt="Scan en direct" 
-                className="w-full h-full object-contain filter contrast-125 opacity-85 z-10"
+                alt="Aperçu du document" 
+                className="w-12 h-14 object-cover rounded-lg border border-slate-800 shadow-sm shrink-0"
               />
             ) : (
-              <div className="text-center space-y-3 z-10">
-                <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 mx-auto shadow-lg shadow-cyan-500/20">
-                  <Brain className="w-8 h-8 animate-spin" style={{ animationDuration: '4s' }} />
-                </div>
-                <div className="font-mono text-xs text-cyan-300">
-                  {uploadedFile?.name || 'Document_EDT.pdf'}
-                </div>
-                <span className="text-[10px] text-slate-400 font-mono uppercase block">
-                  Reconnaissance Vectorielle 2D • Modèle {selectedFormat.toUpperCase()}
-                </span>
+              <div className="w-12 h-14 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                <FileText className="w-6 h-6 text-slate-400" />
               </div>
             )}
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-slate-200 truncate">
+                {uploadedFile?.name || 'Document_EDT.pdf'}
+              </p>
+              <p className="text-[11px] text-slate-400">
+                {uploadedFile?.size ? `${Math.round(uploadedFile.size / 1024)} Ko • ` : ''}
+                Format {FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || selectedFormat.toUpperCase()}
+              </p>
+            </div>
+            <span className="text-xs font-mono font-bold text-indigo-400 shrink-0">
+              {scanProgress}%
+            </span>
           </div>
 
-          {/* Stepper Progress Bar */}
-          <div className="space-y-2 max-w-md mx-auto">
-            <div className="flex items-center justify-between text-xs font-mono text-slate-300">
-              <span className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                Conversion IA
-              </span>
-              <span className="text-cyan-400 font-bold">{scanProgress}%</span>
-            </div>
-            <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-800">
+          {/* Minimalist Progress Bar */}
+          <div className="space-y-2">
+            <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800/80">
               <div 
-                className="h-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-emerald-400 transition-all duration-300 ease-out rounded-full"
+                className="h-full bg-indigo-500 transition-all duration-300 ease-out rounded-full"
                 style={{ width: `${scanProgress}%` }}
               />
             </div>
-          </div>
-
-          {/* Terminal Console Stream */}
-          <div className="max-w-md mx-auto p-3.5 rounded-xl bg-black/80 border border-slate-800 font-mono text-xs text-slate-300 space-y-1">
-            {analysisLogs.map((log, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span className="text-cyan-400">›</span>
-                <span className="truncate">{log}</span>
-              </div>
-            ))}
+            <div className="flex justify-between items-center text-[11px] text-slate-400">
+              <span>Analyse et fidélité des créneaux</span>
+              <span>{scanProgress < 100 ? 'En cours...' : 'Terminé'}</span>
+            </div>
           </div>
 
         </Card>
