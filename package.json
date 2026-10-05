@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ocr:server": "node scripts/start-ocr-for-all-server.cjs"
   },
   "dependencies": {
     "@google/genai": "^2.27.0",
