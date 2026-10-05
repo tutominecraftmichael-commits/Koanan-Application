@@ -59,11 +59,7 @@ import {
   loadDemoPdfTemplate,
   type ScheduleFormatType
 } from '../../services/pdfParserService';
-import { 
-  extraireEmploiDuTemps, 
-  convertFileToBase64,
-  convertAnyOcrOutputToOfficialTextFile
-} from '../../services/geminiExtractionService';
+import { extraireEmploiDuTemps, convertFileToBase64 } from '../../services/geminiExtractionService';
 import { 
   generateAcademicAnalysisReport, 
   buildStateFromExtractedSchedule 
@@ -367,36 +363,27 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     setScanStatus('Envoi au moteur IA Gemini 2.5 Flash...');
 
     try {
-      // 1. Moteur Haute-Fidélité OCR FOR ALL (Dual-Pass QA Auto-Correcteur Zéro-Erreur)
+      // 1. Priorité au modèle multimodal Gemini 2.5 Flash
       const mimeType = uploadedFile.type || (uploadedFile.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
       const base64Data = await convertFileToBase64(uploadedFile);
 
-      setScanProgress(20);
-      setScanStatus('Connexion au moteur OCR FOR ALL...');
+      setScanProgress(45);
+      setScanStatus('Analyse visuelle et structuration par Gemini...');
 
-      const structuredText = await extraireEmploiDuTemps(
-        base64Data, 
-        mimeType, 
-        selectedFormat, 
-        (status, percent) => {
-          setScanStatus(status);
-          setScanProgress(percent);
-        }
-      );
+      const structuredText = await extraireEmploiDuTemps(base64Data, mimeType);
 
-      // Si OCR FOR ALL a retourné le texte structuré avec succès
+      // Si Gemini a retourné le texte structuré avec succès
       if (structuredText && structuredText.trim().length > 10) {
         setScanProgress(100);
-        setScanStatus('Fichier texte officiel structuré avec succès à 100% !');
-        const officialTextFile = convertAnyOcrOutputToOfficialTextFile(structuredText, selectedFormat);
-        setScheduleText(officialTextFile.trim());
+        setScanStatus('Numérisation Gemini terminée avec succès !');
+        setScheduleText(structuredText.trim());
         await new Promise(r => setTimeout(r, 600));
         soundFX.playCheckmarkPop();
         setUploadStep('review_text');
         return;
       }
-    } catch (ocrErr: any) {
-      console.warn('OCR FOR ALL notice (bascule sur moteur vectoriel local) :', ocrErr?.message || ocrErr);
+    } catch (geminiErr: any) {
+      console.warn('Gemini extraction notice (bascule sur moteur local) :', geminiErr?.message || geminiErr);
     }
 
     // 2. Moteur local de secours (PDF.js / OCR 2D) si Gemini indisponible
@@ -1003,11 +990,6 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           <div className="text-center space-y-3">
             <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto shadow-sm">
               <FileText className="w-7 h-7 text-indigo-400 animate-pulse" />
-            </div>
-
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-[11px] font-semibold text-cyan-300 mx-auto shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-spin" />
-              <span>Moteur OCR FOR ALL • Double Passe Zéro-Erreur</span>
             </div>
 
             <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">

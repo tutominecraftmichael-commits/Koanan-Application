@@ -56,62 +56,55 @@ Renvoie UNIQUEMENT le texte formaté correspondant au gabarit retenu.
 N'inclus AUCUN commentaire, AUCUNE balise Markdown.
 `;
 
-import { 
-  executeOcrForAllExtraction, 
-  checkOcrForAllServer, 
-  sanitizeAndAlignScheduleText,
-  convertAnyOcrOutputToOfficialTextFile
-} from "./ocrForAllEngine";
-import type { OcrForAllProgressCallback } from "./ocrForAllEngine";
-import type { ScheduleFormatType } from "./pdfParserService";
-
-export { 
-  executeOcrForAllExtraction, 
-  checkOcrForAllServer, 
-  sanitizeAndAlignScheduleText,
-  convertAnyOcrOutputToOfficialTextFile
-};
-export type { OcrForAllProgressCallback };
-
 /**
  * C'est cette fonction que l'application appelle quand l'étudiant choisit un PDF ou prend une photo.
- * Intègre désormais le moteur haute-précision OCR FOR ALL avec boucle auto-correctrice (Dual-Pass QA).
  * 
  * VARIABLE 2 : fileBase64 -> Le contenu du PDF ou de la photo converti en texte Base64
  * VARIABLE 3 : mimeType -> "application/pdf" (si PDF) ou "image/jpeg" / "image/png" (si photo)
- * VARIABLE 4 : format -> Niveau d'étude ('scolaire', 'tpcm', 'lmd')
- * VARIABLE 5 : onProgress -> Callback de progression en temps réel
  */
-export async function extraireEmploiDuTemps(
-  fileBase64: string, 
-  mimeType: string = "image/jpeg",
-  format?: ScheduleFormatType,
-  onProgress?: (status: string, percent: number) => void
-): Promise<string> {
-  const progressBridge: OcrForAllProgressCallback = (_step, message, progress) => {
-    if (onProgress) {
-      onProgress(message, progress);
-    }
-  };
+export async function extraireEmploiDuTemps(fileBase64: string, mimeType: string = "image/jpeg"): Promise<string> {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    throw new Error("Clé API Gemini introuvable dans le fichier .env (GEMINI_API_KEY ou VITE_GEMINI_API_KEY).");
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
+
+  // Détecte automatiquement le mimeType à partir du préfixe Data URL si présent
+  let effectiveMime = mimeType;
+  const prefixMatch = fileBase64.match(/^data:([^;]+);base64,/);
+  if (prefixMatch && prefixMatch[1]) {
+    effectiveMime = prefixMatch[1];
+  }
+
+  // Supprime le préfixe si le front-end l'a envoyé avec "data:image/...;base64,"
+  const cleanBase64 = fileBase64.replace(/^data:[^;]+;base64,/, "");
 
   try {
-    return await executeOcrForAllExtraction(fileBase64, mimeType, format, progressBridge);
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              inlineData: {
+                data: cleanBase64,
+                mimeType: effectiveMime
+              }
+            },
+            { text: PROMPT_OFFICIEL }
+          ]
+        }
+      ]
+    });
+
+    let raw = response.text ? response.text.trim() : "";
+    // Supprime d'éventuels blocs markdown englobants (```text ... ```)
+    raw = raw.replace(/^```[a-z]*\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+    return raw;
   } catch (err: any) {
-    console.warn("Moteur OCR FOR ALL notification:", err?.message || err);
-    // Si une erreur survient, tenter une extraction directe avec le prompt officiel de secours
-    const apiKey = getApiKey();
-    if (!apiKey) {
-      throw err;
-    }
-
-    const ai = new GoogleGenAI({ apiKey });
-    let effectiveMime = mimeType;
-    const prefixMatch = fileBase64.match(/^data:([^;]+);base64,/);
-    if (prefixMatch && prefixMatch[1]) {
-      effectiveMime = prefixMatch[1];
-    }
-    const cleanBase64 = fileBase64.replace(/^data:[^;]+;base64,/, "");
-
+    console.warn("Échec gemini-2.5-flash, bascule sur gemini-2.0-flash:", err?.message || err);
     const responseFallback = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: [
@@ -131,7 +124,8 @@ export async function extraireEmploiDuTemps(
     });
 
     let raw = responseFallback.text ? responseFallback.text.trim() : "";
-    return convertAnyOcrOutputToOfficialTextFile(raw, format);
+    raw = raw.replace(/^```[a-z]*\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+    return raw;
   }
 }
 
