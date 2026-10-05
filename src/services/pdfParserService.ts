@@ -7,7 +7,7 @@ import type {
 } from '../types';
 import { generateId, parseTimeToMinutes, minutesToTimeString } from '../lib/utils';
 import * as pdfjsLib from 'pdfjs-dist';
-import { extractTextFromImage } from './ocrService';
+import { extractDetailedTextFromImage } from './ocrService';
 
 // Configure worker for pdfjs-dist v6 in Vite / Browser environment
 if (typeof window !== 'undefined') {
@@ -704,14 +704,65 @@ export const LYCEE_SUBJECT_ACRONYMS: Record<string, string> = {
 };
 
 /**
- * Clean course title by removing days of week, dates, rooms, prof titles, time tokens, and structural noise.
- * Eliminates repeated duplicate words (e.g. "PC PC", "PCPC", "SVT SVT") and resolves acronyms into full academic titles.
+ * Extracts professor information from a string with support for:
+ * - ALL-CAPS names: "Dr KOIVOGUI MOUSSA", "Dr KADJO ASSANDE PIERRE", "M. KONE ZANA", "Pr. CARON", etc.
+ * - Mixed-case names: "Prof. Dr. Boni", "M. Dupont", "Mme. Mercier", "Sarah Jenkins"
+ * - Teaching teams: "Équipe SVT", "Équipe PC", "Équipe Maths", "Équipe pédagogique", "Équipe Tutorat"
  */
-function cleanSubjectTitle(text: string, dynamicEcueMap?: Map<string, { name: string; professor?: string }>): string {
-  const trimmed = text.trim();
+export function extractProfessor(text: string): string | undefined {
+  if (!text) return undefined;
+  // 1. Check for teaching team
+  const teamMatch = text.match(/\b(Équipe|Equipe)\s+(pédagogique|pedagogique|SVT|PC|Maths|Mathématiques|Français|Tutorat|Sport)\b/i);
+  if (teamMatch) return teamMatch[0].trim();
 
-  // 0. Filter out non-academic schedule breaks (Récréation, Pause, etc.)
-  if (/\b(recreation|récréation|pause|dejeuner|d\u00e9jeuner|repas|interclasse)\b/i.test(trimmed)) {
+  // 2. Check for titled professors / doctors / teachers (multi-word names in uppercase or mixed)
+  const titleMatch = text.match(/\b(Professeur|Prof\.?|Pr\.?|Docteur|Dr\.?|Monsieur|M\.|Madame|Mme\.?|Mister|Mr\.?|Mrs\.?|Me\.?)\s+([A-ZÀ-Ÿ][a-zà-ÿA-ZÀ-Ÿ-]+(?:\s+[a-zà-ÿA-ZÀ-Ÿ-]+){1,3})/);
+  if (titleMatch) return titleMatch[0].trim();
+
+  // 3. Known teachers list
+  const knownProfessors = [
+    'Sarah Jenkins',
+    'Dr KOIVOGUI MOUSSA',
+    'Dr KADJO ASSANDE PIERRE',
+    'M. KONE ZANA',
+    'M. MEYER JEAN-MARC',
+    'Dr GOLI ETIENNE',
+    'Dr KOUAKOU INNOCENT',
+    'Dr ADINGRA FODJO MARIUS',
+    'M. YEO NICODEME'
+  ];
+  for (const kp of knownProfessors) {
+    if (text.toLowerCase().includes(kp.toLowerCase())) return kp;
+  }
+
+  return undefined;
+}
+
+/**
+ * Extracts room information cleanly from a string
+ */
+export function extractRoom(text: string): string | undefined {
+  if (!text) return undefined;
+  const match = text.match(/\b(Grand Amphi\s+[A-Za-z0-9À-ÿ\s_-]+|Amphi(?:théâtre)?\s+[A-Za-z0-9À-ÿ\s_-]+|Salle\s+(?:Polyvalente|TP\s*\d+|TD\s*\d+|[A-Za-z0-9À-ÿ_-]+)|Labo?(?:toire)?\s*(?:Info(?:rmatique)?|Phys(?:ique)?|Chimie|SVT|Elec|Electronique)?\s*\d*|Terrain\s+[A-Za-z0-9À-ÿ_-]+|Auditorium\s+[A-Za-z0-9À-ÿ\s_-]+|[A-Z]\d{2,3})\b/i);
+  return match ? match[0].trim() : undefined;
+}
+
+/**
+ * Clean course title by:
+ * 1. Removing extracted room and professor first so they never pollute the subject name.
+ * 2. Removing days, dates, timestamps, group notations, and CM/TD/TP badges.
+ * 3. Resolving academic acronyms (PC, SVT, MATHS, FR, HG, PHILO, etc.) according to level.
+ * 4. Eliminating duplicated words ("PC PC" -> "Physique-Chimie").
+ */
+export function cleanSubjectTitle(
+  text: string, 
+  dynamicEcueMap?: Map<string, { name: string; professor?: string }>,
+  format?: ScheduleFormatType
+): string {
+  let trimmed = text.trim();
+
+  // 0. Filter out non-academic schedule breaks
+  if (/\b(recreation|récréation|pause|dejeuner|déjeuner|repas|interclasse|midi)\b/i.test(trimmed)) {
     return '';
   }
 
@@ -731,71 +782,70 @@ function cleanSubjectTitle(text: string, dynamicEcueMap?: Map<string, { name: st
     }
   }
 
-  // 3. Remove repeated adjacent duplicate words: e.g. "PC PC", "SVT SVT", "MATHS MATHS", "Français Français"
-  let preCleaned = trimmed;
-  while (/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/i.test(preCleaned)) {
-    preCleaned = preCleaned.replace(/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/gi, '$1');
+  // 3. Remove professor and room FIRST so their tokens never bleed into the subject title
+  const detectedProf = extractProfessor(trimmed);
+  if (detectedProf) {
+    trimmed = trimmed.replace(detectedProf, ' ');
+  }
+  const detectedRoom = extractRoom(trimmed);
+  if (detectedRoom) {
+    trimmed = trimmed.replace(detectedRoom, ' ');
   }
 
-  // 4. Remove glued doubled words: e.g. "PCPC" -> "PC", "SVTSVT" -> "SVT", "MATHSMATHS" -> "MATHS", "P.CP.C" -> "P.C"
-  preCleaned = preCleaned.replace(/^([A-Za-zÀ-ÿ.]{2,12})\1$/i, '$1');
-  if (preCleaned.replace(/\./g, '').length % 2 === 0) {
-    const half = preCleaned.length / 2;
-    if (preCleaned.slice(0, half).toLowerCase() === preCleaned.slice(half).toLowerCase()) {
-      preCleaned = preCleaned.slice(0, half);
+  // 4. Remove repeated adjacent duplicate words: e.g. "PC PC", "SVT SVT", "MATHS MATHS"
+  while (/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/i.test(trimmed)) {
+    trimmed = trimmed.replace(/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/gi, '$1');
+  }
+
+  // 5. Remove glued doubled words: e.g. "PCPC" -> "PC", "SVTSVT" -> "SVT"
+  trimmed = trimmed.replace(/^([A-Za-zÀ-ÿ.]{2,12})\1$/i, '$1');
+  if (trimmed.replace(/\./g, '').length % 2 === 0) {
+    const half = trimmed.length / 2;
+    if (trimmed.slice(0, half).toLowerCase() === trimmed.slice(half).toLowerCase()) {
+      trimmed = trimmed.slice(0, half);
     }
   }
 
-  // Check Lycée acronym directly
-  const upperInitial = preCleaned.toUpperCase().replace(/\s+/g, '');
+  // 6. Direct acronym check (e.g. "PC", "SVT", "MATHS")
+  const upperInitial = trimmed.toUpperCase().replace(/\s+/g, '');
   const dotStrippedInitial = upperInitial.replace(/\./g, '');
   if (LYCEE_SUBJECT_ACRONYMS[upperInitial]) return LYCEE_SUBJECT_ACRONYMS[upperInitial];
   if (LYCEE_SUBJECT_ACRONYMS[dotStrippedInitial]) return LYCEE_SUBJECT_ACRONYMS[dotStrippedInitial];
 
-  let cleaned = preCleaned
-    // 1. Remove Days of the Week (French & English) + Abbreviations
+  // 7. Remove Days, Dates, Times, Course Types, Rooms, Leftover noise
+  let cleaned = trimmed
     .replace(/\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi, ' ')
     .replace(/\b(lun|mar|mer|jeu|ven|sam|dim|mon|tue|wed|thu|fri|sat|sun)\.?\b/gi, ' ')
-    // 2. Remove Dates & Calendar stamps (e.g. 12/09/2026, Semaine 38, S1, S2)
     .replace(/\b\d{1,2}[/-]\d{1,2}([/-]\d{2,4})?\b/g, ' ')
     .replace(/\b\d{1,2}\s+(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\b/gi, ' ')
     .replace(/\b(semaine|sem|semestre)\s*\d+\b/gi, ' ')
-    // 3. Remove times: 08:30, 8h30, 10:00, 08h-10h, etc.
     .replace(/\b\d{1,2}[h:H]\d{2}\b/g, ' ')
     .replace(/\b\d{1,2}[h:H]\b/g, ' ')
     .replace(/\b\d{1,2}:\d{2}\b/g, ' ')
     .replace(/[-–—/àaA]\s*\d{1,2}[h:H:]\d{0,2}/g, ' ')
-    // 4. Remove Course Types and Group notation (preserve PROJET which can be a course name)
     .replace(/\b(CM|TD|TP|EXAM|PARTIEL|DS|COURS|MAGISTRAL|SEANCE|GROUPE|GRP|GR\d|G\d|ECTS|COEFF|COEFFICIENT)\b/gi, ' ')
-    // 5. Remove common room notations & campus keywords
     .replace(/\b(Amphi(?:théâtre)?|Salle|Labo?|Laboratoire|Bâtiment|Bat|Room|Auditorium|Campus|Site|UFR|Département|Faculté)\s*[A-Za-z0-9_-]*/gi, ' ')
-    // 6. Remove prof prefixes & labels
     .replace(/\b(Professeur|Prof\.?|Pr\.?|Docteur|Dr\.?|Monsieur|M\.|Madame|Mme\.?|Mister|Mr\.?|Mrs\.?|Enseignant|Intervenant)\s+[A-Za-zÀ-ÿ-]+/gi, ' ')
-    // 7. Remove structural timetable noise
     .replace(/\b(Emploi du temps|Planning|Horaire|Horaires|Matière|Discipline|Année|Promo|Promotion|Niveau|Licence|Master|PASS|L1|L2|L3|M1|M2)\b/gi, ' ')
-    // 8. Remove noise symbols and leftover punctuation
     .replace(/[|:;•\-_~*#<>\[\]()\\/]+/g, ' ')
     .replace(/\s{2,}/g, ' ')
     .trim();
 
-  // Remove trailing or leading single letters or numbers that might remain from "S1", "G2", etc.
+  // Strip leading/trailing single characters or numbers
   cleaned = cleaned.replace(/^[0-9A-Za-z]\s+/, '').replace(/\s+[0-9A-Za-z]$/, '').trim();
-  // Strip dangling prepositions
   cleaned = cleaned.replace(/\s+(de|d'|des|du|et|en|à)$/i, '').trim();
 
-  // Deduplicate again after cleaning noise
   while (/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/i.test(cleaned)) {
     cleaned = cleaned.replace(/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/gi, '$1');
   }
-  cleaned = cleaned.replace(/^([A-Za-zÀ-ÿ.]{2,12})\1$/i, '$1');
 
-  // Check Lycée acronym on cleaned string
+  // Acronym re-check on cleaned text
   const upperCleaned = cleaned.toUpperCase().replace(/\s+/g, '');
   const dotStrippedCleaned = upperCleaned.replace(/\./g, '');
   if (LYCEE_SUBJECT_ACRONYMS[upperCleaned]) return LYCEE_SUBJECT_ACRONYMS[upperCleaned];
   if (LYCEE_SUBJECT_ACRONYMS[dotStrippedCleaned]) return LYCEE_SUBJECT_ACRONYMS[dotStrippedCleaned];
 
-  // Absolute safety check: If title is still a cryptic code (e.g. 1MAN3350, 2INF3350, etc.)
+  // Cryptic university codes check (e.g. 1MAN3350)
   if (/^[0-9]?[A-Z]{2,5}[-_]?[0-9]{3,5}$/i.test(cleaned)) {
     const upper = cleaned.toUpperCase();
     if (upper.includes('MAN')) return 'Fondamentaux du Management & Finance';
@@ -807,29 +857,13 @@ function cleanSubjectTitle(text: string, dynamicEcueMap?: Map<string, { name: st
     return 'Enseignement Universitaire';
   }
 
-  // If title was stripped too much
   if (cleaned.length < 2) {
-    cleaned = 'Module d\'Enseignement';
+    if (format === 'scolaire') return 'Matière Générale';
+    if (format === 'tpcm') return 'Module Technique';
+    return 'Module d\'Enseignement';
   }
 
-  // Capitalize nicely
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
-}
-
-/**
- * Extracts room information from a string
- */
-function extractRoom(text: string): string | undefined {
-  const match = text.match(/\b(Amphi(?:théâtre)?\s+[A-Za-z0-9À-ÿ\s_-]+|Salle\s+[A-Za-z0-9_-]+|Labo?\s*[A-Za-z0-9_-]*|Bâtiment\s+[A-Za-z0-9_-]+|[A-Z]\d{2,3}|Auditorium\s+[A-Za-z0-9\s_-]+)\b/i);
-  return match ? match[0].trim() : undefined;
-}
-
-/**
- * Extracts professor information from a string
- */
-function extractProfessor(text: string): string | undefined {
-  const match = text.match(/\b(Professeur|Prof\.?|Pr\.?|Docteur|Dr\.?|Monsieur|M\.|Madame|Mme\.?|Mr\.?|Mrs\.?)\s+([A-ZÀ-Ÿ][a-zà-ÿ]+(?:\s+[A-ZÀ-Ÿ][a-zà-ÿ]+)?)\b/i);
-  return match ? match[0].trim() : undefined;
 }
 
 /**
@@ -1388,7 +1422,8 @@ function parseSpatialGridSchedule(
  */
 export function parseSequentialSchedule(
   rawText: string,
-  dynamicEcueMap?: Map<string, { name: string; professor?: string }>
+  dynamicEcueMap?: Map<string, { name: string; professor?: string }>,
+  format?: ScheduleFormatType
 ): {
   detectedSlots: {
     dayOfWeek: DayOfWeek;
@@ -1578,6 +1613,12 @@ export function parseSequentialSchedule(
       const matches = Array.from(clause.matchAll(/(\d{1,2})[h:H:](\d{2})?\s*[-–—àaA/to]+\s*(\d{1,2})[h:H:](\d{2})?/gi));
 
       if (matches.length > 0) {
+        // Multi-day horizontal row detection:
+        // If a row contains 2+ time matches with identical or near start times, each column belongs to a different day!
+        const isMultiDayHorizontalRow = matches.length >= 2 && 
+          (Math.abs(parseTimeToMinutes(normalizeTimeString(matches[0][1], matches[0][2])) - 
+                    parseTimeToMinutes(normalizeTimeString(matches[1][1], matches[1][2]))) <= 45);
+
         for (let mIdx = 0; mIdx < matches.length; mIdx++) {
           const match = matches[mIdx];
           const startH = match[1];
@@ -1604,7 +1645,7 @@ export function parseSequentialSchedule(
             }
           }
 
-          // If still completely empty, look at next line (e.g. course title on the line right below the time)
+          // If still completely empty, look at next line
           if (contextText.length === 0 && i + 1 < lines.length) {
             const nextLine = lines[i + 1].trim();
             if (!timeIntervalRegex.test(nextLine) && findDayInLine(nextLine) === null) {
@@ -1618,16 +1659,21 @@ export function parseSequentialSchedule(
           const room = extractRoom(contextText);
           const professor = extractProfessor(contextText);
           const type = detectCourseType(contextText);
-          const cleanSub = cleanSubjectTitle(contextText, dynamicEcueMap);
+          const cleanSub = cleanSubjectTitle(contextText, dynamicEcueMap, format);
+
+          // If this was a horizontal matrix row across multiple days, distribute each match to its column day!
+          const slotDay: DayOfWeek = isMultiDayHorizontalRow
+            ? (((currentDay + mIdx) % 6) as DayOfWeek)
+            : currentDay;
 
           if (cleanSub && cleanSub.length >= 2 && parseTimeToMinutes(endTime) > parseTimeToMinutes(startTime)) {
             detectedSlots.push({
-              dayOfWeek: currentDay,
+              dayOfWeek: slotDay,
               startTime,
               endTime,
               rawSubject: cleanSub,
               type,
-              room: room || 'Salle de cours',
+              room: room || (format === 'scolaire' ? 'Salle de classe' : 'Salle de cours'),
               professor,
             });
           }
@@ -1681,7 +1727,8 @@ export function parseTimetableText(
   fileName: string, 
   fileSize: number, 
   spatialItems?: SpatialTextItem[],
-  pageCount: number = 1
+  pageCount: number = 1,
+  format?: ScheduleFormatType
 ): ExtractedPdfSchedule {
   let detectedSlots: {
     dayOfWeek: DayOfWeek;
@@ -1706,7 +1753,7 @@ export function parseTimetableText(
 
   // 2. If spatial grid found few or no slots, use Sequential & Linear Parser
   if (detectedSlots.length < 2) {
-    const sequentialResult = parseSequentialSchedule(rawText, dynamicEcueMap);
+    const sequentialResult = parseSequentialSchedule(rawText, dynamicEcueMap, format);
     if (sequentialResult.detectedSlots.length > 0) {
       detectedSlots = sequentialResult.detectedSlots;
     }
@@ -1744,7 +1791,7 @@ export function parseTimetableText(
       raw = entry.name;
       if (entry.professor && !slot.professor) slot.professor = entry.professor;
     } else {
-      raw = cleanSubjectTitle(slot.rawSubject, dynamicEcueMap);
+      raw = cleanSubjectTitle(slot.rawSubject, dynamicEcueMap, format);
     }
 
     let canonical = raw;
@@ -1968,9 +2015,10 @@ export function formatExtractedScheduleToFormatText(
  */
 export function parseStructuredScheduleTruth(
   text: string,
-  fileName: string = 'Emploi_du_Temps_Source_Verite.txt'
+  fileName: string = 'Emploi_du_Temps_Source_Verite.txt',
+  format?: ScheduleFormatType
 ): ExtractedPdfSchedule {
-  return parseTimetableText(text, fileName, text.length);
+  return parseTimetableText(text, fileName, text.length, undefined, 1, format);
 }
 
 /**
@@ -1979,24 +2027,33 @@ export function parseStructuredScheduleTruth(
  */
 export async function parseTimetableDocument(
   file: File,
-  onProgress?: (message: string, percent: number) => void
+  onProgress?: (message: string, percent: number) => void,
+  format?: ScheduleFormatType
 ): Promise<ExtractedPdfSchedule> {
   const isImage = file.type.startsWith('image/') || /\.(png|jpe?g|webp|bmp)$/i.test(file.name);
 
   if (isImage) {
-    onProgress?.('Numérisation OCR haute résolution de l’image...', 15);
-    const ocrText = await extractTextFromImage(file, (prog, status) => {
+    onProgress?.('Numérisation OCR haute résolution et filtrage des contrastes...', 15);
+    const ocrResult = await extractDetailedTextFromImage(file, (prog, status) => {
       onProgress?.(status, Math.round(prog * 100));
     });
 
-    onProgress?.('Détection sémantique et extraction de la Source de Vérité...', 90);
-    return parseTimetableText(ocrText, file.name, file.size);
+    onProgress?.('Détection sémantique avancée et structuration des cours...', 90);
+    const textToParse = ocrResult.reconstructedText || ocrResult.rawText;
+    return parseTimetableText(
+      textToParse,
+      file.name,
+      file.size,
+      ocrResult.spatialItems,
+      1,
+      format
+    );
   } else {
     onProgress?.('Lecture vectorielle des flux PDF...', 20);
     const { rawText, spatialItems, pageCount } = await extractDetailedPdfContent(file);
 
     onProgress?.('Structuration des créneaux horaires...', 80);
-    return parseTimetableText(rawText, file.name, file.size, spatialItems, pageCount);
+    return parseTimetableText(rawText, file.name, file.size, spatialItems, pageCount, format);
   }
 }
 

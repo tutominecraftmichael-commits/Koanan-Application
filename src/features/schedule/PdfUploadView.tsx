@@ -370,7 +370,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
         setScanStatus(status);
         setScanProgress(Math.max(10, Math.min(95, percent)));
         setAnalysisLogs(prev => [...prev.slice(-3), `› ${status}`]);
-      });
+      }, selectedFormat);
 
       setScanProgress(98);
       setScanStatus(`Structuration du fichier texte au format ${FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || 'officiel'}...`);
@@ -407,7 +407,11 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
     try {
       const formatLabel = FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || 'Emploi_du_Temps';
-      const parsed = parseStructuredScheduleTruth(scheduleText, `${uploadedFile?.name || 'Emploi_du_Temps'}_${formatLabel}.txt`);
+      const parsed = parseStructuredScheduleTruth(
+        scheduleText,
+        `${uploadedFile?.name || 'Emploi_du_Temps'}_${formatLabel}.txt`,
+        selectedFormat
+      );
       const harmonized = recalculateSummary({
         ...parsed,
         slots: harmonizeAndDeduplicateSlots(parsed.slots),
@@ -976,9 +980,23 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           </div>
 
           {/* FUTURISTIC LASER SCANNER VISUALIZER */}
-          <div className="relative max-w-md mx-auto aspect-[4/3] rounded-2xl bg-black/60 border border-cyan-500/40 overflow-hidden shadow-[0_0_40px_rgba(6,182,212,0.25)] flex items-center justify-center p-4">
+          <div className="relative max-w-md mx-auto aspect-[4/3] rounded-2xl bg-black/75 border border-cyan-500/40 overflow-hidden shadow-[0_0_45px_rgba(6,182,212,0.3)] flex items-center justify-center p-4">
             
-            {/* LASER BEAM SWEEP ANIMATION */}
+            {/* Holographic Background Grid Pattern */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#06b6d40d_1px,transparent_1px),linear-gradient(to_bottom,#06b6d40d_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+
+            {/* Top HUD Status Bar */}
+            <div className="absolute top-2.5 left-4 right-4 flex items-center justify-between text-[10px] font-mono text-cyan-400/80 z-20 pointer-events-none">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                OCR MATRIX ACTIVE
+              </span>
+              <span className="px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/30 uppercase tracking-wider text-cyan-300">
+                {FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || selectedFormat.toUpperCase()}
+              </span>
+            </div>
+
+            {/* SILKY SMOOTH LASER BEAM SWEEP ANIMATION */}
             <div className="laser-scanner-beam" />
 
             {/* Glowing Corner Targets */}
@@ -991,18 +1009,18 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               <img 
                 src={filePreviewUrl} 
                 alt="Scan en direct" 
-                className="w-full h-full object-contain filter contrast-125 opacity-80"
+                className="w-full h-full object-contain filter contrast-125 opacity-85 z-10"
               />
             ) : (
-              <div className="text-center space-y-3">
-                <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 mx-auto">
+              <div className="text-center space-y-3 z-10">
+                <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 mx-auto shadow-lg shadow-cyan-500/20">
                   <Brain className="w-8 h-8 animate-spin" style={{ animationDuration: '4s' }} />
                 </div>
                 <div className="font-mono text-xs text-cyan-300">
                   {uploadedFile?.name || 'Document_EDT.pdf'}
                 </div>
-                <span className="text-[10px] text-slate-500 font-mono uppercase">
-                  Reconnaissance Vectorielle • Modèle {selectedFormat.toUpperCase()}
+                <span className="text-[10px] text-slate-400 font-mono uppercase block">
+                  Reconnaissance Vectorielle 2D • Modèle {selectedFormat.toUpperCase()}
                 </span>
               </div>
             )}
