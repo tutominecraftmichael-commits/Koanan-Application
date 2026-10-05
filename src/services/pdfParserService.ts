@@ -900,8 +900,14 @@ export function cleanSubjectTitle(
 ): string {
   let trimmed = text.trim();
 
-  // 0. Filter out non-academic schedule breaks
-  if (/\b(recreation|récréation|pause|dejeuner|déjeuner|repas|interclasse|midi)\b/i.test(trimmed)) {
+  // 0. Filter out non-academic schedule breaks or table header tokens (time slot, plage horaire, etc.)
+  if (/\b(recreation|récréation|pause|dejeuner|déjeuner|repas|interclasse|midi|time\s*slot|plage\s*horaire|créneau|creneau|horaires?|hours?)\b/i.test(trimmed)) {
+    return '';
+  }
+
+  // Remove quotes and punctuation artifacts
+  trimmed = trimmed.replace(/["'“”«»]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (trimmed.length < 2 || /^["'\s,;:-]+$/.test(trimmed)) {
     return '';
   }
 

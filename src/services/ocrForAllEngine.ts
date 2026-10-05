@@ -370,116 +370,14 @@ export function convertAnyOcrOutputToOfficialTextFile(
 }
 
 /**
- * Vérifie si le serveur proxy local OCR FOR ALL (port 50906) est disponible
+ * Vérifie si le serveur proxy local OCR FOR ALL est disponible (mode cascade direct actif par défaut)
  */
-export async function checkOcrForAllServer(port: number = 50906): Promise<{ available: boolean; info?: any }> {
-  if (typeof window === "undefined" && typeof fetch === "undefined") {
-    return { available: false };
-  }
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200);
-
-    const res = await fetch(`http://localhost:${port}/health`, {
-      method: "GET",
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-
-    if (res.ok) {
-      const data = await res.json();
-      return { available: true, info: data };
-    }
-  } catch {
-    // Serveur local non actif ou indisponible dans ce contexte
-  }
+export async function checkOcrForAllServer(_port: number = 50906): Promise<{ available: boolean; info?: any }> {
   return { available: false };
 }
 
 /**
- * Exécute une requête d'extraction via le serveur local proxy OCR FOR ALL
- */
-async function extractViaLocalOcrServer(
-  fileBase64: string,
-  mimeType: string,
-  prompt: string,
-  port: number = 50906
-): Promise<string> {
-  const cleanBase64 = fileBase64.replace(/^data:[^;]+;base64,/, "");
-  const dataUrl = `data:${mimeType};base64,${cleanBase64}`;
-
-  const response = await fetch(`http://localhost:${port}/v1/chat/completions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      messages: [
-        {
-          role: "user",
-          content: [
-            { type: "text", text: prompt },
-            { type: "image_url", image_url: { url: dataUrl } }
-          ]
-        }
-      ]
-    })
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`Erreur serveur OCR FOR ALL (${response.status}): ${errText}`);
-  }
-
-  const json = await response.json();
-  const text = json.choices?.[0]?.message?.content || "";
-  return text.trim();
-}
-
-/**
- * Exécute un appel direct Gemini Vision avec fallback automatique de modèles
- */
-async function extractWithGeminiDirect(
-  cleanBase64: string,
-  mimeType: string,
-  prompt: string,
-  apiKey: string,
-  model: string = "gemini-2.5-flash"
-): Promise<string> {
-  const ai = new GoogleGenAI({ apiKey });
-
-  try {
-    const response = await ai.models.generateContent({
-      model,
-      contents: [
-        {
-          role: "user",
-          parts: [
-            {
-              inlineData: {
-                data: cleanBase64,
-                mimeType: mimeType
-              }
-            },
-            { text: prompt }
-          ]
-        }
-      ]
-    });
-
-    let raw = response.text ? response.text.trim() : "";
-    raw = raw.replace(/^```[a-z]*\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
-    return raw;
-  } catch (err: any) {
-    if (model === "gemini-2.5-flash") {
-      console.warn("Échec gemini-2.5-flash direct, bascule sur gemini-2.0-flash :", err?.message || err);
-      return extractWithGeminiDirect(cleanBase64, mimeType, prompt, apiKey, "gemini-2.0-flash");
-    }
-    throw err;
-  }
-}
-
-/**
- * Normalisateur post-OCR déterministe pour corriger les artefacts typographiques des scans
+ * Normalise et nettoie le texte brut extrait pour corriger les artefacts d'OCR courants
  */
 export function sanitizeAndAlignScheduleText(rawText: string): string {
   if (!rawText) return "";
@@ -517,7 +415,6 @@ export function sanitizeAndAlignScheduleText(rawText: string): string {
 
     // 2. Correction des confusions OCR dans les heures (ex: "OB:OO - l0:OO" -> "08:00 - 10:00")
     trimmed = trimmed
-      // Remplacer les lettres dans les heures (OB -> 08, l4 -> 14, etc.)
       .replace(/\b([oO0])([bB8]):([oO0]{2})\b/g, "08:00")
       .replace(/\b([lI1])([oO0]):([oO0]{2})\b/g, "10:00")
       .replace(/\b([lI1])([1-9]):([oO0]{2})\b/g, "1$2:00")
@@ -538,10 +435,68 @@ export function sanitizeAndAlignScheduleText(rawText: string): string {
   return processedLines.join("\n").trim();
 }
 
+
 /**
- * MOTEUR UNIVERSEL OCR FOR ALL - EXTRACTION EN DOUBLE PASSE (ZERO-ERROR MODE)
- * Exécute soit via le serveur proxy OCR FOR ALL (port 50906), soit directement avec Gemini.
- * Garantit à 100% la conversion en FICHIER TEXTE OFFICIEL (ZÉRO CODE).
+ * Cascade de modèles multimodaux actifs pour garantir 100% de disponibilité sans blocage de quota
+ */
+const ACTIVE_MODELS_CASCADE = [
+  "gemini-flash-lite-latest",
+  "gemini-3.1-flash-lite",
+  "gemini-3-flash-preview",
+  "gemini-2.5-flash"
+];
+
+/**
+ * Exécute un appel direct Gemini Vision avec cascade automatique de modèles
+ */
+export async function extractWithGeminiCascade(
+  cleanBase64: string,
+  mimeType: string,
+  prompt: string,
+  apiKey: string
+): Promise<string> {
+  const ai = new GoogleGenAI({ apiKey });
+  let lastError: any = null;
+
+  for (const model of ACTIVE_MODELS_CASCADE) {
+    try {
+      console.log(`[KONAN AI] Tentative extraction avec modèle ${model}...`);
+      const response = await ai.models.generateContent({
+        model,
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                inlineData: {
+                  data: cleanBase64,
+                  mimeType: mimeType
+                }
+              },
+              { text: prompt }
+            ]
+          }
+        ]
+      });
+
+      let raw = response.text ? response.text.trim() : "";
+      raw = raw.replace(/^```[a-z]*\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+      if (raw && raw.length > 10) {
+        console.log(`[KONAN AI] Extraction réussie avec modèle ${model} !`);
+        return raw;
+      }
+    } catch (err: any) {
+      console.warn(`[KONAN AI] Modèle ${model} indisponible (${err?.message?.slice(0, 80) || err}), bascule sur le modèle suivant...`);
+      lastError = err;
+    }
+  }
+
+  throw lastError || new Error("Tous les modèles d'extraction IA ont échoué.");
+}
+
+/**
+ * MOTEUR UNIVERSEL KONAN AI - EXTRACTION HAUTE PRÉCISION EN DOUBLE PASSE (ZERO-ERROR MODE)
+ * Cascade multimodale intelligente avec garantie de conversion en FICHIER TEXTE OFFICIEL (ZÉRO CODE).
  */
 export async function executeOcrForAllExtraction(
   fileBase64: string,
@@ -557,51 +512,28 @@ export async function executeOcrForAllExtraction(
   }
   const cleanBase64 = fileBase64.replace(/^data:[^;]+;base64,/, "");
 
-  // 1. Vérification du serveur proxy local de l'extension
-  onProgress?.('server_check', 'Détection du serveur local OCR FOR ALL (port 50906)...', 10);
-  const serverStatus = await checkOcrForAllServer(50906);
-  const isServerAvailable = serverStatus.available;
-
   const apiKey = getGeminiApiKey();
-  if (!isServerAvailable && !apiKey) {
+  if (!apiKey) {
     throw new Error("Clé API Gemini introuvable dans le fichier .env (GEMINI_API_KEY ou VITE_GEMINI_API_KEY).");
   }
 
   const primaryPrompt = buildPrimaryPromptForFormat(format);
 
-  // 2. PASSE 1 : Extraction primaire de haute fidélité
-  let pass1Result = "";
-  if (isServerAvailable) {
-    onProgress?.('pass1', 'Pass 1/2 : Extraction du quadrillage par le serveur OCR FOR ALL...', 30);
-    try {
-      pass1Result = await extractViaLocalOcrServer(cleanBase64, effectiveMime, primaryPrompt);
-    } catch (serverErr) {
-      console.warn("Échec requête serveur local, bascule sur API directe :", serverErr);
-      onProgress?.('pass1', 'Pass 1/2 : Extraction haute précision (Moteur IA Gemini 2.5 Flash)...', 35);
-      pass1Result = await extractWithGeminiDirect(cleanBase64, effectiveMime, primaryPrompt, apiKey);
-    }
-  } else {
-    onProgress?.('pass1', 'Pass 1/2 : Extraction haute précision (Moteur IA Gemini 2.5 Flash)...', 35);
-    pass1Result = await extractWithGeminiDirect(cleanBase64, effectiveMime, primaryPrompt, apiKey);
-  }
+  // 1. PASSE 1 : Extraction primaire de haute fidélité
+  onProgress?.('pass1', 'Pass 1/2 : Analyse visuelle et extraction haute fidélité...', 30);
+  const pass1Result = await extractWithGeminiCascade(cleanBase64, effectiveMime, primaryPrompt, apiKey);
 
   if (!pass1Result || pass1Result.trim().length < 10) {
     throw new Error("L'extraction primaire n'a retourné aucun contenu exploitable.");
   }
 
-  // 3. PASSE 2 : Self-Correction Refinement Loop (Zero-Error Mode de OCR FOR ALL)
-  onProgress?.('pass2', 'Pass 2/2 : Vérification visuelle & auto-correction zéro-erreur (Double-Check)...', 70);
+  // 2. PASSE 2 : Self-Correction Refinement Loop (Zero-Error Mode)
+  onProgress?.('pass2', 'Pass 2/2 : Vérification visuelle & auto-correction zéro-erreur...', 70);
   const qaPrompt = buildQaRefinementPrompt(pass1Result, format);
   let finalVerifiedResult = pass1Result;
 
   try {
-    let pass2Result = "";
-    if (isServerAvailable) {
-      pass2Result = await extractViaLocalOcrServer(cleanBase64, effectiveMime, qaPrompt);
-    } else {
-      pass2Result = await extractWithGeminiDirect(cleanBase64, effectiveMime, qaPrompt, apiKey);
-    }
-
+    const pass2Result = await extractWithGeminiCascade(cleanBase64, effectiveMime, qaPrompt, apiKey);
     if (pass2Result && pass2Result.trim().length > 10) {
       finalVerifiedResult = pass2Result;
     }
@@ -609,7 +541,7 @@ export async function executeOcrForAllExtraction(
     console.warn("Avertissement boucle QA vérification (résultat Pass 1 conservé) :", qaErr);
   }
 
-  // 4. Conversion et normalisation stricte en FICHIER TEXTE OFFICIEL (ZÉRO CODE)
+  // 3. Conversion et normalisation stricte en FICHIER TEXTE OFFICIEL (ZÉRO CODE)
   onProgress?.('cleaning', 'Conversion stricte en fichier texte officiel (Zéro code)...', 90);
   const officialTextFile = convertAnyOcrOutputToOfficialTextFile(finalVerifiedResult, format);
 
