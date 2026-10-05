@@ -410,8 +410,8 @@ export function findDayInLine(text: string): DayOfWeek | null {
   const clean = text.trim();
   if (!clean || clean.length < 3) return null;
 
-  // A line that starts with a time interval (e.g. "07:30 - 10:00" or "8h - 10h") is a course slot, NOT a day header!
-  if (/^(\d{1,2})[h:H:](\d{2})?\s*[-–—àaA/to]/i.test(clean)) {
+  // A line that starts with a time interval (e.g. "07:30 - 10:00" or "- 07:30 - 10:00") is a course slot, NOT a day header!
+  if (/^[\s|•*–—#-]*(\d{1,2})[h:H:](\d{2})?\s*[-–—àaA/to]/i.test(clean)) {
     return null;
   }
 
@@ -850,6 +850,10 @@ export const LYCEE_SUBJECT_ACRONYMS: Record<string, string> = {
  */
 export function extractProfessor(text: string): string | undefined {
   if (!text) return undefined;
+  // 0. Check for explicit Prof label e.g. "Prof: Dr KOIVOGUI", "Prof: M. YEO"
+  const explicitProf = text.match(/\b(?:Prof|Professeur|Enseignant|Intervenant)\s*:\s*([^|()]+)/i);
+  if (explicitProf) return explicitProf[1].trim();
+
   // 1. Check for teaching team
   const teamMatch = text.match(/\b(Équipe|Equipe)\s+(pédagogique|pedagogique|SVT|PC|Maths|Mathématiques|Français|Tutorat|Sport)\b/i);
   if (teamMatch) return teamMatch[0].trim();
@@ -882,6 +886,13 @@ export function extractProfessor(text: string): string | undefined {
  */
 export function extractRoom(text: string): string | undefined {
   if (!text) return undefined;
+  // 0. Check for explicit Salle label e.g. "Salle: Amphi ESATIC" or parentheses "(Amphi 1)"
+  const explicitRoom = text.match(/\b(?:Salle|Amphi|Lieu)\s*:\s*([^|()]+)/i);
+  if (explicitRoom) return explicitRoom[1].trim();
+
+  const parenRoom = text.match(/\(([^)]*(?:Amphi|Salle|Labo|Atelier|Machine)[^)]*)\)/i);
+  if (parenRoom) return parenRoom[1].trim();
+
   const match = text.match(/\b(Grand Amphi\s+[A-Za-z0-9À-ÿ\s_-]+|Amphi(?:théâtre)?\s+[A-Za-z0-9À-ÿ\s_-]+|Salle\s+(?:Polyvalente|TP\s*\d+|TD\s*\d+|[A-Za-z0-9À-ÿ_-]+)|Labo?(?:toire)?\s*(?:Info(?:rmatique)?|Phys(?:ique)?|Chimie|SVT|Elec|Electronique)?\s*\d*|Terrain\s+[A-Za-z0-9À-ÿ_-]+|Auditorium\s+[A-Za-z0-9À-ÿ\s_-]+|[A-Z]\d{2,3})\b/i);
   return match ? match[0].trim() : undefined;
 }
@@ -936,6 +947,10 @@ export function cleanSubjectTitle(
   if (detectedRoom) {
     trimmed = trimmed.replace(detectedRoom, ' ');
   }
+  // Strip explicit Salle: and Prof: clauses
+  trimmed = trimmed
+    .replace(/\b(?:Salle|Amphi|Lieu)\s*:[^|()]+/gi, ' ')
+    .replace(/\b(?:Prof|Professeur|Enseignant|Intervenant)\s*:[^|()]+/gi, ' ');
 
   // 4. Remove repeated adjacent duplicate words: e.g. "PC PC", "SVT SVT", "MATHS MATHS"
   while (/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/i.test(trimmed)) {
@@ -1719,6 +1734,7 @@ export function parseSequentialSchedule(
             : clause.length;
 
           let contextText = clause.substring(matchEndIndex, nextMatchStartIndex).trim();
+          contextText = contextText.replace(/^[:|\-\s]+/, '').replace(/[:|\-\s]+$/, '').trim();
 
           // If text after time is completely empty and this was the single time match, check preceding text
           if (contextText.length === 0 && matches.length === 1) {
