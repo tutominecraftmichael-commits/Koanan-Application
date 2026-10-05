@@ -63,11 +63,14 @@ export const getGeminiApiKey = (): string => {
       // Ignorer
     }
   }
-  if (typeof process !== "undefined" && process.env?.GEMINI_API_KEY) {
-    return process.env.GEMINI_API_KEY;
+  if (typeof import.meta !== "undefined") {
+    const metaEnv = (import.meta as any).env;
+    if (metaEnv?.VITE_GEMINI_API_KEY) return metaEnv.VITE_GEMINI_API_KEY;
+    if (metaEnv?.GEMINI_API_KEY) return metaEnv.GEMINI_API_KEY;
   }
-  if (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_GEMINI_API_KEY) {
-    return (import.meta as any).env.VITE_GEMINI_API_KEY;
+  if (typeof process !== "undefined" && process.env) {
+    if (process.env.VITE_GEMINI_API_KEY) return process.env.VITE_GEMINI_API_KEY;
+    if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
   }
   return "";
 };
