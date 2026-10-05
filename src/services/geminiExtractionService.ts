@@ -11,13 +11,16 @@ const getApiKey = (): string => {
       // Ignorer si localStorage restreint
     }
   }
-  // 2. Variable process.env injectée par Vite au build
-  if (typeof process !== "undefined" && process.env?.GEMINI_API_KEY) {
-    return process.env.GEMINI_API_KEY;
+  // 2. Variable Vite import.meta.env
+  if (typeof import.meta !== "undefined") {
+    const metaEnv = (import.meta as any).env;
+    if (metaEnv?.VITE_GEMINI_API_KEY) return metaEnv.VITE_GEMINI_API_KEY;
+    if (metaEnv?.GEMINI_API_KEY) return metaEnv.GEMINI_API_KEY;
   }
-  // 3. Variable Vite import.meta.env
-  if (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_GEMINI_API_KEY) {
-    return (import.meta as any).env.VITE_GEMINI_API_KEY;
+  // 3. Variable process.env
+  if (typeof process !== "undefined" && process.env) {
+    if (process.env.VITE_GEMINI_API_KEY) return process.env.VITE_GEMINI_API_KEY;
+    if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
   }
   return "";
 };
@@ -80,53 +83,48 @@ export async function extraireEmploiDuTemps(fileBase64: string, mimeType: string
   // Supprime le préfixe si le front-end l'a envoyé avec "data:image/...;base64,"
   const cleanBase64 = fileBase64.replace(/^data:[^;]+;base64,/, "");
 
-  try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: [
-        {
-          role: "user",
-          parts: [
-            {
-              inlineData: {
-                data: cleanBase64,
-                mimeType: effectiveMime
-              }
-            },
-            { text: PROMPT_OFFICIEL }
-          ]
-        }
-      ]
-    });
+  const modelsToTry = [
+    "gemini-flash-lite-latest",
+    "gemini-3.1-flash-lite",
+    "gemini-3-flash-preview",
+    "gemini-2.5-flash"
+  ];
 
-    let raw = response.text ? response.text.trim() : "";
-    // Supprime d'éventuels blocs markdown englobants (```text ... ```)
-    raw = raw.replace(/^```[a-z]*\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
-    return raw;
-  } catch (err: any) {
-    console.warn("Échec gemini-2.5-flash, bascule sur gemini-2.0-flash:", err?.message || err);
-    const responseFallback = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: [
-        {
-          role: "user",
-          parts: [
-            {
-              inlineData: {
-                data: cleanBase64,
-                mimeType: effectiveMime
-              }
-            },
-            { text: PROMPT_OFFICIEL }
-          ]
-        }
-      ]
-    });
+  let lastError: any = null;
 
-    let raw = responseFallback.text ? responseFallback.text.trim() : "";
-    raw = raw.replace(/^```[a-z]*\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
-    return raw;
+  for (const model of modelsToTry) {
+    try {
+      const response = await ai.models.generateContent({
+        model,
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                inlineData: {
+                  data: cleanBase64,
+                  mimeType: effectiveMime
+                }
+              },
+              { text: PROMPT_OFFICIEL }
+            ]
+          }
+        ]
+      });
+
+      let raw = response.text ? response.text.trim() : "";
+      // Supprime d'éventuels blocs markdown englobants (```text ... ```)
+      raw = raw.replace(/^```[a-z]*\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+      if (raw && raw.length > 5) {
+        return raw;
+      }
+    } catch (err: any) {
+      console.warn(`[KONAN AI] Modèle ${model} indisponible (${err?.message?.slice(0, 100) || err}), bascule vers le suivant...`);
+      lastError = err;
+    }
   }
+
+  throw lastError || new Error("Impossible d'extraire l'emploi du temps avec l'IA. Vérifiez votre connexion.");
 }
 
 /**
