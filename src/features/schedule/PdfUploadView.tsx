@@ -59,6 +59,7 @@ import {
   loadDemoPdfTemplate,
   type ScheduleFormatType
 } from '../../services/pdfParserService';
+import { extraireEmploiDuTemps, convertFileToBase64 } from '../../services/geminiExtractionService';
 import { 
   generateAcademicAnalysisReport, 
   buildStateFromExtractedSchedule 
@@ -358,13 +359,40 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
     setUploadStep('scanning');
     setErrorMessage(null);
-    setScanProgress(10);
-    setScanStatus('Initialisation de la lecture...');
+    setScanProgress(15);
+    setScanStatus('Envoi au moteur IA Gemini 2.5 Flash...');
 
     try {
+      // 1. Priorité au modèle multimodal Gemini 2.5 Flash
+      const mimeType = uploadedFile.type || (uploadedFile.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
+      const base64Data = await convertFileToBase64(uploadedFile);
+
+      setScanProgress(45);
+      setScanStatus('Analyse visuelle et structuration par Gemini...');
+
+      const structuredText = await extraireEmploiDuTemps(base64Data, mimeType);
+
+      // Si Gemini a retourné le texte structuré avec succès
+      if (structuredText && structuredText.trim().length > 10) {
+        setScanProgress(100);
+        setScanStatus('Numérisation Gemini terminée avec succès !');
+        setScheduleText(structuredText.trim());
+        await new Promise(r => setTimeout(r, 600));
+        soundFX.playCheckmarkPop();
+        setUploadStep('review_text');
+        return;
+      }
+    } catch (geminiErr: any) {
+      console.warn('Gemini extraction notice (bascule sur moteur local) :', geminiErr?.message || geminiErr);
+    }
+
+    // 2. Moteur local de secours (PDF.js / OCR 2D) si Gemini indisponible
+    try {
+      setScanProgress(60);
+      setScanStatus('Traitement par le moteur vectoriel local...');
       const extractedRaw = await parseTimetableDocument(uploadedFile, (status, percent) => {
         setScanStatus(status);
-        setScanProgress(Math.max(10, Math.min(95, percent)));
+        setScanProgress(Math.max(30, Math.min(95, percent)));
       }, selectedFormat);
 
       setScanProgress(98);
