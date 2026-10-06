@@ -105,7 +105,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
   const todaysClasses = classSlots
     .filter(c => c.dayOfWeek === currentDayIndex)
-    .sort((a, b) => a.startTime.localeCompare(b.startTime));
+    .sort((a, b) => (a.startTime || '').localeCompare(b.startTime || ''));
 
   const allTodaysStudySessions = studySessions
     .filter(s => s.dayOfWeek === currentDayIndex);
@@ -129,7 +129,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           const endMin = parseTimeToMinutes(s.endTime);
           return endMin >= currentMinute || s.isRescheduledToday;
         })
-        .sort((a, b) => a.startTime.localeCompare(b.startTime));
+        .sort((a, b) => (a.startTime || '').localeCompare(b.startTime || ''));
 
   // Prochaine session chronologique exacte :
   const isDayFullyComplete = allTodaysStudySessions.length > 0 && allTodaysStudySessions.every(s => s.completed);

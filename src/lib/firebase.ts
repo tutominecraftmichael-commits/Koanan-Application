@@ -110,6 +110,32 @@ googleProvider.setCustomParameters({
   prompt: 'select_account'
 });
 
+// CIRCUIT BREAKER FIRESTORE : Protection anti-quota épuisé et anti-crash
+let isFirestoreQuotaExhausted = false;
+let quotaExhaustedTimestamp = 0;
+const QUOTA_COOLDOWN_MS = 15 * 60 * 1000; // 15 min de pause si quota atteint
+
+export function isFirestoreQuotaBlocked(): boolean {
+  if (!isFirestoreQuotaExhausted) return false;
+  if (Date.now() - quotaExhaustedTimestamp > QUOTA_COOLDOWN_MS) {
+    isFirestoreQuotaExhausted = false;
+    return false;
+  }
+  return true;
+}
+
+export function reportFirestoreError(err: any): void {
+  const msg = err?.message || String(err || '');
+  const code = err?.code || '';
+  if (code === 'resource-exhausted' || msg.includes('resource-exhausted') || msg.includes('Quota exceeded')) {
+    if (!isFirestoreQuotaExhausted) {
+      console.warn('[KONAN Firebase] Quota Cloud Firestore temporairement atteint. Protection activée : utilisation sécurisée du stockage local sans coupure.');
+    }
+    isFirestoreQuotaExhausted = true;
+    quotaExhaustedTimestamp = Date.now();
+  }
+}
+
 export interface RealAuthUser {
   uid: string;
   displayName: string | null;
@@ -474,7 +500,7 @@ export async function checkCloudSyncStatus(uid?: string): Promise<CloudStatusInf
  * share the exact same schedule, subjects, and study plans.
  */
 export async function syncUserStateToCloud(uid: string, data: any): Promise<{ success: boolean; error?: string }> {
-  if (!db || !uid) return { success: false, error: 'Database or UID missing' };
+  if (!db || !uid || isFirestoreQuotaBlocked()) return { success: false, error: 'Database or UID missing or quota protected' };
 
   try {
     const userRef = doc(db, 'users', uid);
@@ -504,6 +530,7 @@ export async function syncUserStateToCloud(uid: string, data: any): Promise<{ su
     lastSyncedHashByUid[uid] = currentHash;
     return { success: true };
   } catch (err: any) {
+    reportFirestoreError(err);
     console.warn('Firestore sync failed (offline or permissions):', err?.message || err);
     return { success: false, error: err?.message || 'SYNC_ERROR' };
   }
@@ -513,7 +540,7 @@ export async function syncUserStateToCloud(uid: string, data: any): Promise<{ su
  * Loads the user state from Cloud Firestore with a resilient timeout.
  */
 export async function loadUserStateFromCloud(uid: string): Promise<any | null> {
-  if (!db || !uid) return null;
+  if (!db || !uid || isFirestoreQuotaBlocked()) return null;
   try {
     const userRef = doc(db, 'users', uid);
     const snapPromise = getDoc(userRef);
@@ -524,6 +551,7 @@ export async function loadUserStateFromCloud(uid: string): Promise<any | null> {
       return snap.data();
     }
   } catch (err) {
+    reportFirestoreError(err);
     console.warn('Firestore load failed (offline or permissions):', err);
   }
   return null;
@@ -537,7 +565,7 @@ export function listenToUserCloudState(
   onUpdate: (data: any) => void,
   onError?: (err: any) => void
 ): () => void {
-  if (!db || !uid) return () => {};
+  if (!db || !uid || isFirestoreQuotaBlocked()) return () => {};
   try {
     const userRef = doc(db, 'users', uid);
     return onSnapshot(userRef, (snap) => {
@@ -545,10 +573,12 @@ export function listenToUserCloudState(
         onUpdate(snap.data());
       }
     }, (err) => {
+      reportFirestoreError(err);
       console.warn('Firestore snapshot listener warning:', err);
       if (onError) onError(err);
     });
   } catch (err) {
+    reportFirestoreError(err);
     console.warn('Failed to attach Firestore listener:', err);
     return () => {};
   }
@@ -680,6 +710,7 @@ export function listenToCloudInvitationsForUser(
   identifiers: string[], 
   onUpdate: (invitations: any[]) => void
 ): () => void {
+  if (isFirestoreQuotaBlocked()) return () => {};
   const queries = buildInvitationQueries(identifiers);
   if (queries.length === 0) return () => {};
 
@@ -697,9 +728,11 @@ export function listenToCloudInvitationsForUser(
         collectSnapshotDocs(snapshot, perQuery[idx]);
         emit();
       }, (err) => {
+        reportFirestoreError(err);
         console.warn('Real-time cloud invitations listener error:', err);
       });
     } catch (err) {
+      reportFirestoreError(err);
       console.warn('Failed to attach real-time cloud invitations listener:', err);
       return () => {};
     }
@@ -713,13 +746,19 @@ export function listenToCloudInvitationsForUser(
  * Safety net when the real-time channel is stalled (VPN, sleeping tab, mobile network).
  */
 export async function fetchCloudInvitationsForUser(identifiers: string[]): Promise<any[]> {
+  if (isFirestoreQuotaBlocked()) return [];
   const queries = buildInvitationQueries(identifiers);
   if (queries.length === 0) return [];
   const merged = new Map<string, any>();
-  const results = await Promise.allSettled(queries.map(q => getDocsFromServer(q)));
-  results.forEach(r => {
-    if (r.status === 'fulfilled') collectSnapshotDocs(r.value, merged);
-  });
+  try {
+    const results = await Promise.allSettled(queries.map(q => getDocsFromServer(q)));
+    results.forEach(r => {
+      if (r.status === 'fulfilled') collectSnapshotDocs(r.value, merged);
+      else if (r.status === 'rejected') reportFirestoreError(r.reason);
+    });
+  } catch (err) {
+    reportFirestoreError(err);
+  }
   return Array.from(merged.values());
 }
 
@@ -727,7 +766,7 @@ export async function fetchCloudInvitationsForUser(identifiers: string[]): Promi
  * Listens in real-time to ALL cloud invitations so the sender can see status changes (accepted/declined).
  */
 export function listenToAllCloudInvitations(onUpdate: (invitations: any[]) => void): () => void {
-  if (!db) return () => {};
+  if (!db || isFirestoreQuotaBlocked()) return () => {};
   try {
     const colRef = collection(db, 'plus_invitations');
     return onSnapshot(colRef, (snapshot) => {
@@ -738,9 +777,11 @@ export function listenToAllCloudInvitations(onUpdate: (invitations: any[]) => vo
       });
       onUpdate(all);
     }, (err) => {
+      reportFirestoreError(err);
       console.warn('Real-time all cloud invitations listener error:', err);
     });
   } catch (err) {
+    reportFirestoreError(err);
     console.warn('Failed to attach all cloud invitations listener:', err);
     return () => {};
   }
@@ -751,7 +792,7 @@ export function listenToAllCloudInvitations(onUpdate: (invitations: any[]) => vo
  * Delivers instantly from cache and server in parallel with a 3.5s timeout.
  */
 export async function fetchAllCloudInvitations(): Promise<any[]> {
-  if (!db) return [];
+  if (!db || isFirestoreQuotaBlocked()) return [];
   try {
     const colRef = collection(db, 'plus_invitations');
     const fetchPromise = getDocs(colRef);
@@ -766,6 +807,7 @@ export async function fetchAllCloudInvitations(): Promise<any[]> {
     });
     return all;
   } catch (err) {
+    reportFirestoreError(err);
     console.warn('fetchAllCloudInvitations error:', err);
     return [];
   }

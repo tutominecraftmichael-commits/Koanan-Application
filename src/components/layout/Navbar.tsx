@@ -701,11 +701,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                       title="Voir mon profil et paramètres"
                       className="flex items-center gap-1.5 sm:gap-2 hover:opacity-90 transition-opacity cursor-pointer text-left"
                     >
-                      <img
-                        src={userAccount.avatar}
-                        alt={displayName}
-                        className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-indigo-500/40 shadow-xs shrink-0"
-                      />
+                      {userAccount.avatar ? (
+                        <img
+                          src={userAccount.avatar}
+                          alt={displayName}
+                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-indigo-500/40 shadow-xs shrink-0"
+                        />
+                      ) : (
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-white font-bold text-xs shadow-xs shrink-0 border border-indigo-500/40">
+                          {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
+                        </div>
+                      )}
                       <div className="hidden xl:block">
                         <p className={`text-xs font-bold leading-tight truncate max-w-[120px] ${
                           effectivePlan === 'plus'

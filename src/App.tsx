@@ -34,8 +34,6 @@ import {
   listenToUserCloudState,
   listenToCloudInvitationsForUser,
   fetchCloudInvitationsForUser,
-  listenToAllCloudInvitations,
-  fetchAllCloudInvitations,
   syncUserStateToCloud,
   loadUserStateFromCloud
 } from './lib/firebase';
@@ -146,35 +144,22 @@ export function App() {
     initialInvites.forEach(inv => knownInvitationIdsRef.current.add(inv.id));
     setPendingInvitations(initialInvites);
 
-    // CRITICAL: Real-time universal Firestore listener (instant delivery on ANY device, 0 refresh required)
-    const unsubscribeAll = listenToAllCloudInvitations(applyCloud);
+    // Targeted cloud synchronization strictly for logged in users (preserves Firestore quota)
+    let unsubscribeTargeted = () => {};
+    let pollTimer: number | undefined;
 
-    // Also targeted listener as redundant channel
-    const identifiers = [myId, myEmail].filter(Boolean) as string[];
-    const unsubscribeTargeted = listenToCloudInvitationsForUser(identifiers, applyCloud);
-
-    // Safety net: periodic direct server fetch (covers sleeping mobile browsers, VPN switches)
-    let fetching = false;
-    const pullFromServer = async () => {
-      if (fetching) return;
-      fetching = true;
-      try {
-        const allCloud = await fetchAllCloudInvitations();
-        if (Array.isArray(allCloud) && allCloud.length > 0) {
-          applyCloud(allCloud);
-        } else if (identifiers.length > 0) {
-          applyCloud(await fetchCloudInvitationsForUser(identifiers));
-        }
-      } catch (err) {
-        console.warn('Invitation server fetch failed:', err);
-      } finally {
-        fetching = false;
+    if (state.userAccount?.isLoggedIn && !state.isDemoMode) {
+      const identifiers = [myId, myEmail].filter(Boolean) as string[];
+      if (identifiers.length > 0) {
+        unsubscribeTargeted = listenToCloudInvitationsForUser(identifiers, applyCloud);
+        // Direct initial fetch only once
+        fetchCloudInvitationsForUser(identifiers).then(cloudInvites => {
+          if (Array.isArray(cloudInvites) && cloudInvites.length > 0) {
+            applyCloud(cloudInvites);
+          }
+        }).catch(() => {});
       }
-    };
-    pullFromServer();
-    const pollTimer = window.setInterval(() => {
-      if (document.visibilityState === 'visible') pullFromServer();
-    }, 60000);
+    }
 
     // Cross-tab BroadcastChannel listener
     const handleBcMessage = (event: MessageEvent) => {
@@ -191,7 +176,19 @@ export function App() {
       refreshPending();
     };
     const handleWake = () => {
-      if (document.visibilityState === 'visible') pullFromServer();
+      if (document.visibilityState === 'visible') {
+        refreshPending();
+        if (state.userAccount?.isLoggedIn && !state.isDemoMode) {
+          const identifiers = [myId, myEmail].filter(Boolean) as string[];
+          if (identifiers.length > 0) {
+            fetchCloudInvitationsForUser(identifiers).then(cloudInvites => {
+              if (Array.isArray(cloudInvites) && cloudInvites.length > 0) {
+                applyCloud(cloudInvites);
+              }
+            }).catch(() => {});
+          }
+        }
+      }
     };
     window.addEventListener('storage', handleStorage);
     window.addEventListener('focus', handleWake);
@@ -200,9 +197,8 @@ export function App() {
 
     return () => {
       disposed = true;
-      unsubscribeAll();
       unsubscribeTargeted();
-      window.clearInterval(pollTimer);
+      if (pollTimer) window.clearInterval(pollTimer);
       invitationBroadcastChannel?.removeEventListener('message', handleBcMessage);
       window.removeEventListener('storage', handleStorage);
       window.removeEventListener('focus', handleWake);
