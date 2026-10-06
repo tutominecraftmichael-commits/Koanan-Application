@@ -14,7 +14,8 @@ import {
   Cpu, 
   X,
   Copy,
-  Calendar
+  Calendar,
+  Key
 } from 'lucide-react';
 import type { 
   Subject, 
@@ -31,7 +32,12 @@ import {
   loadDemoPdfTemplate,
   type ScheduleFormatType 
 } from '../../services/pdfParserService';
-import { extraireEmploiDuTemps, convertFileToBase64 } from '../../services/geminiExtractionService';
+import { 
+  extraireEmploiDuTemps, 
+  convertFileToBase64,
+  hasGeminiApiKey,
+  setCustomGeminiApiKey
+} from '../../services/geminiExtractionService';
 import { buildStateFromExtractedSchedule } from '../../services/aiAcademicAnalyzer';
 
 export interface PdfUploadViewProps {
@@ -85,6 +91,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
+  const [apiKeyConfigured, setApiKeyConfigured] = useState<boolean>(() => hasGeminiApiKey());
+  const [showKeyModal, setShowKeyModal] = useState<boolean>(false);
+  const [tempApiKey, setTempApiKey] = useState<string>('');
 
   // Hidden file inputs
   const pdfInputRef = useRef<HTMLInputElement>(null);
@@ -114,6 +123,16 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       return 0;
     }
   }, [scheduleText, selectedFormat]);
+
+  // Enregistrer une clé API Gemini personnalisée
+  const handleSaveCustomKey = () => {
+    if (tempApiKey.trim()) {
+      setCustomGeminiApiKey(tempApiKey.trim());
+      setApiKeyConfigured(true);
+      setShowKeyModal(false);
+      setError(null);
+    }
+  };
 
   // Réinitialiser tout à zéro
   const handleReset = () => {
@@ -146,6 +165,11 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       }
     } catch (aiErr: any) {
       console.warn('[KONAN] Notice extraction IA directe :', aiErr?.message || aiErr);
+      if (aiErr?.message?.includes('VITE_GEMINI_API_KEY') || !hasGeminiApiKey()) {
+        setIsAnalyzing(false);
+        setError("Clé API Gemini non configurée sur ce site (Vercel). Cliquez sur '🔑 Configurer la clé' pour l'activer instantanément ou ajoutez VITE_GEMINI_API_KEY dans le dashboard Vercel.");
+        return;
+      }
     }
 
     // Moteur de secours local si document PDF
@@ -300,6 +324,25 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             className="text-slate-400 hover:text-white cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* NOTICE CLÉ API (VERCEL / DÉPLOIEMENT) */}
+      {!apiKeyConfigured && (
+        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-200 text-xs flex flex-wrap items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2 min-w-0">
+            <Key className="w-4 h-4 text-amber-400 shrink-0" />
+            <span className="truncate">
+              <strong>Clé Gemini non détectée :</strong> Pour activer l'analyse IA sur ce lien Vercel, configurez votre clé.
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowKeyModal(true)}
+            className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap"
+          >
+            🔑 Configurer la clé
           </button>
         </div>
       )}
@@ -504,6 +547,62 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           <span>Générer mon planning d'étude ({detectedSlotsCount} cours)</span>
         </Button>
       </div>
+
+      {/* MODAL CONFIGURATION CLÉ GEMINI POUR VERCEL */}
+      {showKeyModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                  <Key className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold text-white">Clé API Google Gemini (IA)</h3>
+              </div>
+              <button 
+                type="button"
+                onClick={() => setShowKeyModal(false)}
+                className="text-slate-400 hover:text-white p-1 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Pour que le scan photo et PDF par IA fonctionne sur votre site Vercel, vous pouvez saisir votre clé Gemini ici (elle sera enregistrée dans votre navigateur) ou ajouter <code className="text-indigo-300 bg-slate-800 px-1.5 py-0.5 rounded font-mono text-[11px]">VITE_GEMINI_API_KEY</code> dans le dashboard Vercel.
+            </p>
+
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-medium text-slate-400">Clé API Gemini :</label>
+              <input
+                type="password"
+                value={tempApiKey}
+                onChange={(e) => setTempApiKey(e.target.value)}
+                placeholder="AQ... ou AIzaSy..."
+                className="w-full px-3 py-2 text-xs rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowKeyModal(false)}
+                className="px-3 py-1.5 rounded-xl text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+              >
+                Annuler
+              </button>
+              <Button
+                variant="primary"
+                onClick={handleSaveCustomKey}
+                disabled={!tempApiKey.trim()}
+                className="text-xs py-1.5 px-4"
+              >
+                Activer l'IA
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -1,8 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 
 // VARIABLE 1 : La clé est lue automatiquement depuis .env (injectée par Vite à la compilation) ou localStorage
-const getApiKey = (): string => {
-  // 1. Clé personnalisée éventuelle stockée dans le navigateur (ex: saisie par l'étudiant)
+export const getApiKey = (): string => {
+  // 1. Clé personnalisée éventuelle stockée dans le navigateur (ex: saisie par l'étudiant / développeur)
   if (typeof window !== "undefined") {
     try {
       const stored = window.localStorage.getItem("konan_gemini_api_key");
@@ -23,6 +23,24 @@ const getApiKey = (): string => {
     if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
   }
   return "";
+};
+
+export const hasGeminiApiKey = (): boolean => {
+  return getApiKey().trim().length > 0;
+};
+
+export const setCustomGeminiApiKey = (key: string): void => {
+  if (typeof window !== "undefined") {
+    try {
+      if (key && key.trim().length > 0) {
+        window.localStorage.setItem("konan_gemini_api_key", key.trim());
+      } else {
+        window.localStorage.removeItem("konan_gemini_api_key");
+      }
+    } catch (err) {
+      console.warn("Impossible d'enregistrer la clé dans le localStorage:", err);
+    }
+  }
 };
 
 // LE PROMPT OFFICIEL
@@ -109,7 +127,7 @@ Renvoie UNIQUEMENT le texte formaté correspondant au gabarit retenu, sans balis
 export async function extraireEmploiDuTemps(fileBase64: string, mimeType: string = "image/jpeg"): Promise<string> {
   const apiKey = getApiKey();
   if (!apiKey) {
-    throw new Error("Clé API Gemini introuvable dans le fichier .env (GEMINI_API_KEY ou VITE_GEMINI_API_KEY).");
+    throw new Error("Clé API Gemini non configurée (VITE_GEMINI_API_KEY). Sur Vercel, ajoutez VITE_GEMINI_API_KEY dans Settings > Environment Variables, ou définissez-la dans l'application.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
