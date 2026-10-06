@@ -18,11 +18,10 @@ export const KonanCube: React.FC<KonanCubeProps> = ({
       className={`relative inline-flex items-center justify-center select-none ${className}`}
       style={{ width: size, height: size }}
     >
-      {/* Halo lumineux d'arrière-plan */}
+      {/* Halo lumineux d'arrière-plan discret et léger */}
       {glow && (
         <div 
-          className="absolute inset-2 rounded-full bg-cyan-400/30 blur-xl pointer-events-none animate-pulse" 
-          style={{ filter: 'blur(22px)' }}
+          className="absolute inset-2 rounded-full bg-cyan-400/20 blur-md pointer-events-none" 
         />
       )}
 
@@ -60,14 +59,9 @@ export const KonanCube: React.FC<KonanCubeProps> = ({
             <stop offset="0%" stopColor="#38bdf8" />
             <stop offset="100%" stopColor="#0369a1" />
           </linearGradient>
-
-          {/* Filtre de lueur subtile */}
-          <filter id="konanCubeFilter" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="8" stdDeviation="6" floodColor="#0284c7" floodOpacity="0.4" />
-          </filter>
         </defs>
 
-        <g filter="url(#konanCubeFilter)">
+        <g>
           {/* 1. ÉPAIS CONTOUR EXTERNE DU CUBE (Structure Navy Bleu Nuit) */}
           <path
             d="M 100 39 L 159 72.5 L 159 139.5 L 100 173 L 41 139.5 L 41 72.5 Z"

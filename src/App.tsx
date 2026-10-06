@@ -560,20 +560,27 @@ export function App() {
 
     const unsubscribeAuth = onFirebaseAuthStateChange(async (firebaseUser) => {
       if (firebaseUser) {
-        // User is logged into Firebase
-        const session = getActiveSession();
-        if (!session?.isDemo) {
-          const loaded = loadUserState(firebaseUser.uid, {
-            name: firebaseUser.displayName || 'Étudiant',
-            email: firebaseUser.email || '',
-            avatar: firebaseUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(firebaseUser.displayName || 'User')}`,
-            googleId: firebaseUser.uid,
-            academicLevel: 'Licence Universitaire',
-            isLoggedIn: true,
-            isDemo: false,
-            lastSyncedAt: new Date().toISOString(),
-          });
-          setState(loaded);
+        // L'utilisateur est authentifié avec Firebase : toujours activer la session réelle
+        setActiveSession({
+          uid: firebaseUser.uid,
+          isDemo: false,
+          name: firebaseUser.displayName || 'Étudiant',
+          email: firebaseUser.email || '',
+          avatar: firebaseUser.photoURL || '',
+          academicLevel: 'Licence Universitaire',
+        });
+
+        const loaded = loadUserState(firebaseUser.uid, {
+          name: firebaseUser.displayName || 'Étudiant',
+          email: firebaseUser.email || '',
+          avatar: firebaseUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(firebaseUser.displayName || 'User')}`,
+          googleId: firebaseUser.uid,
+          academicLevel: 'Licence Universitaire',
+          isLoggedIn: true,
+          isDemo: false,
+          lastSyncedAt: new Date().toISOString(),
+        });
+        setState(loaded);
 
           // 1. Check if privacy policy was already accepted (first-time vs returning user)
           const hasLocalAccepted = Boolean(loaded.privacyPolicyAccepted || loaded.userAccount?.privacyPolicyAccepted);
@@ -671,7 +678,6 @@ export function App() {
               });
             }
           });
-        }
       } else {
         if (unsubscribeCloudListener) {
           unsubscribeCloudListener();
@@ -2093,7 +2099,9 @@ export function App() {
         onComplete={() => {
           setIsSplashActive(false);
           const session = getActiveSession();
-          const isConnected = Boolean(session && !session.isDemo && session.uid) || Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode);
+          const isConnected = Boolean(session && !session.isDemo && session.uid) 
+            || Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode)
+            || Boolean(auth?.currentUser);
           
           if (isConnected || pendingDashboardRedirectRef.current) {
             setActiveView(prev => (prev === 'landing' || prev === 'auth' ? 'dashboard' : prev));

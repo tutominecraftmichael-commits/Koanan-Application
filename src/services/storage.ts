@@ -473,8 +473,7 @@ export function loadAppState(): AppState {
       return loadDemoState();
     }
 
-    // If no session exists, the app is in unauthenticated Guest state
-    const demo = loadDemoState();
+    // If no session exists, the app is in clean unauthenticated Guest state (ZERO demo courses)
     let deviceStudentId = '';
     try {
       deviceStudentId = localStorage.getItem('konan_device_student_id') || '';
@@ -486,32 +485,37 @@ export function loadAppState(): AppState {
       deviceStudentId = generateKonanId();
     }
 
-    return {
-      ...demo,
+    const guestUser: UserAccount = {
+      name: 'Étudiant',
+      email: '',
+      avatar: '',
+      googleId: 'guest',
+      academicLevel: 'Licence Universitaire',
+      planTier: 'free',
+      isDemo: false,
+      isLoggedIn: false,
+      lastSyncedAt: new Date().toISOString(),
       konanId: deviceStudentId,
-      userAccount: {
-        ...(demo.userAccount || {
-          name: 'Étudiant',
-          email: '',
-          avatar: '',
-          googleId: 'guest',
-          academicLevel: demo.academicLevel,
-          planTier: 'free' as const,
-          isDemo: false,
-          lastSyncedAt: new Date().toISOString()
-        }),
-        konanId: deviceStudentId,
-        isLoggedIn: false,
-      },
+    };
+
+    return {
+      ...createEmptyUserState(guestUser),
+      konanId: deviceStudentId,
       isDemoMode: false,
     };
   } catch (err) {
-    console.error('loadAppState error, returning fallback demo state:', err);
-    try {
-      return loadDemoState();
-    } catch {
-      return createInitialStateFromPreset();
-    }
+    console.error('loadAppState error, returning fallback empty state:', err);
+    return createEmptyUserState({
+      name: 'Étudiant',
+      email: '',
+      avatar: '',
+      googleId: 'guest',
+      academicLevel: 'Licence Universitaire',
+      planTier: 'free',
+      isDemo: false,
+      isLoggedIn: false,
+      lastSyncedAt: new Date().toISOString(),
+    });
   }
 }
 
