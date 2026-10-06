@@ -1,184 +1,38 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
-  Sparkles, 
-  Brain, 
-  Clock, 
-  ShieldCheck, 
-  ArrowRight, 
-  ArrowLeft,
-  BookOpen, 
+  ArrowLeft, 
+  FileText, 
+  Camera, 
+  ImageIcon, 
+  UploadCloud, 
+  RotateCcw, 
+  Check, 
   AlertCircle, 
-  RefreshCw, 
-  Trash2,
-  Calendar,
-  Sliders,
-  Plus,
-  Edit3,
+  Loader2, 
+  GraduationCap, 
+  School, 
+  Cpu, 
+  X,
   Copy,
-  CheckCircle,
-  Lock,
-  GraduationCap,
-  FlaskConical,
-  School,
-  FileText,
-  Star,
-  Check,
-  Camera,
-  FileUp,
-  Image as ImageIcon,
-  Scan,
-  RotateCcw,
-  FileCheck
+  Calendar
 } from 'lucide-react';
 import type { 
-  ExtractedPdfSchedule, 
-  ExtractedSubjectCandidate, 
-  ExtractedClassCandidate, 
-  Chronotype, 
-  StudyPacing, 
-  DayOfWeek, 
-  CourseType,
-  Subject,
-  ClassSlot,
-  StudyPreferences,
-  StudySession
+  Subject, 
+  ClassSlot, 
+  StudyPreferences, 
+  StudySession 
 } from '../../types';
-import { DAYS_OF_WEEK, COURSE_TYPE_LABELS } from '../../types';
 import { Button } from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
-import { Card } from '../../components/ui/Card';
-import { Modal } from '../../components/ui/Modal';
-import { Input, Select } from '../../components/ui/FormControls';
-import { generateId, parseTimeToMinutes } from '../../lib/utils';
 import { 
-  formatStructuredScheduleTruth,
-  parseStructuredScheduleTruth,
-  harmonizeAndDeduplicateSlots,
+  parseStructuredScheduleTruth, 
+  harmonizeAndDeduplicateSlots, 
   parseTimetableDocument,
   formatExtractedScheduleToFormatText,
   loadDemoPdfTemplate,
-  type ScheduleFormatType
+  type ScheduleFormatType 
 } from '../../services/pdfParserService';
 import { extraireEmploiDuTemps, convertFileToBase64 } from '../../services/geminiExtractionService';
-import { 
-  generateAcademicAnalysisReport, 
-  buildStateFromExtractedSchedule 
-} from '../../services/aiAcademicAnalyzer';
-import { PACING_STRATEGIES, getPacingStrategy, recommendPacingStrategies } from '../../lib/pacingStrategies';
-import { ProFeatureModal } from '../../components/common/ProFeatureModal';
-import { soundFX } from '../../lib/audioEffects';
-import confetti from 'canvas-confetti';
-
-// ─── FORMAT DEFINITIONS & EXAMPLES ───────────────────────────────────────────
-
-interface FormatDefinition {
-  id: ScheduleFormatType;
-  label: string;
-  subtitle: string;
-  icon: React.ReactNode;
-  color: string;
-  borderColor: string;
-  bgColor: string;
-  glowColor: string;
-  description: string;
-  audience: string;
-  example: string;
-  placeholder: string;
-}
-
-const FORMAT_DEFINITIONS: FormatDefinition[] = [
-  {
-    id: 'lmd',
-    label: 'LMD (Universitaire)',
-    subtitle: 'Licence · Master · Doctorat',
-    icon: <GraduationCap className="w-6 h-6" />,
-    color: 'text-indigo-400',
-    borderColor: 'border-indigo-500/40',
-    bgColor: 'bg-indigo-950/30',
-    glowColor: 'shadow-indigo-500/20',
-    description: 'Emplois du temps avec codes ECUE, amphithéâtres, noms des professeurs et numéros de salles.',
-    audience: 'Étudiants en université, grandes écoles, ESATIC, INP-HB, etc.',
-    example: `LUNDI :
-07:30 - 10:00 | Algèbres 2 [1MTH3350] | Amphi A | Dr KOIVOGUI
-10:15 - 12:45 | Anglais [1LAN3350] | Salle 204 | M. YEO
-14:30 - 17:00 | Développement d'Applications [1INF3350] | Lab Info | M. KONE
-MARDI :
-07:30 - 10:00 | Fondamentaux de la Finance [1MAN3350] | Amphi B | Dr KADJO
-10:15 - 12:45 | Conception Web [2INF3350] | Lab Info | M. MEYER
-MERCREDI :
-07:30 - 10:00 | Analyse 2 [2MTH3350] | Amphi A | Dr GOLI`,
-    placeholder: `Collez votre emploi du temps ici au format LMD…
-
-Exemple :
-LUNDI :
-07:30 - 10:00 | Algèbres 2 [1MTH3350] | Amphi A | Dr KOIVOGUI
-10:15 - 12:45 | Anglais [1LAN3350] | Salle 204 | M. YEO
-MARDI :
-08:00 - 10:00 | Finance [1MAN3350] | Amphi B | Dr KADJO`,
-  },
-  {
-    id: 'tpcm',
-    label: 'TP / CM (Technique)',
-    subtitle: 'BTS · DUT · Ingénieur',
-    icon: <FlaskConical className="w-6 h-6" />,
-    color: 'text-cyan-400',
-    borderColor: 'border-cyan-500/40',
-    bgColor: 'bg-cyan-950/30',
-    glowColor: 'shadow-cyan-500/20',
-    description: 'Emplois du temps avec types de cours explicites (CM, TD, TP) et laboratoires spécialisés.',
-    audience: 'BTS, DUT, écoles d\'ingénieurs, formations techniques.',
-    example: `LUNDI :
-08:00 - 10:00 CM Électronique Analogique | Amphi 1
-10:15 - 12:15 TD Mathématiques Appliquées | Salle 302
-14:00 - 17:00 TP Informatique Industrielle | Labo Info
-MARDI :
-08:00 - 10:00 CM Physique des Matériaux | Amphi 2
-10:15 - 12:15 TD Automatismes | Salle 105
-14:00 - 16:00 TP Électricité | Labo Elec
-JEUDI :
-08:00 - 10:00 CM Anglais Technique | Salle 201
-10:15 - 12:15 TD Thermodynamique | Salle 303`,
-    placeholder: `Collez votre emploi du temps ici au format TP/CM…
-
-Exemple :
-LUNDI :
-08:00 - 10:00 CM Électronique Analogique | Amphi 1
-10:15 - 12:15 TD Mathématiques Appliquées | Salle 302
-14:00 - 17:00 TP Informatique Industrielle | Labo Info`,
-  },
-  {
-    id: 'scolaire',
-    label: 'Scolaire',
-    subtitle: 'Lycée · Collège',
-    icon: <School className="w-6 h-6" />,
-    color: 'text-emerald-400',
-    borderColor: 'border-emerald-500/40',
-    bgColor: 'bg-emerald-950/30',
-    glowColor: 'shadow-emerald-500/20',
-    description: 'Format simplifié : horaires + matière. Pas besoin de code ni de salle.',
-    audience: 'Lycéens, collégiens, élèves en prépa.',
-    example: `LUNDI :
-08:00 - 10:00 Mathématiques
-10:15 - 12:00 Physique-Chimie
-14:00 - 16:00 Français
-MARDI :
-08:00 - 10:00 Histoire-Géographie
-10:15 - 12:00 Anglais
-14:00 - 16:00 SVT
-MERCREDI :
-08:00 - 10:00 Philosophie
-10:15 - 12:00 EPS`,
-    placeholder: `Collez votre emploi du temps ici…
-
-Exemple :
-LUNDI :
-08:00 - 10:00 Mathématiques
-10:15 - 12:00 Physique-Chimie
-14:00 - 16:00 Français`,
-  },
-];
-
-// ─── COMPONENT ───────────────────────────────────────────────────────────────
+import { buildStateFromExtractedSchedule } from '../../services/aiAcademicAnalyzer';
 
 export interface PdfUploadViewProps {
   studentName: string;
@@ -194,2135 +48,462 @@ export interface PdfUploadViewProps {
   onUpgradeToPro?: () => void;
 }
 
+const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; icon: React.ReactNode; placeholder: string; demoId: string }> = {
+  lmd: {
+    label: 'LMD (Université / Grandes Écoles)',
+    short: 'LMD',
+    icon: <GraduationCap className="w-4 h-4" />,
+    demoId: 'pdf-esatic-entd2',
+    placeholder: `JOUR: LUNDI\n- 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi ESATIC | Prof: Dr KOIVOGUI\n- 10:15 - 12:45 : Anglais [1LAN3350] | Salle: Salle 204 | Prof: M. YEO\n- 14:30 - 17:00 : Dév Applications 1 [1INF3350] | Salle: Lab Info 1 | Prof: M. KONE\n\nJOUR: MARDI\n- 07:30 - 10:00 : Finance [1MAN3350] | Salle: Amphi B | Prof: Dr KADJO`
+  },
+  tpcm: {
+    label: 'BTS / Technique (CM · TD · TP)',
+    short: 'BTS',
+    icon: <Cpu className="w-4 h-4" />,
+    demoId: 'pdf-cs-l3',
+    placeholder: `JOUR: LUNDI\n- 08:00 - 10:00 : CM Électronique Analogique (Amphi 1)\n- 10:15 - 12:15 : TD Mathématiques Appliquées (Salle 302)\n- 14:00 - 17:00 : TP Informatique Industrielle (Labo Info 3)\n\nJOUR: MARDI\n- 08:00 - 10:00 : CM Physique des Matériaux (Amphi 2)\n- 10:15 - 12:15 : TD Systèmes Logiques (Salle 105)`
+  },
+  scolaire: {
+    label: 'Scolaire (Lycée / Collège)',
+    short: 'Scolaire',
+    icon: <School className="w-4 h-4" />,
+    demoId: 'pdf-lycee-john-wesley',
+    placeholder: `JOUR: LUNDI\n- 08:00 - 10:00 : Mathématiques\n- 10:15 - 12:00 : Physique-Chimie\n- 14:00 - 16:00 : Français\n\nJOUR: MARDI\n- 08:00 - 10:00 : Histoire-Géographie\n- 10:15 - 12:00 : Anglais\n- 14:00 - 16:00 : SVT`
+  }
+};
+
 export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   studentName,
-  planTier = 'free',
   onApplyExtractedSchedule,
   onCancel,
-  onViewPricing,
-  onUpgradeToPro,
 }) => {
-  // Steps state machine:
-  // 1. upload_file -> 2. select_level -> 3. scanning -> 4. review_text -> 5. review_planning
-  type UploadStep = 'upload_file' | 'select_level' | 'scanning' | 'review_text' | 'review_planning';
-  const [uploadStep, setUploadStep] = useState<UploadStep>('upload_file');
-
-  // File upload state
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [filePreviewUrl, setFilePreviewUrl] = useState<string | null>(null);
-  const [fileType, setFileType] = useState<'pdf' | 'image' | null>(null);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const [manualTextMode, setManualTextMode] = useState(false);
+  // State
+  const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType>('lmd');
+  const [scheduleText, setScheduleText] = useState<string>('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState<boolean>(false);
+  const [isDragOver, setIsDragOver] = useState<boolean>(false);
 
   // Hidden file inputs
-  const pdfInputRef = React.useRef<HTMLInputElement>(null);
-  const cameraInputRef = React.useRef<HTMLInputElement>(null);
-  const galleryInputRef = React.useRef<HTMLInputElement>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
-  // Format selection (default LMD)
-  const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType>('lmd');
-  const [scheduleText, setScheduleText] = useState('');
-
-  // Scanning progress
-  const [scanProgress, setScanProgress] = useState(0);
-  const [scanStatus, setScanStatus] = useState('');
-
-  // Extracted schedule & error state
-  const [extractedData, setExtractedData] = useState<ExtractedPdfSchedule | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  // Add/Edit subject modal
-  const [isAddSubjectOpen, setIsAddSubjectOpen] = useState(false);
-  const [newSubName, setNewSubName] = useState('');
-  const [newSubCoeff, setNewSubCoeff] = useState(4);
-  const [newSubDiff, setNewSubDiff] = useState<1|2|3|4|5>(3);
-
-  // Add slot modal
-  const [isAddSlotOpen, setIsAddSlotOpen] = useState(false);
-  const [slotSubId, setSlotSubId] = useState('');
-  const [slotDay, setSlotDay] = useState<DayOfWeek>(0);
-  const [slotStart, setSlotStart] = useState('08:30');
-  const [slotEnd, setSlotEnd] = useState('10:30');
-  const [slotType, setSlotType] = useState<CourseType>('lecture');
-  const [slotRoom, setSlotRoom] = useState('Amphi A');
-  const [slotProf, setSlotProf] = useState('');
-
-  // Edit slot modal
-  const [editingSlot, setEditingSlot] = useState<ExtractedClassCandidate | null>(null);
-
-  // Review stage state
-  const [activeTab, setActiveTab] = useState<'source_truth' | 'subjects' | 'slots' | 'strategy' | 'raw_inspector'>('source_truth');
-  const [isEditingTruth, setIsEditingTruth] = useState(false);
-  const [truthEditText, setTruthEditText] = useState('');
-  const [copiedTruthText, setCopiedTruthText] = useState(false);
-  const [selectedChronotype, setSelectedChronotype] = useState<Chronotype>('evening');
-  const [selectedPacing, setSelectedPacing] = useState<StudyPacing>('active_recall_spaced');
-  const [selectedCombinedPacings, setSelectedCombinedPacings] = useState<StudyPacing[]>(['active_recall_spaced']);
-  const [copiedRawText, setCopiedRawText] = useState(false);
-
-  // Dynamic recommendation engine based on class finish times, weekly volume, and subject count
-  const pacingRecommendation = useMemo(() => {
-    if (!extractedData) return null;
-    return recommendPacingStrategies(
-      extractedData.subjects.length,
-      extractedData.slots,
-      extractedData.totalWeeklyClassHours
-    );
-  }, [extractedData]);
-
-  const [proModalInfo, setProModalInfo] = useState<{ title: string; desc: string } | null>(null);
-
-  // Pre-select the recommended pacing strategy when schedule is analyzed
+  // Vider tout cache au montage
   useEffect(() => {
-    if (pacingRecommendation) {
-      if (planTier === 'free' && (pacingRecommendation.primaryId === 'feynman' || pacingRecommendation.primaryId === 'time_blocking')) {
-        const freeFallback = pacingRecommendation.recommendedIds.find(id => id !== 'feynman' && id !== 'time_blocking') || 'active_recall_spaced';
-        setSelectedPacing(freeFallback);
-        setSelectedCombinedPacings([freeFallback]);
-      } else {
-        setSelectedPacing(pacingRecommendation.primaryId);
-        if (planTier !== 'free' && pacingRecommendation.recommendedIds.length > 0) {
-          const combo = [pacingRecommendation.primaryId, ...pacingRecommendation.recommendedIds.filter(id => id !== pacingRecommendation.primaryId)].slice(0, 2);
-          setSelectedCombinedPacings(combo);
-        } else {
-          setSelectedCombinedPacings([pacingRecommendation.primaryId]);
-        }
-      }
+    try {
+      sessionStorage.removeItem('konan_scan_cache');
+      sessionStorage.removeItem('konan_extracted_text');
+      localStorage.removeItem('konan_scan_cache');
+      localStorage.removeItem('konan_ocr_cache');
+      localStorage.removeItem('konan_draft_schedule');
+    } catch {
+      // Ignorer
     }
-  }, [pacingRecommendation, planTier]);
+  }, []);
 
-  const recalculateSummary = (data: ExtractedPdfSchedule): ExtractedPdfSchedule => {
-    const totalWeeklyClassMinutes = data.slots.reduce((acc, slot) => {
-      return acc + Math.max(0, (parseTimeToMinutes(slot.endTime) - parseTimeToMinutes(slot.startTime)));
-    }, 0);
+  // Détection en direct du nombre de cours valides
+  const detectedSlotsCount = useMemo(() => {
+    if (!scheduleText.trim()) return 0;
+    try {
+      const parsed = parseStructuredScheduleTruth(scheduleText, 'preview.txt', selectedFormat);
+      return parsed.slots.length;
+    } catch {
+      return 0;
+    }
+  }, [scheduleText, selectedFormat]);
 
-    const totalWeeklyClassHours = Math.round((totalWeeklyClassMinutes / 60) * 10) / 10;
-    const recommendedStudyHours = Math.max(8, Math.round(totalWeeklyClassHours * 0.75));
-
-    return {
-      ...data,
-      totalWeeklyClassHours,
-      recommendedStudyHours,
-    };
+  // Réinitialiser tout à zéro
+  const handleReset = () => {
+    setSelectedFile(null);
+    setScheduleText('');
+    setError(null);
+    setIsAnalyzing(false);
+    if (pdfInputRef.current) pdfInputRef.current.value = '';
+    if (cameraInputRef.current) cameraInputRef.current.value = '';
+    if (galleryInputRef.current) galleryInputRef.current.value = '';
   };
 
-  const handleFileSelected = (file: File) => {
-    if (!file) return;
-    setErrorMessage(null);
-
-    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
-    const isImage = file.type.startsWith('image/') || /\.(png|jpe?g|webp|bmp)$/i.test(file.name);
-
-    if (!isPdf && !isImage) {
-      setErrorMessage('Format de fichier non pris en charge. Veuillez importer un document PDF ou une photo (PNG, JPG, WEBP).');
-      return;
-    }
-
-    setUploadedFile(file);
-    setFileType(isPdf ? 'pdf' : 'image');
-
-    if (isImage) {
-      try {
-        const url = URL.createObjectURL(file);
-        setFilePreviewUrl(url);
-      } catch (e) {
-        console.warn('Could not create preview URL', e);
-      }
-    } else {
-      setFilePreviewUrl(null);
-    }
-
-    // Advance to Step 2: Demander le niveau d'étude
-    setUploadStep('select_level');
-  };
-
-  const handleSelectDemoTemplate = (templateId: string) => {
-    const demo = loadDemoPdfTemplate(templateId);
-    let format: ScheduleFormatType = 'lmd';
-    if (templateId.includes('technique') || templateId.includes('bts')) format = 'tpcm';
-    if (templateId.includes('scolaire') || templateId.includes('lycee')) format = 'scolaire';
-
-    setSelectedFormat(format);
-    const generatedText = formatExtractedScheduleToFormatText(demo, format);
-    setScheduleText(generatedText || demo.rawText || '');
-    setUploadedFile(new File([demo.rawText || ''], demo.fileName, { type: 'application/pdf' }));
-    setFileType('pdf');
-    setFilePreviewUrl(null);
-    setUploadStep('select_level');
-  };
-
-  const startScanningPipeline = async () => {
-    if (!uploadedFile) {
-      setErrorMessage('Veuillez sélectionner un fichier PDF ou une photo.');
-      return;
-    }
-
-    setUploadStep('scanning');
-    setErrorMessage(null);
-    setScanProgress(15);
-    setScanStatus('Envoi au moteur IA Gemini 2.5 Flash...');
+  // Traitement direct du fichier uploadé
+  const handleFileSelected = async (file: File) => {
+    setError(null);
+    setSelectedFile(file);
+    setIsAnalyzing(true);
 
     try {
-      // 1. Priorité au modèle multimodal Gemini 2.5 Flash
-      const mimeType = uploadedFile.type || (uploadedFile.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
-      const base64Data = await convertFileToBase64(uploadedFile);
+      const mimeType = file.type || (file.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
+      const base64 = await convertFileToBase64(file);
 
-      setScanProgress(45);
-      setScanStatus('Analyse visuelle et structuration par Gemini...');
+      // Appel IA direct sans fioritures ni timers artificiels
+      const aiResult = await extraireEmploiDuTemps(base64, mimeType);
 
-      const structuredText = await extraireEmploiDuTemps(base64Data, mimeType);
-
-      // Si Gemini a retourné le texte structuré avec succès
-      if (structuredText && structuredText.trim().length > 10) {
-        setScanProgress(100);
-        setScanStatus('Numérisation Gemini terminée avec succès !');
-        setScheduleText(structuredText.trim());
-        await new Promise(r => setTimeout(r, 600));
-        soundFX.playCheckmarkPop();
-        setUploadStep('review_text');
+      if (aiResult && aiResult.trim().length > 10) {
+        setScheduleText(aiResult.trim());
+        setIsAnalyzing(false);
         return;
       }
-    } catch (geminiErr: any) {
-      console.warn('Gemini extraction notice (bascule sur moteur local) :', geminiErr?.message || geminiErr);
+    } catch (aiErr: any) {
+      console.warn('[KONAN] Notice extraction IA directe :', aiErr?.message || aiErr);
     }
 
-    // 2. Moteur local de secours (PDF.js / OCR 2D) si Gemini indisponible
-    try {
-      setScanProgress(60);
-      setScanStatus('Traitement par le moteur vectoriel local...');
-      const extractedRaw = await parseTimetableDocument(uploadedFile, (status, percent) => {
-        setScanStatus(status);
-        setScanProgress(Math.max(30, Math.min(95, percent)));
-      }, selectedFormat);
-
-      setScanProgress(98);
-      setScanStatus(`Structuration du fichier texte au format ${FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || 'officiel'}...`);
-
-      let structuredText = formatExtractedScheduleToFormatText(extractedRaw, selectedFormat);
-
-      if (!structuredText.trim()) {
-        const fallbackDef = FORMAT_DEFINITIONS.find(f => f.id === selectedFormat) || FORMAT_DEFINITIONS[0];
-        structuredText = fallbackDef.example;
+    // Moteur de secours local si document PDF
+    if (file.name.toLowerCase().endsWith('.pdf')) {
+      try {
+        const localExtracted = await parseTimetableDocument(file, undefined, selectedFormat);
+        const localText = formatExtractedScheduleToFormatText(localExtracted, selectedFormat);
+        if (localText && localText.trim().length > 10) {
+          setScheduleText(localText.trim());
+          setIsAnalyzing(false);
+          return;
+        }
+      } catch (localErr) {
+        console.warn('[KONAN] Notice extraction locale :', localErr);
       }
+    }
 
-      setScheduleText(structuredText);
-      setScanProgress(100);
-      setScanStatus('Numérisation et conversion terminées avec succès !');
+    setIsAnalyzing(false);
+    setError("L'IA n'a pas pu numériser ce document. Vous pouvez coller le texte de votre emploi du temps directement dans la zone ci-dessous.");
+  };
 
-      await new Promise(r => setTimeout(r, 600));
-      soundFX.playCheckmarkPop();
-      setUploadStep('review_text');
-    } catch (err: any) {
-      console.error('Scanning failed:', err);
-      const fallbackDef = FORMAT_DEFINITIONS.find(f => f.id === selectedFormat) || FORMAT_DEFINITIONS[0];
-      setScheduleText(fallbackDef.example);
-      setUploadStep('review_text');
-      setErrorMessage("La lecture automatique a rencontré une difficulté sur ce document. Nous avons pré-rempli la structure officielle ci-dessous pour que vous puissiez ajuster vos cours.");
+  // Charger un exemple officiel certifié
+  const handleLoadDemo = (templateId: string, format: ScheduleFormatType) => {
+    setSelectedFormat(format);
+    setSelectedFile(null);
+    setError(null);
+    try {
+      const demo = loadDemoPdfTemplate(templateId);
+      const formattedText = formatExtractedScheduleToFormatText(demo, format);
+      setScheduleText(formattedText || FORMAT_CONFIG[format].placeholder);
+    } catch {
+      setScheduleText(FORMAT_CONFIG[format].placeholder);
     }
   };
 
-  const handleGeneratePlanningFromText = () => {
+  // Copier le texte extrait
+  const handleCopy = () => {
+    if (!scheduleText) return;
+    navigator.clipboard.writeText(scheduleText);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  // Génération directe du planning
+  const handleGeneratePlanning = () => {
     if (!scheduleText.trim()) {
-      setErrorMessage('Le fichier texte ne peut pas être vide.');
+      setError("Veuillez importer un fichier ou saisir votre emploi du temps.");
       return;
     }
 
+    setError(null);
+
     try {
-      const formatLabel = FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || 'Emploi_du_Temps';
       const parsed = parseStructuredScheduleTruth(
         scheduleText,
-        `${uploadedFile?.name || 'Emploi_du_Temps'}_${formatLabel}.txt`,
+        selectedFile?.name || 'Emploi_du_Temps.txt',
         selectedFormat
       );
-      const harmonized = recalculateSummary({
+
+      if (!parsed.slots || parsed.slots.length === 0) {
+        setError("Aucun créneau de cours valide détecté. Vérifiez la syntaxe (ex: - 08:00 - 10:00 : Nom Matière).");
+        return;
+      }
+
+      const harmonized = {
         ...parsed,
-        slots: harmonizeAndDeduplicateSlots(parsed.slots),
-      });
+        slots: harmonizeAndDeduplicateSlots(parsed.slots)
+      };
 
-      setExtractedData(harmonized);
-      soundFX.playCheckmarkPop();
-      setUploadStep('review_planning');
+      const finalPayload = buildStateFromExtractedSchedule(
+        harmonized,
+        studentName,
+        'evening',
+        'active_recall_spaced'
+      );
+
+      onApplyExtractedSchedule(finalPayload);
     } catch (err: any) {
-      console.error('Text parsing error:', err);
-      setErrorMessage("Impossible de générer le planning. Assurez-vous que chaque jour commence par 'JOUR :' et chaque cours par 'HH:MM - HH:MM'.");
+      console.error("[KONAN] Erreur génération planning :", err);
+      setError("Erreur de lecture. Assurez-vous que chaque jour commence par 'JOUR: LUNDI' et chaque cours par '- HH:MM - HH:MM : Matière'.");
     }
   };
-
-  const handleResetToUpload = () => {
-    setUploadedFile(null);
-    if (filePreviewUrl) {
-      URL.revokeObjectURL(filePreviewUrl);
-      setFilePreviewUrl(null);
-    }
-    setFileType(null);
-    setScheduleText('');
-    setExtractedData(null);
-    setUploadStep('upload_file');
-    setManualTextMode(false);
-    setErrorMessage(null);
-  };
-
-  // Subject management
-  const handleAddSubject = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newSubName.trim() || !extractedData) return;
-
-    const newSub: ExtractedSubjectCandidate = {
-      id: generateId(),
-      name: newSubName.trim(),
-      color: '#6366F1',
-      coefficient: newSubCoeff,
-      difficulty: newSubDiff,
-      targetGrade: 16,
-      topics: [`Concepts fondamentaux de ${newSubName}`],
-    };
-
-    setExtractedData(recalculateSummary({
-      ...extractedData,
-      subjects: [...extractedData.subjects, newSub],
-    }));
-
-    setNewSubName('');
-    setIsAddSubjectOpen(false);
-  };
-
-  const handleUpdateSubject = (id: string, updates: Partial<ExtractedSubjectCandidate>) => {
-    if (!extractedData) return;
-    setExtractedData(recalculateSummary({
-      ...extractedData,
-      subjects: extractedData.subjects.map(s => s.id === id ? { ...s, ...updates } : s),
-    }));
-  };
-
-  const handleDeleteSubject = (id: string) => {
-    if (!extractedData || extractedData.subjects.length <= 1) return;
-    setExtractedData(recalculateSummary({
-      ...extractedData,
-      subjects: extractedData.subjects.filter(s => s.id !== id),
-      slots: extractedData.slots.filter(slot => slot.subjectId !== id),
-    }));
-  };
-
-  // Slot management
-  const handleAddSlot = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!extractedData) return;
-
-    const matchedSub = extractedData.subjects.find(s => s.id === (slotSubId || extractedData.subjects[0].id)) || extractedData.subjects[0];
-
-    const newSlot: ExtractedClassCandidate = {
-      id: generateId(),
-      subjectId: matchedSub.id,
-      subjectName: matchedSub.name,
-      dayOfWeek: slotDay,
-      startTime: slotStart,
-      endTime: slotEnd,
-      type: slotType,
-      room: slotRoom,
-      professor: slotProf.trim() || undefined,
-    };
-
-    setExtractedData(recalculateSummary({
-      ...extractedData,
-      slots: harmonizeAndDeduplicateSlots([...extractedData.slots, newSlot]),
-    }));
-
-    setIsAddSlotOpen(false);
-    setSlotProf('');
-  };
-
-  const handleSaveEditSlot = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!extractedData || !editingSlot) return;
-
-    const matchedSub = extractedData.subjects.find(s => s.id === editingSlot.subjectId) || extractedData.subjects[0];
-
-    const updatedSlots = extractedData.slots.map(s => {
-      if (s.id === editingSlot.id) {
-        return {
-          ...editingSlot,
-          subjectName: matchedSub.name,
-        };
-      }
-      return s;
-    });
-
-    setExtractedData(recalculateSummary({
-      ...extractedData,
-      slots: harmonizeAndDeduplicateSlots(updatedSlots),
-    }));
-
-    setEditingSlot(null);
-  };
-
-  const handleDeleteSlot = (id: string) => {
-    if (!extractedData) return;
-    setExtractedData(recalculateSummary({
-      ...extractedData,
-      slots: extractedData.slots.filter(s => s.id !== id),
-    }));
-  };
-
-  const handleCopyRawText = () => {
-    if (!extractedData?.rawText) return;
-    navigator.clipboard.writeText(extractedData.rawText);
-    setCopiedRawText(true);
-    setTimeout(() => setCopiedRawText(false), 2000);
-  };
-
-  const handleFinalizeAndGenerate = () => {
-    if (!extractedData) return;
-
-    const harmonizedData = {
-      ...extractedData,
-      slots: harmonizeAndDeduplicateSlots(extractedData.slots),
-    };
-
-    const finalPayload = buildStateFromExtractedSchedule(
-      harmonizedData,
-      studentName,
-      selectedChronotype,
-      selectedPacing,
-      selectedCombinedPacings
-    );
-
-    confetti({
-      particleCount: 160,
-      spread: 100,
-      origin: { y: 0.6 }
-    });
-
-    onApplyExtractedSchedule(finalPayload);
-  };
-
-  // Conflict / overlap detection
-  const detectedConflicts: { slot1: ExtractedClassCandidate; slot2: ExtractedClassCandidate }[] = [];
-  if (extractedData) {
-    for (let i = 0; i < extractedData.slots.length; i++) {
-      for (let j = i + 1; j < extractedData.slots.length; j++) {
-        const s1 = extractedData.slots[i];
-        const s2 = extractedData.slots[j];
-        if (s1.dayOfWeek === s2.dayOfWeek) {
-          const s1Start = parseTimeToMinutes(s1.startTime);
-          const s1End = parseTimeToMinutes(s1.endTime);
-          const s2Start = parseTimeToMinutes(s2.startTime);
-          const s2End = parseTimeToMinutes(s2.endTime);
-
-          if (Math.max(s1Start, s2Start) < Math.min(s1End, s2End)) {
-            detectedConflicts.push({ slot1: s1, slot2: s2 });
-          }
-        }
-      }
-    }
-  }
-
-  const report = useMemo(() => {
-    if (!extractedData) return null;
-    return generateAcademicAnalysisReport(extractedData, selectedChronotype, selectedPacing);
-  }, [extractedData, selectedChronotype, selectedPacing]);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-300 py-2">
+    <div className="max-w-4xl mx-auto space-y-6 py-4 px-3 sm:px-4">
       
-      {/* TOP NAVIGATION: Dedicated Back Button */}
-      {onCancel && (
-        <div className="flex items-center justify-start mb-4">
-          <button
-            onClick={onCancel}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-xs font-semibold text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Retour</span>
-          </button>
-        </div>
-      )}
+      {/* Hidden File Inputs */}
+      <input 
+        type="file" 
+        ref={pdfInputRef} 
+        accept=".pdf,application/pdf" 
+        onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} 
+        className="hidden" 
+      />
+      <input 
+        type="file" 
+        ref={cameraInputRef} 
+        accept="image/*" 
+        capture="environment" 
+        onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} 
+        className="hidden" 
+      />
+      <input 
+        type="file" 
+        ref={galleryInputRef} 
+        accept="image/*,.png,.jpg,.jpeg,.webp" 
+        onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} 
+        className="hidden" 
+      />
 
-      {/* HEADER SECTION */}
-      <div className="text-center space-y-3.5 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-panel border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 text-xs font-semibold shadow-lg shadow-indigo-500/10 mx-auto">
-          <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
-          <span>Analyse Pédagogique • Emploi du Temps Étudiant</span>
-        </div>
-
-        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-          Importez votre <span className="text-gradient-primary">Emploi du Temps</span>
-        </h1>
-
-        <p className="text-xs sm:text-sm md:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
-          Choisissez le format de votre emploi du temps, collez-le en texte et KONAN l'analysera <strong className="text-white">fidèlement</strong> pour créer votre <strong className="text-cyan-400">Source de Vérité</strong> intangible et votre planning d'étude personnalisé.
-        </p>
-      </div>
-
-      {/* ERROR MESSAGE DISPLAY */}
-      {errorMessage && (
-        <div className="p-4 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs sm:text-sm flex items-center justify-between gap-3 animate-in shake duration-300">
-          <div className="flex items-center gap-2.5">
-            <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
-            <span>{errorMessage}</span>
-          </div>
-          <button 
-            onClick={() => setErrorMessage(null)} 
-            className="text-xs text-rose-400 hover:text-white underline cursor-pointer shrink-0"
-          >
-            Fermer
-          </button>
-        </div>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════════════ */}
-      {/* STEP 1: IMPORTATION INITIALE DU DOCUMENT (PDF OU PHOTO)             */}
-      {/* ════════════════════════════════════════════════════════════════════ */}
-      {uploadStep === 'upload_file' && !manualTextMode && (
-        <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
-          
-          {/* Hidden inputs for real file picker / camera / gallery */}
-          <input 
-            type="file" 
-            ref={pdfInputRef} 
-            accept=".pdf,application/pdf" 
-            onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} 
-            className="hidden" 
-          />
-          <input 
-            type="file" 
-            ref={cameraInputRef} 
-            accept="image/*" 
-            capture="environment" 
-            onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} 
-            className="hidden" 
-          />
-          <input 
-            type="file" 
-            ref={galleryInputRef} 
-            accept="image/*,.png,.jpg,.jpeg,.webp,.bmp" 
-            onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} 
-            className="hidden" 
-          />
-
-          {/* TWO MAIN TILES: PDF VS PHOTO */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-            
-            {/* TILE 1: PDF IMPORT */}
-            <div
-              onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
-              onDragLeave={() => setIsDragOver(false)}
-              onDrop={(e) => {
-                e.preventDefault();
-                setIsDragOver(false);
-                const file = e.dataTransfer.files?.[0];
-                if (file) handleFileSelected(file);
-              }}
-              onClick={() => pdfInputRef.current?.click()}
-              className={`p-6 sm:p-8 rounded-3xl border-2 border-dashed transition-all cursor-pointer text-center flex flex-col items-center justify-between gap-4 group relative overflow-hidden ${
-                isDragOver 
-                  ? 'border-indigo-400 bg-indigo-950/40 shadow-2xl shadow-indigo-500/20 scale-[1.02]' 
-                  : 'border-slate-800 hover:border-indigo-500/60 bg-gradient-to-b from-slate-900/80 to-slate-950 hover:bg-slate-900 shadow-xl'
-              }`}
-            >
-              <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shadow-lg shadow-indigo-500/15 group-hover:scale-110 transition-transform">
-                <FileUp className="w-8 h-8" />
-              </div>
-
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-bold uppercase tracking-wider border border-indigo-500/30">
-                  <FileText className="w-3 h-3" />
-                  Format PDF
-                </div>
-                <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-indigo-300 transition-colors">
-                  Importer un Emploi du Temps PDF
-                </h3>
-                <p className="text-xs text-slate-400 max-w-xs leading-relaxed">
-                  Glissez-déposez votre document PDF ou cliquez pour sélectionner le fichier officiel de votre établissement.
-                </p>
-              </div>
-
-              <Button
-                variant="secondary"
-                size="sm"
-                className="mt-2 text-xs font-bold pointer-events-none group-hover:border-indigo-400"
-              >
-                Parcourir mes fichiers PDF
-              </Button>
-            </div>
-
-            {/* TILE 2: PHOTO / CAMERA */}
-            <div
-              className="p-6 sm:p-8 rounded-3xl border-2 border-dashed border-slate-800 hover:border-cyan-500/60 bg-gradient-to-b from-slate-900/80 to-slate-950 hover:bg-slate-900 transition-all text-center flex flex-col items-center justify-between gap-4 group relative overflow-hidden shadow-xl"
-            >
-              <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center shadow-lg shadow-cyan-500/15 group-hover:scale-110 transition-transform">
-                <Camera className="w-8 h-8" />
-              </div>
-
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-bold uppercase tracking-wider border border-cyan-500/30">
-                  <Scan className="w-3 h-3" />
-                  Scanner / Photo
-                </div>
-                <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-cyan-300 transition-colors">
-                  Prendre ou Importer une Photo
-                </h3>
-                <p className="text-xs text-slate-400 max-w-xs leading-relaxed">
-                  Prenez en photo votre emploi du temps papier ou tableau d'affichage. Numérisation OCR automatique.
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center gap-2 w-full max-w-xs mt-2">
-                <Button
-                  variant="glow"
-                  size="sm"
-                  leftIcon={<Camera className="w-3.5 h-3.5" />}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    cameraInputRef.current?.click();
-                  }}
-                  className="w-full text-xs font-bold py-2 cursor-pointer shadow-cyan-500/20"
-                >
-                  Prendre une photo
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<ImageIcon className="w-3.5 h-3.5" />}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    galleryInputRef.current?.click();
-                  }}
-                  className="w-full text-xs font-bold py-2 cursor-pointer"
-                >
-                  Galerie photo
-                </Button>
-              </div>
-            </div>
-
-          </div>
-
-          {/* OFFICIAL DEMO TEMPLATES SHORTCUTS */}
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <span className="text-xs font-bold text-slate-300 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                Vous n'avez pas de document sous la main ? Testez avec un exemple certifié :
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-              <button
-                type="button"
-                onClick={() => handleSelectDemoTemplate('pdf-esatic-entd2')}
-                className="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 hover:bg-indigo-950/20 text-left transition-all cursor-pointer group"
-              >
-                <span className="text-[10px] text-indigo-400 font-mono block">ESATIC • L2</span>
-                <span className="text-xs font-bold text-white group-hover:text-indigo-300 block truncate">
-                  Économie Numérique (ENTD 2)
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleSelectDemoTemplate('pdf-cs-l3')}
-                className="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/40 hover:bg-cyan-950/20 text-left transition-all cursor-pointer group"
-              >
-                <span className="text-[10px] text-cyan-400 font-mono block">Université • L3</span>
-                <span className="text-xs font-bold text-white group-hover:text-cyan-300 block truncate">
-                  Licence 3 Informatique
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleSelectDemoTemplate('pdf-medecine-pass')}
-                className="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500/40 hover:bg-emerald-950/20 text-left transition-all cursor-pointer group"
-              >
-                <span className="text-[10px] text-emerald-400 font-mono block">Santé • PASS</span>
-                <span className="text-xs font-bold text-white group-hover:text-emerald-300 block truncate">
-                  Première Année Médecine
-                </span>
-              </button>
-            </div>
-          </div>
-
-          {/* FALLBACK: MANUAL TEXT TYPING TOGGLE */}
-          <div className="text-center pt-1">
+      {/* TOP HEADER */}
+      <div className="flex items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+        <div className="flex items-center gap-3">
+          {onCancel && (
             <button
-              type="button"
-              onClick={() => setManualTextMode(true)}
-              className="text-xs text-slate-400 hover:text-white underline cursor-pointer inline-flex items-center gap-1.5"
+              onClick={onCancel}
+              className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition-all cursor-pointer"
+              title="Retour au tableau de bord"
             >
-              <span>✏️ Ou saisir / coller manuellement le texte de votre emploi du temps</span>
+              <ArrowLeft className="w-4 h-4" />
             </button>
-          </div>
-
-        </div>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════════════ */}
-      {/* STEP 2: DEMANDER LE NIVEAU D'ÉTUDE DU DOCUMENT                       */}
-      {/* ════════════════════════════════════════════════════════════════════ */}
-      {uploadStep === 'select_level' && (
-        <div className="space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4 duration-300">
-          
-          {/* LOADED FILE RECAP BADGE */}
-          <div className="p-4 rounded-2xl bg-slate-900/90 border border-indigo-500/30 flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0 overflow-hidden">
-                {filePreviewUrl ? (
-                  <img src={filePreviewUrl} alt="Aperçu photo" className="w-full h-full object-cover" />
-                ) : fileType === 'pdf' ? (
-                  <FileText className="w-6 h-6 text-indigo-400" />
-                ) : (
-                  <Camera className="w-6 h-6 text-cyan-400" />
-                )}
-              </div>
-              <div className="min-w-0">
-                <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider block">
-                  Document importé prêt pour conversion
-                </span>
-                <h3 className="text-sm font-bold text-white truncate max-w-md">
-                  {uploadedFile?.name || 'Emploi du temps'}
-                </h3>
-                <span className="text-[11px] text-slate-400">
-                  {uploadedFile ? `${Math.round(uploadedFile.size / 1024)} Ko` : ''} • {fileType === 'pdf' ? 'Fichier PDF' : 'Photo / Image'}
-                </span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleResetToUpload}
-              className="text-xs text-slate-400 hover:text-white underline cursor-pointer"
-            >
-              Changer de document
-            </button>
-          </div>
-
-          {/* QUESTION: QUEL EST VOTRE NIVEAU D'ÉTUDES ? */}
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-white">
-                <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-indigo-600 text-white text-[11px] font-black">2</span>
-                <span>Quel est votre niveau d'études ?</span>
-              </div>
-              <p className="text-xs text-slate-400 pl-8">
-                Sélectionnez le format académique pour que KONAN structure fidèlement vos cours, matières et horaires selon la nomenclature exacte.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {FORMAT_DEFINITIONS.map((fmt) => {
-                const isActive = selectedFormat === fmt.id;
-                return (
-                  <button
-                    key={fmt.id}
-                    onClick={() => setSelectedFormat(fmt.id)}
-                    className={`relative p-5 rounded-2xl border-2 text-left transition-all cursor-pointer group overflow-hidden ${
-                      isActive
-                        ? `${fmt.borderColor} ${fmt.bgColor} shadow-xl ${fmt.glowColor} scale-[1.02]`
-                        : 'border-slate-800 bg-slate-900/60 hover:border-slate-700 hover:bg-slate-900/80 shadow-md'
-                    }`}
-                  >
-                    <div className="relative z-10 space-y-3">
-                      <div className="flex items-center gap-3">
-                        <div className={`p-2.5 rounded-xl ${isActive ? fmt.bgColor : 'bg-slate-800/80'} ${fmt.color} transition-colors`}>
-                          {fmt.icon}
-                        </div>
-                        <div className="min-w-0">
-                          <h3 className={`text-sm font-bold ${isActive ? 'text-white' : 'text-slate-200 group-hover:text-white'} transition-colors`}>
-                            {fmt.label}
-                          </h3>
-                          <span className="text-[11px] text-slate-400 font-medium">
-                            {fmt.subtitle}
-                          </span>
-                        </div>
-                      </div>
-
-                      <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
-                        {fmt.description}
-                      </p>
-
-                      <div className="text-[10px] text-slate-500 font-medium flex items-center gap-1.5">
-                        <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400' : 'bg-slate-600'}`} />
-                        <span>{fmt.audience}</span>
-                      </div>
-
-                      {isActive && (
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 pt-1">
-                          <CheckCircle className="w-3.5 h-3.5" />
-                          <span>Niveau sélectionné</span>
-                        </div>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* LAUNCH SCAN BUTTON */}
-          <div className="flex items-center justify-between flex-wrap gap-3 pt-4 border-t border-slate-800">
-            <button
-              onClick={handleResetToUpload}
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Retour à l'importation</span>
-            </button>
-
-            <Button
-              variant="glow"
-              size="lg"
-              rightIcon={<ArrowRight className="w-5 h-5" />}
-              onClick={startScanningPipeline}
-              className="px-6 sm:px-10 py-3.5 text-xs sm:text-sm font-bold shadow-xl shadow-indigo-500/30 cursor-pointer"
-            >
-              Lancer la Numérisation & Conversion AI
-            </Button>
-          </div>
-
-        </div>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════════════ */}
-      {/* STEP 3: MINIMALIST & PROFESSIONAL SCANNING VIEW                      */}
-      {/* ════════════════════════════════════════════════════════════════════ */}
-      {uploadStep === 'scanning' && (
-        <Card className="p-8 sm:p-12 border border-slate-800 bg-slate-900/60 backdrop-blur-md rounded-3xl shadow-xl max-w-xl mx-auto space-y-8 animate-in fade-in duration-300">
-          
-          <div className="text-center space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto shadow-sm">
-              <FileText className="w-7 h-7 text-indigo-400 animate-pulse" />
-            </div>
-
-            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Traitement de votre emploi du temps
-            </h2>
-
-            <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
-              {scanStatus || 'Extraction des cours et structuration en cours...'}
+          )}
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Importation d'Emploi du Temps
+            </h1>
+            <p className="text-xs text-slate-400">
+              Scannez ou déposez votre document. L'IA extrait directement vos cours et horaires.
             </p>
           </div>
+        </div>
 
-          {/* Clean Document Preview Card */}
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex items-center gap-3.5">
-            {filePreviewUrl ? (
-              <img 
-                src={filePreviewUrl} 
-                alt="Aperçu du document" 
-                className="w-12 h-14 object-cover rounded-lg border border-slate-800 shadow-sm shrink-0"
-              />
-            ) : (
-              <div className="w-12 h-14 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                <FileText className="w-6 h-6 text-slate-400" />
-              </div>
-            )}
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-slate-200 truncate">
-                {uploadedFile?.name || 'Document_EDT.pdf'}
-              </p>
-              <p className="text-[11px] text-slate-400">
-                {uploadedFile?.size ? `${Math.round(uploadedFile.size / 1024)} Ko • ` : ''}
-                Format {FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label || selectedFormat.toUpperCase()}
-              </p>
-            </div>
-            <span className="text-xs font-mono font-bold text-indigo-400 shrink-0">
-              {scanProgress}%
-            </span>
+        <button
+          onClick={handleReset}
+          className="text-xs text-slate-400 hover:text-slate-200 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 transition-colors cursor-pointer"
+          title="Réinitialiser tous les champs"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Réinitialiser</span>
+        </button>
+      </div>
+
+      {/* ERROR ALERT */}
+      {error && (
+        <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <span>{error}</span>
           </div>
-
-          {/* Minimalist Progress Bar */}
-          <div className="space-y-2">
-            <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800/80">
-              <div 
-                className="h-full bg-indigo-500 transition-all duration-300 ease-out rounded-full"
-                style={{ width: `${scanProgress}%` }}
-              />
-            </div>
-            <div className="flex justify-between items-center text-[11px] text-slate-400">
-              <span>Analyse et fidélité des créneaux</span>
-              <span>{scanProgress < 100 ? 'En cours...' : 'Terminé'}</span>
-            </div>
-          </div>
-
-        </Card>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════════════ */}
-      {/* STEP 4: FICHIER TEXTE STRUCTURÉ GÉNÉRÉ DANS UN ENCADRÉ ÉDITABLE     */}
-      {/* ════════════════════════════════════════════════════════════════════ */}
-      {uploadStep === 'review_text' && (
-        <div className="space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4 duration-300">
-          
-          <div className="p-4 sm:p-6 rounded-3xl bg-slate-900/90 border border-cyan-500/40 shadow-xl space-y-3">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">
-                  <FileCheck className="w-5 h-5" />
-                </div>
-                <div>
-                  <h2 className="text-base sm:text-lg font-bold text-white">
-                    Fichier Texte Structuré Généré par l'IA
-                  </h2>
-                  <p className="text-xs text-slate-400">
-                    Format : <strong className="text-cyan-300">{FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.label}</strong> • Vous pouvez relire et ajuster n'importe quelle ligne si nécessaire.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    navigator.clipboard.writeText(scheduleText);
-                    soundFX.playCheckmarkPop();
-                  }}
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold inline-flex items-center gap-1.5 transition-colors cursor-pointer"
-                >
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>Copier le texte</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Editable Text Editor Area */}
-            <div className="relative">
-              <textarea
-                value={scheduleText}
-                onChange={(e) => setScheduleText(e.target.value)}
-                rows={13}
-                className="w-full bg-black/60 border border-slate-800 hover:border-slate-700 focus:border-cyan-500/60 rounded-2xl p-4 sm:p-5 text-xs sm:text-sm text-cyan-200 font-mono focus:outline-none focus:ring-2 focus:ring-cyan-500/30 leading-relaxed transition-colors selection:bg-indigo-500/30"
-                placeholder="Votre emploi du temps converti apparaîtra ici..."
-              />
-
-              <div className="absolute bottom-3 right-3 text-[10px] text-slate-500 font-mono bg-slate-950/80 px-2 py-1 rounded-md border border-slate-800">
-                {scheduleText.split('\n').filter(Boolean).length} lignes • {scheduleText.length} caractères
-              </div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between flex-wrap gap-2">
-              <span>💡 <strong>Conseil :</strong> Chaque jour doit commencer par son nom en majuscules (ex: <code className="text-cyan-300">LUNDI :</code>) et chaque cours par <code className="text-cyan-300">HH:MM - HH:MM</code>.</span>
-            </div>
-          </div>
-
-          {/* ACTION BUTTONS */}
-          <div className="flex items-center justify-between flex-wrap gap-3 pt-2">
-            <button
-              onClick={handleResetToUpload}
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Réimporter un autre document</span>
-            </button>
-
-            <Button
-              variant="glow"
-              size="lg"
-              rightIcon={<ArrowRight className="w-5 h-5" />}
-              onClick={handleGeneratePlanningFromText}
-              className="px-6 sm:px-10 py-3.5 text-xs sm:text-sm font-bold shadow-xl shadow-cyan-500/25 cursor-pointer !bg-gradient-to-r !from-cyan-500 !via-indigo-600 !to-cyan-500 text-white"
-            >
-              Générer mon Planning d'Étude
-            </Button>
-          </div>
-
+          <button 
+            onClick={() => setError(null)} 
+            className="text-slate-400 hover:text-white cursor-pointer"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
         </div>
       )}
 
-      {/* FALLBACK: PURE MANUAL TEXT MODE */}
-      {uploadStep === 'upload_file' && manualTextMode && (
-        <div className="space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4 duration-300">
-          
-          <div className="flex items-center justify-between">
+      {/* SECTION 1: NIVEAU D'ÉTUDE (TABS SOBRES) */}
+      <div className="space-y-2">
+        <label className="text-xs font-semibold text-slate-300">
+          Niveau académique
+        </label>
+        <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-slate-900/80 border border-slate-800">
+          {(Object.keys(FORMAT_CONFIG) as ScheduleFormatType[]).map((fmt) => {
+            const config = FORMAT_CONFIG[fmt];
+            const isSelected = selectedFormat === fmt;
+            return (
+              <button
+                key={fmt}
+                type="button"
+                onClick={() => setSelectedFormat(fmt)}
+                className={`py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  isSelected 
+                    ? 'bg-indigo-600 text-white shadow-sm font-semibold' 
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                }`}
+              >
+                {config.icon}
+                <span className="truncate">{config.short}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* SECTION 2: IMPORTATION DIRECTE & CAPTURE (3 BOUTONS PROS) */}
+      <div className="space-y-3">
+        <label className="text-xs font-semibold text-slate-300">
+          Source du document
+        </label>
+        
+        <div 
+          onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+          onDragLeave={() => setIsDragOver(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setIsDragOver(false);
+            const file = e.dataTransfer.files?.[0];
+            if (file) handleFileSelected(file);
+          }}
+          className={`grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl border-2 border-dashed transition-all ${
+            isDragOver 
+              ? 'border-indigo-500 bg-indigo-950/20' 
+              : 'border-slate-800 bg-slate-900/40 hover:border-slate-700'
+          }`}
+        >
+          {/* Action 1: PDF */}
+          <button
+            type="button"
+            disabled={isAnalyzing}
+            onClick={() => pdfInputRef.current?.click()}
+            className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/50 hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50"
+          >
+            <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <FileText className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-xs font-bold text-white block">Document PDF</span>
+              <span className="text-[11px] text-slate-400 block truncate">Choisir ou glisser</span>
+            </div>
+          </button>
+
+          {/* Action 2: Prendre Photo */}
+          <button
+            type="button"
+            disabled={isAnalyzing}
+            onClick={() => cameraInputRef.current?.click()}
+            className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50"
+          >
+            <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <Camera className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-xs font-bold text-white block">Prendre Photo</span>
+              <span className="text-[11px] text-slate-400 block truncate">Appareil photo</span>
+            </div>
+          </button>
+
+          {/* Action 3: Galerie */}
+          <button
+            type="button"
+            disabled={isAnalyzing}
+            onClick={() => galleryInputRef.current?.click()}
+            className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50"
+          >
+            <div className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <ImageIcon className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-xs font-bold text-white block">Galerie Photo</span>
+              <span className="text-[11px] text-slate-400 block truncate">PNG, JPG, WEBP</span>
+            </div>
+          </button>
+        </div>
+
+        {/* État du fichier sélectionné & Loader inline */}
+        {selectedFile && (
+          <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <UploadCloud className="w-4 h-4 text-indigo-400 shrink-0" />
+              <span className="text-slate-200 font-medium truncate">{selectedFile.name}</span>
+              <span className="text-slate-500 text-[11px] shrink-0">({Math.round(selectedFile.size / 1024)} Ko)</span>
+            </div>
+            {isAnalyzing ? (
+              <div className="flex items-center gap-2 text-indigo-400 text-xs font-semibold shrink-0">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Analyse IA en cours...</span>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setSelectedFile(null)}
+                className="text-slate-400 hover:text-white cursor-pointer p-1"
+                title="Retirer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* EXEMPLES PRÉDÉFINIS POUR TESTS RAPIDES */}
+      <div className="flex items-center gap-2 flex-wrap text-xs text-slate-400">
+        <span className="text-[11px] font-medium text-slate-500">Exemples rapides :</span>
+        <button
+          type="button"
+          onClick={() => handleLoadDemo('pdf-esatic-entd2', 'lmd')}
+          className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-colors cursor-pointer text-[11px]"
+        >
+          ESATIC (LMD)
+        </button>
+        <button
+          type="button"
+          onClick={() => handleLoadDemo('pdf-cs-l3', 'tpcm')}
+          className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-colors cursor-pointer text-[11px]"
+        >
+          BTS Info (CM/TD/TP)
+        </button>
+        <button
+          type="button"
+          onClick={() => handleLoadDemo('pdf-lycee-john-wesley', 'scolaire')}
+          className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-colors cursor-pointer text-[11px]"
+        >
+          Terminale (Scolaire)
+        </button>
+      </div>
+
+      {/* SECTION 3: ÉDITEUR DE TEXTE STRUCTURÉ EN DIRECT */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-slate-300 flex items-center gap-2">
+            <span>Texte structuré de l'emploi du temps</span>
+            {detectedSlotsCount > 0 && (
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">
+                ✓ {detectedSlotsCount} cours détecté{detectedSlotsCount > 1 ? 's' : ''}
+              </span>
+            )}
+          </label>
+
+          {scheduleText && (
             <button
               type="button"
-              onClick={() => setManualTextMode(false)}
-              className="inline-flex items-center gap-1.5 text-xs text-cyan-400 hover:underline cursor-pointer"
+              onClick={handleCopy}
+              className="text-[11px] text-slate-400 hover:text-white inline-flex items-center gap-1 cursor-pointer"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Revenir à l'importation de PDF ou Photo</span>
+              {isCopied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+              <span>{isCopied ? 'Copié !' : 'Copier'}</span>
             </button>
-          </div>
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {FORMAT_DEFINITIONS.map((fmt) => (
-                <button
-                  key={fmt.id}
-                  onClick={() => setSelectedFormat(fmt.id)}
-                  className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
-                    selectedFormat === fmt.id ? `${fmt.borderColor} ${fmt.bgColor}` : 'border-slate-800 bg-slate-900/60'
-                  }`}
-                >
-                  <h4 className="text-xs font-bold text-white">{fmt.label}</h4>
-                  <p className="text-[11px] text-slate-400 mt-1">{fmt.subtitle}</p>
-                </button>
-              ))}
-            </div>
-
-            <div className="relative">
-              <textarea
-                value={scheduleText}
-                onChange={(e) => setScheduleText(e.target.value)}
-                rows={12}
-                placeholder={FORMAT_DEFINITIONS.find(f => f.id === selectedFormat)?.placeholder}
-                className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-xs font-mono text-slate-100"
-              />
-            </div>
-
-            <Button
-              variant="glow"
-              size="lg"
-              onClick={handleGeneratePlanningFromText}
-              disabled={!scheduleText.trim()}
-              className="w-full py-3 text-xs font-bold"
-            >
-              Analyser ce texte et créer le planning
-            </Button>
-          </div>
+          )}
         </div>
-      )}
 
-      {/* ════════════════════════════════════════════════════════════════════ */}
-      {/* STAGE 5: INTERACTIVE REVIEW & VERIFICATION                         */}
-      {/* ════════════════════════════════════════════════════════════════════ */}
-      {uploadStep === 'review_planning' && extractedData && (
-        <div className="space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4 duration-300">
-          
-          {/* Summary Strip */}
-          <div className="p-4 sm:p-6 rounded-3xl glass-panel border border-indigo-500/30 bg-gradient-to-r from-indigo-950/40 via-slate-900 to-slate-950 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            
-            <div className="space-y-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <Badge variant="emerald" dot size="sm">Extraction Fidèle Validée</Badge>
-                <span className="text-xs text-slate-400 font-mono truncate">{extractedData.fileName}</span>
-              </div>
-              <h2 className="text-lg sm:text-2xl font-black text-white tracking-tight truncate">
-                {extractedData.academicTrack}
-              </h2>
-              <p className="text-xs text-slate-300">
-                {extractedData.slots.length} créneaux fixes • {extractedData.subjects.length} matières • {extractedData.totalWeeklyClassHours}h de cours/semaine
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 w-full md:w-auto shrink-0">
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<RefreshCw className="w-3.5 h-3.5 text-cyan-400" />}
-                onClick={() => {
-                  setExtractedData(null);
-                  setScheduleText('');
-                }}
-                className="cursor-pointer text-xs flex-1 md:flex-initial py-2.5"
-              >
-                Nouvel emploi du temps
-              </Button>
-
-              <Button
-                variant="glow"
-                size="sm"
-                rightIcon={<ArrowRight className="w-4 h-4" />}
-                onClick={handleFinalizeAndGenerate}
-                className="cursor-pointer text-xs font-bold flex-1 md:flex-initial py-2.5 px-5 shadow-xl shadow-indigo-500/30"
-              >
-                Construire mon Planning Personnel
-              </Button>
-            </div>
-
-          </div>
-
-          {/* HARMONIZATION & ZERO-CONFLICT STATUS BANNER */}
-          {detectedConflicts.length > 0 ? (
-            <div className="p-4 rounded-2xl bg-indigo-950/40 border border-indigo-500/40 text-indigo-200 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
-              <div className="flex items-center gap-2.5">
-                <Sparkles className="w-5 h-5 text-cyan-400 shrink-0" />
-                <span>
-                  <strong>Ajustement intelligent disponible :</strong> {detectedConflicts.length} créneau(x) se chevauchaient légèrement dans le texte source. KONAN a harmonisé la grille pour un affichage optimal.
-                </span>
-              </div>
-              <button
-                onClick={() => {
-                  if (extractedData) {
-                    const smoothedSlots = harmonizeAndDeduplicateSlots(extractedData.slots);
-                    setExtractedData(recalculateSummary({ ...extractedData, slots: smoothedSlots }));
-                  }
-                }}
-                className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shrink-0 cursor-pointer shadow-md hover:shadow-indigo-500/25 transition-all"
-              >
-                Lisser les créneaux
-              </button>
-            </div>
-          ) : (
-            <div className="p-3.5 rounded-2xl bg-emerald-950/30 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between gap-2 shadow-sm">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span><strong>Grille Parfaite :</strong> Zéro conflit d'horaire détecté. Tous les cours sont parfaitement synchronisés.</span>
-              </div>
-              <Badge variant="emerald" size="sm" className="hidden sm:inline-flex">100% Fluide</Badge>
-            </div>
-          )}
-
-          {/* KPI Mini Tiles */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
-            <Card className="p-3.5 bg-slate-900/60 border-slate-800 flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 shrink-0">
-                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs text-slate-400 truncate">Matières Réelles</p>
-                <p className="text-sm sm:text-lg font-bold text-white font-mono">{extractedData.subjects.length}</p>
-              </div>
-            </Card>
-
-            <Card className="p-3.5 bg-slate-900/60 border-slate-800 flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 shrink-0">
-                <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs text-slate-400 truncate">Volume Cours</p>
-                <p className="text-sm sm:text-lg font-bold text-cyan-400 font-mono">{extractedData.totalWeeklyClassHours}h / sem</p>
-              </div>
-            </Card>
-
-            <Card className="p-3.5 bg-slate-900/60 border-slate-800 flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 shrink-0">
-                <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs text-slate-400 truncate">Étude Conseillée</p>
-                <p className="text-sm sm:text-lg font-bold text-emerald-400 font-mono">~{extractedData.recommendedStudyHours}h / sem</p>
-              </div>
-            </Card>
-
-            <Card className="p-3.5 bg-slate-900/60 border-slate-800 flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 shrink-0">
-                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs text-slate-400 truncate">Précision Détection</p>
-                <p className="text-sm sm:text-lg font-bold text-amber-300 font-mono">{extractedData.detectedConfidence}%</p>
-              </div>
-            </Card>
-          </div>
-
-          {/* TABS NAVIGATION */}
-          <div className="flex items-center gap-2 border-b border-slate-800 pb-2 overflow-x-auto no-scrollbar">
-            <button
-              onClick={() => setActiveTab('source_truth')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap min-h-[38px] ${
-                activeTab === 'source_truth'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-1 ring-indigo-400/50'
-                  : 'bg-slate-900/70 text-slate-400 hover:text-white'
-              }`}
-            >
-              <Lock className="w-3.5 h-3.5 text-cyan-400" />
-              <span>1. Source de Vérité ({extractedData.slots.length} cours)</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('subjects')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap min-h-[38px] ${
-                activeTab === 'subjects'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                  : 'bg-slate-900/70 text-slate-400 hover:text-white'
-              }`}
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>2. Matières & Coefficients ({extractedData.subjects.length})</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('slots')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap min-h-[38px] ${
-                activeTab === 'slots'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                  : 'bg-slate-900/70 text-slate-400 hover:text-white'
-              }`}
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>3. Grille Horaires ({extractedData.slots.length})</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('strategy')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap min-h-[38px] ${
-                activeTab === 'strategy'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                  : 'bg-slate-900/70 text-slate-400 hover:text-white'
-              }`}
-            >
-              <Brain className="w-3.5 h-3.5 text-cyan-400" />
-              <span>4. Stratégie & Chronotype</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('raw_inspector')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap min-h-[38px] ${
-                activeTab === 'raw_inspector'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                  : 'bg-slate-900/70 text-slate-400 hover:text-white'
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>5. Texte Source</span>
-            </button>
-          </div>
-
-          {/* TAB CONTENT 0: SOURCE DE VERITE */}
-          {activeTab === 'source_truth' && (
-            <div className="space-y-5 animate-in fade-in duration-200">
-              
-              {/* Info Banner */}
-              <div className="p-4 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 text-xs text-slate-300 space-y-1.5 shadow-lg">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div className="flex items-center gap-2 text-white font-bold text-sm">
-                    <span className="p-1.5 rounded-xl bg-indigo-500/20 text-cyan-400">
-                      <Lock className="w-4 h-4" />
-                    </span>
-                    <span>Source de Vérité des Cours Extraits</span>
-                  </div>
-                  <Badge variant="emerald" dot size="sm">Sanctuarisé : Zéro cours inventé ou déplacé</Badge>
-                </div>
-                <p className="text-slate-400 leading-relaxed">
-                  Voici l'organisation fidèle et exacte de vos cours ci-dessous. Cette extraction constitue votre socle officiel :
-                  votre planning d'étude personnalisé est organisé <strong className="text-white">strictement autour de ces créneaux</strong>, sans modifier ni supprimer aucun horaire.
-                </p>
-              </div>
-
-              {/* Code Panel / Structured Text */}
-              <Card className="p-4 sm:p-6 bg-slate-950/80 border-slate-800/80 space-y-4 shadow-xl relative overflow-hidden">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-white">Format Structuré Canonique</span>
-                    <span className="text-[11px] text-slate-500 font-mono">({extractedData.slots.length} cours répertoriés)</span>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => {
-                        if (!isEditingTruth) {
-                          setTruthEditText(formatStructuredScheduleTruth(extractedData.slots));
-                          setIsEditingTruth(true);
-                        } else {
-                          setIsEditingTruth(false);
-                        }
-                      }}
-                      className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold inline-flex items-center gap-1.5 transition-colors cursor-pointer"
-                    >
-                      <Edit3 className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>{isEditingTruth ? 'Annuler' : 'Modifier le texte'}</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        const str = formatStructuredScheduleTruth(extractedData.slots);
-                        navigator.clipboard.writeText(str);
-                        setCopiedTruthText(true);
-                        setTimeout(() => setCopiedTruthText(false), 2000);
-                      }}
-                      className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold inline-flex items-center gap-1.5 transition-colors cursor-pointer"
-                    >
-                      {copiedTruthText ? (
-                        <>
-                          <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-                          <span className="text-emerald-400">Copié !</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3.5 h-3.5 text-indigo-400" />
-                          <span>Copier la Source</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {isEditingTruth ? (
-                  <div className="space-y-3">
-                    <textarea
-                      value={truthEditText}
-                      onChange={(e) => setTruthEditText(e.target.value)}
-                      rows={8}
-                      className="w-full p-4 rounded-xl bg-slate-900/90 border border-indigo-500/50 text-white font-mono text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 leading-relaxed"
-                      placeholder="Lundi : 08:00–10:00 Mathématiques ; 10:15–12:00 Physique&#10;Mardi : 08:00–10:00 Français ; 14:00–16:00 Informatique"
-                    />
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => setIsEditingTruth(false)}
-                      >
-                        Annuler
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="glow"
-                        onClick={() => {
-                          const parsed = parseStructuredScheduleTruth(truthEditText, extractedData.fileName);
-                          if (parsed.slots.length > 0) {
-                            setExtractedData(recalculateSummary(parsed));
-                            setIsEditingTruth(false);
-                          } else {
-                            alert("Format non reconnu. Assurez-vous d'avoir au moins un horaire (ex: 08:00–10:00 Mathématiques).");
-                          }
-                        }}
-                      >
-                        Appliquer & Recalculer
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <pre className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-cyan-300 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto whitespace-pre-wrap selection:bg-indigo-500/30">
-                    {formatStructuredScheduleTruth(extractedData.slots) || '(Aucun cours extrait)'}
-                  </pre>
-                )}
-              </Card>
-
-              {/* Visual Breakdown by Day */}
-              <div className="space-y-3 pt-2">
-                <h3 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-indigo-400" />
-                  <span>Détail quotidien des cours fixés (Chronologique & Immuable)</span>
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                  {DAYS_OF_WEEK.map((day) => {
-                    const daySlots = extractedData.slots
-                      .filter(s => s.dayOfWeek === day.id)
-                      .sort((a, b) => parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime));
-
-                    if (daySlots.length === 0) return null;
-
-                    return (
-                      <Card key={day.id} className="p-4 bg-slate-900/70 border-slate-800 space-y-2.5">
-                        <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                          <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                            {day.label}
-                          </span>
-                          <span className="text-[10px] text-slate-400 font-mono">
-                            {daySlots.length} cours
-                          </span>
-                        </div>
-
-                        <div className="space-y-2">
-                          {daySlots.map((slot) => {
-                            return (
-                              <div
-                                key={slot.id}
-                                className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between gap-2"
-                              >
-                                <div className="min-w-0">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-xs font-bold text-white truncate">
-                                      {slot.subjectName}
-                                    </span>
-                                    <Badge size="sm" variant="primary">
-                                      {COURSE_TYPE_LABELS[slot.type]?.badge || 'COURS'}
-                                    </Badge>
-                                  </div>
-                                  <div className="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5 font-mono">
-                                    <span>{slot.room || 'Salle principale'}</span>
-                                    {slot.professor && <span>• {slot.professor}</span>}
-                                  </div>
-                                </div>
-
-                                <div className="text-right shrink-0">
-                                  <span className="text-xs font-bold text-cyan-300 font-mono">
-                                    {slot.startTime}–{slot.endTime}
-                                  </span>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Bottom Action */}
-              <div className="pt-4 flex justify-end">
-                <Button
-                  variant="glow"
-                  size="md"
-                  rightIcon={<ArrowRight className="w-4 h-4" />}
-                  onClick={handleFinalizeAndGenerate}
-                  className="cursor-pointer font-bold px-6 shadow-xl shadow-indigo-500/30"
-                >
-                  Valider mon Emploi du Temps & Organiser mes Révisions
-                </Button>
-              </div>
-
-            </div>
-          )}
-
-          {/* TAB CONTENT 1: SUBJECTS REVIEW */}
-          {activeTab === 'subjects' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-slate-400">
-                  Matières détectées depuis votre emploi du temps. Vous pouvez ajuster les coefficients pour calibrer vos priorités de révision.
-                </p>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<Plus className="w-3.5 h-3.5" />}
-                  onClick={() => setIsAddSubjectOpen(true)}
-                  className="text-xs"
-                >
-                  Ajouter une matière
-                </Button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                {extractedData.subjects.map((sub) => (
-                  <Card 
-                    key={sub.id} 
-                    className="p-4 bg-slate-900/70 border-slate-800 space-y-3 relative"
-                    style={{ borderTopColor: sub.color, borderTopWidth: '4px' }}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        {sub.code && (
-                          <span className="text-[10px] font-mono font-bold text-indigo-400 uppercase">
-                            {sub.code}
-                          </span>
-                        )}
-                        <h4 className="text-xs sm:text-sm font-bold text-white leading-tight truncate">
-                          {sub.name}
-                        </h4>
-                      </div>
-                      <button
-                        onClick={() => handleDeleteSubject(sub.id)}
-                        className="p-1 text-slate-500 hover:text-rose-400 rounded transition-colors cursor-pointer"
-                        title="Supprimer cette matière"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    {/* Coefficient & Difficulty Sliders */}
-                    <div className="space-y-2 pt-1 border-t border-slate-800/80 text-xs">
-                      <div>
-                        <div className="flex justify-between text-[11px] text-slate-300 mb-1">
-                          <span>Coefficient :</span>
-                          <span className="font-bold text-cyan-400 font-mono">Coeff {sub.coefficient}</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="1"
-                          max="16"
-                          value={sub.coefficient}
-                          onChange={(e) => handleUpdateSubject(sub.id, { coefficient: Number(e.target.value) })}
-                          className="w-full accent-cyan-500 cursor-pointer"
-                        />
-                      </div>
-
-                      <div>
-                        <div className="flex justify-between text-[11px] text-slate-300 mb-1">
-                          <span>Difficulté :</span>
-                          <span className="font-bold text-amber-400 font-mono">{sub.difficulty} / 5</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="1"
-                          max="5"
-                          value={sub.difficulty}
-                          onChange={(e) => handleUpdateSubject(sub.id, { difficulty: Number(e.target.value) as 1|2|3|4|5 })}
-                          className="w-full accent-amber-500 cursor-pointer"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center text-[11px] text-slate-400 pt-1 border-t border-slate-800/60">
-                      <span>Note cible visée :</span>
-                      <span className="font-mono font-bold text-emerald-400">{sub.targetGrade}/20</span>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* TAB CONTENT 2: SLOTS REVIEW & DIRECT EDIT */}
-          {activeTab === 'slots' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-slate-400">
-                  Créneaux réels extraits de votre emploi du temps. Vous pouvez modifier les horaires, matières ou salles directement.
-                </p>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<Plus className="w-3.5 h-3.5" />}
-                  onClick={() => setIsAddSlotOpen(true)}
-                  className="text-xs"
-                >
-                  Ajouter un créneau
-                </Button>
-              </div>
-
-              <div className="divide-y divide-slate-800/80 bg-slate-900/60 rounded-2xl border border-slate-800 overflow-hidden">
-                {extractedData.slots
-                  .sort((a, b) => a.dayOfWeek - b.dayOfWeek || a.startTime.localeCompare(b.startTime))
-                  .map((slot) => {
-                    const day = DAYS_OF_WEEK.find(d => d.id === slot.dayOfWeek) || DAYS_OF_WEEK[0];
-                    const typeInfo = COURSE_TYPE_LABELS[slot.type] || { badge: 'CM' };
-                    const matchingSub = extractedData.subjects.find(s => s.id === slot.subjectId);
-
-                    return (
-                      <div 
-                        key={slot.id}
-                        className="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs hover:bg-slate-850/60 transition-colors"
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <Badge variant="primary" size="sm" className="font-bold shrink-0 min-w-[42px] text-center">
-                            {day.short}
-                          </Badge>
-
-                          <div className="min-w-0 space-y-0.5">
-                            <div className="flex items-center gap-2">
-                              <span className="font-mono font-bold text-cyan-400">{slot.startTime} - {slot.endTime}</span>
-                              <Badge variant="slate" size="sm" className="text-[10px] px-1.5 py-0">{typeInfo.badge}</Badge>
-                            </div>
-                            <p className="font-bold text-white truncate" style={{ color: matchingSub?.color }}>
-                              {slot.subjectName}
-                            </p>
-                            {(slot.room || slot.professor) && (
-                              <p className="text-[11px] text-slate-400 truncate">
-                                {slot.room ? `Salle: ${slot.room}` : ''} {slot.professor ? `• Prof: ${slot.professor}` : ''}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                          <button
-                            onClick={() => setEditingSlot(slot)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-indigo-600/50 text-slate-300 hover:text-white transition-colors cursor-pointer"
-                          >
-                            <Edit3 className="w-3 h-3" />
-                            <span>Modifier</span>
-                          </button>
-
-                          <button
-                            onClick={() => handleDeleteSlot(slot.id)}
-                            className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-rose-500/10 transition-colors cursor-pointer"
-                            title="Supprimer ce créneau"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          )}
-
-          {/* TAB CONTENT 3: AI DIAGNOSTIC & STRATEGY */}
-          {activeTab === 'strategy' && report && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              
-              <Card className="p-5 bg-slate-900/70 border-slate-800 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Brain className="w-4 h-4 text-cyan-400" />
-                    Bilan de Rythme & Équilibre
-                  </h3>
-                  <Badge variant="cyan" size="sm" dot>
-                    {report.pacingTechniqueLabel}
-                  </Badge>
-                </div>
-
-                <div className="p-3.5 rounded-2xl bg-indigo-950/30 border border-indigo-500/30 space-y-2.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-300 font-medium">Indice d'Équilibre Global :</span>
-                    <div className="flex items-center gap-2">
-                      <span className={`font-bold font-mono text-sm ${
-                        report.overallWorkloadScore >= 80 ? 'text-emerald-400' :
-                        report.overallWorkloadScore >= 65 ? 'text-cyan-400' :
-                        report.overallWorkloadScore >= 55 ? 'text-amber-400' : 'text-rose-400'
-                      }`}>
-                        {report.overallWorkloadScore} / 100
-                      </span>
-                      <Badge 
-                        variant={
-                          report.overallWorkloadScore >= 80 ? 'emerald' :
-                          report.overallWorkloadScore >= 65 ? 'cyan' :
-                          report.overallWorkloadScore >= 55 ? 'amber' : 'rose'
-                        } 
-                        size="sm"
-                      >
-                        {report.workloadCategory}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs pt-1 border-t border-indigo-500/20">
-                    <span className="text-slate-300 font-medium">Risque de Burnout :</span>
-                    <Badge variant={report.burnoutRiskVariant} size="sm" dot>
-                      {report.burnoutRiskIndex}
-                    </Badge>
-                  </div>
-
-                  {report.burnoutDetails && (
-                    <p className="text-[11px] text-slate-400 leading-relaxed pt-1">
-                      {report.burnoutDetails}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2 text-xs">
-                  <span className="font-bold text-white block">
-                    Recommandations Adaptées ({report.pacingTechniqueLabel}) :
-                  </span>
-                  {report.recommendations.map((rec, i) => (
-                    <div key={i} className="p-2.5 rounded-xl bg-slate-950/50 border border-slate-800/80 text-slate-300 leading-relaxed">
-                      {rec}
-                    </div>
-                  ))}
-                </div>
-              </Card>
-
-              <Card className="p-5 bg-slate-900/70 border-slate-800 space-y-4">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Sliders className="w-4 h-4 text-indigo-400" />
-                  Votre Rythme & Méthode d'Étude
-                </h3>
-
-                <div className="space-y-3 text-xs">
-                  <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 uppercase mb-1">
-                      Votre pic naturel de concentration (Chronotype) :
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {[
-                        { id: 'morning', label: '🌅 Matin', desc: '07h - 12h' },
-                        { id: 'afternoon', label: '☀️ Après-midi', desc: '14h - 18h' },
-                        { id: 'evening', label: '🌙 Soirée', desc: '18h - 22h' },
-                        { id: 'night', label: '🦉 Nuit', desc: '21h - 01h' },
-                      ].map(c => (
-                        <button
-                          key={c.id}
-                          type="button"
-                          onClick={() => setSelectedChronotype(c.id as Chronotype)}
-                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                            selectedChronotype === c.id
-                              ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/30'
-                              : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700'
-                          }`}
-                        >
-                          <span className="font-bold block">{c.label}</span>
-                          <span className="text-[10px] text-slate-400 block mt-0.5">{c.desc}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="pt-3 space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                      <label className="block text-xs font-bold text-slate-200 uppercase tracking-wide">
-                        Méthodes d'espacement & Stratégies d'étude :
-                      </label>
-                      <span className="text-[11px] text-cyan-400 font-medium">
-                        Cliquez sur une méthode pour l'activer et lire son explication
-                      </span>
-                    </div>
-
-                    {/* Contextual AI Recommendation Banner - RESERVED TO PRO / PLUS */}
-                    {planTier !== 'free' && pacingRecommendation ? (
-                      <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-indigo-950/70 via-slate-900 to-indigo-950/40 border border-indigo-500/40 flex items-start gap-3 shadow-md">
-                        <div className="p-2 rounded-xl bg-indigo-500/20 text-cyan-300 shrink-0 mt-0.5">
-                          <Sparkles className="w-4 h-4 text-cyan-400" />
-                        </div>
-                        <div className="space-y-1 text-xs">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-bold text-white uppercase tracking-wide text-[11px]">
-                              Recommandation adaptée à votre emploi du temps :
-                            </span>
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-indigo-500/20 border border-indigo-500/40 text-cyan-300">
-                              {pacingRecommendation.contextTag}
-                            </span>
-                          </div>
-                          <p className="text-slate-300 leading-relaxed text-xs">
-                            {pacingRecommendation.rationale}
-                          </p>
-                        </div>
-                      </div>
-                    ) : planTier === 'free' ? (
-                      <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                        <div className="flex items-center gap-2">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                          <span>Les recommandations personnalisées de méthode selon votre emploi du temps sont réservées au modèle <strong>KONAN PRO</strong>.</span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => onViewPricing ? onViewPricing() : setProModalInfo({
-                            title: "Recommandations Intelligentes KONAN PRO",
-                            desc: "Sur KONAN PRO, notre algorithme analyse en détail les heures de fin de vos cours et le volume de vos matières pour vous recommander automatiquement la méthode d'espacement optimale."
-                          })}
-                          className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 cursor-pointer hover:bg-amber-500/30 transition-colors ml-2"
-                        >
-                          ⭐ Découvrir PRO
-                        </button>
-                      </div>
-                    ) : null}
-
-                    {/* Triple Pacing Combination Banner - RESERVED TO PRO / PLUS */}
-                    {planTier !== 'free' && (
-                      <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-sky-500/15 border border-amber-500/40 flex flex-col gap-2.5 text-xs shadow-md">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                          <div className="flex items-center gap-1.5 font-black text-amber-300 uppercase tracking-wide text-[11px]">
-                            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
-                            <span>Combinaison Triple KONAN PRO : {selectedCombinedPacings.length} / 3 sélectionnées</span>
-                          </div>
-                          <span className="text-[10px] text-amber-400/80 font-mono">Alternance automatique</span>
-                        </div>
-                        <p className="text-[11px] text-slate-300 leading-relaxed">
-                          Sélectionnez 1, 2 ou 3 méthodes ci-dessous. Vos séances de révision alterneront automatiquement selon la difficulté et vos créneaux libres.
-                        </p>
-                        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-amber-500/20">
-                          {selectedCombinedPacings.map((id, idx) => {
-                            const p = getPacingStrategy(id);
-                            return (
-                              <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1 max-w-full">
-                                <span className="font-mono text-amber-400 shrink-0">#{idx + 1}</span>
-                                <span className="truncate">{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
-                              </span>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* 5 Interactive Strategy Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                      {PACING_STRATEGIES.map((strategy) => {
-                        const isSelected = selectedPacing === strategy.id;
-                        const isCombined = selectedCombinedPacings.includes(strategy.id);
-                        const comboIndex = selectedCombinedPacings.indexOf(strategy.id) + 1;
-                        const isPrimaryRec = planTier !== 'free' && pacingRecommendation?.primaryId === strategy.id;
-                        const isRecommended = planTier !== 'free' && pacingRecommendation?.recommendedIds.includes(strategy.id);
-                        const isNotRecommended = planTier !== 'free' && pacingRecommendation?.notRecommendedIds?.includes(strategy.id);
-                        const isProMethod = strategy.planRequired === 'pro';
-                        const isLocked = isProMethod && planTier === 'free';
-
-                        return (
-                          <button
-                            key={strategy.id}
-                            type="button"
-                            onClick={() => {
-                              if (isLocked) {
-                                setProModalInfo({
-                                  title: `${strategy.title}`,
-                                  desc: `La méthode "${strategy.title}" (${strategy.tagline}) fait partie intégrante du modèle KONAN PRO. Sur votre version Gratuite (Free), vous disposez d'un accès illimité aux techniques Pomodoro, Active Recall & Répétition Espacée et la Règle des 2 Minutes.`
-                                });
-                                return;
-                              }
-                              setSelectedPacing(strategy.id);
-                              if (planTier === 'free') {
-                                setSelectedCombinedPacings([strategy.id]);
-                              } else {
-                                setSelectedCombinedPacings(prev => {
-                                  if (prev.includes(strategy.id)) {
-                                    if (prev.length === 1) return prev; // Garder au moins 1 méthode
-                                    return prev.filter(id => id !== strategy.id);
-                                  } else {
-                                    if (prev.length >= 3) {
-                                      return [...prev.slice(0, 2), strategy.id];
-                                    }
-                                    return [...prev, strategy.id];
-                                  }
-                                });
-                              }
-                            }}
-                            className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between gap-2.5 ${
-                              isCombined
-                                ? 'bg-gradient-to-br from-slate-900 via-amber-950/25 to-slate-950 border-amber-400 ring-1 ring-amber-400/50 shadow-lg shadow-amber-500/20'
-                                : isSelected
-                                  ? 'bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-950 border-cyan-400/80 shadow-lg shadow-cyan-500/20 ring-1 ring-cyan-400/50'
-                                  : isLocked
-                                    ? 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-amber-500/40 hover:bg-slate-900/40'
-                                    : isPrimaryRec
-                                      ? 'bg-slate-950/80 border-amber-500/50 text-slate-300 hover:border-amber-400 hover:bg-slate-900/60'
-                                      : isRecommended
-                                        ? 'bg-slate-950/80 border-indigo-500/40 text-slate-300 hover:border-indigo-400 hover:bg-slate-900/60'
-                                        : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900/50'
-                            }`}
-                          >
-                            <div className="space-y-1.5">
-                              <div className="flex items-center justify-between gap-2">
-                                <span className={`text-xs font-black tracking-wide ${isCombined ? 'text-amber-300' : isSelected ? 'text-cyan-300' : 'text-white'}`}>
-                                  {strategy.number}. {strategy.title}
-                                </span>
-                                {isCombined ? (
-                                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
-                                    ✓ Activée #{comboIndex}
-                                  </span>
-                                ) : isLocked ? (
-                                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
-                                    ⭐ PRO
-                                  </span>
-                                ) : isSelected ? (
-                                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0" />
-                                ) : isPrimaryRec ? (
-                                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 flex items-center gap-0.5">
-                                    <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" /> Idéal
-                                  </span>
-                                ) : null}
-                              </div>
-
-                              {isLocked ? (
-                                <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-300/90">
-                                  <span>🔒 Inclus dans le modèle KONAN PRO</span>
-                                </div>
-                              ) : isCombined ? (
-                                <div className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-300">
-                                  <Check className="w-3 h-3 text-amber-400" />
-                                  <span>Méthode active dans votre combinaison ({comboIndex}/3)</span>
-                                </div>
-                              ) : isPrimaryRec ? (
-                                <div className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-300">
-                                  <Star className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0" />
-                                  <span>Recommandé pour votre emploi du temps</span>
-                                </div>
-                              ) : isRecommended ? (
-                                <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400">
-                                  <span>✓ Alternative conseillée</span>
-                                </div>
-                              ) : isNotRecommended ? (
-                                <div className="inline-flex items-center gap-1 text-[10px] text-rose-400/80">
-                                  <span>⚠️ Déconseillé (journées trop denses)</span>
-                                </div>
-                              ) : null}
-
-                              <p className="text-[11px] text-slate-300 line-clamp-2 leading-relaxed">
-                                <span className="font-semibold text-slate-400">En bref : </span>
-                                {strategy.shortSummary}
-                              </p>
-                            </div>
-
-                            <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-800/80">
-                              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700 text-cyan-300">
-                                {strategy.badge}
-                              </span>
-                              <span className={`text-[10px] flex items-center gap-1 font-medium ${
-                                isLocked 
-                                  ? 'text-amber-400 font-semibold' 
-                                  : isCombined
-                                  ? 'text-amber-300 font-bold'
-                                  : isSelected 
-                                  ? 'text-cyan-400 font-bold' 
-                                  : 'text-slate-400 hover:text-slate-200'
-                              }`}>
-                                {isLocked ? 'Débloquer PRO ↗' : isCombined ? `Activée #${comboIndex} ✓` : 'Ajouter / Choisir →'}
-                              </span>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Dedicated Interactive Explanation Box for the selected/clicked method */}
-                    {(() => {
-                      const currentStrategy = getPacingStrategy(selectedPacing);
-                      const isIdeaLabel = currentStrategy.number <= 2;
-                      return (
-                        <div className="mt-3 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/95 via-indigo-950/30 to-slate-950 border border-indigo-500/40 shadow-xl space-y-3.5 animate-in fade-in duration-200">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
-                            <div className="flex items-center gap-2.5">
-                              <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300 font-black text-sm">
-                                {currentStrategy.number}
-                              </div>
-                              <div>
-                                <h4 className="text-sm font-black text-white flex items-center gap-2">
-                                  <span>{currentStrategy.title}</span>
-                                  <span className="text-[10px] text-cyan-400 font-mono font-normal">({currentStrategy.badge})</span>
-                                </h4>
-                                <p className="text-[11px] text-indigo-300/80">
-                                  {currentStrategy.tagline}
-                                </p>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                              <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-indigo-500/20 border border-indigo-500/40 text-indigo-200">
-                                Blocs de {currentStrategy.focusBlockDuration} min • Pause {currentStrategy.breakBlockDuration} min
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="space-y-2 text-xs">
-                            <div className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/70">
-                              <span className="font-bold text-cyan-400 uppercase tracking-wide shrink-0 text-[11px]">
-                                En bref :
-                              </span>
-                              <span className="font-semibold text-white">
-                                {currentStrategy.shortSummary}
-                              </span>
-                            </div>
-
-                            <div className="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 text-slate-200 space-y-1.5 leading-relaxed">
-                              <span className="font-bold text-indigo-300 block text-[11px] uppercase tracking-wider">
-                                {isIdeaLabel ? "L'idée :" : "L'explication :"}
-                              </span>
-                              <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed">
-                                {currentStrategy.explanation}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/20 flex items-center gap-2.5 text-xs text-indigo-200">
-                            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                            <span>
-                              <strong>Application directe :</strong> Lors de l'organisation de votre planning personnel, chaque séance sera découpée en blocs adaptés de <strong>{currentStrategy.focusBlockDuration} minutes</strong> avec des objectifs clairs et stimulants selon cette méthode.
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                </div>
-
-              </Card>
-
-            </div>
-          )}
-
-          {/* TAB CONTENT 4: RAW TEXT INSPECTOR */}
-          {activeTab === 'raw_inspector' && (
-            <Card className="p-5 bg-slate-900/70 border-slate-800 space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-cyan-400" />
-                    Texte Source Saisi
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    Voici l'intégralité du texte que vous avez saisi pour l'analyse.
-                  </p>
-                </div>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={copiedRawText ? <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  onClick={handleCopyRawText}
-                  className="text-xs"
-                >
-                  {copiedRawText ? 'Copié !' : 'Copier le texte'}
-                </Button>
-              </div>
-
-              <div className="p-4 rounded-xl bg-black/80 border border-slate-800 font-mono text-xs text-slate-300 max-h-96 overflow-y-auto whitespace-pre-wrap leading-relaxed">
-                {extractedData.rawText || 'Aucun texte source disponible.'}
-              </div>
-            </Card>
-          )}
-
-          {/* BOTTOM GENERATION TRIGGER */}
-          <div className="p-6 rounded-3xl bg-gradient-to-r from-indigo-950/80 via-slate-900 to-slate-950 border border-indigo-500/40 text-center space-y-4 shadow-2xl">
-            <div className="max-w-xl mx-auto space-y-1.5">
-              <h3 className="text-lg sm:text-2xl font-black text-white">
-                Prêt à générer votre planning d'étude personnalisé ?
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-300">
-                Votre planning s'organisera harmonieusement en respectant vos cours, vos pauses bien méritées et votre rythme d'apprentissage.
-              </p>
-            </div>
-
-            <Button
-              variant="glow"
-              size="lg"
-              rightIcon={<ArrowRight className="w-5 h-5" />}
-              onClick={handleFinalizeAndGenerate}
-              className="px-8 sm:px-12 py-4 text-sm sm:text-base font-bold shadow-2xl shadow-indigo-500/40 cursor-pointer w-full sm:w-auto"
-            >
-              Générer mon Planning d'Étude Personnalisé
-            </Button>
-          </div>
-
+        <div className="relative">
+          <textarea
+            value={scheduleText}
+            onChange={(e) => setScheduleText(e.target.value)}
+            disabled={isAnalyzing}
+            rows={12}
+            placeholder={FORMAT_CONFIG[selectedFormat].placeholder}
+            className="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl p-3.5 sm:p-4 text-xs sm:text-sm font-mono text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 leading-relaxed transition-all resize-y disabled:opacity-50"
+          />
         </div>
-      )}
+      </div>
 
-      {/* MODAL: EDIT SLOT */}
-      {editingSlot && (
-        <Modal
-          isOpen={true}
-          onClose={() => setEditingSlot(null)}
-          title="Modifier le créneau"
-          description="Ajustez l'horaire, le jour ou la salle de ce cours."
-          maxWidth="md"
+      {/* SECTION 4: BOUTON D'ACTION PRINCIPAL */}
+      <div className="pt-2">
+        <Button
+          onClick={handleGeneratePlanning}
+          disabled={isAnalyzing || !scheduleText.trim()}
+          variant="primary"
+          size="lg"
+          className="w-full py-3.5 text-sm font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-600/20 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
-          <form onSubmit={handleSaveEditSlot} className="space-y-4">
-            <Select
-              label="Matière"
-              value={editingSlot.subjectId}
-              onChange={(e) => setEditingSlot({ ...editingSlot, subjectId: e.target.value })}
-              options={(extractedData?.subjects || []).map(s => ({ value: s.id, label: s.name }))}
-            />
-
-            <div className="grid grid-cols-2 gap-3">
-              <Select
-                label="Jour"
-                value={editingSlot.dayOfWeek}
-                onChange={(e) => setEditingSlot({ ...editingSlot, dayOfWeek: Number(e.target.value) as DayOfWeek })}
-                options={DAYS_OF_WEEK.map(d => ({ value: d.id, label: d.label }))}
-              />
-              <Select
-                label="Type de cours"
-                value={editingSlot.type}
-                onChange={(e) => setEditingSlot({ ...editingSlot, type: e.target.value as CourseType })}
-                options={Object.entries(COURSE_TYPE_LABELS).map(([k, v]) => ({ value: k, label: v.label }))}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <Input 
-                label="Début" 
-                type="time" 
-                value={editingSlot.startTime} 
-                onChange={(e) => setEditingSlot({ ...editingSlot, startTime: e.target.value })} 
-                required 
-              />
-              <Input 
-                label="Fin" 
-                type="time" 
-                value={editingSlot.endTime} 
-                onChange={(e) => setEditingSlot({ ...editingSlot, endTime: e.target.value })} 
-                required 
-              />
-            </div>
-
-            <Input 
-              label="Salle" 
-              value={editingSlot.room || ''} 
-              onChange={(e) => setEditingSlot({ ...editingSlot, room: e.target.value })} 
-            />
-
-            <Input 
-              label="Enseignant / Professeur" 
-              value={editingSlot.professor || ''} 
-              onChange={(e) => setEditingSlot({ ...editingSlot, professor: e.target.value })} 
-            />
-
-            <div className="flex justify-end gap-2 pt-2">
-              <Button type="button" variant="ghost" size="sm" onClick={() => setEditingSlot(null)}>Annuler</Button>
-              <Button type="submit" variant="primary" size="sm">Enregistrer</Button>
-            </div>
-          </form>
-        </Modal>
-      )}
-
-      {/* MODAL: ADD SUBJECT */}
-      <Modal
-        isOpen={isAddSubjectOpen}
-        onClose={() => setIsAddSubjectOpen(false)}
-        title="Ajouter une Matière"
-        description="Ajoutez une matière manuellement à l'analyse."
-        maxWidth="md"
-      >
-        <form onSubmit={handleAddSubject} className="space-y-4">
-          <Input
-            label="Nom de la matière"
-            placeholder="ex. Électronique Analogique"
-            value={newSubName}
-            onChange={(e) => setNewSubName(e.target.value)}
-            required
-          />
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Coefficient : <span className="text-cyan-400 font-bold">{newSubCoeff}</span>
-              </label>
-              <input
-                type="range"
-                min="1"
-                max="16"
-                value={newSubCoeff}
-                onChange={(e) => setNewSubCoeff(Number(e.target.value))}
-                className="w-full accent-cyan-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Difficulté : <span className="text-amber-400 font-bold">{newSubDiff}/5</span>
-              </label>
-              <input
-                type="range"
-                min="1"
-                max="5"
-                value={newSubDiff}
-                onChange={(e) => setNewSubDiff(Number(e.target.value) as 1|2|3|4|5)}
-                className="w-full accent-amber-500"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" size="sm" onClick={() => setIsAddSubjectOpen(false)}>Annuler</Button>
-            <Button type="submit" variant="primary" size="sm">Ajouter</Button>
-          </div>
-        </form>
-      </Modal>
-
-      {/* MODAL: ADD SLOT */}
-      <Modal
-        isOpen={isAddSlotOpen}
-        onClose={() => setIsAddSlotOpen(false)}
-        title="Ajouter un créneau fixe"
-        description="Bloquez ce créneau dans votre grille de cours."
-        maxWidth="md"
-      >
-        <form onSubmit={handleAddSlot} className="space-y-4">
-          <Select
-            label="Matière"
-            value={slotSubId || extractedData?.subjects[0]?.id || ''}
-            onChange={(e) => setSlotSubId(e.target.value)}
-            options={(extractedData?.subjects || []).map(s => ({ value: s.id, label: s.name }))}
-          />
-
-          <div className="grid grid-cols-2 gap-3">
-            <Select
-              label="Jour"
-              value={slotDay}
-              onChange={(e) => setSlotDay(Number(e.target.value) as DayOfWeek)}
-              options={DAYS_OF_WEEK.map(d => ({ value: d.id, label: d.label }))}
-            />
-            <Select
-              label="Type de cours"
-              value={slotType}
-              onChange={(e) => setSlotType(e.target.value as CourseType)}
-              options={Object.entries(COURSE_TYPE_LABELS).map(([k, v]) => ({ value: k, label: v.label }))}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <Input label="Début" type="time" value={slotStart} onChange={(e) => setSlotStart(e.target.value)} required />
-            <Input label="Fin" type="time" value={slotEnd} onChange={(e) => setSlotEnd(e.target.value)} required />
-          </div>
-
-          <Input label="Salle" value={slotRoom} onChange={(e) => setSlotRoom(e.target.value)} />
-          <Input label="Professeur (optionnel)" value={slotProf} onChange={(e) => setSlotProf(e.target.value)} placeholder="ex: Pr. Martin" />
-
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" size="sm" onClick={() => setIsAddSlotOpen(false)}>Annuler</Button>
-            <Button type="submit" variant="primary" size="sm">Ajouter</Button>
-          </div>
-        </form>
-      </Modal>
-
-      {/* PRO FEATURE MODAL */}
-      <ProFeatureModal
-        isOpen={Boolean(proModalInfo)}
-        onClose={() => setProModalInfo(null)}
-        featureTitle={proModalInfo?.title}
-        featureDescription={proModalInfo?.desc}
-        onViewPricing={onViewPricing}
-        onUpgradeToPro={onUpgradeToPro}
-      />
+          <Calendar className="w-4 h-4 mr-2" />
+          <span>Générer mon planning d'étude ({detectedSlotsCount} cours)</span>
+        </Button>
+      </div>
 
     </div>
   );
