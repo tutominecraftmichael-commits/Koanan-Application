@@ -84,18 +84,12 @@ import { PresetModal } from './features/onboarding/PresetModal';
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
-  const [isSplashActive, setIsSplashActive] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    return !sessionStorage.getItem('konan_entrance_splash_played');
-  });
-  const pendingDashboardRedirectRef = useRef<boolean>(false);
   const pendingPrivacyModalRef = useRef<boolean>(false);
 
   const [activeView, setActiveView] = useState<ActiveAppView>(() => {
-    const alreadyPlayedSplash = typeof window !== 'undefined' && sessionStorage.getItem('konan_entrance_splash_played');
     const session = getActiveSession();
     const isConnected = Boolean(session && !session.isDemo && session.uid);
-    if (isConnected && alreadyPlayedSplash) {
+    if (isConnected) {
       return 'dashboard';
     }
     return 'landing';
@@ -582,27 +576,20 @@ export function App() {
         });
         setState(loaded);
 
-          // 1. Check if privacy policy was already accepted (first-time vs returning user)
-          const hasLocalAccepted = Boolean(loaded.privacyPolicyAccepted || loaded.userAccount?.privacyPolicyAccepted);
+          // 1. Accès direct & instantané au tableau de bord (0 latence sur mobile & PC)
+          setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
 
-          if (hasLocalAccepted) {
-            // Already accepted: seamless direct entry to dashboard
-            const greetingName = loaded.studentName || firebaseUser.displayName || 'Étudiant';
-            if (hasGreetedAuthRef.current !== firebaseUser.uid) {
-              hasGreetedAuthRef.current = firebaseUser.uid;
-              showToast(`✨ Bonne Arrivée ! ${greetingName}`);
-            }
-            if (isSplashActive) {
-              // L'animation est en cours d'exécution : on ne l'interrompt pas
-              pendingDashboardRedirectRef.current = true;
-            } else {
-              setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
-            }
-          } else {
-            // Check Firestore Cloud just in case this is a returning user on a new device or cleared cache
+          const greetingName = loaded.studentName || firebaseUser.displayName || 'Étudiant';
+          if (hasGreetedAuthRef.current !== firebaseUser.uid) {
+            hasGreetedAuthRef.current = firebaseUser.uid;
+            showToast(`✨ Bonne Arrivée ! ${greetingName}`);
+          }
+
+          // 2. Vérification de la politique de confidentialité (non-bloquante pour la navigation)
+          const hasLocalAccepted = Boolean(loaded.privacyPolicyAccepted || loaded.userAccount?.privacyPolicyAccepted);
+          if (!hasLocalAccepted) {
             loadUserStateFromCloud(firebaseUser.uid).then(cloudData => {
               if (cloudData?.privacyPolicyAccepted) {
-                // Cloud already has acceptance recorded!
                 setState(prev => ({
                   ...prev,
                   privacyPolicyAccepted: true,
@@ -613,30 +600,11 @@ export function App() {
                     privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt,
                   } : undefined,
                 }));
-                const greetingName = loaded.studentName || firebaseUser.displayName || 'Étudiant';
-                if (hasGreetedAuthRef.current !== firebaseUser.uid) {
-                  hasGreetedAuthRef.current = firebaseUser.uid;
-                  showToast(`✨ Bonne Arrivée ! ${greetingName}`);
-                }
-                if (isSplashActive) {
-                  pendingDashboardRedirectRef.current = true;
-                } else {
-                  setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
-                }
-              } else {
-                // First-time user: display the mandatory Privacy Policy & Data Security Agreement
-                if (isSplashActive) {
-                  pendingPrivacyModalRef.current = true;
-                } else {
-                  setIsPrivacyModalOpen(true);
-                }
-              }
-            }).catch(() => {
-              if (isSplashActive) {
-                pendingPrivacyModalRef.current = true;
               } else {
                 setIsPrivacyModalOpen(true);
               }
+            }).catch(() => {
+              setIsPrivacyModalOpen(true);
             });
           }
 
@@ -2097,13 +2065,12 @@ export function App() {
       {/* 🚀 Cinematic 3D Entrance Animation */}
       <KonanEntranceSplash 
         onComplete={() => {
-          setIsSplashActive(false);
           const session = getActiveSession();
           const isConnected = Boolean(session && !session.isDemo && session.uid) 
             || Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode)
             || Boolean(auth?.currentUser);
           
-          if (isConnected || pendingDashboardRedirectRef.current) {
+          if (isConnected) {
             setActiveView(prev => (prev === 'landing' || prev === 'auth' ? 'dashboard' : prev));
           }
           if (pendingPrivacyModalRef.current) {

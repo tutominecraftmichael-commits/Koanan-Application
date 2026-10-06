@@ -130,7 +130,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   // Étape 2 : Personnalisation des Matières & Méthodes
   const [editableSubjects, setEditableSubjects] = useState<EditableSubject[]>([]);
   const [extractedSlots, setExtractedSlots] = useState<any[]>([]);
-  const [selectedPacing, setSelectedPacing] = useState<StudyPacing>('pomodoro');
+  const [selectedPacings, setSelectedPacings] = useState<StudyPacing[]>(['pomodoro']);
   const [selectedChronotype, setSelectedChronotype] = useState<Chronotype>('evening');
   const [proModalPacingNotice, setProModalPacingNotice] = useState<string | null>(null);
 
@@ -305,7 +305,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
       setEditableSubjects(subjectsMap);
 
-      // Présélection intelligente de la méthode recommandée par l'IA pour les abonnés PRO / PLUS
+      // Présélection intelligente des méthodes recommandées pour les abonnés PRO / PLUS
       if (planTier !== 'free') {
         const rec = recommendPacingStrategies(
           subjectsMap.length,
@@ -315,8 +315,10 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             dayOfWeek: s.dayOfWeek
           }))
         );
-        if (rec?.primaryId) {
-          setSelectedPacing(rec.primaryId);
+        if (rec?.recommendedIds && rec.recommendedIds.length > 0) {
+          setSelectedPacings(rec.recommendedIds.slice(0, 3) as StudyPacing[]);
+        } else if (rec?.primaryId) {
+          setSelectedPacings([rec.primaryId]);
         }
       }
 
@@ -360,7 +362,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     }));
   };
 
-  // Sélection d'une technique d'espacement avec contrôle de formule (Audio 1)
+  // Sélection ou combinaison des techniques d'espacement (Audio 1 & Audio 2)
   const handleSelectPacingStrategy = (pacingId: StudyPacing) => {
     const isAllowed = isPacingAllowedForPlan(pacingId, planTier);
     if (!isAllowed) {
@@ -369,7 +371,30 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       setProModalPacingNotice(`La méthode "${strat?.title || pacingId}" fait partie des techniques avancées réservées à KONAN PRO (1 200 F) et KONAN PLUS. Sur votre formule Gratuite, vous disposez d'un accès illimité à Pomodoro, Active Recall et la Règle des 2 Minutes.`);
       return;
     }
-    setSelectedPacing(pacingId);
+
+    if (planTier === 'free') {
+      // Formule Gratuite : 1 seule méthode active
+      setSelectedPacings([pacingId]);
+      setProModalPacingNotice(null);
+      return;
+    }
+
+    // Formule PRO ou PLUS : combinaison possible de 1 à 3 méthodes simultanément
+    setSelectedPacings(prev => {
+      if (prev.includes(pacingId)) {
+        // Désélection si déjà présente (garder au minimum 1 méthode active)
+        if (prev.length > 1) {
+          return prev.filter(id => id !== pacingId);
+        }
+        return prev;
+      }
+      // Ajout si moins de 3 méthodes
+      if (prev.length < 3) {
+        return [...prev, pacingId];
+      }
+      // Si 3 méthodes déjà sélectionnées : remplacer la dernière
+      return [prev[0], prev[1], pacingId];
+    });
     setProModalPacingNotice(null);
   };
 
@@ -402,14 +427,15 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
         }),
         totalWeeklyClassHours: Math.round(extractedSlots.length * 2),
         recommendedStudyHours: Math.round(activeSubjects.length * 3),
-        summaryNote: `Planning généré avec méthode ${selectedPacing}`,
+        summaryNote: `Planning généré avec ${selectedPacings.length > 1 ? `${selectedPacings.length} méthodes combinées` : `méthode ${selectedPacings[0]}`}`,
       };
 
       const finalPayload = buildStateFromExtractedSchedule(
         finalSchedule,
         studentName,
         selectedChronotype,
-        selectedPacing
+        selectedPacings[0] || 'pomodoro',
+        selectedPacings
       );
 
       onApplyExtractedSchedule(finalPayload);
@@ -937,23 +963,35 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   Formule active : <strong className={planTier === 'pro' ? 'text-amber-400' : planTier === 'plus' ? 'text-indigo-400' : 'text-slate-300'}>{planTier.toUpperCase()}</strong>
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                Choisissez comment KONAN cadence vos séances d'étude en dehors de vos cours.
-              </p>
+              {planTier !== 'free' ? (
+                <div className="flex flex-wrap items-center justify-between gap-2 mt-1">
+                  <p className="text-[11px] text-slate-400">
+                    Combinez jusqu'à 3 méthodes d'espacement pour alterner vos révisions intelligemment.
+                  </p>
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-cyan-400" />
+                    {selectedPacings.length}/3 méthodes combinées
+                  </span>
+                </div>
+              ) : (
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Choisissez comment KONAN cadence vos séances d'étude en dehors de vos cours.
+                </p>
+              )}
             </div>
 
-            {/* BANNIÈRE DE RECOMMANDATION IA CONTEXTUELLE */}
+            {/* BANNIÈRE DE RECOMMANDATION CONTEXTUELLE */}
             {planTier !== 'free' ? (
               <div className="p-4 sm:p-4.5 rounded-2xl bg-gradient-to-r from-indigo-950/90 via-slate-900 to-indigo-950/50 border border-cyan-500/30 shadow-lg shadow-indigo-950/50 space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-start gap-3">
                     <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0 mt-0.5">
-                      <Sparkles className="w-4 h-4 text-cyan-300 animate-pulse" />
+                      <Sparkles className="w-4 h-4 text-cyan-300" />
                     </div>
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="text-xs font-black uppercase tracking-wider text-cyan-400">
-                          Recommandation IA (KONAN {planTier.toUpperCase()})
+                          Recommandation
                         </span>
                         <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
                           {pacingRecommendation.contextTag}
@@ -965,14 +1003,20 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     </div>
                   </div>
 
-                  {selectedPacing !== pacingRecommendation.primaryId && (
+                  {(!pacingRecommendation.recommendedIds.every(id => selectedPacings.includes(id as StudyPacing))) && (
                     <button
                       type="button"
-                      onClick={() => setSelectedPacing(pacingRecommendation.primaryId)}
+                      onClick={() => {
+                        if (pacingRecommendation.recommendedIds.length > 0) {
+                          setSelectedPacings(pacingRecommendation.recommendedIds.slice(0, 3) as StudyPacing[]);
+                        } else {
+                          setSelectedPacings([pacingRecommendation.primaryId]);
+                        }
+                      }}
                       className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-cyan-500/20 shrink-0 cursor-pointer flex items-center justify-center gap-1.5"
                     >
                       <Check className="w-3.5 h-3.5" />
-                      <span>Appliquer la méthode IA</span>
+                      <span>Appliquer la recommandation</span>
                     </button>
                   )}
                 </div>
@@ -982,7 +1026,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
                   <span>
-                    Les recommandations IA personnalisées selon la charge horaire de vos cours sont réservées à <strong>KONAN PRO</strong>.
+                    Les recommandations personnalisées selon la charge horaire de vos cours sont réservées à <strong>KONAN PRO</strong>.
                   </span>
                 </div>
                 {onViewPricing && (
@@ -999,7 +1043,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {PACING_STRATEGIES.map((strategy) => {
-                const isSelected = selectedPacing === strategy.id;
+                const isSelected = selectedPacings.includes(strategy.id);
                 const isAllowed = isPacingAllowedForPlan(strategy.id, planTier);
                 const isPrimaryRec = planTier !== 'free' && pacingRecommendation.primaryId === strategy.id;
                 const isRecommended = planTier !== 'free' && pacingRecommendation.recommendedIds.includes(strategy.id);
@@ -1031,16 +1075,16 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                         </p>
                       </div>
 
-                      {/* Badge Statut Plan ou Recommandation IA */}
+                      {/* Badge Statut Plan ou Recommandation */}
                       <div className="flex flex-col items-end gap-1">
                         {isPrimaryRec && (
-                          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1 shrink-0 animate-pulse">
-                            ⭐ Recommandé par l'IA
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1 shrink-0">
+                            ⭐ Recommandé
                           </span>
                         )}
                         {isRecommended && !isPrimaryRec && (
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shrink-0">
-                            Alternatif IA
+                            Alternatif
                           </span>
                         )}
                         {isNotRecommended && (
@@ -1054,7 +1098,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                               ? 'bg-indigo-500 text-white'
                               : 'bg-slate-800 text-slate-300'
                           }`}>
-                            {isSelected ? '✓ Sélectionnée' : 'Inclus'}
+                            {isSelected 
+                              ? (planTier !== 'free' && selectedPacings.length > 1 ? `✓ Méthode ${selectedPacings.indexOf(strategy.id) + 1}/3` : '✓ Sélectionnée')
+                              : (planTier !== 'free' ? '+ Combiner' : 'Inclus')}
                           </span>
                         ) : (
                           <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1 shrink-0">

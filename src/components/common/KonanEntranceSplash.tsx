@@ -66,6 +66,12 @@ export const KonanEntranceSplash: React.FC<KonanEntranceSplashProps> = ({
     return list;
   }, []);
 
+  const handleDismiss = React.useCallback(() => {
+    setIsDismissed(true);
+    sessionStorage.setItem('konan_entrance_splash_played', 'true');
+    onComplete?.();
+  }, [onComplete]);
+
   useEffect(() => {
     // Vérifier si l'animation a déjà été visionnée lors de cette session
     if (!forcePlay) {
@@ -77,25 +83,25 @@ export const KonanEntranceSplash: React.FC<KonanEntranceSplashProps> = ({
       }
     }
 
-    // 1. Salto arrière en l'air (0ms -> 920ms)
+    // 1. Salto arrière en l'air (0ms -> 700ms)
     const timerLand = setTimeout(() => {
       // 2. Impact au sol -> Éclat d'étoiles (Bleu, Jaune, Multicolore)
       setPhase('land');
       setShowSparkles(true);
-    }, 920);
+    }, 700);
 
-    // 3. Fondu fluide et rapide vers l'application (1250ms)
+    // 3. Fondu fluide et rapide vers l'application (900ms)
     const timerFade = setTimeout(() => {
       setPhase('fade');
-    }, 1250);
+    }, 900);
 
-    // 4. Fin de l'animation & libération de l'écran (1550ms)
+    // 4. Fin de l'animation & libération de l'écran (1100ms)
     const timerDone = setTimeout(() => {
       setPhase('done');
       setIsDismissed(true);
       sessionStorage.setItem('konan_entrance_splash_played', 'true');
       onComplete?.();
-    }, 1550);
+    }, 1100);
 
     return () => {
       clearTimeout(timerLand);
@@ -108,18 +114,36 @@ export const KonanEntranceSplash: React.FC<KonanEntranceSplashProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 select-none pointer-events-none ${
-        phase === 'fade' ? 'opacity-0' : 'opacity-100'
+      onClick={handleDismiss}
+      onTouchStart={handleDismiss}
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-200 select-none cursor-pointer ${
+        phase === 'fade' ? 'opacity-0 pointer-events-none' : 'opacity-100'
       } bg-[#080B11]/95`}
       style={{ perspective: 1000 }}
+      title="Appuyez pour passer"
     >
+      {/* Bouton discret pour passer immédiatement l'animation (mobile & PC) */}
+      <div className="absolute top-5 right-5 sm:top-6 sm:right-6 z-40">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDismiss();
+          }}
+          className="px-3.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 text-xs text-slate-300 hover:text-white border border-slate-700/80 shadow-lg backdrop-blur-md transition-all flex items-center gap-1.5 font-medium cursor-pointer"
+        >
+          <span>Passer</span>
+          <span>→</span>
+        </button>
+      </div>
+
       {/* Halo discret en arrière-plan (léger et fluide pour smartphone) */}
       <div 
         className="absolute w-72 h-72 sm:w-80 sm:h-80 rounded-full bg-cyan-500/15 blur-2xl pointer-events-none"
       />
 
       {/* CONTENEUR DU CUBE */}
-      <div className="relative flex items-center justify-center">
+      <div className="relative flex items-center justify-center pointer-events-none">
         
         {/* LE VÉRITABLE CUBE KONAN (Salto arrière 3D en l'air) */}
         <div

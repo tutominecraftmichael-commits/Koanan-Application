@@ -541,17 +541,17 @@
 }
 
 .animate-konan-cube-backflip {
-  animation: konanCubeBackflip 0.92s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: konanCubeBackflip 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   will-change: transform, opacity;
 }
 
 .animate-konan-cube-fadeout {
-  animation: konanCubeFadeOut 0.35s ease-out forwards;
+  animation: konanCubeFadeOut 0.2s ease-out forwards;
   will-change: transform, opacity;
 }
 
 .animate-spark-burst-fluid {
-  animation: sparkBurstFluid 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: sparkBurstFluid 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
 }
 
