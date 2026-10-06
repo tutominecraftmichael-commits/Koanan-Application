@@ -29,6 +29,7 @@ import { Badge } from '../ui/Badge';
 import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
 import { formatNotificationTime } from '../../lib/utils';
+import { soundFX } from '../../lib/audioEffects';
 
 export interface OwnerNotificationItem {
   id: string;
@@ -224,7 +225,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Desktop Navigation Links - Centered, shrink-0, perfectly spaced */}
           {activeView !== 'landing' && activeView !== 'auth' && (
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 bg-slate-900/80 p-1 rounded-xl border border-slate-800/80 shrink-0 mx-2 shadow-xs">
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800/80 shrink-0 mx-2 shadow-xs">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeView === item.id;
@@ -232,20 +233,31 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     key={item.id}
                     onClick={() => {
+                      soundFX.playCheckmarkPop();
                       if (!userAccount?.isLoggedIn && !isDemoMode) {
                         onNavigate('auth');
                       } else {
                         onNavigate(item.id);
                       }
                     }}
-                    className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 whitespace-nowrap ${
+                    className={`group flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer shrink-0 whitespace-nowrap active:scale-95 ${
                       isActive
-                        ? 'bg-blue-600 text-white shadow-sm shadow-blue-900/40'
-                        : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/40 ring-1 ring-blue-400/40'
+                        : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
                     }`}
                   >
-                    <Icon className="w-3.5 h-3.5 shrink-0" />
-                    <span>{item.label}</span>
+                    <Icon className={`w-3.5 h-3.5 shrink-0 transition-transform duration-300 ease-out ${
+                      isActive 
+                        ? 'scale-110 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' 
+                        : 'group-hover:text-blue-300'
+                    } ${
+                      item.id === 'dashboard' ? 'group-hover:-translate-y-0.5 group-hover:scale-115' :
+                      item.id === 'schedule' ? 'group-hover:-rotate-12 group-hover:scale-120' :
+                      item.id === 'subjects' ? 'group-hover:scale-125' :
+                      item.id === 'planner' ? 'group-hover:rotate-45 group-hover:scale-115' :
+                      'group-hover:-translate-y-0.5 group-hover:scale-115'
+                    }`} />
+                    <span className="transition-colors duration-200">{item.label}</span>
                   </button>
                 );
               })}
@@ -797,19 +809,30 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => {
+                    soundFX.playCheckmarkPop();
                     if (!userAccount?.isLoggedIn && !isDemoMode) {
                       onNavigate('auth');
                     } else {
                       onNavigate(item.id);
                     }
                   }}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer min-h-[38px] interactive-pill ${
+                  className={`group flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 shrink-0 cursor-pointer min-h-[38px] active:scale-95 ${
                     isActive 
-                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' 
-                      : 'bg-slate-900/70 text-slate-400 hover:text-slate-100 hover:bg-slate-800'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/40 ring-1 ring-blue-400/30' 
+                      : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5 shrink-0" />
+                  <Icon className={`w-3.5 h-3.5 shrink-0 transition-transform duration-300 ease-out ${
+                    isActive 
+                      ? 'scale-110 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' 
+                      : 'group-hover:text-blue-300'
+                  } ${
+                    item.id === 'dashboard' ? 'group-hover:-translate-y-0.5 group-hover:scale-115' :
+                    item.id === 'schedule' ? 'group-hover:-rotate-12 group-hover:scale-120' :
+                    item.id === 'subjects' ? 'group-hover:scale-125' :
+                    item.id === 'planner' ? 'group-hover:rotate-45 group-hover:scale-115' :
+                    'group-hover:-translate-y-0.5 group-hover:scale-115'
+                  }`} />
                   <span>{item.label}</span>
                 </button>
               );

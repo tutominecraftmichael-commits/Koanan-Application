@@ -217,15 +217,40 @@
 }
 
 .interactive-pill {
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .interactive-pill:hover {
-  transform: scale(1.03);
+  transform: translateY(-1px) scale(1.02);
 }
 
 .interactive-pill:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
+}
+
+@keyframes gradientSheen {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.btn-generate-glow {
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+  background-size: 200% 200%;
+  animation: gradientSheen 4s ease infinite;
+  box-shadow: 0 4px 20px -2px rgba(79, 70, 229, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .btn-generate-glow:hover {
+    box-shadow: 0 8px 30px -4px rgba(79, 70, 229, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.25) inset;
+    transform: translateY(-2px);
+  }
+}
+
+.btn-generate-glow:active {
+  transform: scale(0.98);
 }
 
 .interactive-card {

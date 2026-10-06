@@ -22,7 +22,12 @@ import {
   ArrowRight,
   Plus,
   Minus,
-  Crown
+  Crown,
+  Sun,
+  Flame,
+  Sunset,
+  Moon,
+  Clock
 } from 'lucide-react';
 import type { 
   Subject, 
@@ -33,6 +38,7 @@ import type {
   StudyPacing
 } from '../../types';
 import { Button } from '../../components/ui/Button';
+import { soundFX } from '../../lib/audioEffects';
 import { 
   parseStructuredScheduleTruth, 
   harmonizeAndDeduplicateSlots, 
@@ -1053,13 +1059,13 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   <div
                     key={strategy.id}
                     onClick={() => handleSelectPacingStrategy(strategy.id)}
-                    className={`p-4 rounded-2xl border transition-all cursor-pointer relative ${
+                    className={`group p-4 rounded-2xl border transition-all duration-200 cursor-pointer relative active:scale-[0.99] ${
                       isSelected
-                        ? 'bg-indigo-950/40 border-indigo-500 shadow-md shadow-indigo-950/50 ring-1 ring-indigo-500/50'
+                        ? 'bg-indigo-950/60 border-indigo-500 shadow-lg shadow-indigo-950/60 ring-2 ring-indigo-500/50 scale-[1.01]'
                         : isPrimaryRec
-                        ? 'bg-slate-900/90 border-cyan-500/50 hover:border-cyan-400 hover:bg-slate-850'
+                        ? 'bg-slate-900/90 border-cyan-500/50 hover:border-cyan-400 hover:bg-slate-850 hover:-translate-y-0.5 shadow-sm hover:shadow-cyan-500/10'
                         : isAllowed
-                        ? 'bg-slate-900/80 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
+                        ? 'bg-slate-900/80 border-slate-800 hover:border-slate-700 hover:bg-slate-850 hover:-translate-y-0.5 shadow-sm'
                         : 'bg-slate-950/60 border-slate-800/80 hover:border-amber-500/40 opacity-80'
                     }`}
                   >
@@ -1131,29 +1137,64 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
           {/* 3. MOMENT PRÉFÉRÉ D'ÉTUDE (CHRONOTYPE) */}
           <div className="space-y-2 pt-2">
-            <label className="text-xs font-semibold text-slate-300">
-              Moment de la journée le plus productif pour vous
+            <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Moment de la journée le plus productif pour vous</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
-                { id: 'morning' as Chronotype, label: 'Matin (07h - 12h)' },
-                { id: 'afternoon' as Chronotype, label: 'Après-midi (13h - 17h)' },
-                { id: 'evening' as Chronotype, label: 'Soir (18h - 22h)' },
-                { id: 'night' as Chronotype, label: 'Nuit (22h - 02h)' },
-              ].map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => setSelectedChronotype(c.id)}
-                  className={`p-2.5 rounded-xl border text-xs font-medium transition-all cursor-pointer text-center ${
-                    selectedChronotype === c.id
-                      ? 'bg-indigo-600 border-indigo-500 text-white font-bold'
-                      : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:bg-slate-850'
-                  }`}
-                >
-                  {c.label}
-                </button>
-              ))}
+                { 
+                  id: 'morning' as Chronotype, 
+                  label: 'Matin (07h - 12h)',
+                  icon: Sun,
+                  activeClass: 'bg-gradient-to-r from-amber-600 to-amber-500 border-amber-400 text-white shadow-md shadow-amber-500/25 ring-2 ring-amber-400/40 font-bold',
+                  iconClass: 'text-amber-400 group-hover:text-amber-300 group-hover:rotate-45'
+                },
+                { 
+                  id: 'afternoon' as Chronotype, 
+                  label: 'Après-midi (13h - 17h)',
+                  icon: Flame,
+                  activeClass: 'bg-gradient-to-r from-orange-600 to-rose-600 border-orange-400 text-white shadow-md shadow-orange-500/25 ring-2 ring-orange-400/40 font-bold',
+                  iconClass: 'text-orange-400 group-hover:text-orange-300 group-hover:scale-125'
+                },
+                { 
+                  id: 'evening' as Chronotype, 
+                  label: 'Soir (18h - 22h)',
+                  icon: Sunset,
+                  activeClass: 'bg-gradient-to-r from-indigo-600 to-violet-600 border-indigo-400 text-white shadow-md shadow-indigo-500/30 ring-2 ring-indigo-400/40 font-bold',
+                  iconClass: 'text-indigo-400 group-hover:text-indigo-300 group-hover:-rotate-12 group-hover:scale-115'
+                },
+                { 
+                  id: 'night' as Chronotype, 
+                  label: 'Nuit (22h - 02h)',
+                  icon: Moon,
+                  activeClass: 'bg-gradient-to-r from-blue-600 to-indigo-700 border-blue-400 text-white shadow-md shadow-blue-500/25 ring-2 ring-blue-400/40 font-bold',
+                  iconClass: 'text-blue-400 group-hover:text-blue-300 group-hover:rotate-12 group-hover:scale-115'
+                },
+              ].map((c) => {
+                const Icon = c.icon;
+                const isSelected = selectedChronotype === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedChronotype(c.id);
+                      soundFX.playCheckmarkPop();
+                    }}
+                    className={`group p-2.5 rounded-xl border text-xs font-medium transition-all duration-200 cursor-pointer text-center flex items-center justify-center gap-1.5 active:scale-95 ${
+                      isSelected
+                        ? `${c.activeClass} scale-[1.02]`
+                        : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:bg-slate-850 hover:border-slate-700 hover:-translate-y-0.5'
+                    }`}
+                  >
+                    <Icon className={`w-3.5 h-3.5 shrink-0 transition-transform duration-300 ease-out ${
+                      isSelected ? 'text-white scale-110 drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' : c.iconClass
+                    }`} />
+                    <span>{c.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -1163,21 +1204,27 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               type="button"
               variant="secondary"
               size="lg"
-              onClick={() => setCurrentStep('upload')}
-              className="w-full sm:w-auto px-5 py-3.5 text-xs text-slate-300"
+              onClick={() => {
+                soundFX.playCheckmarkPop();
+                setCurrentStep('upload');
+              }}
+              className="group w-full sm:w-auto px-5 py-3.5 text-xs text-slate-300 hover:text-white border-slate-700 hover:border-slate-500 bg-slate-900/90 hover:bg-slate-850 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
             >
-              ← Retour au document
+              <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-300 ease-out group-hover:-translate-x-1" />
+              <span>Retour au document</span>
             </Button>
-            <Button
+            <button
               type="button"
-              onClick={handleFinalSubmit}
-              variant="primary"
-              size="lg"
-              className="flex-1 w-full py-3.5 text-sm font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-600/20 cursor-pointer transition-all"
+              onClick={() => {
+                soundFX.playSuccessChime();
+                handleFinalSubmit();
+              }}
+              className="group flex-1 w-full py-3.5 px-6 text-sm font-bold text-white rounded-xl cursor-pointer btn-generate-glow flex items-center justify-center gap-2.5 transition-all duration-300 active:scale-[0.98]"
             >
-              <Calendar className="w-4 h-4 mr-2" />
+              <Calendar className="w-4 h-4 text-white transition-transform duration-300 ease-out group-hover:scale-125 group-hover:-rotate-12 drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
               <span>Générer mon planning d'étude avec ces paramètres ({editableSubjects.filter(s => s.enabled).length} matières)</span>
-            </Button>
+              <Sparkles className="w-4 h-4 text-cyan-200 transition-transform duration-300 ease-out group-hover:rotate-180 group-hover:scale-125" />
+            </button>
           </div>
 
         </div>
