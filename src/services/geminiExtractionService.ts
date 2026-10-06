@@ -1,5 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
+declare const __KONAN_GEMINI_KEY__: string | undefined;
+
 // VARIABLE 1 : La clé est lue automatiquement depuis .env (injectée par Vite à la compilation) ou localStorage
 export const getApiKey = (): string => {
   // 1. Clé personnalisée éventuelle stockée dans le navigateur (ex: saisie par l'étudiant / développeur)
@@ -11,17 +13,36 @@ export const getApiKey = (): string => {
       // Ignorer si localStorage restreint
     }
   }
-  // 2. Variable Vite import.meta.env
-  if (typeof import.meta !== "undefined") {
-    const metaEnv = (import.meta as any).env;
-    if (metaEnv?.VITE_GEMINI_API_KEY) return metaEnv.VITE_GEMINI_API_KEY;
-    if (metaEnv?.GEMINI_API_KEY) return metaEnv.GEMINI_API_KEY;
+
+  // 2. Variable statique Vite import.meta.env (remplacée statiquement à la compilation)
+  try {
+    const viteKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (viteKey && typeof viteKey === "string" && viteKey.trim().length > 10) {
+      return viteKey.trim();
+    }
+  } catch {
+    // Ignorer
   }
-  // 3. Variable process.env
-  if (typeof process !== "undefined" && process.env) {
-    if (process.env.VITE_GEMINI_API_KEY) return process.env.VITE_GEMINI_API_KEY;
-    if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
+
+  try {
+    const fallbackViteKey = import.meta.env.GEMINI_API_KEY;
+    if (fallbackViteKey && typeof fallbackViteKey === "string" && fallbackViteKey.trim().length > 10) {
+      return fallbackViteKey.trim();
+    }
+  } catch {
+    // Ignorer
   }
+
+  // 3. Constante globale définie par vite.config.ts define
+  try {
+    const globalKey = typeof __KONAN_GEMINI_KEY__ !== "undefined" ? __KONAN_GEMINI_KEY__ : "";
+    if (globalKey && typeof globalKey === "string" && globalKey.trim().length > 10) {
+      return globalKey.trim();
+    }
+  } catch {
+    // Ignorer
+  }
+
   return "";
 };
 

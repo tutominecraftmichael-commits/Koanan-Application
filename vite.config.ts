@@ -13,6 +13,9 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
     ],
     define: {
+      'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(apiKey),
+      'import.meta.env.GEMINI_API_KEY': JSON.stringify(apiKey),
+      '__KONAN_GEMINI_KEY__': JSON.stringify(apiKey),
       'process.env.GEMINI_API_KEY': JSON.stringify(apiKey),
       'process.env.VITE_GEMINI_API_KEY': JSON.stringify(apiKey),
     },
