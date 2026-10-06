@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
     ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(apiKey),
+      'process.env.VITE_GEMINI_API_KEY': JSON.stringify(apiKey),
     },
     server: {
       host: true,
