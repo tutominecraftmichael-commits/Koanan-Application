@@ -9,7 +9,7 @@ import type {
 } from '../types';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
 import { DEFAULT_PREFERENCES } from '../lib/presets';
-import { getPacingStrategy } from '../lib/pacingStrategies';
+import { getPacingStrategy, analyzeScheduleDaytimeMetrics } from '../lib/pacingStrategies';
 
 export interface AcademicAnalysisReport {
   overallWorkloadScore: number; // 0 to 100
@@ -51,30 +51,28 @@ export function generateAcademicAnalysisReport(
     ? subjects.reduce((sum, s) => sum + s.difficulty, 0) / subjects.length 
     : 3;
 
-  // 2. Schedule Timing Analysis: Late Finish Days & Peak Days
-  const dayFinishTimes: Record<number, number> = {};
-  const dayClassMinutes: Record<number, number> = {};
+  // 2. Schedule Timing & Daytime Availability Analysis
+  const daytimeMetrics = analyzeScheduleDaytimeMetrics(
+    slots.map(s => ({
+      startTime: s.startTime,
+      endTime: s.endTime,
+      dayOfWeek: s.dayOfWeek
+    })),
+    subjects.length
+  );
 
+  const lateDaysCount = daytimeMetrics.lateDaysCount;
+  let maxDailyClassMinutes = 0;
+
+  const dayClassMinutes: Record<number, number> = {};
   slots.forEach(slot => {
     const endMin = timeToMinutes(slot.endTime);
     const startMin = timeToMinutes(slot.startTime);
     const duration = Math.max(0, endMin - startMin);
-
-    dayFinishTimes[slot.dayOfWeek] = Math.max(dayFinishTimes[slot.dayOfWeek] || 0, endMin);
     dayClassMinutes[slot.dayOfWeek] = (dayClassMinutes[slot.dayOfWeek] || 0) + duration;
   });
 
-  const lateThresholdMin = 17 * 60 + 30; // 17:30
-  let lateDaysCount = 0;
-  let maxDailyClassMinutes = 0;
-
-  Object.entries(dayFinishTimes).forEach(([, finishMin]) => {
-    if (finishMin >= lateThresholdMin) {
-      lateDaysCount++;
-    }
-  });
-
-  Object.entries(dayClassMinutes).forEach(([, mins]) => {
+  Object.values(dayClassMinutes).forEach(mins => {
     if (mins > maxDailyClassMinutes) {
       maxDailyClassMinutes = mins;
     }
@@ -101,7 +99,7 @@ export function generateAcademicAnalysisReport(
     }));
 
   // 4. Burnout Risk Index (Multi-Factorial Neurocognitive Analysis)
-  // Factors: Total class hours + late finishes + difficulty + peak intensity + pacing match
+  // Factors: Total class hours + late finishes + daytime free time + difficulty + peak intensity + pacing match
   let burnoutRiskScore = 0;
 
   // Hours factor
@@ -110,9 +108,15 @@ export function generateAcademicAnalysisReport(
   else if (totalWeeklyClassHours >= 18) burnoutRiskScore += 1;
 
   // Late days factor (finish >= 17h30)
-  if (lateDaysCount >= 4) burnoutRiskScore += 3;
-  else if (lateDaysCount >= 3) burnoutRiskScore += 2;
-  else if (lateDaysCount >= 2) burnoutRiskScore += 1;
+  // Prise en compte du temps libre en journée : si l'étudiant dispose de plages diurnes conséquentes,
+  // la charge mentale est largement tempérée.
+  if (lateDaysCount >= 4) {
+    burnoutRiskScore += daytimeMetrics.hasSignificantDaytimeFreeTime ? 1.5 : 3;
+  } else if (lateDaysCount >= 3) {
+    burnoutRiskScore += daytimeMetrics.hasSignificantDaytimeFreeTime ? 1 : 2;
+  } else if (lateDaysCount >= 2) {
+    burnoutRiskScore += daytimeMetrics.hasSignificantDaytimeFreeTime ? 0.5 : 1;
+  }
 
   // Difficulty factor
   if (avgDifficulty >= 4.0) burnoutRiskScore += 2;
@@ -121,13 +125,15 @@ export function generateAcademicAnalysisReport(
   // Peak day factor (more than 6h30 in one day)
   if (maxDailyClassMinutes >= 390) burnoutRiskScore += 1.5;
 
-  // Technique fitness with heavy schedules:
-  // Using 75m time blocking after 3+ late days creates severe cognitive friction
-  if (lateDaysCount >= 3 && pacing === 'time_blocking') {
-    burnoutRiskScore += 1;
+  // Technique fitness with daytime schedule:
+  if (pacing === 'time_blocking') {
+    if (daytimeMetrics.isContinuousDense) {
+      burnoutRiskScore += 1; // Journées denses sans pauses diurnes + 75m le soir
+    } else if (daytimeMetrics.hasSignificantDaytimeFreeTime) {
+      burnoutRiskScore = Math.max(0, burnoutRiskScore - 0.5); // Idéalement calé sur les créneaux libres en journée
+    }
   }
-  // Pomodoro or 2-min rule provides stress relief on dense days
-  if (lateDaysCount >= 3 && (pacing === 'pomodoro' || pacing === 'two_minutes_rule')) {
+  if ((lateDaysCount >= 3 || daytimeMetrics.isContinuousDense) && (pacing === 'pomodoro' || pacing === 'two_minutes_rule')) {
     burnoutRiskScore = Math.max(0, burnoutRiskScore - 0.5);
   }
 
@@ -138,36 +144,38 @@ export function generateAcademicAnalysisReport(
   if (burnoutRiskScore >= 6) {
     burnoutRiskIndex = 'Élevé (Surcharge critique)';
     burnoutRiskVariant = 'rose';
-    burnoutDetails = `Risque élevé détecté : volume hebdomadaire important (${totalWeeklyClassHours}h), ${lateDaysCount} journées se terminant à 17h30 ou plus, et charge conceptuelle soutenue (${avgDifficulty.toFixed(1)}/5). Une modération impérative des sessions nocturnes est requise.`;
+    burnoutDetails = `Risque élevé détecté : volume hebdomadaire important (${totalWeeklyClassHours}h), journées continues avec peu de temps libre diurne (${daytimeMetrics.totalDaytimeFreeHours}h), et charge conceptuelle soutenue (${avgDifficulty.toFixed(1)}/5). Une modération impérative des sessions nocturnes est requise.`;
   } else if (burnoutRiskScore >= 3.5) {
     burnoutRiskIndex = 'Modéré (Vigilance)';
     burnoutRiskVariant = 'amber';
-    burnoutDetails = `Risque modéré sous contrôle : rythme hebdomadaire demandeur (${totalWeeklyClassHours}h, ${lateDaysCount} cours tardifs). La décompression de 35 min après les cours est indispensable pour préserver la mémoire de travail.`;
+    burnoutDetails = daytimeMetrics.hasSignificantDaytimeFreeTime
+      ? `Rythme maîtrisé : cours étalés mais ${daytimeMetrics.totalDaytimeFreeHours}h de temps libre diurne disponibles (${daytimeMetrics.majorFreeBlocksCount} grands créneaux ≥ 1h30). Exploitez ces fenêtres pour réviser sans surcharger vos soirées.`
+      : `Risque modéré sous contrôle : rythme hebdomadaire demandeur (${totalWeeklyClassHours}h, ${lateDaysCount} cours tardifs). La décompression de 35 min après les cours est indispensable pour préserver la mémoire de travail.`;
   } else {
     burnoutRiskIndex = 'Faible (Optimal)';
     burnoutRiskVariant = 'emerald';
-    burnoutDetails = `Rythme sain et équilibré : dispersion temporelle fluide (${totalWeeklyClassHours}h de cours), créneaux de récupération neurologique suffisants.`;
+    burnoutDetails = `Rythme sain et équilibré : dispersion temporelle fluide (${totalWeeklyClassHours}h de cours, ${daytimeMetrics.totalDaytimeFreeHours}h de temps libre diurne), créneaux de récupération neurologique suffisants.`;
   }
 
   // 5. Indice d'Équilibre Global (0 à 100)
-  // Dynamic formula combining workload, late finishes, difficulty, subject diversity, and pacing synergy
+  // Dynamic formula combining workload, daytime free windows, late finishes, difficulty, and pacing synergy
   let balanceScore = 96;
 
   // Penalty for high class volume
   if (totalWeeklyClassHours > 28) {
     balanceScore -= (totalWeeklyClassHours - 28) * 1.5;
   } else if (totalWeeklyClassHours < 12) {
-    // Very low class volume is well balanced
     balanceScore += 2;
   }
 
-  // Penalty for late days
+  // Penalty for late days (allégée si l'étudiant a du temps libre en journée)
+  const latePenaltyCoeff = daytimeMetrics.hasSignificantDaytimeFreeTime ? 0.5 : 1;
   if (lateDaysCount >= 4) {
-    balanceScore -= 12;
+    balanceScore -= 12 * latePenaltyCoeff;
   } else if (lateDaysCount >= 3) {
-    balanceScore -= 8;
+    balanceScore -= 8 * latePenaltyCoeff;
   } else if (lateDaysCount >= 2) {
-    balanceScore -= 4;
+    balanceScore -= 4 * latePenaltyCoeff;
   }
 
   // Penalty for extreme cognitive load
@@ -181,15 +189,19 @@ export function generateAcademicAnalysisReport(
   }
 
   // Technique synergy bonus or penalty:
-  if (lateDaysCount >= 3) {
-    if (pacing === 'pomodoro' || pacing === 'two_minutes_rule') {
-      balanceScore += 5; // Perfect match for high mental fatigue
-    } else if (pacing === 'time_blocking') {
-      balanceScore -= 7; // Discordance: 75m intensive blocks after 17h30 exhaustion
+  if (pacing === 'time_blocking') {
+    if (daytimeMetrics.hasSignificantDaytimeFreeTime) {
+      balanceScore += 5; // Synergie forte : exploitation des créneaux libres en journée
+    } else if (daytimeMetrics.isContinuousDense) {
+      balanceScore -= 6; // Discordance : blocs de 75m le soir après journées sans pause
     }
-  } else if (lateDaysCount <= 1) {
-    if (pacing === 'active_recall_spaced' || pacing === 'feynman' || pacing === 'time_blocking') {
-      balanceScore += 4; // High deep-work synergy when days end early
+  } else if (pacing === 'pomodoro' || pacing === 'two_minutes_rule') {
+    if (daytimeMetrics.isContinuousDense || daytimeMetrics.isFragmentedGaps) {
+      balanceScore += 5; // Idéal pour journées compactes ou pauses courtes
+    }
+  } else if (pacing === 'active_recall_spaced' || pacing === 'feynman') {
+    if (daytimeMetrics.hasSignificantDaytimeFreeTime || lateDaysCount <= 1) {
+      balanceScore += 4;
     }
   }
 
@@ -220,9 +232,13 @@ export function generateAcademicAnalysisReport(
       recommendations.push(
         `🍅 Technique Pomodoro (25 min travail / 5 min pause) : Idéale pour contourner la fatigue mentale après les cours. Réalisez 2 à 3 micro-sessions avec une pause longue de 15 min après chaque bloc.`
       );
-      if (lateDaysCount >= 3) {
+      if (daytimeMetrics.hasSignificantDaytimeFreeTime) {
         recommendations.push(
-          `⏰ Soirées chargées (fin ≥ 17h30) : Limitez-vous à 2 cycles Pomodoro (50 min nettes) sur vos matières majeures, sans forcer un troisième cycle afin d'éviter la saturation.`
+          `⚡ Utilisation en journée : Vous disposez d'environ ${daytimeMetrics.totalDaytimeFreeHours}h de temps libre diurne. Profitez de ces créneaux pour caler des cycles Pomodoro complets avec un focus calme.`
+        );
+      } else if (lateDaysCount >= 3 || daytimeMetrics.isContinuousDense) {
+        recommendations.push(
+          `⏰ Soirées après cours denses (fin ≥ 17h30) : Limitez-vous à 2 cycles Pomodoro (50 min nettes) sur vos matières majeures, sans forcer un troisième cycle afin d'éviter la saturation.`
         );
       } else {
         recommendations.push(
@@ -255,9 +271,13 @@ export function generateAcademicAnalysisReport(
       recommendations.push(
         `🧱 Time Blocking (Immersion Profonde 75 min) : Blocs fermés et sanctuarisés pour vos matières denses. Téléphone en mode avion et notifications coupées.`
       );
-      if (lateDaysCount >= 2) {
+      if (daytimeMetrics.hasSignificantDaytimeFreeTime) {
         recommendations.push(
-          `⚠️ Vigilance fatigue : Les journées finissant à 17h30+ sont peu propices aux blocs de 75 min le soir. Déplacez vos sessions Time Blocking sur vos demi-journées libres ou le week-end.`
+          `⚡ Exploitation optimale des créneaux libres : Vous bénéficiez d'environ ${daytimeMetrics.totalDaytimeFreeHours}h de temps libre en journée (${daytimeMetrics.majorFreeBlocksCount} grands créneaux ≥ 1h30 ou demi-journées). Sanctuarisez ces plages diurnes sur le campus ou à la bibliothèque pour vos sessions Time Blocking de 75 min, afin de vous libérer totalement vos soirées.`
+        );
+      } else if (lateDaysCount >= 2 || daytimeMetrics.isContinuousDense) {
+        recommendations.push(
+          `⚠️ Vigilance fatigue : Vos journées s'enchaînent de manière très continue jusqu'à 17h30+. Évitez d'imposer des blocs lourds de 75 min le soir : préférez le week-end ou vos demi-journées de repos.`
         );
       }
       break;
