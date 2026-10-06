@@ -48,8 +48,10 @@ interface SettingsModalProps {
   onExportData?: () => void;
   onImportData?: () => void;
   onResetData?: () => void;
+  planTier?: 'free' | 'pro' | 'plus';
   onSelectPlan?: (planId: 'free' | 'pro' | 'plus') => void;
   onUpgradeToPro?: () => void;
+
   // PLUS features props:
   invitedEmails?: string[];
   academicGoal?: AcademicGoal;
@@ -70,6 +72,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onExportData,
   onImportData,
   onResetData,
+  planTier,
   onSelectPlan,
   onUpgradeToPro: _onUpgradeToPro,
   invitedEmails = [],
@@ -85,6 +88,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [editFiliere, setEditFiliere] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [copiedKonanId, setCopiedKonanId] = useState(false);
+
+  const currentPlan = planTier || userAccount?.planTier || 'free';
+
 
   useEffect(() => {
     if (isOpen) {
@@ -179,22 +185,22 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <h4 className={`text-sm font-bold truncate ${
-                      userAccount?.planTier === 'plus'
+                      currentPlan === 'plus'
                         ? 'plus-multicolor-shimmer-text font-black'
-                        : userAccount?.planTier === 'pro'
+                        : currentPlan === 'pro'
                         ? 'gold-shimmer-text font-black'
                         : 'text-white'
                     }`}>{displayName}</h4>
                     <span 
                       className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0 border ${
-                        userAccount?.planTier === 'pro'
+                        currentPlan === 'pro'
                           ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                          : userAccount?.planTier === 'plus'
+                          : currentPlan === 'plus'
                           ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
-                          : 'bg-slate-800 text-sky-300 border-sky-500/30'
+                          : 'bg-slate-800 text-slate-300 border-slate-700'
                       }`}
                     >
-                      {userAccount?.planTier === 'pro' ? '⭐ PRO' : userAccount?.planTier === 'plus' ? '👑 PLUS' : 'FREE'}
+                      {currentPlan === 'pro' ? '⭐ PRO' : currentPlan === 'plus' ? '👑 PLUS' : 'FREE'}
                     </span>
                   </div>
                   <p className="text-xs text-indigo-300 font-semibold truncate flex items-center gap-1.5 mt-0.5">
@@ -354,29 +360,32 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
 
-          {/* SECTION 1.5: FORMULE & PRIVILÈGES KONAN PLUS */}
+          {/* SECTION 1.5: FORMULE & ABONNEMENT */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
                   <Crown className="w-3.5 h-3.5 text-amber-400" />
-                  Formule & Privilèges {userAccount?.planTier === 'plus' ? 'KONAN PLUS' : 'Abonnement'}
+                  Formule & Abonnement
                 </span>
                 <p className="text-[11px] text-slate-400 mt-0.5">
-                  {userAccount?.planTier === 'plus' 
-                    ? 'Accès complet au groupe de 4 invités, objectifs et musiques de révision.' 
-                    : 'Passez à la vitesse supérieure avec les fonctionnalités d\'élite.'}
+                  {currentPlan === 'plus' 
+                    ? 'Modèle KONAN PLUS Actif (4 comptes inclus, objectifs scolaires et musiques).' 
+                    : currentPlan === 'pro'
+                    ? 'Modèle KONAN PRO Actif (Dates d\'examens, synchronisation Google Agenda, Feynman).'
+                    : 'Modèle KONAN Gratuit actif. Passez à la vitesse supérieure selon vos ambitions.'}
                 </p>
               </div>
             </div>
 
-            {userAccount?.planTier === 'plus' ? (
+            {currentPlan === 'plus' ? (
               <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 via-indigo-950/40 to-slate-950 border border-amber-500/30 space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-white flex items-center gap-1.5">
                     <Crown className="w-4 h-4 text-amber-400" />
-                    Modèle KONAN PLUS Actif
+                    Modèle KONAN PLUS Actif (Élite)
                   </span>
+                  <span className="text-[10px] font-bold text-amber-300 font-mono">3 000 F / mois</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -424,31 +433,109 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     </div>
                   </button>
                 </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onSelectPlan?.('pro');
+                    }}
+                    className="text-amber-400 hover:text-amber-300 font-semibold cursor-pointer"
+                  >
+                    ⭐ Basculer vers KONAN PRO
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onSelectPlan?.('free');
+                    }}
+                    className="text-slate-400 hover:text-white cursor-pointer"
+                  >
+                    Revenir au modèle Gratuit
+                  </button>
+                </div>
+              </div>
+            ) : currentPlan === 'pro' ? (
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 via-slate-900 to-slate-950 border border-amber-500/40 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                    <span className="text-xs font-bold text-white">Modèle KONAN PRO Actif</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/30">
+                    1 200 F / mois
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Dates d'examens, synchronisation continue Google Agenda, et méthodes avancées Feynman & Time Blocking activées.
+                </p>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-2 border-t border-slate-800">
+                  <Button
+                    type="button"
+                    variant="glow"
+                    size="sm"
+                    leftIcon={<Crown className="w-3.5 h-3.5 text-amber-300" />}
+                    onClick={() => {
+                      onClose();
+                      onSelectPlan?.('plus');
+                    }}
+                    className="text-xs font-bold cursor-pointer"
+                  >
+                    Passer à Konan Plus (4 comptes inclus)
+                  </Button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onSelectPlan?.('free');
+                    }}
+                    className="text-[11px] text-slate-400 hover:text-white cursor-pointer text-center sm:text-right py-1"
+                  >
+                    Revenir au modèle Gratuit
+                  </button>
+                </div>
               </div>
             ) : (
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-purple-950/30 to-slate-950 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div className="space-y-1 text-center sm:text-left">
-                  <div className="flex items-center justify-center sm:justify-start gap-1.5">
-                    <Crown className="w-4 h-4 text-amber-400" />
-                    <span className="text-xs font-bold text-white">Découvrez KONAN PLUS</span>
-                  </div>
-                  <p className="text-[11px] text-slate-400">
-                    4 comptes invités inclus, 3 objectifs ciblés & musiques de révision.
-                  </p>
+              <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-200">
+                    Modèle Actuel : KONAN Gratuit (Free)
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-mono">0 F CFA</span>
                 </div>
-                <Button
-                  type="button"
-                  variant="glow"
-                  size="sm"
-                  leftIcon={<Crown className="w-3.5 h-3.5 text-amber-400" />}
-                  onClick={() => {
-                    onClose();
-                    onSelectPlan?.('plus');
-                  }}
-                  className="whitespace-nowrap text-xs font-bold shrink-0 cursor-pointer"
-                >
-                  Passer à Konan Plus
-                </Button>
+                <p className="text-[11px] text-slate-400">
+                  Accès illimité aux plannings, Pomodoro, Active Recall et la Règle des 2 Minutes.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    leftIcon={<Sparkles className="w-3.5 h-3.5 text-amber-300" />}
+                    onClick={() => {
+                      onClose();
+                      onSelectPlan?.('pro');
+                    }}
+                    className="text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white cursor-pointer justify-center"
+                  >
+                    Passer à Konan Pro (1 200 F)
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="glow"
+                    size="sm"
+                    leftIcon={<Crown className="w-3.5 h-3.5 text-amber-300" />}
+                    onClick={() => {
+                      onClose();
+                      onSelectPlan?.('plus');
+                    }}
+                    className="text-xs font-bold cursor-pointer justify-center"
+                  >
+                    Passer à Konan Plus (3 000 F)
+                  </Button>
+                </div>
               </div>
             )}
           </div>

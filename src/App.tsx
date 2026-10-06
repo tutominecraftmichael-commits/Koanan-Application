@@ -18,10 +18,13 @@ import {
   getPlusInvitations,
   updateInvitationStatus,
   registerPlusUser,
+  deregisterPlusUser,
   isTargetAlreadyPlus,
   mergeInvitationsFromCloud,
   invitationBroadcastChannel
 } from './services/storage';
+import { KonanEntranceSplash } from './components/common/KonanEntranceSplash';
+
 import { generateOptimizedStudyPlan } from './services/plannerAlgorithm';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import { 
@@ -199,25 +202,31 @@ export function App() {
     };
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
-  // Unified, resilient single source of truth for plan tier (prevents "Free" vs "Plus" glitches)
+  // Unified, resilient single source of truth for plan tier (prevents "Free" vs "Plus" vs "Pro" glitches)
   const effectivePlanTier: 'free' | 'pro' | 'plus' = useMemo(() => {
+    // 1. Explicit choice in state takes absolute priority
+    if (state.planTier === 'pro') return 'pro';
+    if (state.planTier === 'free') return 'free';
+    if (state.planTier === 'plus') return 'plus';
+
+    // 2. Explicit choice in userAccount takes secondary priority
+    if (state.userAccount?.planTier === 'pro') return 'pro';
+    if (state.userAccount?.planTier === 'free') return 'free';
+    if (state.userAccount?.planTier === 'plus') return 'plus';
+
+    // 3. Plus group guest
+    if (state.isGroupGuest || state.userAccount?.isGroupGuest) return 'plus';
+
+    // 4. Registry check only if not explicitly free/pro
     const myId = state.userAccount?.konanId || state.konanId;
     const myEmail = state.userAccount?.email;
-    const isPlusRegistered = Boolean(myId && isTargetAlreadyPlus(myId)) || Boolean(myEmail && isTargetAlreadyPlus(myEmail));
-    if (
-      state.planTier === 'plus' ||
-      state.userAccount?.planTier === 'plus' ||
-      state.isGroupGuest ||
-      state.userAccount?.isGroupGuest ||
-      isPlusRegistered
-    ) {
+    if ((myId && isTargetAlreadyPlus(myId)) || (myEmail && isTargetAlreadyPlus(myEmail))) {
       return 'plus';
     }
-    if (state.planTier === 'pro' || state.userAccount?.planTier === 'pro') {
-      return 'pro';
-    }
+
     return 'free';
   }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest, state.userAccount?.isGroupGuest, state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
+
 
   // Unified display name
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
@@ -814,13 +823,21 @@ export function App() {
     setIsProModalOpen(false);
 
     if (state.userAccount?.isLoggedIn || state.isDemoMode) {
+      const myId = state.userAccount?.konanId || state.konanId;
+      const myEmail = state.userAccount?.email;
+
       if (planId === 'free') {
+        deregisterPlusUser(myId);
+        deregisterPlusUser(myEmail);
+
         const updated: AppState = {
           ...state,
           planTier: 'free',
+          isGroupGuest: false,
           userAccount: state.userAccount ? {
             ...state.userAccount,
             planTier: 'free',
+            isGroupGuest: false,
           } : undefined,
         };
 
@@ -843,12 +860,17 @@ export function App() {
           setActiveView('dashboard');
         }
       } else if (planId === 'pro') {
+        deregisterPlusUser(myId);
+        deregisterPlusUser(myEmail);
+
         const updated: AppState = {
           ...state,
           planTier: 'pro',
+          isGroupGuest: false,
           userAccount: state.userAccount ? {
             ...state.userAccount,
             planTier: 'pro',
+            isGroupGuest: false,
           } : undefined,
         };
 
@@ -870,7 +892,6 @@ export function App() {
           }
         }
 
-        // Pas d'animation au moment du paiement de l'abonnement (audio 1)
         soundFX.playCheckmarkPop();
 
         showToast('⭐ Félicitations ! Le modèle KONAN PRO est activé ! Synchronisation Google Agenda automatique déclenchée pour tous les jours.');
@@ -879,6 +900,8 @@ export function App() {
         }
       } else if (planId === 'plus') {
         const studentKonanId = state.userAccount?.konanId || state.konanId || generateKonanId(state.userAccount?.googleId || state.userAccount?.email);
+        registerPlusUser(studentKonanId, state.userAccount?.email);
+
         const updated: AppState = {
           ...state,
           planTier: 'plus',
@@ -909,7 +932,6 @@ export function App() {
           'pro_activated'
         );
 
-        // Pas d'animation au moment du paiement de l'abonnement (audio 1)
         soundFX.playCheckmarkPop();
 
         showToast('👑 Félicitations ! Le modèle KONAN PLUS est activé ! Invitez jusqu\'à 4 amis (4 comptes inclus) & profitez de l\'expérience complète.');
@@ -1895,8 +1917,10 @@ export function App() {
         userAccount={state.userAccount}
         studentName={effectiveStudentName}
         academicLevel={state.academicLevel}
+        planTier={effectivePlanTier}
         isDemoMode={state.isDemoMode}
         onLogout={handleLogout}
+
         onUpdateProfile={handleUpdateProfile}
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}
@@ -2032,7 +2056,11 @@ export function App() {
         <p>KONAN — Copilote Académique & Product Engineering d'Excellence</p>
       </footer>
 
+      {/* 🚀 Cinematic 3D Entrance Animation */}
+      <KonanEntranceSplash />
+
     </div>
+
   );
 }
 export default App;

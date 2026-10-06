@@ -250,7 +250,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               }`}
               onClick={() => onSelectPlan?.('pro')}
             >
-              {currentPlan === 'pro' ? '✓ Modèle KONAN PRO Actif' : 'Choisir Konan Pro'}
+              {currentPlan === 'pro' ? '✓ Modèle KONAN PRO Actif' : 'Passer à Konan Pro'}
             </Button>
           </div>
         </div>
