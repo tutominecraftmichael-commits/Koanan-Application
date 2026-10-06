@@ -11,8 +11,7 @@ import {
   ShieldCheck,
   Sparkles,
   GraduationCap,
-  Save,
-  Copy
+  Save
 } from 'lucide-react';
 import type { UserAccount, AcademicGoal } from '../../types';
 import { Crown, Users, Target } from 'lucide-react';
@@ -87,7 +86,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [editName, setEditName] = useState('');
   const [editFiliere, setEditFiliere] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [copiedKonanId, setCopiedKonanId] = useState(false);
 
   const currentPlan = planTier || userAccount?.planTier || 'free';
 
@@ -218,29 +216,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     </svg>
                     <span className="font-medium text-slate-300">Compte connecté</span>
                   </div>
-
-                  {/* Code Konan Secret (Sans bordure ni carré, texte jaune) */}
-                  {userAccount?.konanId && (
-                    <div 
-                      onClick={() => {
-                        navigator.clipboard.writeText(userAccount.konanId || '');
-                        setCopiedKonanId(true);
-                        soundFX.playCheckmarkPop();
-                        setTimeout(() => setCopiedKonanId(false), 2000);
-                      }}
-                      className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer select-none pt-0.5"
-                      title="Cliquez pour copier"
-                    >
-                      <span className="text-slate-300 font-medium">Code Konan Secret :</span>
-                      <span className="text-amber-400 font-mono font-bold tracking-wider">{userAccount.konanId}</span>
-                      {copiedKonanId ? (
-                        <span className="text-[10px] text-emerald-400 font-semibold ml-1">(copié !)</span>
-                      ) : (
-                        <Copy className="w-3 h-3 text-amber-400/60 ml-0.5 hover:text-amber-300 transition-colors" />
-                      )}
-                    </div>
-                  )}
-
+                  
                   <div className="flex items-center gap-1.5 mt-1 text-[11px] text-cyan-400">
                     <ShieldCheck className="w-3 h-3 text-cyan-400" />
                     <span>{isDemoMode ? t('demoIsolated', lang) : t('secureSession', lang)}</span>
@@ -476,14 +452,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     type="button"
                     variant="glow"
                     size="sm"
-                    leftIcon={<Crown className="w-3.5 h-3.5 text-amber-300" />}
-                    onClick={() => {
-                      onClose();
-                      onSelectPlan?.('plus');
-                    }}
-                    className="text-xs font-bold cursor-pointer"
+                    disabled={true}
+                    className="text-xs font-semibold cursor-not-allowed opacity-60 bg-slate-900 border border-slate-800 text-slate-400"
                   >
-                    Passer à Konan Plus (4 comptes inclus)
+                    Konan Plus pas disponible pour le moment
                   </Button>
                   <button
                     type="button"
@@ -526,14 +498,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     type="button"
                     variant="glow"
                     size="sm"
-                    leftIcon={<Crown className="w-3.5 h-3.5 text-amber-300" />}
-                    onClick={() => {
-                      onClose();
-                      onSelectPlan?.('plus');
-                    }}
-                    className="text-xs font-bold cursor-pointer justify-center"
+                    disabled={true}
+                    className="text-xs font-semibold cursor-not-allowed opacity-60 bg-slate-900 border border-slate-800 text-slate-400 justify-center"
                   >
-                    Passer à Konan Plus (3 000 F)
+                    Konan Plus pas disponible pour le moment
                   </Button>
                 </div>
               </div>

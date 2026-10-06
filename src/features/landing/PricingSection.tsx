@@ -265,12 +265,12 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           <div className="space-y-5">
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">
-                  Fonctionnalités Complètes
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Fonctionnalités Futures
                 </span>
-                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-indigo-950/80 text-indigo-200 border border-indigo-500/40 font-semibold flex items-center gap-1 whitespace-nowrap shrink-0">
+                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-semibold flex items-center gap-1 whitespace-nowrap shrink-0">
                   <Crown className="w-3 h-3 text-amber-300" />
-                  4 Comptes Inclus & VIP
+                  Bientôt disponible
                 </span>
               </div>
               
@@ -287,15 +287,15 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 </span>
                 <span className="text-xs text-slate-400 font-medium">CFA / mois</span>
               </div>
-              <p className="text-[11px] text-indigo-400 font-semibold mt-1">L'expérience complète • Jusqu'à 5 étudiants (vous + 4 invités)</p>
+              <p className="text-[11px] text-slate-400 font-medium mt-1">L'expérience complète • Jusqu'à 5 étudiants (vous + 4 invités)</p>
             </div>
 
             {/* Features List */}
             <div className="space-y-3.5">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-indigo-300">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                 Tout ce qui est dans Konan Pro, plus :
               </p>
-              <ul className="space-y-3 text-xs sm:text-sm text-slate-200">
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-300">
                 <li className="flex items-start gap-2.5">
                   <Target className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                   <div>
@@ -330,11 +330,10 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <Button
               variant="secondary"
               size="md"
-              rightIcon={currentPlan === 'plus' ? <Check className="w-4 h-4 text-emerald-400" /> : undefined}
-              className="w-full text-xs sm:text-sm font-bold py-3 hover:bg-slate-800 border-indigo-500/40 text-indigo-200 hover:text-white active:scale-95 transition-transform cursor-pointer"
-              onClick={() => onSelectPlan?.('plus')}
+              disabled={true}
+              className="w-full text-xs sm:text-sm font-semibold py-3 bg-slate-900/60 border border-slate-800 text-slate-400 cursor-not-allowed opacity-80"
             >
-              {currentPlan === 'plus' ? '✓ Modèle KONAN PLUS Actif' : 'Passer à Konan Plus'}
+              Konan Plus pas disponible pour le moment
             </Button>
           </div>
         </div>

@@ -174,7 +174,7 @@ export function App() {
     pullFromServer();
     const pollTimer = window.setInterval(() => {
       if (document.visibilityState === 'visible') pullFromServer();
-    }, 1000);
+    }, 60000);
 
     // Cross-tab BroadcastChannel listener
     const handleBcMessage = (event: MessageEvent) => {
@@ -211,26 +211,25 @@ export function App() {
     };
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
-  // Unified, resilient single source of truth for plan tier (prevents "Free" vs "Plus" vs "Pro" glitches)
+  // Unified, resilient single source of truth for plan tier
+  // Konan Plus étant actuellement fermé/indisponible, tout compte Plus bascule directement vers Pro
   const effectivePlanTier: 'free' | 'pro' | 'plus' = useMemo(() => {
-    // 1. Explicit choice in state takes absolute priority
-    if (state.planTier === 'pro') return 'pro';
+    // 1. Explicit choice in state
+    if (state.planTier === 'plus' || state.planTier === 'pro') return 'pro';
     if (state.planTier === 'free') return 'free';
-    if (state.planTier === 'plus') return 'plus';
 
     // 2. Explicit choice in userAccount takes secondary priority
-    if (state.userAccount?.planTier === 'pro') return 'pro';
+    if (state.userAccount?.planTier === 'plus' || state.userAccount?.planTier === 'pro') return 'pro';
     if (state.userAccount?.planTier === 'free') return 'free';
-    if (state.userAccount?.planTier === 'plus') return 'plus';
 
     // 3. Plus group guest
-    if (state.isGroupGuest || state.userAccount?.isGroupGuest) return 'plus';
+    if (state.isGroupGuest || state.userAccount?.isGroupGuest) return 'pro';
 
     // 4. Registry check only if not explicitly free/pro
     const myId = state.userAccount?.konanId || state.konanId;
     const myEmail = state.userAccount?.email;
     if ((myId && isTargetAlreadyPlus(myId)) || (myEmail && isTargetAlreadyPlus(myEmail))) {
-      return 'plus';
+      return 'pro';
     }
 
     return 'free';
@@ -256,7 +255,7 @@ export function App() {
     }
   }, [effectivePlanTier, state.planTier, state.userAccount?.planTier]);
 
-  const isGroupOwner = effectivePlanTier === 'plus' && !state.isGroupGuest && !state.userAccount?.isGroupGuest;
+  const isGroupOwner = (effectivePlanTier as string) === 'plus' && !state.isGroupGuest && !state.userAccount?.isGroupGuest;
   const currentOwnerKonanId = (state.userAccount?.konanId || state.konanId || '').trim().toUpperCase();
   const currentOwnerEmail = (state.userAccount?.email || '').trim().toLowerCase();
 

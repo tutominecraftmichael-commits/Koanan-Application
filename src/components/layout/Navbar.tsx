@@ -92,6 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [lang] = useLanguage();
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isBellRinging, setIsBellRinging] = useState(false);
   const toolsMenuRef = useRef<HTMLDivElement>(null);
   const notificationsMenuRef = useRef<HTMLDivElement>(null);
   const mobileNotificationsMenuRef = useRef<HTMLDivElement>(null);
@@ -272,10 +273,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => setIsToolsOpen(!isToolsOpen)}
                     title={t('navTools', lang)}
-                    className="p-2 rounded-xl bg-slate-900/70 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer flex items-center gap-1"
+                    className="group p-2 rounded-xl bg-slate-900/70 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-all cursor-pointer flex items-center gap-1 active:scale-95"
                   >
-                    <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    <ChevronDown className="w-3 h-3 text-slate-500" />
+                    <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:rotate-45 group-hover:text-indigo-400 group-active:scale-90" />
+                    <ChevronDown className={`w-3 h-3 text-slate-500 transition-transform duration-300 ${isToolsOpen ? 'rotate-180 text-white' : 'group-hover:translate-y-0.5'}`} />
                   </button>
 
                   {isToolsOpen && (
@@ -333,9 +334,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                       <button
                         onClick={() => { onResetData(); setIsToolsOpen(false); }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition-colors cursor-pointer text-left"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition-colors cursor-pointer text-left group/rst"
                       >
-                        <RotateCcw className="w-3.5 h-3.5" />
+                        <RotateCcw className="w-3.5 h-3.5 transition-transform duration-500 group-hover/rst:-rotate-180" />
                         <span>{t('resetDefault', lang)}</span>
                       </button>
                     </div>
@@ -349,12 +350,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsNotificationsOpen(prev => !prev);
+                      setIsBellRinging(true);
+                      setTimeout(() => setIsBellRinging(false), 800);
                     }}
-                    className="relative p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center bg-slate-900/80 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700 active:scale-95"
+                    onTouchStart={() => {
+                      setIsBellRinging(true);
+                      setTimeout(() => setIsBellRinging(false), 800);
+                    }}
+                    className="group relative p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center bg-slate-900/80 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700 active:scale-95"
                     title={hasUnreadNotifications ? 'Nouvelles notifications non lues' : 'Notifications'}
                     aria-label={hasUnreadNotifications ? 'Notifications (non lues)' : 'Notifications'}
                   >
-                    <Bell className="w-4 h-4" />
+                    <Bell className={`w-4 h-4 transition-transform ${isBellRinging ? 'animate-bell-ring text-amber-400' : 'group-hover:animate-bell-ring group-hover:text-amber-300'}`} />
                     {hasUnreadNotifications && (
                       <span className="absolute top-1 right-1 flex h-2.5 w-2.5" aria-hidden="true">
                         <span className="absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-60 animate-ping" />

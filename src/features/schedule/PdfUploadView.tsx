@@ -368,7 +368,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     if (!isAllowed) {
       // Bloqué pour le modèle Gratuit : avertissement clair et option d'upgrade
       const strat = PACING_STRATEGIES.find(p => p.id === pacingId);
-      setProModalPacingNotice(`La méthode "${strat?.title || pacingId}" fait partie des techniques avancées réservées à KONAN PRO (1 200 F) et KONAN PLUS. Sur votre formule Gratuite, vous disposez d'un accès illimité à Pomodoro, Active Recall et la Règle des 2 Minutes.`);
+      setProModalPacingNotice(`La méthode "${strat?.title || pacingId}" fait partie des techniques avancées réservées à KONAN PRO (1 200 F). Sur votre formule Gratuite, vous disposez d'un accès illimité à Pomodoro, Active Recall et la Règle des 2 Minutes.`);
       return;
     }
 
@@ -486,7 +486,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               </button>
             </div>
             <p className="text-xs text-slate-300">
-              Collez votre clé API Google Gemini pour activer l'analyse IA de vos images et PDF.
+              Collez votre clé API Google Gemini pour activer l'analyse de vos images et PDF.
             </p>
             <input
               type="password"
@@ -584,7 +584,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             </div>
             <p className="text-xs text-slate-400 mt-0.5">
               {currentStep === 'upload'
-                ? "Scannez votre document. L'IA extrait directement vos cours et horaires."
+                ? "Scannez votre document pour extraire directement vos cours et horaires."
                 : "Ajustez les coefficients de vos matières et choisissez votre méthode d'étude."}
             </p>
           </div>
@@ -592,11 +592,11 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
         <button
           onClick={handleReset}
-          className="text-xs text-slate-400 hover:text-slate-200 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 transition-colors cursor-pointer"
+          className="group text-xs text-slate-300 hover:text-white inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-900/60 hover:bg-slate-850 transition-all cursor-pointer active:scale-95 shadow-xs"
           title="Réinitialiser"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Réinitialiser</span>
+          <RotateCcw className="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-400 transition-transform duration-500 group-hover:-rotate-180 group-active:rotate-[-360deg]" />
+          <span>Réinitialiser</span>
         </button>
       </div>
 
@@ -627,7 +627,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               <div className="flex items-center gap-2 min-w-0">
                 <Key className="w-4 h-4 text-amber-400 shrink-0" />
                 <span className="truncate">
-                  <strong>Clé Gemini non configurée :</strong> Pour activer l'analyse IA sur ce lien Vercel, configurez votre clé.
+                  <strong>Clé Gemini non configurée :</strong> Pour activer l'analyse sur ce lien Vercel, configurez votre clé.
                 </span>
               </div>
               <button
@@ -749,7 +749,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 {isAnalyzing ? (
                   <div className="flex items-center gap-2 text-indigo-400 text-xs font-semibold shrink-0">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Analyse IA en cours...</span>
+                    <span>Analyse en cours...</span>
                   </div>
                 ) : (
                   <button
@@ -832,8 +832,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               disabled={isAnalyzing || !scheduleText.trim() || detectedSlotsCount === 0}
               variant="primary"
               size="lg"
-              rightIcon={<ArrowRight className="w-4 h-4 ml-1" />}
-              className="w-full py-3.5 text-sm font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-600/20 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              rightIcon={<ArrowRight className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1.5 group-active:translate-x-2" />}
+              className="group w-full py-3.5 text-sm font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-600/25 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 active:scale-[0.98] hover:shadow-indigo-500/40"
             >
               <span>Continuer : Configurer les coefficients & méthodes ({detectedSlotsCount} cours)</span>
             </Button>
