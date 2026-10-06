@@ -84,7 +84,22 @@ import { PresetModal } from './features/onboarding/PresetModal';
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
-  const [activeView, setActiveView] = useState<ActiveAppView>('landing');
+  const [isSplashActive, setIsSplashActive] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return !sessionStorage.getItem('konan_entrance_splash_played');
+  });
+  const pendingDashboardRedirectRef = useRef<boolean>(false);
+  const pendingPrivacyModalRef = useRef<boolean>(false);
+
+  const [activeView, setActiveView] = useState<ActiveAppView>(() => {
+    const alreadyPlayedSplash = typeof window !== 'undefined' && sessionStorage.getItem('konan_entrance_splash_played');
+    const session = getActiveSession();
+    const isConnected = Boolean(session && !session.isDemo && session.uid);
+    if (isConnected && alreadyPlayedSplash) {
+      return 'dashboard';
+    }
+    return 'landing';
+  });
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -570,7 +585,12 @@ export function App() {
               hasGreetedAuthRef.current = firebaseUser.uid;
               showToast(`✨ Bonne Arrivée ! ${greetingName}`);
             }
-            setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
+            if (isSplashActive) {
+              // L'animation est en cours d'exécution : on ne l'interrompt pas
+              pendingDashboardRedirectRef.current = true;
+            } else {
+              setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
+            }
           } else {
             // Check Firestore Cloud just in case this is a returning user on a new device or cleared cache
             loadUserStateFromCloud(firebaseUser.uid).then(cloudData => {
@@ -591,13 +611,25 @@ export function App() {
                   hasGreetedAuthRef.current = firebaseUser.uid;
                   showToast(`✨ Bonne Arrivée ! ${greetingName}`);
                 }
-                setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
+                if (isSplashActive) {
+                  pendingDashboardRedirectRef.current = true;
+                } else {
+                  setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
+                }
               } else {
                 // First-time user: display the mandatory Privacy Policy & Data Security Agreement
-                setIsPrivacyModalOpen(true);
+                if (isSplashActive) {
+                  pendingPrivacyModalRef.current = true;
+                } else {
+                  setIsPrivacyModalOpen(true);
+                }
               }
             }).catch(() => {
-              setIsPrivacyModalOpen(true);
+              if (isSplashActive) {
+                pendingPrivacyModalRef.current = true;
+              } else {
+                setIsPrivacyModalOpen(true);
+              }
             });
           }
 
@@ -2057,7 +2089,21 @@ export function App() {
       </footer>
 
       {/* 🚀 Cinematic 3D Entrance Animation */}
-      <KonanEntranceSplash />
+      <KonanEntranceSplash 
+        onComplete={() => {
+          setIsSplashActive(false);
+          const session = getActiveSession();
+          const isConnected = Boolean(session && !session.isDemo && session.uid) || Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode);
+          
+          if (isConnected || pendingDashboardRedirectRef.current) {
+            setActiveView(prev => (prev === 'landing' || prev === 'auth' ? 'dashboard' : prev));
+          }
+          if (pendingPrivacyModalRef.current) {
+            setIsPrivacyModalOpen(true);
+            pendingPrivacyModalRef.current = false;
+          }
+        }} 
+      />
 
     </div>
 

@@ -21,6 +21,7 @@ import { Card } from '../../components/ui/Card';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { ACADEMIC_PRESETS } from '../../lib/presets';
 import { PricingSection } from './PricingSection';
+import { KonanCube } from '../../components/common/KonanCube';
 
 export interface LandingHeroProps {
   onStartApp: () => void;
@@ -61,14 +62,12 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           {/* Official Konan 3D Logo Emblem */}
           <div className="flex justify-center pb-1">
             <div className="relative group">
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 opacity-50 blur-lg group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2px] bg-slate-950 border border-sky-400/40 shadow-2xl shadow-sky-500/20 flex items-center justify-center overflow-hidden">
-                <img
-                  src="/konan-logo.png"
-                  alt="Logo Officiel KONAN"
-                  className="w-full h-full object-contain rounded-full"
-                />
-              </div>
+              <KonanCube 
+                size={100} 
+                showStars={true} 
+                glow={true} 
+                className="group-hover:scale-105 transition-transform duration-300"
+              />
             </div>
           </div>
 
