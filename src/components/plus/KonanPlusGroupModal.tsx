@@ -25,7 +25,7 @@ import {
   mergeInvitationsFromCloud, 
   invitationBroadcastChannel 
 } from '../../services/storage';
-import { listenToOwnerCloudInvitations, deleteCloudPlusInvitation } from '../../lib/firebase';
+import { fetchAllCloudInvitations, deleteCloudPlusInvitation } from '../../lib/firebase';
 import { generateId } from '../../lib/utils';
 import type { PlusInvitationNotification } from '../../types';
 
@@ -90,17 +90,17 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
     const handleBc = () => refresh();
     invitationBroadcastChannel?.addEventListener('message', handleBc);
 
-    const unsubscribeCloud = listenToOwnerCloudInvitations(ownerKonanId, (cloudInvites) => {
+    // One-shot fetch upon opening the modal (no real-time onSnapshot loop)
+    fetchAllCloudInvitations().then((cloudInvites) => {
       if (Array.isArray(cloudInvites) && cloudInvites.length > 0) {
         mergeInvitationsFromCloud(cloudInvites);
         setInvitations(getPlusInvitations());
       }
-    });
+    }).catch(() => {});
 
     return () => {
       window.removeEventListener('storage', refresh);
       invitationBroadcastChannel?.removeEventListener('message', handleBc);
-      unsubscribeCloud();
     };
   }, [isOpen]);
 

@@ -31,8 +31,6 @@ import {
   auth,
   onFirebaseAuthStateChange, 
   signOutReal, 
-  listenToUserCloudState,
-  listenToCloudInvitationsForUser,
   fetchCloudInvitationsForUser,
   syncUserStateToCloud,
   loadUserStateFromCloud
@@ -156,15 +154,13 @@ export function App() {
     initialInvites.forEach(inv => knownInvitationIdsRef.current.add(inv.id));
     setPendingInvitations(initialInvites);
 
-    // Targeted cloud synchronization strictly for logged in users (preserves Firestore quota)
-    let unsubscribeTargeted = () => {};
+    // Targeted cloud synchronization strictly for logged in users (one-shot getDocs fetch, no onSnapshot loops)
     let pollTimer: number | undefined;
 
     if (state.userAccount?.isLoggedIn && !state.isDemoMode) {
       const identifiers = [myId, myEmail].filter(Boolean) as string[];
       if (identifiers.length > 0) {
-        unsubscribeTargeted = listenToCloudInvitationsForUser(identifiers, applyCloud);
-        // Direct initial fetch only once
+        // Direct initial fetch once upon mount / auth
         fetchCloudInvitationsForUser(identifiers).then(cloudInvites => {
           if (Array.isArray(cloudInvites) && cloudInvites.length > 0) {
             applyCloud(cloudInvites);
@@ -209,7 +205,6 @@ export function App() {
 
     return () => {
       disposed = true;
-      unsubscribeTargeted();
       if (pollTimer) window.clearInterval(pollTimer);
       invitationBroadcastChannel?.removeEventListener('message', handleBcMessage);
       window.removeEventListener('storage', handleStorage);
@@ -553,10 +548,8 @@ export function App() {
     };
   }, [state.studySessions.length, state.classSlots.length, activeView]);
 
-  // Listen to Firebase auth state changes on mount and sync with Cloud Firestore
+  // Listen to Firebase auth state changes on mount and load Cloud Firestore data once with getDoc()
   useEffect(() => {
-    let unsubscribeCloudListener: (() => void) | null = null;
-
     const unsubscribeAuth = onFirebaseAuthStateChange(async (firebaseUser) => {
       if (firebaseUser) {
         // L'utilisateur est authentifié avec Firebase : toujours activer la session réelle
@@ -620,52 +613,11 @@ export function App() {
             }
           }).catch(console.warn);
 
-          // 3. Real-time multi-device synchronization
-          if (unsubscribeCloudListener) unsubscribeCloudListener();
-          unsubscribeCloudListener = listenToUserCloudState(firebaseUser.uid, (cloudData) => {
-            if (cloudData) {
-              setState(prev => {
-                if (prev.isDemoMode) return prev;
-                // Si les données cloud ne sont pas plus récentes que l'état local actuel, éviter le re-render
-                if (cloudData.lastSyncedAt && prev.userAccount?.lastSyncedAt && cloudData.lastSyncedAt <= prev.userAccount.lastSyncedAt) {
-                  return prev;
-                }
-                return {
-                  ...prev,
-                  studentName: cloudData.studentName || prev.studentName,
-                  academicLevel: cloudData.academicLevel || prev.academicLevel,
-                  planTier: cloudData.planTier || prev.planTier || 'free',
-                  completedOnboarding: cloudData.completedOnboarding ?? prev.completedOnboarding,
-                  subjects: (cloudData.subjects && cloudData.subjects.length > 0) ? cloudData.subjects : prev.subjects,
-                  classSlots: (cloudData.classSlots && cloudData.classSlots.length > 0) ? cloudData.classSlots : prev.classSlots,
-                  preferences: cloudData.preferences ? { ...prev.preferences, ...cloudData.preferences } : prev.preferences,
-                  studySessions: (cloudData.studySessions && cloudData.studySessions.length > 0) ? cloudData.studySessions : prev.studySessions,
-                  logs: cloudData.logs || prev.logs,
-                  cycleCompletedDate: cloudData.cycleCompletedDate !== undefined ? cloudData.cycleCompletedDate : prev.cycleCompletedDate,
-                  userAccount: prev.userAccount ? {
-                    ...prev.userAccount,
-                    planTier: cloudData.planTier || prev.planTier || 'free',
-                    name: cloudData.studentName || prev.userAccount.name,
-                    invitedEmails: cloudData.invitedEmails || prev.userAccount.invitedEmails,
-                    academicGoal: cloudData.academicGoal || prev.userAccount.academicGoal,
-                    coachingSessionsRemaining: cloudData.coachingSessionsRemaining !== undefined ? cloudData.coachingSessionsRemaining : prev.userAccount.coachingSessionsRemaining,
-                    lastCoachingDate: cloudData.lastCoachingDate || prev.userAccount.lastCoachingDate,
-                  } : undefined,
-                };
-              });
-            }
-          });
-      } else {
-        if (unsubscribeCloudListener) {
-          unsubscribeCloudListener();
-          unsubscribeCloudListener = null;
-        }
       }
     });
 
     return () => {
       unsubscribeAuth();
-      if (unsubscribeCloudListener) unsubscribeCloudListener();
     };
   }, []);
 

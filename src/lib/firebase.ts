@@ -61,16 +61,15 @@ import {
   doc, 
   getDoc, 
   setDoc, 
-  updateDoc,
-  deleteDoc,
-  collection,
-  onSnapshot,
-  query,
-  where,
-  getDocs,
-  getDocsFromServer,
-  type QuerySnapshot,
-  type DocumentData
+  updateDoc, 
+  deleteDoc, 
+  collection, 
+  query, 
+  where, 
+  getDocs, 
+  getDocsFromServer, 
+  type QuerySnapshot, 
+  type DocumentData 
 } from 'firebase/firestore';
 
 /** Normalizes an identifier (Konan ID or email) for invitation matching. */
@@ -558,7 +557,7 @@ export async function loadUserStateFromCloud(uid: string): Promise<any | null> {
 }
 
 /**
- * Listens in real-time to Cloud Firestore user state updates across all connected devices.
+ * One-shot retrieval of user cloud state (replaces deprecated continuous onSnapshot listeners).
  */
 export function listenToUserCloudState(
   uid: string, 
@@ -566,26 +565,12 @@ export function listenToUserCloudState(
   onError?: (err: any) => void
 ): () => void {
   if (!db || !uid || isFirestoreQuotaBlocked()) return () => {};
-  try {
-    const userRef = doc(db, 'users', uid);
-    return onSnapshot(userRef, (snap) => {
-      // 🛑 CRITICAL: Ignore local pending writes to break the infinite echo loop!
-      if (snap.metadata.hasPendingWrites) {
-        return;
-      }
-      if (snap.exists()) {
-        onUpdate(snap.data());
-      }
-    }, (err) => {
-      reportFirestoreError(err);
-      console.warn('Firestore snapshot listener warning:', err);
-      if (onError) onError(err);
-    });
-  } catch (err) {
-    reportFirestoreError(err);
-    console.warn('Failed to attach Firestore listener:', err);
-    return () => {};
-  }
+  loadUserStateFromCloud(uid).then(data => {
+    if (data) onUpdate(data);
+  }).catch(err => {
+    if (onError) onError(err);
+  });
+  return () => {};
 }
 
 /**
@@ -712,41 +697,19 @@ function collectSnapshotDocs(snapshot: QuerySnapshot<DocumentData>, into: Map<st
 
 /**
  * Listens in real-time to Cloud Firestore for invitations matching this student's IDs or email.
- * Uses targeted server-side queries so delivery is near-instant regardless of collection size.
+ * One-shot fetch of cloud invitations for user (replaces continuous onSnapshot listener).
  */
 export function listenToCloudInvitationsForUser(
   identifiers: string[], 
   onUpdate: (invitations: any[]) => void
 ): () => void {
   if (isFirestoreQuotaBlocked()) return () => {};
-  const queries = buildInvitationQueries(identifiers);
-  if (queries.length === 0) return () => {};
-
-  const perQuery: Map<string, any>[] = queries.map(() => new Map());
-  const emit = () => {
-    const merged = new Map<string, any>();
-    perQuery.forEach(m => m.forEach((v, k) => merged.set(k, v)));
-    onUpdate(Array.from(merged.values()));
-  };
-
-  const unsubscribers = queries.map((q, idx) => {
-    try {
-      return onSnapshot(q, (snapshot) => {
-        perQuery[idx] = new Map();
-        collectSnapshotDocs(snapshot, perQuery[idx]);
-        emit();
-      }, (err) => {
-        reportFirestoreError(err);
-        console.warn('Real-time cloud invitations listener error:', err);
-      });
-    } catch (err) {
-      reportFirestoreError(err);
-      console.warn('Failed to attach real-time cloud invitations listener:', err);
-      return () => {};
+  fetchCloudInvitationsForUser(identifiers).then(invites => {
+    if (Array.isArray(invites) && invites.length > 0) {
+      onUpdate(invites);
     }
-  });
-
-  return () => unsubscribers.forEach(unsub => unsub());
+  }).catch(() => {});
+  return () => {};
 }
 
 /**
@@ -771,39 +734,18 @@ export async function fetchCloudInvitationsForUser(identifiers: string[]): Promi
 }
 
 /**
- * Listens in real-time to owner's cloud invitations so the sender can see status changes (accepted/declined)
- * without exposing or querying invitations of other students.
+ * One-shot fetch of owner invitations (replaces continuous onSnapshot listener).
  */
 export function listenToOwnerCloudInvitations(
-  ownerKonanIdOrUid: string, 
+  _ownerKonanIdOrUid: string, 
   onUpdate: (invitations: any[]) => void
 ): () => void {
-  if (!db || isFirestoreQuotaBlocked() || !ownerKonanIdOrUid) return () => {};
-  try {
-    const colRef = collection(db, 'plus_invitations');
-    const currentUid = auth?.currentUser?.uid || '';
-    
-    // Requête ciblée : uniquement les invitations appartenant à l'expéditeur (anti-fuite de données)
-    const q = currentUid 
-      ? query(colRef, where('senderUid', '==', currentUid))
-      : query(colRef, where('senderKonanId', '==', ownerKonanIdOrUid.trim().toUpperCase()));
-
-    return onSnapshot(q, (snapshot) => {
-      const all: any[] = [];
-      snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        all.push({ ...data, id: data.id || docSnap.id });
-      });
+  fetchAllCloudInvitations().then(all => {
+    if (Array.isArray(all) && all.length > 0) {
       onUpdate(all);
-    }, (err) => {
-      reportFirestoreError(err);
-      console.warn('Real-time owner cloud invitations listener error:', err);
-    });
-  } catch (err) {
-    reportFirestoreError(err);
-    console.warn('Failed to attach owner cloud invitations listener:', err);
-    return () => {};
-  }
+    }
+  }).catch(() => {});
+  return () => {};
 }
 
 /**
