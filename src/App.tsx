@@ -18,7 +18,6 @@ import {
   getPlusInvitations,
   updateInvitationStatus,
   registerPlusUser,
-  deregisterPlusUser,
   isTargetAlreadyPlus,
   mergeInvitationsFromCloud,
   invitationBroadcastChannel
@@ -26,6 +25,7 @@ import {
 import { KonanEntranceSplash } from './components/common/KonanEntranceSplash';
 
 import { generateOptimizedStudyPlan } from './services/plannerAlgorithm';
+import { transitionUserState } from './services/tierTransitionService';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import { 
   auth,
@@ -47,7 +47,8 @@ import type {
   UserAccount,
   Chronotype,
   AcademicGoal,
-  PlusInvitationNotification
+  PlusInvitationNotification,
+  PlanTier
 } from './types';
 import { generateId } from './lib/utils';
 import { Sparkles, X } from 'lucide-react';
@@ -219,7 +220,7 @@ export function App() {
     // Mode Démo : strictement 'free'
     if (state.isDemoMode) return 'free';
 
-    // Konan Plus : uniquement si invité officiel dans un groupe ou vérifié dans le registre
+    // Konan Plus : invité officiel dans un groupe ou vérifié dans le registre
     if (state.isGroupGuest || state.userAccount?.isGroupGuest) return 'plus';
 
     const myId = state.userAccount?.konanId || state.konanId;
@@ -228,20 +229,37 @@ export function App() {
       return 'plus';
     }
 
-    // Phase Waitlist Mobile Money (Wave & Orange Money) :
-    // Aucun achat Pro n'étant encore ouvert, tous les utilisateurs sont protégés en tier 'free'
-    return 'free';
-  }, [state.isDemoMode, state.isGroupGuest, state.userAccount?.isGroupGuest, state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
+    // Déclaration explicite du compte ou de l'état
+    const declaredTier = state.planTier || state.userAccount?.planTier;
+    if (declaredTier === 'plus') return 'plus';
+    if (declaredTier === 'pro') return 'pro';
 
+    return 'free';
+  }, [state.isDemoMode, state.isGroupGuest, state.userAccount?.isGroupGuest, state.userAccount?.konanId, state.konanId, state.userAccount?.email, state.planTier, state.userAccount?.planTier]);
+
+  const previousTierRef = useRef<PlanTier>(effectivePlanTier);
 
   // Unified display name
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
     ? state.userAccount.name
     : (state.studentName || 'Étudiant');
 
-  // Eradicate any "Free" vs "Plus" discrepancy by keeping state and userAccount strictly in sync
+  // Détection automatique de changement de modèle et dissolution instantanée des fonctionnalités non autorisées
   useEffect(() => {
-    if (state.planTier !== effectivePlanTier || (state.userAccount && state.userAccount.planTier !== effectivePlanTier)) {
+    const prevTier = previousTierRef.current;
+    if (prevTier !== effectivePlanTier) {
+      previousTierRef.current = effectivePlanTier;
+
+      // Déclenchement de la transition stricte : dissolution des méthodes Pro/Plus, devoirs et régénération de l'emploi du temps
+      const { nextState, dissolvedFeatures } = transitionUserState(state, effectivePlanTier);
+      setState(nextState);
+      if (nextState.userAccount?.googleId && !nextState.isDemoMode) {
+        saveUserState(nextState.userAccount.googleId, nextState);
+      }
+      if (dissolvedFeatures.length > 0) {
+        showToast(`⚡ Passage au modèle ${effectivePlanTier.toUpperCase()} : fonctionnalités et emploi du temps réalignés (${dissolvedFeatures.length} ajustements).`);
+      }
+    } else if (state.planTier !== effectivePlanTier || (state.userAccount && state.userAccount.planTier !== effectivePlanTier)) {
       setState(prev => ({
         ...prev,
         planTier: effectivePlanTier,
@@ -783,80 +801,65 @@ export function App() {
   };
 
   /**
-   * Plan selection from Landing Hero / Pricing / Modals:
-   * Directly activates the chosen model on the student account.
+   * Plan selection from Landing Hero / Pricing / Modals / Settings:
+   * Dissout immédiatement toutes les fonctionnalités exclusives lors du passage à un modèle inférieur (ex: Pro -> Free, Plus -> Pro)
    */
   const handleSelectPlan = (planId: 'free' | 'pro' | 'plus') => {
     setIsProModalOpen(false);
 
-    if (state.userAccount?.isLoggedIn || state.isDemoMode) {
-      const myId = state.userAccount?.konanId || state.konanId;
-      const myEmail = state.userAccount?.email;
+    const currentTier = effectivePlanTier;
 
-      if (planId === 'free') {
-        deregisterPlusUser(myId);
-        deregisterPlusUser(myEmail);
+    // 1. Passage vers Gratuit (depuis Pro ou Plus) OU passage de Plus vers Pro :
+    if (planId === 'free' || (currentTier === 'plus' && planId === 'pro')) {
+      const { nextState, dissolvedFeatures } = transitionUserState(state, planId);
+      previousTierRef.current = planId;
 
-        const updated: AppState = {
-          ...state,
-          planTier: 'free',
-          isGroupGuest: false,
-          userAccount: state.userAccount ? {
-            ...state.userAccount,
-            planTier: 'free',
-            isGroupGuest: false,
-          } : undefined,
-        };
-
-        if (state.preferences.pacing === 'feynman' || state.preferences.pacing === 'time_blocking') {
-          updated.preferences = {
-            ...state.preferences,
-            pacing: 'pomodoro',
-            focusBlockDuration: 25,
-            breakBlockDuration: 5,
-          };
-        }
-
-        if (state.userAccount?.googleId && !state.isDemoMode) {
-          saveUserState(state.userAccount.googleId, updated);
-        }
-        setState(updated);
-
-        showToast('✨ Vous êtes sur le modèle KONAN Gratuit (Free).');
-        if (activeView === 'landing' || activeView === 'auth') {
-          setActiveView('dashboard');
-        }
-      } else if (planId === 'pro') {
-        // 🔒 VERROUILLAGE PRO : Aucun achat gratuit ou direct sans paiement Mobile Money
-        setWaitlistModalInfo({
-          isOpen: true,
-          featureTitle: 'Formule KONAN PRO (1 200 FCFA / mois)',
-          featureDescription: 'Débloquez les méthodes avancées Feynman & Time Blocking, les combinaisons triples et les rappels d’étude 30 min avant session.',
-          requiredTier: 'pro',
-        });
-        return;
-      } else if (planId === 'plus') {
-        // 🔒 VERROUILLAGE PLUS : Aucun achat gratuit ou direct sans paiement Mobile Money
-        setWaitlistModalInfo({
-          isOpen: true,
-          featureTitle: 'Formule KONAN PLUS (2 500 FCFA / mois)',
-          featureDescription: 'Débloquez les objectifs académiques (Major de promo), les pistes sonores de révision et le partage avec 4 camarades.',
-          requiredTier: 'plus',
-        });
-        return;
+      if (nextState.userAccount?.googleId && !nextState.isDemoMode) {
+        saveUserState(nextState.userAccount.googleId, nextState);
       }
-    } else {
-      if (planId === 'pro' || planId === 'plus') {
-        setWaitlistModalInfo({
-          isOpen: true,
-          featureTitle: planId === 'pro' ? 'Formule KONAN PRO (1 200 FCFA / mois)' : 'Formule KONAN PLUS (2 500 FCFA / mois)',
-          featureDescription: 'Cette formule arrive très bientôt avec le paiement simplifié par Wave et Orange Money.',
-          requiredTier: planId,
-        });
-        return;
+      setState(nextState);
+
+      const targetLabel = planId === 'free' ? 'KONAN Gratuit' : 'KONAN PRO';
+      showToast(`✨ Modèle ${targetLabel} activé : vos fonctionnalités et votre emploi du temps ont été immédiatement réalignés (${dissolvedFeatures.length} ajustements).`);
+      if (activeView === 'landing' || activeView === 'auth') {
+        setActiveView('dashboard');
       }
+      return;
+    }
+
+    // 2. Si l'utilisateur est en mode démo et veut tester le modèle Pro ou Plus :
+    if (state.isDemoMode) {
+      const { nextState } = transitionUserState(state, planId);
+      previousTierRef.current = planId;
+      setState(nextState);
+      showToast(`✨ Simulation Démo : Modèle ${planId.toUpperCase()} activé.`);
+      return;
+    }
+
+    // 3. Phase Waitlist Mobile Money (Wave & Orange Money) pour les achats réels :
+    if (planId === 'pro') {
+      setWaitlistModalInfo({
+        isOpen: true,
+        featureTitle: 'Formule KONAN PRO (1 200 FCFA / mois)',
+        featureDescription: 'Débloquez les méthodes avancées Feynman & Time Blocking, les combinaisons triples, et l’adaptation automatique aux dates d’examens et devoirs.',
+        requiredTier: 'pro',
+      });
+      return;
+    }
+
+    if (planId === 'plus') {
+      setWaitlistModalInfo({
+        isOpen: true,
+        featureTitle: 'Formule KONAN PLUS (2 500 FCFA / mois)',
+        featureDescription: 'Débloquez les objectifs académiques (Major de promo), les pistes sonores de révision et le partage avec 4 camarades.',
+        requiredTier: 'plus',
+      });
+      return;
+    }
+
+    if (!state.userAccount?.isLoggedIn && !state.isDemoMode) {
       localStorage.setItem('konan_pending_plan', planId);
-      showToast(`⭐ Connectez-vous avec Google ou démarrez la démo pour activer le modèle KONAN Gratuit.`);
+      showToast(`⭐ Connectez-vous avec Google ou démarrez la démo pour continuer.`);
       setActiveView('auth');
     }
   };
@@ -1171,7 +1174,7 @@ export function App() {
   };
 
   const handleUpdateSubjects = (newSubjects: Subject[]) => {
-    const updatedPlan = generateOptimizedStudyPlan(newSubjects, state.classSlots, state.preferences);
+    const updatedPlan = generateOptimizedStudyPlan(newSubjects, state.classSlots, state.preferences, effectivePlanTier);
     setState(prev => ({
       ...prev,
       subjects: newSubjects,
@@ -1182,7 +1185,7 @@ export function App() {
 
   const handleUpdateClassSlots = (newSlots: ClassSlot[]) => {
     const harmonized = harmonizeAndDeduplicateSlots(newSlots);
-    const updatedPlan = generateOptimizedStudyPlan(state.subjects, harmonized, state.preferences);
+    const updatedPlan = generateOptimizedStudyPlan(state.subjects, harmonized, state.preferences, effectivePlanTier);
     setState(prev => ({
       ...prev,
       classSlots: harmonized,
@@ -1192,7 +1195,7 @@ export function App() {
   };
 
   const handleUpdatePreferences = (newPrefs: StudyPreferences) => {
-    const updatedPlan = generateOptimizedStudyPlan(state.subjects, state.classSlots, newPrefs);
+    const updatedPlan = generateOptimizedStudyPlan(state.subjects, state.classSlots, newPrefs, effectivePlanTier);
     setState(prev => ({
       ...prev,
       preferences: newPrefs,
@@ -1253,7 +1256,7 @@ export function App() {
   };
 
   const handleRegeneratePlan = () => {
-    const freshPlan = generateOptimizedStudyPlan(state.subjects, state.classSlots, state.preferences);
+    const freshPlan = generateOptimizedStudyPlan(state.subjects, state.classSlots, state.preferences, effectivePlanTier);
     setState(prev => ({
       ...prev,
       studySessions: freshPlan,

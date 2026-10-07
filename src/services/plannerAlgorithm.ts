@@ -36,6 +36,9 @@ export function generateOptimizedStudyPlan(
     ? { planTier: userOrTier } 
     : userOrTier;
   
+  const resolvedTier: PlanTier = (userContext?.planTier || (userContext as any)?.tier) ?? 'free';
+  const isExamFeatureAllowed = resolvedTier === 'pro' || resolvedTier === 'plus';
+
   let effectivePreferences = preferences;
   if (userContext) {
     try {
@@ -50,6 +53,19 @@ export function generateOptimizedStudyPlan(
     }
   }
 
+  // Si le modèle est Gratuit (Free) : dissolution stricte des méthodes Pro et du multi-méthodes
+  if (resolvedTier === 'free') {
+    const isPro = effectivePreferences.pacing === 'feynman' || effectivePreferences.pacing === 'time_blocking';
+    const safePacing = isPro ? 'pomodoro' : effectivePreferences.pacing;
+    effectivePreferences = {
+      ...effectivePreferences,
+      pacing: safePacing,
+      focusBlockDuration: safePacing === 'pomodoro' ? 25 : effectivePreferences.focusBlockDuration || 25,
+      breakBlockDuration: safePacing === 'pomodoro' ? 5 : effectivePreferences.breakBlockDuration || 5,
+      combinedPacings: [safePacing],
+    };
+  }
+
   // Pacing strategy definition (Pomodoro, Active Recall & Spaced, Feynman, Time Blocking, 2-Minutes Rule)
   const pacingStrategy = getPacingStrategy(effectivePreferences.pacing);
   const sessionBlock = effectivePreferences.focusBlockDuration || pacingStrategy.focusBlockDuration;
@@ -57,23 +73,26 @@ export function generateOptimizedStudyPlan(
 
   // 1. Calcul des scores académiques pondérés pour chaque matière
   const subjectScores = subjects.map(sub => {
-    const daysUntilExam = getDaysRemaining(sub.examDate);
     let examUrgencyFactor = 1.0;
-    if (daysUntilExam !== null) {
-      if (daysUntilExam < 0) {
-        examUrgencyFactor = 0.6; // Épreuve déjà passée : ne pas surcharger la semaine
-      } else if (daysUntilExam <= 3) {
-        examUrgencyFactor = 2.4; // Urgence critique J-3
-      } else if (daysUntilExam <= 7) {
-        examUrgencyFactor = 1.8; // Semaine d'épreuve J-7
-      } else if (daysUntilExam <= 14) {
-        examUrgencyFactor = 1.4; // Quinzaine pré-examen J-14
-      } else if (daysUntilExam <= 30) {
-        examUrgencyFactor = 1.15;
+    // L'adaptation et la sur-pondération aux examens/devoirs est EXCLUSIVE aux modèles PRO & PLUS
+    if (isExamFeatureAllowed) {
+      const daysUntilExam = getDaysRemaining(sub.examDate);
+      if (daysUntilExam !== null) {
+        if (daysUntilExam < 0) {
+          examUrgencyFactor = 0.6; // Épreuve déjà passée : ne pas surcharger la semaine
+        } else if (daysUntilExam <= 3) {
+          examUrgencyFactor = 2.4; // Urgence critique J-3
+        } else if (daysUntilExam <= 7) {
+          examUrgencyFactor = 1.8; // Semaine d'épreuve J-7
+        } else if (daysUntilExam <= 14) {
+          examUrgencyFactor = 1.4; // Quinzaine pré-examen J-14
+        } else if (daysUntilExam <= 30) {
+          examUrgencyFactor = 1.15;
+        }
       }
     }
 
-    // Formule basée sur la difficulté cognitive, le coefficient et l'urgence des examens/devoirs
+    // Formule basée sur la difficulté cognitive, le coefficient et l'urgence des examens/devoirs (si Pro/Plus)
     const rawScore = (Math.pow(sub.difficulty, 1.35) * Math.pow(sub.coefficient, 1.25)) * examUrgencyFactor;
     return {
       subject: sub,
@@ -325,17 +344,19 @@ export function generateOptimizedStudyPlan(
         if (!bestCandidate) {
           bestCandidate = subjectPool
             .filter(item => {
-              const daysToExam = getDaysRemainingFrom(item.subject.examDate, sessionDate);
-              // RÈGLE STRICTE : INTERDICTION ABSOLUE de réviser une matière dont l'épreuve est déjà passée
-              if (daysToExam !== null && daysToExam < 0) {
-                return false;
-              }
-              // Ne jamais réviser après l'épreuve le jour J
-              if (daysToExam === 0) {
-                if (item.subject.examTime) {
-                  return slotCurrentStart < parseTimeToMinutes(item.subject.examTime);
+              if (isExamFeatureAllowed) {
+                const daysToExam = getDaysRemainingFrom(item.subject.examDate, sessionDate);
+                // RÈGLE STRICTE : INTERDICTION ABSOLUE de réviser une matière dont l'épreuve est déjà passée
+                if (daysToExam !== null && daysToExam < 0) {
+                  return false;
                 }
-                return slotCurrentStart < 720;
+                // Ne jamais réviser après l'épreuve le jour J
+                if (daysToExam === 0) {
+                  if (item.subject.examTime) {
+                    return slotCurrentStart < parseTimeToMinutes(item.subject.examTime);
+                  }
+                  return slotCurrentStart < 720;
+                }
               }
               return true;
             })
@@ -355,16 +376,16 @@ export function generateOptimizedStudyPlan(
           : 'Chapitre clé & Fondamentaux';
 
         const sessionType = sessionTypeCycle[bestCandidate.scheduledCount % sessionTypeCycle.length];
-        const daysUntilExamOnDate = getDaysRemainingFrom(subject.examDate, sessionDate);
-        const isExamApproaching = daysUntilExamOnDate !== null && daysUntilExamOnDate >= 0 && daysUntilExamOnDate <= 14;
+        const daysUntilExamOnDate = isExamFeatureAllowed ? getDaysRemainingFrom(subject.examDate, sessionDate) : null;
+        const isExamApproaching = isExamFeatureAllowed && daysUntilExamOnDate !== null && daysUntilExamOnDate >= 0 && daysUntilExamOnDate <= 14;
 
         // Stratégie d'espacement active pour cette session (Mono-méthode ou Combinaison Triple KONAN PRO)
         let sessionPacing = pacingStrategy;
         let sessionDuration = sessionBlock;
         let sessionBreak = breakBlock;
 
-        if (preferences.combinedPacings && preferences.combinedPacings.length > 1) {
-          const chosen = preferences.combinedPacings.slice(0, 3).map(id => getPacingStrategy(id));
+        if (isExamFeatureAllowed && effectivePreferences.combinedPacings && effectivePreferences.combinedPacings.length > 1) {
+          const chosen = effectivePreferences.combinedPacings.slice(0, 3).map(id => getPacingStrategy(id));
           const hasFeynman = chosen.find(p => p.id === 'feynman');
           const hasTimeBlocking = chosen.find(p => p.id === 'time_blocking');
           const hasActiveRecall = chosen.find(p => p.id === 'active_recall_spaced');
@@ -551,7 +572,7 @@ export function generateOptimizedStudyPlan(
           completed: false,
           isExamPrep: isExamApproaching,
           examDaysRemaining: isExamApproaching ? daysUntilExamOnDate : undefined,
-          examType: subject.examType || 'examen',
+          examType: isExamFeatureAllowed ? (subject.examType || 'examen') : undefined,
         });
 
         // Mise à jour des compteurs

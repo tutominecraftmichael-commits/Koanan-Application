@@ -120,7 +120,7 @@ export function createInitialStateFromPreset(presetId: string = 'cs-engineering'
     academicLevel: preset.level,
   };
 
-  const studySessions = generateOptimizedStudyPlan(subjects, classSlots, preferences);
+  const studySessions = generateOptimizedStudyPlan(subjects, classSlots, preferences, 'free');
 
   const logs: StudyLog[] = [];
 
@@ -319,8 +319,9 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         : currentState.studySessions;
 
       // If study sessions are empty on cloud, generate them from the subjects and slots!
+      const userTier = cloudData.planTier || currentState.planTier || 'free';
       if ((!mergedStudySessions || mergedStudySessions.length === 0) && mergedSubjects.length > 0) {
-        mergedStudySessions = generateOptimizedStudyPlan(mergedSubjects, mergedClassSlots, mergedPreferences);
+        mergedStudySessions = generateOptimizedStudyPlan(mergedSubjects, mergedClassSlots, mergedPreferences, userTier);
       }
 
       const assignedKonanId = cloudData.konanId || currentState.konanId || currentState.userAccount?.konanId || generateKonanId(uid);

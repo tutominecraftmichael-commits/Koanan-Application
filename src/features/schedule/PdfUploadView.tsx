@@ -473,7 +473,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
         studentName,
         selectedChronotype,
         selectedPacings[0] || 'pomodoro',
-        selectedPacings
+        selectedPacings,
+        planTier
       );
 
       onApplyExtractedSchedule(finalPayload);

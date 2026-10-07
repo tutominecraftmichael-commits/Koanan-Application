@@ -5,7 +5,8 @@ import type {
   StudySession, 
   ExtractedPdfSchedule, 
   Chronotype, 
-  StudyPacing 
+  StudyPacing,
+  PlanTier
 } from '../types';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
 import { DEFAULT_PREFERENCES } from '../lib/presets';
@@ -332,7 +333,8 @@ export function buildStateFromExtractedSchedule(
   studentName: string,
   chronotype: Chronotype = 'evening',
   pacing: StudyPacing = 'active_recall_spaced',
-  combinedPacings?: StudyPacing[]
+  combinedPacings?: StudyPacing[],
+  tier: PlanTier = 'free'
 ): {
   subjects: Subject[];
   classSlots: ClassSlot[];
@@ -382,7 +384,7 @@ export function buildStateFromExtractedSchedule(
     weekendStudyEnabled: true,
   };
 
-  const studySessions = generateOptimizedStudyPlan(subjects, classSlots, preferences);
+  const studySessions = generateOptimizedStudyPlan(subjects, classSlots, preferences, tier);
 
   return {
     subjects,
