@@ -866,7 +866,7 @@ export function App() {
       setWaitlistModalInfo({
         isOpen: true,
         featureTitle: 'Formule KONAN PRO (Bientôt disponible)',
-        featureDescription: 'Débloquez les imports illimités, les dates d’examens & DS (J-X), le rattrapage intra-journée, la synchro Google Calendar et les méthodes avancées Feynman & Time Blocking.',
+        featureDescription: 'Débloquez les imports illimités, les dates d’examens & DS (J-X), la synchro Google Calendar et les méthodes avancées Feynman & Time Blocking.',
         requiredTier: 'pro',
       });
       return;

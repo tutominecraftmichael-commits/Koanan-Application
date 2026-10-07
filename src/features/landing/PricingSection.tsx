@@ -223,10 +223,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   <Calendar className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                   <span><strong>Dates d'examens & Devoirs Surveillés (DS) :</strong> Intégrez vos dates d'épreuves sur chaque matière ; l'algorithme s'adapte avec <strong>compte à rebours interactif (J-X)</strong> et sur-priorisation automatique des révisions clés.</span>
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Rattrapage intelligent intra-journée :</strong> Réaménagement automatique sans stress des séances non effectuées le soir même (avant 21h30 max, zéro report au lendemain, zéro dette cognitive).</span>
-                </li>
+
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                   <span><strong>Synchronisation Google Calendar :</strong> Export direct de votre planning personnalisé (.ics) et intégration dans votre calendrier personnel.</span>
