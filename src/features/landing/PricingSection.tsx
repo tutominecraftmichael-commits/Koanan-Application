@@ -120,24 +120,26 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               <ul className="space-y-3 text-xs sm:text-sm text-slate-200">
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Importation de votre EDT</strong> académique à l'aide d'un tableau texte.</span>
+                  <span><strong>Importation & extraction d'EDT :</strong> Import via PDF, scan photo ou tableau texte (<em>limité à 1 génération / import gratuit</em>).</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Génération d'un EDT personnel bien structuré</strong> adapté à votre cursus pour la réduction du burn-out.</span>
+                  <span><strong>Génération d'EDT personnalisé :</strong> Planning d'étude adapté à votre filière pour structurer vos révisions et réduire le surmenage.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Modification et ajout de matières</strong> avec recalcul instantané du planning d'étude.</span>
+                  <span><strong>Ajustement des matières :</strong> Ajout et personnalisation des cours avec recalcul instantané des créneaux d'étude.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-semibold text-white">Techniques d'espacement Freemium :</span>
-                    <ul className="mt-1.5 space-y-1 pl-1 text-xs text-slate-300 border-l border-slate-800 ml-1">
+                    <span className="font-semibold text-white">4 Techniques d'apprentissage Freemium :</span>
+                    <p className="text-[11px] text-slate-400 mt-0.5 mb-1.5">(1 seule méthode active à la fois)</p>
+                    <ul className="mt-1 space-y-1 pl-1 text-xs text-slate-300 border-l border-slate-800 ml-1">
                       <li className="pl-2">• Technique Pomodoro classique</li>
-                      <li className="pl-2">• Active Recall & Spaced Repetition (Répétition espacée)</li>
-                      <li className="pl-2">• La technique des 2 minutes</li>
+                      <li className="pl-2">• Active Recall (Rappel actif)</li>
+                      <li className="pl-2">• Spaced Repetition (Répétition espacée)</li>
+                      <li className="pl-2">• La règle des 2 minutes</li>
                     </ul>
                   </div>
                 </li>
@@ -185,7 +187,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 ) : (
                   <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-200 border border-sky-400/40 font-bold whitespace-nowrap inline-flex items-center gap-1 shrink-0">
                     <span>⭐</span>
-                    <span>Populaire</span>
+                    <span>Populaire • Bientôt disponible</span>
                   </span>
                 )}
               </div>
@@ -214,8 +216,20 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               </p>
               <ul className="space-y-3 text-xs sm:text-sm text-slate-100">
                 <li className="flex items-start gap-2.5">
+                  <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                  <span><strong>Imports & générations d'EDT illimités :</strong> Importez autant d'emplois du temps que vous le souhaitez via PDF, scan photo ou texte (sans aucun blocage).</span>
+                </li>
+                <li className="flex items-start gap-2.5">
                   <Calendar className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Dates d'examens & Préparation directe :</strong> Intégrez vos dates d'épreuves sur chaque matière ; l'emploi du temps s'adapte et priorise automatiquement les révisions clés.</span>
+                  <span><strong>Dates d'examens & Devoirs Surveillés (DS) :</strong> Intégrez vos dates d'épreuves sur chaque matière ; l'algorithme s'adapte avec <strong>compte à rebours interactif (J-X)</strong> et sur-priorisation automatique des révisions clés.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                  <span><strong>Rattrapage intelligent intra-journée :</strong> Réaménagement automatique sans stress des séances non effectuées le soir même (avant 21h30 max, zéro report au lendemain, zéro dette cognitive).</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                  <span><strong>Synchronisation Google Calendar :</strong> Export direct de votre planning personnalisé (.ics) et intégration dans votre calendrier personnel.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Layers className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
@@ -223,17 +237,17 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     <span className="font-semibold text-white">Modèles d'espacement Premium :</span>
                     <ul className="mt-1 space-y-1 pl-1 text-xs text-sky-200/90 border-l border-sky-500/40 ml-1">
                       <li className="pl-2">• <strong>Time Blocking</strong> académique ciblé</li>
-                      <li className="pl-2">• <strong>Technique de Feynman</strong> (assimilation profonde)</li>
+                      <li className="pl-2">• <strong>Technique de Feynman</strong> (assimilation conceptuelle profonde)</li>
                     </ul>
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Sparkles className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Recommandations de Konan :</strong> Recommandations intelligentes et personnalisées de la meilleure technique d'espacement selon la fatigue et les heures de fin de vos cours (Idéal ⭐, Conseillé, Déconseillé selon la densité de vos journées).</span>
+                  <span><strong>Recommandations algorithmiques de Konan :</strong> Recommandations intelligentes de la meilleure technique selon la fatigue et vos heures de cours (Idéal ⭐, Conseillé, Déconseillé).</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Combinaison triple :</strong> Capacité de combiner jusqu'à <strong>3 techniques d'espacement en même temps</strong> dans le même planning.</span>
+                  <span><strong>Combinaison triple :</strong> Capacité d'activer jusqu'à <strong>3 techniques d'espacement simultanément</strong> dans le même planning.</span>
                 </li>
               </ul>
             </div>
@@ -250,7 +264,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               }`}
               onClick={() => onSelectPlan?.('pro')}
             >
-              {currentPlan === 'pro' ? '✓ Modèle KONAN PRO Actif' : 'Passer à Konan Pro'}
+              {currentPlan === 'pro' ? '✓ Modèle KONAN PRO Actif' : 'Passer à Konan Pro (Bientôt disponible)'}
             </Button>
           </div>
         </div>
@@ -302,24 +316,33 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     <span><strong>Planning conditionné par vos 3 Objectifs Scolaires :</strong></span>
                     <ul className="mt-1 space-y-1 pl-1 text-xs text-slate-300 border-l border-indigo-500/30 ml-1">
                       <li className="pl-2">• <em>Passer l'année avec 12 de moyenne</em></li>
-                      <li className="pl-2">• <em>Passer avec 16 de moyenne</em></li>
-                      <li className="pl-2">• <em>Devenir major de ma promotion</em></li>
+                      <li className="pl-2">• <em>Passer avec mention (16 de moyenne)</em></li>
+                      <li className="pl-2">• <em>Devenir major de ma promotion (18/20+)</em></li>
                     </ul>
-                    <p className="text-[11px] text-slate-400 mt-1">L'objectif influence drastiquement la densité et les méthodes recommandées.</p>
+                    <p className="text-[11px] text-slate-400 mt-1">L'objectif influence directement la cadence horaire, la densité et les méthodes recommandées.</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <UserPlus className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                   <div>
-                    <span><strong>Capacité d'inviter 4 personnes (4 comptes inclus) :</strong></span>
+                    <span><strong>Pack Étudiant (Jusqu'à 5 comptes complets inclus) :</strong></span>
                     <p className="text-slate-300 mt-0.5">
-                      Invitez jusqu'à 4 de vos amis ou camarades via leur adresse email. Ils sont connectés directement à Konan Plus et bénéficient de l'intégralité des fonctionnalités pour réussir ensemble.
+                      Invitez jusqu'à 4 de vos camarades via leur adresse email ou ID Konan. Chaque membre bénéficie de son compte personnel avec l'intégralité des fonctionnalités Pro & Plus (soit 500 F CFA / étudiant / mois).
                     </p>
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Headphones className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-                  <span><strong>Musiques de fond révision & détente :</strong> Ambiances sonores et sons dédiés pour stimuler le focus ou décompresser.</span>
+                  <div>
+                    <span><strong>Lecteur Audio & Musiques de révision :</strong></span>
+                    <p className="text-slate-300 mt-0.5">
+                      Ambiances sonores intégrées dédiées au focus : Ondes Alpha concentration profonde, Lofi Chill révision, Bruit blanc et sons apaisants.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <Sparkles className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                  <span><strong>Coaching d'excellence & Suivi de groupe :</strong> Conseils stratégiques personnalisés par IA pour stimuler la régularité et décrocher les meilleures mentions ensemble.</span>
                 </li>
               </ul>
             </div>

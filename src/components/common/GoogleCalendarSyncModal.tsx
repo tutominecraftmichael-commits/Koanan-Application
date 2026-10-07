@@ -163,7 +163,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                 <span>Fonctionnalité automatique réservée au modèle KONAN PRO</span>
               </div>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Les rappels automatiques et la synchronisation continue pour tous les jours font partie intégrante de <strong>KONAN PRO</strong> (1 200 F CFA / mois).
+                Les rappels automatiques et la synchronisation continue pour tous les jours font partie intégrante de <strong>KONAN PRO</strong> (Bientôt disponible).
               </p>
               <Button
                 variant="glow"

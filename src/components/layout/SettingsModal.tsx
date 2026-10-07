@@ -489,7 +489,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     }}
                     className="text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white cursor-pointer justify-center"
                   >
-                    Passer à Konan Pro (1 200 F)
+                    Passer à Konan Pro (Bientôt disponible)
                   </Button>
                   <Button
                     type="button"

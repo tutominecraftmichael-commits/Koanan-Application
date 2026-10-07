@@ -865,8 +865,8 @@ export function App() {
     if (planId === 'pro') {
       setWaitlistModalInfo({
         isOpen: true,
-        featureTitle: 'Formule KONAN PRO (1 200 FCFA / mois)',
-        featureDescription: 'Débloquez les méthodes avancées Feynman & Time Blocking, les combinaisons triples, et l’adaptation automatique aux dates d’examens et devoirs.',
+        featureTitle: 'Formule KONAN PRO (Bientôt disponible)',
+        featureDescription: 'Débloquez les imports illimités, les dates d’examens & DS (J-X), le rattrapage intra-journée, la synchro Google Calendar et les méthodes avancées Feynman & Time Blocking.',
         requiredTier: 'pro',
       });
       return;
@@ -875,8 +875,8 @@ export function App() {
     if (planId === 'plus') {
       setWaitlistModalInfo({
         isOpen: true,
-        featureTitle: 'Formule KONAN PLUS (2 500 FCFA / mois)',
-        featureDescription: 'Débloquez les objectifs académiques (Major de promo), les pistes sonores de révision et le partage avec 4 camarades.',
+        featureTitle: 'Formule KONAN PLUS (Bientôt disponible)',
+        featureDescription: 'Débloquez le planning conditionné aux 3 objectifs scolaires (Major de promo), le pack de 5 comptes étudiants, les musiques de concentration et le coaching de groupe.',
         requiredTier: 'plus',
       });
       return;

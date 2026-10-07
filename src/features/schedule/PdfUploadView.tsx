@@ -408,7 +408,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       setWaitlistModalState({
         isOpen: true,
         featureTitle: strat?.title || pacingId,
-        featureDescription: `La méthode "${strat?.title || pacingId}" fait partie des techniques d'assimilation avancées réservées à KONAN PRO (1 200 F). Sur votre formule Gratuite, vous disposez d'un accès illimité à Pomodoro, Active Recall, Répétition Espacée et la Règle des 2 Minutes.`,
+        featureDescription: `La méthode "${strat?.title || pacingId}" fait partie des techniques d'assimilation avancées réservées à KONAN PRO (Bientôt disponible). Sur votre formule Gratuite, vous disposez d'un accès illimité à Pomodoro, Active Recall, Répétition Espacée et la Règle des 2 Minutes.`,
         requiredTier: 'pro',
       });
       return;
@@ -586,7 +586,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 }}
                 className="text-xs font-bold"
               >
-                Passer à KONAN PRO (1 200 F)
+                Passer à KONAN PRO (Bientôt disponible)
               </Button>
             </div>
           </div>
