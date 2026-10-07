@@ -1,3 +1,6 @@
+import { SubscriptionForbiddenError } from '../lib/subscriptionGuard';
+import type { PlanTier } from '../types';
+
 /**
  * Service de Notifications Téléphone pour KONAN AI
  * 
@@ -144,3 +147,29 @@ export function sendPhoneNotification(title: string, body: string, tag: string =
     }
   }
 }
+
+/**
+ * Envoie un rappel d'étude programmé 30 minutes avant la session.
+ * STRICTEMENT RÉSERVÉ AUX MEMBRES PRO.
+ * Rejette avec SubscriptionForbiddenError si appelé avec un tier 'free'.
+ */
+export function sendStudyReminder30mNotification(
+  subjectName: string,
+  sessionTime: string,
+  userTier: PlanTier = 'free'
+): boolean {
+  if (userTier === 'free') {
+    throw new SubscriptionForbiddenError(
+      'Les notifications de rappel d’étude (30 minutes avant la session) sont réservées aux membres Pro',
+      'pro'
+    );
+  }
+
+  sendPhoneNotification(
+    `📚 Révision dans 30 min : ${subjectName}`,
+    `Votre créneau d'étude commence à ${sessionTime}. Préparez vos cours en toute sérénité ! 🎯`,
+    `study-reminder-${subjectName}`
+  );
+  return true;
+}
+

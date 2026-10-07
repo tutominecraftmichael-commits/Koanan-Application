@@ -60,11 +60,14 @@ import {
   recommendPacingStrategies,
   type PacingRecommendation
 } from '../../lib/pacingStrategies';
-
+import { WaitlistModal } from '../../components/common/WaitlistModal';
 
 export interface PdfUploadViewProps {
   studentName: string;
   planTier?: 'free' | 'pro' | 'plus';
+  pdfImportsCount?: number;
+  userEmail?: string;
+  userId?: string;
   onApplyExtractedSchedule: (payload: {
     subjects: Subject[];
     classSlots: ClassSlot[];
@@ -113,6 +116,9 @@ interface EditableSubject {
 export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   studentName,
   planTier = 'free',
+  pdfImportsCount = 0,
+  userEmail = '',
+  userId = '',
   onApplyExtractedSchedule,
   onCancel,
   onViewPricing,
@@ -132,6 +138,16 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const [apiKeyConfigured, setApiKeyConfigured] = useState<boolean>(() => hasGeminiApiKey());
   const [showKeyModal, setShowKeyModal] = useState<boolean>(false);
   const [tempApiKey, setTempApiKey] = useState<string>('');
+  const [waitlistModalState, setWaitlistModalState] = useState<{
+    isOpen: boolean;
+    featureTitle: string;
+    featureDescription?: string;
+    requiredTier: 'pro' | 'plus';
+  }>({
+    isOpen: false,
+    featureTitle: '',
+    requiredTier: 'pro',
+  });
 
   // Étape 2 : Personnalisation des Matières & Méthodes
   const [editableSubjects, setEditableSubjects] = useState<EditableSubject[]>([]);
@@ -208,6 +224,17 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
   // Traitement direct du fichier uploadé
   const handleFileSelected = async (file: File) => {
+    // Barrière de niveau : Formule GRATUITE limitée à 1 génération/import via PDF
+    if (planTier === 'free' && (pdfImportsCount || 0) >= 1) {
+      setWaitlistModalState({
+        isOpen: true,
+        featureTitle: "Import & Numérisation illimités d'EDT PDF",
+        featureDescription: "Votre version Gratuite est limitée à 1 import/génération d'emploi du temps. L'accès illimité arrive très bientôt avec le paiement simplifié par Wave et Orange Money.",
+        requiredTier: 'pro',
+      });
+      return;
+    }
+
     setError(null);
     setSelectedFile(file);
     setIsAnalyzing(true);
@@ -372,9 +399,14 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const handleSelectPacingStrategy = (pacingId: StudyPacing) => {
     const isAllowed = isPacingAllowedForPlan(pacingId, planTier);
     if (!isAllowed) {
-      // Bloqué pour le modèle Gratuit : avertissement clair et option d'upgrade
+      // Bloqué pour le modèle Gratuit : ouverture immédiate de la Waitlist Modal
       const strat = PACING_STRATEGIES.find(p => p.id === pacingId);
-      setProModalPacingNotice(`La méthode "${strat?.title || pacingId}" fait partie des techniques avancées réservées à KONAN PRO (1 200 F). Sur votre formule Gratuite, vous disposez d'un accès illimité à Pomodoro, Active Recall et la Règle des 2 Minutes.`);
+      setWaitlistModalState({
+        isOpen: true,
+        featureTitle: strat?.title || pacingId,
+        featureDescription: `La méthode "${strat?.title || pacingId}" fait partie des techniques d'assimilation avancées réservées à KONAN PRO (1 200 F). Sur votre formule Gratuite, vous disposez d'un accès illimité à Pomodoro, Active Recall, Répétition Espacée et la Règle des 2 Minutes.`,
+        requiredTier: 'pro',
+      });
       return;
     }
 
@@ -1223,12 +1255,22 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             >
               <Calendar className="w-4 h-4 text-white transition-transform duration-300 ease-out group-hover:scale-125 group-hover:-rotate-12 drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
               <span>Générer mon planning d'étude avec ces paramètres ({editableSubjects.filter(s => s.enabled).length} matières)</span>
-              <Sparkles className="w-4 h-4 text-cyan-200 transition-transform duration-300 ease-out group-hover:rotate-180 group-hover:scale-125" />
             </button>
           </div>
 
         </div>
       )}
+
+      {/* Modale Waitlist d'accès verrouillé (Wave & Orange Money) */}
+      <WaitlistModal
+        isOpen={waitlistModalState.isOpen}
+        onClose={() => setWaitlistModalState(prev => ({ ...prev, isOpen: false }))}
+        featureTitle={waitlistModalState.featureTitle}
+        featureDescription={waitlistModalState.featureDescription}
+        requiredTier={waitlistModalState.requiredTier}
+        userEmail={userEmail}
+        userId={userId}
+      />
 
     </div>
   );

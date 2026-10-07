@@ -14,20 +14,29 @@ import {
   FOCUS_SOUNDTRACKS, 
   type FocusSoundtrackId 
 } from '../../lib/focusAudioEngine';
+import { WaitlistModal } from '../common/WaitlistModal';
+import type { PlanTier } from '../../types';
 
 export interface FocusAudioPlayerWidgetProps {
   compact?: boolean;
   className?: string;
+  planTier?: PlanTier;
+  userEmail?: string;
+  userId?: string;
 }
 
 export const FocusAudioPlayerWidget: React.FC<FocusAudioPlayerWidgetProps> = ({
   compact = false,
   className = '',
+  planTier = 'free',
+  userEmail = '',
+  userId = '',
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState<FocusSoundtrackId>('alpha_waves');
   const [volume, setVolume] = useState(0.6);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = focusAudioEngine.subscribe((playing, trackId, vol) => {
@@ -41,10 +50,19 @@ export const FocusAudioPlayerWidget: React.FC<FocusAudioPlayerWidgetProps> = ({
   const activeSoundtrack = FOCUS_SOUNDTRACKS.find(t => t.id === currentTrack) || FOCUS_SOUNDTRACKS[0];
 
   const handleTogglePlay = () => {
+    if (planTier !== 'plus') {
+      setIsWaitlistOpen(true);
+      return;
+    }
     focusAudioEngine.toggleTrack(currentTrack);
   };
 
   const handleSelectTrack = (trackId: FocusSoundtrackId) => {
+    if (planTier !== 'plus') {
+      setIsDropdownOpen(false);
+      setIsWaitlistOpen(true);
+      return;
+    }
     setCurrentTrack(trackId);
     focusAudioEngine.play(trackId);
     setIsDropdownOpen(false);
@@ -143,6 +161,16 @@ export const FocusAudioPlayerWidget: React.FC<FocusAudioPlayerWidgetProps> = ({
             </div>
           </div>
         )}
+
+        <WaitlistModal
+          isOpen={isWaitlistOpen}
+          onClose={() => setIsWaitlistOpen(false)}
+          featureTitle="Pistes Sonores d'Étude & Relaxation"
+          featureDescription="Les ambiances sonores et ondes alpha de concentration font partie de l'expérience exclusive KONAN PLUS."
+          requiredTier="plus"
+          userEmail={userEmail}
+          userId={userId}
+        />
       </div>
     );
   }
@@ -251,6 +279,16 @@ export const FocusAudioPlayerWidget: React.FC<FocusAudioPlayerWidgetProps> = ({
           {volume > 1.0 ? `⚡ ${Math.round(volume * 100)}%` : `${Math.round(volume * 100)}%`}
         </span>
       </div>
+
+      <WaitlistModal
+        isOpen={isWaitlistOpen}
+        onClose={() => setIsWaitlistOpen(false)}
+        featureTitle="Pistes Sonores d'Étude & Relaxation"
+        featureDescription="Les ambiances sonores et ondes alpha de concentration font partie de l'expérience exclusive KONAN PLUS."
+        requiredTier="plus"
+        userEmail={userEmail}
+        userId={userId}
+      />
     </div>
   );
 };

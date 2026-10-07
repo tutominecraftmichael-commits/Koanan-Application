@@ -40,6 +40,7 @@ export interface AppState {
   };
   privacyPolicyAccepted?: boolean;
   privacyPolicyAcceptedAt?: string;
+  pdfImportsCount?: number;
 }
 
 /**
@@ -126,7 +127,7 @@ export function createInitialStateFromPreset(presetId: string = 'cs-engineering'
   return {
     studentName: preferences.studentName,
     academicLevel: preset.level,
-    planTier: 'pro',
+    planTier: 'free',
     konanId: 'KN-784201',
     userAccount: {
       name: 'Alexandre Étudiant (Compte Démo)',
@@ -137,7 +138,7 @@ export function createInitialStateFromPreset(presetId: string = 'cs-engineering'
       academicLevel: preset.level,
       isLoggedIn: true,
       isDemo: true,
-      planTier: 'pro',
+      planTier: 'free',
       lastSyncedAt: new Date().toISOString(),
     },
     subjects,

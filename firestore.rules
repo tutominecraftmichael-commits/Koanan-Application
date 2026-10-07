@@ -1,14 +1,44 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    
+    // Helper : vérifie si un champ sensible d'abonnement n'a pas été frauduleusement modifié par le client
+    function isSubscriptionUnchanged() {
+      return (
+        (!('planTier' in request.resource.data) || (resource != null && request.resource.data.planTier == resource.data.planTier) || (resource == null && request.resource.data.planTier == 'free')) &&
+        (!('tier' in request.resource.data) || (resource != null && request.resource.data.tier == resource.data.tier) || (resource == null && request.resource.data.tier == 'free')) &&
+        (!('isPro' in request.resource.data) || (resource != null && request.resource.data.isPro == resource.data.isPro) || (resource == null && request.resource.data.isPro == false))
+      );
+    }
+
+    // Helper : vérifie que les méthodes Pro ne sont pas sauvegardées si le compte est 'free'
+    function arePacingMethodsAllowed() {
+      return (
+        // Si l'utilisateur est Pro ou Plus, tout est permis
+        (resource != null && (resource.data.planTier == 'pro' || resource.data.planTier == 'plus' || resource.data.tier == 'pro' || resource.data.tier == 'plus')) ||
+        // Si utilisateur gratuit, interdiction de stocker Feynman ou Time Blocking dans ses préférences
+        (!('preferences' in request.resource.data) || 
+         !('pacing' in request.resource.data.preferences) || 
+         !(request.resource.data.preferences.pacing in ['feynman', 'time_blocking']))
+      );
+    }
+
     // Chaque étudiant a un accès privé et exclusif à ses propres données (emploi du temps, matières, sessions)
     match /users/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow write: if request.auth != null && request.auth.uid == userId
-        && (!('planTier' in request.resource.data) || request.resource.data.planTier in ['free', 'pro', 'plus']);
+        && isSubscriptionUnchanged()
+        && arePacingMethodsAllowed();
     }
 
-    // Invitations KONAN PLUS : synchronisation temps réel fluide et instantanée entre appareils
+    // Collection Liste d'attente Mobile Money (Wave / Orange Money)
+    // Permet aux étudiants (connectés ou invités) d'enregistrer leur demande d'accès Pro/Plus
+    match /waitlist_pro/{entryId} {
+      allow create: if true;
+      allow read, update, delete: if false; // Strictement réservé au backend / administrateur
+    }
+
+    // Invitations KONAN PLUS : synchronisation temps réel
     match /plus_invitations/{invitationId} {
       allow read, write: if true;
     }

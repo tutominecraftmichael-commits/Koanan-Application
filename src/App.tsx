@@ -59,8 +59,10 @@ import { soundFX } from './lib/audioEffects';
 import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { ProFeatureModal } from './components/common/ProFeatureModal';
+import { WaitlistModal } from './components/common/WaitlistModal';
 import { GoogleCalendarSyncModal } from './components/common/GoogleCalendarSyncModal';
 import { PrivacyPolicyModal } from './components/common/PrivacyPolicyModal';
+import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
@@ -104,6 +106,16 @@ export function App() {
   const [isPlusGroupModalOpen, setIsPlusGroupModalOpen] = useState(false);
   const [isAcademicGoalModalOpen, setIsAcademicGoalModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [waitlistModalInfo, setWaitlistModalInfo] = useState<{
+    isOpen: boolean;
+    featureTitle: string;
+    featureDescription?: string;
+    requiredTier: 'pro' | 'plus';
+  }>({
+    isOpen: false,
+    featureTitle: '',
+    requiredTier: 'pro',
+  });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [pendingInvitations, setPendingInvitations] = useState<PlusInvitationNotification[]>([]);
   const [allInvitations, setAllInvitations] = useState<PlusInvitationNotification[]>(() => getPlusInvitations());
@@ -208,24 +220,25 @@ export function App() {
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
   // Unified, resilient single source of truth for plan tier
-  // Konan Plus étant actuellement fermé/indisponible, tout compte Plus bascule directement vers Pro
   const effectivePlanTier: 'free' | 'pro' | 'plus' = useMemo(() => {
     // 1. Explicit choice in state
-    if (state.planTier === 'plus' || state.planTier === 'pro') return 'pro';
+    if (state.planTier === 'plus') return 'plus';
+    if (state.planTier === 'pro') return 'pro';
     if (state.planTier === 'free') return 'free';
 
     // 2. Explicit choice in userAccount takes secondary priority
-    if (state.userAccount?.planTier === 'plus' || state.userAccount?.planTier === 'pro') return 'pro';
+    if (state.userAccount?.planTier === 'plus') return 'plus';
+    if (state.userAccount?.planTier === 'pro') return 'pro';
     if (state.userAccount?.planTier === 'free') return 'free';
 
     // 3. Plus group guest
-    if (state.isGroupGuest || state.userAccount?.isGroupGuest) return 'pro';
+    if (state.isGroupGuest || state.userAccount?.isGroupGuest) return 'plus';
 
     // 4. Registry check only if not explicitly free/pro
     const myId = state.userAccount?.konanId || state.konanId;
     const myEmail = state.userAccount?.email;
     if ((myId && isTargetAlreadyPlus(myId)) || (myEmail && isTargetAlreadyPlus(myEmail))) {
-      return 'pro';
+      return 'plus';
     }
 
     return 'free';
@@ -861,88 +874,36 @@ export function App() {
           setActiveView('dashboard');
         }
       } else if (planId === 'pro') {
-        deregisterPlusUser(myId);
-        deregisterPlusUser(myEmail);
-
-        const updated: AppState = {
-          ...state,
-          planTier: 'pro',
-          isGroupGuest: false,
-          userAccount: state.userAccount ? {
-            ...state.userAccount,
-            planTier: 'pro',
-            isGroupGuest: false,
-          } : undefined,
-        };
-
-        if (state.userAccount?.googleId && !state.isDemoMode) {
-          saveUserState(state.userAccount.googleId, updated);
-        }
-        setState(updated);
-
-        // 🌟 AUTOMATIC SYNC TO GOOGLE AGENDA FOR ALL DAYS
-        if (state.studySessions && state.studySessions.length > 0) {
-          try {
-            downloadStudyPlanICS(
-              state.studySessions,
-              state.subjects,
-              state.studentName || state.userAccount?.name || 'Étudiant'
-            );
-          } catch (err) {
-            console.warn('ICS auto-download error:', err);
-          }
-        }
-
-        soundFX.playCheckmarkPop();
-
-        showToast('⭐ Félicitations ! Le modèle KONAN PRO est activé ! Synchronisation Google Agenda automatique déclenchée pour tous les jours.');
-        if (activeView === 'landing' || activeView === 'auth') {
-          setActiveView('dashboard');
-        }
+        // 🔒 VERROUILLAGE PRO : Aucun achat gratuit ou direct sans paiement Mobile Money
+        setWaitlistModalInfo({
+          isOpen: true,
+          featureTitle: 'Formule KONAN PRO (1 200 FCFA / mois)',
+          featureDescription: 'Débloquez les méthodes avancées Feynman & Time Blocking, les combinaisons triples et les rappels d’étude 30 min avant session.',
+          requiredTier: 'pro',
+        });
+        return;
       } else if (planId === 'plus') {
-        const studentKonanId = state.userAccount?.konanId || state.konanId || generateKonanId(state.userAccount?.googleId || state.userAccount?.email);
-        registerPlusUser(studentKonanId, state.userAccount?.email);
-
-        const updated: AppState = {
-          ...state,
-          planTier: 'plus',
-          konanId: studentKonanId,
-          invitedIds: state.userAccount?.invitedIds || state.invitedIds || [],
-          invitedEmails: state.userAccount?.invitedEmails || state.invitedEmails || [],
-          userAccount: state.userAccount ? {
-            ...state.userAccount,
-            planTier: 'plus',
-            konanId: studentKonanId,
-            academicGoal: state.userAccount.academicGoal || 'target_16',
-            coachingSessionsRemaining: state.userAccount.coachingSessionsRemaining ?? 2,
-            invitedIds: state.userAccount.invitedIds || state.invitedIds || [],
-            invitedEmails: state.userAccount.invitedEmails || state.invitedEmails || [],
-          } : undefined,
-        };
-
-        if (state.userAccount?.googleId && !state.isDemoMode) {
-          saveUserState(state.userAccount.googleId, updated);
-        }
-        setState(updated);
-
-        // 🌟 AUTOMATIC SYNC TO GOOGLE AGENDA FOR ALL DAYS WITH 15-MIN PHONE ALERTS
-        triggerAutoGoogleCalendarSync(
-          state.studySessions,
-          state.subjects,
-          state.studentName || state.userAccount?.name || 'Étudiant',
-          'pro_activated'
-        );
-
-        soundFX.playCheckmarkPop();
-
-        showToast('👑 Félicitations ! Le modèle KONAN PLUS est activé ! Invitez jusqu\'à 4 amis (4 comptes inclus) & profitez de l\'expérience complète.');
-        if (activeView === 'landing' || activeView === 'auth') {
-          setActiveView('dashboard');
-        }
+        // 🔒 VERROUILLAGE PLUS : Aucun achat gratuit ou direct sans paiement Mobile Money
+        setWaitlistModalInfo({
+          isOpen: true,
+          featureTitle: 'Formule KONAN PLUS (2 500 FCFA / mois)',
+          featureDescription: 'Débloquez les objectifs académiques (Major de promo), les pistes sonores de révision et le partage avec 4 camarades.',
+          requiredTier: 'plus',
+        });
+        return;
       }
     } else {
+      if (planId === 'pro' || planId === 'plus') {
+        setWaitlistModalInfo({
+          isOpen: true,
+          featureTitle: planId === 'pro' ? 'Formule KONAN PRO (1 200 FCFA / mois)' : 'Formule KONAN PLUS (2 500 FCFA / mois)',
+          featureDescription: 'Cette formule arrive très bientôt avec le paiement simplifié par Wave et Orange Money.',
+          requiredTier: planId,
+        });
+        return;
+      }
       localStorage.setItem('konan_pending_plan', planId);
-      showToast(`⭐ Connectez-vous avec Google ou démarrez la démo pour activer le modèle ${planId === 'pro' ? 'KONAN PRO' : planId === 'plus' ? 'KONAN PLUS' : 'KONAN Gratuit'}.`);
+      showToast(`⭐ Connectez-vous avec Google ou démarrez la démo pour activer le modèle KONAN Gratuit.`);
       setActiveView('auth');
     }
   };
@@ -951,6 +912,16 @@ export function App() {
    * Konan Plus: Manage invited student IDs
    */
   const handleUpdateInvitedIds = (ids: string[]) => {
+    if (effectivePlanTier !== 'plus') {
+      setWaitlistModalInfo({
+        isOpen: true,
+        featureTitle: 'Groupe & Partage (4 comptes inclus)',
+        featureDescription: 'Inviter jusqu\'à 4 camarades avec leurs propres comptes fait partie de l\'expérience KONAN PLUS.',
+        requiredTier: 'plus',
+      });
+      return;
+    }
+
     setState(prev => {
       const nextUserAccount: UserAccount = prev.userAccount ? {
         ...prev.userAccount,
@@ -986,6 +957,16 @@ export function App() {
    * Konan Plus: Manage 4 invited accounts (by email or ID)
    */
   const handleUpdateInvitedEmails = (emails: string[]) => {
+    if (effectivePlanTier !== 'plus') {
+      setWaitlistModalInfo({
+        isOpen: true,
+        featureTitle: 'Groupe & Partage (4 comptes inclus)',
+        featureDescription: 'Inviter jusqu\'à 4 camarades avec leurs propres comptes fait partie de l\'expérience KONAN PLUS.',
+        requiredTier: 'plus',
+      });
+      return;
+    }
+
     setState(prev => {
       const nextUserAccount: UserAccount = prev.userAccount ? {
         ...prev.userAccount,
@@ -1021,6 +1002,15 @@ export function App() {
    * Konan Plus: Change 1 of the 3 Academic Goals
    */
   const handleSelectAcademicGoal = (goal: AcademicGoal) => {
+    if (effectivePlanTier !== 'plus') {
+      setWaitlistModalInfo({
+        isOpen: true,
+        featureTitle: 'Objectifs Académiques (Major de promotion)',
+        featureDescription: 'Le conditionnement intelligent du planning selon vos objectifs (12, 16 ou Major) est réservé à KONAN PLUS.',
+        requiredTier: 'plus',
+      });
+      return;
+    }
     setState(prev => {
       const nextUserAccount: UserAccount = prev.userAccount ? {
         ...prev.userAccount,
@@ -1218,6 +1208,7 @@ export function App() {
     studySessions: StudySession[];
   }) => {
     setState(prev => {
+      const nextPdfCount = (prev.pdfImportsCount || prev.userAccount?.pdfImportsCount || 0) + 1;
       const updated: AppState = {
         ...prev,
         academicLevel: payload.preferences.academicLevel,
@@ -1226,8 +1217,17 @@ export function App() {
         preferences: payload.preferences,
         studySessions: payload.studySessions,
         logs: [],
+        pdfImportsCount: nextPdfCount,
+        userAccount: prev.userAccount ? {
+          ...prev.userAccount,
+          pdfImportsCount: nextPdfCount,
+        } : undefined,
         completedOnboarding: true,
       };
+
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, updated);
+      }
       return updated;
     });
 
@@ -1283,33 +1283,36 @@ export function App() {
     phoneNumber?: string; 
     countryCode?: string 
   }) => {
+    // Sécurité backend : assainit formellement le payload et empêche la modification frauduleuse de tier/isPro
+    const safeData = sanitizeUserProfileUpdate(updated as any);
+
     setState(prev => {
       const nextUserAccount: UserAccount = prev.userAccount ? {
         ...prev.userAccount,
-        name: updated.name,
-        academicLevel: updated.academicLevel,
-        phoneNumber: updated.phoneNumber,
-        countryCode: updated.countryCode,
+        name: safeData.name,
+        academicLevel: safeData.academicLevel,
+        phoneNumber: safeData.phoneNumber,
+        countryCode: safeData.countryCode,
         lastSyncedAt: new Date().toISOString(),
       } : {
         isLoggedIn: false,
-        name: updated.name,
+        name: safeData.name,
         email: '',
         avatar: '',
         googleId: '',
-        academicLevel: updated.academicLevel,
+        academicLevel: safeData.academicLevel,
         lastSyncedAt: new Date().toISOString(),
       };
 
       const next: AppState = {
         ...prev,
-        studentName: updated.name,
-        academicLevel: updated.academicLevel,
+        studentName: safeData.name,
+        academicLevel: safeData.academicLevel,
         userAccount: nextUserAccount,
         preferences: {
           ...prev.preferences,
-          studentName: updated.name,
-          academicLevel: updated.academicLevel,
+          studentName: safeData.name,
+          academicLevel: safeData.academicLevel,
         }
       };
 
@@ -1668,6 +1671,9 @@ export function App() {
             <PdfUploadView
               studentName={effectiveStudentName}
               planTier={effectivePlanTier}
+              pdfImportsCount={state.pdfImportsCount || state.userAccount?.pdfImportsCount || 0}
+              userEmail={state.userAccount?.email}
+              userId={state.userAccount?.googleId}
               onApplyExtractedSchedule={handleApplyExtractedSchedule}
               onCancel={() => setActiveView('dashboard')}
               onViewPricing={handleViewPricing}
@@ -1930,8 +1936,30 @@ export function App() {
         onUpgradeToPro={() => handleSelectPlan('pro')}
         invitedEmails={state.userAccount?.invitedEmails || []}
         academicGoal={state.userAccount?.academicGoal || 'target_16'}
-        onOpenGroupModal={() => setIsPlusGroupModalOpen(true)}
-        onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
+        onOpenGroupModal={() => {
+          if (effectivePlanTier !== 'plus') {
+            setWaitlistModalInfo({
+              isOpen: true,
+              featureTitle: 'Groupe & Partage (4 comptes inclus)',
+              featureDescription: 'Inviter jusqu\'à 4 camarades avec leurs propres comptes fait partie de l\'expérience KONAN PLUS.',
+              requiredTier: 'plus',
+            });
+            return;
+          }
+          setIsPlusGroupModalOpen(true);
+        }}
+        onOpenGoalModal={() => {
+          if (effectivePlanTier !== 'plus') {
+            setWaitlistModalInfo({
+              isOpen: true,
+              featureTitle: 'Objectifs Académiques (Major de promotion)',
+              featureDescription: 'Le conditionnement intelligent du planning selon vos objectifs (12, 16 ou Major) est réservé à KONAN PLUS.',
+              requiredTier: 'plus',
+            });
+            return;
+          }
+          setIsAcademicGoalModalOpen(true);
+        }}
         onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
       />
 
@@ -1941,6 +1969,19 @@ export function App() {
         onClose={() => setIsProModalOpen(false)}
         onViewPricing={handleViewPricing}
         onUpgradeToPro={() => handleSelectPlan('pro')}
+        userEmail={state.userAccount?.email}
+        userId={state.userAccount?.googleId}
+      />
+
+      {/* Modale Waitlist d'accès verrouillé (Wave & Orange Money) */}
+      <WaitlistModal
+        isOpen={waitlistModalInfo.isOpen}
+        onClose={() => setWaitlistModalInfo(prev => ({ ...prev, isOpen: false }))}
+        featureTitle={waitlistModalInfo.featureTitle}
+        featureDescription={waitlistModalInfo.featureDescription}
+        requiredTier={waitlistModalInfo.requiredTier}
+        userEmail={state.userAccount?.email}
+        userId={state.userAccount?.googleId}
       />
 
       {/* Duolingo Super-style Celebration Modal for KONAN PRO */}

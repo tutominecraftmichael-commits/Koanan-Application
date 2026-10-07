@@ -100,12 +100,13 @@ export const PACING_STRATEGIES: PacingStrategyInfo[] = [
   },
 ];
 
-export const FREE_PACING_IDS: StudyPacing[] = ['pomodoro', 'active_recall_spaced', 'two_minutes_rule'];
-export const PRO_PACING_IDS: StudyPacing[] = ['feynman', 'time_blocking'];
+import { FREE_METHODS, PRO_METHODS, isMethodAllowedForTier } from './subscriptionPlans';
+
+export const FREE_PACING_IDS = FREE_METHODS;
+export const PRO_PACING_IDS = PRO_METHODS;
 
 export function isPacingAllowedForPlan(id: StudyPacing | string, planTier: 'free' | 'pro' | 'plus' = 'free'): boolean {
-  if (planTier === 'pro' || planTier === 'plus') return true;
-  return FREE_PACING_IDS.includes(id as StudyPacing);
+  return isMethodAllowedForTier(id, planTier);
 }
 
 export function getPacingStrategy(id: StudyPacing | string): PacingStrategyInfo {

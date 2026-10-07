@@ -330,10 +330,10 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <Button
               variant="secondary"
               size="md"
-              disabled={true}
-              className="w-full text-xs sm:text-sm font-semibold py-3 bg-slate-900/60 border border-slate-800 text-slate-400 cursor-not-allowed opacity-80"
+              onClick={() => onSelectPlan?.('plus')}
+              className="w-full text-xs sm:text-sm font-bold py-3 bg-indigo-950/60 hover:bg-indigo-900/60 border border-indigo-500/40 text-indigo-300 hover:text-white transition-all cursor-pointer shadow-md shadow-indigo-950/40"
             >
-              Konan Plus pas disponible pour le moment
+              Rejoindre la liste d'attente (Wave & Orange Money)
             </Button>
           </div>
         </div>

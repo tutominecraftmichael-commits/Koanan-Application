@@ -8,6 +8,8 @@ import type {
 } from '../types';
 import { parseTimeToMinutes, minutesToTimeString, generateId, getDaysRemaining, getDaysRemainingFrom } from '../lib/utils';
 import { getPacingStrategy } from '../lib/pacingStrategies';
+import { validateBackendPermissions } from '../lib/subscriptionGuard';
+import type { PlanTier } from '../types';
 
 interface TimeRange {
   start: number; // minutes from 00:00
@@ -24,9 +26,19 @@ interface AvailableSlot {
 export function generateOptimizedStudyPlan(
   subjects: Subject[],
   classes: ClassSlot[],
-  preferences: StudyPreferences
+  preferences: StudyPreferences,
+  userOrTier?: PlanTier | { tier?: PlanTier; planTier?: PlanTier; isPro?: boolean }
 ): StudySession[] {
   if (subjects.length === 0) return [];
+
+  // Contrôle de sécurité strict Backend / Serveur : vérifie les permissions de palier
+  const userContext = typeof userOrTier === 'string' 
+    ? { planTier: userOrTier } 
+    : userOrTier;
+  
+  if (userContext) {
+    validateBackendPermissions(userContext, 'GENERATE_SCHEDULE', { preferences });
+  }
 
   // Pacing strategy definition (Pomodoro, Active Recall & Spaced, Feynman, Time Blocking, 2-Minutes Rule)
   const pacingStrategy = getPacingStrategy(preferences.pacing);

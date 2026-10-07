@@ -495,10 +495,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     type="button"
                     variant="glow"
                     size="sm"
-                    disabled={true}
-                    className="text-xs font-semibold cursor-not-allowed opacity-60 bg-slate-900 border border-slate-800 text-slate-400 justify-center"
+                    onClick={() => {
+                      onClose();
+                      onSelectPlan?.('plus');
+                    }}
+                    className="text-xs font-semibold bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-300 justify-center cursor-pointer"
                   >
-                    Konan Plus pas disponible pour le moment
+                    👑 Konan Plus (Bientôt dispo)
                   </Button>
                 </div>
               </div>
