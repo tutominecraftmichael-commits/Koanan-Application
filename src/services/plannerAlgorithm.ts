@@ -6,7 +6,7 @@ import type {
   SessionType, 
   DayOfWeek 
 } from '../types';
-import { parseTimeToMinutes, minutesToTimeString, generateId, getDaysRemaining, getDaysRemainingFrom } from '../lib/utils';
+import { parseTimeToMinutes, minutesToTimeString, generateId, getDaysRemaining, getDaysRemainingFrom, isNonAcademicSubject } from '../lib/utils';
 import { getPacingStrategy } from '../lib/pacingStrategies';
 import { validateBackendPermissions } from '../lib/subscriptionGuard';
 import type { PlanTier } from '../types';
@@ -29,7 +29,9 @@ export function generateOptimizedStudyPlan(
   preferences: StudyPreferences,
   userOrTier?: PlanTier | { tier?: PlanTier; planTier?: PlanTier; isPro?: boolean }
 ): StudySession[] {
-  if (subjects.length === 0) return [];
+  // RÈGLE STRICTE : Exclure systématiquement toute matière non révisable (EPS, Sport, devoirs, permanence)
+  const revisableSubjects = subjects.filter(sub => !isNonAcademicSubject(sub.name));
+  if (revisableSubjects.length === 0) return [];
 
   // Contrôle de sécurité strict Backend / Serveur : vérifie les permissions de palier
   const userContext = typeof userOrTier === 'string' 
@@ -72,7 +74,7 @@ export function generateOptimizedStudyPlan(
   const breakBlock = effectivePreferences.breakBlockDuration || pacingStrategy.breakBlockDuration;
 
   // 1. Calcul des scores académiques pondérés pour chaque matière
-  const subjectScores = subjects.map(sub => {
+  const subjectScores = revisableSubjects.map(sub => {
     let examUrgencyFactor = 1.0;
     // L'adaptation et la sur-pondération aux examens/devoirs est EXCLUSIVE aux modèles PRO & PLUS
     if (isExamFeatureAllowed) {
@@ -121,7 +123,7 @@ export function generateOptimizedStudyPlan(
 
   // Répartition proportionnelle des sessions cibles par matière
   subjectScores.forEach(item => {
-    const ratio = totalScore > 0 ? item.score / totalScore : 1 / subjects.length;
+    const ratio = totalScore > 0 ? item.score / totalScore : 1 / revisableSubjects.length;
     const computed = Math.round(ratio * totalSessionsTarget);
     item.targetSessions = Math.max(1, computed);
   });

@@ -4,7 +4,7 @@ import type {
   StudyPreferences, 
   DayOfWeek 
 } from '../types';
-import { parseTimeToMinutes, minutesToTimeString } from '../lib/utils';
+import { parseTimeToMinutes, minutesToTimeString, isNonAcademicSubject } from '../lib/utils';
 
 export interface RescheduleResult {
   updatedSessions: StudySession[];
@@ -38,17 +38,28 @@ function roundUpTo15(minutes: number): number {
 }
 
 /**
- * Sanctuarisation : Nettoie les sessions réaménagées d'anciens jours.
- * Si une session a été déplacée pour rattrapage hier ou la semaine passée,
- * elle est automatiquement restaurée à ses horaires récurrents initiaux.
+ * Sanctuarisation : Nettoie les sessions réaménagées d'anciens jours
+ * et purge systématiquement toute session parasite non académique (EPS, sport, devoirs, etc.).
  */
 export function cleanupStaleRescheduledSessions(
   sessions: StudySession[],
-  currentDateStr: string = getTodayDateString()
+  currentDateStr: string = getTodayDateString(),
+  activeSubjects?: Array<{ id: string; name: string }>
 ): { sessions: StudySession[]; restoredCount: number } {
   let restoredCount = 0;
+  const activeSubjectIds = activeSubjects ? new Set(activeSubjects.map(s => s.id)) : null;
 
-  const cleaned = sessions.map(session => {
+  const validSessions = sessions.filter(session => {
+    // Purger les sessions pour des matières non révisables (EPS, Sport, etc.)
+    if (isNonAcademicSubject(session.title)) return false;
+    // Purger les sessions orphelines dont la matière n'existe pas dans l'emploi du temps actif
+    if (activeSubjectIds && session.subjectId && !activeSubjectIds.has(session.subjectId)) {
+      return false;
+    }
+    return true;
+  });
+
+  const cleaned = validSessions.map(session => {
     if (session.isRescheduledToday && session.rescheduledDate && session.rescheduledDate !== currentDateStr) {
       restoredCount++;
       return {
@@ -252,10 +263,11 @@ export function evaluateDailyCatchup(
   const todayDateStr = getTodayDateString(currentDate);
   const currentMinute = currentDate.getHours() * 60 + currentDate.getMinutes();
 
-  // Étape 1 : Nettoyer les réaménagements des jours passés
+  // Étape 1 : Nettoyer les réaménagements des jours passés et purger toute session orpheline / non académique
   const { sessions: cleanedSessions, restoredCount } = cleanupStaleRescheduledSessions(
     sessions,
-    todayDateStr
+    todayDateStr,
+    subjects
   );
 
   let rescheduledCount = 0;
@@ -273,7 +285,19 @@ export function evaluateDailyCatchup(
     if (session.completed) continue;
 
     // RÈGLE STRICTE KONAN AI :
-    // Une séance ne peut être replacée qu'une seule fois dans la même journée.
+    // 1. Ne JAMAIS rattraper une matière non académique (ex: EPS, Sport, devoirs, permanence)
+    if (isNonAcademicSubject(session.title)) continue;
+
+    // 2. Ne JAMAIS rattraper une matière qui n'existe pas dans l'emploi du temps actif de l'étudiant !
+    const matchingSubject = subjects.find(sub => sub.id === session.subjectId);
+    if (session.subjectId && !matchingSubject) {
+      continue;
+    }
+    if (matchingSubject && isNonAcademicSubject(matchingSubject.name)) {
+      continue;
+    }
+
+    // 3. Une séance ne peut être replacée qu'une seule fois dans la même journée.
     // Si elle a déjà bénéficié d'un créneau de rattrapage aujourd'hui et n'a pas été faite :
     // on ne la repousse pas indéfiniment en soirée (pas de créneau tardif à 23h).
     // Elle est simplement oubliée pour aujourd'hui, avec STRICTEMENT ZÉRO report au lendemain.

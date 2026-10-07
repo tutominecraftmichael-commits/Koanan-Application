@@ -61,6 +61,7 @@ import {
   type PacingRecommendation
 } from '../../lib/pacingStrategies';
 import { WaitlistModal } from '../../components/common/WaitlistModal';
+import { isNonAcademicSubject } from '../../lib/utils';
 
 export interface PdfUploadViewProps {
   studentName: string;
@@ -325,28 +326,18 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       const harmonizedSlots = harmonizeAndDeduplicateSlots(parsed.slots);
       setExtractedSlots(harmonizedSlots);
 
-      // Détecter si un intitulé correspond à un créneau administratif ou de rattrapage plutôt qu'une matière académique
-      const isGenericOrCatchupSlot = (name: string) => {
-        const lower = name.toLowerCase().trim();
-        return (
-          lower.includes('rattrapage') ||
-          lower.includes('devoir surveill') ||
-          lower.includes('permanence') ||
-          lower.includes('pause') ||
-          lower.includes('devoirs et de rattrapage') ||
-          lower.includes('devoirs et cours')
-        );
-      };
+      // RÈGLE STRICTE : Exclure systématiquement toute matière non académique (EPS, sport, devoirs, permanence)
+      const revisableParsedSubjects = parsed.subjects.filter(sub => !isNonAcademicSubject(sub.name));
 
-      // Initialiser la liste éditable des matières
-      const subjectsMap: EditableSubject[] = parsed.subjects.map(sub => ({
+      // Initialiser la liste éditable des matières uniquement avec les vraies matières académiques
+      const subjectsMap: EditableSubject[] = revisableParsedSubjects.map(sub => ({
         id: sub.id,
         name: sub.name,
         color: sub.color || '#3b82f6',
         coefficient: sub.coefficient || 2,
         difficulty: sub.difficulty || 3,
         targetGrade: sub.targetGrade || 14,
-        enabled: !isGenericOrCatchupSlot(sub.name),
+        enabled: true,
       }));
 
       setEditableSubjects(subjectsMap);

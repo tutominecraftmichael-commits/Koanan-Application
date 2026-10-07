@@ -5,7 +5,7 @@ import type {
   ExtractedClassCandidate, 
   ExtractedPdfSchedule 
 } from '../types';
-import { generateId, parseTimeToMinutes, minutesToTimeString } from '../lib/utils';
+import { generateId, parseTimeToMinutes, minutesToTimeString, isNonAcademicSubject } from '../lib/utils';
 import * as pdfjsLib from 'pdfjs-dist';
 import { extractDetailedTextFromImage } from './ocrService';
 
@@ -1911,7 +1911,9 @@ export function parseTimetableText(
   // Re-run harmonization AFTER canonicalizing subjects to merge contiguous blocks (e.g. 2h blocks)
   detectedSlots = harmonizeAndDeduplicateSlots(detectedSlots);
 
-  const uniqueSubjectNames = Array.from(new Set(detectedSlots.map(s => s.rawSubject)));
+  // RÈGLE STRICTE : Exclure toute activité non révisable (EPS, sport, devoirs, permanence) des matières académiques
+  const uniqueSubjectNames = Array.from(new Set(detectedSlots.map(s => s.rawSubject)))
+    .filter(name => !isNonAcademicSubject(name));
 
   // 5. Intelligent Subject Weighting & Disciplinary Topics Calibration
   const subjects: ExtractedSubjectCandidate[] = uniqueSubjectNames.map((name, index) => {

@@ -1,6 +1,6 @@
 import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier, AcademicGoal, PlusInvitationNotification } from '../types';
 import { ACADEMIC_PRESETS, DEFAULT_PREFERENCES } from '../lib/presets';
-import { generateId } from '../lib/utils';
+import { generateId, isNonAcademicSubject } from '../lib/utils';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
 import { generateKonanId } from '../lib/konanId';
 
@@ -202,15 +202,26 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           userPreferences.combinedPacings = ['pomodoro'];
         }
 
+        const sanitizedSubjects: Subject[] = (Array.isArray(parsed.subjects) ? parsed.subjects : [])
+          .filter((s: Subject) => !isNonAcademicSubject(s.name));
+        const validSubjectIds = new Set(sanitizedSubjects.map((s: Subject) => s.id));
+
+        const sanitizedStudySessions: StudySession[] = (Array.isArray(parsed.studySessions) ? parsed.studySessions : [])
+          .filter((sess: StudySession) => {
+            if (isNonAcademicSubject(sess.title)) return false;
+            if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
+            return true;
+          });
+
         return {
           ...baseEmptyState,
           ...parsed,
           studentName: parsed.studentName || user.name,
           academicLevel: parsed.academicLevel || user.academicLevel || 'Licence Universitaire',
           konanId: resolvedKonanId,
-          subjects: Array.isArray(parsed.subjects) ? parsed.subjects : [],
+          subjects: sanitizedSubjects,
           classSlots: Array.isArray(parsed.classSlots) ? parsed.classSlots : [],
-          studySessions: Array.isArray(parsed.studySessions) ? parsed.studySessions : [],
+          studySessions: sanitizedStudySessions,
           logs: hasCompleted ? (Array.isArray(parsed.logs) ? parsed.logs : []) : [],
           preferences: userPreferences,
           streak: parsed.streak ? { ...baseEmptyState.streak, ...parsed.streak } : baseEmptyState.streak,
@@ -308,15 +319,23 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
 
     // Case 1: Cloud already has subjects saved from another device (e.g. Wave8, other phone or PC)
     if (hasCloudSubjects) {
-      const mergedSubjects: Subject[] = cloudData.subjects;
+      const mergedSubjects: Subject[] = (Array.isArray(cloudData.subjects) ? cloudData.subjects : [])
+        .filter((s: Subject) => !isNonAcademicSubject(s.name));
+      const validSubjectIds = new Set(mergedSubjects.map((s: Subject) => s.id));
+
       const mergedClassSlots: ClassSlot[] = Array.isArray(cloudData.classSlots) ? cloudData.classSlots : currentState.classSlots;
       const mergedPreferences: StudyPreferences = cloudData.preferences
         ? { ...currentState.preferences, ...cloudData.preferences }
         : currentState.preferences;
 
-      let mergedStudySessions: StudySession[] = Array.isArray(cloudData.studySessions) && cloudData.studySessions.length > 0
+      let mergedStudySessions: StudySession[] = (Array.isArray(cloudData.studySessions) && cloudData.studySessions.length > 0
         ? cloudData.studySessions
-        : currentState.studySessions;
+        : currentState.studySessions)
+        .filter((sess: StudySession) => {
+          if (isNonAcademicSubject(sess.title)) return false;
+          if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
+          return true;
+        });
 
       // If study sessions are empty on cloud, generate them from the subjects and slots!
       const userTier = cloudData.planTier || currentState.planTier || 'free';
@@ -571,7 +590,7 @@ export function importStateFromJson(jsonString: string): AppState | null {
 
     // Clean and validate subjects
     const validSubjects = parsed.subjects
-      .filter((s: any) => s && typeof s === 'object' && typeof s.name === 'string' && s.name.trim().length > 0)
+      .filter((s: any) => s && typeof s === 'object' && typeof s.name === 'string' && s.name.trim().length > 0 && !isNonAcademicSubject(s.name))
       .map((s: any) => ({
         id: typeof s.id === 'string' && s.id.length > 0 ? s.id.slice(0, 50) : generateId(),
         name: String(s.name).trim().slice(0, 100),
@@ -583,6 +602,8 @@ export function importStateFromJson(jsonString: string): AppState | null {
         description: typeof s.description === 'string' ? s.description.slice(0, 300) : undefined,
       }));
 
+    const validSubjectIdSet = new Set(validSubjects.map((s: any) => s.id));
+
     // Clean and validate class slots
     const validClassSlots = Array.isArray(parsed.classSlots)
       ? parsed.classSlots.filter((cs: any) => cs && typeof cs === 'object' && typeof cs.subjectId === 'string')
@@ -590,7 +611,11 @@ export function importStateFromJson(jsonString: string): AppState | null {
 
     // Clean and validate study sessions
     const validStudySessions = Array.isArray(parsed.studySessions)
-      ? parsed.studySessions.filter((ss: any) => ss && typeof ss === 'object' && typeof ss.id === 'string')
+      ? parsed.studySessions.filter((ss: any) => 
+          ss && typeof ss === 'object' && typeof ss.id === 'string' &&
+          !isNonAcademicSubject(ss.title) &&
+          (!ss.subjectId || validSubjectIdSet.has(ss.subjectId))
+        )
       : [];
 
     // Clean logs

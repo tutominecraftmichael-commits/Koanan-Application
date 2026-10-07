@@ -50,7 +50,7 @@ import type {
   PlusInvitationNotification,
   PlanTier
 } from './types';
-import { generateId } from './lib/utils';
+import { generateId, isNonAcademicSubject } from './lib/utils';
 import { Sparkles, X } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
 
@@ -515,16 +515,39 @@ export function App() {
         if (!prev.userAccount?.isLoggedIn && !prev.isDemoMode) return prev;
         if (!prev.studySessions || prev.studySessions.length === 0) return prev;
 
+        // RÈGLE STRICTE : Purger immédiatement les matières et sessions non académiques parasites (EPS, Sport, devoirs, etc.)
+        const hasInvalidSubject = prev.subjects.some(s => isNonAcademicSubject(s.name));
+        const validSubjects = hasInvalidSubject 
+          ? prev.subjects.filter(s => !isNonAcademicSubject(s.name))
+          : prev.subjects;
+        const validSubjectIds = new Set(validSubjects.map(s => s.id));
+
+        const hasInvalidSession = prev.studySessions.some(
+          s => isNonAcademicSubject(s.title) || (s.subjectId && !validSubjectIds.has(s.subjectId))
+        );
+        const baseSessions = hasInvalidSession
+          ? prev.studySessions.filter(s => !isNonAcademicSubject(s.title) && (!s.subjectId || validSubjectIds.has(s.subjectId)))
+          : prev.studySessions;
+
         // If weekly cycle was completed today, student has finished all tasks: wait until tomorrow
         const todayStr = new Date().toISOString().slice(0, 10);
-        if (prev.cycleCompletedDate === todayStr) return prev;
+        if (prev.cycleCompletedDate === todayStr) {
+          if (hasInvalidSubject || hasInvalidSession) {
+            return {
+              ...prev,
+              subjects: validSubjects,
+              studySessions: baseSessions,
+            };
+          }
+          return prev;
+        }
 
         const { updatedSessions, rescheduledCount, restoredCount, rescheduledSessions } = evaluateDailyCatchup(
-          prev.studySessions,
+          baseSessions,
           prev.classSlots,
           prev.preferences,
           new Date(),
-          prev.subjects
+          validSubjects
         );
 
         if (rescheduledCount > 0) {
@@ -534,14 +557,16 @@ export function App() {
           }
           return {
             ...prev,
+            subjects: validSubjects,
             studySessions: updatedSessions,
           };
         }
 
-        if (restoredCount > 0) {
+        if (restoredCount > 0 || hasInvalidSubject || hasInvalidSession) {
           lastRescheduledSignature.current = '';
           return {
             ...prev,
+            subjects: validSubjects,
             studySessions: updatedSessions,
           };
         }
