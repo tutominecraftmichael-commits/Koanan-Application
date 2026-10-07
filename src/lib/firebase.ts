@@ -569,6 +569,10 @@ export function listenToUserCloudState(
   try {
     const userRef = doc(db, 'users', uid);
     return onSnapshot(userRef, (snap) => {
+      // 🛑 CRITICAL: Ignore local pending writes to break the infinite echo loop!
+      if (snap.metadata.hasPendingWrites) {
+        return;
+      }
       if (snap.exists()) {
         onUpdate(snap.data());
       }

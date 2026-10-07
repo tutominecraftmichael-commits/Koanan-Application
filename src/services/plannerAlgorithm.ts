@@ -36,14 +36,24 @@ export function generateOptimizedStudyPlan(
     ? { planTier: userOrTier } 
     : userOrTier;
   
+  let effectivePreferences = preferences;
   if (userContext) {
-    validateBackendPermissions(userContext, 'GENERATE_SCHEDULE', { preferences });
+    try {
+      validateBackendPermissions(userContext, 'GENERATE_SCHEDULE', { preferences });
+    } catch {
+      // Repli sécurisé vers une méthode autorisée sans jamais faire crasher l'UI React
+      effectivePreferences = {
+        ...preferences,
+        pacing: 'pomodoro',
+        combinedPacings: ['pomodoro']
+      };
+    }
   }
 
   // Pacing strategy definition (Pomodoro, Active Recall & Spaced, Feynman, Time Blocking, 2-Minutes Rule)
-  const pacingStrategy = getPacingStrategy(preferences.pacing);
-  const sessionBlock = preferences.focusBlockDuration || pacingStrategy.focusBlockDuration;
-  const breakBlock = preferences.breakBlockDuration || pacingStrategy.breakBlockDuration;
+  const pacingStrategy = getPacingStrategy(effectivePreferences.pacing);
+  const sessionBlock = effectivePreferences.focusBlockDuration || pacingStrategy.focusBlockDuration;
+  const breakBlock = effectivePreferences.breakBlockDuration || pacingStrategy.breakBlockDuration;
 
   // 1. Calcul des scores académiques pondérés pour chaque matière
   const subjectScores = subjects.map(sub => {

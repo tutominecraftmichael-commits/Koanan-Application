@@ -482,9 +482,12 @@ export function App() {
   const hasGreetedAuthRef = useRef<string>('');
   const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Persist state whenever it changes
+  // Persist state whenever it changes (debounced by 800ms to eliminate thrashing and performance lag)
   useEffect(() => {
-    saveAppState(state);
+    const timer = setTimeout(() => {
+      saveAppState(state);
+    }, 800);
+    return () => clearTimeout(timer);
   }, [state]);
 
   // Dynamic Real-Time Adaptability: Detect missed sessions of today and reschedule for evening catch-up
@@ -623,6 +626,10 @@ export function App() {
             if (cloudData) {
               setState(prev => {
                 if (prev.isDemoMode) return prev;
+                // Si les données cloud ne sont pas plus récentes que l'état local actuel, éviter le re-render
+                if (cloudData.lastSyncedAt && prev.userAccount?.lastSyncedAt && cloudData.lastSyncedAt <= prev.userAccount.lastSyncedAt) {
+                  return prev;
+                }
                 return {
                   ...prev,
                   studentName: cloudData.studentName || prev.studentName,
