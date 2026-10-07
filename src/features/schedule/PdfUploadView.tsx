@@ -325,6 +325,19 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       const harmonizedSlots = harmonizeAndDeduplicateSlots(parsed.slots);
       setExtractedSlots(harmonizedSlots);
 
+      // Détecter si un intitulé correspond à un créneau administratif ou de rattrapage plutôt qu'une matière académique
+      const isGenericOrCatchupSlot = (name: string) => {
+        const lower = name.toLowerCase().trim();
+        return (
+          lower.includes('rattrapage') ||
+          lower.includes('devoir surveill') ||
+          lower.includes('permanence') ||
+          lower.includes('pause') ||
+          lower.includes('devoirs et de rattrapage') ||
+          lower.includes('devoirs et cours')
+        );
+      };
+
       // Initialiser la liste éditable des matières
       const subjectsMap: EditableSubject[] = parsed.subjects.map(sub => ({
         id: sub.id,
@@ -333,7 +346,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
         coefficient: sub.coefficient || 2,
         difficulty: sub.difficulty || 3,
         targetGrade: sub.targetGrade || 14,
-        enabled: true,
+        enabled: !isGenericOrCatchupSlot(sub.name),
       }));
 
       setEditableSubjects(subjectsMap);
@@ -907,16 +920,16 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               {editableSubjects.map((subject) => (
                 <div
                   key={subject.id}
-                  className={`p-3.5 rounded-xl border transition-all ${
+                  className={`p-3 sm:p-3.5 rounded-xl border transition-all ${
                     subject.enabled
                       ? 'bg-slate-900/90 border-slate-800'
                       : 'bg-slate-950/50 border-slate-900 opacity-60'
                   }`}
                 >
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3">
                     
                     {/* Nom de la matière modifiable */}
-                    <div className="flex items-center gap-3 w-full sm:w-auto flex-1 min-w-0">
+                    <div className="flex items-center gap-2.5 sm:gap-3 w-full sm:w-auto flex-1 min-w-0">
                       <input
                         type="checkbox"
                         checked={subject.enabled}
@@ -932,50 +945,50 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                         type="text"
                         value={subject.name}
                         onChange={(e) => handleUpdateName(subject.id, e.target.value)}
-                        className="bg-transparent border-b border-transparent hover:border-slate-700 focus:border-indigo-500 focus:bg-slate-950/60 px-1 py-0.5 rounded text-xs sm:text-sm font-semibold text-white focus:outline-none flex-1 truncate transition-colors"
+                        className="bg-transparent border-b border-transparent hover:border-slate-700 focus:border-indigo-500 focus:bg-slate-950/60 px-1 py-0.5 rounded text-xs sm:text-sm font-semibold text-white focus:outline-none flex-1 min-w-0 truncate transition-colors"
                         placeholder="Nom de la matière"
                       />
                     </div>
 
-                    {/* Contrôle du Coefficient [-] [ Coeff : X ] [+] */}
-                    <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+                    {/* Contrôle Note Cible + Coefficient (Grille 2 colonnes sur mobile, flex horizontal sur desktop) */}
+                    <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:items-center sm:gap-3 sm:w-auto pt-2 sm:pt-0 border-t border-slate-800/60 sm:border-t-0">
                       
                       {/* Note cible */}
-                      <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                        <span className="text-[11px]">Cible :</span>
+                      <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-950/70 sm:bg-slate-950 px-2 py-1 rounded-xl border border-slate-800/80 min-w-0">
+                        <span className="text-[10px] sm:text-[11px] font-medium text-slate-400 whitespace-nowrap shrink-0">Cible :</span>
                         <select
                           value={subject.targetGrade}
                           onChange={(e) => handleUpdateTargetGrade(subject.id, Number(e.target.value))}
-                          className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-indigo-500"
+                          className="bg-transparent border-0 rounded text-xs text-white focus:outline-none cursor-pointer w-full min-w-0 truncate pr-1"
                         >
-                          <option value={10}>10/20 (Validation)</option>
-                          <option value={12}>12/20 (Assez Bien)</option>
-                          <option value={14}>14/20 (Bien)</option>
-                          <option value={16}>16/20 (Très Bien)</option>
-                          <option value={18}>18/20 (Major)</option>
+                          <option value={10} className="bg-slate-900 text-white">10/20 (Validation)</option>
+                          <option value={12} className="bg-slate-900 text-white">12/20 (Assez Bien)</option>
+                          <option value={14} className="bg-slate-900 text-white">14/20 (Bien)</option>
+                          <option value={16} className="bg-slate-900 text-white">16/20 (Très Bien)</option>
+                          <option value={18} className="bg-slate-900 text-white">18/20 (Major)</option>
                         </select>
                       </div>
 
-                      {/* Contrôleur de Coefficient */}
-                      <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl p-1">
+                      {/* Contrôleur de Coefficient [-] [ COEFF : X ] [+] */}
+                      <div className="flex items-center justify-between sm:justify-start gap-1 bg-slate-950 border border-slate-800 rounded-xl p-1 shrink-0">
                         <button
                           type="button"
                           onClick={() => handleUpdateCoeff(subject.id, -1)}
                           disabled={subject.coefficient <= 1}
-                          className="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer"
+                          className="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
                           title="Diminuer coefficient"
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <div className="px-2.5 text-center min-w-[65px]">
-                          <span className="text-[10px] text-slate-400 block font-mono">COEFF</span>
-                          <span className="text-xs font-black text-indigo-400">{subject.coefficient}</span>
+                        <div className="px-1.5 sm:px-2.5 text-center flex-1 sm:flex-initial sm:min-w-[55px]">
+                          <span className="text-[9px] sm:text-[10px] text-slate-400 block font-mono leading-none">COEFF</span>
+                          <span className="text-xs font-black text-indigo-400 leading-tight">{subject.coefficient}</span>
                         </div>
                         <button
                           type="button"
                           onClick={() => handleUpdateCoeff(subject.id, 1)}
                           disabled={subject.coefficient >= 10}
-                          className="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer"
+                          className="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
                           title="Augmenter coefficient"
                         >
                           <Plus className="w-3.5 h-3.5" />

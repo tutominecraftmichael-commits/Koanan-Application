@@ -322,14 +322,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             <div className="space-y-1.5 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-bold text-amber-300 uppercase tracking-wide text-[11px]">
-                  🔄 Réaménagement de rattrapage actif ({studySessions.filter(s => s.isRescheduledToday).length})
+                  🔄 Rattrapage intelligent (Jour même uniquement) ({studySessions.filter(s => s.isRescheduledToday).length})
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 border border-amber-500/40">
-                  Aujourd'hui uniquement
+                  Aucun report au lendemain
                 </span>
               </div>
               <p className="text-slate-300 text-xs leading-relaxed">
-                Vos séances non validées plus tôt ont été automatiquement décalées ce soir pour vous permettre de réviser sans accumuler de retard.
+                Vos séances non validées plus tôt ont été replacées ce soir (avant 21h30 max). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées sans impacter le programme de demain.
               </p>
             </div>
           </div>

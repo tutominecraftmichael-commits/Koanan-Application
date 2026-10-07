@@ -589,8 +589,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                               </span>
                             )}
                             {isRescheduled && (
-                              <Badge variant="amber" size="sm" className="text-[10px] px-2 py-0.5 font-bold animate-pulse" title={session.rescheduledReason}>
-                                🔄 Reportée ce soir ({sub?.name || 'Rattrapage'})
+                              <Badge variant="amber" size="sm" className="text-[10px] px-2 py-0.5 font-bold animate-pulse" title={session.rescheduledReason || "Rattrapage du jour même uniquement (aucun report au lendemain)"}>
+                                🔄 Rattrapage ce soir ({sub?.name || 'Session'})
                               </Badge>
                             )}
                             {session.pacingMethod && (

@@ -99,16 +99,23 @@ export function findNextFreeSlotToday(
   // Démarre 5 à 10 minutes après l'heure actuelle, arrondi aux 15 min supérieures
   const searchStartMin = roundUpTo15(Math.max(currentMinute + 5, 0));
 
-  // Heure maximale de fin d'étude le soir :
-  // Jusqu'à 23h30 - 23h45 pour permettre un rattrapage complet en soirée
-  let dayEndMin = 1410; // 23:30
+  // RÈGLE STRICTE KONAN AI :
+  // Le rattrapage est STRICTEMENT intra-journée (même jour uniquement).
+  // Une séance d'étude ne peut JAMAIS être reportée à 23h ou au milieu de la nuit (respect du sommeil et du repos).
+  // Heure maximale de fin d'étude pour un rattrapage :
+  // - Chronotype Matin : 21h00 (1260 min)
+  // - Chronotype Standard : 21h30 (1290 min)
+  // - Chronotype Nuit : 22h00 (1320 min) STRICTEMENT
+  // Si la séance ne peut pas être terminée avant cette heure limite, elle ne peut pas être replacée aujourd'hui :
+  // elle est simplement oubliée sans AUCUN report vers le jour suivant (ex: samedi -> dimanche strictement interdit).
+  let dayEndMin = 1290; // 21:30 par défaut
   if (preferences.chronotype === 'morning') {
-    dayEndMin = 1350; // 22:30
+    dayEndMin = 1260; // 21:00
   } else if (preferences.chronotype === 'night') {
-    dayEndMin = 1425; // 23:45
+    dayEndMin = 1320; // 22:00 maximum absolu
   }
 
-  // S'il ne reste même pas 30 minutes avant la fin de journée
+  // S'il ne reste même pas 30 minutes avant l'heure limite de fin de journée autorisée
   if (searchStartMin + 30 > dayEndMin) {
     return null;
   }
@@ -265,10 +272,17 @@ export function evaluateDailyCatchup(
     // Si la session est déjà terminée, rien à adapter
     if (session.completed) continue;
 
+    // RÈGLE STRICTE KONAN AI :
+    // Une séance ne peut être replacée qu'une seule fois dans la même journée.
+    // Si elle a déjà bénéficié d'un créneau de rattrapage aujourd'hui et n'a pas été faite :
+    // on ne la repousse pas indéfiniment en soirée (pas de créneau tardif à 23h).
+    // Elle est simplement oubliée pour aujourd'hui, avec STRICTEMENT ZÉRO report au lendemain.
+    if (session.isRescheduledToday) continue;
+
     const sessionEndMin = parseTimeToMinutes(session.endTime);
 
     // Détection : l'heure de fin de la session est dépassée !
-    // (ex: session 08h00 - 10h00, et il est actuellement 10h01 ou plus)
+    // (ex: session EPS 08h00 - 10h00, et il est actuellement 10h01 ou plus)
     if (currentMinute >= sessionEndMin) {
       // Trouver les autres sessions d'aujourd'hui pour éviter tout conflit (incluant celles déjà replacées)
       const otherSessions = updatedSessions.filter(
@@ -301,7 +315,7 @@ export function evaluateDailyCatchup(
             originalStartTime: originalStart,
             originalEndTime: originalEnd,
             rescheduledDate: todayDateStr,
-            rescheduledReason: `Séance de ${subjectName} non validée. Replacée à ${freeSlot.startTime} ce soir pour rattrapage sans stress.`,
+            rescheduledReason: `Séance de ${subjectName} non validée. Replacée à ${freeSlot.startTime} ce soir (rattrapage jour même uniquement, aucun report au lendemain).`,
           };
 
           updatedSessions[sessionIndex] = adaptedSession;
@@ -309,9 +323,10 @@ export function evaluateDailyCatchup(
           rescheduledCount++;
         }
       } else {
-        // Aucun créneau disponible aujourd'hui ou fin de journée atteinte :
-        // Règle demandée : "maintenant si malgré adaptation il ne revise pas oublie"
-        // On ne fait pas de décalage vers demain, aucune dette infinie.
+        // RÈGLE SUPRÊME : Aucun créneau libre avant 21h30 aujourd'hui ou fin de journée atteinte.
+        // Exemple : EPS samedi matin non fait, et impossible de replacer avant le soir.
+        // On n'accumule AUCUNE dette et AUCUN report vers dimanche ou le jour suivant :
+        // La séance est purement OUBLIÉE. L'étudiant n'a tout simplement pas fait EPS ce jour-ci.
       }
     }
   }
