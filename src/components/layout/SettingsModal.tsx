@@ -440,9 +440,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <Sparkles className="w-4 h-4 text-amber-400" />
                     <span className="text-xs font-bold text-white">Modèle KONAN PRO Actif</span>
                   </div>
-                  <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/30">
-                    1 200 F / mois
-                  </span>
                 </div>
                 <p className="text-[11px] text-slate-300 leading-relaxed">
                   Dates d'examens, synchronisation continue Google Agenda, et méthodes avancées Feynman & Time Blocking activées.
