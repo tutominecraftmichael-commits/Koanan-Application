@@ -25,7 +25,7 @@ import {
   mergeInvitationsFromCloud, 
   invitationBroadcastChannel 
 } from '../../services/storage';
-import { listenToAllCloudInvitations, deleteCloudPlusInvitation } from '../../lib/firebase';
+import { listenToOwnerCloudInvitations, deleteCloudPlusInvitation } from '../../lib/firebase';
 import { generateId } from '../../lib/utils';
 import type { PlusInvitationNotification } from '../../types';
 
@@ -90,7 +90,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
     const handleBc = () => refresh();
     invitationBroadcastChannel?.addEventListener('message', handleBc);
 
-    const unsubscribeCloud = listenToAllCloudInvitations((cloudInvites) => {
+    const unsubscribeCloud = listenToOwnerCloudInvitations(ownerKonanId, (cloudInvites) => {
       if (Array.isArray(cloudInvites) && cloudInvites.length > 0) {
         mergeInvitationsFromCloud(cloudInvites);
         setInvitations(getPlusInvitations());

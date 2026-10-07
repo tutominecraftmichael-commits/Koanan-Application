@@ -590,10 +590,14 @@ export function listenToUserCloudState(
 export async function syncCloudPlusInvitation(invitation: any): Promise<boolean> {
   if (!db || !invitation?.id) return false;
   try {
+    const currentUid = auth?.currentUser?.uid || '';
+    const currentEmail = auth?.currentUser?.email || '';
     const invRef = doc(db, 'plus_invitations', invitation.id);
     await setDoc(invRef, {
       ...invitation,
       id: invitation.id,
+      senderUid: invitation.senderUid || currentUid,
+      senderEmail: invitation.senderEmail || currentEmail,
       targetNormalized: normalizeInviteTarget(invitation.targetKonanIdOrEmail),
       targetAlpha: alphaInviteTarget(invitation.targetKonanIdOrEmail),
       targetUpper: (invitation.targetKonanIdOrEmail || '').trim().toUpperCase(),
@@ -763,13 +767,24 @@ export async function fetchCloudInvitationsForUser(identifiers: string[]): Promi
 }
 
 /**
- * Listens in real-time to ALL cloud invitations so the sender can see status changes (accepted/declined).
+ * Listens in real-time to owner's cloud invitations so the sender can see status changes (accepted/declined)
+ * without exposing or querying invitations of other students.
  */
-export function listenToAllCloudInvitations(onUpdate: (invitations: any[]) => void): () => void {
-  if (!db || isFirestoreQuotaBlocked()) return () => {};
+export function listenToOwnerCloudInvitations(
+  ownerKonanIdOrUid: string, 
+  onUpdate: (invitations: any[]) => void
+): () => void {
+  if (!db || isFirestoreQuotaBlocked() || !ownerKonanIdOrUid) return () => {};
   try {
     const colRef = collection(db, 'plus_invitations');
-    return onSnapshot(colRef, (snapshot) => {
+    const currentUid = auth?.currentUser?.uid || '';
+    
+    // Requête ciblée : uniquement les invitations appartenant à l'expéditeur (anti-fuite de données)
+    const q = currentUid 
+      ? query(colRef, where('senderUid', '==', currentUid))
+      : query(colRef, where('senderKonanId', '==', ownerKonanIdOrUid.trim().toUpperCase()));
+
+    return onSnapshot(q, (snapshot) => {
       const all: any[] = [];
       snapshot.forEach(docSnap => {
         const data = docSnap.data();
@@ -778,24 +793,34 @@ export function listenToAllCloudInvitations(onUpdate: (invitations: any[]) => vo
       onUpdate(all);
     }, (err) => {
       reportFirestoreError(err);
-      console.warn('Real-time all cloud invitations listener error:', err);
+      console.warn('Real-time owner cloud invitations listener error:', err);
     });
   } catch (err) {
     reportFirestoreError(err);
-    console.warn('Failed to attach all cloud invitations listener:', err);
+    console.warn('Failed to attach owner cloud invitations listener:', err);
     return () => {};
   }
 }
 
 /**
- * Direct fast fetch of ALL invitations from Cloud Firestore.
- * Delivers instantly from cache and server in parallel with a 3.5s timeout.
+ * Backward compatibility wrapper : délègue vers la requête protégée par utilisateur.
+ */
+export function listenToAllCloudInvitations(onUpdate: (invitations: any[]) => void): () => void {
+  const currentUid = auth?.currentUser?.uid || '';
+  if (!currentUid) return () => {};
+  return listenToOwnerCloudInvitations(currentUid, onUpdate);
+}
+
+/**
+ * Direct fast fetch of invitations from Cloud Firestore restricted to the current authenticated user.
  */
 export async function fetchAllCloudInvitations(): Promise<any[]> {
-  if (!db || isFirestoreQuotaBlocked()) return [];
+  const currentUid = auth?.currentUser?.uid;
+  if (!db || isFirestoreQuotaBlocked() || !currentUid) return [];
   try {
     const colRef = collection(db, 'plus_invitations');
-    const fetchPromise = getDocs(colRef);
+    const q = query(colRef, where('senderUid', '==', currentUid));
+    const fetchPromise = getDocs(q);
     const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 3500));
     const snap: any = await Promise.race([fetchPromise, timeoutPromise]);
     if (!snap) return [];

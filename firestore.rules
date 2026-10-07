@@ -2,7 +2,22 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper : vérifie si un champ sensible d'abonnement n'a pas été frauduleusement modifié par le client
+    // =========================================================================
+    // 1. FONCTIONS DE SÉCURITÉ & VÉRIFICATIONS D'AUTHENTIFICATION
+    // =========================================================================
+
+    // Vérifie que l'utilisateur est authentifié avec Firebase Auth
+    function isAuthenticated() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    // Vérifie que l'utilisateur est le propriétaire légitime du document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Helper anti-élévation de privilèges :
+    // Empêche formellement un utilisateur d'injecter ou modifier son statut d'abonnement (planTier, tier, isPro)
     function isSubscriptionUnchanged() {
       return (
         (!('planTier' in request.resource.data) || (resource != null && request.resource.data.planTier == resource.data.planTier) || (resource == null && request.resource.data.planTier == 'free')) &&
@@ -14,33 +29,96 @@ service cloud.firestore {
     // Helper : vérifie que les méthodes Pro ne sont pas sauvegardées si le compte est 'free'
     function arePacingMethodsAllowed() {
       return (
-        // Si l'utilisateur est Pro ou Plus, tout est permis
+        // Si l'utilisateur est légitimement Pro ou Plus en base, les méthodes sont autorisées
         (resource != null && (resource.data.planTier == 'pro' || resource.data.planTier == 'plus' || resource.data.tier == 'pro' || resource.data.tier == 'plus')) ||
-        // Si utilisateur gratuit, interdiction de stocker Feynman ou Time Blocking dans ses préférences
+        // Si utilisateur gratuit, interdiction formelle de stocker Feynman ou Time Blocking dans ses préférences
         (!('preferences' in request.resource.data) || 
          !('pacing' in request.resource.data.preferences) || 
          !(request.resource.data.preferences.pacing in ['feynman', 'time_blocking']))
       );
     }
 
-    // Chaque étudiant a un accès privé et exclusif à ses propres données (emploi du temps, matières, sessions)
+    // =========================================================================
+    // 2. DONNÉES UTILISATEURS (PROFIL, EMPLOI DU TEMPS, MATIÈRES, SESSIONS)
+    // =========================================================================
+
+    // Chaque étudiant dispose d'un espace strictement privé et confidentiel.
+    // AUCUNE lecture ni écriture publique n'est autorisée.
     match /users/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      allow write: if request.auth != null && request.auth.uid == userId
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId)
         && isSubscriptionUnchanged()
         && arePacingMethodsAllowed();
+
+      // Sous-documents éventuels protégés avec la même isolation stricte
+      match /{document=**} {
+        allow read, write: if isOwner(userId);
+      }
     }
 
-    // Collection Liste d'attente Mobile Money (Wave / Orange Money)
-    // Permet aux étudiants (connectés ou invités) d'enregistrer leur demande d'accès Pro/Plus
+    // =========================================================================
+    // 3. COLLECTION LISTE D'ATTENTE MOBILE MONEY (WAVE & ORANGE MONEY)
+    // =========================================================================
+
+    // STRICTEMENT CONFIDENTIEL : AUCUNE LECTURE PUBLIQUE NI CLIENT.
+    // Ni les emails, ni les numéros, ni les demandes ne peuvent être listés ou consultés depuis le frontend.
+    // Seul l'administrateur / backend sécurisé a accès en lecture via Firebase Admin SDK.
+    // L'ajout (create) est soumis à une validation stricte du schéma pour prévenir le spam ou les injections.
     match /waitlist_pro/{entryId} {
-      allow create: if true;
-      allow read, update, delete: if false; // Strictement réservé au backend / administrateur
+      allow create: if request.resource.data.email is string
+        && request.resource.data.email.size() >= 3
+        && request.resource.data.email.size() <= 120
+        && request.resource.data.email.matches('.*@.*')
+        && request.resource.data.requestedTier in ['pro', 'plus']
+        && request.resource.data.createdAt is string
+        && (!('phoneNumber' in request.resource.data) || request.resource.data.phoneNumber is string)
+        && request.resource.data.keys().hasOnly(['userId', 'email', 'phoneNumber', 'requestedTier', 'featureName', 'source', 'createdAt']);
+
+      // Interdiction absolue de lecture, modification ou suppression depuis le client
+      allow read, update, delete: if false;
     }
 
-    // Invitations KONAN PLUS : synchronisation temps réel
+    // =========================================================================
+    // 4. INVITATIONS KONAN PLUS : STRICTEMENT PRIVÉES (SENDER & RECIPIENT UNIQUEMENT)
+    // =========================================================================
+
+    // Les invitations de groupe ne sont JAMAIS exposées publiquement.
+    // Seuls l'expéditeur propriétaire et le destinataire ciblé peuvent interagir avec leur document.
     match /plus_invitations/{invitationId} {
-      allow read, write: if true;
+      // Lecture : uniquement l'expéditeur authentifié OU le destinataire ciblé (par email ou ID)
+      allow read: if isAuthenticated() && (
+        (resource.data.senderUid == request.auth.uid) ||
+        (request.auth.token.email != null && resource.data.senderEmail == request.auth.token.email) ||
+        (request.auth.token.email != null && resource.data.targetNormalized == request.auth.token.email.lower()) ||
+        (resource.data.targetNormalized == request.auth.uid)
+      );
+
+      // Création : utilisateur authentifié émetteur uniquement
+      allow create: if isAuthenticated()
+        && request.resource.data.targetNormalized is string
+        && request.resource.data.targetNormalized.size() > 0
+        && (!('senderUid' in request.resource.data) || request.resource.data.senderUid == request.auth.uid);
+
+      // Mise à jour : le destinataire peut accepter/refuser, ou l'émetteur peut annuler
+      allow update: if isAuthenticated() && (
+        (resource.data.senderUid == request.auth.uid) ||
+        (request.auth.token.email != null && resource.data.senderEmail == request.auth.token.email) ||
+        (request.auth.token.email != null && resource.data.targetNormalized == request.auth.token.email.lower()) ||
+        (resource.data.targetNormalized == request.auth.uid)
+      );
+
+      // Suppression : uniquement l'expéditeur propriétaire de l'invitation
+      allow delete: if isAuthenticated() && (
+        resource.data.senderUid == request.auth.uid ||
+        (request.auth.token.email != null && resource.data.senderEmail == request.auth.token.email)
+      );
+    }
+
+    // =========================================================================
+    // 5. RÈGLE PAR DÉFAUT : FERMETURE COMPLÈTE DE TOUTE AUTRE COLLECTION
+    // =========================================================================
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
