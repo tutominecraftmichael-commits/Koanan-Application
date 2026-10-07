@@ -192,8 +192,15 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           || Boolean(parsed.isGroupGuest) 
           || Boolean(parsed.userAccount?.isGroupGuest);
 
-        const planTier = isPlus ? 'plus' : (parsed.planTier || parsed.userAccount?.planTier || 'free');
+        // Personne ne doit pouvoir activer Pro ou Plus gratuitement pendant la phase waitlist
+        const planTier: PlanTier = isPlus ? 'plus' : 'free';
         const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
+
+        const userPreferences = parsed.preferences ? { ...baseEmptyState.preferences, ...parsed.preferences } : baseEmptyState.preferences;
+        if (planTier === 'free' && (userPreferences.pacing === 'feynman' || userPreferences.pacing === 'time_blocking')) {
+          userPreferences.pacing = 'pomodoro';
+          userPreferences.combinedPacings = ['pomodoro'];
+        }
 
         return {
           ...baseEmptyState,
@@ -205,7 +212,7 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           classSlots: Array.isArray(parsed.classSlots) ? parsed.classSlots : [],
           studySessions: Array.isArray(parsed.studySessions) ? parsed.studySessions : [],
           logs: hasCompleted ? (Array.isArray(parsed.logs) ? parsed.logs : []) : [],
-          preferences: parsed.preferences ? { ...baseEmptyState.preferences, ...parsed.preferences } : baseEmptyState.preferences,
+          preferences: userPreferences,
           streak: parsed.streak ? { ...baseEmptyState.streak, ...parsed.streak } : baseEmptyState.streak,
           invitedIds: Array.isArray(parsed.invitedIds) ? parsed.invitedIds : [],
           invitedEmails: Array.isArray(parsed.invitedEmails) ? parsed.invitedEmails : [],
@@ -403,8 +410,20 @@ export function loadDemoState(): AppState {
       const parsed = JSON.parse(raw);
       if (parsed.subjects && parsed.subjects.length > 0) {
         const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
+        const demoPreferences = parsed.preferences ? { ...parsed.preferences } : undefined;
+        if (demoPreferences && (demoPreferences.pacing === 'feynman' || demoPreferences.pacing === 'time_blocking')) {
+          demoPreferences.pacing = 'pomodoro';
+          demoPreferences.combinedPacings = ['pomodoro'];
+        }
+
         return { 
           ...parsed, 
+          planTier: 'free',
+          userAccount: parsed.userAccount ? {
+            ...parsed.userAccount,
+            planTier: 'free',
+          } : undefined,
+          preferences: demoPreferences || parsed.preferences,
           logs: hasCompleted ? (parsed.logs || []) : [],
           isDemoMode: true 
         };

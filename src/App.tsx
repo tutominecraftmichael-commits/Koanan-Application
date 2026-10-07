@@ -221,28 +221,22 @@ export function App() {
 
   // Unified, resilient single source of truth for plan tier
   const effectivePlanTier: 'free' | 'pro' | 'plus' = useMemo(() => {
-    // 1. Explicit choice in state
-    if (state.planTier === 'plus') return 'plus';
-    if (state.planTier === 'pro') return 'pro';
-    if (state.planTier === 'free') return 'free';
+    // Mode Démo : strictement 'free'
+    if (state.isDemoMode) return 'free';
 
-    // 2. Explicit choice in userAccount takes secondary priority
-    if (state.userAccount?.planTier === 'plus') return 'plus';
-    if (state.userAccount?.planTier === 'pro') return 'pro';
-    if (state.userAccount?.planTier === 'free') return 'free';
-
-    // 3. Plus group guest
+    // Konan Plus : uniquement si invité officiel dans un groupe ou vérifié dans le registre
     if (state.isGroupGuest || state.userAccount?.isGroupGuest) return 'plus';
 
-    // 4. Registry check only if not explicitly free/pro
     const myId = state.userAccount?.konanId || state.konanId;
     const myEmail = state.userAccount?.email;
     if ((myId && isTargetAlreadyPlus(myId)) || (myEmail && isTargetAlreadyPlus(myEmail))) {
       return 'plus';
     }
 
+    // Phase Waitlist Mobile Money (Wave & Orange Money) :
+    // Aucun achat Pro n'étant encore ouvert, tous les utilisateurs sont protégés en tier 'free'
     return 'free';
-  }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest, state.userAccount?.isGroupGuest, state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
+  }, [state.isDemoMode, state.isGroupGuest, state.userAccount?.isGroupGuest, state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
 
   // Unified display name
@@ -1119,16 +1113,19 @@ export function App() {
   /**
    * Explicit Demo Mode (Alexandre Étudiant):
    * Strictly segregated and only place where changing presets/filières is allowed.
+   * Strictly locked to Free tier during Mobile Money waitlist.
    */
   const handleEnterDemoMode = () => {
     const demo = loadDemoState();
-    const pendingPlan = (localStorage.getItem('konan_pending_plan') as 'free' | 'pro' | 'plus' | null);
-    if (pendingPlan) {
-      demo.planTier = pendingPlan;
-      if (demo.userAccount) {
-        demo.userAccount.planTier = pendingPlan;
-      }
-      localStorage.removeItem('konan_pending_plan');
+    demo.planTier = 'free';
+    if (demo.userAccount) {
+      demo.userAccount.planTier = 'free';
+    }
+
+    // Si la méthode préférée était pro (feynman ou time_blocking), basculer sur pomodoro
+    if (demo.preferences?.pacing === 'feynman' || demo.preferences?.pacing === 'time_blocking') {
+      demo.preferences.pacing = 'pomodoro';
+      demo.preferences.combinedPacings = ['pomodoro'];
     }
 
     setActiveSession({
@@ -1138,39 +1135,7 @@ export function App() {
     });
 
     setState(demo);
-    if (demo.planTier === 'plus') {
-      if (demo.studySessions && demo.studySessions.length > 0) {
-        try {
-          downloadStudyPlanICS(
-            demo.studySessions,
-            demo.subjects,
-            'Alexandre Étudiant'
-          );
-        } catch (err) {
-          console.warn('ICS auto-download error:', err);
-        }
-      }
-      setIsPlusActivationModalOpen(true);
-      soundFX.playVictoryCelebration();
-      showToast('👑 Mode Démo KONAN PLUS : Accès complet aux 4 comptes, objectifs et musiques alpha !');
-    } else if (demo.planTier === 'pro') {
-      if (demo.studySessions && demo.studySessions.length > 0) {
-        try {
-          downloadStudyPlanICS(
-            demo.studySessions,
-            demo.subjects,
-            'Alexandre Étudiant'
-          );
-        } catch (err) {
-          console.warn('ICS auto-download error:', err);
-        }
-      }
-      setIsSuperProModalOpen(true);
-      soundFX.playVictoryCelebration();
-      showToast('⭐ Mode Démo KONAN PRO : Synchronisation Google Agenda automatique déclenchée pour tous les jours !');
-    } else {
-      showToast('🎓 Mode Démo activé (Alexandre Étudiant). Les modèles de filières sont disponibles.');
-    }
+    showToast('🎓 Mode Démo activé (Alexandre Étudiant). Modèle Gratuit (Free) actif.');
     setActiveView('dashboard');
   };
 
