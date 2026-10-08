@@ -122,10 +122,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                   <span><strong>Importation & extraction d'EDT :</strong> Import via PDF, scan photo ou tableau texte (<strong>limité à 3 générations / imports gratuits</strong>, connexion Google obligatoire).</span>
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Mode Démo sans compte :</strong> Découverte immédiate de l'interface avec un emploi du temps prédéfini à l'avance (<em>importation personnalisée désactivée</em>).</span>
-                </li>
+
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                   <span><strong>Génération d'EDT personnalisé :</strong> Planning d'étude adapté à votre filière pour structurer vos révisions et réduire le surmenage.</span>
@@ -341,10 +338,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     </p>
                   </div>
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <Sparkles className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-                  <span><strong>Coaching d'excellence & Suivi de groupe :</strong> Conseils stratégiques personnalisés par IA pour stimuler la régularité et décrocher les meilleures mentions ensemble.</span>
-                </li>
+
               </ul>
             </div>
           </div>

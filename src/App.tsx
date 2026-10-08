@@ -880,7 +880,7 @@ export function App() {
       setWaitlistModalInfo({
         isOpen: true,
         featureTitle: 'Formule KONAN PLUS (Bientôt disponible)',
-        featureDescription: 'Débloquez le planning conditionné aux 3 objectifs scolaires (Major de promo), le pack de 5 comptes étudiants, les musiques de concentration et le coaching de groupe.',
+        featureDescription: 'Débloquez le planning conditionné aux 3 objectifs scolaires (Major de promo), le pack de 5 comptes étudiants et les musiques de concentration.',
         requiredTier: 'plus',
       });
       return;

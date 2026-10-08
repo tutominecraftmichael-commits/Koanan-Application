@@ -782,14 +782,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               /* Landing page actions */
               <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onOpenPresetModal}
-                  className="text-xs hidden sm:inline-flex px-3 py-1.5"
-                >
-                  Démos
-                </Button>
+
                 <Button
                   variant="glow"
                   size="sm"
