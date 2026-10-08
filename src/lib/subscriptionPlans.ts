@@ -81,7 +81,7 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
     priceLabel: '0 F',
     periodLabel: 'Gratuit à vie',
     priceAmount: 0,
-    maxPdfImports: 1, // Limité à 1 import / génération
+    maxPdfImports: 3, // Limité à 3 imports / générations pour le modèle Gratuit
     maxConcurrentMethods: 1, // 1 seule méthode à la fois
     allowedMethods: FREE_METHODS,
     isPurchaseActive: true,

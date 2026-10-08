@@ -225,12 +225,12 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
   // Traitement direct du fichier uploadé
   const handleFileSelected = async (file: File) => {
-    // Barrière de niveau : Formule GRATUITE limitée à 1 génération/import via PDF
-    if (planTier === 'free' && (pdfImportsCount || 0) >= 1) {
+    // Barrière de niveau : Formule GRATUITE limitée à 3 générations/imports via PDF
+    if (planTier === 'free' && (pdfImportsCount || 0) >= 3) {
       setWaitlistModalState({
         isOpen: true,
         featureTitle: "Import & Numérisation illimités d'EDT PDF",
-        featureDescription: "Votre version Gratuite est limitée à 1 import/génération d'emploi du temps. L'accès illimité arrive très bientôt avec le paiement simplifié par Wave et Orange Money.",
+        featureDescription: "Votre version Gratuite est limitée à 3 imports/générations d'emploi du temps. L'accès illimité arrive très bientôt avec le paiement simplifié par Wave et Orange Money.",
         requiredTier: 'pro',
       });
       return;

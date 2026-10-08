@@ -120,7 +120,11 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               <ul className="space-y-3 text-xs sm:text-sm text-slate-200">
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Importation & extraction d'EDT :</strong> Import via PDF, scan photo ou tableau texte (<em>limité à 1 génération / import gratuit</em>).</span>
+                  <span><strong>Importation & extraction d'EDT :</strong> Import via PDF, scan photo ou tableau texte (<strong>limité à 3 générations / imports gratuits</strong>, connexion Google obligatoire).</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                  <span><strong>Mode Démo sans compte :</strong> Découverte immédiate de l'interface avec un emploi du temps prédéfini à l'avance (<em>importation personnalisée désactivée</em>).</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />

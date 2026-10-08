@@ -91,7 +91,11 @@ export function App() {
     if (isConnected) {
       return 'dashboard';
     }
-    return 'landing';
+    if (session && session.isDemo) {
+      return 'dashboard';
+    }
+    // Règle : Première entrée dans l'appli -> connexion obligatoire ou passage en mode démo
+    return 'auth';
   });
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
@@ -680,7 +684,7 @@ export function App() {
    */
   const handleNavigate = (view: ActiveAppView) => {
     if (state.isDemoMode && view === 'upload-schedule') {
-      showToast('ℹ️ En mode démo, l’importation personnalisée est désactivée. Utilisez les exemples d’EDT démo.');
+      showToast('ℹ️ En mode démo, l’importation d’emploi du temps est désactivée : votre EDT est déjà prédéfini à l’avance. Connectez-vous pour importer le vôtre (jusqu’à 3 imports gratuits).');
       return;
     }
 
@@ -1159,6 +1163,11 @@ export function App() {
     preferences: StudyPreferences;
     studySessions: StudySession[];
   }) => {
+    if (state.isDemoMode) {
+      showToast('⚠️ En mode démo, l’emploi du temps est prédéfini à l’avance et ne peut pas être modifié par importation.');
+      return;
+    }
+
     setState(prev => {
       const nextPdfCount = (prev.pdfImportsCount || prev.userAccount?.pdfImportsCount || 0) + 1;
       const updated: AppState = {
@@ -1637,23 +1646,23 @@ export function App() {
                 <GraduationCap className="w-7 h-7" />
               </div>
               <div className="space-y-1.5">
-                <h3 className="text-lg font-bold text-white">Mode Démo : Importation Désactivée</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  L'importation de fichiers et documents est réservée aux comptes connectés. En mode démo, vous pouvez charger et tester les différents modèles d'EDT prédéfinis.
+                <h3 className="text-lg font-bold text-white">Mode Démo : Emploi du Temps Prédéfini</h3>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  En mode démo, l'emploi du temps est <strong>déjà prédéfini à l'avance</strong> et l'importation est désactivée. Pour importer votre propre emploi du temps (<strong className="text-sky-300">jusqu'à 3 imports gratuits</strong>), connectez-vous avec votre compte Google.
                 </p>
               </div>
               <div className="flex flex-col gap-2.5 pt-3">
                 <button
-                  onClick={() => setIsPresetModalOpen(true)}
-                  className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors cursor-pointer shadow-md shadow-indigo-600/20"
+                  onClick={() => setActiveView('auth')}
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs transition-colors cursor-pointer shadow-md shadow-blue-600/20"
                 >
-                  Charger un exemple d'EDT Démo
+                  Se connecter avec Google (3 imports gratuits)
                 </button>
                 <button
-                  onClick={() => setActiveView('auth')}
+                  onClick={() => setActiveView('schedule')}
                   className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition-colors cursor-pointer"
                 >
-                  Se connecter pour importer mon propre EDT
+                  Consulter mon emploi du temps démo prédéfini
                 </button>
               </div>
             </div>

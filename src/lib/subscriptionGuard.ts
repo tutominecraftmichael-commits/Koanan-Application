@@ -98,7 +98,7 @@ export function checkMultiMethodAccess(
 }
 
 /**
- * Vérifie si l'importation de l'emploi du temps via PDF est autorisée (1 fois en Gratuit)
+ * Vérifie si l'importation de l'emploi du temps via PDF est autorisée (3 fois en Gratuit)
  */
 export function checkPdfImportAccess(
   currentImportCount: number = 0,
@@ -110,7 +110,7 @@ export function checkPdfImportAccess(
 
   return {
     allowed: false,
-    reason: "La formule Gratuite est limitée à 1 import d'emploi du temps. Passez à KONAN PRO pour un usage illimité.",
+    reason: "La formule Gratuite est limitée à 3 imports d'emploi du temps. Passez à KONAN PRO pour un usage illimité.",
     requiredTier: 'pro',
   };
 }
