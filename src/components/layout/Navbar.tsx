@@ -1,11 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { 
-  Calendar, 
   Clock, 
-  BookOpen, 
-  BarChart3, 
-  Layers, 
   LogIn, 
   LogOut,
   Upload, 
@@ -31,6 +27,14 @@ import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
 import { formatNotificationTime } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
+import { 
+  AnimatedDashboardIcon,
+  AnimatedSubjectsIcon,
+  AnimatedAnalyticsIcon,
+  AnimatedScheduleIcon,
+  AnimatedPlannerIcon
+} from '../common/AnimatedNavIcons';
+import { ThemeToggle } from '../common/ThemeToggle';
 
 export interface OwnerNotificationItem {
   id: string;
@@ -184,11 +188,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications]);
 
   const navItems = [
-    { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), icon: Layers },
-    { id: 'schedule' as ActiveAppView, label: t('navSchedule', lang), icon: Calendar },
-    { id: 'subjects' as ActiveAppView, label: lang === 'fr' ? 'Matières' : 'Subjects', icon: BookOpen },
-    { id: 'planner' as ActiveAppView, label: lang === 'fr' ? 'Planning' : 'Study Plan', icon: Clock },
-    { id: 'analytics' as ActiveAppView, label: t('navAnalytics', lang), icon: BarChart3 },
+    { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), component: AnimatedDashboardIcon, icon: AnimatedDashboardIcon },
+    { id: 'schedule' as ActiveAppView, label: t('navSchedule', lang), component: AnimatedScheduleIcon, icon: AnimatedScheduleIcon },
+    { id: 'subjects' as ActiveAppView, label: lang === 'fr' ? 'Matières' : 'Subjects', component: AnimatedSubjectsIcon, icon: AnimatedSubjectsIcon },
+    { id: 'planner' as ActiveAppView, label: lang === 'fr' ? 'Planning' : 'Study Plan', component: AnimatedPlannerIcon, icon: AnimatedPlannerIcon },
+    { id: 'analytics' as ActiveAppView, label: t('navAnalytics', lang), component: AnimatedAnalyticsIcon, icon: AnimatedAnalyticsIcon },
   ];
 
   const displayName = userAccount?.isLoggedIn ? userAccount.name : studentName;
@@ -230,7 +234,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {activeView !== 'landing' && activeView !== 'auth' && (
             <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800/80 shrink-0 mx-2 shadow-xs">
               {navItems.map((item) => {
-                const Icon = item.icon;
+                const IconComponent = item.component;
                 const isActive = activeView === item.id;
                 return (
                   <button
@@ -249,17 +253,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                         : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
                     }`}
                   >
-                    <Icon className={`w-3.5 h-3.5 shrink-0 transition-transform duration-300 ease-out ${
-                      isActive 
-                        ? 'scale-110 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' 
-                        : 'group-hover:text-blue-300'
-                    } ${
-                      item.id === 'dashboard' ? 'group-hover:-translate-y-0.5 group-hover:scale-115' :
-                      item.id === 'schedule' ? 'group-hover:-rotate-12 group-hover:scale-120' :
-                      item.id === 'subjects' ? 'group-hover:scale-125' :
-                      item.id === 'planner' ? 'group-hover:rotate-45 group-hover:scale-115' :
-                      'group-hover:-translate-y-0.5 group-hover:scale-115'
-                    }`} />
+                    <IconComponent
+                      isActive={isActive}
+                      className={`w-4 h-4 shrink-0 transition-transform duration-300 ease-out ${
+                        isActive 
+                          ? 'scale-110 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' 
+                          : 'group-hover:text-blue-300'
+                      }`}
+                    />
                     <span className="transition-colors duration-200">{item.label}</span>
                   </button>
                 );
@@ -269,6 +270,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Controls */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            {/* Bouton animé de changement de thème (Mode Clair / Mode Sombre) */}
+            <ThemeToggle />
+
             {activeView !== 'landing' && activeView !== 'auth' ? (
               <>
                 {/* Paramètres (Settings) Button - Bouton circulaire aéré */}
@@ -877,17 +881,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                       : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 shrink-0 transition-transform duration-300 ease-out ${
-                    isActive 
-                      ? 'scale-110 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' 
-                      : 'group-hover:text-blue-300'
-                  } ${
-                    item.id === 'dashboard' ? 'group-hover:-translate-y-0.5 group-hover:scale-115' :
-                    item.id === 'schedule' ? 'group-hover:-rotate-12 group-hover:scale-120' :
-                    item.id === 'subjects' ? 'group-hover:scale-125' :
-                    item.id === 'planner' ? 'group-hover:rotate-45 group-hover:scale-115' :
-                    'group-hover:-translate-y-0.5 group-hover:scale-115'
-                  }`} />
+                  <Icon 
+                    isActive={isActive}
+                    className={`w-4 h-4 shrink-0 transition-transform duration-300 ease-out ${
+                      isActive 
+                        ? 'scale-110 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' 
+                        : 'group-hover:text-blue-300'
+                    }`} 
+                  />
                   <span>{item.label}</span>
                 </button>
               );

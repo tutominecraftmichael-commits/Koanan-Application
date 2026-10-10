@@ -52,6 +52,7 @@ import type {
 import { generateId, isNonAcademicSubject } from './lib/utils';
 import { Sparkles, X } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
+import { useTheme } from './context/ThemeContext';
 
 // Layout
 import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
@@ -81,6 +82,7 @@ import { FocusMode } from './features/focus/FocusMode';
 import { PresetModal } from './features/onboarding/PresetModal';
 
 export function App() {
+  const { isLight } = useTheme();
   const [state, setState] = useState<AppState>(() => loadAppState());
   const pendingPrivacyModalRef = useRef<boolean>(false);
 
@@ -1544,7 +1546,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090E17] text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white w-full max-w-full overflow-x-hidden">
+    <div className={`min-h-screen ${isLight ? 'bg-slate-50 text-slate-900' : 'bg-[#090E17] text-slate-100'} flex flex-col selection:bg-blue-600 selection:text-white w-full max-w-full overflow-x-hidden transition-colors duration-300`}>
       
       {/* Hidden file input for JSON configuration backup imports */}
       <input

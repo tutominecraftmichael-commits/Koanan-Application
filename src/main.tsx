@@ -76,10 +76,14 @@ class RootErrorBoundary extends Component<Props, State> {
   }
 }
 
+import { ThemeProvider } from './context/ThemeContext'
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RootErrorBoundary>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </RootErrorBoundary>
   </StrictMode>,
 )

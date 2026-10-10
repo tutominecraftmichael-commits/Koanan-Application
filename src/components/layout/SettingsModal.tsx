@@ -14,10 +14,11 @@ import {
   Save
 } from 'lucide-react';
 import type { UserAccount, AcademicGoal } from '../../types';
-import { Crown, Users, Target } from 'lucide-react';
+import { Crown, Users, Target, Sun, Moon } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
 import { soundFX } from '../../lib/audioEffects';
+import { useTheme } from '../../context/ThemeContext';
 
 
 const COMMON_FILIERES = [
@@ -81,6 +82,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onOpenPrivacyModal,
 }) => {
   const [lang] = useLanguage();
+  const { toggleTheme, isLight } = useTheme();
 
   // Local form state for editable profile fields only (name, filiere)
   const [editName, setEditName] = useState('');
@@ -506,6 +508,55 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
               </div>
             )}
+          </div>
+
+          {/* SECTION 1.8: APPARENCE & COULEUR DE FOND */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  {isLight ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-indigo-400" />}
+                  Apparence & Couleur de Fond
+                </span>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Basculez entre le mode sombre (fond noir d'origine) et le mode clair (fond blanc).
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2.5 p-1 rounded-2xl bg-slate-950/70 border border-slate-800">
+              <button
+                type="button"
+                onClick={() => {
+                  if (isLight) toggleTheme();
+                  soundFX.playCheckmarkPop();
+                }}
+                className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  !isLight
+                    ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-950/50'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-900/60'
+                }`}
+              >
+                <Moon className="w-4 h-4 text-indigo-300" />
+                <span>Mode Sombre</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (!isLight) toggleTheme();
+                  soundFX.playCheckmarkPop();
+                }}
+                className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  isLight
+                    ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-white shadow-md shadow-amber-950/30'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-900/60'
+                }`}
+              >
+                <Sun className="w-4 h-4 text-amber-200" />
+                <span>Mode Clair</span>
+              </button>
+            </div>
           </div>
 
           {/* SECTION 2: GESTION DES DONNÉES */}
