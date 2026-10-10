@@ -506,14 +506,18 @@ export function setActiveSession(session: ActiveSession | null): void {
 export function loadAppState(): AppState {
   try {
     const session = getActiveSession();
+    // Seul un compte réel authentifié avec Google peut être restauré automatiquement
     if (session && !session.isDemo && session.uid) {
       return loadUserState(session.uid);
     }
+
+    // Une session démo ne doit JAMAIS être restaurée automatiquement au rechargement de l'app.
+    // L'utilisateur doit toujours arriver sur l'interface d'accueil avec un état vierge et neutre.
     if (session && session.isDemo) {
-      return loadDemoState();
+      setActiveSession(null);
     }
 
-    // If no session exists, the app is in clean unauthenticated Guest state (ZERO demo courses)
+    // État Invité totalement propre et neutre (ZÉRO cours démo, ZÉRO matières pré-remplies)
     let deviceStudentId = '';
     try {
       deviceStudentId = localStorage.getItem('konan_device_student_id') || '';

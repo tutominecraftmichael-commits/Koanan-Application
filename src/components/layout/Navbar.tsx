@@ -7,6 +7,7 @@ import {
   BarChart3, 
   Layers, 
   LogIn, 
+  LogOut,
   Upload, 
   Download, 
   RotateCcw,
@@ -56,6 +57,7 @@ export interface NavbarProps {
   totalStudySessions: number;
   completedSessions: number;
   isDemoMode?: boolean;
+  onEnterDemoMode?: () => void;
   onViewPricing?: () => void;
   pendingInvitations?: PlusInvitationNotification[];
   acceptedNotifications?: { id: string; name: string; konanId?: string; timestamp?: string }[];
@@ -83,6 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   totalStudySessions: _totalStudySessions,
   completedSessions: _completedSessions,
   isDemoMode = false,
+  onEnterDemoMode,
   onViewPricing,
   pendingInvitations = [],
   acceptedNotifications = [],
@@ -755,6 +758,36 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <Sparkles className="w-3 h-3 text-amber-400" />
                         <span>PRO</span>
                       </button>
+                    ) : (isDemoMode || userAccount?.isDemo) ? (
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/15 text-amber-300 border-amber-500/30 cursor-default select-none"
+                          title="Mode Démo Actif"
+                        >
+                          <GraduationCap className="w-3 h-3 text-amber-400" />
+                          Démo
+                        </span>
+                        {_onLogout && (
+                          <button
+                            type="button"
+                            onClick={_onLogout}
+                            className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-[10px] font-bold text-rose-300 hover:text-rose-200 transition-colors cursor-pointer shadow-xs"
+                            title="Quitter le Mode Démo et revenir à l'accueil"
+                          >
+                            <LogOut className="w-3 h-3" />
+                            <span>Quitter Démo</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => onNavigate('auth')}
+                          className="hidden xs:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-[10px] font-bold text-indigo-300 hover:text-white transition-colors cursor-pointer shadow-xs"
+                          title="Se connecter avec un compte Google réel"
+                        >
+                          <LogIn className="w-3 h-3" />
+                          <span>Se Connecter</span>
+                        </button>
+                      </div>
                     ) : (
                       <span
                         className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-slate-800/90 text-slate-300 border-slate-700/80 cursor-default select-none"
@@ -782,16 +815,39 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               /* Landing page actions */
               <div className="flex items-center gap-2">
-
-                <Button
-                  variant="glow"
-                  size="sm"
-                  leftIcon={<LogIn className="w-3.5 h-3.5" />}
-                  onClick={() => onNavigate('auth')}
-                  className="text-xs font-semibold px-3 py-1.5 cursor-pointer"
-                >
-                  Connexion
-                </Button>
+                {userAccount && userAccount.isLoggedIn && !isDemoMode ? (
+                  <Button
+                    variant="glow"
+                    size="sm"
+                    onClick={() => onNavigate('dashboard')}
+                    className="text-xs font-semibold px-3 py-1.5 cursor-pointer"
+                  >
+                    Mon Espace
+                  </Button>
+                ) : (
+                  <>
+                    {onEnterDemoMode && (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<GraduationCap className="w-3.5 h-3.5 text-indigo-400" />}
+                        onClick={onEnterDemoMode}
+                        className="text-xs font-semibold px-2.5 sm:px-3 py-1.5 cursor-pointer hover:border-indigo-500/40"
+                      >
+                        Mode Démo
+                      </Button>
+                    )}
+                    <Button
+                      variant="glow"
+                      size="sm"
+                      leftIcon={<LogIn className="w-3.5 h-3.5" />}
+                      onClick={() => onNavigate('auth')}
+                      className="text-xs font-semibold px-3 py-1.5 cursor-pointer"
+                    >
+                      Connexion
+                    </Button>
+                  </>
+                )}
               </div>
             )}
           </div>

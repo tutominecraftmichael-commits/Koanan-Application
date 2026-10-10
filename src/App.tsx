@@ -91,11 +91,9 @@ export function App() {
     if (isConnected) {
       return 'dashboard';
     }
-    if (session && session.isDemo) {
-      return 'dashboard';
-    }
-    // Règle : Première entrée dans l'appli -> connexion obligatoire ou passage en mode démo
-    return 'auth';
+    // Règle produit : Dès l'entrée, l'utilisateur voit d'abord l'interface (accueil / landing).
+    // Le compte démo ne doit JAMAIS être imposé ni sélectionné instantanément : c'est l'utilisateur qui choisit.
+    return 'landing';
   });
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
@@ -1078,7 +1076,32 @@ export function App() {
     setIsPrivacyModalOpen(false);
     await signOutReal();
     setActiveSession(null);
-    setState(loadDemoState());
+
+    let deviceStudentId = '';
+    try {
+      deviceStudentId = localStorage.getItem('konan_device_student_id') || generateKonanId();
+    } catch {
+      deviceStudentId = generateKonanId();
+    }
+
+    const guestUser: UserAccount = {
+      name: 'Étudiant',
+      email: '',
+      avatar: '',
+      googleId: 'guest',
+      academicLevel: 'Licence Universitaire',
+      planTier: 'free',
+      isDemo: false,
+      isLoggedIn: false,
+      lastSyncedAt: new Date().toISOString(),
+      konanId: deviceStudentId,
+    };
+
+    setState({
+      ...createEmptyUserState(guestUser),
+      konanId: deviceStudentId,
+      isDemoMode: false,
+    });
     showToast("⚠️ L'acceptation de la politique de confidentialité est obligatoire pour utiliser KONAN AI.", 6000);
     setActiveView('landing');
   };
@@ -1102,12 +1125,13 @@ export function App() {
   };
 
   /**
-   * Explicit Demo Mode (Alexandre Étudiant):
-   * Strictly segregated and only place where changing presets/filières is allowed.
-   * Strictly locked to Free tier during Mobile Money waitlist.
+   * Explicit Demo Mode:
+   * Activated UNIQUELY when the user explicitly clicks "Mode Démo" or a sample preset.
+   * Never auto-selected.
    */
-  const handleEnterDemoMode = () => {
-    const demo = loadDemoState();
+  const handleEnterDemoMode = (presetId?: string) => {
+    const targetPresetId = typeof presetId === 'string' && presetId ? presetId : 'cs-engineering';
+    const demo = createInitialStateFromPreset(targetPresetId);
     demo.planTier = 'free';
     if (demo.userAccount) {
       demo.userAccount.planTier = 'free';
@@ -1121,18 +1145,18 @@ export function App() {
 
     setActiveSession({
       isDemo: true,
-      name: 'Alexandre Étudiant (Compte Démo)',
-      email: 'alexandre.universite@etudiant.univ.fr',
+      name: demo.userAccount?.name || 'Alexandre Étudiant (Compte Démo)',
+      email: demo.userAccount?.email || 'alexandre.universite@etudiant.univ.fr',
     });
 
     setState(demo);
-    showToast('🎓 Mode Démo activé (Alexandre Étudiant). Modèle Gratuit (Free) actif.');
+    showToast(`🎓 Mode Démo activé (${demo.academicLevel}). Modèle Gratuit (Free) actif.`);
     setActiveView('dashboard');
   };
 
   /**
    * Logout handler:
-   * Disconnects Firebase and resets to unauthenticated Guest state.
+   * Disconnects Firebase / Demo and resets to clean unauthenticated Guest state (ZERO demo courses).
    */
   const handleLogout = async () => {
     hasGreetedAuthRef.current = '';
@@ -1140,17 +1164,39 @@ export function App() {
     await signOutReal();
     setActiveSession(null);
 
-    const guestPreset = createInitialStateFromPreset('cs-engineering');
-    setState({
-      ...guestPreset,
-      userAccount: {
-        ...guestPreset.userAccount!,
-        isLoggedIn: false,
-      },
-      isDemoMode: false,
-    });
+    let deviceStudentId = '';
+    try {
+      deviceStudentId = localStorage.getItem('konan_device_student_id') || '';
+      if (!deviceStudentId) {
+        deviceStudentId = generateKonanId();
+        localStorage.setItem('konan_device_student_id', deviceStudentId);
+      }
+    } catch {
+      deviceStudentId = generateKonanId();
+    }
 
-    showToast('Compte déconnecté.');
+    const guestUser: UserAccount = {
+      name: 'Étudiant',
+      email: '',
+      avatar: '',
+      googleId: 'guest',
+      academicLevel: 'Licence Universitaire',
+      planTier: 'free',
+      isDemo: false,
+      isLoggedIn: false,
+      lastSyncedAt: new Date().toISOString(),
+      konanId: deviceStudentId,
+    };
+
+    const emptyGuestState: AppState = {
+      ...createEmptyUserState(guestUser),
+      konanId: deviceStudentId,
+      isDemoMode: false,
+    };
+
+    setState(emptyGuestState);
+
+    showToast('Session terminée.');
     setActiveView('landing');
   };
 
@@ -1580,6 +1626,7 @@ export function App() {
         planTier={effectivePlanTier}
         konanId={state.konanId || state.userAccount?.konanId}
         isDemoMode={state.isDemoMode}
+        onEnterDemoMode={() => handleEnterDemoMode('cs-engineering')}
         onOpenPresetModal={() => {
           if (state.isDemoMode) {
             setIsPresetModalOpen(true);
@@ -1608,10 +1655,16 @@ export function App() {
         {/* Landing Page */}
         {activeView === 'landing' && (
           <LandingHero
-            isLoggedIn={Boolean(state.userAccount?.isLoggedIn)}
+            isLoggedIn={Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode)}
             currentPlan={effectivePlanTier}
             onSelectPlan={handleSelectPlan}
-            onStartApp={() => setActiveView('auth')}
+            onStartApp={() => {
+              if (state.userAccount?.isLoggedIn && !state.isDemoMode) {
+                setActiveView('dashboard');
+              } else {
+                setActiveView('auth');
+              }
+            }}
             onSelectPreset={handleEnterDemoMode}
           />
         )}

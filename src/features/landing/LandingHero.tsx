@@ -97,16 +97,16 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               onClick={onStartApp}
               className="w-full sm:w-auto shadow-xl shadow-blue-950/50 cursor-pointer text-xs xs:text-sm sm:text-base py-3.5 px-6 font-bold hover:scale-105 active:scale-95 transition-all text-center flex items-center justify-center"
             >
-              Générer mon Planning d'Étude
+              {isLoggedIn ? 'Accéder à mon Tableau de Bord' : "Générer mon Planning d'Étude"}
             </Button>
             <Button
               variant="secondary"
               size="lg"
-              leftIcon={<GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />}
+              leftIcon={<GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />}
               onClick={() => onSelectPreset('cs-engineering')}
-              className="w-full sm:w-auto cursor-pointer text-xs xs:text-sm sm:text-base py-3.5 px-5 font-semibold hover:border-blue-400/40 transition-all text-center flex items-center justify-center"
+              className="w-full sm:w-auto cursor-pointer text-xs xs:text-sm sm:text-base py-3.5 px-5 font-semibold hover:border-indigo-400/40 transition-all text-center flex items-center justify-center"
             >
-              Découvrir un Exemple Prédéfini
+              Tester en Mode Démo
             </Button>
           </div>
 
@@ -377,11 +377,10 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                       size="sm"
                       onClick={() => {
                         onSelectPreset(activePreset.id);
-                        onStartApp();
                       }}
                       className="w-full mt-3 cursor-pointer text-xs font-bold py-2.5"
                     >
-                      Utiliser ce Modèle ({activePreset.name})
+                      Tester ce Modèle Démo ({activePreset.name})
                     </Button>
                   </div>
 
