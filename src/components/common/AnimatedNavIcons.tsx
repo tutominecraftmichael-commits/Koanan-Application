@@ -19,7 +19,7 @@ export const AnimatedDashboardIcon: React.FC<AnimatedIconProps> = ({ className =
   };
 
   return (
-    <div 
+    <div
       className="relative flex items-center justify-center cursor-pointer select-none"
       onMouseEnter={handleTrigger}
       onTouchStart={handleTrigger}
@@ -36,9 +36,8 @@ export const AnimatedDashboardIcon: React.FC<AnimatedIconProps> = ({ className =
         {/* Layer 1 - Haut (Top plate) */}
         <polygon
           points="12 2 2 7 12 12 22 7"
-          className={`transition-all duration-300 origin-center ${
-            isTriggered ? 'animate-stack-jump-top' : 'group-hover:animate-stack-jump-top'
-          }`}
+          className={`transition-all duration-300 origin-center ${isTriggered ? 'animate-stack-jump-top' : 'group-hover:animate-stack-jump-top'
+            }`}
           fill={isActive ? 'currentColor' : 'none'}
           fillOpacity={isActive ? 0.35 : 0}
         />
@@ -46,17 +45,15 @@ export const AnimatedDashboardIcon: React.FC<AnimatedIconProps> = ({ className =
         {/* Layer 2 - Milieu (Middle plate) */}
         <path
           d="M2 12l10 5 10-5"
-          className={`transition-all duration-300 origin-center ${
-            isTriggered ? 'animate-stack-jump-mid' : 'group-hover:animate-stack-jump-mid'
-          }`}
+          className={`transition-all duration-300 origin-center ${isTriggered ? 'animate-stack-jump-mid' : 'group-hover:animate-stack-jump-mid'
+            }`}
         />
 
         {/* Layer 3 - Bas (Bottom plate) */}
         <path
           d="M2 17l10 5 10-5"
-          className={`transition-all duration-300 origin-center ${
-            isTriggered ? 'animate-stack-jump-bot' : 'group-hover:animate-stack-jump-bot'
-          }`}
+          className={`transition-all duration-300 origin-center ${isTriggered ? 'animate-stack-jump-bot' : 'group-hover:animate-stack-jump-bot'
+            }`}
         />
       </svg>
     </div>
@@ -77,7 +74,7 @@ export const AnimatedSubjectsIcon: React.FC<AnimatedIconProps> = ({ className = 
   };
 
   return (
-    <div 
+    <div
       className="relative flex items-center justify-center cursor-pointer select-none perspective-[600px]"
       onClick={handleFlip}
       onMouseEnter={handleFlip}
@@ -117,9 +114,8 @@ export const AnimatedSubjectsIcon: React.FC<AnimatedIconProps> = ({ className = 
 
         {/* Page mobile animée qui se tourne (Page Turn 3D) */}
         <g
-          className={`origin-[12px_12px] transition-transform ${
-            isFlipping ? 'animate-book-page-turn' : 'group-hover:animate-book-page-turn'
-          }`}
+          className={`origin-[12px_12px] transition-transform ${isFlipping ? 'animate-book-page-turn' : 'group-hover:animate-book-page-turn'
+            }`}
           style={{ transformOrigin: '12px 12px' }}
         >
           <path
@@ -149,7 +145,7 @@ export const AnimatedAnalyticsIcon: React.FC<AnimatedIconProps> = ({ className =
   };
 
   return (
-    <div 
+    <div
       className="relative flex items-center justify-center cursor-pointer select-none"
       onClick={handleRise}
       onMouseEnter={handleRise}
@@ -167,9 +163,8 @@ export const AnimatedAnalyticsIcon: React.FC<AnimatedIconProps> = ({ className =
           width="4"
           height="9"
           rx="1.5"
-          className={`origin-bottom transition-transform ${
-            isRising ? 'animate-bar-shoot-1' : 'group-hover:animate-bar-shoot-1'
-          }`}
+          className={`origin-bottom transition-transform ${isRising ? 'animate-bar-shoot-1' : 'group-hover:animate-bar-shoot-1'
+            }`}
           style={{ transformOrigin: '5px 20px' }}
           opacity={isActive ? 0.95 : 0.8}
         />
@@ -181,9 +176,8 @@ export const AnimatedAnalyticsIcon: React.FC<AnimatedIconProps> = ({ className =
           width="4"
           height="15"
           rx="1.5"
-          className={`origin-bottom transition-transform ${
-            isRising ? 'animate-bar-shoot-2' : 'group-hover:animate-bar-shoot-2'
-          }`}
+          className={`origin-bottom transition-transform ${isRising ? 'animate-bar-shoot-2' : 'group-hover:animate-bar-shoot-2'
+            }`}
           style={{ transformOrigin: '12px 20px' }}
           opacity={isActive ? 1 : 0.85}
         />
@@ -195,9 +189,8 @@ export const AnimatedAnalyticsIcon: React.FC<AnimatedIconProps> = ({ className =
           width="4"
           height="12"
           rx="1.5"
-          className={`origin-bottom transition-transform ${
-            isRising ? 'animate-bar-shoot-3' : 'group-hover:animate-bar-shoot-3'
-          }`}
+          className={`origin-bottom transition-transform ${isRising ? 'animate-bar-shoot-3' : 'group-hover:animate-bar-shoot-3'
+            }`}
           style={{ transformOrigin: '19px 20px' }}
           opacity={isActive ? 0.95 : 0.8}
         />
@@ -251,8 +244,8 @@ export const AnimatedPlannerIcon: React.FC<AnimatedIconProps> = ({ className = '
         className={`${className} transition-transform duration-300 group-hover:scale-115 overflow-visible`}
       >
         <circle cx="12" cy="12" r="10" fill={isActive ? 'currentColor' : 'none'} fillOpacity={isActive ? 0.15 : 0} />
-        <polyline 
-          points="12 6 12 12 16 14" 
+        <polyline
+          points="12 6 12 12 16 14"
           className="origin-[12px_12px] group-hover:animate-clock-spin"
           style={{ transformOrigin: '12px 12px' }}
         />
