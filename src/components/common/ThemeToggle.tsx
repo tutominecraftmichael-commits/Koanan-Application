@@ -25,7 +25,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '', showLa
       onClick={handleClick}
       aria-label={isLight ? "Passer en mode sombre (fond noir)" : "Passer en mode clair (fond blanc)"}
       title={isLight ? "Passer en Mode Sombre (Fond Noir)" : "Passer en Mode Clair (Fond Blanc)"}
-      className={`group relative flex items-center justify-center gap-2 p-2 sm:p-2.5 rounded-full border transition-all duration-300 cursor-pointer shadow-sm active:scale-90 ${
+      className={`group relative flex items-center justify-center gap-1.5 p-1.5 sm:p-2 rounded-full border transition-all duration-300 cursor-pointer shadow-sm active:scale-90 shrink-0 ${
         isLight
           ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 border-amber-300/50 shadow-amber-500/10'
           : 'bg-slate-900/80 hover:bg-slate-800 border-slate-800 hover:border-indigo-500/40 text-slate-300 hover:text-white shadow-indigo-500/5'
@@ -39,7 +39,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '', showLa
       />
 
       {/* Icône animée Soleil / Lune */}
-      <div className={`relative w-4 h-4 sm:w-4.5 sm:h-4.5 flex items-center justify-center transition-transform duration-500 ease-out ${
+      <div className={`relative w-3.5 h-3.5 sm:w-4 sm:h-4 flex items-center justify-center transition-transform duration-500 ease-out ${
         isAnimating ? 'rotate-[360deg] scale-110' : 'group-hover:rotate-12'
       }`}>
         {isLight ? (

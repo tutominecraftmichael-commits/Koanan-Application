@@ -199,19 +199,19 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/95 backdrop-blur-2xl transition-all pt-safe">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
         
         {/* Main Navbar Top Row */}
-        <div className="flex items-center justify-between h-16 sm:h-[68px] gap-2 lg:gap-4">
+        <div className="flex items-center justify-between h-14 sm:h-[68px] gap-1.5 sm:gap-4">
           
           {/* Logo & Brand */}
-          <div className="flex items-center shrink-0">
+          <div className="flex items-center shrink-0 min-w-0">
             <button
               onClick={() => onNavigate('landing')}
-              className="flex items-center gap-2.5 sm:gap-3 group text-left cursor-pointer focus:outline-none shrink-0"
+              className="flex items-center gap-2 sm:gap-3 group text-left cursor-pointer focus:outline-none shrink-0"
               title="Retour à l'accueil KONAN"
             >
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0 flex items-center justify-center overflow-hidden">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0 flex items-center justify-center overflow-hidden">
                 <img
                   src="/konan-logo.png"
                   alt="Logo Officiel KONAN"
@@ -220,12 +220,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-base sm:text-lg tracking-tight text-white group-hover:text-blue-300 transition-colors">
+                  <span className="font-extrabold text-sm sm:text-lg tracking-tight text-white group-hover:text-blue-300 transition-colors">
                     KONAN
                   </span>
-                  <Badge variant="cyan" size="sm" className="hidden xs:inline-flex text-[10px] px-1.5 py-0">v1.0</Badge>
+                  <Badge variant="cyan" size="sm" className="hidden sm:inline-flex text-[10px] px-1.5 py-0">v1.0</Badge>
                 </div>
-                <p className="text-[10px] sm:text-[11px] text-slate-400 hidden sm:block truncate">Compagnon Académique</p>
+                <p className="text-[10px] sm:text-[11px] text-slate-400 hidden md:block truncate">Compagnon Académique</p>
               </div>
             </button>
           </div>
@@ -269,26 +269,26 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
 
           {/* Right Action Controls */}
-          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             {/* Bouton animé de changement de thème (Mode Clair / Mode Sombre) */}
             <ThemeToggle />
 
             {activeView !== 'landing' && activeView !== 'auth' ? (
               <>
-                {/* Paramètres (Settings) Button - Bouton circulaire aéré */}
+                {/* Paramètres (Settings) Button - Masqué sur petit écran car l'Avatar ouvre déjà les Paramètres */}
                 {onOpenSettings && (
                   <button
                     onClick={onOpenSettings}
                     title={t('navSettings', lang)}
                     aria-label={t('navSettings', lang)}
-                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/80 border border-slate-800 hover:border-indigo-500/60 hover:bg-slate-800/80 text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 group"
+                    className="hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/80 border border-slate-800 hover:border-indigo-500/60 hover:bg-slate-800/80 text-slate-300 hover:text-white items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 group"
                   >
                     <Settings className="w-4 h-4 text-indigo-400 group-hover:rotate-45 transition-transform duration-300" />
                   </button>
                 )}
 
-                {/* Secondary Tools Menu (Data Export, Import, Reset) */}
-                <div className="relative" ref={toolsMenuRef}>
+                {/* Secondary Tools Menu (Data Export, Import, Reset) - Masqué sur mobile, accessible via Paramètres */}
+                <div className="relative hidden sm:block" ref={toolsMenuRef}>
                   <button
                     onClick={() => setIsToolsOpen(!isToolsOpen)}
                     title={t('navTools', lang)}
@@ -376,15 +376,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setIsBellRinging(true);
                       setTimeout(() => setIsBellRinging(false), 800);
                     }}
-                    className="group relative p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center bg-slate-900/80 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700 active:scale-95"
+                    className="group relative p-1.5 sm:p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center bg-slate-900/80 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700 active:scale-95 shrink-0"
                     title={hasUnreadNotifications ? 'Nouvelles notifications non lues' : 'Notifications'}
                     aria-label={hasUnreadNotifications ? 'Notifications (non lues)' : 'Notifications'}
                   >
-                    <Bell className={`w-4 h-4 transition-transform ${isBellRinging ? 'animate-bell-ring text-amber-400' : 'group-hover:animate-bell-ring group-hover:text-amber-300'}`} />
+                    <Bell className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform ${isBellRinging ? 'animate-bell-ring text-amber-400' : 'group-hover:animate-bell-ring group-hover:text-amber-300'}`} />
                     {hasUnreadNotifications && (
-                      <span className="absolute top-1 right-1 flex h-2.5 w-2.5" aria-hidden="true">
+                      <span className="absolute top-0.5 right-0.5 flex h-2 w-2 sm:h-2.5 sm:w-2.5" aria-hidden="true">
                         <span className="absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-60 animate-ping" />
-                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-slate-950" />
+                        <span className="relative inline-flex h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-rose-500 ring-2 ring-slate-950" />
                       </span>
                     )}
                   </button>
@@ -702,11 +702,11 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                 {/* User / Google Profile Pill -> opens Settings Modal on click */}
                 {userAccount && userAccount.isLoggedIn ? (
-                  <div className="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-800/80">
+                  <div className="flex items-center gap-1 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-800/80 shrink-0">
                     <div
                       onClick={onOpenSettings}
                       title="Voir mon profil et paramètres"
-                      className="flex items-center gap-1.5 sm:gap-2 hover:opacity-90 transition-opacity cursor-pointer text-left"
+                      className="flex items-center gap-1 sm:gap-2 hover:opacity-90 transition-opacity cursor-pointer text-left shrink-0"
                     >
                       {userAccount.avatar ? (
                         <img
@@ -742,10 +742,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                           if (onViewPricing) onViewPricing();
                           else onNavigate('landing');
                         }}
-                        className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-cyan-500/20 text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-cyan-500/20 text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                         title="Modèle KONAN PLUS Actif - Cliquez pour voir les formules"
                       >
-                        <Crown className="w-3 h-3 text-amber-400" />
+                        <Crown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400 shrink-0" />
                         <span>PLUS</span>
                       </button>
                     ) : effectivePlan === 'pro' ? (
@@ -756,19 +756,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                           if (onViewPricing) onViewPricing();
                           else onNavigate('landing');
                         }}
-                        className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/20 text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/20 text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                         title="Modèle KONAN PRO Actif - Cliquez pour voir les formules"
                       >
-                        <Sparkles className="w-3 h-3 text-amber-400" />
+                        <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400 shrink-0" />
                         <span>PRO</span>
                       </button>
                     ) : (isDemoMode || userAccount?.isDemo) ? (
-                      <div className="flex items-center gap-1.5 shrink-0">
+                      <div className="flex items-center gap-1 shrink-0">
                         <span
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/15 text-amber-300 border-amber-500/30 cursor-default select-none"
+                          className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/15 text-amber-300 border-amber-500/30 cursor-default select-none"
                           title="Mode Démo Actif"
                         >
-                          <GraduationCap className="w-3 h-3 text-amber-400" />
+                          <GraduationCap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400 shrink-0" />
                           Démo
                         </span>
                         {_onLogout && (
@@ -785,7 +785,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <button
                           type="button"
                           onClick={() => onNavigate('auth')}
-                          className="hidden xs:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-[10px] font-bold text-indigo-300 hover:text-white transition-colors cursor-pointer shadow-xs"
+                          className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-[10px] font-bold text-indigo-300 hover:text-white transition-colors cursor-pointer shadow-xs"
                           title="Se connecter avec un compte Google réel"
                         >
                           <LogIn className="w-3 h-3" />
@@ -794,7 +794,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                     ) : (
                       <span
-                        className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-slate-800/90 text-slate-300 border-slate-700/80 cursor-default select-none"
+                        className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-slate-800/90 text-slate-300 border-slate-700/80 cursor-default select-none"
                         title="Modèle KONAN Gratuit"
                       >
                         Gratuit
@@ -804,9 +804,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ) : (
                   <button
                     onClick={() => onNavigate('auth')}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 border border-indigo-500/40 hover:border-indigo-400 text-xs font-semibold text-white shadow-sm cursor-pointer"
+                    className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-slate-900 border border-indigo-500/40 hover:border-indigo-400 text-[11px] sm:text-xs font-semibold text-white shadow-sm cursor-pointer shrink-0"
                   >
-                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 shrink-0">
+                    <svg viewBox="0 0 24 24" className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0">
                       <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
                       <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.27 21.37 7.35 24 12 24z" />
                       <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.97 0 12s.46 3.84 1.26 5.42l4.02-3.15z" />
@@ -818,13 +818,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               </>
             ) : (
               /* Landing page actions */
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                 {userAccount && userAccount.isLoggedIn && !isDemoMode ? (
                   <Button
                     variant="glow"
                     size="sm"
                     onClick={() => onNavigate('dashboard')}
-                    className="text-xs font-semibold px-3 py-1.5 cursor-pointer"
+                    className="text-[11px] sm:text-xs font-bold px-2 sm:px-3 py-1 sm:py-1.5 cursor-pointer whitespace-nowrap shadow-sm"
                   >
                     Mon Espace
                   </Button>
@@ -834,19 +834,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <Button
                         variant="secondary"
                         size="sm"
-                        leftIcon={<GraduationCap className="w-3.5 h-3.5 text-indigo-400" />}
+                        leftIcon={<GraduationCap className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-indigo-400 shrink-0" />}
                         onClick={onEnterDemoMode}
-                        className="text-xs font-semibold px-2.5 sm:px-3 py-1.5 cursor-pointer hover:border-indigo-500/40"
+                        className="text-[11px] sm:text-xs font-semibold px-2 sm:px-3 py-1 sm:py-1.5 cursor-pointer hover:border-indigo-500/40 whitespace-nowrap shrink-0"
                       >
-                        Mode Démo
+                        <span className="hidden xs:inline">Mode </span><span>Démo</span>
                       </Button>
                     )}
                     <Button
                       variant="glow"
                       size="sm"
-                      leftIcon={<LogIn className="w-3.5 h-3.5" />}
+                      leftIcon={<LogIn className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />}
                       onClick={() => onNavigate('auth')}
-                      className="text-xs font-semibold px-3 py-1.5 cursor-pointer"
+                      className="text-[11px] sm:text-xs font-bold px-2.5 sm:px-3.5 py-1 sm:py-1.5 cursor-pointer whitespace-nowrap shrink-0 shadow-sm"
                     >
                       Connexion
                     </Button>
@@ -860,7 +860,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Sub-Navigation Bar (Only for active dashboard pages) */}
         {activeView !== 'landing' && activeView !== 'auth' && (
-          <div className="flex lg:hidden items-center py-2 border-t border-slate-900 overflow-x-auto no-scrollbar gap-1.5 px-0.5">
+          <div className="flex lg:hidden items-center py-2 border-t border-slate-900 overflow-x-auto no-scrollbar gap-1.5 px-1.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeView === item.id;
@@ -875,7 +875,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onNavigate(item.id);
                     }
                   }}
-                  className={`group flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 shrink-0 cursor-pointer min-h-[38px] active:scale-95 ${
+                  className={`group flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 shrink-0 cursor-pointer min-h-[36px] active:scale-95 ${
                     isActive 
                       ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/40 ring-1 ring-blue-400/30' 
                       : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800'
