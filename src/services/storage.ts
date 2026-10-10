@@ -70,7 +70,7 @@ export function createEmptyUserState(
       ...user,
       konanId: assignedKonanId,
       isDemo: false,
-      isLoggedIn: true,
+      isLoggedIn: user.isLoggedIn ?? false,
       planTier: user.planTier || 'free',
       privacyPolicyAccepted: user.privacyPolicyAccepted ?? false,
       privacyPolicyAcceptedAt: user.privacyPolicyAcceptedAt,
@@ -162,6 +162,20 @@ export function createInitialStateFromPreset(presetId: string = 'cs-engineering'
  * Loads the state for a specific authenticated user.
  */
 export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState {
+  if (!uid || uid === 'guest' || uid === 'google-demo' || uid === 'demo') {
+    return createEmptyUserState({
+      name: 'Étudiant',
+      email: '',
+      avatar: '',
+      googleId: 'guest',
+      academicLevel: 'Licence Universitaire',
+      isLoggedIn: false,
+      isDemo: false,
+      planTier: 'free',
+      lastSyncedAt: new Date().toISOString(),
+    });
+  }
+
   const assignedKonanId = fallbackUser?.konanId || generateKonanId(uid);
   const user = fallbackUser || {
     name: 'Étudiant',
@@ -481,7 +495,17 @@ export interface ActiveSession {
 export function getActiveSession(): ActiveSession | null {
   try {
     const raw = localStorage.getItem(ACTIVE_SESSION_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        // Purger automatiquement les identifiants réservés ou les sessions démo résiduelles
+        if (parsed.uid === 'guest' || parsed.uid === 'google-demo' || parsed.uid === 'demo' || parsed.isDemo) {
+          localStorage.removeItem(ACTIVE_SESSION_KEY);
+          return null;
+        }
+        return parsed;
+      }
+    }
   } catch (e) {
     console.warn('Error reading active session', e);
   }
@@ -505,19 +529,11 @@ export function setActiveSession(session: ActiveSession | null): void {
  */
 export function loadAppState(): AppState {
   try {
-    const session = getActiveSession();
-    // Seul un compte réel authentifié avec Google peut être restauré automatiquement
-    if (session && !session.isDemo && session.uid) {
-      return loadUserState(session.uid);
-    }
+    // Purger toute session résiduelle au démarrage : à l'entrée dans l'application,
+    // l'utilisateur n'est jamais pré-connecté à un compte et arrive sur un état propre.
+    setActiveSession(null);
 
-    // Une session démo ne doit JAMAIS être restaurée automatiquement au rechargement de l'app.
-    // L'utilisateur doit toujours arriver sur l'interface d'accueil avec un état vierge et neutre.
-    if (session && session.isDemo) {
-      setActiveSession(null);
-    }
-
-    // État Invité totalement propre et neutre (ZÉRO cours démo, ZÉRO matières pré-remplies)
+    // État Invité totalement propre et neutre (ZÉRO cours démo, ZÉRO matières pré-remplies, non connecté)
     let deviceStudentId = '';
     try {
       deviceStudentId = localStorage.getItem('konan_device_student_id') || '';

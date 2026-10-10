@@ -9,7 +9,6 @@ import {
   loadDemoState,
   createEmptyUserState,
   createInitialStateFromPreset,
-  getActiveSession,
   setActiveSession,
   exportStateToJson,
   importStateFromJson,
@@ -85,16 +84,9 @@ export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
   const pendingPrivacyModalRef = useRef<boolean>(false);
 
-  const [activeView, setActiveView] = useState<ActiveAppView>(() => {
-    const session = getActiveSession();
-    const isConnected = Boolean(session && !session.isDemo && session.uid);
-    if (isConnected) {
-      return 'dashboard';
-    }
-    // Règle produit : Dès l'entrée, l'utilisateur voit d'abord l'interface (accueil / landing).
-    // Le compte démo ne doit JAMAIS être imposé ni sélectionné instantanément : c'est l'utilisateur qui choisit.
-    return 'landing';
-  });
+  // Règle absolue : L'utilisateur arrive TOUJOURS sur l'interface d'accueil (landing) en tant que visiteur non connecté.
+  // Jamais de compte connecté d'office, jamais de saut instantané vers le tableau de bord.
+  const [activeView, setActiveView] = useState<ActiveAppView>('landing');
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -593,71 +585,19 @@ export function App() {
     };
   }, [state.studySessions.length, state.classSlots.length, activeView]);
 
-  // Listen to Firebase auth state changes on mount and load Cloud Firestore data once with getDoc()
+  // Déconnexion et purge propre au démarrage de l'application
   useEffect(() => {
+    // Purge toute session résiduelle : à l'entrée, l'utilisateur est un visiteur neutre non connecté
+    setActiveSession(null);
+    signOutReal().catch(() => {});
+
+    // Écoute des changements d'état d'authentification Firebase :
+    // Uniquement pour accompagner une connexion explicite de l'utilisateur (depuis l'écran 'auth')
     const unsubscribeAuth = onFirebaseAuthStateChange(async (firebaseUser) => {
       if (firebaseUser) {
-        // L'utilisateur est authentifié avec Firebase : toujours activer la session réelle
-        setActiveSession({
-          uid: firebaseUser.uid,
-          isDemo: false,
-          name: firebaseUser.displayName || 'Étudiant',
-          email: firebaseUser.email || '',
-          avatar: firebaseUser.photoURL || '',
-          academicLevel: 'Licence Universitaire',
-        });
-
-        const loaded = loadUserState(firebaseUser.uid, {
-          name: firebaseUser.displayName || 'Étudiant',
-          email: firebaseUser.email || '',
-          avatar: firebaseUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(firebaseUser.displayName || 'User')}`,
-          googleId: firebaseUser.uid,
-          academicLevel: 'Licence Universitaire',
-          isLoggedIn: true,
-          isDemo: false,
-          lastSyncedAt: new Date().toISOString(),
-        });
-        setState(loaded);
-
-          // 1. Accès direct & instantané au tableau de bord (0 latence sur mobile & PC)
-          setActiveView(prev => (prev === 'auth' || prev === 'landing' || prev === 'upload-schedule' ? 'dashboard' : prev));
-
-          const greetingName = loaded.studentName || firebaseUser.displayName || 'Étudiant';
-          if (hasGreetedAuthRef.current !== firebaseUser.uid) {
-            hasGreetedAuthRef.current = firebaseUser.uid;
-            showToast(`✨ Bonne Arrivée ! ${greetingName}`);
-          }
-
-          // 2. Vérification de la politique de confidentialité (non-bloquante pour la navigation)
-          const hasLocalAccepted = Boolean(loaded.privacyPolicyAccepted || loaded.userAccount?.privacyPolicyAccepted);
-          if (!hasLocalAccepted) {
-            loadUserStateFromCloud(firebaseUser.uid).then(cloudData => {
-              if (cloudData?.privacyPolicyAccepted) {
-                setState(prev => ({
-                  ...prev,
-                  privacyPolicyAccepted: true,
-                  privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt,
-                  userAccount: prev.userAccount ? {
-                    ...prev.userAccount,
-                    privacyPolicyAccepted: true,
-                    privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt,
-                  } : undefined,
-                }));
-              } else {
-                setIsPrivacyModalOpen(true);
-              }
-            }).catch(() => {
-              setIsPrivacyModalOpen(true);
-            });
-          }
-
-          // 2. Cross-device sync in background: non-blocking
-          fetchAndMergeCloudState(firebaseUser.uid, loaded).then(synced => {
-            if (synced && (synced.subjects.length > 0 || synced.completedOnboarding)) {
-              setState(synced);
-            }
-          }).catch(console.warn);
-
+        // Redirection vers le dashboard UNIQUEMENT si l'utilisateur est activement sur la page 'auth'
+        // JAMAIS depuis 'landing' à l'entrée de l'application
+        setActiveView(prev => (prev === 'auth' ? 'dashboard' : prev));
       }
     });
 
@@ -2115,14 +2055,8 @@ export function App() {
       {/* 🚀 Cinematic 3D Entrance Animation */}
       <KonanEntranceSplash 
         onComplete={() => {
-          const session = getActiveSession();
-          const isConnected = Boolean(session && !session.isDemo && session.uid) 
-            || Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode)
-            || Boolean(auth?.currentUser);
-          
-          if (isConnected) {
-            setActiveView(prev => (prev === 'landing' || prev === 'auth' ? 'dashboard' : prev));
-          }
+          // L'animation d'entrée ne force JAMAIS la redirection vers le dashboard :
+          // L'utilisateur reste sur sa vue actuelle (notamment l'interface d'accueil 'landing').
           if (pendingPrivacyModalRef.current) {
             setIsPrivacyModalOpen(true);
             pendingPrivacyModalRef.current = false;
