@@ -374,7 +374,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       onClose();
                       onOpenGroupModal?.();
                     }}
-                    className="p-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-indigo-300 dark:bg-slate-900/90 dark:hover:bg-slate-850 dark:border-indigo-500/30 dark:hover:border-indigo-400 transition-all text-left flex items-center gap-3 cursor-pointer group shadow-xs"
+                    className="p-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-indigo-300 dark:bg-slate-900/90 dark:hover:bg-slate-800 dark:border-indigo-500/30 dark:hover:border-indigo-400 transition-all text-left flex items-center gap-3 cursor-pointer group shadow-xs"
                   >
                     <div className="w-9 h-9 rounded-lg bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                       <Users className="w-4 h-4" />
@@ -398,7 +398,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       onClose();
                       onOpenGoalModal?.();
                     }}
-                    className="p-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-300 dark:bg-slate-900/90 dark:hover:bg-slate-850 dark:border-amber-500/30 dark:hover:border-amber-400 transition-all text-left flex items-center gap-3 cursor-pointer group shadow-xs"
+                    className="p-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-300 dark:bg-slate-900/90 dark:hover:bg-slate-800 dark:border-amber-500/30 dark:hover:border-amber-400 transition-all text-left flex items-center gap-3 cursor-pointer group shadow-xs"
                   >
                     <div className="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                       <Target className="w-4 h-4" />

@@ -635,7 +635,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
         <button
           onClick={handleReset}
-          className="group text-xs text-slate-300 hover:text-white inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-900/60 hover:bg-slate-850 transition-all cursor-pointer active:scale-95 shadow-xs"
+          className="group text-xs text-slate-300 hover:text-white inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-900/60 hover:bg-slate-800 transition-all cursor-pointer active:scale-95 shadow-xs"
           title="Réinitialiser"
         >
           <RotateCcw className="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-400 transition-transform duration-500 group-hover:-rotate-180 group-active:rotate-[-360deg]" />
@@ -737,7 +737,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 type="button"
                 disabled={isAnalyzing}
                 onClick={() => pdfInputRef.current?.click()}
-                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/50 hover:bg-slate-50 dark:hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
+                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/50 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
               >
                 <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200 dark:bg-indigo-500/10 dark:border-indigo-500/20 dark:text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <FileText className="w-5 h-5" />
@@ -753,7 +753,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 type="button"
                 disabled={isAnalyzing}
                 onClick={() => cameraInputRef.current?.click()}
-                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/50 hover:bg-slate-50 dark:hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
+                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/50 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
               >
                 <div className="w-10 h-10 rounded-lg bg-cyan-50 text-cyan-600 border border-cyan-200 dark:bg-cyan-500/10 dark:border-cyan-500/20 dark:text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <Camera className="w-5 h-5" />
@@ -769,7 +769,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 type="button"
                 disabled={isAnalyzing}
                 onClick={() => galleryInputRef.current?.click()}
-                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 hover:bg-slate-50 dark:hover:border-slate-700 dark:hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
+                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 hover:bg-slate-50 dark:hover:border-slate-700 dark:hover:bg-slate-800 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
               >
                 <div className="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <ImageIcon className="w-5 h-5" />
@@ -1100,9 +1100,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       isSelected
                         ? 'bg-indigo-50/90 border-indigo-500 shadow-md shadow-indigo-100 ring-2 ring-indigo-500/40 scale-[1.01] dark:bg-indigo-950/60 dark:border-indigo-500 dark:shadow-indigo-950/60 dark:ring-indigo-500/50'
                         : isPrimaryRec
-                        ? 'bg-white border-cyan-400 hover:border-cyan-500 hover:bg-cyan-50/30 hover:-translate-y-0.5 shadow-sm dark:bg-slate-900/90 dark:border-cyan-500/50 dark:hover:border-cyan-400 dark:hover:bg-slate-850 dark:hover:shadow-cyan-500/10'
+                        ? 'bg-white border-cyan-400 hover:border-cyan-500 hover:bg-cyan-50/30 hover:-translate-y-0.5 shadow-sm dark:bg-slate-900/90 dark:border-cyan-500/50 dark:hover:border-cyan-400 dark:hover:bg-slate-800 dark:hover:shadow-cyan-500/10'
                         : isAllowed
-                        ? 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 shadow-sm dark:bg-slate-900/80 dark:border-slate-800 dark:hover:border-slate-700 dark:hover:bg-slate-850'
+                        ? 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 shadow-sm dark:bg-slate-900/80 dark:border-slate-800 dark:hover:border-slate-700 dark:hover:bg-slate-800'
                         : 'bg-slate-50/80 border-slate-200 hover:border-amber-400/60 opacity-80 dark:bg-slate-950/60 dark:border-slate-800/80 dark:hover:border-amber-500/40'
                     }`}
                   >
@@ -1222,7 +1222,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     className={`group p-2.5 rounded-xl border text-xs font-medium transition-all duration-200 cursor-pointer text-center flex items-center justify-center gap-1.5 active:scale-95 ${
                       isSelected
                         ? `${c.activeClass} scale-[1.02]`
-                        : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-850 dark:hover:border-slate-700 hover:-translate-y-0.5 shadow-sm'
+                        : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 dark:hover:border-slate-700 hover:-translate-y-0.5 shadow-sm'
                     }`}
                   >
                     <Icon className={`w-3.5 h-3.5 shrink-0 transition-transform duration-300 ease-out ${
@@ -1245,7 +1245,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 soundFX.playCheckmarkPop();
                 setCurrentStep('upload');
               }}
-              className="group w-full sm:w-auto px-5 py-3.5 text-xs text-slate-700 hover:text-slate-900 border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:border-slate-700 dark:hover:border-slate-500 dark:bg-slate-900/90 dark:hover:bg-slate-850 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="group w-full sm:w-auto px-5 py-3.5 text-xs text-slate-700 hover:text-slate-900 border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:border-slate-700 dark:hover:border-slate-500 dark:bg-slate-900/90 dark:hover:bg-slate-800 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-300 ease-out group-hover:-translate-x-1" />
               <span>Retour au document</span>

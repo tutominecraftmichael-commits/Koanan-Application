@@ -143,7 +143,7 @@ export const AcademicGoalSelectorModal: React.FC<AcademicGoalSelectorModalProps>
                   className={`p-4 sm:p-5 rounded-2xl border-2 transition-all cursor-pointer relative interactive-card shadow-lg ${
                     isSelected
                       ? config.borderActive + ' shadow-xl'
-                      : 'bg-slate-900/70 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
+                      : 'bg-slate-900/70 border-slate-800 hover:border-slate-700 hover:bg-slate-800'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">

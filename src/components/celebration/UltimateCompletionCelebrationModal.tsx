@@ -219,7 +219,7 @@ export const UltimateCompletionCelebrationModal: React.FC<UltimateCompletionCele
           </div>
 
           {/* BAR 2: HEURES RÉALISÉES (0h00 -> TOTAL HEURES DEMANDÉES) */}
-          <div className="space-y-1.5 pt-1 border-t border-slate-850">
+          <div className="space-y-1.5 pt-1 border-t border-slate-800">
             <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-slate-300 flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-amber-400" />

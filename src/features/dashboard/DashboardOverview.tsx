@@ -285,7 +285,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {!isDemoMode ? (
           <div 
             onClick={() => onNavigate('upload-schedule')}
-            className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
+            className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
           >
             <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
               <Calendar className="w-5 h-5" />
@@ -305,7 +305,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         ) : (
           <div 
             onClick={() => onOpenPresetModal?.()}
-            className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
+            className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
           >
             <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
               <GraduationCap className="w-5 h-5" />
@@ -327,7 +327,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {/* 2. Planning d'Étude */}
         <div 
           onClick={() => onNavigate('planner')}
-          className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
+          className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
         >
           <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
             <Clock className="w-5 h-5" />
@@ -348,7 +348,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {/* 3. Matières & Thèmes */}
         <div 
           onClick={() => onNavigate('subjects')}
-          className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
+          className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
         >
           <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
             <BookOpen className="w-5 h-5" />
@@ -667,7 +667,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           return (
                             <div
                               key={session.id}
-                              className="p-3 rounded-xl bg-slate-950/40 border border-slate-850 opacity-75 flex items-center justify-between gap-3 text-xs"
+                              className="p-3 rounded-xl bg-slate-950/40 border border-slate-800 opacity-75 flex items-center justify-between gap-3 text-xs"
                               style={{ borderLeftColor: sub?.color || '#10B981', borderLeftWidth: '3px' }}
                             >
                               <div className="min-w-0 flex-1">

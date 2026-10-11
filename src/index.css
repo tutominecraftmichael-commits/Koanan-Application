@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-slate-750: #1b253b;
+  --color-slate-850: #0f172a;
+}
+
 @layer base {
   :root {
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -940,3 +945,30 @@ html.light button.bg-cyan-600 * {
     border-color: #94A3B8 !important;
   }
 }
+
+/* ==========================================================================
+   GLOBAL DARK MODE HOVER / ACTIVE / FOCUS SAFEGUARDS
+   Empêche tout bouton, carte ou composant de devenir blanc lors d'un clic/survol
+   ========================================================================== */
+html.dark .hover\:bg-slate-50:not([class*="dark:hover:bg-"]):hover,
+html.dark .hover\:bg-slate-100:not([class*="dark:hover:bg-"]):hover,
+html.dark .hover\:bg-slate-200:not([class*="dark:hover:bg-"]):hover,
+html.dark .hover\:bg-white:not([class*="dark:hover:bg-"]):hover,
+.dark .hover\:bg-slate-50:not([class*="dark:hover:bg-"]):hover,
+.dark .hover\:bg-slate-100:not([class*="dark:hover:bg-"]):hover,
+.dark .hover\:bg-slate-200:not([class*="dark:hover:bg-"]):hover,
+.dark .hover\:bg-white:not([class*="dark:hover:bg-"]):hover {
+  background-color: #1e293b !important;
+}
+
+html.dark .active\:bg-slate-50:not([class*="dark:active:bg-"]):active,
+html.dark .active\:bg-slate-100:not([class*="dark:active:bg-"]):active,
+html.dark .active\:bg-slate-200:not([class*="dark:active:bg-"]):active,
+html.dark .active\:bg-white:not([class*="dark:active:bg-"]):active,
+.dark .active\:bg-slate-50:not([class*="dark:active:bg-"]):active,
+.dark .active\:bg-slate-100:not([class*="dark:active:bg-"]):active,
+.dark .active\:bg-slate-200:not([class*="dark:active:bg-"]):active,
+.dark .active\:bg-white:not([class*="dark:active:bg-"]):active {
+  background-color: #0f172a !important;
+}
+

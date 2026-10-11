@@ -304,7 +304,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
           {onStartNewCycleEarly && (
             <button
               onClick={onStartNewCycleEarly}
-              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-semibold shrink-0 cursor-pointer transition-colors"
+              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-semibold shrink-0 cursor-pointer transition-colors"
             >
               Reprendre dès aujourd'hui
             </button>
@@ -366,7 +366,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all shrink-0 min-h-[34px] cursor-pointer ${
               selectedDayFilter === 'all'
                 ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/30'
-                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             Tous
@@ -378,7 +378,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all shrink-0 min-h-[34px] cursor-pointer ${
                 selectedDayFilter === d.id
                   ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/30'
-                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
               }`}
             >
               {d.short}

@@ -484,7 +484,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer min-h-[34px] interactive-pill ${
               filterMode === 'combined'
                 ? 'bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-md shadow-indigo-500/30'
-                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             ✨ Vue Complète (Cours + Révisions)
@@ -495,7 +495,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer min-h-[34px] interactive-pill ${
               filterMode === 'classes_only'
                 ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             📚 Cours Scolaires ({classSlots.length})
@@ -506,7 +506,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer min-h-[34px] interactive-pill ${
               filterMode === 'study_only'
                 ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30'
-                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             Séances de Révision ({studySessions.length})
@@ -574,7 +574,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 min-h-[38px] flex items-center gap-2 cursor-pointer interactive-pill ${
                   isSelected
                     ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                    : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
+                    : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white dark:hover:bg-slate-800'
                 }`}
               >
                 <span>{d.label}</span>
@@ -735,7 +735,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                             return (
                               <div
                                 key={slot.id}
-                                className="group relative rounded-xl p-3 bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700/60 transition-all text-left shadow-xs hover:shadow-md"
+                                className="group relative rounded-xl p-3 bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/60 transition-all text-left shadow-xs hover:shadow-md"
                                 style={{ borderLeftColor: subject.color, borderLeftWidth: '5px' }}
                               >
                                 <div className="flex items-center justify-between gap-1 text-[11px] mb-1">

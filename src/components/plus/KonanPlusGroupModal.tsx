@@ -704,7 +704,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
               <button
                 type="button"
                 onClick={handleCopyInviteLink}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-850 text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-semibold transition-all cursor-pointer shrink-0 shadow-xs"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-semibold transition-all cursor-pointer shrink-0 shadow-xs"
               >
                 {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copiedLink ? 'Lien Copié !' : 'Copier le lien d\'invitation'}</span>

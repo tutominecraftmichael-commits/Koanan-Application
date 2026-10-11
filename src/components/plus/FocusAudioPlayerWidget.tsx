@@ -241,7 +241,7 @@ export const FocusAudioPlayerWidget: React.FC<FocusAudioPlayerWidgetProps> = ({
             className={`px-2.5 py-1 rounded-xl text-[11px] font-medium transition-all cursor-pointer border flex items-center gap-1 ${
               currentTrack === t.id
                 ? 'bg-indigo-500/25 border-indigo-400/80 text-white shadow-xs'
-                : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-850'
+                : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800'
             }`}
           >
             <span>{t.icon}</span>
