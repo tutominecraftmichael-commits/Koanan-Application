@@ -840,12 +840,37 @@ html.light .bg-slate-950 {
 html.light .bg-slate-900\/80,
 html.light .bg-slate-900\/70,
 html.light .bg-slate-950\/80 {
-  background-color: rgba(255, 255, 255, 0.9) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
 }
 
 html.light .bg-slate-800,
 html.light .bg-slate-800\/80 {
-  background-color: #F1F5F9 !important;
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+/* Accents lisibles en mode clair (évite le délavé des -400 sur fond clair) */
+html.light .text-cyan-400:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-cyan-"]):not([class*="bg-slate-9"]) {
+  color: #0284C7 !important;
+}
+html.light .text-indigo-400:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-slate-9"]) {
+  color: #4F46E5 !important;
+}
+html.light .text-amber-400:not(button *):not([class*="bg-amber-"]):not([class*="bg-slate-9"]) {
+  color: #D97706 !important;
+}
+html.light .text-emerald-400:not(button *):not([class*="bg-emerald-"]):not([class*="bg-slate-9"]) {
+  color: #059669 !important;
+}
+html.light .text-rose-400:not(button *):not([class*="bg-rose-"]):not([class*="bg-slate-9"]) {
+  color: #E11D48 !important;
+}
+
+/* Empêcher les textes blancs orphelins sur fond blanc en mode clair */
+html.light h1.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]),
+html.light h2.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]),
+html.light h3.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]),
+html.light h4.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]) {
   color: #0F172A !important;
 }
 
@@ -853,7 +878,19 @@ html.light .bg-slate-800\/80 {
 html.light button.bg-gradient-to-r,
 html.light button.bg-gradient-to-r *,
 html.light .btn-generate-glow,
-html.light .btn-generate-glow * {
+html.light .btn-generate-glow *,
+html.light button[class*="bg-indigo-6"],
+html.light button[class*="bg-blue-6"],
+html.light button[class*="bg-amber-6"],
+html.light button[class*="bg-rose-6"],
+html.light button[class*="bg-emerald-6"],
+html.light button[class*="bg-cyan-6"],
+html.light button[class*="bg-indigo-6"] *,
+html.light button[class*="bg-blue-6"] *,
+html.light button[class*="bg-amber-6"] *,
+html.light button[class*="bg-rose-6"] *,
+html.light button[class*="bg-emerald-6"] *,
+html.light button[class*="bg-cyan-6"] * {
   color: #FFFFFF !important;
 }
 

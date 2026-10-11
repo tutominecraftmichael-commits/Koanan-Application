@@ -153,16 +153,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
       
       {/* WELCOME BANNER */}
-      <div className="relative rounded-3xl p-5 sm:p-8 overflow-hidden border border-indigo-500/30 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-slate-950 shadow-2xl">
+      <div className="relative rounded-3xl p-5 sm:p-8 overflow-hidden border border-indigo-100 dark:border-indigo-500/30 bg-gradient-to-r from-indigo-50/90 via-sky-50/40 to-white dark:from-indigo-950/60 dark:via-slate-900 dark:to-slate-950 shadow-sm dark:shadow-2xl">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 relative z-10">
           <div className="space-y-1.5 sm:space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant={isCycleCompletedToday || isDayFullyComplete ? "emerald" : "cyan"} size="sm" dot>
                 {isCycleCompletedToday ? "Cycle Validé 100%" : isDayFullyComplete ? "Journée Validée 100%" : "Copilote Actif"}
               </Badge>
-              <span className="text-[11px] sm:text-xs text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
+              <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
             </div>
-            <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Bonjour, <span className={
                 planTier === 'plus' 
                   ? 'plus-multicolor-shimmer-text font-black' 
@@ -171,14 +171,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   : 'text-gradient-primary'
               }>{studentName}</span> 👋
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-xl">
               {isCycleCompletedToday ? (
-                <span>🌟 <strong className="text-emerald-300">Programme 100% validé !</strong> Toutes les barres de progression sont à zéro. Repos bien mérité, <strong className="text-white">on reprend tout demain</strong> !</span>
+                <span>🌟 <strong className="text-emerald-600 dark:text-emerald-300">Programme 100% validé !</strong> Toutes les barres de progression sont à zéro. Repos bien mérité, <strong className="text-slate-900 dark:text-white">on reprend tout demain</strong> !</span>
               ) : isDayFullyComplete ? (
-                <span>🎉 <strong className="text-emerald-300">Toutes les matières du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} sessions terminées). Bravo pour votre assiduité !</span>
+                <span>🎉 <strong className="text-emerald-600 dark:text-emerald-300">Toutes les matières du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} sessions terminées). Bravo pour votre assiduité !</span>
               ) : (
                 <>
-                  Votre cursus <strong className="text-white">{academicLevel}</strong> est synchronisé en temps réel.
+                  Votre cursus <strong className="text-slate-900 dark:text-white">{academicLevel}</strong> est synchronisé en temps réel.
                   {allTodaysStudySessions.length > 0
                     ? ` ${activeDisplaySessions.length} session(s) active(s) aujourd'hui (${completedToday} terminée(s)).`
                     : ` Journée d'assimilation libre.`}
@@ -189,53 +189,53 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
           {/* Quick Launch Card / À Demain Card */}
           {isCycleCompletedToday ? (
-            <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-indigo-950/70 border border-emerald-500/50 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
+            <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-emerald-50 dark:bg-gradient-to-r dark:from-emerald-950/80 dark:via-slate-900 dark:to-indigo-950/70 border border-emerald-200 dark:border-emerald-500/50 shadow-sm dark:shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
               <div className="space-y-1 text-left min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <Badge variant="emerald" size="sm" dot>Cycle 100% Accompli</Badge>
-                  <span className="text-[10px] text-emerald-300 font-bold uppercase tracking-wider">Repos</span>
+                  <span className="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold uppercase tracking-wider">Repos</span>
                 </div>
-                <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
                   <span>À demain !</span>
-                  <Moon className="w-5 h-5 text-emerald-400" />
+                  <Moon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 </h3>
-                <p className="text-xs text-slate-300 max-w-xs leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-300 max-w-xs leading-relaxed">
                   Toutes les matières sont accomplies. On reprend tout demain avec les compteurs à zéro !
                 </p>
               </div>
             </div>
           ) : isDayFullyComplete ? (
-            <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-teal-950/70 border border-emerald-500/50 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
+            <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-emerald-50 dark:bg-gradient-to-r dark:from-emerald-950/80 dark:via-slate-900 dark:to-teal-950/70 border border-emerald-200 dark:border-emerald-500/50 shadow-sm dark:shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
               <div className="space-y-1 text-left min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <Badge variant="emerald" size="sm" dot>Journée 100% Validée</Badge>
-                  <span className="text-[10px] text-emerald-300 font-bold uppercase tracking-wider">Bravo !</span>
+                  <span className="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold uppercase tracking-wider">Bravo !</span>
                 </div>
-                <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
                   <span>Toutes les sessions du jour sont terminées !</span>
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 </h3>
-                <p className="text-xs text-slate-300 max-w-xs leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-300 max-w-xs leading-relaxed">
                   Félicitations ! Vous avez validé l'intégralité de vos révisions prévues pour aujourd'hui ({completedToday}/{allTodaysStudySessions.length}).
                 </p>
               </div>
             </div>
           ) : nextStudySession && (
-            <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-slate-900/95 border border-indigo-500/40 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
+            <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-indigo-200 dark:border-indigo-500/40 shadow-sm dark:shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
               <div className="space-y-1 text-left min-w-0 flex-1 w-full">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[10px] uppercase font-bold text-indigo-300 tracking-wider block">
+                  <span className="text-[10px] uppercase font-bold text-indigo-600 dark:text-indigo-300 tracking-wider block">
                     Prochaine Session
                   </span>
                   {nextStudySession.isExamPrep && (
                     <span className={`text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 whitespace-nowrap shrink-0 shadow-xs ${
                       nextStudySession.examType === 'devoir'
-                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
-                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                        ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40'
+                        : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
                     }`}>
                       <span>{nextStudySession.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
                       {nextStudySession.examDaysRemaining !== undefined && (
-                        <span className="font-mono bg-rose-950/60 text-rose-200 px-1 rounded text-[9px] border border-rose-500/30">
+                        <span className="font-mono bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 px-1 rounded text-[9px] border border-rose-300 dark:border-rose-500/30">
                           J-{nextStudySession.examDaysRemaining}
                         </span>
                       )}
@@ -247,17 +247,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs sm:text-sm font-bold text-white break-words leading-snug">
+                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">
                   {nextStudySession.title}
                 </p>
-                <p className="text-[11px] font-mono text-cyan-400">
+                <p className="text-[11px] font-mono text-cyan-700 dark:text-cyan-400 font-semibold">
                   {nextStudySession.startTime} - {nextStudySession.endTime} ({nextStudySession.durationMinutes} min)
                 </p>
               </div>
               <Button
                 variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
                 size="sm"
-                leftIcon={<CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+                leftIcon={<CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />}
                 onClick={() => {
                   if (onStartFocusSession) {
                     onStartFocusSession(nextStudySession);
@@ -267,8 +267,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 }}
                 className={`w-full sm:w-auto cursor-pointer text-xs font-bold whitespace-nowrap py-2.5 px-4 hover:scale-105 active:scale-95 transition-transform shrink-0 ${
                   nextStudySession.isRescheduledToday
-                    ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-lg shadow-amber-600/20'
-                    : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border-emerald-500/50 shadow-lg shadow-emerald-600/20'
+                    ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/20'
+                    : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border-emerald-500/50 shadow-md shadow-emerald-600/20'
                 }`}
               >
                 {nextStudySession.isRescheduledToday ? '⚡ Valider Rattrapage' : 'Valider la séance'}
@@ -278,8 +278,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
       </div>
 
-
-
       {/* QUICK ACTIONS HUB */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
         
@@ -287,19 +285,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {!isDemoMode ? (
           <div 
             onClick={() => onNavigate('upload-schedule')}
-            className="group p-4 rounded-2xl bg-slate-900/70 hover:bg-slate-850 border border-slate-800 hover:border-indigo-500/40 transition-all cursor-pointer shadow-lg hover:shadow-indigo-500/10 flex items-center gap-3.5 interactive-card"
+            className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
           >
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
               <Calendar className="w-5 h-5" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
                   Importer Emploi du Temps
                 </h3>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 dark:text-slate-500 dark:group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
               </div>
-              <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 break-words leading-relaxed mt-0.5">
                 Fichier texte ou saisie manuelle de vos cours
               </p>
             </div>
@@ -307,19 +305,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         ) : (
           <div 
             onClick={() => onOpenPresetModal?.()}
-            className="group p-4 rounded-2xl bg-slate-900/70 hover:bg-slate-850 border border-slate-800 hover:border-indigo-500/40 transition-all cursor-pointer shadow-lg hover:shadow-indigo-500/10 flex items-center gap-3.5 interactive-card"
+            className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
           >
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
               <GraduationCap className="w-5 h-5" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
                   Exemples d'EDT Démo
                 </h3>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 dark:text-slate-500 dark:group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
               </div>
-              <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 break-words leading-relaxed mt-0.5">
                 Modèles ESATIC, Médecine, Informatique, Lycée...
               </p>
             </div>
@@ -329,19 +327,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {/* 2. Planning d'Étude */}
         <div 
           onClick={() => onNavigate('planner')}
-          className="group p-4 rounded-2xl bg-slate-900/70 hover:bg-slate-850 border border-slate-800 hover:border-indigo-500/40 transition-all cursor-pointer shadow-lg hover:shadow-indigo-500/10 flex items-center gap-3.5 interactive-card"
+          className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
         >
-          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
             <Clock className="w-5 h-5" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
                 Planning d'Étude
               </h3>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 dark:text-slate-500 dark:group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
             </div>
-            <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 break-words leading-relaxed mt-0.5">
               Consulter vos séances optimisées
             </p>
           </div>
@@ -350,19 +348,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         {/* 3. Matières & Thèmes */}
         <div 
           onClick={() => onNavigate('subjects')}
-          className="group p-4 rounded-2xl bg-slate-900/70 hover:bg-slate-850 border border-slate-800 hover:border-emerald-500/40 transition-all cursor-pointer shadow-lg hover:shadow-emerald-500/10 flex items-center gap-3.5 interactive-card"
+          className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
         >
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
             <BookOpen className="w-5 h-5" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors">
                 Matières & Thèmes
               </h3>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 dark:text-slate-500 dark:group-hover:text-emerald-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
             </div>
-            <p className="text-[11px] text-slate-400 break-words leading-relaxed mt-0.5">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 break-words leading-relaxed mt-0.5">
               Coefficients, chapitres et révisions
             </p>
           </div>
@@ -377,8 +375,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           
           <div className="flex items-center justify-between">
-            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
-              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500 dark:text-indigo-400" />
               <span>Programme ({currentDayInfo.label})</span>
             </h2>
             <Button
@@ -386,7 +384,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               size="sm"
               rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               onClick={() => onNavigate('planner')}
-              className="text-xs text-indigo-400 hover:text-indigo-300 p-1 sm:px-3"
+              className="text-xs text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 p-1 sm:px-3"
             >
               Semaine complète
             </Button>
@@ -398,8 +396,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             {/* 1. Classes */}
             {todaysClasses.length > 0 && (
               <div className="space-y-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                   Cours universitaires ({todaysClasses.length})
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -408,16 +406,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     return (
                       <div
                         key={c.id}
-                        className="p-3 sm:p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                        className="p-3 sm:p-3.5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs"
                         style={{ borderLeftColor: sub?.color || '#6366F1', borderLeftWidth: '3px' }}
                       >
                         <div className="min-w-0 flex-1">
-                          <p className="font-bold text-white text-xs sm:text-sm break-words leading-snug">{sub?.name}</p>
-                          <p className="text-slate-400 text-[11px] mt-0.5 break-words">{c.room || 'Salle de cours'}</p>
+                          <p className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm break-words leading-snug">{sub?.name}</p>
+                          <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5 break-words">{c.room || 'Salle de cours'}</p>
                         </div>
-                        <div className="flex items-center sm:flex-col justify-between sm:justify-center sm:text-right font-mono shrink-0 pt-1 sm:pt-0 border-t border-slate-800/60 sm:border-t-0">
-                          <span className="text-slate-300 font-semibold text-xs">{c.startTime} - {c.endTime}</span>
-                          <span className="text-[10px] text-cyan-400 uppercase font-bold">{c.type}</span>
+                        <div className="flex items-center sm:flex-col justify-between sm:justify-center sm:text-right font-mono shrink-0 pt-1 sm:pt-0 border-t border-slate-100 dark:border-slate-800/60 sm:border-t-0">
+                          <span className="text-slate-700 dark:text-slate-300 font-semibold text-xs">{c.startTime} - {c.endTime}</span>
+                          <span className="text-[10px] text-cyan-700 dark:text-cyan-400 uppercase font-bold">{c.type}</span>
                         </div>
                       </div>
                     );
@@ -428,18 +426,18 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
             {/* 2. Study Sessions */}
             {isCycleCompletedToday ? (
-              <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-indigo-950/40 border border-emerald-500/30 text-center space-y-4 shadow-xl">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center mx-auto border border-emerald-500/30 shadow-lg shadow-emerald-500/20">
+              <div className="p-6 sm:p-8 rounded-3xl bg-emerald-50 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-900 dark:to-indigo-950/40 border border-emerald-200 dark:border-emerald-500/30 text-center space-y-4 shadow-sm dark:shadow-xl">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 flex items-center justify-center mx-auto border border-emerald-200 dark:border-emerald-500/30 shadow-md">
                   <Moon className="w-7 h-7" />
                 </div>
                 <div className="space-y-2 max-w-md mx-auto">
-                  <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold uppercase tracking-wider">
+                  <span className="inline-block px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300 text-xs font-bold uppercase tracking-wider">
                     🎉 Objectif Semaine Validé
                   </span>
-                  <h3 className="text-xl sm:text-2xl font-black text-white">
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
                     À demain ! 🌙
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     Toutes les barres de progression sont à zéro. Reposez-vous bien aujourd'hui, on reprend tout dès demain avec votre nouveau planning !
                   </p>
                 </div>
@@ -447,7 +445,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <div className="pt-2">
                     <button
                       onClick={onStartNewCycleEarly}
-                      className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-xs font-medium cursor-pointer transition-colors"
+                      className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-medium cursor-pointer transition-colors"
                     >
                       Recommencer les révisions dès aujourd'hui
                     </button>
@@ -457,13 +455,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             ) : (
               <div className="space-y-2.5 pt-1">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                     Sessions d'Étude ({completedToday}/{allTodaysStudySessions.length} faites)
                   </span>
                   <div className="flex items-center gap-2">
                     {rescheduledTodaySessions.length > 0 && (
-                      <span className="text-[10px] font-bold text-amber-300 uppercase">
+                      <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 uppercase">
                         {rescheduledTodaySessions.length} à rattraper
                       </span>
                     )}
@@ -472,22 +470,22 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
                 {/* Daily Catch-up Rescheduled Banner with Clear Breakdown */}
                 {rescheduledTodaySessions.length > 0 && (
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-indigo-950/50 border border-amber-500/50 shadow-xl space-y-3.5 text-xs">
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-amber-50/70 dark:from-amber-950/70 dark:via-slate-900 dark:to-indigo-950/50 border border-amber-200 dark:border-amber-500/50 shadow-sm dark:shadow-xl space-y-3.5 text-xs">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex items-start gap-2.5 min-w-0">
-                        <div className="p-2 rounded-xl bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
-                          <AlertCircle className="w-5 h-5 text-amber-400" />
+                        <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0 mt-0.5">
+                          <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div className="space-y-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-extrabold text-amber-300 uppercase tracking-wide text-xs">
+                            <span className="font-extrabold text-amber-900 dark:text-amber-300 uppercase tracking-wide text-xs">
                               ⚠️ Réaménagement intelligent : {rescheduledTodaySessions.length} session(s) non validée(s)
                             </span>
                             <Badge variant="amber" size="sm" className="font-bold px-2 py-0.5 animate-pulse">
                               {totalMissedHoursText} à rattraper aujourd'hui
                             </Badge>
                           </div>
-                          <p className="text-slate-300 text-xs leading-relaxed">
+                          <p className="text-amber-950/80 dark:text-slate-300 text-xs leading-relaxed">
                             Vos créneaux non respectés ont été replacés pour ce soir afin de ne perdre aucune heure de révision.
                           </p>
                         </div>
@@ -499,7 +497,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           size="sm"
                           leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
                           onClick={() => onToggleSessionComplete(rescheduledTodaySessions[0].id)}
-                          className="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs py-2 px-3.5 shadow-lg shadow-amber-600/30 cursor-pointer hover:scale-105 active:scale-95 transition-all"
+                          className="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs py-2 px-3.5 shadow-md shadow-amber-600/30 cursor-pointer hover:scale-105 active:scale-95 transition-all"
                           title="Valider la première séance de rattrapage"
                         >
                           ⚡ Valider le Rattrapage
@@ -508,8 +506,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     </div>
 
                     {/* DÉTAIL CLAIR ET ÉPURÉ DES SÉANCES REPORTÉES CE SOIR */}
-                    <div className="space-y-1.5 pt-2 border-t border-slate-800/80">
-                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    <div className="space-y-1.5 pt-2 border-t border-amber-200/60 dark:border-slate-800/80">
+                      <p className="text-[11px] font-bold text-amber-900/80 dark:text-slate-400 uppercase tracking-wider">
                         Séances reportées ce soir :
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -518,16 +516,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           return (
                             <div
                               key={s.id}
-                              className="p-3 rounded-xl bg-slate-950/70 border border-amber-500/30 text-xs shadow-sm flex items-center justify-between"
+                              className="p-3 rounded-xl bg-white dark:bg-slate-950/70 border border-amber-200 dark:border-amber-500/30 text-xs shadow-xs flex items-center justify-between"
                             >
                               <div className="min-w-0 flex-1 space-y-0.5">
-                                <p className="font-extrabold text-white truncate text-xs">{missedSub?.name || s.title}</p>
-                                <p className="text-[11px] text-amber-300 flex items-center gap-1.5 font-medium">
+                                <p className="font-extrabold text-slate-900 dark:text-white truncate text-xs">{missedSub?.name || s.title}</p>
+                                <p className="text-[11px] text-amber-800 dark:text-amber-300 flex items-center gap-1.5 font-medium">
                                   <span>Reportée ce soir à</span>
-                                  <span className="font-mono font-bold text-amber-200 bg-amber-500/20 px-1.5 py-0.5 rounded border border-amber-500/30">
+                                  <span className="font-mono font-bold text-amber-900 dark:text-amber-200 bg-amber-100 dark:bg-amber-500/20 px-1.5 py-0.5 rounded border border-amber-200 dark:border-amber-500/30">
                                     {s.startTime}
                                   </span>
-                                  <span className="text-slate-400 text-[10px]">({s.durationMinutes} min)</span>
+                                  <span className="text-slate-500 dark:text-slate-400 text-[10px]">({s.durationMinutes} min)</span>
                                 </p>
                               </div>
                             </div>
@@ -540,8 +538,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
                 {/* SESSIONS ACTIVES & RATTRAPAGES EN ORDRE CHRONOLOGIQUE STRICT */}
                 {activeDisplaySessions.length === 0 ? (
-                  <Card className="text-center py-6 sm:py-8 border-slate-800 bg-slate-900/40">
-                    <p className="text-xs text-slate-400">
+                  <Card className="text-center py-6 sm:py-8 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 shadow-xs">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       {completedToday > 0 
                         ? '✨ Bravo ! Toutes vos sessions prévues aujourd’hui sont complétées.'
                         : 'Aucune session d’étude active pour aujourd’hui.'}
@@ -550,7 +548,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={() => onNavigate('planner')}
-                      className="mt-2 text-xs text-indigo-400"
+                      className="mt-2 text-xs text-indigo-600 dark:text-indigo-400"
                     >
                       Consulter mon planning de révision
                     </Button>
@@ -562,27 +560,27 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     return (
                       <div
                         key={session.id}
-                        className={`p-3.5 sm:p-4 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                        className={`p-3.5 sm:p-4 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${
                           isRescheduled
-                            ? 'bg-gradient-to-r from-slate-900 via-amber-950/20 to-slate-900 border-amber-500/40 shadow-lg shadow-amber-950/20'
-                            : 'bg-slate-900/80 border-slate-700/80 hover:border-indigo-500/50 shadow-md'
+                            ? 'bg-gradient-to-r from-amber-50/60 via-white to-amber-50/30 dark:from-slate-900 dark:via-amber-950/20 dark:to-slate-900 border-amber-200 dark:border-amber-500/40'
+                            : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-700/80 hover:border-indigo-400'
                         }`}
                         style={{ borderLeftColor: isRescheduled ? '#F59E0B' : (sub?.color || '#6366F1'), borderLeftWidth: '4px' }}
                       >
                         <div className="space-y-1.5 min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-[11px] font-mono font-bold text-cyan-400">
+                            <span className="text-[11px] font-mono font-bold text-cyan-700 dark:text-cyan-400">
                               {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                             </span>
                             {session.isExamPrep && (
                               <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-xs ${
                                 session.examType === 'devoir'
-                                  ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
-                                  : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                                  ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40'
+                                  : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
                               }`}>
                                 <span>{session.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
                                 {session.examDaysRemaining !== undefined && (
-                                  <span className="font-mono bg-rose-950/60 text-rose-200 px-1 rounded text-[9px] border border-rose-500/30">
+                                  <span className="font-mono bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 px-1 rounded text-[9px] border border-rose-300 dark:border-rose-500/30">
                                     J-{session.examDaysRemaining}
                                   </span>
                                 )}
@@ -594,7 +592,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                               </Badge>
                             )}
                             {session.pacingMethod && (
-                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-500/20 text-cyan-300 border border-indigo-500/30 font-mono">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-cyan-300 border border-indigo-200 dark:border-indigo-500/30 font-mono">
                                 🧠 {session.pacingMethod === 'feynman' ? 'Feynman' : session.pacingMethod === 'time_blocking' ? 'Time Blocking' : session.pacingMethod === 'pomodoro' ? 'Pomodoro' : session.pacingMethod === 'two_minutes_rule' ? '2-Min' : 'Répétition'}
                               </span>
                             )}
@@ -615,13 +613,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             </button>
                           </div>
 
-                          <h4 className="text-xs sm:text-sm font-bold text-white break-words leading-snug">
+                          <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">
                             {session.title}
                           </h4>
-                          <p className="text-[11px] sm:text-xs text-slate-400 break-words leading-snug">{sub?.name}</p>
+                          <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 break-words leading-snug">{sub?.name}</p>
                         </div>
 
-                        <div className="flex items-center gap-2 self-stretch sm:self-center justify-end shrink-0 pt-2 sm:pt-0 border-t border-slate-800/60 sm:border-t-0">
+                        <div className="flex items-center gap-2 self-stretch sm:self-center justify-end shrink-0 pt-2 sm:pt-0 border-t border-slate-100 dark:border-slate-800/60 sm:border-t-0">
 
                           <Button
                             variant={isRescheduled ? "secondary" : "glow"}
@@ -700,17 +698,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <div className="space-y-4 sm:space-y-6">
           
           {/* Upcoming Exam Countdown */}
-          <Card className="border-slate-800 bg-slate-900/60 p-4 sm:p-6 space-y-3 sm:space-y-4">
+          <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-xs">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Target className="w-4 h-4 text-rose-400" />
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <Target className="w-4 h-4 text-rose-500 dark:text-rose-400" />
                 Examens & Devoirs Surveillés
               </h3>
               {planTier === 'free' && (
                 <button
                   type="button"
                   onClick={onUpgradeToPro || onViewPricing}
-                  className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                  className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 shrink-0 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                   title="Activer le modèle KONAN PRO"
                 >
                   ⭐ PRO
@@ -719,14 +717,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
 
             {planTier === 'free' ? (
-              <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-2.5 text-xs">
-                <p className="text-slate-300 leading-relaxed">
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800/80 space-y-2.5 text-xs">
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                   Le compte à rebours et l'adaptation automatique du planning aux dates de partiels et devoirs surveillés sont réservés à l'offre <strong>KONAN PRO</strong>.
                 </p>
                 <button
                   type="button"
                   onClick={onUpgradeToPro || onViewPricing}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors cursor-pointer"
                 >
                   <span>Activer le modèle KONAN PRO</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -739,20 +737,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 {upcomingExams.slice(0, 4).map(sub => (
                   <div
                     key={sub.id}
-                    className="p-2.5 sm:p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between text-xs gap-2.5"
+                    className="p-2.5 sm:p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 flex items-center justify-between text-xs gap-2.5"
                   >
                     <div className="space-y-0.5 min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <p className="font-bold text-white break-words leading-snug">{sub.name}</p>
+                        <p className="font-bold text-slate-900 dark:text-white break-words leading-snug">{sub.name}</p>
                         <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
                           sub.examType === 'devoir' 
-                            ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' 
-                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            ? 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border border-rose-300 dark:border-rose-500/30' 
+                            : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30'
                         }`}>
                           {sub.examType === 'devoir' ? 'Devoir' : 'Examen'}
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-400 break-words">
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 break-words">
                         Coeff {sub.coefficient} • Cible : {sub.targetGrade}/20
                         {sub.examTime ? ` • ${sub.examTime}` : ''}
                       </p>
@@ -773,9 +771,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <Button
                     variant="secondary"
                     size="sm"
-                    leftIcon={<Zap className="w-3.5 h-3.5 text-amber-400" />}
+                    leftIcon={<Zap className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />}
                     onClick={() => onNavigate('planner')}
-                    className="w-full text-xs font-bold py-2 border-amber-500/30 text-amber-300 hover:bg-amber-500/10 cursor-pointer"
+                    className="w-full text-xs font-bold py-2 border-amber-300 dark:border-amber-500/30 text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-500/10 cursor-pointer"
                   >
                     ⚡ Réviser en priorité selon mes épreuves
                   </Button>
@@ -794,26 +792,26 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </Card>
 
           {/* Quick Stats Widget */}
-          <Card className="border-slate-800 bg-slate-900/60 p-4 sm:p-6 space-y-3 sm:space-y-4">
-            <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
+          <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-xs">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
               Indicateurs de Réussite
             </h3>
 
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between items-center text-slate-300">
+              <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
                 <span>Rythme d'étude :</span>
-                <span className="font-bold text-white font-mono">{preferences.chronotype}</span>
+                <span className="font-bold text-slate-900 dark:text-white font-mono">{preferences.chronotype}</span>
               </div>
-              <div className="flex justify-between items-center text-slate-300">
+              <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
                 <span>Objectif quotidien :</span>
-                <span className="font-bold text-cyan-400 font-mono">
+                <span className="font-bold text-cyan-600 dark:text-cyan-400 font-mono">
                   {formatMinutesToHours(preferences.targetDailyStudyMinutes)}
                 </span>
               </div>
-              <div className="flex justify-between items-center text-slate-300">
+              <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
                 <span>Sessions effectuées :</span>
-                <span className="font-bold text-emerald-400 font-mono">
+                <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">
                   <AnimatedCounter value={studySessions.filter(s => s.completed).length} /> validées
                 </span>
               </div>

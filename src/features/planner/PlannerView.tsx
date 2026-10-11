@@ -158,11 +158,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
-            <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-400 shrink-0" />
+          <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+            <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>{t('plannerTitle', lang)}</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             {t('plannerSubtitle', lang)}
           </p>
         </div>
@@ -192,10 +192,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
       </div>
 
       {/* Interactive Method Guidance Bar */}
-      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
-        <div className="flex items-center gap-2 text-xs text-slate-300">
-          <Brain className="w-4 h-4 text-cyan-400 shrink-0" />
-          <span className="font-semibold text-white">{t('clickForGuide', lang)}</span>
+      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/40 to-indigo-50/90 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-900 border border-indigo-200 dark:border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+          <Brain className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
+          <span className="font-semibold text-slate-900 dark:text-white">{t('clickForGuide', lang)}</span>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
           {(Object.entries(sessionTypeBadges) as [SessionType, { label: string; variant: 'primary' | 'cyan' | 'emerald' | 'amber' | 'purple' }][]).map(([type, meta]) => (
@@ -216,23 +216,23 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
       {/* METRIC STRIP */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
-        <Card className="p-3 sm:p-4 bg-slate-900/60 border-slate-800 flex items-center gap-2.5 interactive-card">
-          <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 shrink-0">
+        <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 interactive-card shadow-xs">
+          <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0">
             <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] sm:text-xs text-slate-400 truncate">Volume Hebdo</p>
-            <p className="text-sm sm:text-lg font-bold text-white font-mono">{formatMinutesToHours(totalMinutes)}</p>
+            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Volume Hebdo</p>
+            <p className="text-sm sm:text-lg font-bold text-slate-900 dark:text-white font-mono">{formatMinutesToHours(totalMinutes)}</p>
           </div>
         </Card>
 
-        <Card className="p-3 sm:p-4 bg-slate-900/60 border-slate-800 flex items-center gap-2.5 interactive-card">
-          <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 shrink-0">
+        <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 interactive-card shadow-xs">
+          <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
             <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] sm:text-xs text-slate-400 truncate">Accomplissement</p>
-            <p className="text-sm sm:text-lg font-bold text-emerald-400 font-mono">
+            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Accomplissement</p>
+            <p className="text-sm sm:text-lg font-bold text-emerald-600 dark:text-emerald-400 font-mono">
               <AnimatedCounter value={completionRate} suffix="%" /> (<AnimatedCounter value={completedSessions.length} />/{studySessions.length})
             </p>
           </div>
@@ -246,22 +246,22 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             }
             setIsStrategyModalOpen(true);
           }}
-          className="p-3 sm:p-4 bg-slate-900/60 border-slate-800 flex items-center gap-2.5 hover:border-cyan-500/50 cursor-pointer transition-all group interactive-card"
+          className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 hover:border-cyan-500/50 cursor-pointer transition-all group interactive-card shadow-xs"
           title="Cliquez pour consulter ou changer la méthode d'espacement active"
         >
-          <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:scale-110 transition-transform shrink-0">
+          <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform shrink-0">
             <Brain className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1">
-              <p className="text-[10px] sm:text-xs text-slate-400 truncate">Méthode d'espacement</p>
+              <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Méthode d'espacement</p>
               {preferences.combinedPacings && preferences.combinedPacings.length > 1 && (
-                <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300">
+                <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300">
                   ×{preferences.combinedPacings.length}
                 </span>
               )}
             </div>
-            <p className="text-xs sm:text-sm font-bold text-white truncate group-hover:text-cyan-300 transition-colors">
+            <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
               {preferences.combinedPacings && preferences.combinedPacings.length > 1
                 ? `${preferences.combinedPacings.length} Méthodes Combinées`
                 : activePacing.title}
@@ -269,34 +269,34 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
           </div>
         </Card>
 
-        <Card className="p-3 sm:p-4 bg-slate-900/60 border-slate-800 flex items-center gap-2.5 interactive-card">
-          <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 shrink-0">
+        <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 interactive-card shadow-xs">
+          <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
             <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] sm:text-xs text-slate-400 truncate">Équilibre</p>
-            <p className="text-sm sm:text-lg font-bold text-amber-400 font-mono">Anti-Burnout</p>
+            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Équilibre</p>
+            <p className="text-sm sm:text-lg font-bold text-amber-600 dark:text-amber-400 font-mono">Anti-Burnout</p>
           </div>
         </Card>
       </div>
 
       {/* À Demain Banner in Planner */}
       {isCycleCompletedToday && (
-        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/70 via-slate-900 to-indigo-950/60 border border-emerald-500/40 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+        <div className="p-4 sm:p-5 rounded-2xl bg-emerald-50 dark:bg-gradient-to-r dark:from-emerald-950/70 dark:via-slate-900 dark:to-indigo-950/60 border border-emerald-200 dark:border-emerald-500/40 shadow-xs dark:shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
           <div className="flex items-start gap-3 min-w-0">
-            <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-300 shrink-0 mt-0.5 border border-emerald-500/30">
-              <Moon className="w-5 h-5 text-emerald-400" />
+            <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 shrink-0 mt-0.5 border border-emerald-200 dark:border-emerald-500/30">
+              <Moon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div className="space-y-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-extrabold text-emerald-300 uppercase tracking-wide text-xs">
+                <span className="font-extrabold text-emerald-900 dark:text-emerald-300 uppercase tracking-wide text-xs">
                   🌙 Cycle 100% validé — À demain !
                 </span>
                 <Badge variant="emerald" size="sm" className="font-bold">
                   Barres à 0%
                 </Badge>
               </div>
-              <p className="text-slate-300 text-xs leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
                 Toutes les progressions sont remises à zéro pour entamer le nouveau cycle dès demain. Reposez-vous bien !
               </p>
             </div>
@@ -304,7 +304,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
           {onStartNewCycleEarly && (
             <button
               onClick={onStartNewCycleEarly}
-              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold shrink-0 cursor-pointer transition-colors"
+              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-semibold shrink-0 cursor-pointer transition-colors"
             >
               Reprendre dès aujourd'hui
             </button>
@@ -314,21 +314,21 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
       {/* Daily Catch-up Rescheduled Banner */}
       {studySessions.some(s => s.isRescheduledToday) && !isCycleCompletedToday && (
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-indigo-950/40 border border-amber-500/40 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-amber-50/70 dark:from-amber-950/60 dark:via-slate-900 dark:to-indigo-950/40 border border-amber-200 dark:border-amber-500/40 shadow-xs dark:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
           <div className="flex items-start gap-2.5 min-w-0">
-            <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
-              <Sparkles className="w-4 h-4 text-amber-400" />
+            <div className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0 mt-0.5">
+              <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" />
             </div>
             <div className="space-y-1.5 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-bold text-amber-300 uppercase tracking-wide text-[11px]">
+                <span className="font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wide text-[11px]">
                   🔄 Rattrapage intelligent (Jour même uniquement) ({studySessions.filter(s => s.isRescheduledToday).length})
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 border border-amber-500/40">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-500/40">
                   Aucun report au lendemain
                 </span>
               </div>
-              <p className="text-slate-300 text-xs leading-relaxed">
+              <p className="text-amber-950/80 dark:text-slate-300 text-xs leading-relaxed">
                 Vos séances non validées plus tôt ont été replacées ce soir (avant 21h30 max). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées sans impacter le programme de demain.
               </p>
             </div>
@@ -353,11 +353,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
       )}
 
       {/* FILTER BAR (Mobile Carousel + Subject Dropdown) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl glass-panel border border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-white dark:glass-panel border border-slate-200 dark:border-slate-800 shadow-xs">
         
         {/* Days Pills */}
         <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-1">
-          <span className="text-[11px] font-bold text-slate-400 shrink-0 mr-1 flex items-center gap-1">
+          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 shrink-0 mr-1 flex items-center gap-1">
             <Calendar className="w-3.5 h-3.5" />
             Jour :
           </span>
@@ -366,7 +366,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all shrink-0 min-h-[34px] cursor-pointer ${
               selectedDayFilter === 'all'
                 ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/30'
-                : 'bg-slate-900/80 text-slate-400 hover:text-slate-200'
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
             }`}
           >
             Tous
@@ -378,7 +378,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all shrink-0 min-h-[34px] cursor-pointer ${
                 selectedDayFilter === d.id
                   ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/30'
-                  : 'bg-slate-900/80 text-slate-400 hover:text-slate-200'
+                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
               }`}
             >
               {d.short}
@@ -388,14 +388,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
         {/* Subject Filter Dropdown */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-400 flex items-center gap-1 shrink-0">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1 shrink-0">
             <Filter className="w-3.5 h-3.5" />
             Matière :
           </span>
           <select
             value={selectedSubjectFilter}
             onChange={(e) => setSelectedSubjectFilter(e.target.value)}
-            className="w-full sm:w-auto bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer min-h-[36px]"
+            className="w-full sm:w-auto bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer min-h-[36px]"
           >
             <option value="all">Toutes les matières</option>
             {subjects.map(s => (
@@ -441,10 +441,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               <Card
                 key={session.id}
                 hoverEffect
-                className={`p-4 sm:p-5 border-slate-800/80 transition-all ${
+                className={`p-4 sm:p-5 transition-all shadow-xs ${
                   session.completed
-                    ? 'bg-slate-900/30 opacity-75 border-emerald-500/20'
-                    : 'bg-slate-900/70 border-slate-800'
+                    ? 'bg-slate-100/70 dark:bg-slate-900/30 opacity-75 border border-emerald-500/30'
+                    : 'bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800'
                 }`}
                 style={{ borderLeftColor: subject.color, borderLeftWidth: '5px' }}
               >
@@ -453,10 +453,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                   {/* Top line: Day, Time, Badges */}
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                      <span className="text-xs font-bold text-slate-200">
+                      <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
                         {dayInfo.label}
                       </span>
-                      <span className="text-[11px] sm:text-xs font-mono text-cyan-400 font-bold">
+                      <span className="text-[11px] sm:text-xs font-mono text-cyan-600 dark:text-cyan-400 font-bold">
                         {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                       </span>
                       {isToday && (
@@ -470,7 +470,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         </Badge>
                       )}
                       {session.pacingMethod && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-950/80 border border-slate-800 text-slate-300 flex items-center gap-1 shadow-xs">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex items-center gap-1 shadow-xs">
                           <span>🧠</span>
                           <span className="truncate max-w-[120px]">
                             {getPacingStrategy(session.pacingMethod).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
@@ -496,12 +496,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       {session.isExamPrep && (
                         <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-xs ${
                           session.examType === 'devoir'
-                            ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
-                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                            ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30'
+                            : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30'
                         }`}>
                           <span>{session.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
                           {session.examDaysRemaining !== undefined && (
-                            <span className="font-mono bg-rose-950/60 text-rose-200 px-1 rounded text-[9px] border border-rose-500/30">
+                            <span className="font-mono bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-200 px-1 rounded text-[9px] border border-rose-500/30">
                               J-{session.examDaysRemaining}
                             </span>
                           )}
@@ -521,20 +521,20 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                     >
                       {subject.name}
                     </span>
-                    <h3 className={`text-xs sm:text-sm font-bold text-white mt-0.5 ${session.completed ? 'line-through text-slate-400' : ''}`}>
+                    <h3 className={`text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5 ${session.completed ? 'line-through text-slate-400 dark:text-slate-500' : ''}`}>
                       {session.title}
                     </h3>
                   </div>
 
                   {/* Objectives Checkpoints */}
                   {session.objectives && session.objectives.length > 0 && (
-                    <div className="space-y-1 bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60 text-xs">
-                      <span className="text-[10px] text-slate-400 font-semibold uppercase block">
+                    <div className="space-y-1 bg-slate-50 dark:bg-slate-950/40 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800/60 text-xs">
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase block">
                         Checklist :
                       </span>
                       {session.objectives.map((obj, i) => (
-                        <div key={i} className="flex items-center gap-2 text-slate-300 text-[11px]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" />
+                        <div key={i} className="flex items-center gap-2 text-slate-700 dark:text-slate-300 text-[11px]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
                           <span className="break-words">{obj}</span>
                         </div>
                       ))}
@@ -542,14 +542,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                   )}
 
                   {/* Actions footer */}
-                  <div className="pt-2 sm:pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                  <div className="pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       {session.completed ? (
                         <button
                           onClick={() => isToday && onToggleSessionComplete(session.id)}
                           disabled={!isToday}
-                          className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all min-h-[36px] bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-sm ${
-                            isToday ? 'cursor-pointer hover:bg-emerald-500/30' : 'cursor-default opacity-90'
+                          className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all min-h-[36px] bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/50 shadow-xs ${
+                            isToday ? 'cursor-pointer hover:bg-emerald-100 dark:hover:bg-emerald-500/30' : 'cursor-default opacity-90'
                           }`}
                           title={isToday ? "Cliquer pour annuler la validation" : "Session validée"}
                         >
@@ -568,7 +568,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                           className={`px-3.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer min-h-[36px] interactive-pill ${
                             session.isRescheduledToday
                               ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
-                              : 'bg-indigo-600/30 text-indigo-200 border-indigo-500/40 hover:bg-indigo-600 hover:text-white'
+                              : 'bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white border-indigo-200 dark:bg-indigo-600/30 dark:text-indigo-200 dark:border-indigo-500/40 dark:hover:bg-indigo-600 dark:hover:text-white'
                           }`}
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
@@ -576,10 +576,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         </button>
                       ) : (
                         <div
-                          className="px-3 py-1.5 rounded-xl border border-slate-800/90 bg-slate-950/60 text-slate-400 text-xs font-medium flex items-center gap-1.5 cursor-not-allowed select-none min-h-[36px]"
+                          className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800/90 bg-slate-100 dark:bg-slate-950/60 text-slate-500 dark:text-slate-400 text-xs font-medium flex items-center gap-1.5 cursor-not-allowed select-none min-h-[36px]"
                           title={`🔒 Anti-triche : Vous pourrez valider cette séance uniquement le ${dayInfo.label}.`}
                         >
-                          <Lock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                          <Lock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
                           <span>Disponible le {dayInfo.label}</span>
                         </div>
                       )}

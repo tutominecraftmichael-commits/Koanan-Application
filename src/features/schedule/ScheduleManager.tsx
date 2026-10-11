@@ -381,27 +381,27 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
       
       {/* HEADER BAR */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800/80 pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="cyan" size="sm" dot>Synchronisé</Badge>
-            <span className="text-xs text-slate-400 font-mono flex items-center gap-1.5">
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1.5">
               <span className={
                 planTier === 'plus'
                   ? 'plus-multicolor-shimmer-text font-black'
                   : planTier === 'pro'
                   ? 'gold-shimmer-text font-bold'
-                  : 'text-slate-300 font-semibold'
+                  : 'text-slate-700 dark:text-slate-300 font-semibold'
               }>{studentName}</span>
               <span>•</span>
               <span>{academicLevel}</span>
             </span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-3">
-            <Calendar className="w-7 h-7 sm:w-8 sm:h-8 text-indigo-400 shrink-0" />
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+            <Calendar className="w-7 h-7 sm:w-8 sm:h-8 text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>Emploi du Temps & Grille Hebdomadaire</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-2xl">
             Visualisez vos cours scolaires fixes et vos créneaux de travail personnel organisés selon vos disponibilités.
           </p>
         </div>
@@ -414,10 +414,10 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             <Button
               variant="secondary"
               size="sm"
-              leftIcon={<FileText className="w-3.5 h-3.5 text-cyan-400" />}
+              leftIcon={<FileText className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />}
               onClick={() => onNavigate('upload-schedule')}
               title="Importer un nouvel emploi du temps au format texte"
-              className="cursor-pointer text-xs font-semibold py-2 px-3 border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10"
+              className="cursor-pointer text-xs font-semibold py-2 px-3 border-cyan-200 dark:border-cyan-500/30 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-cyan-500/10"
             >
               Importer Emploi du Temps
             </Button>
@@ -427,7 +427,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            leftIcon={<Lock className="w-3.5 h-3.5 text-cyan-400" />}
+            leftIcon={<Lock className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />}
             onClick={() => {
               const enriched = classSlots.map(c => ({
                 ...c,
@@ -437,7 +437,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               setIsSourceTruthModalOpen(true);
             }}
             title="Consulter et exporter la Source de Vérité des cours extraits"
-            className="cursor-pointer text-xs font-semibold py-2 px-3 border-indigo-500/40 text-indigo-300 hover:bg-indigo-500/10"
+            className="cursor-pointer text-xs font-semibold py-2 px-3 border-indigo-200 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-500/10"
           >
             Source de Vérité
           </Button>
@@ -447,10 +447,10 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              leftIcon={<GraduationCap className="w-3.5 h-3.5 text-indigo-400" />}
+              leftIcon={<GraduationCap className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />}
               onClick={onOpenPresetModal}
               title="Changer de filière ou modèle académique (disponible en mode démo)"
-              className="cursor-pointer text-xs font-semibold py-2 px-3 text-slate-300 hover:text-white"
+              className="cursor-pointer text-xs font-semibold py-2 px-3 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
             >
               Filières (Démo)
             </Button>
@@ -460,7 +460,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            leftIcon={<Plus className="w-3.5 h-3.5 text-indigo-400" />}
+            leftIcon={<Plus className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />}
             onClick={() => handleOpenAddModal(activeMobileDay)}
             className="cursor-pointer text-xs font-semibold py-2 px-3"
           >
@@ -470,12 +470,12 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
       </div>
 
       {/* VIEW FILTER SWITCHER & KPI STRIP */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3.5 sm:p-4 rounded-2xl glass-panel border border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:glass-panel border border-slate-200 dark:border-slate-800 shadow-xs">
         
         {/* Filter Mode Selector */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-          <span className="text-xs font-bold text-slate-400 mr-1 flex items-center gap-1 shrink-0">
-            <Eye className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="text-xs font-bold text-slate-600 dark:text-slate-400 mr-1 flex items-center gap-1 shrink-0">
+            <Eye className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             Affichage :
           </span>
 
@@ -484,7 +484,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer min-h-[34px] interactive-pill ${
               filterMode === 'combined'
                 ? 'bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-md shadow-indigo-500/30'
-                : 'bg-slate-900/80 text-slate-400 hover:text-white'
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             ✨ Vue Complète (Cours + Révisions)
@@ -495,7 +495,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer min-h-[34px] interactive-pill ${
               filterMode === 'classes_only'
                 ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                : 'bg-slate-900/80 text-slate-400 hover:text-white'
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             📚 Cours Scolaires ({classSlots.length})
@@ -506,7 +506,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer min-h-[34px] interactive-pill ${
               filterMode === 'study_only'
                 ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30'
-                : 'bg-slate-900/80 text-slate-400 hover:text-white'
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             Séances de Révision ({studySessions.length})
@@ -514,7 +514,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         </div>
 
         {/* Strategy Badge & Legend Pills */}
-        <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-400">
+        <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400">
           <button
             type="button"
             onClick={() => {
@@ -526,21 +526,21 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               }
               setIsStrategyModalOpen(true);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-950/40 border border-indigo-500/40 text-indigo-300 hover:text-white hover:border-indigo-400 text-xs font-semibold cursor-pointer transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-300 hover:text-indigo-900 dark:hover:text-white hover:border-indigo-400 text-xs font-semibold cursor-pointer transition-all shadow-xs"
             title="Consulter l'explication de la méthode d'espacement appliquée à votre emploi du temps"
           >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+            <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 shrink-0" />
             <span className="break-words">
               Méthode : {preferences.combinedPacings && preferences.combinedPacings.length > 1
                 ? `${preferences.combinedPacings.length} Méthodes Combinées`
                 : activeStrategy.title}
             </span>
             {preferences.combinedPacings && preferences.combinedPacings.length > 1 ? (
-              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/40">
                 ×{preferences.combinedPacings.length}
               </span>
             ) : (
-              <span className="text-[10px] text-cyan-400 font-mono ml-0.5 shrink-0">({activeStrategy.focusBlockDuration}m)</span>
+              <span className="text-[10px] text-cyan-700 dark:text-cyan-400 font-mono ml-0.5 shrink-0">({activeStrategy.focusBlockDuration}m)</span>
             )}
           </button>
 
@@ -602,17 +602,17 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 return (
                   <div
                     key={slot.id}
-                    className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-3 shadow-md interactive-card"
+                    className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 shadow-xs interactive-card"
                     style={{ borderLeftColor: subject.color, borderLeftWidth: '5px' }}
                   >
                     <div className="min-w-0 space-y-1">
                       <div className="flex items-center gap-2 text-xs">
-                        <span className="font-mono font-bold text-cyan-400">{slot.startTime} - {slot.endTime}</span>
+                        <span className="font-mono font-bold text-cyan-600 dark:text-cyan-400">{slot.startTime} - {slot.endTime}</span>
                         <Badge variant="slate" size="sm">{typeInfo.badge}</Badge>
                       </div>
-                      <h4 className="text-sm font-bold text-white break-words leading-snug">{subject.name}</h4>
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">{subject.name}</h4>
                       {(slot.room || slot.professor) && (
-                        <p className="text-[11px] text-slate-400 break-words mt-0.5">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 break-words mt-0.5">
                           {slot.room ? `Salle: ${slot.room}` : ''} {slot.professor ? `• Prof: ${slot.professor}` : ''}
                         </p>
                       )}
@@ -621,14 +621,14 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     <div className="flex items-center gap-1 shrink-0">
                       <button
                         onClick={() => handleOpenEditModal(slot)}
-                        className="p-2 text-slate-300 hover:text-white rounded-lg bg-slate-800 cursor-pointer"
+                        className="p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg bg-slate-100 dark:bg-slate-800 cursor-pointer transition-colors"
                         title="Modifier"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDeleteSlot(slot.id)}
-                        className="p-2 text-rose-400 hover:text-rose-300 rounded-lg bg-rose-500/10 cursor-pointer"
+                        className="p-2 text-rose-500 hover:text-rose-600 dark:hover:text-rose-300 rounded-lg bg-rose-50 dark:bg-rose-500/10 cursor-pointer transition-colors"
                         title="Supprimer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -649,16 +649,16 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 return (
                   <div
                     key={session.id}
-                    className="p-4 rounded-2xl bg-cyan-950/20 border border-cyan-500/30 flex items-center justify-between gap-3 shadow-md interactive-card"
+                    className="p-4 rounded-2xl bg-cyan-50/80 dark:bg-cyan-950/20 border border-cyan-200 dark:border-cyan-500/30 flex items-center justify-between gap-3 shadow-xs interactive-card"
                     style={{ borderLeftColor: '#06B6D4', borderLeftWidth: '5px' }}
                   >
                     <div className="min-w-0 space-y-1 flex-1">
                       <div className="flex items-center gap-2 text-xs">
-                        <span className="font-mono font-bold text-cyan-300">{session.startTime} - {session.endTime}</span>
+                        <span className="font-mono font-bold text-cyan-700 dark:text-cyan-300">{session.startTime} - {session.endTime}</span>
                         <Badge variant="cyan" size="sm">Révision</Badge>
                       </div>
-                      <h4 className="text-sm font-bold text-white break-words leading-snug">{session.title}</h4>
-                      <p className="text-[11px] text-slate-400 break-words mt-0.5">Matière : {subject.name} • {session.durationMinutes} min</p>
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">{session.title}</h4>
+                      <p className="text-[11px] text-slate-600 dark:text-slate-400 break-words mt-0.5">Matière : {subject.name} • {session.durationMinutes} min</p>
                     </div>
                   </div>
                 );
@@ -669,18 +669,18 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
       {/* DESKTOP HIGH DEFINITION WEEKLY TIMETABLE GRID */}
       <div 
         ref={timetableGridRef}
-        className="hidden lg:block glass-panel rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl overflow-x-auto print:border-none print:shadow-none print:bg-white print:p-0"
+        className="hidden lg:block bg-white dark:glass-panel rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-2xl overflow-x-auto print:border-none print:shadow-none print:bg-white print:p-0"
       >
         <div className="min-w-[920px]">
           
           {/* Days Header Columns */}
-          <div className="grid grid-cols-5 md:grid-cols-7 gap-3 mb-4 pb-4 border-b border-slate-800 text-center">
+          <div className="grid grid-cols-5 md:grid-cols-7 gap-3 mb-4 pb-4 border-b border-slate-200 dark:border-slate-800 text-center">
             {displayedDays.map(d => {
               const dayClasses = classSlots.filter(s => s.dayOfWeek === d.id).length;
               const dayStudy = studySessions.filter(s => s.dayOfWeek === d.id).length;
               return (
                 <div key={d.id} className="space-y-1">
-                  <span className="text-sm font-extrabold text-white uppercase tracking-wider">{d.label}</span>
+                  <span className="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">{d.label}</span>
                   <div className="flex items-center justify-center gap-1.5">
                     <Badge variant={dayClasses > 0 ? 'primary' : 'slate'} size="sm" className="text-[10px]">
                       {dayClasses} cours
@@ -714,12 +714,12 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               return (
                 <div
                   key={d.id}
-                  className="bg-slate-900/40 rounded-2xl p-3 border border-slate-800/80 flex flex-col justify-between space-y-3 hover:border-slate-700/80 transition-all min-h-[460px]"
+                  className="bg-slate-50/80 dark:bg-slate-900/40 rounded-2xl p-3 border border-slate-200 dark:border-slate-800/80 flex flex-col justify-between space-y-3 hover:border-slate-300 dark:hover:border-slate-700/80 transition-all min-h-[460px]"
                 >
                   <div className="space-y-2.5">
                     {isEmpty ? (
                       <div className="text-center py-16 px-1">
-                        <p className="text-xs text-slate-500 italic">Créneau libre</p>
+                        <p className="text-xs text-slate-400 italic">Créneau libre</p>
                       </div>
                     ) : (
                       <>
@@ -735,11 +735,11 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                             return (
                               <div
                                 key={slot.id}
-                                className="group relative rounded-xl p-3 bg-slate-800/90 hover:bg-slate-750 border border-slate-700/60 transition-all text-left shadow-md hover:shadow-indigo-500/10"
+                                className="group relative rounded-xl p-3 bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700/60 transition-all text-left shadow-xs hover:shadow-md"
                                 style={{ borderLeftColor: subject.color, borderLeftWidth: '5px' }}
                               >
                                 <div className="flex items-center justify-between gap-1 text-[11px] mb-1">
-                                  <span className="font-mono font-bold text-cyan-400">
+                                  <span className="font-mono font-bold text-cyan-700 dark:text-cyan-400">
                                     {slot.startTime} - {slot.endTime}
                                   </span>
                                   <Badge variant="slate" size="sm" className="text-[10px] px-1.5 py-0">
@@ -747,29 +747,29 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                                   </Badge>
                                 </div>
 
-                                <h4 className="text-xs font-bold text-white leading-tight">
+                                <h4 className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
                                   {subject.name}
                                 </h4>
 
                                 {(slot.room || slot.professor) && (
-                                  <p className="text-[10px] text-slate-400 mt-1 truncate">
+                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 truncate">
                                     {slot.room ? `📍 ${slot.room}` : ''} {slot.professor ? `• 👤 ${slot.professor}` : ''}
                                   </p>
                                 )}
 
                                 {/* Hover Actions */}
-                                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-slate-900/95 rounded-lg p-0.5 border border-slate-700 shadow-md">
+                                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-white/95 dark:bg-slate-900/95 rounded-lg p-0.5 border border-slate-200 dark:border-slate-700 shadow-md">
                                   <button
                                     onClick={() => handleOpenEditModal(slot)}
                                     title="Modifier"
-                                    className="p-1 text-slate-300 hover:text-white rounded hover:bg-slate-700 cursor-pointer"
+                                    className="p-1 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white rounded hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
                                   >
                                     <Edit3 className="w-3.5 h-3.5" />
                                   </button>
                                   <button
                                     onClick={() => handleDeleteSlot(slot.id)}
                                     title="Supprimer"
-                                    className="p-1 text-slate-300 hover:text-rose-400 rounded hover:bg-rose-500/20 cursor-pointer"
+                                    className="p-1 text-slate-600 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-400 rounded hover:bg-rose-50 dark:hover:bg-rose-500/20 cursor-pointer"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
@@ -789,23 +789,23 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                             return (
                               <div
                                 key={session.id}
-                                className="rounded-xl p-2.5 bg-cyan-950/30 hover:bg-cyan-950/50 border border-cyan-500/40 transition-all text-left shadow-sm"
+                                className="rounded-xl p-2.5 bg-cyan-50/80 dark:bg-cyan-950/30 hover:bg-cyan-100/60 dark:hover:bg-cyan-950/50 border border-cyan-200 dark:border-cyan-500/40 transition-all text-left shadow-xs"
                                 style={{ borderLeftColor: '#06B6D4', borderLeftWidth: '5px' }}
                               >
                                 <div className="flex items-center justify-between gap-1 text-[10px] mb-1">
-                                  <span className="font-mono font-bold text-cyan-300">
+                                  <span className="font-mono font-bold text-cyan-700 dark:text-cyan-300">
                                     {session.startTime} - {session.endTime}
                                   </span>
-                                  <span className="text-[10px] text-cyan-400/70 font-medium">
+                                  <span className="text-[10px] text-cyan-800 dark:text-cyan-400/70 font-semibold">
                                     Révision
                                   </span>
                                 </div>
 
-                                <h4 className="text-[11px] font-bold text-white leading-snug line-clamp-2">
+                                <h4 className="text-[11px] font-bold text-slate-900 dark:text-white leading-snug line-clamp-2">
                                   {session.title}
                                 </h4>
 
-                                <p className="text-[10px] text-cyan-400/80 mt-1 truncate">
+                                <p className="text-[10px] text-cyan-800 dark:text-cyan-400/80 mt-1 truncate font-medium">
                                   {subject.name} • {session.durationMinutes}m
                                 </p>
                               </div>
@@ -817,7 +817,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
 
                   <button
                     onClick={() => handleOpenAddModal(d.id)}
-                    className="w-full py-2 px-2 rounded-xl border border-dashed border-slate-800 hover:border-indigo-500/60 text-slate-400 hover:text-indigo-300 text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                    className="w-full py-2 px-2 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 hover:border-indigo-500 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer bg-white/60 dark:bg-transparent"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Ajouter un cours</span>
@@ -830,14 +830,14 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
       </div>
 
       {/* FOOTER CALL TO ACTION */}
-      <div className="flex flex-col sm:flex-row items-center justify-between p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-indigo-950/50 via-slate-900 to-slate-950 border border-indigo-500/30 gap-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between p-5 sm:p-6 rounded-3xl bg-indigo-50/80 dark:bg-gradient-to-r dark:from-indigo-950/50 dark:via-slate-900 dark:to-slate-950 border border-indigo-200 dark:border-indigo-500/30 gap-4 shadow-xs">
         <div className="flex items-center gap-3.5">
-          <div className="p-3 rounded-2xl bg-indigo-600 text-white shrink-0 shadow-lg shadow-indigo-500/30">
+          <div className="p-3 rounded-2xl bg-indigo-600 text-white shrink-0 shadow-md">
             <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <div>
-            <h4 className="text-sm sm:text-base font-bold text-white">Votre emploi du temps est prêt !</h4>
-            <p className="text-xs text-slate-400">
+            <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Votre emploi du temps est prêt !</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400">
               Passez au planning intelligent pour générer et démarrer vos sessions de travail personnel.
             </p>
           </div>
@@ -849,7 +849,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             size="sm"
             onClick={onTriggerPlanner}
             rightIcon={<Clock className="w-4 h-4" />}
-            className="cursor-pointer whitespace-nowrap text-xs font-bold flex-1 sm:flex-initial py-2.5 px-5 shadow-lg shadow-blue-950/40 hover:scale-105 active:scale-95 transition-all"
+            className="cursor-pointer whitespace-nowrap text-xs font-bold flex-1 sm:flex-initial py-2.5 px-5 shadow-md hover:scale-105 active:scale-95 transition-all"
           >
             ✨ Voir mon Planning de Révision
           </Button>
