@@ -832,19 +832,26 @@ html.light .border-slate-900 {
 }
 
 html.light .bg-slate-900,
-html.light .bg-slate-950 {
+html.light .bg-slate-950,
+html.light .bg-slate-900\/95,
+html.light .bg-slate-900\/90,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/70,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/50,
+html.light .bg-slate-950\/80,
+html.light .bg-slate-950\/70,
+html.light .bg-slate-950\/60,
+html.light .bg-slate-950\/50 {
   background-color: #FFFFFF !important;
   color: #0F172A !important;
 }
 
-html.light .bg-slate-900\/80,
-html.light .bg-slate-900\/70,
-html.light .bg-slate-950\/80 {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-}
-
 html.light .bg-slate-800,
-html.light .bg-slate-800\/80 {
+html.light .bg-slate-800\/90,
+html.light .bg-slate-800\/80,
+html.light .bg-slate-800\/70,
+html.light .bg-slate-800\/60 {
   background-color: #F8FAFC !important;
   color: #0F172A !important;
 }
@@ -874,23 +881,29 @@ html.light h4.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="b
   color: #0F172A !important;
 }
 
-/* Conserver le texte blanc sur les boutons avec fond coloré primaire */
-html.light button.bg-gradient-to-r,
-html.light button.bg-gradient-to-r *,
+/* Conserver le texte blanc UNIQUEMENT sur les boutons à fond plein / dégradé sombre */
+html.light button.bg-gradient-to-r:not([class*="/"]),
+html.light button.bg-gradient-to-r:not([class*="/"]) *,
 html.light .btn-generate-glow,
 html.light .btn-generate-glow *,
-html.light button[class*="bg-indigo-6"],
-html.light button[class*="bg-blue-6"],
-html.light button[class*="bg-amber-6"],
-html.light button[class*="bg-rose-6"],
-html.light button[class*="bg-emerald-6"],
-html.light button[class*="bg-cyan-6"],
-html.light button[class*="bg-indigo-6"] *,
-html.light button[class*="bg-blue-6"] *,
-html.light button[class*="bg-amber-6"] *,
-html.light button[class*="bg-rose-6"] *,
-html.light button[class*="bg-emerald-6"] *,
-html.light button[class*="bg-cyan-6"] * {
+html.light button.bg-indigo-600,
+html.light button.bg-indigo-700,
+html.light button.bg-blue-600,
+html.light button.bg-blue-700,
+html.light button.bg-amber-500,
+html.light button.bg-amber-600,
+html.light button.bg-rose-600,
+html.light button.bg-emerald-600,
+html.light button.bg-cyan-600,
+html.light button.bg-indigo-600 *,
+html.light button.bg-indigo-700 *,
+html.light button.bg-blue-600 *,
+html.light button.bg-blue-700 *,
+html.light button.bg-amber-500 *,
+html.light button.bg-amber-600 *,
+html.light button.bg-rose-600 *,
+html.light button.bg-emerald-600 *,
+html.light button.bg-cyan-600 * {
   color: #FFFFFF !important;
 }
 

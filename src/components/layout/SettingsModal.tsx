@@ -447,15 +447,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   Dates d'examens, synchronisation continue Google Agenda, et méthodes avancées Feynman & Time Blocking activées.
                 </p>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
-                  <Button
+                  <button
                     type="button"
-                    variant="glow"
-                    size="sm"
                     disabled={true}
-                    className="text-xs font-semibold cursor-not-allowed opacity-60 bg-slate-100 border border-slate-200 text-slate-500 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400"
+                    className="text-xs font-semibold px-3 py-2 rounded-xl cursor-not-allowed opacity-70 bg-slate-100 border border-slate-300 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300"
                   >
                     Konan Plus pas disponible pour le moment
-                  </Button>
+                  </button>
                   <button
                     type="button"
                     onClick={() => {
@@ -480,31 +478,28 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   Accès illimité aux plannings, Pomodoro, Active Recall et la Règle des 2 Minutes.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                  <Button
+                  <button
                     type="button"
-                    variant="primary"
-                    size="sm"
-                    leftIcon={<Sparkles className="w-3.5 h-3.5 text-amber-300" />}
                     onClick={() => {
                       onClose();
                       onSelectPlan?.('pro');
                     }}
-                    className="text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white cursor-pointer justify-center"
+                    className="text-xs font-bold px-3 py-2.5 rounded-xl transition-all border border-amber-500/60 flex items-center justify-center gap-1.5 cursor-pointer bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-xs active:scale-95"
                   >
-                    Passer à Konan Pro (Bientôt disponible)
-                  </Button>
-                  <Button
+                    <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+                    <span>Passer à Konan Pro (Bientôt disponible)</span>
+                  </button>
+                  <button
                     type="button"
-                    variant="glow"
-                    size="sm"
                     onClick={() => {
                       onClose();
                       onSelectPlan?.('plus');
                     }}
-                    className="text-xs font-semibold bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/30 text-indigo-700 dark:bg-indigo-600/30 dark:hover:bg-indigo-600/50 dark:border-indigo-500/40 dark:text-indigo-300 justify-center cursor-pointer"
+                    className="text-xs font-bold px-3 py-2.5 rounded-xl transition-all border flex items-center justify-center gap-1.5 cursor-pointer bg-indigo-50 hover:bg-indigo-100 border-indigo-300 text-indigo-900 dark:bg-indigo-950/60 dark:hover:bg-indigo-900/70 dark:border-indigo-500/50 dark:text-indigo-200 shadow-xs active:scale-95"
                   >
-                    👑 Konan Plus (Bientôt dispo)
-                  </Button>
+                    <span>👑</span>
+                    <span>Konan Plus (Bientôt dispo)</span>
+                  </button>
                 </div>
               </div>
             )}

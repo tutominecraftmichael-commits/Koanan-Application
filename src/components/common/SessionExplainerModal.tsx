@@ -189,35 +189,35 @@ export const SessionExplainerModal: React.FC<SessionExplainerModalProps> = ({
   const isEn = lang === 'en';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-xl rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 border border-slate-800/90 shadow-2xl shadow-indigo-950/40 overflow-hidden flex flex-col max-h-[90vh]"
+        className="relative w-full max-w-xl rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-800/80 bg-slate-900/50">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/50">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 text-cyan-400 shadow-sm">
+            <div className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-200 dark:bg-indigo-500/15 dark:border-indigo-500/30 dark:text-cyan-400 shadow-xs">
               <Icon className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-bold text-white tracking-wide">
+                <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-wide">
                   {isEn ? data.titleEn : data.titleFr}
                 </h2>
                 <Badge variant={data.badgeVariant} size="sm" dot>
                   {isEn ? 'Active Protocol' : 'Protocole Actif'}
                 </Badge>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t('explainerModalTitle', lang)}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors cursor-pointer"
             aria-label="Fermer"
           >
             <X className="w-5 h-5" />
@@ -228,42 +228,42 @@ export const SessionExplainerModal: React.FC<SessionExplainerModalProps> = ({
         <div className="p-5 sm:p-6 space-y-5 overflow-y-auto flex-1 custom-scrollbar">
 
           {/* Section 1: En bref / In brief */}
-          <div className="p-4 rounded-2xl bg-indigo-950/30 border border-indigo-500/30 space-y-1.5">
-            <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
+          <div className="p-4 rounded-2xl bg-indigo-50/90 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-500/30 space-y-1.5 shadow-xs">
+            <span className="text-xs font-bold text-indigo-700 dark:text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               {t('whatIsIt', lang)}
             </span>
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
               {isEn ? data.summaryEn : data.summaryFr}
             </p>
           </div>
 
           {/* Section 2: Étapes concrètes / Action protocol */}
           <div className="space-y-3">
-            <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               {t('whatToDo', lang)}
             </span>
             <div className="space-y-2">
               {(isEn ? data.stepsEn : data.stepsFr).map((step, idx) => (
                 <div 
                   key={idx} 
-                  className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs sm:text-sm text-slate-300 leading-relaxed flex items-start gap-2.5"
+                  className="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed flex items-start gap-2.5 shadow-xs"
                 >
-                  <span className="text-cyan-400 font-bold font-mono shrink-0">#{idx + 1}</span>
-                  <span>{step.replace(/^\d+\.\s*/, '')}</span>
+                  <span className="text-indigo-600 dark:text-cyan-400 font-bold font-mono shrink-0">#{idx + 1}</span>
+                  <span className="font-medium">{step.replace(/^\d+\.\s*/, '')}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Section 3: Conseil Neurocognitif / Neuro tip */}
-          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
-            <span className="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
-              <AlertTriangle className="w-3.5 h-3.5" />
+          <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 space-y-1.5 shadow-xs">
+            <span className="text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
               {t('neuroTip', lang)}
             </span>
-            <p className="text-xs sm:text-sm text-amber-100 leading-relaxed font-medium">
+            <p className="text-xs sm:text-sm text-amber-950 dark:text-amber-100 leading-relaxed font-medium">
               {isEn ? data.neuroTipEn : data.neuroTipFr}
             </p>
           </div>
@@ -271,7 +271,7 @@ export const SessionExplainerModal: React.FC<SessionExplainerModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end px-6 py-4 border-t border-slate-800/80 bg-slate-900/40">
+        <div className="flex items-center justify-end px-6 py-4 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/80 dark:bg-slate-900/40">
           <Button
             variant="primary"
             size="sm"
