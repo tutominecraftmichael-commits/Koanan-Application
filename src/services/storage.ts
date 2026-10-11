@@ -295,7 +295,9 @@ export function saveUserState(uid: string, state: AppState): void {
   }
 
   // Cross-device Cloud Sync
-  if (!state.isDemoMode && uid && uid !== 'google-demo') {
+  // RGPD Guard: synchroniser sur Firestore UNIQUEMENT si l'utilisateur a accepté la politique de confidentialité
+  const isConsentGiven = Boolean(state.privacyPolicyAccepted || state.userAccount?.privacyPolicyAccepted);
+  if (!state.isDemoMode && uid && uid !== 'google-demo' && isConsentGiven) {
     syncUserStateToCloud(uid, {
       studentName: state.studentName,
       academicLevel: state.academicLevel,

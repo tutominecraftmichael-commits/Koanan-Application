@@ -101,6 +101,11 @@ export function App() {
   const [isPlusGroupModalOpen, setIsPlusGroupModalOpen] = useState(false);
   const [isAcademicGoalModalOpen, setIsAcademicGoalModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [pendingAuth, setPendingAuth] = useState<{
+    profile: UserAccount;
+    preferences?: { chronotype: Chronotype };
+    initialState: AppState;
+  } | null>(null);
   const [waitlistModalInfo, setWaitlistModalInfo] = useState<{
     isOpen: boolean;
     featureTitle: string;
@@ -594,13 +599,9 @@ export function App() {
     signOutReal().catch(() => {});
 
     // Écoute des changements d'état d'authentification Firebase :
-    // Uniquement pour accompagner une connexion explicite de l'utilisateur (depuis l'écran 'auth')
-    const unsubscribeAuth = onFirebaseAuthStateChange(async (firebaseUser) => {
-      if (firebaseUser) {
-        // Redirection vers le dashboard UNIQUEMENT si l'utilisateur est activement sur la page 'auth'
-        // JAMAIS depuis 'landing' à l'entrée de l'application
-        setActiveView(prev => (prev === 'auth' ? 'dashboard' : prev));
-      }
+    // Le flux de connexion et la vérification de consentement sont orchestrés proprement par handleLoginSuccess
+    const unsubscribeAuth = onFirebaseAuthStateChange(() => {
+      // Aucune redirection forcée automatique : le consentement préalable est strictement requis
     });
 
     return () => {
@@ -640,15 +641,17 @@ export function App() {
   };
 
   /**
-   * Real Google / Custom Profile Login Success:
-   * Strictly isolates real user data (ZERO demo courses, clean workspace)
+   * Finalisation de la connexion après acceptation expresse de la politique de confidentialité :
+   * - Enregistrement du compte Google dans la base de données Cloud Firestore
+   * - Déblocage de la session active et navigation vers le tableau de bord
    */
-  const handleLoginSuccess = async (profile: UserAccount, preferences?: { chronotype: Chronotype }) => {
-    let userState = loadUserState(profile.googleId, profile);
-    
-    // Retain previously saved student name if customized, or use profile.name
-    const finalName = userState.studentName || profile.name || 'Étudiant';
-
+  const finalizeUserLogin = async (
+    profile: UserAccount,
+    userState: AppState,
+    effectivePlan: 'free' | 'pro' | 'plus',
+    finalName: string,
+    studentKonanId: string
+  ) => {
     setActiveSession({
       uid: profile.googleId,
       isDemo: false,
@@ -658,7 +661,84 @@ export function App() {
       academicLevel: profile.academicLevel,
     });
 
-    // Apply chronotype preference if specified
+    setState(userState);
+
+    // Enregistrement sécurisé local et dans la base de données Firestore
+    saveUserState(profile.googleId, userState);
+    syncUserStateToCloud(profile.googleId, {
+      ...userState,
+      email: profile.email,
+      name: finalName,
+      googleId: profile.googleId,
+      privacyPolicyAccepted: true,
+      privacyPolicyAcceptedAt: userState.privacyPolicyAcceptedAt || new Date().toISOString(),
+      lastSyncedAt: new Date().toISOString(),
+    }).catch(console.warn);
+
+    // Message de bienvenue avec Code Konan permanent
+    hasGreetedAuthRef.current = profile.googleId;
+    if (effectivePlan === 'pro') {
+      showToast(`⭐ Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PRO actif)`);
+    } else if (effectivePlan === 'plus') {
+      showToast(`👑 Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PLUS actif)`);
+    } else {
+      showToast(`✨ Bonne Arrivée ! ${finalName} — Votre Code Konan : ${studentKonanId}`);
+    }
+
+    // Synchronisation automatique Google Agenda pour Pro / Plus
+    if ((effectivePlan === 'pro' || effectivePlan === 'plus') && userState.studySessions && userState.studySessions.length > 0) {
+      triggerAutoGoogleCalendarSync(
+        userState.studySessions,
+        userState.subjects,
+        finalName,
+        'pro_activated'
+      );
+    }
+
+    // Célébration lors de la toute première connexion
+    const firstLoginKey = `konan_welcomed_v1_${profile.googleId}`;
+    const isFirstTimeLogin = !localStorage.getItem(firstLoginKey) && !userState.completedOnboarding;
+    if (isFirstTimeLogin) {
+      localStorage.setItem(firstLoginKey, 'true');
+      soundFX.playVictoryCelebration();
+      if (effectivePlan === 'plus') {
+        setIsPlusActivationModalOpen(true);
+      } else if (effectivePlan === 'pro') {
+        setIsSuperProModalOpen(true);
+      }
+    }
+
+    // Déblocage de l'accès à l'application
+    setActiveView('dashboard');
+
+    // Synchronisation multi-appareils en arrière-plan
+    fetchAndMergeCloudState(profile.googleId, userState)
+      .then(mergedFromCloud => {
+        if (mergedFromCloud && (mergedFromCloud.subjects?.length > 0 || mergedFromCloud.completedOnboarding)) {
+          saveUserState(profile.googleId, mergedFromCloud);
+          setState(mergedFromCloud);
+          if ((effectivePlan === 'pro' || effectivePlan === 'plus') && (!userState.studySessions || userState.studySessions.length === 0) && mergedFromCloud.studySessions?.length > 0) {
+            triggerAutoGoogleCalendarSync(
+              mergedFromCloud.studySessions,
+              mergedFromCloud.subjects,
+              finalName,
+              'pro_activated'
+            );
+          }
+        }
+      })
+      .catch(console.warn);
+  };
+
+  /**
+   * Real Google / Custom Profile Login:
+   * Pour la première connexion, tant que l'utilisateur n'a pas accepté la politique de confidentialité,
+   * son compte Google n'est JAMAIS enregistré dans Firestore et il n'accède pas à l'application.
+   */
+  const handleLoginSuccess = async (profile: UserAccount, preferences?: { chronotype: Chronotype }) => {
+    let userState = loadUserState(profile.googleId, profile);
+    const finalName = userState.studentName || profile.name || 'Étudiant';
+
     if (preferences?.chronotype) {
       userState.preferences.chronotype = preferences.chronotype;
     }
@@ -685,88 +765,42 @@ export function App() {
     };
     userState.isDemoMode = false;
 
-    // Only push to cloud immediately if local device already has subjects
-    if (userState.subjects && userState.subjects.length > 0) {
-      saveUserState(profile.googleId, userState);
-    }
-    setState(userState);
+    // Vérifier si cet utilisateur a DÉJÀ accepté les règles de confidentialité précédemment
+    let hasAcceptedPrivacy = Boolean(userState.privacyPolicyAccepted || userState.userAccount?.privacyPolicyAccepted);
 
-    // 1. Instant greeting with permanent unique Konan Code (always visible for all users)
-    hasGreetedAuthRef.current = profile.googleId;
-    if (effectivePlan === 'pro') {
-      showToast(`⭐ Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PRO actif)`);
-    } else if (effectivePlan === 'plus') {
-      showToast(`👑 Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PLUS actif)`);
-    } else {
-      showToast(`✨ Bonne Arrivée ! ${finalName} — Votre Code Konan : ${studentKonanId}`);
-    }
-
-    // If PRO or PLUS was chosen/pending and sessions exist, automatically sync Google Agenda for all days
-    if ((effectivePlan === 'pro' || effectivePlan === 'plus') && userState.studySessions && userState.studySessions.length > 0) {
-      triggerAutoGoogleCalendarSync(
-        userState.studySessions,
-        userState.subjects,
-        finalName,
-        'pro_activated'
-      );
-    }
-
-    // 🌟 L'animation & guide s'affichent uniquement lors de la PREMIÈRE connexion de l'utilisateur
-    const firstLoginKey = `konan_welcomed_v1_${profile.googleId}`;
-    const isFirstTimeLogin = !localStorage.getItem(firstLoginKey) && !userState.completedOnboarding;
-    if (isFirstTimeLogin) {
-      localStorage.setItem(firstLoginKey, 'true');
-      soundFX.playVictoryCelebration();
-      if (effectivePlan === 'plus') {
-        setIsPlusActivationModalOpen(true);
-      } else if (effectivePlan === 'pro') {
-        setIsSuperProModalOpen(true);
+    if (!hasAcceptedPrivacy) {
+      try {
+        const cloudData = await loadUserStateFromCloud(profile.googleId);
+        if (cloudData?.privacyPolicyAccepted) {
+          hasAcceptedPrivacy = true;
+          userState.privacyPolicyAccepted = true;
+          userState.privacyPolicyAcceptedAt = cloudData.privacyPolicyAcceptedAt;
+          if (userState.userAccount) {
+            userState.userAccount.privacyPolicyAccepted = true;
+            userState.userAccount.privacyPolicyAcceptedAt = cloudData.privacyPolicyAcceptedAt;
+          }
+        }
+      } catch (err) {
+        console.warn('Vérification cloud privacy:', err);
       }
     }
 
-    const hasAcceptedPrivacy = Boolean(userState.privacyPolicyAccepted || userState.userAccount?.privacyPolicyAccepted);
-
-    if (hasAcceptedPrivacy) {
-      setActiveView('dashboard');
-    } else {
-      loadUserStateFromCloud(profile.googleId).then(cloudData => {
-        if (cloudData?.privacyPolicyAccepted) {
-          setState(prev => ({
-            ...prev,
-            privacyPolicyAccepted: true,
-            privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt,
-            userAccount: prev.userAccount ? {
-              ...prev.userAccount,
-              privacyPolicyAccepted: true,
-              privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt,
-            } : undefined,
-          }));
-          setActiveView('dashboard');
-        } else {
-          setIsPrivacyModalOpen(true);
-        }
-      }).catch(() => {
-        setIsPrivacyModalOpen(true);
+    // 🔒 TANT QUE L'UTILISATEUR N'A PAS ACCEPTÉ :
+    // - Son compte Google et son email ne sont PAS enregistrés dans la base de données
+    // - Aucun accès au dashboard
+    // - Affichage immédiat de l'affiche de confidentialité
+    if (!hasAcceptedPrivacy) {
+      setPendingAuth({
+        profile,
+        preferences,
+        initialState: userState,
       });
+      setIsPrivacyModalOpen(true);
+      return;
     }
 
-    // 2. Background cross-device sync: merges cloud state without delaying navigation
-    fetchAndMergeCloudState(profile.googleId, userState)
-      .then(mergedFromCloud => {
-        if (mergedFromCloud && (mergedFromCloud.subjects?.length > 0 || mergedFromCloud.completedOnboarding)) {
-          saveUserState(profile.googleId, mergedFromCloud);
-          setState(mergedFromCloud);
-          if ((effectivePlan === 'pro' || effectivePlan === 'plus') && (!userState.studySessions || userState.studySessions.length === 0) && mergedFromCloud.studySessions?.length > 0) {
-            triggerAutoGoogleCalendarSync(
-              mergedFromCloud.studySessions,
-              mergedFromCloud.subjects,
-              finalName,
-              'pro_activated'
-            );
-          }
-        }
-      })
-      .catch(console.warn);
+    // UTILISATEUR AYANT DÉJÀ ACCEPTÉ (reconnexion) : Accès direct et synchronisation
+    await finalizeUserLogin(profile, userState, effectivePlan, finalName, studentKonanId);
   };
 
   /**
@@ -973,12 +1007,46 @@ export function App() {
   };
 
   /**
-   * Acceptance of the Privacy Policy & Firebase Cloud Data Security Agreement
+   * Acceptance of the Privacy Policy & Firebase Cloud Data Security Agreement:
+   * C'EST ICI QU'ON ENREGISTRE EN BASE DE DONNÉES ET QU'ON DÉBLOQUE L'ACCÈS À L'APPLICATION !
    */
-  const handleAcceptPrivacyPolicy = () => {
+  const handleAcceptPrivacyPolicy = async () => {
     const timestamp = new Date().toISOString();
-    const currentUid = state.userAccount?.googleId;
 
+    if (pendingAuth) {
+      const { profile, initialState } = pendingAuth;
+      const finalName = initialState.studentName || profile.name || 'Étudiant';
+      const studentKonanId = initialState.konanId || profile.konanId || generateKonanId(profile.googleId || profile.email);
+      const effectivePlan = initialState.planTier || profile.planTier || 'free';
+
+      const acceptedUserState: AppState = {
+        ...initialState,
+        privacyPolicyAccepted: true,
+        privacyPolicyAcceptedAt: timestamp,
+        userAccount: initialState.userAccount ? {
+          ...initialState.userAccount,
+          privacyPolicyAccepted: true,
+          privacyPolicyAcceptedAt: timestamp,
+          lastSyncedAt: timestamp,
+        } : {
+          ...profile,
+          privacyPolicyAccepted: true,
+          privacyPolicyAcceptedAt: timestamp,
+          lastSyncedAt: timestamp,
+        },
+      };
+
+      setIsPrivacyModalOpen(false);
+      setPendingAuth(null);
+
+      // Enregistre en base de données et ouvre l'accès à l'application
+      await finalizeUserLogin(profile, acceptedUserState, effectivePlan, finalName, studentKonanId);
+      soundFX.playVictoryCelebration();
+      showToast(`✨ Bienvenue sur KONAN AI ! Votre compte Google est maintenant enregistré et sécurisé.`);
+      return;
+    }
+
+    const currentUid = state.userAccount?.googleId;
     setState(prev => {
       const nextUserAccount: UserAccount | undefined = prev.userAccount ? {
         ...prev.userAccount,
@@ -1006,18 +1074,29 @@ export function App() {
 
     setIsPrivacyModalOpen(false);
     soundFX.playVictoryCelebration();
-    showToast(`✨ Bienvenue sur KONAN AI ! Vos données sont sécurisées sur Firebase.`);
-    setActiveView('dashboard');
+    showToast(`✨ Vos préférences de confidentialité ont été mises à jour.`);
   };
 
   /**
-   * Decline the Privacy Policy:
-   * Mandatory gatekeeper requires disconnecting and returning to landing.
+   * Refus de la politique de confidentialité :
+   * Tant que non accepté : compte Google et email JAMAIS enregistrés dans Firestore.
+   * Déconnexion complète, nettoyage et retour à l'écran d'accueil.
    */
   const handleDeclinePrivacyPolicy = async () => {
+    const declinedUid = pendingAuth?.profile.googleId || state.userAccount?.googleId;
     setIsPrivacyModalOpen(false);
+    setPendingAuth(null);
+
+    // Déconnexion Firebase Auth immédiate
     await signOutReal();
     setActiveSession(null);
+
+    // Supprimer le stockage local résiduel pour ce compte
+    if (declinedUid && declinedUid !== 'guest' && declinedUid !== 'google-demo') {
+      try {
+        localStorage.removeItem(`konan_user_${declinedUid}`);
+      } catch {}
+    }
 
     let deviceStudentId = '';
     try {
@@ -1044,7 +1123,7 @@ export function App() {
       konanId: deviceStudentId,
       isDemoMode: false,
     });
-    showToast("⚠️ L'acceptation de la politique de confidentialité est obligatoire pour utiliser KONAN AI.", 6000);
+    showToast("ℹ️ L'acceptation de la politique de confidentialité est requise pour créer votre compte et accéder à l'application.", 6000);
     setActiveView('landing');
   };
 
@@ -2016,12 +2095,18 @@ export function App() {
       {/* 🛡️ PRIVACY & FIREBASE CLOUD DATA PROTECTION MODAL (Mandatory on 1st login) */}
       <PrivacyPolicyModal
         isOpen={isPrivacyModalOpen}
-        onClose={() => setIsPrivacyModalOpen(false)}
+        onClose={() => {
+          if (pendingAuth) {
+            handleDeclinePrivacyPolicy();
+          } else {
+            setIsPrivacyModalOpen(false);
+          }
+        }}
         onAccept={handleAcceptPrivacyPolicy}
         onDecline={handleDeclinePrivacyPolicy}
-        isGatekeeper={Boolean(state.userAccount?.isLoggedIn && !state.privacyPolicyAccepted)}
-        studentName={effectiveStudentName}
-        studentEmail={state.userAccount?.email}
+        isGatekeeper={Boolean(pendingAuth || (state.userAccount?.isLoggedIn && !state.privacyPolicyAccepted))}
+        studentName={pendingAuth?.profile.name || effectiveStudentName}
+        studentEmail={pendingAuth?.profile.email || state.userAccount?.email}
       />
 
       {/* Floating Notification Toast (Full multi-line sentence, zero truncation) */}

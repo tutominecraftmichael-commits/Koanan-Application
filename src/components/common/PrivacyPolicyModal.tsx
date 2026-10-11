@@ -95,8 +95,8 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             <div className="p-3.5 rounded-2xl bg-sky-950/40 border border-sky-500/30 flex items-start gap-3 text-sky-200">
               <Lock className="w-5 h-5 text-sky-400 shrink-0 mt-0.5" />
               <div className="text-xs leading-snug">
-                <strong className="text-white block font-bold mb-0.5">Consentement préalable obligatoire</strong>
-                Conformément aux normes internationales de protection de la vie privée, vous devez accepter les conditions de conservation et de sécurité de vos données avant d'accéder à votre emploi du temps et votre tableau de bord.
+                <strong className="text-white block font-bold mb-0.5">Consentement et enregistrement de compte</strong>
+                Tant que vous n'avez pas accepté cette politique, votre compte Google et vos informations ne sont <strong>pas enregistrés dans la base de données</strong>. C'est uniquement après votre acceptation expresse que votre compte est créé et sécurisé sur Firebase, vous donnant accès à l'application.
               </div>
             </div>
           )}
@@ -218,7 +218,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                   J'ai pris connaissance de la politique de confidentialité
                 </span>
                 <span className="text-[11px] sm:text-xs text-slate-300 leading-snug block">
-                  J'accepte expressément que mes données académiques soient conservées et sécurisées dans la base de données Firebase pour le fonctionnement de KONAN AI et la synchronisation de mes emplois du temps.
+                  J'accepte expressément que mon compte Google et mes données académiques soient enregistrés et sécurisés dans la base de données Firebase pour le fonctionnement de KONAN AI et la synchronisation de mes plannings.
                 </span>
               </div>
             </label>
@@ -235,7 +235,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             onClick={onDecline}
             className="w-full sm:w-auto py-2.5 px-4 rounded-xl border border-slate-800 hover:border-rose-500/40 hover:bg-rose-500/10 text-slate-400 hover:text-rose-300 text-xs font-semibold transition-colors cursor-pointer text-center"
           >
-            {isGatekeeper ? 'Ne pas accepter (Refuser et se déconnecter)' : 'Fermer'}
+            {isGatekeeper ? 'Refuser (Ne pas enregistrer et se déconnecter)' : 'Fermer'}
           </button>
 
           {/* Primary Action: Accept & Enter App */}
@@ -250,7 +250,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                 : 'opacity-50 cursor-not-allowed !bg-slate-800 !text-slate-400 border-slate-700'
             }`}
           >
-            <span>Accepter et Accéder à mon Espace</span>
+            <span>Accepter et Enregistrer mon Compte</span>
           </Button>
 
         </div>

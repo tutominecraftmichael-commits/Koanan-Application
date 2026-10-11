@@ -506,6 +506,15 @@ export async function syncUserStateToCloud(uid: string, data: any): Promise<{ su
     // Sanitize data (remove undefined fields that Firestore doesn't like)
     const sanitized = JSON.parse(JSON.stringify(data));
 
+    // GARDE STRICTE DE CONFIDENTIALITÉ / RGPD :
+    // Tant que l'utilisateur n'a pas accepté la politique de confidentialité,
+    // son compte Google, son email et ses données ne doivent JAMAIS être enregistrés dans Firestore.
+    const isConsentAccepted = Boolean(sanitized.privacyPolicyAccepted || sanitized.userAccount?.privacyPolicyAccepted);
+    if (!isConsentAccepted) {
+      console.warn(`[Firebase] syncUserStateToCloud BLOQUÉ pour ${uid} : la politique de confidentialité n'a pas encore été acceptée.`);
+      return { success: false, error: 'PRIVACY_POLICY_NOT_ACCEPTED' };
+    }
+
     // Guard: Prevent a freshly opened unhydrated device from wiping existing cloud subjects
     if (!sanitized.subjects || sanitized.subjects.length === 0) {
       const existing = await loadUserStateFromCloud(uid);
