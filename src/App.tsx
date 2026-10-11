@@ -2136,7 +2136,7 @@ export function App() {
 
       {/* Footer */}
       <footer className="border-t border-slate-900 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-center text-xs text-slate-400 bg-slate-950/60 mt-auto px-4">
-        <p>KONAN — Copilote Académique & Product Engineering d'Excellence</p>
+        <p>KONAN - Anti-Burnout & Product Engineering d'Excellence</p>
       </footer>
 
       {/* 🚀 Cinematic 3D Entrance Animation */}

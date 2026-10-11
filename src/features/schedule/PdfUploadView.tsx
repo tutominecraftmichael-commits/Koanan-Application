@@ -225,6 +225,23 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
   // Traitement direct du fichier uploadé
   const handleFileSelected = async (file: File) => {
+    // 1. Validation de sécurité & intégrité : taille maximale 15 Mo
+    const MAX_FILE_SIZE = 15 * 1024 * 1024;
+    if (file.size > MAX_FILE_SIZE) {
+      setError("Le fichier dépasse la taille maximale autorisée (15 Mo). Veuillez fournir un document PDF ou une image plus légère.");
+      return;
+    }
+
+    // 2. Validation stricte du type MIME et de l'extension
+    const fileNameLower = (file.name || '').toLowerCase();
+    const isPdf = file.type === 'application/pdf' || fileNameLower.endsWith('.pdf');
+    const isImage = file.type.startsWith('image/') || /\.(png|jpe?g|webp|heic|heif|bmp)$/i.test(fileNameLower);
+
+    if (!isPdf && !isImage) {
+      setError("Format non pris en charge. Veuillez importer un document PDF ou une image (PNG, JPG, WEBP).");
+      return;
+    }
+
     // Barrière de niveau : Formule GRATUITE limitée à 3 générations/imports via PDF
     if (planTier === 'free' && (pdfImportsCount || 0) >= 3) {
       setWaitlistModalState({

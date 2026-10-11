@@ -158,7 +158,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className="space-y-1.5 sm:space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant={isCycleCompletedToday || isDayFullyComplete ? "emerald" : "cyan"} size="sm" dot>
-                {isCycleCompletedToday ? "Cycle Validé 100%" : isDayFullyComplete ? "Journée Validée 100%" : "Copilote Actif"}
+                {isCycleCompletedToday ? "Cycle Validé 100%" : isDayFullyComplete ? "Journée Validée 100%" : "Anti-Burnout Actif"}
               </Badge>
               <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
             </div>
