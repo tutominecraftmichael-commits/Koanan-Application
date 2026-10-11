@@ -728,8 +728,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               }}
               className={`grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl border-2 border-dashed transition-all ${
                 isDragOver 
-                  ? 'border-indigo-500 bg-indigo-950/20' 
-                  : 'border-slate-800 bg-slate-900/40 hover:border-slate-700'
+                  ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/20' 
+                  : 'border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 hover:border-slate-400 dark:hover:border-slate-700'
               }`}
             >
               {/* PDF */}
@@ -737,14 +737,14 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 type="button"
                 disabled={isAnalyzing}
                 onClick={() => pdfInputRef.current?.click()}
-                className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/50 hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50"
+                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/50 hover:bg-slate-50 dark:hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
               >
-                <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200 dark:bg-indigo-500/10 dark:border-indigo-500/20 dark:text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <span className="text-xs font-bold text-white block">Document PDF</span>
-                  <span className="text-[11px] text-slate-400 block truncate">Choisir ou glisser</span>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white block">Document PDF</span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block truncate">Choisir ou glisser</span>
                 </div>
               </button>
 
@@ -753,14 +753,14 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 type="button"
                 disabled={isAnalyzing}
                 onClick={() => cameraInputRef.current?.click()}
-                className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50"
+                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/50 hover:bg-slate-50 dark:hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
               >
-                <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 rounded-lg bg-cyan-50 text-cyan-600 border border-cyan-200 dark:bg-cyan-500/10 dark:border-cyan-500/20 dark:text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <Camera className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <span className="text-xs font-bold text-white block">Prendre Photo</span>
-                  <span className="text-[11px] text-slate-400 block truncate">Appareil photo</span>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white block">Prendre Photo</span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block truncate">Appareil photo</span>
                 </div>
               </button>
 
@@ -769,14 +769,14 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 type="button"
                 disabled={isAnalyzing}
                 onClick={() => galleryInputRef.current?.click()}
-                className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50"
+                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 hover:bg-slate-50 dark:hover:border-slate-700 dark:hover:bg-slate-850 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
               >
-                <div className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <ImageIcon className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <span className="text-xs font-bold text-white block">Galerie Photo</span>
-                  <span className="text-[11px] text-slate-400 block truncate">PNG, JPG, WEBP</span>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white block">Galerie Photo</span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block truncate">PNG, JPG, WEBP</span>
                 </div>
               </button>
             </div>
@@ -894,15 +894,15 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Sliders className="w-4 h-4 text-indigo-400" />
+                <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Sliders className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
                   <span>1. Coefficients & Notes Cibles de vos Matières</span>
                 </h2>
-                <p className="text-[11px] text-slate-400 mt-0.5">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
                   Ajustez le coefficient de chaque matière : plus le coefficient est élevé, plus l'algorithme lui réserve des créneaux de travail.
                 </p>
               </div>
-              <span className="text-xs font-mono text-slate-400">
+              <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
                 {editableSubjects.filter(s => s.enabled).length} / {editableSubjects.length} actives
               </span>
             </div>
@@ -913,8 +913,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   key={subject.id}
                   className={`p-3 sm:p-3.5 rounded-xl border transition-all ${
                     subject.enabled
-                      ? 'bg-slate-900/90 border-slate-800'
-                      : 'bg-slate-950/50 border-slate-900 opacity-60'
+                      ? 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-950/50 border-slate-200 dark:border-slate-900 opacity-60'
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3">
@@ -936,50 +936,50 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                         type="text"
                         value={subject.name}
                         onChange={(e) => handleUpdateName(subject.id, e.target.value)}
-                        className="bg-transparent border-b border-transparent hover:border-slate-700 focus:border-indigo-500 focus:bg-slate-950/60 px-1 py-0.5 rounded text-xs sm:text-sm font-semibold text-white focus:outline-none flex-1 min-w-0 truncate transition-colors"
+                        className="bg-transparent border-b border-transparent hover:border-slate-300 dark:hover:border-slate-700 focus:border-indigo-500 focus:bg-slate-50 dark:focus:bg-slate-950/60 px-1 py-0.5 rounded text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none flex-1 min-w-0 truncate transition-colors"
                         placeholder="Nom de la matière"
                       />
                     </div>
 
                     {/* Contrôle Note Cible + Coefficient (Grille 2 colonnes sur mobile, flex horizontal sur desktop) */}
-                    <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:items-center sm:gap-3 sm:w-auto pt-2 sm:pt-0 border-t border-slate-800/60 sm:border-t-0">
+                    <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:items-center sm:gap-3 sm:w-auto pt-2 sm:pt-0 border-t border-slate-100 dark:border-slate-800/60 sm:border-t-0">
                       
                       {/* Note cible */}
-                      <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-950/70 sm:bg-slate-950 px-2 py-1 rounded-xl border border-slate-800/80 min-w-0">
-                        <span className="text-[10px] sm:text-[11px] font-medium text-slate-400 whitespace-nowrap shrink-0">Cible :</span>
+                      <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-950 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-800/80 min-w-0">
+                        <span className="text-[10px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap shrink-0">Cible :</span>
                         <select
                           value={subject.targetGrade}
                           onChange={(e) => handleUpdateTargetGrade(subject.id, Number(e.target.value))}
-                          className="bg-transparent border-0 rounded text-xs text-white focus:outline-none cursor-pointer w-full min-w-0 truncate pr-1"
+                          className="bg-transparent border-0 rounded text-xs text-slate-900 dark:text-white focus:outline-none cursor-pointer w-full min-w-0 truncate pr-1"
                         >
-                          <option value={10} className="bg-slate-900 text-white">10/20 (Validation)</option>
-                          <option value={12} className="bg-slate-900 text-white">12/20 (Assez Bien)</option>
-                          <option value={14} className="bg-slate-900 text-white">14/20 (Bien)</option>
-                          <option value={16} className="bg-slate-900 text-white">16/20 (Très Bien)</option>
-                          <option value={18} className="bg-slate-900 text-white">18/20 (Major)</option>
+                          <option value={10} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white">10/20 (Validation)</option>
+                          <option value={12} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white">12/20 (Assez Bien)</option>
+                          <option value={14} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white">14/20 (Bien)</option>
+                          <option value={16} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white">16/20 (Très Bien)</option>
+                          <option value={18} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white">18/20 (Major)</option>
                         </select>
                       </div>
 
                       {/* Contrôleur de Coefficient [-] [ COEFF : X ] [+] */}
-                      <div className="flex items-center justify-between sm:justify-start gap-1 bg-slate-950 border border-slate-800 rounded-xl p-1 shrink-0">
+                      <div className="flex items-center justify-between sm:justify-start gap-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-1 shrink-0">
                         <button
                           type="button"
                           onClick={() => handleUpdateCoeff(subject.id, -1)}
                           disabled={subject.coefficient <= 1}
-                          className="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
+                          className="w-7 h-7 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shrink-0"
                           title="Diminuer coefficient"
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
                         <div className="px-1.5 sm:px-2.5 text-center flex-1 sm:flex-initial sm:min-w-[55px]">
-                          <span className="text-[9px] sm:text-[10px] text-slate-400 block font-mono leading-none">COEFF</span>
-                          <span className="text-xs font-black text-indigo-400 leading-tight">{subject.coefficient}</span>
+                          <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 block font-mono leading-none">COEFF</span>
+                          <span className="text-xs font-black text-indigo-600 dark:text-indigo-400 leading-tight">{subject.coefficient}</span>
                         </div>
                         <button
                           type="button"
                           onClick={() => handleUpdateCoeff(subject.id, 1)}
                           disabled={subject.coefficient >= 10}
-                          className="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
+                          className="w-7 h-7 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shrink-0"
                           title="Augmenter coefficient"
                         >
                           <Plus className="w-3.5 h-3.5" />
@@ -1098,22 +1098,22 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     onClick={() => handleSelectPacingStrategy(strategy.id)}
                     className={`group p-4 rounded-2xl border transition-all duration-200 cursor-pointer relative active:scale-[0.99] ${
                       isSelected
-                        ? 'bg-indigo-950/60 border-indigo-500 shadow-lg shadow-indigo-950/60 ring-2 ring-indigo-500/50 scale-[1.01]'
+                        ? 'bg-indigo-50/90 border-indigo-500 shadow-md shadow-indigo-100 ring-2 ring-indigo-500/40 scale-[1.01] dark:bg-indigo-950/60 dark:border-indigo-500 dark:shadow-indigo-950/60 dark:ring-indigo-500/50'
                         : isPrimaryRec
-                        ? 'bg-slate-900/90 border-cyan-500/50 hover:border-cyan-400 hover:bg-slate-850 hover:-translate-y-0.5 shadow-sm hover:shadow-cyan-500/10'
+                        ? 'bg-white border-cyan-400 hover:border-cyan-500 hover:bg-cyan-50/30 hover:-translate-y-0.5 shadow-sm dark:bg-slate-900/90 dark:border-cyan-500/50 dark:hover:border-cyan-400 dark:hover:bg-slate-850 dark:hover:shadow-cyan-500/10'
                         : isAllowed
-                        ? 'bg-slate-900/80 border-slate-800 hover:border-slate-700 hover:bg-slate-850 hover:-translate-y-0.5 shadow-sm'
-                        : 'bg-slate-950/60 border-slate-800/80 hover:border-amber-500/40 opacity-80'
+                        ? 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 shadow-sm dark:bg-slate-900/80 dark:border-slate-800 dark:hover:border-slate-700 dark:hover:bg-slate-850'
+                        : 'bg-slate-50/80 border-slate-200 hover:border-amber-400/60 opacity-80 dark:bg-slate-950/60 dark:border-slate-800/80 dark:hover:border-amber-500/40'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="text-xs sm:text-sm font-bold text-white">
+                          <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                             {strategy.title}
                           </h3>
                         </div>
-                        <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
                           {strategy.tagline}
                         </p>
                       </div>
@@ -1121,47 +1121,47 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       {/* Badge Statut Plan ou Recommandation */}
                       <div className="flex flex-col items-end gap-1">
                         {isPrimaryRec && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1 shrink-0">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-300 dark:bg-cyan-500/20 dark:text-cyan-300 dark:border-cyan-500/40 flex items-center gap-1 shrink-0">
                             ⭐ Recommandé
                           </span>
                         )}
                         {isRecommended && !isPrimaryRec && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shrink-0">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30 shrink-0">
                             Alternatif
                           </span>
                         )}
                         {isNotRecommended && (
-                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 shrink-0">
+                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 shrink-0">
                             Non optimal
                           </span>
                         )}
                         {isAllowed ? (
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
                             isSelected
-                              ? 'bg-indigo-500 text-white'
-                              : 'bg-slate-800 text-slate-300'
+                              ? 'bg-indigo-600 text-white shadow-sm'
+                              : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                           }`}>
                             {isSelected 
                               ? (planTier !== 'free' && selectedPacings.length > 1 ? `✓ Méthode ${selectedPacings.indexOf(strategy.id) + 1}/3` : '✓ Sélectionnée')
                               : (planTier !== 'free' ? '+ Combiner' : 'Inclus')}
                           </span>
                         ) : (
-                          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1 shrink-0">
-                            <Lock className="w-3 h-3 text-amber-400" />
+                          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40 flex items-center gap-1 shrink-0">
+                            <Lock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                             ⭐ PRO
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <p className="text-xs text-slate-300 mt-2.5 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-2.5 leading-relaxed">
                       {strategy.explanation}
                     </p>
 
-                    <div className="mt-3 pt-2.5 border-t border-slate-800/60 flex items-center justify-between text-[11px] text-slate-400">
-                      <span className="font-mono">{strategy.badge}</span>
+                    <div className="mt-3 pt-2.5 border-t border-slate-200/80 dark:border-slate-800/60 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+                      <span className="font-mono text-slate-700 dark:text-slate-300">{strategy.badge}</span>
                       {!isAllowed && (
-                        <span className="text-amber-400 text-[10px] font-semibold">
+                        <span className="text-amber-600 dark:text-amber-400 text-[10px] font-semibold">
                           Cliquez pour débloquer
                         </span>
                       )}
@@ -1174,8 +1174,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
           {/* 3. MOMENT PRÉFÉRÉ D'ÉTUDE (CHRONOTYPE) */}
           <div className="space-y-2 pt-2">
-            <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-indigo-400" />
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
               <span>Moment de la journée le plus productif pour vous</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -1185,28 +1185,28 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   label: 'Matin (07h - 12h)',
                   icon: Sun,
                   activeClass: 'bg-gradient-to-r from-amber-600 to-amber-500 border-amber-400 text-white shadow-md shadow-amber-500/25 ring-2 ring-amber-400/40 font-bold',
-                  iconClass: 'text-amber-400 group-hover:text-amber-300 group-hover:rotate-45'
+                  iconClass: 'text-amber-500 dark:text-amber-400 group-hover:text-amber-600 dark:group-hover:text-amber-300 group-hover:rotate-45'
                 },
                 { 
                   id: 'afternoon' as Chronotype, 
                   label: 'Après-midi (13h - 17h)',
                   icon: Flame,
                   activeClass: 'bg-gradient-to-r from-orange-600 to-rose-600 border-orange-400 text-white shadow-md shadow-orange-500/25 ring-2 ring-orange-400/40 font-bold',
-                  iconClass: 'text-orange-400 group-hover:text-orange-300 group-hover:scale-125'
+                  iconClass: 'text-orange-500 dark:text-orange-400 group-hover:text-orange-600 dark:group-hover:text-orange-300 group-hover:scale-125'
                 },
                 { 
                   id: 'evening' as Chronotype, 
                   label: 'Soir (18h - 22h)',
                   icon: Sunset,
                   activeClass: 'bg-gradient-to-r from-indigo-600 to-violet-600 border-indigo-400 text-white shadow-md shadow-indigo-500/30 ring-2 ring-indigo-400/40 font-bold',
-                  iconClass: 'text-indigo-400 group-hover:text-indigo-300 group-hover:-rotate-12 group-hover:scale-115'
+                  iconClass: 'text-indigo-500 dark:text-indigo-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 group-hover:-rotate-12 group-hover:scale-115'
                 },
                 { 
                   id: 'night' as Chronotype, 
                   label: 'Nuit (22h - 02h)',
                   icon: Moon,
                   activeClass: 'bg-gradient-to-r from-blue-600 to-indigo-700 border-blue-400 text-white shadow-md shadow-blue-500/25 ring-2 ring-blue-400/40 font-bold',
-                  iconClass: 'text-blue-400 group-hover:text-blue-300 group-hover:rotate-12 group-hover:scale-115'
+                  iconClass: 'text-blue-500 dark:text-blue-400 group-hover:text-blue-600 dark:group-hover:text-blue-300 group-hover:rotate-12 group-hover:scale-115'
                 },
               ].map((c) => {
                 const Icon = c.icon;
@@ -1222,7 +1222,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     className={`group p-2.5 rounded-xl border text-xs font-medium transition-all duration-200 cursor-pointer text-center flex items-center justify-center gap-1.5 active:scale-95 ${
                       isSelected
                         ? `${c.activeClass} scale-[1.02]`
-                        : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:bg-slate-850 hover:border-slate-700 hover:-translate-y-0.5'
+                        : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-850 dark:hover:border-slate-700 hover:-translate-y-0.5 shadow-sm'
                     }`}
                   >
                     <Icon className={`w-3.5 h-3.5 shrink-0 transition-transform duration-300 ease-out ${
@@ -1245,7 +1245,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 soundFX.playCheckmarkPop();
                 setCurrentStep('upload');
               }}
-              className="group w-full sm:w-auto px-5 py-3.5 text-xs text-slate-300 hover:text-white border-slate-700 hover:border-slate-500 bg-slate-900/90 hover:bg-slate-850 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+              className="group w-full sm:w-auto px-5 py-3.5 text-xs text-slate-700 hover:text-slate-900 border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:border-slate-700 dark:hover:border-slate-500 dark:bg-slate-900/90 dark:hover:bg-slate-850 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-300 ease-out group-hover:-translate-x-1" />
               <span>Retour au document</span>

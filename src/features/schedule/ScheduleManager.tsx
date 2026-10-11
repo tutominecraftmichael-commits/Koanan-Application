@@ -1134,8 +1134,8 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         title="Méthodes d'Espacement & Stratégies d'Étude"
         maxWidth="lg"
       >
-        <div className="space-y-4 text-slate-200">
-          <p className="text-xs text-slate-400 leading-relaxed">
+        <div className="space-y-4 text-slate-800 dark:text-slate-200">
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             Découvrez chaque méthode d'espacement et son fonctionnement neuroscientifique. Cliquez sur une méthode pour lire son explication détaillée et l'appliquer à vos séances d'étude.
           </p>
 
@@ -1143,9 +1143,9 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           {(() => {
             if (planTier === 'free') {
               return (
-                <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-between text-xs text-slate-600 dark:bg-slate-900/60 dark:border-slate-800/80 dark:text-slate-400">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
                     <span>Les recommandations personnalisées selon votre emploi du temps sont réservées à <strong>KONAN PRO</strong>.</span>
                   </div>
                   <button
@@ -1154,7 +1154,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                       setIsStrategyModalOpen(false);
                       if (onViewPricing) onViewPricing();
                     }}
-                    className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 cursor-pointer hover:bg-amber-500/30 transition-colors ml-2"
+                    className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/40 shrink-0 cursor-pointer hover:bg-amber-500/30 transition-colors ml-2"
                   >
                     ⭐ Découvrir PRO
                   </button>
@@ -1163,20 +1163,20 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             }
             const rec = recommendPacingStrategies(subjects.length, classSlots);
             return (
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-950/60 via-slate-900 to-indigo-950/40 border border-indigo-500/40 flex items-start gap-3 shadow-md text-xs">
-                <div className="p-2 rounded-xl bg-indigo-500/20 text-cyan-300 shrink-0 mt-0.5">
-                  <Sparkles className="w-4 h-4 text-cyan-400" />
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/50 to-indigo-50/90 border border-indigo-200 flex items-start gap-3 shadow-sm text-xs dark:bg-gradient-to-r dark:from-indigo-950/60 dark:via-slate-900 dark:to-indigo-950/40 dark:border-indigo-500/40 dark:shadow-md">
+                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-cyan-300 shrink-0 mt-0.5">
+                  <Sparkles className="w-4 h-4 text-indigo-600 dark:text-cyan-400" />
                 </div>
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-bold text-white text-[11px] uppercase tracking-wide">
+                    <span className="font-bold text-slate-900 dark:text-white text-[11px] uppercase tracking-wide">
                       Recommandation adaptée à votre grille :
                     </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-cyan-300 border border-indigo-500/40">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-cyan-300 dark:border-indigo-500/40">
                       {rec.contextTag}
                     </span>
                   </div>
-                  <p className="text-slate-300 text-xs leading-relaxed">
+                  <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
                     {rec.rationale}
                   </p>
                 </div>
@@ -1186,23 +1186,23 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
 
           {/* Contextual Triple Pacing Combination Banner - RESERVED TO PRO / PLUS */}
           {planTier !== 'free' && (
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-sky-500/15 border border-amber-500/40 flex flex-col gap-2.5 text-xs shadow-md">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-sky-50 border border-amber-300/80 flex flex-col gap-2.5 text-xs shadow-sm dark:bg-gradient-to-r dark:from-amber-500/15 dark:via-slate-900 dark:to-sky-500/15 dark:border-amber-500/40 dark:shadow-md">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                <div className="flex items-center gap-1.5 font-black text-amber-300 uppercase tracking-wide text-[11px]">
-                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
+                <div className="flex items-center gap-1.5 font-black text-amber-900 dark:text-amber-300 uppercase tracking-wide text-[11px]">
+                  <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400 shrink-0" />
                   <span>Combinaison Triple KONAN PRO : {selectedCombinedPacings.length} / 3 sélectionnées</span>
                 </div>
-                <span className="text-[10px] text-amber-400/80 font-mono">Alternance automatique</span>
+                <span className="text-[10px] text-amber-700 dark:text-amber-400/80 font-mono font-medium">Alternance automatique</span>
               </div>
-              <p className="text-[11px] text-slate-300 leading-relaxed">
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
                 Sélectionnez 1, 2 ou 3 méthodes ci-dessous. Vos séances de révision alterneront automatiquement selon la difficulté et vos créneaux.
               </p>
-              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-amber-500/20">
+              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-amber-200 dark:border-amber-500/20">
                 {selectedCombinedPacings.map((id, idx) => {
                   const p = getPacingStrategy(id);
                   return (
-                    <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1 max-w-full">
-                      <span className="font-mono text-amber-400 shrink-0">#{idx + 1}</span>
+                    <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1 max-w-full dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
+                      <span className="font-mono text-amber-700 dark:text-amber-400 shrink-0">#{idx + 1}</span>
                       <span className="truncate">{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
                     </span>
                   );
@@ -1257,54 +1257,54 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     }}
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer relative ${
                       isCombined
-                        ? 'bg-slate-900 border-amber-400 ring-1 ring-amber-400/50 shadow-md'
+                        ? 'bg-amber-50/80 border-amber-500 ring-2 ring-amber-400/40 shadow-sm dark:bg-slate-900 dark:border-amber-400 dark:ring-1 dark:ring-amber-400/50 dark:shadow-md'
                         : isCurrent
-                          ? 'bg-slate-900 border-cyan-400 ring-1 ring-cyan-400/50 shadow-md'
+                          ? 'bg-indigo-50/80 border-indigo-500 ring-2 ring-indigo-400/40 shadow-sm dark:bg-slate-900 dark:border-cyan-400 dark:ring-1 dark:ring-cyan-400/50 dark:shadow-md'
                           : isLocked
-                            ? 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-amber-500/40'
+                            ? 'bg-slate-100/70 border-slate-200 text-slate-500 hover:border-amber-400/60 dark:bg-slate-950/40 dark:border-slate-800/80 dark:text-slate-400 dark:hover:border-amber-500/40'
                             : isPrimaryRec
-                              ? 'bg-slate-950/80 border-amber-500/40 text-slate-300 hover:border-amber-400'
-                              : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
+                              ? 'bg-amber-50/40 border-amber-300/80 text-slate-700 hover:border-amber-500 dark:bg-slate-950/80 dark:border-amber-500/40 dark:text-slate-300 dark:hover:border-amber-400'
+                              : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:text-slate-900 dark:bg-slate-950/60 dark:border-slate-800 dark:text-slate-400 dark:hover:border-slate-700 dark:hover:text-white'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1 mb-1">
-                      <span className={`text-xs font-bold ${isCombined ? 'text-amber-300' : isCurrent ? 'text-cyan-300' : 'text-slate-200'}`}>
+                      <span className={`text-xs font-bold ${isCombined ? 'text-amber-900 dark:text-amber-300' : isCurrent ? 'text-indigo-900 dark:text-cyan-300' : 'text-slate-800 dark:text-slate-200'}`}>
                         {s.number}. {s.title}
                       </span>
                       <div className="flex items-center gap-1">
                         {isCombined && (
-                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
                             ✓ Activée #{comboIndex}
                           </span>
                         )}
                         {isLocked && (
-                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
                             ⭐ PRO
                           </span>
                         )}
                         {isPrimaryRec && !isCombined && (
-                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-0.5">
-                            <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" /> Idéal
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-0.5 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
+                            <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400" /> Idéal
                           </span>
                         )}
                         {!isPrimaryRec && isRecommended && !isCombined && (
-                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/40">
                             Conseillé
                           </span>
                         )}
                         {isNotRecommended && (
-                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-rose-50 text-rose-800 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/40">
                             Déconseillé
                           </span>
                         )}
                         {isActiveInPrefs && !isCombined && (
-                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30">
                             Actif
                           </span>
                         )}
                       </div>
                     </div>
-                    <p className="text-[11px] text-slate-400 line-clamp-1">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
                       {s.shortSummary}
                     </p>
                   </button>
@@ -1319,43 +1319,43 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             const isIdeaLabel = strat.number <= 2;
 
             return (
-              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/90 via-indigo-950/40 to-slate-950 border border-indigo-500/40 space-y-3.5 shadow-xl">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-sky-50/40 to-slate-50 border border-indigo-200 space-y-3.5 shadow-sm dark:bg-gradient-to-br dark:from-slate-900/90 dark:via-indigo-950/40 dark:to-slate-950 dark:border-indigo-500/40 dark:shadow-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 font-black text-sm">
+                    <div className="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-700 dark:bg-cyan-500/20 dark:border-cyan-400/40 dark:text-cyan-300 font-black text-sm">
                       {strat.number}
                     </div>
                     <div>
-                      <h4 className="text-sm font-black text-white">{strat.title}</h4>
-                      <p className="text-[11px] text-indigo-300">{strat.tagline}</p>
+                      <h4 className="text-sm font-black text-slate-900 dark:text-white">{strat.title}</h4>
+                      <p className="text-[11px] text-indigo-600 dark:text-indigo-300">{strat.tagline}</p>
                     </div>
                   </div>
 
-                  <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-cyan-300 w-fit">
+                  <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-indigo-700 dark:bg-slate-900 dark:border-slate-700 dark:text-cyan-300 w-fit">
                     {strat.badge}
                   </span>
                 </div>
 
                 <div className="space-y-2 text-xs">
-                  <div className="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-start gap-2">
-                    <span className="font-bold text-cyan-400 uppercase tracking-wide shrink-0 text-[11px]">
+                  <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-sm flex items-start gap-2 dark:bg-slate-950/70 dark:border-slate-800">
+                    <span className="font-bold text-indigo-600 dark:text-cyan-400 uppercase tracking-wide shrink-0 text-[11px]">
                       En bref :
                     </span>
-                    <span className="font-semibold text-white">{strat.shortSummary}</span>
+                    <span className="font-semibold text-slate-800 dark:text-white">{strat.shortSummary}</span>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 text-slate-300 space-y-1.5 leading-relaxed">
-                    <span className="font-bold text-indigo-300 block text-[11px] uppercase tracking-wider">
+                  <div className="p-3.5 rounded-xl bg-white border border-slate-200/90 text-slate-700 space-y-1.5 leading-relaxed shadow-sm dark:bg-slate-950/90 dark:border-slate-800 dark:text-slate-300">
+                    <span className="font-bold text-indigo-700 dark:text-indigo-300 block text-[11px] uppercase tracking-wider">
                       {isIdeaLabel ? "L'idée :" : "L'explication :"}
                     </span>
-                    <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed">
+                    <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-[13px] leading-relaxed">
                       {strat.explanation}
                     </p>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/20 text-xs text-indigo-200 flex items-center gap-2.5">
-                  <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div className="p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-950 flex items-center gap-2.5 dark:bg-indigo-950/40 dark:border-indigo-500/20 dark:text-indigo-200">
+                  <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <span>
                     <strong>Calibrage algorithmique :</strong> Blocs d'étude de <strong>{strat.focusBlockDuration} min</strong> avec pause de <strong>{strat.breakBlockDuration} min</strong> et objectifs ciblés.
                   </span>

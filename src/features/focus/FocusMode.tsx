@@ -188,10 +188,10 @@ export const FocusMode: React.FC<FocusModeProps> = ({
         <div className="space-y-6 sm:space-y-8">
           
           {/* Main Focus Centerpiece */}
-          <div className={`relative rounded-3xl p-6 sm:p-12 glass-panel border text-center overflow-hidden shadow-2xl transition-all duration-500 ${
+          <div className={`relative rounded-3xl p-6 sm:p-12 border text-center overflow-hidden shadow-2xl transition-all duration-500 ${
             isCatchupMode 
-              ? (isActive ? 'border-amber-500/60 shadow-amber-500/20 bg-slate-900/90' : 'border-amber-500/30 bg-slate-900/70')
-              : (isActive ? 'timer-active-aura border-blue-500/40' : 'border-slate-800')
+              ? (isActive ? 'border-amber-400 shadow-amber-500/20 bg-amber-50/70 dark:bg-slate-900/90' : 'border-amber-300 bg-amber-50/50 dark:bg-slate-900/70')
+              : (isActive ? 'timer-active-aura border-indigo-300 dark:border-blue-500/40 bg-white dark:bg-slate-900/90' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80')
           }`}>
             <div
               className="absolute -top-32 left-1/2 -translate-x-1/2 w-80 sm:w-96 h-80 sm:h-96 rounded-full blur-3xl opacity-20 pointer-events-none"
@@ -201,44 +201,44 @@ export const FocusMode: React.FC<FocusModeProps> = ({
             <div className="relative z-10 space-y-4 sm:space-y-6">
               
               <div className="flex flex-wrap items-center justify-center gap-2">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-700/80 text-xs font-semibold max-w-full interactive-pill">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700/80 text-xs font-semibold max-w-full interactive-pill">
                   <span
                     className="w-2 h-2 rounded-full shrink-0 animate-pulse"
                     style={{ backgroundColor: isCatchupMode ? '#F59E0B' : (currentSubject?.color || '#6366F1') }}
                   />
-                  <span className="text-white truncate">{currentSubject?.name || 'Session libre'}</span>
+                  <span className="text-slate-900 dark:text-white truncate">{currentSubject?.name || 'Session libre'}</span>
                 </div>
                 {isCatchupMode && (
-                  <span className="px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-[11px]">
+                  <span className="px-2.5 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-800 dark:bg-amber-500/20 dark:border-amber-500/40 dark:text-amber-300 font-bold text-[11px]">
                     Séance de rattrapage • {currentSubject?.name || 'Matière'}
                   </span>
                 )}
               </div>
 
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-white tracking-tight break-words px-2">
+              <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight break-words px-2">
                 {session?.title || 'Session de Concentration Approfondie'}
               </h1>
 
               {/* Special Catch-up Motivational Banner */}
               {isCatchupMode && (
-                <div className="p-3 sm:p-4 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs max-w-lg mx-auto space-y-1 shadow-lg">
-                  <div className="flex items-center justify-center gap-2 font-bold text-amber-300">
-                    <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                <div className="p-3 sm:p-4 rounded-2xl bg-amber-100/90 border border-amber-300/80 text-amber-950 dark:bg-amber-950/40 dark:border-amber-500/40 dark:text-amber-200 text-xs max-w-lg mx-auto space-y-1 shadow-md">
+                  <div className="flex items-center justify-center gap-2 font-bold text-amber-900 dark:text-amber-300">
+                    <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                     <span>Mode Spécial Rattrapage Activé</span>
                   </div>
-                  <p className="text-[11px] text-slate-300 leading-relaxed">
-                    Vous rattrapez votre séance de <strong className="text-amber-200">{currentSubject?.name || 'révision'}</strong>. Chaque minute vous rapproche de la maîtrise sans accumuler de retard !
+                  <p className="text-[11px] text-amber-950 dark:text-slate-300 leading-relaxed font-medium">
+                    Vous rattrapez votre séance de <strong className="text-amber-900 dark:text-amber-200">{currentSubject?.name || 'révision'}</strong>. Chaque minute vous rapproche de la maîtrise sans accumuler de retard !
                   </p>
                 </div>
               )}
 
               {/* GIANT COUNTDOWN TIMER (Responsive for all phones) */}
               <div className="py-2 sm:py-6">
-                <div className="text-5xl sm:text-7xl md:text-8xl font-black font-mono tracking-tight text-white select-none drop-shadow-lg">
+                <div className="text-5xl sm:text-7xl md:text-8xl font-black font-mono tracking-tight text-slate-900 dark:text-white select-none drop-shadow-md">
                   {formattedTime}
                 </div>
                 
-                <div className="w-full max-w-xs sm:max-w-md mx-auto h-2 bg-slate-800 rounded-full mt-4 sm:mt-6 overflow-hidden border border-slate-700/50">
+                <div className="w-full max-w-xs sm:max-w-md mx-auto h-2 bg-slate-200 dark:bg-slate-800 rounded-full mt-4 sm:mt-6 overflow-hidden border border-slate-300 dark:border-slate-700/50">
                   <div
                     className={`h-full transition-all duration-1000 ease-linear ${
                       isCatchupMode
@@ -289,9 +289,9 @@ export const FocusMode: React.FC<FocusModeProps> = ({
           {/* SPRINT OBJECTIVES & NOTES */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             
-            <Card className="border-slate-800 bg-slate-900/60 p-4 sm:p-6 space-y-3">
-              <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+            <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-4 sm:p-6 space-y-3 shadow-xs">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                 Objectifs de la Séance
               </h3>
               
@@ -308,12 +308,12 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                       onClick={() => toggleObjective(i)}
                       className={`w-full flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer min-h-[40px] ${
                         isChecked
-                          ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-200 line-through'
-                          : 'bg-slate-950/40 border-slate-800 text-slate-300 hover:border-slate-700'
+                          ? 'bg-emerald-50 border-emerald-300 text-emerald-800 line-through dark:bg-emerald-950/30 dark:border-emerald-500/40 dark:text-emerald-200'
+                          : 'bg-slate-50 border-slate-200 text-slate-800 hover:border-slate-300 dark:bg-slate-950/40 dark:border-slate-800 dark:text-slate-300 dark:hover:border-slate-700'
                       }`}
                     >
                       <span className={`w-4 h-4 rounded flex items-center justify-center border text-[10px] shrink-0 ${
-                        isChecked ? 'bg-emerald-500 border-emerald-400 text-slate-950 font-bold' : 'border-slate-600'
+                        isChecked ? 'bg-emerald-500 border-emerald-400 text-white font-bold' : 'border-slate-300 dark:border-slate-600'
                       }`}>
                         {isChecked ? '✓' : ''}
                       </span>
@@ -324,16 +324,16 @@ export const FocusMode: React.FC<FocusModeProps> = ({
               </div>
             </Card>
 
-            <Card className="border-slate-800 bg-slate-900/60 p-4 sm:p-6 space-y-3">
-              <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <FileText className="w-4 h-4 text-indigo-400" />
+            <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-4 sm:p-6 space-y-3 shadow-xs">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <FileText className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
                 Bloc-Notes & Synthèse Rapide
               </h3>
               <textarea
                 placeholder="Notez vos formules clés, doutes ou points d'attention..."
                 value={reflectionNotes}
                 onChange={(e) => setReflectionNotes(e.target.value)}
-                className="w-full h-32 sm:h-36 bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full h-32 sm:h-36 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </Card>
 
@@ -342,16 +342,16 @@ export const FocusMode: React.FC<FocusModeProps> = ({
         </div>
       ) : (
         /* FINISHED MODAL / SUMMARY CARD */
-        <div className="rounded-3xl p-6 sm:p-12 glass-panel border border-emerald-500/30 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 text-center space-y-4 sm:space-y-6 shadow-2xl">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/30">
+        <div className="rounded-3xl p-6 sm:p-12 border border-emerald-300 dark:border-emerald-500/30 bg-white dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-950 dark:to-slate-950 text-center space-y-4 sm:space-y-6 shadow-2xl">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto border border-emerald-200 dark:border-emerald-500/30">
             <Sparkles className="w-7 h-7 sm:w-8 sm:h-8 animate-pulse" />
           </div>
 
           <div className="space-y-1">
-            <h2 className="text-xl sm:text-3xl font-extrabold text-white">
+            <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
               {isCatchupMode ? '🎉 Rattrapage réussi et validé avec succès !' : 'Session accomplie avec succès !'}
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               {isCatchupMode 
                 ? `Votre séance de ${currentSubject?.name || 'révision'} a été officiellement rattrapée et enregistrée.`
                 : "Votre temps d'étude effectif a été sauvegardé en temps réel."}
@@ -360,7 +360,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
 
           {/* Star Rating Feedback */}
           <div className="space-y-2 max-w-sm mx-auto">
-            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider block">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
               Niveau de concentration ressenti :
             </label>
             <div className="flex items-center justify-center gap-2">
@@ -370,7 +370,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                   onClick={() => setSatisfactionRating(star)}
                   className="p-1 text-amber-400 hover:scale-125 transition-transform cursor-pointer"
                 >
-                  <Star className={`w-6 h-6 sm:w-7 sm:h-7 ${star <= satisfactionRating ? 'fill-amber-400' : 'text-slate-600'}`} />
+                  <Star className={`w-6 h-6 sm:w-7 sm:h-7 ${star <= satisfactionRating ? 'fill-amber-400' : 'text-slate-300 dark:text-slate-600'}`} />
                 </button>
               ))}
             </div>
