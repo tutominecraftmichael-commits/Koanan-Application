@@ -470,7 +470,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
       </div>
 
       {/* VIEW FILTER SWITCHER & KPI STRIP */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:glass-panel border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/80 dark:backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-xs">
         
         {/* Filter Mode Selector */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
@@ -669,7 +669,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
       {/* DESKTOP HIGH DEFINITION WEEKLY TIMETABLE GRID */}
       <div 
         ref={timetableGridRef}
-        className="hidden lg:block bg-white dark:glass-panel rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-2xl overflow-x-auto print:border-none print:shadow-none print:bg-white print:p-0"
+        className="hidden lg:block bg-white dark:bg-slate-900/80 dark:backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-2xl overflow-x-auto print:border-none print:shadow-none print:bg-white print:p-0"
       >
         <div className="min-w-[920px]">
           

@@ -353,7 +353,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
       )}
 
       {/* FILTER BAR (Mobile Carousel + Subject Dropdown) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-white dark:glass-panel border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/80 dark:backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-xs">
         
         {/* Days Pills */}
         <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-1">

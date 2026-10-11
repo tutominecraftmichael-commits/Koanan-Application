@@ -101,6 +101,13 @@
 }
 
 /* Glassmorphism & Card Utilities */
+@utility glass-panel {
+  background: rgba(13, 21, 37, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
 .glass-panel {
   background: rgba(13, 21, 37, 0.75);
   backdrop-filter: blur(16px);
