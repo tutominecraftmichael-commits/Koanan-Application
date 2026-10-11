@@ -47,7 +47,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   const activePreset = ACADEMIC_PRESETS[activePresetIndex];
 
   return (
-    <div className="relative min-h-screen bg-[#080B11] overflow-hidden pt-6 sm:pt-12 pb-20">
+    <div className="relative min-h-screen bg-slate-50 text-slate-900 dark:bg-[#070b13] dark:text-slate-100 overflow-hidden pt-6 sm:pt-12 pb-20">
       {/* Background Decorative Ambient Glows */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[450px] sm:h-[600px] radial-glow pointer-events-none" />
       <div className="absolute top-16 left-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
@@ -72,20 +72,20 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           </div>
 
           {/* Release Badge - Luxurious interactive pill */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel border border-blue-500/30 text-blue-200 text-[11px] sm:text-xs font-semibold shadow-lg shadow-blue-950/30 interactive-pill max-w-full text-center">
-            <span className="flex h-2 w-2 rounded-full bg-sky-400 animate-ping shrink-0" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 dark:bg-blue-950/40 dark:border-blue-500/30 dark:text-blue-200 text-[11px] sm:text-xs font-semibold shadow-sm dark:shadow-lg dark:shadow-blue-950/30 interactive-pill max-w-full text-center">
+            <span className="flex h-2 w-2 rounded-full bg-sky-500 dark:bg-sky-400 animate-ping shrink-0" />
             <span className="break-words">Méthode Pédagogique Active & Répétition Espacée</span>
           </div>
 
           {/* Main Title */}
-          <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.2] break-words px-1">
+          <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.2] break-words px-1">
             Transformez votre emploi du temps en un{' '}
             <span className="text-gradient-primary">planning d'étude parfait</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xs xs:text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed px-2 break-words">
-            KONAN analyse vos cours, coefficients d’examens, niveau de difficulté et rythme biologique pour générer un <strong className="text-white font-semibold">programme d'étude équilibré, réaliste et anti-burnout</strong>.
+          <p className="text-xs xs:text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed px-2 break-words">
+            KONAN analyse vos cours, coefficients d’examens, niveau de difficulté et rythme biologique pour générer un <strong className="text-slate-900 dark:text-white font-semibold">programme d'étude équilibré, réaliste et anti-burnout</strong>.
           </p>
 
           {/* CTA Buttons */}
@@ -93,25 +93,25 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             <Button
               variant="glow"
               size="lg"
-              rightIcon={<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />}
+              rightIcon={<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-white" />}
               onClick={onStartApp}
-              className="w-full sm:w-auto shadow-xl shadow-blue-950/50 cursor-pointer text-xs xs:text-sm sm:text-base py-3.5 px-4 sm:px-6 font-bold hover:scale-105 active:scale-95 transition-all text-center flex items-center justify-center"
+              className="w-full sm:w-auto shadow-xl shadow-blue-950/20 cursor-pointer text-xs xs:text-sm sm:text-base py-3.5 px-4 sm:px-6 font-bold hover:scale-105 active:scale-95 transition-all text-center flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white"
             >
               {isLoggedIn ? 'Accéder à mon Tableau de Bord' : "Générer mon Planning d'Étude"}
             </Button>
             <Button
               variant="secondary"
               size="lg"
-              leftIcon={<GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 shrink-0" />}
+              leftIcon={<GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500 dark:text-indigo-400 shrink-0" />}
               onClick={() => onSelectPreset('cs-engineering')}
-              className="w-full sm:w-auto cursor-pointer text-xs xs:text-sm sm:text-base py-3.5 px-4 sm:px-5 font-semibold hover:border-indigo-400/40 transition-all text-center flex items-center justify-center"
+              className="w-full sm:w-auto cursor-pointer text-xs xs:text-sm sm:text-base py-3.5 px-4 sm:px-5 font-semibold bg-white hover:bg-slate-100 text-slate-800 border-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700 transition-all text-center flex items-center justify-center shadow-sm"
             >
               Tester en Mode Démo
             </Button>
           </div>
 
           {/* Google Sign-in Micro-Note */}
-          <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-400 pt-1 text-center px-2">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 pt-1 text-center px-2">
             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 shrink-0">
               <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
               <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.27 21.37 7.35 24 12 24z" />
@@ -122,38 +122,38 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           </div>
 
           {/* Social Proof & Metrics with SCROLL COUNT-UP ANIMATION */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pt-8 border-t border-slate-800/80 max-w-3xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pt-8 border-t border-slate-200 dark:border-slate-800/80 max-w-3xl mx-auto">
             
             {/* Metric 1 */}
-            <div className="p-3.5 rounded-2xl card-luxury text-center group cursor-default">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-black text-white">
-                <AnimatedCounter value={100} suffix="%" className="text-white" />
+            <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm dark:bg-[#0e1626] dark:border-slate-800 text-center group cursor-default">
+              <p className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
+                <AnimatedCounter value={100} suffix="%" className="text-slate-900 dark:text-white" />
               </p>
-              <p className="text-[11px] sm:text-xs text-slate-400 mt-1 font-medium">Algorithmique & Zéro Faux Planning</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Algorithmique & Zéro Faux Planning</p>
             </div>
 
             {/* Metric 2 */}
-            <div className="p-3.5 rounded-2xl card-luxury text-center group cursor-default">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-black text-sky-400">
-                <AnimatedCounter value={40} prefix="-" suffix="%" className="text-sky-400" />
+            <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm dark:bg-[#0e1626] dark:border-slate-800 text-center group cursor-default">
+              <p className="text-2xl sm:text-3xl md:text-4xl font-black text-sky-500 dark:text-sky-400">
+                <AnimatedCounter value={40} prefix="-" suffix="%" className="text-sky-500 dark:text-sky-400" />
               </p>
-              <p className="text-[11px] sm:text-xs text-slate-400 mt-1 font-medium">Charge Mentale & Stress</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Charge Mentale & Stress</p>
             </div>
 
             {/* Metric 3 */}
-            <div className="p-3.5 rounded-2xl card-luxury text-center group cursor-default">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-black text-blue-400">
-                <AnimatedCounter value={2.3} prefix="x" decimals={1} className="text-blue-400" />
+            <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm dark:bg-[#0e1626] dark:border-slate-800 text-center group cursor-default">
+              <p className="text-2xl sm:text-3xl md:text-4xl font-black text-blue-600 dark:text-blue-400">
+                <AnimatedCounter value={2.3} prefix="x" decimals={1} className="text-blue-600 dark:text-blue-400" />
               </p>
-              <p className="text-[11px] sm:text-xs text-slate-400 mt-1 font-medium">Rétention Espacée</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Rétention Espacée</p>
             </div>
 
             {/* Metric 4 */}
-            <div className="p-3.5 rounded-2xl card-luxury text-center group cursor-default">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-black text-emerald-400">
-                <AnimatedCounter value={100} suffix="%" className="text-emerald-400" />
+            <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm dark:bg-[#0e1626] dark:border-slate-800 text-center group cursor-default">
+              <p className="text-2xl sm:text-3xl md:text-4xl font-black text-emerald-600 dark:text-emerald-400">
+                <AnimatedCounter value={100} suffix="%" className="text-emerald-600 dark:text-emerald-400" />
               </p>
-              <p className="text-[11px] sm:text-xs text-slate-400 mt-1 font-medium">Gratuit & Privé</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Gratuit & Privé</p>
             </div>
 
           </div>
@@ -164,23 +164,23 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         <div className="space-y-4 sm:space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 shrink-0" />
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400 shrink-0" />
                 <span>Démonstrateur Interactif</span>
               </h2>
-              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
                 Comparez l'organisation traditionnelle et l'optimisation cognitive de KONAN.
               </p>
             </div>
 
             {/* Toggle State - Initially on 'before' (Sans KONAN) */}
-            <div className="flex items-center bg-slate-900/90 border border-slate-800 p-1.5 rounded-2xl shadow-inner w-full sm:w-auto">
+            <div className="flex items-center bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-1.5 rounded-2xl shadow-inner w-full sm:w-auto">
               <button
                 onClick={() => setSelectedDemoTab('before')}
                 className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer text-center min-h-[38px] flex items-center justify-center gap-1.5 ${
                   selectedDemoTab === 'before'
-                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50 shadow-md shadow-rose-950/40'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-rose-100 text-rose-700 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/50 shadow-sm dark:shadow-md'
+                    : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
               >
                 <span>🔴 Sans KONAN</span>
@@ -190,7 +190,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer text-center min-h-[38px] flex items-center justify-center gap-1.5 ${
                   selectedDemoTab === 'after'
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/40 border border-blue-400/30'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/40'
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5 text-sky-300" />
@@ -201,8 +201,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
           {/* Preset Chips Carousel */}
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-            <span className="text-xs font-bold text-slate-400 shrink-0 mr-1 flex items-center gap-1">
-              <BookOpen className="w-3.5 h-3.5 text-blue-400" />
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 shrink-0 mr-1 flex items-center gap-1">
+              <BookOpen className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
               Filière test :
             </span>
             {ACADEMIC_PRESETS.map((preset, idx) => (
@@ -211,8 +211,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 onClick={() => setActivePresetIndex(idx)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer shrink-0 min-h-[34px] interactive-pill ${
                   activePresetIndex === idx
-                    ? 'bg-blue-500/20 text-blue-300 border-blue-500/50 shadow-sm shadow-blue-900/30'
-                    : 'bg-slate-900/70 text-slate-400 border-slate-800 hover:border-slate-700'
+                    ? 'bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-500/20 dark:text-blue-300 dark:border-blue-500/50 shadow-sm'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 dark:bg-slate-900/70 dark:text-slate-400 dark:border-slate-800 dark:hover:border-slate-700'
                 }`}
               >
                 {preset.name}
@@ -221,22 +221,22 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           </div>
 
           {/* Interactive Card */}
-          <Card className="border border-slate-800 shadow-2xl bg-slate-950/90 p-4 sm:p-7">
+          <Card className="border border-slate-200 shadow-xl bg-white text-slate-900 dark:border-slate-800 dark:shadow-2xl dark:bg-slate-950/90 dark:text-slate-100 p-4 sm:p-7">
             {selectedDemoTab === 'after' ? (
               <div className="space-y-5 sm:space-y-6">
                 
                 {/* Solution Banner */}
-                <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-blue-950/30 border border-blue-500/40 shadow-inner">
+                <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-blue-50 border border-blue-200 text-blue-900 dark:bg-blue-950/30 dark:border-blue-500/40 dark:text-white shadow-inner">
                   <div className="flex items-center gap-3">
                     <div className="p-2.5 rounded-xl bg-blue-600 text-white shrink-0 shadow-md shadow-blue-600/30">
                       <Sparkles className="w-5 h-5 text-sky-200" />
                     </div>
                     <div>
-                      <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <span>Planning d'Étude Optimisé par KONAN</span>
                         <Badge variant="emerald" dot size="sm">Équilibré</Badge>
                       </h4>
-                      <p className="text-[11px] sm:text-xs text-blue-200 mt-0.5">
+                      <p className="text-[11px] sm:text-xs text-blue-700 dark:text-blue-200 mt-0.5">
                         {activePreset.subjects.length} matières réparties • Alternance Spaced Review & Deep Work • {activePreset.level}
                       </p>
                     </div>
@@ -245,7 +245,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                   {/* Interactive toggle back button */}
                   <button
                     onClick={() => setSelectedDemoTab('before')}
-                    className="text-xs font-semibold text-slate-400 hover:text-rose-300 flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-rose-500/10 transition-colors cursor-pointer"
+                    className="text-xs font-semibold text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-300 flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
                     <span>Revoir Sans Konan</span>
@@ -256,33 +256,33 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                   
                   {/* Column 1: Fixed Classes */}
-                  <div className="space-y-2.5 p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+                  <div className="space-y-2.5 p-4 rounded-2xl bg-slate-50 border border-slate-200 dark:bg-slate-900/60 dark:border-slate-800">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">1. Cours Universitaires</span>
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">1. Cours Universitaires</span>
                       <Badge variant="slate" size="sm">Fixe</Badge>
                     </div>
                     <div className="space-y-2">
-                      <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-xs">
-                        <div className="flex justify-between font-bold text-slate-200">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200 text-slate-800 dark:bg-slate-800/60 dark:border-slate-700/60 dark:text-slate-200 text-xs shadow-xs">
+                        <div className="flex justify-between font-bold text-slate-900 dark:text-slate-200">
                           <span>08:30 - 10:30</span>
-                          <span className="text-blue-400">CM</span>
+                          <span className="text-blue-600 dark:text-blue-400">CM</span>
                         </div>
-                        <p className="text-slate-300 mt-1 font-semibold break-words leading-snug">{activePreset.subjects[0]?.name}</p>
+                        <p className="text-slate-700 dark:text-slate-300 mt-1 font-semibold break-words leading-snug">{activePreset.subjects[0]?.name}</p>
                       </div>
-                      <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-xs">
-                        <div className="flex justify-between font-bold text-slate-200">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200 text-slate-800 dark:bg-slate-800/60 dark:border-slate-700/60 dark:text-slate-200 text-xs shadow-xs">
+                        <div className="flex justify-between font-bold text-slate-900 dark:text-slate-200">
                           <span>10:45 - 12:45</span>
-                          <span className="text-sky-400">TD</span>
+                          <span className="text-sky-600 dark:text-sky-400">TD</span>
                         </div>
-                        <p className="text-slate-300 mt-1 font-semibold break-words leading-snug">{activePreset.subjects[0]?.name}</p>
+                        <p className="text-slate-700 dark:text-slate-300 mt-1 font-semibold break-words leading-snug">{activePreset.subjects[0]?.name}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Column 2: Recommended Study Blocks (Interactive & Fun) */}
-                  <div className="space-y-2.5 p-4 rounded-2xl bg-blue-950/20 border border-blue-500/30">
+                  <div className="space-y-2.5 p-4 rounded-2xl bg-blue-50/50 border border-blue-200 dark:bg-blue-950/20 dark:border-blue-500/30">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-blue-200">2. Créneaux Recommandés</span>
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-blue-800 dark:text-blue-200">2. Créneaux Recommandés</span>
                       <Badge variant="primary" size="sm">Toucher pour tester</Badge>
                     </div>
                     
@@ -292,27 +292,27 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                         onClick={() => setActiveTestSlot(activeTestSlot === 1 ? null : 1)}
                         className={`p-3 rounded-xl border text-xs cursor-pointer transition-all interactive-pill ${
                           activeTestSlot === 1
-                            ? 'bg-blue-600/30 border-blue-400 shadow-lg shadow-blue-900/40 ring-2 ring-blue-400/30'
-                            : 'bg-blue-900/25 border-blue-500/30 hover:border-blue-400/50'
+                            ? 'bg-blue-100 border-blue-400 shadow-md ring-2 ring-blue-300 dark:bg-blue-600/30 dark:border-blue-400 dark:shadow-blue-900/40 dark:ring-blue-400/30'
+                            : 'bg-white border-blue-200 hover:border-blue-300 dark:bg-blue-900/25 dark:border-blue-500/30 dark:hover:border-blue-400/50'
                         }`}
                       >
-                        <div className="flex justify-between font-bold text-blue-100">
+                        <div className="flex justify-between font-bold text-blue-950 dark:text-blue-100">
                           <span className="flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5 text-blue-400" />
+                            <Clock className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                             17:30 - 18:15 (45 min)
                           </span>
-                          <span className="text-amber-400 font-mono text-[11px]">Spaced Review</span>
+                          <span className="text-amber-600 dark:text-amber-400 font-mono text-[11px]">Spaced Review</span>
                         </div>
-                        <p className="text-white font-medium mt-1 break-words leading-snug">
+                        <p className="text-slate-900 dark:text-white font-medium mt-1 break-words leading-snug">
                           {activePreset.subjects[0]?.topics?.[0] || 'Points clés du cours'}
                         </p>
                         {activeTestSlot === 1 && (
-                          <div className="mt-2 pt-2 border-t border-blue-400/30 flex items-center justify-between text-[11px] text-sky-200 font-semibold animate-fadeIn">
+                          <div className="mt-2 pt-2 border-t border-blue-200 dark:border-blue-400/30 flex items-center justify-between text-[11px] text-blue-700 dark:text-sky-200 font-semibold animate-fadeIn">
                             <span className="flex items-center gap-1">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                               Session validée !
                             </span>
-                            <span className="text-sky-300 font-bold">Mémorisation validée</span>
+                            <span className="text-blue-800 dark:text-sky-300 font-bold">Mémorisation validée</span>
                           </div>
                         )}
                       </div>
@@ -322,27 +322,27 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                         onClick={() => setActiveTestSlot(activeTestSlot === 2 ? null : 2)}
                         className={`p-3 rounded-xl border text-xs cursor-pointer transition-all interactive-pill ${
                           activeTestSlot === 2
-                            ? 'bg-emerald-600/30 border-emerald-400 shadow-lg shadow-emerald-900/40 ring-2 ring-emerald-400/30'
-                            : 'bg-slate-800/60 border-slate-700/60 hover:border-emerald-500/40'
+                            ? 'bg-emerald-100 border-emerald-400 shadow-md ring-2 ring-emerald-300 dark:bg-emerald-600/30 dark:border-emerald-400 dark:shadow-emerald-900/40 dark:ring-emerald-400/30'
+                            : 'bg-white border-slate-200 hover:border-emerald-300 dark:bg-slate-800/60 dark:border-slate-700/60 dark:hover:border-emerald-500/40'
                         }`}
                       >
-                        <div className="flex justify-between font-bold text-slate-200">
+                        <div className="flex justify-between font-bold text-slate-800 dark:text-slate-200">
                           <span className="flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5 text-emerald-400" />
+                            <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                             18:30 - 19:15 (45 min)
                           </span>
-                          <span className="text-emerald-400 font-mono text-[11px]">Deep Work</span>
+                          <span className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">Deep Work</span>
                         </div>
-                        <p className="text-white font-medium mt-1 break-words leading-snug">
+                        <p className="text-slate-900 dark:text-white font-medium mt-1 break-words leading-snug">
                           {activePreset.subjects[1]?.name || 'Exercices d\'application'}
                         </p>
                         {activeTestSlot === 2 && (
-                          <div className="mt-2 pt-2 border-t border-emerald-400/30 flex items-center justify-between text-[11px] text-emerald-200 font-semibold animate-fadeIn">
+                          <div className="mt-2 pt-2 border-t border-emerald-200 dark:border-emerald-400/30 flex items-center justify-between text-[11px] text-emerald-700 dark:text-emerald-200 font-semibold animate-fadeIn">
                             <span className="flex items-center gap-1">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                               Résolution validée !
                             </span>
-                            <span className="text-emerald-300 font-bold">Session assimilée</span>
+                            <span className="text-emerald-800 dark:text-emerald-300 font-bold">Session assimilée</span>
                           </div>
                         )}
                       </div>
@@ -350,24 +350,24 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                   </div>
 
                   {/* Column 3: Balance & Anti-Burnout Metrics */}
-                  <div className="space-y-2.5 p-4 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+                  <div className="space-y-2.5 p-4 rounded-2xl bg-slate-50 border border-slate-200 dark:bg-slate-900/60 dark:border-slate-800 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between mb-2.5">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">3. Équilibre Biologique</span>
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">3. Équilibre Biologique</span>
                         <Badge variant="emerald" size="sm">Optimal</Badge>
                       </div>
                       <div className="space-y-2 text-xs">
-                        <div className="flex justify-between items-center text-slate-300 p-1.5 rounded-lg bg-slate-800/40">
+                        <div className="flex justify-between items-center text-slate-700 dark:text-slate-300 p-1.5 rounded-lg bg-white border border-slate-200/80 dark:bg-slate-800/40 dark:border-transparent">
                           <span>Étude quotidienne :</span>
-                          <span className="font-mono text-emerald-400 font-bold">1h30 (2 blocs)</span>
+                          <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">1h30 (2 blocs)</span>
                         </div>
-                        <div className="flex justify-between items-center text-slate-300 p-1.5 rounded-lg bg-slate-800/40">
+                        <div className="flex justify-between items-center text-slate-700 dark:text-slate-300 p-1.5 rounded-lg bg-white border border-slate-200/80 dark:bg-slate-800/40 dark:border-transparent">
                           <span>Pause obligatoire :</span>
-                          <span className="font-mono text-sky-300 font-bold">15 min relax</span>
+                          <span className="font-mono text-sky-600 dark:text-sky-300 font-bold">15 min relax</span>
                         </div>
-                        <div className="flex justify-between items-center text-slate-300 p-1.5 rounded-lg bg-slate-800/40">
+                        <div className="flex justify-between items-center text-slate-700 dark:text-slate-300 p-1.5 rounded-lg bg-white border border-slate-200/80 dark:bg-slate-800/40 dark:border-transparent">
                           <span>Soirée libre dès :</span>
-                          <span className="font-mono text-blue-400 font-bold">19:30</span>
+                          <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">19:30</span>
                         </div>
                       </div>
                     </div>
@@ -378,7 +378,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                       onClick={() => {
                         onSelectPreset(activePreset.id);
                       }}
-                      className="w-full mt-3 cursor-pointer text-xs font-bold py-2.5"
+                      className="w-full mt-3 cursor-pointer text-xs font-bold py-2.5 bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       Tester ce Modèle Démo ({activePreset.name})
                     </Button>
@@ -391,20 +391,20 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               <div className="p-4 sm:p-8 text-center space-y-6 max-w-2xl mx-auto">
                 
                 {/* Warning Badge */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-bold animate-bounce-subtle">
-                  <Flame className="w-4 h-4 text-rose-400" />
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-50 border border-rose-200 text-rose-700 dark:bg-rose-950/30 dark:border-rose-900/50 dark:text-rose-300 text-xs font-bold animate-bounce-subtle">
+                  <Flame className="w-4 h-4 text-rose-500 dark:text-rose-400" />
                   <span>Le piège de l'organisation classique sans méthode</span>
                 </div>
 
                 {/* Animated Stat with scroll trigger */}
                 <div className="space-y-2">
-                  <div className="text-5xl sm:text-7xl font-black text-rose-400 font-mono tracking-tight flex items-center justify-center">
-                    <AnimatedCounter value={82} suffix="%" className="text-rose-400 drop-shadow-md" />
+                  <div className="text-5xl sm:text-7xl font-black text-rose-600 dark:text-rose-400 font-mono tracking-tight flex items-center justify-center">
+                    <AnimatedCounter value={82} suffix="%" className="text-rose-600 dark:text-rose-400 drop-shadow-md" />
                   </div>
-                  <h3 className="text-lg sm:text-2xl font-black text-white">
+                  <h3 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white">
                     des étudiants révisent dans l'urgence la veille des examens
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-lg mx-auto">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-lg mx-auto">
                     Sans découpage espacé, le cerveau oublie 70% d'un cours en 48 heures. Cliquez sur les situations ci-dessous pour voir ce qui arrive :
                   </p>
                 </div>
@@ -417,16 +417,16 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     onClick={() => setActiveProblemId(activeProblemId === 1 ? null : 1)}
                     className={`p-3.5 rounded-2xl border transition-all cursor-pointer interactive-pill ${
                       activeProblemId === 1 
-                        ? 'bg-rose-950/40 border-rose-500 shadow-md shadow-rose-950/50' 
-                        : 'bg-slate-900/70 border-slate-800 hover:border-rose-500/30'
+                        ? 'bg-rose-50 border-rose-300 shadow-md shadow-rose-200/50 dark:bg-rose-950/40 dark:border-rose-500 dark:shadow-rose-950/50' 
+                        : 'bg-white border-slate-200 text-slate-800 shadow-sm hover:border-rose-300 dark:bg-[#121c2e] dark:border-slate-800 dark:text-slate-200 dark:hover:border-rose-500/30'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-lg">😫</span>
-                      <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+                      <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
                     </div>
-                    <p className="text-xs font-bold text-white mt-1.5">Nuit blanche à 3h</p>
-                    <p className="text-[11px] text-slate-400 mt-1">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white mt-1.5">Nuit blanche à 3h</p>
+                    <p className={`text-[11px] mt-1 ${activeProblemId === 1 ? 'text-rose-700 dark:text-rose-300 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
                       {activeProblemId === 1 
                         ? '⚠️ Perte de 45% de la mémoire le lendemain au réveil.' 
                         : 'Toucher pour voir l\'impact'}
@@ -438,16 +438,16 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     onClick={() => setActiveProblemId(activeProblemId === 2 ? null : 2)}
                     className={`p-3.5 rounded-2xl border transition-all cursor-pointer interactive-pill ${
                       activeProblemId === 2 
-                        ? 'bg-rose-950/40 border-rose-500 shadow-md shadow-rose-950/50' 
-                        : 'bg-slate-900/70 border-slate-800 hover:border-rose-500/30'
+                        ? 'bg-rose-50 border-rose-300 shadow-md shadow-rose-200/50 dark:bg-rose-950/40 dark:border-rose-500 dark:shadow-rose-950/50' 
+                        : 'bg-white border-slate-200 text-slate-800 shadow-sm hover:border-rose-300 dark:bg-[#121c2e] dark:border-slate-800 dark:text-slate-200 dark:hover:border-rose-500/30'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-lg">⚡</span>
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                     </div>
-                    <p className="text-xs font-bold text-white mt-1.5">Impasse coef 4</p>
-                    <p className="text-[11px] text-slate-400 mt-1">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white mt-1.5">Impasse coef 4</p>
+                    <p className={`text-[11px] mt-1 ${activeProblemId === 2 ? 'text-amber-700 dark:text-amber-300 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
                       {activeProblemId === 2 
                         ? '⚠️ Risque d\'élimination et rattrapages assurés.' 
                         : 'Toucher pour voir l\'impact'}
@@ -459,16 +459,16 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     onClick={() => setActiveProblemId(activeProblemId === 3 ? null : 3)}
                     className={`p-3.5 rounded-2xl border transition-all cursor-pointer interactive-pill ${
                       activeProblemId === 3 
-                        ? 'bg-rose-950/40 border-rose-500 shadow-md shadow-rose-950/50' 
-                        : 'bg-slate-900/70 border-slate-800 hover:border-rose-500/30'
+                        ? 'bg-rose-50 border-rose-300 shadow-md shadow-rose-200/50 dark:bg-rose-950/40 dark:border-rose-500 dark:shadow-rose-950/50' 
+                        : 'bg-white border-slate-200 text-slate-800 shadow-sm hover:border-rose-300 dark:bg-[#121c2e] dark:border-slate-800 dark:text-slate-200 dark:hover:border-rose-500/30'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-lg">📚</span>
-                      <AlertTriangle className="w-3.5 h-3.5 text-sky-400" />
+                      <AlertTriangle className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
                     </div>
-                    <p className="text-xs font-bold text-white mt-1.5">Planning rigide</p>
-                    <p className="text-[11px] text-slate-400 mt-1">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white mt-1.5">Planning rigide</p>
+                    <p className={`text-[11px] mt-1 ${activeProblemId === 3 ? 'text-sky-700 dark:text-sky-300 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
                       {activeProblemId === 3 
                         ? '⚠️ Abandon après 4 jours et culpabilité mentale.' 
                         : 'Toucher pour voir l\'impact'}
@@ -482,9 +482,9 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                   <Button
                     variant="glow"
                     size="lg"
-                    rightIcon={<Sparkles className="w-5 h-5 text-sky-300" />}
+                    rightIcon={<Sparkles className="w-5 h-5 text-sky-200" />}
                     onClick={() => setSelectedDemoTab('after')}
-                    className="w-full sm:w-auto py-4 px-8 text-sm sm:text-base font-extrabold cursor-pointer shadow-xl shadow-blue-600/30 hover:scale-105 active:scale-95 transition-all"
+                    className="w-full sm:w-auto py-4 px-8 text-sm sm:text-base font-extrabold cursor-pointer shadow-xl shadow-blue-600/30 hover:scale-105 active:scale-95 transition-all bg-blue-600 hover:bg-blue-700 text-white"
                   >
                     ✨ Voir la solution KONAN
                   </Button>
@@ -498,52 +498,52 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         {/* 4 CORE VALUE PILLARS - Interactive Luxurious Cards */}
         <div className="space-y-8 sm:space-y-12">
           <div className="text-center space-y-2 max-w-2xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Pourquoi KONAN transforme votre façon d'étudier
             </h2>
-            <p className="text-slate-400 text-xs sm:text-sm">
+            <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
               Conçu selon les neurosciences de l'apprentissage et l'optimisation du rythme biologique.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             
-            <Card hoverEffect className="p-5 space-y-3 card-luxury group">
-              <div className="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center border border-blue-500/30 group-hover:scale-110 transition-transform">
+            <Card hoverEffect className="p-5 space-y-3 bg-white border border-slate-200 shadow-sm dark:bg-[#0e1626] dark:border-slate-800 group">
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:bg-blue-600/20 dark:text-blue-400 flex items-center justify-center border border-blue-200 dark:border-blue-500/30 group-hover:scale-110 transition-transform">
                 <Calendar className="w-5 h-5" />
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-white">Import & Grille Visuelle</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Import & Grille Visuelle</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 Renseignez vos cours magistraux, TD et TP en quelques clics ou chargez un modèle académique prédéfini prêt à l'emploi.
               </p>
             </Card>
 
-            <Card hoverEffect className="p-5 space-y-3 card-luxury group">
-              <div className="w-10 h-10 rounded-xl bg-sky-600/20 text-sky-400 flex items-center justify-center border border-sky-500/30 group-hover:scale-110 transition-transform">
+            <Card hoverEffect className="p-5 space-y-3 bg-white border border-slate-200 shadow-sm dark:bg-[#0e1626] dark:border-slate-800 group">
+              <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-600 dark:bg-sky-600/20 dark:text-sky-400 flex items-center justify-center border border-sky-200 dark:border-sky-500/30 group-hover:scale-110 transition-transform">
                 <Brain className="w-5 h-5" />
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-white">Équilibre Intelligent</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Équilibre Intelligent</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 L'organisation croise coefficients, difficulté ressentie et temps de repos pour allouer les meilleures plages d'étude sans épuisement.
               </p>
             </Card>
 
-            <Card hoverEffect className="p-5 space-y-3 card-luxury group">
-              <div className="w-10 h-10 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30 group-hover:scale-110 transition-transform">
+            <Card hoverEffect className="p-5 space-y-3 bg-white border border-slate-200 shadow-sm dark:bg-[#0e1626] dark:border-slate-800 group">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:bg-emerald-600/20 dark:text-emerald-400 flex items-center justify-center border border-emerald-200 dark:border-emerald-500/30 group-hover:scale-110 transition-transform">
                 <Zap className="w-5 h-5" />
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-white">Validation & Révisions Ciblées</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Validation & Révisions Ciblées</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 Suivi précis séance par séance, découpage par matières et thèmes, et validation de votre progression quotidienne en un clic.
               </p>
             </Card>
 
-            <Card hoverEffect className="p-5 space-y-3 card-luxury group">
-              <div className="w-10 h-10 rounded-xl bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/30 group-hover:scale-110 transition-transform">
+            <Card hoverEffect className="p-5 space-y-3 bg-white border border-slate-200 shadow-sm dark:bg-[#0e1626] dark:border-slate-800 group">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:bg-amber-600/20 dark:text-amber-400 flex items-center justify-center border border-amber-200 dark:border-amber-500/30 group-hover:scale-110 transition-transform">
                 <BarChart className="w-5 h-5" />
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-white">Suivi & Anti-Burnout</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Suivi & Anti-Burnout</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 Mesurez votre temps réel d'étude, ajustez vos charges quotidiennes et suivez votre indice de maîtrise par matière.
               </p>
             </Card>
@@ -559,21 +559,21 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         />
 
         {/* BOTTOM CALL TO ACTION */}
-        <div className="relative rounded-3xl p-6 sm:p-12 overflow-hidden border border-blue-500/30 bg-gradient-to-br from-blue-950/50 via-slate-900 to-slate-950 text-center space-y-4 sm:space-y-6 shadow-2xl">
+        <div className="relative rounded-3xl p-6 sm:p-12 overflow-hidden border border-blue-200 dark:border-blue-500/30 bg-gradient-to-br from-blue-100 via-white to-slate-50 dark:from-blue-950/50 dark:via-slate-900 dark:to-slate-950 text-center space-y-4 sm:space-y-6 shadow-xl dark:shadow-2xl">
           <div className="max-w-2xl mx-auto space-y-3">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Prêt à reprendre le contrôle de votre semestre ?
             </h2>
-            <p className="text-slate-300 text-xs sm:text-sm">
+            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
               Connectez votre compte Google et générez votre premier planning d'étude personnalisé dès maintenant.
             </p>
           </div>
           <Button
             variant="glow"
             size="lg"
-            rightIcon={<ChevronRight className="w-5 h-5" />}
+            rightIcon={<ChevronRight className="w-5 h-5 text-white" />}
             onClick={onStartApp}
-            className="cursor-pointer shadow-xl text-sm sm:text-base px-6 sm:px-8 py-3.5 font-bold w-full sm:w-auto hover:scale-105 active:scale-95 transition-all"
+            className="cursor-pointer shadow-xl text-sm sm:text-base px-6 sm:px-8 py-3.5 font-bold w-full sm:w-auto hover:scale-105 active:scale-95 transition-all bg-blue-600 hover:bg-blue-700 text-white"
           >
             Commencer avec Google & KONAN
           </Button>

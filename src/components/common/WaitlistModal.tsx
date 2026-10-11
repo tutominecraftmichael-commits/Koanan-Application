@@ -105,10 +105,10 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
       <div 
         role="dialog"
         aria-modal="true"
-        className={`relative w-full max-w-lg rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/98 to-slate-950 border-2 shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] ${
+        className={`relative w-full max-w-lg rounded-3xl bg-white dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-900/98 dark:to-slate-950 border-2 shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-slate-900 dark:text-slate-100 ${
           isPlus 
-            ? 'border-indigo-500/50 shadow-indigo-950/60' 
-            : 'border-amber-400/50 shadow-amber-950/60'
+            ? 'border-indigo-400/80 dark:border-indigo-500/50 shadow-indigo-500/10 dark:shadow-indigo-950/60' 
+            : 'border-amber-400/80 dark:border-amber-400/50 shadow-amber-500/10 dark:shadow-amber-950/60'
         }`}
       >
         {/* Barre lumineuse supérieure */}
@@ -121,7 +121,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
         {/* Bouton Fermer */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors z-20 cursor-pointer"
+          className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800/80 transition-colors z-20 cursor-pointer"
           aria-label="Fermer"
         >
           <X className="w-5 h-5" />
@@ -137,16 +137,16 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                   ? 'bg-gradient-to-tr from-indigo-500 via-purple-500 to-sky-400 shadow-indigo-500/30' 
                   : 'bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-300 shadow-amber-500/30'
               }`}>
-                <div className="w-full h-full rounded-[22px] bg-slate-950/90 flex items-center justify-center">
+                <div className="w-full h-full rounded-[22px] bg-slate-50 dark:bg-slate-950/90 flex items-center justify-center">
                   {isPlus ? (
-                    <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-indigo-400 drop-shadow-[0_0_12px_rgba(99,102,241,0.5)]" />
+                    <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-indigo-500 dark:text-indigo-400 drop-shadow-[0_0_12px_rgba(99,102,241,0.5)]" />
                   ) : (
-                    <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)]" />
+                    <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-amber-500 dark:text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)]" />
                   )}
                 </div>
               </div>
-              <div className="absolute -bottom-1 -right-1 p-1.5 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 shadow-md">
-                <Lock className="w-3.5 h-3.5 text-amber-400" />
+              <div className="absolute -bottom-1 -right-1 p-1.5 rounded-xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-700 text-amber-500 shadow-md">
+                <Lock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
               </div>
             </div>
 
@@ -154,46 +154,46 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
             <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
               <span className={`text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${
                 isPlus 
-                  ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40' 
-                  : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                  ? 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/40' 
+                  : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40'
               }`}>
                 ⭐ {priceBadge}
               </span>
-              <span className="text-[10px] sm:text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+              <span className="text-[10px] sm:text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
                 🚀 Bientôt disponible
               </span>
             </div>
 
             {/* Titre officiel exigé */}
             <div className="space-y-1.5 pt-1">
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                 Fonctionnalité {isPlus ? 'Plus' : 'Pro / Plus'} en approche
               </h2>
-              <div className="inline-block px-3 py-1 rounded-xl bg-slate-800/80 border border-slate-700 text-xs font-semibold text-slate-200">
+              <div className="inline-block px-3 py-1 rounded-xl bg-slate-100 border border-slate-200 dark:bg-slate-800/80 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200">
                 🔒 {featureTitle}
               </div>
             </div>
           </div>
 
           {/* Message clair sur Wave & Orange Money */}
-          <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-left space-y-3 shadow-inner">
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
-              Cette fonctionnalité arrive très bientôt avec le paiement simplifié par <strong className="text-sky-400">Wave</strong> et <strong className="text-amber-400">Orange Money</strong>.
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 dark:bg-slate-900/90 dark:border-slate-800 text-left space-y-3 shadow-inner">
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+              Cette fonctionnalité arrive très bientôt avec le paiement simplifié par <strong className="text-sky-600 dark:text-sky-400">Wave</strong> et <strong className="text-amber-600 dark:text-amber-400">Orange Money</strong>.
             </p>
             {featureDescription && (
-              <p className="text-xs text-slate-400 border-t border-slate-800/80 pt-2 leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800/80 pt-2 leading-relaxed">
                 {featureDescription}
               </p>
             )}
 
             {/* Badges visuels Wave / Orange Money */}
             <div className="flex items-center gap-2 pt-1">
-              <div className="px-2.5 py-1 rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-400 text-[11px] font-black flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+              <div className="px-2.5 py-1 rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-600 dark:text-sky-400 text-[11px] font-black flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-sky-500 dark:bg-sky-400 animate-pulse" />
                 Wave Côte d'Ivoire
               </div>
-              <div className="px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] font-black flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <div className="px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-[11px] font-black flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500 dark:bg-amber-400 animate-pulse" />
                 Orange Money
               </div>
             </div>
@@ -203,7 +203,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
           {!isSubmitted ? (
             <form onSubmit={handleSubmit} className="space-y-3.5 text-left">
               <div className="space-y-1">
-                <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
+                <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
                   Votre adresse email
                 </label>
                 <div className="relative">
@@ -214,14 +214,14 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="etudiant@universite.ci"
                     required
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-700 text-white text-xs sm:text-sm placeholder:text-slate-500 focus:outline-hidden focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 dark:bg-slate-950/80 dark:border-slate-700 dark:text-white text-xs sm:text-sm dark:placeholder:text-slate-500 focus:outline-hidden focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all shadow-xs"
                   />
                 </div>
               </div>
 
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
+                  <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
                     Numéro Wave / Orange Money <span className="text-slate-500 font-normal lowercase">(facultatif)</span>
                   </label>
                 </div>
@@ -232,13 +232,13 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     placeholder="07 00 00 00 00"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-700 text-white text-xs sm:text-sm placeholder:text-slate-500 focus:outline-hidden focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder:text-slate-400 dark:bg-slate-950/80 dark:border-slate-700 dark:text-white text-xs sm:text-sm dark:placeholder:text-slate-500 focus:outline-hidden focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all shadow-xs"
                   />
                 </div>
               </div>
 
               {errorMessage && (
-                <p className="text-xs text-rose-400 font-medium">
+                <p className="text-xs text-rose-500 dark:text-rose-400 font-medium">
                   {errorMessage}
                 </p>
               )}
@@ -263,30 +263,30 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
             </form>
           ) : (
             /* Confirmation après inscription */
-            <div className="p-5 rounded-2xl bg-emerald-950/30 border border-emerald-500/40 text-center space-y-2.5 animate-in zoom-in-95 duration-200">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+            <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-500/40 text-center space-y-2.5 animate-in zoom-in-95 duration-200">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-white">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                 Inscription enregistrée sur la liste d'attente !
               </h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 Merci ! Dès que l'intégration Mobile Money (Wave et Orange Money) sera active, vous recevrez une alerte prioritaire avec tarif préférentiel.
               </p>
             </div>
           )}
 
           {/* Lien de repli : Continuer en Gratuit */}
-          <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+          <div className="pt-2 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between">
             <button
               type="button"
               onClick={onClose}
-              className="text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+              className="text-xs text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
             >
               ← Continuer avec la version Gratuite
             </button>
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               <span>Zéro débit bancaire imprévu</span>
             </div>
           </div>

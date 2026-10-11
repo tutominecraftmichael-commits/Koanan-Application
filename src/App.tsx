@@ -1546,7 +1546,7 @@ export function App() {
   };
 
   return (
-    <div className={`min-h-screen ${isLight ? 'bg-slate-50 text-slate-900' : 'bg-[#090E17] text-slate-100'} flex flex-col selection:bg-blue-600 selection:text-white w-full max-w-full overflow-x-hidden transition-colors duration-300`}>
+    <div className={`min-h-screen ${isLight ? 'bg-slate-50 text-slate-900' : 'dark:bg-[#070b13] dark:text-slate-100 bg-[#070b13] text-slate-100'} flex flex-col selection:bg-blue-600 selection:text-white w-full max-w-full overflow-x-hidden transition-colors duration-300`}>
       
       {/* Hidden file input for JSON configuration backup imports */}
       <input

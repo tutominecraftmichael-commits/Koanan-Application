@@ -12,8 +12,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'glass-panel rounded-2xl p-6 transition-all duration-300 relative overflow-hidden',
-          hoverEffect && 'glass-panel-hover',
+          'bg-white border border-slate-200 shadow-sm dark:bg-[#0e1626] dark:border-slate-800 rounded-2xl p-6 transition-all duration-300 relative overflow-hidden text-slate-900 dark:text-slate-100',
+          hoverEffect && 'hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 hover:-translate-y-0.5',
           glow === 'indigo' && 'border-blue-500/30 shadow-md shadow-blue-950/20',
           glow === 'cyan' && 'border-sky-500/30 shadow-md shadow-sky-950/20',
           className
@@ -34,13 +34,13 @@ export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ cla
 );
 
 export const CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ className, children, ...props }) => (
-  <h3 className={cn('text-lg font-semibold text-white tracking-tight flex items-center gap-2', className)} {...props}>
+  <h3 className={cn('text-lg font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-2', className)} {...props}>
     {children}
   </h3>
 );
 
 export const CardDescription: React.FC<React.HTMLAttributes<HTMLParagraphElement>> = ({ className, children, ...props }) => (
-  <p className={cn('text-sm text-slate-400', className)} {...props}>
+  <p className={cn('text-sm text-slate-600 dark:text-slate-400', className)} {...props}>
     {children}
   </p>
 );
@@ -52,7 +52,7 @@ export const CardContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ cl
 );
 
 export const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, children, ...props }) => (
-  <div className={cn('mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between', className)} {...props}>
+  <div className={cn('mt-6 pt-4 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between', className)} {...props}>
     {children}
   </div>
 );

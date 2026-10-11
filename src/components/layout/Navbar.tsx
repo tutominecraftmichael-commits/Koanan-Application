@@ -198,7 +198,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const displayName = userAccount?.isLoggedIn ? userAccount.name : studentName;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/95 backdrop-blur-2xl transition-all pt-safe">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl transition-all pt-safe">
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
         
         {/* Main Navbar Top Row */}
@@ -215,24 +215,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <img
                   src="/konan-logo.png"
                   alt="Logo Officiel KONAN"
-                  className="w-full h-full object-contain rounded-full bg-slate-950/80"
+                  className="w-full h-full object-contain rounded-full bg-white dark:bg-slate-950/80"
                 />
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-sm sm:text-lg tracking-tight text-white group-hover:text-blue-300 transition-colors">
+                  <span className="font-extrabold text-sm sm:text-lg tracking-tight text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors">
                     KONAN
                   </span>
                   <Badge variant="cyan" size="sm" className="hidden sm:inline-flex text-[10px] px-1.5 py-0">v1.0</Badge>
                 </div>
-                <p className="text-[10px] sm:text-[11px] text-slate-400 hidden md:block truncate">Compagnon Académique</p>
+                <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 hidden md:block truncate">Compagnon Académique</p>
               </div>
             </button>
           </div>
 
           {/* Desktop Navigation Links - Centered, shrink-0, perfectly spaced */}
           {activeView !== 'landing' && activeView !== 'auth' && (
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800/80 shrink-0 mx-2 shadow-xs">
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 bg-slate-100 dark:bg-slate-900/90 p-1 rounded-xl border border-slate-200 dark:border-slate-800/80 shrink-0 mx-2 shadow-xs">
               {navItems.map((item) => {
                 const IconComponent = item.component;
                 const isActive = activeView === item.id;
@@ -250,7 +250,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className={`group flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer shrink-0 whitespace-nowrap active:scale-95 ${
                       isActive
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/40 ring-1 ring-blue-400/40'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/80 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/80'
                     }`}
                   >
                     <IconComponent
@@ -258,7 +258,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className={`w-4 h-4 shrink-0 transition-transform duration-300 ease-out ${
                         isActive 
                           ? 'scale-110 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' 
-                          : 'group-hover:text-blue-300'
+                          : 'group-hover:text-blue-500 dark:group-hover:text-blue-300'
                       }`}
                     />
                     <span className="transition-colors duration-200">{item.label}</span>
@@ -275,36 +275,36 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {activeView !== 'landing' && activeView !== 'auth' ? (
               <>
-                {/* Paramètres (Settings) Button - Masqué sur petit écran car l'Avatar ouvre déjà les Paramètres */}
+                {/* Paramètres (Settings) Button */}
                 {onOpenSettings && (
                   <button
                     onClick={onOpenSettings}
                     title={t('navSettings', lang)}
                     aria-label={t('navSettings', lang)}
-                    className="hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/80 border border-slate-800 hover:border-indigo-500/60 hover:bg-slate-800/80 text-slate-300 hover:text-white items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 group"
+                    className="hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 hover:border-indigo-500/60 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 dark:bg-slate-900/80 dark:border-slate-800 dark:hover:border-indigo-500/60 dark:hover:bg-slate-800/80 dark:text-slate-300 dark:hover:text-white items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 group"
                   >
-                    <Settings className="w-4 h-4 text-indigo-400 group-hover:rotate-45 transition-transform duration-300" />
+                    <Settings className="w-4 h-4 text-indigo-500 dark:text-indigo-400 group-hover:rotate-45 transition-transform duration-300" />
                   </button>
                 )}
 
-                {/* Secondary Tools Menu (Data Export, Import, Reset) - Masqué sur mobile, accessible via Paramètres */}
+                {/* Secondary Tools Menu (Data Export, Import, Reset) */}
                 <div className="relative hidden sm:block" ref={toolsMenuRef}>
                   <button
                     onClick={() => setIsToolsOpen(!isToolsOpen)}
                     title={t('navTools', lang)}
-                    className="group p-2 rounded-xl bg-slate-900/70 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+                    className="group p-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-200 dark:bg-slate-900/70 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-all cursor-pointer flex items-center gap-1 active:scale-95"
                   >
-                    <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:rotate-45 group-hover:text-indigo-400 group-active:scale-90" />
-                    <ChevronDown className={`w-3 h-3 text-slate-500 transition-transform duration-300 ${isToolsOpen ? 'rotate-180 text-white' : 'group-hover:translate-y-0.5'}`} />
+                    <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:rotate-45 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 group-active:scale-90" />
+                    <ChevronDown className={`w-3 h-3 text-slate-400 dark:text-slate-500 transition-transform duration-300 ${isToolsOpen ? 'rotate-180 text-slate-900 dark:text-white' : 'group-hover:translate-y-0.5'}`} />
                   </button>
 
                   {isToolsOpen && (
-                    <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-slate-950 border border-slate-800 shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150 space-y-1">
-                      <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-slate-400 tracking-wider border-b border-slate-800/60">
+                    <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-slate-200 shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150 space-y-1 dark:bg-slate-950 dark:border-slate-800">
+                      <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider border-b border-slate-200 dark:border-slate-800/60">
                         {t('navTools', lang)}
                       </div>
 
-                      {/* Importer un emploi du temps: ONLY for connected users, NOT in demo */}
+                      {/* Importer un emploi du temps */}
                       {!isDemoMode && (
                         <button
                           onClick={() => {
@@ -315,9 +315,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                             }
                             setIsToolsOpen(false);
                           }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
                         >
-                          <FileText className="w-3.5 h-3.5 text-cyan-400" />
+                          <FileText className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
                           <span>{t('navImport', lang)}</span>
                         </button>
                       )}
@@ -326,34 +326,34 @@ export const Navbar: React.FC<NavbarProps> = ({
                       {isDemoMode && (
                         <button
                           onClick={() => { onOpenPresetModal(); setIsToolsOpen(false); }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-indigo-300 hover:text-white hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 dark:text-indigo-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
                         >
-                          <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />
+                          <GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
                           <span>Exemples d'EDT Démo</span>
                         </button>
                       )}
 
-                      <div className="my-1 border-t border-slate-800/60" />
+                      <div className="my-1 border-t border-slate-200 dark:border-slate-800/60" />
                       
                       <button
                         onClick={() => { onExportData(); setIsToolsOpen(false); }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
                       >
-                        <Download className="w-3.5 h-3.5 text-cyan-400" />
+                        <Download className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
                         <span>{t('exportConfig', lang)}</span>
                       </button>
 
                       <button
                         onClick={() => { onImportData(); setIsToolsOpen(false); }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
                       >
-                        <Upload className="w-3.5 h-3.5 text-indigo-400" />
+                        <Upload className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
                         <span>{t('importConfig', lang)}</span>
                       </button>
 
                       <button
                         onClick={() => { onResetData(); setIsToolsOpen(false); }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition-colors cursor-pointer text-left group/rst"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:text-rose-400 dark:hover:text-rose-300 dark:hover:bg-rose-500/10 rounded-xl transition-colors cursor-pointer text-left group/rst"
                       >
                         <RotateCcw className="w-3.5 h-3.5 transition-transform duration-500 group-hover/rst:-rotate-180" />
                         <span>{t('resetDefault', lang)}</span>
@@ -376,37 +376,37 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setIsBellRinging(true);
                       setTimeout(() => setIsBellRinging(false), 800);
                     }}
-                    className="group relative p-1.5 sm:p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center bg-slate-900/80 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700 active:scale-95 shrink-0"
+                    className="group relative p-1.5 sm:p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center bg-slate-100 text-slate-700 border-slate-200 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-900/80 dark:text-slate-300 dark:border-slate-800 dark:hover:text-white dark:hover:border-slate-700 active:scale-95 shrink-0"
                     title={hasUnreadNotifications ? 'Nouvelles notifications non lues' : 'Notifications'}
                     aria-label={hasUnreadNotifications ? 'Notifications (non lues)' : 'Notifications'}
                   >
-                    <Bell className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform ${isBellRinging ? 'animate-bell-ring text-amber-400' : 'group-hover:animate-bell-ring group-hover:text-amber-300'}`} />
+                    <Bell className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform ${isBellRinging ? 'animate-bell-ring text-amber-500' : 'group-hover:animate-bell-ring group-hover:text-amber-500 dark:group-hover:text-amber-300'}`} />
                     {hasUnreadNotifications && (
                       <span className="absolute top-0.5 right-0.5 flex h-2 w-2 sm:h-2.5 sm:w-2.5" aria-hidden="true">
                         <span className="absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-60 animate-ping" />
-                        <span className="relative inline-flex h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-rose-500 ring-2 ring-slate-950" />
+                        <span className="relative inline-flex h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-rose-500 ring-2 ring-white dark:ring-slate-950" />
                       </span>
                     )}
                   </button>
 
                   {/* Desktop Dropdown Menu for Notifications */}
                   {isNotificationsOpen && (
-                    <div className="hidden sm:block absolute right-0 top-full mt-2 w-96 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 space-y-2.5">
-                      <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-xs">
-                        <span className="font-bold text-white flex items-center gap-1.5">
-                          <Bell className="w-3.5 h-3.5 text-amber-400" />
+                    <div className="hidden sm:block absolute right-0 top-full mt-2 w-96 rounded-2xl bg-white border border-slate-200 shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 space-y-2.5 dark:bg-slate-900 dark:border-slate-800">
+                      <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800 text-xs">
+                        <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                          <Bell className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                           Notifications & Invitations
                         </span>
                         {activePendingInvitations.length > 0 && (
-                          <span className="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
+                          <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30 px-2 py-0.5 rounded-full">
                             {activePendingInvitations.length} en attente
                           </span>
                         )}
                       </div>
 
                       {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
-                        <div className="py-6 text-center text-xs text-slate-400">
-                          <Bell className="w-6 h-6 mx-auto text-slate-600 mb-2 opacity-50" />
+                        <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+                          <Bell className="w-6 h-6 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                           <p>Aucune notification pour le moment.</p>
                         </div>
                       ) : (
@@ -421,35 +421,35 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 key={notif.id}
                                 className={`p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left animate-in fade-in transition-all ${
                                   isAcc
-                                    ? 'bg-gradient-to-br from-emerald-950/40 via-slate-950 to-indigo-950/30 border-emerald-500/30'
-                                    : 'bg-gradient-to-br from-rose-950/40 via-slate-950 to-slate-900 border-rose-500/30'
+                                    ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-indigo-950/30 dark:border-emerald-500/30'
+                                    : 'bg-rose-50/80 border-rose-200 dark:bg-gradient-to-br dark:from-rose-950/40 dark:via-slate-950 dark:to-slate-900 dark:border-rose-500/30'
                                 }`}
                               >
                                 <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${
-                                  isAcc ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'
+                                  isAcc ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300'
                                 }`}>
-                                  {isAcc ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-rose-400" />}
+                                  {isAcc ? <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />}
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center justify-between gap-1">
                                     <span className={`text-[9px] font-black uppercase tracking-wider ${
-                                      isAcc ? 'text-emerald-400' : 'text-rose-400'
+                                      isAcc ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'
                                     }`}>
                                       {isAcc ? 'Invitation Acceptée' : 'Invitation Refusée'}
                                     </span>
                                     <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-bold shrink-0 shadow-xs ${
-                                      isAcc ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300' : 'bg-rose-500/20 border-rose-500/40 text-rose-300'
+                                      isAcc ? 'bg-emerald-100 border-emerald-300 text-emerald-800 dark:bg-emerald-500/20 dark:border-emerald-500/40 dark:text-emerald-300' : 'bg-rose-100 border-rose-300 text-rose-800 dark:bg-rose-500/20 dark:border-rose-500/40 dark:text-rose-300'
                                     }`}>
-                                      <Clock className={`w-3 h-3 ${isAcc ? 'text-emerald-400' : 'text-rose-400'}`} />
+                                      <Clock className={`w-3 h-3 ${isAcc ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`} />
                                       <span>{timeFormatted}</span>
                                     </div>
                                   </div>
-                                  <p className="text-xs font-bold text-white leading-snug mt-1">
-                                    L'utilisateur : <span className={`font-bold ${isAcc ? 'text-emerald-300' : 'text-rose-300'}`}>{notif.name}</span>{' '}
-                                    {notif.konanId && <span className="font-mono text-amber-300 font-bold">[{notif.konanId}]</span>}{' '}
+                                  <p className="text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">
+                                    L'utilisateur : <span className={`font-bold ${isAcc ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>{notif.name}</span>{' '}
+                                    {notif.konanId && <span className="font-mono text-amber-700 dark:text-amber-300 font-bold">[{notif.konanId}]</span>}{' '}
                                     {isAcc ? 'a accepté votre invitation' : 'a refusé votre invitation'}
                                   </p>
-                                  <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                                  <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                                     {isAcc 
                                       ? 'Ce membre a rejoint votre groupe KONAN PLUS.' 
                                       : 'Cette place est de nouveau libre dans votre groupe d\'étude (4 comptes inclus).'}
@@ -466,28 +466,28 @@ export const Navbar: React.FC<NavbarProps> = ({
                             return (
                               <div 
                                 key={inv.id}
-                                className="p-3.5 rounded-xl bg-gradient-to-br from-amber-500/10 via-slate-950 to-indigo-950/30 border border-amber-500/40 space-y-2.5 shadow-md text-left"
+                                className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-indigo-950/30 dark:border-amber-500/40"
                               >
                                 <div className="flex items-start gap-2.5">
-                                  <div className="p-2 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
+                                  <div className="p-2 rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 shrink-0">
                                     <Crown className="w-4 h-4" />
                                   </div>
                                   <div className="min-w-0 flex-1">
                                     <div className="flex items-center justify-between gap-1">
-                                      <span className="text-[9px] font-black uppercase tracking-wider text-amber-400">
+                                      <span className="text-[9px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-400">
                                         Invitation Officielle
                                       </span>
-                                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-bold shrink-0 shadow-xs">
-                                        <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-amber-800 dark:bg-amber-500/20 dark:border-amber-500/40 dark:text-amber-300 text-[11px] font-bold shrink-0 shadow-xs">
+                                        <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                                         <span>{timeFormatted}</span>
                                       </div>
                                     </div>
-                                    <p className="text-xs font-bold text-white leading-snug mt-1">
+                                    <p className="text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">
                                       Vous avez reçu une invitation de la part de{' '}
-                                      <span className="text-amber-300 font-bold">{inv.senderName}</span>{' '}
-                                      (ID : <span className="font-mono text-amber-300 font-bold">{inv.senderKonanId}</span>).
+                                      <span className="text-amber-700 dark:text-amber-300 font-bold">{inv.senderName}</span>{' '}
+                                      (ID : <span className="font-mono text-amber-700 dark:text-amber-300 font-bold">{inv.senderKonanId}</span>).
                                     </p>
-                                    <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                                    <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                                       Acceptez pour activer immédiatement votre accès complet et gratuit à KONAN PLUS.
                                     </p>
                                   </div>
@@ -515,7 +515,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                       onDeclineInvitation?.(inv);
                                       setIsNotificationsOpen(false);
                                     }}
-                                    className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-rose-950/50 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 text-slate-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                                    className="py-2 px-3.5 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-700 border border-slate-300 hover:border-rose-300 text-slate-700 dark:bg-slate-800 dark:hover:bg-rose-950/50 dark:hover:text-rose-300 dark:border-slate-700 dark:hover:border-rose-500/40 dark:text-slate-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95"
                                   >
                                     <X className="w-3.5 h-3.5" />
                                     <span>Refuser</span>
@@ -542,24 +542,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                       {/* Centered Modal Card on Mobile */}
                       <div 
                         ref={mobileNotificationsMenuRef}
-                        className="relative w-full max-w-sm rounded-2xl bg-slate-900 border border-slate-700/80 shadow-2xl p-4 z-10 animate-in fade-in zoom-in-95 duration-150 space-y-3"
+                        className="relative w-full max-w-sm rounded-2xl bg-white border border-slate-200 shadow-2xl p-4 z-10 animate-in fade-in zoom-in-95 duration-150 space-y-3 dark:bg-slate-900 dark:border-slate-700/80"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-xs">
-                          <span className="font-bold text-white flex items-center gap-1.5">
-                            <Bell className="w-4 h-4 text-amber-400" />
+                        <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800 text-xs">
+                          <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <Bell className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                             Notifications & Invitations
                           </span>
                           <div className="flex items-center gap-2">
                             {activePendingInvitations.length > 0 && (
-                              <span className="text-[10px] font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
+                              <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30 px-2 py-0.5 rounded-full">
                                 {activePendingInvitations.length} en attente
                               </span>
                             )}
                             <button
                               type="button"
                               onClick={() => setIsNotificationsOpen(false)}
-                              className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                              className="p-1 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
                               aria-label="Fermer"
                             >
                               <X className="w-4 h-4" />
@@ -568,8 +568,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                         </div>
 
                         {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
-                          <div className="py-6 text-center text-xs text-slate-400">
-                            <Bell className="w-7 h-7 mx-auto text-slate-600 mb-2 opacity-50" />
+                          <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+                            <Bell className="w-7 h-7 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                             <p>Aucune notification pour le moment.</p>
                           </div>
                         ) : (
@@ -584,35 +584,35 @@ export const Navbar: React.FC<NavbarProps> = ({
                                   key={`mob-${notif.id}`}
                                   className={`p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left animate-in fade-in transition-all ${
                                     isAcc
-                                      ? 'bg-gradient-to-br from-emerald-950/40 via-slate-950 to-indigo-950/30 border-emerald-500/30'
-                                      : 'bg-gradient-to-br from-rose-950/40 via-slate-950 to-slate-900 border-rose-500/30'
+                                      ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-indigo-950/30 dark:border-emerald-500/30'
+                                      : 'bg-rose-50/80 border-rose-200 dark:bg-gradient-to-br dark:from-rose-950/40 dark:via-slate-950 dark:to-slate-900 dark:border-rose-500/30'
                                   }`}
                                 >
                                   <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${
-                                    isAcc ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'
+                                    isAcc ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300'
                                   }`}>
-                                    {isAcc ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-rose-400" />}
+                                    {isAcc ? <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />}
                                   </div>
                                   <div className="min-w-0 flex-1">
                                     <div className="flex items-center justify-between gap-1">
                                       <span className={`text-[9px] font-black uppercase tracking-wider ${
-                                        isAcc ? 'text-emerald-400' : 'text-rose-400'
+                                        isAcc ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'
                                       }`}>
                                         {isAcc ? 'Invitation Acceptée' : 'Invitation Refusée'}
                                       </span>
                                       <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-bold shrink-0 shadow-xs ${
-                                        isAcc ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300' : 'bg-rose-500/20 border-rose-500/40 text-rose-300'
+                                        isAcc ? 'bg-emerald-100 border-emerald-300 text-emerald-800 dark:bg-emerald-500/20 dark:border-emerald-500/40 dark:text-emerald-300' : 'bg-rose-100 border-rose-300 text-rose-800 dark:bg-rose-500/20 dark:border-rose-500/40 dark:text-rose-300'
                                       }`}>
-                                        <Clock className={`w-3 h-3 ${isAcc ? 'text-emerald-400' : 'text-rose-400'}`} />
+                                        <Clock className={`w-3 h-3 ${isAcc ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`} />
                                         <span>{timeFormatted}</span>
                                       </div>
                                     </div>
-                                    <p className="text-xs font-bold text-white leading-snug mt-1">
-                                      L'utilisateur : <span className={`font-bold ${isAcc ? 'text-emerald-300' : 'text-rose-300'}`}>{notif.name}</span>{' '}
-                                      {notif.konanId && <span className="font-mono text-amber-300 font-bold">[{notif.konanId}]</span>}{' '}
+                                    <p className="text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">
+                                      L'utilisateur : <span className={`font-bold ${isAcc ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>{notif.name}</span>{' '}
+                                      {notif.konanId && <span className="font-mono text-amber-700 dark:text-amber-300 font-bold">[{notif.konanId}]</span>}{' '}
                                       {isAcc ? 'a accepté votre invitation' : 'a refusé votre invitation'}
                                     </p>
-                                    <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                                    <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                                       {isAcc 
                                         ? 'Ce membre a rejoint votre groupe KONAN PLUS.' 
                                         : 'Cette place est de nouveau libre dans votre groupe d\'étude (4 comptes inclus).'}
@@ -629,28 +629,28 @@ export const Navbar: React.FC<NavbarProps> = ({
                               return (
                                 <div 
                                   key={`mob-${inv.id}`}
-                                  className="p-3.5 rounded-xl bg-gradient-to-br from-amber-500/10 via-slate-950 to-indigo-950/30 border border-amber-500/40 space-y-2.5 shadow-md text-left"
+                                  className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-indigo-950/30 dark:border-amber-500/40"
                                 >
                                   <div className="flex items-start gap-2.5">
-                                    <div className="p-2 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
+                                    <div className="p-2 rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 shrink-0">
                                       <Crown className="w-4 h-4" />
                                     </div>
                                     <div className="min-w-0 flex-1">
                                       <div className="flex items-center justify-between gap-1">
-                                        <span className="text-[9px] font-black uppercase tracking-wider text-amber-400">
+                                        <span className="text-[9px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-400">
                                           Invitation Officielle
                                         </span>
-                                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-bold shrink-0 shadow-xs">
-                                          <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-amber-800 dark:bg-amber-500/20 dark:border-amber-500/40 dark:text-amber-300 text-[11px] font-bold shrink-0 shadow-xs">
+                                          <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                                           <span>{timeFormatted}</span>
                                         </div>
                                       </div>
-                                      <p className="text-xs font-bold text-white leading-snug mt-1">
+                                      <p className="text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">
                                         Vous avez reçu une invitation de la part de{' '}
-                                        <span className="text-amber-300 font-bold">{inv.senderName}</span>{' '}
-                                        (ID : <span className="font-mono text-amber-300 font-bold">{inv.senderKonanId}</span>).
+                                        <span className="text-amber-700 dark:text-amber-300 font-bold">{inv.senderName}</span>{' '}
+                                        (ID : <span className="font-mono text-amber-700 dark:text-amber-300 font-bold">{inv.senderKonanId}</span>).
                                       </p>
-                                      <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                                      <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                                         Acceptez pour activer immédiatement votre accès complet et gratuit à KONAN PLUS.
                                       </p>
                                     </div>
@@ -678,7 +678,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                         onDeclineInvitation?.(inv);
                                         setIsNotificationsOpen(false);
                                       }}
-                                      className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-rose-950/50 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 text-slate-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                                      className="py-2 px-3.5 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-700 border border-slate-300 hover:border-rose-300 text-slate-700 dark:bg-slate-800 dark:hover:bg-rose-950/50 dark:hover:text-rose-300 dark:border-slate-700 dark:hover:border-rose-500/40 dark:text-slate-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95"
                                     >
                                       <X className="w-4 h-4" />
                                       <span>Refuser</span>
@@ -702,7 +702,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                 {/* User / Google Profile Pill -> opens Settings Modal on click */}
                 {userAccount && userAccount.isLoggedIn ? (
-                  <div className="flex items-center gap-1 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-800/80 shrink-0">
+                  <div className="flex items-center gap-1 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-800/80 shrink-0">
                     <div
                       onClick={onOpenSettings}
                       title="Voir mon profil et paramètres"
@@ -725,9 +725,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                             ? 'plus-multicolor-shimmer-text font-black'
                             : effectivePlan === 'pro'
                             ? 'gold-shimmer-text font-black'
-                            : 'text-white'
+                            : 'text-slate-900 dark:text-white'
                         }`}>{displayName}</p>
-                        <p className="text-[10px] text-cyan-400 font-mono truncate max-w-[120px]">
+                        <p className="text-[10px] text-cyan-600 dark:text-cyan-400 font-mono truncate max-w-[120px]">
                           {userAccount.isDemo ? t('demoAccount', lang) : userAccount.email || 'Connecté'}
                         </p>
                       </div>
@@ -742,10 +742,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                           if (onViewPricing) onViewPricing();
                           else onNavigate('landing');
                         }}
-                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-cyan-500/20 text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-cyan-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                         title="Modèle KONAN PLUS Actif - Cliquez pour voir les formules"
                       >
-                        <Crown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400 shrink-0" />
+                        <Crown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 dark:text-amber-400 shrink-0" />
                         <span>PLUS</span>
                       </button>
                     ) : effectivePlan === 'pro' ? (
@@ -756,26 +756,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                           if (onViewPricing) onViewPricing();
                           else onNavigate('landing');
                         }}
-                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/20 text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                         title="Modèle KONAN PRO Actif - Cliquez pour voir les formules"
                       >
-                        <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400 shrink-0" />
+                        <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 dark:text-amber-400 shrink-0" />
                         <span>PRO</span>
                       </button>
                     ) : (isDemoMode || userAccount?.isDemo) ? (
                       <div className="flex items-center gap-1 shrink-0">
                         <span
-                          className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/15 text-amber-300 border-amber-500/30 cursor-default select-none"
+                          className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30 cursor-default select-none"
                           title="Mode Démo Actif"
                         >
-                          <GraduationCap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400 shrink-0" />
+                          <GraduationCap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 dark:text-amber-400 shrink-0" />
                           Démo
                         </span>
                         {_onLogout && (
                           <button
                             type="button"
                             onClick={_onLogout}
-                            className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-[10px] font-bold text-rose-300 hover:text-rose-200 transition-colors cursor-pointer shadow-xs"
+                            className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-[10px] font-bold text-rose-700 dark:text-rose-300 hover:text-rose-800 dark:hover:text-rose-200 transition-colors cursor-pointer shadow-xs"
                             title="Quitter le Mode Démo et revenir à l'accueil"
                           >
                             <LogOut className="w-3 h-3" />
@@ -785,7 +785,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <button
                           type="button"
                           onClick={() => onNavigate('auth')}
-                          className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-[10px] font-bold text-indigo-300 hover:text-white transition-colors cursor-pointer shadow-xs"
+                          className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/30 text-[10px] font-bold text-indigo-700 hover:text-indigo-900 dark:bg-indigo-600/20 dark:hover:bg-indigo-600/30 dark:border-indigo-500/40 dark:text-indigo-300 dark:hover:text-white transition-colors cursor-pointer shadow-xs"
                           title="Se connecter avec un compte Google réel"
                         >
                           <LogIn className="w-3 h-3" />
@@ -794,7 +794,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                     ) : (
                       <span
-                        className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-slate-800/90 text-slate-300 border-slate-700/80 cursor-default select-none"
+                        className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800/90 dark:text-slate-300 dark:border-slate-700/80 cursor-default select-none"
                         title="Modèle KONAN Gratuit"
                       >
                         Gratuit
@@ -804,7 +804,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ) : (
                   <button
                     onClick={() => onNavigate('auth')}
-                    className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-slate-900 border border-indigo-500/40 hover:border-indigo-400 text-[11px] sm:text-xs font-semibold text-white shadow-sm cursor-pointer shrink-0"
+                    className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 dark:bg-slate-900 dark:border-indigo-500/40 dark:hover:border-indigo-400 dark:text-white text-[11px] sm:text-xs font-semibold shadow-sm cursor-pointer shrink-0 transition-colors"
                   >
                     <svg viewBox="0 0 24 24" className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0">
                       <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
@@ -860,7 +860,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Sub-Navigation Bar (Only for active dashboard pages) */}
         {activeView !== 'landing' && activeView !== 'auth' && (
-          <div className="flex lg:hidden items-center py-2 border-t border-slate-900 overflow-x-auto no-scrollbar gap-1.5 px-1.5">
+          <div className="flex lg:hidden items-center py-2 border-t border-slate-200 dark:border-slate-900 overflow-x-auto no-scrollbar gap-1.5 px-1.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeView === item.id;
@@ -878,7 +878,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className={`group flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 shrink-0 cursor-pointer min-h-[36px] active:scale-95 ${
                     isActive 
                       ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/40 ring-1 ring-blue-400/30' 
-                      : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800'
+                      : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 dark:bg-slate-900/80 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
                   }`}
                 >
                   <Icon 
@@ -886,7 +886,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className={`w-4 h-4 shrink-0 transition-transform duration-300 ease-out ${
                       isActive 
                         ? 'scale-110 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' 
-                        : 'group-hover:text-blue-300'
+                        : 'group-hover:text-blue-500 dark:group-hover:text-blue-300'
                     }`} 
                   />
                   <span>{item.label}</span>
