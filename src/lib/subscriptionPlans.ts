@@ -90,28 +90,28 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
   pro: {
     id: 'pro',
     name: 'KONAN PRO',
-    tagline: 'Performance & Assimilation approfondie',
+    tagline: 'Formule actuellement désactivée — Tous les comptes sont en Gratuit',
     priceLabel: '1 200 F',
-    periodLabel: 'CFA / mois',
+    periodLabel: 'CFA / mois (Désactivé)',
     priceAmount: 1200,
-    maxPdfImports: Infinity,
-    maxConcurrentMethods: 3, // Jusqu'à 3 méthodes simultanées
-    allowedMethods: [...FREE_METHODS, ...PRO_METHODS],
-    isPurchaseActive: false, // Désactivé : Waitlist active
-    paymentProviders: ['Wave', 'Orange Money'],
+    maxPdfImports: 3,
+    maxConcurrentMethods: 1,
+    allowedMethods: FREE_METHODS,
+    isPurchaseActive: false, // Compte Pro désactivé
+    paymentProviders: [],
   },
   plus: {
     id: 'plus',
     name: 'KONAN PLUS',
-    tagline: 'L’Élite Académique & Travail de Groupe',
+    tagline: 'Formule actuellement désactivée — Tous les comptes sont en Gratuit',
     priceLabel: '2 500 F',
-    periodLabel: 'CFA / mois (ou Offre Trimestre)',
+    periodLabel: 'CFA / mois (Désactivé)',
     priceAmount: 2500,
-    maxPdfImports: Infinity,
-    maxConcurrentMethods: 3,
-    allowedMethods: [...FREE_METHODS, ...PRO_METHODS],
-    isPurchaseActive: false, // Désactivé : Waitlist active
-    paymentProviders: ['Wave', 'Orange Money'],
+    maxPdfImports: 3,
+    maxConcurrentMethods: 1,
+    allowedMethods: FREE_METHODS,
+    isPurchaseActive: false, // Compte Plus désactivé
+    paymentProviders: [],
   },
 };
 
@@ -131,23 +131,23 @@ export function isProMethod(method: StudyPacing | string): boolean {
 
 /**
  * Vérifie si une méthode d'apprentissage est autorisée pour un palier donné
+ * RÈGLE ABSOLUE : Mode PRO et PLUS désactivés, seules les méthodes Gratuites sont autorisées.
  */
-export function isMethodAllowedForTier(method: StudyPacing | string, tier: PlanTier = 'free'): boolean {
-  if (tier === 'pro' || tier === 'plus') return true;
+export function isMethodAllowedForTier(method: StudyPacing | string, _tier: PlanTier = 'free'): boolean {
   return isFreeMethod(method);
 }
 
 /**
  * Vérifie si l'utilisateur peut importer un nouvel emploi du temps PDF
+ * Limité aux quotas du modèle Gratuit pour tous les utilisateurs.
  */
-export function canImportPdfSchedule(tier: PlanTier = 'free', currentImportCount: number = 0): boolean {
-  if (tier === 'pro' || tier === 'plus') return true;
+export function canImportPdfSchedule(_tier: PlanTier = 'free', currentImportCount: number = 0): boolean {
   return currentImportCount < PLAN_DETAILS.free.maxPdfImports;
 }
 
 /**
- * Nombre maximal de méthodes combinables pour un palier
+ * Nombre maximal de méthodes combinables pour un palier (1 pour tous)
  */
-export function getMaxMethodsForTier(tier: PlanTier = 'free'): number {
-  return PLAN_DETAILS[tier]?.maxConcurrentMethods || 1;
+export function getMaxMethodsForTier(_tier: PlanTier = 'free'): number {
+  return 1;
 }

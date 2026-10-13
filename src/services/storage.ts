@@ -200,34 +200,62 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           ? parsed.konanId.trim().toUpperCase()
           : (parsed.userAccount?.konanId?.trim()?.toUpperCase() || assignedKonanId);
 
-        const isPlus = isTargetAlreadyPlus(resolvedKonanId) 
-          || isTargetAlreadyPlus(user.email) 
-          || isTargetAlreadyPlus(parsed.userAccount?.email)
-          || Boolean(parsed.isGroupGuest) 
-          || Boolean(parsed.userAccount?.isGroupGuest);
+        // RÈGLE ABSOLUE & UNIVERSELLE : Modes PRO et PLUS désactivés.
+        // TOUS les comptes sans aucune exception retombent à Gratuit ('free').
+        const hadProOrPlus = parsed.planTier === 'pro' || parsed.planTier === 'plus'
+          || parsed.userAccount?.planTier === 'pro' || parsed.userAccount?.planTier === 'plus'
+          || Boolean(parsed.isGroupGuest) || Boolean(parsed.userAccount?.isGroupGuest);
 
-        // Personne ne doit pouvoir activer Pro ou Plus gratuitement pendant la phase waitlist
-        const planTier: PlanTier = isPlus ? 'plus' : 'free';
         const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
 
         const userPreferences = parsed.preferences ? { ...baseEmptyState.preferences, ...parsed.preferences } : baseEmptyState.preferences;
-        if (planTier === 'free' && (userPreferences.pacing === 'feynman' || userPreferences.pacing === 'time_blocking')) {
+        if (userPreferences.pacing === 'feynman' || userPreferences.pacing === 'time_blocking') {
           userPreferences.pacing = 'pomodoro';
-          userPreferences.combinedPacings = ['pomodoro'];
         }
+        userPreferences.combinedPacings = [userPreferences.pacing || 'pomodoro'];
 
         const sanitizedSubjects: Subject[] = (Array.isArray(parsed.subjects) ? parsed.subjects : [])
-          .filter((s: Subject) => !isNonAcademicSubject(s.name));
+          .filter((s: Subject) => !isNonAcademicSubject(s.name))
+          .map((s: Subject) => ({
+            ...s,
+            examDate: undefined,
+            examType: undefined,
+            examTime: undefined,
+          }));
         const validSubjectIds = new Set(sanitizedSubjects.map((s: Subject) => s.id));
 
         const sanitizedStudySessions: StudySession[] = (Array.isArray(parsed.studySessions) ? parsed.studySessions : [])
           .filter((sess: StudySession) => {
             if (isNonAcademicSubject(sess.title)) return false;
             if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
+            if (sess.isExamPrep || sess.type === 'exam_simulation') return false;
+            const lowerTitle = (sess.title || '').toLowerCase();
+            if (lowerTitle.includes('devoir') || lowerTitle.includes('examen') || lowerTitle.includes('épreuve') || lowerTitle.includes('rattrapage')) {
+              return false;
+            }
             return true;
+          })
+          .map((sess: StudySession) => {
+            if (sess.pacingMethod === 'feynman' || sess.pacingMethod === 'time_blocking') {
+              const subject = sanitizedSubjects.find((s: Subject) => s.id === sess.subjectId);
+              const subName = subject?.name || 'Matière';
+              return {
+                ...sess,
+                pacingMethod: 'pomodoro',
+                durationMinutes: 25,
+                title: `Pomodoro (25m) : ${subName}`,
+                description: 'Micro-session Pomodoro de 25 min à fond, coupure nette de 5 min.',
+                objectives: [
+                  '25 min à fond sans distraction',
+                  'Fiche mémo des points clés',
+                  'Auto-test en fin de bloc',
+                ],
+              };
+            }
+            return sess;
           });
 
-        return {
+        const sanitizedResult: AppState = {
           ...baseEmptyState,
           ...parsed,
           studentName: parsed.studentName || user.name,
@@ -239,30 +267,49 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           logs: hasCompleted ? (Array.isArray(parsed.logs) ? parsed.logs : []) : [],
           preferences: userPreferences,
           streak: parsed.streak ? { ...baseEmptyState.streak, ...parsed.streak } : baseEmptyState.streak,
-          invitedIds: Array.isArray(parsed.invitedIds) ? parsed.invitedIds : [],
-          invitedEmails: Array.isArray(parsed.invitedEmails) ? parsed.invitedEmails : [],
-          planTier,
-          isGroupGuest: isPlus ? (parsed.isGroupGuest ?? parsed.userAccount?.isGroupGuest ?? false) : false,
+          invitedIds: [],
+          invitedEmails: [],
+          academicGoal: undefined,
+          coachingSessionsRemaining: 0,
+          planTier: 'free',
+          isGroupGuest: false,
           privacyPolicyAccepted: parsed.privacyPolicyAccepted ?? parsed.userAccount?.privacyPolicyAccepted ?? false,
           privacyPolicyAcceptedAt: parsed.privacyPolicyAcceptedAt ?? parsed.userAccount?.privacyPolicyAcceptedAt,
           userAccount: parsed.userAccount ? {
             ...user,
             ...parsed.userAccount,
             konanId: resolvedKonanId,
-            planTier,
+            planTier: 'free',
+            isGroupGuest: false,
+            academicGoal: undefined,
+            invitedIds: [],
+            invitedEmails: [],
+            coachingSessionsRemaining: 0,
             privacyPolicyAccepted: parsed.privacyPolicyAccepted ?? parsed.userAccount?.privacyPolicyAccepted ?? false,
             privacyPolicyAcceptedAt: parsed.privacyPolicyAcceptedAt ?? parsed.userAccount?.privacyPolicyAcceptedAt,
-            isGroupGuest: isPlus ? (parsed.isGroupGuest ?? parsed.userAccount?.isGroupGuest ?? false) : false,
           } : {
             ...user,
             konanId: resolvedKonanId,
-            planTier,
+            planTier: 'free',
+            isGroupGuest: false,
+            academicGoal: undefined,
+            invitedIds: [],
+            invitedEmails: [],
+            coachingSessionsRemaining: 0,
             privacyPolicyAccepted: parsed.privacyPolicyAccepted ?? false,
             privacyPolicyAcceptedAt: parsed.privacyPolicyAcceptedAt,
-            isGroupGuest: isPlus ? (parsed.isGroupGuest ?? false) : false,
           },
           isDemoMode: false,
         };
+
+        // Si le compte local était en Pro ou Plus, persister immédiatement l'état assaini dans le localStorage
+        if (hadProOrPlus) {
+          try {
+            localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(sanitizedResult));
+          } catch {}
+        }
+
+        return sanitizedResult;
       }
     }
   } catch (err) {
@@ -288,35 +335,56 @@ import {
  * so all devices (PC, mobile, tablet) share the exact same timetable and subjects.
  */
 export function saveUserState(uid: string, state: AppState): void {
+  // RÈGLE ABSOLUE & UNIVERSELLE : Mode PRO et PLUS désactivés.
+  // TOUS les comptes sans aucune exception retombent à Gratuit ('free').
+  const sanitizedState: AppState = {
+    ...state,
+    planTier: 'free',
+    isGroupGuest: false,
+    academicGoal: undefined,
+    invitedIds: [],
+    invitedEmails: [],
+    coachingSessionsRemaining: 0,
+    userAccount: state.userAccount ? {
+      ...state.userAccount,
+      planTier: 'free',
+      isGroupGuest: false,
+      academicGoal: undefined,
+      invitedIds: [],
+      invitedEmails: [],
+      coachingSessionsRemaining: 0,
+    } : undefined,
+  };
+
   try {
-    localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(state));
+    localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(sanitizedState));
   } catch (err) {
     console.error(`Failed to persist user state for ${uid}`, err);
   }
 
   // Cross-device Cloud Sync
   // RGPD Guard: synchroniser sur Firestore UNIQUEMENT si l'utilisateur a accepté la politique de confidentialité
-  const isConsentGiven = Boolean(state.privacyPolicyAccepted || state.userAccount?.privacyPolicyAccepted);
-  if (!state.isDemoMode && uid && uid !== 'google-demo' && isConsentGiven) {
+  const isConsentGiven = Boolean(sanitizedState.privacyPolicyAccepted || sanitizedState.userAccount?.privacyPolicyAccepted);
+  if (!sanitizedState.isDemoMode && uid && uid !== 'google-demo' && isConsentGiven) {
     syncUserStateToCloud(uid, {
-      studentName: state.studentName,
-      academicLevel: state.academicLevel,
-      planTier: state.planTier || 'free',
-      subjects: state.subjects,
-      classSlots: state.classSlots,
-      preferences: state.preferences,
-      studySessions: state.studySessions,
-      logs: state.logs,
-      completedOnboarding: state.completedOnboarding,
-      userAccount: state.userAccount,
-      invitedEmails: state.invitedEmails,
-      invitedIds: state.invitedIds,
-      konanId: state.konanId || state.userAccount?.konanId,
-      academicGoal: state.academicGoal,
-      coachingSessionsRemaining: state.coachingSessionsRemaining,
-      lastCoachingDate: state.lastCoachingDate,
-      privacyPolicyAccepted: state.privacyPolicyAccepted ?? state.userAccount?.privacyPolicyAccepted,
-      privacyPolicyAcceptedAt: state.privacyPolicyAcceptedAt ?? state.userAccount?.privacyPolicyAcceptedAt,
+      studentName: sanitizedState.studentName,
+      academicLevel: sanitizedState.academicLevel,
+      planTier: 'free',
+      subjects: sanitizedState.subjects,
+      classSlots: sanitizedState.classSlots,
+      preferences: sanitizedState.preferences,
+      studySessions: sanitizedState.studySessions,
+      logs: sanitizedState.logs,
+      completedOnboarding: sanitizedState.completedOnboarding,
+      userAccount: sanitizedState.userAccount,
+      invitedEmails: [],
+      invitedIds: [],
+      konanId: sanitizedState.konanId || sanitizedState.userAccount?.konanId,
+      academicGoal: undefined,
+      coachingSessionsRemaining: 0,
+      lastCoachingDate: sanitizedState.lastCoachingDate,
+      privacyPolicyAccepted: sanitizedState.privacyPolicyAccepted ?? sanitizedState.userAccount?.privacyPolicyAccepted,
+      privacyPolicyAcceptedAt: sanitizedState.privacyPolicyAcceptedAt ?? sanitizedState.userAccount?.privacyPolicyAcceptedAt,
     }).catch(() => {});
   }
 }
@@ -336,13 +404,25 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
     // Case 1: Cloud already has subjects saved from another device (e.g. Wave8, other phone or PC)
     if (hasCloudSubjects) {
       const mergedSubjects: Subject[] = (Array.isArray(cloudData.subjects) ? cloudData.subjects : [])
-        .filter((s: Subject) => !isNonAcademicSubject(s.name));
+        .filter((s: Subject) => !isNonAcademicSubject(s.name))
+        .map((s: Subject) => ({
+          ...s,
+          examDate: undefined,
+          examType: undefined,
+          examTime: undefined,
+        }));
       const validSubjectIds = new Set(mergedSubjects.map((s: Subject) => s.id));
 
       const mergedClassSlots: ClassSlot[] = Array.isArray(cloudData.classSlots) ? cloudData.classSlots : currentState.classSlots;
-      const mergedPreferences: StudyPreferences = cloudData.preferences
+      const rawPreferences = cloudData.preferences
         ? { ...currentState.preferences, ...cloudData.preferences }
         : currentState.preferences;
+
+      const mergedPreferences: StudyPreferences = {
+        ...rawPreferences,
+        pacing: (rawPreferences.pacing === 'feynman' || rawPreferences.pacing === 'time_blocking') ? 'pomodoro' : rawPreferences.pacing,
+        combinedPacings: [(rawPreferences.pacing === 'feynman' || rawPreferences.pacing === 'time_blocking') ? 'pomodoro' : rawPreferences.pacing],
+      };
 
       let mergedStudySessions: StudySession[] = (Array.isArray(cloudData.studySessions) && cloudData.studySessions.length > 0
         ? cloudData.studySessions
@@ -350,13 +430,36 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         .filter((sess: StudySession) => {
           if (isNonAcademicSubject(sess.title)) return false;
           if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
+          if (sess.isExamPrep || sess.type === 'exam_simulation') return false;
+          const lowerTitle = (sess.title || '').toLowerCase();
+          if (lowerTitle.includes('devoir') || lowerTitle.includes('examen') || lowerTitle.includes('épreuve') || lowerTitle.includes('rattrapage')) {
+            return false;
+          }
           return true;
+        })
+        .map((sess: StudySession) => {
+          if (sess.pacingMethod === 'feynman' || sess.pacingMethod === 'time_blocking') {
+            const subject = mergedSubjects.find((s: Subject) => s.id === sess.subjectId);
+            const subName = subject?.name || 'Matière';
+            return {
+              ...sess,
+              pacingMethod: 'pomodoro',
+              durationMinutes: 25,
+              title: `Pomodoro (25m) : ${subName}`,
+              description: 'Micro-session Pomodoro de 25 min à fond, coupure nette de 5 min.',
+              objectives: [
+                '25 min à fond sans distraction',
+                'Fiche mémo des points clés',
+                'Auto-test en fin de bloc',
+              ],
+            };
+          }
+          return sess;
         });
 
-      // If study sessions are empty on cloud, generate them from the subjects and slots!
-      const userTier = cloudData.planTier || currentState.planTier || 'free';
+      // If study sessions are empty on cloud, generate them from the subjects and slots in free mode
       if ((!mergedStudySessions || mergedStudySessions.length === 0) && mergedSubjects.length > 0) {
-        mergedStudySessions = generateOptimizedStudyPlan(mergedSubjects, mergedClassSlots, mergedPreferences, userTier);
+        mergedStudySessions = generateOptimizedStudyPlan(mergedSubjects, mergedClassSlots, mergedPreferences, 'free');
       }
 
       const assignedKonanId = cloudData.konanId || currentState.konanId || currentState.userAccount?.konanId || generateKonanId(uid);
@@ -365,7 +468,7 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         ...currentState,
         studentName: cloudData.studentName || currentState.studentName,
         academicLevel: cloudData.academicLevel || currentState.academicLevel,
-        planTier: cloudData.planTier || currentState.planTier || 'free',
+        planTier: 'free',
         completedOnboarding: cloudData.completedOnboarding ?? true,
         subjects: mergedSubjects,
         classSlots: mergedClassSlots,
@@ -374,21 +477,23 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         logs: Array.isArray(cloudData.logs) ? cloudData.logs : currentState.logs,
         cycleCompletedDate: cloudData.cycleCompletedDate !== undefined ? cloudData.cycleCompletedDate : currentState.cycleCompletedDate,
         konanId: assignedKonanId,
-        invitedIds: Array.isArray(cloudData.invitedIds) ? cloudData.invitedIds : currentState.invitedIds,
-        invitedEmails: Array.isArray(cloudData.invitedEmails) ? cloudData.invitedEmails : currentState.invitedEmails,
-        academicGoal: cloudData.academicGoal || currentState.academicGoal,
-        coachingSessionsRemaining: cloudData.coachingSessionsRemaining !== undefined ? cloudData.coachingSessionsRemaining : currentState.coachingSessionsRemaining,
+        invitedIds: [],
+        invitedEmails: [],
+        academicGoal: undefined,
+        coachingSessionsRemaining: 0,
         lastCoachingDate: cloudData.lastCoachingDate || currentState.lastCoachingDate,
         privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.privacyPolicyAccepted,
         privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.privacyPolicyAcceptedAt,
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
-          planTier: cloudData.planTier || currentState.planTier || 'free',
+          planTier: 'free',
           name: cloudData.studentName || currentState.userAccount.name,
           konanId: assignedKonanId,
-          invitedIds: Array.isArray(cloudData.invitedIds) ? cloudData.invitedIds : currentState.userAccount.invitedIds,
-          invitedEmails: Array.isArray(cloudData.invitedEmails) ? cloudData.invitedEmails : currentState.userAccount.invitedEmails,
-          academicGoal: cloudData.academicGoal || currentState.userAccount.academicGoal,
+          invitedIds: [],
+          invitedEmails: [],
+          academicGoal: undefined,
+          isGroupGuest: false,
+          coachingSessionsRemaining: 0,
           privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.userAccount.privacyPolicyAccepted,
           privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.userAccount.privacyPolicyAcceptedAt,
         } : undefined,
@@ -398,10 +503,15 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(merged));
       } catch {}
 
+      // Si le cloud contenait un compte Pro ou Plus, écraser immédiatement sur Firestore avec 'free' !
+      if (cloudData.planTier === 'pro' || cloudData.planTier === 'plus' || cloudData.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'plus' || cloudData.isGroupGuest) {
+        saveUserState(uid, merged);
+      }
+
       return merged;
     }
 
-    // Case 2: Cloud has no subjects, but THIS device (e.g. the phone that created the planning) has subjects
+    // Case 2: Cloud has no subjects, but THIS device has subjects
     if (!hasCloudSubjects && hasLocalSubjects) {
       console.log(`[Sync] Pushing timetable from current device to Cloud Firestore for user ${uid}`);
       saveUserState(uid, currentState);
@@ -414,13 +524,18 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         ...currentState,
         studentName: cloudData.studentName || currentState.studentName,
         academicLevel: cloudData.academicLevel || currentState.academicLevel,
-        planTier: cloudData.planTier || currentState.planTier || 'free',
+        planTier: 'free',
         privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.privacyPolicyAccepted,
         privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.privacyPolicyAcceptedAt,
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
-          planTier: cloudData.planTier || currentState.planTier || 'free',
+          planTier: 'free',
           name: cloudData.studentName || currentState.userAccount.name,
+          isGroupGuest: false,
+          academicGoal: undefined,
+          invitedIds: [],
+          invitedEmails: [],
+          coachingSessionsRemaining: 0,
           privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.userAccount.privacyPolicyAccepted,
           privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.userAccount.privacyPolicyAcceptedAt,
         } : undefined,
@@ -428,6 +543,9 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
       try {
         localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(merged));
       } catch {}
+      if (cloudData.planTier === 'pro' || cloudData.planTier === 'plus' || cloudData.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'plus' || cloudData.isGroupGuest) {
+        saveUserState(uid, merged);
+      }
       return merged;
     }
   } catch (err) {
@@ -654,9 +772,7 @@ export function importStateFromJson(jsonString: string): AppState | null {
       academicLevel: typeof parsed.academicLevel === 'string' && parsed.academicLevel.trim().length > 0
         ? parsed.academicLevel.trim().slice(0, 60)
         : defaultState.academicLevel,
-      planTier: parsed.planTier === 'plus' || parsed.planTier === 'pro' || parsed.planTier === 'free'
-        ? parsed.planTier
-        : 'free',
+      planTier: 'free',
       konanId: typeof parsed.konanId === 'string' && /^KN-[A-Z0-9]{4,10}$/i.test(parsed.konanId.trim())
         ? parsed.konanId.trim().toUpperCase()
         : defaultState.konanId,
@@ -690,7 +806,7 @@ export function generateSyncCode(state: AppState): string {
       t: new Date().toISOString(),
       studentName: state.studentName,
       academicLevel: state.academicLevel,
-      planTier: state.planTier || 'free',
+      planTier: 'free',
       subjects: state.subjects || [],
       classSlots: state.classSlots || [],
       preferences: state.preferences || DEFAULT_PREFERENCES,
@@ -741,7 +857,7 @@ export function importSyncCode(rawInput: string, currentAccount?: UserAccount): 
     const importedState: AppState = {
       studentName: data.studentName || currentAccount?.name || 'Étudiant',
       academicLevel: data.academicLevel || currentAccount?.academicLevel || 'Licence Universitaire',
-      planTier: data.planTier || currentAccount?.planTier || 'free',
+      planTier: 'free',
       subjects: data.subjects || [],
       classSlots: data.classSlots || [],
       preferences: data.preferences || DEFAULT_PREFERENCES,
@@ -754,7 +870,8 @@ export function importSyncCode(rawInput: string, currentAccount?: UserAccount): 
             ...currentAccount,
             name: data.studentName || currentAccount.name,
             academicLevel: data.academicLevel || currentAccount.academicLevel,
-            planTier: data.planTier || currentAccount.planTier || 'free',
+            planTier: 'free',
+            isGroupGuest: false,
           }
         : undefined,
     };
@@ -768,20 +885,13 @@ export function importSyncCode(rawInput: string, currentAccount?: UserAccount): 
 
 /**
  * Registers an ID or email as a known KONAN PLUS subscriber in local storage registry.
+ * DÉSACTIVÉ : Modes Pro et Plus désactivés.
  */
-export function registerPlusUser(konanId?: string, email?: string): void {
+export function registerPlusUser(_konanId?: string, _email?: string): void {
   try {
-    const raw = localStorage.getItem(PLUS_REGISTRY_KEY);
-    const registry: string[] = raw ? JSON.parse(raw) : [];
-    if (konanId && !registry.includes(konanId.toUpperCase())) {
-      registry.push(konanId.toUpperCase());
-    }
-    if (email && !registry.includes(email.toLowerCase())) {
-      registry.push(email.toLowerCase());
-    }
-    localStorage.setItem(PLUS_REGISTRY_KEY, JSON.stringify(registry));
+    localStorage.removeItem(PLUS_REGISTRY_KEY);
   } catch (e) {
-    console.warn('Failed to register plus user:', e);
+    console.warn('Failed to clean plus registry:', e);
   }
 }
 
@@ -805,58 +915,117 @@ export function deregisterPlusUser(identifier?: string): void {
 
 /**
  * Checks whether an ID or email ALREADY has KONAN PLUS active.
- * Used to reject invitations to people who already have Plus.
+ * RÈGLE ABSOLUE : Mode PRO et Mode PLUS désactivés.
+ * TOUS les comptes sans aucune exception sont en Gratuit ('free').
  */
-export function isTargetAlreadyPlus(identifier: string): boolean {
-  if (!identifier) return false;
-  const clean = identifier.trim().toLowerCase();
-  const cleanUpper = identifier.trim().toUpperCase();
-
-  // 1. Check registry
-  try {
-    const raw = localStorage.getItem(PLUS_REGISTRY_KEY);
-    if (raw) {
-      const registry: string[] = JSON.parse(raw);
-      if (registry.some(r => r.toLowerCase() === clean || r.toUpperCase() === cleanUpper)) {
-        return true;
-      }
-    }
-  } catch {}
-
-  // 2. Check local user accounts in localStorage
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && key.startsWith(USER_STORAGE_PREFIX)) {
-      try {
-        const item = localStorage.getItem(key);
-        if (item) {
-          const state = JSON.parse(item);
-          const kId = (state.konanId || state.userAccount?.konanId || '').toLowerCase();
-          const em = (state.userAccount?.email || '').toLowerCase();
-          const plan = state.planTier || state.userAccount?.planTier;
-          if ((kId === clean || em === clean) && plan === 'plus') {
-            return true;
-          }
-        }
-      } catch {}
-    }
-  }
-
-  // 3. Check legacy or demo state
-  try {
-    const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
-    if (legacy) {
-      const parsed = JSON.parse(legacy);
-      const kId = (parsed.konanId || parsed.userAccount?.konanId || '').toLowerCase();
-      const em = (parsed.userAccount?.email || '').toLowerCase();
-      if ((kId === clean || em === clean) && (parsed.planTier === 'plus' || parsed.userAccount?.planTier === 'plus')) {
-        return true;
-      }
-    }
-  } catch {}
-
+export function isTargetAlreadyPlus(_identifier: string): boolean {
   return false;
 }
+
+/**
+ * RÈGLE ABSOLUE & UNIVERSELLE :
+ * Les modes PRO et PLUS sont désactivés.
+ * TOUS les comptes absolument tous sans exception qui sont dans ces modèles retombent à Gratuit.
+ * Compte Pro désactivé et Plus aussi. Tout le monde devient Gratuit.
+ */
+export function enforceAllAccountsFreeMigration(): void {
+  if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
+  try {
+    // 1. Purger le registre Plus
+    localStorage.removeItem(PLUS_REGISTRY_KEY);
+
+    // 2. Parcourir et assainir tous les comptes enregistrés dans le localStorage
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key) continue;
+
+      if (key.startsWith(USER_STORAGE_PREFIX) || key === DEMO_STORAGE_KEY || key === LEGACY_STORAGE_KEY) {
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) continue;
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            const hadProOrPlus = parsed.planTier === 'pro' || parsed.planTier === 'plus'
+              || parsed.userAccount?.planTier === 'pro' || parsed.userAccount?.planTier === 'plus'
+              || Boolean(parsed.isGroupGuest) || Boolean(parsed.userAccount?.isGroupGuest);
+
+            const hasProMethods = parsed.preferences?.pacing === 'feynman'
+              || parsed.preferences?.pacing === 'time_blocking'
+              || (Array.isArray(parsed.preferences?.combinedPacings) && parsed.preferences.combinedPacings.some((m: string) => m === 'feynman' || m === 'time_blocking'));
+
+            const hasExamDates = Array.isArray(parsed.subjects) && parsed.subjects.some((s: any) => s.examDate || s.examType || s.examTime);
+
+            if (hadProOrPlus || hasProMethods || hasExamDates || parsed.planTier !== 'free' || parsed.userAccount?.planTier !== 'free') {
+              const sanitizedPrefs = parsed.preferences ? { ...parsed.preferences } : { ...DEFAULT_PREFERENCES };
+              if (sanitizedPrefs.pacing === 'feynman' || sanitizedPrefs.pacing === 'time_blocking') {
+                sanitizedPrefs.pacing = 'pomodoro';
+              }
+              sanitizedPrefs.combinedPacings = [sanitizedPrefs.pacing || 'pomodoro'];
+
+              const sanitizedSubjects = (Array.isArray(parsed.subjects) ? parsed.subjects : []).map((s: any) => ({
+                ...s,
+                examDate: undefined,
+                examType: undefined,
+                examTime: undefined,
+              }));
+
+              const sanitizedStudySessions = (Array.isArray(parsed.studySessions) ? parsed.studySessions : [])
+                .filter((sess: any) => {
+                  if (sess.isExamPrep || sess.type === 'exam_simulation') return false;
+                  const lowerTitle = (sess.title || '').toLowerCase();
+                  if (lowerTitle.includes('devoir') || lowerTitle.includes('examen') || lowerTitle.includes('épreuve') || lowerTitle.includes('rattrapage')) {
+                    return false;
+                  }
+                  return true;
+                })
+                .map((sess: any) => {
+                  if (sess.pacingMethod === 'feynman' || sess.pacingMethod === 'time_blocking') {
+                    return {
+                      ...sess,
+                      pacingMethod: 'pomodoro',
+                      durationMinutes: 25,
+                      title: `Pomodoro (25m) : ${sess.title?.split(':')?.[1]?.trim() || 'Matière'}`,
+                      description: 'Micro-session Pomodoro de 25 min à fond, coupure nette de 5 min.',
+                    };
+                  }
+                  return sess;
+                });
+
+              const updatedState = {
+                ...parsed,
+                planTier: 'free',
+                isGroupGuest: false,
+                academicGoal: undefined,
+                invitedIds: [],
+                invitedEmails: [],
+                coachingSessionsRemaining: 0,
+                preferences: sanitizedPrefs,
+                subjects: sanitizedSubjects,
+                studySessions: sanitizedStudySessions,
+                userAccount: parsed.userAccount ? {
+                  ...parsed.userAccount,
+                  planTier: 'free',
+                  isGroupGuest: false,
+                  academicGoal: undefined,
+                  invitedIds: [],
+                  invitedEmails: [],
+                  coachingSessionsRemaining: 0,
+                } : undefined,
+              };
+
+              localStorage.setItem(key, JSON.stringify(updatedState));
+            }
+          }
+        } catch {}
+      }
+    }
+  } catch (err) {
+    console.warn('Erreur migration vers gratuit:', err);
+  }
+}
+
+// Exécution immédiate au démarrage
+enforceAllAccountsFreeMigration();
 
 export const invitationBroadcastChannel = typeof window !== 'undefined' && typeof BroadcastChannel !== 'undefined'
   ? new BroadcastChannel('konan_plus_invitations_channel')

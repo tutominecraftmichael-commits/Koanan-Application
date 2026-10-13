@@ -25,14 +25,13 @@ export class SubscriptionForbiddenError extends Error {
 /**
  * Normalisation du rôle/tier d'un utilisateur
  */
-export function resolveUserTier(user?: {
+export function resolveUserTier(_user?: {
   tier?: PlanTier | string;
   planTier?: PlanTier | string;
   isPro?: boolean;
 } | null): PlanTier {
-  if (!user) return 'free';
-  if (user.tier === 'plus' || user.planTier === 'plus') return 'plus';
-  if (user.tier === 'pro' || user.planTier === 'pro' || user.isPro === true) return 'pro';
+  // RÈGLE ABSOLUE : Mode PRO et PLUS désactivés.
+  // TOUS les comptes sans aucune exception retombent à Gratuit ('free').
   return 'free';
 }
 

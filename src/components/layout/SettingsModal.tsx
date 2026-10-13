@@ -14,7 +14,7 @@ import {
   Save
 } from 'lucide-react';
 import type { UserAccount, AcademicGoal } from '../../types';
-import { Crown, Users, Target, Sun, Moon } from 'lucide-react';
+import { Crown, Sun, Moon } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
 import { soundFX } from '../../lib/audioEffects';
@@ -75,10 +75,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   planTier,
   onSelectPlan,
   onUpgradeToPro: _onUpgradeToPro,
-  invitedEmails = [],
-  academicGoal = 'target_16',
-  onOpenGroupModal,
-  onOpenGoalModal,
+  invitedEmails: _invitedEmails = [],
+  academicGoal: _academicGoal = 'target_16',
+  onOpenGroupModal: _onOpenGroupModal,
+  onOpenGoalModal: _onOpenGoalModal,
   onOpenPrivacyModal,
 }) => {
   const [lang] = useLanguage();
@@ -347,162 +347,49 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   Formule & Abonnement
                 </span>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                  {currentPlan === 'plus' 
-                    ? 'Modèle KONAN PLUS Actif (4 comptes inclus, objectifs scolaires et musiques).' 
-                    : currentPlan === 'pro'
-                    ? 'Modèle KONAN PRO Actif (Dates d\'examens, synchronisation Google Agenda, Feynman).'
-                    : 'Modèle KONAN Gratuit actif. Passez à la vitesse supérieure selon vos ambitions.'}
+                  Modèle KONAN Gratuit actif. Les comptes PRO et PLUS sont actuellement désactivés.
                 </p>
               </div>
             </div>
 
-            {currentPlan === 'plus' ? (
-              <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-300/80 dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-indigo-950/40 dark:to-slate-950 dark:border-amber-500/30 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <Crown className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-                    Modèle KONAN PLUS Actif (Élite)
-                  </span>
-                  <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 font-mono">3 000 F / mois</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {/* Groupe 4 comptes */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onOpenGroupModal?.();
-                    }}
-                    className="p-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-indigo-300 dark:bg-slate-900/90 dark:hover:bg-slate-800 dark:border-indigo-500/30 dark:hover:border-indigo-400 transition-all text-left flex items-center gap-3 cursor-pointer group shadow-xs"
-                  >
-                    <div className="w-9 h-9 rounded-lg bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                      <Users className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                        {userAccount?.isGroupGuest ? 'Membre Invité' : 'Groupe (4 comptes)'}
-                      </p>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                        {userAccount?.isGroupGuest 
-                          ? `Invité par ${userAccount.invitedBy?.name || 'Titulaire'}` 
-                          : `${invitedEmails.length} / 4 invités actifs`}
-                      </p>
-                    </div>
-                  </button>
-
-                  {/* 3 Objectifs Scolaires */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onOpenGoalModal?.();
-                    }}
-                    className="p-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-300 dark:bg-slate-900/90 dark:hover:bg-slate-800 dark:border-amber-500/30 dark:hover:border-amber-400 transition-all text-left flex items-center gap-3 cursor-pointer group shadow-xs"
-                  >
-                    <div className="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                      <Target className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">Objectif Scolaire</p>
-                      <p className="text-[10px] text-amber-700 dark:text-amber-300 truncate font-semibold">
-                        {academicGoal === 'major_promotion' ? 'Major de Promo' : academicGoal === 'target_16' ? 'Objectif 16/20' : 'Objectif 12/20'}
-                      </p>
-                    </div>
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-800 text-[11px]">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onSelectPlan?.('pro');
-                    }}
-                    className="text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 font-semibold cursor-pointer"
-                  >
-                    ⭐ Basculer vers KONAN PRO
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onSelectPlan?.('free');
-                    }}
-                    className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white cursor-pointer"
-                  >
-                    Revenir au modèle Gratuit
-                  </button>
-                </div>
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 dark:bg-slate-900/80 dark:border-slate-800 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-900 dark:text-slate-200 flex items-center gap-1.5">
+                  <Check className="w-4 h-4 text-emerald-500" />
+                  Modèle Actuel : KONAN Gratuit (Free)
+                </span>
+                <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+                  Actif pour tous
+                </span>
               </div>
-            ) : currentPlan === 'pro' ? (
-              <div className="p-4 rounded-2xl bg-sky-50/60 border border-sky-300/80 dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-900 dark:to-slate-950 dark:border-amber-500/40 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-sky-600 dark:text-amber-400" />
-                    <span className="text-xs font-bold text-slate-900 dark:text-white">Modèle KONAN PRO Actif</span>
-                  </div>
-                </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Dates d'examens, synchronisation continue Google Agenda, et méthodes avancées Feynman & Time Blocking activées.
-                </p>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
-                  <button
-                    type="button"
-                    disabled={true}
-                    className="text-xs font-semibold px-3 py-2 rounded-xl cursor-not-allowed opacity-70 bg-slate-100 border border-slate-300 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300"
-                  >
-                    Konan Plus pas disponible pour le moment
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onSelectPlan?.('free');
-                    }}
-                    className="text-[11px] text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white cursor-pointer text-center sm:text-right py-1"
-                  >
-                    Revenir au modèle Gratuit
-                  </button>
-                </div>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                Tous les comptes étudiants sont actuellement sur le modèle Gratuit avec accès complet aux plannings, Pomodoro, Active Recall et la Règle des 2 Minutes. Les formules PRO et PLUS sont désactivées.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onSelectPlan?.('pro');
+                  }}
+                  className="text-xs font-bold px-3 py-2.5 rounded-xl transition-all border border-slate-300 dark:border-slate-700 flex items-center justify-center gap-1.5 cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 shadow-xs active:scale-95"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <span>KONAN PRO (Désactivé)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onSelectPlan?.('plus');
+                  }}
+                  className="text-xs font-bold px-3 py-2.5 rounded-xl transition-all border border-slate-300 dark:border-slate-700 flex items-center justify-center gap-1.5 cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 shadow-xs active:scale-95"
+                >
+                  <Crown className="w-3.5 h-3.5 text-indigo-500" />
+                  <span>KONAN PLUS (Désactivé)</span>
+                </button>
               </div>
-            ) : (
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 dark:bg-slate-900/80 dark:border-slate-800 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-900 dark:text-slate-200">
-                    Modèle Actuel : KONAN Gratuit (Free)
-                  </span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">0 F CFA</span>
-                </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400">
-                  Accès illimité aux plannings, Pomodoro, Active Recall et la Règle des 2 Minutes.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onSelectPlan?.('pro');
-                    }}
-                    className="text-xs font-bold px-3 py-2.5 rounded-xl transition-all border border-amber-500/60 flex items-center justify-center gap-1.5 cursor-pointer bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-xs active:scale-95"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-amber-200" />
-                    <span>Passer à Konan Pro (Bientôt disponible)</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onSelectPlan?.('plus');
-                    }}
-                    className="text-xs font-bold px-3 py-2.5 rounded-xl transition-all border flex items-center justify-center gap-1.5 cursor-pointer bg-indigo-50 hover:bg-indigo-100 border-indigo-300 text-indigo-900 dark:bg-indigo-950/60 dark:hover:bg-indigo-900/70 dark:border-indigo-500/50 dark:text-indigo-200 shadow-xs active:scale-95"
-                  >
-                    <span>👑</span>
-                    <span>Konan Plus (Bientôt dispo)</span>
-                  </button>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
 
           {/* SECTION 1.8: APPARENCE & COULEUR DE FOND */}

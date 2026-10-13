@@ -10,7 +10,6 @@ import {
   UserPlus, 
   Headphones, 
   ShieldCheck,
-  ArrowRight
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
@@ -23,8 +22,8 @@ export interface PricingSectionProps {
 
 export const PricingSection: React.FC<PricingSectionProps> = ({ 
   onSelectPlan, 
-  isLoggedIn = false,
-  currentPlan = 'free'
+  isLoggedIn: _isLoggedIn = false,
+  currentPlan: _currentPlan = 'free'
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -156,7 +155,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               className="w-full text-xs sm:text-sm font-bold py-3 bg-white hover:bg-slate-100 text-slate-800 border-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700 active:scale-95 transition-transform cursor-pointer"
               onClick={() => onSelectPlan?.('free')}
             >
-              {currentPlan === 'free' ? '✓ Modèle Actif (Gratuit)' : isLoggedIn ? 'Revenir à KONAN (Gratuit)' : 'Commencer avec Konan'}
+              ✓ Modèle Actif (Gratuit pour tous)
             </Button>
           </div>
         </div>
@@ -180,17 +179,9 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 <span className="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
                   Performance
                 </span>
-                {currentPlan === 'pro' ? (
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-400/40 font-bold whitespace-nowrap inline-flex items-center gap-1 shrink-0">
-                    <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                    <span>Modèle Actif</span>
-                  </span>
-                ) : (
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-300 dark:bg-sky-500/20 dark:text-sky-200 dark:border-sky-400/40 font-bold whitespace-nowrap inline-flex items-center gap-1 shrink-0">
-                    <span>⭐</span>
-                    <span>Populaire • Bientôt disponible</span>
-                  </span>
-                )}
+                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-300 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 font-bold whitespace-nowrap inline-flex items-center gap-1 shrink-0">
+                  <span>Désactivé • Tout le monde en Gratuit</span>
+                </span>
               </div>
               
               <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white flex items-center gap-2">
@@ -254,15 +245,12 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           {/* Action Button */}
           <div className="pt-6 mt-6 border-t border-sky-200 dark:border-sky-500/40">
             <Button
-              variant="glow"
+              variant="secondary"
               size="md"
-              rightIcon={currentPlan === 'pro' ? <Check className="w-4 h-4 text-emerald-300" /> : <ArrowRight className="w-4 h-4 text-white" />}
-              className={`w-full text-xs sm:text-sm font-extrabold py-3.5 shadow-lg shadow-sky-600/20 dark:shadow-sky-950/60 hover:scale-[1.03] active:scale-95 transition-transform cursor-pointer bg-blue-600 hover:bg-blue-700 text-white ${
-                currentPlan === 'pro' ? '!bg-emerald-600/30 !border-emerald-400/60 !text-emerald-200' : ''
-              }`}
+              className="w-full text-xs sm:text-sm font-extrabold py-3.5 shadow-sm cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700"
               onClick={() => onSelectPlan?.('pro')}
             >
-              {currentPlan === 'pro' ? '✓ Modèle KONAN PRO Actif' : 'Passer à Konan Pro (Bientôt disponible)'}
+              Compte PRO Désactivé (Tous en Gratuit)
             </Button>
           </div>
         </div>
@@ -280,9 +268,9 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   Fonctionnalités Futures
                 </span>
-                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 font-semibold flex items-center gap-1 whitespace-nowrap shrink-0">
-                  <Crown className="w-3 h-3 text-amber-500 dark:text-amber-300" />
-                  Bientôt disponible
+                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-300 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 font-bold flex items-center gap-1 whitespace-nowrap shrink-0">
+                  <Crown className="w-3 h-3 text-slate-400" />
+                  Désactivé • Tout le monde en Gratuit
                 </span>
               </div>
               
@@ -349,9 +337,9 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               variant="secondary"
               size="md"
               onClick={() => onSelectPlan?.('plus')}
-              className="w-full text-xs sm:text-sm font-bold py-3 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 dark:bg-indigo-950/60 dark:hover:bg-indigo-900/60 dark:border-indigo-500/40 dark:text-indigo-300 dark:hover:text-white transition-all cursor-pointer shadow-sm dark:shadow-md dark:shadow-indigo-950/40"
+              className="w-full text-xs sm:text-sm font-bold py-3 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 dark:text-slate-300 transition-all cursor-pointer shadow-sm"
             >
-              Rejoindre la liste d'attente (Wave & Orange Money)
+              Compte PLUS Désactivé (Tous en Gratuit)
             </Button>
           </div>
         </div>

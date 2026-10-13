@@ -16,8 +16,7 @@ import {
   getPendingInvitationsForUser,
   getPlusInvitations,
   updateInvitationStatus,
-  registerPlusUser,
-  isTargetAlreadyPlus,
+  deregisterPlusUser,
   mergeInvitationsFromCloud,
   invitationBroadcastChannel
 } from './services/storage';
@@ -27,7 +26,6 @@ import { generateOptimizedStudyPlan } from './services/plannerAlgorithm';
 import { transitionUserState } from './services/tierTransitionService';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import { 
-  auth,
   onFirebaseAuthStateChange, 
   signOutReal, 
   fetchCloudInvitationsForUser,
@@ -217,60 +215,32 @@ export function App() {
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
   // Unified, resilient single source of truth for plan tier
-  const effectivePlanTier: 'free' | 'pro' | 'plus' = useMemo(() => {
-    // Mode Démo : strictement 'free'
-    if (state.isDemoMode) return 'free';
-
-    // Konan Plus : invité officiel dans un groupe ou vérifié dans le registre
-    if (state.isGroupGuest || state.userAccount?.isGroupGuest) return 'plus';
-
-    const myId = state.userAccount?.konanId || state.konanId;
-    const myEmail = state.userAccount?.email;
-    if ((myId && isTargetAlreadyPlus(myId)) || (myEmail && isTargetAlreadyPlus(myEmail))) {
-      return 'plus';
-    }
-
-    // Déclaration explicite du compte ou de l'état
-    const declaredTier = state.planTier || state.userAccount?.planTier;
-    if (declaredTier === 'plus') return 'plus';
-    if (declaredTier === 'pro') return 'pro';
-
-    return 'free';
-  }, [state.isDemoMode, state.isGroupGuest, state.userAccount?.isGroupGuest, state.userAccount?.konanId, state.konanId, state.userAccount?.email, state.planTier, state.userAccount?.planTier]);
-
-  const previousTierRef = useRef<PlanTier>(effectivePlanTier);
+  // RÈGLE ABSOLUE & UNIVERSELLE : Mode PRO et Mode PLUS désactivés.
+  // TOUS les comptes sans aucune exception retombent à Gratuit ('free').
+  // Compte Pro désactivé et Plus aussi. Tout le monde devient Gratuit.
+  const effectivePlanTier = useMemo<PlanTier>(() => 'free', []);
 
   // Unified display name
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
     ? state.userAccount.name
     : (state.studentName || 'Étudiant');
 
-  // Détection automatique de changement de modèle et dissolution instantanée des fonctionnalités non autorisées
+  // Détection automatique et repli strict vers Gratuit si un compte local ou distant avait 'pro' ou 'plus'
   useEffect(() => {
-    const prevTier = previousTierRef.current;
-    if (prevTier !== effectivePlanTier) {
-      previousTierRef.current = effectivePlanTier;
-
-      // Déclenchement de la transition stricte : dissolution des méthodes Pro/Plus, devoirs et régénération de l'emploi du temps
-      const { nextState, dissolvedFeatures } = transitionUserState(state, effectivePlanTier);
+    if (state.planTier !== 'free' || state.userAccount?.planTier !== 'free' || state.isGroupGuest || state.userAccount?.isGroupGuest) {
+      const { nextState } = transitionUserState(state, 'free');
+      nextState.planTier = 'free';
+      if (nextState.userAccount) {
+        nextState.userAccount.planTier = 'free';
+        nextState.userAccount.isGroupGuest = false;
+      }
+      nextState.isGroupGuest = false;
       setState(nextState);
       if (nextState.userAccount?.googleId && !nextState.isDemoMode) {
         saveUserState(nextState.userAccount.googleId, nextState);
       }
-      if (dissolvedFeatures.length > 0) {
-        showToast(`⚡ Passage au modèle ${effectivePlanTier.toUpperCase()} : fonctionnalités et emploi du temps réalignés (${dissolvedFeatures.length} ajustements).`);
-      }
-    } else if (state.planTier !== effectivePlanTier || (state.userAccount && state.userAccount.planTier !== effectivePlanTier)) {
-      setState(prev => ({
-        ...prev,
-        planTier: effectivePlanTier,
-        userAccount: prev.userAccount ? {
-          ...prev.userAccount,
-          planTier: effectivePlanTier,
-        } : undefined,
-      }));
     }
-  }, [effectivePlanTier, state.planTier, state.userAccount?.planTier]);
+  }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest, state.userAccount?.isGroupGuest]);
 
   const isGroupOwner = (effectivePlanTier as string) === 'plus' && !state.isGroupGuest && !state.userAccount?.isGroupGuest;
   const currentOwnerKonanId = (state.userAccount?.konanId || state.konanId || '').trim().toUpperCase();
@@ -373,76 +343,12 @@ export function App() {
       acceptedByKonanId: guestKonanId,
     });
 
-    // 3. Register user as Plus in registry
-    registerPlusUser(guestKonanId, guestEmail);
+    // 3. Plus registry désactivé : tout le monde est en Gratuit
+    deregisterPlusUser(guestKonanId);
+    if (guestEmail) deregisterPlusUser(guestEmail);
 
-    // 4. Immediately transition student to Plus
-    setState(prev => {
-      const nextAccount = prev.userAccount ? {
-        ...prev.userAccount,
-        planTier: 'plus' as const,
-        isGroupGuest: true,
-        invitedBy: {
-          name: invitation.senderName,
-          konanId: invitation.senderKonanId,
-          email: invitation.senderEmail,
-        },
-      } : {
-        isLoggedIn: true,
-        name: prev.studentName || 'Étudiant Invité',
-        email: guestEmail,
-        googleId: 'guest-' + (guestKonanId || invitation.id),
-        konanId: guestKonanId,
-        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(prev.studentName || 'Guest')}`,
-        academicLevel: prev.academicLevel || 'Licence Universitaire',
-        planTier: 'plus' as const,
-        isGroupGuest: true,
-        invitedBy: {
-          name: invitation.senderName,
-          konanId: invitation.senderKonanId,
-          email: invitation.senderEmail,
-        },
-        lastSyncedAt: new Date().toISOString(),
-      };
-
-      const nextState: AppState = {
-        ...prev,
-        planTier: 'plus' as const,
-        isGroupGuest: true,
-        invitedBy: {
-          name: invitation.senderName,
-          konanId: invitation.senderKonanId,
-          email: invitation.senderEmail,
-        },
-        userAccount: nextAccount,
-      };
-
-      saveAppState(nextState);
-      return nextState;
-    });
-
-    // 5. Update cloud user state if logged in
-    const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
-    if (currentUid && currentUid !== 'google-demo') {
-      syncUserStateToCloud(currentUid, {
-        planTier: 'plus',
-        studentName: guestName,
-        konanId: guestKonanId,
-        userAccount: {
-          planTier: 'plus',
-          isGroupGuest: true,
-          invitedBy: {
-            name: invitation.senderName,
-            konanId: invitation.senderKonanId,
-            email: invitation.senderEmail,
-          },
-        }
-      }).catch(console.warn);
-    }
-
-    soundFX.playCelebrationFanfare();
-    setToastMessage(`🎉 Félicitations ! Vous bénéficiez désormais de KONAN PLUS grâce au groupe de ${invitation.senderName}. Accès complet débloqué.`);
-    setIsPlusActivationModalOpen(true);
+    soundFX.playCheckmarkPop();
+    setToastMessage(`Invitation acceptée. Note : Les comptes PRO et PLUS sont actuellement désactivés, vous êtes sur le modèle Gratuit.`);
   };
 
   const handleDeclineInvitation = (invitation: PlusInvitationNotification) => {
@@ -810,60 +716,34 @@ export function App() {
   const handleSelectPlan = (planId: 'free' | 'pro' | 'plus') => {
     setIsProModalOpen(false);
 
-    const currentTier = effectivePlanTier;
-
-    // 1. Passage vers Gratuit (depuis Pro ou Plus) OU passage de Plus vers Pro :
-    if (planId === 'free' || (currentTier === 'plus' && planId === 'pro')) {
-      const { nextState, dissolvedFeatures } = transitionUserState(state, planId);
-      previousTierRef.current = planId;
-
-      if (nextState.userAccount?.googleId && !nextState.isDemoMode) {
-        saveUserState(nextState.userAccount.googleId, nextState);
-      }
-      setState(nextState);
-
-      const targetLabel = planId === 'free' ? 'KONAN Gratuit' : 'KONAN PRO';
-      showToast(`✨ Modèle ${targetLabel} activé : vos fonctionnalités et votre emploi du temps ont été immédiatement réalignés (${dissolvedFeatures.length} ajustements).`);
-      if (activeView === 'landing' || activeView === 'auth') {
-        setActiveView('dashboard');
-      }
-      return;
-    }
-
-    // 2. Si l'utilisateur est en mode démo et veut tester le modèle Pro ou Plus :
-    if (state.isDemoMode) {
-      const { nextState } = transitionUserState(state, planId);
-      previousTierRef.current = planId;
-      setState(nextState);
-      showToast(`✨ Simulation Démo : Modèle ${planId.toUpperCase()} activé.`);
-      return;
-    }
-
-    // 3. Phase Waitlist Mobile Money (Wave & Orange Money) pour les achats réels :
-    if (planId === 'pro') {
+    // RÈGLE ABSOLUE : Mode PRO et Mode PLUS désactivés.
+    if (planId === 'pro' || planId === 'plus') {
       setWaitlistModalInfo({
         isOpen: true,
-        featureTitle: 'Formule KONAN PRO (Bientôt disponible)',
-        featureDescription: 'Débloquez les imports illimités, les dates d’examens & DS (J-X), la synchro Google Calendar et les méthodes avancées Feynman & Time Blocking.',
-        requiredTier: 'pro',
+        featureTitle: planId === 'pro' ? 'Formule KONAN PRO (Désactivée)' : 'Formule KONAN PLUS (Désactivée)',
+        featureDescription: 'Les formules PRO et PLUS sont actuellement désactivées. Tous les comptes utilisateurs sont sur le modèle Gratuit.',
+        requiredTier: planId,
       });
       return;
     }
 
-    if (planId === 'plus') {
-      setWaitlistModalInfo({
-        isOpen: true,
-        featureTitle: 'Formule KONAN PLUS (Bientôt disponible)',
-        featureDescription: 'Débloquez le planning conditionné aux 3 objectifs scolaires (Major de promo), le pack de 5 comptes étudiants et les musiques de concentration.',
-        requiredTier: 'plus',
-      });
-      return;
+    // Modèle Gratuit :
+    const { nextState } = transitionUserState(state, 'free');
+    nextState.planTier = 'free';
+    if (nextState.userAccount) {
+      nextState.userAccount.planTier = 'free';
+      nextState.userAccount.isGroupGuest = false;
     }
+    nextState.isGroupGuest = false;
 
-    if (!state.userAccount?.isLoggedIn && !state.isDemoMode) {
-      localStorage.setItem('konan_pending_plan', planId);
-      showToast(`⭐ Connectez-vous avec Google ou démarrez la démo pour continuer.`);
-      setActiveView('auth');
+    if (nextState.userAccount?.googleId && !nextState.isDemoMode) {
+      saveUserState(nextState.userAccount.googleId, nextState);
+    }
+    setState(nextState);
+
+    showToast(`✨ Modèle KONAN Gratuit actif pour votre compte.`);
+    if (activeView === 'landing' || activeView === 'auth') {
+      setActiveView('dashboard');
     }
   };
 
