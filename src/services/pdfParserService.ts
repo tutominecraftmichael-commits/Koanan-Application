@@ -1232,7 +1232,10 @@ export function harmonizeAndDeduplicateSlots<T extends {
         const extEnd = parseTimeToMinutes(existing.endTime);
         const nameA = (current.subjectName || current.rawSubject || '').toLowerCase().trim();
         const nameB = (existing.subjectName || existing.rawSubject || '').toLowerCase().trim();
-        const sameSubject = nameA.replace(/[^a-z0-9à-ÿ]/g, '') === nameB.replace(/[^a-z0-9à-ÿ]/g, '');
+        const hasIds = Boolean(current.subjectId && existing.subjectId);
+        const sameSubject = hasIds
+          ? current.subjectId === existing.subjectId
+          : (nameA.length > 0 && nameB.length > 0 && nameA.replace(/[^a-z0-9à-ÿ]/g, '') === nameB.replace(/[^a-z0-9à-ÿ]/g, ''));
 
         if (sameSubject && Math.abs(curStart - extStart) <= 15 && Math.abs(curEnd - extEnd) <= 15) {
           if (!existing.room && current.room) existing.room = current.room;
@@ -1251,7 +1254,10 @@ export function harmonizeAndDeduplicateSlots<T extends {
 
       const nameA = (current.subjectName || current.rawSubject || '').toLowerCase().trim();
       const nameB = (prev.subjectName || prev.rawSubject || '').toLowerCase().trim();
-      const sameSubject = nameA.replace(/[^a-z0-9à-ÿ]/g, '') === nameB.replace(/[^a-z0-9à-ÿ]/g, '');
+      const hasIds = Boolean(current.subjectId && prev.subjectId);
+      const sameSubject = hasIds
+        ? current.subjectId === prev.subjectId
+        : (nameA.length > 0 && nameB.length > 0 && nameA.replace(/[^a-z0-9à-ÿ]/g, '') === nameB.replace(/[^a-z0-9à-ÿ]/g, ''));
 
       if (sameSubject && Math.abs(curStart - prevEnd) <= 15 && curEnd > prevStart) {
         prev.endTime = minutesToTimeString(Math.max(prevEnd, curEnd));

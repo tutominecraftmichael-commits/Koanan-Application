@@ -1273,7 +1273,12 @@ export function App() {
     const willBeCompleted = !target.completed;
     const updatedSessions = state.studySessions.map(s => 
       s.id === sessionId 
-        ? { ...s, completed: willBeCompleted, completedAt: willBeCompleted ? new Date().toISOString() : undefined } 
+        ? { 
+            ...s, 
+            completed: willBeCompleted, 
+            completedAt: willBeCompleted ? new Date().toISOString() : undefined,
+            actualDurationMinutes: willBeCompleted ? (s.actualDurationMinutes || s.durationMinutes) : undefined,
+          } 
         : s
     );
 
@@ -1360,7 +1365,12 @@ export function App() {
     soundFX.playCelebrationFanfare();
     const updatedSessions = state.studySessions.map(s => 
       s.id === sessionId 
-        ? { ...s, completed: true, completedAt: new Date().toISOString() } 
+        ? { 
+            ...s, 
+            completed: true, 
+            completedAt: new Date().toISOString(),
+            actualDurationMinutes: log.durationMinutes,
+          } 
         : s
     );
 

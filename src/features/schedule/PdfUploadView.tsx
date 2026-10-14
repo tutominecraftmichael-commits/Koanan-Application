@@ -479,10 +479,20 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           difficulty: s.difficulty,
           targetGrade: s.targetGrade,
         })),
-        slots: extractedSlots.filter(slot => {
-          // Filtrer les créneaux pour ne garder que les matières actives
-          return activeSubjects.some(sub => sub.id === slot.subjectId || sub.name.toLowerCase() === slot.subjectName.toLowerCase());
-        }),
+        slots: extractedSlots
+          .map(slot => {
+            const matchingSub = activeSubjects.find(sub => 
+              sub.id === slot.subjectId || 
+              sub.name.toLowerCase().trim() === (slot.subjectName || '').toLowerCase().trim()
+            );
+            if (!matchingSub) return null;
+            return {
+              ...slot,
+              subjectId: matchingSub.id,
+              subjectName: matchingSub.name,
+            };
+          })
+          .filter((s): s is NonNullable<typeof s> => s !== null),
         totalWeeklyClassHours: Math.round(extractedSlots.length * 2),
         recommendedStudyHours: Math.round(activeSubjects.length * 3),
         summaryNote: `Planning généré avec ${selectedPacings.length > 1 ? `${selectedPacings.length} méthodes combinées` : `méthode ${selectedPacings[0]}`}`,

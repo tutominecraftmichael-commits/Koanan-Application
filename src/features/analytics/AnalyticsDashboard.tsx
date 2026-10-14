@@ -31,36 +31,29 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 }) => {
   const [lang] = useLanguage();
   const completedSessions = studySessions.filter(s => s.completed);
-  const totalPlannedMinutes = studySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
-  const totalCompletedMinutes = completedSessions.reduce((acc, s) => acc + s.durationMinutes, 0);
-
-  const completionRate = studySessions.length > 0 
-    ? Math.round((completedSessions.length / studySessions.length) * 100) 
-    : 0;
-
-  // Real Focus Calculation:
-  // If user has not completed any sessions in their study plan, average rating is strictly 0.0
-  const validCompletedLogs = logs.filter(l => 
-    studySessions.some(s => s.id === l.sessionId && s.completed) ||
-    (completedSessions.length > 0 && l.satisfactionRating > 0)
-  );
-
-  const hasCompletedWork = completedSessions.length > 0;
-  const hasValidLogs = hasCompletedWork && validCompletedLogs.length > 0;
-
-  const numericAverageRating = hasValidLogs
-    ? Number((validCompletedLogs.reduce((acc, l) => acc + l.satisfactionRating, 0) / validCompletedLogs.length).toFixed(1))
-    : 0;
 
   const subjectStats = subjects.map(sub => {
     const subSessions = studySessions.filter(s => s.subjectId === sub.id);
     const subCompleted = subSessions.filter(s => s.completed);
     const plannedMins = subSessions.reduce((acc, s) => acc + s.durationMinutes, 0);
-    const doneMins = subCompleted.reduce((acc, s) => acc + s.durationMinutes, 0);
+
+    // 1. Durée réelle des séances validées (log réel > actualDurationMinutes > durationMinutes)
+    const sessionCompletedMins = subCompleted.reduce((acc, s) => {
+      const matchingLog = logs.find(l => l.sessionId === s.id);
+      const duration = matchingLog?.durationMinutes ?? s.actualDurationMinutes ?? s.durationMinutes;
+      return acc + duration;
+    }, 0);
+
+    // 2. Logs d'étude autonomes sans séance rattachée
+    const standaloneLogsMins = logs
+      .filter(l => l.subjectId === sub.id && (!l.sessionId || !subSessions.some(s => s.id === l.sessionId)))
+      .reduce((acc, l) => acc + l.durationMinutes, 0);
+
+    const doneMins = sessionCompletedMins + standaloneLogsMins;
 
     const progress = (plannedMins > 0 && doneMins > 0) 
       ? Math.min(100, Math.round((doneMins / plannedMins) * 100)) 
-      : 0;
+      : (doneMins > 0 ? 100 : 0);
 
     return {
       subject: sub,
@@ -69,6 +62,27 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       progress,
     };
   });
+
+  const totalPlannedMinutes = subjectStats.reduce((acc, st) => acc + st.plannedMins, 0);
+  const totalCompletedMinutes = subjectStats.reduce((acc, st) => acc + st.doneMins, 0);
+
+  const completionRate = totalPlannedMinutes > 0 
+    ? Math.min(100, Math.round((totalCompletedMinutes / totalPlannedMinutes) * 100)) 
+    : (completedSessions.length > 0 ? 100 : 0);
+
+  // Real Focus Calculation:
+  // If user has not completed any sessions in their study plan, average rating is strictly 0.0
+  const validCompletedLogs = logs.filter(l => 
+    studySessions.some(s => s.id === l.sessionId && s.completed) ||
+    (completedSessions.length > 0 && l.satisfactionRating > 0)
+  );
+
+  const hasCompletedWork = completedSessions.length > 0 || totalCompletedMinutes > 0;
+  const hasValidLogs = hasCompletedWork && validCompletedLogs.length > 0;
+
+  const numericAverageRating = hasValidLogs
+    ? Number((validCompletedLogs.reduce((acc, l) => acc + l.satisfactionRating, 0) / validCompletedLogs.length).toFixed(1))
+    : 0;
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
@@ -181,15 +195,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                   <span className="font-bold text-slate-900 dark:text-white truncate">{subject.name}</span>
                   <Badge variant="slate" size="sm" className="text-[10px] px-1.5 py-0 shrink-0">Coeff {subject.coefficient}</Badge>
                 </div>
-                <div className="font-mono text-slate-600 dark:text-slate-300 text-[11px] shrink-0">
+                <div className="font-mono text-slate-600 dark:text-slate-300 text-[11px] shrink-0 flex items-center gap-1.5">
                   <span className="text-cyan-700 dark:text-cyan-400 font-bold">{formatMinutesToHours(doneMins)}</span>
                   <span className="text-slate-400 dark:text-slate-500"> / {formatMinutesToHours(plannedMins)}</span>
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/60 dark:border-slate-700/60">
+                    {progress}%
+                  </span>
                 </div>
               </div>
 
-              <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden p-0.5">
                 <div
-                  className="h-full transition-all duration-500 rounded-full"
+                  className="h-full transition-all duration-300 ease-out rounded-full shadow-xs"
                   style={{
                     width: `${progress}%`,
                     backgroundColor: subject.color,

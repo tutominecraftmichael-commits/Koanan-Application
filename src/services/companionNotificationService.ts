@@ -114,12 +114,23 @@ export async function requestPhoneNotificationPermission(): Promise<Notification
 export function sendPhoneNotification(title: string, body: string, tag: string = 'konan-study-alert'): void {
   if (!isPhoneNotificationSupported()) return;
 
+  // Nettoyage strict : envoi direct de la notification sans étiquette redondante "Notification complice :"
+  const cleanTitle = (title || 'Konan AI')
+    .replace(/^Notification\s*complice\s*[:\-–—]?\s*/i, '')
+    .replace(/^Notification\s*[:\-–—]?\s*/i, '')
+    .trim() || 'Konan AI';
+
+  const cleanBody = (body || '')
+    .replace(/^Notification\s*complice\s*[:\-–—]?\s*/i, '')
+    .replace(/^Notification\s*[:\-–—]?\s*/i, '')
+    .trim();
+
   if (Notification.permission === 'granted') {
     try {
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.ready.then(reg => {
-          reg.showNotification(title, {
-            body,
+          reg.showNotification(cleanTitle, {
+            body: cleanBody,
             icon: '/icon-192.png',
             badge: '/icon-192.png',
             vibrate: [300, 150, 300],
@@ -127,16 +138,16 @@ export function sendPhoneNotification(title: string, body: string, tag: string =
             renotify: true,
           } as NotificationOptions);
         }).catch(() => {
-          new Notification(title, {
-            body,
+          new Notification(cleanTitle, {
+            body: cleanBody,
             icon: '/icon-192.png',
             badge: '/icon-192.png',
             tag,
           });
         });
       } else {
-        new Notification(title, {
-          body,
+        new Notification(cleanTitle, {
+          body: cleanBody,
           icon: '/icon-192.png',
           badge: '/icon-192.png',
           tag,
@@ -154,9 +165,9 @@ export function sendPhoneNotification(title: string, body: string, tag: string =
 const UPCOMING_REMINDER_TEMPLATES = [
   (sub: string, time: string) => `🎓 C'est l'heure de briller ! Ta séance de ${sub} commence à ${time}. 25 minutes de focus et c'est validé ! ⚡`,
   (sub: string, time: string) => `🔥 Protège ta série ! Ta révision de ${sub} démarre à ${time}. Fais un pas de plus vers la réussite ! 👊`,
-  (sub: string, time: string) => `📚 Hey ! Ne laisse pas le retard s'accumuler : ${sub} commence bientôt (${time}). Viens te surpasser ! 🎯`,
-  (sub: string, time: string) => `👀 Petit rappel amical de Konan : créneau de ${sub} à ${time}. Prépare tes fiches ! 💙`,
-  (sub: string, time: string) => `⚡ Mode champion activé ! Session de ${sub} à ${time}. Chaque minute investie rapporte le jour de l'examen ! 🚀`,
+  (sub: string, time: string) => `📚 Ne laisse pas le retard s'accumuler : ${sub} commence bientôt (${time}). Viens te surpasser ! 🎯`,
+  (sub: string, time: string) => `⚡ Créneau de ${sub} à ${time}. Prépare tes fiches pour une session productive ! 💙`,
+  (sub: string, time: string) => `🚀 Mode champion activé ! Session de ${sub} à ${time}. Chaque minute investie rapporte le jour de l'examen ! 💪`,
 ];
 
 /**
@@ -177,8 +188,8 @@ export function sendStudyReminder30mNotification(
   }
 
   sendPhoneNotification(
-    `📚 Révision : ${subjectName}`,
-    `Votre créneau d'étude commence à ${sessionTime}. Préparez vos cours en toute sérénité ! 🎯`,
+    subjectName,
+    `Votre séance commence à ${sessionTime}. Préparez vos cours en toute sérénité ! 🎯`,
     `study-reminder-${subjectName}`
   );
   return true;
@@ -229,7 +240,7 @@ export function checkAndDispatchStudyReminders(
       const message = template(subjectName, session.startTime);
 
       sendPhoneNotification(
-        `Konan AI • ${subjectName}`,
+        subjectName,
         message,
         `study-alert-${session.id}`
       );

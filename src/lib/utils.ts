@@ -6,11 +6,12 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatMinutesToHours(minutes: number): string {
+  if (!minutes || minutes <= 0) return '0h';
   const hours = Math.floor(minutes / 60);
-  const remainingMins = minutes % 60;
+  const remainingMins = Math.round(minutes % 60);
   if (hours === 0) return `${remainingMins} min`;
   if (remainingMins === 0) return `${hours}h`;
-  return `${hours}h ${remainingMins}m`;
+  return `${hours}h${remainingMins.toString().padStart(2, '0')}`;
 }
 
 export function parseTimeToMinutes(timeStr: string): number {

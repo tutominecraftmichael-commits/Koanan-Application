@@ -239,13 +239,51 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
   // Automatically include weekend days if classes or study sessions exist on Saturday or Sunday
   const hasWeekendClasses = classSlots.some(s => s.dayOfWeek === 5 || s.dayOfWeek === 6) ||
     (studySessions && studySessions.some(s => s.dayOfWeek === 5 || s.dayOfWeek === 6));
-  const hasSundayClasses = classSlots.some(s => s.dayOfWeek === 6) || (studySessions && studySessions.some(s => s.dayOfWeek === 6));
 
-  const baseDays = (preferences.weekendStudyEnabled || hasWeekendClasses) ? DAYS_OF_WEEK : DAYS_OF_WEEK.slice(0, 5);
-  // If Sunday has classes, order starting from Sunday [Dimanche, Lundi, ...]
-  const displayedDays = hasSundayClasses && baseDays.length === 7
-    ? [DAYS_OF_WEEK[6], DAYS_OF_WEEK[0], DAYS_OF_WEEK[1], DAYS_OF_WEEK[2], DAYS_OF_WEEK[3], DAYS_OF_WEEK[4], DAYS_OF_WEEK[5]]
-    : baseDays;
+  // La semaine scolaire/universitaire commence TOUJOURS par Lundi dans les systèmes francophones & internationaux
+  const displayedDays = (preferences.weekendStudyEnabled || hasWeekendClasses) ? DAYS_OF_WEEK : DAYS_OF_WEEK.slice(0, 5);
+
+  interface DayUnifiedEvent {
+    kind: 'class' | 'study';
+    startTimeMinutes: number;
+    slot?: ClassSlot;
+    session?: StudySession;
+  }
+
+  const getDayUnifiedEvents = (dayId: DayOfWeek): DayUnifiedEvent[] => {
+    const events: DayUnifiedEvent[] = [];
+
+    if (filterMode === 'combined' || filterMode === 'classes_only') {
+      classSlots
+        .filter(s => s.dayOfWeek === dayId)
+        .forEach(slot => {
+          events.push({
+            kind: 'class',
+            slot,
+            startTimeMinutes: parseTimeToMinutes(slot.startTime),
+          });
+        });
+    }
+
+    if (filterMode === 'combined' || filterMode === 'study_only') {
+      studySessions
+        .filter(s => s.dayOfWeek === dayId)
+        .forEach(session => {
+          events.push({
+            kind: 'study',
+            session,
+            startTimeMinutes: parseTimeToMinutes(session.startTime),
+          });
+        });
+    }
+
+    return events.sort((a, b) => {
+      if (a.startTimeMinutes !== b.startTimeMinutes) {
+        return a.startTimeMinutes - b.startTimeMinutes;
+      }
+      return a.kind === 'class' ? -1 : 1;
+    });
+  };
 
   const handleOpenAddModal = (day: DayOfWeek = 0, defaultStart = '08:30', defaultEnd = '10:30') => {
     setEditingSlotId(null);
@@ -588,14 +626,21 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           })}
         </div>
 
-        {/* Mobile Day Items List */}
+        {/* Mobile Day Items List - Ordre Chronologique Unifié */}
         <div className="space-y-3">
-          {/* 1. Classes on Mobile */}
-          {(filterMode === 'combined' || filterMode === 'classes_only') &&
-            classSlots
-              .filter(s => s.dayOfWeek === activeMobileDay)
-              .sort((a, b) => parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime))
-              .map(slot => {
+          {(() => {
+            const mobileEvents = getDayUnifiedEvents(activeMobileDay);
+            if (mobileEvents.length === 0) {
+              return (
+                <div className="text-center py-12 px-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 italic">Aucun cours ou créneau de révision prévu pour ce jour.</p>
+                </div>
+              );
+            }
+
+            return mobileEvents.map(ev => {
+              if (ev.kind === 'class' && ev.slot) {
+                const slot = ev.slot;
                 const subject = subjects.find(s => s.id === slot.subjectId) || { name: 'Matière', color: '#6366F1' };
                 const typeInfo = COURSE_TYPE_LABELS[slot.type] || { badge: 'CM' };
 
@@ -636,14 +681,10 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     </div>
                   </div>
                 );
-              })}
+              }
 
-          {/* 2. Study Sessions on Mobile */}
-          {(filterMode === 'combined' || filterMode === 'study_only') &&
-            studySessions
-              .filter(s => s.dayOfWeek === activeMobileDay)
-              .sort((a, b) => parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime))
-              .map(session => {
+              if (ev.kind === 'study' && ev.session) {
+                const session = ev.session;
                 const subject = subjects.find(s => s.id === session.subjectId) || { name: 'Révision', color: '#06B6D4' };
 
                 return (
@@ -662,7 +703,11 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     </div>
                   </div>
                 );
-              })}
+              }
+
+              return null;
+            });
+          })()}
         </div>
       </div>
 
@@ -699,17 +744,8 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           {/* Main Grid Columns with Spacious Readable Cards */}
           <div className="grid grid-cols-5 md:grid-cols-7 gap-3 min-h-[500px]">
             {displayedDays.map(d => {
-              const dayClasses = classSlots
-                .filter(s => s.dayOfWeek === d.id)
-                .sort((a, b) => parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime));
-
-              const dayStudySessions = studySessions
-                .filter(s => s.dayOfWeek === d.id)
-                .sort((a, b) => parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime));
-
-              const isEmpty = (filterMode === 'classes_only' && dayClasses.length === 0) ||
-                (filterMode === 'study_only' && dayStudySessions.length === 0) ||
-                (filterMode === 'combined' && dayClasses.length === 0 && dayStudySessions.length === 0);
+              const dayEvents = getDayUnifiedEvents(d.id);
+              const isEmpty = dayEvents.length === 0;
 
               return (
                 <div
@@ -722,96 +758,96 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                         <p className="text-xs text-slate-400 italic">Créneau libre</p>
                       </div>
                     ) : (
-                      <>
-                        {/* Fixed Classes */}
-                        {(filterMode === 'combined' || filterMode === 'classes_only') &&
-                          dayClasses.map(slot => {
-                            const subject = subjects.find(s => s.id === slot.subjectId) || {
-                              name: 'Matière',
-                              color: '#6366F1',
-                            };
-                            const typeInfo = COURSE_TYPE_LABELS[slot.type] || { badge: 'CM' };
+                      dayEvents.map(ev => {
+                        if (ev.kind === 'class' && ev.slot) {
+                          const slot = ev.slot;
+                          const subject = subjects.find(s => s.id === slot.subjectId) || {
+                            name: 'Matière',
+                            color: '#6366F1',
+                          };
+                          const typeInfo = COURSE_TYPE_LABELS[slot.type] || { badge: 'CM' };
 
-                            return (
-                              <div
-                                key={slot.id}
-                                className="group relative rounded-xl p-3 bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/60 transition-all text-left shadow-xs hover:shadow-md"
-                                style={{ borderLeftColor: subject.color, borderLeftWidth: '5px' }}
-                              >
-                                <div className="flex items-center justify-between gap-1 text-[11px] mb-1">
-                                  <span className="font-mono font-bold text-cyan-700 dark:text-cyan-400">
-                                    {slot.startTime} - {slot.endTime}
-                                  </span>
-                                  <Badge variant="slate" size="sm" className="text-[10px] px-1.5 py-0">
-                                    {typeInfo.badge}
-                                  </Badge>
-                                </div>
-
-                                <h4 className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
-                                  {subject.name}
-                                </h4>
-
-                                {(slot.room || slot.professor) && (
-                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 truncate">
-                                    {slot.room ? `📍 ${slot.room}` : ''} {slot.professor ? `• 👤 ${slot.professor}` : ''}
-                                  </p>
-                                )}
-
-                                {/* Hover Actions */}
-                                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-white/95 dark:bg-slate-900/95 rounded-lg p-0.5 border border-slate-200 dark:border-slate-700 shadow-md">
-                                  <button
-                                    onClick={() => handleOpenEditModal(slot)}
-                                    title="Modifier"
-                                    className="p-1 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white rounded hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
-                                  >
-                                    <Edit3 className="w-3.5 h-3.5" />
-                                  </button>
-                                  <button
-                                    onClick={() => handleDeleteSlot(slot.id)}
-                                    title="Supprimer"
-                                    className="p-1 text-slate-600 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-400 rounded hover:bg-rose-50 dark:hover:bg-rose-500/20 cursor-pointer"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
-                                </div>
+                          return (
+                            <div
+                              key={slot.id}
+                              className="group relative rounded-xl p-3 bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/60 transition-all text-left shadow-xs hover:shadow-md"
+                              style={{ borderLeftColor: subject.color, borderLeftWidth: '5px' }}
+                            >
+                              <div className="flex items-center justify-between gap-1 text-[11px] mb-1">
+                                <span className="font-mono font-bold text-cyan-700 dark:text-cyan-400">
+                                  {slot.startTime} - {slot.endTime}
+                                </span>
+                                <Badge variant="slate" size="sm" className="text-[10px] px-1.5 py-0">
+                                  {typeInfo.badge}
+                                </Badge>
                               </div>
-                            );
-                          })}
 
-                        {/* AI Generated Study Sessions */}
-                        {(filterMode === 'combined' || filterMode === 'study_only') &&
-                          dayStudySessions.map(session => {
-                            const subject = subjects.find(s => s.id === session.subjectId) || {
-                              name: 'Matière',
-                              color: '#06B6D4',
-                            };
+                              <h4 className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
+                                {subject.name}
+                              </h4>
 
-                            return (
-                              <div
-                                key={session.id}
-                                className="rounded-xl p-2.5 bg-cyan-50/80 dark:bg-cyan-950/30 hover:bg-cyan-100/60 dark:hover:bg-cyan-950/50 border border-cyan-200 dark:border-cyan-500/40 transition-all text-left shadow-xs"
-                                style={{ borderLeftColor: '#06B6D4', borderLeftWidth: '5px' }}
-                              >
-                                <div className="flex items-center justify-between gap-1 text-[10px] mb-1">
-                                  <span className="font-mono font-bold text-cyan-700 dark:text-cyan-300">
-                                    {session.startTime} - {session.endTime}
-                                  </span>
-                                  <span className="text-[10px] text-cyan-800 dark:text-cyan-400/70 font-semibold">
-                                    Révision
-                                  </span>
-                                </div>
-
-                                <h4 className="text-[11px] font-bold text-slate-900 dark:text-white leading-snug line-clamp-2">
-                                  {session.title}
-                                </h4>
-
-                                <p className="text-[10px] text-cyan-800 dark:text-cyan-400/80 mt-1 truncate font-medium">
-                                  {subject.name} • {session.durationMinutes}m
+                              {(slot.room || slot.professor) && (
+                                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 truncate">
+                                  {slot.room ? `📍 ${slot.room}` : ''} {slot.professor ? `• 👤 ${slot.professor}` : ''}
                                 </p>
+                              )}
+
+                              {/* Hover Actions */}
+                              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-white/95 dark:bg-slate-900/95 rounded-lg p-0.5 border border-slate-200 dark:border-slate-700 shadow-md">
+                                <button
+                                  onClick={() => handleOpenEditModal(slot)}
+                                  title="Modifier"
+                                  className="p-1 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white rounded hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+                                >
+                                  <Edit3 className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteSlot(slot.id)}
+                                  title="Supprimer"
+                                  className="p-1 text-slate-600 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-400 rounded hover:bg-rose-50 dark:hover:bg-rose-500/20 cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
                               </div>
-                            );
-                          })}
-                      </>
+                            </div>
+                          );
+                        }
+
+                        if (ev.kind === 'study' && ev.session) {
+                          const session = ev.session;
+                          const subject = subjects.find(s => s.id === session.subjectId) || {
+                            name: 'Matière',
+                            color: '#06B6D4',
+                          };
+
+                          return (
+                            <div
+                              key={session.id}
+                              className="rounded-xl p-2.5 bg-cyan-50/80 dark:bg-cyan-950/30 hover:bg-cyan-100/60 dark:hover:bg-cyan-950/50 border border-cyan-200 dark:border-cyan-500/40 transition-all text-left shadow-xs"
+                              style={{ borderLeftColor: '#06B6D4', borderLeftWidth: '5px' }}
+                            >
+                              <div className="flex items-center justify-between gap-1 text-[10px] mb-1">
+                                <span className="font-mono font-bold text-cyan-700 dark:text-cyan-300">
+                                  {session.startTime} - {session.endTime}
+                                </span>
+                                <span className="text-[10px] text-cyan-800 dark:text-cyan-400/70 font-semibold">
+                                  Révision
+                                </span>
+                              </div>
+
+                              <h4 className="text-[11px] font-bold text-slate-900 dark:text-white leading-snug line-clamp-2">
+                                {session.title}
+                              </h4>
+
+                              <p className="text-[10px] text-cyan-800 dark:text-cyan-400/80 mt-1 truncate font-medium">
+                                {subject.name} • {session.durationMinutes}m
+                              </p>
+                            </div>
+                          );
+                        }
+
+                        return null;
+                      })
                     )}
                   </div>
 
