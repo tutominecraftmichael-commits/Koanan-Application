@@ -198,11 +198,9 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   const handleApplyAiRecommendation = () => {
     soundFX.playCheckmarkPop();
     const primary = (aiRecommendation.primaryId as StudyPacing) || 'feynman';
-    const secondaries = (aiRecommendation.recommendedIds as StudyPacing[]) || [];
-    const combined = Array.from(new Set([primary, ...secondaries])).slice(0, 2);
     setSelectedPrimaryPacing(primary);
-    setSelectedCombinedPacings(combined);
-    showToast('Recommandation appliquée avec succès !');
+    setSelectedCombinedPacings([primary]);
+    showToast(`Recommandation appliquée : ${getPacingStrategy(primary).title}`);
   };
 
   // Gestion des matières en Étape 2

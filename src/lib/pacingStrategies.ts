@@ -386,7 +386,7 @@ export function recommendPacingStrategies(
       const lateDaysStr = lateDays.map(d => `${d.name} (${d.time})`).join(', ');
       return {
         primaryId: 'time_blocking',
-        recommendedIds: ['time_blocking', 'feynman'],
+        recommendedIds: ['time_blocking'],
         notRecommendedIds: [],
         lateDaysCount,
         earlyDaysCount,

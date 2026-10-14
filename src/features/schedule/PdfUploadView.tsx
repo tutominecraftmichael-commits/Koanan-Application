@@ -55,6 +55,7 @@ import {
 import { buildStateFromExtractedSchedule } from '../../services/aiAcademicAnalyzer';
 import { 
   PACING_STRATEGIES, 
+  getPacingStrategy,
   isPacingAllowedForPlan,
   recommendPacingStrategies,
   type PacingRecommendation
@@ -354,7 +355,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
       setEditableSubjects(subjectsMap);
 
-      // Présélection intelligente des méthodes recommandées pour les abonnés PRO / PLUS
+      // Présélection intelligente de la méthode recommandée unique selon l'emploi du temps
       if (planTier !== 'free') {
         const rec = recommendPacingStrategies(
           subjectsMap.length,
@@ -364,9 +365,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             dayOfWeek: s.dayOfWeek
           }))
         );
-        if (rec?.recommendedIds && rec.recommendedIds.length > 0) {
-          setSelectedPacings(rec.recommendedIds.slice(0, 3) as StudyPacing[]);
-        } else if (rec?.primaryId) {
+        if (rec?.primaryId) {
           setSelectedPacings([rec.primaryId]);
         }
       }
@@ -1032,11 +1031,11 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               {planTier !== 'free' ? (
                 <div className="flex flex-wrap items-center justify-between gap-2 mt-1">
                   <p className="text-[11px] text-slate-400">
-                    Combinez jusqu'à 3 méthodes d'espacement pour alterner vos révisions intelligemment.
+                    La méthode recommandée ci-dessous est calibrée sur votre emploi du temps. Vous pouvez aussi combiner librement jusqu'à 3 techniques.
                   </p>
                   <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 flex items-center gap-1">
                     <Sparkles className="w-3 h-3 text-cyan-400" />
-                    {selectedPacings.length}/3 méthodes combinées
+                    {selectedPacings.length}/3 méthode{selectedPacings.length > 1 ? 's' : ''} sélectionnée{selectedPacings.length > 1 ? 's' : ''}
                   </span>
                 </div>
               ) : (
@@ -1057,32 +1056,36 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="text-xs font-black uppercase tracking-wider text-cyan-400">
-                          Recommandation
+                          Recommandation IA
                         </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
+                        <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
+                          {getPacingStrategy(pacingRecommendation.primaryId).title}
+                        </span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
                           {pacingRecommendation.contextTag}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-200 mt-1 font-medium leading-relaxed whitespace-pre-line">
+                      <p className="text-xs text-slate-200 mt-1.5 font-medium leading-relaxed whitespace-pre-line">
                         {pacingRecommendation.rationale}
                       </p>
                     </div>
                   </div>
 
-                  {(!pacingRecommendation.recommendedIds.every(id => selectedPacings.includes(id as StudyPacing))) && (
+                  {selectedPacings.length === 1 && selectedPacings[0] === pacingRecommendation.primaryId ? (
+                    <div className="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold shrink-0 flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Méthode active</span>
+                    </div>
+                  ) : (
                     <button
                       type="button"
                       onClick={() => {
-                        if (pacingRecommendation.recommendedIds.length > 0) {
-                          setSelectedPacings(pacingRecommendation.recommendedIds.slice(0, 3) as StudyPacing[]);
-                        } else {
-                          setSelectedPacings([pacingRecommendation.primaryId]);
-                        }
+                        setSelectedPacings([pacingRecommendation.primaryId]);
                       }}
-                      className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-cyan-500/20 shrink-0 cursor-pointer flex items-center justify-center gap-1.5"
+                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-cyan-500/20 shrink-0 cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
                     >
                       <Check className="w-3.5 h-3.5" />
-                      <span>Appliquer la recommandation</span>
+                      <span>Appliquer : {getPacingStrategy(pacingRecommendation.primaryId).title}</span>
                     </button>
                   )}
                 </div>
