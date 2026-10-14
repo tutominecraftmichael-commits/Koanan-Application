@@ -180,7 +180,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   Performance Maximale
                 </span>
                 <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-sm shadow-amber-500/20 font-black whitespace-nowrap inline-flex items-center gap-1 shrink-0 uppercase tracking-wider">
-                  <span>PRO • Découverte</span>
+                  <span>PRO • Version Ouverte</span>
                 </span>
               </div>
               
@@ -197,7 +197,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 </span>
                 <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">CFA / mois</span>
                 <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
-                  Gratuit actuellement
+                  Version PRO ouverte
                 </span>
               </div>
               <p className="text-[11px] text-slate-600 dark:text-slate-300 font-semibold mt-1">
@@ -253,7 +253,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               className="w-full text-xs sm:text-sm font-black py-3.5 px-4 rounded-xl shadow-md shadow-amber-500/20 bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 hover:brightness-105 active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2"
               onClick={() => onSelectPlan?.('pro')}
             >
-              <span>Passer à KONAN PRO (Gratuit actuellement)</span>
+              <span>Passer à KONAN PRO</span>
             </button>
           </div>
         </div>

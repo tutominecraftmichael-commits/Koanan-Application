@@ -608,7 +608,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 }}
                 className="text-xs font-bold"
               >
-                Passer à KONAN PRO (Offre Découverte)
+                Passer à KONAN PRO
               </Button>
             </div>
           </div>

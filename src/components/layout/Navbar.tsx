@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { 
   Clock, 
   LogIn, 
-  LogOut,
   Upload, 
   Download, 
   RotateCcw,
@@ -751,58 +750,39 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </button>
                     ) : effectivePlan === 'pro' ? (
                       <span 
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-sm border bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border-amber-300/80 cursor-default select-none"
-                        title="Modèle KONAN PRO Actif"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-sm border bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border-amber-300/80 cursor-default select-none"
+                        title="Modèle KONAN PRO Actif (Version PRO ouverte)"
                       >
-                        <span>PRO</span>
+                        <span>PRO OUVERTE</span>
                       </span>
-                    ) : (isDemoMode || userAccount?.isDemo) ? (
-                      <div className="flex items-center gap-1 shrink-0">
-                        <span
-                          className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30 cursor-default select-none"
-                          title="Mode Démo Actif"
-                        >
-                          <GraduationCap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 dark:text-amber-400 shrink-0" />
-                          Démo
-                        </span>
-                        {_onLogout && (
-                          <button
-                            type="button"
-                            onClick={_onLogout}
-                            className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-[10px] font-bold text-rose-700 dark:text-rose-300 hover:text-rose-800 dark:hover:text-rose-200 transition-colors cursor-pointer shadow-xs"
-                            title="Quitter le Mode Démo et revenir à l'accueil"
+                    ) : (
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {(isDemoMode || userAccount?.isDemo) && (
+                          <span
+                            className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30 cursor-default select-none"
+                            title="Mode Démo Actif"
                           >
-                            <LogOut className="w-3 h-3" />
-                            <span>Quitter Démo</span>
-                          </button>
+                            <GraduationCap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 dark:text-amber-400 shrink-0" />
+                            Démo
+                          </span>
                         )}
                         <button
                           type="button"
-                          onClick={() => onNavigate('auth')}
-                          className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/30 text-[10px] font-bold text-indigo-700 hover:text-indigo-900 dark:bg-indigo-600/20 dark:hover:bg-indigo-600/30 dark:border-indigo-500/40 dark:text-indigo-300 dark:hover:text-white transition-colors cursor-pointer shadow-xs"
-                          title="Se connecter avec un compte Google réel"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onUpgradeToPro) {
+                              onUpgradeToPro();
+                            } else {
+                              onNavigate('pro-wizard');
+                            }
+                          }}
+                          className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-50 text-amber-900 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                          title="Passer à KONAN PRO (Version PRO ouverte)"
                         >
-                          <LogIn className="w-3 h-3" />
-                          <span>Se Connecter</span>
+                          <span className="font-black text-[8px] bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 px-1.5 py-0.2 rounded-xs border border-amber-300 shadow-xs">PRO</span>
+                          <span className="font-extrabold text-amber-700 dark:text-amber-300">PRO ouverte</span>
                         </button>
                       </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (onUpgradeToPro) {
-                            onUpgradeToPro();
-                          } else {
-                            onNavigate('pro-wizard');
-                          }
-                        }}
-                        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-50 text-amber-900 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                        title="Passer à KONAN PRO (Offre Découverte Offerte)"
-                      >
-                        <span className="font-black text-[8px] bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 px-1.5 py-0.2 rounded-xs border border-amber-300 shadow-xs">PRO</span>
-                        <span className="font-extrabold text-amber-700 dark:text-amber-300">Offert</span>
-                      </button>
                     )}
                   </div>
                 ) : (

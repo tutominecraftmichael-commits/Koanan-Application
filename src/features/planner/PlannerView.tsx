@@ -883,7 +883,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                             } else {
                               setProModalInfo({
                                 title: `${s.title}`,
-                                desc: `La méthode "${s.title}" (${s.tagline}) fait partie intégrante du modèle KONAN PRO. Activez l'accès découverte offert pour reconfigurer votre emploi du temps.`
+                                desc: `La méthode "${s.title}" (${s.tagline}) fait partie intégrante de KONAN PRO. Profitez de la version PRO ouverte pour réorganiser votre emploi du temps.`
                               });
                             }
                             return;

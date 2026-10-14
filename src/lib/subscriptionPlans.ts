@@ -90,9 +90,9 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
   pro: {
     id: 'pro',
     name: 'KONAN PRO',
-    tagline: '1 200 F CFA / mois • Gratuit actuellement (Lancement)',
+    tagline: '1 200 F CFA / mois • Version PRO ouverte (Lancement)',
     priceLabel: '1 200 F',
-    periodLabel: 'CFA / mois (Gratuit actuellement)',
+    periodLabel: 'CFA / mois (Version PRO ouverte)',
     priceAmount: 1200,
     maxPdfImports: 99,
     maxConcurrentMethods: 3,

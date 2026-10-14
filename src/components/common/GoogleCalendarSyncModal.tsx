@@ -160,10 +160,10 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
               <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-xs">
                 <span className="px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-slate-900 text-white dark:bg-white dark:text-slate-900">PRO</span>
-                <span>Fonctionnalité offerte avec le modèle KONAN PRO</span>
+                <span>Version PRO ouverte</span>
               </div>
               <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Les rappels automatiques et la synchronisation continue pour tous les jours de la semaine font partie intégrante de <strong>KONAN PRO</strong> (accès découverte offert).
+                Les rappels automatiques et la synchronisation continue pour tous les jours de la semaine font partie intégrante de <strong>KONAN PRO</strong> (version PRO ouverte).
               </p>
               <Button
                 variant="primary"
@@ -178,7 +178,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                   }
                 }}
               >
-                Configurer et activer KONAN PRO (Offert)
+                Passer à KONAN PRO
               </Button>
             </div>
           ) : (

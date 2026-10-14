@@ -48,7 +48,7 @@ export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
     );
   }
 
-  // Modale Apple Minimaliste pour Konan PRO (Offre Découverte)
+  // Modale Apple Minimaliste pour Konan PRO (Version PRO ouverte)
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-150">
       <div 
@@ -70,7 +70,7 @@ export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
               PRO
             </span>
             <span className="text-[11px] font-semibold text-slate-500">
-              Accès Découverte Offert
+              Version PRO ouverte
             </span>
           </div>
 
@@ -79,7 +79,7 @@ export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
           </h3>
 
           <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            {featureDescription || "Cette fonctionnalité avancée fait partie intégrante de Konan Pro. Profitez de l'accès complet offert pour reconfigurer votre emploi du temps et synchroniser vos rappels d'étude."}
+            {featureDescription || "Cette fonctionnalité avancée fait partie intégrante de Konan Pro. Profitez de la version PRO ouverte pour réorganiser votre emploi du temps et synchroniser vos rappels d'étude."}
           </p>
         </div>
 
@@ -119,7 +119,7 @@ export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
             rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
             className="w-full sm:flex-1 text-xs font-bold py-2.5 order-1 sm:order-2 shadow-md"
           >
-            Configurer avec Konan Pro
+            Passer à KONAN PRO
           </Button>
         </div>
       </div>

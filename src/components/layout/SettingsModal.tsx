@@ -200,7 +200,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                           : 'bg-slate-200 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
                       }`}
                     >
-                      {currentPlan === 'pro' ? '⭐ PRO' : currentPlan === 'plus' ? '👑 PLUS' : 'FREE'}
+                      {currentPlan === 'pro' ? '⭐ PRO OUVERTE' : currentPlan === 'plus' ? '👑 PLUS' : 'GRATUIT'}
                     </span>
                   </div>
                   <p className="text-xs text-indigo-600 dark:text-indigo-300 font-semibold truncate flex items-center gap-1.5 mt-0.5">
@@ -348,7 +348,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </span>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                   {currentPlan === 'pro' 
-                    ? 'Modèle KONAN PRO actif (Offre Découverte Offerte).'
+                    ? 'Modèle KONAN PRO actif (Version PRO ouverte).'
                     : 'Modèle KONAN Gratuit actif. Passez à KONAN PRO pour booster vos révisions.'}
                 </p>
               </div>
@@ -362,7 +362,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </span>
                 {currentPlan === 'pro' ? (
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-sm shadow-amber-500/20">
-                    PRO ACTIF
+                    PRO OUVERTE
                   </span>
                 ) : (
                   <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30">
@@ -373,7 +373,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
                 {currentPlan === 'pro'
                   ? 'Toutes les méthodes cognitives avancées (Feynman, Time Blocking), la réorganisation d’emploi du temps et les rappels sonores (.ics + Google Agenda) sont pleinement activés.'
-                  : 'Accès au planning de base, méthode Pomodoro et Active Recall. L’offre de découverte KONAN PRO est actuellement offerte.'}
+                  : 'Accès au planning de base, méthode Pomodoro et Active Recall. La version PRO de KONAN est actuellement ouverte.'}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                 <button
@@ -390,7 +390,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   }`}
                 >
                   <Zap className="w-3.5 h-3.5" />
-                  <span>{currentPlan === 'pro' ? 'Reconfigurer Konan Pro' : 'Passer à KONAN PRO (Offert)'}</span>
+                  <span>{currentPlan === 'pro' ? 'Reconfigurer Konan Pro' : 'Passer à KONAN PRO'}</span>
                 </button>
                 <button
                   type="button"

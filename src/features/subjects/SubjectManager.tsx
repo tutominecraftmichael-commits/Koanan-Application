@@ -516,10 +516,10 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                     else setIsProModalOpen(true);
                   }}
                   className="w-full bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 rounded-xl px-3 py-2.5 text-xs text-slate-600 dark:text-slate-400 cursor-pointer flex items-center justify-between transition-colors"
-                  title="Disponible avec l'offre KONAN PRO (Offre Découverte Offerte)"
+                  title="Disponible avec le modèle KONAN PRO (Version PRO ouverte)"
                 >
                   <span className="truncate">Adaptation auto selon examens & devoirs</span>
-                  <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 shrink-0 ml-1">Découvrir PRO</span>
+                  <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 shrink-0 ml-1">PRO ouverte</span>
                 </div>
               </div>
             ) : (
