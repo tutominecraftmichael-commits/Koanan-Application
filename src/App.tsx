@@ -56,8 +56,6 @@ import { useTheme } from './context/ThemeContext';
 import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { ProFeatureModal } from './components/common/ProFeatureModal';
-import { SecretCodeModal } from './components/common/SecretCodeModal';
-import { isProSecretUnlocked } from './services/secretCodeService';
 import { WaitlistModal } from './components/common/WaitlistModal';
 import { GoogleCalendarSyncModal } from './components/common/GoogleCalendarSyncModal';
 import { PrivacyPolicyModal } from './components/common/PrivacyPolicyModal';
@@ -94,8 +92,6 @@ export function App() {
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
-  const [isSecretCodeModalOpen, setIsSecretCodeModalOpen] = useState(false);
-  const [secretCodeTargetFeature, setSecretCodeTargetFeature] = useState<string | undefined>(undefined);
   const [isSuperProModalOpen, setIsSuperProModalOpen] = useState(false);
   const [isGoogleCalendarModalOpen, setIsGoogleCalendarModalOpen] = useState(false);
   const [googleCalendarReason, setGoogleCalendarReason] = useState<'pro_activated' | 'plan_applied' | null>(null);
@@ -219,15 +215,9 @@ export function App() {
     };
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
-  // Source unique de vérité pour le palier actif :
-  // KONAN PRO est strictement subordonné à la validation du code secret EXAM2026.
-  // Sans ce code secret déverrouillé, TOUS les comptes sont systématiquement à 'free'.
+  // Source unique de vérité pour le palier actif (supporte le palier 'pro' et 'free')
   const effectivePlanTier = useMemo<PlanTier>(() => {
-    const rawTier = state.planTier || state.userAccount?.planTier || 'free';
-    if (rawTier === 'pro') {
-      return isProSecretUnlocked() ? 'pro' : 'free';
-    }
-    return rawTier === 'plus' ? 'free' : rawTier;
+    return state.planTier || state.userAccount?.planTier || 'free';
   }, [state.planTier, state.userAccount?.planTier]);
 
   // Unified display name
@@ -235,14 +225,9 @@ export function App() {
     ? state.userAccount.name
     : (state.studentName || 'Étudiant');
 
-  // RÈGLE STRICTE : Tous les comptes connectés ou enregistrés en Konan Pro sont rétrogradés
-  // à Gratuit automatiquement et sans exception, sauf s'ils ont débloqué l'accès avec le code secret EXAM2026.
+  // Repli vers Gratuit UNIQUEMENT pour les comptes qui tenteraient d'activer 'plus' (qui reste en liste d'attente)
   useEffect(() => {
-    const isPro = state.planTier === 'pro' || state.userAccount?.planTier === 'pro';
-    const isPlus = state.planTier === 'plus' || state.userAccount?.planTier === 'plus' || state.isGroupGuest || state.userAccount?.isGroupGuest;
-    const shouldDowngradePro = isPro && !isProSecretUnlocked();
-
-    if (isPlus || shouldDowngradePro) {
+    if (state.planTier === 'plus' || state.userAccount?.planTier === 'plus' || state.isGroupGuest || state.userAccount?.isGroupGuest) {
       const { nextState } = transitionUserState(state, 'free');
       nextState.planTier = 'free';
       if (nextState.userAccount) {
@@ -253,7 +238,6 @@ export function App() {
       setState(nextState);
       if (nextState.userAccount?.googleId && !nextState.isDemoMode) {
         saveUserState(nextState.userAccount.googleId, nextState);
-        syncUserStateToCloud(nextState.userAccount.googleId, nextState).catch(() => {});
       }
     }
   }, [state.planTier, state.userAccount?.planTier, state.isGroupGuest, state.userAccount?.isGroupGuest]);
@@ -579,16 +563,11 @@ export function App() {
       return;
     }
 
-    // Formule KONAN PRO : Connexion impérative obligatoire et validation du code secret
+    // Formule KONAN PRO : Connexion impérative obligatoire (aucun accès anonyme ou démo non authentifié)
     if (view === 'pro-wizard') {
       if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
         showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte Google pour passer à KONAN PRO.');
         setActiveView('auth');
-        return;
-      }
-      if (!isProSecretUnlocked()) {
-        setSecretCodeTargetFeature('Parcours de configuration KONAN PRO');
-        setIsSecretCodeModalOpen(true);
         return;
       }
     }
@@ -749,69 +728,17 @@ export function App() {
   };
 
   /**
-   * Ouverture du dialogue de saisie du Code Secret pour KONAN PRO
-   */
-  const handleOpenProSecretModal = (featureTitle?: string) => {
-    setIsProModalOpen(false);
-
-    if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
-      showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte Google pour passer à KONAN PRO.');
-      setActiveView('auth');
-      return;
-    }
-
-    if (isProSecretUnlocked()) {
-      setActiveView('pro-wizard');
-      return;
-    }
-
-    setSecretCodeTargetFeature(featureTitle);
-    setIsSecretCodeModalOpen(true);
-  };
-
-  /**
-   * Validation avec succès du code secret EXAM2026 :
-   * Débloque le palier Pro immédiatement, sauvegarde l'état et lance le wizard
-   */
-  const handleSecretCodeSuccess = () => {
-    setIsSecretCodeModalOpen(false);
-    showToast('🎉 Code secret validé avec succès ! Bienvenue dans KONAN PRO.');
-    soundFX.playSuccessChime();
-
-    const nextState: AppState = {
-      ...state,
-      planTier: 'pro',
-      userAccount: state.userAccount ? {
-        ...state.userAccount,
-        planTier: 'pro',
-      } : undefined,
-    };
-    setState(nextState);
-
-    if (nextState.userAccount?.googleId && !nextState.isDemoMode) {
-      saveUserState(nextState.userAccount.googleId, nextState);
-      syncUserStateToCloud(nextState.userAccount.googleId, nextState).catch(() => {});
-    }
-
-    setActiveView('pro-wizard');
-  };
-
-  /**
    * Plan selection from Landing Hero / Pricing / Modals / Settings:
    * Dissout immédiatement toutes les fonctionnalités exclusives lors du passage à un modèle inférieur (ex: Pro -> Free, Plus -> Pro)
    */
   const handleSelectPlan = (planId: 'free' | 'pro' | 'plus') => {
     setIsProModalOpen(false);
 
-    // Formule KONAN PRO : Connexion impérative obligatoire et validation du code secret
+    // Formule KONAN PRO : Connexion impérative obligatoire
     if (planId === 'pro') {
       if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
         showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte Google pour passer à KONAN PRO.');
         setActiveView('auth');
-        return;
-      }
-      if (!isProSecretUnlocked()) {
-        handleOpenProSecretModal('Passer à KONAN PRO');
         return;
       }
       setActiveView('pro-wizard');
@@ -1643,7 +1570,7 @@ export function App() {
         activeView={activeView}
         onNavigate={handleNavigate}
         onViewPricing={handleViewPricing}
-        onUpgradeToPro={() => handleOpenProSecretModal('Passer à KONAN PRO')}
+        onUpgradeToPro={() => handleSelectPlan('pro')}
         studentName={effectiveStudentName}
         academicLevel={state.academicLevel}
         userAccount={state.userAccount}
@@ -1946,32 +1873,17 @@ export function App() {
 
         {/* Pro Onboarding Wizard: Dedicated Page */}
         {activeView === 'pro-wizard' && (
-          isProSecretUnlocked() ? (
-            <ProWizardView
-              state={state}
-              onUpdateState={(nextState) => {
-                if (nextState.userAccount?.googleId && !nextState.isDemoMode) {
-                  saveUserState(nextState.userAccount.googleId, nextState);
-                }
-                setState(nextState);
-              }}
-              onNavigate={handleNavigate}
-              showToast={showToast}
-            />
-          ) : (
-            <div className="text-center py-16 space-y-4 glass-panel max-w-md mx-auto p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl">
-              <p className="text-base text-slate-900 dark:text-white font-bold">
-                🔒 Code secret requis pour accéder à la configuration KONAN PRO.
-              </p>
-              <button
-                type="button"
-                onClick={() => handleOpenProSecretModal('Configuration KONAN PRO')}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-bold text-xs shadow-md cursor-pointer hover:scale-105 transition-all"
-              >
-                Saisir le Code Secret
-              </button>
-            </div>
-          )
+          <ProWizardView
+            state={state}
+            onUpdateState={(nextState) => {
+              if (nextState.userAccount?.googleId && !nextState.isDemoMode) {
+                saveUserState(nextState.userAccount.googleId, nextState);
+              }
+              setState(nextState);
+            }}
+            onNavigate={handleNavigate}
+            showToast={showToast}
+          />
         )}
       </main>
 
@@ -2036,17 +1948,9 @@ export function App() {
         isOpen={isProModalOpen}
         onClose={() => setIsProModalOpen(false)}
         onViewPricing={handleViewPricing}
-        onUpgradeToPro={() => handleOpenProSecretModal('Fonctionnalités avancées')}
+        onUpgradeToPro={() => handleSelectPlan('pro')}
         userEmail={state.userAccount?.email}
         userId={state.userAccount?.googleId}
-      />
-
-      {/* Secret Code Verification Modal for KONAN PRO */}
-      <SecretCodeModal
-        isOpen={isSecretCodeModalOpen}
-        onClose={() => setIsSecretCodeModalOpen(false)}
-        onSuccess={handleSecretCodeSuccess}
-        featureTitle={secretCodeTargetFeature}
       />
 
       {/* Modale Waitlist d'accès verrouillé (Wave & Orange Money) */}

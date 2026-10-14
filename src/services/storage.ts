@@ -3,7 +3,6 @@ import { ACADEMIC_PRESETS, DEFAULT_PREFERENCES } from '../lib/presets';
 import { generateId, isNonAcademicSubject } from '../lib/utils';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
 import { generateKonanId } from '../lib/konanId';
-import { isProSecretUnlocked } from './secretCodeService';
 
 const LEGACY_STORAGE_KEY = 'konan_ai_academic_state_v1';
 const USER_STORAGE_PREFIX = 'konan_ai_user_';
@@ -201,8 +200,8 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           ? parsed.konanId.trim().toUpperCase()
           : (parsed.userAccount?.konanId?.trim()?.toUpperCase() || assignedKonanId);
 
-        // Palier actif : Supporte le palier PRO uniquement si le code secret EXAM2026 est validé.
-        const isProTier = isProSecretUnlocked() && (parsed.planTier === 'pro' || parsed.userAccount?.planTier === 'pro') && parsed.planTier !== 'plus';
+        // Palier actif : Supporte le palier PRO librement
+        const isProTier = (parsed.planTier === 'pro' || parsed.userAccount?.planTier === 'pro') && parsed.planTier !== 'plus';
         const resolvedPlanTier: PlanTier = isProTier ? 'pro' : 'free';
 
         const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
@@ -337,7 +336,7 @@ import {
  * so all devices (PC, mobile, tablet) share the exact same timetable and subjects.
  */
 export function saveUserState(uid: string, state: AppState): void {
-  const targetTier: PlanTier = (isProSecretUnlocked() && (state.planTier === 'pro' || state.userAccount?.planTier === 'pro')) ? 'pro' : 'free';
+  const targetTier: PlanTier = (state.planTier === 'pro' || state.userAccount?.planTier === 'pro') ? 'pro' : 'free';
   const sanitizedState: AppState = {
     ...state,
     planTier: targetTier,
@@ -454,7 +453,7 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
           return sess;
         });
 
-      const resolvedMergedTier: PlanTier = (isProSecretUnlocked() && (cloudData.planTier === 'pro' || currentState.planTier === 'pro' || currentState.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'pro')) ? 'pro' : 'free';
+      const resolvedMergedTier: PlanTier = (cloudData.planTier === 'pro' || currentState.planTier === 'pro' || currentState.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'pro') ? 'pro' : 'free';
 
       // If study sessions are empty on cloud, generate them from the subjects and slots
       if ((!mergedStudySessions || mergedStudySessions.length === 0) && mergedSubjects.length > 0) {
@@ -519,7 +518,7 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
 
     // Case 3: Cloud has profile meta
     if (cloudData && (cloudData.studentName || cloudData.academicLevel || cloudData.planTier)) {
-      const resolvedCloudTier: PlanTier = (isProSecretUnlocked() && (cloudData.planTier === 'pro' || currentState.planTier === 'pro' || currentState.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'pro')) ? 'pro' : 'free';
+      const resolvedCloudTier: PlanTier = (cloudData.planTier === 'pro' || currentState.planTier === 'pro' || currentState.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'pro') ? 'pro' : 'free';
       const merged: AppState = {
         ...currentState,
         studentName: cloudData.studentName || currentState.studentName,
@@ -564,7 +563,7 @@ export function loadDemoState(): AppState {
       const parsed = JSON.parse(raw);
       if (parsed && parsed.subjects && parsed.subjects.length > 0) {
         const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
-        const isDemoPro = isProSecretUnlocked() && (parsed.planTier === 'pro' || parsed.userAccount?.planTier === 'pro');
+        const isDemoPro = (parsed.planTier === 'pro' || parsed.userAccount?.planTier === 'pro');
         const demoTier: PlanTier = isDemoPro ? 'pro' : 'free';
         const demoPreferences = parsed.preferences ? { ...parsed.preferences } : undefined;
         if (!isDemoPro && demoPreferences && (demoPreferences.pacing === 'feynman' || demoPreferences.pacing === 'time_blocking')) {
@@ -774,7 +773,7 @@ export function importStateFromJson(jsonString: string): AppState | null {
       academicLevel: typeof parsed.academicLevel === 'string' && parsed.academicLevel.trim().length > 0
         ? parsed.academicLevel.trim().slice(0, 60)
         : defaultState.academicLevel,
-      planTier: (isProSecretUnlocked() && parsed.planTier === 'pro') ? 'pro' : 'free',
+      planTier: (parsed.planTier === 'pro') ? 'pro' : 'free',
       konanId: typeof parsed.konanId === 'string' && /^KN-[A-Z0-9]{4,10}$/i.test(parsed.konanId.trim())
         ? parsed.konanId.trim().toUpperCase()
         : defaultState.konanId,
@@ -808,7 +807,7 @@ export function generateSyncCode(state: AppState): string {
       t: new Date().toISOString(),
       studentName: state.studentName,
       academicLevel: state.academicLevel,
-      planTier: (isProSecretUnlocked() && (state.planTier === 'pro' || state.userAccount?.planTier === 'pro')) ? 'pro' : 'free',
+      planTier: (state.planTier === 'pro' || state.userAccount?.planTier === 'pro') ? 'pro' : 'free',
       subjects: state.subjects || [],
       classSlots: state.classSlots || [],
       preferences: state.preferences || DEFAULT_PREFERENCES,

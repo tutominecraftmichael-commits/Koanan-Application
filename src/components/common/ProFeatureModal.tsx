@@ -69,8 +69,8 @@ export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
             <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 border border-amber-300">
               PRO
             </span>
-            <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
-              Code Secret Requis
+            <span className="text-[11px] font-semibold text-slate-500">
+              Accès Découverte Offert
             </span>
           </div>
 
@@ -79,22 +79,22 @@ export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
           </h3>
 
           <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            {featureDescription || "Cette fonctionnalité avancée fait partie intégrante de KONAN PRO. Entrez le code secret pour activer votre accès et calibrer votre emploi du temps."}
+            {featureDescription || "Cette fonctionnalité avancée fait partie intégrante de Konan Pro. Profitez de l'accès complet offert pour reconfigurer votre emploi du temps et synchroniser vos rappels d'étude."}
           </p>
         </div>
 
         {/* Avantages clés */}
         <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80 space-y-2 text-xs">
           <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-            <Check className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
+            <Check className="w-3.5 h-3.5 text-slate-900 dark:text-white shrink-0" />
             <span>Méthodes exclusives (Feynman, Time Blocking, Multi-méthodes)</span>
           </div>
           <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-            <Check className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
+            <Check className="w-3.5 h-3.5 text-slate-900 dark:text-white shrink-0" />
             <span>Surpondération automatique des devoirs et examens</span>
           </div>
           <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-            <Check className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
+            <Check className="w-3.5 h-3.5 text-slate-900 dark:text-white shrink-0" />
             <span>Export et rappels automatiques Google Agenda</span>
           </div>
         </div>
@@ -117,9 +117,9 @@ export const ProFeatureModal: React.FC<ProFeatureModalProps> = ({
               if (onUpgradeToPro) onUpgradeToPro();
             }}
             rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-            className="w-full sm:flex-1 text-xs font-bold py-2.5 order-1 sm:order-2 shadow-md bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 hover:brightness-105 border-amber-300"
+            className="w-full sm:flex-1 text-xs font-bold py-2.5 order-1 sm:order-2 shadow-md"
           >
-            Débloquer avec le Code Secret
+            Configurer avec Konan Pro
           </Button>
         </div>
       </div>

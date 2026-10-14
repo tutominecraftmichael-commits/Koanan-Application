@@ -798,10 +798,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                           }
                         }}
                         className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-50 text-amber-900 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                        title="Passer à KONAN PRO (Code Secret)"
+                        title="Passer à KONAN PRO (Offre Découverte Offerte)"
                       >
                         <span className="font-black text-[8px] bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 px-1.5 py-0.2 rounded-xs border border-amber-300 shadow-xs">PRO</span>
-                        <span className="font-extrabold text-amber-700 dark:text-amber-300">Code Secret</span>
+                        <span className="font-extrabold text-amber-700 dark:text-amber-300">Offert</span>
                       </button>
                     )}
                   </div>
