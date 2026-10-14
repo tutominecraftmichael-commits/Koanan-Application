@@ -373,7 +373,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
                 {currentPlan === 'pro'
                   ? 'Toutes les méthodes cognitives avancées (Feynman, Time Blocking), la réorganisation d’emploi du temps et les rappels sonores (.ics + Google Agenda) sont pleinement activés.'
-                  : 'Accès au planning de base, méthode Pomodoro et Active Recall. L’offre de découverte KONAN PRO est actuellement offerte.'}
+                  : 'Accès au planning de base, méthode Pomodoro et Active Recall. L’accès complet à KONAN PRO requiert le code secret exclusif.'}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                 <button
@@ -390,7 +390,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   }`}
                 >
                   <Zap className="w-3.5 h-3.5" />
-                  <span>{currentPlan === 'pro' ? 'Reconfigurer Konan Pro' : 'Passer à KONAN PRO (Offert)'}</span>
+                  <span>{currentPlan === 'pro' ? 'Reconfigurer Konan Pro' : 'Passer à KONAN PRO (Code Secret)'}</span>
                 </button>
                 <button
                   type="button"
