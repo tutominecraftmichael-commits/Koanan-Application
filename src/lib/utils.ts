@@ -94,33 +94,23 @@ export function formatNotificationTime(isoString?: string): string {
 }
 
 /**
- * Détermine si un intitulé correspond à une activité non académique
- * (Sport/EPS, créneaux de devoirs/rattrapage, pauses, permanence, etc.)
- * qui ne doit JAMAIS faire l'objet de séances de révision ou de rattrapage d'étude.
+ * Détermine si un intitulé correspond à une pause ou interruption non académique
+ * (Pause déjeuner, récréation, repas, interclasse, midi, etc.) qui ne doit pas constituer une matière.
+ * Les vraies matières ou créneaux d'étude (cours, TP, TD, devoirs, rattrapage, EPS) sont TOUS préservés.
  */
 export function isNonAcademicSubject(name?: string): boolean {
   if (!name) return false;
   const n = name.toLowerCase().trim();
   return (
-    n.includes('sport') ||
-    n.includes('physique & sportive') ||
-    n.includes('physique et sportive') ||
-    n.includes('activités physiques') ||
-    n.includes('activites physiques') ||
-    n.includes('education physique') ||
-    n.includes('éducation physique') ||
-    /\beps\b/i.test(n) ||
-    n.includes('(eps)') ||
-    n.includes('gym') ||
-    n.includes('rattrapage') ||
-    n.includes('devoir surveill') ||
-    n.includes('devoirs surveillés') ||
-    n.includes('permanence') ||
-    n.includes('pause') ||
-    n.includes('devoirs et cours') ||
-    n.includes('devoirs et de rattrapage') ||
-    n.includes('tutorat') ||
-    n.includes('vie de classe') ||
-    n.includes('heure de vie')
+    n === 'pause' ||
+    n === 'repas' ||
+    n === 'midi' ||
+    n === 'interclasse' ||
+    n.includes('pause déjeuner') ||
+    n.includes('pause dejeuner') ||
+    n.includes('pause midi') ||
+    n.includes('récréation') ||
+    n.includes('recreation')
   );
 }
+

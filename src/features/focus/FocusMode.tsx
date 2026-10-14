@@ -118,13 +118,18 @@ export const FocusMode: React.FC<FocusModeProps> = ({
   };
 
   const handleSaveAndExit = () => {
-    const elapsedMinutes = Math.max(1, Math.round((totalSeconds - secondsRemaining) / 60));
+    // Si la session est validée, elle crédite au moins la durée nominale de la séance (ex: 45 min, 1h30, etc.)
+    const plannedMins = session?.durationMinutes || 45;
+    const elapsedMinutes = Math.round((totalSeconds - secondsRemaining) / 60);
+    // Un élève ne valide pas une matière en 1 min : valider une séance lui crédite sa vraie durée d'étude prévue
+    const effectiveDuration = isFinished ? plannedMins : Math.max(plannedMins, elapsedMinutes);
+
     const newLog: StudyLog = {
       id: generateId(),
       sessionId: session?.id,
       subjectId: currentSubject?.id || '',
       date: new Date().toISOString().split('T')[0],
-      durationMinutes: elapsedMinutes,
+      durationMinutes: effectiveDuration,
       satisfactionRating,
       summary: reflectionNotes || `Session terminée sur ${session?.title || currentSubject?.name}`,
       createdAt: new Date().toISOString(),

@@ -1921,9 +1921,9 @@ export function parseTimetableText(
   // Re-run harmonization AFTER canonicalizing subjects to merge contiguous blocks (e.g. 2h blocks)
   detectedSlots = harmonizeAndDeduplicateSlots(detectedSlots);
 
-  // RÈGLE STRICTE : Exclure toute activité non révisable (EPS, sport, devoirs, permanence) des matières académiques
+  // Extraire la liste exhaustive de toutes les matières détectées
   const uniqueSubjectNames = Array.from(new Set(detectedSlots.map(s => s.rawSubject)))
-    .filter(name => !isNonAcademicSubject(name));
+    .filter(name => name && name.trim().length > 0 && !isNonAcademicSubject(name));
 
   // 5. Intelligent Subject Weighting & Disciplinary Topics Calibration
   const subjects: ExtractedSubjectCandidate[] = uniqueSubjectNames.map((name, index) => {
@@ -1995,13 +1995,15 @@ export function parseTimetableText(
     };
   });
 
-  // 6. Map slots to subject IDs
+  // 6. Map slots to subject IDs avec garantie de conservation du vrai intitulé de la matière
   const rawSlots: ExtractedClassCandidate[] = detectedSlots.map(s => {
-    const matchedSubject = subjects.find(sub => sub.name === s.rawSubject) || subjects[0];
+    const matchedSubject = subjects.find(sub => sub.name.toLowerCase().trim() === s.rawSubject.toLowerCase().trim()) || subjects.find(sub => sub.name === s.rawSubject);
+    const subjectId = matchedSubject ? matchedSubject.id : generateId();
+    const subjectName = matchedSubject ? matchedSubject.name : s.rawSubject;
     return {
       id: generateId(),
-      subjectId: matchedSubject.id,
-      subjectName: matchedSubject.name,
+      subjectId,
+      subjectName,
       dayOfWeek: s.dayOfWeek,
       startTime: s.startTime,
       endTime: s.endTime,
@@ -2180,11 +2182,13 @@ export function loadDemoPdfTemplate(templateId: string): ExtractedPdfSchedule {
   }));
 
   const rawSlots: ExtractedClassCandidate[] = template.slots.map(s => {
-    const matchingSubject = subjects.find(sub => sub.name === s.subjectName) || subjects[0];
+    const matchingSubject = subjects.find(sub => sub.name.toLowerCase().trim() === s.subjectName.toLowerCase().trim()) || subjects.find(sub => sub.name === s.subjectName);
+    const subjectId = matchingSubject ? matchingSubject.id : generateId();
+    const subjectName = matchingSubject ? matchingSubject.name : s.subjectName;
     return {
       id: generateId(),
-      subjectId: matchingSubject.id,
-      subjectName: matchingSubject.name,
+      subjectId,
+      subjectName,
       dayOfWeek: s.dayOfWeek,
       startTime: s.startTime,
       endTime: s.endTime,

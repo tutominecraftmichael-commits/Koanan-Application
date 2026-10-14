@@ -127,12 +127,8 @@ export function transitionUserState(
       // Filtrage chirurgical des sessions existantes
       nextState.studySessions = (currentState.studySessions || [])
         .filter((session: StudySession) => {
-          // Tout devoir ou examen à préparer s'en va
+          // Tout devoir ou examen intensif Pro s'en va
           if (session.isExamPrep || session.type === 'exam_simulation') return false;
-          const lowerTitle = (session.title || '').toLowerCase();
-          if (lowerTitle.includes('devoir') || lowerTitle.includes('examen') || lowerTitle.includes('épreuve') || lowerTitle.includes('rattrapage')) {
-            return false;
-          }
           return true;
         })
         .map((session: StudySession) => {

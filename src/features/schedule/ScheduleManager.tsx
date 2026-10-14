@@ -389,7 +389,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
 
       // 2. Map ExtractedClassCandidate to ClassSlot, keeping accurate subject reference
       const newParsedSlots: ClassSlot[] = parsed.slots.map(s => {
-        const matchingSub = updatedSubjects.find(sub => sub.name.toLowerCase() === s.subjectName.toLowerCase()) || updatedSubjects[0];
+        const matchingSub = updatedSubjects.find(sub => sub.name.toLowerCase().trim() === s.subjectName.toLowerCase().trim());
         return {
           id: s.id,
           subjectId: matchingSub ? matchingSub.id : s.subjectId,
@@ -1098,7 +1098,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                       }
 
                       const newSlots: ClassSlot[] = parsed.slots.map(s => {
-                        const matchedSub = updatedSubjects.find(sub => sub.name.toLowerCase() === s.subjectName.toLowerCase()) || updatedSubjects[0];
+                        const matchedSub = updatedSubjects.find(sub => sub.name.toLowerCase().trim() === s.subjectName.toLowerCase().trim());
                         return {
                           id: s.id,
                           subjectId: matchedSub ? matchedSub.id : s.subjectId,

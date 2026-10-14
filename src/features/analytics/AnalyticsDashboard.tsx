@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { useLanguage, t } from '../../lib/i18n';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
-import { WeeklyEvolutionChart } from './WeeklyEvolutionChart';
 
 export interface AnalyticsDashboardProps {
   subjects: Subject[];
@@ -37,16 +36,22 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     const subCompleted = subSessions.filter(s => s.completed);
     const plannedMins = subSessions.reduce((acc, s) => acc + s.durationMinutes, 0);
 
-    // 1. Durée réelle des séances validées (log réel > actualDurationMinutes > durationMinutes)
+    // 1. Durée réelle des séances validées (la validation crédite sa durée nominale ou réelle si >= 15 min)
     const sessionCompletedMins = subCompleted.reduce((acc, s) => {
       const matchingLog = logs.find(l => l.sessionId === s.id);
-      const duration = matchingLog?.durationMinutes ?? s.actualDurationMinutes ?? s.durationMinutes;
+      let duration = s.durationMinutes;
+      if (matchingLog && matchingLog.durationMinutes >= 15) {
+        duration = matchingLog.durationMinutes;
+      } else if (s.actualDurationMinutes && s.actualDurationMinutes >= 15) {
+        duration = s.actualDurationMinutes;
+      }
       return acc + duration;
     }, 0);
 
-    // 2. Logs d'étude autonomes sans séance rattachée
+    // 2. Logs d'étude autonomes sans séance rattachée (ignorer clics parasites < 15 min)
     const standaloneLogsMins = logs
       .filter(l => l.subjectId === sub.id && (!l.sessionId || !subSessions.some(s => s.id === l.sessionId)))
+      .filter(l => l.durationMinutes >= 15)
       .reduce((acc, l) => acc + l.durationMinutes, 0);
 
     const doneMins = sessionCompletedMins + standaloneLogsMins;
@@ -171,8 +176,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
       </div>
 
-      {/* GRAPHE D'ÉVOLUTION HEBDOMADAIRE (DUOLINGO STYLE : LUNDI -> DIMANCHE) */}
-      <WeeklyEvolutionChart studySessions={studySessions} subjects={subjects} />
 
       {/* TEMPS PASSÉ PAR MATIÈRE */}
       <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-xs">
@@ -198,9 +201,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 <div className="font-mono text-slate-600 dark:text-slate-300 text-[11px] shrink-0 flex items-center gap-1.5">
                   <span className="text-cyan-700 dark:text-cyan-400 font-bold">{formatMinutesToHours(doneMins)}</span>
                   <span className="text-slate-400 dark:text-slate-500"> / {formatMinutesToHours(plannedMins)}</span>
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/60 dark:border-slate-700/60">
-                    {progress}%
-                  </span>
                 </div>
               </div>
 

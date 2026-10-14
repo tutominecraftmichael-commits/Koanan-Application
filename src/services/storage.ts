@@ -234,10 +234,6 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
             if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
             if (!isProTier) {
               if (sess.isExamPrep || sess.type === 'exam_simulation') return false;
-              const lowerTitle = (sess.title || '').toLowerCase();
-              if (lowerTitle.includes('devoir') || lowerTitle.includes('examen') || lowerTitle.includes('épreuve') || lowerTitle.includes('rattrapage')) {
-                return false;
-              }
             }
             return true;
           })
@@ -436,10 +432,6 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
           if (isNonAcademicSubject(sess.title)) return false;
           if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
           if (sess.isExamPrep || sess.type === 'exam_simulation') return false;
-          const lowerTitle = (sess.title || '').toLowerCase();
-          if (lowerTitle.includes('devoir') || lowerTitle.includes('examen') || lowerTitle.includes('épreuve') || lowerTitle.includes('rattrapage')) {
-            return false;
-          }
           return true;
         })
         .map((sess: StudySession) => {
