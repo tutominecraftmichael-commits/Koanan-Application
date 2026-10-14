@@ -55,7 +55,7 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity animate-in fade-in"
@@ -71,24 +71,24 @@ export const Modal: React.FC<ModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-6 border-b border-slate-200 dark:border-slate-800/80">
+        <div className="flex items-start justify-between p-3.5 sm:p-6 border-b border-slate-200 dark:border-slate-800/80">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">{title}</h2>
-            {description && <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{description}</p>}
+            <h2 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">{title}</h2>
+            {description && <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5 sm:mt-1">{description}</p>}
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
             aria-label="Fermer la boîte de dialogue"
-            className="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white -mr-2 -mt-2"
+            className="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white -mr-1.5 -mt-1.5 sm:-mr-2 sm:-mt-2"
           >
             <X className="w-5 h-5" />
           </Button>
         </div>
 
         {/* Content */}
-        <div className="p-6 max-h-[80vh] overflow-y-auto text-slate-800 dark:text-slate-200">
+        <div className="p-3 sm:p-6 max-h-[85vh] sm:max-h-[82vh] overflow-y-auto text-slate-800 dark:text-slate-200">
           {children}
         </div>
       </div>

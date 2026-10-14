@@ -28,7 +28,9 @@ import {
   Plus,
   Star,
   Brain,
-  Moon
+  Moon,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
@@ -82,6 +84,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
     }
     return [preferences.pacing || 'active_recall_spaced'];
   });
+  const [showRecDiagnostic, setShowRecDiagnostic] = useState(false);
   const [proModalInfo, setProModalInfo] = useState<{ title: string; desc: string } | null>(null);
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
   const [lang] = useLanguage();
@@ -645,8 +648,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         title="Méthodes d'Espacement & Stratégies d'Étude"
         maxWidth="16:9"
       >
-        <div className="space-y-4 text-slate-800 dark:text-slate-200">
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+        <div className="space-y-3 sm:space-y-4 text-slate-800 dark:text-slate-200">
+          <p className="hidden sm:block text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             Consultez les 5 méthodes d'espacement et stratégies de concentration intégrées. Cliquez sur une méthode pour lire son explication et l'appliquer à votre planning.
           </p>
 
@@ -654,10 +657,10 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
           {(() => {
             if (planTier === 'free') {
               return (
-                <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-between text-xs text-slate-600 dark:bg-slate-900/60 dark:border-slate-800/80 dark:text-slate-400">
+                <div className="p-2.5 sm:p-3 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-between text-xs text-slate-600 dark:bg-slate-900/60 dark:border-slate-800/80 dark:text-slate-400">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
-                    <span>Les recommandations personnalisées selon votre emploi du temps sont réservées à <strong>KONAN PRO</strong>.</span>
+                    <span className="line-clamp-1 sm:line-clamp-none">Les recommandations personnalisées sont réservées à <strong>KONAN PRO</strong>.</span>
                   </div>
                   <button
                     type="button"
@@ -677,68 +680,156 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             const isRecActive = selectedCombinedPacings.length === targetPacings.length &&
               targetPacings.every(id => selectedCombinedPacings.includes(id));
             return (
-              <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/50 to-indigo-50/90 border border-indigo-200 flex flex-col sm:flex-row sm:items-start justify-between gap-3.5 shadow-sm text-xs dark:bg-gradient-to-r dark:from-indigo-950/60 dark:via-slate-900 dark:to-indigo-950/40 dark:border-indigo-500/40 dark:shadow-md">
-                <div className="flex items-start gap-3 min-w-0 flex-1">
-                  <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-cyan-300 shrink-0 mt-0.5">
-                    <Sparkles className="w-4 h-4 text-indigo-600 dark:text-cyan-400" />
-                  </div>
-                  <div className="space-y-1.5 min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-bold text-slate-900 dark:text-white text-[11px] uppercase tracking-wide">
-                        Recommandation KONAN :
-                      </span>
-                      {targetPacings.map(id => (
-                        <span key={id} className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-cyan-300 dark:border-indigo-500/40">
-                          {getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
-                        </span>
-                      ))}
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
-                        {rec.contextTag}
-                      </span>
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/50 to-indigo-50/90 border border-indigo-200/90 shadow-sm text-xs dark:bg-gradient-to-r dark:from-indigo-950/60 dark:via-slate-900 dark:to-indigo-950/40 dark:border-indigo-500/40 dark:shadow-md">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                    <div className="p-1.5 sm:p-2 rounded-xl bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-cyan-300 shrink-0">
+                      <Sparkles className="w-4 h-4 text-indigo-600 dark:text-cyan-400" />
                     </div>
-                    <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed whitespace-pre-line">
-                      {rec.rationale}
-                    </p>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <span className="font-bold text-slate-900 dark:text-white text-[11px] uppercase tracking-wide shrink-0">
+                          Recommandation KONAN :
+                        </span>
+                        {targetPacings.map(id => (
+                          <span key={id} className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-cyan-300 dark:border-indigo-500/40">
+                            {getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
+                          </span>
+                        ))}
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 truncate max-w-[200px] sm:max-w-none">
+                          {rec.contextTag}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-indigo-200/60 dark:border-indigo-500/20">
+                    <button
+                      type="button"
+                      onClick={() => setShowRecDiagnostic(!showRecDiagnostic)}
+                      className="px-2.5 py-1 rounded-lg border border-indigo-200 hover:border-indigo-300 text-indigo-700 dark:border-indigo-500/40 dark:text-cyan-300 text-[10px] sm:text-[11px] font-semibold flex items-center gap-1 bg-white/70 dark:bg-slate-900/60 transition-all cursor-pointer"
+                    >
+                      <span>{showRecDiagnostic ? "Masquer le diagnostic" : "Voir le diagnostic"}</span>
+                      {showRecDiagnostic ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    </button>
+
+                    {isRecActive ? (
+                      <div className="px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-bold text-[11px] shrink-0 flex items-center gap-1">
+                        <Check className="w-3.5 h-3.5 text-emerald-500" />
+                        <span>Active</span>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedModalStrategy(rec.primaryId);
+                          setSelectedCombinedPacings(targetPacings);
+                          if (onUpdatePreferences) {
+                            onUpdatePreferences({
+                              ...preferences,
+                              pacing: rec.primaryId,
+                              combinedPacings: targetPacings,
+                              focusBlockDuration: getPacingStrategy(rec.primaryId).focusBlockDuration,
+                              breakBlockDuration: getPacingStrategy(rec.primaryId).breakBlockDuration,
+                            });
+                            onRegeneratePlan();
+                          }
+                        }}
+                        className="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] shrink-0 flex items-center gap-1 transition-all shadow-sm active:scale-95 cursor-pointer"
+                      >
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Appliquer</span>
+                      </button>
+                    )}
                   </div>
                 </div>
 
-                {isRecActive ? (
-                  <div className="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-bold text-xs shrink-0 flex items-center gap-1.5 self-start">
-                    <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>Recommandation active</span>
+                {showRecDiagnostic && (
+                  <div className="mt-2.5 pt-2.5 border-t border-indigo-200/80 dark:border-indigo-500/20 text-slate-600 dark:text-slate-300 text-xs leading-relaxed whitespace-pre-line animate-in fade-in duration-200 max-h-60 overflow-y-auto">
+                    {rec.rationale}
                   </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedModalStrategy(rec.primaryId);
-                      setSelectedCombinedPacings(targetPacings);
-                      if (onUpdatePreferences) {
-                        onUpdatePreferences({
-                          ...preferences,
-                          pacing: rec.primaryId,
-                          combinedPacings: targetPacings,
-                          focusBlockDuration: getPacingStrategy(rec.primaryId).focusBlockDuration,
-                          breakBlockDuration: getPacingStrategy(rec.primaryId).breakBlockDuration,
-                        });
-                        onRegeneratePlan();
-                      }
-                    }}
-                    className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shrink-0 flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer self-start"
-                  >
-                    <Check className="w-3.5 h-3.5" />
-                    <span>Appliquer la recommandation</span>
-                  </button>
                 )}
               </div>
             );
           })()}
 
-          {/* Disposition Widescreen 16:9 en deux colonnes (Sélecteur à gauche, Fiche détaillée à droite) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pt-1">
+          {/* SÉLECTEUR RAPIDE POUR MOBILE (lg:hidden) */}
+          <div className="lg:hidden space-y-2">
+            {planTier !== 'free' && (
+              <div className="p-2.5 rounded-xl bg-amber-50/70 border border-amber-300/80 flex items-center justify-between text-xs dark:bg-amber-500/10 dark:border-amber-500/30">
+                <div className="flex items-center gap-1.5 font-bold text-amber-900 dark:text-amber-300 text-[11px]">
+                  <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500 dark:fill-amber-400 shrink-0" />
+                  <span>Combinaison Triple : {selectedCombinedPacings.length} / 3</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {selectedCombinedPacings.map((id, idx) => (
+                    <span key={id} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300">
+                      #{idx + 1}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
-            {/* COLONNE GAUCHE (5/12) : SÉLECTION DES MÉTHODES */}
-            <div className="lg:col-span-5 space-y-3">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 -mx-1 px-1 no-scrollbar">
+              {PACING_STRATEGIES.map(s => {
+                const isCurrent = (selectedModalStrategy === s.id);
+                const isCombined = selectedCombinedPacings.includes(s.id);
+                const comboIndex = selectedCombinedPacings.indexOf(s.id) + 1;
+                const isLocked = s.planRequired === 'pro' && planTier === 'free';
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => {
+                      if (isLocked) {
+                        if (onUpgradeToPro) onUpgradeToPro();
+                        else setProModalInfo({ title: s.title, desc: `La méthode "${s.title}" fait partie de KONAN PRO.` });
+                        return;
+                      }
+                      setSelectedModalStrategy(s.id);
+                      if (planTier === 'free') {
+                        setSelectedCombinedPacings([s.id]);
+                      } else {
+                        setSelectedCombinedPacings(prev => {
+                          if (prev.includes(s.id)) {
+                            if (prev.length === 1) return prev;
+                            return prev.filter(id => id !== s.id);
+                          } else {
+                            if (prev.length >= 3) return [...prev.slice(0, 2), s.id];
+                            return [...prev, s.id];
+                          }
+                        });
+                      }
+                    }}
+                    className={`px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap shrink-0 flex items-center gap-1.5 transition-all border cursor-pointer ${
+                      isCurrent
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm ring-1 ring-indigo-400/50'
+                        : isCombined
+                          ? 'bg-amber-100 text-amber-900 border-amber-400 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40'
+                          : isLocked
+                            ? 'bg-slate-100 text-slate-500 border-slate-200 dark:bg-slate-900 dark:border-slate-800'
+                            : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800'
+                    }`}
+                  >
+                    <span>{s.number}. {s.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
+                    {isCombined && (
+                      <span className="text-[9px] font-black px-1 rounded-full bg-amber-400 text-slate-950">
+                        #{comboIndex}
+                      </span>
+                    )}
+                    {isLocked && <span className="text-[9px] text-amber-500">⭐</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Disposition Widescreen 16:9 en deux colonnes (Sélecteur à gauche, Fiche détaillée à droite) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 items-start pt-1">
+
+            {/* COLONNE GAUCHE (5/12) : SÉLECTION DES MÉTHODES (DESKTOP UNIQUEMENT) */}
+            <div className="hidden lg:block lg:col-span-5 space-y-3">
               {/* Contextual Triple Pacing Combination Banner - RESERVED TO PRO / PLUS */}
               {planTier !== 'free' && (
                 <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-sky-50 border border-amber-300/80 flex flex-col gap-2 text-xs shadow-sm dark:bg-gradient-to-r dark:from-amber-500/15 dark:via-slate-900 dark:to-sky-500/15 dark:border-amber-500/40 dark:shadow-md">
