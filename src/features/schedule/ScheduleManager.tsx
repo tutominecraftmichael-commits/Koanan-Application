@@ -1163,19 +1163,19 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         </div>
       </Modal>
 
-      {/* STRATEGY & PACING METHODS EXPLANATION MODAL */}
+      {/* STRATEGY & PACING METHODS EXPLANATION MODAL (FORMAT 16:9 PANORAMIQUE & ERGONOMIQUE) */}
       <Modal
         isOpen={isStrategyModalOpen}
         onClose={() => setIsStrategyModalOpen(false)}
         title="Méthodes d'Espacement & Stratégies d'Étude"
-        maxWidth="lg"
+        maxWidth="16:9"
       >
         <div className="space-y-4 text-slate-800 dark:text-slate-200">
           <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             Découvrez chaque méthode d'espacement et son fonctionnement neuroscientifique. Cliquez sur une méthode pour lire son explication détaillée et l'appliquer à vos séances d'étude.
           </p>
 
-          {/* AI Recommendation Context Box - RESERVED TO PRO / PLUS */}
+          {/* AI / KONAN Recommendation Context Box - RESERVED TO PRO / PLUS */}
           {(() => {
             if (planTier === 'free') {
               return (
@@ -1257,236 +1257,245 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             );
           })()}
 
-          {/* Contextual Triple Pacing Combination Banner - RESERVED TO PRO / PLUS */}
-          {planTier !== 'free' && (
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-sky-50 border border-amber-300/80 flex flex-col gap-2.5 text-xs shadow-sm dark:bg-gradient-to-r dark:from-amber-500/15 dark:via-slate-900 dark:to-sky-500/15 dark:border-amber-500/40 dark:shadow-md">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                <div className="flex items-center gap-1.5 font-black text-amber-900 dark:text-amber-300 uppercase tracking-wide text-[11px]">
-                  <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400 shrink-0" />
-                  <span>Combinaison Triple KONAN PRO : {selectedCombinedPacings.length} / 3 sélectionnées</span>
+          {/* Disposition Widescreen 16:9 en deux colonnes (Sélecteur à gauche, Fiche détaillée à droite) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pt-1">
+
+            {/* COLONNE GAUCHE (5/12) : SÉLECTION DES MÉTHODES */}
+            <div className="lg:col-span-5 space-y-3">
+              {/* Contextual Triple Pacing Combination Banner - RESERVED TO PRO / PLUS */}
+              {planTier !== 'free' && (
+                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-sky-50 border border-amber-300/80 flex flex-col gap-2 text-xs shadow-sm dark:bg-gradient-to-r dark:from-amber-500/15 dark:via-slate-900 dark:to-sky-500/15 dark:border-amber-500/40 dark:shadow-md">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                    <div className="flex items-center gap-1.5 font-black text-amber-900 dark:text-amber-300 uppercase tracking-wide text-[11px]">
+                      <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400 shrink-0" />
+                      <span>Combinaison Triple : {selectedCombinedPacings.length} / 3</span>
+                    </div>
+                    <span className="text-[10px] text-amber-700 dark:text-amber-400/80 font-mono font-medium">Alternance auto</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Activez jusqu'à 3 méthodes ci-dessous. Vos révisions alterneront automatiquement.
+                  </p>
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1.5 border-t border-amber-200 dark:border-amber-500/20">
+                    {selectedCombinedPacings.map((id, idx) => {
+                      const p = getPacingStrategy(id);
+                      return (
+                        <span key={id} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1 max-w-full dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
+                          <span className="font-mono text-amber-700 dark:text-amber-400 shrink-0">#{idx + 1}</span>
+                          <span className="truncate">{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
-                <span className="text-[10px] text-amber-700 dark:text-amber-400/80 font-mono font-medium">Alternance automatique</span>
-              </div>
-              <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                Sélectionnez 1, 2 ou 3 méthodes ci-dessous. Vos séances de révision alterneront automatiquement selon la difficulté et vos créneaux.
-              </p>
-              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-amber-200 dark:border-amber-500/20">
-                {selectedCombinedPacings.map((id, idx) => {
-                  const p = getPacingStrategy(id);
-                  return (
-                    <span key={id} className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1 max-w-full dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
-                      <span className="font-mono text-amber-700 dark:text-amber-400 shrink-0">#{idx + 1}</span>
-                      <span className="truncate">{p.title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}</span>
-                    </span>
-                  );
-                })}
+              )}
+
+              {/* Strategy Selector Vertical Stack */}
+              <div className="flex flex-col gap-2">
+                {(() => {
+                  const rec = recommendPacingStrategies(subjects.length, classSlots);
+                  return PACING_STRATEGIES.map(s => {
+                    const isCurrent = (selectedModalStrategy === s.id);
+                    const isCombined = selectedCombinedPacings.includes(s.id);
+                    const comboIndex = selectedCombinedPacings.indexOf(s.id) + 1;
+                    const isActiveInPrefs = (preferences.pacing === s.id);
+                    const isPrimaryRec = planTier !== 'free' && (rec.primaryId === s.id);
+                    const isRecommended = planTier !== 'free' && rec.recommendedIds.includes(s.id);
+                    const isNotRecommended = planTier !== 'free' && rec.notRecommendedIds?.includes(s.id);
+                    const isProMethod = s.planRequired === 'pro';
+                    const isLocked = isProMethod && planTier === 'free';
+
+                    return (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => {
+                          if (isLocked) {
+                            if (onUpgradeToPro) {
+                              onUpgradeToPro();
+                            } else {
+                              setProModalInfo({
+                                title: `${s.title}`,
+                                desc: `La méthode "${s.title}" (${s.tagline}) fait partie intégrante du modèle KONAN PRO. Activez l'accès découverte offert pour reconfigurer votre emploi du temps.`
+                              });
+                            }
+                            return;
+                          }
+                          setSelectedModalStrategy(s.id);
+                          if (planTier === 'free') {
+                            setSelectedCombinedPacings([s.id]);
+                          } else {
+                            setSelectedCombinedPacings(prev => {
+                              if (prev.includes(s.id)) {
+                                if (prev.length === 1) return prev; // Au moins 1 méthode
+                                return prev.filter(id => id !== s.id);
+                              } else {
+                                if (prev.length >= 3) {
+                                  return [...prev.slice(0, 2), s.id];
+                                }
+                                return [...prev, s.id];
+                              }
+                            });
+                          }
+                        }}
+                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer relative ${
+                          isCombined
+                            ? 'bg-amber-50/80 border-amber-500 ring-2 ring-amber-400/40 shadow-sm dark:bg-slate-900 dark:border-amber-400 dark:ring-1 dark:ring-amber-400/50 dark:shadow-md'
+                            : isCurrent
+                              ? 'bg-indigo-50/80 border-indigo-500 ring-2 ring-indigo-400/40 shadow-sm dark:bg-slate-900 dark:border-cyan-400 dark:ring-1 dark:ring-cyan-400/50 dark:shadow-md'
+                              : isLocked
+                                ? 'bg-slate-100/70 border-slate-200 text-slate-500 hover:border-amber-400/60 dark:bg-slate-950/40 dark:border-slate-800/80 dark:text-slate-400 dark:hover:border-amber-500/40'
+                                : isPrimaryRec
+                                  ? 'bg-amber-50/40 border-amber-300/80 text-slate-700 hover:border-amber-500 dark:bg-slate-950/80 dark:border-amber-500/40 dark:text-slate-300 dark:hover:border-amber-400'
+                                  : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:text-slate-900 dark:bg-slate-950/60 dark:border-slate-800 dark:text-slate-400 dark:hover:border-slate-700 dark:hover:text-white'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-1 mb-1">
+                          <span className={`text-xs font-bold ${isCombined ? 'text-amber-900 dark:text-amber-300' : isCurrent ? 'text-indigo-900 dark:text-cyan-300' : 'text-slate-800 dark:text-slate-200'}`}>
+                            {s.number}. {s.title}
+                          </span>
+                          <div className="flex items-center gap-1 shrink-0">
+                            {isCombined && (
+                              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
+                                ✓ #{comboIndex}
+                              </span>
+                            )}
+                            {isLocked && (
+                              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
+                                ⭐ PRO
+                              </span>
+                            )}
+                            {isPrimaryRec && !isCombined && (
+                              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-0.5 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
+                                <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400" /> Idéal
+                              </span>
+                            )}
+                            {!isPrimaryRec && isRecommended && !isCombined && (
+                              <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/40">
+                                Conseillé
+                              </span>
+                            )}
+                            {isNotRecommended && (
+                              <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-rose-50 text-rose-800 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/40">
+                                Déconseillé
+                              </span>
+                            )}
+                            {isActiveInPrefs && !isCombined && (
+                              <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30">
+                                Actif
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                          {s.shortSummary}
+                        </p>
+                      </button>
+                    );
+                  });
+                })()}
               </div>
             </div>
-          )}
 
-          {/* Strategy Selector Pills */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {(() => {
-              const rec = recommendPacingStrategies(subjects.length, classSlots);
-              return PACING_STRATEGIES.map(s => {
-                const isCurrent = (selectedModalStrategy === s.id);
-                const isCombined = selectedCombinedPacings.includes(s.id);
-                const comboIndex = selectedCombinedPacings.indexOf(s.id) + 1;
-                const isActiveInPrefs = (preferences.pacing === s.id);
-                const isPrimaryRec = planTier !== 'free' && (rec.primaryId === s.id);
-                const isRecommended = planTier !== 'free' && rec.recommendedIds.includes(s.id);
-                const isNotRecommended = planTier !== 'free' && rec.notRecommendedIds?.includes(s.id);
-                const isProMethod = s.planRequired === 'pro';
-                const isLocked = isProMethod && planTier === 'free';
+            {/* COLONNE DROITE (7/12) : FICHE STRATÉGIQUE DÉTAILLÉE (FORMAT 16:9 D'EXPLICATION) */}
+            <div className="lg:col-span-7">
+              {(() => {
+                const strat = getPacingStrategy(selectedModalStrategy);
+                const isIdeaLabel = strat.number <= 2;
 
                 return (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => {
-                      if (isLocked) {
-                        if (onUpgradeToPro) {
-                          onUpgradeToPro();
-                        } else {
-                          setProModalInfo({
-                            title: `${s.title}`,
-                            desc: `La méthode "${s.title}" (${s.tagline}) fait partie intégrante du modèle KONAN PRO. Activez l'accès découverte offert pour reconfigurer votre emploi du temps.`
-                          });
-                        }
-                        return;
-                      }
-                      setSelectedModalStrategy(s.id);
-                      if (planTier === 'free') {
-                        setSelectedCombinedPacings([s.id]);
-                      } else {
-                        setSelectedCombinedPacings(prev => {
-                          if (prev.includes(s.id)) {
-                            if (prev.length === 1) return prev; // Au moins 1 méthode
-                            return prev.filter(id => id !== s.id);
-                          } else {
-                            if (prev.length >= 3) {
-                              return [...prev.slice(0, 2), s.id];
-                            }
-                            return [...prev, s.id];
-                          }
-                        });
-                      }
-                    }}
-                    className={`p-3 rounded-xl border text-left transition-all cursor-pointer relative ${
-                      isCombined
-                        ? 'bg-amber-50/80 border-amber-500 ring-2 ring-amber-400/40 shadow-sm dark:bg-slate-900 dark:border-amber-400 dark:ring-1 dark:ring-amber-400/50 dark:shadow-md'
-                        : isCurrent
-                          ? 'bg-indigo-50/80 border-indigo-500 ring-2 ring-indigo-400/40 shadow-sm dark:bg-slate-900 dark:border-cyan-400 dark:ring-1 dark:ring-cyan-400/50 dark:shadow-md'
-                          : isLocked
-                            ? 'bg-slate-100/70 border-slate-200 text-slate-500 hover:border-amber-400/60 dark:bg-slate-950/40 dark:border-slate-800/80 dark:text-slate-400 dark:hover:border-amber-500/40'
-                            : isPrimaryRec
-                              ? 'bg-amber-50/40 border-amber-300/80 text-slate-700 hover:border-amber-500 dark:bg-slate-950/80 dark:border-amber-500/40 dark:text-slate-300 dark:hover:border-amber-400'
-                              : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:text-slate-900 dark:bg-slate-950/60 dark:border-slate-800 dark:text-slate-400 dark:hover:border-slate-700 dark:hover:text-white'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-1 mb-1">
-                      <span className={`text-xs font-bold ${isCombined ? 'text-amber-900 dark:text-amber-300' : isCurrent ? 'text-indigo-900 dark:text-cyan-300' : 'text-slate-800 dark:text-slate-200'}`}>
-                        {s.number}. {s.title}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-sky-50/40 to-slate-50 border border-indigo-200 space-y-3.5 shadow-sm dark:bg-gradient-to-br dark:from-slate-900/90 dark:via-indigo-950/40 dark:to-slate-950 dark:border-indigo-500/40 dark:shadow-xl">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-700 dark:bg-cyan-500/20 dark:border-cyan-400/40 dark:text-cyan-300 font-black text-sm shrink-0">
+                          {strat.number}
+                        </div>
+                        <div>
+                          <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">{strat.title}</h4>
+                          <p className="text-[11px] text-indigo-600 dark:text-indigo-300">{strat.tagline}</p>
+                        </div>
+                      </div>
+
+                      <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-indigo-700 dark:bg-slate-900 dark:border-slate-700 dark:text-cyan-300 w-fit shrink-0">
+                        {strat.badge}
                       </span>
-                      <div className="flex items-center gap-1">
-                        {isCombined && (
-                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
-                            ✓ Activée #{comboIndex}
-                          </span>
-                        )}
-                        {isLocked && (
-                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
-                            ⭐ PRO
-                          </span>
-                        )}
-                        {isPrimaryRec && !isCombined && (
-                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-0.5 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
-                            <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400" /> Idéal
-                          </span>
-                        )}
-                        {!isPrimaryRec && isRecommended && !isCombined && (
-                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/40">
-                            Conseillé
-                          </span>
-                        )}
-                        {isNotRecommended && (
-                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-rose-50 text-rose-800 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/40">
-                            Déconseillé
-                          </span>
-                        )}
-                        {isActiveInPrefs && !isCombined && (
-                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30">
-                            Actif
-                          </span>
-                        )}
+                    </div>
+
+                    <div className="space-y-2.5 text-xs">
+                      <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-sm flex items-start gap-2 dark:bg-slate-950/70 dark:border-slate-800">
+                        <span className="font-bold text-indigo-600 dark:text-cyan-400 uppercase tracking-wide shrink-0 text-[11px]">
+                          En bref :
+                        </span>
+                        <span className="font-semibold text-slate-800 dark:text-white leading-relaxed">{strat.shortSummary}</span>
+                      </div>
+
+                      <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-slate-200/90 text-slate-700 space-y-1.5 leading-relaxed shadow-sm dark:bg-slate-950/90 dark:border-slate-800 dark:text-slate-300">
+                        <span className="font-bold text-indigo-700 dark:text-indigo-300 block text-[11px] uppercase tracking-wider">
+                          {isIdeaLabel ? "L'idée :" : "L'explication :"}
+                        </span>
+                        <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-[13px] leading-relaxed">
+                          {strat.explanation}
+                        </p>
                       </div>
                     </div>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
-                      {s.shortSummary}
-                    </p>
-                  </button>
+
+                    <div className="p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-950 flex items-center gap-2.5 dark:bg-indigo-950/40 dark:border-indigo-500/20 dark:text-indigo-200">
+                      <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <span>
+                        <strong>Calibrage algorithmique :</strong> Blocs d'étude de <strong>{strat.focusBlockDuration} min</strong> avec pause de <strong>{strat.breakBlockDuration} min</strong> et objectifs ciblés.
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-200/80 dark:border-slate-800/80">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setIsStrategyModalOpen(false)}
+                        className="text-xs"
+                      >
+                        Fermer
+                      </Button>
+
+                      {strat.planRequired === 'pro' && planTier === 'free' ? (
+                        <Button
+                          variant="glow"
+                          size="sm"
+                          onClick={() => {
+                            setProModalInfo({
+                              title: `${strat.title}`,
+                              desc: `La méthode "${strat.title}" fait partie du modèle KONAN PRO. Passez à KONAN PRO pour synchroniser votre emploi du temps avec cette méthode avancée.`
+                            });
+                          }}
+                          className="text-xs font-bold cursor-pointer bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 border-amber-400"
+                        >
+                          ⭐ Débloquer avec KONAN PRO
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="glow"
+                          size="sm"
+                          onClick={() => {
+                            const primary = getPacingStrategy(selectedCombinedPacings[0] || selectedModalStrategy);
+                            onUpdatePreferences({
+                              ...preferences,
+                              pacing: primary.id,
+                              combinedPacings: selectedCombinedPacings.length > 0 ? selectedCombinedPacings : [primary.id],
+                              focusBlockDuration: primary.focusBlockDuration,
+                              breakBlockDuration: primary.breakBlockDuration,
+                            });
+                            onTriggerPlanner();
+                            setIsStrategyModalOpen(false);
+                          }}
+                          className="text-xs font-bold cursor-pointer"
+                        >
+                          Appliquer au planning ({selectedCombinedPacings.length} méthode{selectedCombinedPacings.length > 1 ? 's' : ''})
+                        </Button>
+                      )}
+                    </div>
+                  </div>
                 );
-              });
-            })()}
+              })()}
+            </div>
           </div>
-
-          {/* Detailed Explanation View of Selected Strategy */}
-          {(() => {
-            const strat = getPacingStrategy(selectedModalStrategy);
-            const isIdeaLabel = strat.number <= 2;
-
-            return (
-              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-sky-50/40 to-slate-50 border border-indigo-200 space-y-3.5 shadow-sm dark:bg-gradient-to-br dark:from-slate-900/90 dark:via-indigo-950/40 dark:to-slate-950 dark:border-indigo-500/40 dark:shadow-xl">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-700 dark:bg-cyan-500/20 dark:border-cyan-400/40 dark:text-cyan-300 font-black text-sm">
-                      {strat.number}
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-black text-slate-900 dark:text-white">{strat.title}</h4>
-                      <p className="text-[11px] text-indigo-600 dark:text-indigo-300">{strat.tagline}</p>
-                    </div>
-                  </div>
-
-                  <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-indigo-700 dark:bg-slate-900 dark:border-slate-700 dark:text-cyan-300 w-fit">
-                    {strat.badge}
-                  </span>
-                </div>
-
-                <div className="space-y-2 text-xs">
-                  <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-sm flex items-start gap-2 dark:bg-slate-950/70 dark:border-slate-800">
-                    <span className="font-bold text-indigo-600 dark:text-cyan-400 uppercase tracking-wide shrink-0 text-[11px]">
-                      En bref :
-                    </span>
-                    <span className="font-semibold text-slate-800 dark:text-white">{strat.shortSummary}</span>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-white border border-slate-200/90 text-slate-700 space-y-1.5 leading-relaxed shadow-sm dark:bg-slate-950/90 dark:border-slate-800 dark:text-slate-300">
-                    <span className="font-bold text-indigo-700 dark:text-indigo-300 block text-[11px] uppercase tracking-wider">
-                      {isIdeaLabel ? "L'idée :" : "L'explication :"}
-                    </span>
-                    <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-[13px] leading-relaxed">
-                      {strat.explanation}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-950 flex items-center gap-2.5 dark:bg-indigo-950/40 dark:border-indigo-500/20 dark:text-indigo-200">
-                  <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>
-                    <strong>Calibrage algorithmique :</strong> Blocs d'étude de <strong>{strat.focusBlockDuration} min</strong> avec pause de <strong>{strat.breakBlockDuration} min</strong> et objectifs ciblés.
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-end gap-2.5 pt-1">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => setIsStrategyModalOpen(false)}
-                    className="text-xs"
-                  >
-                    Fermer
-                  </Button>
-
-                  {strat.planRequired === 'pro' && planTier === 'free' ? (
-                    <Button
-                      variant="glow"
-                      size="sm"
-                      onClick={() => {
-                        setProModalInfo({
-                          title: `${strat.title}`,
-                          desc: `La méthode "${strat.title}" fait partie du modèle KONAN PRO. Passez à KONAN PRO pour synchroniser votre emploi du temps avec cette méthode avancée.`
-                        });
-                      }}
-                      className="text-xs font-bold cursor-pointer bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 border-amber-400"
-                    >
-                      ⭐ Débloquer avec KONAN PRO
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="glow"
-                      size="sm"
-                      onClick={() => {
-                        const primary = getPacingStrategy(selectedCombinedPacings[0] || selectedModalStrategy);
-                        onUpdatePreferences({
-                          ...preferences,
-                          pacing: primary.id,
-                          combinedPacings: selectedCombinedPacings.length > 0 ? selectedCombinedPacings : [primary.id],
-                          focusBlockDuration: primary.focusBlockDuration,
-                          breakBlockDuration: primary.breakBlockDuration,
-                        });
-                        onTriggerPlanner();
-                        setIsStrategyModalOpen(false);
-                      }}
-                      className="text-xs font-bold cursor-pointer"
-                    >
-                      Appliquer au planning ({selectedCombinedPacings.length} méthode{selectedCombinedPacings.length > 1 ? 's' : ''})
-                    </Button>
-                  )}
-                </div>
-              </div>
-            );
-          })()}
         </div>
       </Modal>
 
