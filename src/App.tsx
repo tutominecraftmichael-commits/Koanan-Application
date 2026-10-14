@@ -65,7 +65,7 @@ import { SuperProActivationModal } from './components/pro/SuperProActivationModa
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
 import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
 import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelectorModal';
-import { downloadStudyPlanICS } from './services/googleCalendarService';
+import { checkAndDispatchStudyReminders, getPhoneNotificationPermission, requestPhoneNotificationPermission } from './services/companionNotificationService';
 
 // Views
 import { LandingHero } from './features/landing/LandingHero';
@@ -78,6 +78,7 @@ import { PlannerView } from './features/planner/PlannerView';
 import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
 import { FocusMode } from './features/focus/FocusMode';
 import { PresetModal } from './features/onboarding/PresetModal';
+import { ProWizardView } from './features/pro/ProWizardView';
 
 export function App() {
   const { isLight } = useTheme();
@@ -214,20 +215,19 @@ export function App() {
     };
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
-  // Unified, resilient single source of truth for plan tier
-  // RÈGLE ABSOLUE & UNIVERSELLE : Mode PRO et Mode PLUS désactivés.
-  // TOUS les comptes sans aucune exception retombent à Gratuit ('free').
-  // Compte Pro désactivé et Plus aussi. Tout le monde devient Gratuit.
-  const effectivePlanTier = useMemo<PlanTier>(() => 'free', []);
+  // Source unique de vérité pour le palier actif (supporte le palier 'pro' offert et 'free')
+  const effectivePlanTier = useMemo<PlanTier>(() => {
+    return state.planTier || state.userAccount?.planTier || 'free';
+  }, [state.planTier, state.userAccount?.planTier]);
 
   // Unified display name
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
     ? state.userAccount.name
     : (state.studentName || 'Étudiant');
 
-  // Détection automatique et repli strict vers Gratuit si un compte local ou distant avait 'pro' ou 'plus'
+  // Repli vers Gratuit UNIQUEMENT pour les comptes qui tenteraient d'activer 'plus' (qui reste en liste d'attente)
   useEffect(() => {
-    if (state.planTier !== 'free' || state.userAccount?.planTier !== 'free' || state.isGroupGuest || state.userAccount?.isGroupGuest) {
+    if (state.planTier === 'plus' || state.userAccount?.planTier === 'plus' || state.isGroupGuest || state.userAccount?.isGroupGuest) {
       const { nextState } = transitionUserState(state, 'free');
       nextState.planTier = 'free';
       if (nextState.userAccount) {
@@ -380,18 +380,12 @@ export function App() {
    * Downloads the recurring .ics file and opens the interactive Google Agenda sync modal.
    */
   const triggerAutoGoogleCalendarSync = (
-    sessions: StudySession[],
-    subjects: Subject[],
-    studentName: string,
+    _sessions: StudySession[],
+    _subjects: Subject[],
+    _studentName: string,
     reason: 'pro_activated' | 'plan_applied'
   ) => {
-    if (sessions && sessions.length > 0) {
-      try {
-        downloadStudyPlanICS(sessions, subjects, studentName);
-      } catch (err) {
-        console.warn('ICS auto-download error:', err);
-      }
-    }
+    // Ne télécharge plus automatiquement le fichier .ics en douce : ouvre uniquement le modal interactif
     setGoogleCalendarReason(reason);
     setIsGoogleCalendarModalOpen(true);
     soundFX.playSuccessChime();
@@ -498,6 +492,32 @@ export function App() {
     };
   }, [state.studySessions.length, state.classSlots.length, activeView]);
 
+  // Notifications d'étude natives style Duolingo (Audio 4)
+  useEffect(() => {
+    const effectivePlan = state.userAccount?.planTier || 'free';
+    if (effectivePlan !== 'pro' && effectivePlan !== 'plus') return;
+    if (!state.studySessions || state.studySessions.length === 0) return;
+
+    // Demande polie de permission de notifications sur mobile/desktop si membre PRO
+    if (getPhoneNotificationPermission() === 'default') {
+      requestPhoneNotificationPermission().catch(() => {});
+    }
+
+    const checkReminders = () => {
+      checkAndDispatchStudyReminders(state.studySessions, state.subjects, effectivePlan);
+    };
+
+    checkReminders();
+    const interval = setInterval(checkReminders, 60000);
+    const handleFocus = () => checkReminders();
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [state.studySessions, state.subjects, state.userAccount?.planTier]);
+
   // Déconnexion et purge propre au démarrage de l'application
   useEffect(() => {
     // Purge toute session résiduelle : à l'entrée, l'utilisateur est un visiteur neutre non connecté
@@ -537,7 +557,7 @@ export function App() {
 
     const isAuth = state.userAccount?.isLoggedIn || state.isDemoMode;
 
-    if (!isAuth && view !== 'landing' && view !== 'auth') {
+    if (!isAuth && view !== 'landing' && view !== 'auth' && view !== 'pro-wizard') {
       showToast('🔒 Connexion requise : Veuillez vous connecter avec Google pour accéder à l’application.');
       setActiveView('auth');
       return;
@@ -591,16 +611,6 @@ export function App() {
       showToast(`✨ Bonne Arrivée ! ${finalName} — Votre Code Konan : ${studentKonanId}`);
     }
 
-    // Synchronisation automatique Google Agenda pour Pro / Plus
-    if ((effectivePlan === 'pro' || effectivePlan === 'plus') && userState.studySessions && userState.studySessions.length > 0) {
-      triggerAutoGoogleCalendarSync(
-        userState.studySessions,
-        userState.subjects,
-        finalName,
-        'pro_activated'
-      );
-    }
-
     // Célébration lors de la toute première connexion
     const firstLoginKey = `konan_welcomed_v1_${profile.googleId}`;
     const isFirstTimeLogin = !localStorage.getItem(firstLoginKey) && !userState.completedOnboarding;
@@ -623,14 +633,6 @@ export function App() {
         if (mergedFromCloud && (mergedFromCloud.subjects?.length > 0 || mergedFromCloud.completedOnboarding)) {
           saveUserState(profile.googleId, mergedFromCloud);
           setState(mergedFromCloud);
-          if ((effectivePlan === 'pro' || effectivePlan === 'plus') && (!userState.studySessions || userState.studySessions.length === 0) && mergedFromCloud.studySessions?.length > 0) {
-            triggerAutoGoogleCalendarSync(
-              mergedFromCloud.studySessions,
-              mergedFromCloud.subjects,
-              finalName,
-              'pro_activated'
-            );
-          }
         }
       })
       .catch(console.warn);
@@ -716,13 +718,19 @@ export function App() {
   const handleSelectPlan = (planId: 'free' | 'pro' | 'plus') => {
     setIsProModalOpen(false);
 
-    // RÈGLE ABSOLUE : Mode PRO et Mode PLUS désactivés.
-    if (planId === 'pro' || planId === 'plus') {
+    // Formule KONAN PRO : Accès direct au Wizard d'optimisation
+    if (planId === 'pro') {
+      setActiveView('pro-wizard');
+      return;
+    }
+
+    // Formule KONAN PLUS : Liste d'attente
+    if (planId === 'plus') {
       setWaitlistModalInfo({
         isOpen: true,
-        featureTitle: planId === 'pro' ? 'Formule KONAN PRO (Désactivée)' : 'Formule KONAN PLUS (Désactivée)',
-        featureDescription: 'Les formules PRO et PLUS sont actuellement désactivées. Tous les comptes utilisateurs sont sur le modèle Gratuit.',
-        requiredTier: planId,
+        featureTitle: 'Formule KONAN PLUS (Désactivée)',
+        featureDescription: 'La formule PLUS est actuellement désactivée. Tous les comptes utilisateurs sont sur le modèle Gratuit.',
+        requiredTier: 'plus',
       });
       return;
     }
@@ -1819,6 +1827,21 @@ export function App() {
               </button>
             </div>
           )
+        )}
+
+        {/* Pro Onboarding Wizard: Dedicated Page */}
+        {activeView === 'pro-wizard' && (
+          <ProWizardView
+            state={state}
+            onUpdateState={(nextState) => {
+              if (nextState.userAccount?.googleId && !nextState.isDemoMode) {
+                saveUserState(nextState.userAccount.googleId, nextState);
+              }
+              setState(nextState);
+            }}
+            onNavigate={handleNavigate}
+            showToast={showToast}
+          />
         )}
       </main>
 

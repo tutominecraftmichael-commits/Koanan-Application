@@ -1232,10 +1232,14 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     type="button"
                     onClick={() => {
                       if (isLocked) {
-                        setProModalInfo({
-                          title: `${s.title}`,
-                          desc: `La méthode "${s.title}" (${s.tagline}) fait partie intégrante du modèle KONAN PRO. Sur votre version Gratuite (Free), vous disposez d'un accès illimité aux techniques Pomodoro, Active Recall & Répétition Espacée et la Règle des 2 Minutes.`
-                        });
+                        if (onUpgradeToPro) {
+                          onUpgradeToPro();
+                        } else {
+                          setProModalInfo({
+                            title: `${s.title}`,
+                            desc: `La méthode "${s.title}" (${s.tagline}) fait partie intégrante du modèle KONAN PRO. Activez l'accès découverte offert pour reconfigurer votre emploi du temps.`
+                          });
+                        }
                         return;
                       }
                       setSelectedModalStrategy(s.id);

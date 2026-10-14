@@ -708,25 +708,25 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <button
                   type="button"
                   onClick={onUpgradeToPro || onViewPricing}
-                  className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 shrink-0 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                  title="Activer le modèle KONAN PRO"
+                  className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-sm shrink-0 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                  title="Découvrir le modèle KONAN PRO (Offre Découverte Offerte)"
                 >
-                  ⭐ PRO
+                  PRO
                 </button>
               )}
             </div>
 
             {planTier === 'free' ? (
-              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800/80 space-y-2.5 text-xs">
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Le compte à rebours et l'adaptation automatique du planning aux dates de partiels et devoirs surveillés sont réservés à l'offre <strong>KONAN PRO</strong>.
+              <div className="p-3.5 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/30 space-y-2.5 text-xs">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                  Le compte à rebours et l'adaptation automatique du planning aux dates de partiels et devoirs surveillés sont inclus dans <strong className="text-amber-600 dark:text-amber-400 font-extrabold">KONAN PRO</strong> (accès découverte offert).
                 </p>
                 <button
                   type="button"
                   onClick={onUpgradeToPro || onViewPricing}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-300 hover:underline transition-all cursor-pointer"
                 >
-                  <span>Activer le modèle KONAN PRO</span>
+                  <span>Configurer avec KONAN PRO (Offert)</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>

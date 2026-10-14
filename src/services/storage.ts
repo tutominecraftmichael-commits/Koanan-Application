@@ -200,43 +200,49 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           ? parsed.konanId.trim().toUpperCase()
           : (parsed.userAccount?.konanId?.trim()?.toUpperCase() || assignedKonanId);
 
-        // RÈGLE ABSOLUE & UNIVERSELLE : Modes PRO et PLUS désactivés.
-        // TOUS les comptes sans aucune exception retombent à Gratuit ('free').
-        const hadProOrPlus = parsed.planTier === 'pro' || parsed.planTier === 'plus'
-          || parsed.userAccount?.planTier === 'pro' || parsed.userAccount?.planTier === 'plus'
-          || Boolean(parsed.isGroupGuest) || Boolean(parsed.userAccount?.isGroupGuest);
+        // Palier actif : Supporte le palier PRO (offert en période de découverte).
+        // Seul le palier PLUS (réservé aux groupes et en attente d'API) retombe sur Gratuit.
+        const isProTier = (parsed.planTier === 'pro' || parsed.userAccount?.planTier === 'pro') && parsed.planTier !== 'plus';
+        const resolvedPlanTier: PlanTier = isProTier ? 'pro' : 'free';
 
         const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
 
         const userPreferences = parsed.preferences ? { ...baseEmptyState.preferences, ...parsed.preferences } : baseEmptyState.preferences;
-        if (userPreferences.pacing === 'feynman' || userPreferences.pacing === 'time_blocking') {
+        if (!isProTier && (userPreferences.pacing === 'feynman' || userPreferences.pacing === 'time_blocking')) {
           userPreferences.pacing = 'pomodoro';
+          userPreferences.combinedPacings = ['pomodoro'];
         }
-        userPreferences.combinedPacings = [userPreferences.pacing || 'pomodoro'];
 
         const sanitizedSubjects: Subject[] = (Array.isArray(parsed.subjects) ? parsed.subjects : [])
           .filter((s: Subject) => !isNonAcademicSubject(s.name))
-          .map((s: Subject) => ({
-            ...s,
-            examDate: undefined,
-            examType: undefined,
-            examTime: undefined,
-          }));
+          .map((s: Subject) => {
+            if (!isProTier) {
+              return {
+                ...s,
+                examDate: undefined,
+                examType: undefined,
+                examTime: undefined,
+              };
+            }
+            return s;
+          });
         const validSubjectIds = new Set(sanitizedSubjects.map((s: Subject) => s.id));
 
         const sanitizedStudySessions: StudySession[] = (Array.isArray(parsed.studySessions) ? parsed.studySessions : [])
           .filter((sess: StudySession) => {
             if (isNonAcademicSubject(sess.title)) return false;
             if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
-            if (sess.isExamPrep || sess.type === 'exam_simulation') return false;
-            const lowerTitle = (sess.title || '').toLowerCase();
-            if (lowerTitle.includes('devoir') || lowerTitle.includes('examen') || lowerTitle.includes('épreuve') || lowerTitle.includes('rattrapage')) {
-              return false;
+            if (!isProTier) {
+              if (sess.isExamPrep || sess.type === 'exam_simulation') return false;
+              const lowerTitle = (sess.title || '').toLowerCase();
+              if (lowerTitle.includes('devoir') || lowerTitle.includes('examen') || lowerTitle.includes('épreuve') || lowerTitle.includes('rattrapage')) {
+                return false;
+              }
             }
             return true;
           })
           .map((sess: StudySession) => {
-            if (sess.pacingMethod === 'feynman' || sess.pacingMethod === 'time_blocking') {
+            if (!isProTier && (sess.pacingMethod === 'feynman' || sess.pacingMethod === 'time_blocking')) {
               const subject = sanitizedSubjects.find((s: Subject) => s.id === sess.subjectId);
               const subName = subject?.name || 'Matière';
               return {
@@ -271,7 +277,7 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           invitedEmails: [],
           academicGoal: undefined,
           coachingSessionsRemaining: 0,
-          planTier: 'free',
+          planTier: resolvedPlanTier,
           isGroupGuest: false,
           privacyPolicyAccepted: parsed.privacyPolicyAccepted ?? parsed.userAccount?.privacyPolicyAccepted ?? false,
           privacyPolicyAcceptedAt: parsed.privacyPolicyAcceptedAt ?? parsed.userAccount?.privacyPolicyAcceptedAt,
@@ -279,7 +285,7 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
             ...user,
             ...parsed.userAccount,
             konanId: resolvedKonanId,
-            planTier: 'free',
+            planTier: resolvedPlanTier,
             isGroupGuest: false,
             academicGoal: undefined,
             invitedIds: [],
@@ -290,7 +296,7 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           } : {
             ...user,
             konanId: resolvedKonanId,
-            planTier: 'free',
+            planTier: resolvedPlanTier,
             isGroupGuest: false,
             academicGoal: undefined,
             invitedIds: [],
@@ -302,8 +308,8 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           isDemoMode: false,
         };
 
-        // Si le compte local était en Pro ou Plus, persister immédiatement l'état assaini dans le localStorage
-        if (hadProOrPlus) {
+        const hadPlus = parsed.planTier === 'plus' || parsed.userAccount?.planTier === 'plus' || Boolean(parsed.isGroupGuest) || Boolean(parsed.userAccount?.isGroupGuest);
+        if (hadPlus) {
           try {
             localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(sanitizedResult));
           } catch {}
@@ -335,11 +341,10 @@ import {
  * so all devices (PC, mobile, tablet) share the exact same timetable and subjects.
  */
 export function saveUserState(uid: string, state: AppState): void {
-  // RÈGLE ABSOLUE & UNIVERSELLE : Mode PRO et PLUS désactivés.
-  // TOUS les comptes sans aucune exception retombent à Gratuit ('free').
+  const targetTier: PlanTier = (state.planTier === 'pro' || state.userAccount?.planTier === 'pro') ? 'pro' : 'free';
   const sanitizedState: AppState = {
     ...state,
-    planTier: 'free',
+    planTier: targetTier,
     isGroupGuest: false,
     academicGoal: undefined,
     invitedIds: [],
@@ -347,7 +352,7 @@ export function saveUserState(uid: string, state: AppState): void {
     coachingSessionsRemaining: 0,
     userAccount: state.userAccount ? {
       ...state.userAccount,
-      planTier: 'free',
+      planTier: targetTier,
       isGroupGuest: false,
       academicGoal: undefined,
       invitedIds: [],
@@ -369,7 +374,7 @@ export function saveUserState(uid: string, state: AppState): void {
     syncUserStateToCloud(uid, {
       studentName: sanitizedState.studentName,
       academicLevel: sanitizedState.academicLevel,
-      planTier: 'free',
+      planTier: targetTier,
       subjects: sanitizedState.subjects,
       classSlots: sanitizedState.classSlots,
       preferences: sanitizedState.preferences,
@@ -457,9 +462,11 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
           return sess;
         });
 
-      // If study sessions are empty on cloud, generate them from the subjects and slots in free mode
+      const resolvedMergedTier: PlanTier = (cloudData.planTier === 'pro' || currentState.planTier === 'pro' || currentState.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'pro') ? 'pro' : 'free';
+
+      // If study sessions are empty on cloud, generate them from the subjects and slots
       if ((!mergedStudySessions || mergedStudySessions.length === 0) && mergedSubjects.length > 0) {
-        mergedStudySessions = generateOptimizedStudyPlan(mergedSubjects, mergedClassSlots, mergedPreferences, 'free');
+        mergedStudySessions = generateOptimizedStudyPlan(mergedSubjects, mergedClassSlots, mergedPreferences, resolvedMergedTier);
       }
 
       const assignedKonanId = cloudData.konanId || currentState.konanId || currentState.userAccount?.konanId || generateKonanId(uid);
@@ -468,7 +475,7 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         ...currentState,
         studentName: cloudData.studentName || currentState.studentName,
         academicLevel: cloudData.academicLevel || currentState.academicLevel,
-        planTier: 'free',
+        planTier: resolvedMergedTier,
         completedOnboarding: cloudData.completedOnboarding ?? true,
         subjects: mergedSubjects,
         classSlots: mergedClassSlots,
@@ -486,7 +493,7 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.privacyPolicyAcceptedAt,
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
-          planTier: 'free',
+          planTier: resolvedMergedTier,
           name: cloudData.studentName || currentState.userAccount.name,
           konanId: assignedKonanId,
           invitedIds: [],
@@ -503,8 +510,8 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(merged));
       } catch {}
 
-      // Si le cloud contenait un compte Pro ou Plus, écraser immédiatement sur Firestore avec 'free' !
-      if (cloudData.planTier === 'pro' || cloudData.planTier === 'plus' || cloudData.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'plus' || cloudData.isGroupGuest) {
+      // Si le cloud contenait un compte Plus obsolète, écraser sur Firestore avec le statut assaini
+      if (cloudData.planTier === 'plus' || cloudData.userAccount?.planTier === 'plus' || cloudData.isGroupGuest) {
         saveUserState(uid, merged);
       }
 
@@ -520,16 +527,17 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
 
     // Case 3: Cloud has profile meta
     if (cloudData && (cloudData.studentName || cloudData.academicLevel || cloudData.planTier)) {
+      const resolvedCloudTier: PlanTier = (cloudData.planTier === 'pro' || currentState.planTier === 'pro' || currentState.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'pro') ? 'pro' : 'free';
       const merged: AppState = {
         ...currentState,
         studentName: cloudData.studentName || currentState.studentName,
         academicLevel: cloudData.academicLevel || currentState.academicLevel,
-        planTier: 'free',
+        planTier: resolvedCloudTier,
         privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.privacyPolicyAccepted,
         privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.privacyPolicyAcceptedAt,
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
-          planTier: 'free',
+          planTier: resolvedCloudTier,
           name: cloudData.studentName || currentState.userAccount.name,
           isGroupGuest: false,
           academicGoal: undefined,
@@ -543,7 +551,7 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
       try {
         localStorage.setItem(`${USER_STORAGE_PREFIX}${uid}`, JSON.stringify(merged));
       } catch {}
-      if (cloudData.planTier === 'pro' || cloudData.planTier === 'plus' || cloudData.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'plus' || cloudData.isGroupGuest) {
+      if (cloudData.planTier === 'plus' || cloudData.userAccount?.planTier === 'plus' || cloudData.isGroupGuest) {
         saveUserState(uid, merged);
       }
       return merged;
@@ -562,20 +570,22 @@ export function loadDemoState(): AppState {
     const raw = localStorage.getItem(DEMO_STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed.subjects && parsed.subjects.length > 0) {
+      if (parsed && parsed.subjects && parsed.subjects.length > 0) {
         const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
+        const isDemoPro = parsed.planTier === 'pro' || parsed.userAccount?.planTier === 'pro';
+        const demoTier: PlanTier = isDemoPro ? 'pro' : 'free';
         const demoPreferences = parsed.preferences ? { ...parsed.preferences } : undefined;
-        if (demoPreferences && (demoPreferences.pacing === 'feynman' || demoPreferences.pacing === 'time_blocking')) {
+        if (!isDemoPro && demoPreferences && (demoPreferences.pacing === 'feynman' || demoPreferences.pacing === 'time_blocking')) {
           demoPreferences.pacing = 'pomodoro';
           demoPreferences.combinedPacings = ['pomodoro'];
         }
 
         return { 
           ...parsed, 
-          planTier: 'free',
+          planTier: demoTier,
           userAccount: parsed.userAccount ? {
             ...parsed.userAccount,
-            planTier: 'free',
+            planTier: demoTier,
           } : undefined,
           preferences: demoPreferences || parsed.preferences,
           logs: hasCompleted ? (parsed.logs || []) : [],
@@ -772,7 +782,7 @@ export function importStateFromJson(jsonString: string): AppState | null {
       academicLevel: typeof parsed.academicLevel === 'string' && parsed.academicLevel.trim().length > 0
         ? parsed.academicLevel.trim().slice(0, 60)
         : defaultState.academicLevel,
-      planTier: 'free',
+      planTier: (parsed.planTier === 'pro') ? 'pro' : 'free',
       konanId: typeof parsed.konanId === 'string' && /^KN-[A-Z0-9]{4,10}$/i.test(parsed.konanId.trim())
         ? parsed.konanId.trim().toUpperCase()
         : defaultState.konanId,
@@ -806,7 +816,7 @@ export function generateSyncCode(state: AppState): string {
       t: new Date().toISOString(),
       studentName: state.studentName,
       academicLevel: state.academicLevel,
-      planTier: 'free',
+      planTier: (state.planTier === 'pro' || state.userAccount?.planTier === 'pro') ? 'pro' : 'free',
       subjects: state.subjects || [],
       classSlots: state.classSlots || [],
       preferences: state.preferences || DEFAULT_PREFERENCES,
@@ -854,10 +864,12 @@ export function importSyncCode(rawInput: string, currentAccount?: UserAccount): 
       return null;
     }
 
+    const resolvedImportTier: PlanTier = (data.planTier === 'pro') ? 'pro' : 'free';
+
     const importedState: AppState = {
       studentName: data.studentName || currentAccount?.name || 'Étudiant',
       academicLevel: data.academicLevel || currentAccount?.academicLevel || 'Licence Universitaire',
-      planTier: 'free',
+      planTier: resolvedImportTier,
       subjects: data.subjects || [],
       classSlots: data.classSlots || [],
       preferences: data.preferences || DEFAULT_PREFERENCES,
@@ -870,7 +882,7 @@ export function importSyncCode(rawInput: string, currentAccount?: UserAccount): 
             ...currentAccount,
             name: data.studentName || currentAccount.name,
             academicLevel: data.academicLevel || currentAccount.academicLevel,
-            planTier: 'free',
+            planTier: resolvedImportTier,
             isGroupGuest: false,
           }
         : undefined,
@@ -923,18 +935,18 @@ export function isTargetAlreadyPlus(_identifier: string): boolean {
 }
 
 /**
- * RÈGLE ABSOLUE & UNIVERSELLE :
- * Les modes PRO et PLUS sont désactivés.
- * TOUS les comptes absolument tous sans exception qui sont dans ces modèles retombent à Gratuit.
- * Compte Pro désactivé et Plus aussi. Tout le monde devient Gratuit.
+ * Migration d'assainissement :
+ * Seul le palier PLUS (réservé aux groupes et en attente des passerelles mobiles Wave / OM) est suspendu.
+ * Les anciens comptes Plus ou invités de groupe retombent sur Gratuit.
+ * Les comptes KONAN PRO sont intégralement préservés.
  */
-export function enforceAllAccountsFreeMigration(): void {
+export function enforcePlusAccountsMigration(): void {
   if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
   try {
-    // 1. Purger le registre Plus
+    // 1. Purger l'ancien registre Plus
     localStorage.removeItem(PLUS_REGISTRY_KEY);
 
-    // 2. Parcourir et assainir tous les comptes enregistrés dans le localStorage
+    // 2. Parcourir et assainir uniquement les comptes 'plus' résiduels
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (!key) continue;
@@ -945,52 +957,11 @@ export function enforceAllAccountsFreeMigration(): void {
           if (!raw) continue;
           const parsed = JSON.parse(raw);
           if (parsed && typeof parsed === 'object') {
-            const hadProOrPlus = parsed.planTier === 'pro' || parsed.planTier === 'plus'
-              || parsed.userAccount?.planTier === 'pro' || parsed.userAccount?.planTier === 'plus'
+            const hadPlus = parsed.planTier === 'plus'
+              || parsed.userAccount?.planTier === 'plus'
               || Boolean(parsed.isGroupGuest) || Boolean(parsed.userAccount?.isGroupGuest);
 
-            const hasProMethods = parsed.preferences?.pacing === 'feynman'
-              || parsed.preferences?.pacing === 'time_blocking'
-              || (Array.isArray(parsed.preferences?.combinedPacings) && parsed.preferences.combinedPacings.some((m: string) => m === 'feynman' || m === 'time_blocking'));
-
-            const hasExamDates = Array.isArray(parsed.subjects) && parsed.subjects.some((s: any) => s.examDate || s.examType || s.examTime);
-
-            if (hadProOrPlus || hasProMethods || hasExamDates || parsed.planTier !== 'free' || parsed.userAccount?.planTier !== 'free') {
-              const sanitizedPrefs = parsed.preferences ? { ...parsed.preferences } : { ...DEFAULT_PREFERENCES };
-              if (sanitizedPrefs.pacing === 'feynman' || sanitizedPrefs.pacing === 'time_blocking') {
-                sanitizedPrefs.pacing = 'pomodoro';
-              }
-              sanitizedPrefs.combinedPacings = [sanitizedPrefs.pacing || 'pomodoro'];
-
-              const sanitizedSubjects = (Array.isArray(parsed.subjects) ? parsed.subjects : []).map((s: any) => ({
-                ...s,
-                examDate: undefined,
-                examType: undefined,
-                examTime: undefined,
-              }));
-
-              const sanitizedStudySessions = (Array.isArray(parsed.studySessions) ? parsed.studySessions : [])
-                .filter((sess: any) => {
-                  if (sess.isExamPrep || sess.type === 'exam_simulation') return false;
-                  const lowerTitle = (sess.title || '').toLowerCase();
-                  if (lowerTitle.includes('devoir') || lowerTitle.includes('examen') || lowerTitle.includes('épreuve') || lowerTitle.includes('rattrapage')) {
-                    return false;
-                  }
-                  return true;
-                })
-                .map((sess: any) => {
-                  if (sess.pacingMethod === 'feynman' || sess.pacingMethod === 'time_blocking') {
-                    return {
-                      ...sess,
-                      pacingMethod: 'pomodoro',
-                      durationMinutes: 25,
-                      title: `Pomodoro (25m) : ${sess.title?.split(':')?.[1]?.trim() || 'Matière'}`,
-                      description: 'Micro-session Pomodoro de 25 min à fond, coupure nette de 5 min.',
-                    };
-                  }
-                  return sess;
-                });
-
+            if (hadPlus) {
               const updatedState = {
                 ...parsed,
                 planTier: 'free',
@@ -999,9 +970,6 @@ export function enforceAllAccountsFreeMigration(): void {
                 invitedIds: [],
                 invitedEmails: [],
                 coachingSessionsRemaining: 0,
-                preferences: sanitizedPrefs,
-                subjects: sanitizedSubjects,
-                studySessions: sanitizedStudySessions,
                 userAccount: parsed.userAccount ? {
                   ...parsed.userAccount,
                   planTier: 'free',
@@ -1020,12 +988,14 @@ export function enforceAllAccountsFreeMigration(): void {
       }
     }
   } catch (err) {
-    console.warn('Erreur migration vers gratuit:', err);
+    console.warn('Erreur migration Plus vers gratuit:', err);
   }
 }
 
+export const enforceAllAccountsFreeMigration = enforcePlusAccountsMigration;
+
 // Exécution immédiate au démarrage
-enforceAllAccountsFreeMigration();
+enforcePlusAccountsMigration();
 
 export const invitationBroadcastChannel = typeof window !== 'undefined' && typeof BroadcastChannel !== 'undefined'
   ? new BroadcastChannel('konan_plus_invitations_channel')

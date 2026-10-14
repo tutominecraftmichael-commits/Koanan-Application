@@ -160,14 +160,19 @@ export async function extraireEmploiDuTemps(fileBase64: string, mimeType: string
     effectiveMime = prefixMatch[1];
   }
 
+  // Normalisation stricte du MIME type pour l'API Gemini
+  if (!effectiveMime || !['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(effectiveMime)) {
+    effectiveMime = effectiveMime?.includes('pdf') ? 'application/pdf' : 'image/jpeg';
+  }
+
   // Supprime le préfixe si le front-end l'a envoyé avec "data:image/...;base64,"
   const cleanBase64 = fileBase64.replace(/^data:[^;]+;base64,/, "");
 
+  // Modèles officiels supportés avec fallback automatique en cascade
   const modelsToTry = [
-    "gemini-flash-lite-latest",
-    "gemini-3.1-flash-lite",
-    "gemini-3-flash-preview",
-    "gemini-2.5-flash"
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash"
   ];
 
   let lastError: any = null;
@@ -195,6 +200,13 @@ export async function extraireEmploiDuTemps(fileBase64: string, mimeType: string
       let raw = response.text ? response.text.trim() : "";
       // Supprime d'éventuels blocs markdown englobants (```text ... ```)
       raw = raw.replace(/^```[a-z]*\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+
+      // Nettoyer toute introduction bavarde éventuelle du modèle
+      const firstDayIdx = raw.search(/(?:^|\n)\s*(?:JOUR\s*:|LUNDI|MARDI|MERCREDI|JEUDI|VENDREDI|SAMEDI|DIMANCHE)/i);
+      if (firstDayIdx > 0) {
+        raw = raw.substring(firstDayIdx).trim();
+      }
+
       if (raw && raw.length > 5) {
         return raw;
       }

@@ -86,4 +86,13 @@ createRoot(document.getElementById('root')!).render(
       </ThemeProvider>
     </RootErrorBoundary>
   </StrictMode>,
-)
+);
+
+// Enregistrement du Service Worker pour les notifications et le mode hors-ligne
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((err) => {
+      console.warn('[KONAN] Service Worker notice:', err);
+    });
+  });
+}

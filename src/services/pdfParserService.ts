@@ -423,6 +423,10 @@ export function findDayInLine(text: string): DayOfWeek | null {
         if (shortRegex.test(clean)) return entry.day;
       } else {
         // Full day names (e.g. "lundi", "mardi", "mercredi", "monday")
+        // Explicit prefix: "JOUR: LUNDI", "JOUR 1 : LUNDI", "DAY: MONDAY"
+        const dayPrefixRegex = new RegExp(`^(?:JOUR(?:\\s*\\d+)?|DAY(?:\\s*\\d+)?)[\\s:|-]+${key}([^a-zÀ-ÿ]|$)`, 'i');
+        if (dayPrefixRegex.test(clean)) return entry.day;
+
         // Either at start of line: "Lundi :", "Lundi |", etc.
         const startRegex = new RegExp(`^[\\s|•*-]*${key}([^a-zÀ-ÿ]|$)`, 'i');
         if (startRegex.test(clean)) return entry.day;
@@ -2085,23 +2089,25 @@ export function formatExtractedScheduleToFormatText(
 
     if (daySlots.length === 0) continue;
 
-    lines.push(`${dayNames[day]} :`);
+    if (lines.length > 0) lines.push('');
+    lines.push(`JOUR: ${dayNames[day]}`);
 
     for (const slot of daySlots) {
       const subject = extracted.subjects.find(sub => sub.id === slot.subjectId);
       const subjectName = (slot.subjectName || subject?.name || 'Matière').trim();
       const code = subject?.code ? ` [${subject.code}]` : '';
-      const room = slot.room ? ` | ${slot.room}` : '';
-      const prof = slot.professor ? ` | ${slot.professor}` : '';
+      const room = slot.room ? ` | Salle: ${slot.room.replace(/^Salle:\s*/i, '')}` : '';
+      const prof = slot.professor ? ` | Prof: ${slot.professor.replace(/^Prof:\s*/i, '')}` : '';
 
       if (format === 'lmd') {
-        lines.push(`${slot.startTime} - ${slot.endTime} | ${subjectName}${code}${room}${prof}`);
+        lines.push(`- ${slot.startTime} - ${slot.endTime} : ${subjectName}${code}${room}${prof}`);
       } else if (format === 'tpcm') {
         const typeBadge = slot.type === 'lab' ? 'TP ' : slot.type === 'tutorial' ? 'TD ' : 'CM ';
-        lines.push(`${slot.startTime} - ${slot.endTime} ${typeBadge}${subjectName}${room}`);
+        const roomParen = slot.room ? ` (${slot.room.replace(/^[()]+|[()]+$/g, '')})` : '';
+        lines.push(`- ${slot.startTime} - ${slot.endTime} : ${typeBadge}${subjectName}${roomParen}`);
       } else {
         // format scolaire (Lycée / Collège)
-        lines.push(`${slot.startTime} - ${slot.endTime} ${subjectName}`);
+        lines.push(`- ${slot.startTime} - ${slot.endTime} : ${subjectName}`);
       }
     }
   }

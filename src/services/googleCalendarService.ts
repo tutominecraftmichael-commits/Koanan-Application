@@ -195,7 +195,13 @@ export function generateStudyPlanICS(
       'ACTION:DISPLAY',
       `DESCRIPTION:${escapeIcsText(`⏳ Rappel Konan AI : Votre révision de ${subject.name} commence dans 30 minutes ! Préparez vos cours. 📚`)}`,
       'END:VALARM',
-      // VALARM 2: ALERTE ROUGE EXACTEMENT À L'HEURE DE DÉBUT (T = 0)
+      // VALARM 2: RAPPEL 10 MINUTES AVANT POUR S'INSTALLER
+      'BEGIN:VALARM',
+      'TRIGGER:-PT10M',
+      'ACTION:DISPLAY',
+      `DESCRIPTION:${escapeIcsText(`⚡ Rappel Konan AI : Plus que 10 minutes avant votre séance de ${subject.name} ! Mettez votre téléphone en silencieux. 🎯`)}`,
+      'END:VALARM',
+      // VALARM 3: ALERTE ROUGE EXACTEMENT À L'HEURE DE DÉBUT (T = 0)
       'BEGIN:VALARM',
       'TRIGGER:PT0M',
       'ACTION:DISPLAY',

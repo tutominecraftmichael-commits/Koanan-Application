@@ -13,8 +13,8 @@ import {
   GraduationCap,
   Save
 } from 'lucide-react';
+import { Clock, Zap, Sun, Moon } from 'lucide-react';
 import type { UserAccount, AcademicGoal } from '../../types';
-import { Crown, Sun, Moon } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
 import { soundFX } from '../../lib/audioEffects';
@@ -74,7 +74,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onResetData,
   planTier,
   onSelectPlan,
-  onUpgradeToPro: _onUpgradeToPro,
+  onUpgradeToPro,
   invitedEmails: _invitedEmails = [],
   academicGoal: _academicGoal = 'target_16',
   onOpenGroupModal: _onOpenGroupModal,
@@ -342,12 +342,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-xs font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <Crown className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-indigo-500" />
                   Formule & Abonnement
                 </span>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                  Modèle KONAN Gratuit actif. Les comptes PRO et PLUS sont actuellement désactivés.
+                  {currentPlan === 'pro' 
+                    ? 'Modèle KONAN PRO actif (Offre Découverte Offerte).'
+                    : 'Modèle KONAN Gratuit actif. Passez à KONAN PRO pour booster vos révisions.'}
                 </p>
               </div>
             </div>
@@ -356,26 +358,39 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-900 dark:text-slate-200 flex items-center gap-1.5">
                   <Check className="w-4 h-4 text-emerald-500" />
-                  Modèle Actuel : KONAN Gratuit (Free)
+                  {currentPlan === 'pro' ? 'Modèle Actuel : KONAN PRO' : 'Modèle Actuel : KONAN Gratuit'}
                 </span>
-                <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30">
-                  Actif pour tous
-                </span>
+                {currentPlan === 'pro' ? (
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-sm shadow-amber-500/20">
+                    PRO ACTIF
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+                    Actif pour tous
+                  </span>
+                )}
               </div>
               <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                Tous les comptes étudiants sont actuellement sur le modèle Gratuit avec accès complet aux plannings, Pomodoro, Active Recall et la Règle des 2 Minutes. Les formules PRO et PLUS sont désactivées.
+                {currentPlan === 'pro'
+                  ? 'Toutes les méthodes cognitives avancées (Feynman, Time Blocking), la réorganisation d’emploi du temps et les rappels sonores (.ics + Google Agenda) sont pleinement activés.'
+                  : 'Accès au planning de base, méthode Pomodoro et Active Recall. L’offre de découverte KONAN PRO est actuellement offerte.'}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                 <button
                   type="button"
                   onClick={() => {
                     onClose();
-                    onSelectPlan?.('pro');
+                    if (onUpgradeToPro) onUpgradeToPro();
+                    else onSelectPlan?.('pro');
                   }}
-                  className="text-xs font-bold px-3 py-2.5 rounded-xl transition-all border border-slate-300 dark:border-slate-700 flex items-center justify-center gap-1.5 cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 shadow-xs active:scale-95"
+                  className={`text-xs font-black px-3 py-2.5 rounded-xl transition-all border flex items-center justify-center gap-1.5 cursor-pointer shadow-xs active:scale-95 ${
+                    currentPlan === 'pro'
+                      ? 'bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border-amber-300 shadow-md shadow-amber-500/20'
+                      : 'bg-indigo-600 hover:bg-indigo-700 text-white border-indigo-600'
+                  }`}
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  <span>KONAN PRO (Désactivé)</span>
+                  <Zap className="w-3.5 h-3.5" />
+                  <span>{currentPlan === 'pro' ? 'Reconfigurer Konan Pro' : 'Passer à KONAN PRO (Offert)'}</span>
                 </button>
                 <button
                   type="button"
@@ -385,8 +400,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   }}
                   className="text-xs font-bold px-3 py-2.5 rounded-xl transition-all border border-slate-300 dark:border-slate-700 flex items-center justify-center gap-1.5 cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 shadow-xs active:scale-95"
                 >
-                  <Crown className="w-3.5 h-3.5 text-indigo-500" />
-                  <span>KONAN PLUS (Désactivé)</span>
+                  <Clock className="w-3.5 h-3.5 text-slate-500" />
+                  <span>KONAN PLUS (Liste d'attente)</span>
                 </button>
               </div>
             </div>

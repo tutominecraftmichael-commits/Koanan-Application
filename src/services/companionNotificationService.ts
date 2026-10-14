@@ -1,5 +1,5 @@
 import { SubscriptionForbiddenError } from '../lib/subscriptionGuard';
-import type { PlanTier } from '../types';
+import type { PlanTier, StudySession, Subject } from '../types';
 
 /**
  * Service de Notifications Téléphone pour KONAN AI
@@ -149,7 +149,18 @@ export function sendPhoneNotification(title: string, body: string, tag: string =
 }
 
 /**
- * Envoie un rappel d'étude programmé 30 minutes avant la session.
+ * Templates de messages motivants inspirés de Duolingo pour les rappels de sessions d'étude
+ */
+const UPCOMING_REMINDER_TEMPLATES = [
+  (sub: string, time: string) => `🎓 C'est l'heure de briller ! Ta séance de ${sub} commence à ${time}. 25 minutes de focus et c'est validé ! ⚡`,
+  (sub: string, time: string) => `🔥 Protège ta série ! Ta révision de ${sub} démarre à ${time}. Fais un pas de plus vers la réussite ! 👊`,
+  (sub: string, time: string) => `📚 Hey ! Ne laisse pas le retard s'accumuler : ${sub} commence bientôt (${time}). Viens te surpasser ! 🎯`,
+  (sub: string, time: string) => `👀 Petit rappel amical de Konan : créneau de ${sub} à ${time}. Prépare tes fiches ! 💙`,
+  (sub: string, time: string) => `⚡ Mode champion activé ! Session de ${sub} à ${time}. Chaque minute investie rapporte le jour de l'examen ! 🚀`,
+];
+
+/**
+ * Envoie un rappel d'étude programmé avant la session.
  * STRICTEMENT RÉSERVÉ AUX MEMBRES PRO.
  * Rejette avec SubscriptionForbiddenError si appelé avec un tier 'free'.
  */
@@ -160,16 +171,74 @@ export function sendStudyReminder30mNotification(
 ): boolean {
   if (userTier === 'free') {
     throw new SubscriptionForbiddenError(
-      'Les notifications de rappel d’étude (30 minutes avant la session) sont réservées aux membres Pro',
+      'Les notifications de rappel d’étude sont réservées aux membres Pro',
       'pro'
     );
   }
 
   sendPhoneNotification(
-    `📚 Révision dans 30 min : ${subjectName}`,
+    `📚 Révision : ${subjectName}`,
     `Votre créneau d'étude commence à ${sessionTime}. Préparez vos cours en toute sérénité ! 🎯`,
     `study-reminder-${subjectName}`
   );
   return true;
+}
+
+/**
+ * Vérifie les créneaux d'étude du jour et déclenche automatiquement
+ * des rappels motivants style Duolingo directement sur le téléphone / navigateur
+ * pour les membres PRO / PLUS.
+ */
+export function checkAndDispatchStudyReminders(
+  sessions: StudySession[],
+  subjects: Subject[],
+  userTier: PlanTier = 'free'
+): void {
+  if (userTier === 'free' || !isPhoneNotificationSupported()) return;
+  if (!sessions || sessions.length === 0) return;
+
+  const now = new Date();
+  const currentDayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // 0=Lundi..6=Dimanche
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const dateKey = now.toISOString().slice(0, 10);
+
+  // Storage key pour ne jamais notifier 2 fois la même séance le même jour
+  const notifiedStorageKey = `konan_notified_reminders_${dateKey}`;
+  let notifiedIds: string[] = [];
+  try {
+    const raw = sessionStorage.getItem(notifiedStorageKey);
+    if (raw) notifiedIds = JSON.parse(raw);
+  } catch {}
+
+  const todaysSessions = sessions.filter(s => s.dayOfWeek === currentDayOfWeek && !s.completed);
+
+  todaysSessions.forEach(session => {
+    if (notifiedIds.includes(session.id)) return;
+
+    // Calcul de l'heure de début en minutes
+    const [h, m] = session.startTime.split(':').map(Number);
+    const sessionStartMinutes = h * 60 + (m || 0);
+    const diffMinutes = sessionStartMinutes - currentMinutes;
+
+    // Alerte 10 à 15 minutes avant le début de la séance, ou à l'heure exacte (0 à -5 min)
+    if ((diffMinutes > 0 && diffMinutes <= 15) || (diffMinutes <= 0 && diffMinutes >= -5)) {
+      const subject = subjects.find(sub => sub.id === session.subjectId);
+      const subjectName = subject?.name || session.title || 'tes révisions';
+
+      const template = UPCOMING_REMINDER_TEMPLATES[Math.floor(Math.random() * UPCOMING_REMINDER_TEMPLATES.length)];
+      const message = template(subjectName, session.startTime);
+
+      sendPhoneNotification(
+        `Konan AI • ${subjectName}`,
+        message,
+        `study-alert-${session.id}`
+      );
+
+      notifiedIds.push(session.id);
+      try {
+        sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
+      } catch {}
+    }
+  });
 }
 

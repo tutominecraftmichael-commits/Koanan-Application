@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Calendar, Bell, Download, ExternalLink, Smartphone, Star, CheckCircle } from 'lucide-react';
+import { X, Calendar, Bell, Download, ExternalLink, Smartphone, CheckCircle } from 'lucide-react';
 import { Button } from '../ui/Button';
 import type { StudySession, Subject } from '../../types';
 import { DAYS_OF_WEEK } from '../../types';
@@ -157,19 +157,18 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
 
           {!isPro ? (
             /* PRO Lock Banner for Free users */
-            <div className="p-4 rounded-2xl bg-amber-950/30 border border-amber-500/40 space-y-3">
-              <div className="flex items-center gap-2 text-amber-300 font-bold text-xs">
-                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                <span>Fonctionnalité automatique réservée au modèle KONAN PRO</span>
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+              <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-xs">
+                <span className="px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-slate-900 text-white dark:bg-white dark:text-slate-900">PRO</span>
+                <span>Fonctionnalité offerte avec le modèle KONAN PRO</span>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Les rappels automatiques et la synchronisation continue pour tous les jours font partie intégrante de <strong>KONAN PRO</strong> (Bientôt disponible).
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Les rappels automatiques et la synchronisation continue pour tous les jours de la semaine font partie intégrante de <strong>KONAN PRO</strong> (accès découverte offert).
               </p>
               <Button
-                variant="glow"
+                variant="primary"
                 size="sm"
                 className="w-full text-xs font-bold py-2.5"
-                leftIcon={<Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />}
                 onClick={() => {
                   onClose();
                   if (onUpgradeToPro) {
@@ -179,7 +178,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                   }
                 }}
               >
-                Activer KONAN PRO maintenant
+                Configurer et activer KONAN PRO (Offert)
               </Button>
             </div>
           ) : (

@@ -27,8 +27,7 @@ import {
   Plus,
   Star,
   Brain,
-  Moon,
-  Lock
+  Moon
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
@@ -60,7 +59,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   preferences,
   onRegeneratePlan,
   onToggleSessionComplete,
-  onStartFocusSession,
+  onStartFocusSession: _onStartFocusSession,
   onAddCustomSession,
   onUpdatePreferences,
   planTier = 'free',
@@ -290,7 +289,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             <div className="space-y-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-extrabold text-emerald-900 dark:text-emerald-300 uppercase tracking-wide text-xs">
-                  🌙 Cycle 100% validé — À demain !
+                  🌙 Programme terminé — À demain !
                 </span>
                 <Badge variant="emerald" size="sm" className="font-bold">
                   Barres à 0%
@@ -325,11 +324,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                   🔄 Rattrapage intelligent (Jour même uniquement) ({studySessions.filter(s => s.isRescheduledToday).length})
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-500/40">
-                  Aucun report au lendemain
+                  Jour même
                 </span>
               </div>
               <p className="text-amber-950/80 dark:text-slate-300 text-xs leading-relaxed">
-                Vos séances non validées plus tôt ont été replacées ce soir (avant 21h30 max). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées sans impacter le programme de demain.
+                Vos séances non effectuées plus tôt ont été replacées ce soir (avant 21h30 max). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées sans impacter le programme de demain.
               </p>
             </div>
           </div>
@@ -541,50 +540,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                     </div>
                   )}
 
-                  {/* Actions footer */}
-                  <div className="pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      {session.completed ? (
-                        <button
-                          onClick={() => isToday && onToggleSessionComplete(session.id)}
-                          disabled={!isToday}
-                          className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all min-h-[36px] bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/50 shadow-xs ${
-                            isToday ? 'cursor-pointer hover:bg-emerald-100 dark:hover:bg-emerald-500/30' : 'cursor-default opacity-90'
-                          }`}
-                          title={isToday ? "Cliquer pour annuler la validation" : "Session validée"}
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>Terminé</span>
-                        </button>
-                      ) : isToday ? (
-                        <button
-                          onClick={() => {
-                            if (onStartFocusSession) {
-                              onStartFocusSession(session);
-                            } else {
-                              onToggleSessionComplete(session.id);
-                            }
-                          }}
-                          className={`px-3.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer min-h-[36px] interactive-pill ${
-                            session.isRescheduledToday
-                              ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
-                              : 'bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white border-indigo-200 dark:bg-indigo-600/30 dark:text-indigo-200 dark:border-indigo-500/40 dark:hover:bg-indigo-600 dark:hover:text-white'
-                          }`}
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>{session.isRescheduledToday ? '⚡ Valider Rattrapage' : 'Valider'}</span>
-                        </button>
-                      ) : (
-                        <div
-                          className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800/90 bg-slate-100 dark:bg-slate-950/60 text-slate-500 dark:text-slate-400 text-xs font-medium flex items-center gap-1.5 cursor-not-allowed select-none min-h-[36px]"
-                          title={`🔒 Anti-triche : Vous pourrez valider cette séance uniquement le ${dayInfo.label}.`}
-                        >
-                          <Lock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-                          <span>Disponible le {dayInfo.label}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+
 
                 </div>
               </Card>
@@ -786,10 +742,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                     type="button"
                     onClick={() => {
                       if (isLocked) {
-                        setProModalInfo({
-                          title: `${s.title}`,
-                          desc: `La méthode "${s.title}" (${s.tagline}) fait partie intégrante du modèle KONAN PRO. Sur votre version Gratuite (Free), vous disposez d'un accès illimité aux techniques Pomodoro, Active Recall & Répétition Espacée et la Règle des 2 Minutes.`
-                        });
+                        if (onUpgradeToPro) {
+                          onUpgradeToPro();
+                        } else {
+                          setProModalInfo({
+                            title: `${s.title}`,
+                            desc: `La méthode "${s.title}" (${s.tagline}) fait partie intégrante du modèle KONAN PRO. Activez l'accès découverte offert pour reconfigurer votre emploi du temps.`
+                          });
+                        }
                         return;
                       }
                       setSelectedModalStrategy(s.id);

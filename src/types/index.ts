@@ -203,7 +203,8 @@ export type ActiveAppView =
   | 'subjects' 
   | 'planner' 
   | 'analytics'
-  | 'focus';
+  | 'focus'
+  | 'pro-wizard';
 
 export type AiAnalysisStep = 
   | 'idle'

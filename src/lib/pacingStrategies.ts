@@ -364,122 +364,117 @@ export function recommendPacingStrategies(
     freeDaysCount
   } = metrics;
 
-  // CAS 0 : Grille sans cours enregistrés ou nouveau départ
+  // CAS 0 : Grille sans cours enregistrés ou configuration initiale
   if (daysWithClasses === 0) {
     return {
-      primaryId: 'active_recall_spaced',
-      recommendedIds: ['active_recall_spaced', 'pomodoro'],
+      primaryId: 'feynman',
+      recommendedIds: ['feynman'],
       notRecommendedIds: [],
       lateDaysCount: 0,
       earlyDaysCount: 0,
       totalDaytimeFreeHours: 0,
       majorFreeBlocksCount: 0,
       hasSignificantDaytimeFreeTime: false,
-      contextTag: `Configuration initiale • ${subjectsCount} matières`,
-      rationale: `Définissez votre méthode d'étude de prédilection. Vous pourrez alterner entre micro-sessions rythmées (Pomodoro), auto-évaluation active (Active Recall) ou blocs d'immersion (Time Blocking).`,
+      contextTag: `Profil équilibré • ${subjectsCount} matières`,
+      rationale: `🎯 Pourquoi ce choix ?\nPour bien retenir tes leçons, expliquer chaque cours avec des mots simples est la méthode la plus rapide et la plus efficace.\n\n💡 Le principe :\nSi tu arrives à l'expliquer simplement, c'est que tu l'as vraiment compris. Tu retiens plus vite et sans te fatiguer !`,
     };
   }
 
-  // CAS 1 : BEAUCOUP DE TEMPS LIBRE EN JOURNÉE (Trous importants, matinées/après-midis libres, jours off)
-  // L'IA ne s'arrête pas à l'heure de fin tardive : si l'étudiant a de grands blocs libres en journée,
-  // le Time Blocking et l'Active Recall sont fortement conseillés pour rentabiliser ces créneaux diurnes !
+  // CAS 1 : BEAUCOUP DE TEMPS LIBRE EN JOURNÉE (Grands blocs diurnes ≥ 1h30)
   if (hasSignificantDaytimeFreeTime) {
-    // Sous-cas 1A : Certaines journées finissent tard MAIS avec de gros trous/temps libre en journée
     if (lateDaysCount >= 2) {
       const lateDaysStr = lateDays.map(d => `${d.name} (${d.time})`).join(', ');
       return {
         primaryId: 'time_blocking',
-        recommendedIds: ['time_blocking', 'active_recall_spaced', 'feynman'],
+        recommendedIds: ['time_blocking', 'feynman'],
         notRecommendedIds: [],
         lateDaysCount,
         earlyDaysCount,
         totalDaytimeFreeHours,
         majorFreeBlocksCount,
         hasSignificantDaytimeFreeTime: true,
-        contextTag: `Fin tardive mais ${totalDaytimeFreeHours}h libres en journée (${majorFreeBlocksCount} créneaux ≥ 1h30) • Time Blocking optimal`,
-        rationale: `Bien que vos cours s'étirent tard certains jours (${lateDaysStr}), vous disposez d'environ ${totalDaytimeFreeHours}h de temps libre pendant la journée réparties sur ${majorFreeBlocksCount} grands créneaux (trous de plus d'1h30 entre vos cours ou demi-journées libres). C'est le contexte idéal pour le Time Blocking (75 min) : vous exploitez ces plages de liberté en journée sur le campus ou à la bibliothèque pour avancer en profondeur, sans devoir travailler épuisé tard le soir. Nous vous conseillons de le combiner avec l'Active Recall (45 min).`,
+        contextTag: `${totalDaytimeFreeHours}h libres en journée • Plages de révision`,
+        rationale: `🎯 Pourquoi ce choix ?\nTu as de grands moments libres dans la journée (${totalDaytimeFreeHours}h au total).\n\n💡 Le principe :\nBloquer un bon créneau de 75 minutes pour une seule matière te permet de travailler au calme en journée, et d'éviter de te surcharger le soir après tes cours tardifs (${lateDaysStr}).`,
       };
     }
 
-    // Sous-cas 1B : Journées finissant tôt ou grille très aérée
     const earlyDaysStr = earlyDays.length > 0 ? earlyDays.map(d => `${d.name} (${d.time})`).join(', ') : '';
     const detailsDays = earlyDaysStr ? ` (${earlyDaysStr})` : freeDaysCount > 0 ? ` (${freeDaysCount} jour(s) sans cours)` : '';
 
     return {
       primaryId: 'time_blocking',
-      recommendedIds: ['time_blocking', 'active_recall_spaced', 'feynman'],
+      recommendedIds: ['time_blocking'],
       notRecommendedIds: [],
       lateDaysCount,
       earlyDaysCount,
       totalDaytimeFreeHours,
       majorFreeBlocksCount,
       hasSignificantDaytimeFreeTime: true,
-      contextTag: `Grandes plages libres en journée (${totalDaytimeFreeHours}h libres • ${majorFreeBlocksCount} créneaux ≥ 1h30) • Immersion profonde`,
-      rationale: `Excellente configuration : votre semaine comporte environ ${totalDaytimeFreeHours}h de temps libre diurne et ${majorFreeBlocksCount} grandes plages dégagées${detailsDays}. Le Time Blocking (75 min) est la méthode reine pour vous immerger sans coupure dans vos matières majeures, complété par l'Active Recall (45 min) et la Technique de Feynman pour tester votre compréhension à fond.`,
+      contextTag: `Emploi du temps aéré • Immersion mono-matière`,
+      rationale: `🎯 Pourquoi ce choix ?\nTon planning a de beaux créneaux libres en journée${detailsDays}.\n\n💡 Le principe :\nEn te posant 75 minutes d'affilée sur une seule matière, tu avances deux fois plus vite sans être distrait ni interrompu.`,
     };
   }
 
-  // CAS 2 : JOURNÉES DENSES EN CONTINU SANS TEMPS LIBRE EN JOURNÉE (Cours non-stop jusqu'à 17h/18h)
-  // Ici seulement, l'absence de pause en journée combinée à une fin tardive justifie d'éviter le Time Blocking le soir.
+  // CAS 2 : JOURNÉES COMPACTES ET FIN TARDIVE SANS PAUSE EN JOURNÉE
   if (lateDaysCount >= 3 || isContinuousDense) {
     const lateDaysStr = lateDays.map(d => `${d.name} (${d.time})`).join(', ');
     return {
       primaryId: 'pomodoro',
-      recommendedIds: ['pomodoro', 'two_minutes_rule'],
+      recommendedIds: ['pomodoro'],
       notRecommendedIds: ['time_blocking'],
       lateDaysCount,
       earlyDaysCount,
       totalDaytimeFreeHours,
       majorFreeBlocksCount,
       hasSignificantDaytimeFreeTime: false,
-      contextTag: `Rythme dense en continu (très peu de pauses en journée, cours jusqu'à 17h30) • Micro-sessions`,
-      rationale: `Vos cours s'enchaînent de manière compacte avec très peu de pauses en journée (${totalDaytimeFreeHours}h de respiration diurne seulement) et se terminent tard (${lateDaysStr}). Après de longues heures d'attention ininterrompue, s'imposer des blocs lourds de 75 min (Time Blocking) le soir risque d'engendrer de la saturation mentale. Nous vous recommandons les micro-sessions de 25 min (Pomodoro & Règle des 2 Minutes) pour alterner vos révisions en douceur sans fatigue excessive.`,
+      contextTag: `Journées chargées (${lateDaysStr}) • Énergie préservée`,
+      rationale: `🎯 Pourquoi ce choix ?\nTes cours s'enchaînent vite et finissent tard (${lateDaysStr}).\n\n💡 Le principe :\nLe soir, réviser par petites sessions de 25 minutes avec 5 minutes de vraie pause t'évite d'avoir la tête pleine et garde ta motivation au top.`,
     };
   }
 
-  // CAS 3 : JOURNÉES MORCELÉES (PETITS CRÉNEAUX LIBRES < 60 min)
+  // CAS 3 : JOURNÉES MORCELÉES (PETITS CRÉNEAUX < 60 min)
   if (isFragmentedGaps) {
     return {
       primaryId: 'pomodoro',
-      recommendedIds: ['pomodoro', 'two_minutes_rule', 'active_recall_spaced'],
+      recommendedIds: ['pomodoro'],
       notRecommendedIds: ['time_blocking'],
       lateDaysCount,
       earlyDaysCount,
       totalDaytimeFreeHours,
       majorFreeBlocksCount,
       hasSignificantDaytimeFreeTime: false,
-      contextTag: `Journées morcelées (${totalDaytimeFreeHours}h libres en petits créneaux de 30-60 min) • Micro-sessions agiles`,
-      rationale: `Votre emploi du temps comprend des respirations en journée, mais réparties en petits intervalles de moins d'une heure entre deux salles. Les micro-sessions de 25 min (Pomodoro) et la Règle des 2 Minutes sont parfaitement calibrées pour rentabiliser ces pauses sans stress.`,
+      contextTag: `Petites pauses entre les cours • Sessions courtes`,
+      rationale: `🎯 Pourquoi ce choix ?\nTu as de petits créneaux libres entre tes cours.\n\n💡 Le principe :\nDes sessions express de 25 minutes (Pomodoro) te permettent de rentabiliser chaque pause sans stress et sans couper un travail en plein milieu.`,
     };
   }
 
-  // CAS 4 : VOLUME ÉLEVÉ DE MATIÈRES (>= 9 matières)
+  // CAS 4 : GRAND NOMBRE DE MATIÈRES (>= 9 matières)
   if (subjectsCount >= 9) {
     return {
-      primaryId: 'pomodoro',
-      recommendedIds: ['pomodoro', 'two_minutes_rule', 'active_recall_spaced'],
+      primaryId: 'active_recall_spaced',
+      recommendedIds: ['active_recall_spaced'],
       notRecommendedIds: ['time_blocking'],
       lateDaysCount,
       earlyDaysCount,
       totalDaytimeFreeHours,
       majorFreeBlocksCount,
       hasSignificantDaytimeFreeTime: false,
-      contextTag: `Large volume (${subjectsCount} matières) • Micro-sessions agiles`,
-      rationale: `Avec ${subjectsCount} matières distinctes, le risque est d'en délaisser certaines. Des micro-sessions régulières de 25 min (Pomodoro & Règle des 2 Minutes) vous permettent de balayer tout le programme chaque semaine avec agilité.`,
+      contextTag: `Nombreuses matières (${subjectsCount}) • Mémoire durable`,
+      rationale: `🎯 Pourquoi ce choix ?\nTu as beaucoup de matières à gérer (${subjectsCount} matières au total).\n\n💡 Le principe :\nAu lieu de relire tes cours en boucle, teste-toi régulièrement avec des questions rapides. Tu retiendras tout 3 fois plus vite !`,
     };
   }
 
   // CAS 5 : SEMAINE ÉQUILIBRÉE STANDARD
   return {
-    primaryId: 'active_recall_spaced',
-    recommendedIds: ['active_recall_spaced', 'pomodoro', 'feynman'],
+    primaryId: 'feynman',
+    recommendedIds: ['feynman'],
     notRecommendedIds: [],
     lateDaysCount,
     earlyDaysCount,
     totalDaytimeFreeHours,
     majorFreeBlocksCount,
     hasSignificantDaytimeFreeTime: totalDaytimeFreeHours >= 8,
-    contextTag: `Semaine équilibrée (${totalDaytimeFreeHours}h libres en journée) • ${subjectsCount} matières`,
-    rationale: `Pour votre emploi du temps régulier avec environ ${totalDaytimeFreeHours}h de respiration en journée, l'Active Recall & Spaced Repetition (45 min) offre le meilleur ancrage mémoriel pour les examens, complété par la Technique de Feynman pour surmonter les points difficiles.`,
+    contextTag: `Semaine équilibrée • ${subjectsCount} matières`,
+    rationale: `🎯 Pourquoi ce choix ?\nTon emploi du temps est bien régulier avec tes ${subjectsCount} matières.\n\n💡 Le principe :\nLa Technique de Feynman t'aide à comprendre en profondeur : réexplique le cours avec tes mots comme à un ami pour réussir tes examens !`,
   };
 }

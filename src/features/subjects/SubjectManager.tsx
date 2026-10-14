@@ -506,16 +506,20 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
 
             {planTier === 'free' ? (
               <div className="space-y-1">
-                <label className="block text-xs font-medium text-slate-300">
-                  Date & Type d'épreuve <span className="text-[10px] font-black text-amber-400 ml-1">⭐ KONAN PRO</span>
+                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                  <span>Date & Type d'épreuve</span>
+                  <span className="px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-slate-900 text-white dark:bg-white dark:text-slate-900">PRO</span>
                 </label>
                 <div 
-                  onClick={() => setIsProModalOpen(true)}
-                  className="w-full bg-slate-900/60 border border-slate-800 hover:border-amber-500/40 rounded-xl px-3 py-2.5 text-xs text-slate-400 cursor-pointer flex items-center justify-between transition-colors"
-                  title="Disponible avec l'offre KONAN PRO"
+                  onClick={() => {
+                    if (onUpgradeToPro) onUpgradeToPro();
+                    else setIsProModalOpen(true);
+                  }}
+                  className="w-full bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 rounded-xl px-3 py-2.5 text-xs text-slate-600 dark:text-slate-400 cursor-pointer flex items-center justify-between transition-colors"
+                  title="Disponible avec l'offre KONAN PRO (Offre Découverte Offerte)"
                 >
                   <span className="truncate">Adaptation auto selon examens & devoirs</span>
-                  <span className="text-[10px] font-bold text-amber-400 shrink-0 ml-1">🔒 PRO</span>
+                  <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 shrink-0 ml-1">Découvrir PRO</span>
                 </div>
               </div>
             ) : (

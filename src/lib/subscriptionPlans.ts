@@ -90,14 +90,14 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
   pro: {
     id: 'pro',
     name: 'KONAN PRO',
-    tagline: 'Formule actuellement désactivée — Tous les comptes sont en Gratuit',
-    priceLabel: '1 200 F',
-    periodLabel: 'CFA / mois (Désactivé)',
-    priceAmount: 1200,
-    maxPdfImports: 3,
-    maxConcurrentMethods: 1,
-    allowedMethods: FREE_METHODS,
-    isPurchaseActive: false, // Compte Pro désactivé
+    tagline: 'Offre Découverte Offerte • Puissance Maximale',
+    priceLabel: 'Offert',
+    periodLabel: 'Période Découverte',
+    priceAmount: 0,
+    maxPdfImports: 99,
+    maxConcurrentMethods: 3,
+    allowedMethods: [...FREE_METHODS, ...PRO_METHODS],
+    isPurchaseActive: true, // Pro offert pendant la période promotionnelle
     paymentProviders: [],
   },
   plus: {
@@ -131,23 +131,28 @@ export function isProMethod(method: StudyPacing | string): boolean {
 
 /**
  * Vérifie si une méthode d'apprentissage est autorisée pour un palier donné
- * RÈGLE ABSOLUE : Mode PRO et PLUS désactivés, seules les méthodes Gratuites sont autorisées.
+ * En PRO ou PLUS, toutes les méthodes sont autorisées.
  */
-export function isMethodAllowedForTier(method: StudyPacing | string, _tier: PlanTier = 'free'): boolean {
+export function isMethodAllowedForTier(method: StudyPacing | string, tier: PlanTier = 'free'): boolean {
+  if (tier === 'pro' || tier === 'plus') {
+    return true;
+  }
   return isFreeMethod(method);
 }
 
 /**
  * Vérifie si l'utilisateur peut importer un nouvel emploi du temps PDF
- * Limité aux quotas du modèle Gratuit pour tous les utilisateurs.
+ * Illimité en Pro/Plus, limité aux quotas du modèle Gratuit en Free.
  */
-export function canImportPdfSchedule(_tier: PlanTier = 'free', currentImportCount: number = 0): boolean {
+export function canImportPdfSchedule(tier: PlanTier = 'free', currentImportCount: number = 0): boolean {
+  if (tier === 'pro' || tier === 'plus') return true;
   return currentImportCount < PLAN_DETAILS.free.maxPdfImports;
 }
 
 /**
- * Nombre maximal de méthodes combinables pour un palier (1 pour tous)
+ * Nombre maximal de méthodes combinables pour un palier (jusqu'à 3 en Pro/Plus, 1 en Free)
  */
-export function getMaxMethodsForTier(_tier: PlanTier = 'free'): number {
+export function getMaxMethodsForTier(tier: PlanTier = 'free'): number {
+  if (tier === 'pro' || tier === 'plus') return 3;
   return 1;
 }

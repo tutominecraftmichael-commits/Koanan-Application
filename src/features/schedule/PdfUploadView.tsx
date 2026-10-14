@@ -22,7 +22,6 @@ import {
   ArrowRight,
   Plus,
   Minus,
-  Crown,
   Sun,
   Flame,
   Sunset,
@@ -573,7 +572,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           <div className="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Crown className="w-5 h-5 text-amber-400" />
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-white text-slate-900 border border-slate-300">
+                  PRO
+                </span>
                 <h3 className="text-sm font-bold text-white">Technique Avancée KONAN PRO</h3>
               </div>
               <button onClick={() => setProModalPacingNotice(null)} className="text-slate-400 hover:text-white">
@@ -593,9 +594,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 Garder Pomodoro (Gratuit)
               </Button>
               <Button 
-                variant="glow" 
+                variant="primary" 
                 size="sm" 
-                leftIcon={<Sparkles className="w-3.5 h-3.5 text-amber-300" />}
                 onClick={() => {
                   setProModalPacingNotice(null);
                   if (onUpgradeToPro) onUpgradeToPro();
@@ -603,7 +603,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 }}
                 className="text-xs font-bold"
               >
-                Passer à KONAN PRO (Bientôt disponible)
+                Passer à KONAN PRO (Offre Découverte)
               </Button>
             </div>
           </div>
@@ -1057,7 +1057,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                           {pacingRecommendation.contextTag}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-200 mt-1 font-medium leading-relaxed">
+                      <p className="text-xs text-slate-200 mt-1 font-medium leading-relaxed whitespace-pre-line">
                         {pacingRecommendation.rationale}
                       </p>
                     </div>

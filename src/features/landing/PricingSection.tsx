@@ -3,7 +3,7 @@ import {
   Check, 
   Sparkles, 
   Star, 
-  Crown, 
+  Clock, 
   Calendar, 
   Layers, 
   Target, 
@@ -176,66 +176,65 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           <div className="space-y-5 pt-2">
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-                  Performance
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                  Performance Maximale
                 </span>
-                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-300 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 font-bold whitespace-nowrap inline-flex items-center gap-1 shrink-0">
-                  <span>Désactivé • Tout le monde en Gratuit</span>
+                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-sm shadow-amber-500/20 font-black whitespace-nowrap inline-flex items-center gap-1 shrink-0 uppercase tracking-wider">
+                  <span>PRO • Découverte</span>
                 </span>
               </div>
               
               <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white flex items-center gap-2">
                 KONAN PRO
-                <Sparkles className="w-5 h-5 text-sky-500 dark:text-sky-400 animate-spin-slow" />
               </h3>
             </div>
 
-            {/* Price with Rolling Counter Animation */}
+            {/* Price */}
             <div className="pt-1 pb-4 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-baseline gap-1">
-                <span className="text-3xl sm:text-4xl font-extrabold text-sky-600 dark:text-white font-mono">
-                  <AnimatedCounter value={1200} duration={1200} formatThousands /> F
+                <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white font-mono">
+                  0 F
                 </span>
-                <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">CFA / mois</span>
+                <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">Offert temporairement</span>
               </div>
-              <p className="text-[11px] text-sky-700 dark:text-sky-300 font-semibold mt-1">Rentabilité maximale • Moins de 40 F / jour</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 font-semibold mt-1">Accès complet offert pendant la phase de lancement</p>
             </div>
 
             {/* Features List */}
             <div className="space-y-3.5">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-300">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Tout ce qui est dans Konan, plus :
               </p>
               <ul className="space-y-3 text-xs sm:text-sm text-slate-700 dark:text-slate-200">
                 <li className="flex items-start gap-2.5">
-                  <Check className="w-4 h-4 text-sky-500 dark:text-sky-400 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-slate-900 dark:text-white shrink-0 mt-0.5" />
                   <span><strong>Imports & générations d'EDT illimités :</strong> Importez autant d'emplois du temps que vous le souhaitez via PDF, scan photo ou texte (sans aucun blocage).</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <Calendar className="w-4 h-4 text-sky-500 dark:text-sky-400 shrink-0 mt-0.5" />
+                  <Calendar className="w-4 h-4 text-slate-900 dark:text-white shrink-0 mt-0.5" />
                   <span><strong>Dates d'examens & Devoirs Surveillés (DS) :</strong> Intégrez vos dates d'épreuves sur chaque matière ; l'algorithme s'adapte avec <strong>compte à rebours interactif (J-X)</strong> et sur-priorisation automatique des révisions clés.</span>
                 </li>
 
                 <li className="flex items-start gap-2.5">
-                  <Check className="w-4 h-4 text-sky-500 dark:text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Synchronisation Google Calendar :</strong> Export direct de votre planning personnalisé (.ics) et intégration dans votre calendrier personnel.</span>
+                  <Check className="w-4 h-4 text-slate-900 dark:text-white shrink-0 mt-0.5" />
+                  <span><strong>Synchronisation Google Calendar :</strong> Export direct de votre planning personnalisé (.ics) avec alertes automatiques et intégration dans votre calendrier personnel.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <Layers className="w-4 h-4 text-sky-500 dark:text-sky-400 shrink-0 mt-0.5" />
+                  <Layers className="w-4 h-4 text-slate-900 dark:text-white shrink-0 mt-0.5" />
                   <div>
                     <span className="font-semibold text-slate-900 dark:text-white">Modèles d'espacement Premium :</span>
-                    <ul className="mt-1 space-y-1 pl-1 text-xs text-slate-700 dark:text-slate-200 border-l border-sky-300 dark:border-sky-500/40 ml-1">
+                    <ul className="mt-1 space-y-1 pl-1 text-xs text-slate-700 dark:text-slate-200 border-l border-slate-300 dark:border-slate-700 ml-1">
                       <li className="pl-2">• <strong>Time Blocking</strong> académique ciblé</li>
                       <li className="pl-2">• <strong>Technique de Feynman</strong> (assimilation conceptuelle profonde)</li>
                     </ul>
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <Sparkles className="w-4 h-4 text-sky-500 dark:text-sky-400 shrink-0 mt-0.5" />
-                  <span><strong>Recommandations algorithmiques de Konan :</strong> Recommandations intelligentes de la meilleure technique selon la fatigue et vos heures de cours (Idéal ⭐, Conseillé, Déconseillé).</span>
+                  <Sparkles className="w-4 h-4 text-slate-900 dark:text-white shrink-0 mt-0.5" />
+                  <span><strong>Recommandations algorithmiques de Konan :</strong> Recommandations intelligentes de la meilleure technique selon la fatigue et vos heures de cours.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <Check className="w-4 h-4 text-sky-500 dark:text-sky-400 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-slate-900 dark:text-white shrink-0 mt-0.5" />
                   <span><strong>Combinaison triple :</strong> Capacité d'activer jusqu'à <strong>3 techniques d'espacement simultanément</strong> dans le même planning.</span>
                 </li>
               </ul>
@@ -243,15 +242,14 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           </div>
 
           {/* Action Button */}
-          <div className="pt-6 mt-6 border-t border-sky-200 dark:border-sky-500/40">
-            <Button
-              variant="secondary"
-              size="md"
-              className="w-full text-xs sm:text-sm font-extrabold py-3.5 shadow-sm cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700"
+          <div className="pt-6 mt-6 border-t border-slate-200 dark:border-slate-800">
+            <button
+              type="button"
+              className="w-full text-xs sm:text-sm font-black py-3.5 px-4 rounded-xl shadow-md shadow-amber-500/20 bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 hover:brightness-105 active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2"
               onClick={() => onSelectPlan?.('pro')}
             >
-              Compte PRO Désactivé (Tous en Gratuit)
-            </Button>
+              <span>Passer à KONAN PRO (Offre Découverte Offerte)</span>
+            </button>
           </div>
         </div>
 
@@ -269,8 +267,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   Fonctionnalités Futures
                 </span>
                 <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-300 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 font-bold flex items-center gap-1 whitespace-nowrap shrink-0">
-                  <Crown className="w-3 h-3 text-slate-400" />
-                  Désactivé • Tout le monde en Gratuit
+                  <Clock className="w-3 h-3 text-slate-400" />
+                  Accès différé • Liste d'attente
                 </span>
               </div>
               

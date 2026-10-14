@@ -81,15 +81,15 @@ export function generateOptimizedStudyPlan(
       const daysUntilExam = getDaysRemaining(sub.examDate);
       if (daysUntilExam !== null) {
         if (daysUntilExam < 0) {
-          examUrgencyFactor = 0.6; // Épreuve déjà passée : ne pas surcharger la semaine
+          examUrgencyFactor = 0.7; // Épreuve déjà passée : ne pas surcharger la semaine
         } else if (daysUntilExam <= 3) {
-          examUrgencyFactor = 2.4; // Urgence critique J-3
+          examUrgencyFactor = 1.45; // Urgence J-3 : surpondération équilibrée
         } else if (daysUntilExam <= 7) {
-          examUrgencyFactor = 1.8; // Semaine d'épreuve J-7
+          examUrgencyFactor = 1.3; // Semaine d'épreuve J-7
         } else if (daysUntilExam <= 14) {
-          examUrgencyFactor = 1.4; // Quinzaine pré-examen J-14
+          examUrgencyFactor = 1.15; // Quinzaine pré-examen J-14
         } else if (daysUntilExam <= 30) {
-          examUrgencyFactor = 1.15;
+          examUrgencyFactor = 1.08;
         }
       }
     }
@@ -325,15 +325,23 @@ export function generateOptimizedStudyPlan(
               return aDaysToExam! - bDaysToExam!;
             }
 
-            // Priorité générale aux épreuves prévues dans les 14 jours
+            // RÈGLE FONDAMENTALE : Les devoirs et examens ne doivent JAMAIS supprimer ou empêcher les autres matières !
+            // Une matière n'ayant encore aucune session (scheduledCount === 0) est prioritaire sur les matières déjà planifiées
+            const aHasZero = a.scheduledCount === 0;
+            const bHasZero = b.scheduledCount === 0;
+            if (aHasZero && !bHasZero) return -1;
+            if (!aHasZero && bHasZero) return 1;
+
+            // Priorité de déficit de quota hebdomadaire :
+            const aDeficit = a.targetSessions - a.scheduledCount;
+            const bDeficit = b.targetSessions - b.scheduledCount;
+            if (aDeficit !== bDeficit) return bDeficit - aDeficit;
+
+            // Épreuves prévues dans les 14 jours (boost de révision sans écraser le quota des autres)
             const aIsExamSoon = aDaysToExam !== null && aDaysToExam >= 0 && aDaysToExam <= 14;
             const bIsExamSoon = bDaysToExam !== null && bDaysToExam >= 0 && bDaysToExam <= 14;
             if (aIsExamSoon && !bIsExamSoon) return -1;
             if (!aIsExamSoon && bIsExamSoon) return 1;
-
-            const aDeficit = a.targetSessions - a.scheduledCount;
-            const bDeficit = b.targetSessions - b.scheduledCount;
-            if (aDeficit !== bDeficit) return bDeficit - aDeficit;
 
             const aDistance = day - a.lastScheduledDay;
             const bDistance = day - b.lastScheduledDay;
