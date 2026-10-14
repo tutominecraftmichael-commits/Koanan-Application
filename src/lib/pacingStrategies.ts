@@ -367,107 +367,93 @@ export function recommendPacingStrategies(
   // CAS 0 : Grille sans cours enregistrés ou configuration initiale
   if (daysWithClasses === 0) {
     return {
-      primaryId: 'feynman',
-      recommendedIds: ['feynman'],
+      primaryId: 'pomodoro',
+      recommendedIds: ['pomodoro', 'active_recall_spaced'],
       notRecommendedIds: [],
       lateDaysCount: 0,
       earlyDaysCount: 0,
       totalDaytimeFreeHours: 0,
       majorFreeBlocksCount: 0,
       hasSignificantDaytimeFreeTime: false,
-      contextTag: `Profil équilibré • ${subjectsCount} matières`,
-      rationale: `🎯 Pourquoi ce choix ?\nPour bien retenir tes leçons, expliquer chaque cours avec des mots simples est la méthode la plus rapide et la plus efficace.\n\n💡 Le principe :\nSi tu arrives à l'expliquer simplement, c'est que tu l'as vraiment compris. Tu retiens plus vite et sans te fatiguer !`,
+      contextTag: `Profil initial • ${subjectsCount} matière(s)`,
+      rationale: `📊 Diagnostic KONAN :\nVotre grille d'études est prête pour la configuration de vos révisions.\n\n🛡️ Recommandation KONAN : Duo Sérénité Académique (2 méthodes)\n• Technique Pomodoro (25 min focus / 5 min pause) : Pour réviser par blocs digestes sans accumuler de fatigue mentale.\n• Active Recall & Répétition Espacée : Pour ancrer durablement les formules et définitions clés en se testant régulièrement.\n\n🎯 Objectif : Réussir votre année scolaire tranquillement et sans stress dès la première semaine.`,
     };
   }
 
-  // CAS 1 : BEAUCOUP DE TEMPS LIBRE EN JOURNÉE (Grands blocs diurnes ≥ 1h30)
-  if (hasSignificantDaytimeFreeTime) {
-    if (lateDaysCount >= 2) {
-      const lateDaysStr = lateDays.map(d => `${d.name} (${d.time})`).join(', ');
-      return {
-        primaryId: 'time_blocking',
-        recommendedIds: ['time_blocking'],
-        notRecommendedIds: [],
-        lateDaysCount,
-        earlyDaysCount,
-        totalDaytimeFreeHours,
-        majorFreeBlocksCount,
-        hasSignificantDaytimeFreeTime: true,
-        contextTag: `${totalDaytimeFreeHours}h libres en journée • Plages de révision`,
-        rationale: `🎯 Pourquoi ce choix ?\nTu as de grands moments libres dans la journée (${totalDaytimeFreeHours}h au total).\n\n💡 Le principe :\nBloquer un bon créneau de 75 minutes pour une seule matière te permet de travailler au calme en journée, et d'éviter de te surcharger le soir après tes cours tardifs (${lateDaysStr}).`,
-      };
-    }
+  // CAS 1 : JOURNÉES À FIN TARDIVE OU CHARGE CONTINUE (cours finissant >= 17h00 sur 2+ jours ou cours compacts sans pause)
+  // RÈGLE ANTI-BURNOUT : Même en cas de volume libre global, les fins de cours tardives créent une fatigue cognitive en soirée.
+  // INTERDICTION d'imposer du Time Blocking lourd de 75 min ou des méthodes d'effort intense le soir.
+  if (lateDaysCount >= 2 || isContinuousDense) {
+    const lateDaysStr = lateDays.map(d => `${d.name} (${d.time})`).join(', ');
+    return {
+      primaryId: 'pomodoro',
+      recommendedIds: ['pomodoro', 'active_recall_spaced'],
+      notRecommendedIds: ['time_blocking'],
+      lateDaysCount,
+      earlyDaysCount,
+      totalDaytimeFreeHours,
+      majorFreeBlocksCount,
+      hasSignificantDaytimeFreeTime,
+      contextTag: `Cours tardifs (${lateDaysStr}) • Sérénité & Anti-Burnout`,
+      rationale: `📊 Diagnostic de votre emploi du temps :\nVos cours se terminent tard dans la journée (${lateDaysStr}) sur ${lateDaysCount} journée(s) de la semaine. Même si vous disposez de créneaux libres par ailleurs, les journées d'études prolongées engendrent une fatigue cognitive accumulée en soirée.\n\n⚠️ Pourquoi éviter le Time Blocking massif le soir :\nImposer des blocs continus de 75 minutes ou des exercices complexes le soir après de longues heures de cours sature le cerveau, augmente le stress et mène rapidement au découragement ou au burnout.\n\n🛡️ La Recommandation KONAN : Combinaison Anti-Stress (2 méthodes)\n1. La Technique Pomodoro (25 min focus / 5 min pause) : Vous travaillez par sessions courtes de 25 minutes avec une vraie pause de 5 minutes. Chaque séance a un but précis et votre esprit reste frais sans saturation.\n2. L'Active Recall & Répétition Espacée : Au lieu de relire passivement des pages entières de cours fatiguant les yeux, vous testez vos connaissances par questions rapides.\n\n🎯 Objectif : Réussir votre année scolaire avec d'excellents résultats, tranquillement, à votre rythme et sans aucun stress.`,
+    };
+  }
 
+  // CAS 2 : JOURNÉES MORCELÉES (PETITS CRÉNEAUX < 60 min)
+  if (isFragmentedGaps) {
+    return {
+      primaryId: 'pomodoro',
+      recommendedIds: ['pomodoro', 'two_minutes_rule'],
+      notRecommendedIds: ['time_blocking'],
+      lateDaysCount,
+      earlyDaysCount,
+      totalDaytimeFreeHours,
+      majorFreeBlocksCount,
+      hasSignificantDaytimeFreeTime: false,
+      contextTag: `Pauses courtes entre les cours • Rythme dynamique`,
+      rationale: `📊 Diagnostic de votre emploi du temps :\nVotre planning est entrecoupé de petites fenêtres libres entre vos cours.\n\n🛡️ La Recommandation KONAN : Duo Dynamique (2 méthodes)\n1. La Technique Pomodoro (25 min) : Parfaite pour rentabiliser chaque pause de la journée sans risquer d'être interrompu au milieu d'un travail.\n2. La Règle des 2 Minutes : Vainc la procrastination en déclenchant immédiatement les petites tâches de préparation et d'organisation.\n\n🎯 Objectif : Valoriser vos créneaux diurnes pour vous libérer du temps le soir et étudier détendu.`,
+    };
+  }
+
+  // CAS 3 : BEAUCOUP DE TEMPS LIBRE EN JOURNÉE ET AUCUN COURS TARDIF (cours finissant tôt <= 14h30)
+  if (hasSignificantDaytimeFreeTime && lateDaysCount === 0 && (earlyDaysCount >= 2 || freeDaysCount >= 1)) {
     const earlyDaysStr = earlyDays.length > 0 ? earlyDays.map(d => `${d.name} (${d.time})`).join(', ') : '';
     const detailsDays = earlyDaysStr ? ` (${earlyDaysStr})` : freeDaysCount > 0 ? ` (${freeDaysCount} jour(s) sans cours)` : '';
 
     return {
       primaryId: 'time_blocking',
-      recommendedIds: ['time_blocking'],
+      recommendedIds: ['time_blocking', 'pomodoro'],
       notRecommendedIds: [],
       lateDaysCount,
       earlyDaysCount,
       totalDaytimeFreeHours,
       majorFreeBlocksCount,
       hasSignificantDaytimeFreeTime: true,
-      contextTag: `Emploi du temps aéré • Immersion mono-matière`,
-      rationale: `🎯 Pourquoi ce choix ?\nTon planning a de beaux créneaux libres en journée${detailsDays}.\n\n💡 Le principe :\nEn te posant 75 minutes d'affilée sur une seule matière, tu avances deux fois plus vite sans être distrait ni interrompu.`,
+      contextTag: `Planning aéré${detailsDays} • Immersion & Équilibre`,
+      rationale: `📊 Diagnostic de votre emploi du temps :\nVos cours se terminent tôt${detailsDays} et vous disposez de larges plages libres en journée (${totalDaytimeFreeHours}h au total) sans aucune fin tardive.\n\n🛡️ La Recommandation KONAN : Combinaison Équilibrée (2 méthodes)\n1. Le Time Blocking (75 min de concentration) : À positionner en journée lorsque votre énergie est optimale pour avancer en profondeur sur vos matières majeures.\n2. La Technique Pomodoro (25 min) : Pour vos révisions légères de consolidation en fin d'après-midi sans vous surmener.\n\n🎯 Objectif : Exploiter la clarté de vos après-midis pour prendre de l'avance tout en gardant vos soirées légères.`,
     };
   }
 
-  // CAS 2 : JOURNÉES COMPACTES ET FIN TARDIVE SANS PAUSE EN JOURNÉE
-  if (lateDaysCount >= 3 || isContinuousDense) {
-    const lateDaysStr = lateDays.map(d => `${d.name} (${d.time})`).join(', ');
+  // CAS 4 : GRAND NOMBRE DE MATIÈRES (>= 8 matières)
+  if (subjectsCount >= 8) {
     return {
       primaryId: 'pomodoro',
-      recommendedIds: ['pomodoro'],
+      recommendedIds: ['pomodoro', 'active_recall_spaced'],
       notRecommendedIds: ['time_blocking'],
       lateDaysCount,
       earlyDaysCount,
       totalDaytimeFreeHours,
       majorFreeBlocksCount,
       hasSignificantDaytimeFreeTime: false,
-      contextTag: `Journées chargées (${lateDaysStr}) • Énergie préservée`,
-      rationale: `🎯 Pourquoi ce choix ?\nTes cours s'enchaînent vite et finissent tard (${lateDaysStr}).\n\n💡 Le principe :\nLe soir, réviser par petites sessions de 25 minutes avec 5 minutes de vraie pause t'évite d'avoir la tête pleine et garde ta motivation au top.`,
-    };
-  }
-
-  // CAS 3 : JOURNÉES MORCELÉES (PETITS CRÉNEAUX < 60 min)
-  if (isFragmentedGaps) {
-    return {
-      primaryId: 'pomodoro',
-      recommendedIds: ['pomodoro'],
-      notRecommendedIds: ['time_blocking'],
-      lateDaysCount,
-      earlyDaysCount,
-      totalDaytimeFreeHours,
-      majorFreeBlocksCount,
-      hasSignificantDaytimeFreeTime: false,
-      contextTag: `Petites pauses entre les cours • Sessions courtes`,
-      rationale: `🎯 Pourquoi ce choix ?\nTu as de petits créneaux libres entre tes cours.\n\n💡 Le principe :\nDes sessions express de 25 minutes (Pomodoro) te permettent de rentabiliser chaque pause sans stress et sans couper un travail en plein milieu.`,
-    };
-  }
-
-  // CAS 4 : GRAND NOMBRE DE MATIÈRES (>= 9 matières)
-  if (subjectsCount >= 9) {
-    return {
-      primaryId: 'active_recall_spaced',
-      recommendedIds: ['active_recall_spaced'],
-      notRecommendedIds: ['time_blocking'],
-      lateDaysCount,
-      earlyDaysCount,
-      totalDaytimeFreeHours,
-      majorFreeBlocksCount,
-      hasSignificantDaytimeFreeTime: false,
-      contextTag: `Nombreuses matières (${subjectsCount}) • Mémoire durable`,
-      rationale: `🎯 Pourquoi ce choix ?\nTu as beaucoup de matières à gérer (${subjectsCount} matières au total).\n\n💡 Le principe :\nAu lieu de relire tes cours en boucle, teste-toi régulièrement avec des questions rapides. Tu retiendras tout 3 fois plus vite !`,
+      contextTag: `Cursus complet (${subjectsCount} matières) • Mémorisation sereine`,
+      rationale: `📊 Diagnostic de votre cursus :\nVous avez ${subjectsCount} matières à concilier dans votre programme académique.\n\n🛡️ La Recommandation KONAN : Duo Mémorisation & Sérénité (2 méthodes)\n1. La Technique Pomodoro (25 min) : Permet de réviser plusieurs matières dans la même journée par blocs digestes de 25 minutes sans sentiment d'encombrement.\n2. L'Active Recall & Répétition Espacée : Consolide chaque notion dans la mémoire à long terme par des questionnaires ciblés.\n\n🎯 Objectif : Assurer la couverture complète de toutes vos matières chaque semaine, calmement et sans stress.`,
     };
   }
 
   // CAS 5 : SEMAINE ÉQUILIBRÉE STANDARD
   return {
-    primaryId: 'feynman',
-    recommendedIds: ['feynman'],
+    primaryId: 'pomodoro',
+    recommendedIds: ['pomodoro', 'active_recall_spaced'],
     notRecommendedIds: [],
     lateDaysCount,
     earlyDaysCount,
@@ -475,6 +461,6 @@ export function recommendPacingStrategies(
     majorFreeBlocksCount,
     hasSignificantDaytimeFreeTime: totalDaytimeFreeHours >= 8,
     contextTag: `Semaine équilibrée • ${subjectsCount} matières`,
-    rationale: `🎯 Pourquoi ce choix ?\nTon emploi du temps est bien régulier avec tes ${subjectsCount} matières.\n\n💡 Le principe :\nLa Technique de Feynman t'aide à comprendre en profondeur : réexplique le cours avec tes mots comme à un ami pour réussir tes examens !`,
+    rationale: `📊 Diagnostic de votre emploi du temps :\nVotre grille horaire présente une alternance régulière de cours.\n\n🛡️ La Recommandation KONAN : Duo Équilibre & Efficacité (2 méthodes)\n1. La Technique Pomodoro (25 min focus / 5 min pause) : Vous assure un rythme constant et bienveillant, protégeant votre énergie mentale.\n2. L'Active Recall & Répétition Espacée : Renforce votre compréhension en testant activement vos acquis clés.\n\n🎯 Objectif : Construire une habitude de révision agréable et pérenne pour réussir votre année en toute sérénité.`,
   };
 }

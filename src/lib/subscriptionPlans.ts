@@ -90,27 +90,27 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
   pro: {
     id: 'pro',
     name: 'KONAN PRO',
-    tagline: 'Offre Découverte Offerte • Puissance Maximale',
-    priceLabel: 'Offert',
-    periodLabel: 'Période Découverte',
-    priceAmount: 0,
+    tagline: '1 200 F CFA / mois • Gratuit actuellement (Lancement)',
+    priceLabel: '1 200 F',
+    periodLabel: 'CFA / mois (Gratuit actuellement)',
+    priceAmount: 1200,
     maxPdfImports: 99,
     maxConcurrentMethods: 3,
     allowedMethods: [...FREE_METHODS, ...PRO_METHODS],
-    isPurchaseActive: true, // Pro offert pendant la période promotionnelle
+    isPurchaseActive: true, // Pro offert pendant la période de lancement
     paymentProviders: [],
   },
   plus: {
     id: 'plus',
     name: 'KONAN PLUS',
-    tagline: 'Formule actuellement désactivée — Tous les comptes sont en Gratuit',
+    tagline: 'Disponible bientôt',
     priceLabel: '2 500 F',
-    periodLabel: 'CFA / mois (Désactivé)',
+    periodLabel: 'CFA / mois (Disponible bientôt)',
     priceAmount: 2500,
     maxPdfImports: 3,
     maxConcurrentMethods: 1,
     allowedMethods: FREE_METHODS,
-    isPurchaseActive: false, // Compte Plus désactivé
+    isPurchaseActive: false, // Compte Plus disponible bientôt
     paymentProviders: [],
   },
 };

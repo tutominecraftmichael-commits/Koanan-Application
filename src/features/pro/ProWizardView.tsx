@@ -99,17 +99,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   // Stepper : 1 = Méthodes, 2 = Devoirs/Examens, 3 = Réorganisation, 4 = Google Agenda
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
 
-  // État Étape 1 : Méthodes cognitives
-  const [selectedPrimaryPacing, setSelectedPrimaryPacing] = useState<StudyPacing>(() => {
-    return state.preferences.pacing || 'feynman';
-  });
-  const [selectedCombinedPacings, setSelectedCombinedPacings] = useState<StudyPacing[]>(() => {
-    const existing = state.preferences.combinedPacings;
-    if (existing && existing.length > 0) return existing;
-    return [state.preferences.pacing || 'feynman'];
-  });
-
-  // État Étape 2 : Matières & Devoirs / Examens
+  // État Étape 2 : Matières & Devoirs / Examens (initialisé d'abord)
   const [subjectsList, setSubjectsList] = useState<Subject[]>(() => {
     if (state.subjects && state.subjects.length > 0) {
       return state.subjects.map(s => ({ ...s }));
@@ -147,6 +137,23 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
     ];
   });
 
+  // Recommandation intelligente KONAN selon la charge et l'emploi du temps
+  const aiRecommendation = useMemo(() => {
+    return recommendPacingStrategies(subjectsList.length, state.classSlots || []);
+  }, [subjectsList.length, state.classSlots]);
+
+  // État Étape 1 : Méthodes cognitives
+  const [selectedPrimaryPacing, setSelectedPrimaryPacing] = useState<StudyPacing>(() => {
+    return state.preferences.pacing || aiRecommendation.primaryId || 'pomodoro';
+  });
+  const [selectedCombinedPacings, setSelectedCombinedPacings] = useState<StudyPacing[]>(() => {
+    const existing = state.preferences.combinedPacings;
+    if (existing && existing.length > 0) return existing;
+    return aiRecommendation.recommendedIds && aiRecommendation.recommendedIds.length > 0
+      ? aiRecommendation.recommendedIds
+      : [aiRecommendation.primaryId || 'pomodoro'];
+  });
+
   // État ajout rapide de matière
   const [isAddingSubject, setIsAddingSubject] = useState(false);
   const [newSubjectName, setNewSubjectName] = useState('');
@@ -163,11 +170,6 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   // État Étape 4 : Téléchargement des rappels
   const [hasDownloadedIcs, setHasDownloadedIcs] = useState(false);
   const [hasOpenedGoogleCalendar, setHasOpenedGoogleCalendar] = useState(false);
-
-  // Recommandation intelligente IA
-  const aiRecommendation = useMemo(() => {
-    return recommendPacingStrategies(subjectsList.length, state.classSlots || []);
-  }, [subjectsList.length, state.classSlots]);
 
   // Gestion des méthodes en Étape 1
   const handleTogglePacing = (pacingId: StudyPacing) => {
@@ -197,10 +199,13 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
 
   const handleApplyAiRecommendation = () => {
     soundFX.playCheckmarkPop();
-    const primary = (aiRecommendation.primaryId as StudyPacing) || 'feynman';
+    const primary = aiRecommendation.primaryId;
+    const targetPacings = aiRecommendation.recommendedIds && aiRecommendation.recommendedIds.length > 0
+      ? aiRecommendation.recommendedIds
+      : [primary];
     setSelectedPrimaryPacing(primary);
-    setSelectedCombinedPacings([primary]);
-    showToast(`Recommandation appliquée : ${getPacingStrategy(primary).title}`);
+    setSelectedCombinedPacings(targetPacings);
+    showToast(`Recommandation KONAN appliquée : ${targetPacings.map(id => getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')).join(' + ')}`);
   };
 
   // Gestion des matières en Étape 2
@@ -480,12 +485,16 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                   )}
                 </div>
 
-                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                  <span>Méthode conseillée :</span>
-                  <span className="text-indigo-600 dark:text-indigo-400 underline decoration-indigo-400/40 underline-offset-4">
-                    {getPacingStrategy(aiRecommendation.primaryId).title}
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+                    {aiRecommendation.recommendedIds.length > 1 ? 'Méthodes conseillées :' : 'Méthode conseillée :'}
                   </span>
-                </h3>
+                  {aiRecommendation.recommendedIds.map(id => (
+                    <span key={id} className="text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-cyan-300 border border-indigo-200 dark:border-indigo-500/30">
+                      {getPacingStrategy(id).title}
+                    </span>
+                  ))}
+                </div>
 
                 <div className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line bg-white/60 dark:bg-slate-950/40 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80">
                   {aiRecommendation.rationale}

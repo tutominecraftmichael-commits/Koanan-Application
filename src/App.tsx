@@ -423,6 +423,11 @@ export function App() {
           : prev.subjects;
         const validSubjectIds = new Set(validSubjects.map(s => s.id));
 
+        const hasInvalidSlots = prev.classSlots?.some(c => !c.subjectId || !validSubjectIds.has(c.subjectId));
+        const cleanedSlots = hasInvalidSlots
+          ? prev.classSlots.filter(c => c.subjectId && validSubjectIds.has(c.subjectId))
+          : prev.classSlots;
+
         const hasInvalidSession = prev.studySessions.some(
           s => isNonAcademicSubject(s.title) || (s.subjectId && !validSubjectIds.has(s.subjectId))
         );
@@ -433,10 +438,11 @@ export function App() {
         // If weekly cycle was completed today, student has finished all tasks: wait until tomorrow
         const todayStr = new Date().toISOString().slice(0, 10);
         if (prev.cycleCompletedDate === todayStr) {
-          if (hasInvalidSubject || hasInvalidSession) {
+          if (hasInvalidSubject || hasInvalidSession || hasInvalidSlots) {
             return {
               ...prev,
               subjects: validSubjects,
+              classSlots: cleanedSlots,
               studySessions: baseSessions,
             };
           }
@@ -445,7 +451,7 @@ export function App() {
 
         const { updatedSessions, rescheduledCount, restoredCount, rescheduledSessions } = evaluateDailyCatchup(
           baseSessions,
-          prev.classSlots,
+          cleanedSlots,
           prev.preferences,
           new Date(),
           validSubjects
@@ -459,15 +465,17 @@ export function App() {
           return {
             ...prev,
             subjects: validSubjects,
+            classSlots: cleanedSlots,
             studySessions: updatedSessions,
           };
         }
 
-        if (restoredCount > 0 || hasInvalidSubject || hasInvalidSession) {
+        if (restoredCount > 0 || hasInvalidSubject || hasInvalidSession || hasInvalidSlots) {
           lastRescheduledSignature.current = '';
           return {
             ...prev,
             subjects: validSubjects,
+            classSlots: cleanedSlots,
             studySessions: updatedSessions,
           };
         }
@@ -555,9 +563,17 @@ export function App() {
       return;
     }
 
-    const isAuth = state.userAccount?.isLoggedIn || state.isDemoMode;
+    // Formule KONAN PRO : Connexion impérative obligatoire (aucun accès anonyme ou démo non authentifié)
+    if (view === 'pro-wizard') {
+      if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
+        showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte Google pour passer à KONAN PRO.');
+        setActiveView('auth');
+        return;
+      }
+    }
 
-    if (!isAuth && view !== 'landing' && view !== 'auth' && view !== 'pro-wizard') {
+    const isAuthenticated = Boolean(state.userAccount?.isLoggedIn || state.isDemoMode);
+    if (!isAuthenticated && view !== 'landing' && view !== 'auth') {
       showToast('🔒 Connexion requise : Veuillez vous connecter avec Google pour accéder à l’application.');
       setActiveView('auth');
       return;
@@ -718,18 +734,23 @@ export function App() {
   const handleSelectPlan = (planId: 'free' | 'pro' | 'plus') => {
     setIsProModalOpen(false);
 
-    // Formule KONAN PRO : Accès direct au Wizard d'optimisation
+    // Formule KONAN PRO : Connexion impérative obligatoire
     if (planId === 'pro') {
+      if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
+        showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte Google pour passer à KONAN PRO.');
+        setActiveView('auth');
+        return;
+      }
       setActiveView('pro-wizard');
       return;
     }
 
-    // Formule KONAN PLUS : Liste d'attente
+    // Formule KONAN PLUS : Disponible bientôt
     if (planId === 'plus') {
       setWaitlistModalInfo({
         isOpen: true,
-        featureTitle: 'Formule KONAN PLUS (Désactivée)',
-        featureDescription: 'La formule PLUS est actuellement désactivée. Tous les comptes utilisateurs sont sur le modèle Gratuit.',
+        featureTitle: 'Formule KONAN PLUS (Disponible bientôt)',
+        featureDescription: 'La formule KONAN PLUS sera disponible très prochainement avec le pack groupe et les ambiances audio. Vous disposez actuellement d\'un accès complet aux fonctionnalités de révision.',
         requiredTier: 'plus',
       });
       return;
@@ -1163,12 +1184,22 @@ export function App() {
   };
 
   const handleUpdateSubjects = (newSubjects: Subject[]) => {
-    const updatedPlan = generateOptimizedStudyPlan(newSubjects, state.classSlots, state.preferences, effectivePlanTier);
-    setState(prev => ({
-      ...prev,
-      subjects: newSubjects,
-      studySessions: updatedPlan,
-    }));
+    const validSubjectIds = new Set(newSubjects.map(s => s.id));
+    const cleanedSlots = state.classSlots.filter(c => !c.subjectId || validSubjectIds.has(c.subjectId));
+    const updatedPlan = generateOptimizedStudyPlan(newSubjects, cleanedSlots, state.preferences, effectivePlanTier);
+    setState(prev => {
+      const nextState: AppState = {
+        ...prev,
+        subjects: newSubjects,
+        classSlots: cleanedSlots,
+        studySessions: updatedPlan,
+        logs: prev.logs.filter(l => !l.subjectId || validSubjectIds.has(l.subjectId)),
+      };
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+      return nextState;
+    });
     showToast('Matières mises à jour et planning recalculé !');
   };
 

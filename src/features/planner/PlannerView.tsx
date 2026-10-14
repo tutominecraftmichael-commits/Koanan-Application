@@ -673,47 +673,61 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               );
             }
             const rec = recommendPacingStrategies(subjects.length, classSlots);
-            const isRecActive = selectedCombinedPacings.length === 1 && selectedCombinedPacings[0] === rec.primaryId;
+            const targetPacings = rec.recommendedIds && rec.recommendedIds.length > 0 ? rec.recommendedIds : [rec.primaryId];
+            const isRecActive = selectedCombinedPacings.length === targetPacings.length &&
+              targetPacings.every(id => selectedCombinedPacings.includes(id));
             return (
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/50 to-indigo-50/90 border border-indigo-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm text-xs dark:bg-gradient-to-r dark:from-indigo-950/60 dark:via-slate-900 dark:to-indigo-950/40 dark:border-indigo-500/40 dark:shadow-md">
-                <div className="flex items-start gap-3">
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/50 to-indigo-50/90 border border-indigo-200 flex flex-col sm:flex-row sm:items-start justify-between gap-3.5 shadow-sm text-xs dark:bg-gradient-to-r dark:from-indigo-950/60 dark:via-slate-900 dark:to-indigo-950/40 dark:border-indigo-500/40 dark:shadow-md">
+                <div className="flex items-start gap-3 min-w-0 flex-1">
                   <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-cyan-300 shrink-0 mt-0.5">
                     <Sparkles className="w-4 h-4 text-indigo-600 dark:text-cyan-400" />
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-1.5 min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-bold text-slate-900 dark:text-white text-[11px] uppercase tracking-wide">
-                        Recommandation IA :
+                        Recommandation KONAN :
                       </span>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-cyan-300 dark:border-indigo-500/40">
-                        {getPacingStrategy(rec.primaryId).title}
-                      </span>
+                      {targetPacings.map(id => (
+                        <span key={id} className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-cyan-300 dark:border-indigo-500/40">
+                          {getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
+                        </span>
+                      ))}
                       <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
                         {rec.contextTag}
                       </span>
                     </div>
-                    <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
+                    <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed whitespace-pre-line">
                       {rec.rationale}
                     </p>
                   </div>
                 </div>
 
                 {isRecActive ? (
-                  <div className="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-bold text-xs shrink-0 flex items-center gap-1.5">
+                  <div className="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-bold text-xs shrink-0 flex items-center gap-1.5 self-start">
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>Méthode active</span>
+                    <span>Recommandation active</span>
                   </div>
                 ) : (
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedModalStrategy(rec.primaryId);
-                      setSelectedCombinedPacings([rec.primaryId]);
+                      setSelectedCombinedPacings(targetPacings);
+                      if (onUpdatePreferences) {
+                        onUpdatePreferences({
+                          ...preferences,
+                          pacing: rec.primaryId,
+                          combinedPacings: targetPacings,
+                          focusBlockDuration: getPacingStrategy(rec.primaryId).focusBlockDuration,
+                          breakBlockDuration: getPacingStrategy(rec.primaryId).breakBlockDuration,
+                        });
+                        onRegeneratePlan();
+                      }
                     }}
-                    className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shrink-0 flex items-center gap-1.5 transition-all shadow-xs active:scale-95 cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shrink-0 flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer self-start"
                   >
                     <Check className="w-3.5 h-3.5" />
-                    <span>Appliquer : {getPacingStrategy(rec.primaryId).title}</span>
+                    <span>Appliquer la recommandation</span>
                   </button>
                 )}
               </div>

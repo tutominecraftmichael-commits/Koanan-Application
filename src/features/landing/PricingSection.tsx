@@ -191,13 +191,18 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
 
             {/* Price */}
             <div className="pt-1 pb-4 border-b border-slate-200 dark:border-slate-800">
-              <div className="flex items-baseline gap-1">
+              <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white font-mono">
-                  0 F
+                  1 200 F
                 </span>
-                <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">Offert temporairement</span>
+                <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">CFA / mois</span>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                  Gratuit actuellement
+                </span>
               </div>
-              <p className="text-[11px] text-slate-600 dark:text-slate-300 font-semibold mt-1">Accès complet offert pendant la phase de lancement</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 font-semibold mt-1">
+                Accès complet 100% offert pendant la phase de lancement
+              </p>
             </div>
 
             {/* Features List */}
@@ -248,7 +253,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               className="w-full text-xs sm:text-sm font-black py-3.5 px-4 rounded-xl shadow-md shadow-amber-500/20 bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 hover:brightness-105 active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2"
               onClick={() => onSelectPlan?.('pro')}
             >
-              <span>Passer à KONAN PRO (Offre Découverte Offerte)</span>
+              <span>Passer à KONAN PRO (Gratuit actuellement)</span>
             </button>
           </div>
         </div>
@@ -268,7 +273,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 </span>
                 <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-300 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 font-bold flex items-center gap-1 whitespace-nowrap shrink-0">
                   <Clock className="w-3 h-3 text-slate-400" />
-                  Accès différé • Liste d'attente
+                  Disponible bientôt
                 </span>
               </div>
               
@@ -337,7 +342,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               onClick={() => onSelectPlan?.('plus')}
               className="w-full text-xs sm:text-sm font-bold py-3 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 dark:text-slate-300 transition-all cursor-pointer shadow-sm"
             >
-              Compte PLUS Désactivé (Tous en Gratuit)
+              Disponible bientôt
             </Button>
           </div>
         </div>

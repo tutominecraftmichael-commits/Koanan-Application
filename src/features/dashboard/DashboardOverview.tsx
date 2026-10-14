@@ -103,12 +103,25 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const currentMinute = now.getHours() * 60 + now.getMinutes();
   const currentDayInfo = DAYS_OF_WEEK.find(d => d.id === currentDayIndex) || DAYS_OF_WEEK[0];
 
+  const validSubjectIds = new Set(subjects.map(s => s.id));
+
+  // Cours universitaires du jour : exclure strictement les matières supprimées ou orphelines
   const todaysClasses = classSlots
-    .filter(c => c.dayOfWeek === currentDayIndex)
+    .filter(c => c.dayOfWeek === currentDayIndex && c.subjectId && validSubjectIds.has(c.subjectId))
+    .filter(c => {
+      const sub = subjects.find(s => s.id === c.subjectId);
+      return Boolean(sub && sub.name && sub.name.trim().length > 0);
+    })
     .sort((a, b) => (a.startTime || '').localeCompare(b.startTime || ''));
 
+  // Sessions de révision du jour : exclure strictement les matières supprimées ou orphelines
   const allTodaysStudySessions = studySessions
-    .filter(s => s.dayOfWeek === currentDayIndex);
+    .filter(s => s.dayOfWeek === currentDayIndex)
+    .filter(s => {
+      if (!s.subjectId) return Boolean(s.title && s.title.trim().length > 0);
+      const sub = subjects.find(sub => sub.id === s.subjectId);
+      return Boolean(sub && sub.name && sub.name.trim().length > 0);
+    });
 
   // Sessions en rattrapage aujourd'hui
   const rescheduledTodaySessions = isCycleCompletedToday 
@@ -403,14 +416,15 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {todaysClasses.map(c => {
                     const sub = subjects.find(s => s.id === c.subjectId);
+                    if (!sub || !sub.name || !sub.name.trim()) return null;
                     return (
                       <div
                         key={c.id}
                         className="p-3 sm:p-3.5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs"
-                        style={{ borderLeftColor: sub?.color || '#6366F1', borderLeftWidth: '3px' }}
+                        style={{ borderLeftColor: sub.color || '#6366F1', borderLeftWidth: '3px' }}
                       >
                         <div className="min-w-0 flex-1">
-                          <p className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm break-words leading-snug">{sub?.name}</p>
+                          <p className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm break-words leading-snug">{sub.name}</p>
                           <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5 break-words">{c.room || 'Salle de cours'}</p>
                         </div>
                         <div className="flex items-center sm:flex-col justify-between sm:justify-center sm:text-right font-mono shrink-0 pt-1 sm:pt-0 border-t border-slate-100 dark:border-slate-800/60 sm:border-t-0">
@@ -513,6 +527,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {rescheduledTodaySessions.map(s => {
                           const missedSub = subjects.find(sub => sub.id === s.subjectId);
+                          if (s.subjectId && (!missedSub || !missedSub.name)) return null;
                           return (
                             <div
                               key={s.id}
@@ -556,6 +571,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 ) : (
                   activeDisplaySessions.map(session => {
                     const sub = subjects.find(s => s.id === session.subjectId);
+                    if (session.subjectId && (!sub || !sub.name)) return null;
                     const isRescheduled = Boolean(session.isRescheduledToday);
                     return (
                       <div

@@ -1048,47 +1048,58 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             {/* BANNIÈRE DE RECOMMANDATION CONTEXTUELLE */}
             {planTier !== 'free' ? (
               <div className="p-4 sm:p-4.5 rounded-2xl bg-gradient-to-r from-indigo-950/90 via-slate-900 to-indigo-950/50 border border-cyan-500/30 shadow-lg shadow-indigo-950/50 space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0 mt-0.5">
-                      <Sparkles className="w-4 h-4 text-cyan-300" />
-                    </div>
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-xs font-black uppercase tracking-wider text-cyan-400">
-                          Recommandation IA
-                        </span>
-                        <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
-                          {getPacingStrategy(pacingRecommendation.primaryId).title}
-                        </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-                          {pacingRecommendation.contextTag}
-                        </span>
+                {(() => {
+                  const targetPacings = pacingRecommendation.recommendedIds && pacingRecommendation.recommendedIds.length > 0
+                    ? pacingRecommendation.recommendedIds
+                    : [pacingRecommendation.primaryId];
+                  const isRecActive = selectedPacings.length === targetPacings.length &&
+                    targetPacings.every(id => selectedPacings.includes(id));
+                  return (
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5">
+                      <div className="flex items-start gap-3 min-w-0 flex-1">
+                        <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0 mt-0.5">
+                          <Sparkles className="w-4 h-4 text-cyan-300" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-xs font-black uppercase tracking-wider text-cyan-400">
+                              Recommandation KONAN
+                            </span>
+                            {targetPacings.map(id => (
+                              <span key={id} className="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
+                                {getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
+                              </span>
+                            ))}
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                              {pacingRecommendation.contextTag}
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-200 mt-1.5 font-medium leading-relaxed whitespace-pre-line">
+                            {pacingRecommendation.rationale}
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-xs text-slate-200 mt-1.5 font-medium leading-relaxed whitespace-pre-line">
-                        {pacingRecommendation.rationale}
-                      </p>
-                    </div>
-                  </div>
 
-                  {selectedPacings.length === 1 && selectedPacings[0] === pacingRecommendation.primaryId ? (
-                    <div className="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold shrink-0 flex items-center gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Méthode active</span>
+                      {isRecActive ? (
+                        <div className="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold shrink-0 flex items-center gap-1.5 self-start">
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Recommandation active</span>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedPacings(targetPacings);
+                          }}
+                          className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-cyan-500/20 shrink-0 cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 self-start"
+                        >
+                          <Check className="w-3.5 h-3.5" />
+                          <span>Appliquer la recommandation</span>
+                        </button>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedPacings([pacingRecommendation.primaryId]);
-                      }}
-                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-cyan-500/20 shrink-0 cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
-                    >
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Appliquer : {getPacingStrategy(pacingRecommendation.primaryId).title}</span>
-                    </button>
-                  )}
-                </div>
+                  );
+                })()}
               </div>
             ) : (
               <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-400">
