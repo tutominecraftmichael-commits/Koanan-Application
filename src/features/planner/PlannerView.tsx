@@ -332,7 +332,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 </span>
               </div>
               <p className="text-amber-950/80 dark:text-slate-300 text-xs leading-relaxed">
-                Vos séances non effectuées plus tôt ont été replacées ce soir (avant 21h30 max). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées sans impacter le programme de demain.
+                Vos séances non effectuées plus tôt ont été replacées ce soir ou cette nuit (avant minuit 00:00 max). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées sans impacter le programme de demain.
               </p>
             </div>
           </div>

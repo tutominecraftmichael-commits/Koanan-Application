@@ -14,13 +14,19 @@ export function formatMinutesToHours(minutes: number): string {
   return `${hours}h${remainingMins.toString().padStart(2, '0')}`;
 }
 
-export function parseTimeToMinutes(timeStr: string): number {
+export function parseTimeToMinutes(timeStr: string, isStartTime = false): number {
   if (!timeStr || !timeStr.includes(':')) return 0;
   const [h, m] = timeStr.split(':').map(Number);
+  if (!isStartTime && (h === 24 || h === 0) && m === 0 && (timeStr === '24:00' || timeStr === '00:00' || timeStr === '0:00')) {
+    return 1440;
+  }
   return (h || 0) * 60 + (m || 0);
 }
 
 export function minutesToTimeString(minutes: number): string {
+  if (minutes === 1440 || minutes === 0) {
+    return '00:00';
+  }
   const h = Math.floor(minutes / 60) % 24;
   const m = minutes % 60;
   return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;

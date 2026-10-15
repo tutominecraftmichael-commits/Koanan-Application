@@ -110,23 +110,16 @@ export function findNextFreeSlotToday(
   // Démarre 5 à 10 minutes après l'heure actuelle, arrondi aux 15 min supérieures
   const searchStartMin = roundUpTo15(Math.max(currentMinute + 5, 0));
 
-  // RÈGLE STRICTE KONAN AI :
-  // Le rattrapage est STRICTEMENT intra-journée (même jour uniquement).
-  // Une séance d'étude ne peut JAMAIS être reportée à 23h ou au milieu de la nuit (respect du sommeil et du repos).
-  // Heure maximale de fin d'étude pour un rattrapage :
-  // - Chronotype Matin : 21h00 (1260 min)
-  // - Chronotype Standard : 21h30 (1290 min)
-  // - Chronotype Nuit : 22h00 (1320 min) STRICTEMENT
-  // Si la séance ne peut pas être terminée avant cette heure limite, elle ne peut pas être replacée aujourd'hui :
-  // elle est simplement oubliée sans AUCUN report vers le jour suivant (ex: samedi -> dimanche strictement interdit).
-  let dayEndMin = 1290; // 21:30 par défaut
-  if (preferences.chronotype === 'morning') {
-    dayEndMin = 1260; // 21:00
-  } else if (preferences.chronotype === 'night') {
-    dayEndMin = 1320; // 22:00 maximum absolu
-  }
+  // RÈGLE ÉTENDUE DE RATTRAPAGE INTELLIGENT (Validée par Christ Boni) :
+  // Le rattrapage est STRICTEMENT intra-journée (même jour uniquement, aucun report au lendemain).
+  // Les séances non effectuées plus tôt sont replacées en fin d'après-midi, soirée ou nuit
+  // avec une heure limite stricte de fin à MINUIT (00:00 / 1440 min).
+  // L'étudiant peut étudier à 22h, 22h30, 23h et terminer jusqu'à 00:00 (minuit pile).
+  // En revanche, si la séance devait finir après minuit (ex: 00:05, 00:10, 00:30),
+  // on arrête et on ne la remplace pas pour préserver le sommeil.
+  const dayEndMin = 1440; // 00:00 (Minuit pile, fin maximale de journée)
 
-  // S'il ne reste même pas 30 minutes avant l'heure limite de fin de journée autorisée
+  // S'il ne reste même pas 30 minutes avant minuit (00:00)
   if (searchStartMin + 30 > dayEndMin) {
     return null;
   }
@@ -274,10 +267,17 @@ export function evaluateDailyCatchup(
   const rescheduledSessions: StudySession[] = [];
   const updatedSessions = [...cleanedSessions];
 
-  // Sessions prévues pour le jour actuel, triées chronologiquement
+  // Sessions prévues pour le jour actuel :
+  // Priorité absolue aux préparations d'examen et devoirs surveillés (DS) pour leur garantir les meilleurs créneaux du soir
   const todaysSessions = updatedSessions
     .filter(s => s.dayOfWeek === todayDayOfWeek)
-    .sort((a, b) => a.startTime.localeCompare(b.startTime));
+    .sort((a, b) => {
+      const aIsExam = Boolean(a.isExamPrep || a.type === 'exam_simulation');
+      const bIsExam = Boolean(b.isExamPrep || b.type === 'exam_simulation');
+      if (aIsExam && !bIsExam) return -1;
+      if (!aIsExam && bIsExam) return 1;
+      return a.startTime.localeCompare(b.startTime);
+    });
 
   // Traiter toutes les sessions non complétées dont l'heure de fin est dépassée
   for (const session of todaysSessions) {
@@ -299,14 +299,13 @@ export function evaluateDailyCatchup(
 
     // 3. Une séance ne peut être replacée qu'une seule fois dans la même journée.
     // Si elle a déjà bénéficié d'un créneau de rattrapage aujourd'hui et n'a pas été faite :
-    // on ne la repousse pas indéfiniment en soirée (pas de créneau tardif à 23h).
+    // on ne la repousse pas indéfiniment en soirée.
     // Elle est simplement oubliée pour aujourd'hui, avec STRICTEMENT ZÉRO report au lendemain.
     if (session.isRescheduledToday) continue;
 
     const sessionEndMin = parseTimeToMinutes(session.endTime);
 
     // Détection : l'heure de fin de la session est dépassée !
-    // (ex: session EPS 08h00 - 10h00, et il est actuellement 10h01 ou plus)
     if (currentMinute >= sessionEndMin) {
       // Trouver les autres sessions d'aujourd'hui pour éviter tout conflit (incluant celles déjà replacées)
       const otherSessions = updatedSessions.filter(
@@ -327,6 +326,7 @@ export function evaluateDailyCatchup(
         const originalStart = session.originalStartTime || session.startTime;
         const originalEnd = session.originalEndTime || session.endTime;
         const subjectName = subjects.find(sub => sub.id === session.subjectId)?.name || session.title;
+        const isExamSession = Boolean(session.isExamPrep || session.type === 'exam_simulation');
 
         const sessionIndex = updatedSessions.findIndex(s => s.id === session.id);
         if (sessionIndex !== -1) {
@@ -339,7 +339,9 @@ export function evaluateDailyCatchup(
             originalStartTime: originalStart,
             originalEndTime: originalEnd,
             rescheduledDate: todayDateStr,
-            rescheduledReason: `Séance de ${subjectName} non validée. Replacée à ${freeSlot.startTime} ce soir (rattrapage jour même uniquement, aucun report au lendemain).`,
+            rescheduledReason: isExamSession
+              ? `🎯 Préparation examen / devoir (${subjectName}) replacée à ${freeSlot.startTime} (rattrapage prioritaire ce soir, fin max à minuit 00:00).`
+              : `Séance de ${subjectName} replacée à ${freeSlot.startTime} (rattrapage ce soir, fin max à minuit 00:00).`,
           };
 
           updatedSessions[sessionIndex] = adaptedSession;
@@ -347,10 +349,9 @@ export function evaluateDailyCatchup(
           rescheduledCount++;
         }
       } else {
-        // RÈGLE SUPRÊME : Aucun créneau libre avant 21h30 aujourd'hui ou fin de journée atteinte.
-        // Exemple : EPS samedi matin non fait, et impossible de replacer avant le soir.
-        // On n'accumule AUCUNE dette et AUCUN report vers dimanche ou le jour suivant :
-        // La séance est purement OUBLIÉE. L'étudiant n'a tout simplement pas fait EPS ce jour-ci.
+        // RÈGLE SUPRÊME : Aucun créneau libre avant minuit (00:00) aujourd'hui ou fin de journée atteinte.
+        // On n'accumule AUCUNE dette et AUCUN report vers le jour suivant :
+        // La séance est purement OUBLIÉE. L'étudiant peut dormir l'esprit serein sans dette de travail.
       }
     }
   }
