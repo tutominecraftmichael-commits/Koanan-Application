@@ -93,22 +93,10 @@ export function transitionUserState(
       breakBlockDuration: nextPacing === 'pomodoro' ? 5 : currentState.preferences.breakBlockDuration || 5,
     };
 
-    // D. Dissolution de toutes les dates de devoirs et examens
-    let hadExamsOrDevoirs = false;
-    nextState.subjects = (currentState.subjects || []).map((sub: Subject) => {
-      if (sub.examDate || sub.examType || sub.examTime) {
-        hadExamsOrDevoirs = true;
-      }
-      return {
-        ...sub,
-        examDate: undefined,
-        examType: undefined,
-        examTime: undefined,
-      };
-    });
-    if (hadExamsOrDevoirs) {
-      dissolvedFeatures.push('Dates de devoirs surveillés & examens supprimées des matières');
-    }
+    // D. Préservation absolue des dates de devoirs et examens des étudiants (ne jamais effacer)
+    nextState.subjects = (currentState.subjects || []).map((sub: Subject) => ({
+      ...sub,
+    }));
 
     // E. Coaching & rappels PRO dissous
     if (nextState.coachingSessionsRemaining) nextState.coachingSessionsRemaining = 0;

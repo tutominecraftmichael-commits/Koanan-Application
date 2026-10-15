@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import type { AppState } from '../../services/storage';
 import type { 
   Subject, 
@@ -137,6 +137,26 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
     ];
   });
 
+  // Synchronisation dynamique si les matières sont chargées depuis le Cloud
+  useEffect(() => {
+    if (state.subjects && state.subjects.length > 0) {
+      setSubjectsList(prev => {
+        return state.subjects.map(s => {
+          const existing = prev.find(p => p.id === s.id);
+          if (existing && (existing.examDate || existing.examType)) {
+            return {
+              ...s,
+              examDate: existing.examDate || s.examDate,
+              examType: existing.examType || s.examType,
+              examTime: existing.examTime || s.examTime,
+            };
+          }
+          return { ...s };
+        });
+      });
+    }
+  }, [state.subjects]);
+
   // Recommandation intelligente KONAN selon la charge et l'emploi du temps
   const aiRecommendation = useMemo(() => {
     return recommendPacingStrategies(subjectsList.length, state.classSlots || []);
@@ -208,9 +228,22 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
     showToast(`Recommandation KONAN appliquée : ${targetPacings.map(id => getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')).join(' + ')}`);
   };
 
-  // Gestion des matières en Étape 2
+  // Gestion des matières en Étape 2 avec persistance IMMÉDIATE (localStorage & Firestore)
   const handleUpdateSubject = (id: string, updates: Partial<Subject>) => {
-    setSubjectsList(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+    setSubjectsList(prev => {
+      const nextSubjects = prev.map(s => s.id === id ? { ...s, ...updates } : s);
+      const nextAppState: AppState = {
+        ...state,
+        planTier: 'pro',
+        userAccount: state.userAccount ? {
+          ...state.userAccount,
+          planTier: 'pro',
+        } : undefined,
+        subjects: nextSubjects,
+      };
+      onUpdateState(nextAppState);
+      return nextSubjects;
+    });
   };
 
   const handleDeleteSubject = (id: string) => {
@@ -219,7 +252,20 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
       return;
     }
     soundFX.playCheckmarkPop();
-    setSubjectsList(prev => prev.filter(s => s.id !== id));
+    setSubjectsList(prev => {
+      const nextSubjects = prev.filter(s => s.id !== id);
+      const nextAppState: AppState = {
+        ...state,
+        planTier: 'pro',
+        userAccount: state.userAccount ? {
+          ...state.userAccount,
+          planTier: 'pro',
+        } : undefined,
+        subjects: nextSubjects,
+      };
+      onUpdateState(nextAppState);
+      return nextSubjects;
+    });
   };
 
   const handleCreateSubject = (e: React.FormEvent) => {
@@ -234,7 +280,20 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
       targetGrade: 15,
       color: colors[subjectsList.length % colors.length],
     };
-    setSubjectsList(prev => [...prev, newSub]);
+    setSubjectsList(prev => {
+      const nextSubjects = [...prev, newSub];
+      const nextAppState: AppState = {
+        ...state,
+        planTier: 'pro',
+        userAccount: state.userAccount ? {
+          ...state.userAccount,
+          planTier: 'pro',
+        } : undefined,
+        subjects: nextSubjects,
+      };
+      onUpdateState(nextAppState);
+      return nextSubjects;
+    });
     setNewSubjectName('');
     setIsAddingSubject(false);
     soundFX.playCheckmarkPop();
@@ -896,6 +955,15 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                 size="md"
                 onClick={() => {
                   soundFX.playCheckmarkPop();
+                  onUpdateState({
+                    ...state,
+                    planTier: 'pro',
+                    userAccount: state.userAccount ? {
+                      ...state.userAccount,
+                      planTier: 'pro',
+                    } : undefined,
+                    subjects: subjectsList,
+                  });
                   setCurrentStep(3);
                 }}
                 rightIcon={<ArrowRight className="w-4 h-4" />}
@@ -1103,6 +1171,16 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                     size="md"
                     onClick={() => {
                       soundFX.playCheckmarkPop();
+                      onUpdateState({
+                        ...state,
+                        planTier: 'pro',
+                        userAccount: state.userAccount ? {
+                          ...state.userAccount,
+                          planTier: 'pro',
+                        } : undefined,
+                        subjects: subjectsList,
+                        studySessions: reorganizedSessions || state.studySessions,
+                      });
                       setCurrentStep(4);
                     }}
                     rightIcon={<ArrowRight className="w-4 h-4" />}

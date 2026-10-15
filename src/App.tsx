@@ -603,25 +603,29 @@ export function App() {
       academicLevel: profile.academicLevel,
     });
 
-    setState(userState);
+    // 1. Synchronisation Cloud PRIORITAIRE AVANT toute écriture sur Firestore :
+    // Récupérer et fusionner immédiatement les matières, devoirs et sessions stockés sur Cloud Firestore
+    let finalUserState = userState;
+    try {
+      const mergedFromCloud = await fetchAndMergeCloudState(profile.googleId, userState);
+      if (mergedFromCloud && (mergedFromCloud.subjects?.length > 0 || mergedFromCloud.completedOnboarding)) {
+        finalUserState = mergedFromCloud;
+      }
+    } catch (err) {
+      console.warn('Erreur synchronisation cloud initiale:', err);
+    }
 
-    // Enregistrement sécurisé local et dans la base de données Firestore
-    saveUserState(profile.googleId, userState);
-    syncUserStateToCloud(profile.googleId, {
-      ...userState,
-      email: profile.email,
-      name: finalName,
-      googleId: profile.googleId,
-      privacyPolicyAccepted: true,
-      privacyPolicyAcceptedAt: userState.privacyPolicyAcceptedAt || new Date().toISOString(),
-      lastSyncedAt: new Date().toISOString(),
-    }).catch(console.warn);
+    setState(finalUserState);
+
+    // 2. Enregistrement sécurisé local et dans la base de données Firestore avec l'état fusionné
+    await saveUserState(profile.googleId, finalUserState);
 
     // Message de bienvenue avec Code Konan permanent
     hasGreetedAuthRef.current = profile.googleId;
-    if (effectivePlan === 'pro') {
+    const resolvedTier = finalUserState.planTier || effectivePlan;
+    if (resolvedTier === 'pro') {
       showToast(`⭐ Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PRO actif)`);
-    } else if (effectivePlan === 'plus') {
+    } else if (resolvedTier === 'plus') {
       showToast(`👑 Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PLUS actif)`);
     } else {
       showToast(`✨ Bonne Arrivée ! ${finalName} — Votre Code Konan : ${studentKonanId}`);
@@ -629,29 +633,19 @@ export function App() {
 
     // Célébration lors de la toute première connexion
     const firstLoginKey = `konan_welcomed_v1_${profile.googleId}`;
-    const isFirstTimeLogin = !localStorage.getItem(firstLoginKey) && !userState.completedOnboarding;
+    const isFirstTimeLogin = !localStorage.getItem(firstLoginKey) && !finalUserState.completedOnboarding;
     if (isFirstTimeLogin) {
       localStorage.setItem(firstLoginKey, 'true');
       soundFX.playVictoryCelebration();
-      if (effectivePlan === 'plus') {
+      if (resolvedTier === 'plus') {
         setIsPlusActivationModalOpen(true);
-      } else if (effectivePlan === 'pro') {
+      } else if (resolvedTier === 'pro') {
         setIsSuperProModalOpen(true);
       }
     }
 
     // Déblocage de l'accès à l'application
     setActiveView('dashboard');
-
-    // Synchronisation multi-appareils en arrière-plan
-    fetchAndMergeCloudState(profile.googleId, userState)
-      .then(mergedFromCloud => {
-        if (mergedFromCloud && (mergedFromCloud.subjects?.length > 0 || mergedFromCloud.completedOnboarding)) {
-          saveUserState(profile.googleId, mergedFromCloud);
-          setState(mergedFromCloud);
-        }
-      })
-      .catch(console.warn);
   };
 
   /**
@@ -1092,7 +1086,11 @@ export function App() {
     hasGreetedAuthRef.current = '';
     lastRescheduledSignature.current = '';
     if (state.userAccount?.googleId && !state.isDemoMode) {
-      saveUserState(state.userAccount.googleId, state);
+      try {
+        await saveUserState(state.userAccount.googleId, state);
+      } catch (err) {
+        console.warn('Erreur de synchronisation cloud avant déconnexion:', err);
+      }
     }
     await signOutReal();
     setActiveSession(null);

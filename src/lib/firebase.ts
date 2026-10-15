@@ -515,12 +515,36 @@ export async function syncUserStateToCloud(uid: string, data: any): Promise<{ su
       return { success: false, error: 'PRIVACY_POLICY_NOT_ACCEPTED' };
     }
 
-    // Guard: Prevent a freshly opened unhydrated device from wiping existing cloud subjects
+    // Guard 1: Prevent a freshly opened unhydrated device from wiping existing cloud subjects
     if (!sanitized.subjects || sanitized.subjects.length === 0) {
       const existing = await loadUserStateFromCloud(uid);
       if (existing && existing.subjects && existing.subjects.length > 0) {
         console.warn('Prevented accidental overwrite of cloud state by empty local state');
         return { success: false, error: 'BLOCKED_OVERWRITE_PROTECTION' };
+      }
+    }
+
+    // Guard 2: Prevent unhydrated payloads without exam dates from wiping out existing cloud homework/exam dates
+    if (Array.isArray(sanitized.subjects) && sanitized.subjects.length > 0) {
+      const incomingHasExams = sanitized.subjects.some((s: any) => Boolean(s.examDate));
+      if (!incomingHasExams) {
+        const existing = await loadUserStateFromCloud(uid);
+        if (existing && Array.isArray(existing.subjects) && existing.subjects.some((s: any) => Boolean(s.examDate))) {
+          sanitized.subjects = sanitized.subjects.map((sub: any) => {
+            const cloudSub = existing.subjects.find((cs: any) => 
+              cs.id === sub.id || (cs.name && sub.name && cs.name.toLowerCase().trim() === sub.name.toLowerCase().trim())
+            );
+            if (cloudSub?.examDate) {
+              return {
+                ...sub,
+                examDate: cloudSub.examDate,
+                examType: sub.examType || cloudSub.examType || 'devoir',
+                examTime: sub.examTime || cloudSub.examTime,
+              };
+            }
+            return sub;
+          });
+        }
       }
     }
 

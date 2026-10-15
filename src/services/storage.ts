@@ -201,7 +201,7 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           : (parsed.userAccount?.konanId?.trim()?.toUpperCase() || assignedKonanId);
 
         // Palier actif : Supporte le palier PRO librement
-        const isProTier = (parsed.planTier === 'pro' || parsed.userAccount?.planTier === 'pro') && parsed.planTier !== 'plus';
+        const isProTier = (parsed.planTier === 'pro' || parsed.userAccount?.planTier === 'pro' || fallbackUser?.planTier === 'pro') && parsed.planTier !== 'plus';
         const resolvedPlanTier: PlanTier = isProTier ? 'pro' : 'free';
 
         const hasCompleted = Array.isArray(parsed.studySessions) && parsed.studySessions.some((s: StudySession) => s.completed);
@@ -220,9 +220,6 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
           .filter((sess: StudySession) => {
             if (isNonAcademicSubject(sess.title)) return false;
             if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
-            if (!isProTier) {
-              if (sess.isExamPrep || sess.type === 'exam_simulation') return false;
-            }
             return true;
           })
           .map((sess: StudySession) => {
@@ -324,7 +321,7 @@ import {
  * Saves a real user's private state to localStorage and syncs to Cloud Firestore
  * so all devices (PC, mobile, tablet) share the exact same timetable and subjects.
  */
-export function saveUserState(uid: string, state: AppState): void {
+export async function saveUserState(uid: string, state: AppState): Promise<void> {
   const targetTier: PlanTier = (state.planTier === 'pro' || state.userAccount?.planTier === 'pro') ? 'pro' : 'free';
   const sanitizedState: AppState = {
     ...state,
@@ -355,26 +352,30 @@ export function saveUserState(uid: string, state: AppState): void {
   // RGPD Guard: synchroniser sur Firestore UNIQUEMENT si l'utilisateur a accepté la politique de confidentialité
   const isConsentGiven = Boolean(sanitizedState.privacyPolicyAccepted || sanitizedState.userAccount?.privacyPolicyAccepted);
   if (!sanitizedState.isDemoMode && uid && uid !== 'google-demo' && isConsentGiven) {
-    syncUserStateToCloud(uid, {
-      studentName: sanitizedState.studentName,
-      academicLevel: sanitizedState.academicLevel,
-      planTier: targetTier,
-      subjects: sanitizedState.subjects,
-      classSlots: sanitizedState.classSlots,
-      preferences: sanitizedState.preferences,
-      studySessions: sanitizedState.studySessions,
-      logs: sanitizedState.logs,
-      completedOnboarding: sanitizedState.completedOnboarding,
-      userAccount: sanitizedState.userAccount,
-      invitedEmails: [],
-      invitedIds: [],
-      konanId: sanitizedState.konanId || sanitizedState.userAccount?.konanId,
-      academicGoal: undefined,
-      coachingSessionsRemaining: 0,
-      lastCoachingDate: sanitizedState.lastCoachingDate,
-      privacyPolicyAccepted: sanitizedState.privacyPolicyAccepted ?? sanitizedState.userAccount?.privacyPolicyAccepted,
-      privacyPolicyAcceptedAt: sanitizedState.privacyPolicyAcceptedAt ?? sanitizedState.userAccount?.privacyPolicyAcceptedAt,
-    }).catch(() => {});
+    try {
+      await syncUserStateToCloud(uid, {
+        studentName: sanitizedState.studentName,
+        academicLevel: sanitizedState.academicLevel,
+        planTier: targetTier,
+        subjects: sanitizedState.subjects,
+        classSlots: sanitizedState.classSlots,
+        preferences: sanitizedState.preferences,
+        studySessions: sanitizedState.studySessions,
+        logs: sanitizedState.logs,
+        completedOnboarding: sanitizedState.completedOnboarding,
+        userAccount: sanitizedState.userAccount,
+        invitedEmails: [],
+        invitedIds: [],
+        konanId: sanitizedState.konanId || sanitizedState.userAccount?.konanId,
+        academicGoal: undefined,
+        coachingSessionsRemaining: 0,
+        lastCoachingDate: sanitizedState.lastCoachingDate,
+        privacyPolicyAccepted: sanitizedState.privacyPolicyAccepted ?? sanitizedState.userAccount?.privacyPolicyAccepted,
+        privacyPolicyAcceptedAt: sanitizedState.privacyPolicyAcceptedAt ?? sanitizedState.userAccount?.privacyPolicyAcceptedAt,
+      });
+    } catch (err) {
+      console.warn('syncUserStateToCloud failed in saveUserState:', err);
+    }
   }
 }
 
@@ -415,6 +416,19 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
             topics: (Array.isArray(s.topics) && s.topics.length > 0) ? s.topics : (localSub?.topics || []),
           };
         });
+
+      // Inclusion des matières créées localement qui ne sont pas encore sur le cloud
+      (currentState.subjects || []).forEach((ls: Subject) => {
+        if (!isNonAcademicSubject(ls.name)) {
+          const alreadyExists = mergedSubjects.some((ms: Subject) => 
+            ms.id === ls.id || ms.name.toLowerCase().trim() === ls.name.toLowerCase().trim()
+          );
+          if (!alreadyExists) {
+            mergedSubjects.push(ls);
+          }
+        }
+      });
+
       const validSubjectIds = new Set(mergedSubjects.map((s: Subject) => s.id));
 
       const mergedClassSlots: ClassSlot[] = Array.isArray(cloudData.classSlots) ? cloudData.classSlots : currentState.classSlots;
@@ -436,7 +450,6 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         .filter((sess: StudySession) => {
           if (isNonAcademicSubject(sess.title)) return false;
           if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
-          if (!isPro && (sess.isExamPrep || sess.type === 'exam_simulation')) return false;
           return true;
         })
         .map((sess: StudySession) => {

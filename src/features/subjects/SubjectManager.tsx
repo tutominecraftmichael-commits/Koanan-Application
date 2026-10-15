@@ -49,7 +49,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   onUpdateSubjects,
   onOpenPresetModal,
   isDemoMode = false,
-  planTier = 'free',
+  planTier: _planTier = 'free',
   onViewPricing,
   onUpgradeToPro,
   onTriggerPlanner,
@@ -146,9 +146,9 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         coefficient,
         difficulty,
         targetGrade,
-        examDate: planTier === 'free' ? undefined : (examDate || undefined),
-        examType: planTier === 'free' ? undefined : (examDate ? examType : undefined),
-        examTime: planTier === 'free' ? undefined : (examDate ? examTime : undefined),
+        examDate: examDate || undefined,
+        examType: examDate ? examType : undefined,
+        examTime: examDate ? examTime : undefined,
         topics: finalTopics,
       } : s);
       onUpdateSubjects(updated);
@@ -161,9 +161,9 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         coefficient,
         difficulty,
         targetGrade,
-        examDate: planTier === 'free' ? undefined : (examDate || undefined),
-        examType: planTier === 'free' ? undefined : (examDate ? examType : undefined),
-        examTime: planTier === 'free' ? undefined : (examDate ? examTime : undefined),
+        examDate: examDate || undefined,
+        examType: examDate ? examType : undefined,
+        examTime: examDate ? examTime : undefined,
         topics: finalTopics,
       };
       onUpdateSubjects([...subjects, newSub]);
@@ -504,39 +504,19 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
               onChange={(e) => setTargetGrade(Number(e.target.value))}
             />
 
-            {planTier === 'free' ? (
-              <div className="space-y-1">
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <span>Date & Type d'épreuve</span>
-                  <span className="px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-slate-900 text-white dark:bg-white dark:text-slate-900">PRO</span>
-                </label>
-                <div 
-                  onClick={() => {
-                    if (onUpgradeToPro) onUpgradeToPro();
-                    else setIsProModalOpen(true);
-                  }}
-                  className="w-full bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 rounded-xl px-3 py-2.5 text-xs text-slate-600 dark:text-slate-400 cursor-pointer flex items-center justify-between transition-colors"
-                  title="Disponible avec le modèle KONAN PRO (Version PRO ouverte)"
-                >
-                  <span className="truncate">Adaptation auto selon examens & devoirs</span>
-                  <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 shrink-0 ml-1">PRO ouverte</span>
-                </div>
-              </div>
-            ) : (
-              <Input
-                label="Date de l'épreuve"
-                type="date"
-                value={examDate}
-                onChange={(e) => setExamDate(e.target.value)}
-              />
-            )}
+            <Input
+              label="Date du devoir surveillé ou de l'épreuve"
+              type="date"
+              value={examDate}
+              onChange={(e) => setExamDate(e.target.value)}
+            />
           </div>
 
-          {planTier !== 'free' && examDate && (
+          {examDate && (
             <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-                  ⚡ Adaptation de l'emploi du temps
+                  ⚡ Adaptation ciblée de l'emploi du temps
                 </span>
                 <span className="text-[10px] font-semibold text-amber-300/80 uppercase">KONAN PRO</span>
               </div>
