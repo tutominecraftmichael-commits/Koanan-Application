@@ -920,29 +920,40 @@ export function cleanSubjectTitle(
     return '';
   }
 
-  // Remove quotes and punctuation artifacts
-  trimmed = trimmed.replace(/["'“”«»]/g, ' ').replace(/\s+/g, ' ').trim();
-  if (trimmed.length < 2 || /^["'\s,;:-]+$/.test(trimmed)) {
-    return '';
-  }
+  // Remove leading time interval or line bullets e.g. "- 07:30 - 10:00 :" or "08h00 - 10h00 :"
+  trimmed = trimmed
+    .replace(/^[-*•\s]*\d{1,2}[h:H:]\d{0,2}\s*[-–—àaA/to]+\s*\d{1,2}[h:H:]\d{0,2}\s*[:|-]?\s*/i, '')
+    .replace(/^[-*•\s]+/, '');
 
-  // 1. Dynamic ECUE Map exact and word-boundary check
-  if (dynamicEcueMap) {
-    for (const [code, info] of dynamicEcueMap.entries()) {
-      if (new RegExp(`(^|\\b)${code}(\\b|$)`, 'i').test(trimmed)) {
-        return info.name;
-      }
+  // 1. Strip pipe-delimited metadata clauses FIRST: | Salle: ... | Prof: ... | Amphi: ...
+  trimmed = trimmed
+    .replace(/\|\s*(?:salle|amphi|lieu|room|batiment|bâtiment|bat)\s*:[^|();\n]+/gi, ' ')
+    .replace(/\|\s*(?:prof|professeur|enseignant|intervenant|dr|pr|m\.|mme)\s*:[^|();\n]+/gi, ' ')
+    .replace(/\|\s*[^|:]+:[^|]+/g, ' ');
+
+  // 2. Extract or strip bracketed course/ECUE code: e.g. [1MTH3350] or [INFO301]
+  const bracketCodeMatch = trimmed.match(/\[\s*([A-Za-z0-9_-]{2,14})\s*\]/);
+  if (bracketCodeMatch) {
+    const code = bracketCodeMatch[1];
+    if (dynamicEcueMap?.has(code)) {
+      return dynamicEcueMap.get(code)!.name;
     }
-  }
-
-  // 2. Pre-indexed known academic ECUE map check
-  for (const [code, info] of Object.entries(KNOWN_ACADEMIC_ECUE_MAP)) {
-    if (new RegExp(`(^|\\b)${code}(\\b|$)`, 'i').test(trimmed)) {
-      return info.name;
+    if (KNOWN_ACADEMIC_ECUE_MAP[code.toUpperCase()]) {
+      return KNOWN_ACADEMIC_ECUE_MAP[code.toUpperCase()].name;
     }
+    // Remove the bracketed code so it doesn't pollute the subject title
+    trimmed = trimmed.replace(bracketCodeMatch[0], ' ');
   }
 
-  // 3. Remove professor and room FIRST so their tokens never bleed into the subject title
+  // 3. Remove parenthesized room or course details: e.g. "(Amphi 1)", "(Salle 302)", "(Labo 2)"
+  trimmed = trimmed.replace(/\((?:salle|amphi|labo|batiment|bâtiment|room|atelier)[^)]*\)/gi, ' ');
+
+  // 4. Strip explicit Salle: and Prof: clauses (even without pipe)
+  trimmed = trimmed
+    .replace(/\b(?:salle|amphi|lieu|room|batiment|bâtiment)\s*:\s*[^|();\n]+/gi, ' ')
+    .replace(/\b(?:prof|professeur|enseignant|intervenant)\s*:\s*[^|();\n]+/gi, ' ');
+
+  // 5. Remove professor and room entities
   const detectedProf = extractProfessor(trimmed);
   if (detectedProf) {
     trimmed = trimmed.replace(detectedProf, ' ');
@@ -951,17 +962,45 @@ export function cleanSubjectTitle(
   if (detectedRoom) {
     trimmed = trimmed.replace(detectedRoom, ' ');
   }
-  // Strip explicit Salle: and Prof: clauses
-  trimmed = trimmed
-    .replace(/\b(?:Salle|Amphi|Lieu)\s*:[^|()]+/gi, ' ')
-    .replace(/\b(?:Prof|Professeur|Enseignant|Intervenant)\s*:[^|()]+/gi, ' ');
 
-  // 4. Remove repeated adjacent duplicate words: e.g. "PC PC", "SVT SVT", "MATHS MATHS"
+  // 6. Strip standalone leftover room/prof tokens
+  trimmed = trimmed
+    .replace(/\b(?:salle|amphi|amphithéâtre|lieu|room|batiment|bâtiment|labo|laboratoire)\b/gi, ' ')
+    .replace(/\b(?:prof|professeur|enseignant|intervenant|docteur|dr|pr|monsieur|madame|m\.|mme)\b/gi, ' ');
+
+  // 7. Strip course types at start/end of title (e.g. "CM Électronique Analogique" -> "Électronique Analogique")
+  trimmed = trimmed
+    .replace(/^\s*(?:CM|TD|TP|COURS|MAGISTRAL)\s*[-:]?\s*/i, '')
+    .replace(/\s*[-:(]?\s*(?:CM|TD|TP|COURS|MAGISTRAL)\s*\)?$/i, '');
+
+  // 8. Dynamic ECUE Map check on remaining text
+  if (dynamicEcueMap) {
+    for (const [code, info] of dynamicEcueMap.entries()) {
+      if (new RegExp(`(^|\\b)${code}(\\b|$)`, 'i').test(trimmed)) {
+        return info.name;
+      }
+    }
+  }
+
+  // 9. Pre-indexed known academic ECUE map check
+  for (const [code, info] of Object.entries(KNOWN_ACADEMIC_ECUE_MAP)) {
+    if (new RegExp(`(^|\\b)${code}(\\b|$)`, 'i').test(trimmed)) {
+      return info.name;
+    }
+  }
+
+  // Remove quotes and punctuation artifacts
+  trimmed = trimmed.replace(/["'“”«»]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (trimmed.length < 2 || /^["'\s,;:-]+$/.test(trimmed)) {
+    return '';
+  }
+
+  // Remove repeated adjacent duplicate words: e.g. "PC PC", "SVT SVT"
   while (/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/i.test(trimmed)) {
     trimmed = trimmed.replace(/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/gi, '$1');
   }
 
-  // 5. Remove glued doubled words: e.g. "PCPC" -> "PC", "SVTSVT" -> "SVT"
+  // Remove glued doubled words: e.g. "PCPC" -> "PC"
   trimmed = trimmed.replace(/^([A-Za-zÀ-ÿ.]{2,12})\1$/i, '$1');
   if (trimmed.replace(/\./g, '').length % 2 === 0) {
     const half = trimmed.length / 2;
@@ -970,13 +1009,13 @@ export function cleanSubjectTitle(
     }
   }
 
-  // 6. Direct acronym check (e.g. "PC", "SVT", "MATHS")
+  // Direct acronym check (e.g. "PC", "SVT", "MATHS")
   const upperInitial = trimmed.toUpperCase().replace(/\s+/g, '');
   const dotStrippedInitial = upperInitial.replace(/\./g, '');
   if (LYCEE_SUBJECT_ACRONYMS[upperInitial]) return LYCEE_SUBJECT_ACRONYMS[upperInitial];
   if (LYCEE_SUBJECT_ACRONYMS[dotStrippedInitial]) return LYCEE_SUBJECT_ACRONYMS[dotStrippedInitial];
 
-  // 7. Remove Days, Dates, Times, Course Types, Rooms, Leftover noise
+  // Remove Days, Dates, Times, Course Types, Rooms, Leftover noise
   let cleaned = trimmed
     .replace(/\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi, ' ')
     .replace(/\b(lun|mar|mer|jeu|ven|sam|dim|mon|tue|wed|thu|fri|sat|sun)\.?\b/gi, ' ')
@@ -1765,8 +1804,25 @@ export function parseSequentialSchedule(
           // Skip if break or free slot
           if (isFreeOrBreak(contextText)) continue;
 
-          const room = extractRoom(contextText);
-          const professor = extractProfessor(contextText);
+          let room = extractRoom(contextText);
+          let professor = extractProfessor(contextText);
+
+          // Pipe metadata parsing: | Salle: ... | Prof: ...
+          if (contextText.includes('|')) {
+            const parts = contextText.split('|').map(p => p.trim());
+            for (let pIdx = 1; pIdx < parts.length; pIdx++) {
+              const part = parts[pIdx];
+              const rMatch = part.match(/(?:salle|amphi|lieu|room)\s*:\s*([^|()]+)/i);
+              if (rMatch && rMatch[1]) {
+                room = rMatch[1].trim();
+              }
+              const pMatch = part.match(/(?:prof|professeur|enseignant|intervenant|dr|pr|m\.|mme)\s*:\s*([^|()]+)/i);
+              if (pMatch && pMatch[1]) {
+                professor = pMatch[1].trim();
+              }
+            }
+          }
+
           const type = detectCourseType(contextText);
           const cleanSub = cleanSubjectTitle(contextText, dynamicEcueMap, format);
 
@@ -1903,14 +1959,31 @@ export function parseTimetableText(
 
     let canonical = raw;
 
-    for (const existingCanonical of Array.from(new Set(subjectClusterMap.values()))) {
-      const normA = raw.toLowerCase().replace(/[^a-z0-9]/g, '');
-      const normB = existingCanonical.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const normalizeForCluster = (s: string) => {
+      return s
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\b(?:cours|cm|td|tp|magistral|seance|amphi|salle|labo)\b/gi, '')
+        .replace(/[^a-z0-9]/g, '')
+        .trim();
+    };
 
-      // Only merge if normalized strings are strictly identical (case/space/accent insensitive)
-      if (normA === normB) {
-        canonical = existingCanonical;
-        break;
+    const normA = normalizeForCluster(raw);
+
+    if (normA.length >= 2) {
+      for (const existingCanonical of Array.from(new Set(subjectClusterMap.values()))) {
+        const normB = normalizeForCluster(existingCanonical);
+        if (normB.length < 2) continue;
+
+        const isExact = normA === normB;
+        const isPrefix = (normA.length >= 5 && normB.length >= 5) && (normA.startsWith(normB) || normB.startsWith(normA));
+        const isContained = (normA.length >= 7 && normB.length >= 7) && (normA.includes(normB) || normB.includes(normA));
+
+        if (isExact || isPrefix || isContained) {
+          canonical = existingCanonical.length <= raw.length ? existingCanonical : raw;
+          break;
+        }
       }
     }
 
@@ -1990,7 +2063,7 @@ export function parseTimetableText(
       coefficient: coeff,
       difficulty,
       targetGrade: 16,
-      examDate: '2026-12-18',
+      examDate: undefined,
       topics,
     };
   });

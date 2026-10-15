@@ -16,25 +16,26 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    // Helper anti-élévation de privilèges :
-    // Empêche formellement un utilisateur d'injecter ou modifier son statut d'abonnement (planTier, tier, isPro)
-    function isSubscriptionUnchanged() {
+    // Helper de validation de palier :
+    // L'offre KONAN PRO (Version PRO ouverte) est actuellement accessible à tous les étudiants inscrits.
+    // Le palier 'plus' reste réservé à la validation administrative / liste d'attente.
+    function isSubscriptionAllowed() {
       return (
-        (!('planTier' in request.resource.data) || (resource != null && request.resource.data.planTier == resource.data.planTier) || (resource == null && request.resource.data.planTier == 'free')) &&
-        (!('tier' in request.resource.data) || (resource != null && request.resource.data.tier == resource.data.tier) || (resource == null && request.resource.data.tier == 'free')) &&
-        (!('isPro' in request.resource.data) || (resource != null && request.resource.data.isPro == resource.data.isPro) || (resource == null && request.resource.data.isPro == false))
+        (!('planTier' in request.resource.data) || request.resource.data.planTier in ['free', 'pro']) &&
+        (!('tier' in request.resource.data) || request.resource.data.tier in ['free', 'pro'])
       );
     }
 
-    // Helper : vérifie que les méthodes Pro ne sont pas sauvegardées si le compte est 'free'
+    // Helper : autorise toutes les méthodes d'apprentissage académiques
     function arePacingMethodsAllowed() {
       return (
-        // Si l'utilisateur est légitimement Pro ou Plus en base, les méthodes sont autorisées
-        (resource != null && (resource.data.planTier == 'pro' || resource.data.planTier == 'plus' || resource.data.tier == 'pro' || resource.data.tier == 'plus')) ||
-        // Si utilisateur gratuit, interdiction formelle de stocker Feynman ou Time Blocking dans ses préférences
-        (!('preferences' in request.resource.data) || 
-         !('pacing' in request.resource.data.preferences) || 
-         !(request.resource.data.preferences.pacing in ['feynman', 'time_blocking']))
+        !('preferences' in request.resource.data) || 
+        !('pacing' in request.resource.data.preferences) || 
+        request.resource.data.preferences.pacing in [
+          'pomodoro', 'active_recall_spaced', 'active_recall', 
+          'feynman', 'time_blocking', 'two_minutes_rule', 
+          'spaced_repetition', 'balanced'
+        ]
       );
     }
 
@@ -47,7 +48,7 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if isOwner(userId);
       allow write: if isOwner(userId)
-        && isSubscriptionUnchanged()
+        && isSubscriptionAllowed()
         && arePacingMethodsAllowed();
 
       // Sous-documents éventuels protégés avec la même isolation stricte

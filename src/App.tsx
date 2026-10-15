@@ -1091,6 +1091,9 @@ export function App() {
   const handleLogout = async () => {
     hasGreetedAuthRef.current = '';
     lastRescheduledSignature.current = '';
+    if (state.userAccount?.googleId && !state.isDemoMode) {
+      saveUserState(state.userAccount.googleId, state);
+    }
     await signOutReal();
     setActiveSession(null);
 
@@ -1206,21 +1209,33 @@ export function App() {
   const handleUpdateClassSlots = (newSlots: ClassSlot[]) => {
     const harmonized = harmonizeAndDeduplicateSlots(newSlots);
     const updatedPlan = generateOptimizedStudyPlan(state.subjects, harmonized, state.preferences, effectivePlanTier);
-    setState(prev => ({
-      ...prev,
-      classSlots: harmonized,
-      studySessions: updatedPlan,
-    }));
+    setState(prev => {
+      const nextState: AppState = {
+        ...prev,
+        classSlots: harmonized,
+        studySessions: updatedPlan,
+      };
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+      return nextState;
+    });
     showToast("Emploi du temps mis à jour avec succès !");
   };
 
   const handleUpdatePreferences = (newPrefs: StudyPreferences) => {
     const updatedPlan = generateOptimizedStudyPlan(state.subjects, state.classSlots, newPrefs, effectivePlanTier);
-    setState(prev => ({
-      ...prev,
-      preferences: newPrefs,
-      studySessions: updatedPlan,
-    }));
+    setState(prev => {
+      const nextState: AppState = {
+        ...prev,
+        preferences: newPrefs,
+        studySessions: updatedPlan,
+      };
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+      return nextState;
+    });
     showToast("Préférences d'étude enregistrées !");
   };
 
@@ -1277,10 +1292,16 @@ export function App() {
 
   const handleRegeneratePlan = () => {
     const freshPlan = generateOptimizedStudyPlan(state.subjects, state.classSlots, state.preferences, effectivePlanTier);
-    setState(prev => ({
-      ...prev,
-      studySessions: freshPlan,
-    }));
+    setState(prev => {
+      const nextState: AppState = {
+        ...prev,
+        studySessions: freshPlan,
+      };
+      if (prev.userAccount?.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, nextState);
+      }
+      return nextState;
+    });
     showToast('✨ Votre planning d’étude a été réorganisé avec succès !');
   };
 

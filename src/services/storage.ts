@@ -213,18 +213,7 @@ export function loadUserState(uid: string, fallbackUser?: UserAccount): AppState
         }
 
         const sanitizedSubjects: Subject[] = (Array.isArray(parsed.subjects) ? parsed.subjects : [])
-          .filter((s: Subject) => !isNonAcademicSubject(s.name))
-          .map((s: Subject) => {
-            if (!isProTier) {
-              return {
-                ...s,
-                examDate: undefined,
-                examType: undefined,
-                examTime: undefined,
-              };
-            }
-            return s;
-          });
+          .filter((s: Subject) => !isNonAcademicSubject(s.name));
         const validSubjectIds = new Set(sanitizedSubjects.map((s: Subject) => s.id));
 
         const sanitizedStudySessions: StudySession[] = (Array.isArray(parsed.studySessions) ? parsed.studySessions : [])
@@ -403,14 +392,29 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
 
     // Case 1: Cloud already has subjects saved from another device (e.g. Wave8, other phone or PC)
     if (hasCloudSubjects) {
+      const resolvedMergedTier: PlanTier = (
+        cloudData.planTier === 'pro' || 
+        cloudData.userAccount?.planTier === 'pro' || 
+        currentState.planTier === 'pro' || 
+        currentState.userAccount?.planTier === 'pro'
+      ) ? 'pro' : 'free';
+
+      const isPro = resolvedMergedTier === 'pro';
+
       const mergedSubjects: Subject[] = (Array.isArray(cloudData.subjects) ? cloudData.subjects : [])
         .filter((s: Subject) => !isNonAcademicSubject(s.name))
-        .map((s: Subject) => ({
-          ...s,
-          examDate: undefined,
-          examType: undefined,
-          examTime: undefined,
-        }));
+        .map((s: Subject) => {
+          const localSub = currentState.subjects?.find((ls: Subject) => 
+            ls.id === s.id || ls.name.toLowerCase().trim() === s.name.toLowerCase().trim()
+          );
+          return {
+            ...s,
+            examDate: s.examDate || localSub?.examDate || undefined,
+            examType: s.examType || localSub?.examType || undefined,
+            examTime: s.examTime || localSub?.examTime || undefined,
+            topics: (Array.isArray(s.topics) && s.topics.length > 0) ? s.topics : (localSub?.topics || []),
+          };
+        });
       const validSubjectIds = new Set(mergedSubjects.map((s: Subject) => s.id));
 
       const mergedClassSlots: ClassSlot[] = Array.isArray(cloudData.classSlots) ? cloudData.classSlots : currentState.classSlots;
@@ -420,8 +424,10 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
 
       const mergedPreferences: StudyPreferences = {
         ...rawPreferences,
-        pacing: (rawPreferences.pacing === 'feynman' || rawPreferences.pacing === 'time_blocking') ? 'pomodoro' : rawPreferences.pacing,
-        combinedPacings: [(rawPreferences.pacing === 'feynman' || rawPreferences.pacing === 'time_blocking') ? 'pomodoro' : rawPreferences.pacing],
+        pacing: (!isPro && (rawPreferences.pacing === 'feynman' || rawPreferences.pacing === 'time_blocking')) ? 'pomodoro' : rawPreferences.pacing,
+        combinedPacings: isPro 
+          ? (Array.isArray(rawPreferences.combinedPacings) && rawPreferences.combinedPacings.length > 0 ? rawPreferences.combinedPacings : [rawPreferences.pacing])
+          : [(!isPro && (rawPreferences.pacing === 'feynman' || rawPreferences.pacing === 'time_blocking')) ? 'pomodoro' : rawPreferences.pacing],
       };
 
       let mergedStudySessions: StudySession[] = (Array.isArray(cloudData.studySessions) && cloudData.studySessions.length > 0
@@ -430,11 +436,11 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         .filter((sess: StudySession) => {
           if (isNonAcademicSubject(sess.title)) return false;
           if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
-          if (sess.isExamPrep || sess.type === 'exam_simulation') return false;
+          if (!isPro && (sess.isExamPrep || sess.type === 'exam_simulation')) return false;
           return true;
         })
         .map((sess: StudySession) => {
-          if (sess.pacingMethod === 'feynman' || sess.pacingMethod === 'time_blocking') {
+          if (!isPro && (sess.pacingMethod === 'feynman' || sess.pacingMethod === 'time_blocking')) {
             const subject = mergedSubjects.find((s: Subject) => s.id === sess.subjectId);
             const subName = subject?.name || 'Matière';
             return {
@@ -452,8 +458,6 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
           }
           return sess;
         });
-
-      const resolvedMergedTier: PlanTier = (cloudData.planTier === 'pro' || currentState.planTier === 'pro' || currentState.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'pro') ? 'pro' : 'free';
 
       // If study sessions are empty on cloud, generate them from the subjects and slots
       if ((!mergedStudySessions || mergedStudySessions.length === 0) && mergedSubjects.length > 0) {
