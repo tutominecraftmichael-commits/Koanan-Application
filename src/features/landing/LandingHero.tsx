@@ -579,6 +579,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           </Button>
         </div>
 
+        {/* Ligne de crédits & signature de l'auteur */}
+        <div className="pt-2 sm:pt-4 text-center">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
+            Conçu et développé par <span className="text-slate-900 dark:text-slate-200 font-semibold">Christ Michaël Boni</span>
+          </p>
+        </div>
+
       </div>
     </div>
   );
