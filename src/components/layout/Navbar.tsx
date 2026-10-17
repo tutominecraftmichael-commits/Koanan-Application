@@ -709,13 +709,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <FocusAudioPlayerWidget compact className="hidden lg:inline-flex mr-1" />
                 )}
 
-                {/* User / Google Profile Pill -> opens Settings Modal on click */}
+                {/* User / Google Profile Pill -> opens Settings Modal on click (Masqué sur mobile pour éviter le doublon avec la barre inférieure) */}
                 {userAccount && userAccount.isLoggedIn ? (
                   <div className="flex items-center gap-1 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-800/80 shrink-0">
                     <div
                       onClick={onOpenSettings}
                       title="Voir mon profil et paramètres"
-                      className="flex items-center gap-1 sm:gap-2 hover:opacity-90 transition-opacity cursor-pointer text-left shrink-0"
+                      className="hidden lg:flex items-center gap-1 sm:gap-2 hover:opacity-90 transition-opacity cursor-pointer text-left shrink-0"
                     >
                       {userAccount.avatar ? (
                         <img
