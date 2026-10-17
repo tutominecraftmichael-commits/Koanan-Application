@@ -28,6 +28,7 @@ import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import { 
   onFirebaseAuthStateChange, 
   signOutReal, 
+  checkGoogleRedirectResult,
   fetchCloudInvitationsForUser,
   syncUserStateToCloud,
   loadUserStateFromCloud
@@ -524,19 +525,56 @@ export function App() {
     };
   }, [state.studySessions, state.subjects, state.userAccount?.planTier]);
 
-  // Déconnexion et purge propre au démarrage de l'application
+  // Gestion d'authentification mobile et synchronisation au démarrage
   useEffect(() => {
-    // Purge toute session résiduelle : à l'entrée, l'utilisateur est un visiteur neutre non connecté
-    setActiveSession(null);
-    signOutReal().catch(() => {});
+    let isMounted = true;
+
+    const checkMobileRedirectAuth = async () => {
+      try {
+        const redirectedUser = await checkGoogleRedirectResult();
+        if (redirectedUser && isMounted) {
+          const profile: UserAccount = {
+            name: redirectedUser.displayName || 'Étudiant',
+            email: redirectedUser.email || '',
+            avatar: redirectedUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(redirectedUser.displayName || 'User')}`,
+            googleId: redirectedUser.uid,
+            konanId: generateKonanId(redirectedUser.uid || redirectedUser.email || undefined),
+            academicLevel: 'Licence Universitaire',
+            isLoggedIn: true,
+            isDemo: false,
+            lastSyncedAt: new Date().toISOString(),
+          };
+          await handleLoginSuccess(profile);
+          setActiveView('dashboard');
+        }
+      } catch (err) {
+        console.warn('Vérification redirection Google mobile:', err);
+      }
+    };
+
+    checkMobileRedirectAuth();
 
     // Écoute des changements d'état d'authentification Firebase :
-    // Le flux de connexion et la vérification de consentement sont orchestrés proprement par handleLoginSuccess
-    const unsubscribeAuth = onFirebaseAuthStateChange(() => {
-      // Aucune redirection forcée automatique : le consentement préalable est strictement requis
+    const unsubscribeAuth = onFirebaseAuthStateChange(async (firebaseUser) => {
+      if (!isMounted) return;
+      if (firebaseUser && (!state.userAccount?.isLoggedIn || state.isDemoMode)) {
+        const profile: UserAccount = {
+          name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Étudiant',
+          email: firebaseUser.email || '',
+          avatar: firebaseUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(firebaseUser.displayName || firebaseUser.email || 'User')}`,
+          googleId: firebaseUser.uid,
+          konanId: generateKonanId(firebaseUser.uid || firebaseUser.email || undefined),
+          academicLevel: 'Licence Universitaire',
+          isLoggedIn: true,
+          isDemo: false,
+          lastSyncedAt: new Date().toISOString(),
+        };
+        await handleLoginSuccess(profile);
+      }
     });
 
     return () => {
+      isMounted = false;
       unsubscribeAuth();
     };
   }, []);

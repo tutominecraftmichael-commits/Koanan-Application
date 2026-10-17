@@ -198,7 +198,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   const displayName = userAccount?.isLoggedIn ? userAccount.name : studentName;
 
   return (
-    <header className={`sticky top-0 z-40 w-full transition-all pt-safe ${
+    <>
+      <header className={`sticky top-0 z-40 w-full transition-all pt-safe ${
       activeView === 'landing' 
         ? 'bg-[#F9FAFB]/90 dark:bg-[#0A0E1A]/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/[0.08]' 
         : 'border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl'
@@ -851,88 +852,93 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
       </div>
-
-      {/* Fixed Bottom Navigation Bar on Mobile (Fini les éléments coupés) */}
-      {activeView !== 'landing' && activeView !== 'auth' && activeView !== 'pro-wizard' && (
-        <nav 
-          role="navigation"
-          aria-label="Navigation principale mobile"
-          className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0B0F19]/95 dark:bg-[#0B0F19]/95 backdrop-blur-md border-t border-white/10 px-2 pt-1.5 pb-safe shadow-[0_-4px_25px_rgba(0,0,0,0.6)]"
-        >
-          <div className="grid grid-cols-6 items-center justify-items-center max-w-md mx-auto">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeView === item.id;
-              const shortLabel = item.id === 'dashboard' ? 'Accueil' :
-                                 item.id === 'schedule' ? 'EDT' :
-                                 item.id === 'subjects' ? 'Matières' :
-                                 item.id === 'planner' ? 'Planning' :
-                                 'Stats';
-              return (
-                <button
-                  key={`bottom-${item.id}`}
-                  type="button"
-                  onClick={() => {
-                    soundFX.playCheckmarkPop();
-                    if (!userAccount?.isLoggedIn && !isDemoMode) {
-                      onNavigate('auth');
-                    } else {
-                      onNavigate(item.id);
-                    }
-                  }}
-                  className={`flex flex-col items-center justify-center py-1 px-1 w-full rounded-xl transition-all cursor-pointer relative ${
-                    isActive ? 'text-white' : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  {isActive && (
-                    <span className="absolute -top-1.5 w-6 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
-                  )}
-                  <Icon 
-                    isActive={isActive} 
-                    className={`w-4.5 h-4.5 transition-transform duration-200 ${
-                      isActive ? 'scale-110 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]' : ''
-                    }`} 
-                  />
-                  <span className={`text-[10px] mt-1 font-medium tracking-tight truncate max-w-full ${
-                    isActive ? 'font-bold text-white' : ''
-                  }`}>
-                    {shortLabel}
-                  </span>
-                </button>
-              );
-            })}
-
-            {/* Onglet Profil Mobile dédié */}
-            <button
-              type="button"
-              onClick={() => {
-                soundFX.playCheckmarkPop();
-                if (onOpenSettings) {
-                  onOpenSettings();
-                } else if (!userAccount?.isLoggedIn && !isDemoMode) {
-                  onNavigate('auth');
-                }
-              }}
-              className="flex flex-col items-center justify-center py-1 px-1 w-full rounded-xl transition-all cursor-pointer relative text-slate-400 hover:text-slate-200"
-            >
-              {userAccount?.avatar ? (
-                <img
-                  src={userAccount.avatar}
-                  alt="Profil"
-                  className="w-4.5 h-4.5 rounded-full object-cover border border-indigo-400/50 shadow-xs"
-                />
-              ) : (
-                <div className="w-4.5 h-4.5 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-[9px] font-bold text-white shadow-xs">
-                  {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-3 h-3" />}
-                </div>
-              )}
-              <span className="text-[10px] mt-1 font-medium tracking-tight truncate max-w-full">
-                Profil
-              </span>
-            </button>
-          </div>
-        </nav>
-      )}
     </header>
-  );
+
+    {/* Fixed Bottom Navigation Bar on Mobile (Fini les éléments coupés et zéro bordure noire) */}
+    {activeView !== 'landing' && activeView !== 'auth' && activeView !== 'pro-wizard' && (
+      <nav 
+        role="navigation"
+        aria-label="Navigation principale mobile"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#0B0F19]/95 backdrop-blur-md border-t border-slate-200/90 dark:border-white/10 px-2 pt-1.5 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_25px_rgba(0,0,0,0.6)]"
+      >
+        <div className="grid grid-cols-6 items-center justify-items-center max-w-md mx-auto">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeView === item.id;
+            const shortLabel = item.id === 'dashboard' ? 'Accueil' :
+                               item.id === 'schedule' ? 'EDT' :
+                               item.id === 'subjects' ? 'Matières' :
+                               item.id === 'planner' ? 'Planning' :
+                               'Stats';
+            return (
+              <button
+                key={`bottom-${item.id}`}
+                type="button"
+                onClick={() => {
+                  soundFX.playCheckmarkPop();
+                  if (!userAccount?.isLoggedIn && !isDemoMode) {
+                    onNavigate('auth');
+                  } else {
+                    onNavigate(item.id);
+                  }
+                }}
+                className={`flex flex-col items-center justify-center py-1 px-1 w-full rounded-xl transition-all cursor-pointer relative ${
+                  isActive 
+                    ? 'text-blue-600 dark:text-white font-bold' 
+                    : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                }`}
+              >
+                {isActive && (
+                  <span className="absolute -top-1.5 w-6 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 rounded-full shadow-[0_0_8px_rgba(79,70,229,0.5)] dark:shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+                )}
+                <Icon 
+                  isActive={isActive} 
+                  className={`w-4.5 h-4.5 transition-transform duration-200 ${
+                    isActive 
+                      ? 'scale-110 text-blue-600 dark:text-white drop-shadow-[0_0_6px_rgba(37,99,235,0.3)] dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]' 
+                      : ''
+                  }`} 
+                />
+                <span className={`text-[10px] mt-1 tracking-tight truncate max-w-full ${
+                  isActive ? 'font-bold text-blue-600 dark:text-white' : 'font-medium'
+                }`}>
+                  {shortLabel}
+                </span>
+              </button>
+            );
+          })}
+
+          {/* Onglet Profil Mobile dédié */}
+          <button
+            type="button"
+            onClick={() => {
+              soundFX.playCheckmarkPop();
+              if (onOpenSettings) {
+                onOpenSettings();
+              } else if (!userAccount?.isLoggedIn && !isDemoMode) {
+                onNavigate('auth');
+              }
+            }}
+            className="flex flex-col items-center justify-center py-1 px-1 w-full rounded-xl transition-all cursor-pointer relative text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+          >
+            {userAccount?.avatar ? (
+              <img
+                src={userAccount.avatar}
+                alt="Profil"
+                className="w-4.5 h-4.5 rounded-full object-cover border border-indigo-400/50 shadow-xs"
+              />
+            ) : (
+              <div className="w-4.5 h-4.5 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-[9px] font-bold text-white shadow-xs">
+                {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-3 h-3" />}
+              </div>
+            )}
+            <span className="text-[10px] mt-1 font-medium tracking-tight truncate max-w-full">
+              Profil
+            </span>
+          </button>
+        </div>
+      </nav>
+    )}
+  </>
+);
 };
