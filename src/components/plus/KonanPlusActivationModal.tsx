@@ -8,9 +8,6 @@ import {
   ArrowRight,
   ArrowLeft,
   X,
-  Check,
-  Copy,
-  Hash,
   UserPlus,
   Play,
   Pause,
@@ -21,7 +18,6 @@ import {
 import type { AcademicGoal, PlusInvitationNotification } from '../../types';
 import { Button } from '../ui/Button';
 import { soundFX } from '../../lib/audioEffects';
-import { validateKonanId, formatKonanId } from '../../lib/konanId';
 import { focusAudioEngine, FOCUS_SOUNDTRACKS } from '../../lib/focusAudioEngine';
 import type { FocusSoundtrackId } from '../../lib/focusAudioEngine';
 import { isTargetAlreadyPlus, savePlusInvitation, getPlusInvitations } from '../../services/storage';
@@ -55,7 +51,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
   konanId = 'KN-849201',
   invitedIds = [],
   invitedEmails = [],
-  onUpdateInvitedIds,
+  onUpdateInvitedIds: _onUpdateInvitedIds,
   onUpdateInvitedEmails,
   academicGoal = 'target_16',
   onSelectAcademicGoal,
@@ -74,7 +70,6 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
   const [friendIdInput, setFriendIdInput] = useState('');
   const [step1Error, setStep1Error] = useState<string | null>(null);
   const [step1Success, setStep1Success] = useState<string | null>(null);
-  const [copiedMyId, setCopiedMyId] = useState(false);
 
   // Step 2 state (Academic goal)
   const [selectedGoal, setSelectedGoal] = useState<AcademicGoal>(academicGoal);
@@ -106,29 +101,15 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
     setStep1Error(null);
     const trimmed = friendIdInput.trim();
     if (!trimmed) {
-      setStep1Error("Veuillez renseigner un ID Konan (ex: KN-849201).");
+      setStep1Error("Veuillez renseigner une adresse email (ex: ami@univ.edu).");
       return;
     }
 
-    const isIdCandidate = trimmed.toUpperCase().startsWith('KN-') || /^[0-9]{5,8}$/.test(trimmed);
-    let finalVal = trimmed;
-
-    if (isIdCandidate) {
-      const formatted = formatKonanId(trimmed);
-      if (!validateKonanId(formatted)) {
-        setStep1Error("Format d'ID Konan invalide. Exemple : KN-849201.");
-        return;
-      }
-      if (formatted.toUpperCase() === konanId.toUpperCase()) {
-        setStep1Error("Vous ne pouvez pas vous inviter vous-même.");
-        return;
-      }
-      finalVal = formatted;
-    }
+    const finalVal = trimmed.toLowerCase();
 
     const currentList = [...invitedIds, ...invitedEmails];
     if (currentList.some(item => item.toLowerCase() === finalVal.toLowerCase())) {
-      setStep1Error(`L'identifiant "${finalVal}" est déjà dans votre groupe.`);
+      setStep1Error(`L'adresse "${finalVal}" est déjà dans votre groupe.`);
       return;
     }
 
@@ -155,26 +136,12 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
     };
     savePlusInvitation(newInvitation);
 
-    if (isIdCandidate) {
-      const nextIds = [...invitedIds, finalVal];
-      onUpdateInvitedIds?.(nextIds);
-      onUpdateInvitedEmails?.([...invitedEmails, finalVal]);
-    } else {
-      onUpdateInvitedEmails?.([...invitedEmails, finalVal]);
-    }
+    onUpdateInvitedEmails?.([...invitedEmails, finalVal]);
 
     soundFX.playCheckmarkPop();
     setFriendIdInput('');
     setStep1Success(`Invitation envoyée ! En attente d'acceptation par votre camarade sur son appareil.`);
     setTimeout(() => setStep1Success(null), 3500);
-  };
-
-  const handleCopyMyId = () => {
-    navigator.clipboard.writeText(konanId).then(() => {
-      setCopiedMyId(true);
-      soundFX.playCheckmarkPop();
-      setTimeout(() => setCopiedMyId(false), 2500);
-    }).catch(() => {});
   };
 
   // STEP 2 HANDLERS: Select Goal
@@ -375,37 +342,13 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                     Étape 1 sur 4 • Multi-comptes
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                    {isGroupGuest ? "Votre Groupe d'Étude Konan Plus" : "Invitez jusqu'à 4 amis avec leur ID Konan"}
+                    {isGroupGuest ? "Votre Groupe d'Étude Konan Plus" : "Invitez jusqu'à 4 amis avec leur adresse email"}
                   </h3>
                   <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
                     {isGroupGuest 
                       ? "Vous êtes membre invité. Votre accès à toutes les fonctionnalités Konan Plus est 100% garanti."
-                      : "Chaque étudiant possède un ID Konan personnel et fixe. Renseignez l'ID de votre ami pour lui débloquer un compte Konan Plus complet et gratuit."}
+                      : "Renseignez l'adresse email de vos camarades pour leur débloquer un compte Konan Plus complet et gratuit."}
                   </p>
-                </div>
-              </div>
-
-              {/* YOUR OWN KONAN ID */}
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-slate-900 to-amber-950/30 border border-amber-500/40 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <Hash className="w-3.5 h-3.5 text-amber-400" />
-                    Votre ID Konan Personnel :
-                  </span>
-                  <span className="text-[10px] text-amber-300 font-semibold">Fixe & Unique</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="px-3 py-1.5 rounded-xl bg-slate-950 border border-amber-500/40 text-amber-300 font-mono font-black text-sm tracking-widest shadow-inner">
-                    {konanId}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleCopyMyId}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-xs font-bold transition-all cursor-pointer shadow-xs"
-                  >
-                    {copiedMyId ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{copiedMyId ? 'Copié !' : 'Copier mon ID'}</span>
-                  </button>
                 </div>
               </div>
 
@@ -420,8 +363,7 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                   </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Vous avez rejoint le groupe d'étude de{' '}
-                    <strong className="text-white">{invitedBy?.name || 'votre titulaire'}</strong>{' '}
-                    {invitedBy?.konanId && <span className="text-amber-300 font-mono font-bold">({invitedBy.konanId})</span>}.
+                    <strong className="text-white">{invitedBy?.name || 'votre titulaire'}</strong>.
                     Toutes les fonctionnalités KONAN PLUS vous sont 100% ouvertes.
                   </p>
                   <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
@@ -435,18 +377,18 @@ export const KonanPlusActivationModal: React.FC<KonanPlusActivationModalProps> =
                 /* ADD FRIEND INPUT - Full width and centered on mobile */
                 <form onSubmit={handleAddFriend} className="space-y-3">
                   <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                    Entrez l'ID Konan de votre ami (ex: KN-948201) :
+                    Entrez l'adresse email de votre ami :
                   </label>
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
                     <div className="relative flex-1 w-full">
                       <input
-                        type="text"
+                        type="email"
                         value={friendIdInput}
                         onChange={(e) => {
                           setFriendIdInput(e.target.value);
                           setStep1Error(null);
                         }}
-                        placeholder="Ex: KN-849201 ou email"
+                        placeholder="Ex: ami@etudiant.univ.edu"
                         className="w-full px-4 py-3 pl-11 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 transition-colors text-left"
                       />
                       <UserPlus className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />

@@ -447,8 +447,8 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           </p>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+        {/* Action Controls - Compact Horizontal Toolbar */}
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar w-full lg:w-auto py-1">
 
           {/* Import Emploi du Temps - ONLY FOR CONNECTED USERS, NOT IN DEMO */}
           {!isDemoMode && onNavigate && (
@@ -458,9 +458,9 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               leftIcon={<FileText className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />}
               onClick={() => onNavigate('upload-schedule')}
               title="Importer un nouvel emploi du temps au format texte"
-              className="cursor-pointer text-xs font-semibold py-2 px-3 border-cyan-200 dark:border-cyan-500/30 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-cyan-500/10"
+              className="cursor-pointer text-xs font-semibold py-1.5 px-2.5 sm:px-3 border-cyan-200 dark:border-cyan-500/30 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-cyan-500/10 shrink-0 whitespace-nowrap"
             >
-              Importer Emploi du Temps
+              Importer EDT
             </Button>
           )}
 
@@ -478,7 +478,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               setIsSourceTruthModalOpen(true);
             }}
             title="Consulter et exporter la Source de Vérité des cours extraits"
-            className="cursor-pointer text-xs font-semibold py-2 px-3 border-indigo-200 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-500/10"
+            className="cursor-pointer text-xs font-semibold py-1.5 px-2.5 sm:px-3 border-indigo-200 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 shrink-0 whitespace-nowrap"
           >
             Source de Vérité
           </Button>
@@ -491,7 +491,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               leftIcon={<GraduationCap className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />}
               onClick={onOpenPresetModal}
               title="Changer de filière ou modèle académique (disponible en mode démo)"
-              className="cursor-pointer text-xs font-semibold py-2 px-3 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+              className="cursor-pointer text-xs font-semibold py-1.5 px-2.5 sm:px-3 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shrink-0 whitespace-nowrap"
             >
               Filières (Démo)
             </Button>
@@ -503,18 +503,18 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             size="sm"
             leftIcon={<Plus className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />}
             onClick={() => handleOpenAddModal(activeMobileDay)}
-            className="cursor-pointer text-xs font-semibold py-2 px-3"
+            className="cursor-pointer text-xs font-semibold py-1.5 px-2.5 sm:px-3 shrink-0 whitespace-nowrap"
           >
-            Ajouter un Cours
+            + Ajouter un Cours
           </Button>
         </div>
       </div>
 
       {/* VIEW FILTER SWITCHER & KPI STRIP */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/80 dark:backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/80 dark:backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-xs">
         
         {/* Filter Mode Selector */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar w-full sm:w-auto pb-1 sm:pb-0">
           <span className="text-xs font-bold text-slate-600 dark:text-slate-400 mr-1 flex items-center gap-1 shrink-0">
             <Eye className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             Affichage :
@@ -522,18 +522,18 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
 
           <button
             onClick={() => setFilterMode('combined')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer min-h-[34px] interactive-pill ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer min-h-[34px] shrink-0 interactive-pill ${
               filterMode === 'combined'
                 ? 'bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-md shadow-indigo-500/30'
                 : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
-            ✨ Vue Complète (Cours + Révisions)
+            ✨ Vue Complète
           </button>
 
           <button
             onClick={() => setFilterMode('classes_only')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer min-h-[34px] interactive-pill ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer min-h-[34px] shrink-0 interactive-pill ${
               filterMode === 'classes_only'
                 ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
                 : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
@@ -544,7 +544,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
 
           <button
             onClick={() => setFilterMode('study_only')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer min-h-[34px] interactive-pill ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer min-h-[34px] shrink-0 interactive-pill ${
               filterMode === 'study_only'
                 ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30'
                 : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'

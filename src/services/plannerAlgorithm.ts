@@ -487,7 +487,7 @@ export function generateOptimizedStudyPlan(
           ];
         } else {
           // active_recall_spaced
-          sessionTitle = `Active Recall & Espacement : ${displaySubjectName} - ${topicName}`;
+          sessionTitle = `${displaySubjectName} - ${topicName}`;
           sessionDescription = `Ne pas juste relire, mais se tester de tête. Espacement dans le temps pour sceller l'information en mémoire longue.`;
           sessionObjectives = [
             'Fermer le cours et essayer de s’en souvenir de tête',

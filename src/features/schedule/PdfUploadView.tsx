@@ -26,7 +26,9 @@ import {
   Flame,
   Sunset,
   Moon,
-  Clock
+  Clock,
+  ChevronDown,
+  BarChart2
 } from 'lucide-react';
 import type { 
   Subject, 
@@ -155,6 +157,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const [selectedPacings, setSelectedPacings] = useState<StudyPacing[]>(['pomodoro']);
   const [selectedChronotype, setSelectedChronotype] = useState<Chronotype>('evening');
   const [proModalPacingNotice, setProModalPacingNotice] = useState<string | null>(null);
+  const [showFullDiagnostic, setShowFullDiagnostic] = useState<boolean>(false);
 
   // Hidden file inputs
   const pdfInputRef = useRef<HTMLInputElement>(null);
@@ -510,7 +513,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 py-4 px-3 sm:px-4">
+    <div className="max-w-4xl mx-auto space-y-6 py-4 px-3 sm:px-4 relative">
+      {/* Ambient diffuse background glow */}
+      <div className="pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 w-full max-w-2xl h-96 bg-gradient-to-b from-[#6366F1]/10 via-[#8B5CF6]/10 to-transparent blur-3xl -z-10 rounded-full" />
       
       {/* Hidden File Inputs */}
       <input 
@@ -616,38 +621,38 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       )}
 
       {/* TOP HEADER */}
-      <div className="flex items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
-        <div className="flex items-center gap-3">
+      <div className="flex items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-4 relative z-10">
+        <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
           {currentStep === 'customize' ? (
             <button
               onClick={() => setCurrentStep('upload')}
-              className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition-all cursor-pointer"
+              className="w-10 h-10 rounded-full backdrop-blur-md bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white flex items-center justify-center shrink-0 transition-all cursor-pointer shadow-xs active:scale-95"
               title="Retour à l'étape 1"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-5 h-5" />
             </button>
           ) : onCancel ? (
             <button
               onClick={onCancel}
-              className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition-all cursor-pointer"
+              className="w-10 h-10 rounded-full backdrop-blur-md bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white flex items-center justify-center shrink-0 transition-all cursor-pointer shadow-xs active:scale-95"
               title="Retour au tableau de bord"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-5 h-5" />
             </button>
           ) : null}
 
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug">
                 {currentStep === 'upload' 
                   ? "Importation de l'Emploi du Temps" 
                   : "Configuration des Matières & Méthodes"}
               </h1>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              <span className="bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/30 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
                 {currentStep === 'upload' ? 'Étape 1/2' : 'Étape 2/2'}
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-400 mt-1 leading-relaxed">
               {currentStep === 'upload'
                 ? "Scannez votre document pour extraire directement vos cours et horaires."
                 : "Ajustez les coefficients de vos matières et choisissez votre méthode d'étude."}
@@ -657,11 +662,11 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
         <button
           onClick={handleReset}
-          className="group text-xs text-slate-300 hover:text-white inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-900/60 hover:bg-slate-800 transition-all cursor-pointer active:scale-95 shadow-xs"
+          className="text-xs text-slate-400 hover:text-white inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-all cursor-pointer active:scale-95 shrink-0 whitespace-nowrap mt-1 sm:mt-0"
           title="Réinitialiser"
         >
-          <RotateCcw className="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-400 transition-transform duration-500 group-hover:-rotate-180 group-active:rotate-[-360deg]" />
           <span>Réinitialiser</span>
+          <RotateCcw className="w-3.5 h-3.5 text-slate-400 transition-transform hover:-rotate-180" />
         </button>
       </div>
 
@@ -910,104 +915,101 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           ÉTAPE 2 : PERSONNALISATION DES COEFFICIENTS & MÉTHODES D'ESPACEMENT
           ========================================================================= */}
       {currentStep === 'customize' && (
-        <div className="space-y-6 animate-in fade-in duration-300">
+        <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
           
-          {/* 1. LISTE DES MATIÈRES & COEFFICIENTS (Audio 1) */}
+          {/* 1. LISTE DES MATIÈRES & COEFFICIENTS */}
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Sliders className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
-                  <span>1. Coefficients & Notes Cibles de vos Matières</span>
-                </h2>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
-                  Ajustez le coefficient de chaque matière : plus le coefficient est élevé, plus l'algorithme lui réserve des créneaux de travail.
-                </p>
-              </div>
-              <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                <Sliders className="w-4 h-4 text-indigo-400 shrink-0" />
+                <span>1. Coefficients & Notes Cibles de vos Matières</span>
+              </h2>
+              <span className="text-xs font-mono font-bold text-[#818CF8] shrink-0">
                 {editableSubjects.filter(s => s.enabled).length} / {editableSubjects.length} actives
               </span>
             </div>
+            <p className="text-[13px] text-slate-400 leading-[1.4]">
+              Ajustez le coefficient de chaque matière : plus le coefficient est élevé, plus l'algorithme lui réserve des créneaux de travail.
+            </p>
 
-            <div className="grid grid-cols-1 gap-2.5">
+            <div className="space-y-3">
               {editableSubjects.map((subject) => (
                 <div
                   key={subject.id}
-                  className={`p-3 sm:p-3.5 rounded-xl border transition-all ${
+                  className={`p-4 rounded-xl border space-y-3 transition-all ${
                     subject.enabled
-                      ? 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 shadow-xs'
-                      : 'bg-slate-100 dark:bg-slate-950/50 border-slate-200 dark:border-slate-900 opacity-60'
+                      ? 'bg-[#131B2E]/50 border-white/5 hover:border-white/10 shadow-xs'
+                      : 'bg-[#131B2E]/20 border-white/5 opacity-50'
                   }`}
                 >
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3">
-                    
-                    {/* Nom de la matière modifiable */}
-                    <div className="flex items-center gap-2.5 sm:gap-3 w-full sm:w-auto flex-1 min-w-0">
-                      <input
-                        type="checkbox"
-                        checked={subject.enabled}
-                        onChange={() => handleToggleSubject(subject.id)}
-                        className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 shrink-0 cursor-pointer"
-                        title={subject.enabled ? "Désactiver cette matière" : "Activer cette matière"}
-                      />
-                      <div 
-                        className="w-3 h-3 rounded-full shrink-0"
-                        style={{ backgroundColor: subject.color }}
-                      />
-                      <input
-                        type="text"
-                        value={subject.name}
-                        onChange={(e) => handleUpdateName(subject.id, e.target.value)}
-                        className="bg-transparent border-b border-transparent hover:border-slate-300 dark:hover:border-slate-700 focus:border-indigo-500 focus:bg-slate-50 dark:focus:bg-slate-950/60 px-1 py-0.5 rounded text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none flex-1 min-w-0 truncate transition-colors"
-                        placeholder="Nom de la matière"
-                      />
-                    </div>
+                  {/* Ligne supérieure : Checkbox + point de couleur + Nom de la matière (sans coupure de texte) */}
+                  <div className="flex items-center gap-2.5 sm:gap-3 w-full min-w-0">
+                    <input
+                      type="checkbox"
+                      checked={subject.enabled}
+                      onChange={() => handleToggleSubject(subject.id)}
+                      className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-white/5 border-white/20 shrink-0 cursor-pointer"
+                      title={subject.enabled ? "Désactiver cette matière" : "Activer cette matière"}
+                    />
+                    <div 
+                      className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
+                      style={{ backgroundColor: subject.color }}
+                    />
+                    <input
+                      type="text"
+                      value={subject.name}
+                      onChange={(e) => handleUpdateName(subject.id, e.target.value)}
+                      className="bg-transparent border-b border-transparent hover:border-white/20 focus:border-indigo-500 focus:bg-white/5 px-1 py-0.5 rounded text-xs sm:text-sm font-semibold text-white focus:outline-none flex-1 min-w-0 transition-colors break-words"
+                      placeholder="Nom de la matière"
+                    />
+                  </div>
 
-                    {/* Contrôle Note Cible + Coefficient (Grille 2 colonnes sur mobile, flex horizontal sur desktop) */}
-                    <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:items-center sm:gap-3 sm:w-auto pt-2 sm:pt-0 border-t border-slate-100 dark:border-slate-800/60 sm:border-t-0">
-                      
-                      {/* Note cible */}
-                      <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-950 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-800/80 min-w-0">
-                        <span className="text-[10px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap shrink-0">Cible :</span>
+                  {/* Ligne inférieure de contrôles : Cible à gauche + Widget Coefficient à droite */}
+                  <div className="flex justify-between items-center bg-black/20 p-2 sm:p-2.5 rounded-lg border border-white/5 gap-2">
+                    
+                    {/* Sélecteur Note Cible avec petite flèche ▾ */}
+                    <div className="relative flex items-center">
+                      <span className="text-[11px] sm:text-xs text-slate-400 font-medium mr-1.5 whitespace-nowrap">Cible :</span>
+                      <div className="relative flex items-center">
                         <select
                           value={subject.targetGrade}
                           onChange={(e) => handleUpdateTargetGrade(subject.id, Number(e.target.value))}
-                          className="bg-transparent border-0 rounded text-xs text-slate-900 dark:text-white focus:outline-none cursor-pointer w-full min-w-0 truncate pr-1"
+                          className="appearance-none bg-white/5 hover:bg-white/10 border border-white/10 rounded-md px-2.5 py-1 pr-6 text-xs font-semibold text-white focus:outline-none focus:border-indigo-500 cursor-pointer transition-colors"
                         >
-                          <option value={10} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white">10/20 (Validation)</option>
-                          <option value={12} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white">12/20 (Assez Bien)</option>
-                          <option value={14} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white">14/20 (Bien)</option>
-                          <option value={16} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white">16/20 (Très Bien)</option>
-                          <option value={18} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white">18/20 (Major)</option>
+                          <option value={10} className="bg-[#0B0F19] text-white">10/20 (Validation)</option>
+                          <option value={12} className="bg-[#0B0F19] text-white">12/20 (Assez Bien)</option>
+                          <option value={14} className="bg-[#0B0F19] text-white">14/20 (Bien)</option>
+                          <option value={16} className="bg-[#0B0F19] text-white">16/20 (Très Bien)</option>
+                          <option value={18} className="bg-[#0B0F19] text-white">18/20 (Major)</option>
                         </select>
+                        <ChevronDown className="w-3.5 h-3.5 text-slate-400 pointer-events-none absolute right-1.5" />
                       </div>
+                    </div>
 
-                      {/* Contrôleur de Coefficient [-] [ COEFF : X ] [+] */}
-                      <div className="flex items-center justify-between sm:justify-start gap-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-1 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => handleUpdateCoeff(subject.id, -1)}
-                          disabled={subject.coefficient <= 1}
-                          className="w-7 h-7 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shrink-0"
-                          title="Diminuer coefficient"
-                        >
-                          <Minus className="w-3.5 h-3.5" />
-                        </button>
-                        <div className="px-1.5 sm:px-2.5 text-center flex-1 sm:flex-initial sm:min-w-[55px]">
-                          <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 block font-mono leading-none">COEFF</span>
-                          <span className="text-xs font-black text-indigo-600 dark:text-indigo-400 leading-tight">{subject.coefficient}</span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => handleUpdateCoeff(subject.id, 1)}
-                          disabled={subject.coefficient >= 10}
-                          className="w-7 h-7 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shrink-0"
-                          title="Augmenter coefficient"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                        </button>
+                    {/* Widget Coefficient : [-] COEFF X [+] */}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateCoeff(subject.id, -1)}
+                        disabled={subject.coefficient <= 1}
+                        className="w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
+                        title="Diminuer coefficient"
+                      >
+                        <Minus className="w-3.5 h-3.5" />
+                      </button>
+                      <div className="px-1 text-center min-w-[50px]">
+                        <span className="text-[9px] text-slate-400 block font-mono leading-none">COEFF</span>
+                        <span className="text-xs font-bold text-[#818CF8] leading-tight">{subject.coefficient}</span>
                       </div>
-
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateCoeff(subject.id, 1)}
+                        disabled={subject.coefficient >= 10}
+                        className="w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
+                        title="Augmenter coefficient"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                      </button>
                     </div>
 
                   </div>
@@ -1016,16 +1018,16 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             </div>
           </div>
 
-          {/* 2. CHOIX DE LA MÉTHODE D'ESPACEMENT & RECOMMANDATION IA (Audio 2) */}
+          {/* 2. CHOIX DE LA MÉTHODE D'ESPACEMENT & RECOMMANDATION IA */}
           <div className="space-y-3 pt-2">
             <div>
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                  <span>2. Technique d'Espacement & Méthode de Révision</span>
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>2. Technique d’Espacement & Méthode de Révision</span>
                 </h2>
-                <span className="text-[11px] font-semibold text-slate-400">
-                  Formule active : <strong className={planTier === 'pro' ? 'text-amber-400' : planTier === 'plus' ? 'text-indigo-400' : 'text-slate-300'}>{planTier.toUpperCase()}</strong>
+                <span className="text-[11px] font-semibold text-slate-400 shrink-0">
+                  Formule active : <strong className={planTier === 'pro' ? 'text-amber-500' : planTier === 'plus' ? 'text-indigo-400' : 'text-slate-300'}>{planTier.toUpperCase()}</strong>
                 </span>
               </div>
               {planTier !== 'free' ? (
@@ -1047,7 +1049,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
             {/* BANNIÈRE DE RECOMMANDATION CONTEXTUELLE */}
             {planTier !== 'free' ? (
-              <div className="p-4 sm:p-4.5 rounded-2xl bg-gradient-to-r from-indigo-950/90 via-slate-900 to-indigo-950/50 border border-cyan-500/30 shadow-lg shadow-indigo-950/50 space-y-3">
+              <div className="rounded-xl bg-gradient-to-r from-indigo-950/60 via-slate-900/80 to-blue-950/40 border border-indigo-500/20 p-4 sm:p-5 shadow-lg shadow-indigo-950/30 space-y-3">
                 {(() => {
                   const targetPacings = pacingRecommendation.recommendedIds && pacingRecommendation.recommendedIds.length > 0
                     ? pacingRecommendation.recommendedIds
@@ -1055,18 +1057,18 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   const isRecActive = selectedPacings.length === targetPacings.length &&
                     targetPacings.every(id => selectedPacings.includes(id));
                   return (
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5">
-                      <div className="flex items-start gap-3 min-w-0 flex-1">
-                        <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0 mt-0.5">
-                          <Sparkles className="w-4 h-4 text-cyan-300" />
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3 min-w-0">
+                        <div className="p-2 rounded-xl bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/30 shrink-0 mt-0.5">
+                          <BarChart2 className="w-4 h-4 text-[#818CF8]" />
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-xs font-black uppercase tracking-wider text-cyan-400">
-                              Recommandation KONAN
+                        <div className="min-w-0 flex-1 space-y-1.5">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="text-xs font-black uppercase tracking-wider text-[#818CF8]">
+                              RECOMMANDATION KONAN
                             </span>
                             {targetPacings.map(id => (
-                              <span key={id} className="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
+                              <span key={id} className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#6366F1]/20 text-[#818CF8] font-bold border border-[#6366F1]/30">
                                 {getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
                               </span>
                             ))}
@@ -1074,16 +1076,29 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                               {pacingRecommendation.contextTag}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-200 mt-1.5 font-medium leading-relaxed whitespace-pre-line">
-                            {pacingRecommendation.rationale}
-                          </p>
+                          
+                          <div className="text-xs text-slate-300 leading-relaxed">
+                            <span className="font-semibold text-white flex items-center gap-1.5 mb-1">
+                              <span>📊 Diagnostic de votre emploi du temps</span>
+                            </span>
+                            <p className={`${showFullDiagnostic ? '' : 'line-clamp-3'} whitespace-pre-line text-slate-300`}>
+                              {pacingRecommendation.rationale}
+                            </p>
+                            <button
+                              type="button"
+                              onClick={() => setShowFullDiagnostic(!showFullDiagnostic)}
+                              className="text-xs font-bold text-[#818CF8] hover:text-white mt-1 inline-flex items-center gap-1 cursor-pointer transition-colors"
+                            >
+                              {showFullDiagnostic ? 'Voir moins ▴' : 'Voir plus ▾'}
+                            </button>
+                          </div>
                         </div>
                       </div>
 
                       {isRecActive ? (
-                        <div className="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold shrink-0 flex items-center gap-1.5 self-start">
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>Recommandation active</span>
+                        <div className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-center gap-2">
+                          <Check className="w-4 h-4 text-emerald-400" />
+                          <span>✓ Recommandation active</span>
                         </div>
                       ) : (
                         <button
@@ -1091,9 +1106,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                           onClick={() => {
                             setSelectedPacings(targetPacings);
                           }}
-                          className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-cyan-500/20 shrink-0 cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 self-start"
+                          className="bg-[#6366F1] hover:bg-[#5558E6] text-white py-3 px-6 rounded-xl font-bold w-full transition shadow-md shadow-indigo-600/25 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
                         >
-                          <Check className="w-3.5 h-3.5" />
+                          <Check className="w-4 h-4" />
                           <span>Appliquer la recommandation</span>
                         </button>
                       )}
@@ -1127,78 +1142,70 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 const isAllowed = isPacingAllowedForPlan(strategy.id, planTier);
                 const isPrimaryRec = planTier !== 'free' && pacingRecommendation.primaryId === strategy.id;
                 const isRecommended = planTier !== 'free' && pacingRecommendation.recommendedIds.includes(strategy.id);
-                const isNotRecommended = planTier !== 'free' && pacingRecommendation.notRecommendedIds.includes(strategy.id);
 
                 return (
                   <div
                     key={strategy.id}
                     onClick={() => handleSelectPacingStrategy(strategy.id)}
-                    className={`group p-4 rounded-2xl border transition-all duration-200 cursor-pointer relative active:scale-[0.99] ${
+                    className={`group p-4 rounded-xl border transition-all duration-200 cursor-pointer relative active:scale-[0.99] ${
                       isSelected
-                        ? 'bg-indigo-50/90 border-indigo-500 shadow-md shadow-indigo-100 ring-2 ring-indigo-500/40 scale-[1.01] dark:bg-indigo-950/60 dark:border-indigo-500 dark:shadow-indigo-950/60 dark:ring-indigo-500/50'
+                        ? 'bg-[#131B2E]/70 border-[#6366F1] shadow-md shadow-indigo-950/50 ring-1 ring-[#6366F1]/50'
                         : isPrimaryRec
-                        ? 'bg-white border-cyan-400 hover:border-cyan-500 hover:bg-cyan-50/30 hover:-translate-y-0.5 shadow-sm dark:bg-slate-900/90 dark:border-cyan-500/50 dark:hover:border-cyan-400 dark:hover:bg-slate-800 dark:hover:shadow-cyan-500/10'
+                        ? 'bg-[#131B2E]/50 border-cyan-500/40 hover:border-cyan-500'
                         : isAllowed
-                        ? 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 shadow-sm dark:bg-slate-900/80 dark:border-slate-800 dark:hover:border-slate-700 dark:hover:bg-slate-800'
-                        : 'bg-slate-50/80 border-slate-200 hover:border-amber-400/60 opacity-80 dark:bg-slate-950/60 dark:border-slate-800/80 dark:hover:border-amber-500/40'
+                        ? 'bg-[#131B2E]/40 border-white/5 hover:border-white/10 hover:bg-[#131B2E]/60'
+                        : 'bg-black/20 border-white/5 opacity-70'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
-                            {strategy.title}
-                          </h3>
-                        </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                          {strategy.title}
+                        </h3>
+                        <p className="text-[11px] text-slate-400 font-medium mt-0.5">
                           {strategy.tagline}
                         </p>
                       </div>
 
-                      {/* Badge Statut Plan ou Recommandation */}
-                      <div className="flex flex-col items-end gap-1">
+                      {/* Badges */}
+                      <div className="flex flex-wrap items-center justify-end gap-1 shrink-0">
                         {isPrimaryRec && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-300 dark:bg-cyan-500/20 dark:text-cyan-300 dark:border-cyan-500/40 flex items-center gap-1 shrink-0">
-                            ⭐ Recommandé
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/30">
+                            ★ Recommandé
                           </span>
                         )}
                         {isRecommended && !isPrimaryRec && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30 shrink-0">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
                             Alternatif
-                          </span>
-                        )}
-                        {isNotRecommended && (
-                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 shrink-0">
-                            Non optimal
                           </span>
                         )}
                         {isAllowed ? (
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
                             isSelected
-                              ? 'bg-indigo-600 text-white shadow-sm'
-                              : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                              ? 'bg-[#6366F1] text-white shadow-xs'
+                              : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white'
                           }`}>
                             {isSelected 
                               ? (planTier !== 'free' && selectedPacings.length > 1 ? `✓ Méthode ${selectedPacings.indexOf(strategy.id) + 1}/3` : '✓ Sélectionnée')
                               : (planTier !== 'free' ? '+ Combiner' : 'Inclus')}
                           </span>
                         ) : (
-                          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40 flex items-center gap-1 shrink-0">
-                            <Lock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1 shrink-0">
+                            <Lock className="w-3 h-3 text-amber-400" />
                             ⭐ PRO
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-2.5 leading-relaxed">
+                    <p className="text-xs text-slate-300 mt-2 leading-relaxed">
                       {strategy.explanation}
                     </p>
 
-                    <div className="mt-3 pt-2.5 border-t border-slate-200/80 dark:border-slate-800/60 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                      <span className="font-mono text-slate-700 dark:text-slate-300">{strategy.badge}</span>
+                    <div className="mt-2.5 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                      <span className="font-mono text-slate-300">{strategy.badge}</span>
                       {!isAllowed && (
-                        <span className="text-amber-600 dark:text-amber-400 text-[10px] font-semibold">
+                        <span className="text-amber-400 text-[10px] font-semibold">
                           Cliquez pour débloquer
                         </span>
                       )}
@@ -1210,40 +1217,36 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           </div>
 
           {/* 3. MOMENT PRÉFÉRÉ D'ÉTUDE (CHRONOTYPE) */}
-          <div className="space-y-2 pt-2">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+          <div className="space-y-2.5 pt-2">
+            <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-indigo-400" />
               <span>Moment de la journée le plus productif pour vous</span>
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
               {[
                 { 
                   id: 'morning' as Chronotype, 
                   label: 'Matin (07h - 12h)',
                   icon: Sun,
-                  activeClass: 'bg-gradient-to-r from-amber-600 to-amber-500 border-amber-400 text-white shadow-md shadow-amber-500/25 ring-2 ring-amber-400/40 font-bold',
-                  iconClass: 'text-amber-500 dark:text-amber-400 group-hover:text-amber-600 dark:group-hover:text-amber-300 group-hover:rotate-45'
+                  iconClass: 'text-amber-400'
                 },
                 { 
                   id: 'afternoon' as Chronotype, 
                   label: 'Après-midi (13h - 17h)',
                   icon: Flame,
-                  activeClass: 'bg-gradient-to-r from-orange-600 to-rose-600 border-orange-400 text-white shadow-md shadow-orange-500/25 ring-2 ring-orange-400/40 font-bold',
-                  iconClass: 'text-orange-500 dark:text-orange-400 group-hover:text-orange-600 dark:group-hover:text-orange-300 group-hover:scale-125'
+                  iconClass: 'text-orange-400'
                 },
                 { 
                   id: 'evening' as Chronotype, 
                   label: 'Soir (18h - 22h)',
                   icon: Sunset,
-                  activeClass: 'bg-gradient-to-r from-indigo-600 to-violet-600 border-indigo-400 text-white shadow-md shadow-indigo-500/30 ring-2 ring-indigo-400/40 font-bold',
-                  iconClass: 'text-indigo-500 dark:text-indigo-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 group-hover:-rotate-12 group-hover:scale-115'
+                  iconClass: 'text-indigo-400'
                 },
                 { 
                   id: 'night' as Chronotype, 
                   label: 'Nuit (22h - 02h)',
                   icon: Moon,
-                  activeClass: 'bg-gradient-to-r from-blue-600 to-indigo-700 border-blue-400 text-white shadow-md shadow-blue-500/25 ring-2 ring-blue-400/40 font-bold',
-                  iconClass: 'text-blue-500 dark:text-blue-400 group-hover:text-blue-600 dark:group-hover:text-blue-300 group-hover:rotate-12 group-hover:scale-115'
+                  iconClass: 'text-blue-400'
                 },
               ].map((c) => {
                 const Icon = c.icon;
@@ -1256,13 +1259,13 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       setSelectedChronotype(c.id);
                       soundFX.playCheckmarkPop();
                     }}
-                    className={`group p-2.5 rounded-xl border text-xs font-medium transition-all duration-200 cursor-pointer text-center flex items-center justify-center gap-1.5 active:scale-95 ${
+                    className={`group p-3 rounded-xl border text-xs font-medium transition-all duration-200 cursor-pointer text-center flex items-center justify-center gap-2 active:scale-95 ${
                       isSelected
-                        ? `${c.activeClass} scale-[1.02]`
-                        : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 dark:hover:border-slate-700 hover:-translate-y-0.5 shadow-sm'
+                        ? 'bg-gradient-to-r from-indigo-600 to-violet-600 border-indigo-400 text-white shadow-md shadow-indigo-500/30 ring-2 ring-indigo-400/40 font-bold scale-[1.01]'
+                        : 'bg-transparent border-white/5 text-slate-400 hover:text-white hover:bg-white/5 hover:border-white/10'
                     }`}
                   >
-                    <Icon className={`w-3.5 h-3.5 shrink-0 transition-transform duration-300 ease-out ${
+                    <Icon className={`w-4 h-4 shrink-0 transition-transform duration-300 ${
                       isSelected ? 'text-white scale-110 drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' : c.iconClass
                     }`} />
                     <span>{c.label}</span>
@@ -1272,31 +1275,30 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             </div>
           </div>
 
-          {/* 4. BOUTON FINAL DE GÉNÉRATION DU PLANNING */}
-          <div className="pt-4 flex flex-col sm:flex-row items-center gap-3">
-            <Button
-              type="button"
-              variant="secondary"
-              size="lg"
-              onClick={() => {
-                soundFX.playCheckmarkPop();
-                setCurrentStep('upload');
-              }}
-              className="group w-full sm:w-auto px-5 py-3.5 text-xs text-slate-700 hover:text-slate-900 border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:border-slate-700 dark:hover:border-slate-500 dark:bg-slate-900/90 dark:hover:bg-slate-800 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-300 ease-out group-hover:-translate-x-1" />
-              <span>Retour au document</span>
-            </Button>
+          {/* 4. APPELS À L'ACTION DU BAS */}
+          <div className="pt-6 pb-28 sm:pb-32 flex flex-col items-center gap-3">
             <button
               type="button"
               onClick={() => {
                 soundFX.playSuccessChime();
                 handleFinalSubmit();
               }}
-              className="group flex-1 w-full py-3.5 px-6 text-sm font-bold text-white rounded-xl cursor-pointer btn-generate-glow flex items-center justify-center gap-2.5 transition-all duration-300 active:scale-[0.98]"
+              className="w-full py-4 px-6 text-sm sm:text-base font-bold text-white rounded-2xl cursor-pointer bg-gradient-to-r from-[#6366F1] to-[#4F46E5] hover:from-[#5558E6] hover:to-[#4338CA] shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/40 flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98]"
             >
-              <Calendar className="w-4 h-4 text-white transition-transform duration-300 ease-out group-hover:scale-125 group-hover:-rotate-12 drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
-              <span>Générer mon planning d'étude avec ces paramètres ({editableSubjects.filter(s => s.enabled).length} matières)</span>
+              <Calendar className="w-5 h-5 text-white shrink-0" />
+              <span>Générer mon planning d'étude avec ces paramètres ({editableSubjects.filter(s => s.enabled).length} matières) ⚡</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                soundFX.playCheckmarkPop();
+                setCurrentStep('upload');
+              }}
+              className="text-sm text-slate-400 hover:text-white py-2.5 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Retour au document</span>
             </button>
           </div>
 

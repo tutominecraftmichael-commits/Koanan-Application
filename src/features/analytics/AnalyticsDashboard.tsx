@@ -103,18 +103,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </p>
       </div>
 
-      {/* KPI TOP TILES (3 CARTES CLAIRES & ÉQUILIBRÉES) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+      {/* KPI TOP TILES (2 COLONNES COMPACTES SUR MOBILE, 3 SUR DESKTOP) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-4">
         
-        <Card className="p-3.5 sm:p-5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-2 sm:space-y-3 interactive-card shadow-xs">
+        <Card className="p-3 sm:p-5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-1.5 sm:space-y-3 interactive-card shadow-xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs font-semibold uppercase">
-            <span>Étude Réalisée</span>
-            <div className="p-1.5 sm:p-2 rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+            <span className="truncate">Étude Réalisée</span>
+            <div className="p-1 sm:p-2 rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400 shrink-0">
               <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div>
-            <span className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono">
+            <span className="text-lg sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono">
               {formatMinutesToHours(totalCompletedMinutes)}
             </span>
             <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
@@ -124,15 +124,15 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <ProgressBar value={completionRate} size="sm" showPercentage={false} color="indigo" />
         </Card>
 
-        <Card className="p-3.5 sm:p-5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-2 sm:space-y-3 interactive-card shadow-xs">
+        <Card className="p-3 sm:p-5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-1.5 sm:space-y-3 interactive-card shadow-xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs font-semibold uppercase">
-            <span>Complétion</span>
-            <div className="p-1.5 sm:p-2 rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+            <span className="truncate">Complétion</span>
+            <div className="p-1 sm:p-2 rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 shrink-0">
               <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div>
-            <span className="text-xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
+            <span className="text-lg sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
               <AnimatedCounter value={completionRate} suffix="%" className="text-emerald-600 dark:text-emerald-400" />
             </span>
             <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
@@ -142,35 +142,37 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <ProgressBar value={completionRate} size="sm" showPercentage={false} color="emerald" />
         </Card>
 
-        <Card className="p-3.5 sm:p-5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-2 sm:space-y-3 interactive-card shadow-xs">
+        <Card className="p-3 sm:p-5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-1.5 sm:space-y-3 interactive-card shadow-xs col-span-2 sm:col-span-1">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs font-semibold uppercase">
-            <span>Focus Moyen</span>
-            <div className={`p-1.5 sm:p-2 rounded-lg ${hasValidLogs ? 'bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'}`}>
+            <span className="truncate">Focus Moyen</span>
+            <div className={`p-1 sm:p-2 rounded-lg shrink-0 ${hasValidLogs ? 'bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'}`}>
               <Star className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${hasValidLogs ? 'fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400' : 'text-slate-400 dark:text-slate-600'}`} />
             </div>
           </div>
-          <div>
-            <span className={`text-xl sm:text-3xl font-extrabold font-mono ${hasValidLogs ? 'text-amber-600 dark:text-amber-300' : 'text-slate-400 dark:text-slate-500'}`}>
-              {hasValidLogs ? (
-                <AnimatedCounter value={numericAverageRating} suffix=" / 5" decimals={1} className="text-amber-600 dark:text-amber-300" />
-              ) : (
-                '0.0 / 5'
-              )}
-            </span>
-            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-              {hasValidLogs ? `Sur ${validCompletedLogs.length} session${validCompletedLogs.length > 1 ? 's' : ''}` : 'Aucun cours effectué'}
-            </p>
-          </div>
-          <div className="flex items-center gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => {
-              const isFilled = hasValidLogs && i < Math.round(numericAverageRating);
-              return (
-                <Star 
-                  key={i} 
-                  className={`w-3 h-3 ${isFilled ? 'fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400' : 'text-slate-300 dark:text-slate-700 fill-none'}`} 
-                />
-              );
-            })}
+          <div className="flex items-baseline justify-between sm:block">
+            <div>
+              <span className={`text-lg sm:text-3xl font-extrabold font-mono ${hasValidLogs ? 'text-amber-600 dark:text-amber-300' : 'text-slate-400 dark:text-slate-500'}`}>
+                {hasValidLogs ? (
+                  <AnimatedCounter value={numericAverageRating} suffix=" / 5" decimals={1} className="text-amber-600 dark:text-amber-300" />
+                ) : (
+                  '0.0 / 5'
+                )}
+              </span>
+              <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                {hasValidLogs ? `Sur ${validCompletedLogs.length} session${validCompletedLogs.length > 1 ? 's' : ''}` : 'Aucun cours effectué'}
+              </p>
+            </div>
+            <div className="flex items-center gap-0.5 self-center sm:self-auto sm:mt-2">
+              {Array.from({ length: 5 }).map((_, i) => {
+                const isFilled = hasValidLogs && i < Math.round(numericAverageRating);
+                return (
+                  <Star 
+                    key={i} 
+                    className={`w-3 h-3 ${isFilled ? 'fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400' : 'text-slate-300 dark:text-slate-700 fill-none'}`} 
+                  />
+                );
+              })}
+            </div>
           </div>
         </Card>
 

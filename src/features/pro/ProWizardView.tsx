@@ -30,7 +30,9 @@ import {
   ShieldCheck,
   Flame,
   BookOpen,
-  Filter
+  Filter,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 
@@ -190,6 +192,9 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   // État Étape 4 : Téléchargement des rappels
   const [hasDownloadedIcs, setHasDownloadedIcs] = useState(false);
   const [hasOpenedGoogleCalendar, setHasOpenedGoogleCalendar] = useState(false);
+
+  // État Accordéon pour les matières en Étape 2 (par défaut la première matière est ouverte)
+  const [expandedSubjectId, setExpandedSubjectId] = useState<string | null>(() => subjectsList[0]?.id || null);
 
   // Gestion des méthodes en Étape 1
   const handleTogglePacing = (pacingId: StudyPacing) => {
@@ -420,46 +425,47 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   }, [reorganizedSessions]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#070B13] text-slate-900 dark:text-slate-100 transition-colors py-6 sm:py-10 px-3 sm:px-6">
-      <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#070B13] text-slate-900 dark:text-slate-100 transition-colors py-6 sm:py-8 px-3 sm:px-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         
         {/* =========================================================================
-            HEADER AVEC BADGE PRO JAUNE DORÉ ÉTINCELANT
+            HEADER COMPACT : BADGE PRO & QUITTER SUR UNE LIGNE, TITRE RESPONSIVE
             ========================================================================= */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5">
-              {/* Badge PRO Jaune Doré Fixe */}
+        <div className="space-y-3 border-b border-slate-200 dark:border-slate-800 pb-4 sm:pb-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-xs inline-flex items-center">
                 PRO
               </span>
-              <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
                 Version PRO ouverte
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            <button
+              type="button"
+              onClick={() => onNavigate('dashboard')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer shrink-0"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Quitter le parcours</span>
+            </button>
+          </div>
+
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white">
               Configuration de votre Emploi du Temps Pro
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-xl leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Personnalisez vos méthodes cognitives, vos devoirs et vos examens. L'algorithme réorganise votre semaine en optimisant chaque matière.
             </p>
           </div>
-
-          <button
-            type="button"
-            onClick={() => onNavigate('dashboard')}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer shrink-0"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Quitter le parcours</span>
-          </button>
         </div>
 
         {/* =========================================================================
             BARRE DE PROGRESSION ANIMÉE FLUIDE
             ========================================================================= */}
         <div className="space-y-2">
-          <div className="w-full bg-slate-200/80 dark:bg-slate-800/80 h-2.5 rounded-full overflow-hidden shadow-inner relative">
+          <div className="w-full bg-slate-200/80 dark:bg-slate-800/80 h-2 rounded-full overflow-hidden shadow-inner relative">
             <div 
               className="h-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 transition-all duration-500 ease-out rounded-full shadow-sm shadow-amber-400/50"
               style={{ width: `${(currentStep / 4) * 100}%` }}
@@ -471,14 +477,14 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
         </div>
 
         {/* =========================================================================
-            STEPPER HORIZONTAL INTERACTIF & COLORÉ
+            STEPPER DES 4 ÉTAPES : CERCLE CENTRÉ AU-DESSUS DU TEXTE (ZÉRO TRONCATURE)
             ========================================================================= */}
-        <div className="grid grid-cols-4 gap-2 sm:gap-3">
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5">
           {[
-            { step: 1, label: '1. Méthodes', short: 'Méthodes' },
-            { step: 2, label: '2. Devoirs & Examens', short: 'Devoirs' },
-            { step: 3, label: '3. Réorganisation', short: 'Planning' },
-            { step: 4, label: '4. Google Agenda', short: 'Agenda' },
+            { step: 1, label: 'Méthodes' },
+            { step: 2, label: 'Devoirs' },
+            { step: 3, label: 'Planning' },
+            { step: 4, label: 'Agenda' },
           ].map(s => {
             const isActive = currentStep === s.step;
             const isCompleted = currentStep > s.step;
@@ -494,31 +500,28 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                   }
                 }}
                 disabled={s.step > currentStep && !reorganizedSessions}
-                className={`py-3 px-2 sm:px-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer ${
+                className={`py-2 px-1 sm:py-3 sm:px-2 rounded-xl sm:rounded-2xl border flex flex-col items-center justify-center text-center transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? 'bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-transparent border-amber-400 dark:border-amber-400/80 shadow-md shadow-amber-500/10 ring-2 ring-amber-400/30 scale-[1.02] text-slate-900 dark:text-white'
+                    ? 'bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-transparent border-amber-400 dark:border-amber-400/80 shadow-md shadow-amber-500/10 ring-2 ring-amber-400/30 text-slate-900 dark:text-white'
                     : isCompleted
                     ? 'bg-emerald-500/10 dark:bg-emerald-950/20 border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15'
                     : 'bg-white/40 dark:bg-slate-900/30 border-slate-200/60 dark:border-slate-800/60 text-slate-400 opacity-60 cursor-not-allowed'
                 }`}
               >
-                <div className="flex items-center gap-2">
-                  <span className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center shrink-0 transition-transform ${
-                    isActive
-                      ? 'bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-black shadow-xs scale-110'
-                      : isCompleted
-                      ? 'bg-emerald-500 text-white shadow-xs'
-                      : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
-                  }`}>
-                    {isCompleted ? <Check className="w-3 h-3 stroke-[3]" /> : s.step}
-                  </span>
-                  <span className="text-xs font-bold truncate hidden sm:inline">
-                    {s.label}
-                  </span>
-                  <span className="text-xs font-bold truncate sm:hidden">
-                    {s.short}
-                  </span>
-                </div>
+                <span className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full text-[10px] sm:text-xs font-bold flex items-center justify-center mb-1 shrink-0 transition-transform ${
+                  isActive
+                    ? 'bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-black shadow-xs scale-105'
+                    : isCompleted
+                    ? 'bg-emerald-500 text-white shadow-xs'
+                    : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
+                }`}>
+                  {isCompleted ? <Check className="w-3 h-3 stroke-[3]" /> : s.step}
+                </span>
+                <span className={`text-[11px] sm:text-xs leading-tight whitespace-normal text-center ${
+                  isActive ? 'font-bold text-slate-900 dark:text-white' : 'font-medium'
+                }`}>
+                  {s.label}
+                </span>
               </button>
             );
           })}
@@ -529,60 +532,66 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
             ========================================================================= */}
         {currentStep === 1 && (
           <div className="space-y-6 animate-in fade-in duration-200">
-            {/* Banner Recommandation Pédagogique - Espacé, Clair & Structuré */}
-            <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-slate-900/5 dark:to-transparent border border-indigo-500/30 dark:border-indigo-500/40 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
-              <div className="space-y-2.5 max-w-2xl">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
-                    <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
-                    Recommandation de Konan
-                  </span>
-                  {aiRecommendation.contextTag && (
-                    <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
-                      • {aiRecommendation.contextTag}
-                    </span>
-                  )}
-                </div>
+            {/* Banner Recommandation Pédagogique - Épuré, Lumineux & Sans Répétition */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-slate-900/5 dark:to-transparent border border-indigo-500/30 dark:border-indigo-500/40 shadow-sm space-y-3.5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 w-fit">
+                  <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
+                  Recommandation de Konan
+                </span>
 
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
-                    {aiRecommendation.recommendedIds.length > 1 ? 'Méthodes conseillées :' : 'Méthode conseillée :'}
-                  </span>
+                <button
+                  type="button"
+                  onClick={handleApplyAiRecommendation}
+                  className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs transition-all shadow-md shadow-indigo-600/20 active:scale-95 cursor-pointer shrink-0 inline-flex items-center justify-center gap-2"
+                >
+                  <Check className="w-4 h-4 stroke-[2.5]" />
+                  <span>✓ Appliquer le conseil</span>
+                </button>
+              </div>
+
+              {/* Méthodes conseillées sous forme de badges lumineux côte à côte */}
+              <div className="space-y-1.5">
+                <span className="text-xs font-extrabold text-slate-900 dark:text-white block">
+                  {aiRecommendation.recommendedIds.length > 1 ? 'Méthodes conseillées :' : 'Méthode conseillée :'}
+                </span>
+                <div className="flex flex-wrap gap-2">
                   {aiRecommendation.recommendedIds.map(id => (
-                    <span key={id} className="text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-cyan-300 border border-indigo-200 dark:border-indigo-500/30">
-                      {getPacingStrategy(id).title}
+                    <span 
+                      key={id} 
+                      className="text-xs font-bold px-3 py-1 rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-cyan-300 border border-indigo-300/60 dark:border-indigo-500/40 shadow-xs flex items-center gap-1.5"
+                    >
+                      <span className="text-amber-400">★</span>
+                      <span>{getPacingStrategy(id).title}</span>
                     </span>
                   ))}
                 </div>
-
-                <div className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line bg-white/60 dark:bg-slate-950/40 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80">
-                  {aiRecommendation.rationale}
-                </div>
               </div>
 
-              <button
-                type="button"
-                onClick={handleApplyAiRecommendation}
-                className="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs transition-all shadow-md hover:shadow-indigo-500/20 active:scale-95 cursor-pointer shrink-0 inline-flex items-center gap-2"
-              >
-                <Check className="w-4 h-4" />
-                <span>Appliquer le conseil</span>
-              </button>
+              {/* Bloc unique Diagnostic de votre emploi du temps */}
+              <div className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed bg-white/60 dark:bg-slate-950/40 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800/80 space-y-1">
+                <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <span>📊 Diagnostic de votre emploi du temps</span>
+                </div>
+                <p className="whitespace-pre-line text-slate-600 dark:text-slate-300">
+                  {aiRecommendation.rationale}
+                </p>
+              </div>
             </div>
 
             {/* Sélecteur de méthodes interactif avec thèmes colorés */}
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                  <BookOpen className="w-4 h-4 text-amber-500" />
-                  Sélectionnez jusqu'à 3 méthodes simultanées (Avantage Pro) :
+              <div className="flex items-center justify-between gap-2 text-xs">
+                <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 min-w-0">
+                  <BookOpen className="w-4 h-4 text-amber-500 shrink-0" />
+                  <span className="truncate">Sélectionnez jusqu'à 3 méthodes simultanées (Avantage Pro) :</span>
                 </span>
-                <span className="font-mono text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                <span className="whitespace-nowrap px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 shrink-0 font-mono">
                   {selectedCombinedPacings.length} / 3 actives
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {PACING_STRATEGIES.map((strategy) => {
                   const isSelected = selectedCombinedPacings.includes(strategy.id);
                   const isPrimary = selectedPrimaryPacing === strategy.id;
@@ -593,21 +602,21 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                     <div
                       key={strategy.id}
                       onClick={() => handleTogglePacing(strategy.id)}
-                      className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 cursor-pointer relative flex flex-col justify-between gap-3 hover:-translate-y-0.5 ${
+                      className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer relative flex flex-col justify-between gap-3 hover:-translate-y-0.5 ${
                         isSelected
                           ? `bg-white dark:bg-slate-900/90 ${theme.activeGlow}`
                           : 'bg-white/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs'
                       }`}
                     >
-                      <div className="space-y-2.5">
+                      <div className="space-y-2">
                         <div className="flex items-start justify-between gap-2">
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
+                          <div className="space-y-1 min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-1.5">
                               <h4 className="text-sm font-extrabold text-slate-900 dark:text-white">
                                 {strategy.title}
                               </h4>
                               {isProExclusive && (
-                                <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-xs">
+                                <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-xs shrink-0">
                                   PRO
                                 </span>
                               )}
@@ -617,7 +626,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                             </span>
                           </div>
 
-                          <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-transform ${
+                          <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-transform mt-0.5 ${
                             isSelected
                               ? `${theme.checkBg} border-transparent scale-110 shadow-xs`
                               : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'
@@ -626,7 +635,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                           </div>
                         </div>
 
-                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
                           {strategy.explanation}
                         </p>
                       </div>
@@ -687,15 +696,15 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
         {currentStep === 2 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             {/* Bannière Aucune matière n'est supprimée */}
-            <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-emerald-500/10 via-cyan-500/5 to-transparent border border-emerald-500/30 dark:border-emerald-500/40 shadow-sm flex items-start sm:items-center gap-3.5">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-xs">
-                <ShieldCheck className="w-5 h-5" />
+            <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-500/10 via-cyan-500/5 to-transparent border border-emerald-500/30 dark:border-emerald-500/40 shadow-xs flex items-start gap-3 text-xs">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                <ShieldCheck className="w-4 h-4" />
               </div>
-              <div className="space-y-0.5 text-xs">
+              <div className="space-y-0.5 min-w-0">
                 <h4 className="font-extrabold text-slate-900 dark:text-white">
                   Aucune matière n'est supprimée
                 </h4>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-[11px] sm:text-xs">
                   L'intelligence de Konan intensifie les révisions pour vos devoirs et examens, tout en maintenant les créneaux réguliers de vos autres matières.
                 </p>
               </div>
@@ -710,163 +719,192 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
               </p>
             </div>
 
-            {/* Liste des matières */}
-            <div className="space-y-3.5">
+            {/* Liste des matières en accordéon intelligent */}
+            <div className="space-y-2.5">
               {subjectsList.map((subject) => {
                 const hasExam = Boolean(subject.examDate);
                 const daysRemaining = subject.examDate ? getDaysRemaining(subject.examDate) : null;
+                const activeId = expandedSubjectId !== null ? expandedSubjectId : (subjectsList[0]?.id || null);
+                const isExpanded = activeId === subject.id;
 
                 return (
                   <div
                     key={subject.id}
-                    className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 space-y-4 shadow-xs relative overflow-hidden transition-all duration-200 hover:border-slate-300 dark:hover:border-slate-700"
+                    className={`rounded-2xl bg-white dark:bg-slate-900/90 border transition-all duration-200 overflow-hidden shadow-xs ${
+                      isExpanded 
+                        ? 'border-slate-300 dark:border-slate-700 ring-1 ring-amber-500/20' 
+                        : 'border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700'
+                    }`}
                     style={{ borderLeftColor: subject.color || '#6366F1', borderLeftWidth: '4px' }}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div className="flex items-center gap-3">
+                    {/* Header compact cliquable (Accordéon) */}
+                    <div
+                      onClick={() => {
+                        soundFX.playCheckmarkPop();
+                        setExpandedSubjectId(isExpanded ? null : subject.id);
+                      }}
+                      className="p-3 sm:p-3.5 flex items-center justify-between gap-2.5 cursor-pointer select-none hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
                         <div
-                          className="w-4 h-4 rounded-full shrink-0 shadow-xs"
+                          className="w-3.5 h-3.5 rounded-full shrink-0 shadow-xs"
                           style={{ backgroundColor: subject.color || '#6366F1' }}
                         />
-                        <div>
-                          <h4 className="text-sm font-extrabold text-slate-900 dark:text-white">
-                            {subject.name}
-                          </h4>
-                          <span className="text-[11px] text-slate-500 font-mono">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white break-words">
+                              {subject.name}
+                            </h4>
+                            {hasExam && daysRemaining !== null && (
+                              <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/40 inline-flex items-center gap-1 shrink-0">
+                                <Flame className="w-2.5 h-2.5" />
+                                J-{daysRemaining}
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[10px] sm:text-[11px] text-slate-500 font-mono block">
                             Coeff {subject.coefficient} • Difficulté {subject.difficulty}/5
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        {hasExam && daysRemaining !== null && (
-                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/40 inline-flex items-center gap-1">
-                            <Flame className="w-3 h-3" />
-                            Urgence {subject.examType === 'devoir' ? 'Devoir' : 'Examen'} • J-{daysRemaining}
-                          </span>
-                        )}
-
+                      <div className="flex items-center gap-1.5 shrink-0">
                         <button
                           type="button"
-                          onClick={() => handleDeleteSubject(subject.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteSubject(subject.id);
+                          }}
                           className="p-1.5 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
                           title="Supprimer cette matière"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
-                      </div>
-                    </div>
-
-                    {/* Paramètres de la matière : Coeff & Difficulté */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                      <div className="space-y-1">
-                        <div className="flex justify-between items-center text-[11px]">
-                          <label className="font-bold text-slate-700 dark:text-slate-300">
-                            Coefficient de la matière
-                          </label>
-                          <span className="font-mono font-extrabold px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
-                            Coeff {subject.coefficient}
-                          </span>
-                        </div>
-                        <input
-                          type="range"
-                          min="1"
-                          max="10"
-                          value={subject.coefficient}
-                          onChange={(e) => handleUpdateSubject(subject.id, { coefficient: Number(e.target.value) })}
-                          className="w-full accent-amber-500 cursor-pointer"
-                        />
-                        <div className="flex justify-between text-[10px] font-mono text-slate-400">
-                          <span>1 (Optionnel)</span>
-                          <span>10 (Majeure)</span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-1">
-                        <div className="flex justify-between items-center text-[11px]">
-                          <label className="font-bold text-slate-700 dark:text-slate-300">
-                            Difficulté perçue
-                          </label>
-                          <span className="font-mono font-extrabold px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
-                            {subject.difficulty} / 5
-                          </span>
-                        </div>
-                        <input
-                          type="range"
-                          min="1"
-                          max="5"
-                          value={subject.difficulty}
-                          onChange={(e) => handleUpdateSubject(subject.id, { difficulty: Number(e.target.value) as any })}
-                          className="w-full accent-amber-500 cursor-pointer"
-                        />
-                        <div className="flex justify-between text-[10px] font-mono text-slate-400">
-                          <span>Facile</span>
-                          <span>Moyen</span>
-                          <span>Complexe</span>
+                        <div className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                          {isExpanded ? (
+                            <ChevronUp className="w-4 h-4 text-amber-500" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 text-slate-400" />
+                          )}
                         </div>
                       </div>
                     </div>
 
-                    {/* Bloc Devoir / Examen programmé */}
-                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 cursor-pointer select-none">
-                          <input
-                            type="checkbox"
-                            checked={hasExam}
-                            onChange={(e) => {
-                              soundFX.playCheckmarkPop();
-                              if (e.target.checked) {
-                                const defaultDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-                                handleUpdateSubject(subject.id, {
-                                  examDate: defaultDate,
-                                  examType: 'devoir',
-                                });
-                              } else {
-                                handleUpdateSubject(subject.id, {
-                                  examDate: undefined,
-                                  examType: undefined,
-                                });
-                              }
-                            }}
-                            className="w-4 h-4 rounded accent-amber-500 cursor-pointer"
-                          />
-                          <span>Préparer un devoir surveillé ou un examen pour cette matière</span>
-                        </label>
-                      </div>
-
-                      {hasExam && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 animate-in fade-in duration-200">
-                          <div>
-                            <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">
-                              Type d'échéance :
-                            </span>
-                            <select
-                              value={subject.examType || 'devoir'}
-                              onChange={(e) => handleUpdateSubject(subject.id, { examType: e.target.value as EvaluationType })}
-                              className="w-full px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-800 dark:text-slate-200"
-                            >
-                              <option value="devoir">Devoir Surveillé (DS) / Contrôle continu</option>
-                              <option value="examen">Examen Final / Partiel</option>
-                              <option value="rattrapage">Session de Rattrapage</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">
-                              Date de l'épreuve :
-                            </span>
+                    {/* Contenu Déplié de la matière */}
+                    {isExpanded && (
+                      <div className="p-3.5 sm:p-4 pt-0 space-y-4 border-t border-slate-100 dark:border-slate-800/80 animate-in fade-in duration-200">
+                        {/* Paramètres de la matière : Coeff & Difficulté */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center text-[11px]">
+                              <label className="font-bold text-slate-700 dark:text-slate-300">
+                                Coefficient de la matière
+                              </label>
+                              <span className="font-mono font-extrabold px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
+                                Coeff {subject.coefficient}
+                              </span>
+                            </div>
                             <input
-                              type="date"
-                              value={subject.examDate || ''}
-                              min={new Date().toISOString().split('T')[0]}
-                              onChange={(e) => handleUpdateSubject(subject.id, { examDate: e.target.value })}
-                              className="w-full px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-800 dark:text-slate-200 font-mono"
+                              type="range"
+                              min="1"
+                              max="10"
+                              value={subject.coefficient}
+                              onChange={(e) => handleUpdateSubject(subject.id, { coefficient: Number(e.target.value) })}
+                              className="w-full accent-amber-500 cursor-pointer"
                             />
+                            <div className="flex justify-between text-[10px] font-mono text-slate-400">
+                              <span>1 (Optionnel)</span>
+                              <span>10 (Majeure)</span>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center text-[11px]">
+                              <label className="font-bold text-slate-700 dark:text-slate-300">
+                                Difficulté perçue
+                              </label>
+                              <span className="font-mono font-extrabold px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
+                                {subject.difficulty} / 5
+                              </span>
+                            </div>
+                            <input
+                              type="range"
+                              min="1"
+                              max="5"
+                              value={subject.difficulty}
+                              onChange={(e) => handleUpdateSubject(subject.id, { difficulty: Number(e.target.value) as any })}
+                              className="w-full accent-amber-500 cursor-pointer"
+                            />
+                            <div className="flex justify-between text-[10px] font-mono text-slate-400">
+                              <span>Facile</span>
+                              <span>Moyen</span>
+                              <span>Complexe</span>
+                            </div>
                           </div>
                         </div>
-                      )}
-                    </div>
+
+                        {/* Bloc Devoir / Examen programmé */}
+                        <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 cursor-pointer select-none">
+                              <input
+                                type="checkbox"
+                                checked={hasExam}
+                                onChange={(e) => {
+                                  soundFX.playCheckmarkPop();
+                                  if (e.target.checked) {
+                                    const defaultDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                                    handleUpdateSubject(subject.id, {
+                                      examDate: defaultDate,
+                                      examType: 'devoir',
+                                    });
+                                  } else {
+                                    handleUpdateSubject(subject.id, {
+                                      examDate: undefined,
+                                      examType: undefined,
+                                    });
+                                  }
+                                }}
+                                className="w-4 h-4 rounded accent-amber-500 cursor-pointer"
+                              />
+                              <span>Préparer un devoir surveillé ou un examen pour cette matière</span>
+                            </label>
+                          </div>
+
+                          {hasExam && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 animate-in fade-in duration-200">
+                              <div>
+                                <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">
+                                  Type d'échéance :
+                                </span>
+                                <select
+                                  value={subject.examType || 'devoir'}
+                                  onChange={(e) => handleUpdateSubject(subject.id, { examType: e.target.value as EvaluationType })}
+                                  className="w-full px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-800 dark:text-slate-200"
+                                >
+                                  <option value="devoir">Devoir Surveillé (DS) / Contrôle continu</option>
+                                  <option value="examen">Examen Final / Partiel</option>
+                                  <option value="rattrapage">Session de Rattrapage</option>
+                                </select>
+                              </div>
+
+                              <div>
+                                <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">
+                                  Date de l'épreuve :
+                                </span>
+                                <input
+                                  type="date"
+                                  value={subject.examDate || ''}
+                                  min={new Date().toISOString().split('T')[0]}
+                                  onChange={(e) => handleUpdateSubject(subject.id, { examDate: e.target.value })}
+                                  className="w-full px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-800 dark:text-slate-200 font-mono"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -1020,36 +1058,42 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                   </div>
 
                   {/* Résumé des critères configurés */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg mx-auto text-left">
-                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60">
-                      <span className="block text-[10px] font-bold text-slate-400 uppercase">Matières</span>
-                      <span className="text-xs font-black text-slate-900 dark:text-white font-mono">
-                        {subjectsList.length} au programme
+                  <div className="grid grid-cols-3 gap-2.5 max-w-lg mx-auto text-center">
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60 flex flex-col items-center justify-center">
+                      <span className="text-xl font-bold text-slate-900 dark:text-white font-mono">
+                        {subjectsList.length}
+                      </span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                        Matières
                       </span>
                     </div>
-                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60">
-                      <span className="block text-[10px] font-bold text-slate-400 uppercase">Échéances</span>
-                      <span className="text-xs font-black text-slate-900 dark:text-white font-mono">
-                        {subjectsList.filter(s => s.examDate).length} prioritaires
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60 flex flex-col items-center justify-center">
+                      <span className="text-xl font-bold text-amber-500 dark:text-amber-400 font-mono">
+                        {subjectsList.filter(s => s.examDate).length}
+                      </span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                        Échéances
                       </span>
                     </div>
-                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60 col-span-2 sm:col-span-1">
-                      <span className="block text-[10px] font-bold text-slate-400 uppercase">Méthodes</span>
-                      <span className="text-xs font-black text-slate-900 dark:text-white font-mono">
-                        {selectedCombinedPacings.length} active(s)
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60 flex flex-col items-center justify-center">
+                      <span className="text-xl font-bold text-emerald-500 dark:text-emerald-400 font-mono">
+                        {selectedCombinedPacings.length}
+                      </span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                        Méthode active
                       </span>
                     </div>
                   </div>
 
                   {/* Bouton de réorganisation */}
-                  <div className="pt-2">
+                  <div className="pt-2 flex justify-center">
                     <button
                       type="button"
                       onClick={handleRunReorganization}
-                      className="px-8 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-lg shadow-amber-500/25 hover:from-amber-300 hover:to-yellow-300 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2"
+                      className="w-full sm:w-auto px-6 sm:px-8 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-lg shadow-amber-500/20 hover:from-amber-300 hover:to-yellow-300 active:scale-95 transition-all cursor-pointer inline-flex items-center justify-center gap-2"
                     >
-                      <Zap className="w-4 h-4 fill-slate-950" />
-                      <span>{reorganizedSessions ? 'Relancer la réorganisation' : 'Réorganiser mon emploi du temps avec Konan Pro'}</span>
+                      <Zap className="w-4 h-4 fill-slate-950 shrink-0" />
+                      <span>{reorganizedSessions ? 'Relancer la réorganisation' : '⚡ Réorganiser mon emploi du temps avec Konan Pro'}</span>
                     </button>
                   </div>
                 </>

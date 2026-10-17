@@ -1619,7 +1619,7 @@ export function App() {
       <main className={`flex-1 w-full mx-auto overflow-x-hidden ${
         activeView === 'landing'
           ? 'max-w-full p-0'
-          : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8'
+          : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
       }`}>
         
         {/* Landing Page */}

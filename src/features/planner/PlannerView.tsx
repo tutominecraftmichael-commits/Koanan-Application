@@ -37,6 +37,7 @@ import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { useLanguage, t } from '../../lib/i18n';
+import { cleanSessionTitle } from '../dashboard/DashboardOverview';
 
 export interface PlannerViewProps {
   subjects: Subject[];
@@ -88,6 +89,21 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   const [proModalInfo, setProModalInfo] = useState<{ title: string; desc: string } | null>(null);
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
   const [lang] = useLanguage();
+
+  // Accordion state for checklists: first pending session open by default
+  const [openChecklists, setOpenChecklists] = useState<Set<string>>(() => {
+    const firstPending = studySessions.find(s => !s.completed);
+    return firstPending ? new Set([firstPending.id]) : new Set();
+  });
+
+  const toggleChecklist = (id: string) => {
+    setOpenChecklists(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   const activePacing = getPacingStrategy(preferences.pacing);
 
@@ -194,22 +210,22 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         </div>
       </div>
 
-      {/* Interactive Method Guidance Bar */}
-      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/40 to-indigo-50/90 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-900 border border-indigo-200 dark:border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+      {/* Interactive Method Guidance Bar (Fluid Horizontal Ribbon) */}
+      <div className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/40 to-indigo-50/90 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-900 border border-indigo-200 dark:border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-xs">
+        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 shrink-0">
           <Brain className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-          <span className="font-semibold text-slate-900 dark:text-white">{t('clickForGuide', lang)}</span>
+          <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">{t('clickForGuide', lang)}</span>
         </div>
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center gap-2 pb-1 sm:pb-0">
           {(Object.entries(sessionTypeBadges) as [SessionType, { label: string; variant: 'primary' | 'cyan' | 'emerald' | 'amber' | 'purple' }][]).map(([type, meta]) => (
             <button
               key={type}
               type="button"
               onClick={() => setSelectedExplainerType(type)}
-              className="cursor-pointer hover:scale-105 transition-all text-left group"
+              className="cursor-pointer hover:scale-105 transition-all text-left group shrink-0"
               title={t('clickForGuide', lang)}
             >
-              <Badge variant={meta.variant} size="sm" className="group-hover:ring-1 group-hover:ring-cyan-400">
+              <Badge variant={meta.variant} size="sm" className="group-hover:ring-1 group-hover:ring-cyan-400 whitespace-nowrap text-[11px] py-1 px-2.5">
                 {meta.label} ℹ️
               </Badge>
             </button>
@@ -524,23 +540,38 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                     >
                       {subject.name}
                     </span>
-                    <h3 className={`text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5 ${session.completed ? 'line-through text-slate-400 dark:text-slate-500' : ''}`}>
-                      {session.title}
+                    <h3 className={`text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5 leading-snug break-words ${session.completed ? 'line-through text-slate-400 dark:text-slate-500' : ''}`}>
+                      {cleanSessionTitle(session.title)}
                     </h3>
                   </div>
 
-                  {/* Objectives Checkpoints */}
+                  {/* Objectives Checkpoints (Accordéon Repliable) */}
                   {session.objectives && session.objectives.length > 0 && (
-                    <div className="space-y-1 bg-slate-50 dark:bg-slate-950/40 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800/60 text-xs">
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase block">
-                        Checklist :
-                      </span>
-                      {session.objectives.map((obj, i) => (
-                        <div key={i} className="flex items-center gap-2 text-slate-700 dark:text-slate-300 text-[11px]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
-                          <span className="break-words">{obj}</span>
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-800/80 overflow-hidden bg-slate-50/70 dark:bg-slate-950/40">
+                      <button
+                        type="button"
+                        onClick={() => toggleChecklist(session.id)}
+                        className="w-full flex items-center justify-between p-2.5 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900/60 transition-colors cursor-pointer"
+                      >
+                        <span className="flex items-center gap-1.5 text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
+                          <span>📋 Protocole & Checklist ({session.objectives.length} étapes)</span>
+                        </span>
+                        {openChecklists.has(session.id) ? (
+                          <ChevronUp className="w-3.5 h-3.5 text-slate-400" />
+                        ) : (
+                          <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                        )}
+                      </button>
+                      {openChecklists.has(session.id) && (
+                        <div className="p-2.5 pt-0 space-y-1.5 border-t border-slate-200/60 dark:border-slate-800/60 text-xs animate-in fade-in duration-200">
+                          {session.objectives.map((obj, i) => (
+                            <div key={i} className="flex items-start gap-2 text-slate-600 dark:text-slate-300 text-[11px] leading-relaxed">
+                              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 mt-1.5" />
+                              <span className="break-words">{obj}</span>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
                   )}
 

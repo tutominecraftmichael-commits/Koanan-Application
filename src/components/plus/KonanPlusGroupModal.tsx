@@ -11,12 +11,10 @@ import {
   Users,
   CheckCircle2,
   AlertCircle,
-  Hash,
   Clock
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { soundFX } from '../../lib/audioEffects';
-import { validateKonanId, formatKonanId } from '../../lib/konanId';
 import { 
   isTargetAlreadyPlus, 
   savePlusInvitation, 
@@ -77,7 +75,6 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
   const [inputIdentifier, setInputIdentifier] = useState('');
   const [inputError, setInputError] = useState<string | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [copiedId, setCopiedId] = useState(false);
   const [successBanner, setSuccessBanner] = useState<string | null>(null);
   const [invitations, setInvitations] = useState<PlusInvitationNotification[]>(() => getPlusInvitations());
 
@@ -291,37 +288,20 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
     const trimmed = inputIdentifier.trim();
 
     if (!trimmed) {
-      setInputError("Veuillez saisir un ID Konan (ex: KN-849201) ou un email.");
+      setInputError("Veuillez saisir l'adresse email de votre ami.");
       return;
     }
 
-    const isIdCandidate = trimmed.toUpperCase().startsWith('KN-') || /^[0-9]{5,8}$/.test(trimmed);
-    let finalValue = trimmed;
-    let isId = false;
-
-    if (isIdCandidate) {
-      const formatted = formatKonanId(trimmed);
-      if (!validateKonanId(formatted)) {
-        setInputError("Format d'ID Konan invalide. Exemple attendu : KN-849201.");
-        return;
-      }
-      if (formatted.toUpperCase() === ownerKonanId.toUpperCase()) {
-        setInputError("Vous ne pouvez pas inviter votre propre ID Konan.");
-        return;
-      }
-      finalValue = formatted;
-      isId = true;
-    } else {
-      if (!validateEmail(trimmed)) {
-        setInputError("Format invalide. Saisissez un ID Konan (ex: KN-849201) ou un email valide.");
-        return;
-      }
-      if (ownerEmail && trimmed.toLowerCase() === ownerEmail.toLowerCase()) {
-        setInputError("Votre propre adresse email bénéficie déjà du compte principal.");
-        return;
-      }
-      finalValue = trimmed.toLowerCase();
+    if (!validateEmail(trimmed)) {
+      setInputError("Format invalide. Saisissez une adresse email valide (ex: ami@univ.fr).");
+      return;
     }
+    if (ownerEmail && trimmed.toLowerCase() === ownerEmail.toLowerCase()) {
+      setInputError("Votre propre adresse email bénéficie déjà du compte principal.");
+      return;
+    }
+    const finalValue = trimmed.toLowerCase();
+    const isId = false;
 
     if (allInvited.some(m => m.value.toLowerCase() === finalValue.toLowerCase())) {
       setInputError(`Cet identifiant "${finalValue}" est déjà rattaché à votre groupe.`);
@@ -407,14 +387,6 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
     setTimeout(() => setSuccessBanner(null), 3000);
   };
 
-  const handleCopyMyKonanId = () => {
-    navigator.clipboard.writeText(ownerKonanId).then(() => {
-      setCopiedId(true);
-      soundFX.playCheckmarkPop();
-      setTimeout(() => setCopiedId(false), 2500);
-    }).catch(() => {});
-  };
-
   const handleCopyInviteLink = () => {
     const inviteLink = `${window.location.origin}/?plan=plus&invite_id=${encodeURIComponent(realOwnerKonanId)}`;
     navigator.clipboard.writeText(inviteLink).then(() => {
@@ -467,40 +439,10 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
               <p className="text-xs sm:text-sm text-slate-300 mt-1">
                 {isGuest 
                   ? `Vous êtes membre invité du groupe d'étude de ${realOwnerName}.`
-                  : "Invitez jusqu'à 4 amis via leur ID Konan personnel pour leur octroyer un accès complet et immédiat à Konan Plus."}
+                  : "Invitez jusqu'à 4 amis via leur adresse email pour leur octroyer un accès complet et immédiat à Konan Plus."}
               </p>
             </div>
           </div>
-
-          {/* MY PERSONAL KONAN ID CARD */}
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-950/50 via-slate-900 to-amber-950/30 border border-amber-500/30 space-y-2.5 shadow-md">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Hash className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-bold text-white uppercase tracking-wider">
-                  Votre ID Konan Unique & Personnel {isGuest ? '(Membre)' : '(Titulaire)'}
-                </span>
-              </div>
-              <span className="text-[10px] font-semibold text-amber-300/80">Fixe & Sécurisé</span>
-            </div>
-            <p className="text-[11px] text-slate-300 leading-relaxed">
-              Cet identifiant est strictement le vôtre. Partagez-le pour être identifié ou parrainé sur le réseau KONAN.
-            </p>
-            <div className="flex items-center gap-2 pt-1">
-              <div className="px-3.5 py-2 rounded-xl bg-slate-950 border border-amber-500/40 text-amber-300 font-mono font-black text-sm tracking-widest shadow-inner">
-                {ownerKonanId}
-              </div>
-              <button
-                type="button"
-                onClick={handleCopyMyKonanId}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-xs font-bold transition-all cursor-pointer shadow-xs"
-              >
-                {copiedId ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copiedId ? 'ID Copié !' : 'Copier mon ID'}</span>
-              </button>
-            </div>
-          </div>
-
 
           {/* Success Banner */}
           {successBanner && (
@@ -521,8 +463,7 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
               </div>
               <p className="text-xs text-slate-300 leading-relaxed">
                 Vous bénéficiez de l'ensemble des privilèges KONAN PLUS grâce au compte titulaire de{' '}
-                <strong className="text-white">{realOwnerName}</strong>{' '}
-                {realOwnerKonanId && <span className="text-amber-300 font-mono font-bold">({realOwnerKonanId})</span>}.
+                <strong className="text-white">{realOwnerName}</strong>.
               </p>
               <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
                 <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
@@ -532,22 +473,22 @@ export const KonanPlusGroupModal: React.FC<KonanPlusGroupModalProps> = ({
               </div>
             </div>
           ) : (
-            /* Input Form: Add Friend by ID or Email */
+            /* Input Form: Add Friend by Email */
             <form onSubmit={handleAddMember} className="space-y-3">
               <div>
                 <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-                  Ajouter un ami avec son ID Konan (ou son email) :
+                  Inviter un ami par son adresse email :
                 </label>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full">
                   <div className="relative flex-1 w-full">
                     <input
-                      type="text"
+                      type="email"
                       value={inputIdentifier}
                       onChange={(e) => {
                         setInputIdentifier(e.target.value);
                         setInputError(null);
                       }}
-                      placeholder="Ex: KN-849201 ou ami@univ.edu"
+                      placeholder="Ex: ami@etudiant.univ.fr"
                       disabled={remainingSlots === 0}
                       className="w-full px-4 py-3 pl-11 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-colors disabled:opacity-50 text-left"
                     />

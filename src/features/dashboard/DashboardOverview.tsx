@@ -62,6 +62,11 @@ export interface DashboardOverviewProps {
   invitedBy?: { name: string; konanId: string; email?: string };
 }
 
+export const cleanSessionTitle = (rawTitle: string): string => {
+  if (!rawTitle) return '';
+  return rawTitle.replace(/^(?:Active Recall & Espacement|Règle des 2 Min & Sprint|Time Blocking Dédié|Technique Feynman & Vulgarisation|Pomodoro & Deep Work)\s*:\s*/i, '').trim();
+};
+
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   studentName,
   academicLevel,
@@ -163,19 +168,22 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     .sort((a, b) => (a.daysRemaining || 999) - (b.daysRemaining || 999));
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-5 sm:space-y-7 animate-in fade-in duration-300">
       
-      {/* WELCOME BANNER */}
-      <div className="relative rounded-3xl p-5 sm:p-8 overflow-hidden border border-indigo-100 dark:border-indigo-500/30 bg-gradient-to-r from-indigo-50/90 via-sky-50/40 to-white dark:from-indigo-950/60 dark:via-slate-900 dark:to-slate-950 shadow-sm dark:shadow-2xl">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 relative z-10">
-          <div className="space-y-1.5 sm:space-y-2">
+      {/* WELCOME BANNER WITH INTEGRATED NEXT SESSION */}
+      <div className="relative rounded-2xl sm:rounded-3xl p-4 sm:p-7 overflow-hidden border border-indigo-100 dark:border-indigo-500/30 bg-gradient-to-r from-indigo-50/90 via-sky-50/40 to-white dark:from-indigo-950/60 dark:via-slate-900 dark:to-slate-950 shadow-sm dark:shadow-2xl">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 sm:gap-6 relative z-10">
+          
+          {/* User & Curriculum Greeting */}
+          <div className="space-y-1.5 sm:space-y-2 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant={isCycleCompletedToday || isDayFullyComplete ? "emerald" : "cyan"} size="sm" dot>
                 {isCycleCompletedToday ? "Cycle Validé 100%" : isDayFullyComplete ? "Journée Validée 100%" : "Anti-Burnout Actif"}
               </Badge>
               <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
             </div>
-            <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Bonjour, <span className={
                 planTier === 'plus' 
                   ? 'plus-multicolor-shimmer-text font-black' 
@@ -184,84 +192,71 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   : 'text-gradient-primary'
               }>{studentName}</span> 👋
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-xl">
+
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
               {isCycleCompletedToday ? (
-                <span>🌟 <strong className="text-emerald-600 dark:text-emerald-300">Programme 100% validé !</strong> Toutes les barres de progression sont à zéro. Repos bien mérité, <strong className="text-slate-900 dark:text-white">on reprend tout demain</strong> !</span>
+                <span>🌟 <strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Programme 100% validé !</strong> Repos bien mérité, on reprend demain.</span>
               ) : isDayFullyComplete ? (
-                <span>🎉 <strong className="text-emerald-600 dark:text-emerald-300">Toutes les matières du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} sessions terminées). Bravo pour votre assiduité !</span>
+                <span>🎉 <strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
               ) : (
                 <>
-                  Votre cursus <strong className="text-slate-900 dark:text-white">{academicLevel}</strong> est synchronisé en temps réel.
+                  Cursus <strong className="text-slate-700 dark:text-slate-200 font-semibold">{academicLevel}</strong> synchronisé.
                   {allTodaysStudySessions.length > 0
-                    ? ` ${activeDisplaySessions.length} session(s) active(s) aujourd'hui (${completedToday} terminée(s)).`
+                    ? ` ${activeDisplaySessions.length} session(s) active(s) (${completedToday} terminée(s)).`
                     : ` Journée d'assimilation libre.`}
                 </>
               )}
             </p>
           </div>
 
-          {/* Quick Launch Card / À Demain Card */}
+          {/* Quick Launch Card / Next Session / À Demain Card */}
           {isCycleCompletedToday ? (
-            <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-emerald-50 dark:bg-gradient-to-r dark:from-emerald-950/80 dark:via-slate-900 dark:to-indigo-950/70 border border-emerald-200 dark:border-emerald-500/50 shadow-sm dark:shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
-              <div className="space-y-1 text-left min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <Badge variant="emerald" size="sm" dot>Cycle 100% Accompli</Badge>
-                  <span className="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold uppercase tracking-wider">Repos</span>
-                </div>
-                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                  <span>À demain !</span>
-                  <Moon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-300 max-w-xs leading-relaxed">
-                  Toutes les matières sont accomplies. On reprend tout demain avec les compteurs à zéro !
-                </p>
+            <div className="w-full lg:w-auto p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/40 shadow-xs flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shrink-0">
+                <Moon className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-slate-900 dark:text-white">À demain !</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">Toutes les matières sont accomplies.</p>
               </div>
             </div>
           ) : isDayFullyComplete ? (
-            <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-emerald-50 dark:bg-gradient-to-r dark:from-emerald-950/80 dark:via-slate-900 dark:to-teal-950/70 border border-emerald-200 dark:border-emerald-500/50 shadow-sm dark:shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
-              <div className="space-y-1 text-left min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <Badge variant="emerald" size="sm" dot>Journée 100% Validée</Badge>
-                  <span className="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold uppercase tracking-wider">Bravo !</span>
-                </div>
-                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                  <span>Toutes les sessions du jour sont terminées !</span>
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-300 max-w-xs leading-relaxed">
-                  Félicitations ! Vous avez validé l'intégralité de vos révisions prévues pour aujourd'hui ({completedToday}/{allTodaysStudySessions.length}).
-                </p>
+            <div className="w-full lg:w-auto p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/40 shadow-xs flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shrink-0">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-slate-900 dark:text-white">Journée validée à 100% !</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">Bravo pour votre assiduité.</p>
               </div>
             </div>
           ) : nextStudySession && (
-            <div className="w-full lg:w-auto p-4 sm:p-5 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-indigo-200 dark:border-indigo-500/40 shadow-sm dark:shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 interactive-card">
-              <div className="space-y-1 text-left min-w-0 flex-1 w-full">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[10px] uppercase font-bold text-indigo-600 dark:text-indigo-300 tracking-wider block">
+            <div className="w-full lg:max-w-md p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-indigo-200 dark:border-indigo-500/40 shadow-sm dark:shadow-xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 shrink-0">
+              <div className="space-y-1 text-left min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="text-[10px] uppercase font-bold text-indigo-600 dark:text-indigo-400 tracking-wider">
                     Prochaine Session
                   </span>
                   {nextStudySession.isExamPrep && (
-                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 whitespace-nowrap shrink-0 shadow-xs ${
+                    <span className={`text-[9px] font-black px-1.5 py-0.2 rounded-full flex items-center gap-1 shrink-0 ${
                       nextStudySession.examType === 'devoir'
                         ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40'
                         : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
                     }`}>
                       <span>{nextStudySession.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
                       {nextStudySession.examDaysRemaining !== undefined && (
-                        <span className="font-mono bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 px-1 rounded text-[9px] border border-rose-300 dark:border-rose-500/30">
-                          J-{nextStudySession.examDaysRemaining}
-                        </span>
+                        <span className="font-mono">J-{nextStudySession.examDaysRemaining}</span>
                       )}
                     </span>
                   )}
                   {nextStudySession.isRescheduledToday && (
-                    <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold animate-pulse">
-                      🔄 Rattrapage ce soir
+                    <Badge variant="amber" size="sm" className="text-[9px] px-1.5 py-0 font-bold animate-pulse">
+                      🔄 Rattrapage
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">
-                  {nextStudySession.title}
+                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words leading-tight line-clamp-2">
+                  {cleanSessionTitle(nextStudySession.title)}
                 </p>
                 <p className="text-[11px] font-mono text-cyan-700 dark:text-cyan-400 font-semibold">
                   {nextStudySession.startTime} - {nextStudySession.endTime} ({nextStudySession.durationMinutes} min)
@@ -278,106 +273,98 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     onToggleSessionComplete(nextStudySession.id);
                   }
                 }}
-                className={`w-full sm:w-auto cursor-pointer text-xs font-bold whitespace-nowrap py-2.5 px-4 hover:scale-105 active:scale-95 transition-transform shrink-0 ${
+                className={`w-full sm:w-auto cursor-pointer text-xs font-bold whitespace-nowrap py-2 px-3.5 hover:scale-105 active:scale-95 transition-transform shrink-0 ${
                   nextStudySession.isRescheduledToday
                     ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/20'
                     : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border-emerald-500/50 shadow-md shadow-emerald-600/20'
                 }`}
               >
-                {nextStudySession.isRescheduledToday ? '⚡ Valider Rattrapage' : 'Valider la séance'}
+                {nextStudySession.isRescheduledToday ? '⚡ Rattrapage' : 'Valider la séance'}
               </Button>
             </div>
           )}
         </div>
       </div>
 
-      {/* QUICK ACTIONS HUB */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+      {/* COMPACT QUICK ACTION ROW (3 COLUMNS ON ALL SCREENS) */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-3.5">
         
         {/* 1. Importer Emploi du Temps OU Exemples d'EDT Démo */}
         {!isDemoMode ? (
-          <div 
+          <button 
+            type="button"
             onClick={() => onNavigate('upload-schedule')}
-            className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
+            className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
           >
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
-              <Calendar className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
-                  Importer Emploi du Temps
-                </h3>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 dark:text-slate-500 dark:group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
-              </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 break-words leading-relaxed mt-0.5">
-                Fichier texte ou saisie manuelle de vos cours
+              <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors leading-tight truncate">
+                Importer EDT
+              </h3>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
+                Texte ou manuel
               </p>
             </div>
-          </div>
+          </button>
         ) : (
-          <div 
+          <button 
+            type="button"
             onClick={() => onOpenPresetModal?.()}
-            className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
+            className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
           >
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
-              <GraduationCap className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
+              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
-                  Exemples d'EDT Démo
-                </h3>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 dark:text-slate-500 dark:group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
-              </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 break-words leading-relaxed mt-0.5">
-                Modèles ESATIC, Médecine, Informatique, Lycée...
+              <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors leading-tight truncate">
+                EDT Démo
+              </h3>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
+                Modèles ESATIC, etc.
               </p>
             </div>
-          </div>
+          </button>
         )}
 
         {/* 2. Planning d'Étude */}
-        <div 
+        <button 
+          type="button"
           onClick={() => onNavigate('planner')}
-          className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
+          className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
-            <Clock className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
-                Planning d'Étude
-              </h3>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 dark:text-slate-500 dark:group-hover:text-indigo-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 break-words leading-relaxed mt-0.5">
-              Consulter vos séances optimisées
+            <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors leading-tight truncate">
+              Planning
+            </h3>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
+              Séances optimisées
             </p>
           </div>
-        </div>
+        </button>
 
         {/* 3. Matières & Thèmes */}
-        <div 
+        <button 
+          type="button"
           onClick={() => onNavigate('subjects')}
-          className="group p-4 rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center gap-3.5 interactive-card"
+          className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500/20 group-hover:scale-110 transition-all flex items-center justify-center shrink-0">
-            <BookOpen className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
+            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors">
-                Matières & Thèmes
-              </h3>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 dark:text-slate-500 dark:group-hover:text-emerald-400 group-hover:translate-x-1.5 transition-all shrink-0 ml-1" />
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 break-words leading-relaxed mt-0.5">
-              Coefficients, chapitres et révisions
+            <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors leading-tight truncate">
+              Matières
+            </h3>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
+              Coeffs & chapitres
             </p>
           </div>
-        </div>
+        </button>
 
       </div>
 
@@ -630,7 +617,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           </div>
 
                           <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">
-                            {session.title}
+                            {cleanSessionTitle(session.title)}
                           </h4>
                           <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 break-words leading-snug">{sub?.name}</p>
                         </div>
@@ -687,7 +674,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                               style={{ borderLeftColor: sub?.color || '#10B981', borderLeftWidth: '3px' }}
                             >
                               <div className="min-w-0 flex-1">
-                                <p className="line-through text-slate-300 font-semibold truncate">{session.title}</p>
+                                <p className="line-through text-slate-300 font-semibold truncate">{cleanSessionTitle(session.title)}</p>
                                 <p className="text-[11px] text-slate-500 font-mono">{session.startTime} - {session.endTime} ({session.durationMinutes} min)</p>
                               </div>
                               <button

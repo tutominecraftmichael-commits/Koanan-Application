@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { 
   Clock, 
-  LogIn, 
   Upload, 
   Download, 
   RotateCcw,
@@ -16,11 +15,12 @@ import {
   Check,
   CheckCircle2,
   X,
-  XCircle
+  XCircle,
+  User
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount, PlusInvitationNotification } from '../../types';
-import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
+import { KonanCube } from '../common/KonanCube';
 import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
 import { formatNotificationTime } from '../../lib/utils';
@@ -198,7 +198,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   const displayName = userAccount?.isLoggedIn ? userAccount.name : studentName;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl transition-all pt-safe">
+    <header className={`sticky top-0 z-40 w-full transition-all pt-safe ${
+      activeView === 'landing' 
+        ? 'bg-[#0A0E1A]/85 backdrop-blur-xl border-b border-white/[0.08]' 
+        : 'border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl'
+    }`}>
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
         
         {/* Main Navbar Top Row */}
@@ -211,13 +215,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-2 sm:gap-3 group text-left cursor-pointer focus:outline-none shrink-0"
               title="Retour à l'accueil KONAN"
             >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0 flex items-center justify-center overflow-hidden">
-                <img
-                  src="/konan-logo.png"
-                  alt="Logo Officiel KONAN"
-                  className="w-full h-full object-contain rounded-full bg-white dark:bg-slate-950/80"
-                />
-              </div>
+              {activeView === 'landing' ? (
+                <div className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center shrink-0 drop-shadow-[0_0_15px_rgba(56,189,248,0.45)] group-hover:scale-105 transition-transform duration-300">
+                  <KonanCube size={38} showStars={false} glow={true} />
+                </div>
+              ) : (
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0 flex items-center justify-center overflow-hidden">
+                  <img
+                    src="/konan-logo.png"
+                    alt="Logo Officiel KONAN"
+                    className="w-full h-full object-contain rounded-full bg-white dark:bg-slate-950/80"
+                  />
+                </div>
+              )}
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="font-extrabold text-sm sm:text-lg tracking-tight text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors">
@@ -231,7 +241,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop Navigation Links - Centered, shrink-0, perfectly spaced */}
-          {activeView !== 'landing' && activeView !== 'auth' && (
+          {activeView !== 'landing' && activeView !== 'auth' && activeView !== 'pro-wizard' && (
             <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 bg-slate-100 dark:bg-slate-900/90 p-1 rounded-xl border border-slate-200 dark:border-slate-800/80 shrink-0 mx-2 shadow-xs">
               {navItems.map((item) => {
                 const IconComponent = item.component;
@@ -484,8 +494,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                     </div>
                                     <p className="text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">
                                       Vous avez reçu une invitation de la part de{' '}
-                                      <span className="text-amber-700 dark:text-amber-300 font-bold">{inv.senderName}</span>{' '}
-                                      (ID : <span className="font-mono text-amber-700 dark:text-amber-300 font-bold">{inv.senderKonanId}</span>).
+                                      <span className="text-amber-700 dark:text-amber-300 font-bold">{inv.senderName}</span>.
                                     </p>
                                     <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                                       Acceptez pour activer immédiatement votre accès complet et gratuit à KONAN PLUS.
@@ -647,8 +656,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                       </div>
                                       <p className="text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">
                                         Vous avez reçu une invitation de la part de{' '}
-                                        <span className="text-amber-700 dark:text-amber-300 font-bold">{inv.senderName}</span>{' '}
-                                        (ID : <span className="font-mono text-amber-700 dark:text-amber-300 font-bold">{inv.senderKonanId}</span>).
+                                        <span className="text-amber-700 dark:text-amber-300 font-bold">{inv.senderName}</span>.
                                       </p>
                                       <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                                         Acceptez pour activer immédiatement votre accès complet et gratuit à KONAN PLUS.
@@ -750,20 +758,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </button>
                     ) : effectivePlan === 'pro' ? (
                       <span 
-                        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-sm border bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border-amber-300/80 cursor-default select-none"
+                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-sm border bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border-amber-300/80 cursor-default select-none"
                         title="Modèle KONAN PRO Actif (Version PRO ouverte)"
                       >
-                        <span>PRO OUVERTE</span>
+                        <span className="xs:hidden">PRO</span>
+                        <span className="hidden xs:inline">PRO OUVERTE</span>
                       </span>
                     ) : (
-                      <div className="flex items-center gap-1.5 shrink-0">
+                      <div className="flex items-center gap-1 shrink-0">
                         {(isDemoMode || userAccount?.isDemo) && (
                           <span
                             className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30 cursor-default select-none"
                             title="Mode Démo Actif"
                           >
                             <GraduationCap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 dark:text-amber-400 shrink-0" />
-                            Démo
+                            <span>Démo</span>
                           </span>
                         )}
                         <button
@@ -776,11 +785,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                               onNavigate('pro-wizard');
                             }
                           }}
-                          className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-50 text-amber-900 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                          className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-50 text-amber-900 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                           title="Passer à KONAN PRO (Version PRO ouverte)"
                         >
-                          <span className="font-black text-[8px] bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 px-1.5 py-0.2 rounded-xs border border-amber-300 shadow-xs">PRO</span>
-                          <span className="font-extrabold text-amber-700 dark:text-amber-300">PRO ouverte</span>
+                          <span className="font-black text-[8px] bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 px-1 py-0.2 rounded-xs border border-amber-300 shadow-xs">PRO</span>
+                          <span className="font-extrabold text-amber-700 dark:text-amber-300 hidden xs:inline">PRO ouverte</span>
                         </button>
                       </div>
                     )}
@@ -788,52 +797,51 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ) : (
                   <button
                     onClick={() => onNavigate('auth')}
-                    className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 dark:bg-slate-900 dark:border-indigo-500/40 dark:hover:border-indigo-400 dark:text-white text-[11px] sm:text-xs font-semibold shadow-sm cursor-pointer shrink-0 transition-colors"
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 dark:bg-slate-900 dark:border-indigo-500/40 dark:hover:border-indigo-400 dark:text-white text-[11px] sm:text-xs font-semibold shadow-sm cursor-pointer shrink-0 transition-colors"
                   >
-                    <svg viewBox="0 0 24 24" className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0">
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 shrink-0">
                       <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
                       <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.27 21.37 7.35 24 12 24z" />
                       <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.97 0 12s.46 3.84 1.26 5.42l4.02-3.15z" />
                       <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.63 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
                     </svg>
-                    <span className="hidden sm:inline">Google</span>
+                    <span>Connexion</span>
                   </button>
                 )}
               </>
             ) : (
               /* Landing page actions */
-              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+              <div className="flex items-center gap-2 shrink-0">
                 {userAccount && userAccount.isLoggedIn && !isDemoMode ? (
-                  <Button
-                    variant="glow"
-                    size="sm"
+                  <button
+                    type="button"
                     onClick={() => onNavigate('dashboard')}
-                    className="text-[11px] sm:text-xs font-bold px-2 sm:px-3 py-1 sm:py-1.5 cursor-pointer whitespace-nowrap shadow-sm"
+                    className="flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/10 backdrop-blur-md text-xs sm:text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
                   >
-                    Mon Espace
-                  </Button>
+                    <span>Mon Espace</span>
+                    <span className="text-sky-300">➔</span>
+                  </button>
                 ) : (
                   <>
                     {onEnterDemoMode && (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<GraduationCap className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-indigo-400 shrink-0" />}
+                      <button
+                        type="button"
                         onClick={onEnterDemoMode}
-                        className="text-[11px] sm:text-xs font-semibold px-2 sm:px-3 py-1 sm:py-1.5 cursor-pointer hover:border-indigo-500/40 whitespace-nowrap shrink-0"
+                        className="hidden xs:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/10 backdrop-blur-md text-xs font-medium transition-all cursor-pointer"
                       >
-                        <span className="hidden xs:inline">Mode </span><span>Démo</span>
-                      </Button>
+                        <GraduationCap className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                        <span>Démo</span>
+                      </button>
                     )}
-                    <Button
-                      variant="glow"
-                      size="sm"
-                      leftIcon={<LogIn className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />}
+                    {/* Bouton discret "Connexion ➔" en verre dépoli (glassmorphism) */}
+                    <button
+                      type="button"
                       onClick={() => onNavigate('auth')}
-                      className="text-[11px] sm:text-xs font-bold px-2.5 sm:px-3.5 py-1 sm:py-1.5 cursor-pointer whitespace-nowrap shrink-0 shadow-sm"
+                      className="flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/15 backdrop-blur-md text-xs sm:text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
                     >
-                      Connexion
-                    </Button>
+                      <span>Connexion</span>
+                      <span className="text-sky-300">➔</span>
+                    </button>
                   </>
                 )}
               </div>
@@ -842,15 +850,28 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         </div>
 
-        {/* Mobile Sub-Navigation Bar (Only for active dashboard pages) */}
-        {activeView !== 'landing' && activeView !== 'auth' && (
-          <div className="flex lg:hidden items-center py-2 border-t border-slate-200 dark:border-slate-900 overflow-x-auto no-scrollbar gap-1.5 px-1.5">
+      </div>
+
+      {/* Fixed Bottom Navigation Bar on Mobile (Fini les éléments coupés) */}
+      {activeView !== 'landing' && activeView !== 'auth' && activeView !== 'pro-wizard' && (
+        <nav 
+          role="navigation"
+          aria-label="Navigation principale mobile"
+          className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0B0F19]/95 dark:bg-[#0B0F19]/95 backdrop-blur-md border-t border-white/10 px-2 pt-1.5 pb-safe shadow-[0_-4px_25px_rgba(0,0,0,0.6)]"
+        >
+          <div className="grid grid-cols-6 items-center justify-items-center max-w-md mx-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeView === item.id;
+              const shortLabel = item.id === 'dashboard' ? 'Accueil' :
+                                 item.id === 'schedule' ? 'EDT' :
+                                 item.id === 'subjects' ? 'Matières' :
+                                 item.id === 'planner' ? 'Planning' :
+                                 'Stats';
               return (
                 <button
-                  key={item.id}
+                  key={`bottom-${item.id}`}
+                  type="button"
                   onClick={() => {
                     soundFX.playCheckmarkPop();
                     if (!userAccount?.isLoggedIn && !isDemoMode) {
@@ -859,28 +880,59 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onNavigate(item.id);
                     }
                   }}
-                  className={`group flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 shrink-0 cursor-pointer min-h-[36px] active:scale-95 ${
-                    isActive 
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/40 ring-1 ring-blue-400/30' 
-                      : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 dark:bg-slate-900/80 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
+                  className={`flex flex-col items-center justify-center py-1 px-1 w-full rounded-xl transition-all cursor-pointer relative ${
+                    isActive ? 'text-white' : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
+                  {isActive && (
+                    <span className="absolute -top-1.5 w-6 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+                  )}
                   <Icon 
-                    isActive={isActive}
-                    className={`w-4 h-4 shrink-0 transition-transform duration-300 ease-out ${
-                      isActive 
-                        ? 'scale-110 text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]' 
-                        : 'group-hover:text-blue-500 dark:group-hover:text-blue-300'
+                    isActive={isActive} 
+                    className={`w-4.5 h-4.5 transition-transform duration-200 ${
+                      isActive ? 'scale-110 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]' : ''
                     }`} 
                   />
-                  <span>{item.label}</span>
+                  <span className={`text-[10px] mt-1 font-medium tracking-tight truncate max-w-full ${
+                    isActive ? 'font-bold text-white' : ''
+                  }`}>
+                    {shortLabel}
+                  </span>
                 </button>
               );
             })}
-          </div>
-        )}
 
-      </div>
+            {/* Onglet Profil Mobile dédié */}
+            <button
+              type="button"
+              onClick={() => {
+                soundFX.playCheckmarkPop();
+                if (onOpenSettings) {
+                  onOpenSettings();
+                } else if (!userAccount?.isLoggedIn && !isDemoMode) {
+                  onNavigate('auth');
+                }
+              }}
+              className="flex flex-col items-center justify-center py-1 px-1 w-full rounded-xl transition-all cursor-pointer relative text-slate-400 hover:text-slate-200"
+            >
+              {userAccount?.avatar ? (
+                <img
+                  src={userAccount.avatar}
+                  alt="Profil"
+                  className="w-4.5 h-4.5 rounded-full object-cover border border-indigo-400/50 shadow-xs"
+                />
+              ) : (
+                <div className="w-4.5 h-4.5 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-[9px] font-bold text-white shadow-xs">
+                  {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-3 h-3" />}
+                </div>
+              )}
+              <span className="text-[10px] mt-1 font-medium tracking-tight truncate max-w-full">
+                Profil
+              </span>
+            </button>
+          </div>
+        </nav>
+      )}
     </header>
   );
 };
