@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft, 
   AlertCircle, 
+  CheckCircle2,
   GraduationCap, 
   Smartphone, 
   Info, 
@@ -9,8 +10,8 @@ import {
   Mail,
   Lock,
   User,
-  Sparkles,
-  ArrowRight
+  ArrowRight,
+  KeyRound
 } from 'lucide-react';
 import type { UserAccount, Chronotype } from '../../types';
 import { 
@@ -19,6 +20,7 @@ import {
   checkGoogleRedirectResult,
   signInWithEmailReal,
   signUpWithEmailReal,
+  resetPasswordReal,
   isMobileBrowser
 } from '../../lib/firebase';
 import { generateKonanId } from '../../lib/konanId';
@@ -30,7 +32,111 @@ export interface AuthPageProps {
   currentProfile?: UserAccount;
 }
 
-type AuthMethod = 'google' | 'email' | 'direct';
+type AuthMethod = 'google' | 'email';
+
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+
+// Liste des services d'emails temporaires et jetables interdits
+const DISPOSABLE_DOMAINS = new Set([
+  'yopmail.com', 'yopmail.fr', 'yopmail.net', 'tempmail.com', 'temp-mail.org', 
+  'guerrillamail.com', 'mailinator.com', '10minutemail.com', 'trashmail.com', 
+  'sharklasers.com', 'getairmail.com', 'dispostable.com', 'fakemailgenerator.com', 
+  'mohmal.com', 'crazymailing.com', 'burnermail.io', 'inboxkitten.com', 
+  'throwawaymail.com', 'generator.email', 'emailondeck.com', 'tempail.com',
+  'mytemp.email', 'nada.ltd', 'dropmail.me', 'getnada.com', 'crazymailing.com',
+  'fakemail.net', 'disposablemail.com', 'trashmail.net', 'mytempemail.com'
+]);
+
+// Préfixes manifestement fictifs ou inventés
+const INVENTED_PREFIXES = new Set([
+  'test', 'fake', 'asdf', 'qwerty', 'admin', 'user', 'demo', 'sample', 
+  'aaa', 'abc', 'xyz', '123', 'temp', 'azerty', 'noemail', 'none', 
+  'test1', 'test2', 'test123', 'foo', 'bar', 'testeur', 'bidon', 'faux',
+  'blabla', 'random', 'jesaispas', 'inconnu', 'exemple', 'example', 'nobody'
+]);
+
+// Fautes de frappe courantes sur les fournisseurs majeurs
+const DOMAIN_TYPOS: Record<string, string> = {
+  'gmai.com': 'gmail.com',
+  'gamil.com': 'gmail.com',
+  'gmial.com': 'gmail.com',
+  'gmaill.com': 'gmail.com',
+  'gmaik.com': 'gmail.com',
+  'yaho.com': 'yahoo.com',
+  'yahooo.com': 'yahoo.com',
+  'yaho.fr': 'yahoo.fr',
+  'hotmial.com': 'hotmail.com',
+  'hotmai.com': 'hotmail.com',
+  'outlok.com': 'outlook.com',
+  'outloo.com': 'outlook.com',
+  'iclud.com': 'icloud.com',
+  'iclou.com': 'icloud.com',
+};
+
+/**
+ * Validation stricte et rigoureuse de l'adresse email
+ * Vérifie la syntaxe RFC, les noms inventés, les domaines jetables et les extensions réelles
+ */
+export function validateStrictEmail(email: string): { isValid: boolean; error?: string } {
+  const clean = email.trim().toLowerCase();
+  if (!clean) {
+    return { isValid: false, error: "Veuillez renseigner votre adresse email." };
+  }
+
+  if (!EMAIL_REGEX.test(clean)) {
+    return { isValid: false, error: "Format d'adresse email invalide. Exemple : etudiant@gmail.com ou nom@univ.edu" };
+  }
+
+  const [localPart, domainPart] = clean.split('@');
+  if (!localPart || !domainPart) {
+    return { isValid: false, error: "L'adresse email doit comporter un identifiant et un nom de domaine valide." };
+  }
+
+  // Vérifier la longueur de la partie locale
+  if (localPart.length < 2) {
+    return { isValid: false, error: "Le nom d'utilisateur de l'email est trop court (au moins 2 caractères requis)." };
+  }
+
+  // Interdiction des adresses inventées évidentes
+  if (INVENTED_PREFIXES.has(localPart)) {
+    return { isValid: false, error: `L'adresse "${localPart}@${domainPart}" est fictive ou de test. Veuillez entrer votre véritable adresse email active.` };
+  }
+
+  // Interdiction des répétitions absurdes (ex: aaaaa@..., 11111@...)
+  if (/^(.)\1{3,}$/.test(localPart)) {
+    return { isValid: false, error: "Cette adresse email semble inventée. Veuillez entrer une adresse email personnelle ou universitaire valide." };
+  }
+
+  // Vérifier les fautes de frappe de domaines célèbres
+  if (DOMAIN_TYPOS[domainPart]) {
+    return { isValid: false, error: `Domaine introuvable. Vouliez-vous écrire @${DOMAIN_TYPOS[domainPart]} au lieu de @${domainPart} ?` };
+  }
+
+  // Interdiction stricte des domaines jetables / poubelles
+  if (DISPOSABLE_DOMAINS.has(domainPart)) {
+    return { isValid: false, error: "Les adresses email temporaires ou jetables (yopmail, temp-mail...) sont strictement refusées. Utilisez une véritable adresse email pour sauvegarder votre planning." };
+  }
+
+  // Vérifier le TLD (extension)
+  const parts = domainPart.split('.');
+  const tld = parts[parts.length - 1];
+  if (!tld || tld.length < 2 || !/^[a-z]+$/i.test(tld)) {
+    return { isValid: false, error: "L'extension du domaine (.com, .fr, .ci, .edu...) est invalide." };
+  }
+
+  const invalidTlds = new Set(['test', 'fake', 'local', 'invalid', 'example', 'dummy', 'localhost']);
+  if (invalidTlds.has(tld)) {
+    return { isValid: false, error: `L'extension .${tld} n'est pas un domaine internet réel.` };
+  }
+
+  // Le nom de domaine principal (avant TLD) doit comporter au moins 2 caractères
+  const mainDomain = parts[parts.length - 2];
+  if (!mainDomain || mainDomain.length < 2) {
+    return { isValid: false, error: "Le nom de domaine de l'email est invalide." };
+  }
+
+  return { isValid: true };
+}
 
 export const AuthPage: React.FC<AuthPageProps> = ({
   onLoginSuccess,
@@ -40,14 +146,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   const [activeMethod, setActiveMethod] = useState<AuthMethod>('google');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Email form state
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
-
-  // Direct Mobile state
-  const [directName, setDirectName] = useState('');
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
 
   // Unauthorized domain dialog state
   const [showDomainHelp, setShowDomainHelp] = useState(false);
@@ -93,6 +199,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     setErrorMessage(null);
+    setSuccessMessage(null);
     setShowDomainHelp(false);
 
     try {
@@ -146,7 +253,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
           await signInWithGoogleRedirectReal();
           return;
         } catch {
-          setErrorMessage('La fenêtre popup Google a été bloquée. Utilisez l\'onglet "Email" ou "Accès Direct Mobile" ci-dessous.');
+          setErrorMessage('La fenêtre popup Google a été bloquée. Vous pouvez vous connecter via l\'onglet "Email" ci-dessous.');
         }
       } else if (err.message) {
         setErrorMessage(err.message);
@@ -162,6 +269,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   const handleGoogleRedirectDirect = async () => {
     setIsLoading(true);
     setErrorMessage(null);
+    setSuccessMessage(null);
     setShowDomainHelp(false);
     try {
       await signInWithGoogleRedirectReal();
@@ -177,26 +285,72 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   };
 
   /**
-   * Universal Email & Password Authentication:
-   * Fonctionne sur tous les navigateurs mobiles et webviews sans exception.
+   * Password Reset Handler (avec validation stricte de l'email)
+   */
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    const emailCheck = validateStrictEmail(email);
+    if (!emailCheck.isValid) {
+      setErrorMessage(emailCheck.error || "Adresse email invalide.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await resetPasswordReal(email.trim());
+      setSuccessMessage(`Un lien de réinitialisation sécurisé a été envoyé à l'adresse : ${email.trim()}. Vérifiez votre boîte de réception.`);
+    } catch (err: any) {
+      console.error('Reset Password Error:', err);
+      setErrorMessage(err.message || 'Impossible d\'envoyer le lien de réinitialisation.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /**
+   * Universal Email & Password Authentication avec VALIDATION STRICTE
+   * Refuse tout email fictif, jetable ou mal formé.
    */
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) {
-      setErrorMessage('Veuillez renseigner votre email et mot de passe.');
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    // 1. Contrôle rigoureux de l'adresse email
+    const emailCheck = validateStrictEmail(email);
+    if (!emailCheck.isValid) {
+      setErrorMessage(emailCheck.error || "Adresse email invalide.");
       return;
     }
+
+    // 2. Contrôle du mot de passe
+    if (!password || password.length < 6) {
+      setErrorMessage('Le mot de passe doit comporter au moins 6 caractères.');
+      return;
+    }
+
+    // 3. Contrôle du nom lors de l'inscription
+    if (isRegistering && fullName.trim().length < 2) {
+      setErrorMessage('Veuillez renseigner votre Prénom & Nom (au moins 2 caractères).');
+      return;
+    }
+
     setIsLoading(true);
-    setErrorMessage(null);
     try {
+      const cleanEmail = email.trim();
       const authUser = isRegistering 
-        ? await signUpWithEmailReal(email.trim(), password)
-        : await signInWithEmailReal(email.trim(), password);
+        ? await signUpWithEmailReal(cleanEmail, password, fullName.trim() || undefined)
+        : await signInWithEmailReal(cleanEmail, password);
+
+      const finalDisplayName = authUser.displayName || (isRegistering && fullName.trim()) || cleanEmail.split('@')[0] || 'Étudiant';
 
       const profile: UserAccount = {
-        name: authUser.displayName || email.split('@')[0] || 'Étudiant',
-        email: authUser.email || email.trim(),
-        avatar: authUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(authUser.displayName || email)}`,
+        name: finalDisplayName,
+        email: authUser.email || cleanEmail,
+        avatar: authUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(finalDisplayName)}`,
         googleId: authUser.uid,
         konanId: generateKonanId(authUser.uid || authUser.email || undefined),
         academicLevel: 'Licence Universitaire',
@@ -207,38 +361,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
       onLoginSuccess(profile);
     } catch (err: any) {
       console.error('Email Auth Error:', err);
-      setErrorMessage(err.message || 'Erreur lors de la connexion par email.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /**
-   * Fast Direct Mobile Student Access:
-   * Permet aux étudiants sur smartphones restreints de se connecter immédiatement avec leur nom.
-   */
-  const handleDirectStudentLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleanName = directName.trim() || 'Étudiant Mobile';
-    setIsLoading(true);
-    setErrorMessage(null);
-    try {
-      const uniqueId = `mobile-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      const cleanEmail = `${cleanName.toLowerCase().replace(/[^a-z0-9]/g, '.')}@etudiant.konan.app`;
-      const profile: UserAccount = {
-        name: cleanName,
-        email: cleanEmail,
-        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(cleanName)}`,
-        googleId: uniqueId,
-        konanId: generateKonanId(),
-        academicLevel: 'Licence Universitaire',
-        isLoggedIn: true,
-        isDemo: false,
-        lastSyncedAt: new Date().toISOString(),
-      };
-      onLoginSuccess(profile);
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Erreur lors de la connexion mobile.');
+      setErrorMessage(err.message || 'Erreur lors de l\'authentification par email.');
     } finally {
       setIsLoading(false);
     }
@@ -285,44 +408,40 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-[11px] font-semibold">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-              <span>Compatible 100% Mobile, Tablette & Ordinateur</span>
+              <span>Authentification Sécurisée & Données Chiffrées</span>
             </div>
           </div>
 
-          {/* Tab Selector for 100% Mobile Device Coverage */}
-          <div className="grid grid-cols-3 gap-1 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700/60 relative z-10">
+          {/* Tab Selector : STRICTLY 2 METHODS (GOOGLE & EMAIL) */}
+          <div className="grid grid-cols-2 gap-1 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700/60 relative z-10">
             <button
               type="button"
-              onClick={() => { setActiveMethod('google'); setErrorMessage(null); }}
-              className={`py-2 px-1 text-[11px] font-bold rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 ${
+              onClick={() => { setActiveMethod('google'); setErrorMessage(null); setSuccessMessage(null); }}
+              className={`py-2 px-3 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 ${
                 activeMethod === 'google'
                   ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
+              <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.27 21.37 7.35 24 12 24z" />
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.97 0 12s.46 3.84 1.26 5.42l4.02-3.15z" />
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.63 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
+              </svg>
               <span>Google</span>
             </button>
             <button
               type="button"
-              onClick={() => { setActiveMethod('email'); setErrorMessage(null); }}
-              className={`py-2 px-1 text-[11px] font-bold rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 ${
+              onClick={() => { setActiveMethod('email'); setErrorMessage(null); setSuccessMessage(null); }}
+              className={`py-2 px-3 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 ${
                 activeMethod === 'email'
                   ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <span>Email</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => { setActiveMethod('direct'); setErrorMessage(null); }}
-              className={`py-2 px-1 text-[11px] font-bold rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 ${
-                activeMethod === 'direct'
-                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>Accès Direct</span>
+              <Mail className="w-4 h-4 shrink-0 text-indigo-500" />
+              <span>Email & Mot de passe</span>
             </button>
           </div>
 
@@ -344,12 +463,23 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             </div>
           )}
 
+          {/* Success Banner */}
+          {successMessage && (
+            <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs flex items-start gap-2.5 animate-in fade-in text-left">
+              <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400" />
+              <div className="flex-1">
+                <p className="font-semibold">Opération réussie</p>
+                <p className="text-[11px] text-emerald-700 dark:text-emerald-300/90 mt-0.5 leading-relaxed">{successMessage}</p>
+              </div>
+            </div>
+          )}
+
           {/* Error Banner */}
           {errorMessage && (
             <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-800 dark:text-rose-300 text-xs flex items-start gap-2.5 animate-in fade-in text-left">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600 dark:text-rose-400" />
               <div className="flex-1">
-                <p className="font-semibold">Information de connexion</p>
+                <p className="font-semibold">Vérification requise</p>
                 <p className="text-[11px] text-rose-700 dark:text-rose-300/90 mt-0.5 leading-relaxed">{errorMessage}</p>
               </div>
             </div>
@@ -377,7 +507,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 <span>{isLoading ? 'Connexion en cours...' : 'Continuer avec Google'}</span>
               </button>
 
-              {/* Bouton explicite Redirection Mobile pour les téléphones stricts */}
+              {/* Option Redirection Directe pour mobiles stricts */}
               <button
                 type="button"
                 onClick={handleGoogleRedirectDirect}
@@ -390,110 +520,165 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             </div>
           )}
 
-          {/* METHOD 2 : EMAIL & PASSWORD (UNIVERSAL) */}
+          {/* METHOD 2 : EMAIL & PASSWORD AVEC VALIDATION STRICTE */}
           {activeMethod === 'email' && (
-            <form onSubmit={handleEmailAuth} className="space-y-3 relative z-10 pt-1 animate-in fade-in duration-200">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <Mail className="w-3.5 h-3.5 text-indigo-500" />
-                  <span>Adresse Email</span>
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="etudiant@universite.edu"
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                />
-              </div>
+            <div className="space-y-3 relative z-10 pt-1 animate-in fade-in duration-200">
+              
+              {/* Formulaire Mot de passe oublié */}
+              {isForgotPassword ? (
+                <form onSubmit={handleForgotPassword} className="space-y-3">
+                  <div className="p-3 rounded-xl bg-indigo-50/70 dark:bg-indigo-500/10 border border-indigo-200/80 dark:border-indigo-500/20 text-xs text-indigo-900 dark:text-indigo-200">
+                    <p className="font-bold flex items-center gap-1.5 mb-1">
+                      <KeyRound className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                      <span>Réinitialisation du mot de passe</span>
+                    </p>
+                    <p className="text-[11px] text-indigo-800/90 dark:text-indigo-300/90">
+                      Entrez votre adresse email existante pour recevoir un lien de réinitialisation sécurisé.
+                    </p>
+                  </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-indigo-500" />
-                  <span>Mot de passe</span>
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  minLength={6}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                />
-              </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                      <Mail className="w-3.5 h-3.5 text-indigo-500" />
+                      <span>Votre Adresse Email</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="exemple : etudiant@gmail.com"
+                      required
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                    />
+                  </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-              >
-                {isLoading ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <span>{isRegistering ? "Créer mon Compte Étudiant" : "Se Connecter par Email"}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {isLoading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <span>Envoyer le lien de réinitialisation</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
 
-              <div className="text-center pt-1">
-                <button
-                  type="button"
-                  onClick={() => setIsRegistering(!isRegistering)}
-                  className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
-                >
-                  {isRegistering 
-                    ? "Déjà inscrit ? Se connecter" 
-                    : "Première visite ? Créer un compte avec cet email"}
-                </button>
-              </div>
-            </form>
-          )}
+                  <div className="text-center pt-1">
+                    <button
+                      type="button"
+                      onClick={() => { setIsForgotPassword(false); setErrorMessage(null); }}
+                      className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:underline cursor-pointer"
+                    >
+                      ← Retour à la connexion
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                /* Formulaire Connexion / Inscription standard */
+                <form onSubmit={handleEmailAuth} className="space-y-3">
+                  
+                  {/* Champ Nom (uniquement pour la création de compte) */}
+                  {isRegistering && (
+                    <div className="space-y-1 animate-in fade-in duration-150">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                        <User className="w-3.5 h-3.5 text-indigo-500" />
+                        <span>Prénom & Nom</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        placeholder="Ex : Christ Michaël Boni"
+                        required={isRegistering}
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                      />
+                    </div>
+                  )}
 
-          {/* METHOD 3 : DIRECT MOBILE STUDENT ACCESS (0% BLOCKED) */}
-          {activeMethod === 'direct' && (
-            <form onSubmit={handleDirectStudentLogin} className="space-y-3 relative z-10 pt-1 animate-in fade-in duration-200">
-              <div className="p-3 rounded-xl bg-indigo-50/70 dark:bg-indigo-500/10 border border-indigo-200/80 dark:border-indigo-500/20 text-xs text-indigo-900 dark:text-indigo-200 leading-relaxed">
-                <div className="flex items-center gap-1.5 font-bold mb-1">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                  <span>Accès Direct Mobile Instantané</span>
-                </div>
-                <span>Idéal si votre téléphone bloque Google ou si vous souhaitez démarrer immédiatement avec votre prénom.</span>
-              </div>
+                  {/* Champ Email vérifié */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Mail className="w-3.5 h-3.5 text-indigo-500" />
+                        <span>Adresse Email réelle</span>
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-normal">Gmail, Yahoo, Outlook, Univ...</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="etudiant@domaine.com"
+                      required
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                    />
+                  </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-indigo-500" />
-                  <span>Votre Prénom & Nom</span>
-                </label>
-                <input
-                  type="text"
-                  value={directName}
-                  onChange={(e) => setDirectName(e.target.value)}
-                  placeholder="Ex : Christ Boni ou YHWH"
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                />
-              </div>
+                  {/* Champ Mot de passe */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5 text-indigo-500" />
+                        <span>Mot de passe</span>
+                      </label>
+                      {!isRegistering && (
+                        <button
+                          type="button"
+                          onClick={() => { setIsForgotPassword(true); setErrorMessage(null); }}
+                          className="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                        >
+                          Mot de passe oublié ?
+                        </button>
+                      )}
+                    </div>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Au moins 6 caractères"
+                      required
+                      minLength={6}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                    />
+                  </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-xs shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-              >
-                {isLoading ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <span>Accéder à mon Espace Mobile</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </form>
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {isLoading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <span>{isRegistering ? "Créer mon Compte Étudiant" : "Se Connecter"}</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+
+                  <div className="text-center pt-1.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsRegistering(!isRegistering);
+                        setErrorMessage(null);
+                        setSuccessMessage(null);
+                      }}
+                      className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                    >
+                      {isRegistering 
+                        ? "Déjà inscrit ? Se connecter avec mon email" 
+                        : "Première visite ? Créer un compte avec cette adresse"}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
           )}
 
           {/* Demo Mode Link */}
