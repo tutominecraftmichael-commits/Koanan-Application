@@ -34,20 +34,25 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (mode === 'light') {
       root.classList.remove('dark');
       root.classList.add('light');
+      root.setAttribute('data-theme', 'light');
       document.body.classList.remove('dark');
       document.body.classList.add('light');
+      document.body.setAttribute('data-theme', 'light');
       const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', '#F8FAFC');
+      if (meta) meta.setAttribute('content', '#F9FAFB');
     } else {
       root.classList.remove('light');
       root.classList.add('dark');
+      root.setAttribute('data-theme', 'dark');
       document.body.classList.remove('light');
       document.body.classList.add('dark');
+      document.body.setAttribute('data-theme', 'dark');
       const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', '#090E17');
+      if (meta) meta.setAttribute('content', '#070B13');
     }
   };
 
+  // Immediate synchronous execution on mount/render
   useEffect(() => {
     applyTheme(theme);
     try {

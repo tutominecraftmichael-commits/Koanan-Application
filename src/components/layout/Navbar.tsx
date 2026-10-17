@@ -200,7 +200,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className={`sticky top-0 z-40 w-full transition-all pt-safe ${
       activeView === 'landing' 
-        ? 'bg-[#0A0E1A]/85 backdrop-blur-xl border-b border-white/[0.08]' 
+        ? 'bg-[#F9FAFB]/90 dark:bg-[#0A0E1A]/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/[0.08]' 
         : 'border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl'
     }`}>
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
@@ -816,10 +816,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     type="button"
                     onClick={() => onNavigate('dashboard')}
-                    className="flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/10 backdrop-blur-md text-xs sm:text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+                    className="flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200 dark:bg-white/[0.08] dark:hover:bg-white/[0.15] dark:text-white dark:border-white/10 backdrop-blur-md text-xs sm:text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
                   >
                     <span>Mon Espace</span>
-                    <span className="text-sky-300">➔</span>
+                    <span className="text-blue-600 dark:text-sky-300">➔</span>
                   </button>
                 ) : (
                   <>
@@ -827,20 +827,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <button
                         type="button"
                         onClick={onEnterDemoMode}
-                        className="hidden xs:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/10 backdrop-blur-md text-xs font-medium transition-all cursor-pointer"
+                        className="hidden xs:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] dark:text-slate-300 dark:hover:text-white dark:border-white/10 backdrop-blur-md text-xs font-medium transition-all cursor-pointer"
                       >
-                        <GraduationCap className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                        <GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
                         <span>Démo</span>
                       </button>
                     )}
-                    {/* Bouton discret "Connexion ➔" en verre dépoli (glassmorphism) */}
+                    {/* Bouton discret "Connexion ➔" */}
                     <button
                       type="button"
                       onClick={() => onNavigate('auth')}
-                      className="flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/15 backdrop-blur-md text-xs sm:text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+                      className="flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-white/[0.08] dark:hover:bg-white/[0.15] dark:text-white dark:border-white/15 backdrop-blur-md text-xs sm:text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
                     >
                       <span>Connexion</span>
-                      <span className="text-sky-300">➔</span>
+                      <span className="text-indigo-600 dark:text-sky-300">➔</span>
                     </button>
                   </>
                 )}

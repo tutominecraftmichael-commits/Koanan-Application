@@ -50,7 +50,6 @@ import type {
 import { generateId, isNonAcademicSubject } from './lib/utils';
 import { Sparkles, X } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
-import { useTheme } from './context/ThemeContext';
 
 // Layout
 import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
@@ -81,7 +80,6 @@ import { PresetModal } from './features/onboarding/PresetModal';
 import { ProWizardView } from './features/pro/ProWizardView';
 
 export function App() {
-  const { isLight } = useTheme();
   const [state, setState] = useState<AppState>(() => loadAppState());
   const pendingPrivacyModalRef = useRef<boolean>(false);
 
@@ -1573,7 +1571,7 @@ export function App() {
   };
 
   return (
-    <div className={`min-h-screen ${isLight ? 'bg-slate-50 text-slate-900' : 'dark:bg-[#070b13] dark:text-slate-100 bg-[#070b13] text-slate-100'} flex flex-col selection:bg-blue-600 selection:text-white w-full max-w-full overflow-x-hidden transition-colors duration-300`}>
+    <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#070B13] text-[#0F172A] dark:text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white w-full max-w-full overflow-x-hidden transition-colors duration-300">
       
       {/* Hidden file input for JSON configuration backup imports */}
       <input
