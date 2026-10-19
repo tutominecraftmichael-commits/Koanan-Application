@@ -26,10 +26,12 @@ import {
   ChevronUp,
   BookOpen,
   Moon,
-  Zap
+  Zap,
+  Download
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
+import { PrintableScheduleModal } from '../../components/common/PrintableScheduleModal';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { useLanguage, t } from '../../lib/i18n';
 import type { SessionType } from '../../types';
@@ -100,6 +102,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
   const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
 
   const [showCompletedSessions, setShowCompletedSessions] = useState(false);
 
@@ -211,6 +214,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </>
               )}
             </p>
+
+            {/* Bouton Télécharger mon planning PDF */}
+            <div className="pt-1.5 flex flex-wrap items-center gap-2">
+              <Button
+                variant="glow"
+                size="sm"
+                leftIcon={<Download className="w-4 h-4 text-white animate-bounce" />}
+                onClick={() => setIsPrintModalOpen(true)}
+                className="cursor-pointer text-xs font-black py-2 px-3.5 bg-gradient-to-r from-indigo-600 via-sky-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white shadow-lg shadow-indigo-500/25 ring-2 ring-cyan-400/50"
+                title="Télécharger mon planning officiel en PDF ou Image HD"
+              >
+                📥 Télécharger mon planning (PDF)
+              </Button>
+            </div>
           </div>
 
           {/* Quick Launch Card / Next Session / À Demain Card */}
@@ -293,8 +310,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
       </div>
 
-      {/* COMPACT QUICK ACTION ROW (3 COLUMNS ON ALL SCREENS) */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3.5">
+      {/* COMPACT QUICK ACTION ROW (4 COLUMNS ON ALL SCREENS) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3.5">
         
         {/* 1. Importer Emploi du Temps OU Exemples d'EDT Démo */}
         {!isDemoMode ? (
@@ -369,6 +386,25 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </h3>
             <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
               Coeffs & chapitres
+            </p>
+          </div>
+        </button>
+
+        {/* 4. Télécharger Planning PDF */}
+        <button 
+          type="button"
+          onClick={() => setIsPrintModalOpen(true)}
+          className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 dark:from-slate-900/90 dark:to-indigo-950/40 border-2 border-indigo-400/50 dark:border-indigo-500/50 hover:border-cyan-400 dark:hover:border-cyan-400 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
+        >
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 text-white group-hover:scale-105 transition-all flex items-center justify-center shrink-0 shadow-sm">
+            <Download className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-[11px] sm:text-xs font-extrabold text-indigo-700 dark:text-cyan-300 group-hover:text-indigo-600 dark:group-hover:text-white transition-colors leading-tight truncate">
+              Planning PDF
+            </h3>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5 font-semibold">
+              Format officiel
             </p>
           </div>
         </button>
@@ -862,6 +898,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         planTier={planTier}
         onUpgradeToPro={onUpgradeToPro}
         onViewPricing={onViewPricing}
+      />
+
+      {/* Modal Emploi du Temps / Planning Imprimable Officiel (Anti-Burnout) */}
+      <PrintableScheduleModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        subjects={subjects}
+        classSlots={classSlots}
+        studySessions={studySessions}
+        studentName={studentName}
+        academicTrack={academicLevel}
       />
 
     </div>

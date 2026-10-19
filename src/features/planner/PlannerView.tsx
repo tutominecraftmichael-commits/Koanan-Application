@@ -194,14 +194,14 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
         <div className="flex flex-wrap items-center gap-2">
           <Button
-            variant="secondary"
+            variant="glow"
             size="sm"
-            leftIcon={<Download className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />}
+            leftIcon={<Download className="w-4 h-4 text-white animate-bounce" />}
             onClick={() => setIsPrintModalOpen(true)}
-            className="cursor-pointer text-xs flex-1 sm:flex-initial py-2 border-cyan-500/30 hover:border-cyan-500/60 font-bold"
+            className="cursor-pointer text-xs flex-1 sm:flex-initial py-2 px-3.5 bg-gradient-to-r from-indigo-600 via-sky-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white shadow-lg shadow-indigo-500/25 font-black ring-2 ring-cyan-400/50"
             title="Télécharger mon planning de révisions officiel en PDF ou Image HD"
           >
-            Télécharger mon planning (PDF)
+            📥 Télécharger mon planning (PDF)
           </Button>
 
           <Button
@@ -225,6 +225,35 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             {isRegenerating ? '...' : t('regeneratePlan', lang)}
           </Button>
         </div>
+      </div>
+
+      {/* BANNER TÉLÉCHARGEMENT OFFICIEL (Impossible à rater) */}
+      <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-indigo-500/15 via-sky-500/10 to-cyan-500/15 border-2 border-indigo-400/50 dark:border-indigo-500/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-white shrink-0 shadow-md">
+            <Download className="w-5 h-5 animate-bounce" />
+          </div>
+          <div>
+            <h4 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <span>Planning de Révision Anti-Burnout (PDF Officiel)</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800 dark:bg-cyan-500/20 dark:text-cyan-300">
+                Prêt à imprimer
+              </span>
+            </h4>
+            <p className="text-xs text-slate-600 dark:text-slate-300">
+              Exportez ou imprimez votre planning personnel en PDF HD ou Image HD (avec matières, codes couleurs, citations inspirantes et règles de repos).
+            </p>
+          </div>
+        </div>
+        <Button
+          variant="glow"
+          size="sm"
+          leftIcon={<Download className="w-4 h-4 text-white" />}
+          onClick={() => setIsPrintModalOpen(true)}
+          className="cursor-pointer text-xs font-black py-2.5 px-4 bg-gradient-to-r from-indigo-600 via-sky-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white shadow-lg shadow-indigo-500/30 shrink-0 whitespace-nowrap w-full sm:w-auto"
+        >
+          📥 Télécharger mon planning (PDF)
+        </Button>
       </div>
 
       {/* Interactive Method Guidance Bar (Fluid Horizontal Ribbon) */}

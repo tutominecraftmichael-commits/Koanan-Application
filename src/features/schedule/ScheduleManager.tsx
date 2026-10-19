@@ -38,8 +38,10 @@ import {
   CheckCircle,
   Star,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Download
 } from 'lucide-react';
+import { PrintableScheduleModal } from '../../components/common/PrintableScheduleModal';
 
 export interface ScheduleManagerProps {
   studentName?: string;
@@ -225,6 +227,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
   });
   const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);
   const [showRecDiagnostic, setShowRecDiagnostic] = useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
 
   const activeStrategy = getPacingStrategy(preferences.pacing);
 
@@ -450,6 +453,18 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         {/* Action Controls - Compact Horizontal Toolbar */}
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar w-full lg:w-auto py-1">
 
+          {/* Télécharger mon planning (PDF) - Bouton vibrant mis en avant */}
+          <Button
+            variant="glow"
+            size="sm"
+            leftIcon={<Download className="w-4 h-4 text-white animate-bounce" />}
+            onClick={() => setIsPrintModalOpen(true)}
+            title="Télécharger l'Emploi du temps & planning officiel en PDF ou Image HD"
+            className="cursor-pointer text-xs font-black py-2 px-3.5 bg-gradient-to-r from-indigo-600 via-sky-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white shadow-lg shadow-indigo-500/25 shrink-0 whitespace-nowrap ring-2 ring-cyan-400/50"
+          >
+            📥 Télécharger mon planning (PDF)
+          </Button>
+
           {/* Import Emploi du Temps - ONLY FOR CONNECTED USERS, NOT IN DEMO */}
           {!isDemoMode && onNavigate && (
             <Button
@@ -508,6 +523,35 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             + Ajouter un Cours
           </Button>
         </div>
+      </div>
+
+      {/* BANNER TÉLÉCHARGEMENT OFFICIEL (Impossible à rater) */}
+      <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-indigo-500/15 via-sky-500/10 to-cyan-500/15 border-2 border-indigo-400/50 dark:border-indigo-500/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-white shrink-0 shadow-md">
+            <Download className="w-5 h-5 animate-bounce" />
+          </div>
+          <div>
+            <h4 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <span>Emploi du temps & Planning Anti-Burnout (PDF Officiel)</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800 dark:bg-cyan-500/20 dark:text-cyan-300">
+                Prêt à imprimer
+              </span>
+            </h4>
+            <p className="text-xs text-slate-600 dark:text-slate-300">
+              Exportez ou imprimez votre grille personnalisée en PDF HD avec vos matières, codes couleurs, créneaux et citations inspirantes.
+            </p>
+          </div>
+        </div>
+        <Button
+          variant="glow"
+          size="sm"
+          leftIcon={<Download className="w-4 h-4 text-white" />}
+          onClick={() => setIsPrintModalOpen(true)}
+          className="cursor-pointer text-xs font-black py-2.5 px-4 bg-gradient-to-r from-indigo-600 via-sky-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white shadow-lg shadow-indigo-500/30 shrink-0 whitespace-nowrap w-full sm:w-auto"
+        >
+          📥 Télécharger mon planning (PDF)
+        </Button>
       </div>
 
       {/* VIEW FILTER SWITCHER & KPI STRIP */}
@@ -1609,6 +1653,17 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         planTier={planTier}
         onUpgradeToPro={onUpgradeToPro}
         onViewPricing={onViewPricing}
+      />
+
+      {/* Modal Emploi du Temps / Planning Imprimable Officiel (Anti-Burnout) */}
+      <PrintableScheduleModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        subjects={subjects}
+        classSlots={classSlots}
+        studySessions={studySessions || []}
+        studentName={studentName}
+        academicTrack={academicLevel}
       />
 
     </div>
