@@ -1,0 +1,15 @@
+{
+  "name": "konan-ai-cloud-functions",
+  "description": "Système autonome de notifications push FCM et rappels de révision pour KONAN AI",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^5.0.0"
+  },
+  "private": true
+}
