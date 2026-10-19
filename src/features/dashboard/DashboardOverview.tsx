@@ -11,7 +11,7 @@ import { DAYS_OF_WEEK } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
-import { formatMinutesToHours, getDaysRemaining, parseTimeToMinutes } from '../../lib/utils';
+import { formatMinutesToHours, getDaysRemaining, getSessionExamCountdown, parseTimeToMinutes } from '../../lib/utils';
 import { 
   Sparkles, 
   Calendar, 
@@ -64,7 +64,11 @@ export interface DashboardOverviewProps {
 
 export const cleanSessionTitle = (rawTitle: string): string => {
   if (!rawTitle) return '';
-  return rawTitle.replace(/^(?:Active Recall & Espacement|Règle des 2 Min & Sprint|Time Blocking Dédié|Technique Feynman & Vulgarisation|Pomodoro & Deep Work)\s*:\s*/i, '').trim();
+  return rawTitle
+    .replace(/^(?:Active Recall & Espacement|Règle des 2 Min & Sprint|Time Blocking Dédié|Technique Feynman & Vulgarisation|Pomodoro & Deep Work)\s*:\s*/i, '')
+    .replace(/\s*\(J-\d+\)\s*/gi, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
 };
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
@@ -244,9 +248,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
                     }`}>
                       <span>{nextStudySession.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
-                      {nextStudySession.examDaysRemaining !== undefined && (
-                        <span className="font-mono">J-{nextStudySession.examDaysRemaining}</span>
-                      )}
+                      {(() => {
+                        const sub = subjects.find(s => s.id === nextStudySession.subjectId);
+                        const countdown = getSessionExamCountdown(nextStudySession.dayOfWeek, sub?.examDate);
+                        const text = countdown.label || (nextStudySession.examDaysRemaining !== undefined && nextStudySession.examDaysRemaining >= 0 ? `J-${nextStudySession.examDaysRemaining}` : null);
+                        return text ? <span className="font-mono">{text}</span> : null;
+                      })()}
                     </span>
                   )}
                   {nextStudySession.isRescheduledToday && (
@@ -582,11 +589,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                   : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
                               }`}>
                                 <span>{session.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
-                                {session.examDaysRemaining !== undefined && (
-                                  <span className="font-mono bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 px-1 rounded text-[9px] border border-rose-300 dark:border-rose-500/30">
-                                    J-{session.examDaysRemaining}
-                                  </span>
-                                )}
+                                {(() => {
+                                  const sub = subjects.find(s => s.id === session.subjectId);
+                                  const countdown = getSessionExamCountdown(session.dayOfWeek, sub?.examDate);
+                                  const text = countdown.label || (session.examDaysRemaining !== undefined && session.examDaysRemaining >= 0 ? `J-${session.examDaysRemaining}` : null);
+                                  return text ? (
+                                    <span className="font-mono bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 px-1 rounded text-[9px] border border-rose-300 dark:border-rose-500/30">
+                                      {text}
+                                    </span>
+                                  ) : null;
+                                })()}
                               </span>
                             )}
                             {isRescheduled && (
@@ -760,11 +772,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     </div>
                     {sub.daysRemaining !== null && (
                       <Badge
-                        variant={sub.daysRemaining <= 7 ? 'rose' : sub.daysRemaining <= 15 ? 'amber' : 'cyan'}
+                        variant={sub.daysRemaining < 0 ? 'slate' : sub.daysRemaining <= 3 ? 'rose' : sub.daysRemaining <= 7 ? 'amber' : 'cyan'}
                         size="sm"
                         className="font-mono font-bold shrink-0"
                       >
-                        J-{sub.daysRemaining}
+                        {sub.daysRemaining < 0 ? 'Passé' : sub.daysRemaining === 0 ? 'Jour J' : `J-${sub.daysRemaining}`}
                       </Badge>
                     )}
                   </div>

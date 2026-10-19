@@ -5,7 +5,7 @@ import type {
   ExtractedClassCandidate, 
   ExtractedPdfSchedule 
 } from '../types';
-import { generateId, parseTimeToMinutes, minutesToTimeString, isNonAcademicSubject } from '../lib/utils';
+import { generateId, parseTimeToMinutes, minutesToTimeString, isNonAcademicSubject, extractRealAcademicDiscipline } from '../lib/utils';
 import * as pdfjsLib from 'pdfjs-dist';
 import { extractDetailedTextFromImage } from './ocrService';
 
@@ -911,12 +911,12 @@ export function extractRoom(text: string): string | undefined {
 export function cleanSubjectTitle(
   text: string, 
   dynamicEcueMap?: Map<string, { name: string; professor?: string }>,
-  format?: ScheduleFormatType
+  _format?: ScheduleFormatType
 ): string {
   let trimmed = text.trim();
 
   // 0. Filter out non-academic schedule breaks or table header tokens (time slot, plage horaire, etc.)
-  if (/\b(recreation|récréation|pause|dejeuner|déjeuner|repas|interclasse|midi|time\s*slot|plage\s*horaire|créneau|creneau|horaires?|hours?)\b/i.test(trimmed)) {
+  if (isNonAcademicSubject(trimmed)) {
     return '';
   }
 
@@ -924,6 +924,14 @@ export function cleanSubjectTitle(
   trimmed = trimmed
     .replace(/^[-*•\s]*\d{1,2}[h:H:]\d{0,2}\s*[-–—àaA/to]+\s*\d{1,2}[h:H:]\d{0,2}\s*[:|-]?\s*/i, '')
     .replace(/^[-*•\s]+/, '');
+
+  // 0.bis Si le créneau mentionne une évaluation avec matière (ex: "Devoir de Mathématiques", "DS Physique"), extraire la vraie matière
+  const extractedDiscipline = extractRealAcademicDiscipline(trimmed);
+  if (extractedDiscipline && extractedDiscipline !== trimmed) {
+    trimmed = extractedDiscipline;
+  } else if (!extractedDiscipline && isNonAcademicSubject(trimmed)) {
+    return '';
+  }
 
   // 1. Strip pipe-delimited metadata clauses FIRST: | Salle: ... | Prof: ... | Amphi: ...
   trimmed = trimmed
@@ -1060,10 +1068,8 @@ export function cleanSubjectTitle(
     return 'Enseignement Universitaire';
   }
 
-  if (cleaned.length < 2) {
-    if (format === 'scolaire') return 'Matière Générale';
-    if (format === 'tpcm') return 'Module Technique';
-    return 'Module d\'Enseignement';
+  if (isNonAcademicSubject(cleaned) || cleaned.length < 2) {
+    return '';
   }
 
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
@@ -1993,6 +1999,9 @@ export function parseTimetableText(
 
   // Re-run harmonization AFTER canonicalizing subjects to merge contiguous blocks (e.g. 2h blocks)
   detectedSlots = harmonizeAndDeduplicateSlots(detectedSlots);
+
+  // Filtrer rigoureusement les créneaux non académiques ou orphelins (devoirs sans matière, examens sans matière, récréation, pauses)
+  detectedSlots = detectedSlots.filter(s => s.rawSubject && s.rawSubject.trim().length > 0 && !isNonAcademicSubject(s.rawSubject));
 
   // Extraire la liste exhaustive de toutes les matières détectées
   const uniqueSubjectNames = Array.from(new Set(detectedSlots.map(s => s.rawSubject)))

@@ -38,6 +38,7 @@ import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarS
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { useLanguage, t } from '../../lib/i18n';
 import { cleanSessionTitle } from '../dashboard/DashboardOverview';
+import { getSessionExamCountdown } from '../../lib/utils';
 
 export interface PlannerViewProps {
   subjects: Subject[];
@@ -519,11 +520,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                             : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30'
                         }`}>
                           <span>{session.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
-                          {session.examDaysRemaining !== undefined && (
-                            <span className="font-mono bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-200 px-1 rounded text-[9px] border border-rose-500/30">
-                              J-{session.examDaysRemaining}
-                            </span>
-                          )}
+                          {(() => {
+                            const sub = subjects.find(s => s.id === session.subjectId);
+                            const countdown = getSessionExamCountdown(session.dayOfWeek, sub?.examDate);
+                            const text = countdown.label || (session.examDaysRemaining !== undefined && session.examDaysRemaining >= 0 ? `J-${session.examDaysRemaining}` : null);
+                            return text ? (
+                              <span className="font-mono bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-200 px-1 rounded text-[9px] border border-rose-500/30">
+                                {text}
+                              </span>
+                            ) : null;
+                          })()}
                         </span>
                       )}
                       {session.priority === 'urgent' && session.examType !== 'devoir' && (

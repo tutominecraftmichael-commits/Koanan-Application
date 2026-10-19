@@ -267,9 +267,12 @@ export function generateOptimizedStudyPlan(
     });
 
     // Calcul propre et net de la date locale sans décalage pour ce jour de la semaine
-    const sessionDate = new Date(mondayDate);
-    sessionDate.setDate(mondayDate.getDate() + day);
-    sessionDate.setHours(0, 0, 0, 0);
+    // En calculant daysAhead (0 à 6 jours d'avance à partir d'aujourd'hui), la suite logique
+    // des jours est rigoureusement respectée : Dimanche = J-5, Lundi = J-4, Mardi = J-3, etc.
+    const daysAhead = (day - currentDayIndex + 7) % 7;
+    const sessionDate = new Date(referenceDate);
+    sessionDate.setDate(referenceDate.getDate() + daysAhead);
+    sessionDate.setHours(12, 0, 0, 0);
     const yyyy = sessionDate.getFullYear();
     const mm = String(sessionDate.getMonth() + 1).padStart(2, '0');
     const dd = String(sessionDate.getDate()).padStart(2, '0');
@@ -532,8 +535,8 @@ export function generateOptimizedStudyPlan(
             ];
           } else if (daysUntilExamOnDate === 1 || daysUntilExamOnDate === 2) {
             finalTitle = subject.examType === 'devoir'
-              ? `Synthèse Devoir (25m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`
-              : `🔥 Ultime Révision (25m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`;
+              ? `Synthèse Devoir (25m) : ${displaySubjectName}`
+              : `🔥 Ultime Révision (25m) : ${displaySubjectName}`;
             finalDesc = `Veille d'épreuve : séance de synthèse ciblée de 25 minutes sur ${displaySubjectName}. Réactivation des points clés et repos cérébral sans surchauffe.`;
             finalObjectives = [
               `Révision flash des formules et concepts capitaux de ${displaySubjectName}`,
@@ -542,9 +545,9 @@ export function generateOptimizedStudyPlan(
             ];
           } else if (daysUntilExamOnDate <= 5) {
             finalTitle = subject.examType === 'devoir'
-              ? `Préparation Devoir (45m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`
-              : `⚡ Prépa Intensive ${examLabel} (45m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`;
-            finalDesc = `Échéance à J-${daysUntilExamOnDate} : session approfondie de 45 minutes sur ${topicName} et entraînement aux exercices types.`;
+              ? `Préparation Devoir (45m) : ${displaySubjectName}`
+              : `⚡ Prépa Intensive ${examLabel} (45m) : ${displaySubjectName}`;
+            finalDesc = `Séance approfondie de 45 minutes sur ${topicName} et entraînement aux exercices types.`;
             finalObjectives = [
               `Focalisation sur les chapitres à fort coefficient : ${topicName}`,
               'Simulation d\'épreuves et entraînement chronométré',
@@ -553,8 +556,8 @@ export function generateOptimizedStudyPlan(
           } else {
             // J-6 à J-14
             finalTitle = subject.examType === 'devoir'
-              ? `Révision Devoir (45m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`
-              : `Révision Approfondie Examen (45m) (J-${daysUntilExamOnDate}) : ${displaySubjectName}`;
+              ? `Révision Devoir (45m) : ${displaySubjectName}`
+              : `Révision Approfondie Examen (45m) : ${displaySubjectName}`;
             finalDesc = `Anticipation stratégique : consolidation approfondie de 45 minutes avant l'épreuve.`;
             finalObjectives = [
               `Maîtrise complète du chapitre : ${topicName}`,

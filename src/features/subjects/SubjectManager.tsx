@@ -367,11 +367,11 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                       <div className="flex items-center gap-1 shrink-0">
                         {daysToExam !== null && (
                           <Badge
-                            variant={daysToExam <= 7 ? 'rose' : daysToExam <= 15 ? 'amber' : 'cyan'}
+                            variant={daysToExam < 0 ? 'slate' : daysToExam <= 3 ? 'rose' : daysToExam <= 7 ? 'amber' : 'cyan'}
                             size="sm"
                             className="text-[10px] px-1.5 py-0 font-bold font-mono"
                           >
-                            J-{daysToExam}
+                            {daysToExam < 0 ? 'Épreuve passée' : daysToExam === 0 ? 'Jour J' : `J-${daysToExam}`}
                           </Badge>
                         )}
                         <Edit3 className="w-3 h-3 text-slate-400 group-hover:text-cyan-600 transition-colors ml-0.5" />

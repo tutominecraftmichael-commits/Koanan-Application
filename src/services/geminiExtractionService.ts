@@ -78,6 +78,22 @@ RÈGLE FONDAMENTALE SUR LES HORAIRES (AUCUNE HEURE N'EST FIXE) :
 - Aligne rigoureusement chaque matière sur sa tranche horaire exacte et son jour. Ne permute aucune colonne avec une autre.
 
 ==============================================================================
+RÈGLE ABSOLUE DE DISSÉCATION & EXTRACTION DISCIPLINAIRE STRICTE :
+==============================================================================
+1. N'EXTRAIS QUE DE VRAIES MATIÈRES ET DISCIPLINES ACADÉMIQUES RECONNUES :
+   - Exemples de matières valides : Mathématiques, Physique-Chimie, Français, Histoire-Géographie, Philosophie, SVT, Anglais, Droit Civil, Algorithmique, Électronique, Économie, etc.
+
+2. CE QUI N'EST PAS UNE MATIÈRE (INTERDICTION ABSOLUE D'EXTRAIRE) :
+   - ÉVALUATIONS GÉNÉRIQUES ET EXAMENS SANS MATIÈRE :
+     Les mentions "Devoir", "Devoir Surveillé", "DS", "DST", "Examen", "Examen de semestre impair", "Examen de semestre pair", "Partiels", "Contrôle", "Interrogation", "Session d'examen", "Rattrapage" NE SONT PAS DES MATIÈRES.
+     * Si un créneau est nommé "Devoir de Mathématiques", retiens STRICTEMENT la matière : "Mathématiques".
+     * Si un créneau mentionne uniquement "Devoir", "DS", "Examen", "Examen de semestre impair" ou toute mention similaire sans matière académique claire, IGNORE TOTALEMENT ce créneau (ne l'extrais pas).
+   - PAUSES & INTERRUPTIONS :
+     "Récréation", "Récré", "Pause", "Pause déjeuner", "Pause midi", "Repas", "Midi", "Interclasse" NE SONT PAS DES MATIÈRES. Ne les écris jamais dans la liste des cours.
+   - CRÉNEAUX ADMINISTRATIFS, ÉTUDES OU TEMPS LIBRE :
+     "Permanence", "Étude surveillée", "Tutorat", "Vie de classe", "Heure de vie", "Conseil de classe", "Temps libre", "Autonomie" NE SONT PAS DES MATIÈRES. Ignore-les.
+
+==============================================================================
 DÉTECTION DU SYSTÈME D'ÉTUDE :
 ==============================================================================
 Identifie le gabarit à appliquer selon le contenu :
