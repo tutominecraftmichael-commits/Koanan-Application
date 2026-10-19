@@ -164,6 +164,8 @@ export interface UserAccount {
   privacyPolicyAccepted?: boolean;
   privacyPolicyAcceptedAt?: string;
   pdfImportsCount?: number; // Nombre d'extractions/imports d'EDT via PDF effectuées
+  fcmToken?: string;
+  fcmTokenUpdatedAt?: string;
   lastSyncedAt: string;
 }
 

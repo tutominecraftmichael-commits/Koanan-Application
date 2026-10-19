@@ -88,10 +88,10 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-// Enregistrement du Service Worker pour les notifications et le mode hors-ligne
+// Enregistrement du Service Worker Firebase Cloud Messaging & PWA
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
+    navigator.serviceWorker.register('/firebase-messaging-sw.js', { scope: '/' }).catch((err) => {
       console.warn('[KONAN] Service Worker notice:', err);
     });
   });

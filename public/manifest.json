@@ -1,0 +1,29 @@
+{
+  "short_name": "KONAN",
+  "name": "KONAN",
+  "description": "Compagnon Académique Anti-Burnout et Planning d'Étude Intelligent",
+  "icons": [
+    {
+      "src": "/logo-konan.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#090E17",
+  "theme_color": "#090E17",
+  "display": "standalone",
+  "orientation": "portrait",
+  "categories": ["education", "productivity"]
+}

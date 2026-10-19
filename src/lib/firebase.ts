@@ -817,5 +817,31 @@ export async function fetchAllCloudInvitations(): Promise<any[]> {
   }
 }
 
+/**
+ * Enregistre le token FCM (Firebase Cloud Messaging Web Push)
+ * dans le document Firestore de l'étudiant connecté pour les rappels d'étude.
+ */
+export async function saveUserFCMToken(uid: string, fcmToken: string): Promise<boolean> {
+  if (!db || !uid || isFirestoreQuotaBlocked()) {
+    console.warn('[Firebase] Impossible d\'enregistrer le token FCM : Firestore non disponible ou quota atteint.');
+    return false;
+  }
+  try {
+    const userRef = doc(db, 'users', uid);
+    await setDoc(userRef, {
+      fcmToken,
+      fcmTokenUpdatedAt: new Date().toISOString(),
+      pushNotificationsEnabled: true,
+      lastSyncedAt: new Date().toISOString(),
+    }, { merge: true });
+    return true;
+  } catch (err: any) {
+    reportFirestoreError(err);
+    console.warn('[Firebase] Erreur lors de l\'enregistrement du token FCM dans Firestore:', err);
+    return false;
+  }
+}
+
+
 
 

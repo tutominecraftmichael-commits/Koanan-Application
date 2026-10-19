@@ -1768,6 +1768,7 @@ export function App() {
               onOpenGoalModal={() => setIsAcademicGoalModalOpen(true)}
               isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
+              userUid={state.userAccount?.googleId}
             />
           ) : (
             <div className="text-center py-16 space-y-4">

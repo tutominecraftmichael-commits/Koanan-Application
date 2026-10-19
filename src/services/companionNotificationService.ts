@@ -131,8 +131,8 @@ export function sendPhoneNotification(title: string, body: string, tag: string =
         navigator.serviceWorker.ready.then(reg => {
           reg.showNotification(cleanTitle, {
             body: cleanBody,
-            icon: '/icon-192.png',
-            badge: '/icon-192.png',
+            icon: '/logo-konan.png',
+            badge: '/logo-konan.png',
             vibrate: [300, 150, 300],
             tag,
             renotify: true,
@@ -140,16 +140,16 @@ export function sendPhoneNotification(title: string, body: string, tag: string =
         }).catch(() => {
           new Notification(cleanTitle, {
             body: cleanBody,
-            icon: '/icon-192.png',
-            badge: '/icon-192.png',
+            icon: '/logo-konan.png',
+            badge: '/logo-konan.png',
             tag,
           });
         });
       } else {
         new Notification(cleanTitle, {
           body: cleanBody,
-          icon: '/icon-192.png',
-          badge: '/icon-192.png',
+          icon: '/logo-konan.png',
+          badge: '/logo-konan.png',
           tag,
         });
       }
