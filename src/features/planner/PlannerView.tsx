@@ -30,11 +30,13 @@ import {
   Brain,
   Moon,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Download
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
+import { PrintableScheduleModal } from '../../components/common/PrintableScheduleModal';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { useLanguage, t } from '../../lib/i18n';
 import { cleanSessionTitle } from '../dashboard/DashboardOverview';
@@ -55,6 +57,7 @@ export interface PlannerViewProps {
   onUpgradeToPro?: () => void;
   cycleCompletedDate?: string;
   onStartNewCycleEarly?: () => void;
+  studentName?: string;
 }
 
 export const PlannerView: React.FC<PlannerViewProps> = ({
@@ -72,6 +75,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   onUpgradeToPro,
   cycleCompletedDate,
   onStartNewCycleEarly,
+  studentName = 'Étudiant',
 }) => {
   const [selectedDayFilter, setSelectedDayFilter] = useState<number | 'all'>('all');
   const [selectedSubjectFilter, setSelectedSubjectFilter] = useState<string>('all');
@@ -79,6 +83,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   const [isAddCustomOpen, setIsAddCustomOpen] = useState(false);
   const [isStrategyModalOpen, setIsStrategyModalOpen] = useState(false);
   const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [selectedModalStrategy, setSelectedModalStrategy] = useState<string>(preferences.pacing || 'active_recall_spaced');
   const [selectedCombinedPacings, setSelectedCombinedPacings] = useState<StudyPacing[]>(() => {
     if (preferences.combinedPacings && preferences.combinedPacings.length > 0) {
@@ -188,6 +193,17 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<Download className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />}
+            onClick={() => setIsPrintModalOpen(true)}
+            className="cursor-pointer text-xs flex-1 sm:flex-initial py-2 border-cyan-500/30 hover:border-cyan-500/60 font-bold"
+            title="Télécharger mon planning de révisions officiel en PDF ou Image HD"
+          >
+            Télécharger mon planning (PDF)
+          </Button>
+
           <Button
             variant="secondary"
             size="sm"
@@ -1132,6 +1148,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         isOpen={!!selectedExplainerType}
         onClose={() => setSelectedExplainerType(null)}
         sessionType={selectedExplainerType}
+      />
+
+      {/* Printable Schedule & PDF Export Modal */}
+      <PrintableScheduleModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        subjects={subjects}
+        classSlots={classSlots}
+        studySessions={studySessions}
+        studentName={studentName}
       />
 
     </div>

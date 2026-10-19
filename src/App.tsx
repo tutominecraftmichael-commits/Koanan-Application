@@ -1864,6 +1864,7 @@ export function App() {
               onUpgradeToPro={() => handleSelectPlan('pro')}
               cycleCompletedDate={state.cycleCompletedDate}
               onStartNewCycleEarly={handleStartNewCycleEarly}
+              studentName={state.studentName || state.userAccount?.name || 'Étudiant'}
             />
           ) : (
             <div className="text-center py-16 space-y-4">

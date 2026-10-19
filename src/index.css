@@ -997,3 +997,34 @@ html.dark .active\:bg-white:not([class*="dark:active:bg-"]):active,
   background-color: #0f172a !important;
 }
 
+/* ==========================================================================
+   PRINT STYLES FOR PRINTABLE SCHEDULE SHEET
+   Garantit que seul le document officiel KONAN Anti-Burnout s'imprime avec ses vraies couleurs
+   ========================================================================== */
+@media print {
+  body {
+    background: #FFFDF8 !important;
+    color: #0F172A !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  #printable-schedule-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 12px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+
