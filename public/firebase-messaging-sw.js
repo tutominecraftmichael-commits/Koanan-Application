@@ -78,3 +78,13 @@ self.addEventListener('notificationclick', (event) => {
     })
   );
 });
+
+// Événement fetch pour l'installabilité PWA sur tous les navigateurs (Chrome, Samsung Internet, Safari, Edge)
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return caches.match(event.request);
+    })
+  );
+});
