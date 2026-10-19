@@ -212,13 +212,19 @@ export function setupFCMForegroundListener(
  * Spécifie clairement la matière, les séances de rattrapage, l'heure et la date.
  */
 export const STUDY_REMINDER_MOTIVATIONAL_TEMPLATES = {
-  // Séance normale à venir
-  upcoming: (sub: string, time?: string, dateText?: string) => 
-    `Prépare ton bloc-notes ! Ta session de ${sub} commence à ${time || 'bientôt'}${dateText ? ` (${dateText})` : ''}. Le Cube t'attend pour valider ton créneau.`,
+  // Séance normale à venir (5 minutes avant)
+  upcoming5m: (sub: string, time?: string, dateText?: string) => 
+    `Prépare ton bloc-notes ! Ta session de ${sub} commence dans 5 minutes (à ${time || 'bientôt'}${dateText ? `, ${dateText}` : ''}). Le Cube t'attend pour valider ton créneau.`,
   // Séance de rattrapage
   catchup: (sub: string, time?: string, dateText?: string) => 
     `C'est l'heure de ton rattrapage ! Ta séance de ${sub} replacée ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} t'attend. Viens valider ton créneau d'étude !`,
-  // Alerte retard / créneau en attente
+  // Oubli de rattrapage
+  catchupForgotten: (sub: string, time?: string, dateText?: string) => 
+    `Tu as oublié ton rattrapage ? Ta séance de ${sub} replacée ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} n'est toujours pas validée. Ne laisse pas le retard s'accumuler !`,
+  // Alerte d'urgence style Duolingo / interro
+  emergencyInterro: (sub: string, count: number = 2) => 
+    `Tu ne veux pas bosser, non ? OK. Mais quand le prof va distribuer les sujets d'interro, ne viens pas te plaindre ! Déjà ${count} séances délaissées aujourd'hui (${sub}). Viens rattraper avant minuit !`,
+  // Alerte retard standard
   overdue: (sub: string, time?: string, dateText?: string) => 
     `Ton algorithme s'impatiente ! Ta séance de ${sub} prévue ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`,
 };

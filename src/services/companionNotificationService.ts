@@ -163,15 +163,15 @@ export function sendPhoneNotification(title: string, body: string, tag: string =
  * Templates de messages motivants inspirés de Duolingo pour les rappels de sessions d'étude
  */
 const UPCOMING_REMINDER_TEMPLATES = [
-  (sub: string, time: string) => `🎓 C'est l'heure de briller ! Ta séance de ${sub} commence à ${time}. 25 minutes de focus et c'est validé ! ⚡`,
-  (sub: string, time: string) => `🔥 Protège ta série ! Ta révision de ${sub} démarre à ${time}. Fais un pas de plus vers la réussite ! 👊`,
-  (sub: string, time: string) => `📚 Ne laisse pas le retard s'accumuler : ${sub} commence bientôt (${time}). Viens te surpasser ! 🎯`,
+  (sub: string, time: string) => `🎓 C'est l'heure de briller ! Ta séance de ${sub} commence dans 5 min (à ${time}). 25 minutes de focus et c'est validé ! ⚡`,
+  (sub: string, time: string) => `🔥 Reste concentré sur tes objectifs ! Ta révision de ${sub} démarre à ${time}. Fais un pas de plus vers la réussite ! 👊`,
+  (sub: string, time: string) => `📚 Ne laisse pas le retard s'accumuler : ${sub} commence dans 5 minutes (${time}). Viens te surpasser ! 🎯`,
   (sub: string, time: string) => `⚡ Créneau de ${sub} à ${time}. Prépare tes fiches pour une session productive ! 💙`,
   (sub: string, time: string) => `🚀 Mode champion activé ! Session de ${sub} à ${time}. Chaque minute investie rapporte le jour de l'examen ! 💪`,
 ];
 
 /**
- * Envoie un rappel d'étude programmé avant la session.
+ * Envoie un rappel d'étude programmé avant la session (5 min avant).
  * STRICTEMENT RÉSERVÉ AUX MEMBRES PRO.
  * Rejette avec SubscriptionForbiddenError si appelé avec un tier 'free'.
  */
@@ -189,16 +189,18 @@ export function sendStudyReminder30mNotification(
 
   sendPhoneNotification(
     subjectName,
-    `Votre séance commence à ${sessionTime}. Préparez vos cours en toute sérénité ! 🎯`,
+    `Votre séance commence dans 5 minutes (à ${sessionTime}). Préparez vos cours en toute sérénité ! 🎯`,
     `study-reminder-${subjectName}`
   );
   return true;
 }
 
+export const sendStudyReminder5mNotification = sendStudyReminder30mNotification;
+
 /**
  * Vérifie les créneaux d'étude du jour et déclenche automatiquement
  * des rappels motivants style Duolingo directement sur le téléphone / navigateur
- * pour les membres PRO / PLUS.
+ * pour les membres PRO / PLUS (5 minutes avant la session).
  */
 export function checkAndDispatchStudyReminders(
   sessions: StudySession[],
@@ -231,8 +233,8 @@ export function checkAndDispatchStudyReminders(
     const sessionStartMinutes = h * 60 + (m || 0);
     const diffMinutes = sessionStartMinutes - currentMinutes;
 
-    // Alerte 10 à 15 minutes avant le début de la séance, ou à l'heure exacte (0 à -5 min)
-    if ((diffMinutes > 0 && diffMinutes <= 15) || (diffMinutes <= 0 && diffMinutes >= -5)) {
+    // Alerte 5 minutes avant le début de la séance (ou à l'heure exacte 0 à -5 min)
+    if ((diffMinutes > 0 && diffMinutes <= 5) || (diffMinutes <= 0 && diffMinutes >= -5)) {
       const subject = subjects.find(sub => sub.id === session.subjectId);
       const subjectName = subject?.name || session.title || 'tes révisions';
 
