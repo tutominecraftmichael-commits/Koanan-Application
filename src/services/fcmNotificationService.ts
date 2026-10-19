@@ -209,17 +209,19 @@ export function setupFCMForegroundListener(
 
 /**
  * Messages de rappel d'étude directs et motivants (identitaire Cube KONAN, sans XP ni points)
+ * Spécifie clairement la matière, les séances de rattrapage, l'heure et la date.
  */
-export const STUDY_REMINDER_MOTIVATIONAL_TEMPLATES = [
-  (sub: string, time?: string) => 
-    `Ta séance de ${sub}${time ? ` (${time})` : ''} commence maintenant. Le Cube KONAN t'attend pour réviser !`,
-  (sub: string, time?: string) => 
-    `C'est l'heure de ton créneau de ${sub}${time ? ` (${time})` : ''}. Viens travailler et valider ton créneau d'étude !`,
-  (sub: string, time?: string) => 
-    `Le Cube KONAN est prêt pour ta session de ${sub}${time ? ` prévu à ${time}` : ''}. 25 minutes de focus pour avancer !`,
-  (sub: string, time?: string) => 
-    `Séance de ${sub}${time ? ` (${time})` : ''} active. Prends tes cours et viens valider ta séance dès maintenant ! 🎯`,
-];
+export const STUDY_REMINDER_MOTIVATIONAL_TEMPLATES = {
+  // Séance normale à venir
+  upcoming: (sub: string, time?: string, dateText?: string) => 
+    `Prépare ton bloc-notes ! Ta session de ${sub} commence à ${time || 'bientôt'}${dateText ? ` (${dateText})` : ''}. Le Cube t'attend pour valider ton créneau.`,
+  // Séance de rattrapage
+  catchup: (sub: string, time?: string, dateText?: string) => 
+    `C'est l'heure de ton rattrapage ! Ta séance de ${sub} replacée ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} t'attend. Viens valider ton créneau d'étude !`,
+  // Alerte retard / créneau en attente
+  overdue: (sub: string, time?: string, dateText?: string) => 
+    `Ton algorithme s'impatiente ! Ta séance de ${sub} prévue ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`,
+};
 
 /**
  * Prépare le payload officiel prêt à l'envoi pour FCM HTTP v1 / Cloud Function
@@ -229,15 +231,17 @@ export function buildFCMStudyReminderPayload(
   fcmToken: string,
   subjectName: string,
   sessionTime?: string,
-  customBody?: string
+  customBody?: string,
+  customTitle?: string
 ) {
   const body = customBody || `Ta séance de ${subjectName}${sessionTime ? ` (${sessionTime})` : ''} commence maintenant. Le Cube KONAN t'attend pour réviser !`;
+  const title = customTitle || "KONAN ✦ Rappel d'étude";
 
   return {
     message: {
       token: fcmToken,
       notification: {
-        title: "KONAN ✦ Rappel d'étude",
+        title,
         body,
       },
       webpush: {

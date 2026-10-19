@@ -4,6 +4,13 @@
  * Fonctions Cloud Serverless pour l'automatisation complète des rappels d'étude (FCM) :
  * 1. checkStudySessionsAndSendReminders : Tâche planifiée automatique (toutes les 15 minutes)
  * 2. triggerStudyRemindersHttp : Endpoint HTTP sécurisé pour déclenchement manuel ou via webhook
+ * 
+ * RÈGLES STRICTES :
+ * - Notification réservée aux abonnés PRO et PLUS (les utilisateurs gratuits n'ont pas accès).
+ * - Rappels clairs : quoi bosser (matière), quoi rattraper (séance de rattrapage), quelle heure, quelle date.
+ * - Aucune mention de système de points ou d'XP.
+ * - Aucun emoji de glace.
+ * - Identité visuelle : Logo "logo-konan.png" et Cube KONAN.
  */
 
 import { onSchedule } from 'firebase-functions/v2/scheduler';
@@ -111,10 +118,17 @@ async function processAllStudentReminders() {
   const currentDayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
+  const dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+  const dayName = dayNames[currentDayOfWeek];
+  const dateFormatted = now.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+  const fullDateText = `aujourd'hui (${dayName} ${dateFormatted})`;
+
   const usersSnapshot = await db.collection('users').get();
   const stats = {
     scannedUsers: usersSnapshot.size,
+    eligibleSubscribers: 0,
     upcomingSent: 0,
+    catchupSent: 0,
     overdueSent: 0,
     cleanedTokens: 0,
     errors: 0,
@@ -123,8 +137,24 @@ async function processAllStudentReminders() {
   for (const doc of usersSnapshot.docs) {
     const userData = doc.data() || {};
     const userId = doc.id;
-    const fcmToken = userData.fcmToken || userData.userAccount?.fcmToken;
 
+    // RÈGLE MÉTIER STRICTE :
+    // Seuls les abonnés PRO et PLUS ont droit aux notifications
+    const userTier = String(
+      userData.planTier || 
+      userData.tier || 
+      userData.userAccount?.planTier || 
+      (userData.isPro ? 'pro' : userData.isPlus ? 'plus' : 'free')
+    ).toLowerCase().trim();
+
+    const isSubscribedToReminders = userTier === 'pro' || userTier === 'plus';
+    if (!isSubscribedToReminders) {
+      continue;
+    }
+
+    stats.eligibleSubscribers += 1;
+
+    const fcmToken = userData.fcmToken || userData.userAccount?.fcmToken;
     if (!fcmToken) continue;
 
     const subjectsList = Array.isArray(userData.subjects) ? userData.subjects : [];
@@ -166,13 +196,53 @@ async function processAllStudentReminders() {
       if (startMin < 0) continue;
 
       const isPending = isSessionPending(slot);
+      const isCatchup = Boolean(slot.isRescheduledToday || slot.rescheduledReason || slot.isCatchup);
       const diffToStart = startMin - currentMinutes;
 
-      // 1. Rappel 15 min avant
+      // 1. Séance de rattrapage
+      const catchupKey = `${todayStr}_${slotId}_catchup_alert`;
+      if (isCatchup && isPending && diffToStart <= 15 && !notifiedMap[catchupKey]) {
+        const title = `KONAN ✦ Séance de rattrapage — ${resolvedSubjectName}`;
+        const body = formattedEndTime
+          ? `C'est l'heure de ton rattrapage ! Ta séance de ${resolvedSubjectName} replacée ${fullDateText} de ${formattedStartTime} à ${formattedEndTime} t'attend. Viens valider ton créneau d'étude !`
+          : `C'est l'heure de ton rattrapage ! Ta séance de ${resolvedSubjectName} replacée ${fullDateText} à ${formattedStartTime} t'attend. Viens valider ton créneau d'étude !`;
+
+        const res = await sendPushWithCleanup({
+          userId,
+          fcmToken,
+          title,
+          body,
+          tag: `konan-catchup-${slotId}`,
+          dataPayload: {
+            url: '/',
+            type: 'catchup_session',
+            sessionId: slotId,
+            subjectName: resolvedSubjectName,
+            startTime: formattedStartTime,
+            endTime: formattedEndTime,
+            date: todayStr,
+          },
+        });
+
+        if (res.success) {
+          stats.catchupSent += 1;
+          updatesToSave[`notifiedStudyReminders.${catchupKey}`] = new Date().toISOString();
+          continue;
+        } else if (res.cleaned) {
+          stats.cleanedTokens += 1;
+          break;
+        } else {
+          stats.errors += 1;
+        }
+      }
+
+      // 2. Rappel 15 min avant
       const upcomingKey = `${todayStr}_${slotId}_upcoming_15m`;
-      if (isPending && diffToStart >= 0 && diffToStart <= 15 && !notifiedMap[upcomingKey]) {
-        const title = "KONAN ✦ Rappel de séance";
-        const body = `Prépare ton bloc-notes ! Ta session de ${resolvedSubjectName} commence à ${formattedStartTime}. Le Cube t'attend pour valider ton créneau.`;
+      if (!isCatchup && isPending && diffToStart >= 0 && diffToStart <= 15 && !notifiedMap[upcomingKey]) {
+        const title = `KONAN ✦ Rappel de séance — ${resolvedSubjectName}`;
+        const body = formattedEndTime
+          ? `Prépare ton bloc-notes ! Ta session de ${resolvedSubjectName} commence à ${formattedStartTime} (prévue jusqu'à ${formattedEndTime}, ${fullDateText}). Le Cube t'attend pour valider ton créneau.`
+          : `Prépare ton bloc-notes ! Ta session de ${resolvedSubjectName} commence à ${formattedStartTime} (${fullDateText}). Le Cube t'attend pour valider ton créneau.`;
 
         const res = await sendPushWithCleanup({
           userId,
@@ -187,6 +257,7 @@ async function processAllStudentReminders() {
             subjectName: resolvedSubjectName,
             startTime: formattedStartTime,
             endTime: formattedEndTime,
+            date: todayStr,
           },
         });
 
@@ -201,16 +272,16 @@ async function processAllStudentReminders() {
         }
       }
 
-      // 2. Alerte en retard / non validé après l'heure
+      // 3. Alerte en retard / non validé après l'heure
       const overdueKey = `${todayStr}_${slotId}_overdue_alert`;
       const isPastStartTime = currentMinutes > startMin + 5;
       const isPastEndTime = endMin > 0 ? currentMinutes >= endMin : currentMinutes >= startMin + 30;
 
       if (isPending && (isPastStartTime || isPastEndTime) && !notifiedMap[overdueKey]) {
-        const title = "KONAN ✦ Alerte planning";
+        const title = `KONAN ✦ Alerte planning — ${resolvedSubjectName}`;
         const body = formattedEndTime
-          ? `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue de ${formattedStartTime} à ${formattedEndTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`
-          : `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue à ${formattedStartTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`;
+          ? `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue ${fullDateText} de ${formattedStartTime} à ${formattedEndTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`
+          : `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue ${fullDateText} à ${formattedStartTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`;
 
         const res = await sendPushWithCleanup({
           userId,
@@ -225,6 +296,7 @@ async function processAllStudentReminders() {
             subjectName: resolvedSubjectName,
             startTime: formattedStartTime,
             endTime: formattedEndTime,
+            date: todayStr,
           },
         });
 

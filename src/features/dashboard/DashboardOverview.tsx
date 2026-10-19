@@ -26,22 +26,14 @@ import {
   ChevronUp,
   BookOpen,
   Moon,
-  Zap,
-  Bell,
-  BellRing,
-  Check
+  Zap
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { useLanguage, t } from '../../lib/i18n';
 import type { SessionType } from '../../types';
-import { 
-  enableStudentPushNotifications, 
-  isStudentPushActiveOnDevice, 
-  triggerDeviceTestReminder,
-  setupFCMForegroundListener
-} from '../../services/fcmNotificationService';
+import { enableStudentPushNotifications } from '../../services/fcmNotificationService';
 
 export interface DashboardOverviewProps {
   studentName: string;
@@ -115,26 +107,25 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const [showCompletedSessions, setShowCompletedSessions] = useState(false);
 
   // Notifications Web Push (Firebase Cloud Messaging)
-  const [isPushActive, setIsPushActive] = useState<boolean>(() => isStudentPushActiveOnDevice());
-  const [isPushLoading, setIsPushLoading] = useState(false);
-  const [pushFeedback, setPushFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const [isTestSending, setIsTestSending] = useState(false);
-
+  // Pour les membres PRO et PLUS : synchronisation automatique et silencieuse du token FCM en arrière-plan
+  // Aucun bouton manuel ni test n'est affiché sur le tableau de bord.
   React.useEffect(() => {
-    setIsPushActive(isStudentPushActiveOnDevice());
+    const isProOrPlus = planTier === 'pro' || planTier === 'plus';
+    if (!isProOrPlus) return;
 
-    // Écoute des notifications reçues au premier plan (Foreground listener)
-    const unsubscribe = setupFCMForegroundListener((title, body) => {
-      setPushFeedback({
-        type: 'success',
-        message: `${title} : ${body}`
-      });
-    });
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, []);
+    const effectiveUid = userUid || _konanId;
+    if (typeof window !== 'undefined' && 'Notification' in window && 'serviceWorker' in navigator) {
+      if (Notification.permission === 'granted') {
+        enableStudentPushNotifications(effectiveUid).catch(() => {});
+      } else if (Notification.permission === 'default') {
+        Notification.requestPermission().then((perm) => {
+          if (perm === 'granted') {
+            enableStudentPushNotifications(effectiveUid).catch(() => {});
+          }
+        }).catch(() => {});
+      }
+    }
+  }, [planTier, userUid, _konanId]);
 
 
   const now = new Date();
@@ -202,40 +193,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const upcomingExams = subjects
     .filter(s => s.examDate)
     .map(s => ({ ...s, daysRemaining: getDaysRemaining(s.examDate) }))
-  const handleEnablePushNotifications = async () => {
-    setIsPushLoading(true);
-    setPushFeedback(null);
-    try {
-      const effectiveUid = userUid || _konanId;
-      const result = await enableStudentPushNotifications(effectiveUid);
-      if (result.success && result.token) {
-        setIsPushActive(true);
-        setPushFeedback({
-          type: 'success',
-          message: "Rappels d'étude activés avec succès sur cet appareil ! Le Cube KONAN vous alertera pour chaque séance."
-        });
-      } else {
-        setPushFeedback({
-          type: 'error',
-          message: result.error || "Impossible d'activer les notifications push. Vérifiez les permissions de votre navigateur."
-        });
-      }
-    } catch (err: any) {
-      setPushFeedback({
-        type: 'error',
-        message: err?.message || "Erreur lors de l'activation des notifications."
-      });
-    } finally {
-      setIsPushLoading(false);
-    }
-  };
-
-  const handleSendTestReminder = async () => {
-    setIsTestSending(true);
-    const subjectName = nextStudySession ? cleanSessionTitle(nextStudySession.title) : (subjects[0]?.name || 'Mathématiques');
-    await triggerDeviceTestReminder(subjectName);
-    setTimeout(() => setIsTestSending(false), 2000);
-  };
+    .sort((a, b) => (a.daysRemaining || 999) - (b.daysRemaining || 999));
 
   return (
     <div className="space-y-5 sm:space-y-7 animate-in fade-in duration-300">
@@ -438,91 +396,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </p>
           </div>
         </button>
-      </div>
-
-      {/* SECTION PUSH NOTIFICATIONS / RAPPELS D'ÉTUDE EN ARRIÈRE-PLAN */}
-      <div className="relative overflow-hidden rounded-2xl border border-indigo-200/80 dark:border-indigo-500/25 bg-gradient-to-r from-indigo-50/90 via-white to-purple-50/90 dark:from-slate-900/90 dark:via-indigo-950/20 dark:to-slate-900/90 p-3.5 sm:p-4 shadow-xs transition-all">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 p-0.5 shadow-md shadow-indigo-500/20 shrink-0">
-              <div className="w-full h-full rounded-[10px] bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden">
-                <img 
-                  src="/logo-konan.png" 
-                  alt="Cube KONAN" 
-                  className="w-7 h-7 object-contain drop-shadow-sm hover:scale-105 transition-transform"
-                />
-              </div>
-              {isPushActive && (
-                <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
-              )}
-            </div>
-
-            <div className="space-y-0.5 min-w-0">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5 truncate">
-                  <span>Rappels d'étude en arrière-plan</span>
-                </h3>
-                <span className="text-[9px] uppercase tracking-wider font-extrabold px-1.5 py-0.2 rounded-md bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300 shrink-0">
-                  FCM Push
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-tight">
-                {isPushActive 
-                  ? "Alertes actives sur cet appareil : le Cube KONAN vous prévient même si l'application est fermée."
-                  : "Recevez vos alertes de révision sur cet appareil, même quand le site est fermé."}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto shrink-0">
-            {isPushActive ? (
-              <>
-                <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/30 px-2.5 py-1.5 rounded-xl">
-                  <Check className="w-3.5 h-3.5" />
-                  <span>Rappels activés</span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSendTestReminder}
-                  disabled={isTestSending}
-                  className="text-xs border-indigo-200 dark:border-indigo-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/50"
-                  leftIcon={<BellRing className={`w-3.5 h-3.5 text-indigo-500 ${isTestSending ? 'animate-bounce' : ''}`} />}
-                >
-                  {isTestSending ? 'Envoi...' : 'Tester un rappel'}
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant="glow"
-                size="sm"
-                onClick={handleEnablePushNotifications}
-                disabled={isPushLoading}
-                className="w-full sm:w-auto text-xs font-bold py-2 px-3.5 bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-md shadow-indigo-600/25 active:scale-95 transition-all"
-                leftIcon={<Bell className={`w-3.5 h-3.5 ${isPushLoading ? 'animate-spin' : ''}`} />}
-              >
-                {isPushLoading ? 'Activation...' : '🔔 Activer les notifications de révision'}
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {pushFeedback && (
-          <div className={`mt-2.5 p-2 rounded-xl text-xs flex items-center justify-between gap-2 border ${
-            pushFeedback.type === 'success' 
-              ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/40' 
-              : 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/40'
-          }`}>
-            <span className="font-medium text-[11px]">{pushFeedback.message}</span>
-            <button 
-              type="button" 
-              onClick={() => setPushFeedback(null)}
-              className="text-xs opacity-60 hover:opacity-100 font-bold px-1"
-            >
-              ✕
-            </button>
-          </div>
-        )}
       </div>
 
       {/* 2-COLUMN COCKPIT (TODAY'S TIMELINE + ACADEMIC INSIGHTS) */}

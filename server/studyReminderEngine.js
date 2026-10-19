@@ -3,10 +3,12 @@
  * 
  * Ce module parcourt les profils étudiants dans Cloud Firestore, vérifie les plannings
  * de révision du jour et déclenche automatiquement les notifications push adaptées :
- * 1. Rappel 15 minutes avant le début de la séance
- * 2. Alerte en cas de retard / créneau non validé après l'heure prévue
+ * 1. Rappel 15 minutes avant le début de la séance (matière, heure, date)
+ * 2. Séance de rattrapage replacée aujourd'hui (matière, heure, date, rattrapage explicite)
+ * 3. Alerte en cas de retard / créneau non validé après l'heure prévue
  * 
  * RÈGLES STRICTES :
+ * - Notification réservée aux abonnés PRO et PLUS (les utilisateurs gratuits n'ont pas accès).
  * - Aucune mention de système de points ou d'XP.
  * - Aucun emoji de glace.
  * - Identité visuelle : Logo "logo-konan.png" et Cube KONAN.
@@ -17,10 +19,6 @@ import admin from 'firebase-admin';
 
 /**
  * Initialise Firebase Admin SDK de manière résiliente.
- * Supporte :
- * 1. Clé de compte de service via GOOGLE_APPLICATION_CREDENTIALS ou FIREBASE_SERVICE_ACCOUNT_KEY
- * 2. Variables d'environnement standard ou Application Default Credentials
- * 3. Initialisation par défaut avec Project ID 'konanai-ed046'
  */
 export function initFirebaseAdmin() {
   if (admin.apps.length > 0) {
@@ -44,7 +42,6 @@ export function initFirebaseAdmin() {
     }
   }
 
-  // Initialisation standard Firebase
   try {
     return admin.initializeApp({
       projectId,
@@ -163,7 +160,6 @@ export async function sendPushNotificationWithCleanup({
     const errorCode = error.code || '';
     const errorMsg = String(error.message || '');
 
-    // Détection des tokens expirés ou invalides (désinstallation de la PWA, token révoqué, etc.)
     const isTokenInvalid = 
       errorCode === 'messaging/invalid-registration-token' ||
       errorCode === 'messaging/registration-token-not-registered' ||
@@ -191,32 +187,34 @@ export async function sendPushNotificationWithCleanup({
 
 /**
  * Fonction centrale de vérification conditionnelle et d'envoi autonome
- * 
- * Parcours les utilisateurs dans Firestore, analyse leurs créneaux du jour et envoie :
- * - 15 min avant : rappel de séance
- * - En retard / non validé après l'heure : alerte de planning
  */
 export async function runStudyRemindersCheck() {
   const app = initFirebaseAdmin();
   const db = admin.firestore(app);
 
   const now = new Date();
-  // En Côte d'Ivoire / UTC ou selon timezone locale
   const todayStr = now.toISOString().slice(0, 10);
   
   // 0 = Lundi, 1 = Mardi, ... 6 = Dimanche (convention KONAN)
   const currentDayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  console.log(`[KONAN Backend] Démarrage du scan autonome des révisions : ${todayStr} à ${now.getHours()}h${String(now.getMinutes()).padStart(2, '0')} (Jour ${currentDayOfWeek})...`);
+  const dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+  const dayName = dayNames[currentDayOfWeek];
+  const dateFormatted = now.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+  const fullDateText = `aujourd'hui (${dayName} ${dateFormatted})`;
+
+  console.log(`[KONAN Backend] Démarrage du scan autonome des révisions : ${fullDateText} à ${now.getHours()}h${String(now.getMinutes()).padStart(2, '0')}...`);
 
   const usersSnapshot = await db.collection('users').get();
   console.log(`[KONAN Backend] ${usersSnapshot.size} profils trouvés dans Firestore.`);
 
   const stats = {
     totalUsers: usersSnapshot.size,
+    eligibleSubscribers: 0,
     usersWithToken: 0,
     upcomingRemindersSent: 0,
+    catchupAlertsSent: 0,
     overdueAlertsSent: 0,
     tokensCleaned: 0,
     errors: 0,
@@ -225,8 +223,24 @@ export async function runStudyRemindersCheck() {
   for (const doc of usersSnapshot.docs) {
     const userData = doc.data() || {};
     const userId = doc.id;
-    const fcmToken = userData.fcmToken || userData.userAccount?.fcmToken;
 
+    // RÈGLE MÉTIER STRICTE :
+    // "S'il est sur Plus, il a le droit d'avoir les notifications, Pro il a le droit, mais gratuit n'a pas le droit."
+    const userTier = String(
+      userData.planTier || 
+      userData.tier || 
+      userData.userAccount?.planTier || 
+      (userData.isPro ? 'pro' : userData.isPlus ? 'plus' : 'free')
+    ).toLowerCase().trim();
+
+    const isSubscribedToReminders = userTier === 'pro' || userTier === 'plus';
+    if (!isSubscribedToReminders) {
+      continue;
+    }
+
+    stats.eligibleSubscribers += 1;
+
+    const fcmToken = userData.fcmToken || userData.userAccount?.fcmToken;
     if (!fcmToken) {
       continue;
     }
@@ -258,7 +272,6 @@ export async function runStudyRemindersCheck() {
     // Filtrer les créneaux qui concernent AUJOURD'HUI
     const todaysSlots = rawSessions.filter((slot) => {
       if (!slot) return false;
-      // Correspondance par dayOfWeek (0 à 6) ou par date explicite (YYYY-MM-DD)
       if (slot.date && slot.date === todayStr) return true;
       if (slot.dayOfWeek !== undefined && Number(slot.dayOfWeek) === currentDayOfWeek) return true;
       return false;
@@ -268,14 +281,13 @@ export async function runStudyRemindersCheck() {
       continue;
     }
 
-    // Map des notifications déjà envoyées pour cet utilisateur pour éviter les doublons
     const notifiedMap = userData.notifiedStudyReminders || {};
     const updatesToSave = {};
 
     for (const slot of todaysSlots) {
       const slotId = slot.id || `${slot.dayOfWeek}_${slot.startTime}_${slot.subjectId || 'slot'}`;
       
-      // Extraction dynamique des informations du créneau demandées :
+      // Extraction dynamique des informations exactes :
       // - slot.subjectName
       // - slot.startTime (ex: "18h30")
       // - slot.endTime (ex: "19h15")
@@ -294,16 +306,58 @@ export async function runStudyRemindersCheck() {
       if (startMin < 0) continue;
 
       const isPending = isSessionPending(slot);
+      const isCatchup = Boolean(slot.isRescheduledToday || slot.rescheduledReason || slot.isCatchup);
       const diffToStart = startMin - currentMinutes;
 
       // -------------------------------------------------------------
-      // CONDITION 1 : RAPPEL 15 MINUTES AVANT LE DÉBUT DE LA SÉANCE
+      // CAS 1 : SÉANCE DE RATTRAPAGE PROGRAMMÉE AUJOURD'HUI
       // -------------------------------------------------------------
-      // Si la séance commence dans 0 à 15 minutes et n'est pas déjà validée
+      const catchupKey = `${todayStr}_${slotId}_catchup_alert`;
+      if (isCatchup && isPending && diffToStart <= 15 && !notifiedMap[catchupKey]) {
+        const title = `KONAN ✦ Séance de rattrapage — ${resolvedSubjectName}`;
+        const body = formattedEndTime
+          ? `C'est l'heure de ton rattrapage ! Ta séance de ${resolvedSubjectName} replacée ${fullDateText} de ${formattedStartTime} à ${formattedEndTime} t'attend. Viens valider ton créneau d'étude !`
+          : `C'est l'heure de ton rattrapage ! Ta séance de ${resolvedSubjectName} replacée ${fullDateText} à ${formattedStartTime} t'attend. Viens valider ton créneau d'étude !`;
+
+        const result = await sendPushNotificationWithCleanup({
+          db,
+          userId,
+          fcmToken,
+          title,
+          body,
+          tag: `konan-catchup-${slotId}`,
+          dataPayload: {
+            url: '/',
+            type: 'catchup_session',
+            sessionId: slotId,
+            subjectName: resolvedSubjectName,
+            startTime: formattedStartTime,
+            endTime: formattedEndTime,
+            date: todayStr,
+          },
+        });
+
+        if (result.success) {
+          stats.catchupAlertsSent += 1;
+          updatesToSave[`notifiedStudyReminders.${catchupKey}`] = new Date().toISOString();
+          continue; // Rattrapage notifié, passer au créneau suivant
+        } else if (result.cleaned) {
+          stats.tokensCleaned += 1;
+          break;
+        } else {
+          stats.errors += 1;
+        }
+      }
+
+      // -------------------------------------------------------------
+      // CAS 2 : RAPPEL 15 MINUTES AVANT LE DÉBUT DE LA SÉANCE
+      // -------------------------------------------------------------
       const upcomingKey = `${todayStr}_${slotId}_upcoming_15m`;
-      if (isPending && diffToStart >= 0 && diffToStart <= 15 && !notifiedMap[upcomingKey]) {
-        const title = "KONAN ✦ Rappel de séance";
-        const body = `Prépare ton bloc-notes ! Ta session de ${resolvedSubjectName} commence à ${formattedStartTime}. Le Cube t'attend pour valider ton créneau.`;
+      if (!isCatchup && isPending && diffToStart >= 0 && diffToStart <= 15 && !notifiedMap[upcomingKey]) {
+        const title = `KONAN ✦ Rappel de séance — ${resolvedSubjectName}`;
+        const body = formattedEndTime
+          ? `Prépare ton bloc-notes ! Ta session de ${resolvedSubjectName} commence à ${formattedStartTime} (prévue jusqu'à ${formattedEndTime}, ${fullDateText}). Le Cube t'attend pour valider ton créneau.`
+          : `Prépare ton bloc-notes ! Ta session de ${resolvedSubjectName} commence à ${formattedStartTime} (${fullDateText}). Le Cube t'attend pour valider ton créneau.`;
 
         const result = await sendPushNotificationWithCleanup({
           db,
@@ -319,6 +373,7 @@ export async function runStudyRemindersCheck() {
             subjectName: resolvedSubjectName,
             startTime: formattedStartTime,
             endTime: formattedEndTime,
+            date: todayStr,
           },
         });
 
@@ -327,26 +382,24 @@ export async function runStudyRemindersCheck() {
           updatesToSave[`notifiedStudyReminders.${upcomingKey}`] = new Date().toISOString();
         } else if (result.cleaned) {
           stats.tokensCleaned += 1;
-          break; // Token invalide, inutile de tester d'autres créneaux pour ce user
+          break;
         } else {
           stats.errors += 1;
         }
       }
 
       // -------------------------------------------------------------
-      // CONDITION 2 : EN CAS DE RETARD / CRÉNEAU NON VALIDÉ APRÈS L'HEURE
+      // CAS 3 : RETARD / CRÉNEAU NON VALIDÉ APRÈS L'HEURE PRÉVUE
       // -------------------------------------------------------------
-      // Si l'heure prévue est dépassée (l'heure de début est passée ou l'heure de fin est passée),
-      // et que le créneau est toujours "pending" (non validé) avant minuit
       const overdueKey = `${todayStr}_${slotId}_overdue_alert`;
-      const isPastStartTime = currentMinutes > startMin + 5; // dépassé d'au moins 5 min
+      const isPastStartTime = currentMinutes > startMin + 5;
       const isPastEndTime = endMin > 0 ? currentMinutes >= endMin : currentMinutes >= startMin + 30;
 
       if (isPending && (isPastStartTime || isPastEndTime) && !notifiedMap[overdueKey]) {
-        const title = "KONAN ✦ Alerte planning";
+        const title = `KONAN ✦ Alerte planning — ${resolvedSubjectName}`;
         const body = formattedEndTime 
-          ? `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue de ${formattedStartTime} à ${formattedEndTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`
-          : `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue à ${formattedStartTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`;
+          ? `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue ${fullDateText} de ${formattedStartTime} à ${formattedEndTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`
+          : `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue ${fullDateText} à ${formattedStartTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`;
 
         const result = await sendPushNotificationWithCleanup({
           db,
@@ -362,6 +415,7 @@ export async function runStudyRemindersCheck() {
             subjectName: resolvedSubjectName,
             startTime: formattedStartTime,
             endTime: formattedEndTime,
+            date: todayStr,
           },
         });
 
@@ -370,19 +424,19 @@ export async function runStudyRemindersCheck() {
           updatesToSave[`notifiedStudyReminders.${overdueKey}`] = new Date().toISOString();
         } else if (result.cleaned) {
           stats.tokensCleaned += 1;
-          break; // Token invalide
+          break;
         } else {
           stats.errors += 1;
         }
       }
     }
 
-    // Sauvegarder les clés de notifications envoyées pour éviter tout spam
+    // Sauvegarde anti-doublon dans Firestore
     if (Object.keys(updatesToSave).length > 0) {
       try {
         await db.collection('users').doc(userId).update(updatesToSave);
       } catch (err) {
-        console.warn(`[KONAN Backend] Erreur lors de la mise à jour des rappels envoyés pour ${userId} :`, err.message);
+        console.warn(`[KONAN Backend] Erreur mise à jour anti-doublons pour ${userId} :`, err.message);
       }
     }
   }
