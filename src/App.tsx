@@ -2215,11 +2215,13 @@ export function App() {
         </div>
       )}
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 dark:border-slate-900 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-center text-xs text-slate-500 dark:text-slate-400 bg-white/60 dark:bg-slate-950/60 mt-auto px-4 space-y-1">
-        <p>KONAN - Anti-Burnout & Product Engineering d'Excellence</p>
-        <p className="text-slate-600 dark:text-slate-300 font-medium">Conçu et développé par Christ Michaël Boni</p>
-      </footer>
+      {/* Footer: affiché UNIQUEMENT sur la page d'accueil (première page) */}
+      {activeView === 'landing' && (
+        <footer className="border-t border-slate-200 dark:border-slate-900 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-center text-xs text-slate-500 dark:text-slate-400 bg-white/60 dark:bg-slate-950/60 mt-auto px-4 space-y-1">
+          <p>KONAN - Anti-Burnout & Product Engineering d'Excellence</p>
+          <p className="text-slate-600 dark:text-slate-300 font-medium">Conçu et développé par Christ Michaël Boni</p>
+        </footer>
+      )}
 
       {/* 🚀 Cinematic 3D Entrance Animation */}
       <KonanEntranceSplash 
