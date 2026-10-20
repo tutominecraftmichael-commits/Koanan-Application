@@ -11,7 +11,7 @@ import { DAYS_OF_WEEK } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
-import { formatMinutesToHours, getDaysRemaining, getSessionExamCountdown, parseTimeToMinutes } from '../../lib/utils';
+import { formatMinutesToHours, getDaysRemaining, getSessionExamCountdown, parseTimeToMinutes, getWeekDateRange, isDateInWeek } from '../../lib/utils';
 import { 
   Sparkles, 
   Calendar, 
@@ -30,7 +30,6 @@ import {
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
-import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { useLanguage, t } from '../../lib/i18n';
 import type { SessionType } from '../../types';
 import { enableStudentPushNotifications } from '../../services/fcmNotificationService';
@@ -62,6 +61,7 @@ export interface DashboardOverviewProps {
   isGroupGuest?: boolean;
   invitedBy?: { name: string; konanId: string; email?: string };
   userUid?: string;
+  onOpenWeeklyRecap?: () => void;
 }
 
 export const cleanSessionTitle = (rawTitle: string): string => {
@@ -99,6 +99,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   isGroupGuest: _isGroupGuest = false,
   invitedBy: _invitedBy,
   userUid,
+  onOpenWeeklyRecap,
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -189,6 +190,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const completedToday = completedTodaySessions.length;
   const totalMissedMinutes = rescheduledTodaySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
   const totalMissedHoursText = formatMinutesToHours(totalMissedMinutes);
+
+  const currentWeekRange = getWeekDateRange(now);
+  const weekSessions = studySessions.filter(s => s.date ? isDateInWeek(s.date, currentWeekRange.mondayStr, currentWeekRange.sundayStr) : true);
+  const weekCompletedSessions = weekSessions.filter(s => s.completed);
+  const weekCompletedMins = weekCompletedSessions.reduce((acc, s) => acc + s.durationMinutes, 0);
+  const weekPlannedMins = weekSessions.reduce((acc, s) => acc + s.durationMinutes, 0);
 
   const upcomingExams = subjects
     .filter(s => s.examDate)
@@ -848,21 +855,41 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </span>
               </div>
               <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
-                <span>Sessions effectuées :</span>
+                <span>Aujourd'hui :</span>
                 <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">
-                  <AnimatedCounter value={studySessions.filter(s => s.completed).length} /> validées
+                  {completedToday} / {allTodaysStudySessions.length} validées
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
+                <span>Cette semaine :</span>
+                <span className="font-bold text-indigo-600 dark:text-indigo-400 font-mono">
+                  {formatMinutesToHours(weekCompletedMins)} / {formatMinutesToHours(weekPlannedMins)} ({weekCompletedSessions.length} validées)
                 </span>
               </div>
             </div>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => onNavigate('analytics')}
-              className="w-full text-xs cursor-pointer py-2"
-            >
-              Consulter les statistiques complètes
-            </Button>
+            <div className="space-y-2 pt-1">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => onNavigate('analytics')}
+                className="w-full text-xs cursor-pointer py-2"
+              >
+                Consulter les statistiques complètes
+              </Button>
+
+              {onOpenWeeklyRecap && (
+                <Button
+                  variant="glow"
+                  size="sm"
+                  onClick={onOpenWeeklyRecap}
+                  leftIcon={<Sparkles className="w-3.5 h-3.5 text-amber-300" />}
+                  className="w-full text-xs font-bold py-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-md shadow-indigo-600/20 cursor-pointer"
+                >
+                  Bilan Hebdomadaire
+                </Button>
+              )}
+            </div>
           </Card>
 
         </div>

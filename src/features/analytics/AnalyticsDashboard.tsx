@@ -1,16 +1,18 @@
-import React from 'react';
-import type { Subject, StudySession, StudyLog, StudyPreferences } from '../../types';
+import React, { useState, useMemo } from 'react';
+import type { Subject, StudySession, StudyLog, StudyPreferences, WeeklySummary } from '../../types';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { ProgressBar } from '../../components/ui/FormControls';
-import { formatMinutesToHours } from '../../lib/utils';
+import { Button } from '../../components/ui/Button';
+import { formatMinutesToHours, getWeekDateRange, isDateInWeek } from '../../lib/utils';
 import { 
   BarChart3, 
   CheckCircle2, 
   Award, 
   Clock, 
   Star, 
-  Brain 
+  Brain,
+  Sparkles
 } from 'lucide-react';
 import { useLanguage, t } from '../../lib/i18n';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
@@ -20,25 +22,59 @@ export interface AnalyticsDashboardProps {
   studySessions: StudySession[];
   logs: StudyLog[];
   preferences: StudyPreferences;
+  onOpenWeeklyRecap?: () => void;
+  weeklySummaries?: WeeklySummary[];
 }
+
+export type AnalyticsTimeframe = 'current_week' | 'past_week' | 'all_time';
 
 export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   subjects,
   studySessions,
   logs,
   preferences: _preferences,
+  onOpenWeeklyRecap,
 }) => {
   const [lang] = useLanguage();
-  const completedSessions = studySessions.filter(s => s.completed);
+  const [timeframe, setTimeframe] = useState<AnalyticsTimeframe>('current_week');
+
+  const now = useMemo(() => new Date(), []);
+  const currentWeekRange = useMemo(() => getWeekDateRange(now), [now]);
+  
+  const pastWeekDate = useMemo(() => {
+    const d = new Date(now);
+    d.setDate(d.getDate() - 7);
+    return d;
+  }, [now]);
+  const pastWeekRange = useMemo(() => getWeekDateRange(pastWeekDate), [pastWeekDate]);
+
+  // Filtrage strict selon la période sélectionnée pour éliminer tout cumul erroné
+  const { filteredSessions, filteredLogs, currentRangeLabel } = useMemo(() => {
+    if (timeframe === 'current_week') {
+      const { mondayStr, sundayStr, weekLabel } = currentWeekRange;
+      const fSessions = studySessions.filter(s => s.date ? isDateInWeek(s.date, mondayStr, sundayStr) : true);
+      const fLogs = logs.filter(l => isDateInWeek(l.date || l.createdAt, mondayStr, sundayStr));
+      return { filteredSessions: fSessions, filteredLogs: fLogs, currentRangeLabel: `Cette semaine (${weekLabel})` };
+    }
+    if (timeframe === 'past_week') {
+      const { mondayStr, sundayStr, weekLabel } = pastWeekRange;
+      const fSessions = studySessions.filter(s => s.date ? isDateInWeek(s.date, mondayStr, sundayStr) : false);
+      const fLogs = logs.filter(l => isDateInWeek(l.date || l.createdAt, mondayStr, sundayStr));
+      return { filteredSessions: fSessions, filteredLogs: fLogs, currentRangeLabel: `Semaine passée (${weekLabel})` };
+    }
+    return { filteredSessions: studySessions, filteredLogs: logs, currentRangeLabel: 'Historique Global' };
+  }, [timeframe, studySessions, logs, currentWeekRange, pastWeekRange]);
+
+  const completedSessions = filteredSessions.filter(s => s.completed);
 
   const subjectStats = subjects.map(sub => {
-    const subSessions = studySessions.filter(s => s.subjectId === sub.id);
+    const subSessions = filteredSessions.filter(s => s.subjectId === sub.id);
     const subCompleted = subSessions.filter(s => s.completed);
     const plannedMins = subSessions.reduce((acc, s) => acc + s.durationMinutes, 0);
 
-    // 1. Durée réelle des séances validées (la validation crédite sa durée nominale ou réelle si >= 15 min)
+    // 1. Durée réelle des séances validées de la période sélectionnée
     const sessionCompletedMins = subCompleted.reduce((acc, s) => {
-      const matchingLog = logs.find(l => l.sessionId === s.id);
+      const matchingLog = filteredLogs.find(l => l.sessionId === s.id);
       let duration = s.durationMinutes;
       if (matchingLog && matchingLog.durationMinutes >= 15) {
         duration = matchingLog.durationMinutes;
@@ -48,8 +84,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       return acc + duration;
     }, 0);
 
-    // 2. Logs d'étude autonomes sans séance rattachée (ignorer clics parasites < 15 min)
-    const standaloneLogsMins = logs
+    // 2. Logs d'étude autonomes sans séance rattachée créés pendant cette période
+    const standaloneLogsMins = filteredLogs
       .filter(l => l.subjectId === sub.id && (!l.sessionId || !subSessions.some(s => s.id === l.sessionId)))
       .filter(l => l.durationMinutes >= 15)
       .reduce((acc, l) => acc + l.durationMinutes, 0);
@@ -75,10 +111,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     ? Math.min(100, Math.round((totalCompletedMinutes / totalPlannedMinutes) * 100)) 
     : (completedSessions.length > 0 ? 100 : 0);
 
-  // Real Focus Calculation:
-  // If user has not completed any sessions in their study plan, average rating is strictly 0.0
-  const validCompletedLogs = logs.filter(l => 
-    studySessions.some(s => s.id === l.sessionId && s.completed) ||
+  // Real Focus Calculation pour la période
+  const validCompletedLogs = filteredLogs.filter(l => 
+    filteredSessions.some(s => s.id === l.sessionId && s.completed) ||
     (completedSessions.length > 0 && l.satisfactionRating > 0)
   );
 
@@ -92,15 +127,66 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
       
-      {/* Header */}
-      <div>
-        <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-          <BarChart3 className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-500 dark:text-indigo-400 shrink-0" />
-          <span>{t('analyticsTitle', lang)}</span>
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
-          {t('analyticsSubtitle', lang)}
-        </p>
+      {/* Header avec sélecteur de période et bouton Bilan */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+            <BarChart3 className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-500 dark:text-indigo-400 shrink-0" />
+            <span>{t('analyticsTitle', lang)}</span>
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+            {currentRangeLabel} — Progression sans cumul erroné
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Onglets de période */}
+          <div className="inline-flex rounded-xl bg-slate-100 dark:bg-slate-800/80 p-1 border border-slate-200 dark:border-slate-700/60 text-xs font-semibold">
+            <button
+              onClick={() => setTimeframe('current_week')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                timeframe === 'current_week'
+                  ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-300 shadow-xs font-bold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              Cette semaine
+            </button>
+            <button
+              onClick={() => setTimeframe('past_week')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                timeframe === 'past_week'
+                  ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-300 shadow-xs font-bold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              Semaine passée
+            </button>
+            <button
+              onClick={() => setTimeframe('all_time')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                timeframe === 'all_time'
+                  ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-300 shadow-xs font-bold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              Global
+            </button>
+          </div>
+
+          {/* Bouton Duolingo Bilan de la Semaine */}
+          {onOpenWeeklyRecap && (
+            <Button
+              variant="glow"
+              size="sm"
+              onClick={onOpenWeeklyRecap}
+              leftIcon={<Sparkles className="w-3.5 h-3.5 text-amber-300" />}
+              className="text-xs font-bold py-1.5 px-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-md shadow-indigo-600/30 cursor-pointer shrink-0"
+            >
+              Bilan Hebdomadaire
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* KPI TOP TILES (2 COLONNES COMPACTES SUR MOBILE, 3 SUR DESKTOP) */}

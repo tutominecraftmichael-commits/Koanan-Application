@@ -288,4 +288,49 @@ export function isNonAcademicSubject(name?: string): boolean {
   return false;
 }
 
+/**
+ * Calcule l'intervalle strict de la semaine (du Lundi 00:00 au Dimanche 23:59:59).
+ */
+export function getWeekDateRange(refDate: Date = new Date()): {
+  mondayStr: string;
+  sundayStr: string;
+  weekLabel: string;
+  mondayDate: Date;
+  sundayDate: Date;
+} {
+  const date = new Date(refDate);
+  const dayIndex = (date.getDay() + 6) % 7; // 0 = Lundi, 6 = Dimanche
+  
+  const monday = new Date(date);
+  monday.setDate(date.getDate() - dayIndex);
+  monday.setHours(0, 0, 0, 0);
 
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23, 59, 59, 999);
+
+  const mondayStr = monday.toISOString().slice(0, 10);
+  const sundayStr = sunday.toISOString().slice(0, 10);
+
+  const startDay = monday.getDate().toString().padStart(2, '0');
+  const startMonth = (monday.getMonth() + 1).toString().padStart(2, '0');
+  const endDay = sunday.getDate().toString().padStart(2, '0');
+  const endMonth = (sunday.getMonth() + 1).toString().padStart(2, '0');
+
+  return {
+    mondayStr,
+    sundayStr,
+    weekLabel: `Du ${startDay}/${startMonth} au ${endDay}/${endMonth}`,
+    mondayDate: monday,
+    sundayDate: sunday,
+  };
+}
+
+/**
+ * Vérifie si une date (YYYY-MM-DD ou ISO) se situe dans la plage d'une semaine donnée.
+ */
+export function isDateInWeek(dateStr?: string, mondayStr?: string, sundayStr?: string): boolean {
+  if (!dateStr || !mondayStr || !sundayStr) return false;
+  const cleanDate = dateStr.slice(0, 10);
+  return cleanDate >= mondayStr && cleanDate <= sundayStr;
+}

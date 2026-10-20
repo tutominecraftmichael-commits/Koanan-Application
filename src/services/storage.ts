@@ -1,4 +1,4 @@
-import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier, AcademicGoal, PlusInvitationNotification } from '../types';
+import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier, AcademicGoal, PlusInvitationNotification, WeeklySummary } from '../types';
 import { ACADEMIC_PRESETS, DEFAULT_PREFERENCES } from '../lib/presets';
 import { generateId, isNonAcademicSubject } from '../lib/utils';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
@@ -25,6 +25,10 @@ export interface AppState {
   streak?: UserStreak;
   planTier?: PlanTier;
   cycleCompletedDate?: string; // YYYY-MM-DD
+  // Weekly Recap & Archiving fields
+  weeklySummaries?: WeeklySummary[];
+  currentWeekMonday?: string; // YYYY-MM-DD
+  pendingWeeklyRecap?: WeeklySummary | null;
   // KONAN PLUS fields
   konanId?: string; // Personal student ID
   invitedIds?: string[]; // Up to 4 invited student IDs

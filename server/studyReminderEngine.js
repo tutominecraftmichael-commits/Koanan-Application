@@ -288,6 +288,35 @@ export async function runStudyRemindersCheck() {
     const updatesToSave = {};
 
     // -------------------------------------------------------------
+    // CAS SPÉCIAL DUOLINGO-STYLE : BILAN DE FIN DE SEMAINE (Dimanche soir à 23h50) - Audio 2 & 3
+    // "le dimanche à partir de 23h... à 23h50 que tu envoies la notification... il clique dessus, et puis il va voir le bilan de sa semaine"
+    // -------------------------------------------------------------
+    const isSundayNight = currentDayOfWeek === 6 && currentMinutes >= 1430; // 23h50 (1430 min)
+    const sundayRecapKey = `${todayStr}_weekly_recap_23h50`;
+    if (isSundayNight && !notifiedMap[sundayRecapKey]) {
+      const title = `📊 Bilan de ta semaine KONAN disponible !`;
+      const body = `Ta semaine de révision est terminée. Viens voir le bilan de ta semaine et préparer ta rentrée en toute sérénité.`;
+
+      const result = await sendPushNotificationWithCleanup({
+        db,
+        userId,
+        fcmToken,
+        title,
+        body,
+        tag: `konan-weekly-recap-${todayStr}`,
+        dataPayload: {
+          url: '/?view=weekly_recap',
+          type: 'weekly_recap',
+          date: todayStr,
+        },
+      });
+
+      if (result.success) {
+        updatesToSave[`notifiedStudyReminders.${sundayRecapKey}`] = new Date().toISOString();
+      }
+    }
+
+    // -------------------------------------------------------------
     // CAS SPÉCIAL DUOLINGO-STYLE : TOUT DÉLAISSÉ / ZÉRO SÉANCE DEPUIS CE MATIN
     // "Tu ne veux pas bosser, non ? OK. Quand le prof va faire l'interro, ne viens pas te plaindre !"
     // -------------------------------------------------------------

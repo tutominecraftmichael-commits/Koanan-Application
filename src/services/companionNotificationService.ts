@@ -253,5 +253,31 @@ export function checkAndDispatchStudyReminders(
       } catch {}
     }
   });
+
+  // -------------------------------------------------------------
+  // BILAN HEBDOMADAIRE (Dimanche soir à 23h50) - Règle utilisateur Audio 2 & 3
+  // "le dimanche à 23h50 que tu envoies la notification... il clique dessus, et puis il va voir le bilan de sa semaine"
+  // -------------------------------------------------------------
+  const isSunday = currentDayOfWeek === 6; // 6 = Dimanche
+  const is23h50 = currentMinutes >= (23 * 60 + 50); // À partir de 23h50 (1430 min)
+  const sundayRecapKey = `konan_weekly_recap_sent_${dateKey}`;
+
+  if (isSunday && is23h50) {
+    let alreadySent = false;
+    try {
+      alreadySent = Boolean(localStorage.getItem(sundayRecapKey));
+    } catch {}
+
+    if (!alreadySent) {
+      sendPhoneNotification(
+        '📊 Bilan de ta semaine KONAN disponible !',
+        'Ta semaine de révision est terminée. Viens voir le bilan de ta semaine et préparer ta rentrée en toute sérénité.',
+        `weekly-recap-${dateKey}`
+      );
+      try {
+        localStorage.setItem(sundayRecapKey, 'true');
+      } catch {}
+    }
+  }
 }
 

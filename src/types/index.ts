@@ -133,6 +133,32 @@ export interface StudyLog {
   createdAt: string;
 }
 
+export interface WeeklySubjectStat {
+  subjectId: string;
+  subjectName: string;
+  plannedMinutes: number;
+  completedMinutes: number;
+  completionRate: number;
+  completedSessions: number;
+  totalSessions: number;
+}
+
+export interface WeeklySummary {
+  id: string; // "week_YYYY-MM-DD" (start date of Monday)
+  weekStartDate: string; // YYYY-MM-DD (Monday)
+  weekEndDate: string; // YYYY-MM-DD (Sunday)
+  studentName: string;
+  totalPlannedMinutes: number;
+  totalCompletedMinutes: number;
+  completionRate: number; // 0 to 100
+  completedSessionsCount: number;
+  totalSessionsCount: number;
+  averageFocusRating: number;
+  subjectBreakdown: WeeklySubjectStat[];
+  createdAt: string;
+  viewed?: boolean;
+}
+
 export type PlanTier = 'free' | 'pro' | 'plus';
 
 export type AcademicGoal = 'target_12' | 'target_16' | 'major_promotion';
