@@ -223,10 +223,10 @@ export const STUDY_REMINDER_MOTIVATIONAL_TEMPLATES = {
     `Tu as oublié ton rattrapage ? Ta séance de ${sub} replacée ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} n'est toujours pas validée. Ne laisse pas le retard s'accumuler !`,
   // Alerte d'urgence style Duolingo / interro
   emergencyInterro: (sub: string, count: number = 2) => 
-    `Tu ne veux pas bosser, non ? OK. Mais quand le prof va distribuer les sujets d'interro, ne viens pas te plaindre ! Déjà ${count} séances délaissées aujourd'hui (${sub}). Viens rattraper avant minuit !`,
+    `Tu ne veux pas bosser, non ? OK. Mais quand le prof va distribuer les sujets d'interro, ne viens pas te plaindre ! Déjà ${count} séances délaissées aujourd'hui (${sub}). Viens rattraper avant 23h30 !`,
   // Alerte retard standard
   overdue: (sub: string, time?: string, dateText?: string) => 
-    `Ton algorithme s'impatiente ! Ta séance de ${sub} prévue ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`,
+    `Ton algorithme s'impatiente ! Ta séance de ${sub} prévue ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant 23h30 !`,
 };
 
 /**

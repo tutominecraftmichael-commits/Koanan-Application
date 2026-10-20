@@ -342,7 +342,7 @@ export async function runStudyRemindersCheck() {
         'tes cours';
 
       const title = `KONAN ✦ Alerte urgente — Interros en approche !`;
-      const body = `Tu ne veux pas bosser, non ? OK. Mais quand le prof va distribuer les sujets d'interro, ne viens pas te plaindre ! Déjà ${pastPendingSlotsToday.length} séances délaissées aujourd'hui (${mainSubjectName}). Viens rattraper avant minuit !`;
+      const body = `Tu ne veux pas bosser, non ? OK. Mais quand le prof va distribuer les sujets d'interro, ne viens pas te plaindre ! Déjà ${pastPendingSlotsToday.length} séances délaissées aujourd'hui (${mainSubjectName}). Viens rattraper avant 23h30 !`;
 
       const result = await sendPushNotificationWithCleanup({
         db,
@@ -518,8 +518,8 @@ export async function runStudyRemindersCheck() {
       if (!isCatchup && isPending && (isPastStartTime || isPastEndTime) && !notifiedMap[overdueKey]) {
         const title = `KONAN ✦ Alerte planning — ${resolvedSubjectName}`;
         const body = formattedEndTime 
-          ? `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue ${fullDateText} de ${formattedStartTime} à ${formattedEndTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`
-          : `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue ${fullDateText} à ${formattedStartTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`;
+          ? `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue ${fullDateText} de ${formattedStartTime} à ${formattedEndTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant 23h30 !`
+          : `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue ${fullDateText} à ${formattedStartTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant 23h30 !`;
 
         const result = await sendPushNotificationWithCleanup({
           db,

@@ -150,6 +150,11 @@ export function generateOptimizedStudyPlan(
       dayEndMin = Math.min(dayEndMin, 1320);     // 22:00
     }
 
+    // RÈGLE STRICTE ANTI-SURMENAGE & PRÉSERVATION DE LA LUCIDITÉ (Validée par Christ Boni) :
+    // Aucun créneau d'étude ni aucun rattrapage ne peut être généré à ou après 23h30 (1410 min).
+    // Toute séance doit impérativement se terminer au plus tard à 23h30.
+    dayEndMin = Math.min(dayEndMin, 1410);
+
     const busyIntervals: TimeRange[] = [];
 
     // Cours réels de l'emploi du temps (Source de Vérité) : sas de transition garanti (10 min avant, au moins 35 min après pour rentrer, se doucher, goûter sans étiquette superflue)
@@ -500,9 +505,17 @@ export function generateOptimizedStudyPlan(
         }
 
         const startMin = slotCurrentStart;
-        const availableInSlot = slot.end - startMin;
-        const actualDuration = Math.min(sessionDuration, Math.max(20, availableInSlot));
+        // RÈGLE STRICTE DE LUCIDITÉ : aucun créneau ne peut commencer à ou après 23h30 (1410 min)
+        if (startMin >= 1410) break;
+
+        const effectiveSlotEnd = Math.min(slot.end, 1410);
+        const availableInSlot = effectiveSlotEnd - startMin;
+        if (availableInSlot < 20) break;
+
+        const actualDuration = Math.min(sessionDuration, availableInSlot);
         const endMin = startMin + actualDuration;
+        // RÈGLE STRICTE : La séance ne peut déborder après 23h30
+        if (endMin > 1410) break;
 
         const examLabel = subject.examType === 'devoir' ? 'Devoir' : subject.examType === 'rattrapage' ? 'Rattrapage' : 'Examen';
 
@@ -611,8 +624,15 @@ export function generateOptimizedStudyPlan(
     }
   }
 
+  // RÈGLE DE SÉCURITÉ ABSOLUE : Exclusion définitive de tout créneau débutant à/après 23h30 ou finissant après 23h30
+  const strictlyLucidSessions = generatedSessions.filter(s => {
+    const sStart = parseTimeToMinutes(s.startTime);
+    const sEnd = parseTimeToMinutes(s.endTime);
+    return sStart < 1410 && sEnd <= 1410;
+  });
+
   // Tri final chronologique irréprochable : d'abord par jour (0 à 6), puis par heure de début
-  return generatedSessions.sort((a, b) => {
+  return strictlyLucidSessions.sort((a, b) => {
     if (a.dayOfWeek !== b.dayOfWeek) return a.dayOfWeek - b.dayOfWeek;
     return parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime);
   });
