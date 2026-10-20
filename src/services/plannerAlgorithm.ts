@@ -433,14 +433,14 @@ export function generateOptimizedStudyPlan(
 
         // 🧠 CALIBRAGE INTELLIGENT DE LA DURÉE POUR LES EXAMENS ET DEVOIRS (Règle utilisateur) :
         // Soit J le jour actuel, épreuve à J+X :
-        // - J à J+3 (échéance dans 3 à 5+ jours) : 45 min de révision approfondie et entraînement aux exercices
-        // - J+3 à J+4 (échéance dans 1 à 2 jours, veille d'épreuve) : 25 min de synthèse ciblée et révision flash
+        // - J+2 et plus (échéance dans 2 jours ou plus, ex: J-2, J-3, J-5...) : 45 min de révision/préparation approfondie
+        // - J+1 (Jour 1 avant l'épreuve / veille) : 25 min de synthèse ciblée et révision flash (repos cérébral)
         // - Jour J (0 jour avant épreuve) : 20 min de réveil flash des formules avant l'épreuve
         if (isExamApproaching) {
-          if (daysUntilExamOnDate >= 3) {
+          if (daysUntilExamOnDate >= 2) {
             sessionDuration = 45;
             sessionBreak = Math.max(sessionBreak, 10);
-          } else if (daysUntilExamOnDate === 1 || daysUntilExamOnDate === 2) {
+          } else if (daysUntilExamOnDate === 1) {
             sessionDuration = 25;
             sessionBreak = Math.max(sessionBreak, 5);
           } else if (daysUntilExamOnDate === 0) {
@@ -533,15 +533,25 @@ export function generateOptimizedStudyPlan(
               'Respiration et stabilisation mentale avant de composer',
               'Vérification du matériel et lucidité maximale',
             ];
-          } else if (daysUntilExamOnDate === 1 || daysUntilExamOnDate === 2) {
+          } else if (daysUntilExamOnDate === 1) {
             finalTitle = subject.examType === 'devoir'
               ? `Synthèse Devoir (25m) : ${displaySubjectName}`
               : `🔥 Ultime Révision (25m) : ${displaySubjectName}`;
-            finalDesc = `Veille d'épreuve : séance de synthèse ciblée de 25 minutes sur ${displaySubjectName}. Réactivation des points clés et repos cérébral sans surchauffe.`;
+            finalDesc = `Veille d'épreuve (Jour 1) : séance de synthèse ciblée de 25 minutes sur ${displaySubjectName}. Réactivation des points clés et repos cérébral sans surchauffe.`;
             finalObjectives = [
               `Révision flash des formules et concepts capitaux de ${displaySubjectName}`,
               'Auto-évaluation à blanc sur 2 exercices types sans notes',
               'Repos cérébral anticipé pour être à 100% de lucidité le jour J',
+            ];
+          } else if (daysUntilExamOnDate === 2) {
+            finalTitle = subject.examType === 'devoir'
+              ? `Préparation Devoir (45m) : ${displaySubjectName}`
+              : `⚡ Prépa Intensive ${examLabel} (45m) : ${displaySubjectName}`;
+            finalDesc = `Jour 2 avant l'épreuve : séance approfondie de 45 minutes sur ${topicName} et entraînement aux exercices types.`;
+            finalObjectives = [
+              `Focalisation sur les chapitres à fort coefficient : ${topicName}`,
+              'Simulation d\'épreuves et entraînement chronométré',
+              'Élimination des dernières hésitations méthodologiques',
             ];
           } else if (daysUntilExamOnDate <= 5) {
             finalTitle = subject.examType === 'devoir'
