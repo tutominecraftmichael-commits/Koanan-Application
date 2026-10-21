@@ -232,9 +232,6 @@ export const STUDY_REMINDER_MOTIVATIONAL_TEMPLATES = {
   // 3e séance ratée ou surchauffe
   catchupTier3: (sub: string, newTime: string) => 
     `L'algorithme surchauffe à force de recalculer les rattrapages ! 🔥 Qu'est-ce que tu attends pour venir bosser ?! (${sub} à ${newTime})`,
-  // Bilan hebdomadaire (Lundi 00:00)
-  weeklyRecap: () =>
-    `Ton bilan de la semaine passée est là ! Viens voir ta progression et tes statistiques. 📊`,
   // Séance de rattrapage générique
   catchup: (sub: string, time?: string, dateText?: string) => 
     `C'est l'heure de ton rattrapage ! Ta séance de ${sub} replacée ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} t'attend. Viens valider ton créneau d'étude ! 🎯`,

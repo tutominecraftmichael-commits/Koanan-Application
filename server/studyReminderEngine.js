@@ -288,36 +288,6 @@ export async function runStudyRemindersCheck() {
     const updatesToSave = {};
 
     // -------------------------------------------------------------
-    // CAS SPÉCIAL : BILAN HEBDOMADAIRE (Lundi à minuit 00:00) - Règle utilisateur Audio 3
-    // "lundi à minuit 00:00 que tu envoies le bilan. Tu lui envoies un message, une notification pour lui dire :
-    // 'Ton bilan de la semaine passée est là ! Viens voir ta progression et tes statistiques. 📊'"
-    // -------------------------------------------------------------
-    const isMondayMidnight = currentDayOfWeek === 0 && currentMinutes <= 30; // Lundi entre 00:00 et 00:30
-    const mondayRecapKey = `${todayStr}_weekly_recap_monday_00h00`;
-    if (isMondayMidnight && !notifiedMap[mondayRecapKey]) {
-      const title = `📊 Bilan hebdomadaire disponible !`;
-      const body = `Ton bilan de la semaine passée est là ! Viens voir ta progression et tes statistiques. 📊`;
-
-      const result = await sendPushNotificationWithCleanup({
-        db,
-        userId,
-        fcmToken,
-        title,
-        body,
-        tag: `konan-weekly-recap-${todayStr}`,
-        dataPayload: {
-          url: '/?view=weekly_recap',
-          type: 'weekly_recap',
-          date: todayStr,
-        },
-      });
-
-      if (result.success) {
-        updatesToSave[`notifiedStudyReminders.${mondayRecapKey}`] = new Date().toISOString();
-      }
-    }
-
-    // -------------------------------------------------------------
     // CAS SPÉCIAL : SURCHAUFFE ALGORITHME (3 séances délaissées ou plus)
     // "L'algorithme surchauffe à force de recalculer les rattrapages ! 🔥 Qu'est-ce que tu attends pour venir bosser ?!"
     // -------------------------------------------------------------

@@ -46,10 +46,9 @@ import type {
   Chronotype,
   AcademicGoal,
   PlusInvitationNotification,
-  PlanTier,
-  WeeklySummary
+  PlanTier
 } from './types';
-import { generateId, isNonAcademicSubject, getWeekDateRange } from './lib/utils';
+import { generateId, isNonAcademicSubject } from './lib/utils';
 import { Sparkles, X } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
 
@@ -63,8 +62,7 @@ import { PrivacyPolicyModal } from './components/common/PrivacyPolicyModal';
 import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal';
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
-import { WeeklyRecapModal } from './components/celebration/WeeklyRecapModal';
-import { computeWeeklySummary, checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
+import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
 import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
@@ -99,8 +97,6 @@ export function App() {
   const [isGoogleCalendarModalOpen, setIsGoogleCalendarModalOpen] = useState(false);
   const [googleCalendarReason, setGoogleCalendarReason] = useState<'pro_activated' | 'plan_applied' | null>(null);
   const [isUltimateCelebrationOpen, setIsUltimateCelebrationOpen] = useState(false);
-  const [isWeeklyRecapOpen, setIsWeeklyRecapOpen] = useState(false);
-  const [activeWeeklySummary, setActiveWeeklySummary] = useState<WeeklySummary | null>(null);
   const [isPlusActivationModalOpen, setIsPlusActivationModalOpen] = useState(false);
   const [isPlusGroupModalOpen, setIsPlusGroupModalOpen] = useState(false);
   const [isAcademicGoalModalOpen, setIsAcademicGoalModalOpen] = useState(false);
@@ -230,65 +226,16 @@ export function App() {
     ? state.userAccount.name
     : (state.studentName || 'Étudiant');
 
-  const handleOpenWeeklyRecap = () => {
-    const summary = state.pendingWeeklyRecap || computeWeeklySummary(
-      state.subjects,
-      state.studySessions,
-      state.logs,
-      new Date(),
-      effectiveStudentName
-    );
-    setActiveWeeklySummary(summary);
-    setIsWeeklyRecapOpen(true);
-  };
-
-  const handleStartNewWeek = () => {
-    const freshPlan = generateOptimizedStudyPlan(
-      state.subjects,
-      state.classSlots,
-      state.preferences,
-      effectivePlanTier
-    );
-    const { mondayStr } = getWeekDateRange(new Date());
-    const nextState: AppState = {
-      ...state,
-      currentWeekMonday: mondayStr,
-      pendingWeeklyRecap: null,
-      studySessions: freshPlan,
-      cycleCompletedDate: undefined,
-    };
-    setState(nextState);
-    saveAppState(nextState);
-    if (state.userAccount?.googleId) {
-      saveUserState(state.userAccount.googleId, nextState);
-    }
-    setToastMessage("Nouvelle semaine initialisée avec succès ! Bon courage pour vos révisions 🚀");
-  };
-
-  // Détection du paramètre ?view=weekly_recap et bascule automatique de semaine
+  // Bascule automatique de semaine (rollover d'agenda) sans pop-up de bilan
   useEffect(() => {
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('view') === 'weekly_recap') {
-        handleOpenWeeklyRecap();
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    } catch {}
-
     const rollover = checkAndPerformWeeklyRollover(state);
     if (rollover.hasRollover) {
-      setState(rollover.nextState);
-      saveAppState(rollover.nextState);
+      const cleanNextState = { ...rollover.nextState, pendingWeeklyRecap: null };
+      setState(cleanNextState);
+      saveAppState(cleanNextState);
       if (state.userAccount?.googleId) {
-        saveUserState(state.userAccount.googleId, rollover.nextState);
+        saveUserState(state.userAccount.googleId, cleanNextState);
       }
-      if (rollover.archivedSummary) {
-        setActiveWeeklySummary(rollover.archivedSummary);
-        setIsWeeklyRecapOpen(true);
-      }
-    } else if (state.pendingWeeklyRecap) {
-      setActiveWeeklySummary(state.pendingWeeklyRecap);
-      setIsWeeklyRecapOpen(true);
     }
   }, [state.studySessions.length, state.currentWeekMonday]);
 
@@ -1993,7 +1940,6 @@ export function App() {
               studySessions={state.studySessions}
               logs={state.logs}
               preferences={state.preferences}
-              onOpenWeeklyRecap={handleOpenWeeklyRecap}
               weeklySummaries={state.weeklySummaries}
             />
           ) : (
@@ -2175,13 +2121,7 @@ export function App() {
         totalSessionsCount={state.studySessions.length}
       />
 
-      {/* 📊 Weekly Celebration & Recap Modal (Style Duolingo) */}
-      <WeeklyRecapModal
-        isOpen={isWeeklyRecapOpen}
-        onClose={() => setIsWeeklyRecapOpen(false)}
-        summary={activeWeeklySummary}
-        onStartNewWeek={handleStartNewWeek}
-      />
+
 
       {/* 🛡️ PRIVACY & FIREBASE CLOUD DATA PROTECTION MODAL (Mandatory on 1st login) */}
       <PrivacyPolicyModal

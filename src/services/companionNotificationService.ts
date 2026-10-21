@@ -219,32 +219,5 @@ export function checkAndDispatchStudyReminders(
       } catch {}
     }
   });
-
-  // -------------------------------------------------------------
-  // BILAN HEBDOMADAIRE (Lundi à minuit 00:00) - Règle utilisateur Audio 3
-  // "lundi à minuit 00:00 que tu envoies le bilan. Tu lui envoies une notification pour lui dire :
-  // 'Ton bilan de la semaine passée est là ! Viens voir ta progression et tes statistiques. 📊'"
-  // -------------------------------------------------------------
-  const isMonday = currentDayOfWeek === 0; // 0 = Lundi
-  const isMidnightStart = currentMinutes <= 30; // 00:00 à 00:30
-  const mondayRecapKey = `konan_weekly_recap_sent_${dateKey}`;
-
-  if (isMonday && isMidnightStart) {
-    let alreadySent = false;
-    try {
-      alreadySent = Boolean(localStorage.getItem(mondayRecapKey));
-    } catch {}
-
-    if (!alreadySent) {
-      sendPhoneNotification(
-        '📊 Bilan hebdomadaire disponible !',
-        'Ton bilan de la semaine passée est là ! Viens voir ta progression et tes statistiques. 📊',
-        `weekly-recap-${dateKey}`
-      );
-      try {
-        localStorage.setItem(mondayRecapKey, 'true');
-      } catch {}
-    }
-  }
 }
 

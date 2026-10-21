@@ -3,7 +3,6 @@ import type { Subject, StudySession, StudyLog, StudyPreferences, WeeklySummary }
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { ProgressBar } from '../../components/ui/FormControls';
-import { Button } from '../../components/ui/Button';
 import { formatMinutesToHours, getWeekDateRange, isDateInWeek } from '../../lib/utils';
 import { 
   BarChart3, 
@@ -11,8 +10,7 @@ import {
   Award, 
   Clock, 
   Star, 
-  Brain,
-  Sparkles
+  Brain
 } from 'lucide-react';
 import { useLanguage, t } from '../../lib/i18n';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
@@ -22,7 +20,6 @@ export interface AnalyticsDashboardProps {
   studySessions: StudySession[];
   logs: StudyLog[];
   preferences: StudyPreferences;
-  onOpenWeeklyRecap?: () => void;
   weeklySummaries?: WeeklySummary[];
 }
 
@@ -33,7 +30,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   studySessions,
   logs,
   preferences: _preferences,
-  onOpenWeeklyRecap,
 }) => {
   const [lang] = useLanguage();
   const [timeframe, setTimeframe] = useState<AnalyticsTimeframe>('current_week');
@@ -107,9 +103,13 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const totalPlannedMinutes = subjectStats.reduce((acc, st) => acc + st.plannedMins, 0);
   const totalCompletedMinutes = subjectStats.reduce((acc, st) => acc + st.doneMins, 0);
 
-  const completionRate = totalPlannedMinutes > 0 
-    ? Math.min(100, Math.round((totalCompletedMinutes / totalPlannedMinutes) * 100)) 
-    : (completedSessions.length > 0 ? 100 : 0);
+  // Complétion réelle et proportionnelle : calcul exact sur le ratio de séances et de temps accomplis
+  const totalPlannedSessions = filteredSessions.length;
+  const completedSessionsCount = completedSessions.length;
+
+  const completionRate = totalPlannedSessions > 0
+    ? Math.min(100, Math.round((completedSessionsCount / totalPlannedSessions) * 100))
+    : (totalPlannedMinutes > 0 ? Math.min(100, Math.round((totalCompletedMinutes / totalPlannedMinutes) * 100)) : 0);
 
   // Real Focus Calculation pour la période
   const validCompletedLogs = filteredLogs.filter(l => 
@@ -127,7 +127,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
       
-      {/* Header avec sélecteur de période et bouton Bilan */}
+      {/* Header avec sélecteur de période */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
@@ -173,19 +173,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               Global
             </button>
           </div>
-
-          {/* Bouton Duolingo Bilan de la Semaine */}
-          {onOpenWeeklyRecap && (
-            <Button
-              variant="glow"
-              size="sm"
-              onClick={onOpenWeeklyRecap}
-              leftIcon={<Sparkles className="w-3.5 h-3.5 text-amber-300" />}
-              className="text-xs font-bold py-1.5 px-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-md shadow-indigo-600/30 cursor-pointer shrink-0"
-            >
-              Bilan Hebdomadaire
-            </Button>
-          )}
         </div>
       </div>
 
@@ -221,9 +208,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             <span className="text-lg sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
               <AnimatedCounter value={completionRate} suffix="%" className="text-emerald-600 dark:text-emerald-400" />
             </span>
-            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-              {completedSessions.length} validées
-            </p>
           </div>
           <ProgressBar value={completionRate} size="sm" showPercentage={false} color="emerald" />
         </Card>

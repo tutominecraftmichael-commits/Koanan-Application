@@ -176,7 +176,7 @@ export function checkAndPerformWeeklyRollover(currentState: AppState): {
     ...currentState,
     currentWeekMonday: currentMondayStr,
     weeklySummaries: updatedSummaries,
-    pendingWeeklyRecap: pastWeekSummary, // Déclenche le pop-up Duolingo de bilan
+    pendingWeeklyRecap: null,
     studySessions: freshSessions,
     cycleCompletedDate: undefined, // Réinitialisation du cycle
   };
