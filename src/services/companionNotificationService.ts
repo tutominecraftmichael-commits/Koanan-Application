@@ -14,68 +14,28 @@ import type { PlanTier, StudySession, Subject } from '../types';
  * 3. AUCUN message n'est envoyé dans l'agenda / calendrier Google.
  */
 
-// Templates pour 1 session manquée (ton complice, déculpabilisant)
-const SINGLE_MISSED_TEMPLATES: Array<(missedSubject: string, nextSubject: string, newTime: string) => string> = [
-  // Le rappel pratique :
-  (_missed, nextSubject, newTime) =>
-    `⏰ Tu n'as pas pu faire ta séance ? Je l'ai décalée pour toi à ${newTime}. Fais au moins 10 minutes sur ${nextSubject} pour rester dans le bain ! 🚀`,
-
-  // L'encouragement simple :
-  (_missed, nextSubject, newTime) =>
-    `📚 Zéro pression : j'ai réajusté ton créneau à ${newTime}. Prends 5 petites minutes pour survoler ${nextSubject} avec moi ! 💙`,
-
-  // Le réflexe d'étude :
-  (_missed, nextSubject, newTime) =>
-    `🔔 Ta session précédente a sauté, mais je l'ai déjà replacée à ${newTime}. Viens valider ${nextSubject} avant la fin de la journée ! 🎯`,
-
-  // Le coup de pouce anti-flemme :
-  (_missed, nextSubject, _newTime) =>
-    `👀 Je garde ton planning à jour, pas de souci ! Fais juste un petit exercice sur ${nextSubject} et on est bons pour aujourd'hui. 👊`,
-];
-
-// Templates pour 2 sessions ou plus manquées (ton motivateur renforcé, coup de boost)
-const MULTI_MISSED_TEMPLATES: Array<(missedSubject: string, nextSubject: string, newTime: string, count: number) => string> = [
-  // Le sursaut de motivation :
-  (_missed, nextSubject, newTime, count) =>
-    `🔥 Déjà ${count} séances manquées aujourd'hui : on ne laisse pas le retard s'accumuler ! Ton créneau t'attend à ${newTime}. Fais au moins 15 minutes sur ${nextSubject} maintenant pour protéger ta flamme d'assiduité ! 💪`,
-
-  // L'appel à l'action :
-  (_missed, nextSubject, newTime, count) =>
-    `🚨 Attention champion : ${count} sessions ont sauté aujourd'hui. Je les ai replacées à ${newTime}, mais c'est le moment de réagir ! Viens valider ${nextSubject} pour reprendre le contrôle immédiat. Tu en es capable ! ⚡`,
-
-  // Le pacte anti-décrochage :
-  (_missed, nextSubject, newTime, _count) =>
-    `🛡️ Deuxième alerte du jour : ne laisse pas la flemme décider pour toi ! Planning réajusté à ${newTime}. Donne 15 minutes sur ${nextSubject} et finis ta journée avec fierté ! 🎯`,
-
-  // L'énergie combative :
-  (_missed, nextSubject, newTime, _count) =>
-    `💥 Stop à la flemme ! 2 séances reportées à ${newTime}. Viens faire une session express sur ${nextSubject} dès maintenant : prouve-toi que rien ne peut casser ta discipline ! 👊`,
-];
-
-let lastTemplateIndex = -1;
-
 /**
- * Génère le texte de la notification envoyé au téléphone.
+ * Génère le texte de notification punchy et gradué selon le nombre de séances manquées aujourd'hui :
+ * - 1ère fois : déculpabilisant, mentionne l'heure ratée et la nouvelle heure
+ * - 2e fois : ton plus ferme "Ça fait la 2e fois que tu ne viens pas bosser !"
+ * - 3e fois+ : "L'algorithme surchauffe à force de recalculer les rattrapages ! 🔥"
  */
 export function generateDuolingoCompanionMessage(
   missedCount: number,
   missedSubject: string,
-  nextSubject: string,
-  newTime: string
+  _nextSubject: string,
+  newTime: string,
+  originalTime?: string
 ): string {
-  const isMulti = missedCount >= 2;
-  const templates = isMulti ? MULTI_MISSED_TEMPLATES : SINGLE_MISSED_TEMPLATES;
-
-  let nextIndex: number;
-  do {
-    nextIndex = Math.floor(Math.random() * templates.length);
-  } while (templates.length > 1 && nextIndex === lastTemplateIndex);
-  lastTemplateIndex = nextIndex;
-
-  if (isMulti) {
-    return MULTI_MISSED_TEMPLATES[nextIndex](missedSubject, nextSubject, newTime, missedCount);
+  if (missedCount <= 1) {
+    const origText = originalTime ? ` (prévue à ${originalTime})` : '';
+    return `Tu as oublié de faire ${missedSubject}${origText}, mais c'est pas grave ! Je la replace à ${newTime}. Viens faire la séance ! 🎯`;
   }
-  return SINGLE_MISSED_TEMPLATES[nextIndex](missedSubject, nextSubject, newTime);
+  if (missedCount === 2) {
+    return `Ça fait la 2e fois que tu ne viens pas bosser ! Tu attends quoi pour venir ? ${missedSubject} replacée à ${newTime}. ⚡`;
+  }
+  // 3e fois ou plus : surchauffe
+  return `L'algorithme surchauffe à force de recalculer les rattrapages ! 🔥 Qu'est-ce que tu attends pour venir bosser ?! (${missedSubject} replacée à ${newTime})`;
 }
 
 /**
@@ -160,18 +120,15 @@ export function sendPhoneNotification(title: string, body: string, tag: string =
 }
 
 /**
- * Templates de messages motivants inspirés de Duolingo pour les rappels de sessions d'étude
+ * Templates de messages punchy et motivants avec emojis (Audio utilisateur 1 & 2)
  */
-const UPCOMING_REMINDER_TEMPLATES = [
-  (sub: string, time: string) => `🎓 C'est l'heure de briller ! Ta séance de ${sub} commence dans 5 min (à ${time}). 25 minutes de focus et c'est validé ! ⚡`,
-  (sub: string, time: string) => `🔥 Reste concentré sur tes objectifs ! Ta révision de ${sub} démarre à ${time}. Fais un pas de plus vers la réussite ! 👊`,
-  (sub: string, time: string) => `📚 Ne laisse pas le retard s'accumuler : ${sub} commence dans 5 minutes (${time}). Viens te surpasser ! 🎯`,
-  (sub: string, time: string) => `⚡ Créneau de ${sub} à ${time}. Prépare tes fiches pour une session productive ! 💙`,
-  (sub: string, time: string) => `🚀 Mode champion activé ! Session de ${sub} à ${time}. Chaque minute investie rapporte le jour de l'examen ! 💪`,
+export const UPCOMING_REMINDER_TEMPLATES = [
+  (sub: string) => `Ta séance de ${sub} débute dans 45 minutes, viens ! 📚`,
+  (sub: string, time?: string) => `Ta séance de ${sub} débute dans quelques minutes${time ? ` (à ${time})` : ''}, viens ! 📚`,
 ];
 
 /**
- * Envoie un rappel d'étude programmé avant la session (5 min avant).
+ * Envoie un rappel d'étude programmé avant la session (45 min ou 5 min avant).
  * STRICTEMENT RÉSERVÉ AUX MEMBRES PRO.
  * Rejette avec SubscriptionForbiddenError si appelé avec un tier 'free'.
  */
@@ -189,7 +146,7 @@ export function sendStudyReminder30mNotification(
 
   sendPhoneNotification(
     subjectName,
-    `Votre séance commence dans 5 minutes (à ${sessionTime}). Préparez vos cours en toute sérénité ! 🎯`,
+    `Ta séance de ${subjectName} débute dans 45 minutes (à ${sessionTime}), viens ! 📚`,
     `study-reminder-${subjectName}`
   );
   return true;
@@ -199,8 +156,8 @@ export const sendStudyReminder5mNotification = sendStudyReminder30mNotification;
 
 /**
  * Vérifie les créneaux d'étude du jour et déclenche automatiquement
- * des rappels motivants style Duolingo directement sur le téléphone / navigateur
- * pour les membres PRO / PLUS (5 minutes avant la session).
+ * des rappels punchy directement sur le téléphone / navigateur
+ * pour les membres PRO / PLUS (45 minutes et 5 minutes avant la session).
  */
 export function checkAndDispatchStudyReminders(
   sessions: StudySession[],
@@ -215,7 +172,7 @@ export function checkAndDispatchStudyReminders(
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   const dateKey = now.toISOString().slice(0, 10);
 
-  // Storage key pour ne jamais notifier 2 fois la même séance le même jour
+  // Storage key pour ne jamais notifier 2 fois la même alerte
   const notifiedStorageKey = `konan_notified_reminders_${dateKey}`;
   let notifiedIds: string[] = [];
   try {
@@ -226,28 +183,37 @@ export function checkAndDispatchStudyReminders(
   const todaysSessions = sessions.filter(s => s.dayOfWeek === currentDayOfWeek && !s.completed);
 
   todaysSessions.forEach(session => {
-    if (notifiedIds.includes(session.id)) return;
-
     // Calcul de l'heure de début en minutes
     const [h, m] = session.startTime.split(':').map(Number);
     const sessionStartMinutes = h * 60 + (m || 0);
     const diffMinutes = sessionStartMinutes - currentMinutes;
 
-    // Alerte 5 minutes avant le début de la séance (ou à l'heure exacte 0 à -5 min)
-    if ((diffMinutes > 0 && diffMinutes <= 5) || (diffMinutes <= 0 && diffMinutes >= -5)) {
-      const subject = subjects.find(sub => sub.id === session.subjectId);
-      const subjectName = subject?.name || session.title || 'tes révisions';
+    const subject = subjects.find(sub => sub.id === session.subjectId);
+    const subjectName = subject?.name || session.title || 'tes cours';
 
-      const template = UPCOMING_REMINDER_TEMPLATES[Math.floor(Math.random() * UPCOMING_REMINDER_TEMPLATES.length)];
-      const message = template(subjectName, session.startTime);
-
+    // 1. Alerte 45 minutes avant le début de la séance (Instruction vocale exacte)
+    const alert45mId = `${session.id}_45m`;
+    if (diffMinutes > 40 && diffMinutes <= 45 && !notifiedIds.includes(alert45mId)) {
       sendPhoneNotification(
         subjectName,
-        message,
-        `study-alert-${session.id}`
+        `Ta séance de ${subjectName} débute dans 45 minutes, viens ! 📚`,
+        `study-alert-45m-${session.id}`
       );
+      notifiedIds.push(alert45mId);
+      try {
+        sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
+      } catch {}
+    }
 
-      notifiedIds.push(session.id);
+    // 2. Alerte 5 minutes avant ou au démarrage
+    const alert5mId = `${session.id}_5m`;
+    if (((diffMinutes > 0 && diffMinutes <= 5) || (diffMinutes <= 0 && diffMinutes >= -5)) && !notifiedIds.includes(alert5mId)) {
+      sendPhoneNotification(
+        subjectName,
+        `Ta séance de ${subjectName} débute dans 5 minutes, viens ! 📚`,
+        `study-alert-5m-${session.id}`
+      );
+      notifiedIds.push(alert5mId);
       try {
         sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
       } catch {}
@@ -255,27 +221,28 @@ export function checkAndDispatchStudyReminders(
   });
 
   // -------------------------------------------------------------
-  // BILAN HEBDOMADAIRE (Dimanche soir à 23h50) - Règle utilisateur Audio 2 & 3
-  // "le dimanche à 23h50 que tu envoies la notification... il clique dessus, et puis il va voir le bilan de sa semaine"
+  // BILAN HEBDOMADAIRE (Lundi à minuit 00:00) - Règle utilisateur Audio 3
+  // "lundi à minuit 00:00 que tu envoies le bilan. Tu lui envoies une notification pour lui dire :
+  // 'Ton bilan de la semaine passée est là ! Viens voir ta progression et tes statistiques. 📊'"
   // -------------------------------------------------------------
-  const isSunday = currentDayOfWeek === 6; // 6 = Dimanche
-  const is23h50 = currentMinutes >= (23 * 60 + 50); // À partir de 23h50 (1430 min)
-  const sundayRecapKey = `konan_weekly_recap_sent_${dateKey}`;
+  const isMonday = currentDayOfWeek === 0; // 0 = Lundi
+  const isMidnightStart = currentMinutes <= 30; // 00:00 à 00:30
+  const mondayRecapKey = `konan_weekly_recap_sent_${dateKey}`;
 
-  if (isSunday && is23h50) {
+  if (isMonday && isMidnightStart) {
     let alreadySent = false;
     try {
-      alreadySent = Boolean(localStorage.getItem(sundayRecapKey));
+      alreadySent = Boolean(localStorage.getItem(mondayRecapKey));
     } catch {}
 
     if (!alreadySent) {
       sendPhoneNotification(
-        '📊 Bilan de ta semaine KONAN disponible !',
-        'Ta semaine de révision est terminée. Viens voir le bilan de ta semaine et préparer ta rentrée en toute sérénité.',
+        '📊 Bilan hebdomadaire disponible !',
+        'Ton bilan de la semaine passée est là ! Viens voir ta progression et tes statistiques. 📊',
         `weekly-recap-${dateKey}`
       );
       try {
-        localStorage.setItem(sundayRecapKey, 'true');
+        localStorage.setItem(mondayRecapKey, 'true');
       } catch {}
     }
   }

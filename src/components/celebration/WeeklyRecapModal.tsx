@@ -136,27 +136,18 @@ export const WeeklyRecapModal: React.FC<WeeklyRecapModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        {/* Header avec Cube KONAN en célébration */}
+        {/* Header : Titre épuré "Bilan Hebdomadaire" (sans le logo qui saute) */}
         <div className="text-center space-y-2 pt-2">
-          <div className="relative inline-block">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-sky-400 p-0.5 mx-auto shadow-xl shadow-indigo-600/30 animate-bounce duration-1000">
-              <div className="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center overflow-hidden">
-                <img src="/logo-konan.png" alt="Cube KONAN" className="w-11 h-11 sm:w-14 sm:h-14 object-contain" />
-              </div>
-            </div>
-            <div className="absolute -bottom-2 -right-2 p-1.5 rounded-full bg-emerald-500 text-slate-950 shadow-md">
-              <Sparkles className="w-4 h-4 fill-current" />
-            </div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <span>Bilan Hebdomadaire</span>
           </div>
 
           <div>
-            <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-indigo-300 font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 inline-block mb-1">
+            <h2 id="weekly-recap-title" className="text-2xl sm:text-3xl font-black text-white tracking-tight">
               Bilan Hebdomadaire
-            </span>
-            <h2 id="weekly-recap-title" className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              Bilan de votre Semaine
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-400 mt-1">
               Semaine du {summary.weekStartDate} au {summary.weekEndDate}
             </p>
           </div>

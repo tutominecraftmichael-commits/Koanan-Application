@@ -208,25 +208,45 @@ export function setupFCMForegroundListener(
 }
 
 /**
- * Messages de rappel d'étude directs et motivants (identitaire Cube KONAN, sans XP ni points)
- * Spécifie clairement la matière, les séances de rattrapage, l'heure et la date.
+ * Messages de rappel d'étude directs, punchy et motivants avec émojis (identitaire Cube KONAN, sans XP ni points)
+ * Audio utilisateur 1, 2 & 3 :
+ * - 45 min avant : "Ta séance de [Matière] débute dans 45 minutes, viens ! 📚"
+ * - 1er oubli : "Tu as oublié de faire [Matière] (prévue à [Heure ratée]), mais c'est pas grave ! Je la replace à [Nouvelle Heure]. Viens faire la séance ! 🎯"
+ * - 2e oubli : "Ça fait la 2e fois que tu ne viens pas bosser ! Tu attends quoi pour venir ? [Matière] replacée à [Nouvelle Heure]. ⚡"
+ * - 3e oubli+ : "L'algorithme surchauffe à force de recalculer les rattrapages ! 🔥 Qu'est-ce que tu attends pour venir bosser ?! ([Matière] à [Nouvelle Heure])"
+ * - Bilan lundi 00h00 : "Ton bilan de la semaine passée est là ! Viens voir ta progression et tes statistiques. 📊"
  */
 export const STUDY_REMINDER_MOTIVATIONAL_TEMPLATES = {
-  // Séance normale à venir (5 minutes avant)
-  upcoming5m: (sub: string, time?: string, dateText?: string) => 
-    `Prépare ton bloc-notes ! Ta session de ${sub} commence dans 5 minutes (à ${time || 'bientôt'}${dateText ? `, ${dateText}` : ''}). Le Cube t'attend pour valider ton créneau.`,
-  // Séance de rattrapage
+  // Séance à venir 45 minutes avant
+  upcoming45m: (sub: string) => 
+    `Ta séance de ${sub} débute dans 45 minutes, viens ! 📚`,
+  // Séance normale à venir (5 minutes avant ou immédiate)
+  upcoming5m: (sub: string, time?: string) => 
+    `Ta séance de ${sub} débute ${time ? `à ${time}` : 'dans 5 minutes'}, viens ! 📚`,
+  // 1ère séance ratée aujourd'hui
+  catchupTier1: (sub: string, originalTime: string, newTime: string) => 
+    `Tu as oublié de faire ${sub} (prévue à ${originalTime || 'l\'heure prévue'}), mais c'est pas grave ! Je la replace à ${newTime}. Viens faire la séance ! 🎯`,
+  // 2e séance ratée aujourd'hui
+  catchupTier2: (sub: string, newTime: string) => 
+    `Ça fait la 2e fois que tu ne viens pas bosser ! Tu attends quoi pour venir ? ${sub} replacée à ${newTime}. ⚡`,
+  // 3e séance ratée ou surchauffe
+  catchupTier3: (sub: string, newTime: string) => 
+    `L'algorithme surchauffe à force de recalculer les rattrapages ! 🔥 Qu'est-ce que tu attends pour venir bosser ?! (${sub} à ${newTime})`,
+  // Bilan hebdomadaire (Lundi 00:00)
+  weeklyRecap: () =>
+    `Ton bilan de la semaine passée est là ! Viens voir ta progression et tes statistiques. 📊`,
+  // Séance de rattrapage générique
   catchup: (sub: string, time?: string, dateText?: string) => 
-    `C'est l'heure de ton rattrapage ! Ta séance de ${sub} replacée ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} t'attend. Viens valider ton créneau d'étude !`,
+    `C'est l'heure de ton rattrapage ! Ta séance de ${sub} replacée ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} t'attend. Viens valider ton créneau d'étude ! 🎯`,
   // Oubli de rattrapage
-  catchupForgotten: (sub: string, time?: string, dateText?: string) => 
-    `Tu as oublié ton rattrapage ? Ta séance de ${sub} replacée ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} n'est toujours pas validée. Ne laisse pas le retard s'accumuler !`,
-  // Alerte d'urgence style Duolingo / interro
-  emergencyInterro: (sub: string, count: number = 2) => 
-    `Tu ne veux pas bosser, non ? OK. Mais quand le prof va distribuer les sujets d'interro, ne viens pas te plaindre ! Déjà ${count} séances délaissées aujourd'hui (${sub}). Viens rattraper avant 23h30 !`,
+  catchupForgotten: (sub: string, time?: string) => 
+    `Tu as oublié ton rattrapage ? Ta séance de ${sub} replacée à ${time || 'ton horaire'} n'est toujours pas validée. Viens bosser ! ⚡`,
+  // Alerte d'urgence
+  emergencyInterro: (sub: string, _count: number = 2) => 
+    `L'algorithme surchauffe à force de recalculer les rattrapages ! 🔥 Qu'est-ce que tu attends pour venir bosser ta séance de ${sub} ?!`,
   // Alerte retard standard
-  overdue: (sub: string, time?: string, dateText?: string) => 
-    `Ton algorithme s'impatiente ! Ta séance de ${sub} prévue ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant 23h30 !`,
+  overdue: (sub: string, time?: string) => 
+    `Ton algorithme s'impatiente ! Ta séance de ${sub} prévue à ${time || 'ton horaire'} t'attend. Viens valider ton créneau avant minuit 00:00 ! ⚡`,
 };
 
 /**

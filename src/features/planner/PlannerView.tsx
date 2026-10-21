@@ -351,7 +351,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 </span>
               </div>
               <p className="text-amber-950/80 dark:text-slate-300 text-xs leading-relaxed">
-                Vos séances non effectuées plus tôt ont été replacées ce soir (avant 23h30 max pour préserver votre lucidité et votre sommeil). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées sans impacter le programme de demain.
+                Vos séances non effectuées plus tôt ont été replacées ce soir (fin max à minuit 00:00). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées à minuit sans impacter le programme de demain.
               </p>
             </div>
           </div>
@@ -481,6 +481,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       <span className="text-[11px] sm:text-xs font-mono text-cyan-600 dark:text-cyan-400 font-bold">
                         {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                       </span>
+                      {session.isRescheduledToday && session.originalStartTime && (
+                        <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-500/40">
+                          ⏰ Ratée à {session.originalStartTime} ➔ Replacée à {session.startTime}
+                        </span>
+                      )}
                       {isToday && (
                         <Badge variant="cyan" size="sm" className="text-[10px] px-1.5 py-0 font-bold">
                           ✨ Aujourd'hui
@@ -488,7 +493,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       )}
                       {session.isRescheduledToday && (
                         <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold" title={session.rescheduledReason}>
-                          🔄 Reportée ce soir ({subject.name})
+                          🔄 Rattrapage ({subject.name})
                         </Badge>
                       )}
                       {session.pacingMethod && (

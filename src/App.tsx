@@ -22,7 +22,7 @@ import {
 } from './services/storage';
 import { KonanEntranceSplash } from './components/common/KonanEntranceSplash';
 
-import { generateOptimizedStudyPlan } from './services/plannerAlgorithm';
+import { generateOptimizedStudyPlan, mergePreservingCompletedSessions, synchronizeSessionsWithExamCountdowns } from './services/plannerAlgorithm';
 import { transitionUserState } from './services/tierTransitionService';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import { 
@@ -524,27 +524,34 @@ export function App() {
           validSubjects
         );
 
-        if (rescheduledCount > 0) {
-          const signature = rescheduledSessions.map(s => `${s.id}-${s.startTime}`).sort().join('|');
-          if (signature !== lastRescheduledSignature.current) {
-            lastRescheduledSignature.current = signature;
-          }
-          return {
-            ...prev,
-            subjects: validSubjects,
-            classSlots: cleanedSlots,
-            studySessions: updatedSessions,
-          };
-        }
+        // Auto-synchronisation des durées pour les devoirs / épreuves imminentes (ex: 45 min) sans clic utilisateur
+        const finalSessions = synchronizeSessionsWithExamCountdowns(updatedSessions, validSubjects);
+        const hasSessionDurationChange = finalSessions.some(
+          (s, idx) => s.durationMinutes !== baseSessions[idx]?.durationMinutes || s.endTime !== baseSessions[idx]?.endTime
+        );
 
-        if (restoredCount > 0 || hasInvalidSubject || hasInvalidSession || hasInvalidSlots) {
-          lastRescheduledSignature.current = '';
-          return {
+        if (rescheduledCount > 0 || restoredCount > 0 || hasSessionDurationChange || hasInvalidSubject || hasInvalidSession || hasInvalidSlots) {
+          if (rescheduledCount > 0) {
+            const signature = rescheduledSessions.map(s => `${s.id}-${s.startTime}`).sort().join('|');
+            if (signature !== lastRescheduledSignature.current) {
+              lastRescheduledSignature.current = signature;
+            }
+          } else {
+            lastRescheduledSignature.current = '';
+          }
+
+          const nextState: AppState = {
             ...prev,
             subjects: validSubjects,
             classSlots: cleanedSlots,
-            studySessions: updatedSessions,
+            studySessions: finalSessions,
           };
+
+          if (prev.userAccount?.googleId && !prev.isDemoMode) {
+            saveUserState(prev.userAccount.googleId, nextState);
+          }
+
+          return nextState;
         }
 
         return prev;
@@ -554,8 +561,8 @@ export function App() {
     // Run check on mount and view transitions
     performCatchupCheck();
 
-    // Check periodically every 60 seconds
-    const interval = setInterval(performCatchupCheck, 60000);
+    // Check periodically every 30 seconds for immediate catch-up
+    const interval = setInterval(performCatchupCheck, 30000);
 
     // Re-check on window/tab focus (e.g. user unlocks mobile phone or refocuses browser tab)
     const handleFocus = () => performCatchupCheck();
@@ -1293,11 +1300,12 @@ export function App() {
     const cleanedSlots = state.classSlots.filter(c => !c.subjectId || validSubjectIds.has(c.subjectId));
     const updatedPlan = generateOptimizedStudyPlan(newSubjects, cleanedSlots, state.preferences, effectivePlanTier);
     setState(prev => {
+      const mergedSessions = mergePreservingCompletedSessions(prev.studySessions, updatedPlan);
       const nextState: AppState = {
         ...prev,
         subjects: newSubjects,
         classSlots: cleanedSlots,
-        studySessions: updatedPlan,
+        studySessions: mergedSessions,
         logs: prev.logs.filter(l => !l.subjectId || validSubjectIds.has(l.subjectId)),
       };
       if (prev.userAccount?.googleId && !prev.isDemoMode) {
@@ -1312,10 +1320,11 @@ export function App() {
     const harmonized = harmonizeAndDeduplicateSlots(newSlots);
     const updatedPlan = generateOptimizedStudyPlan(state.subjects, harmonized, state.preferences, effectivePlanTier);
     setState(prev => {
+      const mergedSessions = mergePreservingCompletedSessions(prev.studySessions, updatedPlan);
       const nextState: AppState = {
         ...prev,
         classSlots: harmonized,
-        studySessions: updatedPlan,
+        studySessions: mergedSessions,
       };
       if (prev.userAccount?.googleId && !prev.isDemoMode) {
         saveUserState(prev.userAccount.googleId, nextState);
@@ -1328,10 +1337,11 @@ export function App() {
   const handleUpdatePreferences = (newPrefs: StudyPreferences) => {
     const updatedPlan = generateOptimizedStudyPlan(state.subjects, state.classSlots, newPrefs, effectivePlanTier);
     setState(prev => {
+      const mergedSessions = mergePreservingCompletedSessions(prev.studySessions, updatedPlan);
       const nextState: AppState = {
         ...prev,
         preferences: newPrefs,
-        studySessions: updatedPlan,
+        studySessions: mergedSessions,
       };
       if (prev.userAccount?.googleId && !prev.isDemoMode) {
         saveUserState(prev.userAccount.googleId, nextState);
@@ -1393,11 +1403,12 @@ export function App() {
   };
 
   const handleRegeneratePlan = () => {
-    const freshPlan = generateOptimizedStudyPlan(state.subjects, state.classSlots, state.preferences, effectivePlanTier);
     setState(prev => {
+      const freshPlan = generateOptimizedStudyPlan(prev.subjects, prev.classSlots, prev.preferences, effectivePlanTier);
+      const mergedSessions = mergePreservingCompletedSessions(prev.studySessions, freshPlan);
       const nextState: AppState = {
         ...prev,
-        studySessions: freshPlan,
+        studySessions: mergedSessions,
       };
       if (prev.userAccount?.googleId && !prev.isDemoMode) {
         saveUserState(prev.userAccount.googleId, nextState);
@@ -1837,7 +1848,6 @@ export function App() {
               isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
               userUid={state.userAccount?.googleId}
-              onOpenWeeklyRecap={handleOpenWeeklyRecap}
             />
           ) : (
             <div className="text-center py-16 space-y-4">

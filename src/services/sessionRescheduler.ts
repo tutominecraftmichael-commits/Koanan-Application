@@ -56,20 +56,20 @@ export function cleanupStaleRescheduledSessions(
     if (activeSubjectIds && session.subjectId && !activeSubjectIds.has(session.subjectId)) {
       return false;
     }
-    // Règle de lucidité : purger toute session orpheline dont l'horaire dépasse 23h30
+    // Purger toute session orpheline dont l'horaire dépasse minuit 00:00
     const sStart = parseTimeToMinutes(session.startTime);
     const sEnd = parseTimeToMinutes(session.endTime);
-    if ((sStart >= 1410 || sEnd > 1410) && !session.originalStartTime) {
+    if ((sStart >= 1440 || sEnd > 1440) && !session.originalStartTime) {
       return false;
     }
     return true;
   });
 
   const cleaned = validSessions.map(session => {
-    // Rétablir à l'horaire d'origine toute session qui aurait été replacée après 23h30
+    // Rétablir à l'horaire d'origine toute session qui aurait été replacée après minuit 00:00
     const sStart = parseTimeToMinutes(session.startTime);
     const sEnd = parseTimeToMinutes(session.endTime);
-    if ((sStart >= 1410 || sEnd > 1410) && session.originalStartTime) {
+    if ((sStart >= 1440 || sEnd > 1440) && session.originalStartTime) {
       restoredCount++;
       return {
         ...session,
@@ -133,15 +133,14 @@ export function findNextFreeSlotToday(
   // Démarre 5 à 10 minutes après l'heure actuelle, arrondi aux 15 min supérieures
   const searchStartMin = roundUpTo15(Math.max(currentMinute + 5, 0));
 
-  // RÈGLE STRICTE ANTI-SURMENAGE & PRÉSERVATION DE LA LUCIDITÉ (Validée par Christ Boni) :
+  // RÈGLE STRICTE DE RATTRAPAGE (Rectifiée par Christ Boni) :
   // Le rattrapage est STRICTEMENT intra-journée (même jour uniquement, aucun report au lendemain).
-  // AUCUN créneau ou rattrapage ne peut être généré à ou après 23h30 (1410 min).
-  // Toute séance replacée doit impérativement se terminer au plus tard à 23h30 pile pour préserver la lucidité et le sommeil.
-  // En revanche, si la séance devait déborder après 23h30 (ex: 23h35, 23h45, 00:00),
-  // on arrête et on ne la replie pas pour garantir un temps de repos cérébral incompressible.
-  const dayEndMin = 1410; // 23:30 (Heure limite absolue pour préserver la lucidité)
+  // Les séances non effectuées plus tôt sont replacées en fin d'après-midi ou soirée avec heure limite à MINUIT 00:00 (1440 min).
+  // À partir de minuit 00:00, si la séance n'a pas pu être rattrapée, c'est fini, on passe au lendemain sans dette.
+  // Toutes les matières déjà faites aujourd'hui sont rigoureusement comptées.
+  const dayEndMin = 1440; // 00:00 (Minuit pile, fin absolue de journée)
 
-  // S'il ne reste même pas 30 minutes avant 23h30 (1410 min)
+  // S'il ne reste même pas 30 minutes avant minuit 00:00 (1440 min)
   if (searchStartMin + 30 > dayEndMin) {
     return null;
   }
@@ -330,9 +329,12 @@ export function evaluateDailyCatchup(
     if (session.isRescheduledToday) continue;
 
     const sessionEndMin = parseTimeToMinutes(session.endTime);
+    const sessionStartMin = parseTimeToMinutes(session.startTime);
 
-    // Détection : l'heure de fin de la session est dépassée !
-    if (currentMinute >= sessionEndMin) {
+    // Détection immédiate : si l'heure de fin est dépassée, ou si l'heure de début + 15 min est passée sans validation
+    const isMissed = (currentMinute >= sessionEndMin) || (currentMinute >= sessionStartMin + 15);
+
+    if (isMissed) {
       // Trouver les autres sessions d'aujourd'hui pour éviter tout conflit (incluant celles déjà replacées)
       const otherSessions = updatedSessions.filter(
         s => s.dayOfWeek === todayDayOfWeek && s.id !== session.id
@@ -366,8 +368,8 @@ export function evaluateDailyCatchup(
             originalEndTime: originalEnd,
             rescheduledDate: todayDateStr,
             rescheduledReason: isExamSession
-              ? `🎯 Préparation examen / devoir (${subjectName}) replacée à ${freeSlot.startTime} (rattrapage prioritaire ce soir, fin max à 23h30 pour préserver la lucidité).`
-              : `Séance de ${subjectName} replacée à ${freeSlot.startTime} (rattrapage ce soir, fin max à 23h30 pour préserver la lucidité).`,
+              ? `🎯 Préparation ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime} (fin max à minuit 00:00)`
+              : `Séance de ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime} (fin max à minuit 00:00)`,
           };
 
           updatedSessions[sessionIndex] = adaptedSession;
@@ -375,9 +377,9 @@ export function evaluateDailyCatchup(
           rescheduledCount++;
         }
       } else {
-        // RÈGLE SUPRÊME : Aucun créneau libre avant 23h30 aujourd'hui ou fin de journée atteinte.
-        // On n'accumule AUCUNE dette et AUCUN report vers le jour suivant :
-        // La séance est purement OUBLIÉE. L'étudiant peut dormir l'esprit serein sans dette de travail pour préserver sa lucidité.
+        // RÈGLE SUPRÊME : À partir de minuit 00:00, si la séance n'a pas été rattrapée,
+        // on passe au lendemain sans dette. Toutes les matières déjà faites sont comptées,
+        // et la séance restante est simplement oubliée.
       }
     }
   }

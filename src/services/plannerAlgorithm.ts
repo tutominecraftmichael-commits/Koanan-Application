@@ -637,3 +637,133 @@ export function generateOptimizedStudyPlan(
     return parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime);
   });
 }
+
+/**
+ * Fusionne un nouveau plan généré avec les sessions existantes en préservant
+ * STRICTEMENT toutes les séances déjà validées par l'étudiant (completed: true).
+ * Interdiction absolue de réinitialiser le travail déjà accompli.
+ */
+export function mergePreservingCompletedSessions(
+  existingSessions: StudySession[],
+  freshPlan: StudySession[]
+): StudySession[] {
+  if (!existingSessions || existingSessions.length === 0) {
+    return freshPlan;
+  }
+
+  const completedSessions = existingSessions.filter(s => s.completed);
+  if (completedSessions.length === 0) {
+    return freshPlan;
+  }
+
+  // 1. Indexer les séances complétées par ID et par clé Matière-Jour
+  const completedById = new Map<string, StudySession>();
+  const completedByKey = new Map<string, StudySession>();
+  
+  completedSessions.forEach(s => {
+    completedById.set(s.id, s);
+    const key = `${s.subjectId || s.title}-${s.dayOfWeek}`;
+    if (!completedByKey.has(key)) {
+      completedByKey.set(key, s);
+    }
+  });
+
+  const matchedCompletedIds = new Set<string>();
+
+  // 2. Mettre à jour les séances du nouveau plan en conservant les données de validation
+  const mergedPlan = freshPlan.map(fresh => {
+    // Correspondance par ID
+    const byId = completedById.get(fresh.id);
+    if (byId) {
+      matchedCompletedIds.add(byId.id);
+      return {
+        ...fresh,
+        completed: true,
+        completedAt: byId.completedAt,
+        actualDurationMinutes: byId.actualDurationMinutes || fresh.durationMinutes,
+        rating: byId.rating,
+      };
+    }
+
+    // Correspondance par Matière et Jour
+    const key = `${fresh.subjectId || fresh.title}-${fresh.dayOfWeek}`;
+    const byKey = completedByKey.get(key);
+    if (byKey && !matchedCompletedIds.has(byKey.id)) {
+      matchedCompletedIds.add(byKey.id);
+      return {
+        ...fresh,
+        completed: true,
+        completedAt: byKey.completedAt,
+        actualDurationMinutes: byKey.actualDurationMinutes || fresh.durationMinutes,
+        rating: byKey.rating,
+      };
+    }
+
+    return fresh;
+  });
+
+  // 3. Conserver toute séance validée qui n'aurait pas trouvé de correspondance directe
+  const unmatchedCompleted = completedSessions.filter(s => !matchedCompletedIds.has(s.id));
+
+  return [...mergedPlan, ...unmatchedCompleted].sort((a, b) => {
+    if (a.dayOfWeek !== b.dayOfWeek) return a.dayOfWeek - b.dayOfWeek;
+    return parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime);
+  });
+}
+
+/**
+ * Synchronise automatiquement les séances non complétées avec les échéances d'examens/devoirs actuelles
+ * (ex: mise à jour automatique à 45m si un devoir approche à J-2 sans réinitialiser les séances faites).
+ */
+export function synchronizeSessionsWithExamCountdowns(
+  sessions: StudySession[],
+  subjects: Subject[]
+): StudySession[] {
+  if (!sessions || sessions.length === 0) return [];
+  const subjectsMap = new Map(subjects.map(s => [s.id, s]));
+
+  const referenceDate = new Date();
+  const currentDayIndex = (referenceDate.getDay() + 6) % 7;
+
+  return sessions.map(session => {
+    if (session.completed) return session; // Ne JAMAIS altérer une session déjà validée
+
+    const subject = subjectsMap.get(session.subjectId);
+    if (!subject || !subject.examDate) return session;
+
+    const daysAhead = (session.dayOfWeek - currentDayIndex + 7) % 7;
+    const sessionDate = new Date(referenceDate);
+    sessionDate.setDate(referenceDate.getDate() + daysAhead);
+
+    const daysToExam = getDaysRemainingFrom(subject.examDate, sessionDate);
+    if (daysToExam === null || daysToExam < 0) return session;
+
+    // Si un examen/devoir est dans les 14 jours, calibrer la durée
+    const isExamApproaching = daysToExam <= 14;
+    let targetDuration = session.durationMinutes;
+    if (isExamApproaching) {
+      if (daysToExam >= 2) {
+        targetDuration = 45;
+      } else if (daysToExam === 1) {
+        targetDuration = 25;
+      } else if (daysToExam === 0) {
+        targetDuration = 20;
+      }
+    }
+
+    if (targetDuration !== session.durationMinutes) {
+      const startMin = parseTimeToMinutes(session.startTime);
+      const newEndMin = Math.min(1440, startMin + targetDuration);
+      return {
+        ...session,
+        durationMinutes: targetDuration,
+        endTime: minutesToTimeString(newEndMin),
+        isExamPrep: true,
+        examDaysRemaining: daysToExam,
+        examType: subject.examType || 'examen',
+      };
+    }
+
+    return session;
+  });
+}

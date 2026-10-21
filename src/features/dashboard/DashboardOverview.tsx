@@ -61,7 +61,6 @@ export interface DashboardOverviewProps {
   isGroupGuest?: boolean;
   invitedBy?: { name: string; konanId: string; email?: string };
   userUid?: string;
-  onOpenWeeklyRecap?: () => void;
 }
 
 export const cleanSessionTitle = (rawTitle: string): string => {
@@ -99,7 +98,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   isGroupGuest: _isGroupGuest = false,
   invitedBy: _invitedBy,
   userUid,
-  onOpenWeeklyRecap,
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -296,9 +294,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words leading-tight line-clamp-2">
                   {cleanSessionTitle(nextStudySession.title)}
                 </p>
-                <p className="text-[11px] font-mono text-cyan-700 dark:text-cyan-400 font-semibold">
-                  {nextStudySession.startTime} - {nextStudySession.endTime} ({nextStudySession.durationMinutes} min)
-                </p>
+                <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                  <span className="text-[11px] font-mono text-cyan-700 dark:text-cyan-400 font-semibold">
+                    {nextStudySession.startTime} - {nextStudySession.endTime} ({nextStudySession.durationMinutes} min)
+                  </span>
+                  {nextStudySession.isRescheduledToday && nextStudySession.originalStartTime && (
+                    <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-500/40">
+                      ⏰ Ratée à {nextStudySession.originalStartTime} ➔ Replacée à {nextStudySession.startTime}
+                    </span>
+                  )}
+                </div>
               </div>
               <Button
                 variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
@@ -612,6 +617,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             <span className="text-[11px] font-mono font-bold text-cyan-700 dark:text-cyan-400">
                               {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                             </span>
+                            {isRescheduled && session.originalStartTime && (
+                              <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-500/40">
+                                ⏰ Ratée à {session.originalStartTime} ➔ Replacée à {session.startTime}
+                              </span>
+                            )}
                             {session.isExamPrep && (
                               <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-xs ${
                                 session.examType === 'devoir'
@@ -877,18 +887,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               >
                 Consulter les statistiques complètes
               </Button>
-
-              {onOpenWeeklyRecap && (
-                <Button
-                  variant="glow"
-                  size="sm"
-                  onClick={onOpenWeeklyRecap}
-                  leftIcon={<Sparkles className="w-3.5 h-3.5 text-amber-300" />}
-                  className="w-full text-xs font-bold py-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-md shadow-indigo-600/20 cursor-pointer"
-                >
-                  Bilan Hebdomadaire
-                </Button>
-              )}
             </div>
           </Card>
 
