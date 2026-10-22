@@ -443,14 +443,9 @@ export function generateOptimizedStudyPlan(
         if (isExamApproaching) {
           const isDevoir = subject.examType === 'devoir';
           if (isDevoir) {
-            if (daysUntilExamOnDate === 0) {
-              sessionDuration = 20;
-              sessionBreak = 5;
-            } else {
-              // Devoir à J-1, J-2, J-3, etc. : 45 minutes obligatoires !
-              sessionDuration = 45;
-              sessionBreak = Math.max(sessionBreak, 10);
-            }
+            // Pour les devoirs (subject.examType === 'devoir') : TOUJOURS 45 minutes, même au jour 1 (J-1 et jour J) !
+            sessionDuration = 45;
+            sessionBreak = Math.max(sessionBreak, 10);
           } else {
             if (daysUntilExamOnDate >= 2) {
               sessionDuration = 45;
@@ -549,14 +544,22 @@ export function generateOptimizedStudyPlan(
         if (isExamApproaching) {
           if (daysUntilExamOnDate === 0) {
             finalTitle = subject.examType === 'devoir'
-              ? `Dernière Relecture Devoir : ${displaySubjectName}`
+              ? `Préparation Devoir (45m) : ${displaySubjectName}`
               : `⚡ Réveil Flash Examen : ${displaySubjectName}`;
-            finalDesc = `Dernière mise en condition avant votre ${examLabel} de ${displaySubjectName} aujourd'hui.`;
-            finalObjectives = [
-              `Revue éclair des formules clés de ${displaySubjectName}`,
-              'Respiration et stabilisation mentale avant de composer',
-              'Vérification du matériel et lucidité maximale',
-            ];
+            finalDesc = subject.examType === 'devoir'
+              ? `Jour de devoir : séance approfondie de 45 minutes sur ${displaySubjectName} avant l'épreuve.`
+              : `Dernière mise en condition avant votre ${examLabel} de ${displaySubjectName} aujourd'hui.`;
+            finalObjectives = subject.examType === 'devoir'
+              ? [
+                  `Revue approfondie des exercices types et méthodes de ${displaySubjectName}`,
+                  'Vérification finale des points clés avant de composer',
+                  'Lucidité et concentration maximale',
+                ]
+              : [
+                  `Revue éclair des formules clés de ${displaySubjectName}`,
+                  'Respiration et stabilisation mentale avant de composer',
+                  'Vérification du matériel et lucidité maximale',
+                ];
           } else if (daysUntilExamOnDate === 1) {
             finalTitle = subject.examType === 'devoir'
               ? `Préparation Devoir (45m) : ${displaySubjectName}`
@@ -763,12 +766,8 @@ export function synchronizeSessionsWithExamCountdowns(
     const isDevoir = subject.examType === 'devoir';
     if (isExamApproaching) {
       if (isDevoir) {
-        // Pour les devoirs : 45 min quel que soit le jour (même à J-1), sauf le jour J (20 min flash)
-        if (daysToExam === 0) {
-          targetDuration = 20;
-        } else {
-          targetDuration = 45;
-        }
+        // Pour les devoirs : TOUJOURS 45 min quel que soit le jour (même à J-1 et jour J)
+        targetDuration = 45;
       } else {
         if (daysToExam >= 2) {
           targetDuration = 45;

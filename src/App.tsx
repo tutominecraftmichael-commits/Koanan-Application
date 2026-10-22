@@ -489,24 +489,25 @@ export function App() {
               lastRescheduledSignature.current = signature;
               // Notification immédiate du rattrapage replacé (règle stricte Christ Boni)
               const effectivePlan = prev.planTier || prev.userAccount?.planTier || 'free';
-              rescheduledSessions.forEach(session => {
-                const notifyKey = `rescheduled_notif_${todayStr}_${session.id}_${session.startTime}`;
+              if (rescheduledSessions.length > 0) {
+                const primary = rescheduledSessions[0];
+                const notifyKey = `rescheduled_notif_${todayStr}_${primary.id}_${primary.startTime}`;
                 const alreadyNotified = sessionStorage.getItem(notifyKey);
                 if (!alreadyNotified) {
                   try {
                     sessionStorage.setItem(notifyKey, 'true');
                   } catch {}
-                  const matchingSubject = validSubjects.find(s => s.id === session.subjectId);
-                  const subjectName = matchingSubject?.name || session.title || 'tes cours';
+                  const matchingSubject = validSubjects.find(s => s.id === primary.subjectId);
+                  const subjectName = matchingSubject?.name || primary.title || 'tes cours';
                   sendSessionRescheduledNotification(
                     subjectName,
-                    session.startTime,
-                    session.originalStartTime,
-                    session.durationMinutes,
+                    primary.startTime,
+                    primary.originalStartTime,
+                    primary.durationMinutes,
                     effectivePlan
                   );
                 }
-              });
+              }
             }
           } else {
             lastRescheduledSignature.current = '';
@@ -574,7 +575,7 @@ export function App() {
     }
 
     const checkReminders = () => {
-      checkAndDispatchStudyReminders(state.studySessions, state.subjects, effectivePlan);
+      checkAndDispatchStudyReminders(state.studySessions, state.subjects, effectivePlan, state.cycleCompletedDate);
     };
 
     checkReminders();
@@ -586,7 +587,7 @@ export function App() {
       clearInterval(interval);
       window.removeEventListener('focus', handleFocus);
     };
-  }, [state.studySessions, state.subjects, state.userAccount?.planTier]);
+  }, [state.studySessions, state.subjects, state.userAccount?.planTier, state.cycleCompletedDate]);
 
   // Gestion d'authentification mobile et synchronisation au démarrage
   useEffect(() => {

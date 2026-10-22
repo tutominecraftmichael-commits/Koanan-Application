@@ -343,31 +343,51 @@ export function syncRemindersWithServiceWorker(
 
 /**
  * Vérifie les créneaux d'étude du jour et déclenche automatiquement
- * les notifications selon les circonstances réelles :
- * 1. Strictement 5 minutes avant chaque session normale ou rattrapage (jamais après le début)
- * 2. Alerte premier créneau sauté (dès 15 min de retard non validé)
- * 3. Alerte oubli de rattrapage (dès 15 min de retard sur le créneau de rattrapage)
- * 4. Alerte créneaux multiples manqués dans la journée (>= 3 séances délaissées)
- * 5. Rattrapage du soir (dernière chance avant minuit) entre 21h00 et 23h50
- * 6. Synchronisation automatique avec le Service Worker pour l'arrière-plan
+ * les notifications selon une COORDINATION STRICTE :
+ * 1. Si toutes les séances sont déjà validées (completed: true) ou cycle terminé aujourd'hui : SILENCE TOTAL (0 notification).
+ * 2. Au MAXIMUM 1 SEULE NOTIFICATION par vérification (aucun flood ni notifications multiples simultanées).
+ * 3. Hiérarchie ordonnée :
+ *    - Priorité 1 : Séance débutant dans exactement 5 minutes (strictement 4-6 min avant, jamais après début).
+ *    - Priorité 2 : Rattrapage du soir (dernière chance avant minuit, 21h00 à 23h50).
+ *    - Priorité 3 : Alerte plusieurs créneaux manqués dans la journée (>= 3 séances sautées).
+ *    - Priorité 4 : Alerte créneau sauté (au plus 1 seule alerte, pas de cumul).
+ * 4. Cooldown anti-spam de 15 minutes entre deux notifications de retard.
  */
 export function checkAndDispatchStudyReminders(
   sessions: StudySession[],
   subjects: Subject[],
-  userTier: PlanTier = 'free'
+  userTier: PlanTier = 'free',
+  cycleCompletedDate?: string
 ): void {
   if (userTier === 'free' || !isPhoneNotificationSupported()) return;
   if (!sessions || sessions.length === 0) return;
 
-  // Armer le Service Worker en arrière-plan
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+
+  // RÈGLE ABSOLUE : Si le cycle d'étude a été complété aujourd'hui,
+  // SILENCE TOTAL ! L'étudiant a déjà validé ses révisions.
+  if (cycleCompletedDate === todayStr) {
+    return;
+  }
+
+  const currentDayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // 0=Lundi..6=Dimanche
+  const todaysSessions = sessions.filter(s => s.dayOfWeek === currentDayOfWeek);
+  if (todaysSessions.length === 0) return;
+
+  // Si toutes les séances du jour sont validées (completed: true), AUCUNE notification !
+  const uncompletedToday = todaysSessions.filter(s => !s.completed);
+  if (uncompletedToday.length === 0) {
+    return;
+  }
+
+  // Armer le Service Worker en arrière-plan avec les créneaux non complétés
   syncRemindersWithServiceWorker(sessions, subjects, userTier);
 
-  const now = new Date();
-  const currentDayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // 0=Lundi..6=Dimanche
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
-  const dateKey = now.toISOString().slice(0, 10);
+  const dateKey = todayStr;
 
-  // Storage key pour ne jamais notifier 2 fois la même alerte
+  // Clé anti-doublon et anti-flood
   const notifiedStorageKey = `konan_notified_reminders_${dateKey}`;
   let notifiedIds: string[] = [];
   try {
@@ -375,81 +395,54 @@ export function checkAndDispatchStudyReminders(
     if (raw) notifiedIds = JSON.parse(raw);
   } catch {}
 
-  const todaysSessions = sessions.filter(s => s.dayOfWeek === currentDayOfWeek);
-  const uncompletedToday = todaysSessions.filter(s => !s.completed);
+  const markNotified = (id: string) => {
+    notifiedIds.push(id);
+    try {
+      sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
+      sessionStorage.setItem('konan_last_reminder_time', String(Date.now()));
+    } catch {}
+  };
 
-  // Compter le nombre de créneaux manqués passés (> 15 min de retard)
-  const pastPendingToday = uncompletedToday.filter(session => {
-    const [h, m] = session.startTime.split(':').map(Number);
-    const startMin = h * 60 + (m || 0);
-    return currentMinutes > startMin + 15;
-  });
-  const missedCount = pastPendingToday.length;
-  const isEvening = currentMinutes >= 1260 && currentMinutes < 1435; // 21h00 - 23h55
+  const lastReminderTime = Number(sessionStorage.getItem('konan_last_reminder_time') || '0');
+  const isCooldownActive = Date.now() - lastReminderTime < 15 * 60 * 1000;
 
-  // 1. Rappels STRICTEMENT 5 minutes avant la séance (normales et rattrapages)
-  // (diffMinutes entre 4 et 6 minutes avant le début ; STRICTEMENT INTERDIT si diffMinutes <= 0 car la séance a déjà commencé)
-  uncompletedToday.forEach(session => {
+  // =========================================================================
+  // HIÉRARCHIE DE COORDINATION STRICTE : AU MAXIMUM 1 SEULE NOTIFICATION
+  // =========================================================================
+
+  // ÉTAPE 1 (PRIORITÉ ABSOLUE) : Séance débutant dans exactement 5 minutes (diffMinutes entre 4 et 6)
+  for (const session of uncompletedToday) {
     const [h, m] = session.startTime.split(':').map(Number);
     const sessionStartMinutes = h * 60 + (m || 0);
     const diffMinutes = sessionStartMinutes - currentMinutes;
 
-    const subject = subjects.find(sub => sub.id === session.subjectId);
-    const subjectName = subject?.name || session.title || 'tes cours';
-    const duration = session.durationMinutes || 25;
-    const isCatchup = Boolean(session.isRescheduledToday || session.rescheduledReason);
+    if (diffMinutes >= 4 && diffMinutes <= 6) {
+      const alert5mId = `${session.id}_5m_${session.startTime}`;
+      if (!notifiedIds.includes(alert5mId)) {
+        const subject = subjects.find(sub => sub.id === session.subjectId);
+        const subjectName = subject?.name || session.title || 'tes cours';
+        const duration = session.durationMinutes || 25;
+        const isCatchup = Boolean(session.isRescheduledToday || session.rescheduledReason);
 
-    const alert5mId = `${session.id}_5m_${session.startTime}`;
-    if (diffMinutes >= 4 && diffMinutes <= 6 && !notifiedIds.includes(alert5mId)) {
-      const title = isCatchup ? `KONAN ✦ Rattrapage ${subjectName}` : `KONAN ✦ ${subjectName}`;
-      const body = isCatchup 
-        ? getCatchup5mMessage(subjectName, session.startTime, duration)
-        : getUpcoming5mMessage(subjectName, duration);
+        const title = isCatchup ? `KONAN ✦ Rattrapage ${subjectName}` : `KONAN ✦ ${subjectName}`;
+        const body = isCatchup 
+          ? getCatchup5mMessage(subjectName, session.startTime, duration)
+          : getUpcoming5mMessage(subjectName, duration);
 
-      sendPhoneNotification(title, body, `study-alert-5m-${session.id}`);
-      notifiedIds.push(alert5mId);
-      try {
-        sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
-      } catch {}
+        sendPhoneNotification(title, body, `study-alert-5m-${session.id}`);
+        markNotified(alert5mId);
+        return; // ARRÊT STRICT : 1 seule notification coordonnée !
+      }
     }
-
-    // 2. Alerte premier créneau sauté (séance normale) si retard > 15 min
-    const firstMissedId = `${session.id}_first_missed`;
-    if (!isCatchup && diffMinutes <= -15 && missedCount < 3 && !notifiedIds.includes(firstMissedId)) {
-      const body = getFirstMissedMessage(subjectName, duration);
-      sendPhoneNotification(`KONAN ✦ ${subjectName}`, body, `study-first-missed-${session.id}`);
-      notifiedIds.push(firstMissedId);
-      try {
-        sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
-      } catch {}
-    }
-
-    // 3. Alerte oubli de rattrapage (séance de rattrapage passée de plus de 15 min sans validation)
-    const catchupMissedId = `${session.id}_catchup_missed_${session.startTime}`;
-    if (isCatchup && diffMinutes <= -15 && !notifiedIds.includes(catchupMissedId)) {
-      const body = getCatchupMissedMessage(subjectName, session.startTime, duration);
-      sendPhoneNotification(`KONAN ✦ Rattrapage ${subjectName}`, body, `study-catchup-missed-${session.id}`);
-      notifiedIds.push(catchupMissedId);
-      try {
-        sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
-      } catch {}
-    }
-  });
-
-  // 4. Alerte plusieurs créneaux manqués dans la journée (>= 3 séances sautées)
-  const multipleMissedKey = `multiple_missed_${dateKey}`;
-  if (missedCount >= 3 && !isEvening && !notifiedIds.includes(multipleMissedKey)) {
-    const firstSession = pastPendingToday[0];
-    const firstSubject = subjects.find(sub => sub.id === firstSession.subjectId)?.name || firstSession.title || 'tes cours';
-    const body = getMultipleMissedMessage(firstSubject);
-    sendPhoneNotification(`KONAN ✦ ${firstSubject}`, body, `study-multiple-missed-${dateKey}`);
-    notifiedIds.push(multipleMissedKey);
-    try {
-      sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
-    } catch {}
   }
 
-  // 5. Rattrapage du soir : Dernière chance avant minuit (21h00 à 23h50)
+  // Si le cooldown anti-spam est actif, ne pas envoyer d'alerte de retard supplémentaire
+  if (isCooldownActive) {
+    return;
+  }
+
+  // ÉTAPE 2 : Rattrapage du soir (Dernière chance avant minuit, 21h00 à 23h50)
+  const isEvening = currentMinutes >= 1260 && currentMinutes < 1435;
   const eveningAlertKey = `evening_last_chance_${dateKey}`;
   if (isEvening && uncompletedToday.length > 0 && !notifiedIds.includes(eveningAlertKey)) {
     const firstSession = uncompletedToday[0];
@@ -457,9 +450,50 @@ export function checkAndDispatchStudyReminders(
     const duration = firstSession.durationMinutes || 25;
     const body = getEveningLastChanceMessage(firstSubject, duration);
     sendPhoneNotification('KONAN', body, `study-evening-last-chance-${dateKey}`);
-    notifiedIds.push(eveningAlertKey);
-    try {
-      sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
-    } catch {}
+    markNotified(eveningAlertKey);
+    return; // ARRÊT STRICT : 1 seule notification coordonnée !
+  }
+
+  // ÉTAPE 3 : Alertes créneaux multiples manqués dans la journée (>= 3 séances sautées)
+  const pastPendingToday = uncompletedToday.filter(session => {
+    const [h, m] = session.startTime.split(':').map(Number);
+    const startMin = h * 60 + (m || 0);
+    return currentMinutes > startMin + 15;
+  });
+  const missedCount = pastPendingToday.length;
+
+  const multipleMissedKey = `multiple_missed_${dateKey}`;
+  if (missedCount >= 3 && !isEvening && !notifiedIds.includes(multipleMissedKey)) {
+    const firstSession = pastPendingToday[0];
+    const firstSubject = subjects.find(sub => sub.id === firstSession.subjectId)?.name || firstSession.title || 'tes cours';
+    const body = getMultipleMissedMessage(firstSubject);
+    sendPhoneNotification(`KONAN ✦ ${firstSubject}`, body, `study-multiple-missed-${dateKey}`);
+    markNotified(multipleMissedKey);
+    return; // ARRÊT STRICT : 1 seule notification coordonnée !
+  }
+
+  // ÉTAPE 4 : Alerte unique pour le créneau sauté le plus récent (au maximum 1 alerte, pas de cumul)
+  if (missedCount > 0 && missedCount < 3 && !isEvening) {
+    for (const session of pastPendingToday) {
+      const isCatchup = Boolean(session.isRescheduledToday || session.rescheduledReason);
+      const missedKey = isCatchup 
+        ? `${session.id}_catchup_missed_${session.startTime}`
+        : `${session.id}_first_missed`;
+
+      if (!notifiedIds.includes(missedKey)) {
+        const subject = subjects.find(sub => sub.id === session.subjectId);
+        const subjectName = subject?.name || session.title || 'tes cours';
+        const duration = session.durationMinutes || 25;
+
+        const title = isCatchup ? `KONAN ✦ Rattrapage ${subjectName}` : `KONAN ✦ ${subjectName}`;
+        const body = isCatchup
+          ? getCatchupMissedMessage(subjectName, session.startTime, duration)
+          : getFirstMissedMessage(subjectName, duration);
+
+        sendPhoneNotification(title, body, `study-missed-${session.id}`);
+        markNotified(missedKey);
+        return; // ARRÊT STRICT : 1 seule notification coordonnée !
+      }
+    }
   }
 }

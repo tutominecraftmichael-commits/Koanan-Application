@@ -242,6 +242,13 @@ async function processAllStudentReminders() {
 
     if (todaysSlots.length === 0) continue;
 
+    // RÈGLE ABSOLUE : Si toutes les séances du jour sont validées ou cycle terminé aujourd'hui :
+    const isCycleDone = userData.cycleCompletedDate === todayStr || userData.userAccount?.cycleCompletedDate === todayStr;
+    const allCompletedToday = todaysSlots.every((s) => s && (s.completed === true || s.status === 'completed' || s.status === 'done'));
+    if (isCycleDone || allCompletedToday) {
+      continue; // SILENCE TOTAL ! L'étudiant a déjà tout validé !
+    }
+
     const notifiedMap = userData.notifiedStudyReminders || {};
     const updatesToSave = {};
 
