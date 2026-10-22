@@ -437,20 +437,31 @@ export function generateOptimizedStudyPlan(
         }
 
         // 🧠 CALIBRAGE INTELLIGENT DE LA DURÉE POUR LES EXAMENS ET DEVOIRS (Règle utilisateur) :
-        // Soit J le jour actuel, épreuve à J+X :
-        // - J+2 et plus (échéance dans 2 jours ou plus, ex: J-2, J-3, J-5...) : 45 min de révision/préparation approfondie
-        // - J+1 (Jour 1 avant l'épreuve / veille) : 25 min de synthèse ciblée et révision flash (repos cérébral)
-        // - Jour J (0 jour avant épreuve) : 20 min de réveil flash des formules avant l'épreuve
+        // RÈGLE FORMELLE (Audio utilisateur 3) :
+        // Pour les devoirs (subject.examType === 'devoir') : quel que soit le jour (même à J-1), l'étudiant révise TOUJOURS 45 minutes !
+        // Pour les examens généraux : 45 min à J>=2, 25 min de synthèse à J-1 (repos cérébral), 20 min flash à J-0.
         if (isExamApproaching) {
-          if (daysUntilExamOnDate >= 2) {
-            sessionDuration = 45;
-            sessionBreak = Math.max(sessionBreak, 10);
-          } else if (daysUntilExamOnDate === 1) {
-            sessionDuration = 25;
-            sessionBreak = Math.max(sessionBreak, 5);
-          } else if (daysUntilExamOnDate === 0) {
-            sessionDuration = 20;
-            sessionBreak = 5;
+          const isDevoir = subject.examType === 'devoir';
+          if (isDevoir) {
+            if (daysUntilExamOnDate === 0) {
+              sessionDuration = 20;
+              sessionBreak = 5;
+            } else {
+              // Devoir à J-1, J-2, J-3, etc. : 45 minutes obligatoires !
+              sessionDuration = 45;
+              sessionBreak = Math.max(sessionBreak, 10);
+            }
+          } else {
+            if (daysUntilExamOnDate >= 2) {
+              sessionDuration = 45;
+              sessionBreak = Math.max(sessionBreak, 10);
+            } else if (daysUntilExamOnDate === 1) {
+              sessionDuration = 25;
+              sessionBreak = Math.max(sessionBreak, 5);
+            } else if (daysUntilExamOnDate === 0) {
+              sessionDuration = 20;
+              sessionBreak = 5;
+            }
           }
         }
 
@@ -548,14 +559,22 @@ export function generateOptimizedStudyPlan(
             ];
           } else if (daysUntilExamOnDate === 1) {
             finalTitle = subject.examType === 'devoir'
-              ? `Synthèse Devoir (25m) : ${displaySubjectName}`
+              ? `Préparation Devoir (45m) : ${displaySubjectName}`
               : `🔥 Ultime Révision (25m) : ${displaySubjectName}`;
-            finalDesc = `Veille d'épreuve (Jour 1) : séance de synthèse ciblée de 25 minutes sur ${displaySubjectName}. Réactivation des points clés et repos cérébral sans surchauffe.`;
-            finalObjectives = [
-              `Révision flash des formules et concepts capitaux de ${displaySubjectName}`,
-              'Auto-évaluation à blanc sur 2 exercices types sans notes',
-              'Repos cérébral anticipé pour être à 100% de lucidité le jour J',
-            ];
+            finalDesc = subject.examType === 'devoir'
+              ? `Veille de devoir (Jour 1) : séance de révision approfondie de 45 minutes sur ${displaySubjectName}. Entraînement complet et consolidation avant l'épreuve.`
+              : `Veille d'épreuve (Jour 1) : séance de synthèse ciblée de 25 minutes sur ${displaySubjectName}. Réactivation des points clés et repos cérébral sans surchauffe.`;
+            finalObjectives = subject.examType === 'devoir'
+              ? [
+                  `Révision approfondie des cours et méthodes de ${displaySubjectName}`,
+                  'Auto-évaluation à blanc sur les exercices types du devoir',
+                  'Vérification de la maîtrise technique avant demain',
+                ]
+              : [
+                  `Révision flash des formules et concepts capitaux de ${displaySubjectName}`,
+                  'Auto-évaluation à blanc sur 2 exercices types sans notes',
+                  'Repos cérébral anticipé pour être à 100% de lucidité le jour J',
+                ];
           } else if (daysUntilExamOnDate === 2) {
             finalTitle = subject.examType === 'devoir'
               ? `Préparation Devoir (45m) : ${displaySubjectName}`
@@ -741,13 +760,23 @@ export function synchronizeSessionsWithExamCountdowns(
     // Si un examen/devoir est dans les 14 jours, calibrer la durée
     const isExamApproaching = daysToExam <= 14;
     let targetDuration = session.durationMinutes;
+    const isDevoir = subject.examType === 'devoir';
     if (isExamApproaching) {
-      if (daysToExam >= 2) {
-        targetDuration = 45;
-      } else if (daysToExam === 1) {
-        targetDuration = 25;
-      } else if (daysToExam === 0) {
-        targetDuration = 20;
+      if (isDevoir) {
+        // Pour les devoirs : 45 min quel que soit le jour (même à J-1), sauf le jour J (20 min flash)
+        if (daysToExam === 0) {
+          targetDuration = 20;
+        } else {
+          targetDuration = 45;
+        }
+      } else {
+        if (daysToExam >= 2) {
+          targetDuration = 45;
+        } else if (daysToExam === 1) {
+          targetDuration = 25;
+        } else if (daysToExam === 0) {
+          targetDuration = 20;
+        }
       }
     }
 

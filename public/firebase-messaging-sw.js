@@ -34,21 +34,27 @@ if (messaging) {
   messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] Notification en arrière-plan reçue :', payload);
 
-    const title =
+    const rawTitle =
       payload?.notification?.title ||
       payload?.data?.title ||
-      "KONAN ✦ Rappel d'étude";
+      "KONAN";
+
+    const title = String(rawTitle)
+      .replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '')
+      .trim() || "KONAN";
 
     const body =
       payload?.notification?.body ||
       payload?.data?.body ||
-      "C'est l'heure de ta séance de révision. Viens travailler et valider ton créneau !";
+      "C’est l’heure de poser le téléphone deux secondes. Viens te concentrer, je compte sur toi ! 👊📚";
 
     const notificationOptions = {
       body,
-      icon: "/logo-konan.png",
-      badge: "/logo-konan.png",
+      icon: "/cube-icon.png",
+      badge: "/cube-badge.png",
       tag: payload?.data?.tag || "konan-study-reminder",
+      vibrate: [300, 150, 300],
+      renotify: true,
       data: {
         url: payload?.data?.url || "/",
         sessionId: payload?.data?.sessionId,

@@ -143,8 +143,8 @@ export async function triggerDeviceTestReminder(subjectName: string = 'Mathémat
   if (typeof window === 'undefined' || !('Notification' in window)) return false;
   if (Notification.permission !== 'granted') return false;
 
-  const title = "KONAN ✦ Rappel d'étude";
-  const body = `Ta séance de ${subjectName} commence maintenant. Le Cube KONAN t'attend pour réviser !`;
+  const title = `KONAN ✦ ${subjectName}`;
+  const body = `C’est l’heure de poser le téléphone deux secondes. Prends ton cahier de ${subjectName}, 30 minutes bien concentré et on en parle plus. Je compte sur toi ! 👊📚`;
 
   try {
     if ('serviceWorker' in navigator) {
@@ -152,8 +152,8 @@ export async function triggerDeviceTestReminder(subjectName: string = 'Mathémat
       if (reg && reg.showNotification) {
         await reg.showNotification(title, {
           body,
-          icon: "/logo-konan.png",
-          badge: "/logo-konan.png",
+          icon: "/cube-icon.png",
+          badge: "/cube-badge.png",
           tag: "konan-study-test",
           data: { url: "/" },
         });
@@ -163,8 +163,8 @@ export async function triggerDeviceTestReminder(subjectName: string = 'Mathémat
 
     new Notification(title, {
       body,
-      icon: "/logo-konan.png",
-      badge: "/logo-konan.png",
+      icon: "/cube-icon.png",
+      badge: "/cube-badge.png",
       tag: "konan-study-test",
     });
     return true;
@@ -189,11 +189,11 @@ export function setupFCMForegroundListener(
       const title =
         payload?.notification?.title ||
         payload?.data?.title ||
-        "KONAN ✦ Rappel d'étude";
+        "KONAN";
       const body =
         payload?.notification?.body ||
         payload?.data?.body ||
-        "C'est l'heure de ta séance de révision. Viens travailler et valider ton créneau !";
+        "C’est l’heure de poser le téléphone deux secondes. Viens te concentrer, je compte sur toi ! 👊📚";
 
       if (onNotificationReceived) {
         onNotificationReceived(title, body, payload);
@@ -208,47 +208,52 @@ export function setupFCMForegroundListener(
 }
 
 /**
- * Messages de rappel d'étude directs, punchy et motivants avec émojis (identitaire Cube KONAN, sans XP ni points)
- * Audio utilisateur 1, 2 & 3 :
- * - 45 min avant : "Ta séance de [Matière] débute dans 45 minutes, viens ! 📚"
- * - 1er oubli : "Tu as oublié de faire [Matière] (prévue à [Heure ratée]), mais c'est pas grave ! Je la replace à [Nouvelle Heure]. Viens faire la séance ! 🎯"
- * - 2e oubli : "Ça fait la 2e fois que tu ne viens pas bosser ! Tu attends quoi pour venir ? [Matière] replacée à [Nouvelle Heure]. ⚡"
- * - 3e oubli+ : "L'algorithme surchauffe à force de recalculer les rattrapages ! 🔥 Qu'est-ce que tu attends pour venir bosser ?! ([Matière] à [Nouvelle Heure])"
- * - Bilan lundi 00h00 : "Ton bilan de la semaine passée est là ! Viens voir ta progression et tes statistiques. 📊"
+ * Templates officiels KONAN - Compagnon d'études de l'étudiant
+ * Voix : Grand frère dévoué, complice, direct, sans aucun jargon robotique ni mention de points/XP.
+ * Règle stricte : Tout ce qui est manqué doit être rattrapé LE JOUR MÊME avant minuit. Pas de report.
  */
 export const STUDY_REMINDER_MOTIVATIONAL_TEMPLATES = {
-  // Séance à venir 45 minutes avant
-  upcoming45m: (sub: string) => 
-    `Ta séance de ${sub} débute dans 45 minutes, viens ! 📚`,
-  // Séance normale à venir (5 minutes avant ou immédiate)
-  upcoming5m: (sub: string, time?: string) => 
-    `Ta séance de ${sub} débute ${time ? `à ${time}` : 'dans 5 minutes'}, viens ! 📚`,
-  // 1ère séance ratée aujourd'hui
-  catchupTier1: (sub: string, originalTime: string, newTime: string) => 
-    `Tu as oublié de faire ${sub} (prévue à ${originalTime || 'l\'heure prévue'}), mais c'est pas grave ! Je la replace à ${newTime}. Viens faire la séance ! 🎯`,
-  // 2e séance ratée aujourd'hui
-  catchupTier2: (sub: string, newTime: string) => 
-    `Ça fait la 2e fois que tu ne viens pas bosser ! Tu attends quoi pour venir ? ${sub} replacée à ${newTime}. ⚡`,
-  // 3e séance ratée ou surchauffe
-  catchupTier3: (sub: string, newTime: string) => 
-    `L'algorithme surchauffe à force de recalculer les rattrapages ! 🔥 Qu'est-ce que tu attends pour venir bosser ?! (${sub} à ${newTime})`,
-  // Séance de rattrapage générique
-  catchup: (sub: string, time?: string, dateText?: string) => 
-    `C'est l'heure de ton rattrapage ! Ta séance de ${sub} replacée ${dateText ? `${dateText} ` : ''}à ${time || 'ton horaire'} t'attend. Viens valider ton créneau d'étude ! 🎯`,
-  // Oubli de rattrapage
-  catchupForgotten: (sub: string, time?: string) => 
-    `Tu as oublié ton rattrapage ? Ta séance de ${sub} replacée à ${time || 'ton horaire'} n'est toujours pas validée. Viens bosser ! ⚡`,
-  // Alerte d'urgence
-  emergencyInterro: (sub: string, _count: number = 2) => 
-    `L'algorithme surchauffe à force de recalculer les rattrapages ! 🔥 Qu'est-ce que tu attends pour venir bosser ta séance de ${sub} ?!`,
-  // Alerte retard standard
-  overdue: (sub: string, time?: string) => 
-    `Ton algorithme s'impatiente ! Ta séance de ${sub} prévue à ${time || 'ton horaire'} t'attend. Viens valider ton créneau avant minuit 00:00 ! ⚡`,
+  // 1. Avant la séance (5 minutes avant)
+  upcoming5m: [
+    (sub: string) => `C’est l’heure de poser le téléphone deux secondes. Prends ton cahier de ${sub}, 30 minutes bien concentré et on en parle plus. Je compte sur toi ! 👊📚`,
+    (sub: string) => `Petit rappel entre nous : ta session de ${sub} démarre dans 5 minutes. Fais ça proprement pour ta propre fierté, ne traîne pas. ✨`,
+    (sub: string) => `Tu te souviens pourquoi on s’est lancés là-dedans ? ${sub} commence tout de suite. Lève-toi, bois un peu d’eau et installe-toi. 🤍`,
+  ],
+
+  // 2. Premier créneau sauté (manqué ou oublié)
+  firstMissed: [
+    (sub: string) => `Tu es où comme ça ? Tu devais être sur ${sub}. Ne commence pas à glisser sur les réseaux, viens faire au moins l'essentiel maintenant. 👀`,
+    (sub: string) => `Je te vois, tu fuis le cours de ${sub} ? 😂 Reviens t'asseoir 20 minutes, ne laisse pas la paresse gagner la journée.`,
+    (_sub: string) => `Pardon, ne commence pas à négliger. On avait dit qu'on assurait aujourd'hui. Ouvre ton cours tout de suite, il est encore temps ! ⏳`,
+  ],
+
+  // 3. Plusieurs créneaux manqués dans la journée (3 ou 4 sautés)
+  multipleMissed: [
+    (_sub: string) => `Franchement, tu penses que les résultats vont tomber du ciel ? Tu as laissé 4 créneaux passer aujourd'hui ! C'est ce soir qu'on rattrape ça ou c'est mort pour de bon. Lève-toi et va bosser, fais-moi honneur ! 😤`,
+    (_sub: string) => `Tu as sauté presque toute ta journée. Tu crois que c'est un jeu ? Demain c'est un autre jour, ce qui est perdu aujourd'hui ne reviendra pas. Assieds-toi ce soir et sauve ce qui peut l'être ! 🤦‍♂️`,
+    (sub: string) => `Tu me déçois un peu là. Tout le monde compte sur toi, Je m'inquiète pour ta reussite, et toi tu laisses ${sub} en l'air ? Rebranche-toi tout de suite, il reste encore quelques heures avant ce soir pour rattraper le coup. 🛑`,
+  ],
+
+  // 4. Le rattrapage du soir (Dernière chance avant minuit)
+  eveningLastChance: [
+    (_sub: string) => `Écoute-moi bien : minuit arrive. Ce que tu n’as pas étudié aujourd’hui, c’est classé sans suite, pas de report sur demain. Prends 30 minutes chrono maintenant pour sauver l'honneur de ta journée. ⏰🔥`,
+    (sub: string) => `Dernier appel de la soirée. Tu as raté des séances plus tôt, mais tu peux encore te coucher la tête haute si tu rattrapes ${sub} maintenant. Montre-moi ce que tu as dans le ventre ! 💪`,
+  ],
+
+  // Rétrocompatibilité d'appel direct
+  upcoming45m: (sub: string) => `Petit rappel entre nous : ta session de ${sub} démarre dans 5 minutes. Fais ça proprement pour ta propre fierté, ne traîne pas. ✨`,
+  catchupTier1: (sub: string) => `Tu es où comme ça ? Tu devais être sur ${sub}. Ne commence pas à glisser sur les réseaux, viens faire au moins l'essentiel maintenant. 👀`,
+  catchupTier2: (sub: string) => `Je te vois, tu fuis le cours de ${sub} ? 😂 Reviens t'asseoir 20 minutes, ne laisse pas la paresse gagner la journée.`,
+  catchupTier3: (_sub: string) => `Franchement, tu penses que les résultats vont tomber du ciel ? Tu as laissé 4 créneaux passer aujourd'hui ! C'est ce soir qu'on rattrape ça ou c'est mort pour de bon. Lève-toi et va bosser, fais-moi honneur ! 😤`,
+  catchup: (_sub: string) => `Pardon, ne commence pas à négliger. On avait dit qu'on assurait aujourd'hui. Ouvre ton cours tout de suite, il est encore temps ! ⏳`,
+  catchupForgotten: (sub: string) => `Dernier appel de la soirée. Tu as raté des séances plus tôt, mais tu peux encore te coucher la tête haute si tu rattrapes ${sub} maintenant. Montre-moi ce que tu as dans le ventre ! 💪`,
+  emergencyInterro: (sub: string) => `Tu me déçois un peu là. Tout le monde compte sur toi, Je m'inquiète pour ta reussite, et toi tu laisses ${sub} en l'air ? Rebranche-toi tout de suite, il reste encore quelques heures avant ce soir pour rattraper le coup. 🛑`,
+  overdue: (_sub: string) => `Écoute-moi bien : minuit arrive. Ce que tu n’as pas étudié aujourd’hui, c’est classé sans suite, pas de report sur demain. Prends 30 minutes chrono maintenant pour sauver l'honneur de ta journée. ⏰🔥`,
 };
 
 /**
  * Prépare le payload officiel prêt à l'envoi pour FCM HTTP v1 / Cloud Function
- * (aucun XP, aucun emoji de glace, centré sur le rappel d'étude et le Cube KONAN)
+ * (aucun XP, aucun emoji de glace, centré sur le Cube KONAN et le rappel d'étude)
  */
 export function buildFCMStudyReminderPayload(
   fcmToken: string,
@@ -257,8 +262,8 @@ export function buildFCMStudyReminderPayload(
   customBody?: string,
   customTitle?: string
 ) {
-  const body = customBody || `Ta séance de ${subjectName}${sessionTime ? ` (${sessionTime})` : ''} commence maintenant. Le Cube KONAN t'attend pour réviser !`;
-  const title = customTitle || "KONAN ✦ Rappel d'étude";
+  const body = customBody || `C’est l’heure de poser le téléphone deux secondes. Prends ton cahier de ${subjectName}, 30 minutes bien concentré et on en parle plus. Je compte sur toi ! 👊📚`;
+  const title = customTitle || `KONAN ✦ ${subjectName}`;
 
   return {
     message: {
@@ -269,8 +274,8 @@ export function buildFCMStudyReminderPayload(
       },
       webpush: {
         notification: {
-          icon: "/logo-konan.png",
-          badge: "/logo-konan.png",
+          icon: "/cube-icon.png",
+          badge: "/cube-badge.png",
           tag: `study-reminder-${subjectName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
           vibrate: [200, 100, 200],
         },
