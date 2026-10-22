@@ -326,7 +326,8 @@ import {
  * so all devices (PC, mobile, tablet) share the exact same timetable and subjects.
  */
 export async function saveUserState(uid: string, state: AppState): Promise<void> {
-  const targetTier: PlanTier = (state.planTier === 'pro' || state.userAccount?.planTier === 'pro') ? 'pro' : 'free';
+  const rawTier = state.planTier || state.userAccount?.planTier;
+  const targetTier: PlanTier = (rawTier === 'pro' || rawTier === 'plus') ? rawTier : 'free';
   const sanitizedState: AppState = {
     ...state,
     planTier: targetTier,

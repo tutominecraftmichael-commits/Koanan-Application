@@ -85,16 +85,29 @@ self.addEventListener('message', (event) => {
       // rem.targetTimestamp est l'horodatage exact correspondant à (startTime - 5 minutes)
       const delay = rem.targetTimestamp - now;
       if (delay > 0 && delay < 24 * 3600 * 1000) {
+        const notifOptions = {
+          body: rem.body,
+          icon: '/cube-icon.png',
+          badge: '/cube-badge.png',
+          tag: rem.tag || 'konan-study-reminder',
+          vibrate: [300, 150, 300],
+          renotify: true,
+          data: { url: '/', sessionId: rem.sessionId, ...(rem.data || {}) },
+        };
+
+        // Si le navigateur / smartphone supporte Notification Triggers au niveau de l'OS :
+        if ('showTrigger' in Notification.prototype && typeof TimestampTrigger !== 'undefined') {
+          try {
+            notifOptions.showTrigger = new TimestampTrigger(rem.targetTimestamp);
+            self.registration.showNotification(rem.title || 'KONAN', notifOptions);
+            return;
+          } catch (triggerErr) {
+            console.warn('[firebase-messaging-sw.js] Notification Triggers non disponible, repli sur timer actif :', triggerErr);
+          }
+        }
+
         const timerId = setTimeout(() => {
-          self.registration.showNotification(rem.title || 'KONAN', {
-            body: rem.body,
-            icon: '/cube-icon.png',
-            badge: '/cube-badge.png',
-            tag: rem.tag || 'konan-study-reminder',
-            vibrate: [300, 150, 300],
-            renotify: true,
-            data: { url: '/', sessionId: rem.sessionId },
-          });
+          self.registration.showNotification(rem.title || 'KONAN', notifOptions);
           scheduledTimers.delete(rem.id);
         }, delay);
         scheduledTimers.set(rem.id, timerId);

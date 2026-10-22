@@ -2,18 +2,20 @@
  * KONAN AI - Firebase Cloud Functions (v2)
  * 
  * Fonctions Cloud Serverless pour l'automatisation complète des rappels d'étude (FCM) :
- * 1. checkStudySessionsAndSendReminders : Tâche planifiée automatique (toutes les 15 minutes)
+ * 1. checkStudySessionsAndSendReminders : Tâche planifiée automatique (toutes les 1 minute)
  * 2. triggerStudyRemindersHttp : Endpoint HTTP sécurisé pour déclenchement manuel ou via webhook
  * 
  * RÈGLES STRICTES :
  * - Notification réservée aux abonnés PRO et PLUS (les utilisateurs gratuits n'ont pas accès).
- * - Rappel envoyé 5 minutes avant la session.
- * - Alerte interros d'urgence si la matinée/journée est délaissée.
- * - Rappels clairs : quoi bosser (matière), quoi rattraper (séance de rattrapage), quelle heure, quelle date.
+ * - Rappel envoyé 5 minutes avant la session (strictement 5m, jamais après le début).
+ * - Notifications de rattrapage structurées :
+ *   a) Immédiate dès que la séance est reportée : "Ta séance de {matiere} a été reportée à {newTime}..."
+ *   b) 5 minutes avant le créneau de rattrapage
+ *   c) Rattrapage oublié (> 15 min de retard)
  * - Aucune mention de "série" ou de "streak" (il n'y a pas de série).
  * - Aucune mention de système de points ou d'XP.
- * - Aucun emoji de glace.
- * - Identité visuelle : Logo "logo-konan.png" et Cube KONAN.
+ * - Zéro jargon robotique.
+ * - Identité visuelle : Silhouette du CUBE KONAN avec lettre K (/cube-icon.png et /cube-badge.png).
  */
 
 import { onSchedule } from 'firebase-functions/v2/scheduler';
@@ -59,6 +61,13 @@ function cleanRawSubjectTitle(title) {
     .trim();
 }
 
+function sanitizeNotificationTitle(title) {
+  const cleaned = (title || 'KONAN')
+    .replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '')
+    .trim();
+  return cleaned || 'KONAN';
+}
+
 function isSessionPending(session) {
   if (!session) return false;
   if (session.completed === true) return false;
@@ -67,15 +76,20 @@ function isSessionPending(session) {
 }
 
 async function sendPushWithCleanup({ userId, fcmToken, title, body, dataPayload, tag }) {
+  const cleanTitle = sanitizeNotificationTitle(title);
+  const cleanBody = (body || '')
+    .replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '')
+    .trim();
+
   const message = {
     token: fcmToken,
-    notification: { title, body },
+    notification: { title: cleanTitle, body: cleanBody },
     webpush: {
       notification: {
-        icon: '/logo-konan.png',
-        badge: '/logo-konan.png',
+        icon: '/cube-icon.png',
+        badge: '/cube-badge.png',
         tag: tag || 'konan-study',
-        vibrate: [200, 100, 200],
+        vibrate: [300, 150, 300],
       },
       fcm_options: { link: dataPayload?.url || '/' },
     },
@@ -113,7 +127,7 @@ async function sendPushWithCleanup({ userId, fcmToken, title, body, dataPayload,
 }
 
 /**
- * Logique partagée de scan et notification
+ * Logique partagée de scan et notification (toutes les 1 minute)
  */
 async function processAllStudentReminders() {
   const now = new Date();
@@ -121,21 +135,69 @@ async function processAllStudentReminders() {
   const currentDayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  const dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-  const dayName = dayNames[currentDayOfWeek];
-  const dateFormatted = now.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
-  const fullDateText = `aujourd'hui (${dayName} ${dateFormatted})`;
-
   const usersSnapshot = await db.collection('users').get();
   const stats = {
     scannedUsers: usersSnapshot.size,
     eligibleSubscribers: 0,
     upcomingSent: 0,
     catchupSent: 0,
+    rescheduledNoticesSent: 0,
     urgentInterroAlertsSent: 0,
     overdueSent: 0,
     cleanedTokens: 0,
     errors: 0,
+  };
+
+  // -------------------------------------------------------------
+  // TEMPLATES OFFICIELS DU COMPAGNON KONAN (Règles strictes Christ Boni)
+  // -------------------------------------------------------------
+  const BEFORE_SESSION_MSGS = [
+    (sub, dur = 25) => `C’est l’heure de poser le téléphone deux secondes. Prends ton cahier de ${sub}, ${dur} minutes bien concentré et on en parle plus. Je compte sur toi ! 👊📚`,
+    (sub) => `Petit rappel entre nous : ta session de ${sub} démarre dans 5 minutes. Fais ça proprement pour ta propre fierté, ne traîne pas. ✨`,
+    (sub) => `Tu te souviens pourquoi on s’est lancés là-dedans ? ${sub} commence tout de suite. Lève-toi, bois un peu d’eau et installe-toi. 🤍`,
+  ];
+
+  const FIRST_MISSED_MSGS = [
+    (sub) => `Tu es où comme ça ? Tu devais être sur ${sub}. Ne commence pas à glisser sur les réseaux, viens faire au moins l'essentiel maintenant. 👀`,
+    (sub, dur = 25) => `Je te vois, tu fuis le cours de ${sub} ? 😂 Reviens t'asseoir ${dur} minutes, ne laisse pas la paresse gagner la journée.`,
+    () => `Pardon, ne commence pas à négliger. On avait dit qu'on assurait aujourd'hui. Ouvre ton cours tout de suite, il est encore temps ! ⏳`,
+  ];
+
+  const MULTIPLE_MISSED_MSGS = [
+    () => `Franchement, tu penses que les résultats vont tomber du ciel ? Tu as laissé plusieurs créneaux passer aujourd'hui ! C'est ce soir qu'on rattrape ça ou c'est mort pour de bon. Lève-toi et va bosser, fais-moi honneur ! 😤`,
+    () => `Tu as sauté presque toute ta journée. Tu crois que c'est un jeu ? Demain c'est un autre jour, ce qui est perdu aujourd'hui ne reviendra pas. Assieds-toi ce soir et sauve ce qui peut l'être ! 🤦‍♂️`,
+    (sub) => `Tu me déçois un peu là. Tout le monde compte sur toi, Je m'inquiète pour ta reussite, et toi tu laisses ${sub} en l'air ? Rebranche-toi tout de suite, il reste encore quelques heures avant ce soir pour rattraper le coup. 🛑`,
+  ];
+
+  const EVENING_LAST_CHANCE_MSGS = [
+    (_sub, dur = 25) => `Écoute-moi bien : minuit arrive. Ce que tu n’as pas étudié aujourd’hui, c’est classé sans suite, pas de report sur demain. Prends ${dur} minutes chrono maintenant pour sauver l'honneur de ta journée. ⏰🔥`,
+    (sub) => `Dernier appel de la soirée. Tu as raté des séances plus tôt, mais tu peux encore te coucher la tête haute si tu rattrapes ${sub} maintenant. Montre-moi ce que tu as dans le ventre ! 💪`,
+  ];
+
+  const RESCHEDULED_SESSION_MSGS = [
+    (sub, time) => `Ta séance de ${sub} a été reportée à ${time}. Viens rattraper ton retard aujourd'hui avant minuit, on ne lâche rien ! ⏳👊`,
+    (sub, time) => `Tu as sauté ta session de ${sub} ? Je ne te laisse pas abandonner : je l'ai replacée à ${time}. Sois au rendez-vous ce soir ! 👊`,
+    (sub, time, dur = 25) => `Pardon, ne commence pas à négliger. Ta séance de ${sub} t'attend à ${time} pour ${dur} minutes bien concentré. Assure ta journée ! ✨`,
+  ];
+
+  const CATCHUP_5M_MSGS = [
+    (sub, time, dur = 25) => `C’est l’heure de ton rattrapage de ${sub} ! Ça commence dans 5 minutes (à ${time}). ${dur} minutes et l'honneur est sauf ! 👊📚`,
+    (sub, time) => `Petit rappel pour ton rattrapage : ta session de ${sub} démarre dans 5 minutes (à ${time}). Ne traîne pas, montre ce que tu as dans le ventre ! ✨`,
+  ];
+
+  const CATCHUP_MISSED_MSGS = [
+    (sub, time) => `Tu as oublié ton rattrapage de ${sub} à ${time} ? Minuit approche, ne laisse pas la paresse gagner la journée. Ouvre ton cours tout de suite ! ⏳`,
+    (sub, _time, dur = 25) => `Je te vois, tu fuis encore le rattrapage de ${sub} ? 😂 Viens t'asseoir ${dur} minutes, il est encore temps avant minuit ! 👀`,
+  ];
+
+  const pickMsg = (arr, sub, dur = 25) => {
+    const idx = Math.floor(Math.random() * arr.length);
+    return arr[idx](sub, dur);
+  };
+
+  const pickTimeMsg = (arr, sub, time, dur = 25) => {
+    const idx = Math.floor(Math.random() * arr.length);
+    return arr[idx](sub, time, dur);
   };
 
   for (const doc of usersSnapshot.docs) {
@@ -183,21 +245,55 @@ async function processAllStudentReminders() {
     const notifiedMap = userData.notifiedStudyReminders || {};
     const updatesToSave = {};
 
-    // Alerte d'urgence Duolingo : aucune séance validée depuis le matin
-    const completedCountToday = todaysSlots.filter((s) => s && s.completed === true).length;
     const pastPendingSlotsToday = todaysSlots.filter((s) => {
       if (!s || s.completed === true) return false;
       const startMin = parseTimeToMinutes(s.startTime);
       return startMin > 0 && currentMinutes > startMin + 15;
     });
 
-    const isMorningOrDayCompletelyNeglected = 
-      completedCountToday === 0 && 
-      pastPendingSlotsToday.length >= 2 && 
-      currentMinutes >= 720;
+    const missedCount = pastPendingSlotsToday.length;
+    const isEveningTime = currentMinutes >= 1260 && currentMinutes < 1435; // 21h00 à 23h55
 
-    const emergencyInterroKey = `${todayStr}_urgent_interro_neglect`;
-    if (isMorningOrDayCompletelyNeglected && !notifiedMap[emergencyInterroKey]) {
+    // 1. Rattrapage du soir : Dernière chance avant minuit (21h00 - 23h50)
+    const eveningLastChanceKey = `${todayStr}_evening_last_chance`;
+    if (isEveningTime && missedCount > 0 && !notifiedMap[eveningLastChanceKey]) {
+      const firstNeglected = pastPendingSlotsToday[0];
+      const mainSubjectName = 
+        firstNeglected.subjectName || 
+        subjectsMap.get(firstNeglected.subjectId) || 
+        cleanRawSubjectTitle(firstNeglected.title) || 
+        'tes cours';
+      const duration = firstNeglected.durationMinutes || 25;
+
+      const title = 'KONAN';
+      const body = pickMsg(EVENING_LAST_CHANCE_MSGS, mainSubjectName, duration);
+
+      const result = await sendPushWithCleanup({
+        userId,
+        fcmToken,
+        title,
+        body,
+        tag: `konan-evening-last-chance-${todayStr}`,
+        dataPayload: {
+          url: '/',
+          type: 'evening_last_chance',
+          subjectName: mainSubjectName,
+          date: todayStr,
+        },
+      });
+
+      if (result.success) {
+        stats.catchupSent += 1;
+        updatesToSave[`notifiedStudyReminders.${eveningLastChanceKey}`] = new Date().toISOString();
+      } else if (result.cleaned) {
+        stats.cleanedTokens += 1;
+        continue;
+      }
+    }
+
+    // 2. Plusieurs créneaux manqués dans la journée (>= 3 séances sautées)
+    const multipleMissedKey = `${todayStr}_multiple_missed_alert`;
+    if (missedCount >= 3 && !isEveningTime && !notifiedMap[multipleMissedKey]) {
       const firstNeglected = pastPendingSlotsToday[0];
       const mainSubjectName = 
         firstNeglected.subjectName || 
@@ -205,18 +301,18 @@ async function processAllStudentReminders() {
         cleanRawSubjectTitle(firstNeglected.title) || 
         'tes cours';
 
-      const title = `KONAN ✦ Alerte urgente — Interros en approche !`;
-      const body = `Tu ne veux pas bosser, non ? OK. Mais quand le prof va distribuer les sujets d'interro, ne viens pas te plaindre ! Déjà ${pastPendingSlotsToday.length} séances délaissées aujourd'hui (${mainSubjectName}). Viens rattraper avant minuit !`;
+      const title = `KONAN ✦ ${mainSubjectName}`;
+      const body = pickMsg(MULTIPLE_MISSED_MSGS, mainSubjectName);
 
       const result = await sendPushWithCleanup({
         userId,
         fcmToken,
         title,
         body,
-        tag: `konan-emergency-interro-${todayStr}`,
+        tag: `konan-multiple-missed-${todayStr}`,
         dataPayload: {
           url: '/',
-          type: 'emergency_interro_neglect',
+          type: 'multiple_missed_sessions',
           subjectName: mainSubjectName,
           date: todayStr,
         },
@@ -224,7 +320,7 @@ async function processAllStudentReminders() {
 
       if (result.success) {
         stats.urgentInterroAlertsSent += 1;
-        updatesToSave[`notifiedStudyReminders.${emergencyInterroKey}`] = new Date().toISOString();
+        updatesToSave[`notifiedStudyReminders.${multipleMissedKey}`] = new Date().toISOString();
       } else if (result.cleaned) {
         stats.cleanedTokens += 1;
         continue;
@@ -243,77 +339,107 @@ async function processAllStudentReminders() {
       const formattedEndTime = formatTimeDisplay(slot.endTime || '');
 
       const startMin = parseTimeToMinutes(slot.startTime);
-      const endMin = parseTimeToMinutes(slot.endTime);
-
       if (startMin < 0) continue;
 
       const isPending = isSessionPending(slot);
       const isCatchup = Boolean(slot.isRescheduledToday || slot.rescheduledReason || slot.isCatchup);
       const diffToStart = startMin - currentMinutes;
+      const duration = slot.durationMinutes || 25;
 
-      // 1. Séance de rattrapage
-      const catchupKey = `${todayStr}_${slotId}_catchup_alert`;
-      if (isCatchup && isPending && diffToStart <= 5 && diffToStart >= -10 && !notifiedMap[catchupKey]) {
-        const title = `KONAN ✦ Séance de rattrapage — ${resolvedSubjectName}`;
-        const body = formattedEndTime
-          ? `C'est l'heure de ton rattrapage ! Ta séance de ${resolvedSubjectName} replacée ${fullDateText} de ${formattedStartTime} à ${formattedEndTime} t'attend. Viens valider ton créneau d'étude !`
-          : `C'est l'heure de ton rattrapage ! Ta séance de ${resolvedSubjectName} replacée ${fullDateText} à ${formattedStartTime} t'attend. Viens valider ton créneau d'étude !`;
+      // -------------------------------------------------------------
+      // CAS A : NOTIFICATION IMMÉDIATE DÈS QUE LA SÉANCE EST REPORTÉE
+      // -------------------------------------------------------------
+      const rescheduledNoticeKey = `${todayStr}_${slotId}_rescheduled_notice_${slot.startTime}`;
+      if (isCatchup && !notifiedMap[rescheduledNoticeKey]) {
+        const title = `KONAN ✦ ${resolvedSubjectName}`;
+        const body = pickTimeMsg(RESCHEDULED_SESSION_MSGS, resolvedSubjectName, formattedStartTime, duration);
+
+        const result = await sendPushWithCleanup({
+          userId,
+          fcmToken,
+          title,
+          body,
+          tag: `konan-rescheduled-${slotId}`,
+          dataPayload: {
+            url: '/',
+            type: 'session_rescheduled',
+            sessionId: slotId,
+            subjectName: resolvedSubjectName,
+            newStartTime: formattedStartTime,
+            date: todayStr,
+          },
+        });
+
+        if (result.success) {
+          stats.rescheduledNoticesSent += 1;
+          updatesToSave[`notifiedStudyReminders.${rescheduledNoticeKey}`] = new Date().toISOString();
+        } else if (result.cleaned) {
+          stats.cleanedTokens += 1;
+          break;
+        }
+      }
+
+      // -------------------------------------------------------------
+      // CAS B : 5 MINUTES AVANT LE RATTRAPAGE
+      // -------------------------------------------------------------
+      const catchup5mKey = `${todayStr}_${slotId}_catchup_5m_${slot.startTime}`;
+      if (isCatchup && isPending && diffToStart >= 4 && diffToStart <= 6 && !notifiedMap[catchup5mKey]) {
+        const title = `KONAN ✦ Rattrapage ${resolvedSubjectName}`;
+        const body = pickTimeMsg(CATCHUP_5M_MSGS, resolvedSubjectName, formattedStartTime, duration);
 
         const res = await sendPushWithCleanup({
           userId,
           fcmToken,
           title,
           body,
-          tag: `konan-catchup-${slotId}`,
+          tag: `konan-catchup-5m-${slotId}`,
           dataPayload: {
             url: '/',
-            type: 'catchup_session',
+            type: 'catchup_upcoming_5m',
             sessionId: slotId,
             subjectName: resolvedSubjectName,
             startTime: formattedStartTime,
-            endTime: formattedEndTime,
             date: todayStr,
           },
         });
 
         if (res.success) {
           stats.catchupSent += 1;
-          updatesToSave[`notifiedStudyReminders.${catchupKey}`] = new Date().toISOString();
+          updatesToSave[`notifiedStudyReminders.${catchup5mKey}`] = new Date().toISOString();
           continue;
         } else if (res.cleaned) {
           stats.cleanedTokens += 1;
           break;
-        } else {
-          stats.errors += 1;
         }
       }
 
-      // Oubli de rattrapage
-      const catchupForgottenKey = `${todayStr}_${slotId}_catchup_forgotten`;
-      if (isCatchup && isPending && currentMinutes > startMin + 10 && !notifiedMap[catchupForgottenKey]) {
-        const title = `KONAN ✦ Alerte rattrapage — ${resolvedSubjectName}`;
-        const body = `Tu as oublié ton rattrapage ? Ta séance de ${resolvedSubjectName} replacée ${fullDateText} à ${formattedStartTime} n'est toujours pas validée. Quand l'interro va arriver, ne te plains pas ! Viens bosser maintenant !`;
+      // -------------------------------------------------------------
+      // CAS C : RATTRAPAGE OUBLIÉ (> 15 MIN DE RETARD)
+      // -------------------------------------------------------------
+      const catchupMissedKey = `${todayStr}_${slotId}_catchup_missed_${slot.startTime}`;
+      if (isCatchup && isPending && currentMinutes > startMin + 15 && !notifiedMap[catchupMissedKey]) {
+        const title = `KONAN ✦ Rattrapage ${resolvedSubjectName}`;
+        const body = pickTimeMsg(CATCHUP_MISSED_MSGS, resolvedSubjectName, formattedStartTime, duration);
 
         const res = await sendPushWithCleanup({
           userId,
           fcmToken,
           title,
           body,
-          tag: `konan-catchup-forgotten-${slotId}`,
+          tag: `konan-catchup-missed-${slotId}`,
           dataPayload: {
             url: '/',
-            type: 'catchup_forgotten',
+            type: 'catchup_missed',
             sessionId: slotId,
             subjectName: resolvedSubjectName,
             startTime: formattedStartTime,
-            endTime: formattedEndTime,
             date: todayStr,
           },
         });
 
         if (res.success) {
           stats.catchupSent += 1;
-          updatesToSave[`notifiedStudyReminders.${catchupForgottenKey}`] = new Date().toISOString();
+          updatesToSave[`notifiedStudyReminders.${catchupMissedKey}`] = new Date().toISOString();
           continue;
         } else if (res.cleaned) {
           stats.cleanedTokens += 1;
@@ -321,13 +447,13 @@ async function processAllStudentReminders() {
         }
       }
 
-      // 2. Rappel 5 min avant (rectification demandée)
+      // -------------------------------------------------------------
+      // CAS D : SÉANCE NORMALE — STRICTEMENT 5 MINUTES AVANT
+      // -------------------------------------------------------------
       const upcoming5mKey = `${todayStr}_${slotId}_upcoming_5m`;
-      if (!isCatchup && isPending && diffToStart >= 0 && diffToStart <= 5 && !notifiedMap[upcoming5mKey]) {
-        const title = `KONAN ✦ Rappel de séance — ${resolvedSubjectName}`;
-        const body = formattedEndTime
-          ? `Prépare ton bloc-notes ! Ta session de ${resolvedSubjectName} commence dans 5 minutes (à ${formattedStartTime}, jusqu'à ${formattedEndTime}, ${fullDateText}). Le Cube t'attend pour valider ton créneau.`
-          : `Prépare ton bloc-notes ! Ta session de ${resolvedSubjectName} commence dans 5 minutes (à ${formattedStartTime}, ${fullDateText}). Le Cube t'attend pour valider ton créneau.`;
+      if (!isCatchup && isPending && diffToStart >= 4 && diffToStart <= 6 && !notifiedMap[upcoming5mKey]) {
+        const title = `KONAN ✦ ${resolvedSubjectName}`;
+        const body = pickMsg(BEFORE_SESSION_MSGS, resolvedSubjectName, duration);
 
         const res = await sendPushWithCleanup({
           userId,
@@ -357,26 +483,24 @@ async function processAllStudentReminders() {
         }
       }
 
-      // 3. Alerte en retard / non validé après l'heure
-      const overdueKey = `${todayStr}_${slotId}_overdue_alert`;
-      const isPastStartTime = currentMinutes > startMin + 5;
-      const isPastEndTime = endMin > 0 ? currentMinutes >= endMin : currentMinutes >= startMin + 30;
-
-      if (!isCatchup && isPending && (isPastStartTime || isPastEndTime) && !notifiedMap[overdueKey]) {
-        const title = `KONAN ✦ Alerte planning — ${resolvedSubjectName}`;
-        const body = formattedEndTime
-          ? `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue ${fullDateText} de ${formattedStartTime} à ${formattedEndTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`
-          : `Ton algorithme s'impatiente ! Ta séance de ${resolvedSubjectName} prévue ${fullDateText} à ${formattedStartTime} est toujours en attente. Ne laisse pas le retard s'accumuler ! Viens valider ton créneau avant minuit !`;
+      // -------------------------------------------------------------
+      // CAS E : PREMIER CRÉNEAU SAUTÉ (MANQUÉ OU OUBLIÉ)
+      // -------------------------------------------------------------
+      const firstMissedKey = `${todayStr}_${slotId}_first_missed`;
+      const isPastStartTime = currentMinutes > startMin + 15;
+      if (!isCatchup && isPending && isPastStartTime && missedCount < 3 && !notifiedMap[firstMissedKey]) {
+        const title = `KONAN ✦ ${resolvedSubjectName}`;
+        const body = pickMsg(FIRST_MISSED_MSGS, resolvedSubjectName, duration);
 
         const res = await sendPushWithCleanup({
           userId,
           fcmToken,
           title,
           body,
-          tag: `konan-overdue-${slotId}`,
+          tag: `konan-missed-${slotId}`,
           dataPayload: {
             url: '/',
-            type: 'overdue_session',
+            type: 'missed_session',
             sessionId: slotId,
             subjectName: resolvedSubjectName,
             startTime: formattedStartTime,
@@ -387,7 +511,7 @@ async function processAllStudentReminders() {
 
         if (res.success) {
           stats.overdueSent += 1;
-          updatesToSave[`notifiedStudyReminders.${overdueKey}`] = new Date().toISOString();
+          updatesToSave[`notifiedStudyReminders.${firstMissedKey}`] = new Date().toISOString();
         } else if (res.cleaned) {
           stats.cleanedTokens += 1;
           break;
@@ -406,16 +530,16 @@ async function processAllStudentReminders() {
 }
 
 /**
- * 1. Tâche planifiée automatique (toutes les 15 minutes)
+ * 1. Tâche planifiée automatique (toutes les 1 minute pour réactivité exacte)
  */
 export const checkStudySessionsAndSendReminders = onSchedule(
   {
-    schedule: 'every 15 minutes',
+    schedule: 'every 1 minutes',
     timeZone: 'Africa/Abidjan',
     retryCount: 1,
   },
   async () => {
-    console.log('[KONAN Cloud Function] Exécution planifiée du scan des séances...');
+    console.log('[KONAN Cloud Function] Exécution planifiée du scan des séances (1 min)...');
     const stats = await processAllStudentReminders();
     console.log('[KONAN Cloud Function] Scan terminé :', stats);
   }

@@ -48,6 +48,25 @@ export const EVENING_LAST_CHANCE_TEMPLATES = [
   (sub: string, _dur: number = 25) => `Dernier appel de la soirée. Tu as raté des séances plus tôt, mais tu peux encore te coucher la tête haute si tu rattrapes ${sub} maintenant. Montre-moi ce que tu as dans le ventre ! 💪`,
 ];
 
+// 5. Séance de rattrapage reportée (dès que le créneau est déplacé à une nouvelle heure)
+export const RESCHEDULED_SESSION_TEMPLATES = [
+  (sub: string, newTime: string, _dur: number = 25) => `Ta séance de ${sub} a été reportée à ${newTime}. Viens rattraper ton retard aujourd'hui avant minuit, on ne lâche rien ! ⏳👊`,
+  (sub: string, newTime: string, _dur: number = 25) => `Tu as sauté ta session de ${sub} ? Je ne te laisse pas abandonner : je l'ai replacée à ${newTime}. Sois au rendez-vous ce soir ! 👊`,
+  (sub: string, newTime: string, dur: number = 25) => `Pardon, ne commence pas à négliger. Ta séance de ${sub} t'attend à ${newTime} pour ${dur} minutes bien concentré. Assure ta journée ! ✨`,
+];
+
+// 6. Rappel 5 minutes avant la séance de rattrapage
+export const CATCHUP_5M_TEMPLATES = [
+  (sub: string, newTime: string, dur: number = 25) => `C’est l’heure de ton rattrapage de ${sub} ! Ça commence dans 5 minutes (à ${newTime}). ${dur} minutes et l'honneur est sauf ! 👊📚`,
+  (sub: string, newTime: string, _dur: number = 25) => `Petit rappel pour ton rattrapage : ta session de ${sub} démarre dans 5 minutes (à ${newTime}). Ne traîne pas, montre ce que tu as dans le ventre ! ✨`,
+];
+
+// 7. Rattrapage oublié / manqué après l'heure
+export const CATCHUP_MISSED_TEMPLATES = [
+  (sub: string, newTime: string, _dur: number = 25) => `Tu as oublié ton rattrapage de ${sub} à ${newTime} ? Minuit approche, ne laisse pas la paresse gagner la journée. Ouvre ton cours tout de suite ! ⏳`,
+  (sub: string, _newTime: string, dur: number = 25) => `Je te vois, tu fuis encore le rattrapage de ${sub} ? 😂 Viens t'asseoir ${dur} minutes, il est encore temps avant minuit ! 👀`,
+];
+
 /**
  * Sélecteur pseudo-aléatoire stable ou indexé pour les messages avec durée dynamique
  */
@@ -65,6 +84,21 @@ function pickTemplate(
   return randomFn(sub, duration);
 }
 
+function pickTimeTemplate(
+  templates: ((sub: string, time: string, dur: number) => string)[],
+  sub: string,
+  timeStr: string,
+  duration: number = 25,
+  index?: number
+): string {
+  if (typeof index === 'number' && index >= 0) {
+    const fn = templates[index % templates.length];
+    return fn(sub, timeStr, duration);
+  }
+  const randomFn = templates[Math.floor(Math.random() * templates.length)];
+  return randomFn(sub, timeStr, duration);
+}
+
 export function getUpcoming5mMessage(subject: string, duration: number = 25, index?: number): string {
   return pickTemplate(BEFORE_SESSION_TEMPLATES, subject, duration, index);
 }
@@ -79,6 +113,18 @@ export function getMultipleMissedMessage(subject: string, duration: number = 25,
 
 export function getEveningLastChanceMessage(subject: string, duration: number = 25, index?: number): string {
   return pickTemplate(EVENING_LAST_CHANCE_TEMPLATES, subject, duration, index);
+}
+
+export function getRescheduledSessionMessage(subject: string, newTime: string, duration: number = 25, index?: number): string {
+  return pickTimeTemplate(RESCHEDULED_SESSION_TEMPLATES, subject, newTime, duration, index);
+}
+
+export function getCatchup5mMessage(subject: string, newTime: string, duration: number = 25, index?: number): string {
+  return pickTimeTemplate(CATCHUP_5M_TEMPLATES, subject, newTime, duration, index);
+}
+
+export function getCatchupMissedMessage(subject: string, newTime: string, duration: number = 25, index?: number): string {
+  return pickTimeTemplate(CATCHUP_MISSED_TEMPLATES, subject, newTime, duration, index);
 }
 
 /**
@@ -218,8 +264,33 @@ export function sendStudyReminder5mNotification(
 export const sendStudyReminder30mNotification = sendStudyReminder5mNotification;
 
 /**
- * Transmet au Service Worker la liste exacte des séances du jour pour qu'il déclenche
- * les alertes 5 minutes avant même si l'application est en arrière-plan ou que l'écran est éteint.
+ * Envoie immédiatement une notification informant l'étudiant que sa séance
+ * non faite a été reportée / décalée pour rattrapage plus tard dans la journée.
+ * STRICTEMENT RÉSERVÉ AUX MEMBRES PRO / PLUS.
+ */
+export function sendSessionRescheduledNotification(
+  subjectName: string,
+  newStartTime: string,
+  _originalStartTime?: string,
+  durationMinutes: number = 25,
+  userTier: PlanTier = 'free'
+): boolean {
+  if (userTier === 'free') {
+    return false;
+  }
+
+  const message = getRescheduledSessionMessage(subjectName, newStartTime, durationMinutes);
+  sendPhoneNotification(
+    `KONAN ✦ ${subjectName}`,
+    message,
+    `study-rescheduled-${subjectName}-${newStartTime}`
+  );
+  return true;
+}
+
+/**
+ * Transmet au Service Worker la liste exacte des séances du jour (normales et rattrapages)
+ * pour qu'il déclenche les alertes 5 minutes avant même si l'application est en arrière-plan.
  */
 export function syncRemindersWithServiceWorker(
   sessions: StudySession[],
@@ -241,14 +312,20 @@ export function syncRemindersWithServiceWorker(
     const subject = subjects.find(s => s.id === session.subjectId);
     const subjectName = subject?.name || session.title || 'tes cours';
     const duration = session.durationMinutes || 25;
+    const isCatchup = Boolean(session.isRescheduledToday || session.rescheduledReason);
+
+    const title = isCatchup ? `KONAN ✦ Rattrapage ${subjectName}` : `KONAN ✦ ${subjectName}`;
+    const body = isCatchup 
+      ? getCatchup5mMessage(subjectName, session.startTime, duration)
+      : getUpcoming5mMessage(subjectName, duration);
 
     return {
       id: `${session.id}_5m`,
       sessionId: session.id,
       targetTimestamp,
-      title: `KONAN ✦ ${subjectName}`,
-      body: getUpcoming5mMessage(subjectName, duration),
-      tag: `study-alert-5m-${session.id}`,
+      title,
+      body,
+      tag: isCatchup ? `catchup-alert-5m-${session.id}` : `study-alert-5m-${session.id}`,
     };
   }).filter(r => r.targetTimestamp > Date.now());
 
@@ -267,9 +344,12 @@ export function syncRemindersWithServiceWorker(
 /**
  * Vérifie les créneaux d'étude du jour et déclenche automatiquement
  * les notifications selon les circonstances réelles :
- * 1. Strictement 5 minutes avant chaque session (jamais après le début)
- * 2. Rattrapage du soir (dernière chance avant minuit) entre 21h00 et 23h59
- * 3. Synchronisation automatique avec le Service Worker pour l'arrière-plan
+ * 1. Strictement 5 minutes avant chaque session normale ou rattrapage (jamais après le début)
+ * 2. Alerte premier créneau sauté (dès 15 min de retard non validé)
+ * 3. Alerte oubli de rattrapage (dès 15 min de retard sur le créneau de rattrapage)
+ * 4. Alerte créneaux multiples manqués dans la journée (>= 3 séances délaissées)
+ * 5. Rattrapage du soir (dernière chance avant minuit) entre 21h00 et 23h50
+ * 6. Synchronisation automatique avec le Service Worker pour l'arrière-plan
  */
 export function checkAndDispatchStudyReminders(
   sessions: StudySession[],
@@ -298,8 +378,17 @@ export function checkAndDispatchStudyReminders(
   const todaysSessions = sessions.filter(s => s.dayOfWeek === currentDayOfWeek);
   const uncompletedToday = todaysSessions.filter(s => !s.completed);
 
-  // 1. Rappel STRICTEMENT 5 minutes avant la séance
-  // (diffMinutes entre 4 et 6 minutes avant le début ; INTERDIT si diffMinutes <= 0 car la séance a déjà commencé)
+  // Compter le nombre de créneaux manqués passés (> 15 min de retard)
+  const pastPendingToday = uncompletedToday.filter(session => {
+    const [h, m] = session.startTime.split(':').map(Number);
+    const startMin = h * 60 + (m || 0);
+    return currentMinutes > startMin + 15;
+  });
+  const missedCount = pastPendingToday.length;
+  const isEvening = currentMinutes >= 1260 && currentMinutes < 1435; // 21h00 - 23h55
+
+  // 1. Rappels STRICTEMENT 5 minutes avant la séance (normales et rattrapages)
+  // (diffMinutes entre 4 et 6 minutes avant le début ; STRICTEMENT INTERDIT si diffMinutes <= 0 car la séance a déjà commencé)
   uncompletedToday.forEach(session => {
     const [h, m] = session.startTime.split(':').map(Number);
     const sessionStartMinutes = h * 60 + (m || 0);
@@ -308,35 +397,66 @@ export function checkAndDispatchStudyReminders(
     const subject = subjects.find(sub => sub.id === session.subjectId);
     const subjectName = subject?.name || session.title || 'tes cours';
     const duration = session.durationMinutes || 25;
+    const isCatchup = Boolean(session.isRescheduledToday || session.rescheduledReason);
 
-    const alert5mId = `${session.id}_5m`;
+    const alert5mId = `${session.id}_5m_${session.startTime}`;
     if (diffMinutes >= 4 && diffMinutes <= 6 && !notifiedIds.includes(alert5mId)) {
-      const body = getUpcoming5mMessage(subjectName, duration);
-      sendPhoneNotification(
-        `KONAN ✦ ${subjectName}`,
-        body,
-        `study-alert-5m-${session.id}`
-      );
+      const title = isCatchup ? `KONAN ✦ Rattrapage ${subjectName}` : `KONAN ✦ ${subjectName}`;
+      const body = isCatchup 
+        ? getCatchup5mMessage(subjectName, session.startTime, duration)
+        : getUpcoming5mMessage(subjectName, duration);
+
+      sendPhoneNotification(title, body, `study-alert-5m-${session.id}`);
       notifiedIds.push(alert5mId);
+      try {
+        sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
+      } catch {}
+    }
+
+    // 2. Alerte premier créneau sauté (séance normale) si retard > 15 min
+    const firstMissedId = `${session.id}_first_missed`;
+    if (!isCatchup && diffMinutes <= -15 && missedCount < 3 && !notifiedIds.includes(firstMissedId)) {
+      const body = getFirstMissedMessage(subjectName, duration);
+      sendPhoneNotification(`KONAN ✦ ${subjectName}`, body, `study-first-missed-${session.id}`);
+      notifiedIds.push(firstMissedId);
+      try {
+        sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
+      } catch {}
+    }
+
+    // 3. Alerte oubli de rattrapage (séance de rattrapage passée de plus de 15 min sans validation)
+    const catchupMissedId = `${session.id}_catchup_missed_${session.startTime}`;
+    if (isCatchup && diffMinutes <= -15 && !notifiedIds.includes(catchupMissedId)) {
+      const body = getCatchupMissedMessage(subjectName, session.startTime, duration);
+      sendPhoneNotification(`KONAN ✦ Rattrapage ${subjectName}`, body, `study-catchup-missed-${session.id}`);
+      notifiedIds.push(catchupMissedId);
       try {
         sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
       } catch {}
     }
   });
 
-  // 2. Rattrapage du soir : Dernière chance avant minuit (21h00 à 23h50)
-  // Règle stricte : ce qui n'est pas étudié aujourd'hui est classé sans suite, pas de report sur demain
+  // 4. Alerte plusieurs créneaux manqués dans la journée (>= 3 séances sautées)
+  const multipleMissedKey = `multiple_missed_${dateKey}`;
+  if (missedCount >= 3 && !isEvening && !notifiedIds.includes(multipleMissedKey)) {
+    const firstSession = pastPendingToday[0];
+    const firstSubject = subjects.find(sub => sub.id === firstSession.subjectId)?.name || firstSession.title || 'tes cours';
+    const body = getMultipleMissedMessage(firstSubject);
+    sendPhoneNotification(`KONAN ✦ ${firstSubject}`, body, `study-multiple-missed-${dateKey}`);
+    notifiedIds.push(multipleMissedKey);
+    try {
+      sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
+    } catch {}
+  }
+
+  // 5. Rattrapage du soir : Dernière chance avant minuit (21h00 à 23h50)
   const eveningAlertKey = `evening_last_chance_${dateKey}`;
-  if (currentMinutes >= 1260 && currentMinutes < 1435 && uncompletedToday.length > 0 && !notifiedIds.includes(eveningAlertKey)) {
+  if (isEvening && uncompletedToday.length > 0 && !notifiedIds.includes(eveningAlertKey)) {
     const firstSession = uncompletedToday[0];
     const firstSubject = subjects.find(sub => sub.id === firstSession.subjectId)?.name || firstSession.title || 'tes cours';
     const duration = firstSession.durationMinutes || 25;
     const body = getEveningLastChanceMessage(firstSubject, duration);
-    sendPhoneNotification(
-      'KONAN',
-      body,
-      `study-evening-last-chance-${dateKey}`
-    );
+    sendPhoneNotification('KONAN', body, `study-evening-last-chance-${dateKey}`);
     notifiedIds.push(eveningAlertKey);
     try {
       sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));

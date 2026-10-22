@@ -12,7 +12,7 @@
 import { runStudyRemindersCheck } from './studyReminderEngine.js';
 
 const isOneShot = process.argv.includes('--once');
-const INTERVAL_MINUTES = parseInt(process.env.CHECK_INTERVAL_MINUTES || '15', 10);
+const INTERVAL_MINUTES = parseInt(process.env.CHECK_INTERVAL_MINUTES || '1', 10);
 const INTERVAL_MS = INTERVAL_MINUTES * 60 * 1000;
 
 console.log('===============================================================');

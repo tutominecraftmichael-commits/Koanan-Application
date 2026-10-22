@@ -67,7 +67,12 @@ import { SuperProActivationModal } from './components/pro/SuperProActivationModa
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
 import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
 import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelectorModal';
-import { checkAndDispatchStudyReminders, getPhoneNotificationPermission, requestPhoneNotificationPermission } from './services/companionNotificationService';
+import { 
+  checkAndDispatchStudyReminders, 
+  getPhoneNotificationPermission, 
+  requestPhoneNotificationPermission,
+  sendSessionRescheduledNotification 
+} from './services/companionNotificationService';
 
 // Views
 import { LandingHero } from './features/landing/LandingHero';
@@ -482,6 +487,26 @@ export function App() {
             const signature = rescheduledSessions.map(s => `${s.id}-${s.startTime}`).sort().join('|');
             if (signature !== lastRescheduledSignature.current) {
               lastRescheduledSignature.current = signature;
+              // Notification immédiate du rattrapage replacé (règle stricte Christ Boni)
+              const effectivePlan = prev.planTier || prev.userAccount?.planTier || 'free';
+              rescheduledSessions.forEach(session => {
+                const notifyKey = `rescheduled_notif_${todayStr}_${session.id}_${session.startTime}`;
+                const alreadyNotified = sessionStorage.getItem(notifyKey);
+                if (!alreadyNotified) {
+                  try {
+                    sessionStorage.setItem(notifyKey, 'true');
+                  } catch {}
+                  const matchingSubject = validSubjects.find(s => s.id === session.subjectId);
+                  const subjectName = matchingSubject?.name || session.title || 'tes cours';
+                  sendSessionRescheduledNotification(
+                    subjectName,
+                    session.startTime,
+                    session.originalStartTime,
+                    session.durationMinutes,
+                    effectivePlan
+                  );
+                }
+              });
             }
           } else {
             lastRescheduledSignature.current = '';
