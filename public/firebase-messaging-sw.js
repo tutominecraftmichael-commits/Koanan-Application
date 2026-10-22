@@ -66,6 +66,44 @@ if (messaging) {
   });
 }
 
+// Map des timers de rappels locaux planifiés (déclenchés 5 min avant même en arrière-plan)
+const scheduledTimers = new Map();
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SCHEDULE_UPCOMING_REMINDERS') {
+    const reminders = event.data.reminders;
+    if (!Array.isArray(reminders)) return;
+
+    // Nettoyer les anciens timers
+    for (const [, timer] of scheduledTimers.entries()) {
+      clearTimeout(timer);
+    }
+    scheduledTimers.clear();
+
+    const now = Date.now();
+    reminders.forEach((rem) => {
+      // rem.targetTimestamp est l'horodatage exact correspondant à (startTime - 5 minutes)
+      const delay = rem.targetTimestamp - now;
+      if (delay > 0 && delay < 24 * 3600 * 1000) {
+        const timerId = setTimeout(() => {
+          self.registration.showNotification(rem.title || 'KONAN', {
+            body: rem.body,
+            icon: '/cube-icon.png',
+            badge: '/cube-badge.png',
+            tag: rem.tag || 'konan-study-reminder',
+            vibrate: [300, 150, 300],
+            renotify: true,
+            data: { url: '/', sessionId: rem.sessionId },
+          });
+          scheduledTimers.delete(rem.id);
+        }, delay);
+        scheduledTimers.set(rem.id, timerId);
+      }
+    });
+    console.log(`[firebase-messaging-sw.js] ${scheduledTimers.size} rappels d'étude (5 min avant) armés avec succès.`);
+  }
+});
+
 // Clic sur la notification : ouvre ou focus directement l'application KONAN
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();

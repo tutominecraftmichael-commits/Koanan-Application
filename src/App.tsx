@@ -529,7 +529,23 @@ export function App() {
 
     // Demande polie de permission de notifications sur mobile/desktop si membre PRO
     if (getPhoneNotificationPermission() === 'default') {
-      requestPhoneNotificationPermission().catch(() => {});
+      requestPhoneNotificationPermission().then((perm) => {
+        if (perm === 'granted') {
+          const uid = state.userAccount?.googleId || state.userAccount?.email;
+          if (uid) {
+            import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
+              enableStudentPushNotifications(uid).catch(() => {});
+            });
+          }
+        }
+      }).catch(() => {});
+    } else if (getPhoneNotificationPermission() === 'granted') {
+      const uid = state.userAccount?.googleId || state.userAccount?.email;
+      if (uid) {
+        import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
+          enableStudentPushNotifications(uid).catch(() => {});
+        });
+      }
     }
 
     const checkReminders = () => {

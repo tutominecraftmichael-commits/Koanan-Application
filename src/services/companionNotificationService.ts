@@ -11,8 +11,10 @@ import type { PlanTier, StudySession, Subject } from '../types';
  * RÈGLES STRICTES :
  * 1. Zéro jargon robotique ("Alerte", "Algorithme", "Tâche #12", "Notification complice").
  * 2. Titre épuré : "KONAN" ou "KONAN ✦ {matiere}", aucun préfixe de catégorie.
- * 3. Icone et Badge : Silhouette du CUBE KONAN (/cube-icon.png et /cube-badge.png).
- * 4. Règle absolue du rattrapage : tout ce qui est manqué doit être rattrapé LE JOUR MÊME avant minuit. Aucun report au lendemain.
+ * 3. Icone et Badge : Silhouette et face du CUBE KONAN avec la lettre K (/cube-icon.png et /cube-badge.png).
+ * 4. Durées dynamiques : les minutes indiquées reflètent la durée réelle de la session (ex: 25m, 45m).
+ * 5. Timing strict : l'alerte pré-session part STRICTEMENT 5 minutes avant (jamais après le début).
+ * 6. Règle absolue du rattrapage : tout ce qui est manqué doit être rattrapé LE JOUR MÊME avant minuit. Aucun report au lendemain.
  */
 
 // ============================================================================
@@ -21,77 +23,83 @@ import type { PlanTier, StudySession, Subject } from '../types';
 
 // 1. Avant la séance (5 minutes avant)
 export const BEFORE_SESSION_TEMPLATES = [
-  (sub: string) => `C’est l’heure de poser le téléphone deux secondes. Prends ton cahier de ${sub}, 30 minutes bien concentré et on en parle plus. Je compte sur toi ! 👊📚`,
-  (sub: string) => `Petit rappel entre nous : ta session de ${sub} démarre dans 5 minutes. Fais ça proprement pour ta propre fierté, ne traîne pas. ✨`,
-  (sub: string) => `Tu te souviens pourquoi on s’est lancés là-dedans ? ${sub} commence tout de suite. Lève-toi, bois un peu d’eau et installe-toi. 🤍`,
+  (sub: string, dur: number = 25) => `C’est l’heure de poser le téléphone deux secondes. Prends ton cahier de ${sub}, ${dur} minutes bien concentré et on en parle plus. Je compte sur toi ! 👊📚`,
+  (sub: string, _dur: number = 25) => `Petit rappel entre nous : ta session de ${sub} démarre dans 5 minutes. Fais ça proprement pour ta propre fierté, ne traîne pas. ✨`,
+  (sub: string, _dur: number = 25) => `Tu te souviens pourquoi on s’est lancés là-dedans ? ${sub} commence tout de suite. Lève-toi, bois un peu d’eau et installe-toi. 🤍`,
 ];
 
 // 2. Premier créneau sauté (manqué ou oublié)
 export const FIRST_MISSED_TEMPLATES = [
-  (sub: string) => `Tu es où comme ça ? Tu devais être sur ${sub}. Ne commence pas à glisser sur les réseaux, viens faire au moins l'essentiel maintenant. 👀`,
-  (sub: string) => `Je te vois, tu fuis le cours de ${sub} ? 😂 Reviens t'asseoir 20 minutes, ne laisse pas la paresse gagner la journée.`,
-  (_sub: string) => `Pardon, ne commence pas à négliger. On avait dit qu'on assurait aujourd'hui. Ouvre ton cours tout de suite, il est encore temps ! ⏳`,
+  (sub: string, _dur: number = 25) => `Tu es où comme ça ? Tu devais être sur ${sub}. Ne commence pas à glisser sur les réseaux, viens faire au moins l'essentiel maintenant. 👀`,
+  (sub: string, dur: number = 25) => `Je te vois, tu fuis le cours de ${sub} ? 😂 Reviens t'asseoir ${dur} minutes, ne laisse pas la paresse gagner la journée.`,
+  (_sub: string, _dur: number = 25) => `Pardon, ne commence pas à négliger. On avait dit qu'on assurait aujourd'hui. Ouvre ton cours tout de suite, il est encore temps ! ⏳`,
 ];
 
 // 3. Plusieurs créneaux manqués dans la journée (3 ou 4 sautés)
 export const MULTIPLE_MISSED_TEMPLATES = [
-  (_sub: string) => `Franchement, tu penses que les résultats vont tomber du ciel ? Tu as laissé 4 créneaux passer aujourd'hui ! C'est ce soir qu'on rattrape ça ou c'est mort pour de bon. Lève-toi et va bosser, fais-moi honneur ! 😤`,
-  (_sub: string) => `Tu as sauté presque toute ta journée. Tu crois que c'est un jeu ? Demain c'est un autre jour, ce qui est perdu aujourd'hui ne reviendra pas. Assieds-toi ce soir et sauve ce qui peut l'être ! 🤦‍♂️`,
-  (sub: string) => `Tu me déçois un peu là. Tout le monde compte sur toi, Je m'inquiète pour ta reussite, et toi tu laisses ${sub} en l'air ? Rebranche-toi tout de suite, il reste encore quelques heures avant ce soir pour rattraper le coup. 🛑`,
+  (_sub: string, _dur: number = 25) => `Franchement, tu penses que les résultats vont tomber du ciel ? Tu as laissé 4 créneaux passer aujourd'hui ! C'est ce soir qu'on rattrape ça ou c'est mort pour de bon. Lève-toi et va bosser, fais-moi honneur ! 😤`,
+  (_sub: string, _dur: number = 25) => `Tu as sauté presque toute ta journée. Tu crois que c'est un jeu ? Demain c'est un autre jour, ce qui est perdu aujourd'hui ne reviendra pas. Assieds-toi ce soir et sauve ce qui peut l'être ! 🤦‍♂️`,
+  (sub: string, _dur: number = 25) => `Tu me déçois un peu là. Tout le monde compte sur toi, Je m'inquiète pour ta reussite, et toi tu laisses ${sub} en l'air ? Rebranche-toi tout de suite, il reste encore quelques heures avant ce soir pour rattraper le coup. 🛑`,
 ];
 
 // 4. Le rattrapage du soir (Dernière chance avant minuit)
 export const EVENING_LAST_CHANCE_TEMPLATES = [
-  (_sub: string) => `Écoute-moi bien : minuit arrive. Ce que tu n’as pas étudié aujourd’hui, c’est classé sans suite, pas de report sur demain. Prends 30 minutes chrono maintenant pour sauver l'honneur de ta journée. ⏰🔥`,
-  (sub: string) => `Dernier appel de la soirée. Tu as raté des séances plus tôt, mais tu peux encore te coucher la tête haute si tu rattrapes ${sub} maintenant. Montre-moi ce que tu as dans le ventre ! 💪`,
+  (_sub: string, dur: number = 25) => `Écoute-moi bien : minuit arrive. Ce que tu n’as pas étudié aujourd’hui, c’est classé sans suite, pas de report sur demain. Prends ${dur} minutes chrono maintenant pour sauver l'honneur de ta journée. ⏰🔥`,
+  (sub: string, _dur: number = 25) => `Dernier appel de la soirée. Tu as raté des séances plus tôt, mais tu peux encore te coucher la tête haute si tu rattrapes ${sub} maintenant. Montre-moi ce que tu as dans le ventre ! 💪`,
 ];
 
 /**
- * Sélecteur pseudo-aléatoire stable ou indexé pour les messages
+ * Sélecteur pseudo-aléatoire stable ou indexé pour les messages avec durée dynamique
  */
-function pickTemplate(templates: ((sub: string) => string)[], sub: string, index?: number): string {
+function pickTemplate(
+  templates: ((sub: string, dur: number) => string)[],
+  sub: string,
+  duration: number = 25,
+  index?: number
+): string {
   if (typeof index === 'number' && index >= 0) {
     const fn = templates[index % templates.length];
-    return fn(sub);
+    return fn(sub, duration);
   }
   const randomFn = templates[Math.floor(Math.random() * templates.length)];
-  return randomFn(sub);
+  return randomFn(sub, duration);
 }
 
-export function getUpcoming5mMessage(subject: string, index?: number): string {
-  return pickTemplate(BEFORE_SESSION_TEMPLATES, subject, index);
+export function getUpcoming5mMessage(subject: string, duration: number = 25, index?: number): string {
+  return pickTemplate(BEFORE_SESSION_TEMPLATES, subject, duration, index);
 }
 
-export function getFirstMissedMessage(subject: string, index?: number): string {
-  return pickTemplate(FIRST_MISSED_TEMPLATES, subject, index);
+export function getFirstMissedMessage(subject: string, duration: number = 25, index?: number): string {
+  return pickTemplate(FIRST_MISSED_TEMPLATES, subject, duration, index);
 }
 
-export function getMultipleMissedMessage(subject: string, index?: number): string {
-  return pickTemplate(MULTIPLE_MISSED_TEMPLATES, subject, index);
+export function getMultipleMissedMessage(subject: string, duration: number = 25, index?: number): string {
+  return pickTemplate(MULTIPLE_MISSED_TEMPLATES, subject, duration, index);
 }
 
-export function getEveningLastChanceMessage(subject: string, index?: number): string {
-  return pickTemplate(EVENING_LAST_CHANCE_TEMPLATES, subject, index);
+export function getEveningLastChanceMessage(subject: string, duration: number = 25, index?: number): string {
+  return pickTemplate(EVENING_LAST_CHANCE_TEMPLATES, subject, duration, index);
 }
 
 /**
- * Génère le message du Compagnon selon le contexte (nombre de créneaux manqués, soirée)
+ * Génère le message du Compagnon selon le contexte (nombre de créneaux manqués, soirée, durée réelle)
  */
 export function generateKonanCompanionMessage(
   missedCount: number,
   missedSubject: string,
-  isEvening: boolean = false
+  isEvening: boolean = false,
+  duration: number = 25
 ): string {
   if (isEvening && missedCount > 0) {
-    return getEveningLastChanceMessage(missedSubject);
+    return getEveningLastChanceMessage(missedSubject, duration);
   }
   if (missedCount >= 3) {
-    return getMultipleMissedMessage(missedSubject);
+    return getMultipleMissedMessage(missedSubject, duration);
   }
   if (missedCount >= 1) {
-    return getFirstMissedMessage(missedSubject);
+    return getFirstMissedMessage(missedSubject, duration);
   }
-  return getUpcoming5mMessage(missedSubject);
+  return getUpcoming5mMessage(missedSubject, duration);
 }
 
 // Rétrocompatibilité
@@ -146,7 +154,7 @@ export function sanitizeNotificationTitle(title: string): string {
 
 /**
  * Envoie la notification directement au téléphone de l'utilisateur.
- * Elle apparaît dans le volet de notification / l'écran de verrouillage du smartphone avec le CUBE KONAN.
+ * Elle apparaît dans le volet de notification / l'écran de verrouillage du smartphone avec le CUBE KONAN (et lettre K).
  */
 export function sendPhoneNotification(title: string, body: string, tag: string = 'konan-study-alert'): void {
   if (!isPhoneNotificationSupported()) return;
@@ -188,7 +196,7 @@ export function sendPhoneNotification(title: string, body: string, tag: string =
  */
 export function sendStudyReminder5mNotification(
   subjectName: string,
-  _sessionTime?: string,
+  durationMinutes: number = 25,
   userTier: PlanTier = 'free'
 ): boolean {
   if (userTier === 'free') {
@@ -198,7 +206,7 @@ export function sendStudyReminder5mNotification(
     );
   }
 
-  const message = getUpcoming5mMessage(subjectName);
+  const message = getUpcoming5mMessage(subjectName, durationMinutes);
   sendPhoneNotification(
     `KONAN ✦ ${subjectName}`,
     message,
@@ -210,10 +218,58 @@ export function sendStudyReminder5mNotification(
 export const sendStudyReminder30mNotification = sendStudyReminder5mNotification;
 
 /**
+ * Transmet au Service Worker la liste exacte des séances du jour pour qu'il déclenche
+ * les alertes 5 minutes avant même si l'application est en arrière-plan ou que l'écran est éteint.
+ */
+export function syncRemindersWithServiceWorker(
+  sessions: StudySession[],
+  subjects: Subject[],
+  userTier: PlanTier = 'free'
+): void {
+  if (userTier === 'free' || typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
+  if (!navigator.serviceWorker.controller) return;
+
+  const now = new Date();
+  const currentDayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
+  const todaysSessions = sessions.filter(s => s.dayOfWeek === currentDayOfWeek && !s.completed);
+
+  const reminders = todaysSessions.map(session => {
+    const [h, m] = session.startTime.split(':').map(Number);
+    const sessionDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0);
+    // Strictement 5 minutes avant le début de la séance :
+    const targetTimestamp = sessionDate.getTime() - 5 * 60 * 1000;
+    const subject = subjects.find(s => s.id === session.subjectId);
+    const subjectName = subject?.name || session.title || 'tes cours';
+    const duration = session.durationMinutes || 25;
+
+    return {
+      id: `${session.id}_5m`,
+      sessionId: session.id,
+      targetTimestamp,
+      title: `KONAN ✦ ${subjectName}`,
+      body: getUpcoming5mMessage(subjectName, duration),
+      tag: `study-alert-5m-${session.id}`,
+    };
+  }).filter(r => r.targetTimestamp > Date.now());
+
+  if (reminders.length > 0) {
+    try {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'SCHEDULE_UPCOMING_REMINDERS',
+        reminders,
+      });
+    } catch (err) {
+      console.warn('[Reminders] Erreur postMessage au Service Worker :', err);
+    }
+  }
+}
+
+/**
  * Vérifie les créneaux d'étude du jour et déclenche automatiquement
  * les notifications selon les circonstances réelles :
- * 1. 5 minutes avant chaque session
+ * 1. Strictement 5 minutes avant chaque session (jamais après le début)
  * 2. Rattrapage du soir (dernière chance avant minuit) entre 21h00 et 23h59
+ * 3. Synchronisation automatique avec le Service Worker pour l'arrière-plan
  */
 export function checkAndDispatchStudyReminders(
   sessions: StudySession[],
@@ -222,6 +278,9 @@ export function checkAndDispatchStudyReminders(
 ): void {
   if (userTier === 'free' || !isPhoneNotificationSupported()) return;
   if (!sessions || sessions.length === 0) return;
+
+  // Armer le Service Worker en arrière-plan
+  syncRemindersWithServiceWorker(sessions, subjects, userTier);
 
   const now = new Date();
   const currentDayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // 0=Lundi..6=Dimanche
@@ -239,7 +298,8 @@ export function checkAndDispatchStudyReminders(
   const todaysSessions = sessions.filter(s => s.dayOfWeek === currentDayOfWeek);
   const uncompletedToday = todaysSessions.filter(s => !s.completed);
 
-  // 1. Rappel 5 minutes avant la séance
+  // 1. Rappel STRICTEMENT 5 minutes avant la séance
+  // (diffMinutes entre 4 et 6 minutes avant le début ; INTERDIT si diffMinutes <= 0 car la séance a déjà commencé)
   uncompletedToday.forEach(session => {
     const [h, m] = session.startTime.split(':').map(Number);
     const sessionStartMinutes = h * 60 + (m || 0);
@@ -247,10 +307,11 @@ export function checkAndDispatchStudyReminders(
 
     const subject = subjects.find(sub => sub.id === session.subjectId);
     const subjectName = subject?.name || session.title || 'tes cours';
+    const duration = session.durationMinutes || 25;
 
     const alert5mId = `${session.id}_5m`;
-    if (((diffMinutes > 0 && diffMinutes <= 5) || (diffMinutes <= 0 && diffMinutes >= -5)) && !notifiedIds.includes(alert5mId)) {
-      const body = getUpcoming5mMessage(subjectName);
+    if (diffMinutes >= 4 && diffMinutes <= 6 && !notifiedIds.includes(alert5mId)) {
+      const body = getUpcoming5mMessage(subjectName, duration);
       sendPhoneNotification(
         `KONAN ✦ ${subjectName}`,
         body,
@@ -267,8 +328,10 @@ export function checkAndDispatchStudyReminders(
   // Règle stricte : ce qui n'est pas étudié aujourd'hui est classé sans suite, pas de report sur demain
   const eveningAlertKey = `evening_last_chance_${dateKey}`;
   if (currentMinutes >= 1260 && currentMinutes < 1435 && uncompletedToday.length > 0 && !notifiedIds.includes(eveningAlertKey)) {
-    const firstSubject = subjects.find(sub => sub.id === uncompletedToday[0].subjectId)?.name || uncompletedToday[0].title || 'tes cours';
-    const body = getEveningLastChanceMessage(firstSubject);
+    const firstSession = uncompletedToday[0];
+    const firstSubject = subjects.find(sub => sub.id === firstSession.subjectId)?.name || firstSession.title || 'tes cours';
+    const duration = firstSession.durationMinutes || 25;
+    const body = getEveningLastChanceMessage(firstSubject, duration);
     sendPhoneNotification(
       'KONAN',
       body,

@@ -290,32 +290,35 @@ export async function runStudyRemindersCheck() {
     // -------------------------------------------------------------
     // TEMPLATES OFFICIELS KONAN (Compagnon d'études de l'étudiant)
     // -------------------------------------------------------------
+    // -------------------------------------------------------------
+    // TEMPLATES OFFICIELS KONAN (Compagnon d'études de l'étudiant)
+    // -------------------------------------------------------------
     const BEFORE_SESSION_MSGS = [
-      (sub) => `C’est l’heure de poser le téléphone deux secondes. Prends ton cahier de ${sub}, 30 minutes bien concentré et on en parle plus. Je compte sur toi ! 👊📚`,
+      (sub, dur = 25) => `C’est l’heure de poser le téléphone deux secondes. Prends ton cahier de ${sub}, ${dur} minutes bien concentré et on en parle plus. Je compte sur toi ! 👊📚`,
       (sub) => `Petit rappel entre nous : ta session de ${sub} démarre dans 5 minutes. Fais ça proprement pour ta propre fierté, ne traîne pas. ✨`,
       (sub) => `Tu te souviens pourquoi on s’est lancés là-dedans ? ${sub} commence tout de suite. Lève-toi, bois un peu d’eau et installe-toi. 🤍`,
     ];
 
     const FIRST_MISSED_MSGS = [
       (sub) => `Tu es où comme ça ? Tu devais être sur ${sub}. Ne commence pas à glisser sur les réseaux, viens faire au moins l'essentiel maintenant. 👀`,
-      (sub) => `Je te vois, tu fuis le cours de ${sub} ? 😂 Reviens t'asseoir 20 minutes, ne laisse pas la paresse gagner la journée.`,
-      (sub) => `Pardon, ne commence pas à négliger. On avait dit qu'on assurait aujourd'hui. Ouvre ton cours tout de suite, il est encore temps ! ⏳`,
+      (sub, dur = 25) => `Je te vois, tu fuis le cours de ${sub} ? 😂 Reviens t'asseoir ${dur} minutes, ne laisse pas la paresse gagner la journée.`,
+      () => `Pardon, ne commence pas à négliger. On avait dit qu'on assurait aujourd'hui. Ouvre ton cours tout de suite, il est encore temps ! ⏳`,
     ];
 
     const MULTIPLE_MISSED_MSGS = [
-      (sub) => `Franchement, tu penses que les résultats vont tomber du ciel ? Tu as laissé 4 créneaux passer aujourd'hui ! C'est ce soir qu'on rattrape ça ou c'est mort pour de bon. Lève-toi et va bosser, fais-moi honneur ! 😤`,
-      (_sub) => `Tu as sauté presque toute ta journée. Tu crois que c'est un jeu ? Demain c'est un autre jour, ce qui est perdu aujourd'hui ne reviendra pas. Assieds-toi ce soir et sauve ce qui peut l'être ! 🤦‍♂️`,
+      () => `Franchement, tu penses que les résultats vont tomber du ciel ? Tu as laissé 4 créneaux passer aujourd'hui ! C'est ce soir qu'on rattrape ça ou c'est mort pour de bon. Lève-toi et va bosser, fais-moi honneur ! 😤`,
+      () => `Tu as sauté presque toute ta journée. Tu crois que c'est un jeu ? Demain c'est un autre jour, ce qui est perdu aujourd'hui ne reviendra pas. Assieds-toi ce soir et sauve ce qui peut l'être ! 🤦‍♂️`,
       (sub) => `Tu me déçois un peu là. Tout le monde compte sur toi, Je m'inquiète pour ta reussite, et toi tu laisses ${sub} en l'air ? Rebranche-toi tout de suite, il reste encore quelques heures avant ce soir pour rattraper le coup. 🛑`,
     ];
 
     const EVENING_LAST_CHANCE_MSGS = [
-      (_sub) => `Écoute-moi bien : minuit arrive. Ce que tu n’as pas étudié aujourd’hui, c’est classé sans suite, pas de report sur demain. Prends 30 minutes chrono maintenant pour sauver l'honneur de ta journée. ⏰🔥`,
+      (_sub, dur = 25) => `Écoute-moi bien : minuit arrive. Ce que tu n’as pas étudié aujourd’hui, c’est classé sans suite, pas de report sur demain. Prends ${dur} minutes chrono maintenant pour sauver l'honneur de ta journée. ⏰🔥`,
       (sub) => `Dernier appel de la soirée. Tu as raté des séances plus tôt, mais tu peux encore te coucher la tête haute si tu rattrapes ${sub} maintenant. Montre-moi ce que tu as dans le ventre ! 💪`,
     ];
 
-    const pickMsg = (arr, sub) => {
+    const pickMsg = (arr, sub, dur = 25) => {
       const idx = Math.floor(Math.random() * arr.length);
-      return arr[idx](sub);
+      return arr[idx](sub, dur);
     };
 
     // Analyse des créneaux passés non complétés aujourd'hui
@@ -340,9 +343,10 @@ export async function runStudyRemindersCheck() {
         subjectsMap.get(firstNeglected.subjectId) || 
         cleanRawSubjectTitle(firstNeglected.title) || 
         'tes cours';
+      const duration = firstNeglected.durationMinutes || 25;
 
       const title = 'KONAN';
-      const body = pickMsg(EVENING_LAST_CHANCE_MSGS, mainSubjectName);
+      const body = pickMsg(EVENING_LAST_CHANCE_MSGS, mainSubjectName, duration);
 
       const result = await sendPushNotificationWithCleanup({
         db,
@@ -427,12 +431,14 @@ export async function runStudyRemindersCheck() {
       const diffToStart = startMin - currentMinutes;
 
       // -------------------------------------------------------------
-      // CIRCONSTANCE 1 : AVANT LA SÉANCE (5 MINUTES AVANT)
+      // CIRCONSTANCE 1 : AVANT LA SÉANCE (STRICTEMENT 5 MINUTES AVANT)
+      // Audio 3 : envoyer strictement 5 min avant, JAMAIS après le début
       // -------------------------------------------------------------
       const upcoming5mKey = `${todayStr}_${slotId}_upcoming_5m`;
-      if (!isCatchup && isPending && diffToStart >= 0 && diffToStart <= 5 && !notifiedMap[upcoming5mKey]) {
+      const duration = slot.durationMinutes || 25;
+      if (!isCatchup && isPending && diffToStart >= 4 && diffToStart <= 6 && !notifiedMap[upcoming5mKey]) {
         const title = `KONAN ✦ ${resolvedSubjectName}`;
-        const body = pickMsg(BEFORE_SESSION_MSGS, resolvedSubjectName);
+        const body = pickMsg(BEFORE_SESSION_MSGS, resolvedSubjectName, duration);
 
         const result = await sendPushNotificationWithCleanup({
           db,
@@ -470,7 +476,7 @@ export async function runStudyRemindersCheck() {
       const isPastStartTime = currentMinutes > startMin + 15;
       if (isPending && isPastStartTime && missedCount < 3 && !notifiedMap[firstMissedKey]) {
         const title = `KONAN ✦ ${resolvedSubjectName}`;
-        const body = pickMsg(FIRST_MISSED_MSGS, resolvedSubjectName);
+        const body = pickMsg(FIRST_MISSED_MSGS, resolvedSubjectName, duration);
 
         const result = await sendPushNotificationWithCleanup({
           db,
