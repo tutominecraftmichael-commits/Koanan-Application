@@ -157,12 +157,26 @@ export async function sendPushNotificationWithCleanup({
       title: cleanTitle,
       body: cleanBody,
     },
+    android: {
+      priority: 'high',
+      notification: {
+        sound: 'default',
+        channelId: 'konan_study_reminders',
+        priority: 'high',
+        defaultVibrateTimings: true,
+      },
+    },
     webpush: {
+      headers: {
+        Urgency: 'high',
+      },
       notification: {
         icon: '/cube-icon.png',
         badge: '/cube-badge.png',
         tag,
-        vibrate: [300, 150, 300],
+        vibrate: [500, 250, 500, 250, 500],
+        requireInteraction: true,
+        sound: 'default',
       },
       fcm_options: {
         link: dataPayload.url || '/',
@@ -477,7 +491,24 @@ export async function runStudyRemindersCheck() {
       const startMin = parseTimeToMinutes(slot.startTime);
       if (startMin < 0) continue;
 
-      const isPending = isSessionPending(slot);
+      // 1. RÈGLE CRITIQUE : Si l'examen est déjà passé, zéro notification et zéro rattrapage
+      const matchingSubject = subjectsList.find((s) => s?.id === slot.subjectId);
+      if (matchingSubject?.examDate) {
+        const [y, m, d] = matchingSubject.examDate.split('-').map(Number);
+        let eh = 23;
+        let em = 59;
+        if (matchingSubject.examTime) {
+          const [h, min] = matchingSubject.examTime.split(':').map(Number);
+          if (!isNaN(h)) eh = h;
+          if (!isNaN(min)) em = min;
+        }
+        const examDateTime = new Date(y, (m || 1) - 1, d || 1, eh, em, 0);
+        if (now.getTime() >= examDateTime.getTime()) {
+          continue; // Matière passée : silence absolu
+        }
+      }
+
+      const isPending = isSessionPending(slot) && !slot.isExpired;
       const isCatchup = Boolean(slot.isRescheduledToday || slot.rescheduledReason || slot.isCatchup);
       const diffToStart = startMin - currentMinutes;
       const duration = slot.durationMinutes || 25;
@@ -486,7 +517,7 @@ export async function runStudyRemindersCheck() {
       // CAS A : NOTIFICATION IMMÉDIATE DÈS QUE LA SÉANCE EST REPORTÉE
       // -------------------------------------------------------------
       const rescheduledNoticeKey = `${todayStr}_${slotId}_rescheduled_notice_${slot.startTime}`;
-      if (isCatchup && !notifiedMap[rescheduledNoticeKey]) {
+      if (isCatchup && !slot.notifRattrapageEnvoyee && !notifiedMap[rescheduledNoticeKey] && startMin > currentMinutes) {
         const title = `KONAN ✦ ${resolvedSubjectName}`;
         const body = pickTimeMsg(RESCHEDULED_SESSION_MSGS, resolvedSubjectName, formattedStartTime, duration);
 
@@ -593,7 +624,7 @@ export async function runStudyRemindersCheck() {
       // CAS D : SÉANCE NORMALE — STRICTEMENT 5 MINUTES AVANT (JAMAIS APRÈS)
       // -------------------------------------------------------------
       const upcoming5mKey = `${todayStr}_${slotId}_upcoming_5m`;
-      if (!isCatchup && isPending && diffToStart >= 4 && diffToStart <= 6 && !notifiedMap[upcoming5mKey]) {
+      if (!isCatchup && isPending && !slot.rappelEnvoye && diffToStart >= 4 && diffToStart <= 6 && !notifiedMap[upcoming5mKey]) {
         const title = `KONAN ✦ ${resolvedSubjectName}`;
         const body = pickMsg(BEFORE_SESSION_MSGS, resolvedSubjectName, duration);
 

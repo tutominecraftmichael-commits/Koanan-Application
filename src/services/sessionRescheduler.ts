@@ -218,6 +218,11 @@ export function findNextFreeSlotToday(
         if (availableDuration >= targetDuration) {
           const slotStart = currentPointer;
           const slotEnd = slotStart + targetDuration;
+          // RÈGLE ABSOLUE : Le créneau doit être STRICTEMENT dans le futur (dateDebut > maintenant)
+          if (slotStart <= currentMinute) {
+            currentPointer = Math.max(currentPointer, currentMinute + 5);
+            continue;
+          }
           return {
             startTime: minutesToTimeString(slotStart),
             endTime: minutesToTimeString(slotEnd),
@@ -234,6 +239,10 @@ export function findNextFreeSlotToday(
     if (currentPointer + targetDuration <= dayEndMin) {
       const slotStart = currentPointer;
       const slotEnd = slotStart + targetDuration;
+      // RÈGLE ABSOLUE : Le créneau doit être STRICTEMENT dans le futur (dateDebut > maintenant)
+      if (slotStart <= currentMinute) {
+        return null;
+      }
       // Sécurité absolue : aucun créneau ne démarre à/après 23h30 ni ne dépasse 23h30
       if (slotStart >= dayEndMin || slotEnd > dayEndMin) {
         return null;
@@ -252,7 +261,12 @@ export function findNextFreeSlotToday(
   const fullSlot = findSlotForTargetDuration(durationMinutes);
   if (fullSlot) return fullSlot;
 
-  // 2ème tentative (si la soirée est contrainte) : trouver la plus grande durée disponible (>= 30 min)
+  // 2ème tentative (si la soirée est contrainte) :
+  // Si c'est un devoir (45 min), STRICTEMENT AUCUNE RÉDUCTION en dessous de 45 min !
+  if (durationMinutes === 45) {
+    return null;
+  }
+
   for (let adjusted = durationMinutes - 15; adjusted >= 30; adjusted -= 15) {
     const candidate = findSlotForTargetDuration(adjusted);
     if (candidate) return candidate;
@@ -275,7 +289,7 @@ export function evaluateDailyCatchup(
   classes: ClassSlot[],
   preferences: StudyPreferences,
   currentDate: Date = new Date(),
-  subjects: Array<{ id: string; name: string }> = []
+  subjects: Array<{ id: string; name: string; examDate?: string; examTime?: string; examType?: string }> = []
 ): RescheduleResult {
   const todayDayOfWeek = getTodayDayOfWeek(currentDate);
   const todayDateStr = getTodayDateString(currentDate);
@@ -306,8 +320,8 @@ export function evaluateDailyCatchup(
 
   // Traiter toutes les sessions non complétées dont l'heure de fin est dépassée
   for (const session of todaysSessions) {
-    // Si la session est déjà terminée, rien à adapter
-    if (session.completed) continue;
+    // Si la session est déjà terminée ou expirée, rien à adapter
+    if (session.completed || session.isExpired) continue;
 
     // RÈGLE STRICTE KONAN AI :
     // 1. Ne JAMAIS rattraper une matière non académique (ex: EPS, Sport, devoirs, permanence)
@@ -322,10 +336,33 @@ export function evaluateDailyCatchup(
       continue;
     }
 
-    // 3. Une séance ne peut être replacée qu'une seule fois dans la même journée.
-    // Si elle a déjà bénéficié d'un créneau de rattrapage aujourd'hui et n'a pas été faite :
-    // on ne la repousse pas indéfiniment en soirée.
-    // Elle est simplement oubliée pour aujourd'hui, avec STRICTEMENT ZÉRO report au lendemain.
+    // 3. RÈGLE CRITIQUE (Examen / Devoir passé) :
+    // Si la date d'examen ou date de fin est dépassée (maintenant >= dateExamen),
+    // marquer la session en expirée/terminée, NE GÉNÉRER AUCUN RATTRAPAGE ET AUCUNE NOTIFICATION.
+    if (matchingSubject?.examDate) {
+      const [year, month, day] = matchingSubject.examDate.split('-').map(Number);
+      let examHour = 23;
+      let examMinute = 59;
+      if (matchingSubject.examTime) {
+        const [eh, em] = matchingSubject.examTime.split(':').map(Number);
+        if (!isNaN(eh)) examHour = eh;
+        if (!isNaN(em)) examMinute = em;
+      }
+      const examDateTime = new Date(year, (month || 1) - 1, day || 1, examHour, examMinute, 0);
+      if (currentDate.getTime() >= examDateTime.getTime()) {
+        const sIndex = updatedSessions.findIndex(s => s.id === session.id);
+        if (sIndex !== -1) {
+          updatedSessions[sIndex] = {
+            ...updatedSessions[sIndex],
+            isExpired: true,
+            completed: true, // Archivée silencieusement sans notification
+          };
+        }
+        continue;
+      }
+    }
+
+    // 4. Une séance ne peut être replacée qu'une seule fois dans la même journée.
     if (session.isRescheduledToday) continue;
 
     const sessionEndMin = parseTimeToMinutes(session.endTime);
@@ -340,21 +377,29 @@ export function evaluateDailyCatchup(
         s => s.dayOfWeek === todayDayOfWeek && s.id !== session.id
       );
 
+      // Pour les devoirs : TOUJOURS 45 minutes même au jour 1 !
+      const isDevoir = session.examType === 'devoir' || 
+        matchingSubject?.examType === 'devoir' || 
+        /\b(devoir|ds)\b/i.test(session.title) || 
+        (matchingSubject && /\b(devoir|ds)\b/i.test(matchingSubject.name));
+      const targetDuration = isDevoir ? 45 : session.durationMinutes;
+
       const freeSlot = findNextFreeSlotToday(
         todayDayOfWeek,
         currentMinute,
-        session.durationMinutes,
+        targetDuration,
         classes,
         preferences,
         otherSessions
       );
 
-      if (freeSlot) {
+      // RÈGLE ABSOLUE : Le créneau de rattrapage doit être STRICTEMENT dans le futur (dateDebut > maintenant)
+      if (freeSlot && parseTimeToMinutes(freeSlot.startTime) > currentMinute) {
         // Enregistrer l'horaire d'origine uniquement si la session n'avait pas déjà été déplacée
         const originalStart = session.originalStartTime || session.startTime;
         const originalEnd = session.originalEndTime || session.endTime;
-        const subjectName = subjects.find(sub => sub.id === session.subjectId)?.name || session.title;
-        const isExamSession = Boolean(session.isExamPrep || session.type === 'exam_simulation');
+        const subjectName = matchingSubject?.name || session.title;
+        const isExamSession = Boolean(session.isExamPrep || session.type === 'exam_simulation' || isDevoir);
 
         const sessionIndex = updatedSessions.findIndex(s => s.id === session.id);
         if (sessionIndex !== -1) {
@@ -367,6 +412,9 @@ export function evaluateDailyCatchup(
             originalStartTime: originalStart,
             originalEndTime: originalEnd,
             rescheduledDate: todayDateStr,
+            // Réinitialisation des verrous de notification pour le nouveau créneau futur
+            rappelEnvoye: false,
+            notifRattrapageEnvoyee: false,
             rescheduledReason: isExamSession
               ? `🎯 Préparation ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime} (fin max à minuit 00:00)`
               : `Séance de ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime} (fin max à minuit 00:00)`,

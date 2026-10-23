@@ -120,6 +120,11 @@ export interface StudySession {
   originalEndTime?: string;
   rescheduledDate?: string; // YYYY-MM-DD
   rescheduledReason?: string;
+  // Verrous d'idempotence et statut d'expiration (Christ Boni)
+  rappelEnvoye?: boolean;
+  notifRattrapageEnvoyee?: boolean;
+  notifOubliEnvoyee?: boolean;
+  isExpired?: boolean;
 }
 
 export interface StudyLog {

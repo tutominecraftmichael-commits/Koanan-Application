@@ -483,36 +483,7 @@ export function App() {
         );
 
         if (rescheduledCount > 0 || restoredCount > 0 || hasSessionDurationChange || hasInvalidSubject || hasInvalidSession || hasInvalidSlots) {
-          if (rescheduledCount > 0) {
-            const signature = rescheduledSessions.map(s => `${s.id}-${s.startTime}`).sort().join('|');
-            if (signature !== lastRescheduledSignature.current) {
-              lastRescheduledSignature.current = signature;
-              // Notification immédiate du rattrapage replacé (règle stricte Christ Boni)
-              const effectivePlan = prev.planTier || prev.userAccount?.planTier || 'free';
-              if (rescheduledSessions.length > 0) {
-                const primary = rescheduledSessions[0];
-                const notifyKey = `rescheduled_notif_${todayStr}_${primary.id}_${primary.startTime}`;
-                const alreadyNotified = sessionStorage.getItem(notifyKey);
-                if (!alreadyNotified) {
-                  try {
-                    sessionStorage.setItem(notifyKey, 'true');
-                  } catch {}
-                  const matchingSubject = validSubjects.find(s => s.id === primary.subjectId);
-                  const subjectName = matchingSubject?.name || primary.title || 'tes cours';
-                  sendSessionRescheduledNotification(
-                    subjectName,
-                    primary.startTime,
-                    primary.originalStartTime,
-                    primary.durationMinutes,
-                    effectivePlan
-                  );
-                }
-              }
-            }
-          } else {
-            lastRescheduledSignature.current = '';
-          }
-
+          // Mise à jour silencieuse de l'emploi du temps sans spammer l'utilisateur à l'ouverture
           const nextState: AppState = {
             ...prev,
             subjects: validSubjects,

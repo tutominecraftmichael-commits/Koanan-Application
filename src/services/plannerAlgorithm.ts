@@ -437,26 +437,23 @@ export function generateOptimizedStudyPlan(
         }
 
         // 🧠 CALIBRAGE INTELLIGENT DE LA DURÉE POUR LES EXAMENS ET DEVOIRS (Règle utilisateur) :
-        // RÈGLE FORMELLE (Audio utilisateur 3) :
-        // Pour les devoirs (subject.examType === 'devoir') : quel que soit le jour (même à J-1), l'étudiant révise TOUJOURS 45 minutes !
+        // Pour les devoirs (subject.examType === 'devoir') : quel que soit le jour (même à J-1 et jour 1), l'étudiant révise TOUJOURS 45 minutes !
         // Pour les examens généraux : 45 min à J>=2, 25 min de synthèse à J-1 (repos cérébral), 20 min flash à J-0.
-        if (isExamApproaching) {
-          const isDevoir = subject.examType === 'devoir';
-          if (isDevoir) {
-            // Pour les devoirs (subject.examType === 'devoir') : TOUJOURS 45 minutes, même au jour 1 (J-1 et jour J) !
+        const isDevoir = subject.examType === 'devoir' || /\b(devoir|ds)\b/i.test(subject.name);
+        if (isDevoir) {
+          // Pour les devoirs : TOUJOURS 45 minutes, STRICTEMENT, même au jour 1 (J-1 et jour J) !
+          sessionDuration = 45;
+          sessionBreak = Math.max(sessionBreak, 10);
+        } else if (isExamApproaching) {
+          if (daysUntilExamOnDate >= 2) {
             sessionDuration = 45;
             sessionBreak = Math.max(sessionBreak, 10);
-          } else {
-            if (daysUntilExamOnDate >= 2) {
-              sessionDuration = 45;
-              sessionBreak = Math.max(sessionBreak, 10);
-            } else if (daysUntilExamOnDate === 1) {
-              sessionDuration = 25;
-              sessionBreak = Math.max(sessionBreak, 5);
-            } else if (daysUntilExamOnDate === 0) {
-              sessionDuration = 20;
-              sessionBreak = 5;
-            }
+          } else if (daysUntilExamOnDate === 1) {
+            sessionDuration = 25;
+            sessionBreak = Math.max(sessionBreak, 5);
+          } else if (daysUntilExamOnDate === 0) {
+            sessionDuration = 20;
+            sessionBreak = 5;
           }
         }
 
@@ -763,19 +760,17 @@ export function synchronizeSessionsWithExamCountdowns(
     // Si un examen/devoir est dans les 14 jours, calibrer la durée
     const isExamApproaching = daysToExam <= 14;
     let targetDuration = session.durationMinutes;
-    const isDevoir = subject.examType === 'devoir';
-    if (isExamApproaching) {
-      if (isDevoir) {
-        // Pour les devoirs : TOUJOURS 45 min quel que soit le jour (même à J-1 et jour J)
+    const isDevoir = subject.examType === 'devoir' || /\b(devoir|ds)\b/i.test(subject.name) || /\b(devoir|ds)\b/i.test(session.title);
+    if (isDevoir) {
+      // Pour les devoirs : TOUJOURS 45 min quel que soit le jour (même à J-1 et jour J)
+      targetDuration = 45;
+    } else if (isExamApproaching) {
+      if (daysToExam >= 2) {
         targetDuration = 45;
-      } else {
-        if (daysToExam >= 2) {
-          targetDuration = 45;
-        } else if (daysToExam === 1) {
-          targetDuration = 25;
-        } else if (daysToExam === 0) {
-          targetDuration = 20;
-        }
+      } else if (daysToExam === 1) {
+        targetDuration = 25;
+      } else if (daysToExam === 0) {
+        targetDuration = 20;
       }
     }
 

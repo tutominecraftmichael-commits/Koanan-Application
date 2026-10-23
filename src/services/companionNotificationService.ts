@@ -376,7 +376,7 @@ export function checkAndDispatchStudyReminders(
   if (todaysSessions.length === 0) return;
 
   // Si toutes les séances du jour sont validées (completed: true), AUCUNE notification !
-  const uncompletedToday = todaysSessions.filter(s => !s.completed);
+  const uncompletedToday = todaysSessions.filter(s => !s.completed && !s.isExpired);
   if (uncompletedToday.length === 0) {
     return;
   }
@@ -387,23 +387,23 @@ export function checkAndDispatchStudyReminders(
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   const dateKey = todayStr;
 
-  // Clé anti-doublon et anti-flood
+  // Clé anti-doublon et anti-flood persistante (localStorage pour survivre aux fermetures d'app)
   const notifiedStorageKey = `konan_notified_reminders_${dateKey}`;
   let notifiedIds: string[] = [];
   try {
-    const raw = sessionStorage.getItem(notifiedStorageKey);
+    const raw = localStorage.getItem(notifiedStorageKey);
     if (raw) notifiedIds = JSON.parse(raw);
   } catch {}
 
   const markNotified = (id: string) => {
     notifiedIds.push(id);
     try {
-      sessionStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
-      sessionStorage.setItem('konan_last_reminder_time', String(Date.now()));
+      localStorage.setItem(notifiedStorageKey, JSON.stringify(notifiedIds));
+      localStorage.setItem('konan_last_reminder_time', String(Date.now()));
     } catch {}
   };
 
-  const lastReminderTime = Number(sessionStorage.getItem('konan_last_reminder_time') || '0');
+  const lastReminderTime = Number(localStorage.getItem('konan_last_reminder_time') || '0');
   const isCooldownActive = Date.now() - lastReminderTime < 15 * 60 * 1000;
 
   // =========================================================================
@@ -412,6 +412,7 @@ export function checkAndDispatchStudyReminders(
 
   // ÉTAPE 1 (PRIORITÉ ABSOLUE) : Séance débutant dans exactement 5 minutes (diffMinutes entre 4 et 6)
   for (const session of uncompletedToday) {
+    if (session.rappelEnvoye) continue;
     const [h, m] = session.startTime.split(':').map(Number);
     const sessionStartMinutes = h * 60 + (m || 0);
     const diffMinutes = sessionStartMinutes - currentMinutes;
@@ -430,6 +431,7 @@ export function checkAndDispatchStudyReminders(
           : getUpcoming5mMessage(subjectName, duration);
 
         sendPhoneNotification(title, body, `study-alert-5m-${session.id}`);
+        session.rappelEnvoye = true;
         markNotified(alert5mId);
         return; // ARRÊT STRICT : 1 seule notification coordonnée !
       }

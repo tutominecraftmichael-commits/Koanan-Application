@@ -53,8 +53,11 @@ if (messaging) {
       icon: "/cube-icon.png",
       badge: "/cube-badge.png",
       tag: payload?.data?.tag || "konan-study-reminder",
-      vibrate: [300, 150, 300],
+      vibrate: [500, 250, 500, 250, 500],
       renotify: true,
+      sound: "default",
+      requireInteraction: true,
+      priority: "high",
       data: {
         url: payload?.data?.url || "/",
         sessionId: payload?.data?.sessionId,
@@ -65,6 +68,38 @@ if (messaging) {
     return self.registration.showNotification(title, notificationOptions);
   });
 }
+
+// Écouteur push direct natif pour réveiller le téléphone même si l'application est fermée
+self.addEventListener('push', (event) => {
+  if (!event.data) return;
+  try {
+    const data = event.data.json();
+    const rawTitle = data?.notification?.title || data?.data?.title || 'KONAN';
+    const title = String(rawTitle).replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '').trim() || 'KONAN';
+    const body = data?.notification?.body || data?.data?.body || 'C’est l’heure de poser le téléphone deux secondes. Viens te concentrer, je compte sur toi ! 👊📚';
+    
+    event.waitUntil(
+      self.registration.showNotification(title, {
+        body,
+        icon: '/cube-icon.png',
+        badge: '/cube-badge.png',
+        tag: data?.data?.tag || 'konan-study-push',
+        vibrate: [500, 250, 500, 250, 500],
+        renotify: true,
+        sound: 'default',
+        requireInteraction: true,
+        priority: 'high',
+        data: {
+          url: data?.data?.url || '/',
+          sessionId: data?.data?.sessionId,
+          ...data?.data,
+        },
+      })
+    );
+  } catch (e) {
+    console.warn('[firebase-messaging-sw.js] Push non-JSON reçu :', e);
+  }
+});
 
 // Map des timers de rappels locaux planifiés (déclenchés 5 min avant même en arrière-plan)
 const scheduledTimers = new Map();
