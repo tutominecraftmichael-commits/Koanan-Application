@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 export interface AnimatedCounterProps {
   value: number;
+  from?: number;
   duration?: number;
   prefix?: string;
   suffix?: string;
@@ -11,13 +12,13 @@ export interface AnimatedCounterProps {
 }
 
 /**
- * Animated Counter that reliably animates to target value.
- * Starts directly at the target value (or animates smoothly from previous value)
- * without any flaky IntersectionObserver resets that get stuck at 0%.
+ * Animated Counter that counts up dynamically to the target value with cubic ease-out.
+ * Automatically triggered when scrolled into view or mounted, with a smooth deceleration curve.
  */
 export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
   value,
-  duration = 600,
+  from = 0,
+  duration = 1100,
   prefix = '',
   suffix = '',
   decimals = 0,
@@ -25,58 +26,92 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
   className = '',
 }) => {
   const safeTarget = typeof value === 'number' && !isNaN(value) ? value : 0;
-  const [current, setCurrent] = useState<number>(safeTarget);
+  const safeFrom = typeof from === 'number' && !isNaN(from) ? from : 0;
+  const [current, setCurrent] = useState<number>(safeFrom);
+  const elementRef = useRef<HTMLSpanElement>(null);
   const animFrameRef = useRef<number | null>(null);
-  const prevValueRef = useRef<number>(safeTarget);
+  const hasAnimatedRef = useRef<boolean>(false);
 
   useEffect(() => {
-    const startVal = prevValueRef.current;
-    const endVal = typeof value === 'number' && !isNaN(value) ? value : 0;
-    prevValueRef.current = endVal;
+    const el = elementRef.current;
+    const endVal = safeTarget;
+    const startVal = safeFrom;
 
-    // Si la valeur est identique, aucune animation n'est nécessaire
-    if (startVal === endVal) {
-      setCurrent(endVal);
-      return;
-    }
+    // Reset to start on value change
+    setCurrent(startVal);
+    hasAnimatedRef.current = false;
 
     if (animFrameRef.current) {
       cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
     }
 
-    const startTime = performance.now();
-    const animDuration = Math.max(200, duration);
+    const startAnimation = () => {
+      if (hasAnimatedRef.current) return;
+      hasAnimatedRef.current = true;
 
-    const step = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / animDuration, 1);
-      // Cubic ease-out
-      const ease = 1 - Math.pow(1 - progress, 3);
-      const nextVal = startVal + (endVal - startVal) * ease;
-      setCurrent(nextVal);
+      const startTime = performance.now();
+      const animDuration = Math.max(300, duration);
 
-      if (progress < 1) {
-        animFrameRef.current = requestAnimationFrame(step);
-      } else {
-        setCurrent(endVal);
-        animFrameRef.current = null;
-      }
+      const step = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / animDuration, 1);
+        // Cubic ease-out
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const nextVal = startVal + (endVal - startVal) * ease;
+        setCurrent(nextVal);
+
+        if (progress < 1) {
+          animFrameRef.current = requestAnimationFrame(step);
+        } else {
+          setCurrent(endVal);
+          animFrameRef.current = null;
+        }
+      };
+
+      animFrameRef.current = requestAnimationFrame(step);
     };
 
-    animFrameRef.current = requestAnimationFrame(step);
+    // If IntersectionObserver is not supported, start immediately
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window) || !el) {
+      startAnimation();
+      return () => {
+        if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      };
+    }
+
+    // Safety timeout: if observer hasn't fired after 250ms (e.g. element already visible), force start
+    const safetyTimer = setTimeout(() => {
+      startAnimation();
+    }, 250);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry && entry.isIntersecting) {
+          clearTimeout(safetyTimer);
+          startAnimation();
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -20px 0px' }
+    );
+
+    observer.observe(el);
 
     return () => {
+      clearTimeout(safetyTimer);
+      observer.disconnect();
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
         animFrameRef.current = null;
       }
     };
-  }, [value, duration]);
+  }, [safeTarget, safeFrom, duration]);
 
   const displayVal = typeof current === 'number' && !isNaN(current) ? current : safeTarget;
 
   return (
-    <span className={`tabular-nums font-mono ${className}`}>
+    <span ref={elementRef} className={`tabular-nums font-mono ${className}`}>
       {prefix}
       {decimals > 0 
         ? displayVal.toFixed(decimals) 

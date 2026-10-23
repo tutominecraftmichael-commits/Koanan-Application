@@ -54,11 +54,22 @@ export const KonanCube: React.FC<KonanCubeProps> = ({
             <stop offset="100%" stopColor="#0369a1" />
           </linearGradient>
 
-          {/* Dégradé Étoile Sparkle */}
+          {/* Dégradé Étoiles Sparkles (Cyan Électrique & Lueur Céleste) */}
           <linearGradient id="konanStarGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#38bdf8" />
-            <stop offset="100%" stopColor="#0369a1" />
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="30%" stopColor="#bae6fd" />
+            <stop offset="70%" stopColor="#38bdf8" />
+            <stop offset="100%" stopColor="#0284c7" />
           </linearGradient>
+
+          {/* Halo lumineux pour faire briller les étincelles bleues */}
+          <filter id="konanSparkGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
 
         <g>
@@ -185,23 +196,29 @@ export const KonanCube: React.FC<KonanCubeProps> = ({
             </g>
           </g>
 
-          {/* 9. DEUX ÉTOILES / ÉTINCELLES ICONIQUES DU LOGO KONAN */}
+          {/* 9. DEUX ÉTOILES / ÉTINCELLES ICONIQUES DU LOGO KONAN (Ultra-Visibles & Lumineuses) */}
           {showStars && (
             <>
-              {/* Étoile en haut à droite */}
-              <g transform="translate(174, 46) scale(0.95)">
+              {/* Étoile en haut à droite (Lueur Cyan & Cœur Blanc) */}
+              <g transform="translate(162, 52) scale(1.05)" filter="url(#konanSparkGlow)">
+                <path
+                  d="M 0 -14 Q 0 0 14 0 Q 0 0 0 14 Q 0 0 -14 0 Q 0 0 0 -14 Z"
+                  fill="url(#konanStarGrad)"
+                  stroke="#e0f2fe"
+                  strokeWidth="0.8"
+                />
+                <circle cx="0" cy="0" r="2.4" fill="#ffffff" />
+              </g>
+
+              {/* Étoile en bas à gauche (Lueur Cyan & Cœur Blanc) */}
+              <g transform="translate(38, 148) scale(0.95)" filter="url(#konanSparkGlow)">
                 <path
                   d="M 0 -13 Q 0 0 13 0 Q 0 0 0 13 Q 0 0 -13 0 Q 0 0 0 -13 Z"
                   fill="url(#konanStarGrad)"
+                  stroke="#e0f2fe"
+                  strokeWidth="0.8"
                 />
-              </g>
-
-              {/* Étoile en bas à gauche */}
-              <g transform="translate(26, 154) scale(0.85)">
-                <path
-                  d="M 0 -12 Q 0 0 12 0 Q 0 0 0 12 Q 0 0 -12 0 Q 0 0 0 -12 Z"
-                  fill="url(#konanStarGrad)"
-                />
+                <circle cx="0" cy="0" r="2.2" fill="#ffffff" />
               </g>
             </>
           )}

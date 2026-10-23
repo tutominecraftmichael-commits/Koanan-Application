@@ -428,7 +428,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 {/* Pourcentage 82% géant en rouge alerte percutant */}
                 <div className="space-y-2">
                   <div className="text-6xl sm:text-7xl md:text-8xl font-black text-[#DC2626] dark:text-rose-500 font-mono tracking-tight drop-shadow-none dark:drop-shadow-[0_0_25px_rgba(244,63,94,0.55)] flex items-center justify-center">
-                    <AnimatedCounter value={82} suffix="%" className="text-[#DC2626] dark:text-rose-500" />
+                    <AnimatedCounter 
+                      key={`counter-before-${selectedDemoTab}`} 
+                      value={82} 
+                      duration={1200} 
+                      suffix="%" 
+                      className="text-[#DC2626] dark:text-rose-500" 
+                    />
                   </div>
                   <h3 className="text-lg sm:text-2xl font-black text-[#0F172A] dark:text-white px-2">
                     des étudiants révisent dans l'urgence la veille des examens

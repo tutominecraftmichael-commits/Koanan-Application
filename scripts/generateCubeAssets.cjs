@@ -24,10 +24,23 @@ const svgColor = `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.or
       <stop offset="100%" stop-color="#0369a1" />
     </linearGradient>
     <linearGradient id="konanStarGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#38bdf8" />
-      <stop offset="100%" stop-color="#0369a1" />
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="30%" stop-color="#bae6fd" />
+      <stop offset="70%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
     </linearGradient>
+    <filter id="sparkGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
   </defs>
+  
+  <!-- Fond Bleu Nuit Premium #070F22 -->
+  <rect width="200" height="200" rx="42" fill="#070F22" />
+  
   <g>
     <!-- Structure extérieure Bleu Nuit -->
     <path d="M 100 39 L 159 72.5 L 159 139.5 L 100 173 L 41 139.5 L 41 72.5 Z" fill="#09284d" stroke="#09284d" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" />
@@ -70,12 +83,14 @@ const svgColor = `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.or
       </g>
     </g>
 
-    <!-- ÉTOILES / ÉTINCELLES DU LOGO KONAN -->
-    <g transform="translate(174, 46) scale(0.95)">
-      <path d="M 0 -13 Q 0 0 13 0 Q 0 0 0 13 Q 0 0 -13 0 Q 0 0 0 -13 Z" fill="url(#konanStarGrad)" />
+    <!-- DEUX ÉTOILES / ÉTINCELLES ICONIQUES DU LOGO KONAN (Lumineuses & Éclatantes) -->
+    <g transform="translate(162, 52) scale(1.05)" filter="url(#sparkGlow)">
+      <path d="M 0 -14 Q 0 0 14 0 Q 0 0 0 14 Q 0 0 -14 0 Q 0 0 0 -14 Z" fill="url(#konanStarGrad)" stroke="#e0f2fe" stroke-width="0.8" />
+      <circle cx="0" cy="0" r="2.4" fill="#ffffff" />
     </g>
-    <g transform="translate(26, 154) scale(0.85)">
-      <path d="M 0 -12 Q 0 0 12 0 Q 0 0 0 12 Q 0 0 -12 0 Q 0 0 0 -12 Z" fill="url(#konanStarGrad)" />
+    <g transform="translate(38, 148) scale(0.95)" filter="url(#sparkGlow)">
+      <path d="M 0 -13 Q 0 0 13 0 Q 0 0 0 13 Q 0 0 -13 0 Q 0 0 0 -13 Z" fill="url(#konanStarGrad)" stroke="#e0f2fe" stroke-width="0.8" />
+      <circle cx="0" cy="0" r="2.2" fill="#ffffff" />
     </g>
   </g>
 </svg>`;
@@ -154,7 +169,13 @@ captureHtml('temp_badge192.html', 'public/cube-badge-192.png', 192);
   if (fs.existsSync(f)) fs.unlinkSync(f);
 });
 
-console.log('✅ Tous les assets Cube avec les lettres K ont été générés avec succès !');
+// Copie vers les noms officiels du logo KONAN avec fond bleu nuit
+fs.copyFileSync('public/cube-icon-512.png', 'public/konan-logo.png');
+fs.copyFileSync('public/cube-icon-512.png', 'public/logo-konan.png');
+fs.copyFileSync('public/cube-icon.png', 'public/favicon.png');
+
+console.log('✅ Tous les assets Cube avec Fond Bleu Nuit et Étoiles Lumineuses ont été générés avec succès !');
 console.log('cube-icon-512.png:', fs.statSync('public/cube-icon-512.png').size, 'octets');
 console.log('cube-icon.png:', fs.statSync('public/cube-icon.png').size, 'octets');
+console.log('konan-logo.png:', fs.statSync('public/konan-logo.png').size, 'octets');
 console.log('cube-badge.png:', fs.statSync('public/cube-badge.png').size, 'octets');
