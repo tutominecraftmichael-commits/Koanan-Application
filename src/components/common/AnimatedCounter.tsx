@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 
 export interface AnimatedCounterProps {
   value: number;
-  from?: number;
   duration?: number;
   prefix?: string;
   suffix?: string;
@@ -12,13 +11,13 @@ export interface AnimatedCounterProps {
 }
 
 /**
- * Animated Counter that counts up dynamically to the target value with cubic ease-out.
- * Automatically triggered when scrolled into view or mounted, with a smooth deceleration curve.
+ * Animated Counter that counts up from 0 to target value with smooth cubic ease-out.
+ * Automatically triggered when scrolled into view, and resets when scrolled away
+ * so the user can always experience the dynamic count-up animation.
  */
 export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
   value,
-  from = 0,
-  duration = 1100,
+  duration = 1200,
   prefix = '',
   suffix = '',
   decimals = 0,
@@ -26,37 +25,38 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
   className = '',
 }) => {
   const safeTarget = typeof value === 'number' && !isNaN(value) ? value : 0;
-  const safeFrom = typeof from === 'number' && !isNaN(from) ? from : 0;
-  const [current, setCurrent] = useState<number>(safeFrom);
+  const [current, setCurrent] = useState<number>(0);
   const elementRef = useRef<HTMLSpanElement>(null);
   const animFrameRef = useRef<number | null>(null);
-  const hasAnimatedRef = useRef<boolean>(false);
+  const isAnimatingRef = useRef<boolean>(false);
 
   useEffect(() => {
     const el = elementRef.current;
-    const endVal = safeTarget;
-    const startVal = safeFrom;
-
-    // Reset to start on value change
-    setCurrent(startVal);
-    hasAnimatedRef.current = false;
-
-    if (animFrameRef.current) {
-      cancelAnimationFrame(animFrameRef.current);
-      animFrameRef.current = null;
-    }
+    if (!el) return;
 
     const startAnimation = () => {
-      if (hasAnimatedRef.current) return;
-      hasAnimatedRef.current = true;
+      if (isAnimatingRef.current) return;
+      isAnimatingRef.current = true;
+
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+      }
 
       const startTime = performance.now();
       const animDuration = Math.max(300, duration);
+      const startVal = 0;
+      const endVal = safeTarget;
+
+      if (startVal === endVal) {
+        setCurrent(endVal);
+        isAnimatingRef.current = false;
+        return;
+      }
 
       const step = (now: number) => {
         const elapsed = now - startTime;
         const progress = Math.min(elapsed / animDuration, 1);
-        // Cubic ease-out
+        // Courbe cubique ease-out naturelle et fluide
         const ease = 1 - Math.pow(1 - progress, 3);
         const nextVal = startVal + (endVal - startVal) * ease;
         setCurrent(nextVal);
@@ -65,6 +65,7 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
           animFrameRef.current = requestAnimationFrame(step);
         } else {
           setCurrent(endVal);
+          isAnimatingRef.current = false;
           animFrameRef.current = null;
         }
       };
@@ -72,43 +73,48 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
       animFrameRef.current = requestAnimationFrame(step);
     };
 
-    // If IntersectionObserver is not supported, start immediately
-    if (typeof window === 'undefined' || !('IntersectionObserver' in window) || !el) {
+    const resetCounter = () => {
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+        animFrameRef.current = null;
+      }
+      isAnimatingRef.current = false;
+      setCurrent(0);
+    };
+
+    // Si le navigateur ne supporte pas IntersectionObserver, démarrer immédiatement
+    if (typeof IntersectionObserver === 'undefined') {
       startAnimation();
-      return () => {
-        if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-      };
+      return;
     }
 
-    // Safety timeout: if observer hasn't fired after 250ms (e.g. element already visible), force start
-    const safetyTimer = setTimeout(() => {
-      startAnimation();
-    }, 250);
-
+    // Déclenché à chaque entrée dans le champ de vision
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
         if (entry && entry.isIntersecting) {
-          clearTimeout(safetyTimer);
           startAnimation();
+        } else if (entry && !entry.isIntersecting) {
+          // Réinitialiser pour pouvoir rejouer l'animation quand on revient dessus
+          resetCounter();
         }
       },
-      { threshold: 0.1, rootMargin: '0px 0px -20px 0px' }
+      { threshold: 0.15, rootMargin: '0px 0px -20px 0px' }
     );
 
     observer.observe(el);
 
     return () => {
-      clearTimeout(safetyTimer);
       observer.disconnect();
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
         animFrameRef.current = null;
       }
+      isAnimatingRef.current = false;
     };
-  }, [safeTarget, safeFrom, duration]);
+  }, [safeTarget, duration]);
 
-  const displayVal = typeof current === 'number' && !isNaN(current) ? current : safeTarget;
+  const displayVal = typeof current === 'number' && !isNaN(current) ? current : 0;
 
   return (
     <span ref={elementRef} className={`tabular-nums font-mono ${className}`}>
@@ -122,4 +128,3 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
     </span>
   );
 };
-

@@ -24,7 +24,6 @@ import {
   isMobileBrowser
 } from '../../lib/firebase';
 import { generateKonanId } from '../../lib/konanId';
-import { KonanCube } from '../../components/common/KonanCube';
 
 export interface AuthPageProps {
   onLoginSuccess: (profile: UserAccount, preferences?: { chronotype: Chronotype }) => void;
@@ -390,11 +389,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
           {/* Header */}
           <div className="text-center space-y-2.5 relative z-10">
-            {/* Logo Officiel avec Fond Bleu Nuit & Étoiles Lumineuses */}
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl p-[2px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 mx-auto shadow-lg shadow-sky-500/30 flex items-center justify-center">
-              <div className="w-full h-full rounded-[14px] bg-[#070F22] flex items-center justify-center overflow-visible p-1">
-                <KonanCube size={54} showStars={true} glow={true} />
-              </div>
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full p-[2px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 mx-auto shadow-lg shadow-sky-500/25 flex items-center justify-center overflow-hidden">
+              <img
+                src="/konan-logo.png"
+                alt="Logo Officiel KONAN"
+                className="w-full h-full object-contain rounded-full bg-[#091427]"
+              />
             </div>
 
             <div className="space-y-1 pt-1">

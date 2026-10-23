@@ -216,12 +216,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-2 sm:gap-3 group text-left cursor-pointer focus:outline-none shrink-0"
               title="Retour à l'accueil KONAN"
             >
-              {/* Logo KONAN avec Fond Bleu Nuit & Étoiles Lumineuses Visibles */}
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 shadow-md shadow-sky-500/30 group-hover:scale-105 transition-transform duration-300 shrink-0 flex items-center justify-center">
-                <div className="w-full h-full rounded-[14px] bg-[#070F22] flex items-center justify-center overflow-visible p-0.5">
-                  <KonanCube size={34} showStars={true} glow={false} />
+              {activeView === 'landing' ? (
+                <div className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center shrink-0 drop-shadow-[0_0_15px_rgba(56,189,248,0.45)] group-hover:scale-105 transition-transform duration-300">
+                  <KonanCube size={38} showStars={false} glow={true} />
                 </div>
-              </div>
+              ) : (
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0 flex items-center justify-center overflow-hidden">
+                  <img
+                    src="/konan-logo.png"
+                    alt="Logo Officiel KONAN"
+                    className="w-full h-full object-contain rounded-full bg-[#091427]"
+                  />
+                </div>
+              )}
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="font-extrabold text-sm sm:text-lg tracking-tight text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors">
