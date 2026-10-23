@@ -54,12 +54,10 @@ export const KonanCube: React.FC<KonanCubeProps> = ({
             <stop offset="100%" stopColor="#0369a1" />
           </linearGradient>
 
-          {/* Dégradé Étoile Sparkle Cyan Lumineux */}
+          {/* Dégradé Étoile Sparkle */}
           <linearGradient id="konanStarGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="30%" stopColor="#7dd3fc" />
-            <stop offset="70%" stopColor="#38bdf8" />
-            <stop offset="100%" stopColor="#0284c7" />
+            <stop offset="0%" stopColor="#38bdf8" />
+            <stop offset="100%" stopColor="#0369a1" />
           </linearGradient>
         </defs>
 
@@ -191,23 +189,19 @@ export const KonanCube: React.FC<KonanCubeProps> = ({
           {showStars && (
             <>
               {/* Étoile en haut à droite */}
-              <g transform="translate(152, 48) scale(0.95)">
-                <circle cx="0" cy="0" r="10" fill="#38bdf8" opacity="0.35" />
+              <g transform="translate(174, 46) scale(0.95)">
                 <path
                   d="M 0 -13 Q 0 0 13 0 Q 0 0 0 13 Q 0 0 -13 0 Q 0 0 0 -13 Z"
                   fill="url(#konanStarGrad)"
                 />
-                <circle cx="0" cy="0" r="2.5" fill="#ffffff" />
               </g>
 
               {/* Étoile en bas à gauche */}
-              <g transform="translate(48, 146) scale(0.85)">
-                <circle cx="0" cy="0" r="9" fill="#38bdf8" opacity="0.35" />
+              <g transform="translate(26, 154) scale(0.85)">
                 <path
                   d="M 0 -12 Q 0 0 12 0 Q 0 0 0 12 Q 0 0 -12 0 Q 0 0 0 -12 Z"
                   fill="url(#konanStarGrad)"
                 />
-                <circle cx="0" cy="0" r="2.2" fill="#ffffff" />
               </g>
             </>
           )}

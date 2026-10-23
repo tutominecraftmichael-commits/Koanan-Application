@@ -70,8 +70,7 @@ import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelecto
 import { 
   checkAndDispatchStudyReminders, 
   getPhoneNotificationPermission, 
-  requestPhoneNotificationPermission,
-  sendSessionRescheduledNotification 
+  requestPhoneNotificationPermission
 } from './services/companionNotificationService';
 
 // Views
@@ -468,7 +467,7 @@ export function App() {
           return prev;
         }
 
-        const { updatedSessions, rescheduledCount, restoredCount, rescheduledSessions } = evaluateDailyCatchup(
+        const { updatedSessions, rescheduledCount, restoredCount } = evaluateDailyCatchup(
           baseSessions,
           cleanedSlots,
           prev.preferences,

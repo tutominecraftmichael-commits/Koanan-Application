@@ -88,11 +88,40 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-// Enregistrement du Service Worker Firebase Cloud Messaging & PWA
+// Enregistrement & mise à jour active du Service Worker pour PWA & Mobile
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/firebase-messaging-sw.js', { scope: '/' }).catch((err) => {
-      console.warn('[KONAN] Service Worker notice:', err);
-    });
+    navigator.serviceWorker
+      .register('/firebase-messaging-sw.js', { scope: '/' })
+      .then((registration) => {
+        // Forcer la vérification immédiate des mises à jour dès l'ouverture sur smartphone
+        registration.update().catch(() => {});
+
+        // Détecter si une nouvelle version a été installée
+        registration.addEventListener('updatefound', () => {
+          const installingWorker = registration.installing;
+          if (installingWorker) {
+            installingWorker.addEventListener('statechange', () => {
+              if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('[KONAN] Nouvelle version détectée, rechargement automatique...');
+                window.location.reload();
+              }
+            });
+          }
+        });
+      })
+      .catch((err) => {
+        console.warn('[KONAN] Service Worker notice:', err);
+      });
+  });
+
+  // Recharger si un nouveau service worker prend le contrôle
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) {
+      refreshing = true;
+      window.location.reload();
+    }
   });
 }
+
