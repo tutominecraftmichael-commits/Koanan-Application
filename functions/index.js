@@ -411,8 +411,6 @@ async function processAllStudentReminders() {
         if (result.success) {
           stats.rescheduledNoticesSent += 1;
           updatesToSave[`notifiedStudyReminders.${rescheduledNoticeKey}`] = new Date().toISOString();
-        }
-          updatesToSave[`notifiedStudyReminders.${rescheduledNoticeKey}`] = new Date().toISOString();
         } else if (result.cleaned) {
           stats.cleanedTokens += 1;
           break;
