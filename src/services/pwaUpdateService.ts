@@ -3,9 +3,11 @@
  * 
  * Ce service garantit que dès que de nouvelles modifications sont poussées sur GitHub
  * et déployées (Vercel), l'application installée sur smartphone mobile (PWA)
- * se met à jour AUTOMATIQUEMENT et INSTANTANÉMENT sans que l'utilisateur
- * n'ait à la désinstaller ou vider son cache manuellement.
+ * détecte la mise à jour et propose à l'utilisateur de mettre à jour d'un clic
+ * sans jamais avoir à désinstaller ou vider son cache manuellement.
  */
+
+import { useState, useEffect } from 'react';
 
 declare const __APP_BUILD_ID__: string;
 
@@ -13,6 +15,40 @@ const CURRENT_VERSION = typeof __APP_BUILD_ID__ !== 'undefined' ? __APP_BUILD_ID
 const STORAGE_KEY = 'konan_app_version';
 
 let isUpdating = false;
+let updateAvailableState = false;
+const listeners = new Set<(available: boolean) => void>();
+
+function notifyUpdateAvailable(val: boolean) {
+  updateAvailableState = val;
+  listeners.forEach((fn) => {
+    try {
+      fn(val);
+    } catch {}
+  });
+}
+
+export function onPwaUpdateAvailable(callback: (available: boolean) => void): () => void {
+  listeners.add(callback);
+  if (updateAvailableState) callback(true);
+  return () => {
+    listeners.delete(callback);
+  };
+}
+
+export function usePwaUpdate() {
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState(updateAvailableState);
+
+  useEffect(() => {
+    return onPwaUpdateAvailable((available) => {
+      setIsUpdateAvailable(available);
+    });
+  }, []);
+
+  return {
+    isUpdateAvailable,
+    applyUpdate: forcePwaCacheClearAndReload,
+  };
+}
 
 /**
  * Purge tous les caches du navigateur et force le rechargement de la page
@@ -21,6 +57,16 @@ export async function forcePwaCacheClearAndReload(): Promise<void> {
   if (isUpdating) return;
   isUpdating = true;
   console.log('[KONAN PWA] Purge immédiate de tous les caches et rechargement...');
+
+  try {
+    const res = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data?.version) {
+        localStorage.setItem(STORAGE_KEY, String(data.version));
+      }
+    }
+  } catch {}
 
   try {
     if ('caches' in window) {
@@ -42,7 +88,7 @@ export async function forcePwaCacheClearAndReload(): Promise<void> {
   } catch {}
 
   // Recharger l'application immédiatement avec le nouveau bundle
-  window.location.reload();
+  window.location.replace(window.location.href);
 }
 
 /**
@@ -81,9 +127,8 @@ export async function checkForPwaUpdate(reg?: ServiceWorkerRegistration): Promis
 
     // Si la version serveur diffère de la version stockée ou actuelle :
     if (serverVersion !== storedVersion || (CURRENT_VERSION && serverVersion !== CURRENT_VERSION)) {
-      console.log(`[KONAN PWA] Nouvelle version détectée (${storedVersion} -> ${serverVersion}) ! Mise à jour instantanée.`);
-      localStorage.setItem(STORAGE_KEY, serverVersion);
-      await forcePwaCacheClearAndReload();
+      console.log(`[KONAN PWA] Nouvelle version détectée (${storedVersion} -> ${serverVersion}) !`);
+      notifyUpdateAvailable(true);
       return true;
     }
   } catch {
@@ -128,13 +173,14 @@ export function initPwaAutoUpdate(reg: ServiceWorkerRegistration): void {
 
     installingWorker.addEventListener('statechange', () => {
       if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-        console.log('[KONAN PWA] Nouveau Service Worker installé, activation immédiate...');
+        console.log('[KONAN PWA] Nouveau Service Worker installé, notification mise à jour...');
+        notifyUpdateAvailable(true);
         installingWorker.postMessage({ type: 'SKIP_WAITING' });
       }
     });
   });
 
-  // 5. Recharger instantanément dès que le nouveau Service Worker prend le contrôle
+  // 5. Recharger dès que le nouveau Service Worker prend le contrôle
   let refreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (!refreshing) {
