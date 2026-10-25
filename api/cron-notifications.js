@@ -13,41 +13,51 @@
  */
 
 import webpush from 'web-push';
-import admin from 'firebase-admin';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getMessaging } from 'firebase-admin/messaging';
 
-// Initialisation de Firebase Admin
-let app;
-if (admin.apps.length === 0) {
+// Initialisation sécurisée de Firebase Admin (Compatible Node ESM et Vercel Serverless)
+function getFirebaseServices() {
   const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-  if (serviceAccountKey) {
+  if (!serviceAccountKey) {
+    return {
+      error: 'MISSING_SERVICE_ACCOUNT_KEY',
+      details: "La variable d'environnement FIREBASE_SERVICE_ACCOUNT_KEY n'est pas configurée dans Vercel."
+    };
+  }
+
+  let app;
+  if (getApps().length === 0) {
     try {
       const raw = serviceAccountKey.trim();
       const parsed = raw.startsWith('{')
         ? JSON.parse(raw)
         : JSON.parse(Buffer.from(raw, 'base64').toString('utf-8'));
-      app = admin.initializeApp({
-        credential: admin.credential.cert(parsed),
+      app = initializeApp({
+        credential: cert(parsed),
         projectId: parsed.project_id || process.env.VITE_FIREBASE_PROJECT_ID || 'konanai-ed046',
       });
     } catch (e) {
-      console.warn('[cron-notifications] Erreur parsing FIREBASE_SERVICE_ACCOUNT_KEY, repli sur default :', e.message);
-      app = admin.initializeApp({
-        projectId: process.env.VITE_FIREBASE_PROJECT_ID || 'konanai-ed046',
-      });
+      return {
+        error: 'INVALID_SERVICE_ACCOUNT_KEY',
+        details: `Erreur lors de l'analyse du JSON de la clé : ${e.message}`
+      };
     }
   } else {
-    app = admin.initializeApp({
-      projectId: process.env.VITE_FIREBASE_PROJECT_ID || 'konanai-ed046',
-    });
+    app = getApps()[0];
   }
-} else {
-  app = admin.apps[0];
-}
 
-const db = getFirestore(app);
-const messaging = getMessaging(app);
+  const db = getFirestore(app);
+  let messaging = null;
+  try {
+    messaging = getMessaging(app);
+  } catch (mErr) {
+    console.warn('[cron-notifications] Firebase Messaging optionnel non initialisé :', mErr.message);
+  }
+
+  return { db, messaging, app };
+}
 
 // Configuration des clés VAPID Web Push
 const VAPID_PUBLIC_KEY =
@@ -123,7 +133,7 @@ function minutesToTimeString(minutes) {
 /**
  * Envoie une notification Push au téléphone (via Web Push standard ou FCM)
  */
-async function dispatchPushToUser({ userId, webPushSub, fcmToken, title, body, tag, dataPayload }) {
+async function dispatchPushToUser({ userId, webPushSub, fcmToken, title, body, tag, dataPayload, db, messaging }) {
   let webPushSuccess = false;
   let fcmSuccess = false;
 
@@ -146,7 +156,7 @@ async function dispatchPushToUser({ userId, webPushSub, fcmToken, title, body, t
       webPushSuccess = true;
     } catch (wpErr) {
       console.warn(`[WebPush] Erreur envoi pour ${userId} :`, wpErr.statusCode || wpErr.message);
-      if (wpErr.statusCode === 404 || wpErr.statusCode === 410) {
+      if (db && (wpErr.statusCode === 404 || wpErr.statusCode === 410)) {
         // Souscription expirée ou désinstallée
         await db.collection('users').doc(userId).update({
           webPushSubscription: FieldValue.delete(),
@@ -156,7 +166,7 @@ async function dispatchPushToUser({ userId, webPushSub, fcmToken, title, body, t
   }
 
   // 2. Envoi complémentaire via FCM si disponible
-  if (fcmToken && !webPushSuccess) {
+  if (fcmToken && !webPushSuccess && messaging) {
     try {
       const message = {
         token: fcmToken,
@@ -278,6 +288,21 @@ export default async function handler(req, res) {
   };
 
   try {
+    const fb = getFirebaseServices();
+    if (fb.error) {
+      return res.status(200).json({
+        success: true,
+        endpointActive: true,
+        service: 'KONAN AI Push Notifications & Catchup Cron',
+        mode: 'Diagnostic / Prêt',
+        notice: fb.details,
+        instruction: "Pour connecter ce cron à votre base de données Firestore et déclencher les notifications push en arrière-plan, ajoutez la variable FIREBASE_SERVICE_ACCOUNT_KEY dans Vercel (Project Settings > Environment Variables).",
+        timestamp: now.toISOString(),
+        stats,
+      });
+    }
+
+    const { db, messaging } = fb;
     const usersSnapshot = await db.collection('users').get();
     stats.usersScanned = usersSnapshot.size;
 
@@ -386,6 +411,8 @@ export default async function handler(req, res) {
             body,
             tag: `konan-5m-${session.id}`,
             dataPayload: { url: '/', sessionId: session.id },
+            db,
+            messaging,
           });
 
           if (sent) {
@@ -435,6 +462,8 @@ export default async function handler(req, res) {
               body,
               tag: `konan-rescheduled-${session.id}`,
               dataPayload: { url: '/', sessionId: session.id, newTime: freeSlot.startTime },
+              db,
+              messaging,
             });
 
             studySessions[i] = session;
