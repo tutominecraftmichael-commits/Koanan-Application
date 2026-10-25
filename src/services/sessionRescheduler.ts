@@ -339,12 +339,14 @@ export function evaluateDailyCatchup(
     // 3. RÈGLE CRITIQUE (Examen / Devoir passé) :
     // Si la date d'examen ou date de fin est dépassée (maintenant >= dateExamen),
     // marquer la session en expirée/terminée, NE GÉNÉRER AUCUN RATTRAPAGE ET AUCUNE NOTIFICATION.
-    if (matchingSubject?.examDate) {
-      const [year, month, day] = matchingSubject.examDate.split('-').map(Number);
+    const targetExamDate = matchingSubject?.examDate || session.examDate;
+    if (targetExamDate) {
+      const [year, month, day] = targetExamDate.split('-').map(Number);
       let examHour = 23;
       let examMinute = 59;
-      if (matchingSubject.examTime) {
-        const [eh, em] = matchingSubject.examTime.split(':').map(Number);
+      const targetExamTime = matchingSubject?.examTime || session.examTime;
+      if (targetExamTime) {
+        const [eh, em] = targetExamTime.split(':').map(Number);
         if (!isNaN(eh)) examHour = eh;
         if (!isNaN(em)) examMinute = em;
       }

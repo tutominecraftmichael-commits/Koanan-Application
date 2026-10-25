@@ -81,36 +81,47 @@ if (messaging) {
   });
 }
 
-// Écouteur push direct natif pour réveiller le téléphone même si l'application est fermée
+// Écouteur Web Push natif standard (W3C Push API) pour réveiller le téléphone
+// même quand l'application est totalement fermée et que l'écran est verrouillé
 self.addEventListener('push', (event) => {
-  if (!event.data) return;
-  try {
-    const data = event.data.json();
-    const rawTitle = data?.notification?.title || data?.data?.title || 'KONAN';
-    const title = String(rawTitle).replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '').trim() || 'KONAN';
-    const body = data?.notification?.body || data?.data?.body || 'C’est l’heure de poser le téléphone deux secondes. Viens te concentrer, je compte sur toi ! 👊📚';
-    
-    event.waitUntil(
-      self.registration.showNotification(title, {
-        body,
-        icon: '/cube-icon.png',
-        badge: '/cube-badge.png',
-        tag: data?.data?.tag || 'konan-study-push',
-        vibrate: [500, 250, 500, 250, 500],
-        renotify: true,
-        sound: 'default',
-        requireInteraction: true,
-        priority: 'high',
-        data: {
-          url: data?.data?.url || '/',
-          sessionId: data?.data?.sessionId,
-          ...data?.data,
-        },
-      })
-    );
-  } catch (e) {
-    console.warn('[firebase-messaging-sw.js] Push non-JSON reçu :', e);
+  let title = 'KONAN';
+  let body = 'C’est l’heure de poser le téléphone deux secondes. Viens te concentrer, je compte sur toi ! 👊📚';
+  let tag = 'konan-study-alert';
+  let customData = { url: '/' };
+
+  if (event.data) {
+    try {
+      const data = event.data.json();
+      title = data.title || data.notification?.title || data.data?.title || 'KONAN';
+      body = data.body || data.notification?.body || data.data?.body || body;
+      tag = data.tag || data.data?.tag || 'konan-study-alert';
+      customData = data.data || { url: data.url || '/' };
+    } catch (e) {
+      body = event.data.text() || body;
+    }
   }
+
+  const cleanTitle = String(title)
+    .replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '')
+    .trim() || 'KONAN';
+  const cleanBody = String(body)
+    .replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '')
+    .trim();
+
+  const options = {
+    body: cleanBody,
+    icon: '/cube-icon.png',
+    badge: '/cube-badge.png',
+    vibrate: [500, 250, 500, 250, 500],
+    sound: 'default',
+    tag,
+    renotify: true,
+    requireInteraction: true,
+    priority: 'high',
+    data: customData,
+  };
+
+  event.waitUntil(self.registration.showNotification(cleanTitle, options));
 });
 
 // Map des timers de rappels locaux planifiés (déclenchés 5 min avant même en arrière-plan)

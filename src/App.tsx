@@ -67,11 +67,7 @@ import { SuperProActivationModal } from './components/pro/SuperProActivationModa
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
 import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
 import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelectorModal';
-import { 
-  checkAndDispatchStudyReminders, 
-  getPhoneNotificationPermission, 
-  requestPhoneNotificationPermission
-} from './services/companionNotificationService';
+
 
 // Views
 import { LandingHero } from './features/landing/LandingHero';
@@ -517,47 +513,37 @@ export function App() {
     };
   }, [state.studySessions.length, state.classSlots.length, activeView]);
 
-  // Notifications d'étude natives style Duolingo (Audio 4)
+  // =========================================================================
+  // ÉTAPE 1 : CONDITION SIMPLE GRATUIT VS PRO (Web Push Arrière-Plan)
+  // 1. Gratuit : ZÉRO notification, désabonnement immédiat.
+  // 2. Pro / Plus : Activation automatique des notifications Web Push.
+  // =========================================================================
   useEffect(() => {
-    const effectivePlan = state.userAccount?.planTier || 'free';
-    if (effectivePlan !== 'pro' && effectivePlan !== 'plus') return;
-    if (!state.studySessions || state.studySessions.length === 0) return;
+    const effectivePlan = state.userAccount?.planTier || state.planTier || 'free';
+    const uid = state.userAccount?.googleId || state.userAccount?.email;
 
-    // Demande polie de permission de notifications sur mobile/desktop si membre PRO
-    if (getPhoneNotificationPermission() === 'default') {
-      requestPhoneNotificationPermission().then((perm) => {
-        if (perm === 'granted') {
-          const uid = state.userAccount?.googleId || state.userAccount?.email;
-          if (uid) {
-            import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
-              enableStudentPushNotifications(uid).catch(() => {});
-            });
-          }
-        }
-      }).catch(() => {});
-    } else if (getPhoneNotificationPermission() === 'granted') {
-      const uid = state.userAccount?.googleId || state.userAccount?.email;
+    if (effectivePlan === 'free') {
+      // Utilisateur en mode Gratuit : ZÉRO notification (ni fermée, ni ouverte)
       if (uid) {
-        import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
-          enableStudentPushNotifications(uid).catch(() => {});
+        import('./services/webPushService').then(({ unsubscribeFromWebPush }) => {
+          unsubscribeFromWebPush(uid).catch(() => {});
         });
       }
+      return;
     }
 
-    const checkReminders = () => {
-      checkAndDispatchStudyReminders(state.studySessions, state.subjects, effectivePlan, state.cycleCompletedDate);
-    };
+    // Utilisateur en mode Pro ou Plus : activation automatique Web Push
+    if (uid && (effectivePlan === 'pro' || effectivePlan === 'plus')) {
+      import('./services/webPushService').then(({ subscribeToWebPush }) => {
+        subscribeToWebPush(uid).catch(() => {});
+      });
 
-    checkReminders();
-    const interval = setInterval(checkReminders, 60000);
-    const handleFocus = () => checkReminders();
-    window.addEventListener('focus', handleFocus);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('focus', handleFocus);
-    };
-  }, [state.studySessions, state.subjects, state.userAccount?.planTier, state.cycleCompletedDate]);
+      // Synchroniser également le token FCM si supporté
+      import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
+        enableStudentPushNotifications(uid).catch(() => {});
+      });
+    }
+  }, [state.userAccount?.planTier, state.planTier, state.userAccount?.googleId, state.userAccount?.email]);
 
   // Gestion d'authentification mobile et synchronisation au démarrage
   useEffect(() => {
