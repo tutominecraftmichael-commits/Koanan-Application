@@ -403,9 +403,6 @@ export function checkAndDispatchStudyReminders(
     } catch {}
   };
 
-  const lastReminderTime = Number(localStorage.getItem('konan_last_reminder_time') || '0');
-  const isCooldownActive = Date.now() - lastReminderTime < 15 * 60 * 1000;
-
   // =========================================================================
   // HIÉRARCHIE DE COORDINATION STRICTE : AU MAXIMUM 1 SEULE NOTIFICATION
   // =========================================================================
@@ -438,64 +435,7 @@ export function checkAndDispatchStudyReminders(
     }
   }
 
-  // Si le cooldown anti-spam est actif, ne pas envoyer d'alerte de retard supplémentaire
-  if (isCooldownActive) {
-    return;
-  }
-
-  // ÉTAPE 2 : Rattrapage du soir (Dernière chance avant minuit, 21h00 à 23h50)
-  const isEvening = currentMinutes >= 1260 && currentMinutes < 1435;
-  const eveningAlertKey = `evening_last_chance_${dateKey}`;
-  if (isEvening && uncompletedToday.length > 0 && !notifiedIds.includes(eveningAlertKey)) {
-    const firstSession = uncompletedToday[0];
-    const firstSubject = subjects.find(sub => sub.id === firstSession.subjectId)?.name || firstSession.title || 'tes cours';
-    const duration = firstSession.durationMinutes || 25;
-    const body = getEveningLastChanceMessage(firstSubject, duration);
-    sendPhoneNotification('KONAN', body, `study-evening-last-chance-${dateKey}`);
-    markNotified(eveningAlertKey);
-    return; // ARRÊT STRICT : 1 seule notification coordonnée !
-  }
-
-  // ÉTAPE 3 : Alertes créneaux multiples manqués dans la journée (>= 3 séances sautées)
-  const pastPendingToday = uncompletedToday.filter(session => {
-    const [h, m] = session.startTime.split(':').map(Number);
-    const startMin = h * 60 + (m || 0);
-    return currentMinutes > startMin + 15;
-  });
-  const missedCount = pastPendingToday.length;
-
-  const multipleMissedKey = `multiple_missed_${dateKey}`;
-  if (missedCount >= 3 && !isEvening && !notifiedIds.includes(multipleMissedKey)) {
-    const firstSession = pastPendingToday[0];
-    const firstSubject = subjects.find(sub => sub.id === firstSession.subjectId)?.name || firstSession.title || 'tes cours';
-    const body = getMultipleMissedMessage(firstSubject);
-    sendPhoneNotification(`KONAN ✦ ${firstSubject}`, body, `study-multiple-missed-${dateKey}`);
-    markNotified(multipleMissedKey);
-    return; // ARRÊT STRICT : 1 seule notification coordonnée !
-  }
-
-  // ÉTAPE 4 : Alerte unique pour le créneau sauté le plus récent (au maximum 1 alerte, pas de cumul)
-  if (missedCount > 0 && missedCount < 3 && !isEvening) {
-    for (const session of pastPendingToday) {
-      const isCatchup = Boolean(session.isRescheduledToday || session.rescheduledReason);
-      const missedKey = isCatchup 
-        ? `${session.id}_catchup_missed_${session.startTime}`
-        : `${session.id}_first_missed`;
-
-      if (!notifiedIds.includes(missedKey)) {
-        const subject = subjects.find(sub => sub.id === session.subjectId);
-        const subjectName = subject?.name || session.title || 'tes cours';
-        const duration = session.durationMinutes || 25;
-
-        const title = isCatchup ? `KONAN ✦ Rattrapage ${subjectName}` : `KONAN ✦ ${subjectName}`;
-        const body = isCatchup
-          ? getCatchupMissedMessage(subjectName, session.startTime, duration)
-          : getFirstMissedMessage(subjectName, duration);
-
-        sendPhoneNotification(title, body, `study-missed-${session.id}`);
-        markNotified(missedKey);
-        return; // ARRÊT STRICT : 1 seule notification coordonnée !
-      }
-    }
-  }
+  // Note : Les alertes rétroactives de séances passées à l'ouverture de l'application ont été supprimées
+  // pour éliminer le spam. La détection et le rattrapage s'exécutent en temps réel via le Push Service Worker et le Cron serveur.
 }
+

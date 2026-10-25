@@ -4,17 +4,27 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
+  "crons": [
+    {
+      "path": "/api/cron-notifications",
+      "schedule": "* * * * *"
+    }
+  ],
   "headers": [
     {
-      "source": "/(firebase-messaging-sw.js|sw.js|manifest.json)",
+      "source": "/(firebase-messaging-sw.js|sw.js|manifest.json|version.json)",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
+          "value": "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0"
         }
       ]
     },
@@ -23,7 +33,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
+          "value": "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0"
         }
       ]
     }

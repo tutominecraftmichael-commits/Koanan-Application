@@ -4,7 +4,7 @@ importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js');
 
 // Version du Service Worker pour forcer la mise à jour sur smartphone et PWA installée
-const SW_VERSION = 'v-2026-10-23-02';
+const SW_VERSION = 'v-2026-10-25-04';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -81,42 +81,58 @@ if (messaging) {
   });
 }
 
-// Écouteur push direct natif pour réveiller le téléphone même si l'application est fermée
+// Écouteur Web Push natif standard (W3C Push API) pour réveiller le téléphone
+// même quand l'application est totalement fermée et que l'écran est verrouillé
 self.addEventListener('push', (event) => {
-  if (!event.data) return;
-  try {
-    const data = event.data.json();
-    const rawTitle = data?.notification?.title || data?.data?.title || 'KONAN';
-    const title = String(rawTitle).replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '').trim() || 'KONAN';
-    const body = data?.notification?.body || data?.data?.body || 'C’est l’heure de poser le téléphone deux secondes. Viens te concentrer, je compte sur toi ! 👊📚';
-    
-    event.waitUntil(
-      self.registration.showNotification(title, {
-        body,
-        icon: '/cube-icon.png',
-        badge: '/cube-badge.png',
-        tag: data?.data?.tag || 'konan-study-push',
-        vibrate: [500, 250, 500, 250, 500],
-        renotify: true,
-        sound: 'default',
-        requireInteraction: true,
-        priority: 'high',
-        data: {
-          url: data?.data?.url || '/',
-          sessionId: data?.data?.sessionId,
-          ...data?.data,
-        },
-      })
-    );
-  } catch (e) {
-    console.warn('[firebase-messaging-sw.js] Push non-JSON reçu :', e);
+  let title = 'KONAN';
+  let body = 'C’est l’heure de poser le téléphone deux secondes. Viens te concentrer, je compte sur toi ! 👊📚';
+  let tag = 'konan-study-alert';
+  let customData = { url: '/' };
+
+  if (event.data) {
+    try {
+      const data = event.data.json();
+      title = data.title || data.notification?.title || data.data?.title || 'KONAN';
+      body = data.body || data.notification?.body || data.data?.body || body;
+      tag = data.tag || data.data?.tag || 'konan-study-alert';
+      customData = data.data || { url: data.url || '/' };
+    } catch (e) {
+      body = event.data.text() || body;
+    }
   }
+
+  const cleanTitle = String(title)
+    .replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '')
+    .trim() || 'KONAN';
+  const cleanBody = String(body)
+    .replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '')
+    .trim();
+
+  const options = {
+    body: cleanBody,
+    icon: '/cube-icon.png',
+    badge: '/cube-badge.png',
+    vibrate: [500, 250, 500, 250, 500],
+    sound: 'default',
+    tag,
+    renotify: true,
+    requireInteraction: true,
+    priority: 'high',
+    data: customData,
+  };
+
+  event.waitUntil(self.registration.showNotification(cleanTitle, options));
 });
 
 // Map des timers de rappels locaux planifiés (déclenchés 5 min avant même en arrière-plan)
 const scheduledTimers = new Map();
 
 self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+    return;
+  }
+
   if (event.data && event.data.type === 'SCHEDULE_UPCOMING_REMINDERS') {
     const reminders = event.data.reminders;
     if (!Array.isArray(reminders)) return;
@@ -186,9 +202,28 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// Événement fetch pour l'installabilité PWA sur tous les navigateurs (Chrome, Samsung Internet, Safari, Edge)
+// Événement fetch : Réseau en priorité absolue pour le HTML et version.json
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+
+  // version.json et le Service Worker doivent TOUJOURS être cherchés sur le réseau sans aucun cache
+  if (url.pathname === '/version.json' || url.pathname.includes('firebase-messaging-sw.js') || url.pathname.includes('sw.js')) {
+    event.respondWith(fetch(event.request, { cache: 'no-store' }));
+    return;
+  }
+
+  // Pour les pages (HTML / Navigation PWA), toujours le réseau en priorité pour charger les dernières mises à jour
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => caches.match(event.request).then((res) => res || caches.match('/index.html')))
+    );
+    return;
+  }
+
+  // Pour les autres requêtes (assets hachés, images), réseau d'abord avec repli cache si hors ligne
   event.respondWith(
     fetch(event.request).catch(() => {
       return caches.match(event.request);
