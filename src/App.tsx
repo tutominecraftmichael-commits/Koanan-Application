@@ -60,7 +60,6 @@ import { WaitlistModal } from './components/common/WaitlistModal';
 import { GoogleCalendarSyncModal } from './components/common/GoogleCalendarSyncModal';
 import { PrivacyPolicyModal } from './components/common/PrivacyPolicyModal';
 import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal';
-import { PwaUpdateBanner } from './components/common/PwaUpdateBanner';
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
@@ -2186,10 +2185,6 @@ export function App() {
 
       {/* 📱 PWA Universal Mobile & Desktop Install Prompt */}
       <PwaInstallPromptModal />
-
-      {/* 🚀 Bannière de Mise à Jour PWA Instantanée */}
-      <PwaUpdateBanner />
-
     </div>
 
   );

@@ -127,8 +127,10 @@ export async function checkForPwaUpdate(reg?: ServiceWorkerRegistration): Promis
 
     // Si la version serveur diffère de la version stockée ou actuelle :
     if (serverVersion !== storedVersion || (CURRENT_VERSION && serverVersion !== CURRENT_VERSION)) {
-      console.log(`[KONAN PWA] Nouvelle version détectée (${storedVersion} -> ${serverVersion}) !`);
-      notifyUpdateAvailable(true);
+      console.log(`[KONAN PWA] Nouvelle version détectée (${storedVersion} -> ${serverVersion}) ! Application silencieuse...`);
+      localStorage.setItem(STORAGE_KEY, serverVersion);
+      // Mise à jour immédiate et silencieuse sans aucune bannière gênante
+      forcePwaCacheClearAndReload();
       return true;
     }
   } catch {
