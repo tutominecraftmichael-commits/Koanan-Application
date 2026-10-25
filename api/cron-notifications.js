@@ -14,8 +14,11 @@
 
 import webpush from 'web-push';
 import admin from 'firebase-admin';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getMessaging } from 'firebase-admin/messaging';
 
 // Initialisation de Firebase Admin
+let app;
 if (admin.apps.length === 0) {
   const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
   if (serviceAccountKey) {
@@ -24,24 +27,27 @@ if (admin.apps.length === 0) {
       const parsed = raw.startsWith('{')
         ? JSON.parse(raw)
         : JSON.parse(Buffer.from(raw, 'base64').toString('utf-8'));
-      admin.initializeApp({
+      app = admin.initializeApp({
         credential: admin.credential.cert(parsed),
         projectId: parsed.project_id || process.env.VITE_FIREBASE_PROJECT_ID || 'konanai-ed046',
       });
     } catch (e) {
       console.warn('[cron-notifications] Erreur parsing FIREBASE_SERVICE_ACCOUNT_KEY, repli sur default :', e.message);
-      admin.initializeApp({
+      app = admin.initializeApp({
         projectId: process.env.VITE_FIREBASE_PROJECT_ID || 'konanai-ed046',
       });
     }
   } else {
-    admin.initializeApp({
+    app = admin.initializeApp({
       projectId: process.env.VITE_FIREBASE_PROJECT_ID || 'konanai-ed046',
     });
   }
+} else {
+  app = admin.apps[0];
 }
 
-const db = admin.firestore();
+const db = getFirestore(app);
+const messaging = getMessaging(app);
 
 // Configuration des clés VAPID Web Push
 const VAPID_PUBLIC_KEY =
@@ -143,7 +149,7 @@ async function dispatchPushToUser({ userId, webPushSub, fcmToken, title, body, t
       if (wpErr.statusCode === 404 || wpErr.statusCode === 410) {
         // Souscription expirée ou désinstallée
         await db.collection('users').doc(userId).update({
-          webPushSubscription: admin.firestore.FieldValue.delete(),
+          webPushSubscription: FieldValue.delete(),
         }).catch(() => {});
       }
     }
@@ -170,7 +176,7 @@ async function dispatchPushToUser({ userId, webPushSub, fcmToken, title, body, t
         },
         data: { url: '/', ...(dataPayload || {}) },
       };
-      await admin.messaging().send(message);
+      await messaging.send(message);
       fcmSuccess = true;
     } catch (fcmErr) {
       console.warn(`[FCM] Erreur envoi pour ${userId} :`, fcmErr.message);
@@ -247,6 +253,15 @@ function findNextFreeSlotToday(currentMinute, durationMinutes, sessions, classes
  * Handler HTTP principal Vercel Serverless
  */
 export default async function handler(req, res) {
+  // En-têtes CORS pour autoriser l'appel depuis navigateur, cron externe ou dashboard
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   const startTime = Date.now();
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
