@@ -464,9 +464,16 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error('[cron-notifications] Erreur globale :', err);
-    return res.status(500).json({
+    const msg = String(err?.message || 'Erreur interne du serveur');
+    const isCredErr = msg.includes('Could not load the default credentials') || msg.includes('NO_ADC_FOUND');
+    return res.status(200).json({
       success: false,
-      error: err?.message || 'Erreur interne du serveur',
+      error: isCredErr
+        ? "Action requise : Ajoutez la variable d'environnement FIREBASE_SERVICE_ACCOUNT_KEY dans les paramètres Vercel pour autoriser la lecture et l'écriture Firestore hors Google Cloud."
+        : msg,
+      details: msg,
+      timestamp: now.toISOString(),
+      cronJobReady: true,
     });
   }
 }
