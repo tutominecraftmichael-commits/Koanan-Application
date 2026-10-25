@@ -4,7 +4,7 @@ importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js');
 
 // Version du Service Worker pour forcer la mise à jour sur smartphone et PWA installée
-const SW_VERSION = 'v-2026-10-23-02';
+const SW_VERSION = 'v-2026-10-25-04';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -128,6 +128,11 @@ self.addEventListener('push', (event) => {
 const scheduledTimers = new Map();
 
 self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+    return;
+  }
+
   if (event.data && event.data.type === 'SCHEDULE_UPCOMING_REMINDERS') {
     const reminders = event.data.reminders;
     if (!Array.isArray(reminders)) return;
@@ -197,9 +202,28 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// Événement fetch pour l'installabilité PWA sur tous les navigateurs (Chrome, Samsung Internet, Safari, Edge)
+// Événement fetch : Réseau en priorité absolue pour le HTML et version.json
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+
+  // version.json et le Service Worker doivent TOUJOURS être cherchés sur le réseau sans aucun cache
+  if (url.pathname === '/version.json' || url.pathname.includes('firebase-messaging-sw.js') || url.pathname.includes('sw.js')) {
+    event.respondWith(fetch(event.request, { cache: 'no-store' }));
+    return;
+  }
+
+  // Pour les pages (HTML / Navigation PWA), toujours le réseau en priorité pour charger les dernières mises à jour
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => caches.match(event.request).then((res) => res || caches.match('/index.html')))
+    );
+    return;
+  }
+
+  // Pour les autres requêtes (assets hachés, images), réseau d'abord avec repli cache si hors ligne
   event.respondWith(
     fetch(event.request).catch(() => {
       return caches.match(event.request);
