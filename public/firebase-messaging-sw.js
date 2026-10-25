@@ -4,7 +4,7 @@ importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js');
 
 // Version du Service Worker pour forcer la mise à jour sur smartphone et PWA installée
-const SW_VERSION = 'v-2026-10-25-04';
+const SW_VERSION = 'v-2026-10-25-05';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -217,7 +217,7 @@ self.addEventListener('fetch', (event) => {
   // Pour les pages (HTML / Navigation PWA), toujours le réseau en priorité pour charger les dernières mises à jour
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: 'no-cache' })
         .catch(() => caches.match(event.request).then((res) => res || caches.match('/index.html')))
     );
     return;
