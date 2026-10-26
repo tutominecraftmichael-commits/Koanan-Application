@@ -49,7 +49,7 @@ import type {
   PlanTier
 } from './types';
 import { generateId, isNonAcademicSubject } from './lib/utils';
-import { Sparkles, X } from 'lucide-react';
+import { Sparkles, X, ShieldCheck } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
 
 // Layout
@@ -81,6 +81,7 @@ import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
 import { FocusMode } from './features/focus/FocusMode';
 import { PresetModal } from './features/onboarding/PresetModal';
 import { ProWizardView } from './features/pro/ProWizardView';
+import { AdminDashboard } from './features/admin/AdminDashboard';
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
@@ -614,6 +615,11 @@ export function App() {
    * Non-connected users cannot access working views or import without authenticating!
    */
   const handleNavigate = (view: ActiveAppView) => {
+    if (view === 'admin') {
+      setActiveView('admin');
+      return;
+    }
+
     if (state.isDemoMode && view === 'upload-schedule') {
       showToast('ℹ️ En mode démo, l’importation d’emploi du temps est désactivée : votre EDT est déjà prédéfini à l’avance. Connectez-vous pour importer le vôtre (jusqu’à 3 imports gratuits).');
       return;
@@ -1644,44 +1650,71 @@ export function App() {
         className="hidden"
       />
 
-      {/* Persistent Navbar */}
-      <Navbar
-        activeView={activeView}
-        onNavigate={handleNavigate}
-        onViewPricing={handleViewPricing}
-        onUpgradeToPro={() => handleSelectPlan('pro')}
-        studentName={effectiveStudentName}
-        academicLevel={state.academicLevel}
-        userAccount={state.userAccount}
-        planTier={effectivePlanTier}
-        konanId={state.konanId || state.userAccount?.konanId}
-        isDemoMode={state.isDemoMode}
-        onEnterDemoMode={() => handleEnterDemoMode('cs-engineering')}
-        onOpenPresetModal={() => {
-          if (state.isDemoMode) {
-            setIsPresetModalOpen(true);
-          }
-        }}
-        onExportData={handleExportData}
-        onImportData={() => fileInputRef.current?.click()}
-        onResetData={handleResetData}
-        onLogout={handleLogout}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        totalStudySessions={state.studySessions?.length || 0}
-        completedSessions={state.studySessions ? state.studySessions.filter(s => s.completed).length : 0}
-        pendingInvitations={pendingInvitations}
-        ownerNotifications={ownerFeedbackNotifications}
-        onAcceptInvitation={handleAcceptInvitation}
-        onDeclineInvitation={handleDeclineInvitation}
-      />
+      {/* Persistent Navbar (Masquée sur la console Administrateur qui a son propre en-tête) */}
+      {activeView !== 'admin' && (
+        <Navbar
+          activeView={activeView}
+          onNavigate={handleNavigate}
+          onViewPricing={handleViewPricing}
+          onUpgradeToPro={() => handleSelectPlan('pro')}
+          studentName={effectiveStudentName}
+          academicLevel={state.academicLevel}
+          userAccount={state.userAccount}
+          planTier={effectivePlanTier}
+          konanId={state.konanId || state.userAccount?.konanId}
+          isDemoMode={state.isDemoMode}
+          onEnterDemoMode={() => handleEnterDemoMode('cs-engineering')}
+          onOpenPresetModal={() => {
+            if (state.isDemoMode) {
+              setIsPresetModalOpen(true);
+            }
+          }}
+          onExportData={handleExportData}
+          onImportData={() => fileInputRef.current?.click()}
+          onResetData={handleResetData}
+          onLogout={handleLogout}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          totalStudySessions={state.studySessions?.length || 0}
+          completedSessions={state.studySessions ? state.studySessions.filter(s => s.completed).length : 0}
+          pendingInvitations={pendingInvitations}
+          ownerNotifications={ownerFeedbackNotifications}
+          onAcceptInvitation={handleAcceptInvitation}
+          onDeclineInvitation={handleDeclineInvitation}
+        />
+      )}
+
+      {/* Bouton Flottant d'Accès Rapide Admin si session admin active */}
+      {activeView !== 'admin' && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
+        <button
+          onClick={() => setActiveView('admin')}
+          className="fixed bottom-5 right-5 z-50 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs shadow-2xl shadow-purple-600/40 border border-purple-400/40 flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all"
+        >
+          <ShieldCheck className="w-4 h-4 text-purple-300" />
+          <span>Console Admin (Direct)</span>
+        </button>
+      )}
 
       {/* Main View Container */}
       <main className={`flex-1 w-full mx-auto overflow-x-hidden ${
-        activeView === 'landing'
+        activeView === 'landing' || activeView === 'admin'
           ? 'max-w-full p-0'
           : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
       }`}>
         
+        {/* Real-time Administrator Console (Strictement Privée & Locale) */}
+        {activeView === 'admin' && (
+          <AdminDashboard
+            onSwitchToStudentView={() => setActiveView('dashboard')}
+            onExitAdmin={() => {
+              try {
+                sessionStorage.removeItem('konan_admin_authenticated');
+                sessionStorage.removeItem('konan_admin_token');
+              } catch {}
+              setActiveView('landing');
+            }}
+          />
+        )}
+
         {/* Landing Page */}
         {activeView === 'landing' && (
           <LandingHero
@@ -1705,6 +1738,7 @@ export function App() {
             onLoginSuccess={handleLoginSuccess}
             onEnterDemoMode={handleEnterDemoMode}
             onBackToLanding={() => setActiveView('landing')}
+            onOpenAdmin={() => setActiveView('admin')}
             currentProfile={state.userAccount}
           />
         )}

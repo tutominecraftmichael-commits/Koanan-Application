@@ -24,8 +24,26 @@ export default defineConfig(({ mode }) => {
             })
           });
         }
+      },
+      {
+        name: 'admin-api-dev-server',
+        configureServer(server) {
+          server.middlewares.use('/api/admin-data', async (req, res) => {
+            try {
+              // @ts-ignore
+              const { default: handler } = await import('./api/admin-data.js');
+              await handler(req, res);
+            } catch (err: any) {
+              console.error('[admin-api-dev-server] Erreur:', err);
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: err?.message || 'Internal Server Error' }));
+            }
+          });
+        }
       }
     ],
+    envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(apiKey),
       'process.env.VITE_GEMINI_API_KEY': JSON.stringify(apiKey),
