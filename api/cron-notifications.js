@@ -20,6 +20,7 @@ import webpush from 'web-push';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getMessaging } from 'firebase-admin/messaging';
+import { getAuth } from 'firebase-admin/auth';
 
 function loadLocalEnvIfPresent() {
   const envFiles = ['.env.local', '.env'];
@@ -86,7 +87,8 @@ function getFirebaseServices() {
     console.warn('[cron-notifications] Firebase Messaging optionnel non initialisé :', mErr.message);
   }
 
-  return { db, messaging, app };
+  const auth = getAuth(app);
+  return { db, messaging, auth, app };
 }
 
 // Configuration des clés VAPID Web Push
@@ -344,41 +346,78 @@ export default async function handler(req, res) {
       console.log(`[cron-notifications] Mode Test Privé demandé pour ${testEmail}`);
 
       let targetDoc = null;
+      let authUser = null;
+      let quotaExceeded = false;
 
-      // 1. Recherche par champ direct 'email'
+      // 1. Recherche instantanée via Firebase Auth (quota séparé de Firestore)
       try {
-        const snap = await db.collection('users').where('email', '==', testEmail).limit(1).get();
-        if (!snap.empty) targetDoc = snap.docs[0];
-      } catch {}
+        authUser = await fb.auth.getUserByEmail(testEmail);
+      } catch (authErr) {
+        console.log(`[cron-notifications] Firebase Auth lookup notice:`, authErr.message);
+      }
 
-      // 2. Recherche par champ imbriqué 'userAccount.email'
-      if (!targetDoc) {
+      // 2. Recherche directe par UID (le plus rapide et le plus précis)
+      if (authUser && authUser.uid) {
+        try {
+          const docSnap = await db.collection('users').doc(authUser.uid).get();
+          if (docSnap.exists) {
+            targetDoc = docSnap;
+          }
+        } catch (fErr) {
+          if (String(fErr.message).includes('Quota exceeded') || String(fErr.message).includes('RESOURCE_EXHAUSTED')) {
+            quotaExceeded = true;
+          }
+        }
+      }
+
+      // 3. Recherche par champ direct 'email' si non trouvé par UID
+      if (!targetDoc && !quotaExceeded) {
+        try {
+          const snap = await db.collection('users').where('email', '==', testEmail).limit(1).get();
+          if (!snap.empty) targetDoc = snap.docs[0];
+        } catch (fErr) {
+          if (String(fErr.message).includes('Quota exceeded') || String(fErr.message).includes('RESOURCE_EXHAUSTED')) {
+            quotaExceeded = true;
+          }
+        }
+      }
+
+      // 4. Recherche par champ imbriqué 'userAccount.email'
+      if (!targetDoc && !quotaExceeded) {
         try {
           const snap = await db.collection('users').where('userAccount.email', '==', testEmail).limit(1).get();
           if (!snap.empty) targetDoc = snap.docs[0];
-        } catch {}
+        } catch (fErr) {
+          if (String(fErr.message).includes('Quota exceeded') || String(fErr.message).includes('RESOURCE_EXHAUSTED')) {
+            quotaExceeded = true;
+          }
+        }
       }
 
-      // 3. Recherche de secours par ID de document ou scan de repli
-      if (!targetDoc) {
+      // 5. Recherche de secours par ID de document
+      if (!targetDoc && !quotaExceeded) {
         try {
           const byIdSnap = await db.collection('users').doc(testEmail).get();
           if (byIdSnap.exists) targetDoc = byIdSnap;
-        } catch {}
+        } catch (fErr) {
+          if (String(fErr.message).includes('Quota exceeded') || String(fErr.message).includes('RESOURCE_EXHAUSTED')) {
+            quotaExceeded = true;
+          }
+        }
       }
 
-      if (!targetDoc) {
-        try {
-          const allSnap = await db.collection('users').get();
-          for (const d of allSnap.docs) {
-            const data = d.data() || {};
-            const em = String(data.email || data.userAccount?.email || '').toLowerCase().trim();
-            if (em === testEmail) {
-              targetDoc = d;
-              break;
-            }
-          }
-        } catch {}
+      if (quotaExceeded) {
+        return res.status(200).json({
+          success: false,
+          testMode: true,
+          targetEmail: testEmail,
+          userId: authUser?.uid || null,
+          displayName: authUser?.displayName || null,
+          diagnostic: 'FIRESTORE_QUOTA_EXCEEDED',
+          message: `Le compte "${testEmail}" existe bien (UID: ${authUser?.uid || 'Inconnu'}), mais Google Cloud a temporairement bloqué les lectures Firestore (Quota journalier gratuit de 50 000 lectures atteint).`,
+          explanation: "Ce blocage survient sur le forfait gratuit 'Spark' de Firebase dès que 50 000 lectures sont atteintes dans la journée. Les requêtes reprennent automatiquement à minuit UTC, ou instantanément en activant le forfait 'Blaze' (paiement à l'usage, 0$ pour un usage normal).",
+          timestamp: now.toISOString(),
+        });
       }
 
       if (!targetDoc) {
