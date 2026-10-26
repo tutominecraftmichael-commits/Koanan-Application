@@ -1,22 +1,33 @@
 /**
  * KONAN AI - Service de Mise à Jour Automatique et Instantanée pour PWA & Mobile
  * 
- * Ce service garantit que dès que de nouvelles modifications sont poussées sur GitHub
- * et déployées (Vercel), l'application installée sur smartphone mobile (PWA)
- * détecte la mise à jour et propose à l'utilisateur de mettre à jour d'un clic
- * sans jamais avoir à désinstaller ou vider son cache manuellement.
+ * Ce service garantit que dès qu'une nouvelle version est déployée en production (Vercel),
+ * l'application installée sur smartphone mobile (PWA) détecte la mise à jour et
+ * actualise silencieusement le cache sans jamais boucler ni bloquer l'utilisateur.
  */
 
 import { useState, useEffect } from 'react';
 
 declare const __APP_BUILD_ID__: string;
 
-const CURRENT_VERSION = typeof __APP_BUILD_ID__ !== 'undefined' ? __APP_BUILD_ID__ : String(Date.now());
+const CURRENT_VERSION = typeof __APP_BUILD_ID__ !== 'undefined' ? __APP_BUILD_ID__ : '';
 const STORAGE_KEY = 'konan_app_version';
+const RELOAD_ATTEMPT_KEY = 'konan_pwa_last_reload_ts';
+const RELOADED_VERSION_KEY = 'konan_pwa_reloaded_for_version';
 
 let isUpdating = false;
 let updateAvailableState = false;
 const listeners = new Set<(available: boolean) => void>();
+
+function isDevEnvironment(): boolean {
+  if (typeof window === 'undefined') return false;
+  return (
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1' ||
+    window.location.hostname.endsWith('.local') ||
+    Boolean(import.meta.env.DEV)
+  );
+}
 
 function notifyUpdateAvailable(val: boolean) {
   updateAvailableState = val;
@@ -51,22 +62,25 @@ export function usePwaUpdate() {
 }
 
 /**
- * Purge tous les caches du navigateur et force le rechargement de la page
+ * Purge les caches du navigateur et actualise la page de manière sécurisée (protégée contre les boucles)
  */
 export async function forcePwaCacheClearAndReload(): Promise<void> {
-  if (isUpdating) return;
-  isUpdating = true;
-  console.log('[KONAN PWA] Purge immédiate de tous les caches et rechargement...');
+  if (isDevEnvironment() || isUpdating) return;
 
+  // Protection stricte anti-boucle : au maximum 1 rechargement toutes les 5 minutes
   try {
-    const res = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' });
-    if (res.ok) {
-      const data = await res.json();
-      if (data?.version) {
-        localStorage.setItem(STORAGE_KEY, String(data.version));
-      }
+    const lastReloadStr = sessionStorage.getItem(RELOAD_ATTEMPT_KEY);
+    const lastReload = lastReloadStr ? Number(lastReloadStr) : 0;
+    const now = Date.now();
+    if (now - lastReload < 5 * 60 * 1000) {
+      console.warn('[KONAN PWA] Rechargement automatique différé : un rechargement a déjà eu lieu il y a moins de 5 min.');
+      return;
     }
+    sessionStorage.setItem(RELOAD_ATTEMPT_KEY, String(now));
   } catch {}
+
+  isUpdating = true;
+  console.log('[KONAN PWA] Purge des caches et actualisation sécurisée...');
 
   try {
     if ('caches' in window) {
@@ -95,7 +109,8 @@ export async function forcePwaCacheClearAndReload(): Promise<void> {
  * Vérifie si une nouvelle version a été déployée sur le serveur
  */
 export async function checkForPwaUpdate(reg?: ServiceWorkerRegistration): Promise<boolean> {
-  if (typeof window === 'undefined' || isUpdating) return false;
+  // En local de développement, JAMAIS de rechargement automatique
+  if (typeof window === 'undefined' || isDevEnvironment() || isUpdating) return false;
 
   // 1. Déclencher la vérification du Service Worker par le navigateur
   if (reg) {
@@ -113,23 +128,40 @@ export async function checkForPwaUpdate(reg?: ServiceWorkerRegistration): Promis
 
     if (!res.ok) return false;
     const data = await res.json();
-    const serverVersion = String(data?.version || '');
+    const serverVersion = String(data?.version || '').trim();
 
     if (!serverVersion) return false;
 
+    // Si le serveur a la même version que notre bundle en cours d'exécution, nous sommes à jour
+    if (CURRENT_VERSION && serverVersion === CURRENT_VERSION) {
+      return false;
+    }
+
+    // Protection anti-boucle : Si nous avons déjà rechargé pour cette version précise dans cette session, ne pas reboucler
+    try {
+      const alreadyReloadedFor = sessionStorage.getItem(RELOADED_VERSION_KEY);
+      if (alreadyReloadedFor === serverVersion) {
+        return false;
+      }
+    } catch {}
+
     const storedVersion = localStorage.getItem(STORAGE_KEY);
 
-    // Première visite : mémoriser la version actuelle
+    // Première visite : mémoriser la version actuelle sans recharger
     if (!storedVersion) {
       localStorage.setItem(STORAGE_KEY, serverVersion);
       return false;
     }
 
-    // Si la version serveur diffère de la version stockée ou actuelle :
-    if (serverVersion !== storedVersion || (CURRENT_VERSION && serverVersion !== CURRENT_VERSION)) {
-      console.log(`[KONAN PWA] Nouvelle version détectée (${storedVersion} -> ${serverVersion}) ! Application silencieuse...`);
+    // Si la version serveur diffère réellement de la version stockée
+    if (serverVersion !== storedVersion) {
+      console.log(`[KONAN PWA] Nouvelle version détectée (${storedVersion} -> ${serverVersion})`);
       localStorage.setItem(STORAGE_KEY, serverVersion);
-      // Mise à jour immédiate et silencieuse sans aucune bannière gênante
+      try {
+        sessionStorage.setItem(RELOADED_VERSION_KEY, serverVersion);
+      } catch {}
+
+      notifyUpdateAvailable(true);
       forcePwaCacheClearAndReload();
       return true;
     }
@@ -144,15 +176,22 @@ export async function checkForPwaUpdate(reg?: ServiceWorkerRegistration): Promis
  * Initialise les observateurs de mise à jour automatique
  */
 export function initPwaAutoUpdate(reg: ServiceWorkerRegistration): void {
-  // Enregistrer la version actuelle dès le lancement
-  localStorage.setItem(STORAGE_KEY, CURRENT_VERSION);
+  // En local de développement, désactiver totalement
+  if (typeof window === 'undefined' || isDevEnvironment()) {
+    return;
+  }
 
-  // 1. Vérification dès le chargement initial (1 seconde après le démarrage)
+  // Enregistrer la version actuelle dès le lancement si connue
+  if (CURRENT_VERSION) {
+    localStorage.setItem(STORAGE_KEY, CURRENT_VERSION);
+  }
+
+  // 1. Vérification 3 secondes après le chargement initial
   setTimeout(() => {
     checkForPwaUpdate(reg);
-  }, 1000);
+  }, 3000);
 
-  // 2. Vérification dès que l'utilisateur déverrouille son téléphone ou revient sur l'application
+  // 2. Vérification dès que l'utilisateur revient sur l'application
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       checkForPwaUpdate(reg);
@@ -163,31 +202,21 @@ export function initPwaAutoUpdate(reg: ServiceWorkerRegistration): void {
     checkForPwaUpdate(reg);
   });
 
-  // 3. Vérification périodique toutes les 60 secondes pendant que l'application est active
+  // 3. Vérification périodique toutes les 5 minutes pendant que l'application est active
   setInterval(() => {
     checkForPwaUpdate(reg);
-  }, 60 * 1000);
+  }, 5 * 60 * 1000);
 
-  // 4. Écouter la découverte d'un nouveau Service Worker par le navigateur
+  // 4. Écouter l'arrivée d'un nouveau Service Worker
   reg.addEventListener('updatefound', () => {
     const installingWorker = reg.installing;
     if (!installingWorker) return;
 
     installingWorker.addEventListener('statechange', () => {
       if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-        console.log('[KONAN PWA] Nouveau Service Worker installé, notification mise à jour...');
+        console.log('[KONAN PWA] Nouveau Service Worker installé');
         notifyUpdateAvailable(true);
-        installingWorker.postMessage({ type: 'SKIP_WAITING' });
       }
     });
-  });
-
-  // 5. Recharger dès que le nouveau Service Worker prend le contrôle
-  let refreshing = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!refreshing) {
-      refreshing = true;
-      window.location.reload();
-    }
   });
 }
