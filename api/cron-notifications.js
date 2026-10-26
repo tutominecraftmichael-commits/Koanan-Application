@@ -12,13 +12,41 @@
  * 4. Aucun texte inventé : utilisation stricte des templates officiels existants.
  */
 
+import fs from 'fs';
+import path from 'path';
 import webpush from 'web-push';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getMessaging } from 'firebase-admin/messaging';
 
+function loadLocalEnvIfPresent() {
+  const envFiles = ['.env.local', '.env'];
+  for (const file of envFiles) {
+    try {
+      const fullPath = path.resolve(process.cwd(), file);
+      if (fs.existsSync(fullPath)) {
+        const content = fs.readFileSync(fullPath, 'utf8');
+        content.split('\n').forEach((line) => {
+          const trimmed = line.trim();
+          if (trimmed && !trimmed.startsWith('#')) {
+            const eqIdx = trimmed.indexOf('=');
+            if (eqIdx > 0) {
+              const k = trimmed.slice(0, eqIdx).trim();
+              const v = trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, '');
+              if (!process.env[k]) {
+                process.env[k] = v;
+              }
+            }
+          }
+        });
+      }
+    } catch {}
+  }
+}
+
 // Initialisation sécurisée de Firebase Admin (Compatible Node ESM et Vercel Serverless)
 function getFirebaseServices() {
+  loadLocalEnvIfPresent();
   const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
   if (!serviceAccountKey) {
     return {
