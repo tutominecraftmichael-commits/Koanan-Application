@@ -92,15 +92,23 @@ createRoot(document.getElementById('root')!).render(
 // Enregistrement & mise à jour active et instantanée du Service Worker pour PWA & Mobile
 
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/firebase-messaging-sw.js', { scope: '/' })
-      .then((registration) => {
-        initPwaAutoUpdate(registration);
-      })
-      .catch((err) => {
-        console.warn('[KONAN] Service Worker notice:', err);
-      });
-  });
+  const isDev = 
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1' || 
+    window.location.hostname.endsWith('.local') ||
+    Boolean(import.meta.env.DEV);
+
+  if (!isDev) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('/firebase-messaging-sw.js', { scope: '/' })
+        .then((registration) => {
+          initPwaAutoUpdate(registration);
+        })
+        .catch((err) => {
+          console.warn('[KONAN] Service Worker notice:', err);
+        });
+    });
+  }
 }
 

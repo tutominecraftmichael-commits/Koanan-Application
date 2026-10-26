@@ -28,6 +28,13 @@ export default defineConfig(({ mode }) => {
       {
         name: 'admin-api-dev-server',
         configureServer(server) {
+          server.middlewares.use('/version.json', (_req, res) => {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({
+              version: buildTimestamp,
+              buildTime: new Date().toISOString()
+            }));
+          });
           server.middlewares.use('/api/admin-data', async (req, res) => {
             try {
               // @ts-ignore
