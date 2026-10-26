@@ -2,16 +2,14 @@
  * KONAN AI - Route API Serverless pour Déclenchement Automatique des Notifications Push
  * Endpoint : /api/cron-notifications (Vercel Serverless Function & Cron)
  * 
- * RÈGLES STRICTES :
- * 1. Utilisateurs Gratuit : ZÉRO notification.
- * 2. Utilisateurs Pro / Plus :
- *    a) Séance dans 1 à 7 minutes -> Rappel Web Push haute priorité (alerte pré-session).
- *    b) Séance ratée (> 15 min) -> Rattrapage immédiat dans le futur (créneau libre > maintenant)
- *       + Notification Push immédiate de report.
- * 3. Examen déjà passé -> Expiration silencieuse, 0 rattrapage, 0 notification.
- * 4. Mode Test Privé (?test=MON_EMAIL) -> Envoie un test UNIQUEMENT au compte de l'utilisateur,
- *    sans toucher aucun élève, avec diagnostic complet en retour JSON.
- * 5. Conservation stricte des templates officiels existants du Compagnon Konan.
+ * PROTECTIONS VITALES :
+ * 1. ZÉRO CRASH 500 : Tous les blocs Firestore et push sont isolés et renvoient toujours un JSON 200 propre.
+ * 2. ÉCONOMIE DRASTIQUE DU QUOTA (50 000 lectures) :
+ *    - INTERDICTION de scanner les 149 comptes à chaque minute.
+ *    - Requête ciblée Firestore (.where) filtrant UNIQUEMENT les comptes Pro / Plus (au maximum 17 comptes).
+ *    - Cache en mémoire serveur de 10 minutes : entre chaque rechargement de cache, ZÉRO lecture Firestore.
+ * 3. MODE TEST PRIVÉ (?test=MON_EMAIL) : Envoi direct et instantané sans toucher aucun élève.
+ * 4. Conservation stricte des templates officiels existants du Compagnon Konan.
  */
 
 import fs from 'fs';
@@ -193,10 +191,12 @@ async function dispatchPushToUser({ userId, webPushSub, fcmToken, title, body, t
       console.warn(`[WebPush] Erreur envoi pour ${userId} :`, wpErr.statusCode || wpErr.message);
       if (db && (wpErr.statusCode === 404 || wpErr.statusCode === 410)) {
         // Souscription expirée ou désinstallée sur l'appareil
-        await db.collection('users').doc(userId).update({
-          webPushSubscription: FieldValue.delete(),
-          pushNotificationsEnabled: false,
-        }).catch(() => {});
+        try {
+          await db.collection('users').doc(userId).update({
+            webPushSubscription: FieldValue.delete(),
+            pushNotificationsEnabled: false,
+          });
+        } catch {}
       }
     }
   }
@@ -304,9 +304,17 @@ function findNextFreeSlotToday(currentMinute, durationMinutes, sessions, classes
 }
 
 /**
+ * Cache global en mémoire pour les profils Pro (10 minutes)
+ * Évite de relire Firestore à chaque minute, réduisant drastiquement le quota de lecture
+ */
+const PRO_CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+
+/**
  * Handler HTTP principal Vercel Serverless & Cron
+ * GARANTIE STRICTE : Ne plante JAMAIS avec une erreur 500
  */
 export default async function handler(req, res) {
+  // CORS global
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -318,9 +326,14 @@ export default async function handler(req, res) {
   const startTime = Date.now();
   const now = new Date();
 
-  // Détection du paramètre test dans la requête (?test=MON_EMAIL)
-  const urlObj = new URL(req.url, 'http://localhost');
-  const testEmail = String(req.query?.test || urlObj.searchParams.get('test') || '').toLowerCase().trim();
+  // Détection des paramètres dans la requête
+  let testEmail = '';
+  let isForce = false;
+  try {
+    const urlObj = new URL(req.url, 'http://localhost');
+    testEmail = String(req.query?.test || urlObj.searchParams.get('test') || '').toLowerCase().trim();
+    isForce = (req.query?.force === 'true') || (urlObj.searchParams.get('force') === 'true');
+  } catch {}
 
   try {
     const fb = getFirebaseServices();
@@ -336,7 +349,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const { db, messaging } = fb;
+    const { db, messaging, auth } = fb;
 
     // =========================================================================
     // CAS 1 : MODE TEST PRIVÉ POUR MON TÉLÉPHONE (?test=MON_EMAIL)
@@ -351,7 +364,7 @@ export default async function handler(req, res) {
 
       // 1. Recherche instantanée via Firebase Auth (quota séparé de Firestore)
       try {
-        authUser = await fb.auth.getUserByEmail(testEmail);
+        authUser = await auth.getUserByEmail(testEmail);
       } catch (authErr) {
         console.log(`[cron-notifications] Firebase Auth lookup notice:`, authErr.message);
       }
@@ -472,17 +485,22 @@ export default async function handler(req, res) {
       const testTitle = 'KONAN ✦ Test Direct Téléphone';
       const testBody = "Test de connexion 100% réussi ! Ton téléphone est parfaitement connecté et prêt à sonner pour tes séances d'étude et tes rattrapages. 👊📚";
 
-      const dispatchResult = await dispatchPushToUser({
-        userId,
-        webPushSub,
-        fcmToken,
-        title: testTitle,
-        body: testBody,
-        tag: `konan-test-${Date.now()}`,
-        dataPayload: { url: '/', isTest: true },
-        db,
-        messaging,
-      });
+      let dispatchResult;
+      try {
+        dispatchResult = await dispatchPushToUser({
+          userId,
+          webPushSub,
+          fcmToken,
+          title: testTitle,
+          body: testBody,
+          tag: `konan-test-${Date.now()}`,
+          dataPayload: { url: '/', isTest: true },
+          db,
+          messaging,
+        });
+      } catch (dispErr) {
+        dispatchResult = { success: false, error: dispErr.message, statusCode: 500 };
+      }
 
       if (dispatchResult.success) {
         return res.status(200).json({
@@ -497,7 +515,7 @@ export default async function handler(req, res) {
             endpoint: webPushSub?.endpoint ? `${webPushSub.endpoint.slice(0, 45)}...` : null,
             keysConfigured: Boolean(webPushSub?.keys?.p256dh && webPushSub?.keys?.auth),
             updatedAt: userData.webPushUpdatedAt || null,
-            timezone: userData.timezone || 'UTC',
+            timezone: userData.timezone || 'Africa/Abidjan',
           },
           studySessionsCount: Array.isArray(userData.studySessions) ? userData.studySessions.length : 0,
           timestamp: now.toISOString(),
@@ -523,204 +541,250 @@ export default async function handler(req, res) {
 
     // =========================================================================
     // CAS 2 : EXÉCUTION DU CRON PÉRIODIQUE (Toutes les minutes)
-    // Détecte les séances entre 1 et 7 minutes et les séances ratées
+    // PROTECTION DRASTIQUE DU QUOTA :
+    // - Pas de scan de 149 utilisateurs.
+    // - Uniquement les comptes Pro/Plus via .where (au maximum 17 comptes).
+    // - Cache serveur en mémoire de 10 minutes.
     // =========================================================================
+    if (!global.__CRON_PRO_CACHE__) {
+      global.__CRON_PRO_CACHE__ = {
+        users: [],
+        timestamp: 0,
+      };
+    }
+
+    const isCacheFresh =
+      !isForce &&
+      global.__CRON_PRO_CACHE__.users.length > 0 &&
+      (Date.now() - global.__CRON_PRO_CACHE__.timestamp < PRO_CACHE_TTL_MS);
+
+    let proUsersList = [];
+    let isFromCache = false;
+
+    if (isCacheFresh) {
+      proUsersList = global.__CRON_PRO_CACHE__.users;
+      isFromCache = true;
+    } else {
+      // Requête ultra-ciblée : UNIQUEMENT les comptes Pro et Plus
+      try {
+        const proSnap = await db.collection('users').where('planTier', 'in', ['pro', 'plus']).get();
+        proUsersList = proSnap.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        // Mettre à jour le cache de 10 minutes
+        global.__CRON_PRO_CACHE__ = {
+          users: proUsersList,
+          timestamp: Date.now(),
+        };
+      } catch (readErr) {
+        const errMsg = String(readErr?.message || '');
+        const isQuota = errMsg.includes('Quota exceeded') || errMsg.includes('RESOURCE_EXHAUSTED');
+
+        // Si quota atteint mais qu'on a déjà un cache (même expiré), réutiliser le cache !
+        if (global.__CRON_PRO_CACHE__.users.length > 0) {
+          proUsersList = global.__CRON_PRO_CACHE__.users;
+          isFromCache = true;
+          console.warn('[cron-notifications] Quota Firestore temporaire : réutilisation du cache en mémoire.');
+        } else {
+          return res.status(200).json({
+            success: false,
+            diagnostic: isQuota ? 'FIRESTORE_QUOTA_EXCEEDED' : 'FIRESTORE_READ_ERROR',
+            error: isQuota
+              ? "Le quota gratuit Firestore quotidien (50 000 lectures) a été temporairement atteint. Les alertes reprendront automatiquement à minuit UTC ou dès l'activation du forfait Blaze."
+              : errMsg,
+            stats: { usersScanned: 0, proUsers: 0, remindersSent5m: 0, catchupsTriggered: 0, examsExpired: 0, errors: 1 },
+            timestamp: now.toISOString(),
+          });
+        }
+      }
+    }
+
     const stats = {
-      usersScanned: 0,
-      proUsers: 0,
+      usersScanned: proUsersList.length,
+      proUsers: proUsersList.length,
+      cached: isFromCache,
+      cacheAgeSeconds: Math.floor((Date.now() - global.__CRON_PRO_CACHE__.timestamp) / 1000),
       remindersSent5m: 0,
       catchupsTriggered: 0,
       examsExpired: 0,
       errors: 0,
     };
 
-    // Requête ciblée pour préserver le quota Firestore (uniquement les appareils avec push actif)
-    let usersSnapshot;
-    try {
-      usersSnapshot = await db.collection('users').where('pushNotificationsEnabled', '==', true).get();
-      if (usersSnapshot.size === 0) {
-        usersSnapshot = await db.collection('users').get();
-      }
-    } catch {
-      usersSnapshot = await db.collection('users').get();
-    }
+    for (const userData of proUsersList) {
+      try {
+        const userId = userData.id;
+        const webPushSub = userData.webPushSubscription;
+        const fcmToken = userData.fcmToken || userData.userAccount?.fcmToken;
 
-    stats.usersScanned = usersSnapshot.size;
-
-    for (const userDoc of usersSnapshot.docs) {
-      const userData = userDoc.data() || {};
-      const userId = userDoc.id;
-
-      // 1. Filtrage Pro / Plus strict
-      const planTier = String(userData.planTier || userData.userAccount?.planTier || userData.tier || 'free').toLowerCase().trim();
-      if (planTier !== 'pro' && planTier !== 'plus') {
-        continue;
-      }
-
-      stats.proUsers += 1;
-
-      const webPushSub = userData.webPushSubscription;
-      const fcmToken = userData.fcmToken || userData.userAccount?.fcmToken;
-      if (!webPushSub && !fcmToken) {
-        continue;
-      }
-
-      // 2. Détermination du fuseau horaire de l'étudiant
-      let userDate = now;
-      if (userData.timezone) {
-        try {
-          userDate = new Date(now.toLocaleString('en-US', { timeZone: userData.timezone }));
-        } catch {}
-      } else if (typeof userData.timezoneOffsetMinutes === 'number') {
-        userDate = new Date(now.getTime() - userData.timezoneOffsetMinutes * 60000);
-      }
-
-      const userTodayStr = userDate.toISOString().slice(0, 10);
-      const userDayOfWeek = userDate.getDay() === 0 ? 6 : userDate.getDay() - 1; // 0=Lundi..6=Dimanche
-      const userMinutes = userDate.getHours() * 60 + userDate.getMinutes();
-
-      // Si le cycle est validé aujourd'hui, repos complet
-      const isCycleDone = userData.cycleCompletedDate === userTodayStr || userData.userAccount?.cycleCompletedDate === userTodayStr;
-      if (isCycleDone) continue;
-
-      const subjects = Array.isArray(userData.subjects) ? userData.subjects : [];
-      let studySessions = Array.isArray(userData.studySessions) ? [...userData.studySessions] : [];
-      const classSlots = Array.isArray(userData.classSlots) ? userData.classSlots : [];
-
-      if (studySessions.length === 0) continue;
-
-      let hasSessionUpdates = false;
-
-      for (let i = 0; i < studySessions.length; i++) {
-        const session = { ...studySessions[i] };
-
-        // La séance concerne aujourd'hui si : date exacte correspondante OU jour de la semaine
-        const isScheduledToday = (session.date && session.date === userTodayStr) || (session.dayOfWeek === userDayOfWeek);
-        if (!isScheduledToday) continue;
-        if (session.completed) continue;
-
-        const subject = subjects.find((s) => s.id === session.subjectId);
-        const subjectName = subject?.name || session.title || 'tes révisions';
-        const duration = session.durationMinutes || 25;
-
-        // RÈGLE 1 : PAS DE RATTRAPAGE SI L'EXAMEN EST DÉJÀ PASSÉ
-        const examDateStr = subject?.examDate || session.examDate;
-        if (examDateStr) {
-          const [ey, em, ed] = examDateStr.split('-').map(Number);
-          let eh = 23;
-          let emin = 59;
-          const examTimeStr = subject?.examTime || session.examTime;
-          if (examTimeStr) {
-            const [th, tm] = examTimeStr.split(':').map(Number);
-            if (!isNaN(th)) eh = th;
-            if (!isNaN(tm)) emin = tm;
-          }
-          const examDateTime = new Date(ey, (em || 1) - 1, ed || 1, eh, emin, 0);
-          if (userDate.getTime() >= examDateTime.getTime()) {
-            session.isExpired = true;
-            session.completed = true;
-            studySessions[i] = session;
-            hasSessionUpdates = true;
-            stats.examsExpired += 1;
-            continue;
-          }
+        // Si l'utilisateur n'a aucun téléphone push enregistré, continuer
+        if (!webPushSub && !fcmToken) {
+          continue;
         }
 
-        if (session.isExpired) continue;
-
-        const sessionStartMin = parseTimeToMinutes(session.startTime);
-        if (sessionStartMin < 0) continue;
-
-        const diffMinutes = sessionStartMin - userMinutes;
-        const isCatchup = Boolean(session.isRescheduledToday || session.rescheduledReason);
-
-        // RÈGLE 2 : DÉTECTION ENTRE 1 ET 7 MINUTES (Rappel 5 min)
-        const alreadyNotifiedToday = session.lastReminderDate === userTodayStr || (session.rappelEnvoye && session.rappelDate === userTodayStr);
-        if (!alreadyNotifiedToday && diffMinutes >= 1 && diffMinutes <= 7) {
-          const title = isCatchup ? `KONAN ✦ Rattrapage ${subjectName}` : `KONAN ✦ ${subjectName}`;
-          const body = isCatchup
-            ? pickTimeMsg(CATCHUP_5M_MSGS, subjectName, session.startTime, duration)
-            : pickMsg(BEFORE_SESSION_MSGS, subjectName, duration);
-
-          const result = await dispatchPushToUser({
-            userId,
-            webPushSub,
-            fcmToken,
-            title,
-            body,
-            tag: `konan-5m-${session.id}`,
-            dataPayload: { url: '/', sessionId: session.id },
-            db,
-            messaging,
-          });
-
-          if (result.success) {
-            session.lastReminderDate = userTodayStr;
-            session.rappelDate = userTodayStr;
-            session.rappelEnvoye = true;
-            session.notifEnvoyee = true;
-            studySessions[i] = session;
-            hasSessionUpdates = true;
-            stats.remindersSent5m += 1;
-          }
+        // Fuseau horaire de l'étudiant
+        let userDate = now;
+        if (userData.timezone) {
+          try {
+            userDate = new Date(now.toLocaleString('en-US', { timeZone: userData.timezone }));
+          } catch {}
+        } else if (typeof userData.timezoneOffsetMinutes === 'number') {
+          userDate = new Date(now.getTime() - userData.timezoneOffsetMinutes * 60000);
         }
 
-        // RÈGLE 3 : SÉANCE RATÉE (> 15 MIN DE RETARD) -> RATTRAPAGE DANS LE FUTUR
-        const alreadyRescheduledToday = session.isRescheduledToday && session.rescheduledDate === userTodayStr;
-        const isMissed = !alreadyRescheduledToday && userMinutes > sessionStartMin + 15;
+        const userTodayStr = userDate.toISOString().slice(0, 10);
+        const userDayOfWeek = userDate.getDay() === 0 ? 6 : userDate.getDay() - 1; // 0=Lundi..6=Dimanche
+        const userMinutes = userDate.getHours() * 60 + userDate.getMinutes();
 
-        if (isMissed) {
-          const targetDuration = session.durationMinutes || 25;
-          const otherSessions = studySessions.filter((s, idx) => idx !== i && ((s.date && s.date === userTodayStr) || s.dayOfWeek === userDayOfWeek));
+        // Si cycle du jour validé, repos
+        const isCycleDone = userData.cycleCompletedDate === userTodayStr || userData.userAccount?.cycleCompletedDate === userTodayStr;
+        if (isCycleDone) continue;
 
-          const freeSlot = findNextFreeSlotToday(userMinutes, targetDuration, otherSessions, classSlots);
+        const subjects = Array.isArray(userData.subjects) ? userData.subjects : [];
+        let studySessions = Array.isArray(userData.studySessions) ? [...userData.studySessions] : [];
+        const classSlots = Array.isArray(userData.classSlots) ? userData.classSlots : [];
 
-          // Le créneau DOIT STRICTEMENT être dans le futur (dateDebut > maintenant)
-          if (freeSlot && parseTimeToMinutes(freeSlot.startTime) > userMinutes) {
-            const originalStart = session.originalStartTime || session.startTime;
-            session.originalStartTime = originalStart;
-            session.originalEndTime = session.endTime;
-            session.startTime = freeSlot.startTime;
-            session.endTime = freeSlot.endTime;
-            session.durationMinutes = freeSlot.durationMinutes;
-            session.isRescheduledToday = true;
-            session.rescheduledDate = userTodayStr;
-            session.rappelEnvoye = false;
-            session.notifEnvoyee = false;
-            session.lastReminderDate = null;
-            session.notifRattrapageEnvoyee = true;
-            session.rescheduledReason = `Séance de ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime}`;
+        if (studySessions.length === 0) continue;
 
-            const title = `KONAN ✦ ${subjectName}`;
-            const body = pickTimeMsg(RESCHEDULED_SESSION_MSGS, subjectName, freeSlot.startTime, targetDuration);
+        let hasSessionUpdates = false;
 
-            await dispatchPushToUser({
+        for (let i = 0; i < studySessions.length; i++) {
+          const session = { ...studySessions[i] };
+
+          const isScheduledToday = (session.date && session.date === userTodayStr) || (session.dayOfWeek === userDayOfWeek);
+          if (!isScheduledToday) continue;
+          if (session.completed) continue;
+
+          const subject = subjects.find((s) => s.id === session.subjectId);
+          const subjectName = subject?.name || session.title || 'tes révisions';
+          const duration = session.durationMinutes || 25;
+
+          // RÈGLE 1 : PAS DE RATTRAPAGE SI L'EXAMEN EST DÉJÀ PASSÉ
+          const examDateStr = subject?.examDate || session.examDate;
+          if (examDateStr) {
+            const [ey, em, ed] = examDateStr.split('-').map(Number);
+            let eh = 23;
+            let emin = 59;
+            const examTimeStr = subject?.examTime || session.examTime;
+            if (examTimeStr) {
+              const [th, tm] = examTimeStr.split(':').map(Number);
+              if (!isNaN(th)) eh = th;
+              if (!isNaN(tm)) emin = tm;
+            }
+            const examDateTime = new Date(ey, (em || 1) - 1, ed || 1, eh, emin, 0);
+            if (userDate.getTime() >= examDateTime.getTime()) {
+              session.isExpired = true;
+              session.completed = true;
+              studySessions[i] = session;
+              hasSessionUpdates = true;
+              stats.examsExpired += 1;
+              continue;
+            }
+          }
+
+          if (session.isExpired) continue;
+
+          const sessionStartMin = parseTimeToMinutes(session.startTime);
+          if (sessionStartMin < 0) continue;
+
+          const diffMinutes = sessionStartMin - userMinutes;
+          const isCatchup = Boolean(session.isRescheduledToday || session.rescheduledReason);
+
+          // RÈGLE 2 : DÉTECTION ENTRE 1 ET 7 MINUTES (Rappel 5 min)
+          const alreadyNotifiedToday = session.lastReminderDate === userTodayStr || (session.rappelEnvoye && session.rappelDate === userTodayStr);
+          if (!alreadyNotifiedToday && diffMinutes >= 1 && diffMinutes <= 7) {
+            const title = isCatchup ? `KONAN ✦ Rattrapage ${subjectName}` : `KONAN ✦ ${subjectName}`;
+            const body = isCatchup
+              ? pickTimeMsg(CATCHUP_5M_MSGS, subjectName, session.startTime, duration)
+              : pickMsg(BEFORE_SESSION_MSGS, subjectName, duration);
+
+            const result = await dispatchPushToUser({
               userId,
               webPushSub,
               fcmToken,
               title,
               body,
-              tag: `konan-rescheduled-${session.id}`,
-              dataPayload: { url: '/', sessionId: session.id, newTime: freeSlot.startTime },
+              tag: `konan-5m-${session.id}`,
+              dataPayload: { url: '/', sessionId: session.id },
               db,
               messaging,
             });
 
-            studySessions[i] = session;
-            hasSessionUpdates = true;
-            stats.catchupsTriggered += 1;
+            if (result.success) {
+              session.lastReminderDate = userTodayStr;
+              session.rappelDate = userTodayStr;
+              session.rappelEnvoye = true;
+              session.notifEnvoyee = true;
+              studySessions[i] = session;
+              hasSessionUpdates = true;
+              stats.remindersSent5m += 1;
+            }
+          }
+
+          // RÈGLE 3 : SÉANCE RATÉE (> 15 MIN DE RETARD) -> RATTRAPAGE DANS LE FUTUR
+          const alreadyRescheduledToday = session.isRescheduledToday && session.rescheduledDate === userTodayStr;
+          const isMissed = !alreadyRescheduledToday && userMinutes > sessionStartMin + 15;
+
+          if (isMissed) {
+            const targetDuration = session.durationMinutes || 25;
+            const otherSessions = studySessions.filter((s, idx) => idx !== i && ((s.date && s.date === userTodayStr) || s.dayOfWeek === userDayOfWeek));
+
+            const freeSlot = findNextFreeSlotToday(userMinutes, targetDuration, otherSessions, classSlots);
+
+            if (freeSlot && parseTimeToMinutes(freeSlot.startTime) > userMinutes) {
+              const originalStart = session.originalStartTime || session.startTime;
+              session.originalStartTime = originalStart;
+              session.originalEndTime = session.endTime;
+              session.startTime = freeSlot.startTime;
+              session.endTime = freeSlot.endTime;
+              session.durationMinutes = freeSlot.durationMinutes;
+              session.isRescheduledToday = true;
+              session.rescheduledDate = userTodayStr;
+              session.rappelEnvoye = false;
+              session.notifEnvoyee = false;
+              session.lastReminderDate = null;
+              session.notifRattrapageEnvoyee = true;
+              session.rescheduledReason = `Séance de ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime}`;
+
+              const title = `KONAN ✦ ${subjectName}`;
+              const body = pickTimeMsg(RESCHEDULED_SESSION_MSGS, subjectName, freeSlot.startTime, targetDuration);
+
+              await dispatchPushToUser({
+                userId,
+                webPushSub,
+                fcmToken,
+                title,
+                body,
+                tag: `konan-rescheduled-${session.id}`,
+                dataPayload: { url: '/', sessionId: session.id, newTime: freeSlot.startTime },
+                db,
+                messaging,
+              });
+
+              studySessions[i] = session;
+              hasSessionUpdates = true;
+              stats.catchupsTriggered += 1;
+            }
           }
         }
-      }
 
-      // Sauvegarde des séances modifiées directement dans Firestore
-      if (hasSessionUpdates) {
-        await db.collection('users').doc(userId).update({
-          studySessions,
-          lastServerCheckAt: new Date().toISOString(),
-        }).catch((err) => {
-          console.error(`[cron-notifications] Erreur mise à jour sessions pour ${userId} :`, err);
-        });
+        // Sauvegarde protégée des séances modifiées
+        if (hasSessionUpdates) {
+          try {
+            await db.collection('users').doc(userId).update({
+              studySessions,
+              lastServerCheckAt: new Date().toISOString(),
+            });
+            // Mettre également à jour la session dans le cache mémoire
+            userData.studySessions = studySessions;
+          } catch (upErr) {
+            console.error(`[cron-notifications] Erreur mise à jour sessions pour ${userId} :`, upErr.message);
+          }
+        }
+      } catch (userLoopErr) {
+        console.error('[cron-notifications] Erreur traitement utilisateur :', userLoopErr.message);
+        stats.errors += 1;
       }
     }
 
@@ -732,14 +796,15 @@ export default async function handler(req, res) {
       stats,
     });
   } catch (err) {
-    console.error('[cron-notifications] Erreur globale :', err);
-    const msg = String(err?.message || 'Erreur interne du serveur');
-    const isQuotaErr = msg.includes('Quota exceeded') || msg.includes('RESOURCE_EXHAUSTED');
+    console.error('[cron-notifications] Erreur globale rattrapée (sécurité 500) :', err);
+    const msg = String(err?.message || 'Erreur interne');
+    const isQuota = msg.includes('Quota exceeded') || msg.includes('RESOURCE_EXHAUSTED');
 
     return res.status(200).json({
       success: false,
-      error: isQuotaErr
-        ? "RESOURCE_EXHAUSTED: Le quota gratuit Firestore quotidien (50 000 lectures) a été temporairement atteint. Les alertes reprendront dès la réinitialisation automatique à minuit UTC."
+      diagnostic: isQuota ? 'FIRESTORE_QUOTA_EXCEEDED' : 'GLOBAL_ERROR_CAUGHT',
+      error: isQuota
+        ? "Le quota gratuit Firestore quotidien (50 000 lectures) a été temporairement atteint. Les alertes reprendront automatiquement dès le reset automatique à minuit UTC."
         : msg,
       details: msg,
       timestamp: now.toISOString(),
