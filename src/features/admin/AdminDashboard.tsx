@@ -100,7 +100,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const res = await fetch('/api/admin-data', {
+      const url = isManual ? '/api/admin-data?force=true' : '/api/admin-data';
+      const res = await fetch(url, {
         headers,
         cache: 'no-store',
       });
@@ -135,13 +136,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-  // Synchronisation en direct toutes les 4 secondes
+  // Synchronisation en direct toutes les 20 secondes (avec cache intelligent pour protéger les quotas Firestore)
   useEffect(() => {
     fetchAdminData(true);
 
     const interval = setInterval(() => {
       fetchAdminData(false);
-    }, 4000);
+    }, 20000);
 
     return () => clearInterval(interval);
   }, [token]);
