@@ -3,9 +3,10 @@
  * 
  * Permet l'envoi de notifications push fiables même lorsque l'application
  * est TOTALEMENT FERMÉE et le téléphone en veille.
+ * Enregistrement 100% silencieux et automatique en arrière-plan pour les abonnés Pro.
  */
 
-import { db } from '../lib/firebase';
+import { auth, db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 
 export const VAPID_PUBLIC_KEY =
@@ -51,22 +52,49 @@ export function getWebPushPermission(): NotificationPermission {
  * Abonne le téléphone aux notifications Web Push en arrière-plan
  * et enregistre la souscription dans Firestore (réservé aux abonnés Pro / Plus)
  */
-export async function subscribeToWebPush(uid?: string): Promise<{ success: boolean; error?: string }> {
+export async function subscribeToWebPush(
+  uidParam?: string,
+  emailParam?: string
+): Promise<{ success: boolean; error?: string }> {
   if (!isWebPushSupported()) {
     return { success: false, error: 'Web Push non supporté sur cet appareil' };
   }
 
   try {
-    // 1. Demande de permission si pas encore accordée
-    const permission = await Notification.requestPermission();
+    // 1. Déterminer l'UID Firestore réel de l'utilisateur
+    const effectiveUid =
+      auth?.currentUser?.uid ||
+      (uidParam && !uidParam.includes('@') ? uidParam : null) ||
+      (typeof localStorage !== 'undefined' ? localStorage.getItem('konan_active_uid') : null) ||
+      uidParam;
+
+    if (!effectiveUid) {
+      console.warn('[KONAN WebPush] Aucun UID utilisateur disponible pour enregistrer la souscription');
+      return { success: false, error: 'UID manquant' };
+    }
+
+    // 2. Vérification / demande de permission
+    let permission = Notification.permission;
+    if (permission === 'default') {
+      try {
+        permission = await Notification.requestPermission();
+      } catch (pErr) {
+        console.warn('[KONAN WebPush] Erreur requestPermission:', pErr);
+      }
+    }
+
     if (permission !== 'granted') {
       return { success: false, error: 'Permission refusée par l\'utilisateur' };
     }
 
-    // 2. Récupérer l'enregistrement du Service Worker
-    const registration = await navigator.serviceWorker.ready;
+    // 3. S'assurer que le Service Worker est bien enregistré
+    let registration = await navigator.serviceWorker.getRegistration('/');
+    if (!registration) {
+      registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', { scope: '/' });
+    }
+    await navigator.serviceWorker.ready;
 
-    // 3. Obtenir ou créer la souscription Push avec la clé publique VAPID
+    // 4. Obtenir ou créer la souscription Push avec la clé publique VAPID
     let subscription = await registration.pushManager.getSubscription();
     if (!subscription) {
       subscription = await registration.pushManager.subscribe({
@@ -76,27 +104,74 @@ export async function subscribeToWebPush(uid?: string): Promise<{ success: boole
     }
 
     const subJson = subscription.toJSON();
-    console.log('[KONAN WebPush] Souscription Push active :', subJson);
+    console.log('[KONAN WebPush] Souscription Push active pour', effectiveUid, subJson.endpoint?.slice(0, 35));
 
-    // 4. Enregistrer dans Firestore pour le compte Pro
-    if (uid && db) {
-      const userRef = doc(db, 'users', uid);
-      await setDoc(
-        userRef,
-        {
-          webPushSubscription: subJson,
-          pushNotificationsEnabled: true,
-          webPushUpdatedAt: new Date().toISOString(),
-        },
-        { merge: true }
-      );
-      console.log(`[KONAN WebPush] Souscription sauvegardée dans Firestore pour ${uid}`);
+    // 5. Enregistrer dans Firestore pour le compte Pro
+    if (db) {
+      const userRef = doc(db, 'users', effectiveUid);
+      const userEmail =
+        auth?.currentUser?.email ||
+        emailParam ||
+        (uidParam && uidParam.includes('@') ? uidParam : undefined);
+
+      const payload: Record<string, any> = {
+        webPushSubscription: subJson,
+        pushNotificationsEnabled: true,
+        webPushUpdatedAt: new Date().toISOString(),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
+        timezoneOffsetMinutes: new Date().getTimezoneOffset(),
+      };
+      if (userEmail) {
+        payload.email = userEmail.toLowerCase().trim();
+      }
+
+      await setDoc(userRef, payload, { merge: true });
+      console.log(`[KONAN WebPush] Souscription sauvegardée dans Firestore pour ${effectiveUid}`);
     }
 
     return { success: true };
   } catch (err: any) {
     console.error('[KONAN WebPush] Erreur abonnement push :', err);
     return { success: false, error: err?.message || 'Erreur lors de l\'abonnement push' };
+  }
+}
+
+/**
+ * Enregistrement silencieux et automatique du téléphone en arrière-plan
+ * Dès qu'un utilisateur en mode Pro ouvre l'application.
+ */
+let autoSubscribed = false;
+export async function autoRegisterWebPushIfPro(
+  planTier?: string,
+  uidParam?: string,
+  emailParam?: string
+): Promise<void> {
+  if (!isWebPushSupported()) return;
+
+  const effectivePlan = String(planTier || '').toLowerCase().trim();
+  if (effectivePlan !== 'pro' && effectivePlan !== 'plus') {
+    return;
+  }
+
+  // Si la permission est déjà accordée, synchroniser immédiatement sans déranger l'élève
+  if (Notification.permission === 'granted') {
+    subscribeToWebPush(uidParam, emailParam).catch((err) => {
+      console.warn('[AutoWebPush] Erreur synchro silencieuse:', err);
+    });
+    return;
+  }
+
+  // Si la permission est encore en 'default', demander une seule fois lors de la première interaction naturelle de l'élève
+  if (Notification.permission === 'default' && !autoSubscribed) {
+    autoSubscribed = true;
+    const triggerSilentRequest = () => {
+      window.removeEventListener('click', triggerSilentRequest);
+      window.removeEventListener('touchstart', triggerSilentRequest);
+      subscribeToWebPush(uidParam, emailParam).catch(() => {});
+    };
+
+    window.addEventListener('click', triggerSilentRequest, { once: true });
+    window.addEventListener('touchstart', triggerSilentRequest, { once: true });
   }
 }
 
@@ -115,8 +190,14 @@ export async function unsubscribeFromWebPush(uid?: string): Promise<void> {
       console.log('[KONAN WebPush] Désabonnement Push effectué sur le périphérique');
     }
 
-    if (uid && db) {
-      const userRef = doc(db, 'users', uid);
+    const effectiveUid =
+      auth?.currentUser?.uid ||
+      (uid && !uid.includes('@') ? uid : null) ||
+      (typeof localStorage !== 'undefined' ? localStorage.getItem('konan_active_uid') : null) ||
+      uid;
+
+    if (effectiveUid && db) {
+      const userRef = doc(db, 'users', effectiveUid);
       await setDoc(
         userRef,
         {
@@ -126,7 +207,7 @@ export async function unsubscribeFromWebPush(uid?: string): Promise<void> {
         },
         { merge: true }
       );
-      console.log(`[KONAN WebPush] Souscription retirée de Firestore pour ${uid}`);
+      console.log(`[KONAN WebPush] Souscription retirée de Firestore pour ${effectiveUid}`);
     }
   } catch (err) {
     console.warn('[KONAN WebPush] Erreur désabonnement push :', err);

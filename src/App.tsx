@@ -522,6 +522,7 @@ export function App() {
   useEffect(() => {
     const effectivePlan = state.userAccount?.planTier || state.planTier || 'free';
     const uid = state.userAccount?.googleId || state.userAccount?.email;
+    const email = state.userAccount?.email;
 
     if (effectivePlan === 'free') {
       // Utilisateur en mode Gratuit : ZÉRO notification (ni fermée, ni ouverte)
@@ -533,16 +534,18 @@ export function App() {
       return;
     }
 
-    // Utilisateur en mode Pro ou Plus : activation automatique Web Push
-    if (uid && (effectivePlan === 'pro' || effectivePlan === 'plus')) {
-      import('./services/webPushService').then(({ subscribeToWebPush }) => {
-        subscribeToWebPush(uid).catch(() => {});
+    // Utilisateur en mode Pro ou Plus : activation automatique Web Push silencieuse
+    if (effectivePlan === 'pro' || effectivePlan === 'plus') {
+      import('./services/webPushService').then(({ autoRegisterWebPushIfPro }) => {
+        autoRegisterWebPushIfPro(effectivePlan, uid, email).catch(() => {});
       });
 
       // Synchroniser également le token FCM si supporté
-      import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
-        enableStudentPushNotifications(uid).catch(() => {});
-      });
+      if (uid) {
+        import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
+          enableStudentPushNotifications(uid).catch(() => {});
+        });
+      }
     }
   }, [state.userAccount?.planTier, state.planTier, state.userAccount?.googleId, state.userAccount?.email]);
 

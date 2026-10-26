@@ -148,6 +148,22 @@ export default async function handler(req, res) {
 
   const { db } = fb;
 
+  // Cache en mémoire pour préserver le quota Firestore (valable 60 secondes sauf si ?force=true)
+  const urlObj = new URL(req.url, 'http://localhost');
+  const isForce = urlObj.searchParams.get('force') === 'true' || req.query?.force === 'true';
+
+  if (!global.__ADMIN_DATA_CACHE__) {
+    global.__ADMIN_DATA_CACHE__ = { data: null, timestamp: 0 };
+  }
+
+  if (!isForce && global.__ADMIN_DATA_CACHE__.data && (Date.now() - global.__ADMIN_DATA_CACHE__.timestamp < 60000)) {
+    return sendJson(200, {
+      ...global.__ADMIN_DATA_CACHE__.data,
+      cached: true,
+      cacheAgeSeconds: Math.floor((Date.now() - global.__ADMIN_DATA_CACHE__.timestamp) / 1000),
+    });
+  }
+
   try {
     const usersSnapshot = await db.collection('users').get();
     const users = [];
@@ -255,7 +271,7 @@ export default async function handler(req, res) {
       return timeB - timeA;
     });
 
-    return sendJson(200, {
+    const resultPayload = {
       success: true,
       authenticated: true,
       timestamp: new Date().toISOString(),
@@ -274,13 +290,48 @@ export default async function handler(req, res) {
         pendingStudySessions: Math.max(0, totalStudySessions - completedStudySessions),
       },
       users,
-    });
+    };
+
+    global.__ADMIN_DATA_CACHE__ = {
+      data: resultPayload,
+      timestamp: Date.now(),
+    };
+
+    return sendJson(200, resultPayload);
   } catch (err) {
     console.error('[admin-data] Erreur lecture Firestore :', err);
-    return sendJson(500, {
+    const msg = String(err?.message || '');
+    const isQuota = msg.includes('Quota exceeded') || msg.includes('RESOURCE_EXHAUSTED');
+
+    if (global.__ADMIN_DATA_CACHE__?.data) {
+      return sendJson(200, {
+        ...global.__ADMIN_DATA_CACHE__.data,
+        cached: true,
+        notice: isQuota ? 'Quota Firestore temporairement atteint : affichage des dernières données en cache.' : undefined,
+      });
+    }
+
+    return sendJson(200, {
       success: false,
-      error: 'FIRESTORE_ERROR',
-      message: err.message,
+      error: isQuota ? 'RESOURCE_EXHAUSTED' : 'FIRESTORE_ERROR',
+      message: isQuota
+        ? 'Le quota Firestore quotidien gratuit (50 000 lectures) a été temporairement atteint. Les données se réinitialisent automatiquement à minuit UTC.'
+        : err.message,
+      stats: {
+        totalUsers: 0,
+        freeUsers: 0,
+        proUsers: 0,
+        plusUsers: 0,
+        pushActiveUsers: 0,
+        totalSubjects: 0,
+        totalClasses: 0,
+        usersWithSchedule: 0,
+        totalStudySessions: 0,
+        completedStudySessions: 0,
+        rescheduledStudySessions: 0,
+        pendingStudySessions: 0,
+      },
+      users: [],
     });
   }
 }

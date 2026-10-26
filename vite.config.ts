@@ -47,6 +47,18 @@ export default defineConfig(({ mode }) => {
               res.end(JSON.stringify({ error: err?.message || 'Internal Server Error' }));
             }
           });
+          server.middlewares.use('/api/cron-notifications', async (req, res) => {
+            try {
+              // @ts-ignore
+              const { default: handler } = await import('./api/cron-notifications.js');
+              await handler(req, res);
+            } catch (err: any) {
+              console.error('[cron-notifications-dev] Erreur:', err);
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: err?.message || 'Internal Server Error' }));
+            }
+          });
         }
       }
     ],
