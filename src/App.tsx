@@ -31,7 +31,8 @@ import {
   checkGoogleRedirectResult,
   fetchCloudInvitationsForUser,
   syncUserStateToCloud,
-  loadUserStateFromCloud
+  loadUserStateFromCloud,
+  auth
 } from './lib/firebase';
 import { generateKonanId } from './lib/konanId';
 import { evaluateDailyCatchup } from './services/sessionRescheduler';
@@ -545,9 +546,21 @@ export function App() {
         import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
           enableStudentPushNotifications(uid).catch(() => {});
         });
+
+        // Synchroniser automatiquement les enveloppes du jour dans la file push_queue
+        import('./services/pushQueueService').then(({ syncTodaySessionsToPushQueue }) => {
+          syncTodaySessionsToPushQueue(uid, email || '', state.studySessions, state.subjects).catch(() => {});
+        });
       }
     }
-  }, [state.userAccount?.planTier, state.planTier, state.userAccount?.googleId, state.userAccount?.email]);
+  }, [
+    state.userAccount?.planTier,
+    state.planTier,
+    state.userAccount?.googleId,
+    state.userAccount?.email,
+    state.studySessions,
+    state.subjects,
+  ]);
 
   // Gestion d'authentification mobile et synchronisation au démarrage
   useEffect(() => {
@@ -1413,6 +1426,14 @@ export function App() {
     };
 
     if (willBeCompleted) {
+      // Supprimer immédiatement l'enveloppe catchup dans push_queue
+      const currentUid = state.userAccount?.googleId || auth?.currentUser?.uid;
+      if (currentUid && (effectivePlanTier === 'pro' || effectivePlanTier === 'plus')) {
+        import('./services/pushQueueService').then(({ removeSessionCatchupFromQueue }) => {
+          removeSessionCatchupFromQueue(currentUid, target.id);
+        }).catch(() => {});
+      }
+
       const daySessions = updatedSessions.filter(s => s.dayOfWeek === target.dayOfWeek);
       const isDayFullyComplete = daySessions.length > 0 && daySessions.every(s => s.completed);
       const totalSessions = updatedSessions.length;
