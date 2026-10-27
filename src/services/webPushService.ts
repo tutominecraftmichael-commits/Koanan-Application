@@ -127,6 +127,28 @@ export async function subscribeToWebPush(
 
       await setDoc(userRef, payload, { merge: true });
       console.log(`[KONAN WebPush] Souscription sauvegardée dans Firestore pour ${effectiveUid}`);
+
+      // Enregistrer également l'appareil dans push_queue pour les tests et la distribution
+      try {
+        const deviceQueueRef = doc(db, 'push_queue', `device_${effectiveUid}`);
+        await setDoc(
+          deviceQueueRef,
+          {
+            userId: effectiveUid,
+            email: userEmail ? userEmail.toLowerCase().trim() : '',
+            subscription: subJson,
+            sendAt: 9999999999999,
+            title: 'Device Registration',
+            body: 'Abonnement push actif pour cet appareil',
+            sessionId: 'device_sub',
+            type: 'device_sub',
+            updatedAt: new Date().toISOString(),
+          },
+          { merge: true }
+        );
+      } catch (qErr) {
+        console.warn('[KONAN WebPush] Notice enregistrement queue device:', qErr);
+      }
     }
 
     return { success: true };

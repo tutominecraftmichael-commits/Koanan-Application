@@ -136,15 +136,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-  // Synchronisation en direct toutes les 20 secondes (avec cache intelligent pour protéger les quotas Firestore)
+  // Chargement des données à l'ouverture de la console administrateur
+  // (Pas de boucle automatique de polling : rafraîchissement manuel via le bouton "Actualiser")
   useEffect(() => {
     fetchAdminData(true);
-
-    const interval = setInterval(() => {
-      fetchAdminData(false);
-    }, 20000);
-
-    return () => clearInterval(interval);
   }, [token]);
 
   // Horloge relative de dernière synchronisation
@@ -240,10 +235,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
           {/* Statut Sync en direct & Boutons d'Action */}
           <div className="flex items-center gap-2.5">
-            {/* Indicateur pulsation live */}
+            {/* Indicateur dernière synchro */}
             <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-slate-300">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>En direct : {secondsAgo === 0 ? 'À l’instant' : `Il y a ${secondsAgo}s`}</span>
+              <span className="flex h-2 w-2 rounded-full bg-emerald-500"></span>
+              <span>Dernière synchro : {secondsAgo === 0 ? 'À l’instant' : `Il y a ${secondsAgo}s`}</span>
             </div>
 
             {/* Bouton rafraîchir manuellement */}

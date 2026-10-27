@@ -2,22 +2,19 @@
  * KONAN AI - Route API Serverless pour Déclenchement Automatique des Notifications Push
  * Endpoint : /api/cron-notifications (Vercel Serverless Function & Cron)
  * 
- * PROTECTIONS VITALES :
- * 1. ZÉRO CRASH 500 : Tous les blocs Firestore et push sont isolés et renvoient toujours un JSON 200 propre.
- * 2. ÉCONOMIE DRASTIQUE DU QUOTA (50 000 lectures) :
- *    - INTERDICTION de scanner les 149 comptes à chaque minute.
- *    - Requête ciblée Firestore (.where) filtrant UNIQUEMENT les comptes Pro / Plus (au maximum 17 comptes).
- *    - Cache en mémoire serveur de 10 minutes : entre chaque rechargement de cache, ZÉRO lecture Firestore.
- * 3. MODE TEST PRIVÉ (?test=MON_EMAIL) : Envoi direct et instantané sans toucher aucun élève.
- * 4. Conservation stricte des templates officiels existants du Compagnon Konan.
+ * ARCHITECTURE "FILE D'ATTENTE" (push_queue) :
+ * 1. ZÉRO CRASH 500 : Entouré d'un try/catch global renvoyant toujours un JSON 200 propre.
+ * 2. ZÉRO SCAN DE LA COLLECTION USERS : Le cron ne lit JAMAIS les 149 utilisateurs.
+ *    Il exécute UNE SEULE requête légère sur `push_queue` où sendAt <= Date.now() (limitée à 50).
+ * 3. DÉPILAGE AUTOMATIQUE : Chaque enveloppe traitée est envoyée puis immédiatement supprimée.
+ * 4. MODE TEST PRIVÉ : ?test=konanapp369@gmail.com envoie une alerte directe à l'abonnement enregistré dans push_queue.
  */
 
 import fs from 'fs';
 import path from 'path';
 import webpush from 'web-push';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
-import { getMessaging } from 'firebase-admin/messaging';
+import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 
 function loadLocalEnvIfPresent() {
@@ -45,14 +42,14 @@ function loadLocalEnvIfPresent() {
   }
 }
 
-// Initialisation sécurisée de Firebase Admin (Compatible Node ESM et Vercel Serverless)
+// Initialisation sécurisée de Firebase Admin
 function getFirebaseServices() {
   loadLocalEnvIfPresent();
   const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
   if (!serviceAccountKey) {
     return {
       error: 'MISSING_SERVICE_ACCOUNT_KEY',
-      details: "La variable d'environnement FIREBASE_SERVICE_ACCOUNT_KEY n'est pas configurée dans Vercel."
+      details: "La variable FIREBASE_SERVICE_ACCOUNT_KEY n'est pas configurée dans Vercel."
     };
   }
 
@@ -70,7 +67,7 @@ function getFirebaseServices() {
     } catch (e) {
       return {
         error: 'INVALID_SERVICE_ACCOUNT_KEY',
-        details: `Erreur lors de l'analyse du JSON de la clé : ${e.message}`
+        details: `Erreur d'analyse du JSON de la clé : ${e.message}`
       };
     }
   } else {
@@ -78,15 +75,12 @@ function getFirebaseServices() {
   }
 
   const db = getFirestore(app);
-  let messaging = null;
+  let auth = null;
   try {
-    messaging = getMessaging(app);
-  } catch (mErr) {
-    console.warn('[cron-notifications] Firebase Messaging optionnel non initialisé :', mErr.message);
-  }
+    auth = getAuth(app);
+  } catch {}
 
-  const auth = getAuth(app);
-  return { db, messaging, auth, app };
+  return { db, auth, app };
 }
 
 // Configuration des clés VAPID Web Push
@@ -106,215 +100,11 @@ const VAPID_SUBJECT =
 try {
   webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 } catch (vapidErr) {
-  console.warn('[cron-notifications] Configuration VAPID notice :', vapidErr.message);
+  console.warn('[cron-notifications] Notice VAPID :', vapidErr.message);
 }
 
-// ---------------------------------------------------------------------------
-// TEMPLATES OFFICIELS EXISTANTS DU COMPAGNON KONAN (Strictement conservés)
-// ---------------------------------------------------------------------------
-const BEFORE_SESSION_MSGS = [
-  (sub, dur = 25) => `C’est l’heure de poser le téléphone deux secondes. Prends ton cahier de ${sub}, ${dur} minutes bien concentré et on en parle plus. Je compte sur toi ! 👊📚`,
-  (sub) => `Petit rappel entre nous : ta session de ${sub} démarre dans 5 minutes. Fais ça proprement pour ta propre fierté, ne traîne pas. ✨`,
-  (sub) => `Tu te souviens pourquoi on s’est lancés là-dedans ? ${sub} commence tout de suite. Lève-toi, bois un peu d’eau et installe-toi. 🤍`,
-];
-
-const RESCHEDULED_SESSION_MSGS = [
-  (sub, time) => `Ta séance de ${sub} a été reportée à ${time}. Viens rattraper ton retard aujourd'hui avant minuit, on ne lâche rien ! ⏳👊`,
-  (sub, time) => `Tu as sauté ta session de ${sub} ? Je ne te laisse pas abandonner : je l'ai replacée à ${time}. Sois au rendez-vous ce soir ! 👊`,
-  (sub, time, dur = 25) => `Pardon, ne commence pas à négliger. Ta séance de ${sub} t'attend à ${time} pour ${dur} minutes bien concentré. Assure ta journée ! ✨`,
-];
-
-const CATCHUP_5M_MSGS = [
-  (sub, time, dur = 25) => `C’est l’heure de ton rattrapage de ${sub} ! Ça commence dans 5 minutes (à ${time}). ${dur} minutes et l'honneur est sauf ! 👊📚`,
-  (sub, time) => `Petit rappel pour ton rattrapage : ta session de ${sub} démarre dans 5 minutes (à ${time}). Ne traîne pas, montre ce que tu as dans le ventre ! ✨`,
-];
-
-function pickMsg(arr, sub, dur = 25) {
-  const idx = Math.floor(Math.random() * arr.length);
-  return arr[idx](sub, dur);
-}
-
-function pickTimeMsg(arr, sub, time, dur = 25) {
-  const idx = Math.floor(Math.random() * arr.length);
-  return arr[idx](sub, time, dur);
-}
-
-function parseTimeToMinutes(timeStr) {
-  if (!timeStr) return -1;
-  const match = String(timeStr).trim().match(/(\d{1,2})[:hH](\d{2})/);
-  if (match) {
-    return parseInt(match[1], 10) * 60 + parseInt(match[2], 10);
-  }
-  const parts = String(timeStr).split(':');
-  if (parts.length >= 2) {
-    const h = parseInt(parts[0], 10);
-    const m = parseInt(parts[1], 10);
-    if (!isNaN(h) && !isNaN(m)) return h * 60 + m;
-  }
-  return -1;
-}
-
-function minutesToTimeString(minutes) {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-}
-
-/**
- * Envoie une notification Push au téléphone (via Web Push standard ou FCM)
- */
-async function dispatchPushToUser({ userId, webPushSub, fcmToken, title, body, tag, dataPayload, db, messaging }) {
-  let webPushSuccess = false;
-  let lastError = null;
-  let lastStatusCode = null;
-
-  const payload = {
-    title,
-    body,
-    icon: '/cube-icon.png',
-    badge: '/cube-badge.png',
-    tag: tag || 'konan-study',
-    data: dataPayload || { url: '/' },
-  };
-
-  // 1. Envoi prioritaire via Web Push natif standard (W3C Push API)
-  if (webPushSub && webPushSub.endpoint) {
-    try {
-      await webpush.sendNotification(webPushSub, JSON.stringify(payload), {
-        urgency: 'high',
-        TTL: 86400,
-      });
-      webPushSuccess = true;
-    } catch (wpErr) {
-      lastError = wpErr.message;
-      lastStatusCode = wpErr.statusCode;
-      console.warn(`[WebPush] Erreur envoi pour ${userId} :`, wpErr.statusCode || wpErr.message);
-      if (db && (wpErr.statusCode === 404 || wpErr.statusCode === 410)) {
-        // Souscription expirée ou désinstallée sur l'appareil
-        try {
-          await db.collection('users').doc(userId).update({
-            webPushSubscription: FieldValue.delete(),
-            pushNotificationsEnabled: false,
-          });
-        } catch {}
-      }
-    }
-  }
-
-  // 2. Envoi complémentaire via FCM si disponible
-  let fcmSuccess = false;
-  if (fcmToken && !webPushSuccess && messaging) {
-    try {
-      const message = {
-        token: fcmToken,
-        notification: { title, body },
-        android: {
-          priority: 'high',
-          notification: { sound: 'default', priority: 'high' },
-        },
-        webpush: {
-          headers: { Urgency: 'high' },
-          notification: {
-            icon: '/cube-icon.png',
-            badge: '/cube-badge.png',
-            sound: 'default',
-            tag: tag || 'konan-study',
-          },
-        },
-        data: { url: '/', ...(dataPayload || {}) },
-      };
-      await messaging.send(message);
-      fcmSuccess = true;
-    } catch (fcmErr) {
-      lastError = lastError || fcmErr.message;
-      console.warn(`[FCM] Erreur envoi pour ${userId} :`, fcmErr.message);
-    }
-  }
-
-  return {
-    success: webPushSuccess || fcmSuccess,
-    webPushSuccess,
-    fcmSuccess,
-    statusCode: lastStatusCode,
-    error: lastError,
-  };
-}
-
-/**
- * Cherche le prochain créneau libre aujourd'hui dans le futur strict (dateDebut > maintenant)
- */
-function findNextFreeSlotToday(currentMinute, durationMinutes, sessions, classes = []) {
-  const searchStartMin = Math.ceil(Math.max(currentMinute + 5, 0) / 15) * 15;
-  const dayEndMin = 1440; // Minuit 00:00
-
-  if (searchStartMin + durationMinutes > dayEndMin) {
-    return null;
-  }
-
-  const busyIntervals = [];
-
-  // Bloquer les cours réels
-  classes.forEach((c) => {
-    const s = parseTimeToMinutes(c.startTime);
-    const e = parseTimeToMinutes(c.endTime);
-    if (s >= 0 && e >= 0) {
-      busyIntervals.push({ start: Math.max(0, s - 10), end: e + 25 });
-    }
-  });
-
-  // Bloquer les autres sessions d'étude prévues aujourd'hui
-  sessions.forEach((s) => {
-    const start = parseTimeToMinutes(s.startTime);
-    const end = parseTimeToMinutes(s.endTime);
-    if (start >= 0 && end > searchStartMin) {
-      busyIntervals.push({ start: Math.max(0, start - 5), end: end + 10 });
-    }
-  });
-
-  busyIntervals.sort((a, b) => a.start - b.start);
-
-  let currentPointer = searchStartMin;
-  for (const busy of busyIntervals) {
-    if (busy.end <= currentPointer) continue;
-    if (busy.start > currentPointer) {
-      const avail = busy.start - currentPointer;
-      if (avail >= durationMinutes) {
-        if (currentPointer > currentMinute) {
-          return {
-            startTime: minutesToTimeString(currentPointer),
-            endTime: minutesToTimeString(currentPointer + durationMinutes),
-            durationMinutes,
-          };
-        }
-      }
-    }
-    currentPointer = Math.max(currentPointer, busy.end);
-    if (currentPointer + durationMinutes > dayEndMin) return null;
-  }
-
-  if (currentPointer + durationMinutes <= dayEndMin && currentPointer > currentMinute) {
-    return {
-      startTime: minutesToTimeString(currentPointer),
-      endTime: minutesToTimeString(currentPointer + durationMinutes),
-      durationMinutes,
-    };
-  }
-
-  return null;
-}
-
-/**
- * Cache global en mémoire pour les profils Pro (10 minutes)
- * Évite de relire Firestore à chaque minute, réduisant drastiquement le quota de lecture
- */
-const PRO_CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
-
-/**
- * Handler HTTP principal Vercel Serverless & Cron
- * GARANTIE STRICTE : Ne plante JAMAIS avec une erreur 500
- */
 export default async function handler(req, res) {
-  // CORS global
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -326,13 +116,11 @@ export default async function handler(req, res) {
   const startTime = Date.now();
   const now = new Date();
 
-  // Détection des paramètres dans la requête
+  // Extraction des paramètres
   let testEmail = '';
-  let isForce = false;
   try {
     const urlObj = new URL(req.url, 'http://localhost');
     testEmail = String(req.query?.test || urlObj.searchParams.get('test') || '').toLowerCase().trim();
-    isForce = (req.query?.force === 'true') || (urlObj.searchParams.get('force') === 'true');
   } catch {}
 
   try {
@@ -341,198 +129,129 @@ export default async function handler(req, res) {
       return res.status(200).json({
         success: false,
         endpointActive: true,
-        service: 'KONAN AI Push Notifications & Catchup Cron',
-        diagnostic: 'MISSING_SERVICE_ACCOUNT_KEY',
+        service: 'KONAN AI Push Queue Worker',
+        diagnostic: fb.error,
         notice: fb.details,
-        instruction: "Pour connecter ce cron à Firestore et envoyer les notifications push, configurez la variable FIREBASE_SERVICE_ACCOUNT_KEY dans les variables d'environnement Vercel.",
         timestamp: now.toISOString(),
       });
     }
 
-    const { db, messaging, auth } = fb;
+    const { db, auth } = fb;
 
     // =========================================================================
-    // CAS 1 : MODE TEST PRIVÉ POUR MON TÉLÉPHONE (?test=MON_EMAIL)
-    // Zéro dérangement pour les élèves : cible UNIQUEMENT mon compte
+    // CAS 1 : MODE TEST PRIVÉ (?test=mon_email)
     // =========================================================================
     if (testEmail) {
-      console.log(`[cron-notifications] Mode Test Privé demandé pour ${testEmail}`);
+      console.log(`[cron-notifications] Mode Test demandé pour : ${testEmail}`);
 
-      let targetDoc = null;
-      let authUser = null;
-      let quotaExceeded = false;
+      let subscription = null;
+      let targetSource = '';
 
-      // 1. Recherche instantanée via Firebase Auth (quota séparé de Firestore)
+      // 1. Recherche directe dans push_queue par champ email
       try {
-        authUser = await auth.getUserByEmail(testEmail);
-      } catch (authErr) {
-        console.log(`[cron-notifications] Firebase Auth lookup notice:`, authErr.message);
+        const queueSnap = await db.collection('push_queue')
+          .where('email', '==', testEmail)
+          .limit(1)
+          .get();
+
+        if (!queueSnap.empty) {
+          const envelope = queueSnap.docs[0].data();
+          if (envelope.subscription && envelope.subscription.endpoint) {
+            subscription = envelope.subscription;
+            targetSource = `push_queue (doc: ${queueSnap.docs[0].id})`;
+          }
+        }
+      } catch (qErr) {
+        console.warn('[cron-notifications] Notice lecture test push_queue :', qErr.message);
       }
 
-      // 2. Recherche directe par UID (le plus rapide et le plus précis)
-      if (authUser && authUser.uid) {
+      // 2. Si non trouvé dans push_queue, recherche par Auth UID pour retrouver le device
+      if (!subscription && auth) {
         try {
-          const docSnap = await db.collection('users').doc(authUser.uid).get();
-          if (docSnap.exists) {
-            targetDoc = docSnap;
+          const authUser = await auth.getUserByEmail(testEmail);
+          if (authUser && authUser.uid) {
+            const devDoc = await db.collection('push_queue').doc(`device_${authUser.uid}`).get();
+            if (devDoc.exists && devDoc.data()?.subscription?.endpoint) {
+              subscription = devDoc.data().subscription;
+              targetSource = `push_queue device_${authUser.uid}`;
+            } else {
+              // Secours : lecture unique du document users pour récupérer la souscription
+              const userDoc = await db.collection('users').doc(authUser.uid).get();
+              if (userDoc.exists && userDoc.data()?.webPushSubscription?.endpoint) {
+                subscription = userDoc.data().webPushSubscription;
+                targetSource = `users/${authUser.uid} (synchronisé vers push_queue)`;
+                // Sauvegarde immédiate dans push_queue pour les futurs tests
+                await db.collection('push_queue').doc(`device_${authUser.uid}`).set({
+                  userId: authUser.uid,
+                  email: testEmail,
+                  subscription,
+                  sendAt: 9999999999999,
+                  title: 'Device Registration',
+                  body: 'Abonnement enregistré',
+                  sessionId: 'device_sub',
+                  type: 'device_sub',
+                  updatedAt: new Date().toISOString(),
+                }, { merge: true });
+              }
+            }
           }
-        } catch (fErr) {
-          if (String(fErr.message).includes('Quota exceeded') || String(fErr.message).includes('RESOURCE_EXHAUSTED')) {
-            quotaExceeded = true;
-          }
+        } catch (authErr) {
+          console.warn('[cron-notifications] Notice recherche secours Auth :', authErr.message);
         }
       }
 
-      // 3. Recherche par champ direct 'email' si non trouvé par UID
-      if (!targetDoc && !quotaExceeded) {
-        try {
-          const snap = await db.collection('users').where('email', '==', testEmail).limit(1).get();
-          if (!snap.empty) targetDoc = snap.docs[0];
-        } catch (fErr) {
-          if (String(fErr.message).includes('Quota exceeded') || String(fErr.message).includes('RESOURCE_EXHAUSTED')) {
-            quotaExceeded = true;
-          }
-        }
-      }
-
-      // 4. Recherche par champ imbriqué 'userAccount.email'
-      if (!targetDoc && !quotaExceeded) {
-        try {
-          const snap = await db.collection('users').where('userAccount.email', '==', testEmail).limit(1).get();
-          if (!snap.empty) targetDoc = snap.docs[0];
-        } catch (fErr) {
-          if (String(fErr.message).includes('Quota exceeded') || String(fErr.message).includes('RESOURCE_EXHAUSTED')) {
-            quotaExceeded = true;
-          }
-        }
-      }
-
-      // 5. Recherche de secours par ID de document
-      if (!targetDoc && !quotaExceeded) {
-        try {
-          const byIdSnap = await db.collection('users').doc(testEmail).get();
-          if (byIdSnap.exists) targetDoc = byIdSnap;
-        } catch (fErr) {
-          if (String(fErr.message).includes('Quota exceeded') || String(fErr.message).includes('RESOURCE_EXHAUSTED')) {
-            quotaExceeded = true;
-          }
-        }
-      }
-
-      if (quotaExceeded) {
+      if (!subscription || !subscription.endpoint) {
         return res.status(200).json({
           success: false,
           testMode: true,
           targetEmail: testEmail,
-          userId: authUser?.uid || null,
-          displayName: authUser?.displayName || null,
-          diagnostic: 'FIRESTORE_QUOTA_EXCEEDED',
-          message: `Le compte "${testEmail}" existe bien (UID: ${authUser?.uid || 'Inconnu'}), mais Google Cloud a temporairement bloqué les lectures Firestore (Quota journalier gratuit de 50 000 lectures atteint).`,
-          explanation: "Ce blocage survient sur le forfait gratuit 'Spark' de Firebase dès que 50 000 lectures sont atteintes dans la journée. Les requêtes reprennent automatiquement à minuit UTC, ou instantanément en activant le forfait 'Blaze' (paiement à l'usage, 0$ pour un usage normal).",
+          diagnostic: 'NO_SUBSCRIPTION_IN_QUEUE',
+          message: `Aucun abonnement Web Push n'a été trouvé dans push_queue pour "${testEmail}".`,
+          instruction: "Ouvre l'application sur ton smartphone connecté à ce compte pour que ton navigateur enregistre automatiquement l'appareil.",
           timestamp: now.toISOString(),
         });
       }
 
-      if (!targetDoc) {
-        return res.status(200).json({
-          success: false,
-          testMode: true,
-          targetEmail: testEmail,
-          diagnostic: 'USER_NOT_FOUND',
-          message: `Aucun compte élève trouvé avec l'adresse "${testEmail}" dans Firestore.`,
-          solution: "Vérifie l'adresse email exacte de ton compte connecté dans l'application Konan.",
-          timestamp: now.toISOString(),
-        });
-      }
+      // Envoi du test
+      const testPayload = JSON.stringify({
+        title: '🔔 Test Push KONAN AI',
+        body: 'Test réussi ! Ton téléphone sonne et reçoit les alertes en direct.',
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/badge-72x72.png',
+        tag: 'konan-test-alert',
+        data: {
+          url: '/',
+          test: true,
+          timestamp: Date.now(),
+        },
+      });
 
-      const userData = targetDoc.data() || {};
-      const userId = targetDoc.id;
-      const planTier = String(userData.planTier || userData.userAccount?.planTier || userData.tier || 'free').toLowerCase().trim();
-      const isProOrPlus = planTier === 'pro' || planTier === 'plus';
-
-      if (!isProOrPlus) {
-        return res.status(200).json({
-          success: false,
-          testMode: true,
-          targetEmail: testEmail,
-          userId,
-          planTier,
-          diagnostic: 'USER_IS_FREE',
-          message: `Le compte "${testEmail}" est actuellement en formule 'Gratuit'. Les notifications push et les rattrapages automatiques sont strictement réservés aux formules Pro / Plus.`,
-          solution: "Bascule ton compte en mode Pro dans l'application pour activer les notifications.",
-          timestamp: now.toISOString(),
-        });
-      }
-
-      const webPushSub = userData.webPushSubscription;
-      const fcmToken = userData.fcmToken || userData.userAccount?.fcmToken;
-
-      if (!webPushSub && !fcmToken) {
-        return res.status(200).json({
-          success: false,
-          testMode: true,
-          targetEmail: testEmail,
-          userId,
-          planTier,
-          diagnostic: 'NO_PUSH_SUBSCRIPTION',
-          message: `Ton téléphone n'a pas encore enregistré sa souscription Web Push dans Firestore.`,
-          solution: "Ouvre l'application sur ton smartphone connecté à ce compte Pro : l'abonnement Web Push s'enregistre automatiquement et silencieusement en arrière-plan.",
-          timestamp: now.toISOString(),
-        });
-      }
-
-      // Envoi immédiat du test push
-      const testTitle = 'KONAN ✦ Test Direct Téléphone';
-      const testBody = "Test de connexion 100% réussi ! Ton téléphone est parfaitement connecté et prêt à sonner pour tes séances d'étude et tes rattrapages. 👊📚";
-
-      let dispatchResult;
       try {
-        dispatchResult = await dispatchPushToUser({
-          userId,
-          webPushSub,
-          fcmToken,
-          title: testTitle,
-          body: testBody,
-          tag: `konan-test-${Date.now()}`,
-          dataPayload: { url: '/', isTest: true },
-          db,
-          messaging,
+        await webpush.sendNotification(subscription, testPayload, {
+          TTL: 3600,
+          urgency: 'high',
         });
-      } catch (dispErr) {
-        dispatchResult = { success: false, error: dispErr.message, statusCode: 500 };
-      }
 
-      if (dispatchResult.success) {
         return res.status(200).json({
           success: true,
           testMode: true,
           targetEmail: testEmail,
-          userId,
-          planTier,
+          source: targetSource,
           diagnostic: 'PUSH_DELIVERED',
-          message: 'Notification de test envoyée avec succès à ton téléphone ! Regarde ton écran.',
-          subscriptionDetails: {
-            endpoint: webPushSub?.endpoint ? `${webPushSub.endpoint.slice(0, 45)}...` : null,
-            keysConfigured: Boolean(webPushSub?.keys?.p256dh && webPushSub?.keys?.auth),
-            updatedAt: userData.webPushUpdatedAt || null,
-            timezone: userData.timezone || 'Africa/Abidjan',
-          },
-          studySessionsCount: Array.isArray(userData.studySessions) ? userData.studySessions.length : 0,
+          message: 'Notification de test envoyée avec succès sur ton téléphone !',
           timestamp: now.toISOString(),
         });
-      } else {
+      } catch (pushErr) {
+        console.error('[cron-notifications] Erreur envoi push test :', pushErr);
         return res.status(200).json({
           success: false,
           testMode: true,
           targetEmail: testEmail,
-          userId,
-          planTier,
           diagnostic: 'PUSH_SEND_FAILED',
-          httpStatus: dispatchResult.statusCode,
-          errorDetails: dispatchResult.error,
-          message: "Échec de l'envoi de la notification vers le service de messagerie du smartphone.",
-          solution: dispatchResult.statusCode === 410 || dispatchResult.statusCode === 404
-            ? "L'ancienne souscription de ton téléphone a expiré. Réouvre simplement l'application sur ton téléphone pour renouveler la clé."
+          httpStatus: pushErr.statusCode,
+          error: pushErr.message,
+          solution: pushErr.statusCode === 410 || pushErr.statusCode === 404
+            ? "L'ancienne souscription de ton téléphone a expiré. Réouvre l'application sur ton smartphone pour la renouveler."
             : "Vérifie les permissions de notifications dans les paramètres de ton navigateur sur smartphone.",
           timestamp: now.toISOString(),
         });
@@ -540,263 +259,78 @@ export default async function handler(req, res) {
     }
 
     // =========================================================================
-    // CAS 2 : EXÉCUTION DU CRON PÉRIODIQUE (Toutes les minutes)
-    // PROTECTION DRASTIQUE DU QUOTA :
-    // - Pas de scan de 149 utilisateurs.
-    // - Uniquement les comptes Pro/Plus via .where (au maximum 17 comptes).
-    // - Cache serveur en mémoire de 10 minutes.
+    // CAS 2 : TRAITEMENT DE LA FILE D'ATTENTE PUSH (push_queue)
+    // Une seule requête Firestore sur push_queue (ZÉRO scan des 149 utilisateurs)
     // =========================================================================
-    if (!global.__CRON_PRO_CACHE__) {
-      global.__CRON_PRO_CACHE__ = {
-        users: [],
-        timestamp: 0,
-      };
-    }
-
-    const isCacheFresh =
-      !isForce &&
-      global.__CRON_PRO_CACHE__.users.length > 0 &&
-      (Date.now() - global.__CRON_PRO_CACHE__.timestamp < PRO_CACHE_TTL_MS);
-
-    let proUsersList = [];
-    let isFromCache = false;
-
-    if (isCacheFresh) {
-      proUsersList = global.__CRON_PRO_CACHE__.users;
-      isFromCache = true;
-    } else {
-      // Requête ultra-ciblée : UNIQUEMENT les comptes Pro et Plus
-      try {
-        const proSnap = await db.collection('users').where('planTier', 'in', ['pro', 'plus']).get();
-        proUsersList = proSnap.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        // Mettre à jour le cache de 10 minutes
-        global.__CRON_PRO_CACHE__ = {
-          users: proUsersList,
-          timestamp: Date.now(),
-        };
-      } catch (readErr) {
-        const errMsg = String(readErr?.message || '');
-        const isQuota = errMsg.includes('Quota exceeded') || errMsg.includes('RESOURCE_EXHAUSTED');
-
-        // Si quota atteint mais qu'on a déjà un cache (même expiré), réutiliser le cache !
-        if (global.__CRON_PRO_CACHE__.users.length > 0) {
-          proUsersList = global.__CRON_PRO_CACHE__.users;
-          isFromCache = true;
-          console.warn('[cron-notifications] Quota Firestore temporaire : réutilisation du cache en mémoire.');
-        } else {
-          return res.status(200).json({
-            success: false,
-            diagnostic: isQuota ? 'FIRESTORE_QUOTA_EXCEEDED' : 'FIRESTORE_READ_ERROR',
-            error: isQuota
-              ? "Le quota gratuit Firestore quotidien (50 000 lectures) a été temporairement atteint. Les alertes reprendront automatiquement à minuit UTC ou dès l'activation du forfait Blaze."
-              : errMsg,
-            stats: { usersScanned: 0, proUsers: 0, remindersSent5m: 0, catchupsTriggered: 0, examsExpired: 0, errors: 1 },
-            timestamp: now.toISOString(),
-          });
-        }
-      }
-    }
+    const nowMs = Date.now();
+    const queueSnap = await db.collection('push_queue')
+      .where('sendAt', '<=', nowMs)
+      .limit(50)
+      .get();
 
     const stats = {
-      usersScanned: proUsersList.length,
-      proUsers: proUsersList.length,
-      cached: isFromCache,
-      cacheAgeSeconds: Math.floor((Date.now() - global.__CRON_PRO_CACHE__.timestamp) / 1000),
-      remindersSent5m: 0,
-      catchupsTriggered: 0,
-      examsExpired: 0,
+      envelopesFound: queueSnap.size,
+      sent: 0,
+      deleted: 0,
       errors: 0,
     };
 
-    for (const userData of proUsersList) {
+    for (const docSnap of queueSnap.docs) {
+      const envelope = docSnap.data();
+      const docId = docSnap.id;
+
+      // Ignorer les appareils enregistrés avec un sendAt dans le futur lointain
+      if (typeof envelope.sendAt === 'number' && envelope.sendAt > nowMs) {
+        continue;
+      }
+
+      if (envelope.subscription && envelope.subscription.endpoint) {
+        const payload = JSON.stringify({
+          title: envelope.title || 'KONAN AI',
+          body: envelope.body || 'C’est l’heure de ta révision ! Viens te concentrer 👊📚',
+          icon: '/icons/icon-192x192.png',
+          badge: '/icons/badge-72x72.png',
+          tag: `konan-${envelope.sessionId || 'alert'}-${envelope.type || 'reminder'}`,
+          data: {
+            url: '/',
+            sessionId: envelope.sessionId,
+            type: envelope.type,
+            timestamp: nowMs,
+          },
+        });
+
+        try {
+          await webpush.sendNotification(envelope.subscription, payload, {
+            TTL: 3600,
+            urgency: 'high',
+          });
+          stats.sent += 1;
+        } catch (pushErr) {
+          console.warn(`[cron-notifications] Push échoué pour doc ${docId} :`, pushErr.message);
+          stats.errors += 1;
+        }
+      }
+
+      // Supprimer immédiatement l'enveloppe traitée de la file d'attente
       try {
-        const userId = userData.id;
-        const webPushSub = userData.webPushSubscription;
-        const fcmToken = userData.fcmToken || userData.userAccount?.fcmToken;
-
-        // Si l'utilisateur n'a aucun téléphone push enregistré, continuer
-        if (!webPushSub && !fcmToken) {
-          continue;
-        }
-
-        // Fuseau horaire de l'étudiant
-        let userDate = now;
-        if (userData.timezone) {
-          try {
-            userDate = new Date(now.toLocaleString('en-US', { timeZone: userData.timezone }));
-          } catch {}
-        } else if (typeof userData.timezoneOffsetMinutes === 'number') {
-          userDate = new Date(now.getTime() - userData.timezoneOffsetMinutes * 60000);
-        }
-
-        const userTodayStr = userDate.toISOString().slice(0, 10);
-        const userDayOfWeek = userDate.getDay() === 0 ? 6 : userDate.getDay() - 1; // 0=Lundi..6=Dimanche
-        const userMinutes = userDate.getHours() * 60 + userDate.getMinutes();
-
-        // Si cycle du jour validé, repos
-        const isCycleDone = userData.cycleCompletedDate === userTodayStr || userData.userAccount?.cycleCompletedDate === userTodayStr;
-        if (isCycleDone) continue;
-
-        const subjects = Array.isArray(userData.subjects) ? userData.subjects : [];
-        let studySessions = Array.isArray(userData.studySessions) ? [...userData.studySessions] : [];
-        const classSlots = Array.isArray(userData.classSlots) ? userData.classSlots : [];
-
-        if (studySessions.length === 0) continue;
-
-        let hasSessionUpdates = false;
-
-        for (let i = 0; i < studySessions.length; i++) {
-          const session = { ...studySessions[i] };
-
-          const isScheduledToday = (session.date && session.date === userTodayStr) || (session.dayOfWeek === userDayOfWeek);
-          if (!isScheduledToday) continue;
-          if (session.completed) continue;
-
-          const subject = subjects.find((s) => s.id === session.subjectId);
-          const subjectName = subject?.name || session.title || 'tes révisions';
-          const duration = session.durationMinutes || 25;
-
-          // RÈGLE 1 : PAS DE RATTRAPAGE SI L'EXAMEN EST DÉJÀ PASSÉ
-          const examDateStr = subject?.examDate || session.examDate;
-          if (examDateStr) {
-            const [ey, em, ed] = examDateStr.split('-').map(Number);
-            let eh = 23;
-            let emin = 59;
-            const examTimeStr = subject?.examTime || session.examTime;
-            if (examTimeStr) {
-              const [th, tm] = examTimeStr.split(':').map(Number);
-              if (!isNaN(th)) eh = th;
-              if (!isNaN(tm)) emin = tm;
-            }
-            const examDateTime = new Date(ey, (em || 1) - 1, ed || 1, eh, emin, 0);
-            if (userDate.getTime() >= examDateTime.getTime()) {
-              session.isExpired = true;
-              session.completed = true;
-              studySessions[i] = session;
-              hasSessionUpdates = true;
-              stats.examsExpired += 1;
-              continue;
-            }
-          }
-
-          if (session.isExpired) continue;
-
-          const sessionStartMin = parseTimeToMinutes(session.startTime);
-          if (sessionStartMin < 0) continue;
-
-          const diffMinutes = sessionStartMin - userMinutes;
-          const isCatchup = Boolean(session.isRescheduledToday || session.rescheduledReason);
-
-          // RÈGLE 2 : DÉTECTION ENTRE 1 ET 7 MINUTES (Rappel 5 min)
-          const alreadyNotifiedToday = session.lastReminderDate === userTodayStr || (session.rappelEnvoye && session.rappelDate === userTodayStr);
-          if (!alreadyNotifiedToday && diffMinutes >= 1 && diffMinutes <= 7) {
-            const title = isCatchup ? `KONAN ✦ Rattrapage ${subjectName}` : `KONAN ✦ ${subjectName}`;
-            const body = isCatchup
-              ? pickTimeMsg(CATCHUP_5M_MSGS, subjectName, session.startTime, duration)
-              : pickMsg(BEFORE_SESSION_MSGS, subjectName, duration);
-
-            const result = await dispatchPushToUser({
-              userId,
-              webPushSub,
-              fcmToken,
-              title,
-              body,
-              tag: `konan-5m-${session.id}`,
-              dataPayload: { url: '/', sessionId: session.id },
-              db,
-              messaging,
-            });
-
-            if (result.success) {
-              session.lastReminderDate = userTodayStr;
-              session.rappelDate = userTodayStr;
-              session.rappelEnvoye = true;
-              session.notifEnvoyee = true;
-              studySessions[i] = session;
-              hasSessionUpdates = true;
-              stats.remindersSent5m += 1;
-            }
-          }
-
-          // RÈGLE 3 : SÉANCE RATÉE (> 15 MIN DE RETARD) -> RATTRAPAGE DANS LE FUTUR
-          const alreadyRescheduledToday = session.isRescheduledToday && session.rescheduledDate === userTodayStr;
-          const isMissed = !alreadyRescheduledToday && userMinutes > sessionStartMin + 15;
-
-          if (isMissed) {
-            const targetDuration = session.durationMinutes || 25;
-            const otherSessions = studySessions.filter((s, idx) => idx !== i && ((s.date && s.date === userTodayStr) || s.dayOfWeek === userDayOfWeek));
-
-            const freeSlot = findNextFreeSlotToday(userMinutes, targetDuration, otherSessions, classSlots);
-
-            if (freeSlot && parseTimeToMinutes(freeSlot.startTime) > userMinutes) {
-              const originalStart = session.originalStartTime || session.startTime;
-              session.originalStartTime = originalStart;
-              session.originalEndTime = session.endTime;
-              session.startTime = freeSlot.startTime;
-              session.endTime = freeSlot.endTime;
-              session.durationMinutes = freeSlot.durationMinutes;
-              session.isRescheduledToday = true;
-              session.rescheduledDate = userTodayStr;
-              session.rappelEnvoye = false;
-              session.notifEnvoyee = false;
-              session.lastReminderDate = null;
-              session.notifRattrapageEnvoyee = true;
-              session.rescheduledReason = `Séance de ${subjectName} • Ratée à ${originalStart} ➔ Replacée à ${freeSlot.startTime}`;
-
-              const title = `KONAN ✦ ${subjectName}`;
-              const body = pickTimeMsg(RESCHEDULED_SESSION_MSGS, subjectName, freeSlot.startTime, targetDuration);
-
-              await dispatchPushToUser({
-                userId,
-                webPushSub,
-                fcmToken,
-                title,
-                body,
-                tag: `konan-rescheduled-${session.id}`,
-                dataPayload: { url: '/', sessionId: session.id, newTime: freeSlot.startTime },
-                db,
-                messaging,
-              });
-
-              studySessions[i] = session;
-              hasSessionUpdates = true;
-              stats.catchupsTriggered += 1;
-            }
-          }
-        }
-
-        // Sauvegarde protégée des séances modifiées
-        if (hasSessionUpdates) {
-          try {
-            await db.collection('users').doc(userId).update({
-              studySessions,
-              lastServerCheckAt: new Date().toISOString(),
-            });
-            // Mettre également à jour la session dans le cache mémoire
-            userData.studySessions = studySessions;
-          } catch (upErr) {
-            console.error(`[cron-notifications] Erreur mise à jour sessions pour ${userId} :`, upErr.message);
-          }
-        }
-      } catch (userLoopErr) {
-        console.error('[cron-notifications] Erreur traitement utilisateur :', userLoopErr.message);
-        stats.errors += 1;
+        await db.collection('push_queue').doc(docId).delete();
+        stats.deleted += 1;
+      } catch (delErr) {
+        console.error(`[cron-notifications] Erreur suppression doc ${docId} :`, delErr.message);
       }
     }
 
-    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+    const durationSeconds = ((Date.now() - startTime) / 1000).toFixed(2);
     return res.status(200).json({
       success: true,
-      timestamp: now.toISOString(),
-      executionDurationSeconds: parseFloat(duration),
+      service: 'KONAN AI Push Queue Worker',
+      durationSeconds: parseFloat(durationSeconds),
       stats,
+      timestamp: now.toISOString(),
     });
+
   } catch (err) {
-    console.error('[cron-notifications] Erreur globale rattrapée (sécurité 500) :', err);
+    console.error('[cron-notifications] Erreur globale rattrapée (protection 500) :', err);
     const msg = String(err?.message || 'Erreur interne');
     const isQuota = msg.includes('Quota exceeded') || msg.includes('RESOURCE_EXHAUSTED');
 
@@ -804,9 +338,8 @@ export default async function handler(req, res) {
       success: false,
       diagnostic: isQuota ? 'FIRESTORE_QUOTA_EXCEEDED' : 'GLOBAL_ERROR_CAUGHT',
       error: isQuota
-        ? "Le quota gratuit Firestore quotidien (50 000 lectures) a été temporairement atteint. Les alertes reprendront automatiquement dès le reset automatique à minuit UTC."
+        ? "Le quota gratuit Firestore quotidien a été temporairement dépassé. Les envois reprendront dès le reset automatique à 00:00 UTC."
         : msg,
-      details: msg,
       timestamp: now.toISOString(),
       cronJobReady: true,
     });
