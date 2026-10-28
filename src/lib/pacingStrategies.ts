@@ -64,7 +64,7 @@ export const PACING_STRATEGIES: PacingStrategyInfo[] = [
     borderColor: 'border-purple-500/40',
     bgColor: 'bg-purple-950/20',
     textColor: 'text-purple-400',
-    planRequired: 'pro',
+    planRequired: 'free',
   },
   {
     id: 'time_blocking',
@@ -80,7 +80,7 @@ export const PACING_STRATEGIES: PacingStrategyInfo[] = [
     borderColor: 'border-indigo-500/40',
     bgColor: 'bg-indigo-950/20',
     textColor: 'text-indigo-400',
-    planRequired: 'pro',
+    planRequired: 'free',
   },
   {
     id: 'two_minutes_rule',

@@ -155,12 +155,13 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     <Check className="relative w-4 h-4 text-blue-600 dark:text-sky-400 drop-shadow-[0_0_8px_rgba(37,99,235,0.6)] dark:drop-shadow-[0_0_8px_rgba(56,189,248,0.7)]" />
                   </div>
                   <div>
-                    <span className="font-semibold text-slate-900 dark:text-white">4 Techniques d'apprentissage Freemium :</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">Toutes les 5 Techniques d'apprentissage incluses :</span>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 mb-1.5">(1 seule méthode active à la fois)</p>
                     <ul className="mt-1 space-y-1 pl-1 text-xs text-slate-600 dark:text-slate-300 border-l border-slate-200 dark:border-white/10 ml-1">
                       <li className="pl-2">• Technique Pomodoro classique</li>
-                      <li className="pl-2">• Active Recall (Rappel actif)</li>
-                      <li className="pl-2">• Spaced Repetition (Répétition espacée)</li>
+                      <li className="pl-2">• Active Recall & Spaced Repetition</li>
+                      <li className="pl-2">• Technique de Feynman</li>
+                      <li className="pl-2">• Time Blocking</li>
                       <li className="pl-2">• La règle des 2 minutes</li>
                     </ul>
                   </div>
@@ -265,13 +266,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     <span className="absolute inset-0 rounded-full bg-emerald-500/20 dark:bg-emerald-400/25 blur-[3px]" />
                     <Layers className="relative w-4 h-4 text-emerald-600 dark:text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.6)] dark:drop-shadow-[0_0_8px_rgba(52,211,153,0.7)]" />
                   </div>
-                  <div>
-                    <span className="font-semibold text-slate-900 dark:text-white">Modèles d'espacement Premium :</span>
-                    <ul className="mt-1 space-y-1 pl-1 text-xs text-slate-600 dark:text-slate-300 border-l border-amber-200 dark:border-indigo-400/30 ml-1">
-                      <li className="pl-2">• <strong className="text-slate-900 dark:text-white">Time Blocking</strong> académique ciblé</li>
-                      <li className="pl-2">• <strong className="text-slate-900 dark:text-white">Technique de Feynman</strong> (assimilation conceptuelle profonde)</li>
-                    </ul>
-                  </div>
+                  <span><strong className="text-slate-900 dark:text-white">Combinaison de méthodes Premium :</strong> Capacité d'activer et de combiner jusqu'à <strong className="text-slate-900 dark:text-white">3 techniques d'espacement simultanément</strong> dans le même planning (contre 1 seule en version gratuite).</span>
                 </li>
 
                 <li className="flex items-start gap-2.5">
@@ -279,15 +274,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     <span className="absolute inset-0 rounded-full bg-emerald-500/20 dark:bg-emerald-400/25 blur-[3px]" />
                     <Sparkles className="relative w-4 h-4 text-emerald-600 dark:text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.6)] dark:drop-shadow-[0_0_8px_rgba(52,211,153,0.7)]" />
                   </div>
-                  <span><strong className="text-slate-900 dark:text-white">Recommandations algorithmiques de Konan :</strong> Recommandations intelligentes de la meilleure technique selon la fatigue et vos heures de cours.</span>
-                </li>
-
-                <li className="flex items-start gap-2.5">
-                  <div className="relative shrink-0 flex items-center justify-center w-5 h-5 mt-0.5">
-                    <span className="absolute inset-0 rounded-full bg-emerald-500/20 dark:bg-emerald-400/25 blur-[3px]" />
-                    <Check className="relative w-4 h-4 text-emerald-600 dark:text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.6)] dark:drop-shadow-[0_0_8px_rgba(52,211,153,0.7)]" />
-                  </div>
-                  <span><strong className="text-slate-900 dark:text-white">Combinaison triple :</strong> Capacité d'activer jusqu'à <strong className="text-slate-900 dark:text-white">3 techniques d'espacement simultanément</strong> dans le même planning.</span>
+                  <span><strong className="text-slate-900 dark:text-white">Recommandations algorithmiques de Konan :</strong> Recommandations intelligentes de la meilleure combinaison de techniques selon la fatigue et vos heures de cours.</span>
                 </li>
               </ul>
             </div>
