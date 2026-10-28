@@ -1619,8 +1619,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       onClick={() => handleSelectStudySystem(item.id)}
                       className={`w-full p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
                         selected
-                          ? 'bg-indigo-600/15 border-indigo-500 shadow-[0_4px_0_0_#4338CA]'
-                          : 'bg-slate-900/80 border-slate-800 hover:border-slate-700 shadow-[0_4px_0_0_#0F172A]'
+                          ? 'bg-indigo-50 dark:bg-indigo-600/15 border-indigo-500 shadow-[0_4px_0_0_#4338CA]'
+                          : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-slate-700 shadow-[0_4px_0_0_#CBD5E1] dark:shadow-[0_4px_0_0_#0F172A]'
                       }`}
                     >
                       <div className="flex items-start gap-3.5">
@@ -1628,33 +1628,33 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                           className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
                             selected
                               ? 'bg-indigo-500 text-white'
-                              : 'bg-slate-800 text-slate-400'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                           }`}
                         >
                           <Icon className="w-5 h-5" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-extrabold text-white text-sm sm:text-base">
+                            <span className="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">
                               {cfg.title}
                             </span>
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30">
                               {cfg.badge}
                             </span>
-                            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                            <span className="text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-500/20">
                               {cfg.fileName}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
                             {cfg.subtitle}
                           </p>
-                          <div className="mt-2 px-2.5 py-1.5 rounded-lg bg-slate-950/90 border border-slate-800/80 font-mono text-[10px] text-slate-300 truncate">
+                          <div className="mt-2 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-950/90 border border-slate-200 dark:border-slate-800/80 font-mono text-[10px] text-slate-700 dark:text-slate-300 truncate">
                             {cfg.syntaxExample}
                           </div>
                         </div>
                         <div
                           className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 mt-1 ${
-                            selected ? 'border-indigo-400 bg-indigo-500' : 'border-slate-700'
+                            selected ? 'border-indigo-500 bg-indigo-500' : 'border-slate-300 dark:border-slate-700'
                           }`}
                         >
                           {selected && <Check className="w-3.5 h-3.5 text-white stroke-[3]" />}
@@ -1738,46 +1738,46 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   type="button"
                   disabled={isAnalyzing}
                   onClick={() => pdfInputRef.current?.click()}
-                  className="p-3.5 rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 hover:border-indigo-500/50 flex flex-col items-center text-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/90 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/50 flex flex-col items-center text-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-xs"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
                     <FileText className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-extrabold text-white">Fichier PDF</span>
-                  <span className="text-[10px] text-slate-400">Importer EDT</span>
+                  <span className="text-xs font-extrabold text-slate-900 dark:text-white">Fichier PDF</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">Importer EDT</span>
                 </button>
 
                 <button
                   type="button"
                   disabled={isAnalyzing}
                   onClick={() => cameraInputRef.current?.click()}
-                  className="p-3.5 rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 hover:border-cyan-500/50 flex flex-col items-center text-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/90 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/50 flex flex-col items-center text-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-xs"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
                     <Camera className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-extrabold text-white">Prendre Photo</span>
-                  <span className="text-[10px] text-slate-400">Caméra directe</span>
+                  <span className="text-xs font-extrabold text-slate-900 dark:text-white">Prendre Photo</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">Caméra directe</span>
                 </button>
 
                 <button
                   type="button"
                   disabled={isAnalyzing}
                   onClick={() => galleryInputRef.current?.click()}
-                  className="p-3.5 rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 hover:border-emerald-500/50 flex flex-col items-center text-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 flex flex-col items-center text-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-xs"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                     <ImageIcon className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-extrabold text-white">Galerie Image</span>
-                  <span className="text-[10px] text-slate-400">PNG, JPG, WEBP</span>
+                  <span className="text-xs font-extrabold text-slate-900 dark:text-white">Galerie Image</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">PNG, JPG, WEBP</span>
                 </button>
               </div>
 
               {/* Indicateur d'extraction en cours */}
               {isAnalyzing && (
-                <div className="p-3.5 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 flex items-center gap-3 text-xs text-indigo-200">
-                  <Loader2 className="w-4 h-4 text-indigo-400 animate-spin shrink-0" />
+                <div className="p-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-500/30 flex items-center gap-3 text-xs text-indigo-800 dark:text-indigo-200">
+                  <Loader2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 animate-spin shrink-0" />
                   <span className="font-bold">{analysisStatus || 'Extraction en cours...'}</span>
                 </div>
               )}
@@ -1788,32 +1788,32 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 <button
                   type="button"
                   onClick={() => handleLoadCertifiedDemo('lmd')}
-                  className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[11px] font-semibold text-slate-300 hover:text-white cursor-pointer transition-colors"
+                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors"
                 >
                   ESATIC (LMD)
                 </button>
                 <button
                   type="button"
                   onClick={() => handleLoadCertifiedDemo('bts')}
-                  className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[11px] font-semibold text-slate-300 hover:text-white cursor-pointer transition-colors"
+                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors"
                 >
                   BTS Info (CM/TD/TP)
                 </button>
                 <button
                   type="button"
                   onClick={() => handleLoadCertifiedDemo('lycee')}
-                  className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[11px] font-semibold text-slate-300 hover:text-white cursor-pointer transition-colors"
+                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer transition-colors"
                 >
                   Terminale (Lycée)
                 </button>
               </div>
 
               {/* ÉDITEUR DU FICHIER TEXTE EXTRAIT (.TXT) */}
-              <div className="space-y-2 bg-slate-900/70 border border-slate-800 rounded-2xl p-3.5">
+              <div className="space-y-2 bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 shadow-xs">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-indigo-400 shrink-0" />
-                    <span className="text-xs font-extrabold text-white font-mono">
+                    <FileText className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                    <span className="text-xs font-extrabold text-slate-900 dark:text-white font-mono">
                       {activeSystem.fileName}
                     </span>
                     {liveParsedPreview.slots.length > 0 && (
@@ -2003,27 +2003,27 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               </div>
 
               {/* 2. Recommandation KONAN & Méthode d'Espacement */}
-              <div className="space-y-2.5 pt-2 border-t border-slate-800/80">
-                <h2 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
+              <div className="space-y-2.5 pt-2 border-t border-slate-200 dark:border-slate-800/80">
+                <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                   <span>2. Méthode de Révision & Diagnostic KONAN</span>
                 </h2>
 
-                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-950/60 via-slate-900/90 to-slate-900 border border-indigo-500/30 space-y-2">
+                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/50 to-indigo-50/90 dark:from-indigo-950/60 dark:via-slate-900/90 dark:to-slate-900 border border-indigo-200 dark:border-indigo-500/30 space-y-2">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <BarChart2 className="w-4 h-4 text-indigo-400" />
-                    <span className="text-xs font-black uppercase tracking-wider text-indigo-300">
+                    <BarChart2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                    <span className="text-xs font-black uppercase tracking-wider text-indigo-900 dark:text-indigo-300">
                       Recommandation IA :
                     </span>
-                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-500/20 text-indigo-900 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30">
                       {getPacingStrategy(pacingRecommendation.primaryId).title}
                     </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                       {pacingRecommendation.contextTag}
                     </span>
                   </div>
                   <p
-                    className={`text-xs text-slate-300 leading-relaxed ${
+                    className={`text-xs text-slate-800 dark:text-slate-300 leading-relaxed font-medium ${
                       showFullDiagnostic ? '' : 'line-clamp-2'
                     }`}
                   >
@@ -2032,7 +2032,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   <button
                     type="button"
                     onClick={() => setShowFullDiagnostic(!showFullDiagnostic)}
-                    className="text-[11px] font-bold text-indigo-400 hover:text-white cursor-pointer"
+                    className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
                   >
                     {showFullDiagnostic ? 'Voir moins ▴' : 'Lire le diagnostic complet ▾'}
                   </button>
@@ -2052,21 +2052,21 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         }}
                         className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-indigo-600/20 border-indigo-500 ring-1 ring-indigo-500/40'
+                            ? 'bg-indigo-50 dark:bg-indigo-600/20 border-indigo-500 ring-2 ring-indigo-500/30 shadow-xs'
                             : isAllowed
-                            ? 'bg-slate-900/80 border-slate-800 hover:border-slate-700'
-                            : 'bg-slate-900/40 border-slate-800/50 opacity-75'
+                            ? 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                            : 'bg-slate-100 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/50 opacity-60'
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-extrabold text-white truncate">
+                          <span className="text-xs font-extrabold text-slate-900 dark:text-white truncate">
                             {strategy.title}
                           </span>
-                          <span className="text-[10px] font-mono text-indigo-300 shrink-0">
+                          <span className="text-[10px] font-mono font-bold text-indigo-600 dark:text-indigo-300 shrink-0">
                             {strategy.badge}
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
+                        <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
                           {strategy.tagline}
                         </p>
                       </button>
@@ -2076,9 +2076,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               </div>
 
               {/* 3. Chronotype */}
-              <div className="space-y-2 pt-2 border-t border-slate-800/80">
-                <label className="text-xs font-extrabold text-slate-300 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-indigo-400" />
+              <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800/80">
+                <label className="text-xs font-extrabold text-slate-800 dark:text-slate-300 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                   <span>3. Moment de la journée où tu es le plus concentré</span>
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -2100,8 +2100,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         }}
                         className={`p-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-indigo-600 border-indigo-400 text-white'
-                            : 'bg-slate-900/80 border-slate-800 text-slate-300 hover:text-white'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                            : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                         }`}
                       >
                         <Icon className="w-4 h-4 shrink-0" />
