@@ -7,6 +7,8 @@ import {
   getRedirectResult,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+  getAdditionalUserInfo,
   updateProfile,
   sendPasswordResetEmail,
   sendEmailVerification,
@@ -141,6 +143,71 @@ export interface RealAuthUser {
   email: string | null;
   photoURL: string | null;
   emailVerified?: boolean;
+  isNewUser?: boolean;
+}
+
+/**
+ * Checks whether an email/Gmail address already exists in Firebase Auth,
+ * Cloud Firestore `users` collection, or local storage.
+ */
+export async function checkEmailExistsInDatabase(email: string): Promise<boolean> {
+  const cleanEmail = (email || '').trim().toLowerCase();
+  if (!cleanEmail) return false;
+
+  // 1. Check local storage saved user states
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      for (let i = 0; i < window.localStorage.length; i++) {
+        const key = window.localStorage.key(i);
+        if (key && key.startsWith('konan_ai_')) {
+          const raw = window.localStorage.getItem(key);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const savedEmail = (
+              parsed?.userAccount?.email ||
+              parsed?.email ||
+              ''
+            ).trim().toLowerCase();
+            if (savedEmail && savedEmail === cleanEmail) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+  } catch {
+    // Ignore local storage read errors
+  }
+
+  // 2. Check Firebase Auth sign-in methods
+  if (auth) {
+    try {
+      const methods = await fetchSignInMethodsForEmail(auth, cleanEmail);
+      if (Array.isArray(methods) && methods.length > 0) {
+        return true;
+      }
+    } catch {
+      // Enumeration protection may be enabled; proceed to Firestore check
+    }
+  }
+
+  // 3. Check Cloud Firestore `users` collection
+  if (db && !isFirestoreQuotaBlocked()) {
+    try {
+      const usersRef = collection(db, 'users');
+      const q1 = query(usersRef, where('email', '==', cleanEmail));
+      const snap1 = await getDocs(q1);
+      if (!snap1.empty) return true;
+
+      const q2 = query(usersRef, where('userAccount.email', '==', cleanEmail));
+      const snap2 = await getDocs(q2);
+      if (!snap2.empty) return true;
+    } catch (err) {
+      reportFirestoreError(err);
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -162,11 +229,36 @@ export async function signInWithGoogleReal(): Promise<RealAuthUser> {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
+    const additionalInfo = getAdditionalUserInfo(result);
+    let alreadyExists = additionalInfo?.isNewUser === false;
+
+    if (!alreadyExists && db && !isFirestoreQuotaBlocked()) {
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          alreadyExists = true;
+        }
+      } catch (err) {
+        reportFirestoreError(err);
+      }
+    }
+
+    if (!alreadyExists && typeof window !== 'undefined' && window.localStorage) {
+      try {
+        if (window.localStorage.getItem(`konan_ai_user_state_${user.uid}`)) {
+          alreadyExists = true;
+        }
+      } catch {
+        // Ignore storage error
+      }
+    }
+
     return {
       uid: user.uid,
       displayName: user.displayName,
       email: user.email,
       photoURL: user.photoURL,
+      isNewUser: !alreadyExists,
     };
   } catch (error: any) {
     console.error('Firebase Google Sign-In Error:', error);
@@ -301,6 +393,13 @@ export async function signUpWithEmailReal(
     throw new Error('CONFIG_MISSING: Firebase n\'est pas configuré.');
   }
 
+  const emailExists = await checkEmailExistsInDatabase(email);
+  if (emailExists) {
+    const existsErr = new Error('Le compte existe déjà, connectez-vous directement');
+    (existsErr as any).code = 'auth/email-already-in-use';
+    throw existsErr;
+  }
+
   try {
     const result = await createUserWithEmailAndPassword(auth, email.trim(), password);
     const user = result.user;
@@ -330,12 +429,13 @@ export async function signUpWithEmailReal(
       email: user.email,
       photoURL: finalAvatar,
       emailVerified: user.emailVerified,
+      isNewUser: true,
     };
   } catch (error: any) {
     console.error('Firebase Email Sign-Up Error:', error);
 
     if (error.code === 'auth/email-already-in-use') {
-      throw new Error('Ce compte existe déjà. Veuillez vous connecter avec votre mot de passe au lieu de créer un nouveau compte.');
+      throw new Error('Le compte existe déjà, connectez-vous directement');
     }
     if (error.code === 'auth/weak-password') {
       throw new Error('Le mot de passe doit comporter au moins 6 caractères.');

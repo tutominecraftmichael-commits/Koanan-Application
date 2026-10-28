@@ -218,7 +218,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <div className="pt-1 pb-4 border-b border-amber-200/80 dark:border-indigo-500/20">
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-4xl sm:text-5xl font-black text-[#0F172A] dark:text-white font-mono tracking-tight">
-                  1 200 F
+                  <AnimatedCounter value={1200} duration={1200} formatThousands /> F
                 </span>
                 <span className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">CFA / mois</span>
                 <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30">

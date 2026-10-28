@@ -594,6 +594,9 @@ export function App() {
     // Écoute des changements d'état d'authentification Firebase :
     const unsubscribeAuth = onFirebaseAuthStateChange(async (firebaseUser) => {
       if (!isMounted) return;
+      if (sessionStorage.getItem('konan_onboarding_in_progress') === 'true') {
+        return;
+      }
       if (firebaseUser && (!state.userAccount?.isLoggedIn || state.isDemoMode)) {
         const profile: UserAccount = {
           name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Étudiant',
