@@ -80,7 +80,7 @@ import { PlannerView } from './features/planner/PlannerView';
 import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
 import { FocusMode } from './features/focus/FocusMode';
 import { PresetModal } from './features/onboarding/PresetModal';
-import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding';
+import { DuolingoOnboarding, isLocalAdminEnvironment } from './features/onboarding/DuolingoOnboarding';
 import { ProWizardView } from './features/pro/ProWizardView';
 import { AdminDashboard } from './features/admin/AdminDashboard';
 
@@ -97,7 +97,7 @@ export function App() {
   const [isProModalOpen, setIsProModalOpen] = useState(false);
   const [isSuperProModalOpen, setIsSuperProModalOpen] = useState(false);
   const [isGoogleCalendarModalOpen, setIsGoogleCalendarModalOpen] = useState(false);
-  const [googleCalendarReason, setGoogleCalendarReason] = useState<'pro_activated' | 'plan_applied' | null>(null);
+  const [googleCalendarReason] = useState<'pro_activated' | 'plan_applied' | null>(null);
   const [isUltimateCelebrationOpen, setIsUltimateCelebrationOpen] = useState(false);
   const [isPlusActivationModalOpen, setIsPlusActivationModalOpen] = useState(false);
   const [isPlusGroupModalOpen, setIsPlusGroupModalOpen] = useState(false);
@@ -389,22 +389,6 @@ export function App() {
 
     soundFX.playNotificationPing();
     setToastMessage(`Invitation de ${invitation.senderName} refusée.`);
-  };
-
-  /**
-   * Automatic Google Calendar & 15-min reminder sync for ALL days of the week:
-   * Downloads the recurring .ics file and opens the interactive Google Agenda sync modal.
-   */
-  const triggerAutoGoogleCalendarSync = (
-    _sessions: StudySession[],
-    _subjects: Subject[],
-    _studentName: string,
-    reason: 'pro_activated' | 'plan_applied'
-  ) => {
-    // Ne télécharge plus automatiquement le fichier .ics en douce : ouvre uniquement le modal interactif
-    setGoogleCalendarReason(reason);
-    setIsGoogleCalendarModalOpen(true);
-    soundFX.playSuccessChime();
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -725,8 +709,12 @@ export function App() {
       }
     }
 
-    // Déblocage de l'accès à l'application
-    setActiveView('dashboard');
+    // Déblocage de l'accès à l'application (ou Guide EDT Pro avec Konan si Pro/Plus)
+    if (resolvedTier === 'pro' || resolvedTier === 'plus') {
+      setActiveView('pro-wizard');
+    } else {
+      setActiveView('dashboard');
+    }
   };
 
   /**
@@ -846,25 +834,22 @@ export function App() {
   const handleSelectPlan = (planId: 'free' | 'pro' | 'plus') => {
     setIsProModalOpen(false);
 
-    // Formule KONAN PRO : Connexion impérative obligatoire
-    if (planId === 'pro') {
+    // Formule KONAN PRO ou KONAN PLUS : Ouverture du Guide EDT Pro pas à pas avec Konan
+    if (planId === 'pro' || planId === 'plus') {
       if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
-        showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte Google pour passer à KONAN PRO.');
+        showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte pour configurer votre EDT Pro avec Konan.');
         setActiveView('auth');
         return;
       }
+      setState(prev => ({
+        ...prev,
+        planTier: planId,
+        userAccount: prev.userAccount ? {
+          ...prev.userAccount,
+          planTier: planId,
+        } : undefined,
+      }));
       setActiveView('pro-wizard');
-      return;
-    }
-
-    // Formule KONAN PLUS : Disponible bientôt
-    if (planId === 'plus') {
-      setWaitlistModalInfo({
-        isOpen: true,
-        featureTitle: 'Formule KONAN PLUS (Disponible bientôt)',
-        featureDescription: 'La formule KONAN PLUS sera disponible très prochainement avec le pack groupe et les ambiances audio. Vous disposez actuellement d\'un accès complet aux fonctionnalités de révision.',
-        requiredTier: 'plus',
-      });
       return;
     }
 
@@ -1326,15 +1311,12 @@ export function App() {
       return updated;
     });
 
-    // 🌟 If on KONAN PRO, automatically trigger Google Agenda sync for all days
+    // 🌟 Si l'utilisateur a choisi KONAN PRO ou KONAN PLUS, lancer le guide EDT Pro pas-à-pas avec Konan
     const isPro = (payload.planTier || state.planTier || state.userAccount?.planTier) === 'pro' || (payload.planTier || state.planTier || state.userAccount?.planTier) === 'plus';
-    if (isPro && payload.studySessions.length > 0) {
-      triggerAutoGoogleCalendarSync(
-        payload.studySessions,
-        payload.subjects,
-        state.studentName || state.userAccount?.name || 'Étudiant',
-        'plan_applied'
-      );
+    if (isPro) {
+      showToast('🚀 Bienvenue dans le Guide EDT Pro avec Konan !');
+      setActiveView('pro-wizard');
+      return;
     }
 
     showToast('🎉 Emploi du temps synchronisé & planning d’étude optimisé généré !');
@@ -1786,14 +1768,14 @@ export function App() {
         />
       )}
 
-      {/* Bouton Flottant d'Accès Rapide Admin si session admin active */}
-      {activeView !== 'admin' && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
+      {/* Bouton Flottant d'Accès Rapide Admin si session admin active (STRICTEMENT LOCAL UNIQUEMENT) */}
+      {isLocalAdminEnvironment() && activeView !== 'admin' && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
         <button
           onClick={() => setActiveView('admin')}
           className="fixed bottom-5 right-5 z-50 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs shadow-2xl shadow-purple-600/40 border border-purple-400/40 flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all"
         >
           <ShieldCheck className="w-4 h-4 text-purple-300" />
-          <span>Console Admin (Direct)</span>
+          <span>Console Admin (Local)</span>
         </button>
       )}
 
@@ -1804,8 +1786,8 @@ export function App() {
           : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
       }`}>
         
-        {/* Real-time Administrator Console (Strictement Privée & Locale) */}
-        {activeView === 'admin' && (
+        {/* Real-time Administrator Console (Strictement Privée & Locale Uniquement) */}
+        {activeView === 'admin' && isLocalAdminEnvironment() && (
           <AdminDashboard
             onSwitchToStudentView={() => setActiveView('dashboard')}
             onExitAdmin={() => {
@@ -1823,6 +1805,7 @@ export function App() {
           <DuolingoOnboarding
             currentUser={state.userAccount?.isLoggedIn ? state.userAccount : null}
             onOpenLogin={() => setActiveView('auth')}
+            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
             onLoginSuccess={(user) => {
               handleLoginSuccess(user);
             }}
@@ -1844,7 +1827,7 @@ export function App() {
             onLoginSuccess={handleLoginSuccess}
             onEnterDemoMode={handleEnterDemoMode}
             onBackToLanding={() => setActiveView('landing')}
-            onOpenAdmin={() => setActiveView('admin')}
+            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
             currentProfile={state.userAccount}
           />
         )}

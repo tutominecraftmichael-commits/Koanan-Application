@@ -806,7 +806,9 @@ html.light #root {
 }
 
 html.light .bg-\[\#090E17\],
-html.light .bg-\[\#090D16\] {
+html.light .bg-\[\#090D16\],
+html.light .bg-\[\#070B13\],
+html.light .bg-\[\#070B13\]\/95 {
   background-color: #F8FAFC !important;
   color: #0F172A !important;
 }
@@ -914,13 +916,19 @@ html.light .text-rose-400:not(button *):not([class*="bg-rose-"]):not([class*="bg
 html.light h1.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]),
 html.light h2.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]),
 html.light h3.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]),
-html.light h4.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]) {
+html.light h4.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]),
+html.light p.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]),
+html.light span.text-white:not(button *):not([class*="bg-indigo-"]):not([class*="bg-blue-"]):not([class*="bg-amber-"]):not([class*="bg-rose-"]):not([class*="from-indigo-"]):not([class*="from-amber-"]):not([class*="bg-emerald-500"]),
+html.light input.text-white,
+html.light textarea.text-white,
+html.light select.text-white,
+html.light label.text-white {
   color: #0F172A !important;
 }
 
 /* Conserver le texte blanc UNIQUEMENT sur les boutons à fond plein / dégradé sombre */
-html.light button.bg-gradient-to-r:not([class*="/"]),
-html.light button.bg-gradient-to-r:not([class*="/"]) *,
+html.light button.bg-gradient-to-r:not([class*="/"]):not([class*="from-emerald-500"]):not([class*="from-amber-400"]),
+html.light button.bg-gradient-to-r:not([class*="/"]):not([class*="from-emerald-500"]):not([class*="from-amber-400"]) *,
 html.light .btn-generate-glow,
 html.light .btn-generate-glow *,
 html.light button.bg-indigo-600,
@@ -942,6 +950,15 @@ html.light button.bg-rose-600 *,
 html.light button.bg-emerald-600 *,
 html.light button.bg-cyan-600 * {
   color: #FFFFFF !important;
+}
+
+html.light button.from-emerald-500,
+html.light button.from-emerald-500 *,
+html.light button.bg-emerald-500,
+html.light button.bg-emerald-500 *,
+html.light button.from-amber-400,
+html.light button.from-amber-400 * {
+  color: #022C22 !important;
 }
 
 @media print {
