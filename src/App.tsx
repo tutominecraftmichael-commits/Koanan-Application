@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { GraduationCap } from 'lucide-react';
 import type { AppState } from './services/storage';
-import { 
-  loadAppState, 
-  saveAppState, 
+import {
+  loadAppState,
+  saveAppState,
   loadUserState,
   saveUserState,
   loadDemoState,
@@ -26,8 +26,8 @@ import { generateOptimizedStudyPlan, mergePreservingCompletedSessions, synchroni
 import { transitionUserState } from './services/tierTransitionService';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import {
-  onFirebaseAuthStateChange, 
-  signOutReal, 
+  onFirebaseAuthStateChange,
+  signOutReal,
   checkGoogleRedirectResult,
   fetchCloudInvitationsForUser,
   syncUserStateToCloud,
@@ -36,13 +36,13 @@ import {
 } from './lib/firebase';
 import { generateKonanId } from './lib/konanId';
 import { evaluateDailyCatchup } from './services/sessionRescheduler';
-import type { 
-  ActiveAppView, 
-  Subject, 
-  ClassSlot, 
-  StudySession, 
+import type {
+  ActiveAppView,
+  Subject,
+  ClassSlot,
+  StudySession,
   StudyLog,
-  StudyPreferences, 
+  StudyPreferences,
   UserAccount,
   Chronotype,
   AcademicGoal,
@@ -97,7 +97,7 @@ export function App() {
   const [isProModalOpen, setIsProModalOpen] = useState(false);
   const [isSuperProModalOpen, setIsSuperProModalOpen] = useState(false);
   const [isGoogleCalendarModalOpen, setIsGoogleCalendarModalOpen] = useState(false);
-  const [googleCalendarReason] = useState<'pro_activated' | 'plan_applied' | null>(null);
+  const [googleCalendarReason, setGoogleCalendarReason] = useState<'pro_activated' | 'plan_applied' | null>(null);
   const [isUltimateCelebrationOpen, setIsUltimateCelebrationOpen] = useState(false);
   const [isPlusActivationModalOpen, setIsPlusActivationModalOpen] = useState(false);
   const [isPlusGroupModalOpen, setIsPlusGroupModalOpen] = useState(false);
@@ -123,6 +123,7 @@ export function App() {
   const [allInvitations, setAllInvitations] = useState<PlusInvitationNotification[]>(() => getPlusInvitations());
 
   const knownInvitationIdsRef = useRef<Set<string>>(new Set());
+  const pendingProWizardRef = useRef<boolean>(false);
 
   // 1. Real-time universal synchronization of all invitations (Firestore Cloud + BroadcastChannel + LocalStorage)
   useEffect(() => {
@@ -169,7 +170,7 @@ export function App() {
           if (Array.isArray(cloudInvites) && cloudInvites.length > 0) {
             applyCloud(cloudInvites);
           }
-        }).catch(() => {});
+        }).catch(() => { });
       }
     }
 
@@ -197,7 +198,7 @@ export function App() {
               if (Array.isArray(cloudInvites) && cloudInvites.length > 0) {
                 applyCloud(cloudInvites);
               }
-            }).catch(() => {});
+            }).catch(() => { });
           }
         }
       }
@@ -391,6 +392,23 @@ export function App() {
     setToastMessage(`Invitation de ${invitation.senderName} refusée.`);
   };
 
+  /**
+   * Automatic Google Calendar & 15-min reminder sync for ALL days of the week:
+   * Downloads the recurring .ics file and opens the interactive Google Agenda sync modal.
+   */
+  const _triggerAutoGoogleCalendarSync = (
+    _sessions: StudySession[],
+    _subjects: Subject[],
+    _studentName: string,
+    reason: 'pro_activated' | 'plan_applied'
+  ) => {
+    // Ne télécharge plus automatiquement le fichier .ics en douce : ouvre uniquement le modal interactif
+    setGoogleCalendarReason(reason);
+    setIsGoogleCalendarModalOpen(true);
+    soundFX.playSuccessChime();
+  };
+  void _triggerAutoGoogleCalendarSync;
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const lastRescheduledSignature = useRef<string>('');
   const hasGreetedAuthRef = useRef<string>('');
@@ -429,7 +447,7 @@ export function App() {
 
         // RÈGLE STRICTE : Purger immédiatement les matières et sessions non académiques parasites (EPS, Sport, devoirs, etc.)
         const hasInvalidSubject = prev.subjects.some(s => isNonAcademicSubject(s.name));
-        const validSubjects = hasInvalidSubject 
+        const validSubjects = hasInvalidSubject
           ? prev.subjects.filter(s => !isNonAcademicSubject(s.name))
           : prev.subjects;
         const validSubjectIds = new Set(validSubjects.map(s => s.id));
@@ -524,7 +542,7 @@ export function App() {
       // Utilisateur en mode Gratuit : ZÉRO notification (ni fermée, ni ouverte)
       if (uid) {
         import('./services/webPushService').then(({ unsubscribeFromWebPush }) => {
-          unsubscribeFromWebPush(uid).catch(() => {});
+          unsubscribeFromWebPush(uid).catch(() => { });
         });
       }
       return;
@@ -533,18 +551,18 @@ export function App() {
     // Utilisateur en mode Pro ou Plus : activation automatique Web Push silencieuse
     if (effectivePlan === 'pro' || effectivePlan === 'plus') {
       import('./services/webPushService').then(({ autoRegisterWebPushIfPro }) => {
-        autoRegisterWebPushIfPro(effectivePlan, uid, email).catch(() => {});
+        autoRegisterWebPushIfPro(effectivePlan, uid, email).catch(() => { });
       });
 
       // Synchroniser également le token FCM si supporté
       if (uid) {
         import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
-          enableStudentPushNotifications(uid).catch(() => {});
+          enableStudentPushNotifications(uid).catch(() => { });
         });
 
         // Synchroniser automatiquement les enveloppes du jour dans la file push_queue
         import('./services/pushQueueService').then(({ syncTodaySessionsToPushQueue }) => {
-          syncTodaySessionsToPushQueue(uid, email || '', state.studySessions, state.subjects).catch(() => {});
+          syncTodaySessionsToPushQueue(uid, email || '', state.studySessions, state.subjects).catch(() => { });
         });
       }
     }
@@ -720,10 +738,14 @@ export function App() {
       }
     }
 
-    // Déblocage de l'accès à l'application (ou Guide EDT Pro avec Konan si Pro/Plus)
-    if (resolvedTier === 'pro' || resolvedTier === 'plus') {
+    // Déblocage de l'accès à l'application :
+    // Un utilisateur qui a déjà un compte (même s'il est Pro ou Plus) arrive DIRECTEMENT dans son tableau de bord.
+    // Seul un utilisateur qui vient de cliquer explicitement sur la carte d'accompagnement Pro ou Plus lance le guide EDT Pro.
+    if (pendingProWizardRef.current && (resolvedTier === 'pro' || resolvedTier === 'plus')) {
+      pendingProWizardRef.current = false;
       setActiveView('pro-wizard');
     } else {
+      pendingProWizardRef.current = false;
       setActiveView('dashboard');
     }
   };
@@ -1112,7 +1134,7 @@ export function App() {
     if (declinedUid && declinedUid !== 'guest' && declinedUid !== 'google-demo') {
       try {
         localStorage.removeItem(`konan_user_${declinedUid}`);
-      } catch {}
+      } catch { }
     }
 
     let deviceStudentId = '';
@@ -1253,11 +1275,14 @@ export function App() {
     preferences: StudyPreferences;
     studySessions: StudySession[];
     planTier?: 'free' | 'pro' | 'plus';
+    launchProWizard?: boolean;
   }) => {
     if (state.isDemoMode) {
-      showToast('⚠️ En mode démo, l’emploi du temps est prédéfini à l’avance et ne peut pas être modifié par importation.');
+      showToast('⚠️ En mode démo, l’emploi du temps est prédéfini à l’avance et ne peut pas pas être modifié par importation.');
       return;
     }
+
+    pendingProWizardRef.current = Boolean(payload.launchProWizard);
 
     try {
       sessionStorage.removeItem('konan_pending_onboarding_payload');
@@ -1282,10 +1307,10 @@ export function App() {
         completedOnboarding: true,
         userAccount: prevPending.initialState.userAccount
           ? {
-              ...prevPending.initialState.userAccount,
-              planTier: effectiveTier,
-              pdfImportsCount: nextPdfCount,
-            }
+            ...prevPending.initialState.userAccount,
+            planTier: effectiveTier,
+            pdfImportsCount: nextPdfCount,
+          }
           : undefined,
       };
       return {
@@ -1321,9 +1346,8 @@ export function App() {
       return updated;
     });
 
-    // 🌟 Si l'utilisateur a choisi KONAN PRO ou KONAN PLUS, lancer le guide EDT Pro pas-à-pas avec Konan
-    const isPro = (payload.planTier || state.planTier || state.userAccount?.planTier) === 'pro' || (payload.planTier || state.planTier || state.userAccount?.planTier) === 'plus';
-    if (isPro) {
+    // 🌟 Uniquement si l'utilisateur vient de cliquer explicitement sur le modèle KONAN PRO ou KONAN PLUS, lancer le guide EDT Pro
+    if (payload.launchProWizard && (payload.planTier === 'pro' || payload.planTier === 'plus')) {
       showToast('🚀 Bienvenue dans le Guide EDT Pro avec Konan !');
       setActiveView('pro-wizard');
       return;
@@ -1389,11 +1413,11 @@ export function App() {
     showToast("Préférences d'étude enregistrées !");
   };
 
-  const handleUpdateProfile = (updated: { 
-    name: string; 
-    academicLevel: string; 
-    phoneNumber?: string; 
-    countryCode?: string 
+  const handleUpdateProfile = (updated: {
+    name: string;
+    academicLevel: string;
+    phoneNumber?: string;
+    countryCode?: string
   }) => {
     // Sécurité backend : assainit formellement le payload et empêche la modification frauduleuse de tier/isPro
     const safeData = sanitizeUserProfileUpdate(updated as any);
@@ -1474,14 +1498,14 @@ export function App() {
 
     soundFX.playCheckmarkPop();
     const willBeCompleted = !target.completed;
-    const updatedSessions = state.studySessions.map(s => 
-      s.id === sessionId 
-        ? { 
-            ...s, 
-            completed: willBeCompleted, 
-            completedAt: willBeCompleted ? new Date().toISOString() : undefined,
-            actualDurationMinutes: willBeCompleted ? (s.actualDurationMinutes || s.durationMinutes) : undefined,
-          } 
+    const updatedSessions = state.studySessions.map(s =>
+      s.id === sessionId
+        ? {
+          ...s,
+          completed: willBeCompleted,
+          completedAt: willBeCompleted ? new Date().toISOString() : undefined,
+          actualDurationMinutes: willBeCompleted ? (s.actualDurationMinutes || s.durationMinutes) : undefined,
+        }
         : s
     );
 
@@ -1502,7 +1526,7 @@ export function App() {
       if (currentUid && (effectivePlanTier === 'pro' || effectivePlanTier === 'plus')) {
         import('./services/pushQueueService').then(({ removeSessionCatchupFromQueue }) => {
           removeSessionCatchupFromQueue(currentUid, target.id);
-        }).catch(() => {});
+        }).catch(() => { });
       }
 
       const daySessions = updatedSessions.filter(s => s.dayOfWeek === target.dayOfWeek);
@@ -1574,14 +1598,14 @@ export function App() {
     if (!target) return;
 
     soundFX.playCelebrationFanfare();
-    const updatedSessions = state.studySessions.map(s => 
-      s.id === sessionId 
-        ? { 
-            ...s, 
-            completed: true, 
-            completedAt: new Date().toISOString(),
-            actualDurationMinutes: log.durationMinutes,
-          } 
+    const updatedSessions = state.studySessions.map(s =>
+      s.id === sessionId
+        ? {
+          ...s,
+          completed: true,
+          completedAt: new Date().toISOString(),
+          actualDurationMinutes: log.durationMinutes,
+        }
         : s
     );
 
@@ -1735,7 +1759,7 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#070B13] text-[#0F172A] dark:text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white w-full max-w-full overflow-x-hidden transition-colors duration-300">
-      
+
       {/* Hidden file input for JSON configuration backup imports */}
       <input
         type="file"
@@ -1790,12 +1814,11 @@ export function App() {
       )}
 
       {/* Main View Container */}
-      <main className={`flex-1 w-full mx-auto overflow-x-hidden ${
-        activeView === 'landing' || activeView === 'admin'
-          ? 'max-w-full p-0'
-          : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
-      }`}>
-        
+      <main className={`flex-1 w-full mx-auto overflow-x-hidden ${activeView === 'landing' || activeView === 'admin'
+        ? 'max-w-full p-0'
+        : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
+        }`}>
+
         {/* Real-time Administrator Console (Strictement Privée & Locale Uniquement) */}
         {activeView === 'admin' && isLocalAdminEnvironment() && (
           <AdminDashboard
@@ -1804,7 +1827,7 @@ export function App() {
               try {
                 sessionStorage.removeItem('konan_admin_authenticated');
                 sessionStorage.removeItem('konan_admin_token');
-              } catch {}
+              } catch { }
               setActiveView('landing');
             }}
           />
@@ -2273,7 +2296,7 @@ export function App() {
 
       {/* Floating Notification Toast (Full multi-line sentence, zero truncation) */}
       {toastMessage && (
-        <div 
+        <div
           role="status"
           aria-live="polite"
           className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-50 bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-950 border border-sky-400/50 text-white px-4 py-3 rounded-2xl shadow-2xl shadow-indigo-950/70 text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in slide-in-from-bottom-5 duration-200 max-w-[94vw] sm:max-w-md w-auto backdrop-blur-md"
@@ -2305,7 +2328,7 @@ export function App() {
       )}
 
       {/* 🚀 Cinematic 3D Entrance Animation */}
-      <KonanEntranceSplash 
+      <KonanEntranceSplash
         onComplete={() => {
           // L'animation d'entrée ne force JAMAIS la redirection vers le dashboard :
           // L'utilisateur reste sur sa vue actuelle (notamment l'interface d'accueil 'landing').
@@ -2313,7 +2336,7 @@ export function App() {
             setIsPrivacyModalOpen(true);
             pendingPrivacyModalRef.current = false;
           }
-        }} 
+        }}
       />
 
       {/* 📱 PWA Universal Mobile & Desktop Install Prompt */}

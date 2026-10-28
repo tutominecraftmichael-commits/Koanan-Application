@@ -362,9 +362,9 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 <Button
                   variant="secondary"
                   size="sm"
-                  leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
+                  leftIcon={<CheckCircle2 className="w-4 h-4 text-slate-950" />}
                   onClick={() => onToggleSessionComplete(firstCatchup.id)}
-                  className="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs py-2 px-3 shadow-md shadow-amber-600/30 cursor-pointer"
+                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-[0_4px_0_0_#b45309] active:translate-y-0.5 active:shadow-[0_2px_0_0_#b45309] cursor-pointer transition-all"
                 >
                   ⚡ Valider le rattrapage
                 </Button>
@@ -589,6 +589,35 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                   )}
 
 
+
+                  {/* Action Button: Valider la session / Valider le rattrapage */}
+                  <div className="pt-1 flex items-center justify-end">
+                    <Button
+                      variant={session.completed ? 'secondary' : session.isRescheduledToday ? 'secondary' : 'glow'}
+                      size="sm"
+                      leftIcon={<CheckCircle2 className="w-4 h-4" />}
+                      onClick={() => {
+                        if (!session.completed && _onStartFocusSession && isToday) {
+                          _onStartFocusSession(session);
+                        } else {
+                          onToggleSessionComplete(session.id);
+                        }
+                      }}
+                      className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer active:translate-y-0.5 ${
+                        session.completed
+                          ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 shadow-none'
+                          : session.isRescheduledToday
+                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] active:shadow-[0_2px_0_0_#b45309]'
+                          : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
+                      }`}
+                    >
+                      {session.completed
+                        ? '✓ Session validée'
+                        : session.isRescheduledToday
+                        ? '⚡ Valider le rattrapage'
+                        : 'Valider la session'}
+                    </Button>
+                  </div>
 
                 </div>
               </Card>

@@ -12,15 +12,15 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, leftIcon, rightIcon, children, disabled, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer select-none active:scale-[0.98]';
+    const baseStyles = 'inline-flex items-center justify-center font-bold transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer select-none active:translate-y-0.5';
 
     const variants = {
-      primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-950/20 border border-blue-500/40',
-      glow: 'bg-gradient-to-r from-blue-700 via-blue-600 to-sky-500 hover:from-blue-600 hover:to-sky-400 text-white shadow-md shadow-blue-950/30 border border-blue-400/30 font-semibold',
-      secondary: 'bg-white hover:bg-slate-100 text-slate-800 border-slate-300 shadow-sm dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700',
-      outline: 'bg-transparent border border-slate-300 hover:border-blue-500 text-slate-700 hover:bg-blue-50 hover:text-blue-600 dark:border-slate-700 dark:hover:border-blue-500/60 dark:text-slate-200 dark:hover:bg-blue-500/10 dark:hover:text-white',
+      primary: 'bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-400/40 shadow-[0_4px_0_0_#3730A3] active:shadow-[0_2px_0_0_#3730A3] font-extrabold',
+      glow: 'bg-gradient-to-r from-indigo-600 via-blue-600 to-sky-500 hover:from-indigo-500 hover:to-sky-400 text-white border border-blue-400/40 shadow-[0_4px_0_0_#1e3a8a] active:shadow-[0_2px_0_0_#1e3a8a] font-extrabold',
+      secondary: 'bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-200 shadow-[0_3px_0_0_#cbd5e1] active:shadow-[0_1px_0_0_#cbd5e1] dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700 dark:shadow-[0_3px_0_0_#0f172a] dark:active:shadow-[0_1px_0_0_#0f172a] font-bold',
+      outline: 'bg-transparent border-2 border-slate-300 hover:border-blue-500 text-slate-700 hover:bg-blue-50 hover:text-blue-600 shadow-[0_3px_0_0_#cbd5e1] active:shadow-[0_1px_0_0_#cbd5e1] dark:border-slate-700 dark:hover:border-blue-500/60 dark:text-slate-200 dark:hover:bg-blue-500/10 dark:hover:text-white dark:shadow-[0_3px_0_0_#0f172a]',
       ghost: 'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900 dark:hover:bg-slate-800/60 dark:text-slate-300 dark:hover:text-white',
-      danger: 'bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-950/20 border border-rose-500/30',
+      danger: 'bg-rose-600 hover:bg-rose-500 text-white border border-rose-400/40 shadow-[0_4px_0_0_#9f1239] active:shadow-[0_2px_0_0_#9f1239] font-extrabold',
     };
 
     const sizes = {

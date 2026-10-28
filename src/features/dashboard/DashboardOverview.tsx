@@ -308,7 +308,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <Button
                 variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
                 size="sm"
-                leftIcon={<CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />}
+                leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
                 onClick={() => {
                   if (onStartFocusSession) {
                     onStartFocusSession(nextStudySession);
@@ -316,13 +316,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     onToggleSessionComplete(nextStudySession.id);
                   }
                 }}
-                className={`w-full sm:w-auto cursor-pointer text-xs font-bold whitespace-nowrap py-2 px-3.5 hover:scale-105 active:scale-95 transition-transform shrink-0 ${
+                className={`w-full sm:w-auto cursor-pointer text-xs font-extrabold whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-0.5 ${
                   nextStudySession.isRescheduledToday
-                    ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/20'
-                    : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border-emerald-500/50 shadow-md shadow-emerald-600/20'
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] active:shadow-[0_2px_0_0_#b45309]'
+                    : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
                 }`}
               >
-                {nextStudySession.isRescheduledToday ? '⚡ Rattrapage' : 'Valider la séance'}
+                {nextStudySession.isRescheduledToday ? '⚡ Valider le rattrapage' : 'Valider la session'}
               </Button>
             </div>
           )}
@@ -538,12 +538,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         <Button
                           variant="secondary"
                           size="sm"
-                          leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
+                          leftIcon={<CheckCircle2 className="w-4 h-4 text-slate-950" />}
                           onClick={() => onToggleSessionComplete(rescheduledTodaySessions[0].id)}
-                          className="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs py-2 px-3.5 shadow-md shadow-amber-600/30 cursor-pointer hover:scale-105 active:scale-95 transition-all"
+                          className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-[0_4px_0_0_#b45309] active:translate-y-0.5 active:shadow-[0_2px_0_0_#b45309] cursor-pointer transition-all"
                           title="Valider la première séance de rattrapage"
                         >
-                          ⚡ Valider le Rattrapage
+                          ⚡ Valider le rattrapage
                         </Button>
                       </div>
                     </div>
@@ -679,7 +679,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           <Button
                             variant={isRescheduled ? "secondary" : "glow"}
                             size="sm"
-                            leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
+                            leftIcon={<CheckCircle2 className={`w-4 h-4 ${isRescheduled ? 'text-slate-950' : 'text-slate-950'}`} />}
                             onClick={() => {
                               if (onStartFocusSession) {
                                 onStartFocusSession(session);
@@ -687,13 +687,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                 onToggleSessionComplete(session.id);
                               }
                             }}
-                            className={`w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[38px] ${
+                            className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-0.5 ${
                               isRescheduled
-                                ? 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/50 shadow-md shadow-amber-600/30'
-                                : 'bg-indigo-600 hover:bg-indigo-500 text-white border-indigo-400/30 shadow-md shadow-indigo-600/20'
+                                ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] active:shadow-[0_2px_0_0_#b45309]'
+                                : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
                             }`}
                           >
-                            <span>{isRescheduled ? '⚡ Valider Rattrapage' : 'Valider la séance'}</span>
+                            <span>{isRescheduled ? '⚡ Valider le rattrapage' : 'Valider la session'}</span>
                           </Button>
                         </div>
                       </div>
