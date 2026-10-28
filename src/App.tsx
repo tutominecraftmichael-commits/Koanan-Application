@@ -2294,24 +2294,24 @@ export function App() {
         studentEmail={pendingAuth?.profile.email || state.userAccount?.email}
       />
 
-      {/* Floating Notification Toast (Full multi-line sentence, zero truncation) */}
+      {/* Floating Notification Toast (Full multi-line sentence, zero truncation, crystal clear in light and dark mode) */}
       {toastMessage && (
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-50 bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-950 border border-sky-400/50 text-white px-4 py-3 rounded-2xl shadow-2xl shadow-indigo-950/70 text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in slide-in-from-bottom-5 duration-200 max-w-[94vw] sm:max-w-md w-auto backdrop-blur-md"
+          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-50 bg-white dark:bg-slate-900 border-2 border-indigo-200 dark:border-sky-400/50 text-slate-900 dark:text-white px-4 py-3 rounded-2xl shadow-xl shadow-indigo-950/15 dark:shadow-2xl dark:shadow-indigo-950/70 text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in slide-in-from-bottom-5 duration-200 max-w-[94vw] sm:max-w-md w-auto backdrop-blur-md"
         >
-          <div className="p-1.5 rounded-xl bg-sky-500/20 text-sky-300 shrink-0 mt-0.5 border border-sky-500/30">
-            <Sparkles className="w-4 h-4 text-sky-300" />
+          <div className="p-1.5 rounded-xl bg-indigo-50 dark:bg-sky-500/20 text-indigo-600 dark:text-sky-300 shrink-0 mt-0.5 border border-indigo-200 dark:border-sky-500/30">
+            <Sparkles className="w-4 h-4 text-indigo-600 dark:text-sky-300" />
           </div>
           <div className="flex-1 min-w-0 pr-1">
-            <p className="text-white text-xs sm:text-sm font-medium leading-relaxed break-words whitespace-normal">
+            <p className="text-slate-900 dark:text-white text-xs sm:text-sm font-bold leading-relaxed break-words whitespace-normal">
               {toastMessage}
             </p>
           </div>
           <button
             onClick={() => setToastMessage(null)}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors shrink-0 -mr-1 -mt-1 cursor-pointer"
+            className="text-slate-400 hover:text-slate-800 dark:hover:text-white p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0 -mr-1 -mt-1 cursor-pointer"
             aria-label="Fermer"
           >
             <X className="w-4 h-4" />
