@@ -25,7 +25,7 @@ import { KonanEntranceSplash } from './components/common/KonanEntranceSplash';
 import { generateOptimizedStudyPlan, mergePreservingCompletedSessions, synchronizeSessionsWithExamCountdowns } from './services/plannerAlgorithm';
 import { transitionUserState } from './services/tierTransitionService';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
-import { 
+import {
   onFirebaseAuthStateChange, 
   signOutReal, 
   checkGoogleRedirectResult,

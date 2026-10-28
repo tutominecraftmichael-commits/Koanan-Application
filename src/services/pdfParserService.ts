@@ -1253,11 +1253,7 @@ function generateAcademicTopicsForSubject(name: string): string[] {
   ];
 }
 
-/**
- * SMART OVERLAP RESOLUTION & SLOT HARMONIZER
- * Eliminates duplicate entries and resolves time collisions so the timetable is 100% clean and readable.
- */
-export function harmonizeAndDeduplicateSlots<T extends {
+export interface HarmonizableSlot {
   dayOfWeek: DayOfWeek;
   startTime: string;
   endTime: string;
@@ -1268,8 +1264,13 @@ export function harmonizeAndDeduplicateSlots<T extends {
   room?: string;
   professor?: string;
   code?: string;
-  [key: string]: any;
-}>(slots: T[]): T[] {
+}
+
+/**
+ * SMART OVERLAP RESOLUTION & SLOT HARMONIZER
+ * Eliminates duplicate entries and resolves time collisions so the timetable is 100% clean and readable.
+ */
+export function harmonizeAndDeduplicateSlots<T extends HarmonizableSlot>(slots: T[]): T[] {
   const harmonized: T[] = [];
 
   // Group by day of week (0 to 6)
