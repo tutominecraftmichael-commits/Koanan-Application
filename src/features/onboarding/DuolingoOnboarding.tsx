@@ -36,9 +36,15 @@ import {
   X,
   Loader2,
   Volume2,
-  VolumeX
+  VolumeX,
+  Layers,
+  Cpu,
+  BellRing,
+  LogIn
 } from 'lucide-react';
 import { KonanCube } from '../../components/common/KonanCube';
+import { AnimatedCounter } from '../../components/common/AnimatedCounter';
+import { WaitlistModal } from '../../components/common/WaitlistModal';
 import { soundFX } from '../../lib/audioEffects';
 import {
   parseTimetableDocument,
@@ -65,7 +71,8 @@ import {
 import {
   signInWithGoogleReal,
   signInWithEmailReal,
-  signUpWithEmailReal
+  signUpWithEmailReal,
+  checkEmailExistsInDatabase
 } from '../../lib/firebase';
 import { generateKonanId } from '../../lib/konanId';
 import { validateStrictEmail } from '../auth/AuthPage';
@@ -101,7 +108,8 @@ type OnboardingStepId =
   | 'study_type'
   | 'upload'
   | 'customize'
-  | 'account_setup';
+  | 'account_setup'
+  | 'pricing_models';
 
 type StudySystemChoice = 'lmd' | 'bts' | 'lycee';
 
@@ -111,6 +119,137 @@ const STEP_ORDER: OnboardingStepId[] = [
   'upload',
   'customize',
   'account_setup',
+  'pricing_models',
+];
+
+interface AccompanimentPlanSpec {
+  id: 'free' | 'pro' | 'plus';
+  name: string;
+  tagline: string;
+  priceValue: number;
+  currency: string;
+  period: string;
+  description: string;
+  badge: string | null;
+  popular: boolean;
+  comingSoon: boolean;
+  accentGradient: string;
+  ctaLabel: string;
+  features: {
+    text: string;
+    detail?: string;
+    highlight?: boolean;
+  }[];
+}
+
+const ACCOMPANIMENT_PLANS: AccompanimentPlanSpec[] = [
+  {
+    id: 'free',
+    name: 'KONAN',
+    tagline: 'Découverte • Autonomie',
+    priceValue: 0,
+    currency: 'F CFA',
+    period: '/ mois',
+    description: 'Gratuit pour toujours • Sans carte requise. Idéal pour découvrir la planification intelligente et structurer ses révisions.',
+    badge: 'Gratuit • Autonomie',
+    popular: false,
+    comingSoon: false,
+    accentGradient: 'from-slate-700 to-slate-800',
+    ctaLabel: 'Continuer avec KONAN (Gratuit)',
+    features: [
+      {
+        text: "Importation & extraction d'EDT",
+        detail: 'Import via PDF, scan photo ou fichier texte (limité à 3 générations / imports gratuits).',
+        highlight: true,
+      },
+      {
+        text: "Génération d'EDT personnalisé",
+        detail: "Planning d'étude adapté à votre filière (LMD, BTS, Lycée) pour structurer vos révisions et réduire le surmenage.",
+      },
+      {
+        text: 'Ajustement des matières & coefficients',
+        detail: "Ajout et personnalisation des cours avec recalcul instantané des créneaux d'étude.",
+      },
+      {
+        text: "4 Techniques d'apprentissage Freemium (1 active à la fois)",
+        detail: '• Pomodoro classique • Active Recall (Rappel actif) • Spaced Repetition (Répétition espacée) • Règle des 2 minutes.',
+      },
+    ],
+  },
+  {
+    id: 'pro',
+    name: 'KONAN PRO',
+    tagline: 'Performance Maximale • Version Ouverte',
+    priceValue: 1200,
+    currency: 'F CFA',
+    period: '/ mois',
+    description: 'Accès complet 100% offert pendant la phase de lancement.',
+    badge: 'Recommandé • Version Ouverte',
+    popular: true,
+    comingSoon: false,
+    accentGradient: 'from-amber-400 via-amber-500 to-indigo-600',
+    ctaLabel: 'Démarrer avec KONAN PRO',
+    features: [
+      {
+        text: "Imports & générations d'EDT illimités",
+        detail: "Importez autant d'emplois du temps que souhaité via PDF, scan photo ou texte (sans aucun blocage).",
+        highlight: true,
+      },
+      {
+        text: "Dates d'examens & Devoirs Surveillés (DS)",
+        detail: "Intégrez vos épreuves ; l'algorithme s'adapte avec compte à rebours interactif (J-X) et sur-priorisation automatique.",
+        highlight: true,
+      },
+      {
+        text: 'Synchronisation Google Calendar (.ics)',
+        detail: 'Export direct de votre planning personnalisé avec alertes automatiques et intégration nette.',
+      },
+      {
+        text: "Modèles d'espacement Premium",
+        detail: '• Time Blocking académique ciblé • Technique de Feynman (assimilation conceptuelle profonde).',
+        highlight: true,
+      },
+      {
+        text: 'Recommandations algorithmiques de Konan',
+        detail: 'Recommandations intelligentes de la meilleure technique selon la fatigue et vos heures de cours.',
+      },
+      {
+        text: 'Combinaison triple simultanée',
+        detail: "Capacité d'activer jusqu'à 3 techniques d'espacement simultanément dans le même planning.",
+      },
+    ],
+  },
+  {
+    id: 'plus',
+    name: 'KONAN PLUS',
+    tagline: 'Fonctionnalités Futures • Élite',
+    priceValue: 2500,
+    currency: 'F CFA',
+    period: '/ mois',
+    description: 'Tout ce qui est dans KONAN PRO, plus un écosystème collaboratif et audio complet.',
+    badge: 'Bientôt disponible',
+    popular: false,
+    comingSoon: true,
+    accentGradient: 'from-purple-500 via-violet-600 to-fuchsia-600',
+    ctaLabel: 'Rejoindre la liste d’attente',
+    features: [
+      {
+        text: 'Planning conditionné par vos 3 Objectifs Scolaires',
+        detail: "• Passer l'année avec 12 de moyenne • Passer avec mention (16/20) • Devenir major de promotion (18/20+).",
+        highlight: true,
+      },
+      {
+        text: "Pack Étudiant (Jusqu'à 5 comptes complets inclus)",
+        detail: "Invitez jusqu'à 4 camarades via leur adresse email. Chaque membre bénéficie de l'accès Pro & Plus intégral.",
+        highlight: true,
+      },
+      {
+        text: 'Lecteur Audio & Musiques de révision',
+        detail: 'Ambiances sonores intégrées dédiées au focus : Ondes Alpha concentration profonde, Lofi Chill révision, Bruit blanc.',
+        highlight: true,
+      },
+    ],
+  },
 ];
 
 const STUDY_SYSTEM_CONFIG: Record<
@@ -208,15 +347,12 @@ const WordByWordBubble: React.FC<{ text: string; speed?: number }> = ({
 export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   onComplete,
   onOpenLogin: _onOpenLogin,
-  currentUser,
+  currentUser: _currentUser,
   onLoginSuccess,
 }) => {
   const [step, setStep] = useState<OnboardingStepId>('welcome');
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [showExistingLogin, setShowExistingLogin] = useState<boolean>(false);
-
-  const isAuthenticated = Boolean(currentUser?.isLoggedIn && !currentUser?.isDemo);
-  const studentName = currentUser?.name || 'Étudiant';
 
   // Étape 2 : Système d'études choisi (LMD, BTS, Lycée)
   const [studyType, setStudyType] = useState<StudySystemChoice | null>('lmd');
@@ -241,22 +377,33 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   const [chronotype, setChronotype] = useState<Chronotype>('evening');
   const [showFullDiagnostic, setShowFullDiagnostic] = useState<boolean>(false);
 
-  // Étape 5 : Formule & Compte
-  const [selectedPlan, setSelectedPlan] = useState<'free' | 'pro' | 'plus'>('free');
+  // Étape 5 & 6 : Compte (Nouvel utilisateur) puis Modèles d'accompagnement
+  const [selectedPlan, setSelectedPlan] = useState<'free' | 'pro' | 'plus'>('pro');
   const [generatedSubjects, setGeneratedSubjects] = useState<Subject[]>([]);
   const [generatedSlots, setGeneratedSlots] = useState<ClassSlot[]>([]);
   const [generatedSessions, setGeneratedSessions] = useState<StudySession[]>([]);
   const [generatedPrefs, setGeneratedPrefs] = useState<StudyPreferences | null>(null);
 
-  // États Authentification (Création de compte ou Connexion)
-  const [authFullName, setAuthFullName] = useState<string>(
-    currentUser?.name && currentUser.name !== 'Étudiant' ? currentUser.name : ''
-  );
+  // États Authentification (Toujours vierges au départ : aucun nom pré-attribué)
+  const [authFullName, setAuthFullName] = useState<string>('');
   const [authEmail, setAuthEmail] = useState<string>('');
   const [authPassword, setAuthPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [accountExistsRedirect, setAccountExistsRedirect] = useState<boolean>(false);
   const [isSubmittingAuth, setIsSubmittingAuth] = useState<boolean>(false);
+  const [registeredProfile, setRegisteredProfile] = useState<UserAccount | null>(null);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    return () => {
+      try {
+        sessionStorage.removeItem('konan_onboarding_in_progress');
+      } catch {
+        // Ignore sessionStorage cleanup error
+      }
+    };
+  }, []);
 
   // Références inputs fichiers
   const pdfInputRef = useRef<HTMLInputElement>(null);
@@ -583,7 +730,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     setEditableSubjects(prev => prev.map(s => (s.id === id ? { ...s, enabled: !s.enabled } : s)));
   };
 
-  // Valider l'étape 4 (Personnalisation) -> Construire le planning complet et passer à l'étape 5 (Formule & Compte)
+  // Valider l'étape 4 (Personnalisation) -> Construire le planning complet et passer à l'étape 5 (Informations de connexion du nouvel utilisateur)
   const handleProceedToAccountSetup = () => {
     const activeSubjects = editableSubjects.filter(s => s.enabled);
     if (activeSubjects.length === 0) {
@@ -631,7 +778,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     const primaryPacing = selectedPacings[0] || 'pomodoro';
     const built = buildStateFromExtractedSchedule(
       scheduleToBuild,
-      authFullName.trim() || studentName,
+      authFullName.trim() || 'Étudiant',
       chronotype,
       primaryPacing,
       selectedPacings,
@@ -643,13 +790,30 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     setGeneratedPrefs(built.preferences);
     setGeneratedSessions(built.studySessions);
 
+    try {
+      sessionStorage.setItem('konan_onboarding_in_progress', 'true');
+    } catch {
+      // Ignore sessionStorage error
+    }
+
+    setAuthError(null);
+    setAccountExistsRedirect(false);
     soundFX.playSuccessChime();
     setStep('account_setup');
   };
 
   // Construit et persiste le payload final d'onboarding pour garantir zéro perte lors de la création de compte / Google Auth
-  const buildAndPersistFinalPayload = (effectiveName?: string) => {
-    const cleanName = (effectiveName || authFullName || studentName || 'Étudiant').trim();
+  const buildAndPersistFinalPayload = (
+    effectiveName?: string,
+    chosenPlan?: 'free' | 'pro' | 'plus'
+  ) => {
+    const cleanName = (
+      effectiveName ||
+      registeredProfile?.name ||
+      authFullName ||
+      'Étudiant'
+    ).trim();
+    const effectiveTier = chosenPlan || selectedPlan;
     const finalPrefs: StudyPreferences = generatedPrefs
       ? { ...generatedPrefs, studentName: cleanName }
       : {
@@ -671,7 +835,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       classSlots: generatedSlots,
       preferences: finalPrefs,
       studySessions: generatedSessions,
-      planTier: selectedPlan,
+      planTier: effectiveTier,
     };
 
     try {
@@ -683,17 +847,11 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     return payload;
   };
 
-  // Finaliser l'onboarding (Création de compte Email ou utilisateur déjà connecté)
-  const handleFinalizeOnboarding = async (e?: React.FormEvent) => {
+  // Étape 5 : Validation des informations de connexion du NOUVEL utilisateur (avec rejet strict si l'email/Gmail existe déjà en base)
+  const handleRegisterNewAccount = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setAuthError(null);
-
-    if (isAuthenticated) {
-      soundFX.playCelebrationFanfare();
-      const payload = buildAndPersistFinalPayload(studentName);
-      onComplete(payload);
-      return;
-    }
+    setAccountExistsRedirect(false);
 
     if (!authFullName.trim() || authFullName.trim().length < 2) {
       setAuthError('Veuillez renseigner votre Prénom & Nom (au moins 2 caractères).');
@@ -714,9 +872,22 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     setIsSubmittingAuth(true);
     try {
       const cleanName = authFullName.trim();
-      const cleanEmail = authEmail.trim();
-      // Sauvegarder le planning extrait AVANT de déclencher l'inscription Firebase
-      const payload = buildAndPersistFinalPayload(cleanName);
+      const cleanEmail = authEmail.trim().toLowerCase();
+
+      try {
+        sessionStorage.setItem('konan_onboarding_in_progress', 'true');
+      } catch {
+        // Ignore
+      }
+
+      // Vérification préalable dans la base de données (Firebase Auth, Firestore & LocalStorage)
+      const existsInDb = await checkEmailExistsInDatabase(cleanEmail);
+      if (existsInDb) {
+        setAccountExistsRedirect(true);
+        setAuthError('Le compte existe déjà, connectez-vous directement');
+        setIsSubmittingAuth(false);
+        return;
+      }
 
       const authUser = await signUpWithEmailReal(cleanEmail, authPassword, cleanName);
 
@@ -735,31 +906,137 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         lastSyncedAt: new Date().toISOString(),
       };
 
+      setRegisteredProfile(profile);
+      buildAndPersistFinalPayload(cleanName, selectedPlan);
       soundFX.playStreakIgniteChime();
-      onLoginSuccess(profile);
-      onComplete(payload);
+      setStep('pricing_models');
     } catch (err: any) {
-      sessionStorage.removeItem(PENDING_ONBOARDING_PAYLOAD_KEY);
-      setAuthError(err?.message || 'Erreur lors de la création du compte.');
+      const msg = err?.message || '';
+      if (
+        err?.code === 'auth/email-already-in-use' ||
+        msg.toLowerCase().includes('existe déjà') ||
+        msg.toLowerCase().includes('already-in-use')
+      ) {
+        setAccountExistsRedirect(true);
+        setAuthError('Le compte existe déjà, connectez-vous directement');
+      } else {
+        setAuthError(msg || 'Erreur lors de la création du compte.');
+      }
     } finally {
       setIsSubmittingAuth(false);
     }
   };
 
-  // Inscription / Connexion Google
-  const handleGoogleOnboardingAuth = async () => {
+  // Étape 5 : Inscription Google pour un NOUVEL utilisateur (vérifie que le Gmail n'existe pas déjà dans la base)
+  const handleGoogleNewRegistration = async () => {
+    setAuthError(null);
+    setAccountExistsRedirect(false);
+    setIsSubmittingAuth(true);
+    try {
+      soundFX.playCheckmarkPop();
+      try {
+        sessionStorage.setItem('konan_onboarding_in_progress', 'true');
+      } catch {
+        // Ignore
+      }
+
+      const realUser = await signInWithGoogleReal();
+      if (realUser) {
+        // Si ce Gmail existe déjà dans la base de données, refuser l'inscription et demander de se connecter directement
+        if (realUser.isNewUser === false) {
+          if (realUser.email) {
+            setAuthEmail(realUser.email);
+          }
+          setAccountExistsRedirect(true);
+          setAuthError('Le compte existe déjà, connectez-vous directement');
+          setIsSubmittingAuth(false);
+          return;
+        }
+
+        const resolvedName = realUser.displayName || authFullName.trim() || 'Étudiant';
+        setAuthFullName(resolvedName);
+        if (realUser.email) {
+          setAuthEmail(realUser.email);
+        }
+
+        const profile: UserAccount = {
+          name: resolvedName,
+          email: realUser.email || '',
+          avatar:
+            realUser.photoURL ||
+            `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(resolvedName)}`,
+          googleId: realUser.uid,
+          konanId: generateKonanId(realUser.uid || realUser.email || undefined),
+          academicLevel: activeSystem.title,
+          isLoggedIn: true,
+          isDemo: false,
+          planTier: selectedPlan,
+          lastSyncedAt: new Date().toISOString(),
+        };
+
+        setRegisteredProfile(profile);
+        buildAndPersistFinalPayload(resolvedName, selectedPlan);
+        soundFX.playStreakIgniteChime();
+        setStep('pricing_models');
+      }
+    } catch (err: any) {
+      setAuthError(err?.message || 'Inscription Google interrompue.');
+    } finally {
+      setIsSubmittingAuth(false);
+    }
+  };
+
+  // Étape 6 : Choix final du modèle d'accompagnement (Gratuit, Pro, Plus) -> Ouverture du planning
+  const handleSelectAccompanimentModel = (planId: 'free' | 'pro' | 'plus') => {
+    soundFX.playCheckmarkPop();
+    setSelectedPlan(planId);
+
+    if (planId === 'plus') {
+      setIsWaitlistOpen(true);
+      return;
+    }
+
+    const effectiveName = (registeredProfile?.name || authFullName || 'Étudiant').trim();
+    const payload = buildAndPersistFinalPayload(effectiveName, planId);
+
+    try {
+      sessionStorage.removeItem('konan_onboarding_in_progress');
+    } catch {
+      // Ignore
+    }
+
+    soundFX.playCelebrationFanfare();
+
+    if (registeredProfile) {
+      const updatedProfile: UserAccount = {
+        ...registeredProfile,
+        name: effectiveName,
+        planTier: planId,
+      };
+      onLoginSuccess(updatedProfile);
+    }
+    onComplete(payload);
+  };
+
+  // Connexion Google pour un compte existant (depuis l'écran de connexion directe)
+  const handleGoogleExistingLogin = async () => {
     setAuthError(null);
     setIsSubmittingAuth(true);
     try {
       soundFX.playCheckmarkPop();
+      try {
+        sessionStorage.removeItem('konan_onboarding_in_progress');
+      } catch {
+        // Ignore
+      }
       const hasExtractedSchedule = generatedSlots.length > 0 && generatedSubjects.length > 0;
-      const pendingPayload = hasExtractedSchedule
-        ? buildAndPersistFinalPayload(authFullName.trim() || studentName)
-        : null;
-
       const realUser = await signInWithGoogleReal();
       if (realUser) {
         const resolvedName = realUser.displayName || authFullName.trim() || 'Étudiant';
+        const pendingPayload = hasExtractedSchedule
+          ? buildAndPersistFinalPayload(resolvedName, selectedPlan)
+          : null;
+
         const profile: UserAccount = {
           name: resolvedName,
           email: realUser.email || '',
@@ -779,24 +1056,17 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         setShowExistingLogin(false);
         onLoginSuccess(profile);
         if (pendingPayload) {
-          onComplete({
-            ...pendingPayload,
-            preferences: {
-              ...pendingPayload.preferences,
-              studentName: resolvedName,
-            },
-          });
+          onComplete(pendingPayload);
         }
       }
     } catch (err: any) {
-      sessionStorage.removeItem(PENDING_ONBOARDING_PAYLOAD_KEY);
       setAuthError(err?.message || 'Connexion Google interrompue.');
     } finally {
       setIsSubmittingAuth(false);
     }
   };
 
-  // Connexion à un compte existant depuis l'écran d'accueil
+  // Connexion par Email/Mot de passe à un compte existant
   const handleExistingAccountLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
@@ -814,18 +1084,27 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
     setIsSubmittingAuth(true);
     try {
+      try {
+        sessionStorage.removeItem('konan_onboarding_in_progress');
+      } catch {
+        // Ignore
+      }
+      const hasExtractedSchedule = generatedSlots.length > 0 && generatedSubjects.length > 0;
       const authUser = await signInWithEmailReal(authEmail.trim(), authPassword);
+      const resolvedName = authUser.displayName || authEmail.split('@')[0] || 'Étudiant';
+      const pendingPayload = hasExtractedSchedule
+        ? buildAndPersistFinalPayload(resolvedName, selectedPlan)
+        : null;
+
       const profile: UserAccount = {
-        name: authUser.displayName || authEmail.split('@')[0] || 'Étudiant',
+        name: resolvedName,
         email: authUser.email || authEmail.trim(),
         avatar:
           authUser.photoURL ||
-          `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(
-            authUser.displayName || 'User'
-          )}`,
+          `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(resolvedName)}`,
         googleId: authUser.uid,
         konanId: generateKonanId(authUser.uid || authUser.email || undefined),
-        academicLevel: 'Licence Universitaire',
+        academicLevel: activeSystem.title || 'Licence Universitaire',
         isLoggedIn: true,
         isDemo: false,
         lastSyncedAt: new Date().toISOString(),
@@ -833,6 +1112,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       soundFX.playStreakIgniteChime();
       setShowExistingLogin(false);
       onLoginSuccess(profile);
+      if (pendingPayload) {
+        onComplete(pendingPayload);
+      }
     } catch (err: any) {
       setAuthError(err?.message || "Ce compte n'existe pas ou le mot de passe est incorrect.");
     } finally {
@@ -842,7 +1124,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
   const bubbleMessage: string = useMemo(() => {
     if (showExistingLogin) {
-      return 'Content de te revoir ! Connecte-toi pour retrouver ton planning.';
+      return 'Content de te revoir ! Connecte-toi directement avec tes identifiants existants.';
     }
     switch (step) {
       case 'welcome':
@@ -858,7 +1140,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       case 'customize':
         return 'Vérifie tes matières extraites, ajuste leurs coefficients et choisis ta méthode de révision.';
       case 'account_setup':
-        return `Ton planning (${generatedSlots.length} cours fixes + ${generatedSessions.length} séances d'étude) est prêt !`;
+        return `Tout est prêt ! Renseigne tes informations de connexion avec une adresse Gmail/Email nouvelle pour sauvegarder tes ${generatedSlots.length} cours et ${generatedSessions.length} séances d'étude.`;
+      case 'pricing_models':
+        return `Parfait ${registeredProfile?.name || authFullName || ''} ! Choisis maintenant ton modèle d'accompagnement KONAN (Gratuit, Pro ou Plus) pour ouvrir ton planning.`;
     }
   }, [
     step,
@@ -868,6 +1152,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     activeSystem.title,
     generatedSlots.length,
     generatedSessions.length,
+    registeredProfile?.name,
+    authFullName,
   ]);
 
   return (
@@ -958,7 +1244,11 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
       {/* BARRE DE PROGRESSION SUPÉRIEURE */}
       {(step !== 'welcome' || showExistingLogin) && (
-        <header className="w-full max-w-2xl mx-auto px-4 pt-5 pb-2 flex items-center gap-3 z-20">
+        <header
+          className={`w-full ${
+            step === 'pricing_models' && !showExistingLogin ? 'max-w-7xl' : 'max-w-2xl'
+          } mx-auto px-4 pt-5 pb-2 flex items-center gap-3 z-20 transition-all duration-300`}
+        >
           <button
             type="button"
             onClick={handleBack}
@@ -1002,10 +1292,14 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       )}
 
       {/* CONTENU CENTRAL */}
-      <main className="flex-1 w-full max-w-2xl mx-auto px-4 py-3 flex flex-col justify-center z-10">
+      <main
+        className={`flex-1 w-full ${
+          step === 'pricing_models' && !showExistingLogin ? 'max-w-7xl' : 'max-w-2xl'
+        } mx-auto px-4 py-3 flex flex-col justify-center z-10 transition-all duration-300`}
+      >
         {/* Cube Konan + Bulle de parole en haut des étapes */}
         {step !== 'welcome' && (
-          <div className="mb-4 flex items-center gap-3 bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3">
+          <div className="mb-4 flex items-center gap-3 bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3 max-w-3xl mx-auto w-full">
             <div className="shrink-0">
               <KonanCube size={54} showStars={false} glow={true} />
             </div>
@@ -1020,7 +1314,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           {showExistingLogin && (
             <form
               onSubmit={handleExistingAccountLogin}
-              className="space-y-4 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl"
+              className="space-y-4 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl max-w-xl mx-auto"
             >
               <h2 className="text-xl font-black text-white">Connexion à ton compte</h2>
 
@@ -1033,7 +1327,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs font-bold text-slate-400 block mb-1">Email</label>
+                  <label className="text-xs font-bold text-slate-400 block mb-1">Email / Gmail</label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
@@ -1041,7 +1335,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       required
                       value={authEmail}
                       onChange={(e) => setAuthEmail(e.target.value)}
-                      placeholder="etudiant@ecole.ci"
+                      placeholder="ton.email@gmail.com"
                       className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
                     />
                   </div>
@@ -1075,16 +1369,16 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 disabled={isSubmittingAuth}
                 className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-sm shadow-[0_4px_0_0_#3730A3] active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-50"
               >
-                {isSubmittingAuth ? 'Connexion en cours...' : 'SE CONNECTER'}
+                {isSubmittingAuth ? 'Connexion en cours...' : 'SE CONNECTER DIRECTEMENT'}
               </button>
 
               <button
                 type="button"
-                onClick={handleGoogleOnboardingAuth}
+                onClick={handleGoogleExistingLogin}
                 disabled={isSubmittingAuth}
                 className="w-full py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
-                <span>Continuer avec Google</span>
+                <span>Se connecter avec Google</span>
               </button>
             </form>
           )}
@@ -1123,6 +1417,17 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   type="button"
                   onClick={() => {
                     soundFX.playCheckmarkPop();
+                    setAuthFullName('');
+                    setAuthEmail('');
+                    setAuthPassword('');
+                    setAuthError(null);
+                    setAccountExistsRedirect(false);
+                    setRegisteredProfile(null);
+                    try {
+                      sessionStorage.setItem('konan_onboarding_in_progress', 'true');
+                    } catch {
+                      // Ignore
+                    }
                     setStep('study_type');
                   }}
                   className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2"
@@ -1131,18 +1436,17 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   <ArrowRight className="w-5 h-5" />
                 </button>
 
-                {!isAuthenticated && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      soundFX.playCheckmarkPop();
-                      setShowExistingLogin(true);
-                    }}
-                    className="w-full py-3.5 px-6 rounded-2xl bg-slate-900 hover:bg-slate-800/90 text-slate-300 hover:text-white font-bold text-xs sm:text-sm border-2 border-slate-800 transition-all cursor-pointer uppercase"
-                  >
-                    J'AI DÉJÀ UN COMPTE • ME CONNECTER
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFX.playCheckmarkPop();
+                    setAuthError(null);
+                    setShowExistingLogin(true);
+                  }}
+                  className="w-full py-3.5 px-6 rounded-2xl bg-slate-900 hover:bg-slate-800/90 text-slate-300 hover:text-white font-bold text-xs sm:text-sm border-2 border-slate-800 transition-all cursor-pointer uppercase"
+                >
+                  J'AI DÉJÀ UN COMPTE • ME CONNECTER
+                </button>
               </div>
             </div>
           )}
@@ -1666,170 +1970,396 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
             </div>
           )}
 
-          {/* ÉTAPE 5 : FORMULE & CRÉATION DU COMPTE POUR SAUVEGARDER LE PLANNING */}
+          {/* ÉTAPE 5 : TOUT EST PRÊT ! + INFORMATIONS DE CONNEXION DU NOUVEL UTILISATEUR */}
           {!showExistingLogin && step === 'account_setup' && (
-            <div className="space-y-4">
-              {/* Carte récapitulative du planning généré */}
-              <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 grid grid-cols-3 gap-2 text-center">
-                <div className="p-2 rounded-xl bg-slate-950/70 border border-slate-800/80">
-                  <span className="text-lg font-black text-indigo-400 block">
-                    {generatedSlots.length}
-                  </span>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">
-                    Cours extraits
-                  </span>
+            <div className="space-y-4 max-w-xl mx-auto">
+              {/* Bannière "Tout est prêt !" sans aucun nom pré-attribué */}
+              <div className="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-4 text-center shadow-xl">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 mx-auto">
+                  <ShieldCheck className="w-6 h-6" />
                 </div>
-                <div className="p-2 rounded-xl bg-slate-950/70 border border-slate-800/80">
-                  <span className="text-lg font-black text-emerald-400 block">
-                    {generatedSessions.length}
-                  </span>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">
-                    Séances d'étude
-                  </span>
+                <div className="space-y-1">
+                  <h2 className="text-xl sm:text-2xl font-black text-white">
+                    Tout est prêt !
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-400">
+                    Ton planning personnalisé ({activeSystem.title}) est généré. Renseigne tes informations de connexion ci-dessous pour continuer.
+                  </p>
                 </div>
-                <div className="p-2 rounded-xl bg-slate-950/70 border border-slate-800/80">
-                  <span className="text-lg font-black text-amber-400 block">
-                    {generatedSubjects.length}
-                  </span>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">
-                    Matières ({activeSystem.title})
-                  </span>
+
+                {/* Carte récapitulative avec animation des nombres */}
+                <div className="grid grid-cols-3 gap-2.5 text-center pt-1">
+                  <div className="p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800/80">
+                    <span className="text-xl sm:text-2xl font-black text-indigo-400 block">
+                      <AnimatedCounter value={generatedSlots.length} duration={1200} />
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase">
+                      Cours extraits
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800/80">
+                    <span className="text-xl sm:text-2xl font-black text-emerald-400 block">
+                      <AnimatedCounter value={generatedSessions.length} duration={1400} />
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase">
+                      Séances d'étude
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800/80">
+                    <span className="text-xl sm:text-2xl font-black text-amber-400 block">
+                      <AnimatedCounter value={generatedSubjects.length} duration={1000} />
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase">
+                      Matières ({activeSystem.title})
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              {/* Sélecteur de formule */}
-              <div className="grid grid-cols-3 gap-2">
-                {(
-                  [
-                    { id: 'free', name: 'Gratuit', price: '0 FCFA', badge: 'Essentiel' },
-                    { id: 'pro', name: 'Pro', price: '1 000 FCFA', badge: 'Populaire' },
-                    { id: 'plus', name: 'Plus', price: '2 500 FCFA', badge: 'IA Complète' },
-                  ] as const
-                ).map((plan) => {
-                  const selected = selectedPlan === plan.id;
+              {/* Formulaire d'informations de connexion (Nouveau compte uniquement) */}
+              <form
+                onSubmit={handleRegisterNewAccount}
+                className="space-y-3.5 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl"
+              >
+                <div className="space-y-1">
+                  <h3 className="text-base sm:text-lg font-black text-white">
+                    Renseigne tes informations de connexion
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Comme c'est ta première fois ici, utilise une adresse Gmail ou Email nouvelle pour créer ton espace étudiant.
+                  </p>
+                </div>
+
+                {authError && (
+                  <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-200 text-xs space-y-2.5">
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                      <span className="font-bold leading-relaxed">{authError}</span>
+                    </div>
+                    {accountExistsRedirect && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          soundFX.playCheckmarkPop();
+                          setAuthError(null);
+                          setAccountExistsRedirect(false);
+                          setShowExistingLogin(true);
+                        }}
+                        className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md"
+                      >
+                        <LogIn className="w-4 h-4" />
+                        <span>Se connecter directement à mon compte</span>
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                <div className="relative">
+                  <UserIcon className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    required
+                    value={authFullName}
+                    onChange={(e) => setAuthFullName(e.target.value)}
+                    placeholder="Ton prénom & nom"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    required
+                    value={authEmail}
+                    onChange={(e) => {
+                      setAuthEmail(e.target.value);
+                      if (accountExistsRedirect) {
+                        setAccountExistsRedirect(false);
+                        setAuthError(null);
+                      }
+                    }}
+                    placeholder="Ton adresse Gmail / Email (nouveau compte)"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    minLength={6}
+                    value={authPassword}
+                    onChange={(e) => setAuthPassword(e.target.value)}
+                    placeholder="Choisis un mot de passe (min. 6 caractères)"
+                    className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmittingAuth}
+                  className="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm tracking-wide shadow-[0_4px_0_0_#047857] active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  <span>
+                    {isSubmittingAuth
+                      ? 'Vérification & enregistrement...'
+                      : 'VALIDER MES INFORMATIONS & CONTINUER'}
+                  </span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleGoogleNewRegistration}
+                  disabled={isSubmittingAuth}
+                  className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                >
+                  <Zap className="w-3.5 h-3.5 text-amber-400" />
+                  <span>S'inscrire avec un nouveau compte Google</span>
+                </button>
+
+                <div className="pt-2 border-t border-slate-800/80 text-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundFX.playCheckmarkPop();
+                      setAuthError(null);
+                      setAccountExistsRedirect(false);
+                      setShowExistingLogin(true);
+                    }}
+                    className="text-xs font-bold text-indigo-400 hover:text-indigo-300 cursor-pointer"
+                  >
+                    Tu as déjà un compte ? Connecte-toi directement →
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* ÉTAPE 6 : MODÈLES D'ACCOMPAGNEMENT (GRAND FORMAT PC, COMPOSANTS COMPLETS & ANIMATION DES NOMBRES) */}
+          {!showExistingLogin && step === 'pricing_models' && (
+            <div className="space-y-8 py-2 w-full">
+              {/* En-tête de présentation des modèles d'accompagnement */}
+              <div className="text-center max-w-3xl mx-auto space-y-3">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-widest">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Modèles d’Accompagnement Étudiant</span>
+                </div>
+                <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                  Choisis ton modèle d’accompagnement{' '}
+                  <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-amber-300 bg-clip-text text-transparent">
+                    KONAN
+                  </span>
+                </h2>
+                <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+                  Tes informations sont validées et tes{' '}
+                  <strong className="text-white">
+                    <AnimatedCounter value={generatedSlots.length} duration={1200} /> cours
+                  </strong>{' '}
+                  +{' '}
+                  <strong className="text-emerald-400">
+                    <AnimatedCounter value={generatedSessions.length} duration={1400} /> séances d'étude
+                  </strong>{' '}
+                  sont prêts. Sélectionne la formule qui t'accompagnera ce semestre.
+                </p>
+              </div>
+
+              {/* Grille des 3 grands modèles d'accompagnement (Gratuit, Pro, Plus) */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch w-full">
+                {ACCOMPANIMENT_PLANS.map((plan) => {
+                  const isPro = plan.id === 'pro';
+                  const isPlus = plan.id === 'plus';
+
                   return (
-                    <button
+                    <div
                       key={plan.id}
-                      type="button"
-                      onClick={() => {
-                        soundFX.playCheckmarkPop();
-                        setSelectedPlan(plan.id);
-                      }}
-                      className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer ${
-                        selected
-                          ? 'bg-indigo-600/15 border-indigo-500'
-                          : 'bg-slate-900/80 border-slate-800 hover:border-slate-700'
-                      }`}
+                      className={`relative rounded-3xl flex flex-col justify-between transition-all duration-300 ${
+                        isPro
+                          ? 'bg-gradient-to-b from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-indigo-500/60 shadow-2xl shadow-indigo-500/15 lg:-translate-y-2'
+                          : isPlus
+                          ? 'bg-gradient-to-b from-slate-900 via-amber-950/15 to-slate-900 border border-amber-500/30 hover:border-amber-500/50 shadow-xl'
+                          : 'bg-slate-900/70 border border-slate-800/80 hover:border-slate-700'
+                      } p-6 sm:p-8`}
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-black text-white">{plan.name}</span>
-                        {plan.id !== 'free' && <Crown className="w-3.5 h-3.5 text-amber-400" />}
+                      {/* Badge supérieur */}
+                      {plan.badge && (
+                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg ${
+                              isPro
+                                ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-600 text-white'
+                                : isPlus
+                                ? 'bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-slate-950'
+                                : 'bg-slate-800 text-slate-300 border border-slate-700'
+                            }`}
+                          >
+                            {isPro && <Zap className="w-3.5 h-3.5 fill-current" />}
+                            {isPlus && <Clock className="w-3.5 h-3.5" />}
+                            {plan.badge}
+                          </span>
+                        </div>
+                      )}
+
+                      <div>
+                        {/* En-tête de la carte */}
+                        <div className="flex items-center justify-between gap-3 mb-3 pt-2">
+                          <div>
+                            <h3 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
+                              {plan.name}
+                            </h3>
+                            <p className="text-xs font-medium text-slate-400 mt-0.5">
+                              {plan.tagline}
+                            </p>
+                          </div>
+                          <div
+                            className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${plan.accentGradient} flex items-center justify-center text-white shadow-md shrink-0`}
+                          >
+                            {plan.id === 'free' && <Layers className="w-5 h-5" />}
+                            {plan.id === 'pro' && <Zap className="w-5 h-5" />}
+                            {plan.id === 'plus' && <Crown className="w-5 h-5" />}
+                          </div>
+                        </div>
+
+                        {/* Prix avec animation des nombres (AnimatedCounter) */}
+                        <div className="my-6 pb-6 border-b border-slate-800/80">
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-4xl sm:text-5xl font-black text-white tracking-tight font-mono">
+                              <AnimatedCounter
+                                value={plan.priceValue}
+                                duration={1800}
+                                formatThousands={plan.priceValue >= 1000}
+                              />
+                            </span>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-bold text-indigo-400">
+                                {plan.currency}
+                              </span>
+                              <span className="text-xs text-slate-500 font-medium">
+                                {plan.period}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Bandeau de lancement gratuit pour KONAN PRO */}
+                          {isPro && (
+                            <div className="mt-3 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2">
+                              <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                              <span className="text-xs font-bold text-emerald-300 leading-tight">
+                                Offre de Lancement Étudiant : Débloqué gratuitement pendant la phase pilote !
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Bandeau d'annonce pour KONAN PLUS */}
+                          {isPlus && (
+                            <div className="mt-3 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-2">
+                              <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                              <span className="text-xs font-bold text-amber-300 leading-tight">
+                                En cours de déploiement final — Inscrivez-vous pour un accès prioritaire.
+                              </span>
+                            </div>
+                          )}
+
+                          <p className="text-xs text-slate-400 mt-3 leading-relaxed">
+                            {plan.description}
+                          </p>
+                        </div>
+
+                        {/* Liste des fonctionnalités et composants */}
+                        <div className="space-y-3.5 mb-8">
+                          <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                            {plan.id === 'free'
+                              ? 'Inclus de base :'
+                              : plan.id === 'pro'
+                              ? 'Tout KONAN Gratuit inclus, plus :'
+                              : 'Tout KONAN Pro inclus, plus :'}
+                          </div>
+
+                          {plan.features.map((feat, i) => (
+                            <div key={i} className="flex items-start gap-3">
+                              <div
+                                className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                                  feat.highlight
+                                    ? isPlus
+                                      ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
+                                      : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/40'
+                                    : 'bg-emerald-500/15 text-emerald-400'
+                                }`}
+                              >
+                                <Check className="w-3 h-3 stroke-[3]" />
+                              </div>
+                              <div className="text-xs leading-relaxed">
+                                <span
+                                  className={`font-semibold ${
+                                    feat.highlight ? 'text-white' : 'text-slate-200'
+                                  }`}
+                                >
+                                  {feat.text}
+                                </span>
+                                {feat.detail && (
+                                  <p className="text-[11px] text-slate-400 mt-0.5 leading-snug">
+                                    {feat.detail}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <span className="text-xs font-extrabold text-indigo-400 block mt-0.5">
-                        {plan.price}
-                      </span>
-                      <span className="text-[10px] text-slate-400 block mt-0.5">{plan.badge}</span>
-                    </button>
+
+                      {/* Bouton d'action */}
+                      <button
+                        type="button"
+                        onClick={() => handleSelectAccompanimentModel(plan.id)}
+                        className={`w-full py-3.5 px-5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                          isPro
+                            ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 hover:from-indigo-500 hover:via-violet-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/25'
+                            : isPlus
+                            ? 'bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-rose-500/20 hover:from-amber-500/30 hover:via-orange-500/30 hover:to-rose-500/30 text-amber-300 border border-amber-500/40 shadow-lg shadow-amber-500/10'
+                            : 'bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700'
+                        }`}
+                      >
+                        {isPlus && <BellRing className="w-4 h-4 text-amber-400 animate-bounce" />}
+                        <span>{plan.ctaLabel}</span>
+                        {!isPlus && <ArrowRight className="w-4 h-4" />}
+                      </button>
+                    </div>
                   );
                 })}
               </div>
 
-              {/* Création du compte ou accès direct si déjà connecté */}
-              {isAuthenticated ? (
-                <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 text-center space-y-4">
-                  <ShieldCheck className="w-10 h-10 text-emerald-400 mx-auto" />
-                  <h3 className="text-lg font-black text-white">
-                    Tout est prêt, {studentName} !
-                  </h3>
-                  <button
-                    type="button"
-                    onClick={() => handleFinalizeOnboarding()}
-                    className="w-full py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-base shadow-[0_5px_0_0_#047857] active:translate-y-1 transition-all cursor-pointer"
-                  >
-                    ACCÉDER À MON EMPLOI DU TEMPS
-                  </button>
+              {/* Rassurance académique en bas des modèles */}
+              <div className="pt-2 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <span>Sans engagement — annulable en 1 clic</span>
                 </div>
-              ) : (
-                <form
-                  onSubmit={handleFinalizeOnboarding}
-                  className="space-y-3.5 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 shadow-xl"
-                >
-                  <h3 className="text-base font-black text-white">
-                    Crée ton profil pour sauvegarder ton emploi du temps
-                  </h3>
+                <div className="flex items-center gap-2">
+                  <Cpu className="w-4 h-4 text-indigo-400" />
+                  <span>Compatible Mobile Money (Wave, Orange, MTN) & Cartes</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="w-4 h-4 text-amber-400" />
+                  <span>Tarif solidaire calibré pour les étudiants</span>
+                </div>
+              </div>
 
-                  {authError && (
-                    <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 shrink-0" />
-                      <span>{authError}</span>
-                    </div>
-                  )}
-
-                  <div className="relative">
-                    <UserIcon className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      required
-                      value={authFullName}
-                      onChange={(e) => setAuthFullName(e.target.value)}
-                      placeholder="Ton prénom & nom (ex: Christ Boni)"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
-                    />
-                  </div>
-
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="email"
-                      required
-                      value={authEmail}
-                      onChange={(e) => setAuthEmail(e.target.value)}
-                      placeholder="Ton adresse email"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
-                    />
-                  </div>
-
-                  <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      required
-                      minLength={6}
-                      value={authPassword}
-                      onChange={(e) => setAuthPassword(e.target.value)}
-                      placeholder="Choisis un mot de passe (min. 6 caractères)"
-                      className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white cursor-pointer"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmittingAuth}
-                    className="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm tracking-wide shadow-[0_4px_0_0_#047857] active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-50"
-                  >
-                    {isSubmittingAuth
-                      ? 'Création & sauvegarde en cours...'
-                      : 'CRÉER MON COMPTE & OUVRIR MON PLANNING'}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleGoogleOnboardingAuth}
-                    disabled={isSubmittingAuth}
-                    className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
-                  >
-                    <Zap className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Continuer rapidement avec Google</span>
-                  </button>
-                </form>
-              )}
+              {/* Modale Liste d'attente KONAN PLUS */}
+              <WaitlistModal
+                isOpen={isWaitlistOpen}
+                onClose={() => setIsWaitlistOpen(false)}
+                userEmail={registeredProfile?.email || authEmail}
+                userId={registeredProfile?.googleId}
+              />
             </div>
           )}
         </div>
