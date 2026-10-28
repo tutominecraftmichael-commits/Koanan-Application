@@ -753,6 +753,11 @@ export function extractDynamicEcueDictionary(
           rest = rest.replace(prof, ' ').trim();
         }
 
+        const room = extractRoom(rest);
+        if (room) {
+          rest = rest.replace(room, ' ').trim();
+        }
+
         // Clean name: remove isolated hours/numbers (e.g. 18 6 0 24), but preserve subject numbers like "2" in "Algèbres 2"
         const cleanName = rest
           .replace(/\b\d{2,3}\b/g, ' ')
@@ -771,27 +776,43 @@ export function extractDynamicEcueDictionary(
     });
   }
 
-  // 2. Parse from sequential rawText lines
+  // 2. Parse from sequential rawText lines (ignoring course slot lines that contain timestamps)
   const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
   const codeRegex = /\b([0-9]?[A-Z]{2,5}[-_]?[0-9]{3,5})\b/i;
+  const timeRangeOnLineRegex = /(\d{1,2})[h:H:](\d{2})?\s*[-–—àaA/to]+\s*(\d{1,2})[h:H:](\d{2})?/i;
 
   lines.forEach(line => {
     const match = line.match(codeRegex);
     if (match) {
       const code = match[1].toUpperCase();
+      if (dict.has(code)) return;
 
-      let rest = line.replace(match[0], ' ')
+      // Strip timestamps, pipe-delimited Salle/Prof metadata, and room/prof entities so slot lines never pollute the dictionary
+      let rest = line
+        .replace(timeRangeOnLineRegex, ' ')
+        .replace(/\[\s*[^\]]+\s*\]/g, ' ')
+        .replace(match[0], ' ')
+        .replace(/\|\s*(?:salle|amphi|lieu|room|batiment|bâtiment)\s*:[^|();\n]+/gi, ' ')
+        .replace(/\|\s*(?:prof|professeur|enseignant|intervenant|dr|pr|m\.|mme)\s*:[^|();\n]+/gi, ' ')
+        .replace(/\b(?:salle|amphi|lieu|room|batiment|bâtiment)\s*:\s*[^|();\n]+/gi, ' ')
+        .replace(/\b(?:prof|professeur|enseignant|intervenant)\s*:\s*[^|();\n]+/gi, ' ')
         .replace(/\b(CODE|ECUE|VH|CM|TD|TP|TVH|ENSEIGNANTS|COEFF|ECTS)\b/gi, ' ')
         .replace(/\b\d{1,3}\s+\d{1,3}\s+\d{1,3}\s+\d{1,3}\b/g, ' ')
         .replace(/\b\d{1,3}\s+\d{1,3}\b/g, ' ')
         .trim();
 
-      const prof = extractProfessor(rest);
+      const prof = extractProfessor(line);
       if (prof) {
         rest = rest.replace(prof, ' ').trim();
       }
 
+      const room = extractRoom(rest);
+      if (room) {
+        rest = rest.replace(room, ' ').trim();
+      }
+
       const cleanName = rest
+        .replace(/\b\d{1,2}[h:H:]\d{0,2}\b/g, ' ')
         .replace(/\b\d{2,3}\b/g, ' ')
         .replace(/[|:;•\-_~*#<>\[\]()\\/]+/g, ' ')
         .replace(/\s{2,}/g, ' ')
@@ -855,7 +876,7 @@ export const LYCEE_SUBJECT_ACRONYMS: Record<string, string> = {
 export function extractProfessor(text: string): string | undefined {
   if (!text) return undefined;
   // 0. Check for explicit Prof label e.g. "Prof: Dr KOIVOGUI", "Prof: M. YEO"
-  const explicitProf = text.match(/\b(?:Prof|Professeur|Enseignant|Intervenant)\s*:\s*([^|()]+)/i);
+  const explicitProf = text.match(/\b(?:Prof|Professeur|Enseignant|Intervenant)\s*:\s*([^|()\n]+)/i);
   if (explicitProf) return explicitProf[1].trim();
 
   // 1. Check for teaching team
@@ -863,7 +884,7 @@ export function extractProfessor(text: string): string | undefined {
   if (teamMatch) return teamMatch[0].trim();
 
   // 2. Check for titled professors / doctors / teachers (multi-word names in uppercase or mixed)
-  const titleMatch = text.match(/\b(Professeur|Prof\.?|Pr\.?|Docteur|Dr\.?|Monsieur|M\.|Madame|Mme\.?|Mister|Mr\.?|Mrs\.?|Me\.?)\s+([A-ZÀ-Ÿ][a-zà-ÿA-ZÀ-Ÿ-]+(?:\s+[a-zà-ÿA-ZÀ-Ÿ-]+){1,3})/);
+  const titleMatch = text.match(/\b(Professeur|Prof\.?|Pr\.?|Docteur|Dr\.?|Monsieur|M\.|Madame|Mme\.?|Mister|Mr\.?|Mrs\.?|Me\.?)\s+([A-ZÀ-Ÿ][a-zà-ÿA-ZÀ-Ÿ-]+(?:\s+[a-zà-ÿA-ZÀ-Ÿ-]+){0,3})/);
   if (titleMatch) return titleMatch[0].trim();
 
   // 3. Known teachers list
@@ -891,10 +912,10 @@ export function extractProfessor(text: string): string | undefined {
 export function extractRoom(text: string): string | undefined {
   if (!text) return undefined;
   // 0. Check for explicit Salle label e.g. "Salle: Amphi ESATIC" or parentheses "(Amphi 1)"
-  const explicitRoom = text.match(/\b(?:Salle|Amphi|Lieu)\s*:\s*([^|()]+)/i);
+  const explicitRoom = text.match(/\b(?:Salle|Amphi|Lieu)\s*:\s*([^|()\n]+)/i);
   if (explicitRoom) return explicitRoom[1].trim();
 
-  const parenRoom = text.match(/\(([^)]*(?:Amphi|Salle|Labo|Atelier|Machine)[^)]*)\)/i);
+  const parenRoom = text.match(/\(([^)]*(?:Amphi|Salle|Labo|Atelier|Machine|Bâtiment|Bat)[^)]*)\)/i);
   if (parenRoom) return parenRoom[1].trim();
 
   const match = text.match(/\b(Grand Amphi\s+[A-Za-z0-9À-ÿ\s_-]+|Amphi(?:théâtre)?\s+[A-Za-z0-9À-ÿ\s_-]+|Salle\s+(?:Polyvalente|TP\s*\d+|TD\s*\d+|[A-Za-z0-9À-ÿ_-]+)|Labo?(?:toire)?\s*(?:Info(?:rmatique)?|Phys(?:ique)?|Chimie|SVT|Elec|Electronique)?\s*\d*|Terrain\s+[A-Za-z0-9À-ÿ_-]+|Auditorium\s+[A-Za-z0-9À-ÿ\s_-]+|[A-Z]\d{2,3})\b/i);
@@ -939,22 +960,25 @@ export function cleanSubjectTitle(
     .replace(/\|\s*(?:prof|professeur|enseignant|intervenant|dr|pr|m\.|mme)\s*:[^|();\n]+/gi, ' ')
     .replace(/\|\s*[^|:]+:[^|]+/g, ' ');
 
-  // 2. Extract or strip bracketed course/ECUE code: e.g. [1MTH3350] or [INFO301]
+  // 2. Strip bracketed course/ECUE code: e.g. [1MTH3350] or [INFO-301]
   const bracketCodeMatch = trimmed.match(/\[\s*([A-Za-z0-9_-]{2,14})\s*\]/);
   if (bracketCodeMatch) {
-    const code = bracketCodeMatch[1];
-    if (dynamicEcueMap?.has(code)) {
-      return dynamicEcueMap.get(code)!.name;
+    const code = bracketCodeMatch[1].toUpperCase();
+    // Remove the bracketed code from the text
+    trimmed = trimmed.replace(bracketCodeMatch[0], ' ').trim();
+    // If nothing meaningful remains besides the code, resolve the code's name from dictionary
+    if (trimmed.replace(/[^A-Za-zÀ-ÿ]/g, '').length < 2) {
+      if (KNOWN_ACADEMIC_ECUE_MAP[code]) {
+        return KNOWN_ACADEMIC_ECUE_MAP[code].name;
+      }
+      if (dynamicEcueMap?.has(code)) {
+        return dynamicEcueMap.get(code)!.name;
+      }
     }
-    if (KNOWN_ACADEMIC_ECUE_MAP[code.toUpperCase()]) {
-      return KNOWN_ACADEMIC_ECUE_MAP[code.toUpperCase()].name;
-    }
-    // Remove the bracketed code so it doesn't pollute the subject title
-    trimmed = trimmed.replace(bracketCodeMatch[0], ' ');
   }
 
   // 3. Remove parenthesized room or course details: e.g. "(Amphi 1)", "(Salle 302)", "(Labo 2)"
-  trimmed = trimmed.replace(/\((?:salle|amphi|labo|batiment|bâtiment|room|atelier)[^)]*\)/gi, ' ');
+  trimmed = trimmed.replace(/\((?:[^)]*(?:salle|amphi|labo|batiment|bâtiment|room|atelier|machine)[^)]*)\)/gi, ' ');
 
   // 4. Strip explicit Salle: and Prof: clauses (even without pipe)
   trimmed = trimmed
@@ -981,19 +1005,19 @@ export function cleanSubjectTitle(
     .replace(/^\s*(?:CM|TD|TP|COURS|MAGISTRAL)\s*[-:]?\s*/i, '')
     .replace(/\s*[-:(]?\s*(?:CM|TD|TP|COURS|MAGISTRAL)\s*\)?$/i, '');
 
-  // 8. Dynamic ECUE Map check on remaining text
-  if (dynamicEcueMap) {
-    for (const [code, info] of dynamicEcueMap.entries()) {
-      if (new RegExp(`(^|\\b)${code}(\\b|$)`, 'i').test(trimmed)) {
-        return info.name;
-      }
+  // 8. Pre-indexed known academic ECUE map check if the text is just a code
+  for (const [code, info] of Object.entries(KNOWN_ACADEMIC_ECUE_MAP)) {
+    if (new RegExp(`^\\s*${code}\\s*$`, 'i').test(trimmed)) {
+      return info.name;
     }
   }
 
-  // 9. Pre-indexed known academic ECUE map check
-  for (const [code, info] of Object.entries(KNOWN_ACADEMIC_ECUE_MAP)) {
-    if (new RegExp(`(^|\\b)${code}(\\b|$)`, 'i').test(trimmed)) {
-      return info.name;
+  // 9. Dynamic ECUE Map check if the text is just a code
+  if (dynamicEcueMap) {
+    for (const [code, info] of dynamicEcueMap.entries()) {
+      if (new RegExp(`^\\s*${code}\\s*$`, 'i').test(trimmed)) {
+        return info.name;
+      }
     }
   }
 
@@ -1042,8 +1066,8 @@ export function cleanSubjectTitle(
     .replace(/\s{2,}/g, ' ')
     .trim();
 
-  // Strip leading/trailing single characters or numbers
-  cleaned = cleaned.replace(/^[0-9A-Za-z]\s+/, '').replace(/\s+[0-9A-Za-z]$/, '').trim();
+  // Strip leading single letter/digit or trailing isolated single letter (PRESERVE trailing course numbers like "Algèbres 2", "Analyse 2", "Applications 1")
+  cleaned = cleaned.replace(/^[0-9A-Za-z]\s+/, '').replace(/\s+[A-Za-z]$/, '').trim();
   cleaned = cleaned.replace(/\s+(de|d'|des|du|et|en|à)$/i, '').trim();
 
   while (/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/i.test(cleaned)) {
@@ -1059,6 +1083,8 @@ export function cleanSubjectTitle(
   // Cryptic university codes check (e.g. 1MAN3350)
   if (/^[0-9]?[A-Z]{2,5}[-_]?[0-9]{3,5}$/i.test(cleaned)) {
     const upper = cleaned.toUpperCase();
+    if (KNOWN_ACADEMIC_ECUE_MAP[upper]) return KNOWN_ACADEMIC_ECUE_MAP[upper].name;
+    if (dynamicEcueMap?.has(upper)) return dynamicEcueMap.get(upper)!.name;
     if (upper.includes('MAN')) return 'Fondamentaux du Management & Finance';
     if (upper.includes('INF')) return 'Informatique & Génie Logiciel';
     if (upper.includes('MTH') || upper.includes('MATH')) return 'Mathématiques & Analyse';
@@ -1241,6 +1267,7 @@ export function harmonizeAndDeduplicateSlots<T extends {
   type?: CourseType;
   room?: string;
   professor?: string;
+  code?: string;
   [key: string]: any;
 }>(slots: T[]): T[] {
   const harmonized: T[] = [];
@@ -1285,6 +1312,7 @@ export function harmonizeAndDeduplicateSlots<T extends {
         if (sameSubject && Math.abs(curStart - extStart) <= 15 && Math.abs(curEnd - extEnd) <= 15) {
           if (!existing.room && current.room) existing.room = current.room;
           if (!existing.professor && current.professor) existing.professor = current.professor;
+          if (!existing.code && current.code) existing.code = current.code;
           return true;
         }
         return false;
@@ -1308,6 +1336,7 @@ export function harmonizeAndDeduplicateSlots<T extends {
         prev.endTime = minutesToTimeString(Math.max(prevEnd, curEnd));
         if (!prev.room && current.room) prev.room = current.room;
         if (!prev.professor && current.professor) prev.professor = current.professor;
+        if (!prev.code && current.code) prev.code = current.code;
         continue;
       }
 
@@ -1326,8 +1355,9 @@ export function harmonizeAndDeduplicateSlots<T extends {
 
 /**
  * 2D SPATIAL GRID TIMETABLE PARSER
- * Identifies horizontal day columns (ADE, Celcat, Hyperplanning, Google/Apple Calendar grids)
- * and clusters courses by column and vertical time sequence.
+ * Identifies both Horizontal Day Columns (Days = Columns, Times = Rows)
+ * and Vertical Day Rows (Days = Rows, Times = Columns)
+ * and clusters courses by exact 2D coordinates.
  */
 function parseSpatialGridSchedule(
   spatialItems: SpatialTextItem[],
@@ -1342,6 +1372,7 @@ function parseSpatialGridSchedule(
     type: CourseType;
     room?: string;
     professor?: string;
+    code?: string;
   }[];
 } {
   const detectedSlots: {
@@ -1352,6 +1383,7 @@ function parseSpatialGridSchedule(
     type: CourseType;
     room?: string;
     professor?: string;
+    code?: string;
   }[] = [];
 
   const timeRangeRegex = /(\d{1,2})[h:H](\d{2})?\s*[-–—àaA/]\s*(\d{1,2})[h:H](\d{2})?/i;
@@ -1361,7 +1393,7 @@ function parseSpatialGridSchedule(
     const pageItems = spatialItems.filter(item => item.pageNum === p);
     if (pageItems.length === 0) continue;
 
-    // 1. Detect Day Column Headers on this page
+    // 1. Detect Day Headers on this page
     const detectedDaysOnPage: { day: DayOfWeek; label: string; xCenter: number; y: number }[] = [];
 
     for (const item of pageItems) {
@@ -1393,8 +1425,8 @@ function parseSpatialGridSchedule(
         const dayRows = detectedDaysOnPage.map((dayItem, index, arr) => {
           const prev = arr[index - 1];
           const next = arr[index + 1];
-          const yMax = prev ? (prev.y + dayItem.y) / 2 : 600;
-          const yMin = next ? (dayItem.y + next.y) / 2 : 210;
+          const yMax = prev ? (prev.y + dayItem.y) / 2 : dayItem.y + 45;
+          const yMin = next ? (dayItem.y + next.y) / 2 : Math.max(180, dayItem.y - 55);
           return {
             day: dayItem.day,
             label: dayItem.label,
@@ -1403,26 +1435,90 @@ function parseSpatialGridSchedule(
           };
         });
 
-        for (const row of dayRows) {
-          const rowItems = pageItems
-            .filter(item => item.y >= row.yMin && item.y < row.yMax && item.x >= 65)
-            .sort((a, b) => b.y - a.y);
-
-          // Group by horizontal line within this day band (tolerance 5px)
-          const timeRows: { y: number; items: SpatialTextItem[] }[] = [];
-          rowItems.forEach(item => {
-            let tr = timeRows.find(existing => Math.abs(existing.y - item.y) <= 5);
-            if (!tr) {
-              tr = { y: item.y, items: [] };
-              timeRows.push(tr);
+        // Check if horizontal time column headers exist across the top of the table
+        const detectedTimeCols: { startTime: string; endTime: string; xCenter: number }[] = [];
+        for (const item of pageItems) {
+          const match = item.str.match(colonTimeRegex) || item.str.match(timeRangeRegex);
+          if (match) {
+            const startTime = normalizeTimeString(match[1], match[2] || '00');
+            const endTime = normalizeTimeString(match[3], match[4] || '00');
+            if (parseTimeToMinutes(endTime) > parseTimeToMinutes(startTime)) {
+              const xCenter = item.x + item.width / 2;
+              const exists = detectedTimeCols.some(tc => Math.abs(tc.xCenter - xCenter) < 35 && tc.startTime === startTime);
+              if (!exists) {
+                detectedTimeCols.push({ startTime, endTime, xCenter });
+              }
             }
-            tr.items.push(item);
-          });
-          timeRows.sort((a, b) => b.y - a.y);
+          }
+        }
 
-          for (const tr of timeRows) {
-            tr.items.sort((a, b) => a.x - b.x);
-            processBlock(tr.items, row.day);
+        const hasHorizontalTimeHeader =
+          detectedTimeCols.length >= 2 &&
+          Math.max(...detectedTimeCols.map(t => t.xCenter)) - Math.min(...detectedTimeCols.map(t => t.xCenter)) > 100;
+
+        if (hasHorizontalTimeHeader) {
+          detectedTimeCols.sort((a, b) => a.xCenter - b.xCenter);
+          const timeCols = detectedTimeCols.map((tc, idx, arr) => {
+            const prev = arr[idx - 1];
+            const next = arr[idx + 1];
+            const xMin = prev ? (prev.xCenter + tc.xCenter) / 2 : Math.max(55, tc.xCenter - 80);
+            const xMax = next ? (tc.xCenter + next.xCenter) / 2 : tc.xCenter + 120;
+            return {
+              startTime: tc.startTime,
+              endTime: tc.endTime,
+              xMin,
+              xMax,
+            };
+          });
+
+          for (const row of dayRows) {
+            for (const tCol of timeCols) {
+              const cellItems = pageItems
+                .filter(item => item.y >= row.yMin && item.y < row.yMax && item.x >= tCol.xMin && item.x < tCol.xMax)
+                .sort((a, b) => b.y - a.y || a.x - b.x);
+
+              if (cellItems.length > 0) {
+                const cellText = cellItems.map(it => it.str).join(' ').trim();
+                const codeMatch = cellText.match(/\b([0-9]?[A-Z]{2,5}[-_]?[0-9]{3,5})\b/);
+                const rawSubject = cleanSubjectTitle(cellText, dynamicEcueMap);
+                if (rawSubject && rawSubject.length > 1) {
+                  const dictEntry = codeMatch ? dynamicEcueMap?.get(codeMatch[1].toUpperCase()) : undefined;
+                  detectedSlots.push({
+                    dayOfWeek: row.day,
+                    startTime: tCol.startTime,
+                    endTime: tCol.endTime,
+                    rawSubject,
+                    type: detectCourseType(cellText),
+                    room: extractRoom(cellText),
+                    professor: extractProfessor(cellText) || dictEntry?.professor,
+                    code: codeMatch ? codeMatch[1].toUpperCase() : undefined,
+                  });
+                }
+              }
+            }
+          }
+        } else {
+          for (const row of dayRows) {
+            const rowItems = pageItems
+              .filter(item => item.y >= row.yMin && item.y < row.yMax && item.x >= 65)
+              .sort((a, b) => b.y - a.y);
+
+            // Group by horizontal line within this day band (tolerance 5px)
+            const timeRows: { y: number; items: SpatialTextItem[] }[] = [];
+            rowItems.forEach(item => {
+              let tr = timeRows.find(existing => Math.abs(existing.y - item.y) <= 5);
+              if (!tr) {
+                tr = { y: item.y, items: [] };
+                timeRows.push(tr);
+              }
+              tr.items.push(item);
+            });
+            timeRows.sort((a, b) => b.y - a.y);
+
+            for (const tr of timeRows) {
+              tr.items.sort((a, b) => a.x - b.x);
+              processBlock(tr.items, row.day);
+            }
           }
         }
       } else {
@@ -1490,16 +1586,19 @@ function parseSpatialGridSchedule(
 
               if (cellItems.length > 0) {
                 const cellText = cellItems.map(it => it.str).join(' ').trim();
+                const codeMatch = cellText.match(/\b([0-9]?[A-Z]{2,5}[-_]?[0-9]{3,5})\b/);
                 const rawSubject = cleanSubjectTitle(cellText, dynamicEcueMap);
                 if (rawSubject && rawSubject.length > 1) {
+                  const dictEntry = codeMatch ? dynamicEcueMap?.get(codeMatch[1].toUpperCase()) : undefined;
                   detectedSlots.push({
                     dayOfWeek: col.day,
                     startTime: tRow.startTime,
                     endTime: tRow.endTime,
                     rawSubject,
                     type: detectCourseType(cellText),
-                    room: extractRoom(cellText) || 'Salle de cours',
-                    professor: extractProfessor(cellText),
+                    room: extractRoom(cellText),
+                    professor: extractProfessor(cellText) || dictEntry?.professor,
+                    code: codeMatch ? codeMatch[1].toUpperCase() : undefined,
                   });
                 }
               }
@@ -1551,6 +1650,7 @@ function parseSpatialGridSchedule(
       const room = extractRoom(combinedText);
       const professor = extractProfessor(combinedText);
       const type = detectCourseType(combinedText);
+      const codeMatch = combinedText.match(/\b([0-9]?[A-Z]{2,5}[-_]?[0-9]{3,5})\b/);
       const rawSubject = cleanSubjectTitle(combinedText, dynamicEcueMap);
 
       if (rawSubject && rawSubject.length > 1 && parseTimeToMinutes(endTime) > parseTimeToMinutes(startTime)) {
@@ -1560,8 +1660,9 @@ function parseSpatialGridSchedule(
           endTime,
           rawSubject,
           type,
-          room: room || 'Amphi / Salle',
+          room,
           professor,
+          code: codeMatch ? codeMatch[1].toUpperCase() : undefined,
         });
       }
     }
@@ -1575,7 +1676,7 @@ function parseSpatialGridSchedule(
  * Supports:
  * 1. Matrix tables where columns are Days (Excel tab-delimited, Markdown pipes, spaced)
  * 2. Matrix tables where columns are Time slots and rows are Days
- * 3. Line-by-line sequential format with day headers (Lundi : 08:00–10:00 Maths ; ...)
+ * 3. Line-by-line sequential format with day headers (JOUR: LUNDI / Lundi : 08:00–10:00 Maths ; ...)
  * 4. Markdown tables with Day in first column
  * 5. Bullet-pointed or spaced lists
  */
@@ -1592,6 +1693,7 @@ export function parseSequentialSchedule(
     type: CourseType;
     room?: string;
     professor?: string;
+    code?: string;
   }[];
 } {
   const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
@@ -1603,6 +1705,7 @@ export function parseSequentialSchedule(
     type: CourseType;
     room?: string;
     professor?: string;
+    code?: string;
   }[] = [];
 
   const timeIntervalRegex = /(\d{1,2})[h:H:](\d{2})?\s*[-–—àaA/to]+\s*(\d{1,2})[h:H:](\d{2})?/i;
@@ -1660,7 +1763,8 @@ export function parseSequentialSchedule(
         dayCols.forEach(({ colIdx, day }) => {
           const cell = rowCells[colIdx];
           if (cell && !isFreeOrBreak(cell)) {
-            const cleanSub = cleanSubjectTitle(cell, dynamicEcueMap);
+            const bracketMatch = cell.match(/\[\s*([A-Za-z0-9_-]{2,14})\s*\]/);
+            const cleanSub = cleanSubjectTitle(cell, dynamicEcueMap, format);
             if (cleanSub && cleanSub.length >= 2) {
               detectedSlots.push({
                 dayOfWeek: day,
@@ -1668,8 +1772,9 @@ export function parseSequentialSchedule(
                 endTime: rowTime!.end,
                 rawSubject: cleanSub,
                 type: detectCourseType(cell),
-                room: extractRoom(cell) || 'Salle de cours',
+                room: extractRoom(cell),
                 professor: extractProfessor(cell),
+                code: bracketMatch ? bracketMatch[1].toUpperCase() : undefined,
               });
             }
           }
@@ -1709,7 +1814,8 @@ export function parseSequentialSchedule(
         timeCols.forEach(({ colIdx, start, end }) => {
           const cell = rowCells[colIdx];
           if (cell && !isFreeOrBreak(cell)) {
-            const cleanSub = cleanSubjectTitle(cell, dynamicEcueMap);
+            const bracketMatch = cell.match(/\[\s*([A-Za-z0-9_-]{2,14})\s*\]/);
+            const cleanSub = cleanSubjectTitle(cell, dynamicEcueMap, format);
             if (cleanSub && cleanSub.length >= 2) {
               detectedSlots.push({
                 dayOfWeek: rowDay,
@@ -1717,8 +1823,9 @@ export function parseSequentialSchedule(
                 endTime: end,
                 rawSubject: cleanSub,
                 type: detectCourseType(cell),
-                room: extractRoom(cell) || 'Salle de cours',
+                room: extractRoom(cell),
                 professor: extractProfessor(cell),
+                code: bracketMatch ? bracketMatch[1].toUpperCase() : undefined,
               });
             }
           }
@@ -1734,9 +1841,9 @@ export function parseSequentialSchedule(
 
   // -------------------------------------------------------------
   // STRATEGY 2: LINEAR, DAY-BLOCK, AND CLAUSE-BASED PARSER
-  // Handles: Lundi : 08:00–10:00 Math ; 10:15–12:00 PC
-  //          | Lundi | 08:00 - 10:00 | Math |
-  //          Lists with bullet points, multiline day blocks
+  // Handles: JOUR: LUNDI
+  //          - 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi ESATIC | Prof: Dr KOIVOGUI
+  //          Lundi : 08:00–10:00 Math ; 10:15–12:00 PC
   // -------------------------------------------------------------
   let currentDay: DayOfWeek = 0;
 
@@ -1748,13 +1855,16 @@ export function parseSequentialSchedule(
     const dayFound = findDayInLine(workingLine);
     if (dayFound !== null) {
       currentDay = dayFound;
-      // Strip day prefix if line is like "Lundi : ..." or "| Lundi | ..."
+      // Strip day prefix if line is like "JOUR: LUNDI", "Lundi : ...", or "| Lundi | ..."
+      workingLine = workingLine.replace(/^(?:JOUR(?:\s*\d+)?|DAY(?:\s*\d+)?)[\s:|-]+[A-Za-zÀ-ÿ]+\s*[:|-]?\s*/i, '');
       for (const entry of DAYS_DICTIONARY) {
         for (const key of entry.keys) {
           workingLine = workingLine.replace(new RegExp(`^[\\s|•*-]*${key}\\s*[:|\\-]?\\s*`, 'i'), '');
         }
       }
     }
+
+    if (!workingLine.trim()) continue;
 
     // Split line into clauses if separated by semicolons or multiple pipe-delimited slots
     let clauses: string[] = [workingLine];
@@ -1810,10 +1920,14 @@ export function parseSequentialSchedule(
           // Skip if break or free slot
           if (isFreeOrBreak(contextText)) continue;
 
+          // Extract bracketed code [CODE] if present
+          const bracketCodeMatch = contextText.match(/\[\s*([A-Za-z0-9_-]{2,14})\s*\]/);
+          const extractedCode = bracketCodeMatch ? bracketCodeMatch[1].toUpperCase() : undefined;
+
           let room = extractRoom(contextText);
           let professor = extractProfessor(contextText);
 
-          // Pipe metadata parsing: | Salle: ... | Prof: ...
+          // Pipe metadata parsing: | Salle: ... | Prof: ... or | Amphi ... | Dr ...
           if (contextText.includes('|')) {
             const parts = contextText.split('|').map(p => p.trim());
             for (let pIdx = 1; pIdx < parts.length; pIdx++) {
@@ -1821,10 +1935,17 @@ export function parseSequentialSchedule(
               const rMatch = part.match(/(?:salle|amphi|lieu|room)\s*:\s*([^|()]+)/i);
               if (rMatch && rMatch[1]) {
                 room = rMatch[1].trim();
+              } else if (!room) {
+                const candidateRoom = extractRoom(part);
+                if (candidateRoom) room = candidateRoom;
               }
-              const pMatch = part.match(/(?:prof|professeur|enseignant|intervenant|dr|pr|m\.|mme)\s*:\s*([^|()]+)/i);
+
+              const pMatch = part.match(/(?:prof|professeur|enseignant|intervenant)\s*:\s*([^|()]+)/i);
               if (pMatch && pMatch[1]) {
                 professor = pMatch[1].trim();
+              } else if (!professor) {
+                const candidateProf = extractProfessor(part);
+                if (candidateProf) professor = candidateProf;
               }
             }
           }
@@ -1842,8 +1963,9 @@ export function parseSequentialSchedule(
               endTime,
               rawSubject: cleanSub,
               type,
-              room: room || (format === 'scolaire' ? 'Salle de classe' : 'Salle de cours'),
+              room,
               professor,
+              code: extractedCode,
             });
           }
         }
@@ -1874,7 +1996,7 @@ export function parseSequentialSchedule(
             endTime,
             rawSubject: cleanSub,
             type: detectCourseType(l),
-            room: extractRoom(l) || 'Salle Principale',
+            room: extractRoom(l),
             professor: extractProfessor(l),
           });
           fallbackDay = ((fallbackDay + 1) % 5) as DayOfWeek;
@@ -1907,6 +2029,7 @@ export function parseTimetableText(
     type: CourseType;
     room?: string;
     professor?: string;
+    code?: string;
   }[] = [];
 
   // Extract ECUE code-to-meaning mapping table from the document (e.g., ESATIC bottom table)
@@ -1955,9 +2078,15 @@ export function parseTimetableText(
     let raw = slot.rawSubject;
     const upper = raw.toUpperCase().trim();
 
-    if (dynamicEcueMap.has(upper)) {
+    if (KNOWN_ACADEMIC_ECUE_MAP[upper]) {
+      const entry = KNOWN_ACADEMIC_ECUE_MAP[upper];
+      raw = entry.name;
+      if (!slot.code) slot.code = upper;
+      if (entry.professor && !slot.professor) slot.professor = entry.professor;
+    } else if (dynamicEcueMap.has(upper)) {
       const entry = dynamicEcueMap.get(upper)!;
       raw = entry.name;
+      if (!slot.code) slot.code = upper;
       if (entry.professor && !slot.professor) slot.professor = entry.professor;
     } else {
       raw = cleanSubjectTitle(slot.rawSubject, dynamicEcueMap, format);
@@ -2009,7 +2138,8 @@ export function parseTimetableText(
 
   // 5. Intelligent Subject Weighting & Disciplinary Topics Calibration
   const subjects: ExtractedSubjectCandidate[] = uniqueSubjectNames.map((name, index) => {
-    const slotCount = detectedSlots.filter(s => s.rawSubject === name).length;
+    const matchingSlots = detectedSlots.filter(s => s.rawSubject === name);
+    const slotCount = matchingSlots.length;
     const lowerName = name.toLowerCase();
 
     let coeff = Math.min(12, Math.max(2, slotCount * 2));
@@ -2019,6 +2149,7 @@ export function parseTimetableText(
       lowerName.includes('math') || 
       lowerName.includes('algo') || 
       lowerName.includes('algebre') ||
+      lowerName.includes('algèbre') ||
       lowerName.includes('analyse') ||
       lowerName.includes('anatomie') || 
       lowerName.includes('physique') || 
@@ -2030,14 +2161,20 @@ export function parseTimetableText(
       difficulty = 5;
     } else if (
       lowerName.includes('reseau') || 
+      lowerName.includes('réseau') || 
       lowerName.includes('systeme') || 
+      lowerName.includes('système') || 
       lowerName.includes('web') ||
       lowerName.includes('application') ||
       lowerName.includes('finance') ||
       lowerName.includes('chimie') || 
+      lowerName.includes('svt') ||
+      lowerName.includes('sciences de la vie') ||
       lowerName.includes('penal') || 
+      lowerName.includes('pénal') || 
       lowerName.includes('stat') ||
       lowerName.includes('economie') ||
+      lowerName.includes('économie') ||
       lowerName.includes('biologie')
     ) {
       coeff = Math.max(5, coeff);
@@ -2053,13 +2190,33 @@ export function parseTimetableText(
       difficulty = 2;
     }
 
-    // Resolve code from dynamic ECUE map if available
-    let resolvedCode = name.slice(0, 4).toUpperCase().replace(/[^A-Z]/g, 'X') + '-' + (301 + index * 5);
-    for (const [code, info] of dynamicEcueMap.entries()) {
-      if (info.name.toLowerCase() === name.toLowerCase()) {
-        resolvedCode = code;
-        break;
+    // Resolve code from slot bracket code, known academic ECUE map, or dynamic ECUE map
+    const slotWithCode = matchingSlots.find(s => s.code && s.code.trim().length > 0);
+    let resolvedCode = slotWithCode?.code || '';
+
+    if (!resolvedCode) {
+      for (const [code, info] of Object.entries(KNOWN_ACADEMIC_ECUE_MAP)) {
+        if (info.name.toLowerCase() === name.toLowerCase()) {
+          resolvedCode = code;
+          break;
+        }
       }
+    }
+    if (!resolvedCode) {
+      for (const [code, info] of dynamicEcueMap.entries()) {
+        if (info.name.toLowerCase() === name.toLowerCase()) {
+          resolvedCode = code;
+          break;
+        }
+      }
+    }
+    if (!resolvedCode) {
+      resolvedCode = name
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .slice(0, 4)
+        .toUpperCase()
+        .replace(/[^A-Z]/g, 'X') + '-' + (301 + index * 5);
     }
 
     const topics = generateAcademicTopicsForSubject(name);
@@ -2104,7 +2261,7 @@ export function parseTimetableText(
   const totalWeeklyClassHours = Math.round((totalWeeklyClassMinutes / 60) * 10) / 10;
   const recommendedStudyHours = Math.max(8, Math.round(totalWeeklyClassHours * 0.75));
 
-  const trackName = fileName.replace(/\.pdf$/i, '').replace(/[_-]/g, ' ') || 'Emploi du Temps Étudiant';
+  const trackName = fileName.replace(/\.[a-z0-9]+$/i, '').replace(/[_-]/g, ' ') || 'Emploi du Temps Étudiant';
 
   return {
     fileName,
@@ -2163,7 +2320,10 @@ export type ScheduleFormatType = 'lmd' | 'tpcm' | 'scolaire';
 
 /**
  * Formats extracted schedule data into a clean, canonical text representation
- * strictly formatted according to the selected academic level / format.
+ * strictly formatted according to the selected academic level / format:
+ * - 'lmd':      - 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi ESATIC | Prof: Dr KOIVOGUI
+ * - 'tpcm':     - 08:00 - 10:00 : CM Électronique Analogique (Amphi 1)
+ * - 'scolaire': - 08:00 - 10:00 : Mathématiques
  */
 export function formatExtractedScheduleToFormatText(
   extracted: ExtractedPdfSchedule,
@@ -2171,6 +2331,12 @@ export function formatExtractedScheduleToFormatText(
 ): string {
   const dayNames = ['LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI', 'DIMANCHE'];
   const lines: string[] = [];
+
+  const isGenericRoom = (r?: string) => {
+    if (!r) return true;
+    const clean = r.trim().toLowerCase();
+    return clean === 'salle de cours' || clean === 'salle de classe' || clean === 'amphi / salle' || clean === 'salle principale';
+  };
 
   for (let day = 0; day <= 6; day++) {
     const daySlots = extracted.slots
@@ -2186,14 +2352,20 @@ export function formatExtractedScheduleToFormatText(
       const subject = extracted.subjects.find(sub => sub.id === slot.subjectId);
       const subjectName = (slot.subjectName || subject?.name || 'Matière').trim();
       const code = subject?.code ? ` [${subject.code}]` : '';
-      const room = slot.room ? ` | Salle: ${slot.room.replace(/^Salle:\s*/i, '')}` : '';
-      const prof = slot.professor ? ` | Prof: ${slot.professor.replace(/^Prof:\s*/i, '')}` : '';
+      const cleanRoom = slot.room && !isGenericRoom(slot.room)
+        ? slot.room.replace(/^(?:Salle|Lieu)\s*:\s*/i, '').replace(/^[()]+|[()]+$/g, '').trim()
+        : '';
+      const cleanProf = slot.professor
+        ? slot.professor.replace(/^(?:Prof|Professeur|Enseignant)\s*:\s*/i, '').trim()
+        : '';
 
       if (format === 'lmd') {
-        lines.push(`- ${slot.startTime} - ${slot.endTime} : ${subjectName}${code}${room}${prof}`);
+        const roomPart = cleanRoom ? ` | Salle: ${cleanRoom}` : '';
+        const profPart = cleanProf ? ` | Prof: ${cleanProf}` : '';
+        lines.push(`- ${slot.startTime} - ${slot.endTime} : ${subjectName}${code}${roomPart}${profPart}`);
       } else if (format === 'tpcm') {
         const typeBadge = slot.type === 'lab' ? 'TP ' : slot.type === 'tutorial' ? 'TD ' : 'CM ';
-        const roomParen = slot.room ? ` (${slot.room.replace(/^[()]+|[()]+$/g, '')})` : '';
+        const roomParen = cleanRoom ? ` (${cleanRoom})` : '';
         lines.push(`- ${slot.startTime} - ${slot.endTime} : ${typeBadge}${subjectName}${roomParen}`);
       } else {
         // format scolaire (Lycée / Collège)
@@ -2234,12 +2406,13 @@ export async function parseTimetableDocument(
     });
 
     onProgress?.('Détection sémantique avancée et structuration des cours...', 90);
+    // ocrResult.reconstructedText is already spatially reconstructed for top-left image coordinates
     const textToParse = ocrResult.reconstructedText || ocrResult.rawText;
     return parseTimetableText(
       textToParse,
       file.name,
       file.size,
-      ocrResult.spatialItems,
+      undefined,
       1,
       format
     );

@@ -157,11 +157,16 @@ Renvoie UNIQUEMENT le texte formaté correspondant au gabarit retenu, sans balis
 
 /**
  * C'est cette fonction que l'application appelle quand l'étudiant choisit un PDF ou prend une photo.
- * 
+ *
  * VARIABLE 2 : fileBase64 -> Le contenu du PDF ou de la photo converti en texte Base64
  * VARIABLE 3 : mimeType -> "application/pdf" (si PDF) ou "image/jpeg" / "image/png" (si photo)
+ * VARIABLE 4 : format -> "lmd" (Université/Grandes Écoles), "tpcm" (BTS), ou "scolaire" (Collège/Lycée)
  */
-export async function extraireEmploiDuTemps(fileBase64: string, mimeType: string = "image/jpeg"): Promise<string> {
+export async function extraireEmploiDuTemps(
+  fileBase64: string,
+  mimeType: string = "image/jpeg",
+  format?: "lmd" | "tpcm" | "scolaire"
+): Promise<string> {
   const apiKey = getApiKey();
   if (!apiKey) {
     throw new Error("Clé API Gemini non configurée (VITE_GEMINI_API_KEY). Sur Vercel, ajoutez VITE_GEMINI_API_KEY dans Settings > Environment Variables, ou définissez-la dans l'application.");
@@ -183,6 +188,18 @@ export async function extraireEmploiDuTemps(fileBase64: string, mimeType: string
 
   // Supprime le préfixe si le front-end l'a envoyé avec "data:image/...;base64,"
   const cleanBase64 = fileBase64.replace(/^data:[^;]+;base64,/, "");
+
+  // Directive de catégorisation selon le système d'études choisi par l'étudiant (LMD, BTS, Lycée)
+  let formatInstruction = "";
+  if (format === "lmd") {
+    formatInstruction = `\n\n==============================================================================\nCATÉGORIE D'EXTRACTION IMPOSÉE PAR L'ÉTUDIANT : SYSTÈME LMD (UNIVERSITÉ / GRANDES ÉCOLES)\n==============================================================================\nApplique OBLIGATOIREMENT le FORMAT 3 (LMD) :\nJOUR: LUNDI\n- HEURE_DEBUT - HEURE_FIN : Nom Matière [Code ECUE] | Salle: Nom Salle | Prof: Nom Enseignant\n(Omets [Code ECUE], | Salle: ou | Prof: uniquement s'ils ne figurent pas sur le document).`;
+  } else if (format === "tpcm") {
+    formatInstruction = `\n\n==============================================================================\nCATÉGORIE D'EXTRACTION IMPOSÉE PAR L'ÉTUDIANT : SYSTÈME BTS (FILIÈRES TECHNIQUES)\n==============================================================================\nApplique OBLIGATOIREMENT le FORMAT 2 (BTS) :\nJOUR: LUNDI\n- HEURE_DEBUT - HEURE_FIN : Type Matière (Salle)\n(Ex: - 08:00 - 10:00 : CM Électronique Analogique (Amphi 1) ou TD / TP. Omets (Salle) si non spécifiée).`;
+  } else if (format === "scolaire") {
+    formatInstruction = `\n\n==============================================================================\nCATÉGORIE D'EXTRACTION IMPOSÉE PAR L'ÉTUDIANT : SYSTÈME SCOLAIRE (LYCÉE / COLLÈGE)\n==============================================================================\nApplique OBLIGATOIREMENT le FORMAT 1 (SCOLAIRE / LYCÉE) :\nJOUR: LUNDI\n- HEURE_DEBUT - HEURE_FIN : Nom Matière\n(Ex: - 08:00 - 10:00 : Mathématiques. Traduis les sigles scolaires comme PC -> Physique-Chimie, SVT -> Sciences de la Vie et de la Terre (SVT), HG -> Histoire-Géographie).`;
+  }
+
+  const effectivePrompt = PROMPT_OFFICIEL + formatInstruction;
 
   // Modèles officiels supportés avec fallback automatique en cascade
   const modelsToTry = [
@@ -207,7 +224,7 @@ export async function extraireEmploiDuTemps(fileBase64: string, mimeType: string
                   mimeType: effectiveMime
                 }
               },
-              { text: PROMPT_OFFICIEL }
+              { text: effectivePrompt }
             ]
           }
         ]

@@ -266,12 +266,11 @@ export async function signInWithEmailReal(
   } catch (error: any) {
     console.error('Firebase Email Sign-In Error:', error);
 
-    if (
-      error.code === 'auth/user-not-found' || 
-      error.code === 'auth/wrong-password' || 
-      error.code === 'auth/invalid-credential'
-    ) {
-      throw new Error('Email ou mot de passe incorrect. Vérifiez vos identifiants ou créez un compte.');
+    if (error.code === 'auth/user-not-found') {
+      throw new Error('Ce compte n\'existe pas ou n\'est pas reconnu. Cliquez sur "Je crée mon planning" pour créer votre compte.');
+    }
+    if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+      throw new Error('Ce compte n\'est pas reconnu ou le mot de passe est incorrect. Si vous n\'avez pas encore de compte, cliquez sur "Je crée mon planning".');
     }
     if (error.code === 'auth/invalid-email') {
       throw new Error('Adresse email invalide.');
@@ -336,7 +335,7 @@ export async function signUpWithEmailReal(
     console.error('Firebase Email Sign-Up Error:', error);
 
     if (error.code === 'auth/email-already-in-use') {
-      throw new Error('Cette adresse email est déjà enregistrée. Connectez-vous directement avec votre mot de passe.');
+      throw new Error('Ce compte existe déjà. Veuillez vous connecter avec votre mot de passe au lieu de créer un nouveau compte.');
     }
     if (error.code === 'auth/weak-password') {
       throw new Error('Le mot de passe doit comporter au moins 6 caractères.');
