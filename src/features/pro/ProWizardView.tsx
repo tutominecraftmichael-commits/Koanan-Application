@@ -35,6 +35,43 @@ import {
   ChevronUp
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
+import { KonanCube } from '../../components/common/KonanCube';
+
+const WordByWordBubble: React.FC<{ text: string; speedMs?: number }> = ({ text, speedMs = 38 }) => {
+  const words = useMemo(() => text.split(' '), [text]);
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  useEffect(() => {
+    setVisibleCount(0);
+    const interval = setInterval(() => {
+      setVisibleCount((prev) => {
+        if (prev >= words.length) {
+          clearInterval(interval);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, speedMs);
+    return () => clearInterval(interval);
+  }, [text, words.length, speedMs]);
+
+  return (
+    <span>
+      {words.map((word, idx) => (
+        <span
+          key={`${idx}-${word}`}
+          className={`inline-block mr-1 transition-all duration-200 ${
+            idx < visibleCount
+              ? 'opacity-100 translate-y-0 blur-0'
+              : 'opacity-0 translate-y-1 blur-[2px] pointer-events-none'
+          }`}
+        >
+          {word}
+        </span>
+      ))}
+    </span>
+  );
+};
 
 export interface ProWizardViewProps {
   state: AppState;
@@ -376,35 +413,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
     soundFX.playCheckmarkPop();
   };
 
-  // Finalisation et enregistrement du palier Pro
-  const handleCompleteWizard = () => {
-    const sessionsToApply = reorganizedSessions || state.studySessions || [];
-    const updatedPreferences: StudyPreferences = {
-      ...state.preferences,
-      pacing: selectedPrimaryPacing,
-      combinedPacings: selectedCombinedPacings,
-      focusBlockDuration: getPacingStrategy(selectedPrimaryPacing).focusBlockDuration,
-      breakBlockDuration: getPacingStrategy(selectedPrimaryPacing).breakBlockDuration,
-    };
-
-    const nextState: AppState = {
-      ...state,
-      planTier: 'pro',
-      userAccount: state.userAccount ? {
-        ...state.userAccount,
-        planTier: 'pro',
-      } : undefined,
-      preferences: updatedPreferences,
-      subjects: subjectsList,
-      studySessions: sessionsToApply,
-    };
-
-    onUpdateState(nextState);
-    // REMPLACEMENT EXPLICITE : Pas d'applaudissements / fanfare
-    soundFX.playCheckmarkPop();
-    showToast('🚀 Configuration KONAN PRO enregistrée avec succès !');
-    onNavigate('dashboard');
-  };
+  const activeTier = state.planTier === 'plus' ? 'plus' : 'pro';
 
   // Sessions filtrées pour l'aperçu
   const filteredSessions = useMemo(() => {
@@ -424,21 +433,71 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
     return reorganizedSessions.filter(s => s.isExamPrep).length;
   }, [reorganizedSessions]);
 
+  // Message dynamique de Konan pas-à-pas selon l'étape actuelle
+  const konanStepGuideText = useMemo(() => {
+    if (currentStep === 1) {
+      return `Étape 1 sur 4 : Choisis jusqu'à 3 méthodes cognitives (${selectedCombinedPacings.length}/3 sélectionnées). Clique sur « Appliquer le conseil » si tu veux que je configure la combinaison idéale pour tes matières !`;
+    }
+    if (currentStep === 2) {
+      return `Étape 2 sur 4 : Ajoute les dates de tes prochains devoirs, contrôles ou examens sur tes ${subjectsList.length} matières. Je vais automatiquement intensifier tes séances à l'approche du Jour-J !`;
+    }
+    if (currentStep === 3) {
+      if (isOptimizing) {
+        return `Analyse en cours (${optimizationProgress}%)... Je croise tes horaires de cours, tes coefficients et tes échéances pour construire ton Emploi du Temps ${activeTier === 'plus' ? 'Plus' : 'Pro'} sur mesure !`;
+      }
+      if (reorganizedSessions) {
+        return `Étape 3 sur 4 : Ton EDT ${activeTier === 'plus' ? 'Plus' : 'Pro'} est prêt avec ${reorganizedSessions.length} séances (${totalHours}h/semaine) ! Vérifie tes créneaux par jour puis passe à l'étape finale.`;
+      }
+      return `Étape 3 sur 4 : Vérifie la réorganisation algorithmique de ton Emploi du Temps.`;
+    }
+    return `Étape 4 sur 4 : Dernière étape ! Télécharge ton fichier d'alertes (.ics) ou synchronise ton planning avec Google Agenda, puis clique sur « Terminer et ouvrir mon espace » !`;
+  }, [currentStep, selectedCombinedPacings.length, subjectsList.length, isOptimizing, optimizationProgress, reorganizedSessions, totalHours, activeTier]);
+
+  // Finalisation et enregistrement du palier Pro / Plus
+  const handleCompleteWizard = () => {
+    const sessionsToApply = reorganizedSessions || state.studySessions || [];
+    const updatedPreferences: StudyPreferences = {
+      ...state.preferences,
+      pacing: selectedPrimaryPacing,
+      combinedPacings: selectedCombinedPacings,
+      focusBlockDuration: getPacingStrategy(selectedPrimaryPacing).focusBlockDuration,
+      breakBlockDuration: getPacingStrategy(selectedPrimaryPacing).breakBlockDuration,
+    };
+
+    const nextState: AppState = {
+      ...state,
+      planTier: activeTier,
+      userAccount: state.userAccount ? {
+        ...state.userAccount,
+        planTier: activeTier,
+      } : undefined,
+      preferences: updatedPreferences,
+      subjects: subjectsList,
+      studySessions: sessionsToApply,
+    };
+
+    onUpdateState(nextState);
+    // REMPLACEMENT EXPLICITE : Pas d'applaudissements / fanfare
+    soundFX.playCheckmarkPop();
+    showToast(`🚀 Configuration KONAN ${activeTier.toUpperCase()} enregistrée avec succès !`);
+    onNavigate('dashboard');
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#070B13] text-slate-900 dark:text-slate-100 transition-colors py-6 sm:py-8 px-3 sm:px-6">
       <div className="max-w-4xl mx-auto space-y-6">
         
         {/* =========================================================================
-            HEADER COMPACT : BADGE PRO & QUITTER SUR UNE LIGNE, TITRE RESPONSIVE
+            HEADER COMPACT : BADGE PRO/PLUS & QUITTER SUR UNE LIGNE, TITRE RESPONSIVE
             ========================================================================= */}
         <div className="space-y-3 border-b border-slate-200 dark:border-slate-800 pb-4 sm:pb-6">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-xs inline-flex items-center">
-                PRO
+                {activeTier === 'plus' ? 'KONAN PLUS' : 'KONAN PRO'}
               </span>
               <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                Version PRO ouverte
+                Guide interactif avec Konan
               </span>
             </div>
             <button
@@ -453,10 +512,32 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
 
           <div>
             <h1 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-              Configuration de votre Emploi du Temps Pro
+              Configuration de votre Emploi du Temps {activeTier === 'plus' ? 'Plus' : 'Pro'}
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Personnalisez vos méthodes cognitives, vos devoirs et vos examens. L'algorithme réorganise votre semaine en optimisant chaque matière.
+              Konan vous accompagne pas à pas : méthodes cognitives, devoirs & examens, réorganisation algorithmique et rappels Google Agenda.
+            </p>
+          </div>
+        </div>
+
+        {/* =========================================================================
+            GUIDE INTERACTIF KONAN PAS À PAS (BULLE ANIMÉE MOT PAR MOT)
+            ========================================================================= */}
+        <div className="flex items-center gap-3.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border-2 border-indigo-500/30 dark:border-indigo-500/40 shadow-md shadow-indigo-500/5">
+          <div className="shrink-0">
+            <KonanCube size={52} showStars={false} glow={true} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30">
+                Konan • Guide Pas-à-Pas
+              </span>
+              <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500">
+                Étape {currentStep}/4
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 leading-relaxed">
+              « <WordByWordBubble text={konanStepGuideText} speedMs={32} /> »
             </p>
           </div>
         </div>

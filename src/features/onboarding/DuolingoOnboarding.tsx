@@ -39,7 +39,6 @@ import {
   VolumeX,
   Layers,
   Cpu,
-  BellRing,
   LogIn
 } from 'lucide-react';
 import { KonanCube } from '../../components/common/KonanCube';
@@ -90,6 +89,18 @@ import type {
 
 export const PENDING_ONBOARDING_PAYLOAD_KEY = 'konan_pending_onboarding_payload';
 
+export function isLocalAdminEnvironment(): boolean {
+  if (typeof window === 'undefined') return false;
+  const host = window.location.hostname;
+  return (
+    host === 'localhost' ||
+    host === '127.0.0.1' ||
+    host === '::1' ||
+    host.endsWith('.local') ||
+    (import.meta.env.DEV && /^192\.168\.|^10\.|^172\.(1[6-9]|2\d|3[0-1])\./.test(host))
+  );
+}
+
 export interface DuolingoOnboardingProps {
   onComplete: (data: {
     subjects: Subject[];
@@ -99,6 +110,7 @@ export interface DuolingoOnboardingProps {
     planTier?: 'free' | 'pro' | 'plus';
   }) => void;
   onOpenLogin: () => void;
+  onOpenAdmin?: () => void;
   currentUser: UserAccount | null;
   onLoginSuccess: (user: UserAccount) => void;
 }
@@ -188,7 +200,7 @@ const ACCOMPANIMENT_PLANS: AccompanimentPlanSpec[] = [
     popular: true,
     comingSoon: false,
     accentGradient: 'from-amber-400 via-amber-500 to-indigo-600',
-    ctaLabel: 'Démarrer avec KONAN PRO',
+    ctaLabel: 'Configurer mon EDT Pro avec Konan',
     features: [
       {
         text: "Imports & générations d'EDT illimités",
@@ -227,11 +239,11 @@ const ACCOMPANIMENT_PLANS: AccompanimentPlanSpec[] = [
     currency: 'F CFA',
     period: '/ mois',
     description: 'Tout ce qui est dans KONAN PRO, plus un écosystème collaboratif et audio complet.',
-    badge: 'Bientôt disponible',
+    badge: 'Élite • Guide EDT Pro inclus',
     popular: false,
-    comingSoon: true,
+    comingSoon: false,
     accentGradient: 'from-purple-500 via-violet-600 to-fuchsia-600',
-    ctaLabel: 'Rejoindre la liste d’attente',
+    ctaLabel: 'Configurer mon EDT Plus avec Konan',
     features: [
       {
         text: 'Planning conditionné par vos 3 Objectifs Scolaires',
@@ -347,12 +359,19 @@ const WordByWordBubble: React.FC<{ text: string; speed?: number }> = ({
 export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   onComplete,
   onOpenLogin: _onOpenLogin,
+  onOpenAdmin,
   currentUser: _currentUser,
   onLoginSuccess,
 }) => {
   const [step, setStep] = useState<OnboardingStepId>('welcome');
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [showExistingLogin, setShowExistingLogin] = useState<boolean>(false);
+
+  // Accès Administrateur (Strictement accessible uniquement en local)
+  const isLocalAdminAllowed = useMemo(() => isLocalAdminEnvironment(), []);
+  const [showAdminModal, setShowAdminModal] = useState<boolean>(false);
+  const [adminCodeInput, setAdminCodeInput] = useState<string>('');
+  const [adminError, setAdminError] = useState<string | null>(null);
 
   // Étape 2 : Système d'études choisi (LMD, BTS, Lycée)
   const [studyType, setStudyType] = useState<StudySystemChoice | null>('lmd');
@@ -986,15 +1005,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     }
   };
 
-  // Étape 6 : Choix final du modèle d'accompagnement (Gratuit, Pro, Plus) -> Ouverture du planning
+  // Étape 6 : Choix final du modèle d'accompagnement (Gratuit, Pro, Plus) -> Ouverture du planning ou Guide EDT Pro avec Konan
   const handleSelectAccompanimentModel = (planId: 'free' | 'pro' | 'plus') => {
     soundFX.playCheckmarkPop();
     setSelectedPlan(planId);
-
-    if (planId === 'plus') {
-      setIsWaitlistOpen(true);
-      return;
-    }
 
     const effectiveName = (registeredProfile?.name || authFullName || 'Étudiant').trim();
     const payload = buildAndPersistFinalPayload(effectiveName, planId);
@@ -1157,7 +1171,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   ]);
 
   return (
-    <div className="min-h-screen w-full bg-[#070B13] text-slate-100 flex flex-col justify-between relative overflow-x-hidden select-none font-sans">
+    <div className="min-h-screen w-full bg-slate-50 dark:bg-[#070B13] text-slate-900 dark:text-slate-100 flex flex-col justify-between relative overflow-x-hidden select-none font-sans transition-colors">
       {/* Glow d'ambiance */}
       <div className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[520px] h-[320px] bg-indigo-600/15 blur-[130px] rounded-full" />
 
@@ -1193,6 +1207,90 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           if (f) handleProcessFile(f);
         }}
       />
+
+      {/* MODALE ACCÈS ADMINISTRATEUR (STRICTEMENT ACCESSIBLE EN LOCAL) */}
+      {isLocalAdminAllowed && showAdminModal && onOpenAdmin && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Lock className="w-4 h-4 text-amber-500" />
+                <span>Console Admin (Local uniquement)</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAdminModal(false);
+                  setAdminCodeInput('');
+                  setAdminError(null);
+                }}
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Cet accès administrateur est strictement réservé à l'environnement local (<code className="font-mono text-indigo-500">localhost</code>).
+            </p>
+            {adminError && (
+              <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs font-bold">
+                {adminError}
+              </div>
+            )}
+            <input
+              type="password"
+              value={adminCodeInput}
+              onChange={(e) => {
+                setAdminCodeInput(e.target.value);
+                setAdminError(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  if (adminCodeInput.trim() === '144000') {
+                    soundFX.playCheckmarkPop();
+                    setShowAdminModal(false);
+                    setAdminCodeInput('');
+                    onOpenAdmin();
+                  } else {
+                    setAdminError('Code administrateur incorrect.');
+                  }
+                }
+              }}
+              placeholder="Code secret Admin..."
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
+            />
+            <div className="flex items-center justify-end gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAdminModal(false);
+                  setAdminCodeInput('');
+                  setAdminError(null);
+                }}
+                className="px-3 py-2 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer"
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (adminCodeInput.trim() === '144000') {
+                    soundFX.playCheckmarkPop();
+                    setShowAdminModal(false);
+                    setAdminCodeInput('');
+                    onOpenAdmin();
+                  } else {
+                    setAdminError('Code administrateur incorrect.');
+                  }
+                }}
+                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white cursor-pointer"
+              >
+                Ouvrir Admin
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODALE CLÉ API GEMINI */}
       {showKeyModal && (
@@ -1252,7 +1350,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           <button
             type="button"
             onClick={handleBack}
-            className="w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all active:scale-95 cursor-pointer shrink-0"
+            className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all active:scale-95 cursor-pointer shrink-0 shadow-xs"
             aria-label="Retour"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -1260,7 +1358,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
           {!showExistingLogin ? (
             <div className="flex-1 flex items-center gap-3">
-              <div className="flex-1 h-3.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800/80 p-0.5">
+              <div className="flex-1 h-3.5 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300 dark:border-slate-800/80 p-0.5">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-300 relative"
                   style={{ width: `${progressPercent}%` }}
@@ -1268,7 +1366,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   <div className="absolute top-0.5 left-2 right-2 h-1 bg-white/30 rounded-full" />
                 </div>
               </div>
-              <span className="text-[11px] font-black text-slate-400 font-mono shrink-0">
+              <span className="text-[11px] font-black text-slate-500 dark:text-slate-400 font-mono shrink-0">
                 {currentStepIndex}/{STEP_ORDER.length - 1}
               </span>
             </div>
@@ -1279,13 +1377,13 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           <button
             type="button"
             onClick={toggleSound}
-            className="w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all cursor-pointer shrink-0"
+            className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer shrink-0 shadow-xs"
             title={isMuted ? 'Activer le son' : 'Couper le son'}
           >
             {isMuted ? (
               <VolumeX className="w-4 h-4 text-slate-500" />
             ) : (
-              <Volume2 className="w-4 h-4 text-emerald-400" />
+              <Volume2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
             )}
           </button>
         </header>
@@ -1299,11 +1397,11 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       >
         {/* Cube Konan + Bulle de parole en haut des étapes */}
         {step !== 'welcome' && (
-          <div className="mb-4 flex items-center gap-3 bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3 max-w-3xl mx-auto w-full">
+          <div className="mb-4 flex items-center gap-3 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/90 rounded-2xl p-3 max-w-3xl mx-auto w-full shadow-sm">
             <div className="shrink-0">
               <KonanCube size={54} showStars={false} glow={true} />
             </div>
-            <p className="text-xs sm:text-sm font-bold text-white leading-snug text-left">
+            <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug text-left">
               « <WordByWordBubble text={bubbleMessage} speed={25} /> »
             </p>
           </div>
@@ -1314,12 +1412,12 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           {showExistingLogin && (
             <form
               onSubmit={handleExistingAccountLogin}
-              className="space-y-4 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl max-w-xl mx-auto"
+              className="space-y-4 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl max-w-xl mx-auto"
             >
-              <h2 className="text-xl font-black text-white">Connexion à ton compte</h2>
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">Connexion à ton compte</h2>
 
               {authError && (
-                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-300 text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{authError}</span>
                 </div>
@@ -1327,7 +1425,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs font-bold text-slate-400 block mb-1">Email / Gmail</label>
+                  <label className="text-xs font-bold text-slate-600 dark:text-slate-400 block mb-1">Email / Gmail</label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
@@ -1336,13 +1434,13 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       value={authEmail}
                       onChange={(e) => setAuthEmail(e.target.value)}
                       placeholder="ton.email@gmail.com"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-400 block mb-1">Mot de passe</label>
+                  <label className="text-xs font-bold text-slate-600 dark:text-slate-400 block mb-1">Mot de passe</label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
@@ -1351,12 +1449,12 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       value={authPassword}
                       onChange={(e) => setAuthPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white cursor-pointer"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -1376,10 +1474,26 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 type="button"
                 onClick={handleGoogleExistingLogin}
                 disabled={isSubmittingAuth}
-                className="w-full py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="w-full py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <span>Se connecter avec Google</span>
               </button>
+
+              {isLocalAdminAllowed && onOpenAdmin && (
+                <div className="pt-2 border-t border-slate-200 dark:border-slate-800 text-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundFX.playCheckmarkPop();
+                      setShowAdminModal(true);
+                    }}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
+                  >
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>Mode Administrateur (Local uniquement)</span>
+                  </button>
+                </div>
+              )}
             </form>
           )}
 
@@ -1394,21 +1508,21 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 <KonanCube size={125} showStars={true} glow={true} className="animate-float" />
               </div>
 
-              <div className="relative bg-slate-900/90 border border-slate-800/90 rounded-3xl p-4 shadow-2xl backdrop-blur-xl text-left">
-                <p className="text-sm font-bold text-white leading-relaxed">
+              <div className="relative bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800/90 rounded-3xl p-4 shadow-xl backdrop-blur-xl text-left w-full">
+                <p className="text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
                   « <WordByWordBubble text={bubbleMessage} speed={35} /> »
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight">
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
                   Le copilote IA de tes{' '}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-500 dark:from-cyan-400 dark:to-indigo-400">
                     révisions
                   </span>
                 </h1>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                  Choisis ton système (<strong className="text-slate-200">LMD, BTS, Lycée</strong>), extrais ton EDT en fichier texte structuré et génère ton planning de révision sur mesure.
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Choisis ton système (<strong className="text-slate-900 dark:text-slate-200">LMD, BTS, Lycée</strong>), extrais ton EDT en fichier texte structuré et génère ton planning de révision sur mesure.
                 </p>
               </div>
 
@@ -1443,10 +1557,25 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                     setAuthError(null);
                     setShowExistingLogin(true);
                   }}
-                  className="w-full py-3.5 px-6 rounded-2xl bg-slate-900 hover:bg-slate-800/90 text-slate-300 hover:text-white font-bold text-xs sm:text-sm border-2 border-slate-800 transition-all cursor-pointer uppercase"
+                  className="w-full py-3.5 px-6 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/90 text-slate-800 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white font-bold text-xs sm:text-sm border-2 border-slate-200 dark:border-slate-800 transition-all cursor-pointer uppercase shadow-xs"
                 >
                   J'AI DÉJÀ UN COMPTE • ME CONNECTER
                 </button>
+
+                {/* Bouton Admin visible UNIQUEMENT en local */}
+                {isLocalAdminAllowed && onOpenAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundFX.playCheckmarkPop();
+                      setShowAdminModal(true);
+                    }}
+                    className="w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                  >
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>Accès Administrateur (Local uniquement)</span>
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -1771,84 +1900,90 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
           {/* ÉTAPE 4 : PERSONNALISATION (COEFFICIENTS, MÉTHODES KONAN & CHRONOTYPE) */}
           {!showExistingLogin && step === 'customize' && (
-            <div className="space-y-5 max-h-[68vh] overflow-y-auto pr-1">
+            <div className="space-y-5 pb-4">
               {/* 1. Matières & Coefficients */}
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                    <Sliders className="w-4 h-4 text-indigo-400" />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                    <Sliders className="w-4 h-4 text-indigo-500 dark:text-indigo-400 shrink-0" />
                     <span>1. Matières extraites & Coefficients</span>
                   </h2>
-                  <span className="text-xs font-mono font-bold text-indigo-400">
+                  <span className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 shrink-0">
                     {editableSubjects.filter(s => s.enabled).length}/{editableSubjects.length} actives
                   </span>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {editableSubjects.map((subject) => (
                     <div
                       key={subject.id}
-                      className={`p-3 rounded-xl border transition-all ${
+                      className={`p-3 sm:p-3.5 rounded-2xl border transition-all ${
                         subject.enabled
-                          ? 'bg-slate-900/90 border-slate-800'
-                          : 'bg-slate-900/30 border-slate-800/40 opacity-50'
+                          ? 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 shadow-xs'
+                          : 'bg-slate-100/60 dark:bg-slate-900/30 border-slate-200/50 dark:border-slate-800/40 opacity-50'
                       }`}
                     >
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                        {/* Ligne 1 sur mobile : Checkbox + Couleur + Nom complet de la matière (100% lisible) */}
+                        <div className="flex items-center gap-2.5 min-w-0 flex-1 w-full">
                           <input
                             type="checkbox"
                             checked={subject.enabled}
                             onChange={() => handleToggleSubjectEnabled(subject.id)}
-                            className="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-700 cursor-pointer shrink-0"
+                            className="w-4 h-4 rounded text-indigo-600 bg-slate-100 dark:bg-slate-950 border-slate-300 dark:border-slate-700 cursor-pointer shrink-0"
                           />
                           <span
-                            className="w-2.5 h-2.5 rounded-full shrink-0"
+                            className="w-3 h-3 rounded-full shrink-0 shadow-xs"
                             style={{ backgroundColor: subject.color }}
                           />
                           <input
                             type="text"
                             value={subject.name}
                             onChange={(e) => handleUpdateSubjectName(subject.id, e.target.value)}
-                            className="bg-transparent text-xs sm:text-sm font-bold text-white focus:outline-none border-b border-transparent focus:border-indigo-500 flex-1 min-w-0"
+                            className="bg-transparent text-sm font-extrabold text-slate-900 dark:text-white focus:outline-none border-b border-transparent focus:border-indigo-500 flex-1 min-w-0 w-full"
                           />
+                          {subject.code && (
+                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 shrink-0">
+                              {subject.code}
+                            </span>
+                          )}
                         </div>
 
-                        {/* Cible + Coeff */}
-                        <div className="flex items-center gap-2 shrink-0">
+                        {/* Ligne 2 sur mobile : Cible + Coeff alignés proprement */}
+                        <div className="flex items-center justify-between sm:justify-end gap-2 pl-6 sm:pl-0 shrink-0">
                           <div className="relative flex items-center">
                             <select
                               value={subject.targetGrade}
                               onChange={(e) =>
                                 handleUpdateSubjectTargetGrade(subject.id, Number(e.target.value))
                               }
-                              className="appearance-none bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 pr-5 text-[11px] font-bold text-slate-200 focus:outline-none cursor-pointer"
+                              className="appearance-none bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-2.5 py-1.5 pr-6 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer"
                             >
                               <option value={12}>Cible 12/20</option>
                               <option value={14}>Cible 14/20</option>
                               <option value={16}>Cible 16/20</option>
                               <option value={18}>Cible 18/20</option>
                             </select>
-                            <ChevronDown className="w-3 h-3 text-slate-400 pointer-events-none absolute right-1.5" />
+                            <ChevronDown className="w-3.5 h-3.5 text-slate-400 pointer-events-none absolute right-2" />
                           </div>
 
-                          <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-lg p-1">
+                          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-1">
                             <button
                               type="button"
                               onClick={() => handleUpdateSubjectCoeff(subject.id, -1)}
-                              className="w-6 h-6 rounded bg-slate-900 hover:bg-slate-800 flex items-center justify-center text-slate-300 cursor-pointer"
+                              className="w-7 h-7 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300 cursor-pointer shadow-2xs"
                             >
-                              <Minus className="w-3 h-3" />
+                              <Minus className="w-3.5 h-3.5" />
                             </button>
-                            <span className="text-xs font-mono font-black text-indigo-400 px-1.5">
+                            <span className="text-xs font-mono font-black text-indigo-600 dark:text-indigo-400 px-2">
                               C.{subject.coefficient}
                             </span>
                             <button
                               type="button"
                               onClick={() => handleUpdateSubjectCoeff(subject.id, 1)}
-                              className="w-6 h-6 rounded bg-slate-900 hover:bg-slate-800 flex items-center justify-center text-slate-300 cursor-pointer"
+                              className="w-7 h-7 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300 cursor-pointer shadow-2xs"
                             >
-                              <Plus className="w-3 h-3" />
+                              <Plus className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </div>
@@ -2262,9 +2397,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                           {/* Bandeau d'annonce pour KONAN PLUS */}
                           {isPlus && (
                             <div className="mt-3 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-2">
-                              <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                              <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
                               <span className="text-xs font-bold text-amber-300 leading-tight">
-                                En cours de déploiement final — Inscrivez-vous pour un accès prioritaire.
+                                Inclut la configuration guidée de votre EDT Pro pas à pas avec Konan !
                               </span>
                             </div>
                           )}
@@ -2316,7 +2451,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         </div>
                       </div>
 
-                      {/* Bouton d'action */}
+                      {/* Bouton d'action (Sans cloche qui saute sur Plus) */}
                       <button
                         type="button"
                         onClick={() => handleSelectAccompanimentModel(plan.id)}
@@ -2328,9 +2463,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             : 'bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700'
                         }`}
                       >
-                        {isPlus && <BellRing className="w-4 h-4 text-amber-400 animate-bounce" />}
                         <span>{plan.ctaLabel}</span>
-                        {!isPlus && <ArrowRight className="w-4 h-4" />}
+                        <ArrowRight className="w-4 h-4" />
                       </button>
                     </div>
                   );
@@ -2367,7 +2501,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
       {/* PIED DE PAGE AVEC BOUTON CONTINUER */}
       {!showExistingLogin && (step === 'study_type' || step === 'upload' || step === 'customize') && (
-        <footer className="w-full border-t border-slate-800/80 bg-[#070B13]/95 backdrop-blur-md px-4 py-3.5 z-20">
+        <footer className="w-full border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-[#070B13]/95 backdrop-blur-md px-4 py-3.5 z-20">
           <div className="max-w-2xl mx-auto">
             {step === 'study_type' && (
               <button
