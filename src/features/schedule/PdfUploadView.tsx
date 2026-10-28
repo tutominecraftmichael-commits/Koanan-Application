@@ -14,6 +14,7 @@ import {
   Cpu, 
   X,
   Copy,
+  Download,
   Calendar,
   Key,
   Sliders,
@@ -81,24 +82,27 @@ export interface PdfUploadViewProps {
   onUpgradeToPro?: () => void;
 }
 
-const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; icon: React.ReactNode; placeholder: string; demoId: string }> = {
+const FORMAT_CONFIG: Record<ScheduleFormatType, { label: string; short: string; fileName: string; icon: React.ReactNode; placeholder: string; demoId: string }> = {
   lmd: {
     label: 'LMD (Université / Grandes Écoles)',
-    short: 'LMD',
+    short: 'Système LMD',
+    fileName: 'Emploi_du_Temps_LMD.txt',
     icon: <GraduationCap className="w-4 h-4" />,
     demoId: 'pdf-esatic-entd2',
     placeholder: `JOUR: LUNDI\n- 07:30 - 10:00 : Algèbres 2 [1MTH3350] | Salle: Amphi ESATIC | Prof: Dr KOIVOGUI\n- 10:15 - 12:45 : Anglais [1LAN3350] | Salle: Salle 204 | Prof: M. YEO\n- 14:30 - 17:00 : Dév Applications 1 [1INF3350] | Salle: Lab Info 1 | Prof: M. KONE\n\nJOUR: MARDI\n- 07:30 - 10:00 : Finance [1MAN3350] | Salle: Amphi B | Prof: Dr KADJO`
   },
   tpcm: {
     label: 'BTS / Technique (CM · TD · TP)',
-    short: 'BTS',
+    short: 'Système BTS',
+    fileName: 'Emploi_du_Temps_BTS.txt',
     icon: <Cpu className="w-4 h-4" />,
     demoId: 'pdf-cs-l3',
     placeholder: `JOUR: LUNDI\n- 08:00 - 10:00 : CM Électronique Analogique (Amphi 1)\n- 10:15 - 12:15 : TD Mathématiques Appliquées (Salle 302)\n- 14:00 - 17:00 : TP Informatique Industrielle (Labo Info 3)\n\nJOUR: MARDI\n- 08:00 - 10:00 : CM Physique des Matériaux (Amphi 2)\n- 10:15 - 12:15 : TD Systèmes Logiques (Salle 105)`
   },
   scolaire: {
     label: 'Scolaire (Lycée / Collège)',
-    short: 'Scolaire',
+    short: 'Lycée / Scolaire',
+    fileName: 'Emploi_du_Temps_Lycee.txt',
     icon: <School className="w-4 h-4" />,
     demoId: 'pdf-lycee-john-wesley',
     placeholder: `JOUR: LUNDI\n- 08:00 - 10:00 : Mathématiques\n- 10:15 - 12:00 : Physique-Chimie\n- 14:00 - 16:00 : Français\n\nJOUR: MARDI\n- 08:00 - 10:00 : Histoire-Géographie\n- 10:15 - 12:00 : Anglais\n- 14:00 - 16:00 : SVT`
@@ -188,6 +192,24 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     }
   }, [scheduleText, selectedFormat]);
 
+  // Changement de catégorie académique (LMD, BTS, Lycée) : re-catégorise et transforme le texte en direct
+  const handleFormatChange = (newFormat: ScheduleFormatType) => {
+    setSelectedFormat(newFormat);
+    if (scheduleText.trim().length > 10) {
+      try {
+        const parsed = parseStructuredScheduleTruth(scheduleText, FORMAT_CONFIG[newFormat].fileName, newFormat);
+        if (parsed.slots.length > 0) {
+          const reformatted = formatExtractedScheduleToFormatText(parsed, newFormat);
+          if (reformatted.trim().length > 10) {
+            setScheduleText(reformatted);
+          }
+        }
+      } catch {
+        // Garder le texte tel quel si non parsable
+      }
+    }
+  };
+
   // Recommandation IA contextuelle selon l'emploi du temps scanné et les matières actives (Audio 2)
   const pacingRecommendation: PacingRecommendation = useMemo(() => {
     const activeCount = editableSubjects.filter(s => s.enabled).length || 6;
@@ -263,40 +285,43 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       const mimeType = file.type || (file.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
       const base64 = await convertFileToBase64(file);
 
-      // Appel IA direct natif
-      const aiResult = await extraireEmploiDuTemps(base64, mimeType);
+      // Appel IA direct natif avec catégorisation stricte (LMD, BTS, Lycée)
+      const aiResult = await extraireEmploiDuTemps(base64, mimeType, selectedFormat);
 
       if (aiResult && aiResult.trim().length > 10) {
-        setScheduleText(aiResult.trim());
+        const parsedAi = parseStructuredScheduleTruth(aiResult.trim(), file.name, selectedFormat);
+        if (parsedAi.slots.length > 0) {
+          const categorizedText = formatExtractedScheduleToFormatText(parsedAi, selectedFormat);
+          setScheduleText(categorizedText || aiResult.trim());
+        } else {
+          setScheduleText(aiResult.trim());
+        }
         setIsAnalyzing(false);
         return;
       }
     } catch (aiErr: any) {
       console.warn('[KONAN] Notice extraction IA directe :', aiErr?.message || aiErr);
-      if (aiErr?.message?.includes('VITE_GEMINI_API_KEY') || !hasGeminiApiKey()) {
-        setIsAnalyzing(false);
-        setError("Clé API Gemini non configurée sur ce site (Vercel). Cliquez sur '🔑 Configurer la clé' pour l'activer instantanément ou ajoutez VITE_GEMINI_API_KEY dans le dashboard Vercel.");
-        return;
-      }
     }
 
-    // Moteur de secours local si document PDF
-    if (file.name.toLowerCase().endsWith('.pdf')) {
-      try {
-        const localExtracted = await parseTimetableDocument(file, undefined, selectedFormat);
-        const localText = formatExtractedScheduleToFormatText(localExtracted, selectedFormat);
-        if (localText && localText.trim().length > 10) {
-          setScheduleText(localText.trim());
-          setIsAnalyzing(false);
-          return;
-        }
-      } catch (localErr) {
-        console.warn('[KONAN] Notice extraction locale :', localErr);
+    // Moteur d'extraction vectoriel / OCR local (PDF & Image) catégorisé selon selectedFormat
+    try {
+      const localExtracted = await parseTimetableDocument(file, undefined, selectedFormat);
+      const localText = formatExtractedScheduleToFormatText(localExtracted, selectedFormat);
+      if (localText && localText.trim().length > 10 && localExtracted.slots.length > 0) {
+        setScheduleText(localText.trim());
+        setIsAnalyzing(false);
+        return;
       }
+    } catch (localErr) {
+      console.warn('[KONAN] Notice extraction locale :', localErr);
     }
 
     setIsAnalyzing(false);
-    setError("L'IA n'a pas pu numériser ce document. Vous pouvez coller le texte de votre emploi du temps directement dans la zone ci-dessous.");
+    if (!hasGeminiApiKey()) {
+      setError("Clé API Gemini non configurée et aucun créneau détecté localement. Cliquez sur '🔑 Configurer la clé' ou collez votre emploi du temps ci-dessous.");
+    } else {
+      setError("Aucun créneau n'a pu être extrait automatiquement de ce fichier. Vous pouvez coller ou saisir votre emploi du temps dans l'éditeur texte ci-dessous.");
+    }
   };
 
   // Charger un exemple officiel certifié
@@ -321,6 +346,20 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     setTimeout(() => setIsCopied(false), 2000);
   };
 
+  // Télécharger le fichier texte structuré (.txt)
+  const handleDownloadTxt = () => {
+    if (!scheduleText.trim()) return;
+    const blob = new Blob([scheduleText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = FORMAT_CONFIG[selectedFormat].fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   // Passer à l'étape 2 de personnalisation
   const handleProceedToCustomization = () => {
     if (!scheduleText.trim()) {
@@ -333,7 +372,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     try {
       const parsed = parseStructuredScheduleTruth(
         scheduleText,
-        selectedFile?.name || 'Emploi_du_Temps.txt',
+        selectedFile?.name || FORMAT_CONFIG[selectedFormat].fileName,
         selectedFormat
       );
 
@@ -465,7 +504,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     try {
       // Reconstituer l'objet ExtractedPdfSchedule avec les matières et coefficients modifiés
       const finalSchedule = {
-        fileName: selectedFile?.name || 'Emploi_du_Temps.txt',
+        fileName: selectedFile?.name || FORMAT_CONFIG[selectedFormat].fileName,
         fileSize: selectedFile?.size || 1024,
         academicTrack: selectedFormat === 'lmd' ? 'Licence Universitaire' : selectedFormat === 'tpcm' ? 'BTS / Technique' : 'Scolaire (Lycée)',
         detectedConfidence: 95,
@@ -645,7 +684,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug">
                 {currentStep === 'upload' 
-                  ? "Importation de l'Emploi du Temps" 
+                  ? "Extraction & Catégorisation de l'EDT" 
                   : "Configuration des Matières & Méthodes"}
               </h1>
               <span className="bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/30 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
@@ -654,7 +693,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             </div>
             <p className="text-xs text-slate-400 mt-1 leading-relaxed">
               {currentStep === 'upload'
-                ? "Scannez votre document pour extraire directement vos cours et horaires."
+                ? "Choisissez votre système d'étude (LMD, BTS, Lycée) pour catégoriser l'extraction et la transformer en fichier texte structuré."
                 : "Ajustez les coefficients de vos matières et choisissez votre méthode d'étude."}
             </p>
           </div>
@@ -713,7 +752,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           {/* SECTION: NIVEAU D'ÉTUDE */}
           <div className="space-y-2">
             <label className="text-xs font-semibold text-slate-300">
-              Niveau académique
+              Catégorie académique (définit la structure du fichier texte extrait)
             </label>
             <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-slate-900/80 border border-slate-800">
               {(Object.keys(FORMAT_CONFIG) as ScheduleFormatType[]).map((fmt) => {
@@ -723,7 +762,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   <button
                     key={fmt}
                     type="button"
-                    onClick={() => setSelectedFormat(fmt)}
+                    onClick={() => handleFormatChange(fmt)}
                     className={`py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer ${
                       isSelected 
                         ? 'bg-indigo-600 text-white shadow-sm font-semibold' 
@@ -819,7 +858,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 {isAnalyzing ? (
                   <div className="flex items-center gap-2 text-indigo-400 text-xs font-semibold shrink-0">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Analyse en cours...</span>
+                    <span>Extraction & Catégorisation ({FORMAT_CONFIG[selectedFormat].short})...</span>
                   </div>
                 ) : (
                   <button
@@ -837,7 +876,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
           {/* EXEMPLES PRÉDÉFINIS */}
           <div className="flex items-center gap-2 flex-wrap text-xs text-slate-400">
-            <span className="text-[11px] font-medium text-slate-500">Exemples rapides :</span>
+            <span className="text-[11px] font-medium text-slate-500">Exemples certifiés :</span>
             <button
               type="button"
               onClick={() => handleLoadDemo('pdf-esatic-entd2', 'lmd')}
@@ -857,15 +896,15 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               onClick={() => handleLoadDemo('pdf-lycee-john-wesley', 'scolaire')}
               className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-colors cursor-pointer text-[11px]"
             >
-              Terminale (Scolaire)
+              Terminale (Lycée)
             </button>
           </div>
 
-          {/* ÉDITEUR TEXTE STRUCTURÉ */}
+          {/* ÉDITEUR FICHIER TEXTE STRUCTURÉ */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-2">
-                <span>Texte structuré de l'emploi du temps</span>
+                <span>Fichier texte extrait ({FORMAT_CONFIG[selectedFormat].fileName})</span>
                 {detectedSlotsCount > 0 && (
                   <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">
                     ✓ {detectedSlotsCount} cours détecté{detectedSlotsCount > 1 ? 's' : ''}
@@ -874,14 +913,24 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               </label>
 
               {scheduleText && (
-                <button
-                  type="button"
-                  onClick={handleCopy}
-                  className="text-[11px] text-slate-400 hover:text-white inline-flex items-center gap-1 cursor-pointer"
-                >
-                  {isCopied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                  <span>{isCopied ? 'Copié !' : 'Copier'}</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCopy}
+                    className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white inline-flex items-center gap-1.5 cursor-pointer transition-colors"
+                  >
+                    {isCopied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                    <span>{isCopied ? 'Copié !' : 'Copier'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDownloadTxt}
+                    className="text-[11px] px-2.5 py-1 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 hover:text-white inline-flex items-center gap-1.5 cursor-pointer transition-colors font-semibold"
+                  >
+                    <Download className="w-3 h-3" />
+                    <span>Télécharger .txt</span>
+                  </button>
+                </div>
               )}
             </div>
 
@@ -895,7 +944,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             />
           </div>
 
-          {/* BOUTON PASSER À L'ÉTAPE 2 (Audio 1 : Ne pas générer immédiatement sans configurer !) */}
+          {/* BOUTON PASSER À L'ÉTAPE 2 */}
           <div className="pt-2">
             <Button
               onClick={handleProceedToCustomization}
@@ -942,7 +991,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       : 'bg-[#131B2E]/20 border-white/5 opacity-50'
                   }`}
                 >
-                  {/* Ligne supérieure : Checkbox + point de couleur + Nom de la matière (sans coupure de texte) */}
+                  {/* Ligne supérieure : Checkbox + point de couleur + Nom de la matière */}
                   <div className="flex items-center gap-2.5 sm:gap-3 w-full min-w-0">
                     <input
                       type="checkbox"

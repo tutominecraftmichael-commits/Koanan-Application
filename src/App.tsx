@@ -71,7 +71,6 @@ import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelecto
 
 
 // Views
-import { LandingHero } from './features/landing/LandingHero';
 import { AuthPage } from './features/auth/AuthPage';
 import { PdfUploadView } from './features/schedule/PdfUploadView';
 import { DashboardOverview } from './features/dashboard/DashboardOverview';
@@ -81,6 +80,7 @@ import { PlannerView } from './features/planner/PlannerView';
 import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
 import { FocusMode } from './features/focus/FocusMode';
 import { PresetModal } from './features/onboarding/PresetModal';
+import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding';
 import { ProWizardView } from './features/pro/ProWizardView';
 import { AdminDashboard } from './features/admin/AdminDashboard';
 
@@ -741,8 +741,39 @@ export function App() {
     userState.academicLevel = profile.academicLevel || userState.academicLevel;
     userState.studentName = finalName;
 
+    // Si l'utilisateur vient de terminer le parcours d'onboarding avec extraction d'EDT, fusionner immédiatement ses cours et matières
+    let onboardingPlanTier: 'free' | 'pro' | 'plus' | undefined;
+    try {
+      const rawPendingOnboarding = sessionStorage.getItem('konan_pending_onboarding_payload');
+      if (rawPendingOnboarding) {
+        const parsedOnboarding = JSON.parse(rawPendingOnboarding);
+        if (parsedOnboarding && Array.isArray(parsedOnboarding.subjects) && parsedOnboarding.subjects.length > 0) {
+          userState.subjects = parsedOnboarding.subjects;
+          userState.classSlots = parsedOnboarding.classSlots || [];
+          userState.studySessions = parsedOnboarding.studySessions || [];
+          if (parsedOnboarding.preferences) {
+            userState.preferences = {
+              ...userState.preferences,
+              ...parsedOnboarding.preferences,
+              studentName: finalName,
+            };
+            userState.academicLevel =
+              parsedOnboarding.preferences.academicLevel ||
+              parsedOnboarding.preferences.academicTrack ||
+              userState.academicLevel;
+          }
+          userState.completedOnboarding = true;
+          userState.pdfImportsCount = Math.max(1, userState.pdfImportsCount || 0);
+          onboardingPlanTier = parsedOnboarding.planTier;
+        }
+        sessionStorage.removeItem('konan_pending_onboarding_payload');
+      }
+    } catch (err) {
+      console.warn('Notice lecture payload onboarding:', err);
+    }
+
     const pendingPlan = (localStorage.getItem('konan_pending_plan') as 'free' | 'pro' | 'plus' | null);
-    const effectivePlan = pendingPlan || userState.planTier || profile.planTier || 'free';
+    const effectivePlan = onboardingPlanTier || pendingPlan || userState.planTier || profile.planTier || 'free';
     if (pendingPlan) {
       localStorage.removeItem('konan_pending_plan');
     }
@@ -758,8 +789,14 @@ export function App() {
       name: finalName,
       isLoggedIn: true,
       isDemo: false,
+      pdfImportsCount: userState.pdfImportsCount,
     };
     userState.isDemoMode = false;
+
+    // Sauvegarder immédiatement l'état local pour que tout rafraîchissement conserve l'emploi du temps extrait
+    if (userState.completedOnboarding && userState.subjects.length > 0) {
+      await saveUserState(profile.googleId, userState);
+    }
 
     // Vérifier si cet utilisateur a DÉJÀ accepté les règles de confidentialité précédemment
     let hasAcceptedPrivacy = Boolean(userState.privacyPolicyAccepted || userState.userAccount?.privacyPolicyAccepted);
@@ -1217,17 +1254,55 @@ export function App() {
     classSlots: ClassSlot[];
     preferences: StudyPreferences;
     studySessions: StudySession[];
+    planTier?: 'free' | 'pro' | 'plus';
   }) => {
     if (state.isDemoMode) {
       showToast('⚠️ En mode démo, l’emploi du temps est prédéfini à l’avance et ne peut pas être modifié par importation.');
       return;
     }
 
+    try {
+      sessionStorage.removeItem('konan_pending_onboarding_payload');
+    } catch {
+      // Ignorer
+    }
+
+    // Mettre aussi à jour pendingAuth si la modale de confidentialité est ouverte lors d'une première inscription
+    setPendingAuth(prevPending => {
+      if (!prevPending) return null;
+      const effectiveTier = payload.planTier || prevPending.initialState.planTier || 'free';
+      const nextPdfCount = (prevPending.initialState.pdfImportsCount || 0) + 1;
+      const mergedInitial: AppState = {
+        ...prevPending.initialState,
+        academicLevel: payload.preferences.academicLevel || prevPending.initialState.academicLevel,
+        planTier: effectiveTier,
+        subjects: payload.subjects,
+        classSlots: payload.classSlots,
+        preferences: payload.preferences,
+        studySessions: payload.studySessions,
+        pdfImportsCount: nextPdfCount,
+        completedOnboarding: true,
+        userAccount: prevPending.initialState.userAccount
+          ? {
+              ...prevPending.initialState.userAccount,
+              planTier: effectiveTier,
+              pdfImportsCount: nextPdfCount,
+            }
+          : undefined,
+      };
+      return {
+        ...prevPending,
+        initialState: mergedInitial,
+      };
+    });
+
     setState(prev => {
       const nextPdfCount = (prev.pdfImportsCount || prev.userAccount?.pdfImportsCount || 0) + 1;
+      const effectiveTier = payload.planTier || prev.planTier || prev.userAccount?.planTier || 'free';
       const updated: AppState = {
         ...prev,
-        academicLevel: payload.preferences.academicLevel,
+        academicLevel: payload.preferences.academicLevel || prev.academicLevel,
+        planTier: effectiveTier,
         subjects: payload.subjects,
         classSlots: payload.classSlots,
         preferences: payload.preferences,
@@ -1236,6 +1311,7 @@ export function App() {
         pdfImportsCount: nextPdfCount,
         userAccount: prev.userAccount ? {
           ...prev.userAccount,
+          planTier: effectiveTier,
           pdfImportsCount: nextPdfCount,
         } : undefined,
         completedOnboarding: true,
@@ -1248,7 +1324,7 @@ export function App() {
     });
 
     // 🌟 If on KONAN PRO, automatically trigger Google Agenda sync for all days
-    const isPro = state.planTier === 'pro' || state.userAccount?.planTier === 'pro' || state.planTier === 'plus' || state.userAccount?.planTier === 'plus';
+    const isPro = (payload.planTier || state.planTier || state.userAccount?.planTier) === 'pro' || (payload.planTier || state.planTier || state.userAccount?.planTier) === 'plus';
     if (isPro && payload.studySessions.length > 0) {
       triggerAutoGoogleCalendarSync(
         payload.studySessions,
@@ -1259,7 +1335,7 @@ export function App() {
     }
 
     showToast('🎉 Emploi du temps synchronisé & planning d’étude optimisé généré !');
-    setActiveView('planner');
+    setActiveView('dashboard');
   };
 
   const handleUpdateSubjects = (newSubjects: Subject[]) => {
@@ -1674,8 +1750,8 @@ export function App() {
         className="hidden"
       />
 
-      {/* Persistent Navbar (Masquée sur la console Administrateur qui a son propre en-tête) */}
-      {activeView !== 'admin' && (
+      {/* Persistent Navbar (Masquée sur la console Administrateur et sur l'accueil Onboarding immersif) */}
+      {activeView !== 'admin' && activeView !== 'landing' && (
         <Navbar
           activeView={activeView}
           onNavigate={handleNavigate}
@@ -1739,20 +1815,23 @@ export function App() {
           />
         )}
 
-        {/* Landing Page */}
+        {/* Parcours d'Onboarding Immersif & Animé Style Duolingo (Page d'accueil épurée) */}
         {activeView === 'landing' && (
-          <LandingHero
-            isLoggedIn={Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode)}
-            currentPlan={effectivePlanTier}
-            onSelectPlan={handleSelectPlan}
-            onStartApp={() => {
-              if (state.userAccount?.isLoggedIn && !state.isDemoMode) {
-                setActiveView('dashboard');
-              } else {
-                setActiveView('auth');
-              }
+          <DuolingoOnboarding
+            currentUser={state.userAccount?.isLoggedIn ? state.userAccount : null}
+            onOpenLogin={() => setActiveView('auth')}
+            onLoginSuccess={(user) => {
+              handleLoginSuccess(user);
             }}
-            onSelectPreset={handleEnterDemoMode}
+            onComplete={({ subjects, classSlots, preferences, studySessions, planTier }) => {
+              handleApplyExtractedSchedule({
+                subjects,
+                classSlots,
+                preferences,
+                studySessions,
+                planTier,
+              });
+            }}
           />
         )}
 
