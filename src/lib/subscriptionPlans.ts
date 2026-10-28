@@ -6,12 +6,9 @@ import type { StudyPacing, PlanTier } from '../types';
 export type { PlanTier };
 
 /**
- * Méthodes autorisées en version GRATUITE (Tier: 'free')
- * - Technique Pomodoro
- * - Règle des deux minutes
- * - Active Recall (Rappel actif)
- * - Spaced Repetition (Répétition espacée)
- * (+ 'active_recall_spaced' pour rétro-compatibilité)
+ * Méthodes autorisées individuellement en version GRATUITE (Tier: 'free')
+ * Toutes les méthodes individuelles sont accessibles gratuitement (1 seule méthode active à la fois).
+ * Seule la COMBINAISON de méthodes simultanées (jusqu'à 3) est réservée à KONAN PRO.
  */
 export const FREE_METHODS: readonly StudyPacing[] = [
   'pomodoro',
@@ -19,17 +16,14 @@ export const FREE_METHODS: readonly StudyPacing[] = [
   'active_recall',
   'spaced_repetition',
   'active_recall_spaced',
-] as const;
-
-/**
- * Méthodes exclusives à la version PRO (Tier: 'pro')
- * - Technique de Feynman
- * - Time Blocking
- */
-export const PRO_METHODS: readonly StudyPacing[] = [
   'feynman',
   'time_blocking',
 ] as const;
+
+/**
+ * Aucune méthode individuelle n'est verrouillée : c'est la combinaison de méthodes qui est exclusive au palier PRO
+ */
+export const PRO_METHODS: readonly StudyPacing[] = [] as const;
 
 /**
  * Fonctionnalités exclusives à la version PLUS (Tier: 'plus')
@@ -49,8 +43,6 @@ export type PlusFeature = typeof PLUS_FEATURES[number];
  * Fonctionnalités exclusives à la version PRO (Tier: 'pro')
  */
 export const PRO_FEATURES = [
-  'feynman',
-  'time_blocking',
   'combined_methods',
   'coefficients_recommendation',
   'study_reminders_30m',

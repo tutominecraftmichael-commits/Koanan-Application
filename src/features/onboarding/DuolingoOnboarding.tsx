@@ -183,8 +183,8 @@ const ACCOMPANIMENT_PLANS: AccompanimentPlanSpec[] = [
         detail: "Ajout et personnalisation des cours avec recalcul instantané des créneaux d'étude.",
       },
       {
-        text: "4 Techniques d'apprentissage Freemium (1 active à la fois)",
-        detail: '• Pomodoro classique • Active Recall (Rappel actif) • Spaced Repetition (Répétition espacée) • Règle des 2 minutes.',
+        text: "Toutes les 5 Méthodes d'apprentissage incluses (1 active à la fois)",
+        detail: '• Pomodoro • Active Recall & Spaced Repetition • Technique de Feynman • Time Blocking • Règle des 2 minutes.',
       },
     ],
   },
@@ -208,6 +208,11 @@ const ACCOMPANIMENT_PLANS: AccompanimentPlanSpec[] = [
         highlight: true,
       },
       {
+        text: "Combinaison de méthodes Premium (Jusqu'à 3 simultanées)",
+        detail: "Activez et combinez jusqu'à 3 techniques d'espacement simultanément dans le même planning (contre 1 seule en version gratuite) pour alterner selon vos matières.",
+        highlight: true,
+      },
+      {
         text: "Dates d'examens & Devoirs Surveillés (DS)",
         detail: "Intégrez vos épreuves ; l'algorithme s'adapte avec compte à rebours interactif (J-X) et sur-priorisation automatique.",
         highlight: true,
@@ -217,17 +222,8 @@ const ACCOMPANIMENT_PLANS: AccompanimentPlanSpec[] = [
         detail: 'Export direct de votre planning personnalisé avec alertes automatiques et intégration nette.',
       },
       {
-        text: "Modèles d'espacement Premium",
-        detail: '• Time Blocking académique ciblé • Technique de Feynman (assimilation conceptuelle profonde).',
-        highlight: true,
-      },
-      {
         text: 'Recommandations algorithmiques de Konan',
-        detail: 'Recommandations intelligentes de la meilleure technique selon la fatigue et vos heures de cours.',
-      },
-      {
-        text: 'Combinaison triple simultanée',
-        detail: "Capacité d'activer jusqu'à 3 techniques d'espacement simultanément dans le même planning.",
+        detail: 'Recommandations intelligentes de la meilleure combinaison de techniques selon la fatigue et vos heures de cours.',
       },
     ],
   },
@@ -413,6 +409,16 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   const [isSubmittingAuth, setIsSubmittingAuth] = useState<boolean>(false);
   const [registeredProfile, setRegisteredProfile] = useState<UserAccount | null>(null);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    } catch {
+      // Ignore
+    }
+  }, [step, showExistingLogin]);
 
   useEffect(() => {
     return () => {

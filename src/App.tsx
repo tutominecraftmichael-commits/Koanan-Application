@@ -396,6 +396,17 @@ export function App() {
   const hasGreetedAuthRef = useRef<string>('');
   const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Remonter automatiquement en haut de la page à chaque changement de vue
+  useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    } catch {
+      // Ignore
+    }
+  }, [activeView]);
+
   // Persist state whenever it changes (debounced by 800ms to eliminate thrashing and performance lag)
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -1164,10 +1175,9 @@ export function App() {
       demo.userAccount.planTier = 'free';
     }
 
-    // Si la méthode préférée était pro (feynman ou time_blocking), basculer sur pomodoro
-    if (demo.preferences?.pacing === 'feynman' || demo.preferences?.pacing === 'time_blocking') {
-      demo.preferences.pacing = 'pomodoro';
-      demo.preferences.combinedPacings = ['pomodoro'];
+    // En mode gratuit (démo), limiter à 1 seule méthode active à la fois
+    if (demo.preferences?.combinedPacings && demo.preferences.combinedPacings.length > 1) {
+      demo.preferences.combinedPacings = [demo.preferences.pacing || 'pomodoro'];
     }
 
     setActiveSession({

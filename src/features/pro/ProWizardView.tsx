@@ -233,6 +233,17 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   // État Accordéon pour les matières en Étape 2 (par défaut la première matière est ouverte)
   const [expandedSubjectId, setExpandedSubjectId] = useState<string | null>(() => subjectsList[0]?.id || null);
 
+  // Remonter automatiquement en haut de la page à chaque changement d'étape
+  useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    } catch {
+      // Ignore
+    }
+  }, [currentStep]);
+
   // Gestion des méthodes en Étape 1
   const handleTogglePacing = (pacingId: StudyPacing) => {
     soundFX.playCheckmarkPop();
@@ -497,7 +508,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                 {activeTier === 'plus' ? 'KONAN PLUS' : 'KONAN PRO'}
               </span>
               <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                Guide interactif avec Konan
+                Version {activeTier.toUpperCase()} ouverte
               </span>
             </div>
             <button
@@ -515,13 +526,13 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
               Configuration de votre Emploi du Temps {activeTier === 'plus' ? 'Plus' : 'Pro'}
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Konan vous accompagne pas à pas : méthodes cognitives, devoirs & examens, réorganisation algorithmique et rappels Google Agenda.
+              Personnalisez votre combinaison de méthodes cognitives, vos devoirs et vos examens. L'algorithme réorganise votre semaine en optimisant chaque matière.
             </p>
           </div>
         </div>
 
         {/* =========================================================================
-            GUIDE INTERACTIF KONAN PAS À PAS (BULLE ANIMÉE MOT PAR MOT)
+            BULLE INTERACTIVE KONAN (MOT PAR MOT, SANS "GUIDE PAS-À-PAS")
             ========================================================================= */}
         <div className="flex items-center gap-3.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border-2 border-indigo-500/30 dark:border-indigo-500/40 shadow-md shadow-indigo-500/5">
           <div className="shrink-0">
@@ -530,7 +541,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30">
-                Konan • Guide Pas-à-Pas
+                Konan
               </span>
               <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500">
                 Étape {currentStep}/4
@@ -676,7 +687,6 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                 {PACING_STRATEGIES.map((strategy) => {
                   const isSelected = selectedCombinedPacings.includes(strategy.id);
                   const isPrimary = selectedPrimaryPacing === strategy.id;
-                  const isProExclusive = strategy.planRequired === 'pro';
                   const theme = getStrategyTheme(strategy.id);
 
                   return (
@@ -696,11 +706,6 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                               <h4 className="text-sm font-extrabold text-slate-900 dark:text-white">
                                 {strategy.title}
                               </h4>
-                              {isProExclusive && (
-                                <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-xs shrink-0">
-                                  PRO
-                                </span>
-                              )}
                             </div>
                             <span className={`inline-block text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border ${theme.badgeBg}`}>
                               {strategy.badge}
