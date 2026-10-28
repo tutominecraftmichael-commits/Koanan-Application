@@ -1,13 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import type { AppState } from '../../services/storage';
-import type { 
-  Subject, 
-  StudyPreferences, 
-  StudySession, 
-  StudyPacing, 
+import type {
+  Subject,
+  StudyPreferences,
+  StudySession,
+  StudyPacing,
   ActiveAppView,
   EvaluationType,
-  DayOfWeek 
+  DayOfWeek
 } from '../../types';
 import { DAYS_OF_WEEK } from '../../types';
 import { PACING_STRATEGIES, recommendPacingStrategies, getPacingStrategy } from '../../lib/pacingStrategies';
@@ -15,17 +15,17 @@ import { generateOptimizedStudyPlan } from '../../services/plannerAlgorithm';
 import { downloadStudyPlanICS, getGoogleCalendarImportUrl } from '../../services/googleCalendarService';
 import { getDaysRemaining, generateId } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  Check, 
-  Calendar, 
-  Download, 
-  ExternalLink, 
-  Clock, 
-  Plus, 
-  Trash2, 
-  CheckCircle2, 
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Calendar,
+  Download,
+  ExternalLink,
+  Clock,
+  Plus,
+  Trash2,
+  CheckCircle2,
   Zap,
   ShieldCheck,
   Flame,
@@ -60,11 +60,10 @@ const WordByWordBubble: React.FC<{ text: string; speedMs?: number }> = ({ text, 
       {words.map((word, idx) => (
         <span
           key={`${idx}-${word}`}
-          className={`inline-block mr-1 transition-all duration-200 ${
-            idx < visibleCount
-              ? 'opacity-100 translate-y-0 blur-0'
-              : 'opacity-0 translate-y-1 blur-[2px] pointer-events-none'
-          }`}
+          className={`inline-block mr-1 transition-all duration-200 ${idx < visibleCount
+            ? 'opacity-100 translate-y-0 blur-0'
+            : 'opacity-0 translate-y-1 blur-[2px] pointer-events-none'
+            }`}
         >
           {word}
         </span>
@@ -497,7 +496,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#070B13] text-slate-900 dark:text-slate-100 transition-colors py-6 sm:py-8 px-3 sm:px-6">
       <div className="max-w-4xl mx-auto space-y-6">
-        
+
         {/* =========================================================================
             HEADER COMPACT : BADGE PRO/PLUS & QUITTER SUR UNE LIGNE, TITRE RESPONSIVE
             ========================================================================= */}
@@ -558,7 +557,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
             ========================================================================= */}
         <div className="space-y-2">
           <div className="w-full bg-slate-200/80 dark:bg-slate-800/80 h-2 rounded-full overflow-hidden shadow-inner relative">
-            <div 
+            <div
               className="h-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 transition-all duration-500 ease-out rounded-full shadow-sm shadow-amber-400/50"
               style={{ width: `${(currentStep / 4) * 100}%` }}
             />
@@ -592,26 +591,23 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                   }
                 }}
                 disabled={s.step > currentStep && !reorganizedSessions}
-                className={`py-2 px-1 sm:py-3 sm:px-2 rounded-xl sm:rounded-2xl border flex flex-col items-center justify-center text-center transition-all duration-200 cursor-pointer ${
-                  isActive
-                    ? 'bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-transparent border-amber-400 dark:border-amber-400/80 shadow-md shadow-amber-500/10 ring-2 ring-amber-400/30 text-slate-900 dark:text-white'
-                    : isCompleted
+                className={`py-2 px-1 sm:py-3 sm:px-2 rounded-xl sm:rounded-2xl border flex flex-col items-center justify-center text-center transition-all duration-200 cursor-pointer ${isActive
+                  ? 'bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-transparent border-amber-400 dark:border-amber-400/80 shadow-md shadow-amber-500/10 ring-2 ring-amber-400/30 text-slate-900 dark:text-white'
+                  : isCompleted
                     ? 'bg-emerald-500/10 dark:bg-emerald-950/20 border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15'
                     : 'bg-white/40 dark:bg-slate-900/30 border-slate-200/60 dark:border-slate-800/60 text-slate-400 opacity-60 cursor-not-allowed'
-                }`}
+                  }`}
               >
-                <span className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full text-[10px] sm:text-xs font-bold flex items-center justify-center mb-1 shrink-0 transition-transform ${
-                  isActive
-                    ? 'bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-black shadow-xs scale-105'
-                    : isCompleted
+                <span className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full text-[10px] sm:text-xs font-bold flex items-center justify-center mb-1 shrink-0 transition-transform ${isActive
+                  ? 'bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-black shadow-xs scale-105'
+                  : isCompleted
                     ? 'bg-emerald-500 text-white shadow-xs'
                     : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
-                }`}>
+                  }`}>
                   {isCompleted ? <Check className="w-3 h-3 stroke-[3]" /> : s.step}
                 </span>
-                <span className={`text-[11px] sm:text-xs leading-tight whitespace-normal text-center ${
-                  isActive ? 'font-bold text-slate-900 dark:text-white' : 'font-medium'
-                }`}>
+                <span className={`text-[11px] sm:text-xs leading-tight whitespace-normal text-center ${isActive ? 'font-bold text-slate-900 dark:text-white' : 'font-medium'
+                  }`}>
                   {s.label}
                 </span>
               </button>
@@ -635,7 +631,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                 <button
                   type="button"
                   onClick={handleApplyAiRecommendation}
-                  className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs transition-all shadow-md shadow-indigo-600/20 active:scale-95 cursor-pointer shrink-0 inline-flex items-center justify-center gap-2"
+                  className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs transition-all shadow-[0_4px_0_0_#3730A3] active:translate-y-0.5 active:shadow-[0_2px_0_0_#3730A3] cursor-pointer shrink-0 inline-flex items-center justify-center gap-2"
                 >
                   <Check className="w-4 h-4 stroke-[2.5]" />
                   <span>✓ Appliquer le conseil</span>
@@ -649,8 +645,8 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {aiRecommendation.recommendedIds.map(id => (
-                    <span 
-                      key={id} 
+                    <span
+                      key={id}
                       className="text-xs font-bold px-3 py-1 rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-cyan-300 border border-indigo-300/60 dark:border-indigo-500/40 shadow-xs flex items-center gap-1.5"
                     >
                       <span className="text-amber-400">★</span>
@@ -693,11 +689,10 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                     <div
                       key={strategy.id}
                       onClick={() => handleTogglePacing(strategy.id)}
-                      className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer relative flex flex-col justify-between gap-3 hover:-translate-y-0.5 ${
-                        isSelected
-                          ? `bg-white dark:bg-slate-900/90 ${theme.activeGlow}`
-                          : 'bg-white/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs'
-                      }`}
+                      className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer relative flex flex-col justify-between gap-3 hover:-translate-y-0.5 ${isSelected
+                        ? `bg-white dark:bg-slate-900/90 ${theme.activeGlow}`
+                        : 'bg-white/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs'
+                        }`}
                     >
                       <div className="space-y-2">
                         <div className="flex items-start justify-between gap-2">
@@ -712,11 +707,10 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                             </span>
                           </div>
 
-                          <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-transform mt-0.5 ${
-                            isSelected
-                              ? `${theme.checkBg} border-transparent scale-110 shadow-xs`
-                              : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'
-                          }`}>
+                          <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-transform mt-0.5 ${isSelected
+                            ? `${theme.checkBg} border-transparent scale-110 shadow-xs`
+                            : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'
+                            }`}>
                             {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
                           </div>
                         </div>
@@ -816,11 +810,10 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                 return (
                   <div
                     key={subject.id}
-                    className={`rounded-2xl bg-white dark:bg-slate-900/90 border transition-all duration-200 overflow-hidden shadow-xs ${
-                      isExpanded 
-                        ? 'border-slate-300 dark:border-slate-700 ring-1 ring-amber-500/20' 
-                        : 'border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700'
-                    }`}
+                    className={`rounded-2xl bg-white dark:bg-slate-900/90 border transition-all duration-200 overflow-hidden shadow-xs ${isExpanded
+                      ? 'border-slate-300 dark:border-slate-700 ring-1 ring-amber-500/20'
+                      : 'border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700'
+                      }`}
                     style={{ borderLeftColor: subject.color || '#6366F1', borderLeftWidth: '4px' }}
                   >
                     {/* Header compact cliquable (Accordéon) */}
@@ -1063,13 +1056,13 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
             )}
 
             {/* Navigation Étape 2 */}
-            <div className="flex items-center justify-between pt-4">
+            <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-4 sm:gap-6 pt-5">
               <Button
                 variant="secondary"
                 size="md"
                 onClick={() => setCurrentStep(1)}
                 leftIcon={<ArrowLeft className="w-4 h-4" />}
-                className="font-bold text-xs"
+                className="font-bold text-xs sm:text-sm px-5 py-3"
               >
                 Retour aux méthodes
               </Button>
@@ -1081,17 +1074,17 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                   soundFX.playCheckmarkPop();
                   onUpdateState({
                     ...state,
-                    planTier: 'pro',
+                    planTier: activeTier,
                     userAccount: state.userAccount ? {
                       ...state.userAccount,
-                      planTier: 'pro',
+                      planTier: activeTier,
                     } : undefined,
                     subjects: subjectsList,
                   });
                   setCurrentStep(3);
                 }}
                 rightIcon={<ArrowRight className="w-4 h-4" />}
-                className="font-bold text-xs sm:text-sm px-6 shadow-md"
+                className="font-bold text-xs sm:text-sm px-6 py-3"
               >
                 Passer à la Réorganisation
               </Button>
@@ -1105,7 +1098,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
         {currentStep === 3 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-6 text-center shadow-sm relative overflow-hidden">
-              
+
               {isOptimizing ? (
                 <div className="space-y-6 py-6 animate-in fade-in duration-200">
                   <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 flex items-center justify-center shadow-md shadow-amber-400/20">
@@ -1122,7 +1115,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                   </div>
 
                   <div className="w-full max-w-md mx-auto bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="h-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 transition-all duration-300 rounded-full"
                       style={{ width: `${optimizationProgress}%` }}
                     />
@@ -1176,7 +1169,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                     <button
                       type="button"
                       onClick={handleRunReorganization}
-                      className="w-full sm:w-auto px-6 sm:px-8 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-lg shadow-amber-500/20 hover:from-amber-300 hover:to-yellow-300 active:scale-95 transition-all cursor-pointer inline-flex items-center justify-center gap-2"
+                      className="w-full sm:w-auto px-6 sm:px-8 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] hover:from-amber-300 hover:to-yellow-300 active:translate-y-0.5 active:shadow-[0_2px_0_0_#b45309] transition-all cursor-pointer inline-flex items-center justify-center gap-2"
                     >
                       <Zap className="w-4 h-4 fill-slate-950 shrink-0" />
                       <span>{reorganizedSessions ? 'Relancer la réorganisation' : '⚡ Réorganiser mon emploi du temps avec Konan Pro'}</span>
@@ -1214,11 +1207,10 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setSelectedDayFilter('all')}
-                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                      selectedDayFilter === 'all'
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
-                    }`}
+                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${selectedDayFilter === 'all'
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                      }`}
                   >
                     Toute la semaine ({reorganizedSessions.length})
                   </button>
@@ -1230,11 +1222,10 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                         key={d.id}
                         type="button"
                         onClick={() => setSelectedDayFilter(d.id)}
-                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer shrink-0 ${
-                          selectedDayFilter === d.id
-                            ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
-                            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
-                        }`}
+                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer shrink-0 ${selectedDayFilter === d.id
+                          ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                          }`}
                       >
                         {d.short} ({count})
                       </button>
@@ -1295,7 +1286,17 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                 </div>
 
                 {/* Validation vers Étape 4 */}
-                <div className="flex justify-end pt-2">
+                <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-4 sm:gap-6 pt-4">
+                  <Button
+                    variant="secondary"
+                    size="md"
+                    onClick={() => setCurrentStep(2)}
+                    leftIcon={<ArrowLeft className="w-4 h-4" />}
+                    className="font-bold text-xs sm:text-sm px-5 py-3"
+                  >
+                    Retour aux devoirs & examens
+                  </Button>
+
                   <Button
                     variant="primary"
                     size="md"
@@ -1303,10 +1304,10 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                       soundFX.playCheckmarkPop();
                       onUpdateState({
                         ...state,
-                        planTier: 'pro',
+                        planTier: activeTier,
                         userAccount: state.userAccount ? {
                           ...state.userAccount,
-                          planTier: 'pro',
+                          planTier: activeTier,
                         } : undefined,
                         subjects: subjectsList,
                         studySessions: reorganizedSessions || state.studySessions,
@@ -1314,7 +1315,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                       setCurrentStep(4);
                     }}
                     rightIcon={<ArrowRight className="w-4 h-4" />}
-                    className="font-bold text-xs sm:text-sm px-6 shadow-md"
+                    className="font-bold text-xs sm:text-sm px-6 py-3"
                   >
                     Valider et passer à la synchronisation Google Agenda
                   </Button>
@@ -1424,13 +1425,13 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
               </div>
 
               {/* Bouton de finalisation global */}
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-4 sm:gap-6">
                 <Button
                   variant="secondary"
                   size="md"
                   onClick={() => setCurrentStep(3)}
                   leftIcon={<ArrowLeft className="w-4 h-4" />}
-                  className="font-bold text-xs w-full sm:w-auto"
+                  className="font-bold text-xs sm:text-sm px-5 py-3 w-full sm:w-auto"
                 >
                   Modifier le planning
                 </Button>
@@ -1438,7 +1439,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                 <button
                   type="button"
                   onClick={handleCompleteWizard}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-lg shadow-amber-500/25 hover:from-amber-300 hover:to-yellow-300 active:scale-95 transition-all cursor-pointer inline-flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] hover:from-amber-300 hover:to-yellow-300 active:translate-y-0.5 active:shadow-[0_2px_0_0_#b45309] transition-all cursor-pointer inline-flex items-center justify-center gap-2"
                 >
                   <Check className="w-4 h-4 stroke-[3]" />
                   <span>Terminer et accéder à mon espace Konan Pro</span>

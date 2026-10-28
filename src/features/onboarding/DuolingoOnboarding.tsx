@@ -108,6 +108,7 @@ export interface DuolingoOnboardingProps {
     preferences: StudyPreferences;
     studySessions: StudySession[];
     planTier?: 'free' | 'pro' | 'plus';
+    launchProWizard?: boolean;
   }) => void;
   onOpenLogin: () => void;
   onOpenAdmin?: () => void;
@@ -1035,7 +1036,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       };
       onLoginSuccess(updatedProfile);
     }
-    onComplete(payload);
+    onComplete({
+      ...payload,
+      launchProWizard: planId === 'pro' || planId === 'plus',
+    });
   };
 
   // Connexion Google pour un compte existant (depuis l'écran de connexion directe)
@@ -1068,16 +1072,15 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           academicLevel: activeSystem.title,
           isLoggedIn: true,
           isDemo: false,
-          planTier: selectedPlan,
           lastSyncedAt: new Date().toISOString(),
         };
 
         soundFX.playStreakIgniteChime();
         setShowExistingLogin(false);
-        onLoginSuccess(profile);
         if (pendingPayload) {
-          onComplete(pendingPayload);
+          onComplete({ ...pendingPayload, launchProWizard: false });
         }
+        onLoginSuccess(profile);
       }
     } catch (err: any) {
       setAuthError(err?.message || 'Connexion Google interrompue.');
@@ -1131,10 +1134,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       };
       soundFX.playStreakIgniteChime();
       setShowExistingLogin(false);
-      onLoginSuccess(profile);
       if (pendingPayload) {
-        onComplete(pendingPayload);
+        onComplete({ ...pendingPayload, launchProWizard: false });
       }
+      onLoginSuccess(profile);
     } catch (err: any) {
       setAuthError(err?.message || "Ce compte n'existe pas ou le mot de passe est incorrect.");
     } finally {
@@ -1522,7 +1525,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
               <div className="space-y-2">
                 <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
-                  Le copilote IA de tes{' '}
+                  Ton frère pour tes{' '}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-500 dark:from-cyan-400 dark:to-indigo-400">
                     révisions
                   </span>
