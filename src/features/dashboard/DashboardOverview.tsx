@@ -26,7 +26,8 @@ import {
   ChevronUp,
   BookOpen,
   Moon,
-  Zap
+  Zap,
+  RotateCcw
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
@@ -701,41 +702,71 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   })
                 )}
 
-                {/* SÉANCES DÉJÀ VALIDÉES AUJOURD'HUI (RÉDUITES / REPLIABLES) */}
+                {/* SÉANCES DÉJÀ VALIDÉES AUJOURD'HUI (REPLIABLES ET PARFAITEMENT LISIBLES) */}
                 {completedTodaySessions.length > 0 && (
                   <div className="pt-2">
                     <button
+                      type="button"
                       onClick={() => setShowCompletedSessions(!showCompletedSessions)}
-                      className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold cursor-pointer transition-colors"
+                      className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-emerald-50/90 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-500/30 hover:bg-emerald-100/80 dark:hover:bg-emerald-950/50 text-emerald-900 dark:text-emerald-300 text-xs font-bold cursor-pointer transition-all shadow-xs"
                     >
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                        <span>Séances validées aujourd'hui ({completedTodaySessions.length})</span>
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-6 h-6 rounded-lg bg-emerald-500/15 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                          <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
+                        </div>
+                        <span className="font-extrabold text-slate-900 dark:text-white">
+                          Séances validées aujourd'hui
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full text-[11px] font-black bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40">
+                          {completedTodaySessions.length}
+                        </span>
                       </div>
-                      {showCompletedSessions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 text-[11px] font-semibold">
+                        <span>{showCompletedSessions ? 'Masquer' : 'Afficher'}</span>
+                        {showCompletedSessions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      </div>
                     </button>
 
                     {showCompletedSessions && (
-                      <div className="mt-2 space-y-2 pl-2">
+                      <div className="mt-2.5 space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
                         {completedTodaySessions.map(session => {
                           const sub = subjects.find(s => s.id === session.subjectId);
                           return (
                             <div
                               key={session.id}
-                              className="p-3 rounded-xl bg-slate-950/40 border border-slate-800 opacity-75 flex items-center justify-between gap-3 text-xs"
-                              style={{ borderLeftColor: sub?.color || '#10B981', borderLeftWidth: '3px' }}
+                              className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs shadow-xs"
+                              style={{ borderLeftColor: sub?.color || '#10B981', borderLeftWidth: '4px' }}
                             >
-                              <div className="min-w-0 flex-1">
-                                <p className="line-through text-slate-300 font-semibold truncate">{cleanSessionTitle(session.title)}</p>
-                                <p className="text-[11px] text-slate-500 font-mono">{session.startTime} - {session.endTime} ({session.durationMinutes} min)</p>
+                              <div className="min-w-0 flex-1 space-y-0.5">
+                                <div className="flex items-center gap-2">
+                                  <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                                  <p className="font-bold text-slate-800 dark:text-slate-200 text-xs sm:text-sm line-through decoration-emerald-500/60 truncate">
+                                    {cleanSessionTitle(session.title)}
+                                  </p>
+                                </div>
+                                <p className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 font-medium pl-4">
+                                  <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400">
+                                    {session.startTime} - {session.endTime}
+                                  </span>
+                                  <span>•</span>
+                                  <span className="font-semibold text-slate-700 dark:text-slate-300 truncate">
+                                    {sub?.name || 'Matière'}
+                                  </span>
+                                  <span>({session.durationMinutes} min)</span>
+                                </p>
                               </div>
-                              <button
-                                onClick={() => onToggleSessionComplete(session.id)}
-                                className="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white text-[10px]"
-                                title="Décocher"
-                              >
-                                Annuler
-                              </button>
+
+                              <div className="flex items-center justify-end shrink-0 pl-4 sm:pl-0">
+                                <button
+                                  type="button"
+                                  onClick={() => onToggleSessionComplete(session.id)}
+                                  className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 hover:bg-rose-50 dark:bg-slate-800 dark:hover:bg-rose-950/40 text-slate-600 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-400 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-2xs"
+                                  title="Annuler la validation de cette séance"
+                                >
+                                  <RotateCcw className="w-3.5 h-3.5" />
+                                  <span>Annuler</span>
+                                </button>
+                              </div>
                             </div>
                           );
                         })}

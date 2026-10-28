@@ -465,7 +465,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 hoverEffect
                 className={`p-4 sm:p-5 transition-all shadow-xs ${
                   session.completed
-                    ? 'bg-slate-100/70 dark:bg-slate-900/30 opacity-75 border border-emerald-500/30'
+                    ? 'bg-emerald-50/40 dark:bg-slate-900/60 border border-emerald-300/60 dark:border-emerald-500/30'
                     : 'bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800'
                 }`}
                 style={{ borderLeftColor: subject.color, borderLeftWidth: '5px' }}
