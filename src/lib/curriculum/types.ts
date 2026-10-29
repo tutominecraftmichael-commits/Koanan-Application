@@ -314,6 +314,21 @@ export interface TutorPointSessionItem {
 // ÉTAT DE PROGRESSION DE L'ÉLÈVE (SAUVEGARDÉ PAR MATIÈRE)
 // ============================================================================
 
+export type StemSubCategory = 'chimie' | 'physique' | 'geometrie' | 'numerique' | 'svt';
+
+export interface SubCategoryStudentProgress {
+  subCategory: StemSubCategory;
+  gradeLevel: CurriculumGradeLevel;
+  positioningCompleted: boolean;
+  currentChapterId: string;
+  currentPointIndex: number;
+  masteredPointIds: string[];
+  completedChapterIds: string[];
+  totalExercisesAnswered: number;
+  correctExercisesCount: number;
+  lastSessionAt?: string;
+}
+
 export interface SubjectStudentProgress {
   subjectId: StemSubjectId;
   gradeLevel: CurriculumGradeLevel;
@@ -325,12 +340,17 @@ export interface SubjectStudentProgress {
   totalExercisesAnswered: number;
   correctExercisesCount: number;
   lastSessionAt?: string;
+  // Alternance automatique (Physique ↔ Chimie & Géométrie ↔ Numérique)
+  lastAlternatedSubCategory?: StemSubCategory;
+  subCategories?: Partial<Record<StemSubCategory, SubCategoryStudentProgress>>;
 }
 
 export type StudentCurriculumProgressMap = Partial<Record<StemSubjectId, SubjectStudentProgress>>;
 
 export interface TutorSessionPayload {
   subjectId: StemSubjectId;
+  subCategory?: StemSubCategory;
+  subCategoryName?: string;
   subjectName: string;
   gradeLevel: CurriculumGradeLevel;
   itemsToReview: TutorPointSessionItem[];
