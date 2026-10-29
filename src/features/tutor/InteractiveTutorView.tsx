@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   AlertCircle,
   ArrowRight,
-  RotateCcw,
   Award,
   Calculator,
   Atom,
@@ -34,15 +33,11 @@ import type {
   TutorSessionPayload
 } from '../../lib/curriculum/types';
 import { STEM_SUBJECTS } from '../../lib/curriculum/types';
-import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
 import {
   buildTutorSessionPayload,
-  getStudentProgressMap,
   initializeSubCategoryPosition,
   recordCompletedTutorSession,
-  getChapterSubCategory,
   getSubCategoryName,
-  getSubCategoryQuestion,
   getActiveSubCategoryForSession
 } from '../../lib/curriculum/studentProgressService';
 import { soundFX } from '../../lib/audioEffects';
@@ -287,6 +282,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // Indices des étapes manquées au premier passage (pour la boucle de rattrapage)
   const [missedIndices, setMissedIndices] = useState<number[]>([]);
 
+  // Indices des exercices validés avec succès (la barre avance STRICTEMENT lors d'une bonne réponse)
+  const [masteredIndices, setMasteredIndices] = useState<number[]>([]);
+
   // File d'attente pour la boucle de rattrapage
   const [catchupQueue, setCatchupQueue] = useState<number[]>([]);
   const [currentCatchupQueueIndex, setCurrentCatchupQueueIndex] = useState<number>(0);
@@ -325,6 +323,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       setIsAnswerChecked(false);
       setIsAnswerCorrect(false);
       setMissedIndices([]);
+      setMasteredIndices([]);
       setCatchupQueue([]);
       setCurrentCatchupQueueIndex(0);
     }
@@ -425,11 +424,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
     if (isCorrect) {
       soundFX.playCorrect();
+      setMasteredIndices(prev => prev.includes(activeStepIndex) ? prev : [...prev, activeStepIndex]);
       if (phase === 'learning') {
         setTotalFirstTryCorrect(prev => prev + 1);
       }
     } else {
+      // STRICTEMENT AUCUNE MUSIQUE NI SON SUR UNE FAUTE (silence complet)
       soundFX.playWrong();
+      // La barre de progression ne doit pas augmenter : aucun ajout dans masteredIndices
       if (phase === 'learning' && !missedIndices.includes(activeStepIndex)) {
         setMissedIndices(prev => [...prev, activeStepIndex]);
       }
@@ -487,6 +489,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       setIsAnswerChecked(false);
       setIsAnswerCorrect(false);
       setMissedIndices([]);
+      setMasteredIndices([]);
       setCatchupQueue([]);
       setCurrentCatchupQueueIndex(0);
     } else {
@@ -821,10 +824,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   const totalLessonPoints = items.length;
   const currentItemNumber = activeItemIndex + 1;
-  const totalSteps = pointExercises.length || 8;
-  const progressPercent = phase === 'catchup'
-    ? Math.min(100, Math.max(12, ((catchupQueue.length - currentCatchupQueueIndex) / (catchupQueue.length || 1)) * 100))
-    : Math.min(100, Math.max(8, ((exerciseIndex + (isAnswerChecked && isAnswerCorrect ? 1 : 0)) / totalSteps) * 100));
+  const totalSteps = pointExercises.length || 1;
+  // La barre de progression augmente UNIQUEMENT sur une bonne réponse (strictement gelée en cas de faute)
+  const progressPercent = Math.min(100, Math.round((masteredIndices.length / totalSteps) * 100));
 
   return (
     <div className="max-w-3xl mx-auto py-4 sm:py-6 px-3 sm:px-6 space-y-4">
@@ -851,13 +853,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </div>
         </div>
 
-        {/* Badge d'étape / rattrapage */}
+        {/* Compteur de progression */}
         <div className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 text-xs font-black text-slate-800 dark:text-slate-200 font-mono shadow-xs">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
           <span>
             {phase === 'catchup'
-              ? `Rattrapage ${currentCatchupQueueIndex + 1}/${catchupQueue.length}`
-              : `Étape ${exerciseIndex + 1}/${totalSteps}`}
+              ? `Reprise ${currentCatchupQueueIndex + 1}/${catchupQueue.length}`
+              : `Question ${activeStepIndex + 1}/${totalSteps}`}
           </span>
         </div>
       </div>
@@ -898,32 +899,19 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       </div>
 
       {/* =================================================================== */}
-      {/* COURS CONTINU + TEST DE COMPRÉHENSION IMMÉDIAT (ÉTAPES 1/8 À 8/8)   */}
+      {/* COURS CONTINU + APPLICATION IMMÉDIATE                              */}
       {/* =================================================================== */}
       {(phase === 'learning' || phase === 'catchup') && activeExercise && activeCourseSlice && (
         <div className="space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-200">
-          {/* Bandeau de Rattrapage si en phase 'catchup' */}
-          {phase === 'catchup' && (
-            <div className="p-3.5 rounded-xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-500/30 flex items-center gap-2.5 text-xs font-bold text-amber-900 dark:text-amber-200">
-              <RotateCcw className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-              <span>
-                🎯 <strong>Rattrapage obligatoire (Objectif 8/8)</strong> : Relis attentivement le point ci-dessous puis réponds pour valider définitivement la notion !
-              </span>
-            </div>
-          )}
-
           {/* PARTIE A : LE BLOC DE COURS PROGRESSIF DE L'ÉTAPE */}
           <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-100 dark:border-slate-800 space-y-4 shadow-sm">
             <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
-                <Sparkles className="w-4 h-4 shrink-0" />
+                <BookOpen className="w-4 h-4 shrink-0" />
                 <span className="text-[11px] font-black uppercase tracking-wider">
                   {activeCourseSlice.stepBadge}
                 </span>
               </div>
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300">
-                Cours + Test {activeStepIndex + 1}/8
-              </span>
             </div>
 
             <h2 className="text-base sm:text-xl font-black text-slate-900 dark:text-white leading-snug">
@@ -1070,7 +1058,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 <span>Test de compréhension immédiat</span>
               </span>
               <span className="font-mono font-bold text-[11px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
-                Question {activeStepIndex + 1}/8
+                Question {activeStepIndex + 1}/{totalSteps}
               </span>
             </div>
 
@@ -1201,12 +1189,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 >
                   <span>
                     {phase === 'catchup'
-                      ? 'Continuer le rattrapage'
-                      : exerciseIndex < (pointExercises.length || 8) - 1
-                        ? `Continuer le cours (Étape ${exerciseIndex + 2}/8)`
+                      ? 'Question suivante ➔'
+                      : exerciseIndex < totalSteps - 1
+                        ? `Question suivante (${exerciseIndex + 2}/${totalSteps}) ➔`
                         : missedIndices.length > 0
-                          ? 'Passer au rattrapage des erreurs (Objectif 8/8)'
-                          : 'Valider la mini-leçon (8/8)'}
+                          ? 'Reprendre les questions non comprises ➔'
+                          : 'Terminer la leçon ➔'}
                   </span>
                   <ArrowRight className="w-5 h-5" />
                 </button>
@@ -1228,13 +1216,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-xs font-black uppercase">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Mini-Leçon 100% Maîtrisée (8/8)</span>
+              <span>Leçon validée avec succès</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
               {currentPoint?.title}
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto">
-              Parfait ! Tu as validé les 8 étapes de cette notion clé. Tes connaissances sont solides et prêtes pour les devoirs de classe.
+              Parfait ! Tu as validé l'ensemble des exercices de cette notion clé. Tes connaissances sont solides et prêtes pour les devoirs et interrogations de classe.
             </p>
           </div>
 

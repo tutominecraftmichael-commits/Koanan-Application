@@ -132,6 +132,41 @@ class SoundFX {
   }
 
   /**
+   * Clic doux sur un élément interactif
+   */
+  public playClick() {
+    this.playCheckmarkPop();
+  }
+
+  /**
+   * Son doux de réponse correcte
+   */
+  public playCorrect() {
+    this.playCheckmarkPop();
+  }
+
+  /**
+   * En cas d'erreur ("faute"), STRICTEMENT AUCUNE MUSIQUE NI SON (silence complet)
+   */
+  public playWrong() {
+    // Silence complet : ne rien jouer
+  }
+
+  /**
+   * Jingle de victoire sobre en fin de leçon validée à 100%
+   */
+  public playVictoryJingle() {
+    this.playStreakIgniteChime();
+  }
+
+  /**
+   * Célébration complète en fin de séance validée
+   */
+  public playGrandCheer() {
+    this.playMinecraftAdvancementSound();
+  }
+
+  /**
    * Alert or notification ping for soft warnings (e.g. anti-cheat)
    */
   public playNotificationPing() {

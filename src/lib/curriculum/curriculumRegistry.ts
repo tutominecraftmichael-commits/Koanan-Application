@@ -14358,278 +14358,298 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
     "summary": "Ensembles de nombres $\\\\mathbb{N}, \\\\mathbb{Z}, \\\\mathbb{D}, \\\\mathbb{Q}, \\\\mathbb{R}$, intervalles et valeur absolue.",
     "points": [
       {
-        "id": "seconde_a_maths_ch1_calcul_numerique_p1",
-        "order": 1,
-        "title": "Calcul numérique : Principes & Fondamentaux",
-        "summary": "Développement, réduction, factorisation et les 3 identités remarquables fondamentales.",
-        "conceptExplanation": "Le calcul littéral consiste à manipuler des expressions contenant des lettres représentant des nombres.\n\n1. Développement et distributivité :\n- Distributivité simple : k · (a + b) = k · a + k · b   et   k · (a - b) = k · a - k · b.\n- Double distributivité : (a + b)(c + d) = a · c + a · d + b · c + b · d.\n\n2. Les trois identités remarquables fondamentales :\nPour tous réels a et b :\n- Identité 1 (carré d'une somme) : (a + b)² = a² + 2ab + b².\n- Identité 2 (carré d'une différence) : (a - b)² = a² - 2ab + b².\n- Identité 3 (différence de deux carrés) : (a - b)(a + b) = a² - b².\n\n3. Méthodes de factorisation :\nFactoriser consiste à transformer une somme algébrique en un produit de facteurs :\n- Recherche d'un facteur commun :\n  k · a + k · b = k · (a + b).\n- Utilisation des identités remarquables :\n  a² - b² = (a - b)(a + b).\n  a² + 2ab + b² = (a + b)².\n  a² - 2ab + b² = (a - b)².",
-        "formulas": [
-          {
-            "name": "Identité 1 (Carré d'une somme)",
-            "formula": "(a + b)² = a² + 2ab + b²",
-            "note": "Ne pas oublier le double produit 2ab !"
-          },
-          {
-            "name": "Identité 3 (Différence de carrés)",
-            "formula": "a² - b² = (a - b)(a + b)",
-            "note": "Outil majeur de factorisation."
-          }
-        ],
-        "keyRule": "Erreur classique majeure : (a + b)² n'est JAMAIS égal à a² + b² ! Il y a TOUJOURS le terme double produit 2ab.",
-        "workedExample": {
-          "title": "Exemple résolu : Développement et factorisation",
-          "statement": "Soit l'expression E = (2x - 3)² - 25. 1. Développer et réduire E. 2. Factoriser E.",
-          "methodSteps": [
-            "Étape 1 : Développer (2x - 3)² avec l'identité (a - b)² : (2x)² - 2(2x)(3) + 3² = 4x² - 12x + 9.",
-            "Étape 2 : Réduire l'expression : E = (4x² - 12x + 9) - 25 = 4x² - 12x - 16.",
-            "Étape 3 : Pour factoriser, reconnaître la forme a² - b² avec a = (2x - 3) et b = 5 (car 25 = 5²) : E = [(2x - 3) - 5][(2x - 3) + 5].",
-            "Étape 4 : Simplifier chaque crochet : E = (2x - 8)(2x + 2). On peut aussi factoriser 4 : E = 4(x - 4)(x + 1)."
-          ],
-          "conclusion": "Forme développée : 4x² - 12x - 16. Forme factorisée : (2x - 8)(2x + 2) = 4(x - 4)(x + 1)."
-        },
-        "exercises": [
-          {
-            "prompt": "Développer l'expression : A = (3x + 4)².",
-            "options": [
-              "9x² + 24x + 16",
-              "9x² + 16",
-              "9x² + 12x + 16",
-              "3x² + 24x + 16"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "(a + b)² = a² + 2ab + b² = (3x)² + 2(3x)(4) + 4² = 9x² + 24x + 16.",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex1",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Factoriser l'expression : B = x² - 49.",
-            "options": [
-              "(x - 7)(x + 7)",
-              "(x - 7)²",
-              "(x - 49)(x + 1)",
-              "x(x - 49)"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "a² - b² = (a - b)(a + b) avec a = x et b = 7 (car 49 = 7²). Donc (x - 7)(x + 7).",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex2",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Développer le produit : C = (2x - 5)(2x + 5).",
-            "options": [
-              "4x² - 25",
-              "4x² + 25",
-              "4x² - 20x - 25",
-              "2x² - 25"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "(a - b)(a + b) = a² - b² = (2x)² - 5² = 4x² - 25.",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex3",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Factoriser par le facteur commun : D = 5x² - 15x.",
-            "options": [
-              "5x (x - 3)",
-              "5 (x² - 3)",
-              "x (5x - 15)",
-              "5x² (1 - 3x)"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le facteur commun est 5x : 5x² - 15x = 5x · x - 5x · 3 = 5x (x - 3).",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex4",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Développer et réduire : E = 4(x - 2) - 3(2x - 5).",
-            "options": [
-              "-2x + 7",
-              "-2x - 23",
-              "2x + 7",
-              "-2x - 7"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "4x - 8 - 6x + 15 = (4x - 6x) + (-8 + 15) = -2x + 7.",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex5",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Reconnaître l'identité remarquable et factoriser : F = x² - 10x + 25.",
-            "options": [
-              "(x - 5)²",
-              "(x + 5)²",
-              "(x - 5)(x + 5)",
-              "(x - 25)²"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "a² - 2ab + b² = (a - b)² avec a = x et b = 5 (car 2×x×5 = 10x et 5² = 25). Donc (x - 5)².",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex6",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Que vaut l'expression 3x² - 2x + 4 pour x = -2 ?",
-            "options": [
-              "20",
-              "12",
-              "-12",
-              "16"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "3(-2)² - 2(-2) + 4 = 3(4) + 4 + 4 = 12 + 8 = 20.",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex7",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quelle est la factorisation de (x + 3)(2x - 1) + (x + 3)(x + 5) ?",
-            "options": [
-              "(x + 3)(3x + 4)",
-              "(x + 3)(2x + 4)",
-              "(x + 3)²",
-              "(2x - 1)(x + 5)"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Facteur commun (x + 3) : (x + 3) [(2x - 1) + (x + 5)] = (x + 3)(3x + 4).",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex8",
-            "type": "mcq"
-          }
-        ]
+              "id": "seconde_a_maths_ch1_calcul_numerique_p1",
+              "order": 1,
+              "title": "Opérations avec les quotients, puissances et radicaux",
+              "summary": "Addition, produit et division de quotients, règles des puissances entières et propriétés des radicaux.",
+              "conceptExplanation": "Les calculs numériques constituent le socle fondamental de toutes les mathématiques du secondaire.\n\nA- Situation d'apprentissage :\nDans une classe de seconde A2, il y a 60 élèves. 30% de ces élèves sont des garçons et 60% de ces garçons ont moins de 18 ans. Une fille de la classe affirme que 40% de ces garçons ont plus de 18 ans. Les élèves cherchent à calculer le pourcentage réel de garçons de plus de 18 ans afin de se prononcer sur cette affirmation.\n\nI- Opérations avec les quotients :\nSoit a, b, c et d des nombres réels tels que les dénominateurs b et d soient différents de zéro.\n1. Addition et soustraction de quotients :\n- Même dénominateur :\n  $$\\frac{a}{b} + \\frac{c}{b} = \\frac{a+c}{b} \\quad \\text{et} \\quad \\frac{a}{b} - \\frac{c}{b} = \\frac{a-c}{b}$$\n- Dénominateurs différents (réduction au même dénominateur) :\n  $$\\frac{a}{b} + \\frac{c}{d} = \\frac{ad + bc}{bd} \\quad \\text{et} \\quad \\frac{a}{b} - \\frac{c}{d} = \\frac{ad - bc}{bd}$$\n\n2. Produit de quotients :\n$$a \\times \\frac{1}{b} = \\frac{a}{b} \\quad \\text{et} \\quad \\frac{a}{b} \\times \\frac{c}{d} = \\frac{ac}{bd}$$\n\n3. Division de quotients :\nPour tous réels a, b, c, d non nuls au dénominateur :\n$$\\frac{a}{\\frac{c}{d}} = a \\times \\frac{d}{c} = \\frac{ad}{c} \\quad \\text{et} \\quad \\frac{\\frac{a}{b}}{\\frac{c}{d}} = \\frac{a}{b} \\times \\frac{d}{c} = \\frac{ad}{bc}$$\n\n4. Puissances :\na étant un nombre réel non nul et n un entier naturel :\n- $a^n = a \\times a \\times \\dots \\times a$ (n facteurs égaux à a).\n- Par convention, pour $a \\neq 0$ : $a^0 = 1$ et $a^{-n} = \\frac{1}{a^n}$.\nPropriétés fondamentales :\n- $a^n \\times a^p = a^{n+p}$\n- $\\frac{a^n}{a^p} = a^{n-p}$\n- $(a^n)^p = a^{np}$\n- $(ab)^n = a^n b^n$\n- $(\\frac{a}{b})^n = \\frac{a^n}{b^n}$\n\n5. Calculs avec les radicaux :\nPour tous nombres réels positifs a et b :\n- $\\sqrt{ab} = \\sqrt{a} \\times \\sqrt{b}$\n- Pour $b > 0$ : $\\sqrt{\\frac{a}{b}} = \\frac{\\sqrt{a}}{\\sqrt{b}}$\n- Pour tout entier naturel n : $\\sqrt{a^n} = (\\sqrt{a})^n$",
+              "formulas": [
+                      {
+                              "name": "Addition et soustraction de fractions",
+                              "formula": "\\frac{a}{b} + \\frac{c}{d} = \\frac{ad+bc}{bd}",
+                              "note": "Réduire impérativement au même dénominateur commun avant d'additionner."
+                      },
+                      {
+                              "name": "Division de deux quotients",
+                              "formula": "\\frac{\\frac{a}{b}}{\\frac{c}{d}} = \\frac{a}{b} \\times \\frac{d}{c} = \\frac{ad}{bc}",
+                              "note": "Diviser par une fraction revient à multiplier par son inverse."
+                      },
+                      {
+                              "name": "Quotient de deux puissances",
+                              "formula": "\\frac{a^n}{a^p} = a^{n-p}",
+                              "note": "Soustraction des exposants lorsque la base est identique."
+                      },
+                      {
+                              "name": "Racine carrée d'un produit",
+                              "formula": "\\sqrt{ab} = \\sqrt{a} \\times \\sqrt{b}",
+                              "note": "Valable uniquement pour des nombres réels positifs a >= 0 et b >= 0."
+                      }
+              ],
+              "keyRule": "Règle d'or absolue en interrogation : on ne peut JAMAIS distribuer la racine carrée sur une addition ! sqrt(a + b) n'est JAMAIS égal à sqrt(a) + sqrt(b). De même, pour diviser deux fractions, on multiplie par l'inverse du dénominateur.",
+              "workedExample": {
+                      "title": "Exercice de fixation résolu type examen (Calculs fractionnaires & radicaux)",
+                      "statement": "Effectuer les calculs suivants et donner les résultats sous forme irréductible : 1. A = 3/5 - 7/5 ; 2. B = 3/7 + 5/2 ; 3. C = (4/3) / (5/4) ; 4. D = sqrt(36 * 81).",
+                      "methodSteps": [
+                              "Étape 1 : Pour A, les dénominateurs sont identiques : A = (3 - 7) / 5 = - 4/5.",
+                              "Étape 2 : Pour B, les dénominateurs sont différents. Réduire au dénominateur commun 7 * 2 = 14 : B = (3*2 + 5*7) / 14 = (6 + 35) / 14 = 41/14.",
+                              "Étape 3 : Pour C, diviser par 5/4 revient à multiplier par son inverse 4/5 : C = (4/3) * (4/5) = (4*4) / (3*5) = 16/15.",
+                              "Étape 4 : Pour D, utiliser la propriété sqrt(a*b) = sqrt(a)*sqrt(b) : D = sqrt(36) * sqrt(81) = 6 * 9 = 54."
+                      ],
+                      "conclusion": "A = -4/5 ; B = 41/14 ; C = 16/15 ; D = 54."
+              },
+              "exercises": [
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex1",
+                              "type": "mcq",
+                              "prompt": "Calculer : $\\frac{7}{3} + \\frac{5}{3}$.",
+                              "options": [
+                                      "4",
+                                      "3",
+                                      "2",
+                                      "\\frac{12}{6}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Les dénominateurs sont identiques : $\\frac{7}{3} + \\frac{5}{3} = \\frac{7+5}{3} = \\frac{12}{3} = 4$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex2",
+                              "type": "mcq",
+                              "prompt": "Calculer : $4 - \\frac{35}{11}$.",
+                              "options": [
+                                      "\\frac{9}{11}",
+                                      "-\\frac{31}{11}",
+                                      "\\frac{6}{11}",
+                                      "\\frac{44}{11}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "On écrit 4 sous forme de fraction de dénominateur 11 : $4 = \\frac{44}{11}$. Donc $4 - \\frac{35}{11} = \\frac{44 - 35}{11} = \\frac{9}{11}$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex3",
+                              "type": "mcq",
+                              "prompt": "Calculer le produit de fractions : $\\frac{2}{7} \\times \\frac{3}{2}$.",
+                              "options": [
+                                      "\\frac{3}{7}",
+                                      "\\frac{25}{14}",
+                                      "\\frac{5}{9}",
+                                      "\\frac{6}{14}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "On simplifie directement par 2 au numérateur et au dénominateur : $\\frac{2 \\times 3}{7 \\times 2} = \\frac{3}{7}$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex4",
+                              "type": "mcq",
+                              "prompt": "Calculer la puissance : $\\left(\\frac{2}{3}\\right)^3$.",
+                              "options": [
+                                      "\\frac{8}{27}",
+                                      "\\frac{6}{9}",
+                                      "\\frac{5}{6}",
+                                      "\\frac{8}{9}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "On applique $(\\frac{a}{b})^n = \\frac{a^n}{b^n}$ : $(\\frac{2}{3})^3 = \\frac{2^3}{3^3} = \\frac{8}{27}$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex5",
+                              "type": "mcq",
+                              "prompt": "Calculer : $\\sqrt{20} \\times \\sqrt{4}$.",
+                              "options": [
+                                      "4\\sqrt{5}",
+                                      "8\\sqrt{10}",
+                                      "10\\sqrt{8}",
+                                      "2\\sqrt{20}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "$\\sqrt{20} = \\sqrt{4 \\times 5} = 2\\sqrt{5}$ et $\\sqrt{4} = 2$. Donc $\\sqrt{20} \\times \\sqrt{4} = 2\\sqrt{5} \\times 2 = 4\\sqrt{5}$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex6",
+                              "type": "mcq",
+                              "prompt": "Écrire sous la forme d'une fraction irréductible : $\\frac{\\frac{200}{35}}{\\frac{25}{7}}$.",
+                              "options": [
+                                      "\\frac{8}{5}",
+                                      "\\frac{16}{7}",
+                                      "\\frac{5}{8}",
+                                      "\\frac{1400}{875}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "$\\frac{\\frac{200}{35}}{\\frac{25}{7}} = \\frac{200}{35} \\times \\frac{7}{25} = \\frac{200 \\times 7}{35 \\times 25} = \\frac{8 \\times 25 \\times 7}{5 \\times 7 \\times 25} = \\frac{8}{5}$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex7",
+                              "type": "mcq",
+                              "prompt": "Écrire sous la forme d'une fraction irréductible : $\\frac{13}{\\frac{39}{46}}$.",
+                              "options": [
+                                      "\\frac{46}{3}",
+                                      "\\frac{3}{46}",
+                                      "\\frac{39}{46}",
+                                      "\\frac{598}{39}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "$\\frac{13}{\\frac{39}{46}} = 13 \\times \\frac{46}{39} = \\frac{13 \\times 46}{3 \\times 13} = \\frac{46}{3}$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p1_ex8",
+                              "type": "mcq",
+                              "prompt": "Écrire sous la forme $a^n$ le produit : $5^6 \\times 5^{-8}$.",
+                              "options": [
+                                      "5^{-2}",
+                                      "5^{14}",
+                                      "5^{-48}",
+                                      "25^{-2}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "$a^n \\times a^p = a^{n+p}$. Donc $5^6 \\times 5^{-8} = 5^{6 + (-8)} = 5^{-2}$."
+                      }
+              ]
       },
       {
-        "id": "seconde_a_maths_ch1_calcul_numerique_p2",
-        "order": 2,
-        "title": "Calcul numérique : Méthodes & Applications Types",
-        "summary": "Applications pratiques, résolution pas-à-pas et automatismes pour les devoirs surveillés.",
-        "conceptExplanation": "Le calcul littéral consiste à manipuler des expressions contenant des lettres représentant des nombres.\n\n1. Développement et distributivité :\n- Distributivité simple : k · (a + b) = k · a + k · b   et   k · (a - b) = k · a - k · b.\n- Double distributivité : (a + b)(c + d) = a · c + a · d + b · c + b · d.\n\n2. Les trois identités remarquables fondamentales :\nPour tous réels a et b :\n- Identité 1 (carré d'une somme) : (a + b)² = a² + 2ab + b².\n- Identité 2 (carré d'une différence) : (a - b)² = a² - 2ab + b².\n- Identité 3 (différence de deux carrés) : (a - b)(a + b) = a² - b².\n\n3. Méthodes de factorisation :\nFactoriser consiste à transformer une somme algébrique en un produit de facteurs :\n- Recherche d'un facteur commun :\n  k · a + k · b = k · (a + b).\n- Utilisation des identités remarquables :\n  a² - b² = (a - b)(a + b).\n  a² + 2ab + b² = (a + b)².\n  a² - 2ab + b² = (a - b)².",
-        "formulas": [
-          {
-            "name": "Identité 1 (Carré d'une somme)",
-            "formula": "(a + b)² = a² + 2ab + b²",
-            "note": "Ne pas oublier le double produit 2ab !"
-          },
-          {
-            "name": "Identité 3 (Différence de carrés)",
-            "formula": "a² - b² = (a - b)(a + b)",
-            "note": "Outil majeur de factorisation."
-          }
-        ],
-        "keyRule": "Erreur classique majeure : (a + b)² n'est JAMAIS égal à a² + b² ! Il y a TOUJOURS le terme double produit 2ab.",
-        "workedExample": {
-          "title": "Exemple résolu : Développement et factorisation",
-          "statement": "Soit l'expression E = (2x - 3)² - 25. 1. Développer et réduire E. 2. Factoriser E.",
-          "methodSteps": [
-            "Étape 1 : Développer (2x - 3)² avec l'identité (a - b)² : (2x)² - 2(2x)(3) + 3² = 4x² - 12x + 9.",
-            "Étape 2 : Réduire l'expression : E = (4x² - 12x + 9) - 25 = 4x² - 12x - 16.",
-            "Étape 3 : Pour factoriser, reconnaître la forme a² - b² avec a = (2x - 3) et b = 5 (car 25 = 5²) : E = [(2x - 3) - 5][(2x - 3) + 5].",
-            "Étape 4 : Simplifier chaque crochet : E = (2x - 8)(2x + 2). On peut aussi factoriser 4 : E = 4(x - 4)(x + 1)."
-          ],
-          "conclusion": "Forme développée : 4x² - 12x - 16. Forme factorisée : (2x - 8)(2x + 2) = 4(x - 4)(x + 1)."
-        },
-        "exercises": [
-          {
-            "prompt": "Développer l'expression : A = (3x + 4)².",
-            "options": [
-              "9x² + 24x + 16",
-              "9x² + 16",
-              "9x² + 12x + 16",
-              "3x² + 24x + 16"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "(a + b)² = a² + 2ab + b² = (3x)² + 2(3x)(4) + 4² = 9x² + 24x + 16.",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex1",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Factoriser l'expression : B = x² - 49.",
-            "options": [
-              "(x - 7)(x + 7)",
-              "(x - 7)²",
-              "(x - 49)(x + 1)",
-              "x(x - 49)"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "a² - b² = (a - b)(a + b) avec a = x et b = 7 (car 49 = 7²). Donc (x - 7)(x + 7).",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex2",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Développer le produit : C = (2x - 5)(2x + 5).",
-            "options": [
-              "4x² - 25",
-              "4x² + 25",
-              "4x² - 20x - 25",
-              "2x² - 25"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "(a - b)(a + b) = a² - b² = (2x)² - 5² = 4x² - 25.",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex3",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Factoriser par le facteur commun : D = 5x² - 15x.",
-            "options": [
-              "5x (x - 3)",
-              "5 (x² - 3)",
-              "x (5x - 15)",
-              "5x² (1 - 3x)"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le facteur commun est 5x : 5x² - 15x = 5x · x - 5x · 3 = 5x (x - 3).",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex4",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Développer et réduire : E = 4(x - 2) - 3(2x - 5).",
-            "options": [
-              "-2x + 7",
-              "-2x - 23",
-              "2x + 7",
-              "-2x - 7"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "4x - 8 - 6x + 15 = (4x - 6x) + (-8 + 15) = -2x + 7.",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex5",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Reconnaître l'identité remarquable et factoriser : F = x² - 10x + 25.",
-            "options": [
-              "(x - 5)²",
-              "(x + 5)²",
-              "(x - 5)(x + 5)",
-              "(x - 25)²"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "a² - 2ab + b² = (a - b)² avec a = x et b = 5 (car 2×x×5 = 10x et 5² = 25). Donc (x - 5)².",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex6",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Que vaut l'expression 3x² - 2x + 4 pour x = -2 ?",
-            "options": [
-              "20",
-              "12",
-              "-12",
-              "16"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "3(-2)² - 2(-2) + 4 = 3(4) + 4 + 4 = 12 + 8 = 20.",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex7",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quelle est la factorisation de (x + 3)(2x - 1) + (x + 3)(x + 5) ?",
-            "options": [
-              "(x + 3)(3x + 4)",
-              "(x + 3)(2x + 4)",
-              "(x + 3)²",
-              "(2x - 1)(x + 5)"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Facteur commun (x + 3) : (x + 3) [(2x - 1) + (x + 5)] = (x + 3)(3x + 4).",
-            "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex8",
-            "type": "mcq"
-          }
-        ]
+              "id": "seconde_a_maths_ch1_calcul_numerique_p2",
+              "order": 2,
+              "title": "Proportionnalité, pourcentages et approximations décimales",
+              "summary": "Coefficients de proportionnalité, pourcentages d'une quantité, augmentations, réductions et arrondis d'ordre n.",
+              "conceptExplanation": "La proportionnalité et les pourcentages s'appliquent à tous les calculs de gestion, d'économie et de sciences.\n\nII- Proportionnalité :\n1. Définition :\nDeux grandeurs x et y sont proportionnelles si l'une est le produit de l'autre par un nombre non nul k donné : $y = kx$.\nLe nombre k s'appelle le coefficient de proportionnalité ($k = \\frac{y}{x}$).\n\n2. Pourcentage d'une quantité :\n$k\\%$ d'une quantité a est égale à : $a \\times \\frac{k}{100}$.\nExemple officiel : $20\\%$ de 40 kg est $40 \\times \\frac{20}{100} = 8\\text{ kg}$.\n\n3. Augmentation et réduction de $k\\%$ :\n- Augmenter une quantité a de $k\\%$ revient à la multiplier par : $\\left(1 + \\frac{k}{100}\\right)$.\n  Exemple : un objet de 2 000 F après augmentation de 30% coûtera : $2000 \\times \\left(1 + \\frac{30}{100}\\right) = 2000 \\times 1{,}30 = 2600\\text{ F}$.\n- Réduire une quantité a de $k\\%$ revient à la multiplier par : $\\left(1 - \\frac{k}{100}\\right)$.\n  Exemple : un objet de 2 000 F après réduction de 30% coûtera : $2000 \\times \\left(1 - \\frac{30}{100}\\right) = 2000 \\times 0{,}70 = 1400\\text{ F}$.\n\n4. Produit de pourcentages :\nPour déterminer a% de b% d'une quantité, on multiplie cette quantité par le produit : $a\\% \\times b\\% = \\frac{a \\times b}{10000}$.\nExemple officiel : 5% de 2% de 300g est : $300 \\times \\frac{2 \\times 5}{10000} = 3 \\times \\frac{1}{10} = 0{,}3\\text{ g}$.\n\nIII- Approximation décimale et arrondi :\n1. Approximation décimale d'ordre n :\nSoit $\\sqrt{15} \\approx 3{,}87298334621$.\nL'encadrement à l'ordre 4 est : $3{,}8729 < \\sqrt{15} < 3{,}8730$.\n- Approximation par défaut d'ordre 4 : $3{,}8729$.\n- Approximation par excès d'ordre 4 : $3{,}8730$.\n2. Arrondi d'ordre n :\n- Si le chiffre d'ordre (n+1) est < 5, l'arrondi est l'approximation par défaut.\n- Si le chiffre d'ordre (n+1) est >= 5, l'arrondi est l'approximation par excès.\nExemple : L'arrondi à l'ordre 3 de $\\sqrt{15}$ est $3{,}873$ (car le 4ème chiffre après la virgule est 9 >= 5).",
+              "formulas": [
+                      {
+                              "name": "Pourcentage d'une grandeur",
+                              "formula": "P = a \\times \\frac{k}{100}",
+                              "note": "Multiplication de la valeur totale par le taux en pourcentage."
+                      },
+                      {
+                              "name": "Augmentation en pourcentage",
+                              "formula": "V_{\\text{finale}} = V_{\\text{initiale}} \\times \\left(1 + \\frac{k}{100}\\right)",
+                              "note": "Facteur multiplicatif supérieur à 1."
+                      },
+                      {
+                              "name": "Réduction en pourcentage",
+                              "formula": "V_{\\text{finale}} = V_{\\text{initiale}} \\times \\left(1 - \\frac{k}{100}\\right)",
+                              "note": "Facteur multiplicatif inférieur à 1."
+                      },
+                      {
+                              "name": "Produit de deux pourcentages",
+                              "formula": "a\\% \\times b\\% = \\frac{a \\times b}{10000}",
+                              "note": "Calcul d'un pourcentage d'un autre pourcentage."
+                      }
+              ],
+              "keyRule": "Pour un devoir : une hausse de 30% suivie d'une baisse de 30% ne redonne JAMAIS la valeur initiale ! (1 + 0,30) * (1 - 0,30) = 1,30 * 0,70 = 0,91 soit 9% de baisse finale.",
+              "workedExample": {
+                      "title": "Situation complexe résolue (Examen officiel 2nde A)",
+                      "statement": "Dans la classe de seconde A2 d'un lycée, il y a 60 élèves. 40% de ces élèves sont des garçons et 25% de ces garçons ont moins de 18 ans. Une élève affirme que 65% des garçons de la classe ont plus de 18 ans. À l'aide des calculs mathématiques, déterminer si cette affirmation est juste.",
+                      "methodSteps": [
+                              "Étape 1 : Déterminer le nombre total de garçons : 60 * (40 / 100) = 24 garçons.",
+                              "Étape 2 : Déterminer le nombre de garçons de moins de 18 ans : 24 * (25 / 100) = 6 garçons.",
+                              "Étape 3 : Déterminer le nombre de garçons de plus de 18 ans : 24 - 6 = 18 garçons.",
+                              "Étape 4 : Calculer le pourcentage correspondant parmi les garçons : (18 / 24) * 100 = 0,75 * 100 = 75%."
+                      ],
+                      "conclusion": "75% des garçons ont plus de 18 ans. L'affirmation de la camarade (65%) est donc fausse."
+              },
+              "exercises": [
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex1",
+                              "type": "mcq",
+                              "prompt": "On donne un tableau de proportionnalité où $x = 3$ donne $y = 9$. Quelle est la valeur de y pour $x = 10$ ?",
+                              "options": [
+                                      "30",
+                                      "27",
+                                      "13",
+                                      "33"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Le coefficient de proportionnalité est $k = \\frac{9}{3} = 3$. Donc pour $x = 10$, $y = k \\times x = 3 \\times 10 = 30$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex2",
+                              "type": "mcq",
+                              "prompt": "Sur un sachet de café de 275 g composé à 30% d'arabica, calculer la masse d'arabica.",
+                              "options": [
+                                      "82{,}5\\text{ g}",
+                                      "92{,}5\\text{ g}",
+                                      "80\\text{ g}",
+                                      "75\\text{ g}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Masse d'arabica = $275 \\times \\frac{30}{100} = 82{,}5\\text{ g}$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex3",
+                              "type": "mcq",
+                              "prompt": "Un sachet de café coûte 1 500 F. Après une réduction de 15%, quel est son nouveau prix ?",
+                              "options": [
+                                      "1275\\text{ F}",
+                                      "1350\\text{ F}",
+                                      "1225\\text{ F}",
+                                      "1485\\text{ F}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Nouveau prix = $1500 \\times \\left(1 - \\frac{15}{100}\\right) = 1500 \\times \\frac{85}{100} = 1275\\text{ F}$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex4",
+                              "type": "mcq",
+                              "prompt": "Une entreprise de 80 employés comporte 15% d'agents de maîtrise. Quel est leur effectif ?",
+                              "options": [
+                                      "12",
+                                      "15",
+                                      "10",
+                                      "14"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Effectif = $80 \\times \\frac{15}{100} = 12$ agents de maîtrise."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex5",
+                              "type": "mcq",
+                              "prompt": "Dans cette même entreprise de 80 employés, 35 sont des femmes. Quel est le pourcentage de femmes ?",
+                              "options": [
+                                      "43{,}75\\%",
+                                      "35\\%",
+                                      "45\\%",
+                                      "40\\%"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Pourcentage de femmes = $35 \\times \\frac{100}{80} = 43{,}75\\%$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex6",
+                              "type": "mcq",
+                              "prompt": "Parmi ces 35 femmes, 7 sont agentes de maîtrise. Quel est le pourcentage d'agentes parmi les femmes ?",
+                              "options": [
+                                      "20\\%",
+                                      "25\\%",
+                                      "15\\%",
+                                      "7\\%"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Pourcentage = $7 \\times \\frac{100}{35} = \\frac{700}{35} = 20\\%$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex7",
+                              "type": "mcq",
+                              "prompt": "Déterminer 2% de 300 g.",
+                              "options": [
+                                      "6\\text{ g}",
+                                      "60\\text{ g}",
+                                      "0{,}6\\text{ g}",
+                                      "3\\text{ g}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Calcul : $300 \\times \\frac{2}{100} = 6\\text{ g}$."
+                      },
+                      {
+                              "id": "seconde_a_maths_ch1_calcul_numerique_p2_ex8",
+                              "type": "mcq",
+                              "prompt": "On donne $\\sqrt{15} \\approx 3{,}87298334621$. Quel est l'arrondi d'ordre 3 de $\\sqrt{15}$ ?",
+                              "options": [
+                                      "3{,}873",
+                                      "3{,}872",
+                                      "3{,}870",
+                                      "3{,}874"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Le quatrième chiffre après la virgule est 9 (qui est supérieur ou égal à 5). L'arrondi d'ordre 3 est donc $3{,}873$."
+                      }
+              ]
       }
     ]
   },
@@ -58663,278 +58683,291 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
     "summary": "Noyau, cortège électronique, isotopes, formule électronique et tableau périodique.",
     "points": [
       {
-        "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1",
-        "order": 1,
-        "title": "Structure de l'atome et élément chimique : Notions Fondamentales & Lois",
-        "summary": "Concentrations molaires et massiques, facteur de dilution, couples redox et équilibrage des demi-équations.",
-        "conceptExplanation": "L'étude quantitative des solutions aqueuses et des transferts d'électrons est indispensable en chimie.\n\n1. Grandeurs fondamentales des solutions :\n- Quantité de matière : n = m / M (en mol).\n- Concentration molaire : C = n / V (en mol·L⁻¹).\n- Concentration massique : C_m = m / V = C · M (en g·L⁻¹).\n- Dilution : lors d'une dilution, la quantité de matière de soluté se conserve : C_initial · V_initial = C_final · V_final.\n  Facteur de dilution : F = C_initial / C_final = V_final / V_initial.\n\n2. Réactions d'oxydoréduction :\n- Un oxydant est une espèce chimique capable de capter au moins un électron : Ox + n e⁻ ⇌ Red.\n- Un réducteur est une espèce chimique capable de céder au moins un électron : Red ⇌ Ox + n e⁻.\n- Équilibrage des demi-équations en milieu acide :\n  1. Équilibrer les éléments chimiques autres que O et H.\n  2. Équilibrer l'élément oxygène O en ajoutant des molécules d'eau H₂O.\n  3. Équilibrer l'élément hydrogène H en ajoutant des ions H⁺ (ou H₃O⁺).\n  4. Équilibrer la charge électrique globale en ajoutant des électrons e⁻.",
-        "formulas": [
-          {
-            "name": "Conservation de matière en dilution",
-            "formula": "C_i · V_i = C_f · V_f  ⇒  V_i = (C_f · V_f) / C_i",
-            "note": "Le facteur de dilution est F = C_i / C_f = V_f / V_i > 1."
-          },
-          {
-            "name": "Relation entre C et C_m",
-            "formula": "C_m = C · M",
-            "note": "C en mol·L⁻¹, M en g·mol⁻¹, C_m en g·L⁻¹."
-          }
-        ],
-        "keyRule": "Dans une équation d'oxydoréduction globale, les électrons cédés par le réducteur doivent toujours être rigoureusement égaux aux électrons captés par l'oxydant (aucun électron libre n'apparaît dans l'équation bilan).",
-        "workedExample": {
-          "title": "Exemple résolu : Préparation par dilution d'une solution",
-          "statement": "On souhaite préparer un volume V_f = 100 mL d'une solution de permanganate de potassium à C_f = 2,0 × 10⁻³ mol·L⁻¹ à partir d'une solution mère à C_i = 5,0 × 10⁻² mol·L⁻¹. Quel volume de solution mère V_i faut-il prélever ?",
-          "methodSteps": [
-            "Étape 1 : Poser la loi de conservation de la quantité de matière de soluté : C_i · V_i = C_f · V_f.",
-            "Étape 2 : Isoler le volume mère à prélever : V_i = (C_f · V_f) / C_i.",
-            "Étape 3 : Calculer le facteur de dilution : F = C_i / C_f = (5,0 × 10⁻²) / (2,0 × 10⁻³) = 25.",
-            "Étape 4 : Calculer V_i : V_i = V_f / F = 100 mL / 25 = 4,0 mL."
-          ],
-          "conclusion": "Il faut prélever 4,0 mL de solution mère à l'aide d'une pipette jaugée munie d'une pro-pipette."
-        },
-        "exercises": [
-          {
-            "prompt": "Quelle est la concentration molaire C d'une solution contenant 0,05 mol de soluté dans 250 mL de solution ?",
-            "options": [
-              "0,20 mol·L⁻¹",
-              "0,05 mol·L⁻¹",
-              "0,0125 mol·L⁻¹",
-              "0,50 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "V = 250 mL = 0,250 L. C = n / V = 0,05 / 0,250 = 0,20 mol·L⁻¹.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex1",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Par définition, que fait un réducteur lors d'une réaction d'oxydoréduction ?",
-            "options": [
-              "Il cède un ou plusieurs électrons",
-              "Il capte un ou plusieurs électrons",
-              "Il capte un proton H⁺",
-              "Il neutralise les charges"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Un réducteur est un donneur d'électrons (il subit une oxydation) : Red → Ox + n e⁻.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex2",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Combien d'électrons sont échangés dans la demi-équation du couple MnO₄⁻ / Mn²⁺ en milieu acide ?",
-            "options": [
-              "5 électrons",
-              "2 électrons",
-              "7 électrons",
-              "1 électron"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "MnO₄⁻ + 8 H⁺ + 5 e⁻ ⇌ Mn²⁺ + 4 H₂O. Le manganèse passe du degré d'oxydation +VII à +II, échangeant 5 électrons.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex3",
-            "type": "mcq"
-          },
-          {
-            "prompt": "On dilue 10 fois une solution mère de concentration C₀ = 0,10 mol·L⁻¹. Quelle est la nouvelle concentration ?",
-            "options": [
-              "0,010 mol·L⁻¹",
-              "1,0 mol·L⁻¹",
-              "0,001 mol·L⁻¹",
-              "0,050 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Diluer 10 fois signifie que le facteur de dilution est F = 10, d'où C_f = C₀ / 10 = 0,010 mol·L⁻¹.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex4",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quel est le nombre d'oxydation du fer dans l'ion Fe³⁺ ?",
-            "options": [
-              "+III",
-              "+II",
-              "0",
-              "-III"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour un ion monoatomique, le nombre d'oxydation est égal à sa charge électrique, soit +III.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex5",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Si la masse molaire du glucose est M = 180 g·mol⁻¹, quelle masse faut-il pour préparer 500 mL à 0,10 mol·L⁻¹ ?",
-            "options": [
-              "9,0 g",
-              "18,0 g",
-              "4,5 g",
-              "90 g"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "n = C · V = 0,10 × 0,500 = 0,05 mol. m = n · M = 0,05 × 180 = 9,0 g.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex6",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Dans la réaction Zn + Cu²⁺ → Zn²⁺ + Cu, quelle espèce est oxydée ?",
-            "options": [
-              "Le zinc Zn (qui perd 2 électrons)",
-              "L'ion cuivre Cu²⁺",
-              "L'eau",
-              "L'ion zinc Zn²⁺"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le zinc passe de Zn à Zn²⁺ en cédant 2 électrons : Zn subit une oxydation, il est oxydé.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex7",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quelle verrerie de précision doit-on obligatoirement utiliser pour préparer une solution étalon par dilution ?",
-            "options": [
-              "Une pipette jaugée et une fiole jaugée",
-              "Une éprouvette graduée et un bêcher",
-              "Un erlenmeyer et un entonnoir",
-              "Un verre à pied et un agitateur"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour une dilution de précision, le prélèvement s'effectue à la pipette jaugée et le mélange final dans une fiole jaugée.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex8",
-            "type": "mcq"
-          }
-        ]
+              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1",
+              "order": 1,
+              "title": "L'élément chimique & Conservation lors des transformations",
+              "summary": "Expériences sur le cuivre, définition de l'élément chimique, corps simples et composés, symboles officiels.",
+              "conceptExplanation": "L'élément chimique est la notion fondamentale qui unifie toute la matière et ses réactions chimiques.\n\nI- Situation d'apprentissage :\nKoffi, élève en classe de seconde au Lycée Moderne 2 de Bouaflé, apprend sur internet que le sang humain contient du fer. Ne comprenant pas comment un métal peut être présent dans le sang, il entreprend avec son professeur de définir l'élément chimique à travers les réactions du cuivre.\n\nII- Mise en évidence expérimentale de l'élément cuivre :\n1. Combustion du cuivre :\nLe métal cuivre rouge (Cu) réagit à chaud avec le dioxygène ($O_2$) pour former une couche noire d'oxyde de cuivre II (CuO) :\n$$2\\text{Cu} + \\text{O}_2 \\longrightarrow 2\\text{CuO}$$\n\n2. Action du carbone sur l'oxyde de cuivre II :\nLe carbone réagit avec l'oxyde de cuivre II chauffé : le solide noir redevient du cuivre rouge métallique et le gaz dégagé trouble l'eau de chaux (dioxyde de carbone $\\text{CO}_2$) :\n$$2\\text{CuO} + \\text{C} \\longrightarrow 2\\text{Cu} + \\text{CO}_2$$\n\n3. Action du fer sur les ions cuivre II :\nLorsqu'on plonge un clou en fer dans une solution bleue de sulfate de cuivre ($\\text{Cu}^{2+}$) :\n- La solution se décolore : les ions $\\text{Cu}^{2+}$ disparaissent.\n- Un dépôt rouge de cuivre métallique (Cu) se dépose sur le fer.\n- La solution devient verte : apparition des ions fer II ($\\text{Fe}^{2+}$).\n$$\\text{Cu}^{2+} + \\text{Fe} \\longrightarrow \\text{Cu} + \\text{Fe}^{2+}$$\n\nIII- Définition et classification de l'élément chimique :\n1. Définition officielle :\nLe cuivre est commun au métal cuivre, à l'oxyde CuO et à l'ion $\\text{Cu}^{2+}$.\nL'élément chimique est ce qui est commun à un corps simple et à tous ses composés.\n\n2. Corps simple vs Corps composé :\n- Corps simple : constitué d'un seul élément chimique (ex : $\\text{H}_2, \\text{O}_2, \\text{O}_3, \\text{Cu}, \\text{Fe}, \\text{Ne}$).\n- Corps composé : constitué de plusieurs éléments différents (ex : $\\text{H}_2\\text{O}, \\text{NH}_3, \\text{CH}_4, \\text{CuO}, \\text{CO}_2$).\n\n3. Symboles des éléments chimiques :\nOn dénombre 118 éléments chimiques (93 naturels et 25 artificiels).\nLe symbole est une lettre majuscule, suivie parfois d'une minuscule.\nOrigines des symboles historiques :\n- Azote : N (Nitrogène) | Sodium : Na (Natrium) | Potassium : K (Kalium)\n- Mercure : Hg (Hydrargyrum) | Or : Au (Aurum) | Étain : Sn (Stannum) | Tungstène : W (Wolfram).",
+              "formulas": [
+                      {
+                              "name": "Combustion du cuivre dans le dioxygène",
+                              "formula": "2\\text{Cu} + \\text{O}_2 \\longrightarrow 2\\text{CuO}",
+                              "note": "Formation d'oxyde de cuivre II de couleur noire."
+                      },
+                      {
+                              "name": "Réduction de l'oxyde CuO par le carbone",
+                              "formula": "2\\text{CuO} + \\text{C} \\longrightarrow 2\\text{Cu} + \\text{CO}_2",
+                              "note": "Régénération du cuivre métallique rouge et dégagement de CO2."
+                      },
+                      {
+                              "name": "Action du fer sur l'ion cuivre II",
+                              "formula": "\\text{Cu}^{2+} + \\text{Fe} \\longrightarrow \\text{Cu} + \\text{Fe}^{2+}",
+                              "note": "Le fer réduit l'ion cuivre II en métal cuivre rouge."
+                      }
+              ],
+              "keyRule": "Définition officielle à retenir par cœur pour les interrogations : l'élément chimique est ce qui est commun à un corps simple et à tous ses composés. Lors d'une réaction chimique, les éléments chimiques se conservent rigoureusement.",
+              "workedExample": {
+                      "title": "Situation d'évaluation résolue (Examen officiel 2nde AC)",
+                      "statement": "On dispose des espèces chimiques suivantes : Cl2, NH3, CO3(2-), C8H10N4O2, Al2(SO4)3, HCl, C12H22O11, O2. 1. Quels sont les éléments constitutifs ? 2. Regrouper les composés possédant l'élément oxygène.",
+                      "methodSteps": [
+                              "Étape 1 : Lister les symboles présents : Cl, N, H, C, O, Al, S.",
+                              "Étape 2 : Nommer chaque élément : Chlore (Cl), Azote (N), Hydrogène (H), Carbone (C), Oxygène (O), Aluminium (Al), Soufre (S).",
+                              "Étape 3 : Identifier les espèces contenant la lettre O : CO3(2-), C8H10N4O2, Al2(SO4)3, C12H22O11 et O2."
+                      ],
+                      "conclusion": "L'élément oxygène O est présent dans 5 espèces différentes sous forme de corps simple (O2) ou de corps composés."
+              },
+              "exercises": [
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex1",
+                              "type": "mcq",
+                              "prompt": "Quels sont les éléments chimiques communs aux hydrocarbures, au sucre ($\\text{C}_6\\text{H}_{12}\\text{O}_6$) et à l'alcool ($\\text{C}_2\\text{H}_6\\text{O}$) ?",
+                              "options": [
+                                      "Le carbone et l'hydrogène",
+                                      "Le carbone et l'oxygène",
+                                      "L'hydrogène et l'oxygène",
+                                      "L'azote et le carbone"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Les éléments présents simultanément dans les trois familles sont le carbone (C) et l'hydrogène (H)."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex2",
+                              "type": "mcq",
+                              "prompt": "Le sulfure de fer, l'oxyde de fer II et le métal fer sont des corps purs. Quel élément ont-ils en commun ?",
+                              "options": [
+                                      "Le fer",
+                                      "Le soufre",
+                                      "L'oxygène",
+                                      "Le carbone"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Ces trois corps renferment tous l'élément chimique fer (Fe)."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex3",
+                              "type": "mcq",
+                              "prompt": "La molécule de chlorophylle a pour formule brute $\\text{C}_{55}\\text{H}_{72}\\text{N}_4\\text{O}_5\\text{Mg}$. Quels éléments renferme-t-elle ?",
+                              "options": [
+                                      "Carbone, Hydrogène, Azote, Oxygène, Magnésium",
+                                      "Carbone, Hélium, Azote, Oxygène, Manganèse",
+                                      "Cuivre, Hydrogène, Nickel, Oxygène, Magnésium",
+                                      "Chlore, Hydrogène, Azote, Or, Mercure"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "C = Carbone, H = Hydrogène, N = Azote, O = Oxygène, Mg = Magnésium."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex4",
+                              "type": "mcq",
+                              "prompt": "Lors du chauffage du sucre en vase clos, il se forme du « charbon de sucre » (C) et de la vapeur d'eau ($\\text{H}_2\\text{O}$). Quels sont les éléments constitutifs du sucre ?",
+                              "options": [
+                                      "Carbone, Hydrogène et Oxygène",
+                                      "Carbone et Hydrogène uniquement",
+                                      "Carbone et Oxygène uniquement",
+                                      "Carbone et Azote"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Le charbon apporte l'élément carbone, et l'eau apporte l'hydrogène et l'oxygène. Le sucre contient donc C, H et O."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex5",
+                              "type": "mcq",
+                              "prompt": "Quelle est l'équation-bilan de la combustion du cuivre métallique dans le dioxygène ?",
+                              "options": [
+                                      "2\\text{Cu} + \\text{O}_2 \\longrightarrow 2\\text{CuO}",
+                                      "\\text{Cu} + \\text{O}_2 \\longrightarrow \\text{CuO}_2",
+                                      "\\text{Cu} + \\text{O} \\longrightarrow \\text{CuO}",
+                                      "2\\text{Cu} + 2\\text{O}_2 \\longrightarrow 2\\text{CuO}"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "2 atomes de cuivre réagissent avec 1 molécule de dioxygène pour former 2 molécules d'oxyde de cuivre II : $2\\text{Cu} + \\text{O}_2 \\longrightarrow 2\\text{CuO}$."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex6",
+                              "type": "mcq",
+                              "prompt": "Parmi les espèces suivantes, laquelle est un corps simple ?",
+                              "options": [
+                                      "\\text{O}_2",
+                                      "\\text{H}_2\\text{O}",
+                                      "\\text{NH}_3",
+                                      "\\text{CO}_2"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Un corps simple est constitué d'un seul élément chimique. $\\text{O}_2$ ne contient que l'élément oxygène."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex7",
+                              "type": "mcq",
+                              "prompt": "Quel est le symbole chimique officiel du tungstène, dérivé de son nom ancien Wolfram ?",
+                              "options": [
+                                      "W",
+                                      "Tu",
+                                      "Tg",
+                                      "Tn"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Le tungstène a pour symbole W, issu de son nom allemand et minéralogique historique Wolfram."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex8",
+                              "type": "mcq",
+                              "prompt": "Quelle est la définition officielle de l'élément chimique au programme ?",
+                              "options": [
+                                      "Ce qui est commun à un corps simple et à tous ses composés",
+                                      "Le plus petit morceau de matière indivisible",
+                                      "Un mélange homogène de plusieurs atomes",
+                                      "Une particule portant une charge positive"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "L'élément chimique est rigoureusement défini comme ce qui est commun à un corps simple et à tous ses composés."
+                      }
+              ]
       },
       {
-        "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2",
-        "order": 2,
-        "title": "Structure de l'atome et élément chimique : Protocoles & Résolution d'Exercices",
-        "summary": "Méthodologie expérimentale, calculs littéraux et applications types aux interrogations.",
-        "conceptExplanation": "L'étude quantitative des solutions aqueuses et des transferts d'électrons est indispensable en chimie.\n\n1. Grandeurs fondamentales des solutions :\n- Quantité de matière : n = m / M (en mol).\n- Concentration molaire : C = n / V (en mol·L⁻¹).\n- Concentration massique : C_m = m / V = C · M (en g·L⁻¹).\n- Dilution : lors d'une dilution, la quantité de matière de soluté se conserve : C_initial · V_initial = C_final · V_final.\n  Facteur de dilution : F = C_initial / C_final = V_final / V_initial.\n\n2. Réactions d'oxydoréduction :\n- Un oxydant est une espèce chimique capable de capter au moins un électron : Ox + n e⁻ ⇌ Red.\n- Un réducteur est une espèce chimique capable de céder au moins un électron : Red ⇌ Ox + n e⁻.\n- Équilibrage des demi-équations en milieu acide :\n  1. Équilibrer les éléments chimiques autres que O et H.\n  2. Équilibrer l'élément oxygène O en ajoutant des molécules d'eau H₂O.\n  3. Équilibrer l'élément hydrogène H en ajoutant des ions H⁺ (ou H₃O⁺).\n  4. Équilibrer la charge électrique globale en ajoutant des électrons e⁻.",
-        "formulas": [
-          {
-            "name": "Conservation de matière en dilution",
-            "formula": "C_i · V_i = C_f · V_f  ⇒  V_i = (C_f · V_f) / C_i",
-            "note": "Le facteur de dilution est F = C_i / C_f = V_f / V_i > 1."
-          },
-          {
-            "name": "Relation entre C et C_m",
-            "formula": "C_m = C · M",
-            "note": "C en mol·L⁻¹, M en g·mol⁻¹, C_m en g·L⁻¹."
-          }
-        ],
-        "keyRule": "Dans une équation d'oxydoréduction globale, les électrons cédés par le réducteur doivent toujours être rigoureusement égaux aux électrons captés par l'oxydant (aucun électron libre n'apparaît dans l'équation bilan).",
-        "workedExample": {
-          "title": "Exemple résolu : Préparation par dilution d'une solution",
-          "statement": "On souhaite préparer un volume V_f = 100 mL d'une solution de permanganate de potassium à C_f = 2,0 × 10⁻³ mol·L⁻¹ à partir d'une solution mère à C_i = 5,0 × 10⁻² mol·L⁻¹. Quel volume de solution mère V_i faut-il prélever ?",
-          "methodSteps": [
-            "Étape 1 : Poser la loi de conservation de la quantité de matière de soluté : C_i · V_i = C_f · V_f.",
-            "Étape 2 : Isoler le volume mère à prélever : V_i = (C_f · V_f) / C_i.",
-            "Étape 3 : Calculer le facteur de dilution : F = C_i / C_f = (5,0 × 10⁻²) / (2,0 × 10⁻³) = 25.",
-            "Étape 4 : Calculer V_i : V_i = V_f / F = 100 mL / 25 = 4,0 mL."
-          ],
-          "conclusion": "Il faut prélever 4,0 mL de solution mère à l'aide d'une pipette jaugée munie d'une pro-pipette."
-        },
-        "exercises": [
-          {
-            "prompt": "Quelle est la concentration molaire C d'une solution contenant 0,05 mol de soluté dans 250 mL de solution ?",
-            "options": [
-              "0,20 mol·L⁻¹",
-              "0,05 mol·L⁻¹",
-              "0,0125 mol·L⁻¹",
-              "0,50 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "V = 250 mL = 0,250 L. C = n / V = 0,05 / 0,250 = 0,20 mol·L⁻¹.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex1",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Par définition, que fait un réducteur lors d'une réaction d'oxydoréduction ?",
-            "options": [
-              "Il cède un ou plusieurs électrons",
-              "Il capte un ou plusieurs électrons",
-              "Il capte un proton H⁺",
-              "Il neutralise les charges"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Un réducteur est un donneur d'électrons (il subit une oxydation) : Red → Ox + n e⁻.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex2",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Combien d'électrons sont échangés dans la demi-équation du couple MnO₄⁻ / Mn²⁺ en milieu acide ?",
-            "options": [
-              "5 électrons",
-              "2 électrons",
-              "7 électrons",
-              "1 électron"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "MnO₄⁻ + 8 H⁺ + 5 e⁻ ⇌ Mn²⁺ + 4 H₂O. Le manganèse passe du degré d'oxydation +VII à +II, échangeant 5 électrons.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex3",
-            "type": "mcq"
-          },
-          {
-            "prompt": "On dilue 10 fois une solution mère de concentration C₀ = 0,10 mol·L⁻¹. Quelle est la nouvelle concentration ?",
-            "options": [
-              "0,010 mol·L⁻¹",
-              "1,0 mol·L⁻¹",
-              "0,001 mol·L⁻¹",
-              "0,050 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Diluer 10 fois signifie que le facteur de dilution est F = 10, d'où C_f = C₀ / 10 = 0,010 mol·L⁻¹.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex4",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quel est le nombre d'oxydation du fer dans l'ion Fe³⁺ ?",
-            "options": [
-              "+III",
-              "+II",
-              "0",
-              "-III"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour un ion monoatomique, le nombre d'oxydation est égal à sa charge électrique, soit +III.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex5",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Si la masse molaire du glucose est M = 180 g·mol⁻¹, quelle masse faut-il pour préparer 500 mL à 0,10 mol·L⁻¹ ?",
-            "options": [
-              "9,0 g",
-              "18,0 g",
-              "4,5 g",
-              "90 g"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "n = C · V = 0,10 × 0,500 = 0,05 mol. m = n · M = 0,05 × 180 = 9,0 g.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex6",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Dans la réaction Zn + Cu²⁺ → Zn²⁺ + Cu, quelle espèce est oxydée ?",
-            "options": [
-              "Le zinc Zn (qui perd 2 électrons)",
-              "L'ion cuivre Cu²⁺",
-              "L'eau",
-              "L'ion zinc Zn²⁺"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le zinc passe de Zn à Zn²⁺ en cédant 2 électrons : Zn subit une oxydation, il est oxydé.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex7",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quelle verrerie de précision doit-on obligatoirement utiliser pour préparer une solution étalon par dilution ?",
-            "options": [
-              "Une pipette jaugée et une fiole jaugée",
-              "Une éprouvette graduée et un bêcher",
-              "Un erlenmeyer et un entonnoir",
-              "Un verre à pied et un agitateur"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour une dilution de précision, le prélèvement s'effectue à la pipette jaugée et le mélange final dans une fiole jaugée.",
-            "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex8",
-            "type": "mcq"
-          }
-        ]
+              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2",
+              "order": 2,
+              "title": "Structure de l'atome, isotopes et cortège électronique",
+              "summary": "Constituants de l'atome (protons, neutrons, électrons), nucléides, isotopes, formule électronique et schéma de Lewis.",
+              "conceptExplanation": "L'atome est constitué d'un noyau central minuscule autour duquel gravitent des électrons.\n\n1. Les constituants de l'atome :\n- L'électron : symbole $e^-$, masse $m_e = 9{,}1 \\times 10^{-31}\\text{ kg}$, charge négative $q_e = -e = -1{,}6 \\times 10^{-19}\\text{ C}$ (où $e = 1{,}6 \\times 10^{-19}\\text{ C}$ est la charge élémentaire).\n- Le noyau est constitué de nucléons :\n  * Protons : charge $+e = +1{,}6 \\times 10^{-19}\\text{ C}$, masse $m_p = 1{,}67 \\times 10^{-27}\\text{ kg}$.\n  * Neutrons : charge nulle (0), masse $m_n = 1{,}67 \\times 10^{-27}\\text{ kg}$.\n\n2. Nucléides et isotopes :\n- Numéro atomique Z : nombre de protons contenus dans le noyau.\n- Nombre de masse A : nombre total de nucléons (protons + neutrons).\n- Nombre de neutrons N : $N = A - Z$.\n- Symbole du nucléide : $^{A}_{Z}\\text{X}$ (exemple : $^{35}_{17}\\text{Cl}$ possède $Z=17$ protons et $A=35$ nucléons, soit $N = 35 - 17 = 18$ neutrons).\n- Isotopes : ensemble de nucléides ayant le même numéro atomique Z mais des nombres de masse A différents (ex : $^{12}_6\\text{C}, ^{13}_6\\text{C}, ^{14}_6\\text{C}$ ou $^{235}_{92}\\text{U}, ^{238}_{92}\\text{U}$).\n- Électroneutralité de l'atome : un atome contient exactement autant d'électrons que de protons ($Z$ protons $\\Leftrightarrow$ $Z$ électrons).\n\n3. Masse et dimensions des atomes :\n- La masse du proton est environ 1 836 fois supérieure à celle de l'électron ($\\frac{m_p}{m_e} \\approx 1836$). La masse de l'atome est donc pratiquement concentrée dans son noyau : $m_{\\text{at}} \\approx A \\times m_p$.\n- Le rayon de l'atome est environ 100 000 fois plus grand que celui du noyau : l'atome possède une structure lacunaire (constitué d'un immense vide).\n\n4. Structure électronique et schéma de Lewis :\n- Les électrons se répartissent sur des couches notées K, L, M, N (d'ordre n = 1, 2, 3, 4).\n- Règle de Pauli : le nombre maximal d'électrons par couche est $2n^2$ :\n  * Couche K ($n=1$) : maximum 2 électrons.\n  * Couche L ($n=2$) : maximum 8 électrons.\n  * Couche M ($n=3$) : maximum 18 électrons.\n- Formule électronique : on remplit successivement les couches K, puis L, puis M.\n  Exemples : Al ($Z=13$) a pour formule $K^2 L^8 M^3$ ; Cl ($Z=17$) a pour formule $K^2 L^8 M^7$.\n- Schéma de Lewis : schématise les électrons de la couche externe par des points (électrons célibataires) et des tirets (doublets non-liants).",
+              "formulas": [
+                      {
+                              "name": "Nombre de neutrons d'un noyau",
+                              "formula": "N = A - Z",
+                              "note": "A = nombre de masse (nucléons), Z = numéro atomique (protons)."
+                      },
+                      {
+                              "name": "Masse approximative de l'atome",
+                              "formula": "m_{\\text{atome}} \\approx A \\times m_p",
+                              "note": "La masse des électrons est négligeable devant celle des nucléons."
+                      },
+                      {
+                              "name": "Capacité maximale d'une couche électronique",
+                              "formula": "N_{\\max} = 2n^2",
+                              "note": "K (n=1) : 2 électrons ; L (n=2) : 8 électrons ; M (n=3) : 18 électrons."
+                      },
+                      {
+                              "name": "Charge totale du noyau",
+                              "formula": "Q = Z \\times e",
+                              "note": "e = 1,6 * 10^-19 C est la charge élémentaire."
+                      }
+              ],
+              "keyRule": "L'atome est toujours électriquement neutre : nombre d'électrons = nombre de protons = Z. Ne pas confondre A (masse/nucléons en haut) et Z (numéro atomique en bas).",
+              "workedExample": {
+                      "title": "Exercice type devoir surveillé résolu (Atome X)",
+                      "statement": "Un atome X possède un noyau contenant 20 neutrons et portant une charge totale Q = +30,4 * 10^-19 C. Identifier l'atome X parmi Ar (Z=18), K (Z=19) et Ca (Z=20).",
+                      "methodSteps": [
+                              "Étape 1 : Calculer le numéro atomique Z = Q / e = (30,4 * 10^-19) / (1,6 * 10^-19) = 19.",
+                              "Étape 2 : Calculer le nombre de masse A = Z + N = 19 + 20 = 39 nucléons.",
+                              "Étape 3 : Identifier l'élément correspondant à Z = 19 dans la table : il s'agit du potassium K."
+                      ],
+                      "conclusion": "L'atome X est le potassium 39_19 K. Son cortège compte 19 électrons et sa formule électronique est K^2 L^8 M^8 N^1."
+              },
+              "exercises": [
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex1",
+                              "type": "mcq",
+                              "prompt": "Dans la notation $^{35}_{17}\\text{Cl}$, que représentent respectivement les nombres 17 et 35 ?",
+                              "options": [
+                                      "Le nombre de protons et le nombre de nucléons",
+                                      "Le nombre de protons et le nombre de neutrons",
+                                      "Le nombre de neutrons et le nombre de nucléons",
+                                      "Le nombre d'électrons et le nombre de neutrons"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Le nombre du bas Z = 17 est le numéro atomique (protons) et le nombre du haut A = 35 est le nombre de masse (nucléons)."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex2",
+                              "type": "mcq",
+                              "prompt": "Quelle est la formule électronique de l'atome de chlore $^{35}_{17}\\text{Cl}$ ($Z = 17$) ?",
+                              "options": [
+                                      "K^2 L^8 M^7",
+                                      "K^2 L^9 M^6",
+                                      "K^2 L^7 M^8",
+                                      "K^2 L^8 M^8"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "On remplit K (2 e-), puis L (8 e-), il reste $17 - 10 = 7$ électrons sur la couche M : $K^2 L^8 M^7$."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex3",
+                              "type": "mcq",
+                              "prompt": "Combien de neutrons possède le noyau de sodium $^{23}_{11}\\text{Na}$ ?",
+                              "options": [
+                                      "12",
+                                      "11",
+                                      "23",
+                                      "34"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "$N = A - Z = 23 - 11 = 12$ neutrons."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex4",
+                              "type": "mcq",
+                              "prompt": "Quelle est la formule électronique de l'atome de magnésium Mg ($Z = 12$) ?",
+                              "options": [
+                                      "K^2 L^8 M^2",
+                                      "K^2 L^10",
+                                      "K^2 L^6 M^4",
+                                      "K^2 L^8 M^4"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Z = 12 : K prend 2 e-, L prend 8 e-, et M prend les 2 e- restants : $K^2 L^8 M^2$."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex5",
+                              "type": "mcq",
+                              "prompt": "Que signifie l'expression « structure lacunaire » de l'atome ?",
+                              "options": [
+                                      "L'atome est essentiellement constitué de vide entre le noyau et les électrons",
+                                      "Le noyau de l'atome comporte des trous",
+                                      "Les électrons se déplacent en ligne droite sans discontinuité",
+                                      "L'atome n'a pas de masse mesurable"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Le rayon de l'atome est 100 000 fois supérieur à celui du noyau : la matière atomique est presque entièrement constituée de vide."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex6",
+                              "type": "mcq",
+                              "prompt": "Un atome possède $N = 20$ neutrons et une charge totale de noyau $Q = +30{,}4 \\times 10^{-19}\\text{ C}$. Identifier cet atome sachant que $e = 1{,}6 \\times 10^{-19}\\text{ C}$.",
+                              "options": [
+                                      "Le potassium K (Z = 19)",
+                                      "L'argon Ar (Z = 18)",
+                                      "Le calcium Ca (Z = 20)",
+                                      "Le chlore Cl (Z = 17)"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "$Z = \\frac{Q}{e} = \\frac{30{,}4 \\times 10^{-19}}{1{,}6 \\times 10^{-19}} = 19$. L'élément à $Z=19$ est le potassium K."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex7",
+                              "type": "mcq",
+                              "prompt": "Deux atomes isotopes possèdent obligatoirement :",
+                              "options": [
+                                      "Le même numéro atomique Z mais des nombres de masse A différents",
+                                      "Le même nombre de masse A mais des numéros atomiques Z différents",
+                                      "Le même nombre de neutrons mais des masses différentes",
+                                      "La même masse et le même nombre d'électrons"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "Par définition, les isotopes ont le même nombre de protons Z (même élément) et un nombre différent de neutrons, donc de masse A."
+                      },
+                      {
+                              "id": "seconde_a_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex8",
+                              "type": "mcq",
+                              "prompt": "L'atome d'aluminium Al possède la formule électronique $K^2 L^8 M^3$. Combien d'électrons célibataires figurent sur son schéma de Lewis ?",
+                              "options": [
+                                      "3",
+                                      "1",
+                                      "2",
+                                      "8"
+                              ],
+                              "correctAnswerIndex": 0,
+                              "explanation": "La couche externe M compte 3 électrons périphériques. Dans le schéma de Lewis d'Al, ils sont représentés par 3 points (électrons célibataires)."
+                      }
+              ]
       }
     ]
   },
