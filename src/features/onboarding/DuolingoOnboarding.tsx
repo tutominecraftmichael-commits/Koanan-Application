@@ -19,7 +19,6 @@ import {
   Flame,
   Lock,
   Mail,
-  User as UserIcon,
   Eye,
   EyeOff,
   AlertCircle,
@@ -70,8 +69,7 @@ import {
 import {
   signInWithGoogleReal,
   signInWithEmailReal,
-  signUpWithEmailReal,
-  checkEmailExistsInDatabase
+  signUpWithEmailReal
 } from '../../lib/firebase';
 import { generateKonanId } from '../../lib/konanId';
 import { validateStrictEmail } from '../auth/AuthPage';
@@ -86,6 +84,8 @@ import type {
   ExtractedSubjectCandidate,
   ExtractedClassCandidate
 } from '../../types';
+import type { CurriculumGradeLevel } from '../../lib/curriculum/types';
+import { GRADE_LEVELS } from '../../lib/curriculum/types';
 
 export const PENDING_ONBOARDING_PAYLOAD_KEY = 'konan_pending_onboarding_payload';
 
@@ -120,6 +120,7 @@ type OnboardingStepId =
   | 'welcome'
   | 'study_type'
   | 'upload'
+  | 'grade_level'
   | 'customize'
   | 'account_setup'
   | 'pricing_models';
@@ -130,6 +131,7 @@ const STEP_ORDER: OnboardingStepId[] = [
   'welcome',
   'study_type',
   'upload',
+  'grade_level',
   'customize',
   'account_setup',
   'pricing_models',
@@ -355,7 +357,7 @@ const WordByWordBubble: React.FC<{ text: string; speed?: number }> = ({
 
 export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   onComplete,
-  onOpenLogin: _onOpenLogin,
+  onOpenLogin,
   onOpenAdmin,
   currentUser: _currentUser,
   onLoginSuccess,
@@ -395,6 +397,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
   // Étape 5 & 6 : Compte (Nouvel utilisateur) puis Modèles d'accompagnement
   const [selectedPlan, setSelectedPlan] = useState<'free' | 'pro' | 'plus'>('pro');
+  const [selectedGradeLevel, setSelectedGradeLevel] = useState<CurriculumGradeLevel>('terminale_d');
+  const [customFiliere, setCustomFiliere] = useState<string>('');
   const [generatedSubjects, setGeneratedSubjects] = useState<Subject[]>([]);
   const [generatedSlots, setGeneratedSlots] = useState<ClassSlot[]>([]);
   const [generatedSessions, setGeneratedSessions] = useState<StudySession[]>([]);
@@ -407,6 +411,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [accountExistsRedirect, setAccountExistsRedirect] = useState<boolean>(false);
+  const [canCreateFromLogin, setCanCreateFromLogin] = useState<boolean>(false);
   const [isSubmittingAuth, setIsSubmittingAuth] = useState<boolean>(false);
   const [registeredProfile, setRegisteredProfile] = useState<UserAccount | null>(null);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState<boolean>(false);
@@ -731,6 +736,50 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       setSelectedPacings([rec.primaryId]);
     }
 
+    // Détection automatique intelligente de la classe et série à partir de l'EDT
+    const textToScan = `${scheduleText} ${uploadedFileName}`.toLowerCase();
+    let detectedGrade: CurriculumGradeLevel | null = null;
+
+    if (/\b(?:ta1|tle\s*a1|terminale\s*a1|t\.?a\.?1)\b/i.test(textToScan)) {
+      detectedGrade = 'terminale_a1';
+    } else if (/\b(?:ta2|tle\s*a2|terminale\s*a2|t\.?a\.?2)\b/i.test(textToScan)) {
+      detectedGrade = 'terminale_a2';
+    } else if (/\b(?:1a1|1re\s*a1|1ère\s*a1|premiere\s*a1)\b/i.test(textToScan)) {
+      detectedGrade = 'premiere_a1';
+    } else if (/\b(?:1a2|1re\s*a2|1ère\s*a2|premiere\s*a2)\b/i.test(textToScan)) {
+      detectedGrade = 'premiere_a2';
+    } else if (/\b(?:tc|tle\s*c|terminale\s*c|t\.?c)\b/i.test(textToScan)) {
+      detectedGrade = 'terminale_c';
+    } else if (/\b(?:td|tle\s*d|terminale\s*d|t\.?d)\b/i.test(textToScan)) {
+      detectedGrade = 'terminale_d';
+    } else if (/\b(?:1c|1re\s*c|1ère\s*c|premiere\s*c)\b/i.test(textToScan)) {
+      detectedGrade = 'premiere_c';
+    } else if (/\b(?:1d|1re\s*d|1ère\s*d|premiere\s*d)\b/i.test(textToScan)) {
+      detectedGrade = 'premiere_d';
+    } else if (/\b(?:2c|2nde\s*c|seconde\s*c)\b/i.test(textToScan)) {
+      detectedGrade = 'seconde_c';
+    } else if (/\b(?:2a|2de\s*a|seconde\s*a)\b/i.test(textToScan)) {
+      detectedGrade = 'seconde_a';
+    } else if (/\b(?:3e|3ème|3eme|troisieme)\b/i.test(textToScan)) {
+      detectedGrade = '3eme';
+    } else if (/\b(?:4e|4ème|4eme|quatrieme)\b/i.test(textToScan)) {
+      detectedGrade = '4eme';
+    } else if (/\b(?:5e|5ème|5eme|cinquieme)\b/i.test(textToScan)) {
+      detectedGrade = '5eme';
+    } else if (/\b(?:6e|6ème|6eme|sixieme)\b/i.test(textToScan)) {
+      detectedGrade = '6eme';
+    }
+
+    if (detectedGrade) {
+      setSelectedGradeLevel(detectedGrade);
+    }
+
+    soundFX.playCheckmarkPop();
+    // Passage à l'étape du choix de niveau d'étude (Classe & Série ou Filière)
+    setStep('grade_level');
+  };
+
+  const handleProceedFromGradeLevelToCustomize = () => {
     soundFX.playCheckmarkPop();
     setStep('customize');
   };
@@ -840,11 +889,19 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       'Étudiant'
     ).trim();
     const effectiveTier = chosenPlan || selectedPlan;
+    const gradeLevelLabel = GRADE_LEVELS.find(g => g.id === selectedGradeLevel)?.label || activeSystem.title;
+    const resolvedAcademicLevel = studyType === 'lycee' ? gradeLevelLabel : (customFiliere.trim() || activeSystem.title);
     const finalPrefs: StudyPreferences = generatedPrefs
-      ? { ...generatedPrefs, studentName: cleanName }
+      ? {
+          ...generatedPrefs,
+          studentName: cleanName,
+          gradeLevel: selectedGradeLevel,
+          academicLevel: resolvedAcademicLevel,
+        }
       : {
           studentName: cleanName,
-          academicLevel: activeSystem.title,
+          academicLevel: resolvedAcademicLevel,
+          gradeLevel: selectedGradeLevel,
           targetDailyStudyMinutes: 120,
           chronotype,
           pacing: selectedPacings[0] || 'pomodoro',
@@ -879,11 +936,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     setAuthError(null);
     setAccountExistsRedirect(false);
 
-    if (!authFullName.trim() || authFullName.trim().length < 2) {
-      setAuthError('Veuillez renseigner votre Prénom & Nom (au moins 2 caractères).');
-      return;
-    }
-
     const emailCheck = validateStrictEmail(authEmail);
     if (!emailCheck.isValid) {
       setAuthError(emailCheck.error || 'Adresse email invalide.');
@@ -897,7 +949,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
     setIsSubmittingAuth(true);
     try {
-      const cleanName = authFullName.trim();
+      const emailPrefix = authEmail.split('@')[0];
+      const cleanName = emailPrefix ? emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1) : 'Étudiant';
       const cleanEmail = authEmail.trim().toLowerCase();
 
       try {
@@ -906,15 +959,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         // Ignore
       }
 
-      // Vérification préalable dans la base de données (Firebase Auth, Firestore & LocalStorage)
-      const existsInDb = await checkEmailExistsInDatabase(cleanEmail);
-      if (existsInDb) {
-        setAccountExistsRedirect(true);
-        setAuthError('Le compte existe déjà, connectez-vous directement');
-        setIsSubmittingAuth(false);
-        return;
-      }
-
+      // Inscription ou connexion automatique sans blocage artificiel
       const authUser = await signUpWithEmailReal(cleanEmail, authPassword, cleanName);
 
       const profile: UserAccount = {
@@ -944,7 +989,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         msg.toLowerCase().includes('already-in-use')
       ) {
         setAccountExistsRedirect(true);
-        setAuthError('Le compte existe déjà, connectez-vous directement');
+        setAuthError(msg || 'Ce compte existe déjà avec cette adresse email. Veuillez vous connecter directement.');
       } else {
         setAuthError(msg || 'Erreur lors de la création du compte.');
       }
@@ -953,7 +998,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     }
   };
 
-  // Étape 5 : Inscription Google pour un NOUVEL utilisateur (vérifie que le Gmail n'existe pas déjà dans la base)
+  // Étape 5 : Authentification Google (création ou reconnexion fluide sans blocage)
   const handleGoogleNewRegistration = async () => {
     setAuthError(null);
     setAccountExistsRedirect(false);
@@ -968,17 +1013,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
       const realUser = await signInWithGoogleReal();
       if (realUser) {
-        // Si ce Gmail existe déjà dans la base de données, refuser l'inscription et demander de se connecter directement
-        if (realUser.isNewUser === false) {
-          if (realUser.email) {
-            setAuthEmail(realUser.email);
-          }
-          setAccountExistsRedirect(true);
-          setAuthError('Le compte existe déjà, connectez-vous directement');
-          setIsSubmittingAuth(false);
-          return;
-        }
-
         const resolvedName = realUser.displayName || authFullName.trim() || 'Étudiant';
         setAuthFullName(resolvedName);
         if (realUser.email) {
@@ -1006,7 +1040,11 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         setStep('pricing_models');
       }
     } catch (err: any) {
-      setAuthError(err?.message || 'Inscription Google interrompue.');
+      if (err?.code === 'auth/unauthorized-domain' || err?.message === 'UNAUTHORIZED_DOMAIN') {
+        setAuthError('Domaine non autorisé. Ouvrez l\'application sur http://localhost:5173 (et non 127.0.0.1) ou utilisez la connexion par Email.');
+      } else {
+        setAuthError(err?.message || 'Inscription Google interrompue.');
+      }
     } finally {
       setIsSubmittingAuth(false);
     }
@@ -1093,6 +1131,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   const handleExistingAccountLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
+    setCanCreateFromLogin(false);
 
     const emailCheck = validateStrictEmail(authEmail);
     if (!emailCheck.isValid) {
@@ -1139,7 +1178,57 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       }
       onLoginSuccess(profile);
     } catch (err: any) {
-      setAuthError(err?.message || "Ce compte n'existe pas ou le mot de passe est incorrect.");
+      const msg = err?.message || '';
+      if (err?.code === 'auth/user-not-found' || msg.includes("n'existe pas")) {
+        setCanCreateFromLogin(true);
+        setAuthError("Ce compte n'existe pas encore. Vous pouvez le créer directement en un clic ci-dessous avec ce mot de passe :");
+      } else {
+        setAuthError(msg || "Ce compte n'est pas reconnu ou le mot de passe est incorrect.");
+      }
+    } finally {
+      setIsSubmittingAuth(false);
+    }
+  };
+
+  // Création directe d'un compte à partir des identifiants saisis dans le formulaire de connexion
+  const handleCreateAccountFromExistingForm = async () => {
+    setAuthError(null);
+    setCanCreateFromLogin(false);
+    setIsSubmittingAuth(true);
+    try {
+      const emailPrefix = authEmail.split('@')[0];
+      const cleanName = emailPrefix ? emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1) : 'Étudiant';
+      const cleanEmail = authEmail.trim().toLowerCase();
+
+      const authUser = await signUpWithEmailReal(cleanEmail, authPassword, cleanName);
+      const hasExtractedSchedule = generatedSlots.length > 0 && generatedSubjects.length > 0;
+      const pendingPayload = hasExtractedSchedule
+        ? buildAndPersistFinalPayload(cleanName, selectedPlan)
+        : null;
+
+      const profile: UserAccount = {
+        name: cleanName,
+        email: authUser.email || cleanEmail,
+        avatar:
+          authUser.photoURL ||
+          `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(cleanName)}`,
+        googleId: authUser.uid,
+        konanId: generateKonanId(authUser.uid || authUser.email || undefined),
+        academicLevel: activeSystem.title || 'Licence Universitaire',
+        isLoggedIn: true,
+        isDemo: false,
+        planTier: selectedPlan,
+        lastSyncedAt: new Date().toISOString(),
+      };
+
+      soundFX.playStreakIgniteChime();
+      setShowExistingLogin(false);
+      if (pendingPayload) {
+        onComplete({ ...pendingPayload, launchProWizard: false });
+      }
+      onLoginSuccess(profile);
+    } catch (createErr: any) {
+      setAuthError(createErr?.message || 'Impossible de créer le compte.');
     } finally {
       setIsSubmittingAuth(false);
     }
@@ -1160,23 +1249,24 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           : liveParsedPreview.slots.length > 0
           ? `Extraction réussie : ${liveParsedPreview.slots.length} créneaux classés en fichier texte ${activeSystem.title} !`
           : `Importe ton emploi du temps (PDF ou Photo) pour l'extraire en fichier texte ${activeSystem.title}.`;
+      case 'grade_level':
+        return studyType === 'lycee'
+          ? "Quelle est ta classe et ta série ? Cela me permet d'activer le programme officiel de Côte d'Ivoire !"
+          : "Précise ta filière d'études pour ajuster ton accompagnement sur mesure.";
       case 'customize':
         return 'Vérifie tes matières extraites, ajuste leurs coefficients et choisis ta méthode de révision.';
       case 'account_setup':
-        return `Tout est prêt ! Renseigne tes informations de connexion avec une adresse Gmail/Email nouvelle pour sauvegarder tes ${generatedSlots.length} cours et ${generatedSessions.length} séances d'étude.`;
+        return `Tout est prêt ! Renseigne tes informations de connexion avec une adresse Gmail/Email pour sauvegarder ton planning.`;
       case 'pricing_models':
-        return `Parfait ${registeredProfile?.name || authFullName || ''} ! Choisis maintenant ton modèle d'accompagnement KONAN (Gratuit, Pro ou Plus) pour ouvrir ton planning.`;
+        return `Parfait ! Choisis maintenant ton modèle d'accompagnement KONAN (Gratuit, Pro ou Plus) pour ouvrir ton planning.`;
     }
   }, [
     step,
+    studyType,
     showExistingLogin,
     isAnalyzing,
     liveParsedPreview.slots.length,
     activeSystem.title,
-    generatedSlots.length,
-    generatedSessions.length,
-    registeredProfile?.name,
-    authFullName,
   ]);
 
   return (
@@ -1423,12 +1513,42 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               onSubmit={handleExistingAccountLogin}
               className="space-y-4 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl max-w-xl mx-auto"
             >
+              <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFX.playCheckmarkPop();
+                    setShowExistingLogin(false);
+                    setAuthError(null);
+                    setCanCreateFromLogin(false);
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Retour à l'accueil</span>
+                </button>
+                <span className="text-xs font-extrabold uppercase tracking-wider text-indigo-500">Connexion Éspace Étudiant</span>
+              </div>
+
               <h2 className="text-xl font-black text-slate-900 dark:text-white">Connexion à ton compte</h2>
 
               {authError && (
-                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-300 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>{authError}</span>
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-300 text-xs flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{authError}</span>
+                  </div>
+                  {canCreateFromLogin && (
+                    <button
+                      type="button"
+                      onClick={handleCreateAccountFromExistingForm}
+                      disabled={isSubmittingAuth}
+                      className="w-full mt-1 py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+                      <span>Créer ce compte directement avec cet email</span>
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -1441,7 +1561,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       type="email"
                       required
                       value={authEmail}
-                      onChange={(e) => setAuthEmail(e.target.value)}
+                      onChange={(e) => {
+                        setAuthEmail(e.target.value);
+                        if (canCreateFromLogin) setCanCreateFromLogin(false);
+                      }}
                       placeholder="ton.email@gmail.com"
                       className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
                     />
@@ -1456,7 +1579,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       type={showPassword ? 'text' : 'password'}
                       required
                       value={authPassword}
-                      onChange={(e) => setAuthPassword(e.target.value)}
+                      onChange={(e) => {
+                        setAuthPassword(e.target.value);
+                        if (canCreateFromLogin) setCanCreateFromLogin(false);
+                      }}
                       placeholder="••••••••"
                       className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
                     />
@@ -1488,6 +1614,21 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 <span>Se connecter avec Google</span>
               </button>
 
+              {onOpenLogin && (
+                <div className="text-center pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowExistingLogin(false);
+                      onOpenLogin();
+                    }}
+                    className="text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline cursor-pointer"
+                  >
+                    Page de connexion avancée & réinitialisation de mot de passe →
+                  </button>
+                </div>
+              )}
+
               {isLocalAdminAllowed && onOpenAdmin && (
                 <div className="pt-2 border-t border-slate-200 dark:border-slate-800 text-center">
                   <button
@@ -1517,8 +1658,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 <KonanCube size={125} showStars={true} glow={true} className="animate-float" />
               </div>
 
-              <div className="relative bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800/90 rounded-3xl p-4 shadow-xl backdrop-blur-xl text-left w-full">
-                <p className="text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
+              <div className="relative bg-slate-900/95 border border-slate-800 rounded-3xl p-4 shadow-xl backdrop-blur-xl text-left w-full">
+                <p className="text-sm font-bold text-white leading-relaxed">
                   « <WordByWordBubble text={bubbleMessage} speed={35} /> »
                 </p>
               </div>
@@ -1907,6 +2048,252 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
             </div>
           )}
 
+          {/* ÉTAPE 3 : NIVEAU D'ÉTUDE (CLASSE & SÉRIE IVOIRIENNE OU FILIÈRE) */}
+          {!showExistingLogin && step === 'grade_level' && (
+            <div className="space-y-5">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <GraduationCap className="w-6 h-6 text-indigo-500 shrink-0" />
+                  <span>
+                    {studyType === 'lycee'
+                      ? '3. Quelle est ta classe & série ?'
+                      : "3. Quelle est ta filière d'études ?"}
+                  </span>
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+                  {studyType === 'lycee'
+                    ? "Sélectionne ta série pour synchroniser ton tuteur KONAN avec le programme officiel de Côte d'Ivoire (3ème à Terminale)."
+                    : "Précise ta filière pour calibrer tes coefficients et prioriser tes cours universitaires."}
+                </p>
+              </div>
+
+              {/* Options Collège / Lycée */}
+              {studyType === 'lycee' && (
+                <div className="space-y-5">
+                  {/* 1. Séries Scientifiques */}
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 mb-2.5">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Lycée — Séries Scientifiques (Maths pures, PC, SVT)</span>
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {[
+                        { id: 'terminale_c', label: 'Terminale C', badge: 'Tle C', desc: 'Bac C — Maths avancées (240h/an) & Sciences Physiques' },
+                        { id: 'terminale_d', label: 'Terminale D', badge: 'Tle D', desc: 'Bac D — SVT, Maths (180h/an) & Sciences Physiques' },
+                        { id: 'premiere_c', label: 'Première C', badge: '1ère C', desc: 'Sciences Exactes — 180h/an (6h/semaine)' },
+                        { id: 'premiere_d', label: 'Première D', badge: '1ère D', desc: 'Sciences Expérimentales — 150h/an (5h/semaine)' },
+                        { id: 'seconde_c', label: 'Seconde C', badge: '2nde C', desc: 'Tronc commun scientifique — 150h/an (5h/semaine)' },
+                      ].map(lvl => {
+                        const isSelected = selectedGradeLevel === lvl.id;
+                        return (
+                          <button
+                            key={lvl.id}
+                            type="button"
+                            onClick={() => {
+                              soundFX.playCheckmarkPop();
+                              setSelectedGradeLevel(lvl.id as CurriculumGradeLevel);
+                            }}
+                            className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                              isSelected
+                                ? 'bg-indigo-50/90 dark:bg-indigo-950/60 border-indigo-600 dark:border-indigo-400 shadow-md shadow-indigo-600/10'
+                                : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-indigo-300'
+                            }`}
+                          >
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-black px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                                  {lvl.badge}
+                                </span>
+                                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                                  {lvl.label}
+                                </h3>
+                              </div>
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                                {lvl.desc}
+                              </p>
+                            </div>
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                              isSelected
+                                ? 'border-indigo-600 bg-indigo-600 text-white'
+                                : 'border-slate-300 dark:border-slate-600'
+                            }`}>
+                              {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* 2. Séries Littéraires avec séparation stricte A1 / A2 */}
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400 flex items-center gap-1.5 mb-2.5">
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>Lycée — Séries Littéraires (Distinction stricte A1 & A2)</span>
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {[
+                        { id: 'terminale_a1', label: 'Terminale A1', badge: 'Tle A1', desc: 'Bac A1 — 8 chapitres avec Primitives & Intégrales (150h/an)' },
+                        { id: 'terminale_a2', label: 'Terminale A2', badge: 'Tle A2', desc: 'Bac A2 — 7 chapitres sans calcul intégral (120h/an)' },
+                        { id: 'premiere_a1', label: 'Première A1', badge: '1re A1', desc: 'Programme approfondi en Mathématiques — 120h/an (4h/semaine)' },
+                        { id: 'premiere_a2', label: 'Première A2', badge: '1re A2', desc: 'Programme standard en Mathématiques — 90h/an (3h/semaine)' },
+                        { id: 'seconde_a', label: 'Seconde A', badge: '2de A', desc: 'Tronc commun littéraire — 90h/an (3h/semaine)' },
+                      ].map(lvl => {
+                        const isSelected = selectedGradeLevel === lvl.id;
+                        return (
+                          <button
+                            key={lvl.id}
+                            type="button"
+                            onClick={() => {
+                              soundFX.playCheckmarkPop();
+                              setSelectedGradeLevel(lvl.id as CurriculumGradeLevel);
+                            }}
+                            className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                              isSelected
+                                ? 'bg-purple-50/90 dark:bg-purple-950/60 border-purple-600 dark:border-purple-400 shadow-md shadow-purple-600/10'
+                                : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-purple-300'
+                            }`}
+                          >
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-black px-2 py-0.5 rounded-md bg-purple-500/15 text-purple-700 dark:text-purple-300">
+                                  {lvl.badge}
+                                </span>
+                                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                                  {lvl.label}
+                                </h3>
+                              </div>
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                                {lvl.desc}
+                              </p>
+                            </div>
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                              isSelected
+                                ? 'border-purple-600 bg-purple-600 text-white'
+                                : 'border-slate-300 dark:border-slate-600'
+                            }`}>
+                              {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* 3. Collège (6ème à 3ème) */}
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 mb-2.5">
+                      <GraduationCap className="w-3.5 h-3.5" />
+                      <span>Collège — Premier Cycle (6ème à 3ème)</span>
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                      {[
+                        { id: '3eme', label: 'Classe de 3ème', badge: '3ème', desc: 'Préparation officielle au BEPC (14 chapitres)' },
+                        { id: '4eme', label: 'Classe de 4ème', badge: '4ème', desc: 'Second degré & géométrie (11 chapitres)' },
+                        { id: '5eme', label: 'Classe de 5ème', badge: '5ème', desc: 'Symétrie axiale & fractions (12 chapitres)' },
+                        { id: '6eme', label: 'Classe de 6ème', badge: '6ème', desc: 'Initiation collège & décimaux (13 chapitres)' },
+                      ].map(lvl => {
+                        const isSelected = selectedGradeLevel === lvl.id;
+                        return (
+                          <button
+                            key={lvl.id}
+                            type="button"
+                            onClick={() => {
+                              soundFX.playCheckmarkPop();
+                              setSelectedGradeLevel(lvl.id as CurriculumGradeLevel);
+                            }}
+                            className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
+                              isSelected
+                                ? 'bg-emerald-50/90 dark:bg-emerald-950/60 border-emerald-600 dark:border-emerald-400 shadow-md shadow-emerald-600/10'
+                                : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-emerald-300'
+                            }`}
+                          >
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[11px] font-black px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                                  {lvl.badge}
+                                </span>
+                                <h3 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                  {lvl.label}
+                                </h3>
+                              </div>
+                              <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                                {lvl.desc}
+                              </p>
+                            </div>
+                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                              isSelected
+                                ? 'border-emerald-600 bg-emerald-600 text-white'
+                                : 'border-slate-300 dark:border-slate-600'
+                            }`}>
+                              {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Options Supérieur LMD & BTS */}
+              {studyType !== 'lycee' && (
+                <div className="space-y-3 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
+                  <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                    Filières courantes ou personnalisée
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {[
+                      'Informatique & Génie Logiciel',
+                      'Réseaux & Télécommunications',
+                      'Sciences Économiques & Gestion',
+                      'Mathématiques & Informatique (MI)',
+                      'Sciences Physiques & Chimie (PC)',
+                      'Biologie & Sciences Médicales',
+                    ].map(filiere => {
+                      const isSelected = customFiliere === filiere;
+                      return (
+                        <button
+                          key={filiere}
+                          type="button"
+                          onClick={() => {
+                            soundFX.playCheckmarkPop();
+                            setCustomFiliere(filiere);
+                            setSelectedGradeLevel(studyType === 'bts' ? 'superieur_bts' : 'superieur_lmd');
+                          }}
+                          className={`p-3 rounded-xl border text-left text-xs font-bold transition-all cursor-pointer flex items-center justify-between ${
+                            isSelected
+                              ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                              : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/80 hover:border-indigo-300'
+                          }`}
+                        >
+                          <span className="truncate">{filiere}</span>
+                          {isSelected && <Check className="w-4 h-4 shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="pt-2">
+                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">
+                      Ou écris ta filière exacte :
+                    </label>
+                    <input
+                      type="text"
+                      value={customFiliere}
+                      onChange={(e) => {
+                        setCustomFiliere(e.target.value);
+                        setSelectedGradeLevel(studyType === 'bts' ? 'superieur_bts' : 'superieur_lmd');
+                      }}
+                      placeholder="Ex: Électronique Industrielle, Droit Privé, etc."
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* ÉTAPE 4 : PERSONNALISATION (COEFFICIENTS, MÉTHODES KONAN & CHRONOTYPE) */}
           {!showExistingLogin && step === 'customize' && (
             <div className="space-y-5 pb-4">
@@ -2197,18 +2584,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                     )}
                   </div>
                 )}
-
-                <div className="relative">
-                  <UserIcon className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    required
-                    value={authFullName}
-                    onChange={(e) => setAuthFullName(e.target.value)}
-                    placeholder="Ton prénom & nom"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
-                  />
-                </div>
 
                 <div className="relative">
                   <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -2509,7 +2884,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       </main>
 
       {/* PIED DE PAGE AVEC BOUTON CONTINUER */}
-      {!showExistingLogin && (step === 'study_type' || step === 'upload' || step === 'customize') && (
+      {!showExistingLogin && (step === 'study_type' || step === 'upload' || step === 'grade_level' || step === 'customize') && (
         <footer className="w-full border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-[#070B13]/95 backdrop-blur-md px-4 py-3.5 z-20">
           <div className="max-w-2xl mx-auto">
             {step === 'study_type' && (
@@ -2542,6 +2917,17 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   VALIDER L'EXTRACTION ({liveParsedPreview.slots.length} COURS ·{' '}
                   {liveParsedPreview.subjects.length} MATIÈRES)
                 </span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            )}
+
+            {step === 'grade_level' && (
+              <button
+                type="button"
+                onClick={handleProceedFromGradeLevelToCustomize}
+                className="w-full py-3.5 px-6 rounded-2xl font-extrabold text-sm tracking-wide bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 shadow-[0_4px_0_0_#065f46] active:translate-y-0.5 transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>CONTINUER VERS LES MATIÈRES & COEFFICIENTS</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             )}

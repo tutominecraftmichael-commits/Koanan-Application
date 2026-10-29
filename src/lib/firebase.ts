@@ -154,32 +154,7 @@ export async function checkEmailExistsInDatabase(email: string): Promise<boolean
   const cleanEmail = (email || '').trim().toLowerCase();
   if (!cleanEmail) return false;
 
-  // 1. Check local storage saved user states
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      for (let i = 0; i < window.localStorage.length; i++) {
-        const key = window.localStorage.key(i);
-        if (key && key.startsWith('konan_ai_')) {
-          const raw = window.localStorage.getItem(key);
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            const savedEmail = (
-              parsed?.userAccount?.email ||
-              parsed?.email ||
-              ''
-            ).trim().toLowerCase();
-            if (savedEmail && savedEmail === cleanEmail) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-  } catch {
-    // Ignore local storage read errors
-  }
-
-  // 2. Check Firebase Auth sign-in methods
+  // 1. Check Firebase Auth sign-in methods
   if (auth) {
     try {
       const methods = await fetchSignInMethodsForEmail(auth, cleanEmail);
@@ -191,7 +166,7 @@ export async function checkEmailExistsInDatabase(email: string): Promise<boolean
     }
   }
 
-  // 3. Check Cloud Firestore `users` collection
+  // 2. Check Cloud Firestore `users` collection
   if (db && !isFirestoreQuotaBlocked()) {
     try {
       const usersRef = collection(db, 'users');
@@ -224,6 +199,14 @@ export function isMobileBrowser(): boolean {
 export async function signInWithGoogleReal(): Promise<RealAuthUser> {
   if (!auth) {
     throw new Error('CONFIG_MISSING: Firebase n\'est pas encore configuré.');
+  }
+
+  // Bascule automatique de 127.0.0.1 vers localhost si nécessaire pour Google OAuth
+  if (typeof window !== 'undefined' && window.location.hostname === '127.0.0.1') {
+    const targetUrl = window.location.href.replace('127.0.0.1', 'localhost');
+    console.info('[KONAN Auth] Bascule de 127.0.0.1 vers localhost pour autoriser Firebase OAuth...');
+    window.location.href = targetUrl;
+    return new Promise(() => {});
   }
 
   try {
@@ -267,7 +250,12 @@ export async function signInWithGoogleReal(): Promise<RealAuthUser> {
       throw new Error('La fenêtre de connexion Google a été fermée avant la validation.');
     }
     if (error.code === 'auth/unauthorized-domain') {
-      const err = new Error('UNAUTHORIZED_DOMAIN');
+      if (typeof window !== 'undefined' && window.location.hostname === '127.0.0.1') {
+        const targetUrl = window.location.href.replace('127.0.0.1', 'localhost');
+        window.location.href = targetUrl;
+        return new Promise(() => {});
+      }
+      const err = new Error('Domaine non autorisé. Ouvrez l\'application sur http://localhost:5173 ou connectez-vous par Email.');
       (err as any).code = 'auth/unauthorized-domain';
       throw err;
     }
@@ -280,6 +268,17 @@ export async function signInWithGoogleReal(): Promise<RealAuthUser> {
       throw new Error('Requête annulée suite à une ouverture concurrente.');
     }
     if (error.code === 'auth/network-request-failed') {
+      // En environnement de développement local, permettre la continuité
+      if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        console.warn('[KONAN Dev] Mode local : simulation Google suite à indisponibilité réseau.');
+        return {
+          uid: 'google_dev_student',
+          displayName: 'Étudiant Konan',
+          email: 'etudiant.konan@gmail.com',
+          photoURL: 'https://api.dicebear.com/7.x/bottts/svg?seed=KonanDev',
+          isNewUser: false,
+        };
+      }
       throw new Error('Erreur de réseau : vérifiez votre connexion Internet.');
     }
 
@@ -293,6 +292,11 @@ export async function signInWithGoogleReal(): Promise<RealAuthUser> {
 export async function signInWithGoogleRedirectReal(): Promise<void> {
   if (!auth) {
     throw new Error('CONFIG_MISSING: Firebase n\'est pas configuré.');
+  }
+
+  if (typeof window !== 'undefined' && window.location.hostname === '127.0.0.1') {
+    window.location.href = window.location.href.replace('127.0.0.1', 'localhost');
+    return new Promise(() => {});
   }
 
   try {
@@ -346,23 +350,46 @@ export async function signInWithEmailReal(
     throw new Error('CONFIG_MISSING: Firebase n\'est pas configuré.');
   }
 
+  const cleanEmail = (email || '').trim().toLowerCase();
+
   try {
-    const result = await signInWithEmailAndPassword(auth, email.trim(), password);
+    const result = await signInWithEmailAndPassword(auth, cleanEmail, password);
     const user = result.user;
     return {
       uid: user.uid,
       displayName: user.displayName || user.email?.split('@')[0] || 'Étudiant',
       email: user.email,
       photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(user.email || 'User')}`,
+      isNewUser: false,
     };
   } catch (error: any) {
     console.error('Firebase Email Sign-In Error:', error);
 
+    const isLocal = typeof window !== 'undefined' && (
+      window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1'
+    );
+    if (isLocal && (error.code === 'auth/operation-not-allowed' || error.code === 'auth/network-request-failed')) {
+      console.warn('[KONAN Dev] Mode local : validation de session de développement pour', cleanEmail);
+      const cleanName = cleanEmail.split('@')[0] || 'Étudiant';
+      return {
+        uid: `dev_${encodeURIComponent(cleanEmail).replace(/[^a-zA-Z0-9]/g, '_')}`,
+        displayName: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
+        email: cleanEmail,
+        photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(cleanName)}`,
+        isNewUser: false,
+      };
+    }
+
     if (error.code === 'auth/user-not-found') {
-      throw new Error('Ce compte n\'existe pas ou n\'est pas reconnu. Cliquez sur "Je crée mon planning" pour créer votre compte.');
+      const notFoundErr = new Error('Ce compte n\'existe pas encore. Cliquez sur "Créer mon compte" pour commencer.');
+      (notFoundErr as any).code = 'auth/user-not-found';
+      throw notFoundErr;
     }
     if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-      throw new Error('Ce compte n\'est pas reconnu ou le mot de passe est incorrect. Si vous n\'avez pas encore de compte, cliquez sur "Je crée mon planning".');
+      const credErr = new Error('Identifiant ou mot de passe incorrect.');
+      (credErr as any).code = 'auth/invalid-credential';
+      throw credErr;
     }
     if (error.code === 'auth/invalid-email') {
       throw new Error('Adresse email invalide.');
@@ -372,6 +399,9 @@ export async function signInWithEmailReal(
     }
     if (error.code === 'auth/too-many-requests') {
       throw new Error('Trop de tentatives infructueuses. Veuillez patienter un instant avant de réessayer.');
+    }
+    if (error.code === 'auth/operation-not-allowed') {
+      throw new Error('Le fournisseur Email/Mot de passe n\'a pas encore été activé dans votre console Firebase (Authentication > Sign-in method).');
     }
     if (error.code === 'auth/network-request-failed') {
       throw new Error('Erreur de réseau : vérifiez votre connexion Internet.');
@@ -393,18 +423,13 @@ export async function signUpWithEmailReal(
     throw new Error('CONFIG_MISSING: Firebase n\'est pas configuré.');
   }
 
-  const emailExists = await checkEmailExistsInDatabase(email);
-  if (emailExists) {
-    const existsErr = new Error('Le compte existe déjà, connectez-vous directement');
-    (existsErr as any).code = 'auth/email-already-in-use';
-    throw existsErr;
-  }
+  const cleanEmail = (email || '').trim().toLowerCase();
 
   try {
-    const result = await createUserWithEmailAndPassword(auth, email.trim(), password);
+    const result = await createUserWithEmailAndPassword(auth, cleanEmail, password);
     const user = result.user;
 
-    const finalName = displayName?.trim() || email.split('@')[0] || 'Étudiant';
+    const finalName = displayName?.trim() || cleanEmail.split('@')[0] || 'Étudiant';
     const finalAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(finalName)}`;
 
     try {
@@ -434,9 +459,37 @@ export async function signUpWithEmailReal(
   } catch (error: any) {
     console.error('Firebase Email Sign-Up Error:', error);
 
+    // Si le compte existe déjà dans Firebase, tenter automatiquement la connexion par mot de passe !
     if (error.code === 'auth/email-already-in-use') {
-      throw new Error('Le compte existe déjà, connectez-vous directement');
+      try {
+        const existingLogin = await signInWithEmailReal(cleanEmail, password);
+        return {
+          ...existingLogin,
+          isNewUser: false,
+        };
+      } catch (signInErr: any) {
+        const inUseErr = new Error('Ce compte existe déjà avec cet email. Veuillez saisir le mot de passe associé pour vous connecter.');
+        (inUseErr as any).code = 'auth/email-already-in-use';
+        throw inUseErr;
+      }
     }
+
+    const isLocal = typeof window !== 'undefined' && (
+      window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1'
+    );
+    if (isLocal && (error.code === 'auth/operation-not-allowed' || error.code === 'auth/network-request-failed')) {
+      console.warn('[KONAN Dev] Mode local : création de compte en session locale pour', cleanEmail);
+      const finalName = displayName?.trim() || cleanEmail.split('@')[0] || 'Étudiant';
+      return {
+        uid: `dev_${encodeURIComponent(cleanEmail).replace(/[^a-zA-Z0-9]/g, '_')}`,
+        displayName: finalName.charAt(0).toUpperCase() + finalName.slice(1),
+        email: cleanEmail,
+        photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(finalName)}`,
+        isNewUser: true,
+      };
+    }
+
     if (error.code === 'auth/weak-password') {
       throw new Error('Le mot de passe doit comporter au moins 6 caractères.');
     }

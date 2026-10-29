@@ -71,6 +71,7 @@ export interface BlockedTimeSlot {
 export interface StudyPreferences {
   studentName: string;
   academicLevel: string;
+  gradeLevel?: string;
   targetDailyStudyMinutes: number;
   chronotype: Chronotype;
   pacing: StudyPacing;
@@ -177,6 +178,7 @@ export interface UserAccount {
   avatar: string;
   googleId: string;
   academicLevel: string;
+  gradeLevel?: string;
   phoneNumber?: string;
   countryCode?: string;
   isLoggedIn: boolean;
@@ -240,6 +242,7 @@ export type ActiveAppView =
   | 'planner' 
   | 'analytics'
   | 'focus'
+  | 'tutor'
   | 'pro-wizard'
   | 'admin';
 

@@ -83,6 +83,9 @@ import { PresetModal } from './features/onboarding/PresetModal';
 import { DuolingoOnboarding, isLocalAdminEnvironment } from './features/onboarding/DuolingoOnboarding';
 import { ProWizardView } from './features/pro/ProWizardView';
 import { AdminDashboard } from './features/admin/AdminDashboard';
+import { InteractiveTutorView } from './features/tutor/InteractiveTutorView';
+import { resolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum } from './lib/curriculum/curriculumMatcher';
+import type { StemSubjectId, CurriculumGradeLevel } from './lib/curriculum/types';
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
@@ -92,6 +95,13 @@ export function App() {
   // Jamais de compte connecté d'office, jamais de saut instantané vers le tableau de bord.
   const [activeView, setActiveView] = useState<ActiveAppView>('landing');
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
+  const [activeTutorSession, setActiveTutorSession] = useState<{
+    subjectTitle: string;
+    stemSubjectId: StemSubjectId;
+    gradeLevel: CurriculumGradeLevel;
+    studySessionId?: string;
+    durationMinutes?: number;
+  } | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
@@ -1584,9 +1594,45 @@ export function App() {
       return;
     }
 
+    // VÉRIFICATION CORRESPONDANCE PROGRAMME OFFICIEL (MATHS, PHYSIQUE-CHIMIE, SVT)
+    const sub = state.subjects.find(s => s.id === session.subjectId);
+    const subjectName = sub?.name || session.title;
+    const resolvedGrade = resolveGradeLevel(
+      state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel
+    );
+
+    if (shouldLaunchInteractiveTutor(subjectName, resolvedGrade)) {
+      const stemMatch = matchSubjectToStemCurriculum(subjectName);
+      if (stemMatch.isStemSubject && stemMatch.stemSubjectId) {
+        setActiveTutorSession({
+          subjectTitle: subjectName,
+          stemSubjectId: stemMatch.stemSubjectId,
+          gradeLevel: resolvedGrade,
+          studySessionId: session.id,
+          durationMinutes: session.durationMinutes || 25,
+        });
+        setActiveView('tutor');
+        soundFX.playCheckmarkPop();
+        return;
+      }
+    }
+
     setFocusSession(session);
     setActiveView('focus');
     soundFX.playCheckmarkPop();
+  };
+
+  /**
+   * Callback de complétion du Tuteur Interactif Duolingo :
+   * Valide la séance, incrémente les statistiques et affiche la célébration.
+   */
+  const handleCompleteTutorSession = (studySessionId?: string, earnedPoints = 50) => {
+    if (studySessionId) {
+      handleToggleSessionComplete(studySessionId);
+    }
+    setActiveTutorSession(null);
+    setActiveView('dashboard');
+    showToast(`🏆 Félicitations ! Séance validée avec succès dans ton tuteur interactif KONAN (+${earnedPoints} XP) !`, 6000);
   };
 
   /**
@@ -2084,6 +2130,25 @@ export function App() {
               </button>
             </div>
           )
+        )}
+
+        {/* Tuteur Interactif Duolingo (Maths, Physique-Chimie, SVT - Programme Officiel CI) */}
+        {activeView === 'tutor' && activeTutorSession && (
+          <InteractiveTutorView
+            userId={state.userAccount?.googleId || 'local_student'}
+            subjectTitle={activeTutorSession.subjectTitle}
+            gradeLevel={activeTutorSession.gradeLevel}
+            stemSubjectId={activeTutorSession.stemSubjectId}
+            studySessionId={activeTutorSession.studySessionId}
+            durationMinutes={activeTutorSession.durationMinutes}
+            onExit={() => {
+              setActiveTutorSession(null);
+              setActiveView('dashboard');
+            }}
+            onSessionCompleted={(sessionId, points) => {
+              handleCompleteTutorSession(sessionId, points);
+            }}
+          />
         )}
 
         {/* Analytics: STRICTLY PROTECTED */}

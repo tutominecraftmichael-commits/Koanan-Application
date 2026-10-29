@@ -98,13 +98,18 @@ export function validateStrictEmail(email: string): { isValid: boolean; error?: 
     return { isValid: false, error: "Le nom d'utilisateur de l'email est trop court (au moins 2 caractères requis)." };
   }
 
-  // Interdiction des adresses inventées évidentes
-  if (INVENTED_PREFIXES.has(localPart)) {
+  const isLocalDev = typeof window !== 'undefined' && (
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1'
+  );
+
+  // Interdiction des adresses inventées évidentes (désactivée en dev pour faciliter les tests)
+  if (!isLocalDev && INVENTED_PREFIXES.has(localPart)) {
     return { isValid: false, error: `L'adresse "${localPart}@${domainPart}" est fictive ou de test. Veuillez entrer votre véritable adresse email active.` };
   }
 
   // Interdiction des répétitions absurdes (ex: aaaaa@..., 11111@...)
-  if (/^(.)\1{3,}$/.test(localPart)) {
+  if (!isLocalDev && /^(.)\1{3,}$/.test(localPart)) {
     return { isValid: false, error: "Cette adresse email semble inventée. Veuillez entrer une adresse email personnelle ou universitaire valide." };
   }
 
@@ -126,7 +131,7 @@ export function validateStrictEmail(email: string): { isValid: boolean; error?: 
   }
 
   const invalidTlds = new Set(['test', 'fake', 'local', 'invalid', 'example', 'dummy', 'localhost']);
-  if (invalidTlds.has(tld)) {
+  if (!isLocalDev && invalidTlds.has(tld)) {
     return { isValid: false, error: `L'extension .${tld} n'est pas un domaine internet réel.` };
   }
 
