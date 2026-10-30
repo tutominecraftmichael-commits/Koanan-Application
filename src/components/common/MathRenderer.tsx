@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import { StackedFraction, renderTextWithStackedFractions } from './StackedFraction';
+export { StackedFraction, renderTextWithStackedFractions };
 
 /**
  * Prétraite automatiquement tout texte en convertissant les expressions mathématiques,
@@ -464,14 +466,14 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = ''
   if (!segments) return null;
 
   if (typeof segments === 'string') {
-    return <span className={className}>{segments}</span>;
+    return <span className={className}>{renderTextWithStackedFractions(segments)}</span>;
   }
 
   return (
     <span className={`math-rendered-text leading-relaxed ${className}`}>
       {segments.map((segment, idx) => {
         if (segment.type === 'text') {
-          return <React.Fragment key={idx}>{segment.content}</React.Fragment>;
+          return <React.Fragment key={idx}>{renderTextWithStackedFractions(segment.content)}</React.Fragment>;
         }
         if (segment.display) {
           return (

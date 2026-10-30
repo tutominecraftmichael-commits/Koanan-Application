@@ -437,10 +437,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         // Safe fail
       }
     } else {
-      // STRICTEMENT AUCUNE MUSIQUE NI SON SUR UNE FAUTE (silence complet)
-      try {
-        soundFX.playWrong();
-      } catch {}
+      // STRICTEMENT AUCUNE MUSIQUE NI SON SUR UNE FAUTE (silence complet garanti)
       // La barre de progression ne doit pas augmenter : aucun ajout dans masteredIndices
       if (phase === 'learning' && !missedIndices.includes(activeStepIndex)) {
         setMissedIndices(prev => [...prev, activeStepIndex]);
