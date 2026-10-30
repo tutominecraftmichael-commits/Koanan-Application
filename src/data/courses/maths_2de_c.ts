@@ -1634,10 +1634,609 @@ export const maths2deCAnglesOrientesTrigoChapter: CurriculumChapter = {
   ]
 };
 
+export const maths2deCHomothetieChapter: CurriculumChapter = {
+  "id": "seconde_c_maths_geometrie_ch6_homothetie",
+  "subjectId": "maths",
+  "gradeLevel": "seconde_c",
+  "order": 6,
+  "officialVolumeHours": 6,
+  "title": "Leçon 6 — Homothétie",
+  "summary": "Définition géométrique et vectorielle d’une homothétie, centre et rapport, propriété fondamentale vectorielle, images de figures (droite, segment, cercle), multiplication des aires par k² et propriétés de conservation.",
+  "points": [
+    {
+      "id": "seconde_c_maths_geometrie_ch6_p1",
+      "order": 1,
+      "title": "Définition, propriété fondamentale et images de figures",
+      "summary": "Définition de l’homothétie h(Ω, k), cas particuliers (identité, symétrie centrale), propriété vectorielle fondamentale M’N’ = k · MN et image d’une droite, d’un segment et d’un cercle.",
+      "conceptExplanation": "Dans la vie courante, un zoom sur smartphone, une maquette d’architecte ou un agrandissement photo conservent exactement les formes tout en modifiant les dimensions. En mathématiques, cette transformation s’appelle une homothétie.\n\n1. Définition fondamentale de l’homothétie :\nSoit Ω un point fixé du plan (appelé le centre) et k un nombre réel non nul (appelé le rapport de l’homothétie).\nOn appelle homothétie de centre Ω et de rapport k, notée h(Ω, k), l’application du plan dans lui-même qui, à tout point M, associe l’unique point M’ tel que :\n  ΩM’ = k · ΩM.\n\n2. Conséquences immédiates et cas particuliers :\n- Alignement : Les points Ω, M et M’ sont toujours strictement alignés.\n- Si k > 0 : M et M’ sont situés du même côté par rapport au centre Ω.\n- Si k < 0 : M et M’ sont situés de part et d’autre du centre Ω.\n- Cas k = 1 : L’homothétie de rapport 1 est l’application identique du plan (tout point est invariant).\n- Cas k = −1 : L’homothétie de centre Ω et de rapport −1 est la symétrie centrale de centre Ω (ΩM’ = −ΩM).\n- Point invariant : Pour tout rapport k ≠ 1, le centre Ω est le SEUL et UNIQUE point invariant de l’homothétie : h(Ω) = Ω.\n\n3. Propriété fondamentale vectorielle :\nSoit M et N deux points quelconques du plan d’images respectives M’ et N’ par l’homothétie h(Ω, k). Alors :\n  M’N’ = k · MN.\nCette relation vectorielle fondamentale prouve que le vecteur formé par les images est colinéaire au vecteur formé par les points d’origine, avec le coefficient exact k.\n\n4. Images de figures simples :\n- Image d’une droite : L’image d’une droite (D) est une droite (D’) qui lui est STRICTEMENT PARALLÈLE ((D’) ∥ (D)).\n  Cas particulier : Si le centre Ω appartient à (D), alors l’image de (D) est (D) elle-même ((D) est globalement invariante).\n- Image d’un segment : L’image du segment [AB] est le segment [A’B’]. Sa longueur vaut :\n  A’B’ = |k| × AB.\n- Multiplication des aires : L’homothétie multiplie les aires de toute surface plane par le carré de son rapport :\n  Aire(Image) = k² × Aire(Initiale).\n- Image d’un cercle : L’image d’un cercle C(O, r) de centre O et de rayon r par h(Ω, k) est un cercle C’(O’, r’) dont le centre est l’image O’ = h(O) et dont le rayon vaut r’ = |k| × r.",
+      "formulas": [
+        {
+          "name": "Définition vectorielle de l’homothétie",
+          "formula": "ΩM’ = k · ΩM",
+          "note": "Ω est le centre et k est le rapport non nul."
+        },
+        {
+          "name": "Propriété fondamentale",
+          "formula": "M’N’ = k · MN",
+          "note": "Vecteur image colinéaire au vecteur antécédent avec le coefficient k."
+        },
+        {
+          "name": "Longueur image et multiplication des aires",
+          "formula": "A’B’ = |k| × AB   ;   Aire’ = k² × Aire",
+          "note": "Les longueurs sont multipliées par |k| et les aires par k²."
+        },
+        {
+          "name": "Image d’un cercle C(O, r)",
+          "formula": "h(C(O, r)) = C’(h(O), |k| · r)",
+          "note": "Le rayon est multiplié par la valeur absolue |k|."
+        }
+      ],
+      "keyRule": "Règle d’or de l’homothétie : ΩM’ = k · ΩM et M’N’ = k · MN. Les longueurs sont toujours multipliées par |k|, et les aires par k² (jamais par k car une aire est toujours positive) !",
+      "workedExample": {
+        "title": "Exemple résolu : Image d’un triangle et calcul de longueurs et d’aires",
+        "statement": "Soit ABC un triangle d’aire égale à 12 cm², avec AB = 6 cm et BC = 8 cm. On considère l’homothétie h de centre O et de rapport k = −2.\n1. Calcule les longueurs A’B’ et B’C’ du triangle image A’B’C’.\n2. Calcule l’aire du triangle image A’B’C’.",
+        "methodSteps": [
+          "Étape 1 : D’après la propriété de longueur de l’homothétie, pour tout segment [MN], M’N’ = |k| × MN.",
+          "Étape 2 : Ici k = −2, donc |k| = |−2| = 2. On a donc : A’B’ = 2 × AB = 2 × 6 = 12 cm, et B’C’ = 2 × BC = 2 × 8 = 16 cm.",
+          "Étape 3 : D’après la propriété de multiplication des aires : Aire(A’B’C’) = k² × Aire(ABC).",
+          "Étape 4 : Remplaçons par les valeurs numériques : k² = (−2)² = 4. Donc Aire(A’B’C’) = 4 × 12 = 48 cm²."
+        ],
+        "conclusion": "A’B’ = 12 cm, B’C’ = 16 cm et l’aire du triangle image est de 48 cm²."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p1_ex1",
+          "type": "mcq",
+          "prompt": "Par définition, l’image d’un point M par l’homothétie de centre Ω et de rapport k non nul est le point M’ tel que :",
+          "options": [
+            "ΩM’ = k · ΩM",
+            "MM’ = k · ΩM",
+            "ΩM = k · ΩM’",
+            "ΩM’ + ΩM = k"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La définition d’une homothétie de centre Ω et de rapport k est l’égalité vectorielle directe ΩM’ = k · ΩM."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p1_ex2",
+          "type": "mcq",
+          "prompt": "Que peut-on dire des trois points Ω, M et son image M’ par une homothétie de centre Ω ?",
+          "options": [
+            "Ils sont obligatoirement alignés car ΩM’ et ΩM sont colinéaires",
+            "Ils forment un triangle isocèle en Ω",
+            "Ils sont situés sur un cercle de diamètre [MM’]",
+            "Ils sont perpendiculaires"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Comme ΩM’ = k · ΩM, les vecteurs ΩM’ et ΩM ont la même direction, donc les points Ω, M et M’ sont toujours alignés."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p1_ex3",
+          "type": "mcq",
+          "prompt": "L’homothétie de centre O et de rapport k = −1 correspond exactement à :",
+          "options": [
+            "La symétrie centrale de centre O",
+            "La translation de vecteur nul",
+            "La symétrie orthogonale par rapport à un axe",
+            "Une rotation d’angle 90°"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Si k = −1, OM’ = −OM, ce qui signifie exactement que O est le milieu du segment [MM’] : c’est la symétrie centrale de centre O."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p1_ex4",
+          "type": "mcq",
+          "prompt": "Quel est l’unique point invariant d’une homothétie de rapport k = 3 ?",
+          "options": [
+            "Son centre Ω uniquement",
+            "Tous les points du plan",
+            "L’origine du repère uniquement",
+            "Aucun point n’est invariant"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour tout rapport k ≠ 1, une homothétie admet un seul et unique point fixe invariant : son centre Ω."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p1_ex5",
+          "type": "mcq",
+          "prompt": "Si M et N ont pour images M’ et N’ par une homothétie de rapport k = −3, que vaut le vecteur M’N’ ?",
+          "options": [
+            "M’N’ = −3 · MN",
+            "M’N’ = 3 · MN",
+            "M’N’ = (1 / 3) · MN",
+            "M’N’ = MN"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "D’après la propriété fondamentale vectorielle de l’homothétie, pour tous points M et N : M’N’ = k · MN. Ici k = −3, donc M’N’ = −3 · MN."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p1_ex6",
+          "type": "mcq",
+          "prompt": "Quelle est la nature de l’image d’une droite (D) par une homothétie de centre Ω n’appartenant pas à (D) ?",
+          "options": [
+            "Une droite (D’) strictement parallèle à (D)",
+            "Une droite perpendiculaire à (D)",
+            "Un cercle passant par le centre Ω",
+            "Une courbe parabolique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L’image d’une droite par une homothétie est toujours une droite parallèle à la droite initiale."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p1_ex7",
+          "type": "mcq",
+          "prompt": "Soit un segment [AB] de longueur 5 cm. Quelle est la longueur de son segment image [A’B’] par une homothétie de rapport k = −2,5 ?",
+          "options": [
+            "12,5 cm",
+            "−12,5 cm",
+            "7,5 cm",
+            "2 cm"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La longueur d’un segment est multipliée par la valeur absolue du rapport : A’B’ = |k| × AB = |−2,5| × 5 = 2,5 × 5 = 12,5 cm."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p1_ex8",
+          "type": "mcq",
+          "prompt": "Si un polygone a une aire de 15 cm², quelle est l’aire de son image par une homothétie de rapport k = 3 ?",
+          "options": [
+            "135 cm² (car 15 × 3² = 15 × 9 = 135)",
+            "45 cm²",
+            "30 cm²",
+            "60 cm²"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L’aire est multipliée par le carré du rapport : Aire’ = k² × Aire = 3² × 15 = 9 × 15 = 135 cm²."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_maths_geometrie_ch6_p2",
+      "order": 2,
+      "title": "Propriétés de conservation, caractérisations et lieux géométriques",
+      "summary": "Conservation de l’alignement, des milieux, du parallélisme, de l’orthogonalité et des angles orientés. Caractérisation d’une homothétie et détermination de lieux géométriques.",
+      "conceptExplanation": "Bien qu'une homothétie modifie les distances, elle préserve fidèlement la structure géométrique des figures !\n\n1. Propriétés de conservation par une homothétie :\nToute homothétie h(Ω, k) conserve :\n- L'alignement : L'image de trois points alignés est formée de trois points alignés.\n- Le milieu : L'image du milieu I d'un segment [AB] est le milieu I' du segment image [A'B'] (h(I) = milieu de [h(A)h(B)]).\n- Le barycentre : L'image du barycentre de points pondérés est le barycentre des points images affectés des mêmes coefficients.\n- Le parallélisme : Les images de deux droites parallèles sont deux droites parallèles.\n- L'orthogonalité : Les images de deux droites perpendiculaires sont deux droites perpendiculaires.\n- Les angles orientés : Un angle orienté a pour image un angle orienté de MÊME MESURE (propriété remarquable : même si k < 0, l'orientation angulaire est préservée car les deux vecteurs sont multipliés par le même k !).\n\n2. Caractérisations fondamentales d’une homothétie :\n- Caractérisation par son centre A, un point B et son image C :\n  Si A, B, C sont trois points distincts et alignés, il existe une UNIQUE homothétie de centre A qui transforme B en C. Son rapport k est le réel tel que AC = k · AB.\n- Caractérisation par son rapport k (k ≠ 0, k ≠ 1), un point A et son image B :\n  Il existe une UNIQUE homothétie de rapport k qui transforme A en B. Son centre Ω est le point vérifiant ΩB = k · ΩA.\n- Caractérisation par deux couples de points (M, M’) et (N, N’) :\n  Soient M, N, M’, N’ quatre points distincts tels que les droites (MN) et (M’N’) sont parallèles ((M’N’) ∥ (MN)) et M’N’ ≠ MN.\n  Il existe une UNIQUE homothétie qui transforme M en M’ et N en N’.\n  Son centre Ω est le point d'intersection des droites (MM’) et (NN’) : {Ω} = (MM’) ∩ (NN’).\n\n3. Détermination de lieux géométriques :\nPour déterminer le lieu géométrique d'un point mobile N lié à un point M décrivant une figure connue (Γ) (droite, cercle) :\n- On établit une relation vectorielle de la forme ΩN = k · ΩM où Ω et k sont fixes.\n- Cela prouve que N est l'image de M par l'homothétie fixe h(Ω, k).\n- Le lieu de N est alors la figure image (Γ’) = h(Γ). Si (Γ) est un cercle C(O, r), le lieu est le cercle C’(h(O), |k|r).",
+      "formulas": [
+        {
+          "name": "Conservation des angles orientés",
+          "formula": "mes(M’A’, M’B’) = mes(MA, MB)",
+          "note": "L’angle orienté formé par les images a exactement la même mesure."
+        },
+        {
+          "name": "Centre déterminé par deux droites",
+          "formula": "{Ω} = (MM’) ∩ (NN’)",
+          "note": "Point de concours des droites joignant chaque point à son image."
+        },
+        {
+          "name": "Rapport déterminé par des points alignés",
+          "formula": "k = AC / AB  (en mesures algébriques)",
+          "note": "Déterminé par l’égalité vectorielle AC = k · AB."
+        }
+      ],
+      "keyRule": "Retiens le réflexe du trapèze : si deux segments [AB] et [A’B’] sont parallèles et de longueurs différentes, les droites (AA’) et (BB’) se coupent au centre Ω de l’homothétie qui transforme A en A’ et B en B’ !",
+      "workedExample": {
+        "title": "Exemple résolu : Détermination d’un lieu géométrique par homothétie",
+        "statement": "Soit (C) un cercle de centre O et de rayon R = 4 cm, et A un point fixé du plan (A ∉ (C)).\nUn point mobile M décrit le cercle (C). On note M’ le milieu du segment [AM].\n1. Exprime le vecteur AM’ en fonction du vecteur AM.\n2. Détermine la nature et les éléments précis du lieu géométrique décrit par M’ lorsque M parcourt (C).",
+        "methodSteps": [
+          "Étape 1 : Par hypothèse, M’ est le milieu du segment [AM], donc AM’ = (1 / 2) · AM.",
+          "Étape 2 : Le point A étant fixe et le coefficient (1 / 2) étant constant, l’égalité AM’ = (1 / 2) · AM prouve que M’ est l’image de M par l’homothétie h de centre A et de rapport k = 1 / 2.",
+          "Étape 3 : Lorsque M décrit le cercle (C) de centre O et de rayon R = 4 cm, son image M’ décrit le cercle image (C’) = h(C).",
+          "Étape 4 : Les éléments de (C’) sont son centre O’ = h(O) (tel que AO’ = (1 / 2) · AO, donc O’ est le milieu de [AO]) et son rayon R’ = |k| × R = (1 / 2) × 4 = 2 cm."
+        ],
+        "conclusion": "Le lieu de M’ est le cercle (C’) de centre O’ (milieu de [AO]) et de rayon 2 cm."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p2_ex1",
+          "type": "mcq",
+          "prompt": "Si I est le milieu du segment [AB] et h une homothétie de rapport k, quelle est l’image h(I) ?",
+          "options": [
+            "Le milieu du segment image [A’B’]",
+            "Le centre de l’homothétie",
+            "Un point situé à une distance k² de A’",
+            "L’extrémité B’"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L’homothétie conserve le milieu d’un segment : l’image du milieu est obligatoirement le milieu des images."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p2_ex2",
+          "type": "mcq",
+          "prompt": "Quelle est la propriété de l’homothétie concernant la mesure d’un angle orienté ?",
+          "options": [
+            "Elle conserve strictement la mesure de tout angle orienté",
+            "Elle multiplie l’angle par le rapport k",
+            "Elle change toujours le signe de l’angle si k < 0",
+            "Elle transforme un angle aigu en angle obtus"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Toute homothétie conserve rigoureusement les angles orientés : mes(M’A’, M’B’) = mes(MA, MB), quel que soit le signe de k."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p2_ex3",
+          "type": "mcq",
+          "prompt": "Soient A, B, C trois points alignés tels que AC = 4 · AB. Quelle est l’homothétie de centre A qui applique B sur C ?",
+          "options": [
+            "L’homothétie de centre A et de rapport 4",
+            "L’homothétie de centre B et de rapport 4",
+            "L’homothétie de centre A et de rapport 1 / 4",
+            "La translation de vecteur 4 · AB"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Comme AC = 4 · AB avec centre A, l’homothétie a pour centre A et pour rapport k = 4."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p2_ex4",
+          "type": "mcq",
+          "prompt": "Soit la relation 3 · CA + 2 · AB = 0. Quelle est l’expression de AC en fonction de AB ?",
+          "options": [
+            "AC = (2 / 3) · AB (donc le rapport de l’homothétie de centre A envoyant B sur C est 2 / 3)",
+            "AC = −(2 / 3) · AB",
+            "AC = (3 / 2) · AB",
+            "AC = 5 · AB"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "3 · CA + 2 · AB = 0 ⟺ −3 · AC + 2 · AB = 0 ⟺ 3 · AC = 2 · AB ⟺ AC = (2 / 3) · AB. Le rapport vaut 2 / 3."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p2_ex5",
+          "type": "mcq",
+          "prompt": "Soit un trapèze ABCD de bases parallèles [AB] et [CD] avec AB ≠ CD. Comment trouve-t-on le centre de l’homothétie qui applique A sur D et B sur C ?",
+          "options": [
+            "C’est le point d’intersection des droites non parallèles (AD) et (BC)",
+            "C’est le milieu du segment [AB]",
+            "C’est le centre de gravité du trapèze",
+            "C’est le point de concours des hauteurs"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le centre d’une homothétie transformant A en D et B en C appartient obligatoirement aux droites (AD) et (BC) : c’est leur point d’intersection."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p2_ex6",
+          "type": "mcq",
+          "prompt": "Dans un triangle ABC de centre de gravité G et de milieu H de [BC], quelle homothétie applique H sur G ?",
+          "options": [
+            "L’homothétie de centre A et de rapport 2 / 3 (car AG = (2 / 3) · AH)",
+            "L’homothétie de centre G et de rapport 3",
+            "L’homothétie de centre A et de rapport 3 / 2",
+            "La translation de vecteur (1 / 3) · AH"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par la propriété du centre de gravité, AG = (2 / 3) · AH. C’est donc l’homothétie de centre A et de rapport 2 / 3 qui transforme H en G."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p2_ex7",
+          "type": "mcq",
+          "prompt": "Un point mobile M décrit un cercle (C) de centre O et de rayon 6 cm. Quel est le lieu du point N défini par ON = −(1 / 3) · OM ?",
+          "options": [
+            "Le cercle concentrique de centre O et de rayon 2 cm",
+            "Un cercle tangent de rayon 6 cm",
+            "Une droite passant par O",
+            "Le point O uniquement"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "N est l’image de M par l’homothétie de centre O et de rapport k = −1 / 3. Le rayon du cercle image est |−1 / 3| × 6 = 2 cm, centré en h(O) = O."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch6_p2_ex8",
+          "type": "mcq",
+          "prompt": "Si deux droites (D1) et (D2) sont perpendiculaires, que peut-on affirmer de leurs images par une homothétie ?",
+          "options": [
+            "Elles sont obligatoirement perpendiculaires (conservation de l’orthogonalité)",
+            "Elles deviennent parallèles",
+            "Leur angle dépend de la valeur absolue du rapport |k|",
+            "Elles se coupent sous un angle de 45°"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L’homothétie conserve l’orthogonalité : les images de deux droites perpendiculaires sont toujours deux droites perpendiculaires."
+        }
+      ]
+    }
+  ]
+};
+
+export const maths2deCRotationChapter: CurriculumChapter = {
+  "id": "seconde_c_maths_geometrie_ch7_rotation",
+  "subjectId": "maths",
+  "gradeLevel": "seconde_c",
+  "order": 7,
+  "officialVolumeHours": 10,
+  "title": "Leçon 7 — Rotation",
+  "summary": "Définition géométrique d’une rotation, centre et angle orienté, propriété fondamentale (isométrie et angle de rotation), images de figures, conservation et caractérisation par deux points et leurs images.",
+  "points": [
+    {
+      "id": "seconde_c_maths_geometrie_ch7_p1",
+      "order": 1,
+      "title": "Définition, propriété fondamentale et images de figures",
+      "summary": "Définition d’une rotation r(O, α), quarts de tour direct et indirect, centre comme unique point invariant, propriété fondamentale (conservation des distances et angle) et images de droites, segments et cercles.",
+      "conceptExplanation": "Après avoir étudié le glissement (translation) et le zoom (homothétie), nous abordons le pivotement circulaire parfait : la rotation dans le plan orienté.\n\n1. Définition fondamentale de la rotation :\nSoit O un point du plan orienté et α un nombre réel appartenant à l'intervalle semi-ouvert ]−π, π] (mesure principale de l’angle).\nOn appelle rotation de centre O et d'angle orienté α, notée r(O, α), l’application du plan dans lui-même qui :\n- Au centre O associe lui-même : r(O) = O.\n- À tout point M distinct de O associe le point M’ tel que :\n  1) OM’ = OM  (le point M’ est situé sur le cercle de centre O passant par M).\n  2) mes(OM, OM’) = α [2π]  (l’angle orienté formé par OM et OM’ vaut α radians).\n\n2. Cas particuliers fondamentaux :\n- Angle α = 0 : C'est l'application identique du plan (tout point reste fixe).\n- Angle α = π (ou −π) : C'est un demi-tour, exactement équivalent à la symétrie centrale de centre O.\n- Angle α = π / 2 (90°) : Appelée quart de tour direct (sens anti-horaire).\n- Angle α = −π / 2 (−90°) : Appelée quart de tour indirect (sens horaire).\n\n3. Point invariant :\nPour tout angle α non nul (α ≠ 0 [2π]), la rotation admet un SEUL ET UNIQUE point invariant : son centre O.\n\n4. Propriété fondamentale d’une rotation :\nSoit r une rotation d’angle α. Si M et N sont deux points distincts du plan d’images respectives M’ et N’ par r, alors :\n  1) M’N’ = MN  (la rotation est une ISOMÉTRIE, elle conserve rigoureusement les longueurs).\n  2) mes(MN, M’N’) = α [2π]  (l’angle orienté formé par le vecteur initial et le vecteur image est exactement égal à l’angle de la rotation).\n\n5. Images de figures simples :\n- Image d’une droite (AB) : C'est la droite (A’B’) passant par les images A’ = r(A) et B’ = r(B).\n  L'angle entre la droite (AB) et la droite image (A’B’) est égal à α.\n- Image d’un segment [AB] : C'est le segment [A’B’] de MÊME LONGUEUR : A’B’ = AB.\n- Image d’un cercle : L'image d'un cercle C(O, R) de centre O et de rayon R est un cercle C’(O’, R) de MÊME RAYON R ayant pour centre le point O’ = r(O).",
+      "formulas": [
+        {
+          "name": "Définition d’une rotation r(O, α)",
+          "formula": "OM’ = OM   et   mes(OM, OM’) = α [2π]",
+          "note": "M’ est à la même distance de O que M, décalé d’un angle orienté α."
+        },
+        {
+          "name": "Propriété fondamentale de la rotation",
+          "formula": "M’N’ = MN   et   mes(MN, M’N’) = α [2π]",
+          "note": "Conservation de la distance et angle orienté égal à α."
+        },
+        {
+          "name": "Image d’un cercle C(O, R)",
+          "formula": "r(C(O, R)) = C’(r(O), R)",
+          "note": "Même rayon R, le centre est simplement tourné de α autour de l’axe."
+        }
+      ],
+      "keyRule": "Retiens les deux lois sacrées de la rotation : 1) Les longueurs ne changent jamais (M'N' = MN, c'est une isométrie) ; 2) Tout vecteur tourne exactement de l'angle α : mes(MN, M'N') = α !",
+      "workedExample": {
+        "title": "Exemple résolu : Rotation et triangles équilatéraux",
+        "statement": "Soit ABC un triangle équilatéral direct (de centre de gravité G). On considère la rotation r de centre A et d’angle π / 3.\n1. Quelle est l’image du point B par cette rotation ?\n2. Soit un point M distinct de A et M’ son image par r. Quelle est la nature précise du triangle AMM’ ?",
+        "methodSteps": [
+          "Étape 1 : Dans le triangle équilatéral direct ABC, on a AB = AC et mes(AB, AC) = π / 3 (60°).",
+          "Étape 2 : Par définition de la rotation r de centre A et d’angle π / 3, l’image de B est le point vérifiant AB’ = AB et mes(AB, AB’) = π / 3. Ce point est donc le point C : r(B) = C.",
+          "Étape 3 : Pour tout point M, par définition de la rotation : AM = AM’ et mes(AM, AM’) = π / 3.",
+          "Étape 4 : Un triangle isocèle qui possède un angle de π / 3 (60°) est obligatoirement un triangle équilatéral. Le triangle AMM’ est donc équilatéral direct."
+        ],
+        "conclusion": "r(B) = C et le triangle AMM’ est toujours un triangle équilatéral direct."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quelles sont les deux conditions qui définissent l’image M’ d’un point M ≠ O par la rotation r(O, α) ?",
+          "options": [
+            "OM’ = OM  et  mes(OM, OM’) = α [2π]",
+            "OM’ = α · OM  et  M’ appartient à la médiatrice",
+            "OM’ + OM = α  et  (OM) ⊥ (OM’)",
+            "OM’ = OM²  et  mes(OM, OM’) = 0"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par définition d’une rotation de centre O et d’angle α, M’ conserve la distance au centre (OM’ = OM) et forme l’angle orienté mes(OM, OM’) = α."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p1_ex2",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on couramment une rotation d’angle π / 2 dans le sens trigonométrique ?",
+          "options": [
+            "Un quart de tour direct",
+            "Un demi-tour",
+            "Un quart de tour indirect",
+            "Une homothétie de rapport 2"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une rotation d’angle +π / 2 (90° dans le sens anti-horaire) est appelée un quart de tour direct."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p1_ex3",
+          "type": "mcq",
+          "prompt": "Une rotation d’angle π (ou −π) est rigoureusement équivalente à :",
+          "options": [
+            "La symétrie centrale de centre O",
+            "La symétrie orthogonale par rapport à l’axe des abscisses",
+            "La translation de vecteur de norme π",
+            "L’application identique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Tourner d’un angle plat π (180°) revient à placer M’ tel que O soit le milieu de [MM’] : c’est la symétrie centrale de centre O."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p1_ex4",
+          "type": "mcq",
+          "prompt": "Combien de points invariants possède une rotation de centre O et d’angle α = π / 4 ?",
+          "options": [
+            "1 seul point invariant (son centre O)",
+            "0 point invariant",
+            "Une infinité de points",
+            "2 points invariants"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Toute rotation d’angle non nul admet pour unique point fixe invariant son propre centre O."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p1_ex5",
+          "type": "mcq",
+          "prompt": "D’après la propriété fondamentale, si M’ et N’ sont les images de M et N par une rotation d’angle α, que vaut l’angle mes(MN, M’N’) ?",
+          "options": [
+            "α [2π]",
+            "2α [2π]",
+            "0 [2π]",
+            "π − α [2π]"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La propriété fondamentale stipule que tout vecteur non nul MN est tourné du même angle orienté α : mes(MN, M’N’) = α [2π]."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p1_ex6",
+          "type": "mcq",
+          "prompt": "Pourquoi la rotation est-elle qualifiée d’isométrie du plan ?",
+          "options": [
+            "Parce qu’elle conserve rigoureusement les longueurs : M’N’ = MN",
+            "Parce qu’elle conserve le centre O",
+            "Parce qu’elle transforme une droite en une droite parallèle",
+            "Parce qu’elle agrandit les figures"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une isométrie est une transformation qui conserve exactement la distance entre deux points quelconques : M’N’ = MN."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p1_ex7",
+          "type": "mcq",
+          "prompt": "Quelle est l’image d’un cercle C de centre O et de rayon 7 cm par une rotation r de centre I et d’angle 2π / 3 ?",
+          "options": [
+            "Un cercle C’ de même rayon 7 cm dont le centre est O’ = r(O)",
+            "Un cercle de rayon 14 cm",
+            "Un cercle de rayon 7 × (2π / 3) cm",
+            "Une ellipse de grand axe 7 cm"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La rotation étant une isométrie, elle conserve les rayons des cercles : le cercle image a le même rayon 7 cm et son centre est l’image du centre."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p1_ex8",
+          "type": "mcq",
+          "prompt": "Si r est une rotation qui transforme A en B, à quel ensemble géométrique appartient obligatoirement le centre O de cette rotation ?",
+          "options": [
+            "À la médiatrice du segment [AB] (car OA = OB)",
+            "Au cercle de diamètre [AB]",
+            "À la droite (AB)",
+            "Au milieu de [AB] obligatoirement"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par définition d’une rotation, le centre O est à égale distance du point et de son image (OA = OB). O appartient donc obligatoirement à la médiatrice de [AB]."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_maths_geometrie_ch7_p2",
+      "order": 2,
+      "title": "Propriétés de conservation, caractérisations et constructions",
+      "summary": "Conservation des angles orientés, du parallélisme, de l’orthogonalité et des aires. Caractérisation par deux points et leurs images, construction du centre par médiatrices et arc capable.",
+      "conceptExplanation": "La rotation est la reine des isométries directes : elle fait tourner une figure entière comme un solide indéformable sans aucune altération.\n\n1. Propriétés de conservation de la rotation :\nToute rotation conserve :\n- Les distances : M’N’ = MN.\n- Les angles orientés : mes(M’A’, M’B’) = mes(MA, MB) [2π] (conservation absolue de l’orientation du plan).\n- L'alignement : L'image de trois points alignés est formée de trois points alignés.\n- Le milieu : L'image du milieu I d'un segment [AB] est le milieu I' du segment image [A'B'].\n- Le parallélisme et l'orthogonalité : Deux droites parallèles ont pour images deux droites parallèles ; deux droites perpendiculaires ont pour images deux droites perpendiculaires.\n- Les aires et le contact : L'aire d'une figure est strictement conservée (Aire(Image) = Aire(Initiale)). Deux figures tangentes ou sécantes ont pour images des figures tangentes ou sécantes.\n\n2. Caractérisation d’une rotation par son centre, un point et son image :\nSoit A, B et C trois points deux à deux distincts du plan tels que AB = AC.\nIl existe une UNIQUE rotation de centre A qui applique B sur C. Son angle orienté est α = mes(AB, AC) [2π].\n\n3. Caractérisation par deux points distincts et leurs images :\nSoit M, N, M’, N’ quatre points du plan tels que :\n  MN = M’N’, M ≠ N et MN ≠ M’N’.\nIl existe une UNIQUE rotation r telle que r(M) = M’ et r(N) = N’.\n- L'angle de la rotation est l'angle orienté α = mes(MN, M’N’) [2π].\n- Le centre Ω est le point d'intersection des médiatrices des segments [MM’] et [NN’] :\n  {Ω} = med[MM’] ∩ med[NN’]  (car ΩM = ΩM’ et ΩN = ΩN’).\n\n4. Caractérisation par l’angle α, un point M et son image N :\nSi l’on connaît l’angle α et que l’on cherche le centre Ω d’une rotation transformant M en N :\n- Ω est à égale distance de M et N (ΩM = ΩN), donc Ω appartient à la médiatrice (Δ) de [MN].\n- De plus, mes(ΩM, ΩN) = α [2π], donc Ω appartient à l’arc capable de mesure α s'appuyant sur [MN].\n- Le centre Ω est l'intersection de la médiatrice (Δ) et de cet arc capable.",
+      "formulas": [
+        {
+          "name": "Conservation des angles orientés",
+          "formula": "mes(M’A’, M’B’) = mes(MA, MB) [2π]",
+          "note": "Les angles orientés sont strictement conservés."
+        },
+        {
+          "name": "Angle de rotation déterminé par deux bipoints",
+          "formula": "α = mes(MN, M’N’) [2π]",
+          "note": "Angle orienté formé par le vecteur antécédent et le vecteur image."
+        },
+        {
+          "name": "Centre déterminé par les médiatrices",
+          "formula": "{Ω} = med[MM’] ∩ med[NN’]",
+          "note": "Intersection des médiatrices joignant chaque point à son image."
+        }
+      ],
+      "keyRule": "Règle infaillible pour trouver le centre d'une rotation : si r(A) = A' et r(B) = B', trace simplement la médiatrice de [AA'] et la médiatrice de [BB']. Leur point d'intersection est exactement le centre Ω !",
+      "workedExample": {
+        "title": "Exemple résolu : Détermination du centre et de l’angle d’une rotation",
+        "statement": "Soit ABCD un carré direct de centre O. On considère la rotation r qui transforme A en B et B en C.\n1. Justifie qu’il existe une unique rotation r transformant A en B et B en C.\n2. Détermine son centre et son angle orienté.",
+        "methodSteps": [
+          "Étape 1 : Dans le carré ABCD, on a AB = BC et les vecteurs AB et BC ne sont pas égaux (ils sont orthogonaux). Il existe donc une unique rotation r telle que r(A) = B et r(B) = C.",
+          "Étape 2 : L’angle de la rotation est donné par l’angle orienté entre les vecteurs antécédent et image : α = mes(AB, BC). Dans un carré direct, cet angle vaut exactement π / 2 (90°).",
+          "Étape 3 : Le centre Ω doit vérifier ΩA = ΩB (donc Ω est sur la médiatrice de [AB]) et ΩB = ΩC (donc Ω est sur la médiatrice de [BC]).",
+          "Étape 4 : Les médiatrices des côtés consécutifs d’un carré se coupent exactement en son centre géométrique O. Le centre de la rotation est donc le point O."
+        ],
+        "conclusion": "La rotation est le quart de tour direct de centre O et d’angle π / 2 : r(O, π / 2)."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p2_ex1",
+          "type": "mcq",
+          "prompt": "Si deux droites (D1) et (D2) sont parallèles, que peut-on dire de leurs images par une rotation ?",
+          "options": [
+            "Elles sont obligatoirement deux droites parallèles (conservation du parallélisme)",
+            "Elles se coupent selon l’angle de la rotation",
+            "Elles deviennent perpendiculaires",
+            "Elles sont confondues avec le centre"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Toute rotation conserve le parallélisme : les images de deux droites parallèles sont toujours deux droites strictement parallèles."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p2_ex2",
+          "type": "mcq",
+          "prompt": "Si un triangle ABC a une aire de 18 cm², quelle est l’aire de son image par une rotation d’angle 5π / 6 ?",
+          "options": [
+            "18 cm² (la rotation conserve exactement les aires)",
+            "18 × (5π / 6) cm²",
+            "36 cm²",
+            "9 cm²"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La rotation étant une isométrie, elle conserve parfaitement les aires : l’aire du triangle image reste exactement 18 cm²."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p2_ex3",
+          "type": "mcq",
+          "prompt": "Soit deux points A et B et leurs images A’ et B’ par une rotation d’angle α. Comment trouve-t-on graphiquement le centre Ω de cette rotation ?",
+          "options": [
+            "Comme l’intersection de la médiatrice de [AA’] et de la médiatrice de [BB’]",
+            "Comme le milieu du segment [AB]",
+            "Comme l’intersection des droites (AB) et (A’B’)",
+            "Comme le barycentre des quatre points"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Comme ΩA = ΩA’ et ΩB = ΩB’, le centre Ω appartient à la fois à la médiatrice de [AA’] et à celle de [BB’] : c’est leur point d’intersection."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p2_ex4",
+          "type": "mcq",
+          "prompt": "Quel est l’angle de la rotation r qui transforme deux points distincts M et N en M’ et N’ ?",
+          "options": [
+            "L’angle orienté mes(MN, M’N’) [2π]",
+            "L’angle géométrique formé par (MM’) et (NN’)",
+            "Toujours 90°",
+            "Le quotient MN / M’N’"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L’angle orienté d’une rotation est l’angle entre tout vecteur non nul MN et son image M’N’ : α = mes(MN, M’N’) [2π]."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p2_ex5",
+          "type": "mcq",
+          "prompt": "Soit un triangle ABC isocèle en A avec AB = AC et mes(AB, AC) = π / 2. Quelle est la rotation de centre A appliquant B sur C ?",
+          "options": [
+            "La rotation de centre A et d’angle π / 2 (quart de tour direct)",
+            "La rotation de centre B et d’angle π / 2",
+            "La symétrie centrale de centre A",
+            "La rotation d’angle π / 4"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Comme AB = AC et mes(AB, AC) = π / 2, c’est l’unique rotation de centre A et d’angle π / 2 qui applique B sur C."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p2_ex6",
+          "type": "mcq",
+          "prompt": "Un point mobile M parcourt un cercle (C) de centre O. N est le point tel que le triangle OMN est rectangle isocèle direct en O. Quel est le lieu de N ?",
+          "options": [
+            "Le cercle (C) lui-même (car N est l’image de M par le quart de tour de centre O)",
+            "Une droite passant par O",
+            "Un cercle de rayon deux fois plus grand",
+            "Un point fixe"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "N est l’image de M par la rotation de centre O et d’angle π / 2. Comme le centre de rotation est le centre du cercle, le cercle image est confondu avec (C) : N décrit le même cercle (C)."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p2_ex7",
+          "type": "mcq",
+          "prompt": "Si r est une rotation d’angle α = π / 3 qui transforme M en N, à quelle courbe appartient le centre Ω de la rotation ?",
+          "options": [
+            "À la médiatrice de [MN] et à l’arc capable d’angle π / 3 sur [MN]",
+            "Au segment [MN] uniquement",
+            "Au cercle de diamètre [MN]",
+            "À la tangente en M"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Ω vérifie ΩM = ΩN (médiatrice de [MN]) et mes(ΩM, ΩN) = π / 3 (arc capable de mesure π / 3 s’appuyant sur [MN])."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch7_p2_ex8",
+          "type": "mcq",
+          "prompt": "La composée de deux rotations de même centre O, notée r(O, α) ∘ r(O, β), est :",
+          "options": [
+            "La rotation de même centre O et d’angle α + β",
+            "Une translation de vecteur de norme α + β",
+            "Une homothétie de rapport α · β",
+            "L’application identique dans tous les cas"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Composer deux rotations ayant le même centre O revient à additionner leurs angles de rotation autour de ce même centre : r(O, α + β)."
+        }
+      ]
+    }
+  ]
+};
+
 export const maths2deCGeometryChapters: CurriculumChapter[] = [
   maths2deCVecteursChapter,
   maths2deCSymetriesTranslationsChapter,
   maths2deCEspaceChapter,
   maths2deCAnglesInscritsChapter,
   maths2deCAnglesOrientesTrigoChapter,
+  maths2deCHomothetieChapter,
+  maths2deCRotationChapter,
 ];
