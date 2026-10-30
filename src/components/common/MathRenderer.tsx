@@ -80,6 +80,16 @@ export function cleanFormulasAndIndices(text: string): string {
     '$$$$E_c = \\frac{1}{2}mv^2$$$$'
   );
 
+  // 5. Formules de chimie et grandeurs molaires
+  s = s.replace(/\bC\s*=\s*n\s*\/\s*V(?:_s)?\b/g, '$$$$C = \\frac{n}{V}$$$$');
+  s = s.replace(/\bC_m\s*=\s*m\s*\/\s*V(?:_s)?\b/g, '$$$$\\mathcal{C}_m = \\frac{m}{V}$$$$');
+  s = s.replace(/\bn\s*=\s*m\s*\/\s*M\b/g, '$$$$n = \\frac{m}{M}$$$$');
+  s = s.replace(/\bn\s*=\s*V\s*\/\s*V_m\b/g, '$$$$n = \\frac{V}{V_m}$$$$');
+  s = s.replace(/\bρ\s*=\s*m\s*\/\s*V\b/g, '$$$$\\rho = \\frac{m}{V}$$$$');
+  s = s.replace(/\bd\s*=\s*ρ\s*\/\s*ρ_0\b/g, '$$$$d = \\frac{\\rho}{\\rho_0}$$$$');
+  s = s.replace(/\bd\s*=\s*M\s*\/\s*29\b/g, '$$$$d = \\frac{M}{29}$$$$');
+  s = s.replace(/\bC_m\s*=\s*M\s*×\s*C\b/g, '$$$$\\mathcal{C}_m = M \\times C$$$$');
+
   // Découpage préservant les blocs mathématiques déjà balisés ($...$ et $$...$$)
   const parts = s.split(/(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$)/g);
 
@@ -280,6 +290,9 @@ export function sanitizeFormulaForKatex(raw: string): string {
   s = s.replace(/(?<!\\frac\{)x_max\s*\/\s*2/g, '\\frac{x_{\\max}}{2}');
   s = s.replace(/(?<!\\frac\{)\[([A-Za-z0-9_\\{}]+)\]_0\s*\/\s*2/g, '\\frac{[$1]_0}{2}');
   s = s.replace(/(?<!\\frac\{)\[([A-Za-z0-9_\\{}]+)\]_max\s*\/\s*2/g, '\\frac{[$1]_{\\max}}{2}');
+
+  // 10.4 Quotients de variables simples : n / V, m / V, m / M, V / V_m, etc.
+  s = s.replace(/(?<!\\frac\{)(?<![a-zA-Z0-9_\\])\b([a-zA-Z0-9_{}]+)\s*\/\s*([a-zA-Z0-9_{}]+)\b(?![a-zA-Z0-9_\\])/g, '\\frac{$1}{$2}');
 
   // 11. Variables et indices usuels
   s = s.replace(/\bv_d\(([^)]+)\)/g, 'v_d($1)');

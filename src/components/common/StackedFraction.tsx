@@ -19,8 +19,8 @@ export const StackedFraction: React.FC<StackedFractionProps> = ({
 }) => {
   return (
     <span
-      className={`inline-flex items-center align-middle mx-1 font-semibold text-indigo-700 dark:text-indigo-300 ${className}`}
-      style={{ verticalAlign: 'middle' }}
+      className={`inline-flex items-center align-middle mx-1 font-semibold text-indigo-700 dark:text-indigo-300 relative -top-[1.5px] ${className}`}
+      style={{ verticalAlign: '-0.28em' }}
     >
       {negative && <span className="mr-0.5 text-base font-bold select-none leading-none">−</span>}
       <span className="inline-flex flex-col items-center justify-center leading-none text-center">
