@@ -97,7 +97,8 @@ export function getSubCategoryQuestion(subCategory: StemSubCategory): string {
     case 'physique': return 'À quel chapitre êtes-vous arrivés en Physique ?';
     case 'geometrie': return 'À quel chapitre êtes-vous arrivés en Géométrie ?';
     case 'numerique': return 'À quel chapitre êtes-vous arrivés en Numérique ?';
-    default: return 'À quel chapitre êtes-vous arrivés en classe ?';
+    case 'svt': return 'À quel chapitre êtes-vous arrivés en SVT ?';
+    default: return 'À quel chapitre êtes-vous arrivés en SVT ?';
   }
 }
 

@@ -550,7 +550,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             <div className="px-3.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-300">
               <span className="font-bold flex items-center gap-1.5 truncate">
                 <CheckCircle2 size={15} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
-                Chapitre sélectionné : Ch. {selectedChapter.order} — {selectedChapter.title}
+                Chapitre sélectionné : {selectedChapter.title.startsWith('Leçon') ? selectedChapter.title : `Ch. ${selectedChapter.order} — ${selectedChapter.title}`}
               </span>
               <span className="text-[10px] font-mono shrink-0 ml-2 font-bold px-1.5 py-0.5 rounded bg-emerald-500/20">
                 {selectedChapter.officialVolumeHours || 12}h
@@ -581,7 +581,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-indigo-300 dark:hover:border-slate-600'
                   }`}
                 >
-                  <span className="text-xs sm:text-sm font-bold truncate">Ch. {ch.order} — {ch.title}</span>
+                  <span className="text-xs sm:text-sm font-bold truncate">
+                    {ch.title.startsWith('Leçon') ? ch.title : `Ch. ${ch.order} — ${ch.title}`}
+                  </span>
                   <span className="text-[11px] font-mono text-slate-400 shrink-0 font-semibold">{ch.officialVolumeHours || 10}h</span>
                 </button>
               ))
