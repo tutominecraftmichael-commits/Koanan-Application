@@ -348,7 +348,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   // Validation du diagnostic initial pour cette sous-catégorie
   const handleConfirmInitialChapter = (chapterId: string) => {
-    soundFX.playCheckmarkPop();
+    try { soundFX.playCheckmarkPop(); } catch {}
     initializeSubCategoryPosition(userId, stemSubjectId, activeSubCategory, gradeLevel, chapterId);
     setShowChapterSelector(false);
     refreshSessionPayload(activeSubCategory);
@@ -406,31 +406,41 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // ACTIONS PÉDAGOGIQUES
   // =========================================================================
 
-  // Sélection d'une option de réponse
+  // Sélection d'une option de réponse (mise à jour d'état immédiate garantie à 100%)
   const handleSelectOption = (idx: number) => {
     if (isAnswerChecked) return;
-    soundFX.playClick();
     setSelectedOptionIndex(idx);
+    try {
+      soundFX.playClick();
+    } catch {
+      // Safe fail : le son ne doit jamais bloquer la sélection
+    }
   };
 
   // Vérification de la réponse
   const handleVerifyAnswer = () => {
     if (selectedOptionIndex === null || !activeExercise) return;
 
-    const isCorrect = selectedOptionIndex === activeExercise.correctAnswerIndex;
+    const isCorrect = Number(selectedOptionIndex) === Number(activeExercise.correctAnswerIndex);
     setIsAnswerChecked(true);
     setIsAnswerCorrect(isCorrect);
     setTotalExercisesAnswered(prev => prev + 1);
 
     if (isCorrect) {
-      soundFX.playCorrect();
       setMasteredIndices(prev => prev.includes(activeStepIndex) ? prev : [...prev, activeStepIndex]);
       if (phase === 'learning') {
         setTotalFirstTryCorrect(prev => prev + 1);
       }
+      try {
+        soundFX.playCorrect();
+      } catch {
+        // Safe fail
+      }
     } else {
       // STRICTEMENT AUCUNE MUSIQUE NI SON SUR UNE FAUTE (silence complet)
-      soundFX.playWrong();
+      try {
+        soundFX.playWrong();
+      } catch {}
       // La barre de progression ne doit pas augmenter : aucun ajout dans masteredIndices
       if (phase === 'learning' && !missedIndices.includes(activeStepIndex)) {
         setMissedIndices(prev => [...prev, activeStepIndex]);
@@ -440,7 +450,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   // Passer à l'étape suivante après lecture de l'explication et de la réaction de Konan
   const handleContinueAfterFeedback = () => {
-    soundFX.playClick();
+    try {
+      soundFX.playClick();
+    } catch {}
     setSelectedOptionIndex(null);
     setIsAnswerChecked(false);
     setIsAnswerCorrect(false);
@@ -474,13 +486,17 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   // Validation d'une mini-leçon à 8/8
   const handleMiniLessonValidated = () => {
-    soundFX.playVictoryJingle();
+    try {
+      soundFX.playVictoryJingle();
+    } catch {}
     setPhase('point_celebration');
   };
 
   // Passer à la mini-leçon suivante ou célébrer la fin de séance
   const handleContinueToNextLesson = () => {
-    soundFX.playClick();
+    try {
+      soundFX.playClick();
+    } catch {}
     if (activeItemIndex < items.length - 1) {
       setActiveItemIndex(prev => prev + 1);
       setPhase('intro');
@@ -499,7 +515,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   // Célébration globale et enregistrement avec alternance
   const handleSessionCelebration = () => {
-    soundFX.playGrandCheer();
+    try {
+      soundFX.playGrandCheer();
+    } catch {}
     setPhase('session_celebration');
 
     recordCompletedTutorSession(
@@ -794,7 +812,10 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <button
             type="button"
             onClick={() => {
-              soundFX.playCheckmarkPop();
+              try { soundFX.playCheckmarkPop(); } catch {}
+              setSelectedOptionIndex(null);
+              setIsAnswerChecked(false);
+              setIsAnswerCorrect(false);
               setPhase('learning');
               setExerciseIndex(0);
             }}
@@ -1101,9 +1122,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       type="button"
                       disabled={isAnswerChecked}
                       onClick={() => handleSelectOption(oIdx)}
-                      className={`w-full p-3.5 sm:p-4 rounded-xl border-2 text-left font-semibold text-xs sm:text-sm flex items-start justify-between gap-3 transition-all cursor-pointer disabled:cursor-default ${btnStyle}`}
+                      className={`w-full p-3.5 sm:p-4 rounded-xl border-2 text-left font-semibold text-xs sm:text-sm flex items-start justify-between gap-3 transition-all cursor-pointer disabled:cursor-default select-none touch-manipulation active:scale-[0.99] ${btnStyle}`}
                     >
-                      <div className="flex items-start gap-3 min-w-0">
+                      <div className="flex items-start gap-3 min-w-0 pointer-events-none">
                         <span
                           className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 mt-0.5 ${
                             isSelected
@@ -1113,16 +1134,16 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                         >
                           {letter}
                         </span>
-                        <div className="leading-snug pt-0.5">
+                        <div className="leading-snug pt-0.5 pointer-events-none">
                           <MathRenderer text={opt} />
                         </div>
                       </div>
 
                       {isAnswerChecked && oIdx === activeExercise.correctAnswerIndex && (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 pointer-events-none" />
                       )}
                       {isAnswerChecked && isSelected && !isAnswerCorrect && (
-                        <AlertCircle className="w-5 h-5 text-rose-500 shrink-0" />
+                        <AlertCircle className="w-5 h-5 text-rose-500 shrink-0 pointer-events-none" />
                       )}
                     </button>
                   );
@@ -1177,15 +1198,23 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   type="button"
                   disabled={selectedOptionIndex === null}
                   onClick={handleVerifyAnswer}
-                  className="w-full py-4 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#3730A3] active:translate-y-1 transition-all cursor-pointer disabled:cursor-not-allowed"
+                  className={`w-full py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wide uppercase transition-all flex items-center justify-center gap-2 select-none ${
+                    selectedOptionIndex !== null
+                      ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_5px_0_#3730A3] active:translate-y-1 cursor-pointer'
+                      : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-300 dark:border-slate-700 cursor-not-allowed opacity-60'
+                  }`}
                 >
-                  Vérifier ma compréhension
+                  <span>
+                    {selectedOptionIndex === null
+                      ? 'Sélectionne une réponse ci-dessus'
+                      : 'Vérifier ma compréhension ➔'}
+                  </span>
                 </button>
               ) : (
                 <button
                   type="button"
                   onClick={handleContinueAfterFeedback}
-                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 select-none"
                 >
                   <span>
                     {phase === 'catchup'

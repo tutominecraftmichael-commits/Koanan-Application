@@ -96,6 +96,10 @@ export function cleanFormulasAndIndices(text: string): string {
     t = t.replace(/\b1\/2\b/g, '$\\frac{1}{2}$');
     t = t.replace(/\(16,0\s*×\s*10⁻³\)\s*\/\s*2/g, '$\\frac{16{,}0 \\times 10^{-3}}{2}$');
 
+    // Fractions ou racines LaTeX isolées sans délimiteur $ (ex: \frac{12}{6} ou -\frac{31}{11})
+    t = t.replace(/(?<!\$)([+\-]?\\frac\{[^{}]+\}\{[^{}]+\})(?!\$)/g, '$$$1$$');
+    t = t.replace(/(?<!\$)([+\-]?\\sqrt\{[^{}]+\})(?!\$)/g, '$$$1$$');
+
     // Demi-réaction dans le texte
     t = t.replace(/\bt[₁1]\/[₂2]\b/g, '$t_{1/2}$');
     t = t.replace(/t₁\/₂/g, '$t_{1/2}$');
