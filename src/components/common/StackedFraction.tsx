@@ -17,17 +17,17 @@ export const StackedFraction: React.FC<StackedFractionProps> = ({
   negative = false,
   className = '',
 }) => {
-  const combinedClasses = `inline-flex items-center align-middle mx-1 font-semibold text-indigo-700 dark:text-indigo-300 relative -top-[1.5px] ${className}`.trim();
+  const combinedClasses = `inline-flex items-center align-middle mx-1 font-semibold text-indigo-700 dark:text-indigo-300 ${className}`.trim();
 
   return (
-    <span className={combinedClasses} style={{ verticalAlign: '-0.28em' }}>
+    <span className={combinedClasses} style={{ verticalAlign: 'middle' }}>
       {negative && <span className="mr-0.5 text-base font-bold select-none leading-none">−</span>}
-      <span className="inline-flex flex-col items-center justify-center leading-none text-center">
-        <span className="px-1 text-[0.85em] font-medium leading-none pb-0.5 w-full text-center">
+      <span className="inline-flex flex-col items-center justify-center text-center leading-none" style={{ verticalAlign: 'middle' }}>
+        <span className="px-1 text-[0.82em] font-medium leading-none pb-[2px] w-full text-center">
           {numerator}
         </span>
-        <span className="w-full border-t-2 border-indigo-500/70 dark:border-indigo-400/80 my-0" />
-        <span className="px-1 text-[0.85em] font-medium leading-none pt-0.5 w-full text-center">
+        <span className="w-full border-t border-indigo-500/80 dark:border-indigo-400/80 my-0" />
+        <span className="px-1 text-[0.82em] font-medium leading-none pt-[2px] w-full text-center">
           {denominator}
         </span>
       </span>

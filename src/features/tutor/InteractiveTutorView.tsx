@@ -1037,7 +1037,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               {phase === 'catchup' && (
                 <span className="px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 animate-pulse">
                   <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Session de rattrapage</span>
+                  <span>Rattrapage</span>
                 </span>
               )}
             </div>

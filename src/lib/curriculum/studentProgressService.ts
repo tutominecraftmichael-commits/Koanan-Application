@@ -52,8 +52,11 @@ export function getChapterSubCategory(chapter: CurriculumChapter): StemSubCatego
   const text = (chapter.title + ' ' + (chapter.summary || '')).toLowerCase();
 
   if (chapter.subjectId === 'physique_chimie') {
+    if (chapter.id.includes('_chimie_')) return 'chimie';
+    if (chapter.id.includes('_physique_')) return 'physique';
+
     // 1. Notions exclusivement physiques
-    const isExclusivelyPhysique = /énergie mécanique|energie mecanique|énergie cinétique|energie cinetique|cinématique|cinematique|mouvement|vitesse et accélération|dynamique|lois de newton|travail|puissance|pesanteur|gravitation|satellite|poids et masse|masse et poids|électricité|courant|tension|résistance|circuit|rlc|condensateur|bobine|champ|induction|optique|lentille|lumière|miroir|ondes|interférences|radioactivité|nucléaire|noyau/.test(text);
+    const isExclusivelyPhysique = /énergie mécanique|energie mecanique|énergie cinétique|energie cinetique|cinématique|cinematique|mouvement|vitesse et accélération|dynamique|lois de newton|travail|puissance|pesanteur|gravitation|satellite|poids et masse|masse et poids|électricité|courant|tension|résistance|circuit|rlc|condensateur|bobine|champ|induction|optique|lentille|lumière|miroir|ondes|interférences|radioactivité|nucléaire|noyau|équilibre|equilibre|deux forces|forces\b/.test(text);
     if (isExclusivelyPhysique) return 'physique';
 
     // 2. Notions de chimie

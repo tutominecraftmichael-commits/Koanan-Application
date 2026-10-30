@@ -9,6 +9,10 @@ import {
   chimie2deASolutionsAqueusesIoniquesChapter,
   chimie2deATestsIdentificationIonsChapter,
 } from '../../data/courses/chimie_2de_a';
+import {
+  physique2deALeMouvementChapter,
+  physique2deAEquilibreSolideDeuxForcesChapter,
+} from '../../data/courses/physique_2de_a';
 import type { CurriculumChapter, CurriculumGradeLevel, StemSubjectId } from './types';
 
 // ============================================================================
@@ -58380,6 +58384,8 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
       }
     ]
   },
+  physique2deALeMouvementChapter,
+  physique2deAEquilibreSolideDeuxForcesChapter,
   chimie2deAElementChimiqueChapter,
   chimie2deAStructureAtomeChapter,
   chimie2deAClassificationPeriodiqueChapter,
