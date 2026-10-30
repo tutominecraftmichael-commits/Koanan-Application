@@ -2231,6 +2231,301 @@ export const maths2deCRotationChapter: CurriculumChapter = {
   ]
 };
 
+export const maths2deCProduitScalaireChapter: CurriculumChapter = {
+  "id": "seconde_c_maths_geometrie_ch8_produit_scalaire",
+  "subjectId": "maths",
+  "gradeLevel": "seconde_c",
+  "order": 8,
+  "officialVolumeHours": 10,
+  "title": "Leçon 8 — Produit scalaire",
+  "summary": "Définition géométrique du produit scalaire, carré scalaire, projection orthogonale, orthogonalité, propriétés bilinéaires, coordonnées dans une base orthonormée, théorème d’Al-Kashi et théorème de la médiane.",
+  "points": [
+    {
+      "id": "seconde_c_maths_geometrie_ch8_p1",
+      "order": 1,
+      "title": "Définition, carré scalaire, projection et orthogonalité",
+      "summary": "Définition géométrique u · v = ‖u‖ · ‖v‖ · cos(u, v), carré scalaire, expression par projection orthogonale AB · AC = AB_barre · AH_barre et critère d’orthogonalité u · v = 0.",
+      "conceptExplanation": "En physique, lorsqu’une force déplace un solide, le travail mécanique dépend de l’intensité de la force, de la distance parcourue, mais surtout de l’angle entre la force et le déplacement. Le produit scalaire est l’outil mathématique qui modélise cette interaction fondamentale.\n\n1. Définition du produit scalaire de deux vecteurs :\nSoit u et v deux vecteurs du plan.\n- Si u ≠ 0 et v ≠ 0 : On appelle produit scalaire de u par v le NOMBRE RÉEL noté u · v défini par :\n  u · v = ‖u‖ × ‖v‖ × cos(u, v).\n- Si u = 0 ou v = 0 : u · v = 0.\n- Attention capitale : Le produit de deux vecteurs par le produit scalaire donne UN NOMBRE RÉEL (un scalaire) et JAMAIS un vecteur !\n\n2. Propriétés immédiates et vecteurs colinéaires :\n- Symétrie : Pour tous vecteurs u et v : u · v = v · u.\n- Inégalité de Cauchy-Schwarz : |u · v| ≤ ‖u‖ × ‖v‖.\n- Vecteurs colinéaires de même sens : cos(u, v) = cos(0) = 1, donc u · v = ‖u‖ × ‖v‖.\n- Vecteurs colinéaires de sens contraires : cos(u, v) = cos(π) = −1, donc u · v = −‖u‖ × ‖v‖.\n\n3. Le Carré scalaire :\nLe produit scalaire d’un vecteur u par lui-même est appelé son carré scalaire, noté u² :\n  u² = u · u = ‖u‖ × ‖u‖ × cos(0) = ‖u‖².\nPour tout bipoint (A, B) : AB² = ‖AB‖² = AB² (le carré de la distance AB).\n\n4. Expression par projection orthogonale :\nSoient A, B, C trois points du plan avec A ≠ B. Soit H le projeté orthogonal de C sur la droite (AB).\n- Théorème fondamental : AB · AC = AB · AH = AB_barre × AH_barre (en mesures algébriques sur la droite orientée (AB)).\n- Plus généralement, si H et K sont les projetés orthogonaux respectifs de C et D sur la droite (AB) :\n  AB · CD = AB_barre × HK_barre.\n\n5. Caractérisation de l’orthogonalité :\n- Théorème : Deux vecteurs u et v sont orthogonaux (u ⊥ v) si et seulement si leur produit scalaire est rigoureusement nul :\n  u ⊥ v  ⟺  u · v = 0.\n- Propriété du cercle : Soit [AB] un segment de diamètre. Un point M distinct de A et B appartient au cercle de diamètre [AB] si et seulement si MA · MB = 0.",
+      "formulas": [
+        {
+          "name": "Définition géométrique du produit scalaire",
+          "formula": "u · v = ‖u‖ × ‖v‖ × cos(u, v)",
+          "note": "Résultat scalaire réel (nombre)."
+        },
+        {
+          "name": "Projection orthogonale",
+          "formula": "AB · AC = AB_barre × AH_barre",
+          "note": "H est le projeté orthogonal de C sur la droite (AB)."
+        },
+        {
+          "name": "Critère d’orthogonalité",
+          "formula": "u ⊥ v  ⟺  u · v = 0",
+          "note": "Le produit scalaire est nul si et seulement si les directions sont perpendiculaires."
+        }
+      ],
+      "keyRule": "Retiens les deux expressions indispensables : 1) Par l’angle : u · v = ‖u‖ · ‖v‖ · cos θ ; 2) Par la projection : AB · AC = AB_barre × AH_barre où H est le projeté orthogonal de C sur (AB). Et si u ⊥ v, alors u · v = 0 !",
+      "workedExample": {
+        "title": "Exemple résolu : Calcul de produit scalaire dans un carré",
+        "statement": "Soit ABCD un carré de côté a = 4 cm et de centre O.\n1. Calcule le produit scalaire AB · AC.\n2. Calcule le produit scalaire AB · AD.\n3. Calcule le produit scalaire AC · DB.",
+        "methodSteps": [
+          "Étape 1 : Pour AB · AC, projetons orthogonalement C sur la droite (AB). Comme ABCD est un carré, le projeté de C sur (AB) est le point B. Donc AB · AC = AB · AB = AB² = 4² = 16.",
+          "Étape 2 : Pour AB · AD, les côtés [AB] et [AD] sont perpendiculaires en A ((AB) ⊥ (AD)). D’après le critère d’orthogonalité, AB · AD = 0.",
+          "Étape 3 : Pour AC · DB, les diagonales (AC) et (DB) d’un carré sont perpendiculaires en son centre O ((AC) ⊥ (DB)). Donc leur produit scalaire est nul : AC · DB = 0."
+        ],
+        "conclusion": "AB · AC = 16, AB · AD = 0 et AC · DB = 0."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est la nature du résultat d’un produit scalaire de deux vecteurs u · v ?",
+          "options": [
+            "Un nombre réel (un scalaire)",
+            "Un vecteur orienté",
+            "Une matrice 2×2",
+            "Un segment de droite"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par définition, le produit scalaire associe à deux vecteurs un nombre réel (scalaire), et non un vecteur."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p1_ex2",
+          "type": "mcq",
+          "prompt": "Soit deux vecteurs u et v tels que ‖u‖ = 4, ‖v‖ = 5 et l’angle (u, v) mesure 60° (avec cos(60°) = 0,5). Que vaut u · v ?",
+          "options": [
+            "10",
+            "20",
+            "0",
+            "10√3"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "u · v = ‖u‖ × ‖v‖ × cos(60°) = 4 × 5 × 0,5 = 20 × 0,5 = 10."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p1_ex3",
+          "type": "mcq",
+          "prompt": "Si u et v sont colinéaires et de sens contraires avec ‖u‖ = 3 et ‖v‖ = 7, que vaut u · v ?",
+          "options": [
+            "−21",
+            "21",
+            "0",
+            "−4"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour deux vecteurs colinéaires de sens contraires, cos(π) = −1, donc u · v = −‖u‖ × ‖v‖ = −3 × 7 = −21."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p1_ex4",
+          "type": "mcq",
+          "prompt": "Deux vecteurs non nuls u et v sont orthogonaux si et seulement si :",
+          "options": [
+            "u · v = 0",
+            "u · v = 1",
+            "‖u‖ = ‖v‖",
+            "u + v = 0"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L’orthogonalité de deux vecteurs se traduit algébriquement par l’annulation de leur produit scalaire : u · v = 0."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p1_ex5",
+          "type": "mcq",
+          "prompt": "Soit H le projeté orthogonal de C sur la droite (AB). Quelle est l’expression de AB · AC ?",
+          "options": [
+            "AB_barre × AH_barre",
+            "AB × AC / 2",
+            "AB_barre + AH_barre",
+            "AH²"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par la propriété du projeté orthogonal, AB · AC est égal au produit des mesures algébriques AB_barre × AH_barre."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p1_ex6",
+          "type": "mcq",
+          "prompt": "Dans un rectangle ABCD avec AB = 6 cm et BC = 4 cm, que vaut le produit scalaire AB · AC ?",
+          "options": [
+            "36 (car le projeté de C sur (AB) est B)",
+            "24",
+            "0",
+            "52"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans un rectangle ABCD, le projeté orthogonal de C sur la droite (AB) est le point B. Donc AB · AC = AB · AB = AB² = 6² = 36."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p1_ex7",
+          "type": "mcq",
+          "prompt": "Un point M appartient au cercle de diamètre [AB] si et seulement si :",
+          "options": [
+            "MA · MB = 0",
+            "MA + MB = 0",
+            "MA = MB",
+            "MA · MB = AB²"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le triangle AMB est rectangle en M si et seulement si M est sur le cercle de diamètre [AB], ce qui équivaut vectoriellement à MA · MB = 0."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p1_ex8",
+          "type": "mcq",
+          "prompt": "Que vaut le carré scalaire u² d’un vecteur u dont la norme vaut 3√2 ?",
+          "options": [
+            "18",
+            "6√2",
+            "9",
+            "36"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le carré scalaire est le carré de la norme : u² = ‖u‖² = (3√2)² = 9 × 2 = 18."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_maths_geometrie_ch8_p2",
+      "order": 2,
+      "title": "Propriétés algébriques, coordonnées et relations métriques",
+      "summary": "Bilinéarité, expression analytique u · v = xx’ + yy’, formule des normes, théorème d’Al-Kashi (loi des cosinus) et théorème de la médiane.",
+      "conceptExplanation": "Le produit scalaire possède une double puissance : il permet des calculs algébriques remarquables en repère orthonormé et résout entièrement n’importe quel triangle !\n\n1. Propriétés algébriques (Bilinéarité) :\nPour tous vecteurs u, v, w et tout nombre réel k :\n- u · (v + w) = u · v + u · w.\n- (k · u) · v = k · (u · v).\n- Identités remarquables scalaires :\n  * ‖u + v‖² = (u + v)² = u² + 2(u · v) + v² = ‖u‖² + 2(u · v) + ‖v‖².\n  * ‖u − v‖² = (u − v)² = ‖u‖² − 2(u · v) + ‖v‖².\n  * (u − v) · (u + v) = u² − v² = ‖u‖² − ‖v‖².\n\n2. Formules liant produit scalaire et normes :\n- u · v = (1 / 2) · [‖u + v‖² − ‖u‖² − ‖v‖²].\n- u · v = (1 / 2) · [‖u‖² + ‖v‖² − ‖u − v‖²].\n\n3. Expression analytique dans une base orthonormée (i, j) :\nSoit u(x, y) et v(x’, y’) dans une base orthonormée (i ⊥ j et ‖i‖ = ‖j‖ = 1).\n- Formule fondamentale : u · v = x · x’ + y · y’.\n- Critère d’orthogonalité analytique : u ⊥ v  ⟺  x · x’ + y · y’ = 0.\n\n4. Relations métriques dans le triangle :\nSoit ABC un triangle quelconque, avec a = BC, b = AC, c = AB.\n- Produit scalaire par les côtés :\n  AB · AC = (1 / 2) · [AB² + AC² − BC²] = (1 / 2) · (b² + c² − a²).\n- **Théorème d’Al-Kashi (Loi des cosinus)** :\n  a² = b² + c² − 2bc · cos(A)\n  b² = a² + c² − 2ac · cos(B)\n  c² = a² + b² − 2ab · cos(C).\n  (C’est la généralisation du théorème de Pythagore à TOUT triangle quelconque ! Si A = 90°, cos(A) = 0 et on retrouve a² = b² + c²).\n- **Théorème de la médiane** : Soit A’ le milieu du côté [BC] :\n  AB² + AC² = 2 · AA’² + (BC² / 2).\n  AB · AC = AA’² − (BC² / 4).",
+      "formulas": [
+        {
+          "name": "Expression en base orthonormée",
+          "formula": "u · v = x · x’ + y · y’",
+          "note": "Somme des produits des coordonnées respectives."
+        },
+        {
+          "name": "Théorème d’Al-Kashi",
+          "formula": "BC² = AB² + AC² − 2 · AB · AC · cos(BAC)",
+          "note": "a² = b² + c² − 2bc cos(A)."
+        },
+        {
+          "name": "Théorème de la médiane",
+          "formula": "AB² + AC² = 2 · AA’² + (BC² / 2)",
+          "note": "A’ est le milieu de [BC]."
+        }
+      ],
+      "keyRule": "Retiens le réflexe Al-Kashi : dès que tu connais deux côtés et l'angle compris, utilise immédiatement a² = b² + c² − 2bc cos(A) pour calculer le troisième côté !",
+      "workedExample": {
+        "title": "Exemple résolu : Théorème d’Al-Kashi et calcul de côté",
+        "statement": "Soit ABC un triangle tel que AB = 8 cm, AC = 3 cm et l’angle BAC mesure 60° (π / 3 rad, avec cos(60°) = 0,5).\n1. Calcule la longueur BC.\n2. Calcule le produit scalaire AB · AC.",
+        "methodSteps": [
+          "Étape 1 : Appliquons le théorème d’Al-Kashi pour le côté BC : BC² = AB² + AC² − 2 × AB × AC × cos(BAC).",
+          "Étape 2 : Remplaçons par les valeurs numériques : BC² = 8² + 3² − 2 × 8 × 3 × 0,5 = 64 + 9 − 24 = 49.",
+          "Étape 3 : On en déduit la longueur BC = √49 = 7 cm.",
+          "Étape 4 : Calculons le produit scalaire AB · AC par la formule des côtés : AB · AC = (1 / 2) · (AB² + AC² − BC²) = (1 / 2) · (64 + 9 − 49) = (1 / 2) × 24 = 12."
+        ],
+        "conclusion": "BC = 7 cm et AB · AC = 12."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p2_ex1",
+          "type": "mcq",
+          "prompt": "Dans un repère orthonormé, que vaut le produit scalaire de u(3, −2) et v(4, 5) ?",
+          "options": [
+            "2 (car 3 × 4 + (−2) × 5 = 12 − 10 = 2)",
+            "22",
+            "−2",
+            "0"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans une base orthonormée, u · v = xx’ + yy’ = (3)(4) + (−2)(5) = 12 − 10 = 2."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p2_ex2",
+          "type": "mcq",
+          "prompt": "Pour quelle valeur de y les vecteurs u(2, y) et v(−6, 3) sont-ils orthogonaux dans une base orthonormée ?",
+          "options": [
+            "4 (car 2 × (−6) + y × 3 = 0 ⟹ 3y = 12)",
+            "−4",
+            "6",
+            "1"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "u ⊥ v ⟺ xx’ + yy’ = 0 ⟺ 2 × (−6) + 3y = 0 ⟺ −12 + 3y = 0 ⟺ 3y = 12 ⟺ y = 4."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p2_ex3",
+          "type": "mcq",
+          "prompt": "Quelle est la formule du théorème d’Al-Kashi pour le côté a = BC d’un triangle ABC ?",
+          "options": [
+            "a² = b² + c² − 2bc · cos(A)",
+            "a² = b² + c² + 2bc · cos(A)",
+            "a² = b² + c² − 2bc · sin(A)",
+            "a² = (b + c)² · cos(A)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le théorème d’Al-Kashi s’écrit a² = b² + c² − 2bc · cos(A)."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p2_ex4",
+          "type": "mcq",
+          "prompt": "Dans un triangle ABC avec b = AC = 5 cm, c = AB = 6 cm et a = BC = 7 cm, que vaut cos(A) ?",
+          "options": [
+            "1 / 5 = 0,2",
+            "1 / 2",
+            "3 / 5",
+            "0"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "D’après Al-Kashi : a² = b² + c² − 2bc cos(A) ⟹ 49 = 25 + 36 − 2(5)(6) cos(A) ⟹ 49 = 61 − 60 cos(A) ⟹ 60 cos(A) = 12 ⟹ cos(A) = 12 / 60 = 1 / 5 = 0,2."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p2_ex5",
+          "type": "mcq",
+          "prompt": "D’après le théorème de la médiane, si A’ est le milieu de [BC], que vaut AB² + AC² ?",
+          "options": [
+            "2 · AA’² + (BC² / 2)",
+            "AA’² + BC²",
+            "2 · AA’² − BC²",
+            "4 · AA’²"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le théorème de la médiane établit rigoureusement que AB² + AC² = 2 · AA’² + (BC² / 2)."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p2_ex6",
+          "type": "mcq",
+          "prompt": "Dans un triangle ABC avec AB = 5, AC = 7 et BC = 6, quelle est la longueur de la médiane AA’ (où A’ est milieu de [BC]) ?",
+          "options": [
+            "√28 = 2√7 (car 2 AA’² = 25 + 49 − 18 = 56 ⟹ AA’² = 28)",
+            "5",
+            "√35",
+            "6"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "2 AA’² + (6² / 2) = 5² + 7² ⟹ 2 AA’² + 18 = 25 + 49 = 74 ⟹ 2 AA’² = 56 ⟹ AA’² = 28 ⟹ AA’ = √28 = 2√7."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p2_ex7",
+          "type": "mcq",
+          "prompt": "Si ‖u‖ = 3, ‖v‖ = 4 et ‖u + v‖ = 5, que vaut le produit scalaire u · v ?",
+          "options": [
+            "0 (les vecteurs sont orthogonaux)",
+            "12",
+            "6",
+            "25"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "u · v = (1 / 2) · [‖u + v‖² − ‖u‖² − ‖v‖²] = (1 / 2) · [25 − 9 − 16] = (1 / 2) × 0 = 0. u et v sont orthogonaux (triangle rectangle 3-4-5)."
+        },
+        {
+          "id": "seconde_c_maths_geometrie_ch8_p2_ex8",
+          "type": "mcq",
+          "prompt": "Dans un triangle ABC, si H est le pied de la hauteur issue de A sur [BC], quelle relation caractérise un triangle rectangle en A ?",
+          "options": [
+            "BA² = BH_barre × BC_barre et HA² = −HB_barre × HC_barre",
+            "BA² = AC²",
+            "AH = BC / 3",
+            "BH = HC obligatoirement"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans un triangle rectangle en A avec hauteur AH : BA² = BH × BC et HA² = HB × HC."
+        }
+      ]
+    }
+  ]
+};
+
 export const maths2deCGeometryChapters: CurriculumChapter[] = [
   maths2deCVecteursChapter,
   maths2deCSymetriesTranslationsChapter,
@@ -2239,4 +2534,5 @@ export const maths2deCGeometryChapters: CurriculumChapter[] = [
   maths2deCAnglesOrientesTrigoChapter,
   maths2deCHomothetieChapter,
   maths2deCRotationChapter,
+  maths2deCProduitScalaireChapter,
 ];
