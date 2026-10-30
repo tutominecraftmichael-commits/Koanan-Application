@@ -273,56 +273,58 @@ export function buildTutorSessionPayload(
   // Quota strict de points essentiels requis pour valider cette séance selon sa durée
   const targetPointsCount = getRequiredPointsCountForDuration(durationMinutes);
 
-  // Collecter les points essentiels de manière continue dans la sous-catégorie active
+  // Collecter les points essentiels de manière continue sans JAMAIS répéter de point
   const itemsToReview: TutorPointSessionItem[] = [];
+  const seenPointIds = new Set<string>();
+
   let chIdx = subChapters.findIndex(c => c.id === activeChapter!.id);
   if (chIdx === -1) chIdx = 0;
-  let ptIdx = subProg!.currentPointIndex || 0;
+  let ptIdx = Math.max(0, Math.min(subProg!.currentPointIndex || 0, Math.max(0, (activeChapter?.points.length || 1) - 1)));
+
+  // Si l'index de point sauvegardé dépasse les points disponibles dans ce chapitre, passer au chapitre suivant
+  if (ptIdx >= activeChapter!.points.length && chIdx < subChapters.length - 1) {
+    chIdx++;
+    ptIdx = 0;
+  }
 
   while (itemsToReview.length < targetPointsCount && chIdx < subChapters.length) {
     const chap = subChapters[chIdx];
     if (ptIdx < chap.points.length) {
       const point = chap.points[ptIdx];
-      const isLast = ptIdx === chap.points.length - 1;
-      itemsToReview.push({
-        point,
-        chapterId: chap.id,
-        chapterTitle: chap.title,
-        chapterOrder: chap.order,
-        pointIndexInChapter: ptIdx,
-        isLastPointOfChapter: isLast,
-        totalPointsInChapter: chap.points.length,
-      });
-      ptIdx++;
-    } else {
-      // Fin du chapitre dans cette sous-matière : passage automatique au suivant
-      chIdx++;
-      ptIdx = 0;
-    }
-  }
-
-  // Repli si fin du programme de la sous-catégorie atteinte
-  if (itemsToReview.length < targetPointsCount && subChapters.length > 0) {
-    let fallbackChIdx = 0;
-    let fallbackPtIdx = 0;
-    while (itemsToReview.length < targetPointsCount && fallbackChIdx < subChapters.length) {
-      const chap = subChapters[fallbackChIdx];
-      if (fallbackPtIdx < chap.points.length) {
-        const point = chap.points[fallbackPtIdx];
+      if (!seenPointIds.has(point.id)) {
+        seenPointIds.add(point.id);
+        const isLast = ptIdx === chap.points.length - 1;
         itemsToReview.push({
           point,
           chapterId: chap.id,
           chapterTitle: chap.title,
           chapterOrder: chap.order,
-          pointIndexInChapter: fallbackPtIdx,
-          isLastPointOfChapter: fallbackPtIdx === chap.points.length - 1,
+          pointIndexInChapter: ptIdx,
+          isLastPointOfChapter: isLast,
           totalPointsInChapter: chap.points.length,
         });
-        fallbackPtIdx++;
-      } else {
-        fallbackChIdx++;
-        fallbackPtIdx = 0;
       }
+      ptIdx++;
+    } else {
+      // Fin du chapitre dans cette sous-matière : passage au chapitre suivant s'il existe
+      chIdx++;
+      ptIdx = 0;
+    }
+  }
+
+  // Si itemsToReview est vide (fin de programme ou premier index hors limites), prendre au moins le premier point valide
+  if (itemsToReview.length === 0 && subChapters.length > 0) {
+    const firstChap = subChapters[0];
+    if (firstChap.points.length > 0) {
+      itemsToReview.push({
+        point: firstChap.points[0],
+        chapterId: firstChap.id,
+        chapterTitle: firstChap.title,
+        chapterOrder: firstChap.order,
+        pointIndexInChapter: 0,
+        isLastPointOfChapter: firstChap.points.length === 1,
+        totalPointsInChapter: firstChap.points.length,
+      });
     }
   }
 

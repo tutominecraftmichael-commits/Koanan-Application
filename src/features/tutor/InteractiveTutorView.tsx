@@ -18,7 +18,10 @@ import {
   Brain,
   FileCheck2,
   BookOpen,
-  ArrowLeftRight
+  ArrowLeftRight,
+  HelpCircle,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import type {
   CurriculumChapter,
@@ -80,11 +83,11 @@ interface ProgressiveCourseSlice {
 }
 
 /**
- * Découpe pédagogique progressive en 8 séquences d'apprentissage :
+ * Fournit l'intégralité du cours de la notion clé sans rien skipper :
  * Considère que l'élève part de zéro et lui explique le "pourquoi" et le "comment"
- * avec des mots simples, une définition claire, l'astuce de Konan et des formules KaTeX.
+ * avec des mots simples, le cours complet pas-à-pas, l'exemple résolu et les vraies formules associées.
  */
-function buildProgressiveCourseSlice(point: CurriculumPoint, stepIndex: number): ProgressiveCourseSlice {
+function buildProgressiveCourseSlice(point: CurriculumPoint, _stepIndex: number): ProgressiveCourseSlice {
   const rawParagraphs = point.conceptExplanation
     .split(/\n\s*\n/)
     .map(p => p.trim())
@@ -94,148 +97,27 @@ function buildProgressiveCourseSlice(point: CurriculumPoint, stepIndex: number):
   const formulas = point.formulas || [];
   const ex = point.workedExample;
   const methodSteps = ex?.methodSteps || [];
-  const halfStepIndex = Math.max(1, Math.ceil(methodSteps.length / 2));
 
-  switch (stepIndex) {
-    case 0:
-      // Étape 1/8 : Contexte & Définition claire (Partir de zéro)
-      return {
-        stepBadge: 'Cours • Étape 1/8 : Contexte & Définition (Partir de Zéro)',
-        stepTitle: `De quoi parle-t-on ? Définition concrète de : ${point.title}`,
-        contextAndDefinition: `Imagine que tu découvres cette notion pour la toute première fois. Avant toute formule ou calcul complexe, il faut poser le décor : ${point.summary}.`,
-        paragraphs: [
-          paragraphs[0] || point.summary,
-          'Prends le temps de bien assimiler le vocabulaire officiel : chaque terme a un sens précis. Identifie toujours ce que l’on cherche à observer ou à mesurer avant de passer aux calculs.',
-        ],
-        konanTip: 'L’Astuce du Prof Konan : Ne retiens jamais de formule sans comprendre les mots ! Définis d’abord chaque notion avec tes propres termes, comme si tu l’expliquais à un ami.',
-        formulas: formulas.slice(0, 1),
-        visualSchema: point.visualSchema,
-      };
-
-    case 1:
-      // Étape 2/8 : Mécanisme & Principes Réels
-      return {
-        stepBadge: 'Cours • Étape 2/8 : Comment ça fonctionne dans la réalité ?',
-        stepTitle: 'Le mécanisme pas-à-pas et les conditions réelles',
-        contextAndDefinition: 'Maintenant que le mot est clair, voyons comment le phénomène fonctionne concrètement :',
-        paragraphs: [
-          paragraphs[1] || paragraphs[0] || 'Dans cette situation, les grandeurs évoluent selon des règles et des conditions physiques ou mathématiques strictes.',
-          'Observe attentivement les facteurs d’influence : qu’est-ce qui accélère, ralentit, augmente ou diminue la grandeur étudiée ?',
-        ],
-        konanTip: 'L’Astuce du Prof Konan : Pose-toi toujours la question : « Si je modifie ce paramètre, quel est l’impact direct sur le résultat ? » C’est ce raisonnement logique qui garantit la note maximale.',
-        formulas: formulas.length > 1 ? [formulas[1]] : formulas.slice(0, 1),
-        visualSchema: point.visualSchema,
-      };
-
-    case 2:
-      // Étape 3/8 : Notations Officielles & Formules Clés (KaTeX)
-      return {
-        stepBadge: 'Cours • Étape 3/8 : Les Grandeurs & Formules Officielles',
-        stepTitle: 'Comment les scientifiques mesurent et calculent cette grandeur',
-        paragraphs: [
-          ...(paragraphs.length > 3 ? paragraphs.slice(2) : [paragraphs[2] || paragraphs[1] || paragraphs[0]]),
-          'Chaque grandeur possède son symbole officiel, sa relation mathématique et son unité obligatoire dans le Système International.',
-        ],
-        konanTip: 'L’Astuce du Prof Konan : Attention aux unités ! Une formule parfaitement appliquée avec une mauvaise conversion (ex: secondes au lieu de minutes, ou litres au lieu de m³) te fait perdre la moitié des points d’un devoir.',
-        formulas: formulas,
-        visualSchema: point.visualSchema,
-      };
-
-    case 3:
-      // Étape 4/8 : Le Réflexe d'Examen National (Pièges & Règle d'Or)
-      return {
-        stepBadge: 'Cours • Étape 4/8 : Le Réflexe d’Examen (Pièges & Règle d’Or)',
-        stepTitle: 'Le piège classique où 80% des élèves perdent des points',
-        paragraphs: [
-          point.keyRule
-            ? point.keyRule
-            : 'Aux examens nationaux (BEPC et BAC), la majorité des erreurs viennent d’une confusion fréquente ou d’un oubli de condition préalable.',
-          'Prends l’habitude de vérifier cette condition avant de te lancer dans les calculs.',
-        ],
-        keyRule: point.keyRule,
-        konanTip: 'L’Astuce du Prof Konan : C’est la question piège préférée des inspecteurs et correcteurs nationaux ! Garde toujours ce réflexe en tête dès la lecture de l’énoncé.',
-        formulas: formulas.slice(0, 2),
-        visualSchema: point.visualSchema,
-      };
-
-    case 4:
-      // Étape 5/8 : Exemple Résolu Pas-à-Pas (Analyse de l'énoncé)
-      return {
-        stepBadge: 'Cours • Étape 5/8 : Exemple Résolu — Déchiffrer l’Énoncé',
-        stepTitle: ex ? `${ex.title} — Repérer les données utiles` : 'Méthode d’analyse d’un sujet d’examen',
-        paragraphs: [
-          'Un bon élève ne calcule pas au hasard : il commence par lister les données fournies par le sujet et identifie clairement l’inconnue recherchée.',
-        ],
-        workedExamplePart: ex
-          ? {
-            title: ex.title,
-            statement: ex.statement,
-            steps: methodSteps.slice(0, halfStepIndex).map((t, i) => ({ index: i + 1, text: t })),
-          }
-          : undefined,
-        konanTip: 'L’Astuce du Prof Konan : Sur ton brouillon, surligne les valeurs chiffrées avec leurs unités. Écris toujours « Données : » puis « On cherche : » avant d’écrire la formule.',
-        formulas: formulas.slice(0, 1),
-        visualSchema: ex?.visualSchema || point.visualSchema,
-      };
-
-    case 5:
-      // Étape 6/8 : Exemple Résolu Pas-à-Pas (Calcul & Rédaction)
-      return {
-        stepBadge: 'Cours • Étape 6/8 : Exemple Résolu — Calcul & Rédaction Modèle',
-        stepTitle: ex ? `${ex.title} — Rédaction et application numérique` : 'L’art de rédiger une solution parfaite',
-        paragraphs: [
-          'Voici comment rédiger rigoureusement sur ta copie d’examen pour obtenir tous les points du barème officiel :',
-        ],
-        workedExamplePart: ex
-          ? {
-            title: ex.title,
-            statement: ex.statement,
-            steps: methodSteps.slice(halfStepIndex).map((t, i) => ({ index: halfStepIndex + i + 1, text: t })),
-            conclusion: ex.conclusion,
-          }
-          : undefined,
-        konanTip: 'L’Astuce du Prof Konan : Règle d’or : pose d’abord la formule littérale avec les lettres, puis remplace par les chiffres. Ne fais jamais l’inverse !',
-        formulas: [],
-        visualSchema: ex?.visualSchema || point.visualSchema,
-      };
-
-    case 6:
-      // Étape 7/8 : Protocole de Rédaction Complet & Cas Pratique
-      return {
-        stepBadge: 'Cours • Étape 7/8 : Protocole de Rédaction Complet',
-        stepTitle: 'Le canevas complet à reproduire le jour du devoir',
-        paragraphs: [
-          'Récapitulatif de la méthode modèle à appliquer en autonomie sur ce nouveau cas pratique :',
-        ],
-        workedExamplePart: ex
-          ? {
-            title: 'Démarche complète modèle',
-            statement: ex.statement,
-            steps: methodSteps.map((t, i) => ({ index: i + 1, text: t })),
-            conclusion: ex.conclusion,
-          }
-          : undefined,
-        keyRule: point.keyRule,
-        konanTip: 'L’Astuce du Prof Konan : Même si tu doutes sur un calcul numérique, écris toujours ta formule et ta démarche : le barème officiel accorde souvent 70% des points au raisonnement littéral !',
-        formulas: formulas.slice(-1),
-        visualSchema: point.visualSchema,
-      };
-
-    default:
-      // Étape 8/8 : Fiche Synthèse Express & Défi Final de Maîtrise
-      return {
-        stepBadge: 'Cours • Étape 8/8 : Synthèse Express & Défi de Maîtrise (8/8)',
-        stepTitle: `Synthèse de Maîtrise : ${point.title}`,
-        paragraphs: [
-          point.summary,
-          'Félicitations pour ton parcours sur cette notion ! Réponds à cette dernière question pour valider définitivement ton 8/8 et couronner la mini-leçon.',
-        ],
-        keyRule: point.keyRule,
-        konanTip: 'L’Astuce du Prof Konan : Tu es à une seule réponse du 8/8 parfait ! Lis bien l’énoncé une dernière fois, tu as toutes les armes pour réussir.',
-        formulas: formulas,
-        visualSchema: point.visualSchema,
-      };
-  }
+  return {
+    stepBadge: 'Point de cours officiel',
+    stepTitle: point.title,
+    contextAndDefinition: point.summary,
+    paragraphs,
+    konanTip: point.keyRule
+      ? `L’Astuce du Prof Konan : ${point.keyRule}`
+      : 'L’Astuce du Prof Konan : Pose toujours ta démarche et tes calculs au brouillon avant de valider ta réponse.',
+    formulas,
+    keyRule: point.keyRule,
+    visualSchema: point.visualSchema,
+    workedExamplePart: ex
+      ? {
+          title: ex.title,
+          statement: ex.statement,
+          steps: methodSteps.map((t, i) => ({ index: i + 1, text: t })),
+          conclusion: ex.conclusion,
+        }
+      : undefined,
+  };
 }
 
 export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
@@ -278,6 +160,10 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
   const [isAnswerChecked, setIsAnswerChecked] = useState<boolean>(false);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean>(false);
+  // Affichage de la justification à la demande (bouton "Pourquoi ?") sur bonne réponse
+  const [showExplanation, setShowExplanation] = useState<boolean>(false);
+  // Dépliement / repliement du cours pour confort de lecture
+  const [isCourseExpanded, setIsCourseExpanded] = useState<boolean>(true);
 
   // Indices des étapes manquées au premier passage (pour la boucle de rattrapage)
   const [missedIndices, setMissedIndices] = useState<number[]>([]);
@@ -322,6 +208,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       setSelectedOptionIndex(null);
       setIsAnswerChecked(false);
       setIsAnswerCorrect(false);
+      setShowExplanation(false);
       setMissedIndices([]);
       setMasteredIndices([]);
       setCatchupQueue([]);
@@ -453,6 +340,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     setSelectedOptionIndex(null);
     setIsAnswerChecked(false);
     setIsAnswerCorrect(false);
+    setShowExplanation(false);
 
     if (phase === 'learning') {
       if (exerciseIndex < pointExercises.length - 1) {
@@ -501,6 +389,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       setSelectedOptionIndex(null);
       setIsAnswerChecked(false);
       setIsAnswerCorrect(false);
+      setShowExplanation(false);
       setMissedIndices([]);
       setMasteredIndices([]);
       setCatchupQueue([]);
@@ -646,7 +535,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-300 dark:border-slate-700'
               }`}
             >
-              <span>{selectedChapter !== null ? 'Démarrer mes révisions ➔' : 'Sélectionne un chapitre'}</span>
+              <span>{selectedChapter !== null ? 'Démarrer mes révisions' : 'Sélectionne un chapitre'}</span>
+              {selectedChapter !== null && <ArrowRight className="w-3.5 h-3.5" />}
             </button>
           </div>
         </div>
@@ -818,7 +708,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             }}
             className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto animate-bounce hover:animate-none"
           >
-            <span>C'est parti ! Commencer la leçon →</span>
+            <span>C'est parti ! Commencer la leçon</span>
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
@@ -870,15 +760,6 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             </div>
           </div>
         </div>
-
-        {/* Compteur de progression */}
-        <div className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 text-xs font-black text-slate-800 dark:text-slate-200 font-mono shadow-xs">
-          <span>
-            {phase === 'catchup'
-              ? `Reprise ${currentCatchupQueueIndex + 1}/${catchupQueue.length}`
-              : `Question ${activeStepIndex + 1}/${totalSteps}`}
-          </span>
-        </div>
       </div>
 
       {/* 2. FIL D'ARIANE / CONTEXTE DE LA LEÇON & BOUTON D'ALTERNANCE */}
@@ -921,149 +802,162 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       {/* =================================================================== */}
       {(phase === 'learning' || phase === 'catchup') && activeExercise && activeCourseSlice && (
         <div className="space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-200">
-          {/* PARTIE A : LE BLOC DE COURS PROGRESSIF DE L'ÉTAPE */}
+          {/* PARTIE A : LE BLOC DE COURS COMPLET DE LA NOTION */}
           <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-100 dark:border-slate-800 space-y-4 shadow-sm">
             <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
                 <BookOpen className="w-4 h-4 shrink-0" />
                 <span className="text-[11px] font-black uppercase tracking-wider">
-                  {activeCourseSlice.stepBadge}
+                  Cours officiel • {currentPoint.title}
                 </span>
               </div>
+              <button
+                type="button"
+                onClick={() => setIsCourseExpanded(prev => !prev)}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                title={isCourseExpanded ? 'Replier le cours' : 'Déplier le cours'}
+              >
+                <span>{isCourseExpanded ? 'Replier' : 'Voir le cours'}</span>
+                {isCourseExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              </button>
             </div>
 
             <h2 className="text-base sm:text-xl font-black text-slate-900 dark:text-white leading-snug">
               <MathRenderer text={activeCourseSlice.stepTitle} />
             </h2>
 
-            {/* 1. Contexte & Définition claire (Partir de zéro) */}
-            {activeCourseSlice.contextAndDefinition && (
-              <div className="p-3.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-800/40 space-y-1.5">
-                <div className="flex items-center gap-1.5 text-blue-900 dark:text-blue-300 text-[11px] font-black uppercase tracking-wider">
-                  <BookOpen className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                  <span>D'où on part ? (Comprendre sans formule)</span>
-                </div>
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
-                  <MathRenderer text={activeCourseSlice.contextAndDefinition} />
-                </p>
-              </div>
-            )}
-
-            {/* Support Visuel / Schéma Géométrique ou Tableau Structuré */}
-            {activeCourseSlice.visualSchema && (
-              <VisualSchemaRenderer schema={activeCourseSlice.visualSchema} />
-            )}
-
-            {/* 2. Paragraphes d'explication du cours détaillés pas-à-pas */}
-            <div className="space-y-2.5">
-              {activeCourseSlice.paragraphs.map((para, pIdx) => (
-                <div
-                  key={pIdx}
-                  className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium whitespace-pre-line"
-                >
-                  <MathRenderer text={para} />
-                </div>
-              ))}
-            </div>
-
-            {/* 3. Mascotte KONAN : Bulle de dialogue interactive avec l'Astuce du Professeur */}
-            {activeCourseSlice.konanTip && (
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 to-cyan-50/70 dark:from-indigo-950/40 dark:to-cyan-950/20 border border-indigo-200/80 dark:border-indigo-500/30 flex items-start gap-3 shadow-2xs">
-                <div className="shrink-0 pt-0.5">
-                  <KonanCube size={42} showStars={true} glow={true} />
-                </div>
-                <div className="space-y-1 min-w-0 flex-1">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
-                    <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
-                    <span>L'Astuce du Professeur Konan</span>
-                  </span>
-                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed">
-                    <MathRenderer text={activeCourseSlice.konanTip} />
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* 4. Formules ou Propriétés mises en évidence (Rendu KaTeX académique, zéro tiret bas) */}
-            {activeCourseSlice.formulas.length > 0 && (
-              <div className="p-3.5 sm:p-4 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-500/30 space-y-2.5">
-                <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
-                  <SubjectIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                  <span>Formule & Propriété Clé (Notation Officielle)</span>
-                </div>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {activeCourseSlice.formulas.map((form, fIdx) => (
-                    <div
-                      key={fIdx}
-                      className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 space-y-1.5 shadow-2xs"
-                    >
-                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 block">
-                        <MathRenderer text={form.name} />
-                      </span>
-                      <div className="text-xs sm:text-sm font-black text-indigo-700 dark:text-indigo-300 overflow-x-auto py-1">
-                        <MathFormula latex={form.formula} display={true} />
-                      </div>
-                      {form.note && (
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                          <MathRenderer text={form.note} />
-                        </p>
-                      )}
+            {isCourseExpanded && (
+              <div className="space-y-4 animate-in fade-in duration-150">
+                {/* 1. Contexte & Définition claire (Partir de zéro) */}
+                {activeCourseSlice.contextAndDefinition && (
+                  <div className="p-3.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-800/40 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-blue-900 dark:text-blue-300 text-[11px] font-black uppercase tracking-wider">
+                      <BookOpen className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                      <span>D'où on part ? (Comprendre sans formule)</span>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 5. Exemple Résolu Pas-à-Pas */}
-            {activeCourseSlice.workedExamplePart && (
-              <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/25 border border-emerald-200 dark:border-emerald-500/30 space-y-3">
-                <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 text-[11px] font-black uppercase tracking-wider">
-                  <FileCheck2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  <span><MathRenderer text={activeCourseSlice.workedExamplePart.title} /></span>
-                </div>
-
-                <div className="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-100 dark:border-slate-800 text-xs font-semibold text-slate-800 dark:text-slate-200">
-                  <span className="font-black text-emerald-700 dark:text-emerald-400 mr-1.5">Énoncé :</span>
-                  <MathRenderer text={activeCourseSlice.workedExamplePart.statement} />
-                </div>
-
-                <div className="space-y-2">
-                  {activeCourseSlice.workedExamplePart.steps.map((st) => (
-                    <div
-                      key={st.index}
-                      className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300"
-                    >
-                      <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-black text-[11px] flex items-center justify-center shrink-0 mt-0.5">
-                        {st.index}
-                      </span>
-                      <div className="leading-relaxed font-medium">
-                        <MathRenderer text={st.text} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {activeCourseSlice.workedExamplePart.conclusion && (
-                  <div className="pt-2 border-t border-emerald-200/70 dark:border-slate-800 flex items-start gap-2 text-xs font-bold text-emerald-900 dark:text-emerald-300">
-                    <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5 stroke-[3]" />
-                    <span>Conclusion : <MathRenderer text={activeCourseSlice.workedExamplePart.conclusion} /></span>
+                    <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+                      <MathRenderer text={activeCourseSlice.contextAndDefinition} />
+                    </p>
                   </div>
                 )}
-              </div>
-            )}
 
-            {/* 6. Règle d'or / Réflexe d'Examen */}
-            {activeCourseSlice.keyRule && (
-              <div className="p-3.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-500/30 flex items-start gap-2.5">
-                <Zap className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                <div className="space-y-0.5">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-300 block">
-                    Réflexe d'Examen National (BEPC / BAC)
-                  </span>
-                  <p className="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
-                    <MathRenderer text={activeCourseSlice.keyRule} />
-                  </p>
+                {/* Support Visuel / Schéma Géométrique ou Tableau Structuré */}
+                {activeCourseSlice.visualSchema && (
+                  <VisualSchemaRenderer schema={activeCourseSlice.visualSchema} />
+                )}
+
+                {/* 2. Paragraphes d'explication du cours détaillés pas-à-pas */}
+                <div className="space-y-2.5">
+                  {activeCourseSlice.paragraphs.map((para, pIdx) => (
+                    <div
+                      key={pIdx}
+                      className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium whitespace-pre-line"
+                    >
+                      <MathRenderer text={para} />
+                    </div>
+                  ))}
                 </div>
+
+                {/* 3. Mascotte KONAN : Bulle de dialogue interactive avec l'Astuce du Professeur */}
+                {activeCourseSlice.konanTip && (
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 to-cyan-50/70 dark:from-indigo-950/40 dark:to-cyan-950/20 border border-indigo-200/80 dark:border-indigo-500/30 flex items-start gap-3 shadow-2xs">
+                    <div className="shrink-0 pt-0.5">
+                      <KonanCube size={42} showStars={true} glow={true} />
+                    </div>
+                    <div className="space-y-1 min-w-0 flex-1">
+                      <span className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                        <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
+                        <span>L'Astuce du Professeur Konan</span>
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed">
+                        <MathRenderer text={activeCourseSlice.konanTip} />
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. Formules ou Propriétés mises en évidence (strictement celles associées à la notion) */}
+                {activeCourseSlice.formulas && activeCourseSlice.formulas.length > 0 && (
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-500/30 space-y-2.5">
+                    <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
+                      <SubjectIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                      <span>Formule & Propriété Clé (Notation Officielle)</span>
+                    </div>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {activeCourseSlice.formulas.map((form, fIdx) => (
+                        <div
+                          key={fIdx}
+                          className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 space-y-1.5 shadow-2xs"
+                        >
+                          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 block">
+                            <MathRenderer text={form.name} />
+                          </span>
+                          <div className="text-xs sm:text-sm font-black text-indigo-700 dark:text-indigo-300 overflow-x-auto py-1">
+                            <MathFormula latex={form.formula} display={true} />
+                          </div>
+                          {form.note && (
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                              <MathRenderer text={form.note} />
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 5. Exemple Résolu Pas-à-Pas */}
+                {activeCourseSlice.workedExamplePart && (
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/25 border border-emerald-200 dark:border-emerald-500/30 space-y-3">
+                    <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 text-[11px] font-black uppercase tracking-wider">
+                      <FileCheck2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <span><MathRenderer text={activeCourseSlice.workedExamplePart.title} /></span>
+                    </div>
+
+                    <div className="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-100 dark:border-slate-800 text-xs font-semibold text-slate-800 dark:text-slate-200">
+                      <span className="font-black text-emerald-700 dark:text-emerald-400 mr-1.5">Énoncé :</span>
+                      <MathRenderer text={activeCourseSlice.workedExamplePart.statement} />
+                    </div>
+
+                    <div className="space-y-2">
+                      {activeCourseSlice.workedExamplePart.steps.map((st) => (
+                        <div
+                          key={st.index}
+                          className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300"
+                        >
+                          <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-black text-[11px] flex items-center justify-center shrink-0 mt-0.5">
+                            {st.index}
+                          </span>
+                          <div className="leading-relaxed font-medium">
+                            <MathRenderer text={st.text} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {activeCourseSlice.workedExamplePart.conclusion && (
+                      <div className="pt-2 border-t border-emerald-200/70 dark:border-slate-800 flex items-start gap-2 text-xs font-bold text-emerald-900 dark:text-emerald-300">
+                        <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5 stroke-[3]" />
+                        <span>Conclusion : <MathRenderer text={activeCourseSlice.workedExamplePart.conclusion} /></span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 6. Règle d'or / Réflexe d'Examen */}
+                {activeCourseSlice.keyRule && (
+                  <div className="p-3.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-500/30 flex items-start gap-2.5">
+                    <Zap className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                    <div className="space-y-0.5">
+                      <span className="text-[11px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-300 block">
+                        Réflexe d'Examen National (BEPC / BAC)
+                      </span>
+                      <p className="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
+                        <MathRenderer text={activeCourseSlice.keyRule} />
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -1074,9 +968,6 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               <span className="font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
                 <Target className="w-4 h-4" />
                 <span>Test de compréhension immédiat</span>
-              </span>
-              <span className="font-mono font-bold text-[11px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
-                Question {activeStepIndex + 1}/{totalSteps}
               </span>
             </div>
 
@@ -1164,25 +1055,45 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       {isAnswerCorrect ? (
-                        <>
-                          <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
-                          <span className="text-xs sm:text-sm font-black text-emerald-900 dark:text-emerald-200">
-                            Bravo ! Tu as bien trouvé, félicitations ! Continue comme ça ! 🎉
-                          </span>
-                        </>
+                        <div className="w-full flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+                            <span className="text-sm sm:text-base font-black text-emerald-900 dark:text-emerald-200">
+                              Bravo !
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setShowExplanation(prev => !prev)}
+                            className="px-3 py-1 rounded-xl text-xs font-bold border border-emerald-300 dark:border-emerald-700/80 bg-white dark:bg-slate-900 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-slate-800 transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                          >
+                            <HelpCircle className="w-3.5 h-3.5" />
+                            <span>{showExplanation ? 'Masquer' : 'Pourquoi ?'}</span>
+                          </button>
+                        </div>
                       ) : (
-                        <>
-                          <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 stroke-[2.5]" />
-                          <span className="text-xs sm:text-sm font-black text-amber-900 dark:text-amber-200">
-                            Ce n'est pas tout à fait ça ! Regarde bien l'explication détaillée ci-dessous, tu vas vite comprendre pour la reprise à la fin :
-                          </span>
-                        </>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 stroke-[2.5]" />
+                            <span className="text-xs sm:text-sm font-black text-amber-900 dark:text-amber-200">
+                              Ce n'est pas la bonne réponse. Regarde la correction :
+                            </span>
+                          </div>
+                        </div>
                       )}
                     </div>
 
-                    <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium bg-white/70 dark:bg-slate-900/70 p-3 rounded-xl border border-slate-200/60 dark:border-slate-800">
-                      <MathRenderer text={activeExercise.explanation} />
-                    </div>
+                    {/* Justification : affichée directement si faute, ou à la demande si succès */}
+                    {(!isAnswerCorrect || showExplanation) && (
+                      <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium bg-white/80 dark:bg-slate-900/80 p-3 rounded-xl border border-slate-200/60 dark:border-slate-800 space-y-1.5 animate-in fade-in duration-150">
+                        {!isAnswerCorrect && activeExercise.options && activeExercise.correctAnswerIndex !== undefined && (
+                          <p className="font-bold text-emerald-700 dark:text-emerald-400">
+                            Bonne réponse : <MathRenderer text={activeExercise.options[activeExercise.correctAnswerIndex]} />
+                          </p>
+                        )}
+                        <MathRenderer text={activeExercise.explanation} />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1204,7 +1115,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   <span>
                     {selectedOptionIndex === null
                       ? 'Sélectionne une réponse ci-dessus'
-                      : 'Vérifier ma compréhension ➔'}
+                      : 'Vérifier ma compréhension'}
                   </span>
                 </button>
               ) : (
@@ -1215,12 +1126,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 >
                   <span>
                     {phase === 'catchup'
-                      ? 'Question suivante ➔'
+                      ? 'Question suivante'
                       : exerciseIndex < totalSteps - 1
-                        ? `Question suivante (${exerciseIndex + 2}/${totalSteps}) ➔`
+                        ? 'Question suivante'
                         : missedIndices.length > 0
-                          ? 'Reprendre les questions non comprises ➔'
-                          : 'Terminer la leçon ➔'}
+                          ? 'Reprendre les questions non comprises'
+                          : 'Terminer la leçon'}
                   </span>
                   <ArrowRight className="w-5 h-5" />
                 </button>
@@ -1258,10 +1169,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               onClick={handleContinueToNextLesson}
               className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs sm:text-sm tracking-wide uppercase shadow-[0_4px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
             >
-              <span>
+              <span className="flex items-center gap-2">
                 {activeItemIndex < items.length - 1
-                  ? `Passer à la mini-leçon suivante (${activeItemIndex + 2}/${items.length}) ➔`
+                  ? `Passer à la mini-leçon suivante (${activeItemIndex + 2}/${items.length})`
                   : 'Terminer la séance d’étude 🏆'}
+                {activeItemIndex < items.length - 1 && <ArrowRight className="w-4 h-4" />}
               </span>
             </button>
           </div>
