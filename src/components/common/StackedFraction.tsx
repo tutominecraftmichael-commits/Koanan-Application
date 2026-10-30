@@ -23,7 +23,9 @@ export const StackedFraction: React.FC<StackedFractionProps> = ({
     <span
       className={combinedClasses}
       style={{
-        verticalAlign: '-0.38em',
+        display: 'inline-flex',
+        alignItems: 'center',
+        verticalAlign: 'middle',
         lineHeight: 1,
       }}
     >
@@ -42,7 +44,7 @@ export const StackedFraction: React.FC<StackedFractionProps> = ({
           style={{
             display: 'block',
             fontSize: '0.82em',
-            padding: '0 3px 2px 3px',
+            padding: '0 3px 1.5px 3px',
             borderBottom: '1.5px solid currentColor',
             width: '100%',
             textAlign: 'center',
@@ -55,7 +57,7 @@ export const StackedFraction: React.FC<StackedFractionProps> = ({
           style={{
             display: 'block',
             fontSize: '0.82em',
-            padding: '2px 3px 0 3px',
+            padding: '1.5px 3px 0 3px',
             width: '100%',
             textAlign: 'center',
             lineHeight: 1.1,

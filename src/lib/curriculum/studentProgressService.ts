@@ -67,6 +67,9 @@ export function getChapterSubCategory(chapter: CurriculumChapter): StemSubCatego
   }
 
   if (chapter.subjectId === 'maths') {
+    if (chapter.id.includes('_geometrie_')) return 'geometrie';
+    if (chapter.id.includes('_numerique_')) return 'numerique';
+
     // 1. Notions explicitement numériques / algébriques
     if (/racine|calcul littéral|calcul numérique|fractions|puissances|équation|inéquation|système|polynôme|suites|limite|dériv|primitive|intégral|logarithme|exponentielle|probab|statistique|dénombrement/i.test(text)) {
       if (!/vecteur|géométrie/i.test(text)) return 'numerique';
