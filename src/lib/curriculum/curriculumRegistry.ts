@@ -17,6 +17,10 @@ import {
   svt2deALeMessageNerveuxChapter,
   svt2deALeMessageHormonalChapter,
   svt2deALesGrandsEnsemblesEnvironnementauxChapter,
+  svt2deALaProductionMatiereOrganiqueChapter,
+  svt2deALeChangementClimatiqueChapter,
+  svt2deALaStructureCelluleAnimaleChapter,
+  svt2deALaReproductionConformeMitoseChapter,
   svt2deADiversiteComportementsAlimentairesChapter,
   svt2deAHabitudesAlimentairesEtSanteChapter,
 } from '../../data/courses/svt_2de_a';
@@ -88899,6 +88903,10 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
   svt2deALeMessageNerveuxChapter,
   svt2deALeMessageHormonalChapter,
   svt2deALesGrandsEnsemblesEnvironnementauxChapter,
+  svt2deALaProductionMatiereOrganiqueChapter,
+  svt2deALeChangementClimatiqueChapter,
+  svt2deALaStructureCelluleAnimaleChapter,
+  svt2deALaReproductionConformeMitoseChapter,
   svt2deADiversiteComportementsAlimentairesChapter,
   svt2deAHabitudesAlimentairesEtSanteChapter,
   {

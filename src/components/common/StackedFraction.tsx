@@ -17,17 +17,50 @@ export const StackedFraction: React.FC<StackedFractionProps> = ({
   negative = false,
   className = '',
 }) => {
-  const combinedClasses = `inline-flex items-center align-middle mx-1 font-semibold text-indigo-700 dark:text-indigo-300 ${className}`.trim();
+  const combinedClasses = `inline-flex items-center text-center mx-1 font-semibold text-indigo-700 dark:text-indigo-300 ${className}`.trim();
 
   return (
-    <span className={combinedClasses} style={{ verticalAlign: 'middle' }}>
-      {negative && <span className="mr-0.5 text-base font-bold select-none leading-none">−</span>}
-      <span className="inline-flex flex-col items-center justify-center text-center leading-none" style={{ verticalAlign: 'middle' }}>
-        <span className="px-1 text-[0.82em] font-medium leading-none pb-[2px] w-full text-center">
+    <span
+      className={combinedClasses}
+      style={{
+        verticalAlign: '-0.38em',
+        lineHeight: 1,
+      }}
+    >
+      {negative && <span className="mr-0.5 text-sm font-bold select-none leading-none">−</span>}
+      <span
+        style={{
+          display: 'inline-flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          lineHeight: 1,
+        }}
+      >
+        <span
+          style={{
+            display: 'block',
+            fontSize: '0.82em',
+            padding: '0 3px 2px 3px',
+            borderBottom: '1.5px solid currentColor',
+            width: '100%',
+            textAlign: 'center',
+            lineHeight: 1.1,
+          }}
+        >
           {numerator}
         </span>
-        <span className="w-full border-t border-indigo-500/80 dark:border-indigo-400/80 my-0" />
-        <span className="px-1 text-[0.82em] font-medium leading-none pt-[2px] w-full text-center">
+        <span
+          style={{
+            display: 'block',
+            fontSize: '0.82em',
+            padding: '2px 3px 0 3px',
+            width: '100%',
+            textAlign: 'center',
+            lineHeight: 1.1,
+          }}
+        >
           {denominator}
         </span>
       </span>

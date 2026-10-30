@@ -1113,16 +1113,1169 @@ L'eau de l'hydrosphère s'évapore dans l'atmosphère, retombe sous forme de pr�
 };
 
 // ============================================================================
+
+// ============================================================================
+// LEÇON 4 : LA PRODUCTION DE LA MATIÈRE ORGANIQUE
+// (Leçon 4 du programme officiel MENA Côte d'Ivoire - 4 Heures)
+// ============================================================================
+export const svt2deALaProductionMatiereOrganiqueChapter: CurriculumChapter = {
+  "id": "seconde_a_svt_ch4_production_matiere_organique",
+  "subjectId": "svt",
+  "gradeLevel": "seconde_a",
+  "order": 4,
+  "officialVolumeHours": 4,
+  "title": "Leçon 4 — La production de la matière organique",
+  "summary": "Mécanisme de la photosynthèse chez les végétaux chlorophylliens (rôles indispensables de la lumière, du CO₂, de l’eau et de la chlorophylle), équation bilan globale, formation de l’amidon, transport par la sève élaborée, stockage dans les organes de réserve (tubercules de manioc, fruits) et rôle écologique de base dans les grands ensembles environnementaux.",
+  "points": [
+    {
+      "id": "seconde_a_svt_ch4_p1",
+      "order": 1,
+      "title": "Conditions expérimentales et mécanisme de la photosynthèse",
+      "summary": "Mise en évidence expérimentale de la production d’amidon (test à l’eau iodée après décoloration à l’alcool) et nécessité absolue de la lumière, du CO₂ et de la chlorophylle.",
+      "conceptExplanation": "Pour comprendre comment les plantes fabriquent leur propre nourriture, partons d'un fait concret que tout le monde observe dans les plantations en Côte d'Ivoire : le manioc développe sous la terre de gros tubercules gorgés de fécule (amidon). Pourtant, sous terre, il n'y a ni soleil ni feuilles. D'où vient cette matière organique ? Elle a été entièrement synthétisée dans les feuilles vertes aériennes avant d'être envoyée vers les racines !\n\nCe phénomène biologique fondamental s'appelle la photosynthèse. Trois expériences historiques permettent d'en isoler les facteurs indispensables :\n\n1. Influence de la lumière :\nSi l'on place une plante verte à la lumière et une autre à l'obscurité pendant 24 heures, puis que l'on fait bouillir leurs feuilles dans l'eau puis dans l'alcool pour les décolorer (en extrayant la chlorophylle) et qu'on les plonge dans l'eau iodée (lugol) :\n- La feuille exposée à la lumière se colore en bleu-violacé intense, ce qui prouve la présence d'amidon.\n- La feuille restée à l'obscurité conserve une teinte jaune-brunâtre : aucun amidon n'a été produit. La lumière est donc une source d'énergie indispensable.\n\n2. Influence du dioxyde de carbone (CO₂) :\nSi l'on enferme deux lots de feuilles bien éclairées sous cloche : l'une recevant de l'air normal, l'autre recevant un air dont le CO₂ a été totalement absorbé par une solution de potasse et de l'eau de chaux. Après test à l'eau iodée, seule la feuille ayant reçu du CO₂ contient de l'amidon. Le carbone minéral de l'air est donc la matière première du glucose végétal.\n\n3. Rôle de la chlorophylle :\nSur une feuille panachée (centre vert contenant de la chlorophylle et pourtour blanc sans chlorophylle) exposée à la lumière et au CO₂, seule la zone verte vire au bleu-violacé avec l'eau iodée. La bordure blanche reste négative. C'est la chlorophylle, pigment vert logé dans les chloroplastes, qui capte l'énergie des photons lumineux.\n\nMécanisme biochimique et équation bilan globale :\nLa chlorophylle capte l'énergie lumineuse solaire, qui permet de scinder la molécule d'eau (H₂O) absorbée par les racines. Cette réaction libère du dioxygène (O₂) rejeté dans l'atmosphère et permet de fixer le dioxyde de carbone (CO₂) pour former une molécule organique riche en énergie : le glucose (C₆H₁₂O₆), immédiatement polymérisé en amidon.\n\nL'équation bilan officielle est :\n6 CO₂ + 6 H₂O → C₆H₁₂O₆ + 6 O₂ (en présence de chlorophylle et d'énergie lumineuse).",
+      "formulas": [
+        {
+          "name": "Équation bilan de la photosynthèse",
+          "formula": "6 CO₂ + 6 H₂O → C₆H₁₂O₆ + 6 O₂",
+          "note": "En présence de chlorophylle et énergie lumineuse"
+        },
+        {
+          "name": "Test de l'amidon",
+          "formula": "Amidon + Eau iodée (Lugol) → Teinte bleu-violacée",
+          "note": "Test colorimétrique d'assimilation chlorophyllienne"
+        }
+      ],
+      "keyRule": "Au devoir de SVT, retiens bien les étapes de préparation de la feuille : 1. Eau bouillante (tue les cellules et fragilise les parois) ; 2. Alcool bouillant (dissout et extrait le pigment vert de chlorophylle pour décolorer la feuille) ; 3. Eau iodée (réactif coloré spécifique révélant l'amidon en bleu-nuit). Sans décoloration préalable, la couleur verte masquerait totalement le résultat !",
+      "workedExample": {
+        "title": "Situation d’évaluation officielle : Synthèse d’amidon et feuille masquée",
+        "statement": "Un élève de Seconde A prend une feuille d'une plante verte saine ayant passé 24 heures à l'obscurité, masque une bande centrale avec du papier noir opaque, puis expose la feuille à la lumière vive pendant 6 heures. Après décoloration dans l'alcool et immersion dans l'eau iodée, décrivez et justifiez l'aspect des différentes zones de la feuille.",
+        "methodSteps": [
+          "Identifier les zones de la feuille : les extrémités non masquées exposées à la lumière vs la bande centrale masquée maintenue à l'obscurité par le papier noir.",
+          "Appliquer le principe de la photosynthèse : les parties éclairées ont pu capter l'énergie lumineuse et synthétiser de l'amidon à partir de l'eau et du CO₂.",
+          "Prédire la réaction à l'eau iodée : les extrémités éclairées prennent une coloration bleu-violacé (présence d'amidon). La bande centrale masquée reste jaune-brunâtre (absence d'amidon)."
+        ],
+        "conclusion": "La synthèse d'amidon nécessite impérativement la lumière. La zone cachée par le cache noir n'a pas pu réaliser la photosynthèse."
+      },
+      "exercises": [
+        {
+          "id": "seconde_a_svt_ch4_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quel réactif chimique colore spécifiquement l'amidon en bleu-violacé ?",
+          "options": [
+            "L'eau iodée (ou soluté de Lugol)",
+            "La liqueur de Fehling à chaud",
+            "Le sulfate de cuivre anhydre",
+            "Le réactif de Biuret"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'eau iodée (iode dissous dans l'iodure de potassium) est le réactif spécifique de mise en évidence de l'amidon, se colorant instantanément en bleu-violacé foncé en sa présence."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p1_ex2",
+          "type": "mcq",
+          "prompt": "Pourquoi fait-on obligatoirement bouillir la feuille dans l'alcool avant d'appliquer l'eau iodée ?",
+          "options": [
+            "Pour extraire la chlorophylle et décolorer la feuille afin de rendre le test bien visible",
+            "Pour injecter artificiellement du glucose dans les nervures de la feuille",
+            "Pour détruire les bactéries pathogènes présentes dans l'eau d'arrosage",
+            "Pour refroidir la feuille avant de la photographier"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'alcool bouillant dissout la chlorophylle verte. Une fois la feuille blanchie/décolorée, le virage au bleu-violacé de l'eau iodée peut être observé sans aucune ambiguïté."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p1_ex3",
+          "type": "mcq",
+          "prompt": "Que constate-t-on sur une feuille maintenue à l'obscurité pendant 24 heures et traitée à l'eau iodée ?",
+          "options": [
+            "Elle ne prend pas de teinte bleu-violacée (elle reste jaunâtre car elle ne contient pas d'amidon)",
+            "Elle devient totalement noire et dégage une odeur de soufre",
+            "Elle produit deux fois plus d'amidon qu'une feuille exposée au soleil",
+            "Elle libère d'abondantes bulles de dioxygène gazeux"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Sans lumière, la chlorophylle ne peut pas capter d'énergie. La photosynthèse est stoppée et aucun amidon n'est synthétisé : le test à l'eau iodée est négatif (jaune pâle/brunâtre)."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p1_ex4",
+          "type": "mcq",
+          "prompt": "Dans quel organite cellulaire végétal est localisée la chlorophylle ?",
+          "options": [
+            "Dans les chloroplastes",
+            "Dans les mitochondries",
+            "Dans les lysosomes",
+            "Dans les centrioles"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La chlorophylle est contenue dans les thylakoïdes des chloroplastes, organites spécifiques des cellules végétales chlorophylliennes."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p1_ex5",
+          "type": "mcq",
+          "prompt": "Lors de la photosynthèse, quel gaz est absorbé par les feuilles et quel gaz est rejeté dans l'air ?",
+          "options": [
+            "Le dioxyde de carbone (CO₂) est absorbé et le dioxygène (O₂) est rejeté",
+            "Le dioxygène (O₂) est absorbé et le dioxyde de carbone (CO₂) est rejeté",
+            "Le diazote (N₂) est absorbé et le méthane (CH₄) est rejeté",
+            "Le monoxyde de carbone (CO) est absorbé et l'ozone (O₃) est rejeté"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La photosynthèse consomme le CO₂ atmosphérique pour fixer son carbone dans les glucides et rejette du dioxygène O₂ issu de la photolyse de l'eau."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p1_ex6",
+          "type": "mcq",
+          "prompt": "Quelle est l'équation bilan chimique globale de la photosynthèse ?",
+          "options": [
+            "6 CO₂ + 6 H₂O → C₆H₁₂O₆ + 6 O₂",
+            "C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O",
+            "2 H₂ + O₂ → 2 H₂O",
+            "CO₂ + H₂O → CH₄ + 2 O₂"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En présence de lumière et de chlorophylle, 6 molécules de dioxyde de carbone réagissent avec 6 molécules d'eau pour produire 1 molécule de glucose (C₆H₁₂O₆) et 6 molécules de dioxygène (O₂)."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p1_ex7",
+          "type": "mcq",
+          "prompt": "Que prouve l'expérience où une plante verte est placée sous cloche avec une solution de potasse ?",
+          "options": [
+            "Que le dioxyde de carbone (CO₂) est indispensable à la fabrication de la matière organique",
+            "Que la potasse accélère la photosynthèse de 500%",
+            "Que la lumière du soleil est nocive pour les feuilles de haricot",
+            "Que l'eau d'arrosage doit être totalement supprimée"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La potasse a pour propriété chimique d'absorber tout le CO₂ de l'air ambiant. Privée de CO₂, la plante ne produit aucun amidon, ce qui prouve que le CO₂ est indispensable."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p1_ex8",
+          "type": "mcq",
+          "prompt": "Sur une feuille panachée éclairée, quelle partie se colore en bleu-violacé après test à l'eau iodée ?",
+          "options": [
+            "Uniquement la partie verte centrale riche en chlorophylle",
+            "Uniquement la bordure blanche dépourvue de chlorophylle",
+            "L'ensemble de la feuille de façon parfaitement homogène",
+            "Aucune partie de la feuille ne change de couleur"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Seules les cellules contenant de la chlorophylle peuvent capter l'énergie lumineuse pour réaliser la photosynthèse. La zone blanche sans chlorophylle est incapable de synthétiser de l'amidon."
+        }
+      ]
+    },
+    {
+      "id": "seconde_a_svt_ch4_p2",
+      "order": 2,
+      "title": "Circulation de la sève élaborée, organes de réserve et équilibre environnemental",
+      "summary": "Différence entre sève brute et sève élaborée, accumulation dans les organes de stockage (tubercules, fruits) et rôle clé des végétaux dans les échanges avec l'atmosphère, la lithosphère et l'hydrosphère.",
+      "conceptExplanation": "La matière organique fabriquée dans les feuilles vertes ne reste pas confinée dans les cellules foliaires. Elle est mise en circulation dans tout le végétal pour assurer son développement et sa survie :\n\n1. Deux types de sèves complémentaires :\n- La sève brute : solution diluée d'eau et de sels minéraux puisée dans le sol (lithosphère) par les poils absorbants des racines. Elle monte le long de la tige par les vaisseaux du xylème jusqu'aux feuilles.\n- La sève élaborée : liquide riche en glucides solubles (saccharose) et en acides aminés issus de la photosynthèse. Elle circule par les vaisseaux du phloème dans toutes les directions (vers les bourgeons pour la croissance, vers les fleurs pour la floraison, et vers les racines pour l'accumulation).\n\n2. Les organes de stockage et de réserve :\nL'excédent de matière organique synthétisée pendant la journée est transporté et mis en réserve sous forme d'amidon, de lipides ou de protéines dans des organes spécialisés :\n- Les tubercules de racines ou de tiges : manioc, igname, patate douce, pomme de terre.\n- Les graines et fruits : maïs, arachide (riche en lipides), haricot (riche en protéines), banane.\nCes réserves permettront à la plante de repousser ou de nourrir le futur germe, mais servent aussi d'aliment de base à l'être humain et aux herbivores !\n\n3. Les végétaux verts au cœur des grands ensembles environnementaux :\nLa production de matière organique végétale relie étroitement les quatre grandes sphères de la Terre :\n- L'atmosphère fournit le dioxyde de carbone (CO₂) et reçoit en retour le dioxygène (O₂) purificateur.\n- L'hydrosphère fournit l'eau indispensable à la turgescence et à la photolyse de l'eau.\n- La lithosphère (le sol) fournit le support d'ancrage et les éléments minéraux essentiels (Azote N, Phosphore P, Potassium K, Soufre S).\n- La biosphère entière s'appuie sur les plantes vertes : en tant que producteurs primaires autotrophes, elles constituent le premier maillon indispensable de toutes les chaînes alimentaires (réseau trophique).",
+      "formulas": [
+        {
+          "name": "Sève brute (xylème)",
+          "formula": "Sève brute = Eau + Sels minéraux dissous",
+          "note": "Sens ascendant, des racines vers les feuilles"
+        },
+        {
+          "name": "Sève élaborée (phloème)",
+          "formula": "Sève élaborée = Eau + Matières organiques solubles",
+          "note": "Sens multidirectionnel vers les organes de stockage"
+        }
+      ],
+      "keyRule": "Pour les épreuves officielles du BAC/devoirs, ne confonds jamais sève brute et sève élaborée ! La sève brute monte des racines (eau + sels minéraux). La sève élaborée descend et irrigue toute la plante avec la matière organique fabriquée par la photosynthèse foliaire.",
+      "workedExample": {
+        "title": "Situation d’évaluation officielle : Origine de l’amidon dans le tubercule de manioc",
+        "statement": "Expliquez pourquoi le tubercule de manioc situé sous terre ne réalise aucune photosynthèse mais contient pourtant une immense quantité d'amidon.",
+        "methodSteps": [
+          "Constater les conditions du sous-sol : le tubercule est dans l'obscurité et ne possède pas de chlorophylle, il ne peut donc pas réaliser lui-même la photosynthèse.",
+          "Identifier la source d'amidon : les feuilles vertes aériennes synthétisent du glucose par photosynthèse en présence de lumière et de CO₂.",
+          "Décrire le transfert et la mise en réserve : les glucides solubles descendent via la sève élaborée jusqu'aux racines tubérisées où ils sont stockés sous forme d'amidon dans les amyloplastes."
+        ],
+        "conclusion": "Le tubercule est un organe de réserve alimenté à distance par la sève élaborée issue des feuilles vertes."
+      },
+      "exercises": [
+        {
+          "id": "seconde_a_svt_ch4_p2_ex1",
+          "type": "mcq",
+          "prompt": "De quoi est principalement constituée la sève brute qui monte des racines vers les feuilles ?",
+          "options": [
+            "D'eau et de sels minéraux dissous puisés dans le sol",
+            "D'huile végétale et de protéines complexes",
+            "D'amidon concentré et de cire protectrice",
+            "De dioxygène gazeux pur sous haute pression"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La sève brute est la solution minérale absorbée au niveau des poils absorbants racinaires, transportant l'eau et les ions minéraux vers les organes photosynthétiques."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p2_ex2",
+          "type": "mcq",
+          "prompt": "Quel liquide conducteur transporte les sucres organiques fabriqués par les feuilles vers tous les organes de la plante ?",
+          "options": [
+            "La sève élaborée",
+            "La sève brute minérale",
+            "L'eau de condensation foliaire",
+            "Le suc vacuolaire acide"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La sève élaborée contient la matière organique issue de la photosynthèse (saccharose, acides aminés) et approvisionne l'ensemble de l'organisme végétal."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p2_ex3",
+          "type": "mcq",
+          "prompt": "Parmi les organes végétaux suivants, lequel constitue l'organe de réserve de matière organique du manioc ?",
+          "options": [
+            "Le tubercule racinaire souterrain",
+            "Le pétiole de la feuille",
+            "L'écorce de la tige principale",
+            "La cuticule cireuse des bourgeons"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Chez le manioc, ce sont les racines tubérisées qui se gorgent d'amidon pour former les gros tubercules consommés par l'homme."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p2_ex4",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on les organismes vivants capables de fabriquer leur propre matière organique à partir de matières purement minérales ?",
+          "options": [
+            "Des organismes autotrophes (producteurs primaires)",
+            "Des organismes hétérotrophes (consommateurs)",
+            "Des décomposeurs saprophytes stricts",
+            "Des parasites intracellulaires"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les plantes vertes sont dites autotrophes : elles produisent leur matière vivante organique sans dépendre d'autres êtres vivants, constituant la base de la biosphère."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p2_ex5",
+          "type": "mcq",
+          "prompt": "Quel grand ensemble environnemental fournit les sels minéraux indispensables (N, P, K, S) à la croissance de la plante ?",
+          "options": [
+            "La lithosphère (le sol)",
+            "La stratosphère supérieure",
+            "La thermosphère",
+            "L'ionosphère"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La lithosphère (les roches et le sol issu de leur altération) renferme les sels minéraux dissous absorbés par les racines de la plante."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p2_ex6",
+          "type": "mcq",
+          "prompt": "Quel rôle majeur les plantes chlorophylliennes jouent-elles vis-à-vis de l'atmosphère terrestre ?",
+          "options": [
+            "Elles purifient l'air en absorbant le CO₂ et en rejetant du dioxygène (O₂)",
+            "Elles détruisent le dioxygène et libèrent de l'acide chlorhydrique",
+            "Elles augmentent l'effet de serre de façon continue",
+            "Elles arrêtent les chutes de météorites"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les végétaux chlorophylliens sont les poumons verts de la Terre : ils agissent comme des puits de carbone en fixant le CO₂ et approvisionnent l'air en O₂ respirable."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p2_ex7",
+          "type": "mcq",
+          "prompt": "Pourquoi les animaux et l'Homme sont-ils qualifiés d'hétérotrophes vis-à-vis de la matière organique ?",
+          "options": [
+            "Parce qu'ils sont incapables de produire leur matière organique et doivent consommer d'autres êtres vivants",
+            "Parce qu'ils réalisent la photosynthèse avec leur peau à la plage",
+            "Parce qu'ils n'ont besoin d'aucun aliment pour grandir",
+            "Parce qu'ils ne consomment que des cailloux et du sable"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'Homme et les animaux sont hétérotrophes : ils dépendent entièrement des matières organiques élaborées par les autotrophes végétaux (soit directement en mangeant des plantes, soit indirectement via les herbivores)."
+        },
+        {
+          "id": "seconde_a_svt_ch4_p2_ex8",
+          "type": "mcq",
+          "prompt": "Que se passerait-il dans un écosystème naturel si tous les végétaux chlorophylliens venaient à disparaître ?",
+          "options": [
+            "La chaîne trophique s'effondrerait, entraînant la disparition progressive des herbivores puis des carnivores et de l'Homme",
+            "Les animaux herbivores commenceraient spontanément à synthétiser de la chlorophylle",
+            "Le taux de dioxygène de l'atmosphère augmenterait prodigieusement",
+            "Le climat deviendrait subitement plus froid partout"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les végétaux chlorophylliens sont les seuls producteurs primaires à la base de toutes les chaînes alimentaires. Sans eux, aucun être hétérotrophe ne pourrait survivre."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 5 : LE CHANGEMENT CLIMATIQUE
+// (Leçon 5 du programme officiel MENA Côte d'Ivoire - 4 Heures)
+// ============================================================================
+export const svt2deALeChangementClimatiqueChapter: CurriculumChapter = {
+  "id": "seconde_a_svt_ch5_changement_climatique",
+  "subjectId": "svt",
+  "gradeLevel": "seconde_a",
+  "order": 5,
+  "officialVolumeHours": 4,
+  "title": "Leçon 5 — Le changement climatique",
+  "summary": "Causes humaines (énergies fossiles, déforestation, CFC, méthane agricole), distinction essentielle entre effet de serre naturel indispensable (+15°C) et effet de serre additionnel provoquant le réchauffement global, destruction de la couche d’ozone, conséquences climatiques (érosion côtière de Grand-Lahou, fonte des calottes) et stratégies de transition vers les énergies renouvelables.",
+  "points": [
+    {
+      "id": "seconde_a_svt_ch5_p1",
+      "order": 1,
+      "title": "Causes anthropiques et mécanisme de l’effet de serre",
+      "summary": "Origines humaines (combustibles fossiles, CFC, déforestation), distinction entre effet de serre naturel (+15°C) et effet de serre anthropique additionnel, et rôle de la couche d’ozone.",
+      "conceptExplanation": "Depuis quelques décennies, la communauté scientifique et les conférences internationales (Montréal 1987, Rio 1992, Kyoto, Paris) alertent sur le dérèglement sans précédent du climat mondial. Pour comprendre ce phénomène, il faut distinguer ses moteurs humains et ses mécanismes physiques :\n\n1. Les causes humaines (anthropiques) :\nDepuis la seconde révolution industrielle (vers 1870), l'activité humaine a profondément modifié la composition de l'atmosphère :\n- Extraction et combustion massive des combustibles fossiles (pétrole, charbon, gaz naturel) pour l'industrie, les centrales électriques et les transports routiers et aériens → libération colossale de dioxyde de carbone (CO₂).\n- Destruction des forêts par le feu (déforestation) pour créer des terres agricoles et des pâturages en zone tropicale → suppression des puits de carbone et rejets de CO₂ et de suies.\n- Agriculture intensive et riziculture inondée → fermentation anaérobie dégageant d'immenses volumes de méthane (CH₄), un gaz à effet de serre 25 fois plus puissant que le CO₂.\n- Utilisation des chlorofluorocarbures (CFC) dans les bombes aérosols et fluides frigorigènes → destruction de la couche d'ozone stratosphérique (O₃) et surchauffe thermique.\n\n2. Évolution historique des mesures atmosphériques :\n- De 1860 à 1960, la teneur moyenne en CO₂ est passée de 290 à 320 ppm (parties par million), soit une hausse de 30 ppm en 100 ans.\n- De 1960 à 1985, elle a bondi de 320 à 350 ppm, soit 30 ppm d'augmentation en seulement 25 ans !\n- Parallèlement, l'anomalie de température moyenne globale est passée de −0,4°C en 1860 à +0,2°C en 2000, et continue de s'accélérer.\n\n3. Le mécanisme physique : Effet de serre naturel vs Effet de serre additionnel :\n- L'effet de serre NATUREL est indispensable à la vie ! Le Soleil envoie des rayons lumineux qui réchauffent la surface de la Terre. Le sol réémet cette énergie sous forme de rayonnements infrarouges thermiques. Les gaz à effet de serre naturels (vapeur d'eau H₂O, CO₂, ozone O₃) piègent une fraction de ces infrarouges et les renvoient vers le sol, comme les vitres d'une serre de jardinier. Grâce à lui, la Terre maintient une température moyenne de +15°C. Sans cet effet de serre naturel, la température moyenne chuterait à −20°C, transformant la planète en désert glacé inhabitable !\n- L'effet de serre ADDITIONNEL (humain) : Le surplus artificiel de CO₂, de méthane (CH₄) et de CFC injecté par l'Homme épaissit ce \"manteau\" protecteur, emprisonnant trop de chaleur et provoquant le réchauffement climatique mondial.\n- La couche d'ozone (O₃) dans la stratosphère nous protège des rayons ultraviolets (UV) mutagènes du Soleil. Les CFC détruisent les molécules d'ozone, laissant passer des UV dangereux qui accentuent l'agression radiative sur les écosystèmes.",
+      "formulas": [
+        {
+          "name": "Équilibre thermique naturel",
+          "formula": "T_moyenne = +15°C avec effet de serre naturel",
+          "note": "Sans effet de serre : T = -20°C (Terre inhabitable)"
+        },
+        {
+          "name": "Gaz à effet de serre majeurs",
+          "formula": "H₂O, CO₂, CH₄, N₂O, CFC",
+          "note": "Piégeage des rayonnements infrarouges thermiques réémis par la Terre"
+        }
+      ],
+      "keyRule": "Attention au piège classique au devoir ! L'effet de serre n'est pas mauvais en soi : l'effet de serre NATUREL permet la vie sur Terre (+15°C au lieu de −20°C). C'est l'effet de serre ADDITIONNEL, causé par les excès de rejets industriels de l'Homme, qui crée la crise climatique.",
+      "workedExample": {
+        "title": "Situation d’évaluation officielle : Corrélation CO₂ atmosphérique et température",
+        "statement": "En analysant les graphiques historiques de l'atmosphère de 1860 à 2000, décrivez la corrélation existant entre la concentration en CO₂ et la courbe des températures moyennes du globe.",
+        "methodSteps": [
+          "Observer l'évolution du CO₂ : de 1860 (290 ppm) à 2000 (plus de 360 ppm), la concentration augmente de manière continue et s'accélère après 1960.",
+          "Observer l'évolution de la température : la température moyenne mondiale suit exactement la même pente ascendante, passant d'une anomalie de −0,4°C à plus de +0,2°C.",
+          "Établir la relation causale : l'augmentation du CO₂ anthropique renforce le piégeage des rayonnements infrarouges terrestres, ce qui induit directement la hausse thermique."
+        ],
+        "conclusion": "Il existe une corrélation directe et étroite entre l'accumulation de gaz à effet de serre dans l'atmosphère et l'élévation de la température planétaire."
+      },
+      "exercises": [
+        {
+          "id": "seconde_a_svt_ch5_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quelle serait la température moyenne à la surface de la Terre en l'absence totale d'effet de serre naturel ?",
+          "options": [
+            "Environ −20°C (la Terre serait un désert de glace inhabitable)",
+            "Exactement 0°C (température de congélation)",
+            "+35°C de canicule permanente",
+            "+100°C d'ébullition générale"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Sans l'effet de serre naturel qui piège les rayonnements infrarouges, la Terre rayonnerait toute sa chaleur vers l'espace : sa température moyenne serait de −20°C au lieu des +15°C actuels."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p1_ex2",
+          "type": "mcq",
+          "prompt": "Quelle est la température moyenne actuelle à la surface du globe grâce à l'effet de serre naturel ?",
+          "options": [
+            "Environ +15°C",
+            "Environ −5°C",
+            "Environ +45°C",
+            "Environ +1°C"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'effet de serre naturel maintient la température moyenne mondiale à environ +15°C, permettant la présence d'eau liquide et l'épanouissement de la vie."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p1_ex3",
+          "type": "mcq",
+          "prompt": "Quel est le gaz à effet de serre naturel le plus abondant dans l'atmosphère terrestre ?",
+          "options": [
+            "La vapeur d'eau (H₂O)",
+            "Le gaz xénon",
+            "Le monoxyde de carbone",
+            "L'hélium"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La vapeur d'eau (nuages, humidité) est le contributeur naturel majoritaire à l'effet de serre, bien avant le CO₂."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p1_ex4",
+          "type": "mcq",
+          "prompt": "Quelle activité humaine constitue la première source de rejet excessif de dioxyde de carbone (CO₂) ?",
+          "options": [
+            "L'extraction et la combustion des énergies fossiles (charbon, pétrole, gaz naturel)",
+            "La fabrication de briques en terre crue",
+            "L'usage de pirogues à rames sur les lagunes",
+            "La plantation de parcs arborés dans les villes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La combustion d'énergies fossiles pour les centrales thermiques, les usines et les transports motorisés est la cause humaine numéro un des émissions de CO₂."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p1_ex5",
+          "type": "mcq",
+          "prompt": "Quel gaz à effet de serre très puissant est rejeté en grande quantité par la riziculture inondée et l'élevage ?",
+          "options": [
+            "Le méthane (CH₄)",
+            "Le dioxygène (O₂)",
+            "L'argon pur (Ar)",
+            "Le diazote (N₂)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La fermentation anaérobie dans les sols inondés des rizières et le système digestif des ruminants génèrent de vastes quantités de méthane (CH₄)."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p1_ex6",
+          "type": "mcq",
+          "prompt": "Quel groupe de composés chimiques industriels est responsable de la destruction de la couche d'ozone ?",
+          "options": [
+            "Les chlorofluorocarbures (CFC)",
+            "Les carbonates de calcium",
+            "Les sulfates de magnésium",
+            "Les chlorures de sodium"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les CFC libèrent des atomes de chlore qui catalysent la dissociation de l'ozone stratosphérique (O₃), créant des trous laissant passer les rayons UV nocifs."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p1_ex7",
+          "type": "mcq",
+          "prompt": "Quel type de rayonnement émis par la Terre réchauffée est absorbé et renvoyé par les gaz à effet de serre ?",
+          "options": [
+            "Les rayonnements infrarouges thermiques",
+            "Les rayonnements ultraviolets solaires",
+            "Les rayons X médicaux",
+            "Les rayons gamma cosmiques"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La Terre absorbe l'énergie lumineuse solaire et la réémet sous forme de rayonnement infrarouge (chaleur). Ce sont ces infrarouges qui sont piégés par les gaz à effet de serre."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p1_ex8",
+          "type": "mcq",
+          "prompt": "De combien la teneur en CO₂ a-t-elle augmenté entre 1960 et 1985 (en seulement 25 ans) ?",
+          "options": [
+            "De 30 ppm (passant brutalement de 320 à 350 ppm)",
+            "De 2000 ppm",
+            "Elle a diminué de moitié",
+            "Elle est restée parfaitement constante"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Alors qu'il avait fallu 100 ans (1860-1960) pour augmenter de 30 ppm, la même hausse de 30 ppm s'est produite en seulement 25 ans après 1960 sous l'effet de l'industrialisation."
+        }
+      ]
+    },
+    {
+      "id": "seconde_a_svt_ch5_p2",
+      "order": 2,
+      "title": "Conséquences planétaires, cas de Grand-Lahou et solutions durables",
+      "summary": "Manifestations du dérèglement (érosion côtière à Grand-Lahou, fonte des calottes, sécheresses) et mesures d’atténuation (énergies renouvelables, reboisement, protocole de Montréal).",
+      "conceptExplanation": "Le dérèglement climatique ne se limite pas à une simple hausse du thermomètre : il bouleverse l'équilibre géophysique et biologique de notre planète avec des conséquences dramatiques déjà visibles :\n\n1. Les conséquences planétaires et régionales :\n- Fonte des calottes glaciaires et des glaciers de montagne : la fonte des glaces polaires (Groenland, Antarctique) combinée à la dilatation thermique des eaux marines chaudes entraîne l'élévation continue du niveau moyen des océans.\n- Submersion et érosion marine sur le littoral ivoirien : l'exemple le plus frappant en Côte d'Ivoire est la ville historique de Grand-Lahou, où l'ancienne cité coloniale et son cimetière ont été littéralement engloutis par les vagues de l'océan Atlantique qui ont fait reculer le rivage de plusieurs centaines de mètres.\n- Perturbations météorologiques extrêmes : recul de la pluviométrie, sécheresses sévères dans les régions sahéliennes et du Nord, feux de brousse destructeurs, vagues de chaleur caniculaire, cyclones et ouragans plus violents et inondations urbaines dévastatrices.\n- Crise sanitaire et agricole : baisse des rendements du café, du cacao et des céréales, pénuries d'eau potable, recrudescence du paludisme et d'autres maladies infectieuses à transmission vectorielle.\n\n2. Les stratégies de lutte et solutions durables :\nFace à cette urgence, des solutions concrètes doivent être adoptées à l'échelle mondiale, nationale et citoyenne :\n- La révolution énergétique vers les énergies renouvelables : remplacer les centrales polluantes au charbon, au fioul et au gaz par des énergies propres et inépuisables :\n  * Énergie solaire photovoltaïque et thermique (abondante en Afrique).\n  * Énergie éolienne (force du vent).\n  * Énergie hydroélectrique (barrages sur les fleuves).\n  * Biomasse durable et biogaz.\n- L'efficacité énergétique et la mobilité propre : promotion des transports en commun, développement des véhicules électriques, élimination des gaspillages d'énergie dans les bâtiments.\n- La protection des forêts et le reboisement : arrêt des feux de brousse anarchiques, création de parcs et réserves naturelles nationales (ex: Parc national de Taï, Comoé), reboisement massif d'arbres pour absorber le CO₂ de l'air.\n- Les conventions internationales : le Protocole de Montréal (1987) a prouvé son efficacité en éliminant les CFC destructeurs d'ozone. Les accords de la COP visent désormais la neutralité carbone pour préserver l'avenir des générations futures.",
+      "formulas": [
+        {
+          "name": "Énergies renouvelables décarbonées",
+          "formula": "Énergie solaire + Éolienne + Hydroélectrique",
+          "note": "Zéro émission directe de gaz à effet de serre"
+        },
+        {
+          "name": "Accords environnementaux",
+          "formula": "Protocole de Montréal (1987) : Élimination des CFC",
+          "note": "Protection de la couche d'ozone stratosphérique"
+        }
+      ],
+      "keyRule": "Pour l'examen, cite toujours l'exemple concret ivoirien de Grand-Lahou pour illustrer l'élévation du niveau de la mer et l'érosion côtière. Mentionne aussi les énergies renouvelables (solaire, hydraulique) comme alternative clé aux combustibles fossiles.",
+      "workedExample": {
+        "title": "Situation d’évaluation officielle : Causes, conséquences et solutions du réchauffement",
+        "statement": "Classez les actions suivantes relatives au changement climatique en Causes, Conséquences et Solutions : 1. Combustion du pétrole ; 2. Utilisation de l'énergie solaire ; 3. Submersion de la vieille ville de Grand-Lahou ; 4. Reboisement d'une parcelle forestière ; 5. Sécheresses et feux de brousse.",
+        "methodSteps": [
+          "Identifier les Causes (activités rejetant des gaz à effet de serre) : 1. Combustion du pétrole.",
+          "Identifier les Conséquences (impacts subis par la Terre) : 3. Submersion de Grand-Lahou et 5. Sécheresses et feux de brousse.",
+          "Identifier les Solutions (actions d'atténuation et de transition) : 2. Utilisation de l'énergie solaire et 4. Reboisement."
+        ],
+        "conclusion": "Causes = 1 ; Conséquences = 3, 5 ; Solutions = 2, 4."
+      },
+      "exercises": [
+        {
+          "id": "seconde_a_svt_ch5_p2_ex1",
+          "type": "mcq",
+          "prompt": "Quelle ville côtière de Côte d'Ivoire est l'exemple officiel d'érosion marine et d'inondation causées par la montée des eaux ?",
+          "options": [
+            "Grand-Lahou",
+            "Korhogo",
+            "Daloa",
+            "Man"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'ancienne ville coloniale de Grand-Lahou a subi une érosion marine dramatique, son littoral reculant sous l'assaut de la montée des eaux de l'océan Atlantique."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p2_ex2",
+          "type": "mcq",
+          "prompt": "Quelle est la cause physique directe de l'élévation du niveau moyen des océans du globe ?",
+          "options": [
+            "La fonte des calottes glaciaires continentales combinée à la dilatation thermique de l'eau réchauffée",
+            "L'accumulation des bouteilles plastiques rejetées à la mer",
+            "Le déplacement des grands navires porte-conteneurs",
+            "L'assèchement des puits d'eau villageois"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'eau de mer se dilate quand sa température augmente, et la fonte des glaciers et calottes continentales (Groenland, Antarctique) déverse d'immenses volumes d'eau dans les océans."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p2_ex3",
+          "type": "mcq",
+          "prompt": "Parmi les sources d'énergie suivantes, laquelle est une énergie propre, renouvelable et sans émission directe de gaz à effet de serre ?",
+          "options": [
+            "L'énergie solaire photovoltaïque",
+            "La centrale thermique au charbon de bois",
+            "Le fioul lourd issu du raffinage pétrolier",
+            "Le gaz de schiste comprimé"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'énergie solaire convertit le rayonnement du soleil en électricité sans aucune combustion ni dégagement de gaz à effet de serre."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p2_ex4",
+          "type": "mcq",
+          "prompt": "Quel protocole international historique signé en 1987 a permis l'interdiction progressive des gaz CFC destructeurs d'ozone ?",
+          "options": [
+            "Le protocole de Montréal",
+            "Le traité de Versailles",
+            "Le congrès de Vienne",
+            "L'accord de Camp David"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le Protocole de Montréal (1987) a réuni les nations pour éliminer les substances qui appauvrissent la couche d'ozone, notamment les CFC."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p2_ex5",
+          "type": "mcq",
+          "prompt": "Pourquoi le reboisement constitue-t-il une solution naturelle capitale contre le réchauffement climatique ?",
+          "options": [
+            "Parce que les arbres absorbent le CO₂ atmosphérique par photosynthèse et le stockent durablement sous forme de bois",
+            "Parce que les feuilles d'arbres attirent les météores et arrêtent le vent",
+            "Parce que les forêts refroidissent la Terre en supprimant le soleil",
+            "Parce que les arbres absorbent le sel de mer"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les forêts sont des puits de carbone vitaux : en grandissant, les arbres séquestrent des milliards de tonnes de carbone minéral dans leur tronc et leurs racines."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p2_ex6",
+          "type": "mcq",
+          "prompt": "Quelle perturbation climatique majeure frappe de plus en plus les zones rurales d'Afrique de l'Ouest ?",
+          "options": [
+            "La baisse de la pluviométrie, les sécheresses prolongées et la prolifération des feux de brousse",
+            "L'apparition de tempêtes de neige sur la lagune Ébrié",
+            "La chute brutale de la température nocturne à −30°C",
+            "L'arrêt complet des marées océaniques"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le dérèglement climatique se traduit en Afrique de l'Ouest par des saisons des pluies plus courtes et irrégulières, des sécheresses et un risque accru de feux de brousse."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p2_ex7",
+          "type": "mcq",
+          "prompt": "Pourquoi l'utilisation des transports en commun contribue-t-elle à freiner le changement climatique ?",
+          "options": [
+            "Parce qu'un bus ou train transporte des dizaines de personnes en consommant beaucoup moins de carburant que des dizaines de voitures individuelles",
+            "Parce qu'un autobus ne roule qu'avec de l'eau de pluie",
+            "Parce que les transports en commun fabriquent de l'ozone dans la ville",
+            "Parce qu'ils empêchent les nuages d'inondation d'éclater"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Transporter collectivement les voyageurs permet de réduire massivement le parc de véhicules particuliers et les rejets de CO₂ liés au trafic routier."
+        },
+        {
+          "id": "seconde_a_svt_ch5_p2_ex8",
+          "type": "mcq",
+          "prompt": "Quel comportement éco-responsable individuel permet à chaque élève de contribuer à la lutte pour le climat ?",
+          "options": [
+            "Éviter le gaspillage d'électricité, planter des arbres et proscrire les feux de brousse et le brûlage de déchets plastiques",
+            "Brûler des pneus usagés dans la rue après les cours",
+            "Laisser les appareils allumés 24h sur 24 pour user les batteries",
+            "Couper les arbres du quartier pour faire du feu"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Chaque geste compte : la sobriété énergétique, la protection des arbres et l'abandon du brûlage à l'air libre protègent directement la qualité de l'atmosphère."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 6 : LA STRUCTURE D’UNE CELLULE ANIMALE
+// (Leçon 6 du programme officiel MENA Côte d'Ivoire - 4 Heures)
+// ============================================================================
+export const svt2deALaStructureCelluleAnimaleChapter: CurriculumChapter = {
+  "id": "seconde_a_svt_ch6_structure_cellule_animale",
+  "subjectId": "svt",
+  "gradeLevel": "seconde_a",
+  "order": 6,
+  "officialVolumeHours": 4,
+  "title": "Leçon 6 — La structure d’une cellule animale",
+  "summary": "Ultrastructure de la cellule animale observée au microscope électronique (membrane plasmique, hyaloplasme/cytosol, noyau avec chromatine et nucléole, réticulum endoplasmique, appareil de Golgi, mitochondries, centrosome à centrioles, absence de paroi pectocellulosique), équipement chromosomique humain, garniture diploïde (2n = 46), autosomes vs gonosomes (XX/XY), cellules haploïdes (n = 23) et détermination du sexe par le spermatozoïde.",
+  "points": [
+    {
+      "id": "seconde_a_svt_ch6_p1",
+      "order": 1,
+      "title": "Ultrastructure de la cellule animale et fonctions des organites",
+      "summary": "Description détaillée des constituants cellulaires au microscope électronique : membrane plasmique, cytosol, noyau, ribosomes, ergastoplasme, dictyosomes, mitochondries et centrosome.",
+      "conceptExplanation": "Pour comprendre comment le corps humain et tous les animaux fonctionnent, il faut descendre à l'échelle de l'unité fondamentale de la vie : la cellule.\nAu microscope optique ordinaire, une cellule animale apparaît comme un simple sac transparent entouré d'une membrane fine, contenant du cytoplasme et une boule centrale appelée le noyau.\nMais lorsqu'on l'observe au microscope électronique (qui grossit plusieurs centaines de milliers de fois), on découvre une ultrastructure d'une immense précision, organisée en compartiments spécialisés appelés des organites :\n\n1. La membrane plasmique :\nC'est la frontière souple qui délimite la cellule animale et contrôle sélectivement les échanges d'eau, d'ions et de nutriments avec le liquide extérieur.\nATTENTION PIÈGE D'EXAMEN : La cellule animale ne possède JAMAIS de membrane pectocellulosique ni de paroi rigide (la paroi de cellulose est l'apanage exclusif des cellules végétales).\n\n2. Le cytoplasme et le cytosol (hyaloplasme) :\nLe cytoplasme est constitué d'une fraction liquide limpide appelée le cytosol (ou hyaloplasme) dans laquelle baignent tous les organites et molécules dissoutes.\n\n3. Le noyau (centre de commandement génétique) :\nEntouré d'une double membrane nucléaire percée de pores nucléaires qui permettent les échanges avec le cytoplasme. Il renferme :\n- Le nucléole (fabrique les ribosomes).\n- La chromatine (filaments fins d'ADN associés à des protéines histones, qui se condenseront en chromosomes visibles lors de la division cellulaire).\n\n4. Les organites de synthèse, de tri et d'énergie :\n- Les ribosomes : minuscules granules fabriquant les protéines à partir des instructions de l'ADN.\n- Le réticulum endoplasmique (RE) : réseau de canaux membranaires. On distingue le RE lisse (synthèse des lipides) et le RE granuleux (ou ergastoplasme, tapissé de ribosomes et assurant la synthèse des protéines).\n- L'appareil de Golgi (dictyosomes) : empilement de saccules aplatis émettant de petites vésicules à leurs extrémités. Il assure la maturation, le tri et l'expédition des molécules sécrétées.\n- Les mitochondries : véritables centrales énergétiques de la cellule, entourées d'une membrane plissée en crêtes, réalisant la respiration cellulaire et fabriquant l'ATP (énergie vitale).\n- Le centrosome (centrioles) : paire de petits cylindres perpendiculaires d'où partent les microtubules. Il participe activement à la division cellulaire en formant les asters.\n- Les lysosomes et peroxysomes : vésicules remplies d'enzymes digestives assurant le recyclage et la destruction des déchets cellulaires.\n- Les vacuoles : petites vésicules chez l'animal (contrairement à l'immense vacuole unique de la cellule végétale).",
+      "formulas": [
+        {
+          "name": "Organisation fondamentale animale",
+          "formula": "Cellule = Membrane plasmique + Cytosol + Noyau + Organites",
+          "note": "Absence absolue de paroi pectocellulosique"
+        },
+        {
+          "name": "Organite énergétique central",
+          "formula": "Mitochondrie → Respiration cellulaire → Production d'ATP",
+          "note": "Centrale énergétique pour les besoins métaboliques"
+        }
+      ],
+      "keyRule": "Pour les questions d'annotation au devoir : ne confonds pas cytosol et cytoplasme ! Le cytoplasme comprend le cytosol (le liquide) PLUS tous les organites qui y baignent. Retiens aussi que l'ergastoplasme est simplement le nom officiel du réticulum endoplasmique granuleux portant des ribosomes.",
+      "workedExample": {
+        "title": "Situation d’évaluation officielle : Identification comparée d’une cellule animale",
+        "statement": "Un élève observe deux cellules A et B au microscope. La cellule A possède des mitochondries, un noyau, une membrane plasmique souple et des centrioles. La cellule B possède un noyau, des chloroplastes verts et une paroi pectocellulosique épaisse. Identifiez la cellule animale et justifiez votre choix.",
+        "methodSteps": [
+          "Analyser les caractéristiques de la cellule A : membrane plasmique souple, centrioles (centrosome) et absence de chloroplastes ni de paroi rigide.",
+          "Analyser les caractéristiques de la cellule B : présence d'une paroi pectocellulosique externe et de chloroplastes (caractéristiques exclusives des cellules végétales).",
+          "Conclure : la cellule A est indiscutablement la cellule animale."
+        ],
+        "conclusion": "La cellule A est une cellule animale car elle possède un centrosome et est délimitée uniquement par une membrane plasmique sans paroi cellulosique."
+      },
+      "exercises": [
+        {
+          "id": "seconde_a_svt_ch6_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quel constituant délimite directement le milieu intérieur d'une cellule animale ?",
+          "options": [
+            "La membrane plasmique souple",
+            "La membrane pectocellulosique rigide",
+            "Une coquille de calcaire imperméable",
+            "Une enveloppe en cire végétale"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La cellule animale est délimitée par une membrane plasmique fluide et souple, sans aucune paroi rigide pectocellulosique."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p1_ex2",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on la fraction liquide du cytoplasme dans laquelle baignent les différents organites cellulaires ?",
+          "options": [
+            "Le cytosol (ou hyaloplasme)",
+            "Le suc vacuolaire acide",
+            "La sève élaborée",
+            "La lymphe sanguine"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cytosol (ou hyaloplasme) est la matrice liquide fondamentale intracellulaire contenant de l'eau, des ions, du glucose et des enzymes."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p1_ex3",
+          "type": "mcq",
+          "prompt": "Quel organite cellulaire est la véritable centrale énergétique de la cellule fabriquant l'ATP ?",
+          "options": [
+            "La mitochondrie",
+            "Le nucléole",
+            "Le lysosome",
+            "Le centriole"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les mitochondries sont le siège de la respiration cellulaire aérobie, convertissant les molécules nutritives en énergie biochimique utilisable (ATP)."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p1_ex4",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on le réticulum endoplasmique tapissé de ribosomes à sa surface assurant la synthèse des protéines ?",
+          "options": [
+            "L'ergastoplasme (ou réticulum endoplasmique granuleux)",
+            "Le réticulum endoplasmique lisse",
+            "L'appareil de Golgi externe",
+            "Le centrosome nucléaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'ergastoplasme (ou REG) doit son aspect granuleux aux ribosomes ancrés sur ses membranes, spécialisés dans la biosynthèse des protéines destinées à l'exportation."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p1_ex5",
+          "type": "mcq",
+          "prompt": "Quel organite constitué d'un empilement de dictyosomes émet des vésicules à ses extrémités pour expédier les molécules cellulaires ?",
+          "options": [
+            "L'appareil de Golgi",
+            "Le ribosome libre",
+            "La mitochondrie interne",
+            "Le filament de kératine"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'appareil de Golgi reçoit les protéines de l'ergastoplasme, les modifie chimiquement et les emballe dans des vésicules de sécrétion émises par ses extrémités."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p1_ex6",
+          "type": "mcq",
+          "prompt": "Quel organite spécifique à la cellule animale est formé de deux centrioles et forme les asters pendant la division cellulaire ?",
+          "options": [
+            "Le centrosome",
+            "Le chloroplaste",
+            "Le peroxysome",
+            "Le nucléole"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le centrosome (composé de deux centrioles perpendiculaires) est le centre organisateur des microtubules chez les cellules animales, formant les asters du fuseau de division."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p1_ex7",
+          "type": "mcq",
+          "prompt": "Sous quelle forme se présente le matériel génétique dans le noyau d'une cellule animale en dehors des périodes de division ?",
+          "options": [
+            "Sous forme de chromatine filamenteuse diffuse",
+            "Sous forme de cristaux minéraux d'amidon",
+            "Sous forme de billes de graisse lipidique",
+            "Sous forme de gaz comprimé dans le nucléole"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans un noyau interphasique, l'ADN est décondensé sous forme d'un réseau filamenteux complexe appelé la chromatine, qui se condensera en chromosomes lors de la mitose."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p1_ex8",
+          "type": "mcq",
+          "prompt": "Laquelle de ces structures est formellement ABSENTE d'une cellule animale saine ?",
+          "options": [
+            "La membrane pectocellulosique rigide",
+            "La mitochondrie",
+            "La membrane plasmique",
+            "L'appareil de Golgi"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La membrane pectocellulosique est une paroi rigide végétale. Elle n'existe absolument pas chez les animaux."
+        }
+      ]
+    },
+    {
+      "id": "seconde_a_svt_ch6_p2",
+      "order": 2,
+      "title": "Équipement chromosomique, caryotype humain et détermination génétique du sexe",
+      "summary": "Notion de caryotype, garniture chromosomique diploïde (2n = 46) des cellules somatiques (22 paires d’autosomes + gonosomes XX ou XY), cellules reproductrices haploïdes (n = 23) et rôle du spermatozoïde.",
+      "conceptExplanation": "Chaque espèce vivante possède dans le noyau de ses cellules un nombre fixe et caractéristique de chromosomes qui portent l'ensemble des gènes héréditaires : c'est sa garniture chromosomique.\n\n1. Qu'est-ce qu'un caryotype ?\nLe caryotype est la représentation photographique ordonnée de l'ensemble des chromosomes du noyau d'une cellule, bloqués en métaphase, découpés et disposés par paires homologues et par ordre de taille décroissante (de la paire 1 la plus grande à la paire 22 la plus petite).\n\n2. Les cellules somatiques : un équipement diploïde (2n = 46) :\nToutes les cellules du corps humain (cellules de la peau, du foie, des muscles, du sang, des os), appelées cellules somatiques, possèdent 46 chromosomes organisés en 23 paires.\nOn dit qu'elles sont diploïdes, ce que l'on note mathématiquement : 2n = 46.\nDans chaque paire :\n- Un chromosome provient du père (d'origine paternelle).\n- L'autre chromosome homologue provient de la mère (d'origine maternelle).\n\n3. Autosomes vs Gonosomes (chromosomes sexuels) :\n- Les 22 premières paires sont rigoureusement identiques chez l'homme et la femme : on les appelle les autosomes (chromosomes non sexuels).\n- La 23ème paire est différente selon le sexe : ce sont les gonosomes ou chromosomes sexuels :\n  * Chez la femme : deux chromosomes identiques notés XX (formule chromosomique : 44 autosomes + XX, soit 46, XX).\n  * Chez l'homme : deux chromosomes dissemblables, un grand noté X et un petit noté Y (formule chromosomique : 44 autosomes + XY, soit 46, XY).\n\n4. Les cellules reproductrices (gamètes) : un équipement haploïde (n = 23) :\nLes cellules sexuelles de reproduction (le spermatozoïde chez l'homme, l'ovule chez la femme) ne contiennent que la moitié des chromosomes : un seul chromosome de chaque paire, soit 23 chromosomes.\nOn dit que les gamètes sont des cellules haploïdes, notées n = 23.\n- L'ovule porte toujours 22 autosomes + un chromosome sexuel X.\n- Le spermatozoïde porte 22 autosomes + soit un chromosome X (50% des cas), soit un chromosome Y (50% des cas).\nConséquence capitale : C'est le spermatozoïde apporté par le père qui détermine à 100% le sexe biologique de l'enfant lors de la fécondation !",
+      "formulas": [
+        {
+          "name": "Garniture diploïde somatique",
+          "formula": "2n = 46 chromosomes (23 paires d'homologues)",
+          "note": "44 autosomes + gonosomes sexuels (XX ou XY)"
+        },
+        {
+          "name": "Garniture haploïde des gamètes",
+          "formula": "n = 23 chromosomes (cellules reproductrices)",
+          "note": "Ovule : 22+X | Spermatozoïde : 22+X ou 22+Y"
+        }
+      ],
+      "keyRule": "Au devoir de SVT, repère tout de suite la 23ème paire sur le caryotype : si les deux chromosomes sont de même taille, c'est une femme (XX). Si l'un est grand et l'autre minuscule en forme de crochet, c'est un homme (XY). Et si le caryotype n'a que 23 chromosomes isolés sans paires, c'est un gamète (cellule sexuelle haploïde) !",
+      "workedExample": {
+        "title": "Situation d’évaluation officielle : Analyse chromosomique et détermination du sexe",
+        "statement": "En observant le caryotype d'une cellule humaine prélevée lors d'une biopsie, on dénombre 23 paires de chromosomes. La 23ème paire montre un chromosome de taille moyenne et un tout petit chromosome noté Y. Déterminez la garniture chromosomique, le sexe de l'individu et le type de cellule.",
+        "methodSteps": [
+          "Compter les chromosomes : 23 paires = 46 chromosomes. La cellule possède 2 exemplaires de chaque chromosome, c'est donc une cellule diploïde (2n = 46).",
+          "Identifier le type de cellule : puisqu'elle est diploïde à 46 chromosomes, c'est une cellule somatique ordinaire (et non un gamète).",
+          "Déterminer le sexe génétique : la 23ème paire est hétéromorphe XY (présence du chromosome Y). L'individu est donc de sexe masculin."
+        ],
+        "conclusion": "Il s'agit d'une cellule somatique diploïde (2n = 46) appartenant à un individu de sexe masculin (formule : 44 autosomes + XY)."
+      },
+      "exercises": [
+        {
+          "id": "seconde_a_svt_ch6_p2_ex1",
+          "type": "mcq",
+          "prompt": "Combien de chromosomes contient le noyau d'une cellule somatique humaine normale ?",
+          "options": [
+            "46 chromosomes disposés en 23 paires (2n = 46)",
+            "23 chromosomes isolés (n = 23)",
+            "92 chromosomes disposés en 46 paires",
+            "48 chromosomes comme le chimpanzé"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Toute cellule somatique humaine normale est diploïde et renferme 46 chromosomes organisés en 23 paires d'homologues."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p2_ex2",
+          "type": "mcq",
+          "prompt": "Comment qualifie-t-on une cellule contenant des paires de chromosomes homologues (notée 2n) ?",
+          "options": [
+            "Une cellule diploïde",
+            "Une cellule haploïde",
+            "Une cellule asexuée",
+            "Une cellule chimérique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une cellule diploïde (2n) possède deux jeux complets de chromosomes homologues, l'un issu du père et l'autre de la mère."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p2_ex3",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on les 22 premières paires de chromosomes non sexuels identiques chez l'homme et la femme ?",
+          "options": [
+            "Les autosomes",
+            "Les gonosomes",
+            "Les ribosomes",
+            "Les histones"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les autosomes sont tous les chromosomes somatiques ordinaires ne déterminant pas directement le sexe chromosomique."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p2_ex4",
+          "type": "mcq",
+          "prompt": "Quels sont les chromosomes sexuels (gonosomes) caractéristiques du caryotype d'une femme normale ?",
+          "options": [
+            "Deux chromosomes X (notés XX)",
+            "Un chromosome X et un chromosome Y (XY)",
+            "Deux chromosomes Y (YY)",
+            "Trois chromosomes X (XXX)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le sexe féminin est caractérisé par une paire de gonosomes homologues identiques notée XX (formule 44 + XX)."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p2_ex5",
+          "type": "mcq",
+          "prompt": "Quels sont les chromosomes sexuels (gonosomes) caractéristiques du caryotype d'un homme normal ?",
+          "options": [
+            "Un chromosome X et un chromosome Y (notés XY)",
+            "Deux chromosomes X (XX)",
+            "Deux chromosomes Y (YY)",
+            "Un chromosome X sans aucun autre gonosome (XO)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le sexe masculin est caractérisé par une paire de gonosomes dissemblables notée XY (formule 44 + XY)."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p2_ex6",
+          "type": "mcq",
+          "prompt": "Combien de chromosomes contient un gamète humain (spermatozoïde ou ovule) ?",
+          "options": [
+            "23 chromosomes isolés (n = 23, cellule haploïde)",
+            "46 chromosomes en 23 paires",
+            "12 chromosomes seulement",
+            "2 chromosomes sexuels ensemble"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les cellules reproductrices (gamètes) sont haploïdes (n = 23). Lors de la fécondation, l'union des deux gamètes rétablit le stock diploïde à 46 chromosomes (23 + 23 = 46)."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p2_ex7",
+          "type": "mcq",
+          "prompt": "Quel gamète parental détermine le sexe génétique de l'enfant lors de la fécondation ?",
+          "options": [
+            "Le spermatozoïde du père (qui peut apporter soit le chromosome X, soit le chromosome Y)",
+            "L'ovule de la mère (qui apporte obligatoirement le chromosome Y)",
+            "Les cellules de la peau du nouveau-né",
+            "Le placenta utérin"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'ovule apporte toujours un chromosome X. C'est le spermatozoïde fécondant qui détermine le sexe : si c'est un spermatozoïde X, le bébé sera une fille (XX) ; si c'est un spermatozoïde Y, ce sera un garçon (XY)."
+        },
+        {
+          "id": "seconde_a_svt_ch6_p2_ex8",
+          "type": "mcq",
+          "prompt": "Qu'est-ce que la garniture chromosomique d'une cellule eucaryote ?",
+          "options": [
+            "L'ensemble des chromosomes présents dans le noyau d'une cellule",
+            "Le nombre de molécules de glucose dans la vacuole",
+            "La quantité d'eau stockée dans le cytoplasme",
+            "Le nombre de battements des cils cellulaires"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La garniture chromosomique désigne la composition et le nombre total de chromosomes constituant le génome du noyau de la cellule."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 7 : LA REPRODUCTION CONFORME OU MITOSE
+// (Leçon 7 du programme officiel MENA Côte d'Ivoire - 6 Heures)
+// ============================================================================
+export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
+  "id": "seconde_a_svt_ch7_reproduction_conforme_mitose",
+  "subjectId": "svt",
+  "gradeLevel": "seconde_a",
+  "order": 7,
+  "officialVolumeHours": 6,
+  "title": "Leçon 7 — La reproduction conforme ou mitose",
+  "summary": "Mécanisme complet de la mitose en 4 phases chronologiques (Prophase avec condensation et asters, Métaphase avec plaque équatoriale, Anaphase avec ascension polaire des chromatides, Télophase et cytodiérèse par étranglement chez l’animal vs nouvelle paroi chez le végétal), conservation intégrale du caryotype (2n), et rôles biologiques capitaux (cicatrisation des plaies, renouvellement tissulaire, croissance continue de l’organisme de la cellule-œuf à 10¹⁷ cellules, et risque tumoral en cas de dérèglement).",
+  "points": [
+    {
+      "id": "seconde_a_svt_ch7_p1",
+      "order": 1,
+      "title": "Les quatre phases chronologiques de la mitose et la cytodiérèse",
+      "summary": "Déroulement continu de la division cellulaire équationnelle : Prophase, Métaphase, Anaphase, Télophase et séparation cytoplasmique chez les cellules animales et végétales.",
+      "conceptExplanation": "Pour comprendre comment un corps grandit ou comment une blessure cutanée se referme, il faut observer la multiplication des cellules.\nLa mitose (ou reproduction conforme) est le mode de division cellulaire qui permet à une cellule mère diploïde (2n) de donner naissance à deux cellules filles génétiquement identiques entre elles et rigoureusement identiques à la cellule mère, en conservant le même nombre exact de chromosomes.\n\nBien qu'il s'agisse d'un phénomène biologique continu (qui dure entre 1 et 4 heures), les biologistes le découpent en quatre phases caractéristiques immuables :\n\n1. La Prophase (première phase de préparation) :\n- Le noyau cellulaire gonfle. La membrane nucléaire et les nucléoles se désagrègent progressivement.\n- La chromatine diffuse s'enroule et se condense fortement (spiralisation) : les chromosomes s'individualisent et deviennent nettement visibles. Chaque chromosome est alors constitué de deux chromatides sœurs identiques reliées entre elles au niveau du centromère.\n- Le centrosome se dédouble en deux centrosomes fils qui migrent vers les deux pôles opposés de la cellule, formant les asters (chez la cellule animale) reliés par les fibres du fuseau de division achromatique.\n\n2. La Métaphase (phase courte et spectaculaire) :\n- Les chromosomes atteignent leur condensation maximale.\n- Grâce aux microtubules du fuseau, tous les centromères des chromosomes viennent se positionner au centre de la cellule, sur le plan équatorial du fuseau achromatique.\n- Cette disposition géométrique parfaite forme une figure appelée la plaque équatoriale. C'est le moment idéal pour photographier et établir le caryotype d'une cellule !\n\n3. L'Anaphase (phase de séparation très rapide) :\n- Chaque centromère se fissure et se divise longitudinalement en deux.\n- Les deux chromatides sœurs de chaque chromosome se séparent net et deviennent des chromosomes fils indépendants (chacun à une seule chromatide).\n- Par raccourcissement des fibres du fuseau, les deux lots strictement identiques de chromosomes sont tirés et migrent en sens opposé vers chacun des deux pôles cellulaires : c'est l'ascension polaire.\n\n4. La Télophase et la cytodiérèse (phase de conclusion) :\n- Arrivés aux pôles, les chromosomes se déspiralisent et reprennent l'aspect filamenteux diffus de chromatine.\n- Le fuseau achromatique disparaît. Une nouvelle membrane nucléaire se reconstitue autour de chaque lot de chromosomes ; les nucléoles réapparaissent : les deux noyaux fils sont formés.\n- La cytodiérèse (séparation du cytoplasme) :\n  * Chez la cellule animale : un simple sillon d'étranglement équatorial se creuse dans la membrane plasmique de l'extérieur vers l'intérieur, coupant la cellule en deux.\n  * Chez la cellule végétale : les parois rigides empêchent tout étranglement ; une nouvelle paroi squelettique pectocellulosique s'édifie du centre vers la périphérie.",
+      "formulas": [
+        {
+          "name": "Chronologie des 4 phases",
+          "formula": "Prophase → Métaphase → Anaphase → Télophase",
+          "note": "Mnémonique officiel : Pour Mon Ami Théodore"
+        },
+        {
+          "name": "Bilan chromosomique mitotique",
+          "formula": "1 cellule mère (2n) → 2 cellules filles (2n) identiques",
+          "note": "Reproduction conforme conservant intégralement le caryotype"
+        }
+      ],
+      "keyRule": "Pour retenir l'ordre des phases de la mitose sans jamais hésiter, utilise le moyen mnémotechnique classique : « Pour Mon Ami Théodore » → P (Prophase), M (Métaphase), A (Anaphase), T (Télophase). Retiens bien : les chromosomes sont dédoublés à deux chromatides en prophase et métaphase, mais deviennent simples à une chromatide dès l'anaphase !",
+      "workedExample": {
+        "title": "Situation d’évaluation officielle : Reconnaissance des phases de la mitose",
+        "statement": "Lors d'un TP au microscope sur une racine d'ail, des élèves observent trois cellules en division : la cellule 1 montre des chromosomes regroupés au centre de la cellule en plan médian ; la cellule 2 montre deux lots de chromosomes en forme de V s'écartant vers les deux pôles opposés ; la cellule 3 montre une membrane nucléaire en cours de reconstitution avec deux nouveaux noyaux. Nommez la phase de chacune de ces trois cellules.",
+        "methodSteps": [
+          "Analyser la cellule 1 : alignement au centre sur le plan équatorial = Métaphase (plaque équatoriale).",
+          "Analyser la cellule 2 : séparation des chromatides et migration vers les pôles opposés = Anaphase (ascension polaire).",
+          "Analyser la cellule 3 : reconstitution de la membrane nucléaire et deux noyaux distincts = Télophase."
+        ],
+        "conclusion": "Cellule 1 = Métaphase ; Cellule 2 = Anaphase ; Cellule 3 = Télophase."
+      },
+      "exercises": [
+        {
+          "id": "seconde_a_svt_ch7_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quel est l'ordre chronologique exact et rigoureux des 4 phases successives de la mitose ?",
+          "options": [
+            "Prophase → Métaphase → Anaphase → Télophase",
+            "Métaphase → Prophase → Télophase → Anaphase",
+            "Anaphase → Prophase → Télophase → Métaphase",
+            "Télophase → Anaphase → Métaphase → Prophase"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le déroulement immuable de la mitose est : Prophase (condensation), Métaphase (plaque équatoriale), Anaphase (séparation des chromatides) et Télophase (reconstitution des noyaux)."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p1_ex2",
+          "type": "mcq",
+          "prompt": "À quelle phase de la mitose les chromosomes condensés s'alignent-ils au centre pour former la plaque équatoriale ?",
+          "options": [
+            "À la métaphase",
+            "À la prophase",
+            "À l'anaphase",
+            "À la télophase"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "C'est durant la métaphase que les chromosomes s'alignent par leurs centromères dans le plan équatorial du fuseau achromatique."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p1_ex3",
+          "type": "mcq",
+          "prompt": "Quel événement mécanique fondamental caractérise l'anaphase de la mitose ?",
+          "options": [
+            "La division des centromères et la migration des chromatides sœurs vers les pôles opposés (ascension polaire)",
+            "La disparition de la membrane plasmique de la cellule",
+            "La fusion de deux cellules filles en une seule",
+            "La fabrication de vacuoles riches en chlorophylle"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'anaphase se caractérise par la rupture du centromère de chaque chromosome : les chromatides sœurs migrent en sens inverse vers chaque pôle grâce aux fibres du fuseau."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p1_ex4",
+          "type": "mcq",
+          "prompt": "Durant quelle phase la chromatine se condense-t-elle en chromosomes visibles et la membrane nucléaire disparaît-elle ?",
+          "options": [
+            "La prophase",
+            "L'anaphase",
+            "La télophase",
+            "La cytodiérèse"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La prophase est la première phase de la mitose, marquée par la spiralisation de l'ADN en chromosomes individualisés et la disparition de l'enveloppe du noyau."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p1_ex5",
+          "type": "mcq",
+          "prompt": "Comment s'effectue la division du cytoplasme (cytodiérèse) chez la cellule animale lors de la télophase ?",
+          "options": [
+            "Par un simple étranglement du cytoplasme (sillon de division)",
+            "Par la construction d'une épaisse paroi en bois",
+            "Par explosion suivie de reconstitution magique",
+            "Par évaporation complète de l'eau cellulaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La membrane souple de la cellule animale se resserre au milieu comme un fil qu'on tire, séparant les deux cellules par un sillon d'étranglement."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p1_ex6",
+          "type": "mcq",
+          "prompt": "Comment s'effectue la cytodiérèse chez une cellule végétale entourée d'une paroi pectocellulosique ?",
+          "options": [
+            "Par la construction d'une nouvelle paroi squelettique rigide du centre vers la périphérie",
+            "Par étranglement de la membrane comme chez l'animal",
+            "Par expulsion du noyau hors de la feuille",
+            "Par injection d'acide dans le sol"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La paroi rigide de cellulose ne peut pas s'étrangler : les vésicules golgiennes s'accumulent au centre pour bâtir une nouvelle paroi mitoyenne transversale."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p1_ex7",
+          "type": "mcq",
+          "prompt": "Combien de cellules filles obtient-on à l'issue de la mitose à partir d'une cellule mère diploïde à 2n chromosomes ?",
+          "options": [
+            "Deux cellules filles diploïdes à 2n chromosomes strictement identiques",
+            "Quatre cellules filles haploïdes à n chromosomes",
+            "Une seule cellule fille qui a doublé de volume",
+            "Huit cellules miniatures sans matériel génétique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La mitose est une division équationnelle : elle engendre 2 cellules filles ayant exactement le même stock chromosomique (2n) que la cellule mère."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p1_ex8",
+          "type": "mcq",
+          "prompt": "Pourquoi la mitose est-elle qualifiée de reproduction « conforme » ?",
+          "options": [
+            "Parce qu'elle conserve fidèlement et intégralement le caryotype et l'information génétique de la cellule mère",
+            "Parce qu'elle respecte les règles administratives de l'établissement scolaire",
+            "Parce qu'elle modifie au hasard 50% des gènes de l'organisme",
+            "Parce qu'elle fabrique des spermatozoïdes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "On parle de reproduction conforme car chaque cellule fille reçoit une copie exacte et fidèle de l'ADN parental : le caryotype est préservé à 100% sans altération."
+        }
+      ]
+    },
+    {
+      "id": "seconde_a_svt_ch7_p2",
+      "order": 2,
+      "title": "Rôles biologiques de la mitose : cicatrisation, croissance et dérèglements tumoraux",
+      "summary": "Importance biologique et médicale : régénération des tissus, cicatrisation des plaies, renouvellement des cellules sanguines, édification de l’adulte (10¹⁷ cellules), et conséquences pathologiques de la prolifération anarchique (tumeurs).",
+      "conceptExplanation": "La mitose n'est pas seulement un mécanisme cellulaire microscopique : c'est le moteur biologique qui maintient en vie tous les organismes pluricellulaires jour après jour.\n\n1. De la cellule-œuf à l'organisme adulte (la croissance) :\nChez l'être humain et les animaux, toute vie débute par une cellule unique : la cellule-œuf issue de la fusion d'un spermatozoïde et d'un ovule.\nGrâce à des millions de cycles mitotiques successifs et parfaitement programmés, cette cellule unique donne naissance à un être adulte constitué de plus de 10¹⁷ cellules (100 millions de milliards de cellules !), toutes dotées du même patrimoine génétique initial.\nChez les végétaux, la mitose continue tout au long de la vie dans les méristèmes terminaux des tiges et des racines, permettant une croissance végétale ininterrompue.\n\n2. La cicatrisation et la réparation des lésions tissulaires :\nLors d'une coupure, d'une blessure profonde au bras (comme lors d'un cours d'EPS) ou d'une brûlure :\n- Les cellules épithéliales et conjonctives situées aux abords de la plaie sont stimulées par des facteurs de croissance.\n- Elles entrent en mitose accélérée pour fabriquer de nouvelles cellules saines.\n- En quelques semaines, la plaie est comblée, le tissu reconstitué et la peau cicatrisée.\n\n3. Le renouvellement permanent des cellules usées :\nDans notre corps, des millions de cellules meurent chaque minute et doivent être remplacées en permanence :\n- Les globules rouges du sang ont une durée de vie de 120 jours : ils sont renouvelés sans cesse par mitose dans la moelle osseuse.\n- Les cellules de l'épiderme de notre peau desquament chaque jour et sont remplacées par les cellules de la couche basale en mitose active.\n- La paroi de l'intestin se renouvelle intégralement tous les 3 à 5 jours.\n\n4. La reproduction chez les êtres unicellulaires :\nChez les organismes formés d'une seule cellule (amibes, paramécies, levures), la mitose équivaut à la reproduction de l'espèce entière : une cellule donne deux individus indépendants.\n\n5. Dérèglement de la mitose et conséquences médicales (Tumeurs et cancers) :\nNormalement, la division cellulaire est rigoureusement contrôlée par des gènes régulateurs et le système immunitaire.\nSi ce système de contrôle est altéré (par exemple à cause d'une mutation génétique provoquée par le tabac, les rayons ultraviolets solaires ou des polluants chimiques) :\n- Les cellules se divisent de manière anarchique, désordonnée et incontrôlable.\n- Cet amas anormal de cellules forme une tumeur. Si les cellules acquièrent la capacité d'envahir les organes voisins, c'est un cancer.\nLa recherche médicale développe donc des thérapies anticancéreuses visant à bloquer le fuseau de division de la mitose des cellules tumorales.",
+      "formulas": [
+        {
+          "name": "Édification de l'organisme",
+          "formula": "1 cellule-œuf fécondée → Plus de 10¹⁷ cellules somatiques",
+          "note": "Par vagues successives et contrôlées de mitoses"
+        },
+        {
+          "name": "Renouvellement tissulaire",
+          "formula": "Hématies (120 jours) + Peau + Muqueuse intestinale",
+          "note": "Remplacement continu et compensateur des cellules usées"
+        }
+      ],
+      "keyRule": "Pour les épreuves écrites : rappelle toujours que la mitose remplit 4 fonctions vitales : 1. Croissance de l'organisme ; 2. Cicatrisation des plaies ; 3. Renouvellement des cellules usées (sang, peau) ; 4. Conservation intégrale du caryotype (2n). Mentionne aussi le risque tumoral en cas de dérèglement du contrôle mitotique.",
+      "workedExample": {
+        "title": "Situation d’évaluation officielle : Renouvellement cellulaire et intégrité cutanée",
+        "statement": "Un élève affirme : « Puisque les cellules de la peau meurent et tombent tous les jours, notre peau devrait disparaître au bout de quelques mois ». Expliquez-lui précisément pourquoi sa conclusion est fausse en faisant intervenir la notion de mitose.",
+        "methodSteps": [
+          "Reconnaître le fait biologique exact : les cellules superficielles de l'épiderme s'usent et meurent continuellement.",
+          "Identifier le mécanisme compensateur : les cellules de la couche basale de l'épiderme se divisent continuellement par mitose conforme.",
+          "Relier l'équilibre dynamique : chaque cellule morte tombée est instantanément remplacée par une nouvelle cellule fille identique issue de la mitose."
+        ],
+        "conclusion": "La peau ne disparaît pas car la mitose assure un renouvellement cellulaire permanent et rigoureusement compensateur tout au long de la vie."
+      },
+      "exercises": [
+        {
+          "id": "seconde_a_svt_ch7_p2_ex1",
+          "type": "mcq",
+          "prompt": "Quel processus biologique permet la cicatrisation et la fermeture progressive d'une plaie profonde de la peau ?",
+          "options": [
+            "La multiplication active et contrôlée des cellules locales par mitoses conformes",
+            "Le rétrécissement spontané des os sous la peau",
+            "La disparition définitive de toutes les cellules de la zone blessée",
+            "La transformation des globules blancs en cellules végétales"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Lors d'une blessure, les cellules bordant la plaie reçoivent un signal de division et entrent en mitose pour fabriquer du tissu cutané neuf et combler la lésion."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p2_ex2",
+          "type": "mcq",
+          "prompt": "Combien de cellules environ composent le corps d'un être humain adulte formé à partir d'une seule cellule-œuf ?",
+          "options": [
+            "Environ 10¹⁷ cellules (100 millions de milliards de cellules)",
+            "Exactement 46 cellules",
+            "Environ 5000 cellules",
+            "Moins d'un million de cellules"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "À partir de l'unique cellule-œuf initiale, des millions de vagues de mitoses successives bâtissent l'organisme adulte composé de plus de 10¹⁷ cellules."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p2_ex3",
+          "type": "mcq",
+          "prompt": "Quelle cellule sanguine humaine possédant une durée de vie de 120 jours est renouvelée en continu par mitose dans la moelle osseuse ?",
+          "options": [
+            "L'hématie (ou globule rouge)",
+            "Le fibroblaste osseux mort",
+            "L'ovocyte primordial",
+            "Le neurone moteur cortical"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les hématies (globules rouges) meurent au bout de 120 jours et sont régénérées à raison de plus de 2 millions par seconde grâce aux divisions mitotiques de la moelle osseuse."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p2_ex4",
+          "type": "mcq",
+          "prompt": "Chez les organismes unicellulaires tels que la paramécie ou la levure, quel est le rôle direct de la mitose ?",
+          "options": [
+            "Elle constitue le mode de reproduction asexuée de l'organisme entier",
+            "Elle fabrique un squelette en calcaire interne",
+            "Elle entraîne obligatoirement la mort immédiate de l'amibe",
+            "Elle sert uniquement à changer de couleur"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Chez un être vivant unicellulaire, la division mitotique de la cellule crée deux individus autonomes complets : elle assure ainsi la reproduction conforme de l'espèce."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p2_ex5",
+          "type": "mcq",
+          "prompt": "Que se produit-il dans un tissu si les mécanismes de contrôle de la mitose sont altérés et que les cellules se multiplient anarchiquement ?",
+          "options": [
+            "La formation d'une tumeur (prolifération anarchique pouvant aboutir au cancer)",
+            "Le tissu devient magiquement immortel sans aucun problème de santé",
+            "Les cellules se transforment instantanément en eau stérile",
+            "Le nombre de chromosomes chute à zéro"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une perte de régulation de la mitose engendre une prolifération cellulaire anarchique et incontrôlée, caractéristique des tumeurs et néoplasmes cancéreux."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p2_ex6",
+          "type": "mcq",
+          "prompt": "Quelle est la durée moyenne approximative d'une mitose dans une cellule eucaryote saine ?",
+          "options": [
+            "Entre 1 et 4 heures",
+            "Exactement 9 mois",
+            "Une fraction de milliseconde imperceptible",
+            "Une année scolaire complète"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La division mitotique est un processus dynamique rapide qui dure généralement entre 1 et 4 heures chez les cellules eucaryotes en prolifération."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p2_ex7",
+          "type": "mcq",
+          "prompt": "Chez les végétaux supérieurs, dans quelles zones anatomiques la mitose est-elle particulièrement active pour assurer la croissance ?",
+          "options": [
+            "Dans les méristèmes terminaux des racines et des bourgeons de tiges",
+            "Dans l'écorce de bois mort desséché",
+            "Au centre de la sève brute ascendante",
+            "Dans les grains de sable du sol"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les méristèmes apicaux (racinaires et caulinaires) sont des zones de mitoses perpétuelles assurant l'allongement continu des organes végétaux."
+        },
+        {
+          "id": "seconde_a_svt_ch7_p2_ex8",
+          "type": "mcq",
+          "prompt": "Pourquoi le caryotype est-il conservé inchangé au cours des millions de mitoses de la vie d'un individu ?",
+          "options": [
+            "Parce que la séparation égale des chromatides sœurs à l'anaphase transmet une copie exacte du matériel génétique à chaque cellule fille",
+            "Parce que le noyau ne contient pas d'ADN pendant la division",
+            "Parce que la cellule mère ne donne qu'une seule cellule fille",
+            "Parce que les chromosomes sont détruits puis reconstruits au hasard"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Grâce à la duplication préalable de l'ADN et au partage équitable des deux chromatides sœurs identiques lors de l'anaphase, chaque cellule fille hérite du même jeu de 46 chromosomes."
+        }
+      ]
+    }
+  ]
+};
+
 // LEÇON 4 : LA DIVERSITÉ DES COMPORTEMENTS ALIMENTAIRES DE L’HOMME
 // (Leçon 8 du programme officiel MENA Côte d'Ivoire)
 // ============================================================================
 export const svt2deADiversiteComportementsAlimentairesChapter: CurriculumChapter = {
-  id: 'seconde_a_svt_ch4_diversite_comportements_alimentaires',
+  id: 'seconde_a_svt_ch8_diversite_comportements_alimentaires',
   subjectId: 'svt',
   gradeLevel: 'seconde_a',
-  order: 4,
+  order: 8,
   officialVolumeHours: 4,
-  title: 'Leçon 4 — La diversité des comportements alimentaires de l’homme',
+  title: 'Leçon 8 — La diversité des comportements alimentaires de l’homme',
   summary:
     'Habitudes alimentaires des différentes régions et ethnies de Côte d’Ivoire (Nord, Sud, Centre, Est, Ouest) et facteurs explicatifs pédologiques (sols), climatiques, floristiques (végétation) et socioculturels.',
   points: [
@@ -1417,12 +2570,12 @@ Les habitudes alimentaires sont également modulées par l'héritage social :
 // (Leçon 9 du programme officiel MENA Côte d'Ivoire)
 // ============================================================================
 export const svt2deAHabitudesAlimentairesEtSanteChapter: CurriculumChapter = {
-  id: 'seconde_a_svt_ch5_habitudes_alimentaires_et_sante',
+  id: 'seconde_a_svt_ch9_habitudes_alimentaires_et_sante',
   subjectId: 'svt',
   gradeLevel: 'seconde_a',
-  order: 5,
+  order: 9,
   officialVolumeHours: 6,
-  title: 'Leçon 5 — Les habitudes alimentaires et la santé de l’homme',
+  title: 'Leçon 9 — Les habitudes alimentaires et la santé de l’homme',
   summary:
     'Impact des habitudes alimentaires sur la santé : maladies par carence qualitative (goître endémique, rôle de la thyroïde, aliments goîtrogènes) et maladies par excès quantitatif (obésité, calcul et interprétation de l’IMC, plaques d’athérome et artériosclérose). Principes d’une alimentation variée et équilibrée.',
   points: [
