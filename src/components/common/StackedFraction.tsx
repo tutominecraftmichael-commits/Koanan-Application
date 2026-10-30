@@ -17,11 +17,10 @@ export const StackedFraction: React.FC<StackedFractionProps> = ({
   negative = false,
   className = '',
 }) => {
+  const combinedClasses = `inline-flex items-center align-middle mx-1 font-semibold text-indigo-700 dark:text-indigo-300 relative -top-[1.5px] ${className}`.trim();
+
   return (
-    <span
-      className={`inline-flex items-center align-middle mx-1 font-semibold text-indigo-700 dark:text-indigo-300 relative -top-[1.5px] ${className}`}
-      style={{ verticalAlign: '-0.28em' }}
-    >
+    <span className={combinedClasses} style={{ verticalAlign: '-0.28em' }}>
       {negative && <span className="mr-0.5 text-base font-bold select-none leading-none">−</span>}
       <span className="inline-flex flex-col items-center justify-center leading-none text-center">
         <span className="px-1 text-[0.85em] font-medium leading-none pb-0.5 w-full text-center">
@@ -137,4 +136,3 @@ export function renderTextWithStackedFractions(text: string): React.ReactNode {
 
   return parts.length > 0 ? parts : cleaned;
 }
-
