@@ -369,7 +369,7 @@ export const MathFormula: React.FC<MathFormulaProps> = ({ latex, display = false
 
   return (
     <span
-      className={`inline-block text-indigo-700 dark:text-indigo-300 align-baseline ${className}`}
+      className={`inline-block text-indigo-700 dark:text-indigo-300 align-middle ${className}`}
       dangerouslySetInnerHTML={{ __html: renderedHtml }}
     />
   );
@@ -487,7 +487,7 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = ''
         return (
           <span
             key={idx}
-            className="inline-math align-baseline mx-0.5"
+            className="inline-math align-middle mx-0.5"
             dangerouslySetInnerHTML={{ __html: segment.html }}
           />
         );

@@ -18,10 +18,10 @@ import {
   Brain,
   FileCheck2,
   BookOpen,
-  ArrowLeftRight,
   HelpCircle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  RotateCcw
 } from 'lucide-react';
 import type {
   CurriculumChapter,
@@ -219,19 +219,6 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   useEffect(() => {
     refreshSessionPayload(activeSubCategory);
   }, [userId, stemSubjectId, gradeLevel, subjectTitle, durationMinutes, activeSubCategory]);
-
-  // Basculer manuellement entre les deux sous-disciplines si l'élève le souhaite
-  const handleToggleSubCategory = () => {
-    let nextSub: StemSubCategory = activeSubCategory;
-    if (stemSubjectId === 'physique_chimie') {
-      nextSub = activeSubCategory === 'chimie' ? 'physique' : 'chimie';
-    } else if (stemSubjectId === 'maths') {
-      nextSub = activeSubCategory === 'geometrie' ? 'numerique' : 'geometrie';
-    }
-    setActiveSubCategory(nextSub);
-    setSelectedChapter(null);
-    refreshSessionPayload(nextSub);
-  };
 
   // Validation du diagnostic initial pour cette sous-catégorie
   const handleConfirmInitialChapter = (chapterId: string) => {
@@ -454,22 +441,107 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             Konan alternera automatiquement ensuite vos séances pour couvrir harmonieusement tout le programme.
           </p>
 
-          {/* Bouton de bascule de sous-matière si nécessaire */}
+          {/* Choix clair de la sous-discipline pour le positionnement */}
           {(stemSubjectId === 'physique_chimie' || stemSubjectId === 'maths') && (
-            <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 text-xs">
-              <span className="text-slate-600 dark:text-slate-300 font-medium">
-                Partie sélectionnée : <strong>{subCategoryLabel}</strong>
+            <div className="space-y-2">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
+                Choisis la matière à positionner aujourd'hui :
               </span>
-              <button
-                type="button"
-                onClick={handleToggleSubCategory}
-                className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
-              >
-                <ArrowLeftRight className="w-3.5 h-3.5" />
-                <span>
-                  Basculer en {activeSubCategory === 'chimie' ? 'Physique' : activeSubCategory === 'physique' ? 'Chimie' : activeSubCategory === 'geometrie' ? 'Numérique' : 'Géométrie'}
-                </span>
-              </button>
+              <div className="grid grid-cols-2 gap-2.5">
+                {stemSubjectId === 'physique_chimie' ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (activeSubCategory !== 'chimie') {
+                          setActiveSubCategory('chimie');
+                          setSelectedChapter(null);
+                          refreshSessionPayload('chimie');
+                        }
+                      }}
+                      className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
+                        activeSubCategory === 'chimie'
+                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                          : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                      }`}
+                    >
+                      <span className="text-2xl select-none">🧪</span>
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm font-black">Chimie</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Atomes, Réactions...</div>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (activeSubCategory !== 'physique') {
+                          setActiveSubCategory('physique');
+                          setSelectedChapter(null);
+                          refreshSessionPayload('physique');
+                        }
+                      }}
+                      className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
+                        activeSubCategory === 'physique'
+                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                          : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                      }`}
+                    >
+                      <span className="text-2xl select-none">⚡</span>
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm font-black">Physique</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Mécanique, Électricité...</div>
+                      </div>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (activeSubCategory !== 'numerique') {
+                          setActiveSubCategory('numerique');
+                          setSelectedChapter(null);
+                          refreshSessionPayload('numerique');
+                        }
+                      }}
+                      className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
+                        activeSubCategory === 'numerique'
+                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                          : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                      }`}
+                    >
+                      <span className="text-2xl select-none">🔢</span>
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm font-black">Numérique</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Calculs, Fonctions...</div>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (activeSubCategory !== 'geometrie') {
+                          setActiveSubCategory('geometrie');
+                          setSelectedChapter(null);
+                          refreshSessionPayload('geometrie');
+                        }
+                      }}
+                      className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
+                        activeSubCategory === 'geometrie'
+                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                          : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                      }`}
+                    >
+                      <span className="text-2xl select-none">📐</span>
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm font-black">Géométrie</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Vecteurs, Droites...</div>
+                      </div>
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           )}
 
@@ -775,19 +847,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
-          {/* Bouton de bascule manuelle rapide */}
-          {(stemSubjectId === 'physique_chimie' || stemSubjectId === 'maths') && (
-            <button
-              type="button"
-              onClick={handleToggleSubCategory}
-              className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
-              title="Alterner la sous-matière"
-            >
-              <ArrowLeftRight className="w-3 h-3" />
-              <span>
-                {activeSubCategory === 'chimie' ? 'Passer en Physique' : activeSubCategory === 'physique' ? 'Passer en Chimie' : activeSubCategory === 'geometrie' ? 'Passer en Numérique' : 'Passer en Géométrie'}
-              </span>
-            </button>
+          {phase === 'catchup' && (
+            <span className="px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 animate-pulse">
+              <RotateCcw className="w-3 h-3" />
+              <span>Rattrapage</span>
+            </span>
           )}
 
           <div className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400">
@@ -969,6 +1033,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 <Target className="w-4 h-4" />
                 <span>Test de compréhension immédiat</span>
               </span>
+
+              {phase === 'catchup' && (
+                <span className="px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 animate-pulse">
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Session de rattrapage</span>
+                </span>
+              )}
             </div>
 
             {/* Énoncé de la question */}

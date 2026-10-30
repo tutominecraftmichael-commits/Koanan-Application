@@ -20,14 +20,15 @@ export const StackedFraction: React.FC<StackedFractionProps> = ({
   return (
     <span
       className={`inline-flex items-center align-middle mx-1 font-semibold text-indigo-700 dark:text-indigo-300 ${className}`}
-      style={{ verticalAlign: '-0.35em' }}
+      style={{ verticalAlign: 'middle' }}
     >
-      {negative && <span className="mr-0.5 text-base font-bold select-none">−</span>}
+      {negative && <span className="mr-0.5 text-base font-bold select-none leading-none">−</span>}
       <span className="inline-flex flex-col items-center justify-center leading-none text-center">
-        <span className="px-1 text-[0.88em] font-medium border-b-2 border-indigo-500/70 dark:border-indigo-400/80 pb-0.5 w-full text-center">
+        <span className="px-1 text-[0.85em] font-medium leading-none pb-0.5 w-full text-center">
           {numerator}
         </span>
-        <span className="px-1 text-[0.88em] font-medium pt-0.5 w-full text-center">
+        <span className="w-full border-t-2 border-indigo-500/70 dark:border-indigo-400/80 my-0" />
+        <span className="px-1 text-[0.85em] font-medium leading-none pt-0.5 w-full text-center">
           {denominator}
         </span>
       </span>
