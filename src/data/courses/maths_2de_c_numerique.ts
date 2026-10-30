@@ -1529,9 +1529,320 @@ export const maths2deCStatistiqueChapter: CurriculumChapter = {
   ]
 };
 
+export const maths2deCFonctionsElementairesChapter: CurriculumChapter = {
+  "id": "seconde_c_maths_numerique_ch5_fonctions_elementaires",
+  "subjectId": "maths",
+  "gradeLevel": "seconde_c",
+  "order": 13,
+  "officialVolumeHours": 12,
+  "title": "Leçon 5 — Étude de fonctions élémentaires",
+  "summary": "Étude approfondie des fonctions affines par intervalles, écriture d'expressions avec valeurs absolues par morceaux, fonction partie entière E(x) et sa représentation en escalier, étude complète des fonctions de référence (carré, valeur absolue, racine carrée, inverse, cube), leurs propriétés de symétrie, parité et tableaux de variations.",
+  "points": [
+    {
+      "id": "seconde_c_maths_numerique_ch5_p1",
+      "order": 1,
+      "title": "Fonctions affines par intervalles et fonction partie entière",
+      "summary": "Définition d'une fonction affine par intervalles, écriture d'une fonction avec valeurs absolues sous forme explicite par morceaux, fonction partie entière E(x), calculs sur réels positifs et négatifs, et tracés graphiques (segments, demi-droites et escaliers).",
+      "conceptExplanation": "Dans de nombreuses situations concrètes (tarifications par paliers, forfaits de communication, phénomènes à seuil), une même formule mathématique ne suffit pas à décrire le système sur tout son domaine. On utilise alors des fonctions définies par morceaux.\n\n1. Définition d'une fonction affine par intervalles :\nUne fonction f est dite affine par intervalles si son ensemble de définition est une réunion d'intervalles disjoints sur chacun desquels f coïncide avec une fonction affine (de la forme x ↦ ax + b).\n- Sa représentation graphique est une réunion de segments de droites ou de demi-droites.\n\n2. Fonctions avec valeurs absolues comme fonctions affines par morceaux :\nToute fonction comportant une valeur absolue du type f(x) = |ax + b| est une fonction affine par intervalles.\n- Méthode pour expliciter f(x) sans les barres de valeur absolue :\n  1) On cherche la racine où l'expression s'annule : ax + b = 0 ⟺ x = −b/a.\n  2) On étudie le signe de ax + b à l'aide d'un tableau de signes.\n  3) Sur l'intervalle où ax + b ≥ 0 : |ax + b| = ax + b.\n  4) Sur l'intervalle où ax + b ≤ 0 : |ax + b| = −(ax + b) = −ax − b.\n  La courbe obtenue est typiquement en forme de « V », continue au point de raccord x = −b/a.\n\n3. La fonction partie entière E(x) :\n- Définition fondamentale : La partie entière d'un nombre réel x est le plus grand entier relatif inférieur ou égal à x. On la note E(x) (ou parfois [x]).\n- Propriété caractéristique d'encadrement : Pour tout réel x, il existe un UNIQUE entier relatif z ∈ ℤ tel que :\n  z ≤ x < z + 1, et alors E(x) = z.\n- Exemples fondamentaux :\n  * Pour les nombres positifs : E(7,8) = 7 car 7 ≤ 7,8 < 8 ; E(9) = 9 car 9 ≤ 9 < 10 ; E(31,365) = 31 car 31 ≤ 31,365 < 32.\n  * Pour les nombres négatifs (attention au piège !) : E(−4,02) = −5 car −5 ≤ −4,02 < −4 (et non −4 !).\n  * Pour tout entier n ∈ ℤ : E(n) = n.\n- Représentation graphique en « escalier » :\n  Sur chaque intervalle semi-ouvert [k ; k + 1[ (avec k ∈ ℤ), la fonction est constante et vaut k : E(x) = k.\n  Graphiquement, la courbe est formée d'une infinité de paliers horizontaux disjoints, fermés à gauche (point plein) et ouverts à droite (point évidé ou crochet).",
+      "formulas": [
+        {
+          "name": "Encadrement de la partie entière",
+          "formula": "z ≤ x < z + 1 ⟺ E(x) = z, avec z ∈ ℤ",
+          "note": "Unique entier relatif inférieur ou égal à x."
+        },
+        {
+          "name": "Propriété fondamentale de E(x)",
+          "formula": "x − 1 < E(x) ≤ x",
+          "note": "L'écart entre un nombre réel et sa partie entière est toujours dans [0 ; 1[."
+        },
+        {
+          "name": "Valeur absolue par morceaux",
+          "formula": "|ax + b| = ax + b si x ≥ −b/a, et −(ax + b) si x < −b/a",
+          "note": "Changement d'expression affine au point d'annulation."
+        }
+      ],
+      "keyRule": "Pour tout réel x, E(x) est le plus grand entier relatif immédiatement à sa gauche ou égal à lui sur l'axe numérique. Pour un nombre négatif, on descend toujours à l'entier strictement inférieur : E(−3,4) = −4.",
+      "workedExample": {
+        "title": "Écriture par intervalles d'une fonction valeur absolue et calculs de partie entière",
+        "statement": "1) Soit la fonction f(x) = |2x − 6| + 1 définie sur ℝ. Écris f(x) sans valeur absolue sous forme d'une fonction affine par intervalles. 2) Calcule les valeurs exactes de E(4,7), E(−2,1) et E(5).",
+        "methodSteps": [
+          "1. Annuler l'expression sous la valeur absolue : 2x − 6 = 0 ⟺ 2x = 6 ⟺ x = 3.",
+          "2. Étudier le signe de 2x − 6 : Comme a = 2 > 0, 2x − 6 est négatif pour x ≤ 3 et positif pour x ≥ 3.",
+          "3. Expliciter f(x) sur ]−∞ ; 3] : |2x − 6| = −(2x − 6) = −2x + 6. Donc f(x) = (−2x + 6) + 1 = −2x + 7.",
+          "4. Expliciter f(x) sur [3 ; +∞[ : |2x − 6| = 2x − 6. Donc f(x) = (2x − 6) + 1 = 2x − 5.",
+          "   Vérification au raccord x = 3 : −2(3) + 7 = 1 et 2(3) − 5 = 1. La fonction est continue en 3.",
+          "5. Calculer les parties entières :",
+          "   - Pour 4,7 : 4 ≤ 4,7 < 5, donc E(4,7) = 4.",
+          "   - Pour −2,1 : −3 ≤ −2,1 < −2, donc E(−2,1) = −3.",
+          "   - Pour 5 : 5 est un entier, donc E(5) = 5."
+        ],
+        "conclusion": "f(x) = −2x + 7 si x ≤ 3, et f(x) = 2x − 5 si x ≥ 3. Les parties entières sont E(4,7) = 4, E(−2,1) = −3 et E(5) = 5."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_maths_numerique_ch5_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est la valeur de la partie entière E(−3,8) ?",
+          "options": [
+            "−4",
+            "−3",
+            "−3,8",
+            "3"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par définition, E(x) est l'entier z tel que z ≤ x < z + 1. Comme −4 ≤ −3,8 < −3, on a E(−3,8) = −4."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p1_ex2",
+          "type": "mcq",
+          "prompt": "Quelle est la valeur de la partie entière E(8,001) ?",
+          "options": [
+            "8",
+            "9",
+            "8,001",
+            "0"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Comme 8 ≤ 8,001 < 9, le plus grand entier inférieur ou égal à 8,001 est 8 : E(8,001) = 8."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p1_ex3",
+          "type": "mcq",
+          "prompt": "Pour tout réel x ∈ ]−∞ ; 2], quelle est l'expression simplifiée de f(x) = |3x − 6| sans barres de valeur absolue ?",
+          "options": [
+            "−3x + 6",
+            "3x − 6",
+            "3x + 6",
+            "−3x − 6"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour x ≤ 2, 3x − 6 ≤ 0. La valeur absolue d'un nombre négatif est son opposé : |3x − 6| = −(3x − 6) = −3x + 6."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p1_ex4",
+          "type": "mcq",
+          "prompt": "Quelle est l'allure de la courbe représentative de la fonction partie entière E(x) dans un repère ?",
+          "options": [
+            "Une suite de paliers horizontaux en forme d'escalier",
+            "Une parabole orientée vers le haut",
+            "Une ligne droite continue de pente 1",
+            "Une hyperbole à deux branches"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Sur chaque intervalle [k ; k + 1[ avec k ∈ ℤ, E(x) est constante et vaut k. Sa représentation forme une succession de segments horizontaux disjoints en escalier."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p1_ex5",
+          "type": "mcq",
+          "prompt": "Soit f(x) = 2x + 1 si x < 1 et f(x) = −x + 4 si x ≥ 1. Quelle est la valeur de f(1) ?",
+          "options": [
+            "3",
+            "2",
+            "4",
+            "f n'est pas définie en 1"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour x = 1, on utilise la formule correspondant à x ≥ 1 : f(1) = −(1) + 4 = 3."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p1_ex6",
+          "type": "mcq",
+          "prompt": "Pour tout réel x, quel est l'encadrement exact de la différence x − E(x) ?",
+          "options": [
+            "0 ≤ x − E(x) < 1",
+            "−1 < x − E(x) ≤ 0",
+            "0 < x − E(x) ≤ 1",
+            "x − E(x) = 0 toujours"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Puisque E(x) ≤ x < E(x) + 1, en soustrayant E(x) partout on obtient : 0 ≤ x − E(x) < 1. Cette quantité est la partie décimale de x."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p1_ex7",
+          "type": "mcq",
+          "prompt": "Quel est l'ensemble des solutions réelles de l'équation E(x) = 4 ?",
+          "options": [
+            "[4 ; 5[",
+            "{4}",
+            "[4 ; 5]",
+            "]3 ; 4]"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "D'après la propriété caractéristique, E(x) = 4 si et seulement si 4 ≤ x < 4 + 1 = 5, soit l'intervalle semi-ouvert [4 ; 5[."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p1_ex8",
+          "type": "mcq",
+          "prompt": "Une communication coûte un forfait fixe de 300 F CFA pour les 2 premières heures (120 min), puis 25 F CFA par minute supplémentaire x. Quelle est l'expression du coût total C(t) pour t > 120 minutes ?",
+          "options": [
+            "300 + 25(t − 120)",
+            "300 + 25t",
+            "25t − 300",
+            "300 × 25(t − 120)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le dépassement est de (t − 120) minutes. Le supplément est de 25(t − 120) F CFA, s'ajoutant au forfait de 300 F CFA : C(t) = 300 + 25(t − 120)."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_maths_numerique_ch5_p2",
+      "order": 2,
+      "title": "Fonctions de référence : carré, valeur absolue, racine carrée, inverse et cube",
+      "summary": "Étude comparative complète des cinq fonctions de référence : domaines de définition, parité, sens de variation, tableaux de variations et propriétés géométriques des courbes associées.",
+      "conceptExplanation": "Les fonctions élémentaires de référence constituent le répertoire fondamental à partir duquel toutes les autres fonctions usuelles sont construites et comparées.\n\n1. La fonction carré : f(x) = x²\n- Ensemble de définition : D = ℝ.\n- Parité : Paire car pour tout x ∈ ℝ, (−x)² = x². Sa courbe est une parabole de sommet O(0 ; 0), symétrique par rapport à l'axe des ordonnées (Oy).\n- Variations : Strictement décroissante sur ]−∞ ; 0], strictement croissante sur [0 ; +∞[.\n- Extremum : Admet un minimum absolu égal à 0 en x = 0.\n\n2. La fonction valeur absolue : f(x) = |x|\n- Ensemble de définition : D = ℝ.\n- Parité : Paire car |−x| = |x|. Sa courbe forme un « V », symétrique par rapport à l'axe (Oy).\n- Variations : Strictement décroissante sur ]−∞ ; 0] (f(x) = −x), strictement croissante sur [0 ; +∞[ (f(x) = x).\n- Extremum : Admet un minimum absolu égal à 0 en x = 0.\n\n3. La fonction racine carrée : f(x) = √x\n- Ensemble de définition : D = ℝ₊ = [0 ; +∞[ (la racine d'un nombre strictement négatif n'existe pas dans ℝ).\n- Variations : Strictement croissante sur [0 ; +∞[.\n- Extremum : Minimum égal à 0 atteint en x = 0.\n- Courbe : Demi-parabole d'axe horizontal (Ox), issue de l'origine O(0 ; 0).\n\n4. La fonction inverse : f(x) = 1/x\n- Ensemble de définition : D = ℝ* = ]−∞ ; 0[ ∪ ]0 ; +∞[ (0 est valeur interdite).\n- Parité : Impaire car 1/(−x) = −(1/x). Sa courbe est une hyperbole équilatère, symétrique par rapport à l'origine O(0 ; 0).\n- Variations : Strictement décroissante sur ]−∞ ; 0[ ET strictement décroissante sur ]0 ; +∞[.\n- Attention : On ne dit JAMAIS que la fonction inverse est « décroissante sur ℝ* », mais bien décroissante séparément sur chacun des deux intervalles ouverts.\n- Asymptotes : L'axe des ordonnées (x = 0) et l'axe des abscisses (y = 0).\n\n5. La fonction cube : f(x) = x³\n- Ensemble de définition : D = ℝ.\n- Parité : Impaire car (−x)³ = −x³. Sa courbe est symétrique par rapport à l'origine O(0 ; 0).\n- Variations : Strictement croissante sur tout ℝ.\n- Signe : Négative pour x < 0, nulle en 0, positive pour x > 0.",
+      "formulas": [
+        {
+          "name": "Parité et symétrie",
+          "formula": "f(−x) = f(x) ⟹ Paire (axe Oy) ; f(−x) = −f(x) ⟹ Impaire (centre O)",
+          "note": "x² et |x| sont paires ; 1/x et x³ sont impaires."
+        },
+        {
+          "name": "Règle de comparaison des puissances sur [0 ; 1]",
+          "formula": "Si 0 ≤ x ≤ 1 : x³ ≤ x² ≤ x ≤ √x",
+          "note": "Sur [0 ; 1], la racine domine les puissances."
+        },
+        {
+          "name": "Règle de comparaison des puissances sur [1 ; +∞[",
+          "formula": "Si x ≥ 1 : √x ≤ x ≤ x² ≤ x³",
+          "note": "Sur [1 ; +∞[, l'ordre des exposants est respecté."
+        }
+      ],
+      "keyRule": "La fonction carré et la fonction valeur absolue sont paires (symétrie axiale par rapport à Oy). La fonction inverse et la fonction cube sont impaires (symétrie centrale par rapport à O). La fonction inverse n'est jamais définie en 0.",
+      "workedExample": {
+        "title": "Comparaison de réels à l'aide des variations des fonctions de référence",
+        "statement": "Sans utiliser de calculatrice : 1) Compare (−3,14)² et (−3,15)². 2) Compare 1 / (√2 + 1) et 1 / (√3 + 1). 3) Détermine le sens de variation et les images aux bornes de la fonction f(x) = x³ sur l'intervalle [−2 ; 3].",
+        "methodSteps": [
+          "1. Comparer (−3,14)² et (−3,15)² :",
+          "   On a −3,15 < −3,14 ≤ 0.",
+          "   La fonction carré x ↦ x² est strictement décroissante sur ]−∞ ; 0], elle inverse l'ordre des nombres négatifs.",
+          "   Donc : (−3,15)² > (−3,14)².",
+          "2. Comparer 1 / (√2 + 1) et 1 / (√3 + 1) :",
+          "   On sait que 2 < 3, et comme la fonction racine carrée est strictement croissante sur [0 ; +∞[, √2 < √3.",
+          "   On ajoute 1 : 0 < √2 + 1 < √3 + 1.",
+          "   La fonction inverse x ↦ 1/x est strictement décroissante sur ]0 ; +∞[, elle inverse l'ordre :",
+          "   1 / (√2 + 1) > 1 / (√3 + 1).",
+          "3. Variations de la fonction cube f(x) = x³ sur [−2 ; 3] :",
+          "   La fonction cube est strictement croissante sur tout ℝ, donc sur [−2 ; 3].",
+          "   f(−2) = (−2)³ = −8 et f(3) = 3³ = 27.",
+          "   Pour tout x ∈ [−2 ; 3] : −8 ≤ x³ ≤ 27."
+        ],
+        "conclusion": "(−3,15)² > (−3,14)² ; 1/(√2 + 1) > 1/(√3 + 1) ; et sur [−2 ; 3], x³ est strictement croissante de −8 à 27."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_maths_numerique_ch5_p2_ex1",
+          "type": "mcq",
+          "prompt": "Quel est l'ensemble de définition de la fonction racine carrée f(x) = √x ?",
+          "options": [
+            "[0 ; +∞[",
+            "ℝ",
+            "]0 ; +∞[",
+            "]−∞ ; 0]"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans l'ensemble des réels ℝ, la racine carrée n'est définie que pour des nombres positifs ou nuls : D = [0 ; +∞[ = ℝ₊."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p2_ex2",
+          "type": "mcq",
+          "prompt": "Quelle propriété géométrique de symétrie possède la courbe de la fonction cube f(x) = x³ ?",
+          "options": [
+            "Symétrique par rapport à l'origine O(0 ; 0)",
+            "Symétrique par rapport à l'axe des ordonnées (Oy)",
+            "Symétrique par rapport à l'axe des abscisses (Ox)",
+            "Aucune symétrie"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La fonction cube est impaire : (−x)³ = −x³. Toute fonction impaire possède une courbe symétrique par rapport à l'origine O du repère."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p2_ex3",
+          "type": "mcq",
+          "prompt": "Quel est le sens de variation de la fonction carré f(x) = x² sur l'intervalle ]−∞ ; 0] ?",
+          "options": [
+            "Strictement décroissante",
+            "Strictement croissante",
+            "Constante",
+            "Croissante puis décroissante"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour deux réels négatifs u < v ≤ 0, on a u² > v². La fonction carré inverse l'ordre des négatifs : elle est strictement décroissante sur ]−∞ ; 0]."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p2_ex4",
+          "type": "mcq",
+          "prompt": "Pourquoi est-il FAUX de dire que la fonction inverse f(x) = 1/x est décroissante sur ℝ* tout entier ?",
+          "options": [
+            "Car si u = −1 et v = 1, on a u < v mais f(u) = −1 < f(v) = 1 (l'ordre n'est pas inversé d'un côté à l'autre de 0)",
+            "Car elle est croissante sur ℝ*",
+            "Car 1/x est positive sur tout ℝ*",
+            "Car elle est constante"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'inversion de l'ordre n'est valable qu'entre nombres de même signe. Pour u = −1 < v = 1, f(−1) = −1 < f(1) = 1 : elle est décroissante sur ]−∞ ; 0[ et sur ]0 ; +∞[ séparément."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p2_ex5",
+          "type": "mcq",
+          "prompt": "Si x = 0,25 (un réel compris entre 0 et 1), quel est l'ordre exact entre x, x² et √x ?",
+          "options": [
+            "x² < x < √x",
+            "√x < x < x²",
+            "x < x² < √x",
+            "x² < √x < x"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour x = 0,25 : x² = 0,0625, x = 0,25, et √x = 0,5. Pour tout x ∈ ]0 ; 1[, on a toujours x² < x < √x."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p2_ex6",
+          "type": "mcq",
+          "prompt": "Quel est l'extremum absolu de la fonction valeur absolue f(x) = |x| sur ℝ ?",
+          "options": [
+            "Un minimum égal à 0, atteint en x = 0",
+            "Un maximum égal à 0, atteint en x = 0",
+            "Un minimum égal à 1, atteint en x = 1",
+            "Elle n'admet aucun extremum"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour tout réel x, |x| ≥ 0 et |0| = 0. Le nombre 0 est donc le minimum absolu de la fonction valeur absolue, atteint en x = 0."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p2_ex7",
+          "type": "mcq",
+          "prompt": "Combien de solutions réelles l'équation x³ = −27 admet-elle ?",
+          "options": [
+            "Une unique solution réelle : x = −3",
+            "Deux solutions : −3 et 3",
+            "Aucune car le second membre est négatif",
+            "Trois solutions réelles distinctes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La fonction cube est une bijection strictement croissante de ℝ sur ℝ. Tout réel k admet un unique antécédent x = ∛k. Comme (−3)³ = −27, l'unique solution est x = −3."
+        },
+        {
+          "id": "seconde_c_maths_numerique_ch5_p2_ex8",
+          "type": "mcq",
+          "prompt": "Quelle est la nature géométrique de la courbe représentative de la fonction f(x) = 1/x ?",
+          "options": [
+            "Une hyperbole équilatère",
+            "Une parabole",
+            "Une droite passant par l'origine",
+            "Un cercle"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La courbe d'équation y = 1/x (ou xy = 1) est une hyperbole équilatère ayant pour asymptotes les axes de coordonnées (Ox) et (Oy)."
+        }
+      ]
+    }
+  ]
+};
+
 export const maths2deCNumericChapters: CurriculumChapter[] = [
   maths2deCFonctionsGeneralitesChapter,
   maths2deCPolynomesRationnellesChapter,
   maths2deCEquationsInequationsChapter,
   maths2deCStatistiqueChapter,
+  maths2deCFonctionsElementairesChapter,
 ];
