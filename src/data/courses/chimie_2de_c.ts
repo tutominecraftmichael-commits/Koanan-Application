@@ -4103,6 +4103,328 @@ export const chimie2deCSolutionsAcidesBasiquesChapter: CurriculumChapter = {
   ]
 };
 
+// ============================================================================
+// LEÇON 11 : RÉACTION ACIDO-BASIQUE. DOSAGE
+// ============================================================================
+
+export const chimie2deCReactionAcidoBasiqueDosageChapter: CurriculumChapter = {
+  "id": "seconde_c_chimie_ch11_reaction_acido_basique_dosage",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 11,
+  "officialVolumeHours": 8,
+  "title": "Leçon 11 — Réaction acido-basique. Dosage",
+  "summary": "Caractéristiques thermiques et stœchiométriques de la réaction entre l'acide chlorhydrique et l'hydroxyde de sodium, bilan ionique, principe du dosage acido-basique, virage du BBT à l'équivalence et relation C_A·V_A = C_B·V_BE.",
+  "points": [
+    {
+      "id": "seconde_c_chimie_ch11_p1_caracteristiques_reaction_bilan",
+      "order": 1,
+      "title": "Caractéristiques de la réaction acido-basique et équation-bilan",
+      "summary": "Comprendre les propriétés de la réaction entre l'acide chlorhydrique et la soude (exothermique, totale, équimolaire) et identifier les produits formés.",
+      "conceptExplanation": "Lorsqu'on verse une solution d'acide chlorhydrique (H₃O⁺ + Cl⁻) dans une solution d'hydroxyde de sodium (Na⁺ + OH⁻) :\n1. Effet thermique : la température du mélange réactionnel s'élève nettement (par exemple de 28 °C à 35 °C). La réaction acido-basique dégage de la chaleur : elle est exothermique.\n2. Caractère complet : la réaction est totale (les réactifs se consomment entièrement s'ils sont introduits dans les proportions stœchiométriques) et quasi-instantanée.\n3. Équimolarité : une mole d'ions hydronium H₃O⁺ réagit avec exactement une mole d'ions hydroxyde OH⁻ pour former deux moles d'eau H₂O selon l'équation ionique nette :\nH₃O⁺ + OH⁻ ⟶ 2 H₂O.\n4. Produits formés et ions spectateurs :\n- L'évaporation de la solution neutre obtenue laisse des cristaux blancs de chlorure de sodium NaCl.\n- Le test à la flamme donne une flamme jaune révélant la présence des ions sodium Na⁺.\n- Le test au nitrate d'argent produit un précipité blanc de AgCl qui noircit à la lumière révélant les ions chlorure Cl⁻.\n- Les ions Na⁺ et Cl⁻ ne participent pas à la transformation : ce sont des ions spectateurs (ou indifférents).\n- L'équation-bilan globale s'écrit : (H₃O⁺ + Cl⁻) + (Na⁺ + OH⁻) ⟶ (Na⁺ + Cl⁻) + 2 H₂O.\n5. État du mélange selon les quantités initiales :\n- Si n(H₃O⁺) = n(OH⁻) : le mélange est neutre (pH = 7 à 25 °C).\n- Si n(H₃O⁺) > n(OH⁻) : les ions H₃O⁺ sont en excès, le mélange final est acide (pH < 7, le BBT est jaune).\n- Si n(OH⁻) > n(H₃O⁺) : les ions OH⁻ sont en excès, le mélange final est basique (pH > 7, le BBT est bleu).",
+      "formulas": [
+        {
+          "name": "Équation ionique nette",
+          "formula": "H₃O⁺ + OH⁻ ⟶ 2 H₂O",
+          "note": "Réaction fondamentale de neutralisation acido-basique en solution aqueuse."
+        },
+        {
+          "name": "Équation globale avec ions spectateurs",
+          "formula": "(H₃O⁺ + Cl⁻) + (Na⁺ + OH⁻) ⟶ (Na⁺ + Cl⁻) + 2 H₂O",
+          "note": "Les ions Na⁺ et Cl⁻ restent inchangés dans la solution."
+        },
+        {
+          "name": "Quantité d'acide introduite",
+          "formula": "n(H₃O⁺) = C_A × V_A",
+          "note": "En moles, avec C_A en mol/L et V_A en litres."
+        },
+        {
+          "name": "Quantité de base introduite",
+          "formula": "n(OH⁻) = C_B × V_B",
+          "note": "En moles, avec C_B en mol/L et V_B en litres."
+        },
+        {
+          "name": "Condition de neutralité stœchiométrique",
+          "formula": "n(H₃O⁺) = n(OH⁻) ⟺ C_A × V_A = C_B × V_B",
+          "note": "Le pH du mélange est alors rigoureusement égal à 7 à 25 °C."
+        }
+      ],
+      "keyRule": "La réaction entre HCl et NaOH est exothermique, totale et équimolaire : H₃O⁺ + OH⁻ ⟶ 2 H₂O. Les ions Na⁺ et Cl⁻ sont spectateurs. Si n(H₃O⁺) = n(OH⁻), le mélange est neutre (pH = 7).",
+      "workedExample": {
+        "title": "Détermination de la nature d'un mélange acide-base et réactif en excès",
+        "statement": "On mélange un volume V_A = 10 cm³ d'une solution d'acide chlorhydrique de concentration C_A = 0,2 mol/L avec un volume V_B = 15 cm³ d'une solution d'hydroxyde de sodium de concentration C_B = 0,1 mol/L. 1) Calcule les quantités de matière d'ions H₃O⁺ et OH⁻ introduites. 2) Écris l'équation-bilan de la réaction. 3) Détermine le réactif en excès et la nature (acide, basique ou neutre) du mélange après réaction.",
+        "methodSteps": [
+          "Convertir les volumes en litres : V_A = 10 cm³ = 10 × 10⁻³ L = 0,010 L ; V_B = 15 cm³ = 15 × 10⁻³ L = 0,015 L.",
+          "Calculer la quantité d'ions H₃O⁺ apportée par l'acide : n(H₃O⁺) = C_A × V_A = 0,2 mol/L × 0,010 L = 2,0 × 10⁻³ mol.",
+          "Calculer la quantité d'ions OH⁻ apportée par la soude : n(OH⁻) = C_B × V_B = 0,1 mol/L × 0,015 L = 1,5 × 10⁻³ mol.",
+          "Écrire l'équation de la réaction : H₃O⁺ + OH⁻ ⟶ 2 H₂O.",
+          "Comparer les quantités de matière initiales : comme 2,0 × 10⁻³ mol > 1,5 × 10⁻³ mol, on a n(H₃O⁺) > n(OH⁻). Les ions H₃O⁺ sont introduits en excès et les ions OH⁻ sont le réactif limitant.",
+          "En déduire la nature de la solution finale : les ions OH⁻ sont entièrement consommés et il reste un excès d'ions H₃O⁺ égal à (2,0 − 1,5) × 10⁻³ = 0,5 × 10⁻³ mol. La solution obtenue est donc acide."
+        ],
+        "conclusion": "Les ions H₃O⁺ sont en excès (0,5 × 10⁻³ mol restantes) ; le mélange final est acide et colorera le BBT en jaune."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch11_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quelles sont les trois caractéristiques essentielles de la réaction entre une solution d'acide chlorhydrique et une solution d'hydroxyde de sodium ?",
+          "options": [
+            "Elle est exothermique, totale et équimolaire",
+            "Elle est endothermique, lente et réversible",
+            "Elle est athermique, partielle et explosive",
+            "Elle est photochimique, instantanée et catalytique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La réaction dégage de la chaleur (exothermique), consomme intégralement le réactif limitant (totale) et consomme exactement 1 mole de H₃O⁺ pour 1 mole de OH⁻ (équimolaire)."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p1_ex2",
+          "type": "mcq",
+          "prompt": "Quelle est l'équation-bilan ionique nette traduisant la neutralisation acido-basique de l'acide chlorhydrique par la soude ?",
+          "options": [
+            "H₃O⁺ + OH⁻ ⟶ 2 H₂O",
+            "HCl + NaOH ⟶ NaCl + H₂",
+            "H⁺ + Cl⁻ ⟶ HCl",
+            "2 H₂O ⟶ H₃O⁺ + OH⁻"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Seuls les ions hydronium H₃O⁺ et hydroxyde OH⁻ réagissent ensemble pour former de l'eau : H₃O⁺ + OH⁻ ⟶ 2 H₂O. Les ions Na⁺ et Cl⁻ sont spectateurs."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p1_ex3",
+          "type": "mcq",
+          "prompt": "Quel rôle jouent les ions sodium Na⁺ et chlorure Cl⁻ lors du mélange de solutions de soude et d'acide chlorhydrique ?",
+          "options": [
+            "Ce sont des ions spectateurs qui ne participent pas à la transformation chimique",
+            "Ils précipitent immédiatement sous forme de dépôt solide insoluble",
+            "Ils s'oxydent mutuellement en chlore et en sodium",
+            "Ils jouent le rôle de catalyseurs biologiques"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les ions Na⁺ et Cl⁻ restent inchangés et libres en solution aqueuse ; ils n'apparaissent pas dans l'équation ionique nette."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p1_ex4",
+          "type": "mcq",
+          "prompt": "On mélange 50 mL d'acide chlorhydrique à 25 °C et 50 mL de soude de même concentration à 25 °C. Quelle observation confirme le caractère exothermique ?",
+          "options": [
+            "La température du mélange s'élève au-dessus de 25 °C (dégagement de chaleur)",
+            "La température du mélange descend en dessous de 0 °C",
+            "Le récipient se couvre spontanément de givre",
+            "La température reste figée exactement à 25,0 °C"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une réaction exothermique libère de l'énergie thermique dans le milieu réactionnel, ce qui se traduit par une augmentation mesurable de la température."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p1_ex5",
+          "type": "mcq",
+          "prompt": "On mélange un volume V_A = 10 mL d'acide chlorhydrique de concentration C_A = 0,1 mol/L et un volume V_B = 5 mL de soude de concentration C_B = 0,1 mol/L. Quel est l'état final du mélange ?",
+          "options": [
+            "Le mélange est acide car n(H₃O⁺) = 1,0 × 10⁻³ mol > n(OH⁻) = 0,5 × 10⁻³ mol",
+            "Le mélange est basique car la soude est plus dense",
+            "Le mélange est parfaitement neutre",
+            "Le mélange n'a subi aucune réaction chimique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "n(H₃O⁺) = 0,1 × 0,010 = 10⁻³ mol ; n(OH⁻) = 0,1 × 0,005 = 0,5 × 10⁻³ mol. Comme n(H₃O⁺) > n(OH⁻), il reste de l'acide en excès : le mélange est acide."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p1_ex6",
+          "type": "mcq",
+          "prompt": "Lorsqu'on évapore complètement l'eau d'une solution obtenue par neutralisation exacte de l'acide chlorhydrique par la soude, que recueille-t-on ?",
+          "options": [
+            "Des cristaux blancs de chlorure de sodium (NaCl)",
+            "Un dépôt vert d'hydroxyde de cuivre",
+            "Du carbonate de calcium pur",
+            "Aucun résidu solide, tout s'évapore"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La neutralisation produit une solution aqueuse de sel de table (Na⁺ + Cl⁻) et d'eau. Après évaporation totale de l'eau, les ions Na⁺ et Cl⁻ cristallisent en NaCl solide."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p1_ex7",
+          "type": "mcq",
+          "prompt": "Quelle couleur prendra le bleu de bromothymol (BBT) si l'on mélange 20 mL de soude C = 0,1 mol/L avec 10 mL d'acide chlorhydrique C = 0,1 mol/L ?",
+          "options": [
+            "Bleue (car la soude est en excès et le milieu est basique)",
+            "Jaune (car le milieu est acide)",
+            "Verte (car le milieu est neutre)",
+            "Rouge écarlate"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "n(OH⁻) = 0,1 × 0,020 = 2 × 10⁻³ mol ; n(H₃O⁺) = 0,1 × 0,010 = 1 × 10⁻³ mol. Les ions hydroxyde sont en excès, la solution finale est basique (pH > 7), donc le BBT vire au bleu."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p1_ex8",
+          "type": "mcq",
+          "prompt": "Pour neutraliser exactement 2 × 10⁻³ mol d'ions hydronium H₃O⁺ contenus dans une prise d'essai, combien de moles d'ions hydroxyde OH⁻ faut-il apporter ?",
+          "options": [
+            "Exactement 2 × 10⁻³ mol en vertu de la stœchiométrie 1 pour 1",
+            "1 × 10⁻³ mol car l'acide est deux fois plus fort",
+            "4 × 10⁻³ mol pour compenser la dilution",
+            "0 mol car la neutralisation est spontanée sans base"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La réaction H₃O⁺ + OH⁻ ⟶ 2 H₂O consomme exactement une mole de OH⁻ par mole de H₃O⁺. Il faut donc n(OH⁻) = n(H₃O⁺) = 2 × 10⁻³ mol."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_chimie_ch11_p2_dosage_principe_equivalence_calculs",
+      "order": 2,
+      "title": "Dosage acido-basique : principe, équivalence et calculs",
+      "summary": "Maîtriser le principe d'un dosage volumétrique, le dispositif expérimental, la détection de l'équivalence par indicateur coloré et la relation C_A·V_A = C_B·V_BE.",
+      "conceptExplanation": "1. Définition du dosage (chimie analytique quantitative) :\nUn dosage ou titrage acido-basique consiste à déterminer expérimentalement la concentration molaire inconnue d'une solution (solution titrée) en la faisant réagir avec une solution de concentration connue avec précision (solution titrante).\n\n2. Dispositif expérimental normalisé :\n- Une burette graduée : contient la solution titrante (ex : hydroxyde de sodium de concentration connue C_B) munie d'un robinet de précision.\n- Un bécher ou erlenmeyer : contient un volume prélevé avec exactitude à la pipette jaugée V_A de solution à doser (ex : acide chlorhydrique de concentration inconnue C_A).\n- Un agitateur magnétique et un barreau aimanté pour homogénéiser la solution.\n- Un indicateur coloré acido-basique : quelques gouttes de bleu de bromothymol (BBT) ajoutées dans le bécher.\n\n3. Équivalence acido-basique :\nL'équivalence acido-basique est l'instant précis où les réactifs (acide et base) ont été mélangés dans les proportions stœchiométriques exactes :\nn(H₃O⁺) apporté par l'acide = n(OH⁻) versé par la base.\nÀ cet instant, la quantité d'acide initialement présente a été totalement neutralisée par le volume équivalent V_BE de solution titrante versé.\n\n4. Repérage de l'équivalence :\n- Avant l'équivalence : l'acide est en excès, le mélange dans le bécher est jaune (au BBT).\n- À l'équivalence exacte : le mélange est neutre (pH = 7 à 25 °C pour un acide fort dosé par une base forte) ; la couleur du BBT vire instantanément du jaune au vert (teinte sensible).\n- Après l'équivalence : la base versée devient en excès, le mélange vire au bleu franc.\n\n5. Relation fondamentale et calculs stœchiométriques :\nÀ l'équivalence acido-basique :\nC_A × V_A = C_B × V_BE.\nOn en déduit immédiatement la concentration de la solution titrée :\nC_A = (C_B × V_BE) / V_A.\nSi la solution dosée provient d'une dilution préalable d'une solution commerciale de concentration C_com par un facteur de dilution F (ex : F = 100), la concentration initiale vaut :\nC_com = F × C_A.",
+      "formulas": [
+        {
+          "name": "Relation fondamentale à l'équivalence",
+          "formula": "C_A × V_A = C_B × V_BE",
+          "note": "Égalité des moles d'acide initiales et de base versées."
+        },
+        {
+          "name": "Concentration inconnue de l'acide titré",
+          "formula": "C_A = (C_B × V_BE) / V_A",
+          "note": "Permet de déterminer la molarité de la solution dosée."
+        },
+        {
+          "name": "Volume équivalent de soude nécessaire",
+          "formula": "V_BE = (C_A × V_A) / C_B",
+          "note": "Volume de solution titrante mesuré à la burette graduée au virage."
+        },
+        {
+          "name": "Facteur de dilution",
+          "formula": "F = C_com / C_A = V_fille / V_mère",
+          "note": "Permet de remonter à la concentration de la solution mère d'origine."
+        },
+        {
+          "name": "Volume complémentaire pour atteindre l'équivalence",
+          "formula": "V'_A = (C_B × V_B) / C_A − V_A",
+          "note": "Volume d'acide à ajouter lorsque la base a été introduite en excès."
+        }
+      ],
+      "keyRule": "À l'équivalence acido-basique, n(acide) = n(base) soit C_A·V_A = C_B·V_BE. Le BBT vire du jaune au vert (pH = 7). La concentration inconnue vaut C_A = (C_B·V_BE)/V_A.",
+      "workedExample": {
+        "title": "Dosage d'une solution d'acide chlorhydrique et calcul de la solution commerciale",
+        "statement": "On dispose d'une solution commerciale d'acide chlorhydrique. On dilue cette solution commerciale 100 fois pour obtenir une solution A de concentration C_A. On prélève ensuite à la pipette jaugée un volume V_A = 20 mL de la solution A que l'on dose avec une solution d'hydroxyde de sodium de concentration C_B = 0,08 mol/L en présence de BBT. Le virage de l'indicateur au vert est obtenu pour un volume de soude versé V_BE = 25 mL. 1) Écris l'équation de la réaction de dosage. 2) Détermine la concentration C_A de la solution diluée. 3) Calcule la concentration C_com de la solution commerciale.",
+        "methodSteps": [
+          "Écrire l'équation-bilan de la réaction de dosage : H₃O⁺ + OH⁻ ⟶ 2 H₂O.",
+          "Définir la condition à l'équivalence : à l'équivalence acido-basique, les quantités de matière d'acide et de base sont égales : n(acide) = n(base) ⟹ C_A × V_A = C_B × V_BE.",
+          "Exprimer puis calculer la concentration C_A : C_A = (C_B × V_BE) / V_A = (0,08 mol/L × 25 mL) / 20 mL = 2,0 / 20 = 0,10 mol/L.",
+          "Utiliser le facteur de dilution F = 100 pour trouver la concentration de la solution commerciale : C_com = 100 × C_A = 100 × 0,10 mol/L = 10 mol/L."
+        ],
+        "conclusion": "La solution diluée a une concentration C_A = 0,10 mol/L et la solution commerciale concentrée a une concentration de 10 mol/L."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch11_p2_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est la définition rigoureuse de l'équivalence acido-basique lors d'un dosage ?",
+          "options": [
+            "C'est l'état où la quantité de matière d'acide initialement présente est égale à la quantité de matière de base versée",
+            "C'est le moment où le volume d'acide dans le bécher est égal au volume de base dans la burette",
+            "C'est l'instant où la solution commence à bouillir dans le bécher",
+            "C'est lorsque le pH de la solution atteint zéro"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'équivalence correspond au mélange stœchiométrique parfait : n(H₃O⁺) initial = n(OH⁻) versé, soit C_A × V_A = C_B × V_BE."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p2_ex2",
+          "type": "mcq",
+          "prompt": "Dans un dosage de l'acide chlorhydrique par la soude en présence de bleu de bromothymol (BBT), quel changement de couleur signale que l'équivalence est atteinte ?",
+          "options": [
+            "Le passage de la couleur jaune à la couleur verte (virage à la neutralité pH = 7)",
+            "Le passage direct du blanc au rouge carmin",
+            "La décoloration totale d'une solution violette",
+            "L'apparition d'un précipité blanc opaque"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le BBT est jaune dans l'acide (bécher initial). À l'équivalence (pH = 7), il prend sa teinte sensible verte. Si l'on continue d'ajouter de la soude, il vire au bleu."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p2_ex3",
+          "type": "mcq",
+          "prompt": "On dose un volume V_A = 10 mL d'acide chlorhydrique par une solution de soude de concentration C_B = 0,05 mol/L. Le virage du BBT est obtenu pour V_BE = 20 mL. Quelle est la concentration C_A de l'acide ?",
+          "options": [
+            "0,10 mol/L",
+            "0,025 mol/L",
+            "0,05 mol/L",
+            "0,20 mol/L"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "C_A = (C_B × V_BE) / V_A = (0,05 × 20) / 10 = 1,0 / 10 = 0,10 mol/L."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p2_ex4",
+          "type": "mcq",
+          "prompt": "Dans la verrerie de laboratoire d'un dosage volumétrique, où place-t-on la solution titrante de concentration connue ?",
+          "options": [
+            "Dans la burette graduée munie d'un robinet",
+            "Dans une fiole jaugée bouchée",
+            "Au fond d'un tube à essai incliné",
+            "Dans une éprouvette graduée non versante"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La solution titrante est obligatoirement introduite dans la burette graduée afin de pouvoir verser goutte à goutte et mesurer avec précision le volume équivalent V_BE."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p2_ex5",
+          "type": "mcq",
+          "prompt": "La relation C_A × V_A = C_B × V_B est-elle vérifiée à tout instant au cours du dosage ?",
+          "options": [
+            "Non, elle n'est vérifiée qu'au seul point particulier de l'équivalence (V_B = V_BE)",
+            "Oui, elle est toujours vérifiée du début jusqu'à la fin",
+            "Oui, uniquement avant d'avoir versé la moindre goutte de base",
+            "Non, elle n'est jamais vérifiée expérimentalement"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Avant l'équivalence, l'acide est en excès (C_A·V_A > C_B·V_B). Après l'équivalence, la base est en excès (C_A·V_A < C_B·V_B). L'égalité stricte n'a lieu qu'à l'équivalence."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p2_ex6",
+          "type": "mcq",
+          "prompt": "Un laborantin dose un volume V_A = 20 mL d'une solution d'acide chlorhydrique de concentration inconnue C_A avec de la soude C_B = 0,1 mol/L. Le BBT vire au vert pour V_BE = 10 mL. Que vaut C_A ?",
+          "options": [
+            "0,05 mol/L",
+            "0,20 mol/L",
+            "0,10 mol/L",
+            "0,01 mol/L"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "C_A = (C_B × V_BE) / V_A = (0,1 × 10) / 20 = 1,0 / 20 = 0,05 mol/L."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p2_ex7",
+          "type": "mcq",
+          "prompt": "Un élève a mélangé 200 mL de soude C_B = 0,02 mol/L et 20 mL d'acide chlorhydrique C_A = 0,1 mol/L. L'équivalence est-elle atteinte, et que faut-il ajouter pour l'atteindre ?",
+          "options": [
+            "L'équivalence n'est pas atteinte (base en excès car n_B = 4×10⁻³ mol > n_A = 2×10⁻³ mol) ; il faut ajouter 20 mL d'acide chlorhydrique",
+            "L'équivalence est parfaitement atteinte car les volumes sont proportionnels",
+            "L'acide est en excès ; il faut ajouter 50 mL d'eau distillée",
+            "Il faut ajouter 10 g de chlorure de sodium solide"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "n_B = 0,02 × 0,200 = 4×10⁻³ mol ; n_A = 0,1 × 0,020 = 2×10⁻³ mol. Il manque n_A' = 4×10⁻³ − 2×10⁻³ = 2×10⁻³ mol d'acide, soit un volume complémentaire V'_A = 2×10⁻³ / 0,1 = 0,020 L = 20 mL d'acide."
+        },
+        {
+          "id": "seconde_c_chimie_ch11_p2_ex8",
+          "type": "mcq",
+          "prompt": "Dans le domaine industriel et agroalimentaire, à quoi servent principalement les techniques de dosage par rapport aux analyses qualitatives ?",
+          "options": [
+            "À déterminer quantitativement la concentration ou la teneur exacte d'un composé pour le contrôle qualité et la surveillance des normes",
+            "Uniquement à changer la couleur des produits alimentaires",
+            "À fabriquer de l'énergie électrique par combustion",
+            "À dissoudre les récipients en verre"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'analyse quantitative (dosage) mesure précisément les concentrations et teneurs réelles (ex : polluants, principes actifs, acidité des jus), contrairement à l'analyse qualitative qui indique seulement la présence ou l'absence d'une espèce."
+        }
+      ]
+    }
+  ]
+};
+
 
 export const chimie2deCChapters: CurriculumChapter[] = [
   chimie2deCElementChimiqueChapter,
@@ -4115,4 +4437,5 @@ export const chimie2deCChapters: CurriculumChapter[] = [
   chimie2deCSolutionsAqueusesChapter,
   chimie2deCTestsIdentificationIonsChapter,
   chimie2deCSolutionsAcidesBasiquesChapter,
+  chimie2deCReactionAcidoBasiqueDosageChapter,
 ];
