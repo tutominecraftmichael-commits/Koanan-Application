@@ -1,12 +1,21 @@
 // ============================================================================
 // MODULE OFFICIEL : PHYSIQUE 2de C (PHYSIQUE-CHIMIE)
 // Ministère de l'Éducation Nationale et de l'Alphabétisation (MENA - Côte d'Ivoire)
-// Thème 1 : Mécanique
-// Leçon 1 : Le mouvement
-// Leçon 2 : Actions mécaniques ou forces
-// Leçon 3 : Équilibre d'un solide soumis à deux forces puis à trois forces
-// Leçon 4 : Principe de l'inertie
-// Leçon 5 : Équilibre d'un solide mobile autour d'un axe fixe
+//
+// THÈME 1 : MÉCANIQUE
+// - Leçon 1 : Le mouvement (8h)
+// - Leçon 2 : Actions mécaniques ou forces (8h)
+// - Leçon 3 : Équilibre d'un solide soumis à deux forces puis à trois forces (8h)
+// - Leçon 4 : Principe de l'inertie (6h)
+// - Leçon 5 : Équilibre d'un solide mobile autour d'un axe fixe (8h)
+// - Leçon 6 : Quantité de mouvement (6h)
+//
+// THÈME 2 : ÉLECTRICITÉ ET ÉLECTRONIQUE
+// - Leçon 7 : Intensité d'un courant continu (6h)
+// - Leçon 8 : Tension électrique (6h)
+// - Leçon 9 : Étude expérimentale de quelques dipôles passifs (8h)
+// - Leçon 10 : Étude expérimentale d'un dipôle actif. Point de fonctionnement (8h)
+//
 // Règle absolue : Zéro code brut informatique, pédagogie pas-à-pas, 8 questions QCM par mini-leçon (score 8/8 exigé)
 // ============================================================================
 
@@ -1595,7 +1604,1544 @@ export const physique2deCEquilibreSolideAxeFixeChapter: CurriculumChapter = {
 };
 
 // ============================================================================
-// EXPORTATION DE TOUS LES CHAPITRES DE PHYSIQUE 2de C
+// LEÇON 6 : QUANTITÉ DE MOUVEMENT
+// ============================================================================
+export const physique2deCQuantiteDeMouvementChapter: CurriculumChapter = {
+  "id": "seconde_c_physique_ch6_quantite_de_mouvement",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 6,
+  "officialVolumeHours": 6,
+  "title": "Leçon 6 — Quantité de mouvement",
+  "summary": "Définition vectorielle de la quantité de mouvement p = m·v, quantité de mouvement d'un système de deux solides, loi de conservation pour un système isolé ou pseudo-isolé et applications aux chocs, au recul et à la propulsion par réaction.",
+  "points": [
+    {
+      "id": "seconde_c_physique_ch6_p1_vecteur_quantite_mouvement_solide_systeme",
+      "order": 1,
+      "title": "Vecteur quantité de mouvement d'un solide et d'un système matériel",
+      "summary": "Définir le vecteur quantité de mouvement p = m·v d'un solide, connaître ses caractéristiques et exprimer la quantité de mouvement globale d'un système de solides.",
+      "conceptExplanation": "1. Définition du vecteur quantité de mouvement d'un solide :\nLe vecteur quantité de mouvement d'un point matériel ou d'un solide de masse m dont le centre d'inertie se déplace à la vitesse vectorielle v_G est égal au produit de sa masse par son vecteur-vitesse :\np = m · v_G.\n\n2. Caractéristiques physiques de p :\n- Point d'application : le centre d'inertie G du solide.\n- Direction : celle du vecteur-vitesse v_G (tangente à la trajectoire).\n- Sens : celui du mouvement (identique au sens de v_G).\n- Norme (valeur) : p = m · v_G avec m en kilogrammes (kg), v_G en mètres par seconde (m·s⁻¹ ou m/s) et p en kilogramme-mètre par seconde (kg·m·s⁻¹ ou kg·m/s).\nAttention : le vecteur quantité de mouvement dépend impérativement du référentiel choisi, car la vitesse v_G dépend du référentiel.\n\n3. Vecteur quantité de mouvement d'un système de deux solides :\nPour un système constitué de deux solides S₁ (masse m₁, centre d'inertie G₁, vitesse v_G1) et S₂ (masse m₂, centre d'inertie G₂, vitesse v_G2) :\nLe vecteur quantité de mouvement global du système est la somme vectorielle des quantités de mouvement individuelles :\np = p₁ + p₂ = m₁ · v_G1 + m₂ · v_G2.\nSi G est le centre d'inertie de l'ensemble du système (masse totale M = m₁ + m₂), on a également :\np = (m₁ + m₂) · v_G = M · v_G.\n\n4. Position du centre d'inertie d'un système de deux solides :\nLe centre d'inertie G est le barycentre des centres G₁ et G₂ affectés des masses m₁ et m₂ :\nOG = (m₁ · OG₁ + m₂ · OG₂) / (m₁ + m₂).\nEn prenant pour origine le point G₁ (O ≡ G₁) :\nG₁G = [m₂ / (m₁ + m₂)] · G₁G₂.\nExemple : si m₂ = 2 m₁, alors G₁G = (2 / 3) G₁G₂.",
+      "formulas": [
+        {
+          "name": "Vecteur quantité de mouvement",
+          "formula": "p = m · v_G",
+          "note": "m en kg, v_G en m·s⁻¹, p en kg·m·s⁻¹ (ou kg·m/s)."
+        },
+        {
+          "name": "Norme de la quantité de mouvement",
+          "formula": "p = m × v",
+          "note": "Valeur scalaire toujours positive, proportionnelle à la masse et à la vitesse."
+        },
+        {
+          "name": "Quantité de mouvement d'un système de solides",
+          "formula": "p = p₁ + p₂ = m₁ · v₁ + m₂ · v₂ = (m₁ + m₂) · v_G",
+          "note": "Somme vectorielle des impulsions de chaque solide composant le système."
+        },
+        {
+          "name": "Position du barycentre d'un système binaire",
+          "formula": "G₁G = [m₂ / (m₁ + m₂)] · G₁G₂",
+          "note": "Le centre d'inertie est toujours plus proche du solide le plus lourd."
+        }
+      ],
+      "keyRule": "La quantité de mouvement est une grandeur STRICTEMENT VECTORIELLE. Pour un système de plusieurs corps se déplaçant dans des directions différentes, on ne peut jamais additionner simplement les valeurs numériques scalaires : il faut impérativement faire une addition vectorielle (géométrique ou par projection sur des axes).",
+      "workedExample": {
+        "title": "Exemple résolu : Calcul de quantité de mouvement d'une automobile et d'une balle",
+        "statement": "1. Une automobile de masse m₁ = 1 200 kg roule à la vitesse v₁ = 90 km/h sur une route rectiligne.\n2. Une balle de fusil de masse m₂ = 20 g est tirée à la vitesse v₂ = 800 m/s.\nCalculer la norme de la quantité de mouvement de chaque objet et comparer leurs ordres de grandeur.",
+        "methodSteps": [
+          "Étape 1 : Convertir les grandeurs dans les unités légales du Système International (SI).",
+          "Pour l'automobile : v₁ = 90 km/h = 90 / 3,6 = 25 m/s. Sa masse est déjà en kg : m₁ = 1 200 kg.",
+          "Pour la balle : v₂ = 800 m/s. Convertir sa masse en kg : m₂ = 20 g = 20 × 10⁻³ kg = 0,020 kg.",
+          "Étape 2 : Calculer la quantité de mouvement p₁ de l'automobile : p₁ = m₁ × v₁ = 1 200 × 25 = 30 000 kg·m/s = 3,0 × 10⁴ kg·m·s⁻¹.",
+          "Étape 3 : Calculer la quantité de mouvement p₂ de la balle : p₂ = m₂ × v₂ = 0,020 × 800 = 16 kg·m/s = 16 kg·m·s⁻¹.",
+          "Étape 4 : Comparer les deux valeurs : p₁ / p₂ = 30 000 / 16 = 1 875."
+        ],
+        "conclusion": "L'automobile possède une quantité de mouvement 1 875 fois plus grande que la balle, car sa masse imposante compense largement sa vitesse plus modeste."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_physique_ch6_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est l'unité légale de la quantité de mouvement dans le Système International (SI) ?",
+          "options": [
+            "Le kilogramme-mètre par seconde (kg·m·s⁻¹)",
+            "Le newton par seconde (N·s⁻¹)",
+            "Le joule par seconde (J·s⁻¹)",
+            "Le mètre par seconde carrée (m·s⁻²)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans le Système International, la masse s'exprime en kg et la vitesse en m·s⁻¹, donc la quantité de mouvement p = m·v s'exprime en kg·m·s⁻¹ (ou en N·s car 1 N = 1 kg·m·s⁻²)."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p1_ex2",
+          "type": "mcq",
+          "prompt": "Quelles sont les caractéristiques vectorielles du vecteur quantité de mouvement p d'un point matériel ?",
+          "options": [
+            "Même point d'application, même direction et même sens que le vecteur-vitesse v_G",
+            "Même direction mais de sens toujours opposé à v_G",
+            "Direction perpendiculaire à la trajectoire et sens vers l'intérieur",
+            "Point d'application à l'origine du repère et direction constante"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Puisque p = m · v_G et que la masse m est un scalaire strictement positif (m > 0), le vecteur p a exactement la même direction, le même sens et le même point d'application que v_G."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p1_ex3",
+          "type": "mcq",
+          "prompt": "Une balle de tennis de masse m = 60 g est servie à une vitesse v = 180 km/h. Quelle est la norme de sa quantité de mouvement ?",
+          "options": [
+            "3,0 kg·m·s⁻¹",
+            "10,8 kg·m·s⁻¹",
+            "300 kg·m·s⁻¹",
+            "1,08 × 10⁴ kg·m·s⁻¹"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Convertissons en unités SI : m = 60 g = 0,060 kg et v = 180 km/h = 180 / 3,6 = 50 m/s. On en déduit : p = m × v = 0,060 × 50 = 3,0 kg·m·s⁻¹."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p1_ex4",
+          "type": "mcq",
+          "prompt": "Si la vitesse d'un mobile est doublée alors que sa masse reste constante, sa quantité de mouvement :",
+          "options": [
+            "Est multipliée par 2",
+            "Est multipliée par 4",
+            "Reste inchangée",
+            "Est divisée par 2"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La norme de la quantité de mouvement p = m × v est directement proportionnelle à la vitesse v. Si v devient 2v, p' = m × (2v) = 2p."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p1_ex5",
+          "type": "mcq",
+          "prompt": "Deux solides A et B de masses mA = 2 kg et mB = 3 kg se déplacent en sens contraires sur un même axe avec des vitesses respectives vA = +4 m/s et vB = −2 m/s. Quelle est la quantité de mouvement totale du système {A + B} sur cet axe ?",
+          "options": [
+            "+2 kg·m·s⁻¹",
+            "+14 kg·m·s⁻¹",
+            "−2 kg·m·s⁻¹",
+            "+8 kg·m·s⁻¹"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La projection sur l'axe donne : p = pA + pB = mA·vA + mB·vB = (2 × (+4)) + (3 × (−2)) = 8 − 6 = +2 kg·m·s⁻¹."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p1_ex6",
+          "type": "mcq",
+          "prompt": "Deux corps ponctuels A et B de masses mA = 100 g et mB = 300 g sont distants de AB = 40 cm. À quelle distance du point A se trouve le centre d'inertie G du système ?",
+          "options": [
+            "30 cm de A",
+            "10 cm de A",
+            "20 cm de A",
+            "25 cm de A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par la formule du barycentre : AG = [mB / (mA + mB)] · AB = [300 / (100 + 300)] × 40 = (3/4) × 40 = 30 cm. Le centre d'inertie est bien plus proche du corps le plus lourd B."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p1_ex7",
+          "type": "mcq",
+          "prompt": "Pourquoi dit-on que le vecteur quantité de mouvement est relatif au référentiel d'observation ?",
+          "options": [
+            "Parce que le vecteur-vitesse v dépend du référentiel d'étude choisi",
+            "Parce que la masse d'un objet change d'un référentiel à l'autre",
+            "Parce que la quantité de mouvement ne peut être mesurée que sur la Terre",
+            "Parce que la direction de la force de gravité change"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La masse m est invariante en mécanique classique, mais le vecteur vitesse v dépend du référentiel d'observation (relativité du mouvement). Donc p = m·v dépend directement du référentiel."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p1_ex8",
+          "type": "mcq",
+          "prompt": "Un système de deux solides a une masse totale M = 5 kg et son centre d'inertie G a une vitesse v_G = 3 m/s. Quelle est la quantité de mouvement totale du système ?",
+          "options": [
+            "15 kg·m·s⁻¹",
+            "1,67 kg·m·s⁻¹",
+            "45 kg·m·s⁻¹",
+            "8 kg·m·s⁻¹"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par la relation générale p = M · v_G, la quantité de mouvement totale d'un système est égale au produit de sa masse totale par la vitesse de son centre d'inertie : p = 5 × 3 = 15 kg·m·s⁻¹."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_physique_ch6_p2_conservation_quantite_mouvement_applications",
+      "order": 2,
+      "title": "Loi de conservation de la quantité de mouvement et applications pratiques",
+      "summary": "Énoncer la loi de conservation pour un système isolé ou pseudo-isolé et l'appliquer au recul des armes à feu, à la propulsion par réaction et aux chocs (mous ou élastiques).",
+      "conceptExplanation": "1. Énoncé de la loi de conservation de la quantité de mouvement :\nPour un système matériel isolé (soumis à aucune force extérieure) ou pseudo-isolé (dont la somme des forces extérieures est nulle : Σ F_ext = 0), le vecteur quantité de mouvement total du système se conserve :\np_total = constante  ⇔  p_après = p_avant.\nRemarque : cette loi est une conséquence directe du principe de l'inertie et de la 3e loi de Newton (principe des actions réciproques).\n\n2. Phénomène de recul (armes à feu, canons, patineurs) :\nConsidérons un canon de masse M contenant un boulet de masse m, initialement immobile sur un sol horizontal sans frottement :\n- Avant le tir : le système est au repos, donc p_avant = (M + m) · 0 = 0.\n- Après le tir : le boulet part avec une vitesse vectorielle v_B et le canon acquiert une vitesse de recul v_C :\np_après = m · v_B + M · v_C.\n- Par conservation de la quantité de mouvement (p_après = p_avant = 0) :\nm · v_B + M · v_C = 0  ⇒  v_C = − (m / M) · v_B.\nEn valeur scalaire : v_C = (m / M) · v_B.\nLe signe négatif signifie que le canon recule impérativement dans le sens strictement opposé à celui de l'éjection du boulet.\n\n3. Propulsion par réaction (fusées, avions à réaction) :\nUne fusée éjecte des gaz de combustion vers l'arrière à très grande vitesse. Par conservation de la quantité de mouvement du système {fusée + gaz}, l'expulsion des gaz vers l'arrière propulse la fusée vers l'avant, même dans le vide absolu spatial où il n'y a aucun air sur lequel 's'appuyer'.\n\n4. Étude des collisions et chocs entre solides :\n- Choc mou (ou inélastique) : après l'impact, les deux solides s'accrochent et restent liés en un seul corps de masse (m₁ + m₂) se déplaçant à la vitesse commune v' :\nm₁ · v₁ + m₂ · v₂ = (m₁ + m₂) · v'  ⇒  v' = (m₁ · v₁ + m₂ · v₂) / (m₁ + m₂).\n- Choc avec trajectoires sécantes : on projette l'égalité vectorielle p_avant = p_après sur deux axes orthogonaux Ox et Oy à l'aide des cosinus et sinus des angles de tir.",
+      "formulas": [
+        {
+          "name": "Loi de conservation de la quantité de mouvement",
+          "formula": "p_après = p_avant (si Σ F_ext = 0)",
+          "note": "Valable pour tout système isolé ou pseudo-isolé, déformable ou non."
+        },
+        {
+          "name": "Vitesse de recul d'un canon ou d'une arme",
+          "formula": "v_C = − (m / M) · v_B",
+          "note": "M masse du canon, m masse du projectile, v_B vitesse du projectile."
+        },
+        {
+          "name": "Vitesse après un choc mou (solides solidaires)",
+          "formula": "v' = (m₁ · v₁ + m₂ · v₂) / (m₁ + m₂)",
+          "note": "Vitesse commune du centre d'inertie après accolement des deux corps."
+        },
+        {
+          "name": "Séparation mutuelle de deux corps au repos",
+          "formula": "m₁ · v₁ + m₂ · v₂ = 0  ⇒  v₂ = (m₁ / m₂) · v₁",
+          "note": "Deux patineurs qui se repoussent partent en sens opposés."
+        }
+      ],
+      "keyRule": "Avant un tir ou une répulsion mutuelle à partir du repos, la quantité de mouvement initiale est STRICTEMENT NULLE (p_avant = 0). Après la séparation, la somme vectorielle reste nulle : m₁·v₁ + m₂·v₂ = 0, ce qui impose que les deux corps partent obligatoirement en sens opposés avec des vitesses inversement proportionnelles à leurs masses.",
+      "workedExample": {
+        "title": "Exemple résolu : Choc mou entre deux wagons de train sur une voie ferrée",
+        "statement": "Sur une voie de triage rectiligne et horizontale, un wagon de marchandises A de masse mA = 30 tonnes roulant à la vitesse vA = 2,0 m/s heurte un wagon B immobile de masse mB = 20 tonnes. Les deux wagons s'accrochent automatiquement lors du choc.\n1. Calculer la quantité de mouvement totale du système avant le choc.\n2. Déterminer la vitesse v' de l'ensemble {A + B} après l'accrochage.",
+        "methodSteps": [
+          "Étape 1 : Définir le système {wagon A + wagon B} et vérifier les hypothèses. Le système est sur rails horizontaux sans frottements notables : le poids total est compensé par la réaction normale des rails, le système est donc pseudo-isolé horizontalement.",
+          "Étape 2 : Convertir les masses en kg : mA = 30 000 kg, mB = 20 000 kg.",
+          "Étape 3 : Calculer la quantité de mouvement avant le choc : p_avant = mA · vA + mB · vB = (30 000 × 2,0) + (20 000 × 0) = 60 000 kg·m·s⁻¹.",
+          "Étape 4 : Appliquer la conservation de la quantité de mouvement : p_après = p_avant = 60 000 kg·m·s⁻¹.",
+          "Étape 5 : Exprimer p_après pour le système accroché de masse totale (mA + mB) : p_après = (mA + mB) × v'.",
+          "Étape 6 : Isoler et calculer v' : v' = p_après / (mA + mB) = 60 000 / (30 000 + 20 000) = 60 000 / 50 000 = 1,2 m/s."
+        ],
+        "conclusion": "Après le choc mou, l'ensemble des deux wagons continue son mouvement dans le même sens à la vitesse réduite de 1,2 m/s."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_physique_ch6_p2_ex1",
+          "type": "mcq",
+          "prompt": "À quelle condition essentielle la quantité de mouvement totale d'un système se conserve-t-elle au cours d'un phénomène ?",
+          "options": [
+            "Le système doit être isolé ou pseudo-isolé (somme des forces extérieures nulle)",
+            "Le système doit obligatoirement être constitué d'un seul solide indéformable",
+            "La vitesse de chaque objet doit rester strictement constante",
+            "Il ne doit y avoir aucune force intérieure entre les éléments du système"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La quantité de mouvement se conserve si et seulement si la somme des forces extérieures appliquées au système est nulle (Σ F_ext = 0), c'est-à-dire si le système est isolé ou pseudo-isolé."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p2_ex2",
+          "type": "mcq",
+          "prompt": "Un canon de masse M = 1 000 kg éjecte horizontalement un obus de masse m = 10 kg à la vitesse de 600 m/s. Quelle est la valeur de la vitesse de recul du canon ?",
+          "options": [
+            "6,0 m/s dans le sens opposé à l'obus",
+            "60 m/s dans le sens de l'obus",
+            "0,6 m/s dans le sens opposé à l'obus",
+            "600 m/s dans le sens opposé à l'obus"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par conservation de la quantité de mouvement (système initialement au repos) : M·v_C + m·v_obus = 0 ⇒ v_C = (m / M) × v_obus = (10 / 1000) × 600 = 0,01 × 600 = 6,0 m/s (en sens inverse)."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p2_ex3",
+          "type": "mcq",
+          "prompt": "Deux patineurs A (50 kg) et B (25 kg), immobiles sur une patinoire sans frottement, se repoussent des deux mains. Le patineur A part à la vitesse vA = 1,5 m/s. Quelle est la vitesse du patineur B ?",
+          "options": [
+            "3,0 m/s en sens opposé à A",
+            "0,75 m/s en sens opposé à A",
+            "1,5 m/s dans le même sens que A",
+            "6,0 m/s en sens opposé à A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Initialement au repos : mA·vA + mB·vB = 0 ⇒ vB = (mA / mB) × vA = (50 / 25) × 1,5 = 2 × 1,5 = 3,0 m/s en sens opposé."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p2_ex4",
+          "type": "mcq",
+          "prompt": "Un solide A (masse m, vitesse v) heurte de plein fouet un solide B identique (masse m) au repos. Après le choc mou, ils restent soudés. Quelle est la vitesse du système {A + B} ?",
+          "options": [
+            "v / 2",
+            "v",
+            "2 v",
+            "0 (immobiles)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par conservation : p_avant = m·v + m·0 = m·v. Après le choc, la masse totale est 2m, donc p_après = (2m)·v' = m·v ⇒ v' = v / 2."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p2_ex5",
+          "type": "mcq",
+          "prompt": "Comment une fusée spatiale parvient-elle à accélérer dans le vide sidéral où il n'y a aucune atmosphère ?",
+          "options": [
+            "En éjectant des gaz à grande vitesse vers l'arrière, ce qui propulse la fusée vers l'avant par conservation de la quantité de mouvement",
+            "En prenant appui sur le rayonnement solaire incident",
+            "En utilisant la force d'attraction résiduelle des étoiles proches",
+            "En créant un vide encore plus poussé à l'avant de sa trajectoire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La propulsion par réaction repose sur la conservation de la quantité de mouvement du système fermé {fusée + gaz éjectés} : l'éjection des gaz vers l'arrière crée instantanément une impulsion motrice vers l'avant, sans besoin de support extérieur."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p2_ex6",
+          "type": "mcq",
+          "prompt": "Une locomotive de 40 000 kg roulant à 36 km/h heurte un wagon immobile de 20 000 kg et s'y accroche. Quelle est la vitesse de l'ensemble après la collision ?",
+          "options": [
+            "6,67 m/s (soit 24 km/h)",
+            "10 m/s (soit 36 km/h)",
+            "18 m/s (soit 64,8 km/h)",
+            "5 m/s (soit 18 km/h)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Convertissons : 36 km/h = 10 m/s. p_avant = 40 000 × 10 = 400 000 kg·m/s. Après accrochage, masse totale = 40 000 + 20 000 = 60 000 kg. Vitesse commune : v' = 400 000 / 60 000 = 40 / 6 ≈ 6,67 m/s (ou 24 km/h)."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p2_ex7",
+          "type": "mcq",
+          "prompt": "Lors d'une explosion d'une grenade initialement au repos qui se brise en deux éclats de masses m₁ = 200 g et m₂ = 300 g, l'éclat 1 part vers la droite à 150 m/s. Quel est le mouvement de l'éclat 2 ?",
+          "options": [
+            "Il part vers la gauche à 100 m/s",
+            "Il part vers la droite à 100 m/s",
+            "Il part vers la gauche à 150 m/s",
+            "Il reste immobile au point d'explosion"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "p_avant = 0. Donc m₁·v₁ + m₂·v₂ = 0 ⇒ v₂ = − (m₁ / m₂) · v₁ = − (200 / 300) × 150 = − 100 m/s. Il se déplace donc vers la gauche à 100 m/s."
+        },
+        {
+          "id": "seconde_c_physique_ch6_p2_ex8",
+          "type": "mcq",
+          "prompt": "Dans le cas d'un choc élastique frontal entre deux billes de même masse m où la bille 1 arrive à la vitesse v et la bille 2 est initialement au repos :",
+          "options": [
+            "La bille 1 s'arrête net et la bille 2 repart avec la vitesse v",
+            "Les deux billes repartent ensemble à la vitesse v / 2",
+            "Les deux billes rebondissent en sens inverse à la vitesse v",
+            "La bille 1 continue à la vitesse v et la bille 2 reste immobile"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Lors d'un choc élastique frontal entre corps de masses identiques, il y a transfert intégral de la quantité de mouvement et de l'énergie cinétique : le premier solide s'immobilise et transmet l'intégralité de sa vitesse au second (comme dans le pendule de Newton)."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 7 : INTENSITÉ D'UN COURANT CONTINU
+// ============================================================================
+export const physique2deCIntensiteCourantContinuChapter: CurriculumChapter = {
+  "id": "seconde_c_physique_ch7_intensite_courant_continu",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 7,
+  "officialVolumeHours": 6,
+  "title": "Leçon 7 — Intensité d'un courant continu",
+  "summary": "Quantité d'électricité Q = n·e, définition du courant I = Q/Δt, mesure à l'ampèremètre, propriétés dans une branche et application rigoureuse de la loi des nœuds.",
+  "points": [
+    {
+      "id": "seconde_c_physique_ch7_p1_quantite_electricite_mesure_ampèremetre",
+      "order": 1,
+      "title": "Quantité d'électricité, intensité du courant et mesure à l'ampèremètre",
+      "summary": "Relier la quantité d'électricité aux porteurs de charge, définir l'intensité I = Q/Δt et maîtriser la mesure par ampèremètre numérique ou analogique à aiguille.",
+      "conceptExplanation": "1. Nature du courant électrique et porteurs de charge :\nLe courant électrique est un déplacement d'ensemble ordonné de porteurs de charge électrique :\n- Dans les métaux et conducteurs solides : les porteurs sont des électrons libres, chargés négativement (q = −e = −1,6 × 10⁻¹⁹ C), qui se déplacent de la borne négative (−) vers la borne positive (+) du générateur.\n- Le sens conventionnel du courant électrique est, par convention historique, orienté de la borne positive (+) vers la borne négative (−) à l'extérieur du générateur.\n- Dans les solutions électrolytiques : le courant est assuré par le déplacement simultané des cations (ions positifs vers la cathode) et des anions (ions négatifs vers l'anode).\n\n2. Quantité d'électricité Q :\nLa quantité d'électricité transportée par n porteurs de charge vaut :\nQ = n · |q|.\nPour un flux de n électrons : Q = n · e avec e = 1,6 × 10⁻¹⁹ C (charge élémentaire).\nL'unité de charge électrique est le coulomb (C).\nPour une mole d'électrons (N_A = 6,02 × 10²³ mol⁻¹) : Q_mol = N_A · e ≈ 96 500 C (constante de Faraday).\n\n3. Définition de l'intensité du courant électrique I :\nL'intensité I à travers une section droite de conducteur est le débit de charge, c'est-à-dire le quotient de la quantité d'électricité Q traversant cette section par la durée Δt du passage :\nI = Q / Δt  ⇔  Q = I · Δt.\nUnités : I en ampères (A), Q en coulombs (C), Δt en secondes (s).\nDébit d'électrons D : D = n / Δt = I / e (nombre d'électrons par seconde).\n\n4. Mesure de l'intensité à l'ampèremètre :\n- L'ampèremètre (ou multimètre en mode A-DC) se branche impérativement EN SÉRIE dans le circuit pour être traversé par le courant à mesurer (sa résistance interne est quasi nulle).\n- Le courant doit entrer par la borne A (ou mA) et ressortir par la borne COM.\n- Ampèremètre à aiguille : la formule de lecture est :\nI = (Calibre × Lecture) / Échelle.\nExemple : calibre C = 1 A, aiguille sur la graduation L = 65 d'une échelle à E = 100 divisions :\nI = (1 × 65) / 100 = 0,65 A.\n- Règle de choix du calibre : choisir le calibre immédiatement supérieur à l'intensité attendue pour obtenir la plus grande déviation possible de l'aiguille tout en évitant de détériorer l'appareil.",
+      "formulas": [
+        {
+          "name": "Quantité d'électricité",
+          "formula": "Q = n · e",
+          "note": "n nombre d'électrons, e = 1,6 × 10⁻¹⁹ C, Q en coulombs (C)."
+        },
+        {
+          "name": "Intensité du courant continu",
+          "formula": "I = Q / Δt",
+          "note": "I en ampères (A), Q en coulombs (C), Δt en secondes (s)."
+        },
+        {
+          "name": "Débit d'électrons",
+          "formula": "D = n / Δt = I / e",
+          "note": "Nombre d'électrons traversant la section par seconde (en électrons/s)."
+        },
+        {
+          "name": "Lecture sur ampèremètre à aiguille",
+          "formula": "I = (Calibre × Lecture) / Échelle",
+          "note": "Lecture = division indiquée par l'aiguille, Échelle = graduation maximale."
+        }
+      ],
+      "keyRule": "L'ampèremètre se branche TOUJOURS EN SÉRIE. Le brancher en dérivation crée un court-circuit dangereux car sa résistance interne est quasi nulle. En cas de calcul avec I = Q / Δt, la durée Δt doit TOUJOURS être convertie en secondes (ex : 1 heure = 3 600 s).",
+      "workedExample": {
+        "title": "Exemple résolu : Débit d'électrons et lecture d'un ampèremètre",
+        "statement": "Un circuit est traversé par un courant continu pendant une durée Δt = 5,0 minutes. L'ampèremètre utilisé possède un calibre C = 500 mA, une échelle de 100 divisions et son aiguille se stabilise sur la division 72.\n1. Calculer l'intensité I du courant dans le circuit.\n2. Calculer la quantité d'électricité Q ayant traversé le circuit.\n3. En déduire le nombre n d'électrons ayant circulé (e = 1,6 × 10⁻¹⁹ C).",
+        "methodSteps": [
+          "Étape 1 : Calculer l'intensité I par la formule de lecture : I = (Calibre × Lecture) / Échelle = (500 mA × 72) / 100 = 360 mA = 0,36 A.",
+          "Étape 2 : Convertir la durée en secondes : Δt = 5,0 min = 5,0 × 60 = 300 s.",
+          "Étape 3 : Calculer la quantité d'électricité Q : Q = I × Δt = 0,36 A × 300 s = 108 C.",
+          "Étape 4 : Déterminer le nombre d'électrons n : n = Q / e = 108 / (1,6 × 10⁻¹⁹) = 6,75 × 10²⁰ électrons."
+        ],
+        "conclusion": "Le courant est de 0,36 A, la charge globale transportée est de 108 C et cela correspond au flux de 6,75 × 10²⁰ électrons."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_physique_ch7_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quel est le sens conventionnel du courant électrique à l'extérieur du générateur ?",
+          "options": [
+            "De la borne positive (+) vers la borne négative (−)",
+            "De la borne négative (−) vers la borne positive (+)",
+            "Du récepteur vers la masse du circuit",
+            "Aléatoire selon la température du conducteur"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par convention internationale établie par Ampère, le courant électrique sort de la borne positive (+) et entre par la borne négative (−) du générateur à l'extérieur de celui-ci (sens inverse du mouvement des électrons)."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p1_ex2",
+          "type": "mcq",
+          "prompt": "Quelle est la quantité d'électricité transportée par 5,0 × 10¹⁹ électrons (e = 1,6 × 10⁻¹⁹ C) ?",
+          "options": [
+            "8,0 C",
+            "3,125 C",
+            "80 C",
+            "0,80 C"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Q = n · e = (5,0 × 10¹⁹) × (1,6 × 10⁻¹⁹) = 5,0 × 1,6 = 8,0 C."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p1_ex3",
+          "type": "mcq",
+          "prompt": "Un conducteur est traversé par une quantité d'électricité de Q = 720 C en 2 minutes. Quelle est l'intensité du courant continu ?",
+          "options": [
+            "6,0 A",
+            "360 A",
+            "12 A",
+            "1 440 A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Convertissons la durée en secondes : Δt = 2 min = 120 s. L'intensité vaut I = Q / Δt = 720 / 120 = 6,0 A."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p1_ex4",
+          "type": "mcq",
+          "prompt": "Comment doit être inséré un ampèremètre pour mesurer l'intensité du courant dans un dipôle ?",
+          "options": [
+            "En série avec le dipôle",
+            "En dérivation aux bornes du dipôle",
+            "En dérivation aux bornes du générateur uniquement",
+            "Entre la borne positive et la carcasse métallique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour être traversé par le même flux de charges que le dipôle étudié, l'ampèremètre doit impérativement être branché en série."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p1_ex5",
+          "type": "mcq",
+          "prompt": "Sur un ampèremètre à aiguille de calibre 3 A comportant 100 divisions, l'aiguille s'arrête sur la graduation 45. Quelle est l'intensité mesurée ?",
+          "options": [
+            "1,35 A",
+            "0,45 A",
+            "1,50 A",
+            "0,15 A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par la formule de lecture : I = (Calibre × Lecture) / Échelle = (3 × 45) / 100 = 135 / 100 = 1,35 A."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p1_ex6",
+          "type": "mcq",
+          "prompt": "On désire mesurer un courant continu estimé à environ 180 mA. On dispose des calibres suivants : 5 A ; 1 A ; 200 mA ; 20 mA. Quel est le calibre le plus approprié ?",
+          "options": [
+            "200 mA",
+            "20 mA",
+            "1 A",
+            "5 A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le calibre de 200 mA est immédiatement supérieur à 180 mA. Il permet d'obtenir la déviation maximale de l'aiguille (meilleure précision) sans dépasser la limite de l'appareil (le calibre 20 mA saturerait l'appareil)."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p1_ex7",
+          "type": "mcq",
+          "prompt": "Un courant de 2,0 A traverse une lampe. Quel est le débit d'électrons dans le filament (e = 1,6 × 10⁻¹⁹ C) ?",
+          "options": [
+            "1,25 × 10¹⁹ électrons par seconde",
+            "3,2 × 10⁻¹⁹ électrons par seconde",
+            "2,0 × 10¹⁹ électrons par seconde",
+            "8,0 × 10¹⁸ électrons par seconde"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le débit d'électrons est D = I / e = 2,0 / (1,6 × 10⁻¹⁹) = 1,25 × 10¹⁹ électrons/s."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p1_ex8",
+          "type": "mcq",
+          "prompt": "Quelle est la quantité d'électricité transportée par 1 mole d'ions cuivre(II) Cu²⁺ en solution aqueuse (NA = 6,02 × 10²³ mol⁻¹, e = 1,6 × 10⁻¹⁹ C) ?",
+          "options": [
+            "192 640 C (soit 2 NA·e)",
+            "96 320 C (soit NA·e)",
+            "48 160 C",
+            "3,85 × 10⁵ C"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Chaque ion Cu²⁺ porte une charge q = +2e. Pour une mole d'ions Cu²⁺, la charge totale transportée est Q = 2 × NA × e = 2 × (6,02 × 10²³) × (1,6 × 10⁻¹⁹) ≈ 192 640 C."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_physique_ch7_p2_proprietes_courant_loi_des_noeuds",
+      "order": 2,
+      "title": "Propriétés du courant dans un circuit, branches et loi des nœuds",
+      "summary": "Comprendre l'unicité du courant dans une branche et maîtriser la loi des nœuds pour déterminer des intensités inconnues dans les circuits ramifiés.",
+      "conceptExplanation": "1. Notions de nœud, de branche et de maille :\n- Nœud : point de connexion commun à au moins trois conducteurs (fils ou dipôles).\n- Branche : portion d'un circuit électrique comprise entre deux nœuds consécutifs. Une branche est constituée de dipôles connectés en série.\n- Branche principale : branche qui contient le générateur de tension.\n- Branches dérivées : branches connectées en parallèle sur les nœuds principaux.\n\n2. Unicité de l'intensité dans une branche :\nDans une branche (ou dans un circuit série sans dérivation), l'intensité du courant électrique est STRICTEMENT LA MÊME en tout point. L'ordre des dipôles branchés en série n'a aucune influence sur l'intensité du courant qui les traverse.\n\n3. Loi des nœuds (conservation de la charge électrique) :\nLa charge électrique ne peut ni s'accumuler en un point du circuit, ni disparaître. Par conséquent, en tout nœud d'un réseau électrique :\nLa somme des intensités des courants arrivant à un nœud est rigoureusement égale à la somme des intensités des courants qui en partent :\nΣ I_arrivant = Σ I_partant.\nExemple classique : pour un nœud où arrive le courant principal I et d'où partent les courants I₁ et I₂ :\nI = I₁ + I₂.\n\n4. Méthode pour résoudre un circuit ramifié :\n- Étape 1 : Identifier tous les nœuds du montage (lettrage A, B, C...).\n- Étape 2 : Flécher le sens du courant dans chaque branche.\n- Étape 3 : Écrire l'équation de la loi des nœuds pour chaque nœud (courants entrants d'un côté de l'égalité, courants sortants de l'autre).\n- Étape 4 : Résoudre le système d'équations pour déterminer les intensités inconnues.",
+      "formulas": [
+        {
+          "name": "Loi des nœuds",
+          "formula": "Σ I_arrivant = Σ I_partant",
+          "note": "En tout nœud, somme des courants entrants = somme des courants sortants."
+        },
+        {
+          "name": "Unicité dans une branche",
+          "formula": "I_amont = I_aval = constante",
+          "note": "L'intensité ne faiblit pas le long d'une même branche."
+        },
+        {
+          "name": "Division du courant en deux branches",
+          "formula": "I = I₁ + I₂",
+          "note": "Le courant principal se partage entre les dérivations."
+        }
+      ],
+      "keyRule": "Un ampèremètre placé n'importe où dans une même branche mesure la même intensité. À un nœud, un courant qui entre est TOUJOURS positif dans la somme entrante : si un calcul d'intensité donne un résultat négatif, cela signifie simplement que le courant circule dans le sens opposé à la flèche choisie initialement.",
+      "workedExample": {
+        "title": "Exemple résolu : Calcul des intensités dans un nœud triple",
+        "statement": "À un nœud K d'un circuit électrique arrivent trois conducteurs transportant les courants I₁ = 2,5 A, I₂ = 1,8 A et I₃. Deux autres conducteurs partent de ce nœud et transportent I₄ = 3,2 A et I₅ = 2,6 A.\n1. Écrire la loi des nœuds au point K en supposant que I₃ arrive au nœud.\n2. Calculer l'intensité I₃ et confirmer son sens.",
+        "methodSteps": [
+          "Étape 1 : Identifier les courants qui arrivent au nœud K : I₁, I₂ et I₃.",
+          "Étape 2 : Identifier les courants qui partent du nœud K : I₄ et I₅.",
+          "Étape 3 : Poser l'égalité de la loi des nœuds : I₁ + I₂ + I₃ = I₄ + I₅.",
+          "Étape 4 : Remplacer par les valeurs numériques : 2,5 + 1,8 + I₃ = 3,2 + 2,6 ⇔ 4,3 + I₃ = 5,8.",
+          "Étape 5 : Isoler I₃ : I₃ = 5,8 − 4,3 = 1,5 A."
+        ],
+        "conclusion": "L'intensité I₃ vaut 1,5 A. Le signe étant positif, le courant I₃ arrive bien effectivement vers le nœud K."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_physique_ch7_p2_ex1",
+          "type": "mcq",
+          "prompt": "Qu'appelle-t-on un nœud dans un circuit électrique ?",
+          "options": [
+            "Un point de jonction reliant au moins trois fils conducteurs",
+            "L'interrupteur qui commande l'ouverture du circuit",
+            "La borne positive de la pile d'alimentation",
+            "Le filament d'une lampe à incandescence"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par définition en électrocinétique, un nœud est un point de connexion commun à plus de deux conducteurs (au moins 3 conducteurs)."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p2_ex2",
+          "type": "mcq",
+          "prompt": "Dans un circuit en série comportant une pile, une résistance et une lampe, comment varie l'intensité du courant entre l'entrée de la résistance et la sortie de la lampe ?",
+          "options": [
+            "L'intensité est rigoureusement identique en tout point du circuit",
+            "L'intensité diminue après avoir traversé la résistance",
+            "L'intensité augmente après la lampe",
+            "L'intensité est nulle entre la résistance et la lampe"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans une branche ou un circuit série, le courant ne s'use pas : il y a conservation intégrale des porteurs de charge, l'intensité est la même en tout point."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p2_ex3",
+          "type": "mcq",
+          "prompt": "Un générateur débite un courant principal de I = 1,4 A dans un nœud qui alimente trois lampes en dérivation. On mesure I₁ = 0,50 A et I₂ = 0,25 A. Quelle est l'intensité I₃ traversant la 3e lampe ?",
+          "options": [
+            "0,65 A",
+            "0,75 A",
+            "1,15 A",
+            "0,35 A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "D'après la loi des nœuds : I = I₁ + I₂ + I₃ ⇒ I₃ = I − (I₁ + I₂) = 1,4 − (0,50 + 0,25) = 1,4 − 0,75 = 0,65 A."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p2_ex4",
+          "type": "mcq",
+          "prompt": "À un nœud P arrivent deux courants I₁ = 4 A et I₂ = 6 A. Trois courants en repartent : I₃ = 3 A, I₄ = 5 A et I₅. Que vaut I₅ ?",
+          "options": [
+            "2 A",
+            "4 A",
+            "8 A",
+            "1 A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Σ I_arrivant = Σ I_partant ⇒ I₁ + I₂ = I₃ + I₄ + I₅ ⇒ 4 + 6 = 3 + 5 + I₅ ⇒ 10 = 8 + I₅ ⇒ I₅ = 2 A."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p2_ex5",
+          "type": "mcq",
+          "prompt": "La loi des nœuds est une conséquence fondamentale de quel principe de la physique ?",
+          "options": [
+            "La conservation de la charge électrique",
+            "La conservation de l'énergie thermique",
+            "La réfraction de la lumière",
+            "Le principe d'Archimède"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Comme les charges électriques ne peuvent ni être créées, ni être détruites, ni s'accumuler en un point du conducteur, tout ce qui entre dans un nœud doit obligatoirement en ressortir (conservation de la charge)."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p2_ex6",
+          "type": "mcq",
+          "prompt": "Dans un montage en dérivation à deux branches identiques, le courant principal vaut I = 0,80 A. Quelle est l'intensité qui traverse chaque branche ?",
+          "options": [
+            "0,40 A dans chaque branche",
+            "0,80 A dans chaque branche",
+            "1,60 A dans chaque branche",
+            "0,20 A dans chaque branche"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Si les deux branches réceptrices sont identiques, le courant se répartit équitablement : I₁ = I₂ = I / 2 = 0,80 / 2 = 0,40 A."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p2_ex7",
+          "type": "mcq",
+          "prompt": "Soit un nœud où trois courants sont fléchés arrivant : I₁ = 5 A, I₂ = 3 A et I₃. Aucun courant n'est fléché partant. Que vaut I₃ d'après la loi des nœuds ?",
+          "options": [
+            "−8 A (le courant part en réalité du nœud)",
+            "+8 A",
+            "0 A",
+            "Impossible à déterminer"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La somme des courants arrivant doit être égale à la somme des courants partant : I₁ + I₂ + I₃ = 0 ⇒ 5 + 3 + I₃ = 0 ⇒ I₃ = −8 A. Le signe négatif indique qu'en réalité ce courant part du nœud avec une valeur absolue de 8 A."
+        },
+        {
+          "id": "seconde_c_physique_ch7_p2_ex8",
+          "type": "mcq",
+          "prompt": "Si l'on ajoute une branche supplémentaire en dérivation dans un circuit domestique alimenté sous tension constante, que devient l'intensité du courant principal fourni par le compteur ?",
+          "options": [
+            "Elle augmente car elle est égale à la somme des courants de toutes les dérivations",
+            "Elle diminue car la résistance totale augmente",
+            "Elle reste exactement constante",
+            "Elle devient nulle par sécurité"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Chaque nouvel appareil branché en dérivation appelle son propre courant I_k. D'après la loi des nœuds, le courant principal I_total = Σ I_k augmente à chaque appareil supplémentaire mis en marche."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 8 : TENSION ÉLECTRIQUE
+// ============================================================================
+export const physique2deCTensionElectriqueChapter: CurriculumChapter = {
+  "id": "seconde_c_physique_ch8_tension_electrique",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 8,
+  "officialVolumeHours": 6,
+  "title": "Leçon 8 — Tension électrique",
+  "summary": "Définition de la tension U_AB = V_A − V_B, caractère algébrique, lois des tensions en série et en dérivation, et mesure à l'oscilloscope (tensions continue et alternative sinusoïdale).",
+  "points": [
+    {
+      "id": "seconde_c_physique_ch8_p1_notion_tension_lois_tensions_continues",
+      "order": 1,
+      "title": "Notion de tension, différence de potentiel et lois des circuits continus",
+      "summary": "Définir la tension U_AB comme différence d'état électrique, maîtriser son caractère algébrique et appliquer les lois d'additivité (série) et d'unicité (dérivation).",
+      "conceptExplanation": "1. Notion de tension électrique et différence de potentiel :\nLe courant électrique circule entre deux points d'un circuit parce que ces deux points ne se trouvent pas dans le même état électrique. La différence d'état électrique entre deux points A et B est appelée tension électrique ou différence de potentiel (d.d.p.) :\nU_AB = V_A − V_B.\n- V_A est le potentiel électrique au point A et V_B le potentiel au point B.\n- L'unité légale de tension électrique est le volt (symbole : V).\n- Représentation conventionnelle : la tension U_AB se représente par un segment fléché orienté de la deuxième lettre vers la première, c'est-à-dire de B vers A.\n\n2. Caractère algébrique de la tension électrique :\nLa tension est une grandeur algébrique (elle peut être positive, négative ou nulle) :\nU_BA = V_B − V_A = − (V_A − V_B) = − U_AB.\nExemple : si U_AB = +4,5 V, alors U_BA = −4,5 V.\n\n3. La masse d'un circuit électrique :\nLa masse d'un circuit est un conducteur commun pris comme référence de potentiel zéro : V_masse = 0 V.\nLa tension mesurée entre un point A quelconque et la masse est directement égale au potentiel de ce point : U_AM = V_A − 0 = V_A.\n\n4. Lois des tensions continues :\n- Additivité des tensions dans un circuit en série (loi des mailles) :\nEntre les extrémités d'une association de dipôles en série, la tension globale est égale à la somme des tensions aux bornes de chaque dipôle :\nU_AC = U_AB + U_BC.\nPlus généralement sur une maille fermée : la somme algébrique des tensions le long d'une maille orientée est nulle (loi des mailles).\n- Égalité des tensions dans un circuit en dérivation (parallèle) :\nLes dipôles branchés en dérivation entre deux mêmes nœuds A et B sont soumis à la MÊME tension électrique :\nU_branche1 = U_branche2 = U_générateur = U_AB.\n- Tension aux bornes d'un fil conducteur parfait : nulle (U_fil = 0 V car V_amont = V_aval).\n- Tension aux bornes d'un interrupteur : U_ouvert = E (tension du générateur), U_fermé = 0 V (assimilable à un fil).",
+      "formulas": [
+        {
+          "name": "Définition de la tension électrique",
+          "formula": "U_AB = V_A − V_B",
+          "note": "Différence de potentiel entre les points A et B (en volts V)."
+        },
+        {
+          "name": "Caractère algébrique de la tension",
+          "formula": "U_BA = − U_AB",
+          "note": "Inverser les bornes inverse le signe de la valeur mesurée."
+        },
+        {
+          "name": "Loi d'additivité des tensions (circuit série)",
+          "formula": "U_AC = U_AB + U_BC",
+          "note": "La tension totale est la somme des tensions intermédiaires."
+        },
+        {
+          "name": "Égalité des tensions en dérivation",
+          "formula": "U_PN = U₁ = U₂",
+          "note": "Deux dipôles montés en parallèle ont toujours la même tension."
+        }
+      ],
+      "keyRule": "Un voltmètre se branche STRICTEMENT EN DÉRIVATION aux bornes du dipôle à mesurer. Pour mesurer U_AB, la borne V (+) doit être reliée au point A et la borne COM (−) doit être reliée au point B. Si on inverse les bornes, le voltmètre affiche une valeur opposée négative.",
+      "workedExample": {
+        "title": "Exemple résolu : Calcul des tensions dans un circuit mixte",
+        "statement": "On considère un circuit où un générateur maintient une tension U_AD = 12,0 V. Entre A et D se trouvent en série un conducteur R₁ (bornes A et B), un ensemble en dérivation {R₂, R₃} (bornes B et C) et une lampe L (bornes C et D). On mesure U_AB = 3,5 V et U_CD = 4,2 V.\n1. Calculer la tension U_BC aux bornes de la dérivation.\n2. En déduire la tension aux bornes de chaque résistance R₂ et R₃.",
+        "methodSteps": [
+          "Étape 1 : Appliquer la loi d'additivité des tensions sur la branche principale en série : U_AD = U_AB + U_BC + U_CD.",
+          "Étape 2 : Isoler la tension inconnue U_BC : U_BC = U_AD − U_AB − U_CD.",
+          "Étape 3 : Remplacer par les valeurs numériques : U_BC = 12,0 − 3,5 − 4,2 = 4,3 V.",
+          "Étape 4 : Utiliser la propriété des dipôles en dérivation : les résistances R₂ et R₃ sont montées en parallèle entre les nœuds B et C, elles sont donc soumises à la même tension que l'ensemble : U_R2 = U_R3 = U_BC = 4,3 V."
+        ],
+        "conclusion": "La tension aux bornes de la dérivation est U_BC = 4,3 V et chaque résistor en parallèle reçoit exactement 4,3 V."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_physique_ch8_p1_ex1",
+          "type": "mcq",
+          "prompt": "Comment se branche un voltmètre pour mesurer la tension aux bornes d'une lampe ?",
+          "options": [
+            "En dérivation (parallèle) aux bornes de la lampe",
+            "En série avant la lampe",
+            "En série après la lampe",
+            "Entre la borne positive et la carcasse sans toucher la lampe"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le voltmètre possède une résistance interne extrêmement grande : il se branche toujours en dérivation aux bornes du composant dont on veut connaître la tension."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p1_ex2",
+          "type": "mcq",
+          "prompt": "Si le potentiel électrique au point A est VA = 9,0 V et au point B est VB = 2,5 V, que vaut la tension U_BA ?",
+          "options": [
+            "−6,5 V",
+            "+6,5 V",
+            "+11,5 V",
+            "−11,5 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "U_BA = VB − VA = 2,5 − 9,0 = −6,5 V (ou U_BA = −U_AB = −(9,0 − 2,5) = −6,5 V)."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p1_ex3",
+          "type": "mcq",
+          "prompt": "Quelle est la tension aux bornes d'un interrupteur ouvert dans un circuit alimenté par une pile de f.é.m. E = 4,5 V ?",
+          "options": [
+            "4,5 V",
+            "0 V",
+            "−4,5 V",
+            "Infinie"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Lorsque l'interrupteur est ouvert, aucun courant ne circule, la tension aux bornes des autres dipôles est nulle et l'interrupteur ouvert supporte la totalité de la tension du générateur (U = E = 4,5 V)."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p1_ex4",
+          "type": "mcq",
+          "prompt": "Trois lampes identiques sont montées en série aux bornes d'un générateur délivrant 12 V. Quelle est la tension aux bornes de chaque lampe ?",
+          "options": [
+            "4 V",
+            "12 V",
+            "36 V",
+            "0 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En série, la tension totale s'additionne : U = U₁ + U₂ + U₃. Comme les lampes sont identiques, U₁ = U₂ = U₃ = 12 / 3 = 4 V."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p1_ex5",
+          "type": "mcq",
+          "prompt": "Deux lampes L₁ et L₂ sont branchées en dérivation aux bornes d'une batterie de voiture de 12 V. Que vaut la tension aux bornes de L₂ ?",
+          "options": [
+            "12 V",
+            "6 V",
+            "24 V",
+            "0 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans un circuit en dérivation, la tension est rigoureusement identique aux bornes de chaque branche : U_L2 = U_L1 = U_batterie = 12 V."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p1_ex6",
+          "type": "mcq",
+          "prompt": "Que vaut conventionnellement le potentiel électrique de la masse d'un circuit ?",
+          "options": [
+            "0 V",
+            "1 V",
+            "La valeur de la tension de la pile",
+            "Une valeur indéterminée dépendante de la résistance"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La masse est le conducteur de référence choisi conventionnellement avec un potentiel nul : V_masse = 0 V."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p1_ex7",
+          "type": "mcq",
+          "prompt": "Dans une branche fermée sans générateur, on a U_AB = 3 V et U_BC = 5 V. Quelle est la tension U_CA ?",
+          "options": [
+            "−8 V",
+            "+8 V",
+            "+2 V",
+            "−2 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "U_AC = U_AB + U_BC = 3 + 5 = 8 V. Donc U_CA = −U_AC = −8 V."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p1_ex8",
+          "type": "mcq",
+          "prompt": "Quelle est la tension mesurée entre les deux extrémités d'un fil de connexion en cuivre parfait traversé par un courant de 2 A ?",
+          "options": [
+            "0 V",
+            "2 V",
+            "0,5 V",
+            "Dépendante de la longueur du fil"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour un fil conducteur idéal de résistance nulle (R = 0), la différence de potentiel à ses bornes est rigoureusement nulle : U_fil = 0 V."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_physique_ch8_p2_visualisation_oscilloscope_sinusoidale",
+      "order": 2,
+      "title": "Visualisation et mesure d'une tension à l'oscilloscope",
+      "summary": "Maîtriser les réglages de l'oscilloscope (sensibilité verticale s_v, base de temps b) et déterminer les grandeurs d'une tension continue ou alternative sinusoïdale (T, N, Umax, Ueff).",
+      "conceptExplanation": "1. Présentation de l'oscilloscope cathodique ou numérique :\nL'oscilloscope est un appareil de mesure qui permet de visualiser et d'analyser l'évolution d'une tension électrique au cours du temps (oscillogramme).\n- Entrée verticale (voie Y) : connectée aux bornes du dipôle (borne rouge/âme au point chaud, borne noire/tresse à la masse).\n- Sensibilité verticale (gain s_v ou k_v) : exprimée en volts par division (V/div) ou en V/cm.\n- Balayage horizontal (base de temps b ou k_h) : fait défiler le spot de gauche à droite à vitesse constante. Exprimé en secondes par division (s/div) ou millisecondes par division (ms/div).\n\n2. Mesure d'une tension continue à l'oscilloscope :\nLorsque le balayage est activé, une tension continue se traduit par un trait horizontal dévié de d divisions par rapport à la ligne centrale zéro :\n|U| = s_v × d.\n- Déviation vers le haut : tension positive (U > 0).\n- Déviation vers le bas : tension négative (U < 0).\nExemple : s_v = 2 V/div et déviation de 3 divisions vers le haut ⇒ U = + (2 × 3) = +6 V.\n\n3. Caractéristiques d'une tension alternative sinusoïdale :\nUne tension alternative sinusoïdale prend successivement des valeurs positives et négatives, symétriques par rapport au zéro.\n- Période T : plus petit intervalle de temps au bout duquel le motif se reproduit identique à lui-même :\nT = b × d_h.\n(b : base de temps en s/div, d_h : nombre de divisions horizontales pour un motif complet en div). Unité légale : la seconde (s).\n- Fréquence N (ou f) : nombre de motifs par seconde, inverse de la période :\nN = 1 / T en Hertz (Hz).\n- Tension maximale (amplitude) U_max : valeur crête la plus haute atteinte par le signal par rapport à l'axe zéro :\nU_max = s_v × d_v  ou  U_max = U_cc / 2 (avec U_cc tension crête à crête).\n- Tension efficace U_eff (ou U) : tension continue produisant le même effet thermique dans une résistance. C'est la tension affichée par un voltmètre en mode alternatif (AC) :\nU_eff = U_max / √2  ≈ U_max / 1,414  ⇔  U_max = U_eff × √2.\nExemple en Côte d'Ivoire : la tension secteur domestique a une valeur efficace U_eff = 220 V ou 230 V, ce qui correspond à une valeur maximale U_max = 220 × 1,414 ≈ 311 V.",
+      "formulas": [
+        {
+          "name": "Tension continue à l'oscilloscope",
+          "formula": "U = ± (s_v × d)",
+          "note": "+ si vers le haut, − si vers le bas."
+        },
+        {
+          "name": "Période temporelle",
+          "formula": "T = b × d_h",
+          "note": "b en s/div ou ms/div, d_h en divisions."
+        },
+        {
+          "name": "Fréquence du signal",
+          "formula": "N = 1 / T",
+          "note": "T en secondes (s), N en hertz (Hz)."
+        },
+        {
+          "name": "Relation tension maximale et efficace",
+          "formula": "U_eff = U_max / √2",
+          "note": "Valable exclusivement pour une tension alternative sinusoïdale."
+        }
+      ],
+      "keyRule": "Attention aux unités lors du calcul de la fréquence : la période T calculée en millisecondes (ms) doit OBLIGATOIREMENT être convertie en secondes (1 ms = 10⁻³ s = 0,001 s) avant de poser N = 1 / T. De même, la tension crête à crête U_cc couvre le haut et le bas de la courbe, donc U_max = U_cc / 2.",
+      "workedExample": {
+        "title": "Exemple résolu : Exploitation complète d'un oscillogramme sinusoïdal",
+        "statement": "On observe sur un écran d'oscilloscope une tension alternative sinusoïdale avec les réglages suivants :\n- Sensibilité verticale : s_v = 5 V/div\n- Base de temps : b = 2 ms/div\nSur l'écran, un motif périodique complet s'étend horizontalement sur d_h = 8 divisions et la hauteur totale crête à crête mesure d_v = 4 divisions.\n1. Calculer la tension maximale U_max.\n2. Calculer la tension efficace U_eff.\n3. Déterminer la période T en secondes puis la fréquence N du signal.",
+        "methodSteps": [
+          "Étape 1 : Calculer la tension crête à crête puis l'amplitude U_max : U_cc = s_v × d_v = 5 V/div × 4 div = 20 V. L'amplitude maximale vaut : U_max = U_cc / 2 = 20 / 2 = 10 V (ou directement U_max = s_v × (4/2) = 5 × 2 = 10 V).",
+          "Étape 2 : Calculer la tension efficace : U_eff = U_max / √2 = 10 / 1,414 ≈ 7,07 V.",
+          "Étape 3 : Calculer la période T : T = b × d_h = 2 ms/div × 8 div = 16 ms.",
+          "Étape 4 : Convertir la période en secondes : T = 16 ms = 16 × 10⁻³ s = 0,016 s.",
+          "Étape 5 : Calculer la fréquence N : N = 1 / T = 1 / 0,016 = 62,5 Hz."
+        ],
+        "conclusion": "La tension étudiée a une amplitude de 10 V, une tension efficace de 7,07 V, une période de 16 ms et une fréquence de 62,5 Hz."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_physique_ch8_p2_ex1",
+          "type": "mcq",
+          "prompt": "Sur un oscilloscope, la sensibilité verticale est réglée sur 2 V/div. Le spot lumineux d'une tension continue est dévié de 3,5 divisions vers le haut. Quelle est la valeur de cette tension ?",
+          "options": [
+            "+7,0 V",
+            "−7,0 V",
+            "+1,75 V",
+            "+5,5 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "U = + (s_v × d) = + (2 V/div × 3,5 div) = +7,0 V."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p2_ex2",
+          "type": "mcq",
+          "prompt": "Une base de temps est réglée sur b = 5 ms/div. Si une période d'un signal sinusoïdal occupe 4 divisions horizontales, que vaut sa période T ?",
+          "options": [
+            "20 ms (soit 0,02 s)",
+            "1,25 ms",
+            "0,8 ms",
+            "200 ms"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "T = b × d_h = 5 ms/div × 4 div = 20 ms = 0,020 s."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p2_ex3",
+          "type": "mcq",
+          "prompt": "Quelle est la fréquence N d'une tension sinusoïdale de période T = 20 ms ?",
+          "options": [
+            "50 Hz",
+            "0,05 Hz",
+            "500 Hz",
+            "20 Hz"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "T = 20 ms = 0,020 s. La fréquence vaut N = 1 / T = 1 / 0,020 = 50 Hz (fréquence standard du réseau électrique)."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p2_ex4",
+          "type": "mcq",
+          "prompt": "Un voltmètre en mode alternatif indique une tension de U = 220 V pour une tension sinusoïdale. Quelle est la tension maximale U_max correspondante ?",
+          "options": [
+            "Environ 311 V",
+            "Environ 155 V",
+            "Exactement 220 V",
+            "440 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "U_max = U_eff × √2 = 220 × 1,414 ≈ 311 V."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p2_ex5",
+          "type": "mcq",
+          "prompt": "Si l'amplitude crête à crête mesurée sur un écran est de U_cc = 14 V, quelle est l'amplitude maximale U_max ?",
+          "options": [
+            "7 V",
+            "14 V",
+            "28 V",
+            "9,9 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La tension crête à crête s'étend de −U_max à +U_max, soit U_cc = 2 U_max. Donc U_max = U_cc / 2 = 14 / 2 = 7 V."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p2_ex6",
+          "type": "mcq",
+          "prompt": "Si on coupe le balayage horizontal (bouton de balayage sur arrêt / mode XY) lors de la visualisation d'une tension sinusoïdale, qu'observe-t-on sur l'écran ?",
+          "options": [
+            "Un segment de droite vertical centré sur l'origine",
+            "Un point lumineux immobile au centre",
+            "Une ligne horizontale continue",
+            "Un cercle lumineux parfait"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Sans balayage horizontal, le spot ne défile plus vers la droite : il oscille uniquement verticalement de bas en haut entre −U_max et +U_max, dessinant un segment vertical lumineux."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p2_ex7",
+          "type": "mcq",
+          "prompt": "Un signal a une fréquence N = 400 Hz. Quelle est sa période T ?",
+          "options": [
+            "2,5 ms (soit 2,5 × 10⁻³ s)",
+            "4,0 ms",
+            "0,25 s",
+            "0,4 ms"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "T = 1 / N = 1 / 400 = 0,0025 s = 2,5 × 10⁻³ s = 2,5 ms."
+        },
+        {
+          "id": "seconde_c_physique_ch8_p2_ex8",
+          "type": "mcq",
+          "prompt": "Quel bouton de l'oscilloscope permet d'éliminer la composante continue d'un signal pour n'observer que sa partie alternative ?",
+          "options": [
+            "Le couplage AC",
+            "Le couplage DC",
+            "La mise à la masse GND",
+            "Le réglage FOCUS"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le mode AC insère un condensateur de découplage en série qui bloque la composante continue et ne transmet que la partie variable/alternative du signal."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 9 : ÉTUDE EXPÉRIMENTALE DE QUELQUES DIPÔLES PASSIFS
+// ============================================================================
+export const physique2deCDipolesPassifsChapter: CurriculumChapter = {
+  "id": "seconde_c_physique_ch9_dipoles_passifs",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 9,
+  "officialVolumeHours": 8,
+  "title": "Leçon 9 — Étude expérimentale de quelques dipôles passifs",
+  "summary": "Définition d'un dipôle passif, conducteur ohmique (loi d'Ohm, conductance, code des couleurs), associations série et dérivation, et étude des dipôles non linéaires (diode à jonction, diode Zener, DEL, lampe).",
+  "points": [
+    {
+      "id": "seconde_c_physique_ch9_p1_conducteur_ohmique_loi_ohm_associations",
+      "order": 1,
+      "title": "Conducteur ohmique : loi d'Ohm, code couleur et associations de résistances",
+      "summary": "Caractériser le dipôle passif linéaire, vérifier la loi d'Ohm U = R·I, déterminer la résistance par anneaux de couleur et calculer les résistances équivalentes.",
+      "conceptExplanation": "1. Définition générale d'un dipôle passif :\nUn dipôle est dit passif si la tension entre ses bornes est strictement nulle lorsqu'il n'est relié à aucun générateur (en circuit ouvert : I = 0 ⇒ U = 0 V). Sa caractéristique passe obligatoirement par l'origine O(0, 0).\nConvention récepteur : pour un dipôle passif, la flèche tension U_AB et la flèche intensité I_AB sont représentées en sens contraires.\n\n2. Caractéristique d'un conducteur ohmique (résistor) :\nLe tracé de la tension U_AB en fonction de l'intensité I_AB donne une droite passant par l'origine dans les deux sens de branchement. C'est donc un dipôle passif, linéaire et symétrique.\n- Loi d'Ohm : la tension est proportionnelle à l'intensité du courant qui traverse le résistor :\nU_AB = R · I_AB.\n- Résistance R : coefficient directeur (pente) de la caractéristique : R = ΔU / ΔI. Unité légale : l'ohm (symbole : Ω).\n- Conductance G : aptitude du conducteur à laisser passer le courant, inverse de la résistance : G = 1 / R. Unité : le siemens (symbole : S).\n\n3. Détermination de la résistance par le code des couleurs :\nLes résistances possèdent des anneaux de couleur normalisés (chiffres a, b, multiplicateur c, tolérance T) :\nR = (10a + b) × 10^c ± T% Ω.\nCode mnémotechnique ('Ne Manger Rien Ou Jeûner Voilà Bien Votre Grande Bonté') :\nNoir=0, Brun=1, Rouge=2, Orange=3, Jaune=4, Vert=5, Bleu=6, Violet=7, Gris=8, Blanc=9.\nAnneau de tolérance : Or = ±5 %, Argent = ±10 %.\nExemple : Jaune (4), Violet (7), Rouge (10²), Or (5 %) ⇒ R = 47 × 10² ± 5 % = 4 700 Ω ± 5 %.\n\n4. Associations de conducteurs ohmiques :\n- Association en série : les résistances sont traversées par le même courant. La résistance équivalente R_e est la somme des résistances individuelles :\nR_e = R₁ + R₂ + ... + R_n = Σ R_i.\n(La résistance équivalente est plus grande que la plus grande des résistances).\n- Association en parallèle (dérivation) : les résistances sont soumises à la même tension. L'inverse de la résistance équivalente est égal à la somme des inverses :\n1 / R_e = 1 / R₁ + 1 / R₂ + ... + 1 / R_n = Σ (1 / R_i).\nPour deux conducteurs en parallèle : R_e = (R₁ × R₂) / (R₁ + R₂).\n(La résistance équivalente est plus petite que la plus petite des résistances).",
+      "formulas": [
+        {
+          "name": "Loi d'Ohm",
+          "formula": "U_AB = R · I_AB",
+          "note": "U en volts (V), R en ohms (Ω), I en ampères (A)."
+        },
+        {
+          "name": "Conductance électrique",
+          "formula": "G = 1 / R",
+          "note": "G en siemens (S), R en ohms (Ω)."
+        },
+        {
+          "name": "Résistance équivalente en série",
+          "formula": "R_e = R₁ + R₂ + ... + R_n",
+          "note": "Addition directe des résistances."
+        },
+        {
+          "name": "Résistance équivalente de deux résistors en dérivation",
+          "formula": "R_e = (R₁ × R₂) / (R₁ + R₂)",
+          "note": "Produit divisé par la somme."
+        }
+      ],
+      "keyRule": "En série, la résistance totale augmente toujours (R_e > max(R_i)). En parallèle, la résistance totale diminue toujours (R_e < min(R_i)). Pour convertir les mA en A dans la loi d'Ohm, diviser impérativement par 1 000 (ex : 250 mA = 0,250 A).",
+      "workedExample": {
+        "title": "Exemple résolu : Calcul de résistance équivalente mixte et tension partielle",
+        "statement": "On dispose de trois résistances : R₁ = 40 Ω, R₂ = 60 Ω montées en parallèle, et cette association est placée en série avec R₃ = 16 Ω. L'ensemble est alimenté sous une tension totale U = 20 V.\n1. Calculer la résistance équivalente R' de la portion en dérivation {R₁, R₂}.\n2. Calculer la résistance équivalente totale R_e du circuit.\n3. Déterminer l'intensité I du courant principal et la tension U_R3 aux bornes de R₃.",
+        "methodSteps": [
+          "Étape 1 : Calculer R' pour les deux résistances en dérivation : R' = (R₁ × R₂) / (R₁ + R₂) = (40 × 60) / (40 + 60) = 2 400 / 100 = 24 Ω.",
+          "Étape 2 : Calculer la résistance équivalente totale en série avec R₃ : R_e = R' + R₃ = 24 + 16 = 40 Ω.",
+          "Étape 3 : Calculer l'intensité I du courant principal fourni par le générateur : I = U / R_e = 20 V / 40 Ω = 0,50 A.",
+          "Étape 4 : Calculer la tension aux bornes de R₃ : U_R3 = R₃ × I = 16 Ω × 0,50 A = 8,0 V."
+        ],
+        "conclusion": "La résistance équivalente totale est de 40 Ω, le courant principal vaut 0,50 A et la tension aux bornes de R₃ est de 8,0 V."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_physique_ch9_p1_ex1",
+          "type": "mcq",
+          "prompt": "Pourquoi dit-on qu'un conducteur ohmique est un dipôle linéaire et symétrique ?",
+          "options": [
+            "Sa caractéristique U = f(I) est une droite passant par l'origine et son comportement est rigoureusement identique quel que soit le sens du courant",
+            "Il ne fonctionne que dans un seul sens du courant continu",
+            "Sa résistance change de valeur selon la tension appliquée",
+            "Il émet de la lumière proportionnellement au courant"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Un dipôle est linéaire car sa courbe caractéristique est une droite passant par O (U = R·I), et symétrique car son tracé présente une symétrie centrale par rapport à l'origine (même valeur de R en sens direct et inverse)."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p1_ex2",
+          "type": "mcq",
+          "prompt": "Un conducteur ohmique de résistance R = 150 Ω est traversé par un courant d'intensité I = 40 mA. Quelle est la tension à ses bornes ?",
+          "options": [
+            "6,0 V",
+            "6 000 V",
+            "3,75 V",
+            "0,27 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Convertissons en ampères : I = 40 mA = 0,040 A. U = R × I = 150 × 0,040 = 6,0 V."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p1_ex3",
+          "type": "mcq",
+          "prompt": "Quelle est la conductance G d'un conducteur ohmique de résistance R = 200 Ω ?",
+          "options": [
+            "0,005 S (soit 5 mS)",
+            "200 S",
+            "0,05 S",
+            "50 S"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "G = 1 / R = 1 / 200 = 0,005 S (siemens) = 5 mS."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p1_ex4",
+          "type": "mcq",
+          "prompt": "Une résistance porte les anneaux suivants : Rouge (2), Violet (7), Orange (3) et Or (5 %). Quelle est sa valeur nominale ?",
+          "options": [
+            "27 000 Ω ± 5 % (27 kΩ)",
+            "273 Ω ± 5 %",
+            "2 700 Ω ± 5 %",
+            "270 kΩ ± 5 %"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "R = (10a + b) × 10^c = 27 × 10³ Ω = 27 000 Ω = 27 kΩ, avec une tolérance de ±5 %."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p1_ex5",
+          "type": "mcq",
+          "prompt": "Deux conducteurs ohmiques de résistances R₁ = 30 Ω et R₂ = 20 Ω sont connectés en série. Quelle est la résistance équivalente de cette association ?",
+          "options": [
+            "50 Ω",
+            "12 Ω",
+            "600 Ω",
+            "10 Ω"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En série, les résistances s'additionnent : R_e = R₁ + R₂ = 30 + 20 = 50 Ω."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p1_ex6",
+          "type": "mcq",
+          "prompt": "Deux conducteurs ohmiques de résistances R₁ = 30 Ω et R₂ = 20 Ω sont connectés en dérivation (parallèle). Quelle est la résistance équivalente ?",
+          "options": [
+            "12 Ω",
+            "50 Ω",
+            "25 Ω",
+            "600 Ω"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En dérivation pour deux résistances : R_e = (R₁ × R₂) / (R₁ + R₂) = (30 × 20) / (30 + 20) = 600 / 50 = 12 Ω."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p1_ex7",
+          "type": "mcq",
+          "prompt": "Trois résistances identiques de valeur R = 90 Ω sont branchées en parallèle. Quelle est la résistance équivalente du dipôle ?",
+          "options": [
+            "30 Ω",
+            "270 Ω",
+            "90 Ω",
+            "10 Ω"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour n résistances identiques en parallèle : R_e = R / n = 90 / 3 = 30 Ω."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p1_ex8",
+          "type": "mcq",
+          "prompt": "Un voltmètre mesure U = 12 V aux bornes d'un résistor et un ampèremètre indique I = 0,24 A. Quelle est la puissance P dissipée par effet Joule ?",
+          "options": [
+            "2,88 W",
+            "50 W",
+            "0,02 W",
+            "144 W"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "P = U × I = 12 V × 0,24 A = 2,88 W (ou P = R·I² = 50 × 0,24² = 2,88 W)."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_physique_ch9_p2_dipoles_non_lineaires_diodes_lampe",
+      "order": 2,
+      "title": "Dipôles non linéaires : diodes à jonction, diode Zener et lampe à incandescence",
+      "summary": "Comprendre le comportement dissymétrique et non linéaire des diodes, déterminer la tension seuil Us, la tension Zener Uz et analyser la variation thermique d'une lampe.",
+      "conceptExplanation": "1. Notions de dipôles non linéaires et dissymétriques :\nUn dipôle est dit non linéaire si sa caractéristique U = f(I) n'est pas une droite. Il est dit dissymétrique si son comportement électrique change selon le sens de branchement dans le circuit (dipôle polarisé ayant une anode A et une cathode K).\n\n2. La diode à jonction au silicium :\n- Symbole : triangle fléché vers une barre verticale (le sens du triangle indique le sens passant direct, de l'anode A vers la cathode K).\n- Sens direct (U_AK > 0) :\n  * Si U_AK < U_s : l'intensité est nulle (I = 0). La diode est dite bloquée (équivalente à un interrupteur ouvert).\n  * Si U_AK ≥ U_s : l'intensité croît très rapidement et la tension reste quasiment stabilisée à U_s. La diode est dite passante (équivalente à un interrupteur fermé avec une chute de tension U_s).\n  * U_s est la tension de seuil : U_s ≈ 0,6 V à 0,7 V pour le silicium, et ≈ 0,2 V à 0,3 V pour le germanium.\n- Sens inverse (U_AK < 0) : l'intensité reste négligeable (I ≈ 0). La diode est bloquée.\n- Diode idéale (parfaite) : modèle théorique où U_s = 0 V (bloquée si U < 0, court-circuit parfait si U ≥ 0).\n- Application majeure : Redressement du courant alternatif. Un pont de 4 diodes (pont de Graetz) redresse les deux alternances d'une tension sinusoïdale en tension redressée double alternance unidirectionnelle.\n\n3. La diode Zener :\n- Sens direct : se comporte exactement comme une diode ordinaire (passante au-delà de U_s ≈ 0,7 V).\n- Sens inverse : bloquée tant que la tension reste comprise entre −U_Z et 0 V (−U_Z < U_AK ≤ 0). En revanche, lorsque U_AK ≤ −U_Z, la diode devient brutalement conductrice par effet Zener et maintient une tension constante U_Z à ses bornes.\n- Application majeure : Stabilisation et régulation des tensions d'alimentation.\n\n4. La diode électroluminescente (DEL ou LED) :\nÉmet de la lumière lorsqu'elle est polarisée en sens direct et que la tension dépasse son seuil d'allumage (U_s compris entre 1,8 V pour le rouge et 3,2 V pour le bleu/blanc).\n\n5. La lampe à incandescence :\n- Sa caractéristique passe par l'origine et présente une symétrie par rapport à O : c'est un dipôle passif, symétrique mais NON LINÉAIRE.\n- La pente ΔU / ΔI augmente au fur et à mesure que l'intensité croît : lorsque le filament chauffe sous l'effet Joule, sa résistance R augmente avec la température.",
+      "formulas": [
+        {
+          "name": "Diode à jonction en sens direct",
+          "formula": "U_AK ≥ U_s  (passante)",
+          "note": "U_s ≈ 0,6 V pour le silicium."
+        },
+        {
+          "name": "Diode Zener en sens inverse",
+          "formula": "U_KA = U_Z  (tension Zener stabilisée)",
+          "note": "Utilisée pour réguler la tension aux bornes d'une charge."
+        },
+        {
+          "name": "Résistance thermique d'un filament",
+          "formula": "R(T) = R₀ · (1 + α · ΔT)",
+          "note": "La résistance augmente avec l'échauffement du tungstène."
+        }
+      ],
+      "keyRule": "Une diode ordinaire ne conduit le courant que dans UN SEUL SENS : de l'anode (+) vers la cathode (−). Si on la branche à l'envers, elle se bloque complètement et coupe le courant (I = 0). La diode Zener, en revanche, est conçue pour être utilisée exprès en polarisation INVERSE pour stabiliser une tension égale à U_Z.",
+      "workedExample": {
+        "title": "Exemple résolu : Circuit de protection avec une DEL et résistance de limitation",
+        "statement": "On alimente une DEL rouge de tension de seuil U_s = 2,0 V à partir d'un générateur de tension continue E = 9,0 V. Pour limiter le courant dans la DEL à I = 20 mA lorsqu'elle éclaire, on place une résistance de protection R_p en série.\n1. Écrire la loi d'additivité des tensions le long de la maille.\n2. Calculer la tension U_Rp aux bornes de la résistance lorsque la DEL est passante.\n3. En déduire la valeur nécessaire pour la résistance de protection R_p.",
+        "methodSteps": [
+          "Étape 1 : Écrire la loi des mailles pour le circuit série en état passant : E = U_Rp + U_s.",
+          "Étape 2 : Isoler la tension U_Rp aux bornes du résistor : U_Rp = E − U_s = 9,0 V − 2,0 V = 7,0 V.",
+          "Étape 3 : Convertir l'intensité en ampères : I = 20 mA = 0,020 A.",
+          "Étape 4 : Appliquer la loi d'Ohm pour le résistor de protection : R_p = U_Rp / I = 7,0 V / 0,020 A = 350 Ω."
+        ],
+        "conclusion": "La résistance de protection doit avoir une valeur de 350 Ω pour limiter le courant à 20 mA et éviter de détruire la DEL."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_physique_ch9_p2_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est la tension de seuil typique d'une diode à jonction au silicium en sens direct ?",
+          "options": [
+            "Environ 0,6 V à 0,7 V",
+            "Exactement 0 V",
+            "Environ 2,0 V à 3,0 V",
+            "12 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour une diode au silicium, la conduction démarre à partir d'une tension de seuil Us d'environ 0,6 V à 0,7 V."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p2_ex2",
+          "type": "mcq",
+          "prompt": "Que vaut l'intensité du courant qui traverse une diode ordinaire branchée en polarisation inverse (sous une tension inférieure à sa tension de claquage) ?",
+          "options": [
+            "Pratiquement nulle (I ≈ 0 A)",
+            "Maximale",
+            "Infinie",
+            "Égale au courant nominal de la pile"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En polarisation inverse, la diode à jonction est bloquée et se comporte comme un isolant ou un interrupteur ouvert : le courant résiduel est quasiment nul."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p2_ex3",
+          "type": "mcq",
+          "prompt": "Quel composant électrique permet de maintenir une tension quasi constante à ses bornes lorsqu'il est polarisé en sens inverse ?",
+          "options": [
+            "La diode Zener",
+            "Le conducteur ohmique",
+            "La lampe à incandescence",
+            "L'interrupteur à bilame"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La diode Zener est spécialement fabriquée pour fonctionner en polarisation inverse au-delà de sa tension de claquage Uz (effet Zener), maintenant ainsi une tension de référence rigoureusement stable."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p2_ex4",
+          "type": "mcq",
+          "prompt": "Pourquoi la caractéristique d'une lampe à incandescence n'est-elle pas une droite linéaire ?",
+          "options": [
+            "Parce que la résistance de son filament de tungstène augmente lorsque sa température s'élève",
+            "Parce que la lampe ne fonctionne qu'avec du courant alternatif",
+            "Parce qu'elle contient du gaz isolant qui bloque le courant",
+            "Parce que la loi d'Ohm ne s'applique pas aux métaux"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Lorsque l'intensité augmente, le filament s'échauffe par effet Joule. Pour les métaux, la résistivité augmente fortement avec la température, ce qui incurve la caractéristique (pente non constante)."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p2_ex5",
+          "type": "mcq",
+          "prompt": "Une diode Zener possède une tension de seuil direct Us = 0,7 V et une tension Zener Uz = 6,8 V. Quelle tension apparaît à ses bornes si elle est passante en inverse ?",
+          "options": [
+            "6,8 V",
+            "0,7 V",
+            "7,5 V",
+            "0 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En sens inverse dans son domaine de conduction Zener, la tension aux bornes de la diode est stabilisée à sa tension Zener Uz = 6,8 V."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p2_ex6",
+          "type": "mcq",
+          "prompt": "Quel montage permet de transformer une tension alternative sinusoïdale en tension redressée double alternance ?",
+          "options": [
+            "Un pont de quatre diodes (pont de Graetz)",
+            "Une diode unique montée en série",
+            "Deux résistances montées en dérivation",
+            "Un potentiomètre réglé à mi-course"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le pont de Graetz constitué de 4 diodes connectées en anneau permet de faire circuler le courant dans la charge toujours dans le même sens quelle que soit l'alternance de la tension d'entrée (redressement double alternance)."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p2_ex7",
+          "type": "mcq",
+          "prompt": "Qu'est-ce qu'une diode idéale (ou modèle de la diode parfaite) ?",
+          "options": [
+            "Une diode théorique sans tension de seuil (Us = 0 V) et sans résistance interne en sens direct",
+            "Une diode qui laisse passer le courant dans les deux sens",
+            "Une diode qui produit de l'énergie électrique",
+            "Une diode incassable aux surtensions"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La diode idéale est un modèle simplifié où la tension de seuil est nulle (Us = 0 V) : elle agit comme un interrupteur parfait fermé en direct et ouvert en inverse."
+        },
+        {
+          "id": "seconde_c_physique_ch9_p2_ex8",
+          "type": "mcq",
+          "prompt": "Une DEL de tension de seuil Us = 2,2 V est montée en parallèle avec une résistance R = 100 Ω. Pour que la DEL s'allume, quelle condition doit remplir l'intensité minimale I_min délivrée à l'ensemble ?",
+          "options": [
+            "I_min = 2,2 / 100 = 22 mA",
+            "I_min = 100 / 2,2 = 45,4 mA",
+            "I_min = 2,2 × 100 = 220 mA",
+            "I_min = 0 A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Tant que la DEL est bloquée, tout le courant traverse la résistance R. La tension U = R·I atteint le seuil d'allumage Us = 2,2 V dès que I_min = Us / R = 2,2 / 100 = 0,022 A = 22 mA."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 10 : ÉTUDE EXPÉRIMENTALE D'UN DIPÔLE ACTIF. POINT DE FONCTIONNEMENT
+// ============================================================================
+export const physique2deCDipoleActifPointFonctionnementChapter: CurriculumChapter = {
+  "id": "seconde_c_physique_ch10_dipole_actif_point_fonctionnement",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 10,
+  "officialVolumeHours": 8,
+  "title": "Leçon 10 — Étude expérimentale d'un dipôle actif. Point de fonctionnement",
+  "summary": "Caractéristique intensité-tension d'une pile U_PN = E − r·I, force électromotrice E, résistance interne r, court-circuit, point de fonctionnement et loi de Pouillet.",
+  "points": [
+    {
+      "id": "seconde_c_physique_ch10_p1_caracteristique_pile_fem_resistance_interne",
+      "order": 1,
+      "title": "Caractéristique d'une pile : f.é.m. E, résistance interne r et court-circuit",
+      "summary": "Définir le dipôle actif, tracer et exploiter l'équation de la caractéristique U_PN = E − r·I, déterminer E et r et calculer le courant de court-circuit I_CC.",
+      "conceptExplanation": "1. Définition d'un dipôle actif et convention générateur :\nUn dipôle est dit actif s'il existe une différence de potentiel non nulle entre ses bornes en circuit ouvert (hors de tout circuit électrique). Les dipôles actifs constituent les générateurs d'énergie électrique (piles, accumulateurs, alternateurs, cellules photovoltaïques).\n- Convention générateur : la flèche représentant la tension U_PN et la flèche représentant le courant débité I sont tracées dans le MÊME sens.\n\n2. Caractéristique intensité-tension d'une pile réelle :\nL'étude expérimentale (variation du courant à l'aide d'un rhéostat) montre que la caractéristique U_PN = f(I) est un segment de droite de pente négative ne passant pas par l'origine.\nSon équation mathématique est de la forme :\nU_PN = E − r · I.\n- Force électromotrice (f.é.m.) E : c'est l'ordonnée à l'origine (pour I = 0 A). Elle représente la tension mesurée à vide entre les bornes de la pile. Elle s'exprime en volts (V).\n- Résistance interne r : c'est l'opposé du coefficient directeur (pente négative a) de la droite :\na = ΔU_PN / ΔI = −r  ⇒  r = − (ΔU_PN / ΔI) = (E − U_PN) / I.\nLa résistance interne r s'exprime en ohms (Ω). Elle traduit la perte de tension par effet Joule à l'intérieur de la pile lors du débit.\n\n3. Modèle du générateur idéal de tension :\nSi la résistance interne est nulle (r = 0 Ω), la tension reste rigoureusement constante quel que soit le courant débité :\nU_PN = E = constante.\nLa caractéristique d'un générateur idéal de tension est une droite strictement horizontale.\n\n4. Intensité de courant de court-circuit I_CC :\nLe court-circuit correspond au cas où les bornes P et N de la pile sont reliées par un fil conducteur de résistance quasi nulle (U_PN = 0 V) :\nU_PN = 0  ⇒  E − r · I_CC = 0  ⇒  I_CC = E / r.\n- I_CC est l'abscisse à l'origine de la caractéristique.\n- C'est l'intensité maximale théorique que peut fournir le générateur. En pratique, ce courant très élevé échauffe violemment la pile et peut provoquer son explosion ou sa détérioration irréversible.",
+      "formulas": [
+        {
+          "name": "Loi d'Ohm pour un générateur (pile)",
+          "formula": "U_PN = E − r · I",
+          "note": "E f.é.m. en V, r résistance interne en Ω, I en A."
+        },
+        {
+          "name": "Calcul de la résistance interne",
+          "formula": "r = (E − U_PN) / I = − (ΔU / ΔI)",
+          "note": "Valeur positive toujours exprimée en ohms (Ω)."
+        },
+        {
+          "name": "Courant de court-circuit",
+          "formula": "I_CC = E / r",
+          "note": "Intensité obtenue pour une tension nulle (U_PN = 0 V)."
+        },
+        {
+          "name": "Générateur idéal de tension",
+          "formula": "U_PN = E (r = 0)",
+          "note": "Tension rigoureusement indépendante du courant débité."
+        }
+      ],
+      "keyRule": "La force électromotrice E se mesure TOUJOURS À VIDE (circuit ouvert, I = 0). Dès que la pile débite du courant dans un circuit fermé, la tension réelle U_PN à ses bornes DIMINUE obligatoirement à cause de la chute de tension ohmique interne r·I (U_PN = E − r·I < E).",
+      "workedExample": {
+        "title": "Exemple résolu : Détermination de la f.é.m., de la résistance interne et de I_CC",
+        "statement": "Une pile électrique a une tension à vide de 4,5 V. Lorsqu'on la branche aux bornes d'un résistor, elle débite un courant I = 0,20 A et la tension entre ses bornes devient U_PN = 4,2 V.\n1. Donner la valeur de sa force électromotrice E.\n2. Calculer sa résistance interne r.\n3. Déterminer l'intensité du courant de court-circuit I_CC.",
+        "methodSteps": [
+          "Étape 1 : Identifier la f.é.m. E : la tension à vide (I = 0) est égale à la force électromotrice, donc E = 4,5 V.",
+          "Étape 2 : Appliquer la formule de la tension en charge : U_PN = E − r·I ⇒ r·I = E − U_PN.",
+          "Étape 3 : Isoler et calculer r : r = (E − U_PN) / I = (4,5 − 4,2) / 0,20 = 0,30 / 0,20 = 1,5 Ω.",
+          "Étape 4 : Calculer le courant de court-circuit : I_CC = E / r = 4,5 / 1,5 = 3,0 A."
+        ],
+        "conclusion": "La pile a une f.é.m. de 4,5 V, une résistance interne de 1,5 Ω et son intensité de court-circuit vaut 3,0 A."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_physique_ch10_p1_ex1",
+          "type": "mcq",
+          "prompt": "Que représente physiquement la force électromotrice (f.é.m.) E d'une pile ?",
+          "options": [
+            "La tension mesurée entre ses bornes en circuit ouvert (à vide, I = 0)",
+            "L'intensité maximale du courant que la pile peut délivrer",
+            "La résistance de son électrolyte interne",
+            "La puissance thermique perdue par effet Joule"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La force électromotrice E d'un dipôle actif est la tension entre ses bornes lorsqu'il ne débite aucun courant (à vide, I = 0 A)."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p1_ex2",
+          "type": "mcq",
+          "prompt": "Une pile de f.é.m. E = 9,0 V et de résistance interne r = 2,0 Ω débite une intensité de I = 0,5 A. Quelle est la tension U_PN à ses bornes ?",
+          "options": [
+            "8,0 V",
+            "10,0 V",
+            "9,0 V",
+            "4,5 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "U_PN = E − r·I = 9,0 − (2,0 × 0,5) = 9,0 − 1,0 = 8,0 V."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p1_ex3",
+          "type": "mcq",
+          "prompt": "L'équation de la caractéristique d'un générateur est U_PN = 24 − 0,1 · I (unités SI). Quelles sont les valeurs de sa f.é.m. E et de sa résistance interne r ?",
+          "options": [
+            "E = 24 V et r = 0,1 Ω",
+            "E = 0,1 V et r = 24 Ω",
+            "E = 24 V et r = −0,1 Ω",
+            "E = 240 V et r = 10 Ω"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par identification avec la relation générale U_PN = E − r·I : l'ordonnée à l'origine est E = 24 V et la résistance interne est r = 0,1 Ω."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p1_ex4",
+          "type": "mcq",
+          "prompt": "Quelle est l'intensité du courant de court-circuit I_CC d'une pile ayant E = 6,0 V et r = 1,2 Ω ?",
+          "options": [
+            "5,0 A",
+            "7,2 A",
+            "0,2 A",
+            "50 A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En court-circuit, U_PN = 0 V ⇒ I_CC = E / r = 6,0 / 1,2 = 5,0 A."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p1_ex5",
+          "type": "mcq",
+          "prompt": "Qu'est-ce qu'un générateur idéal de tension ?",
+          "options": [
+            "Un générateur dont la résistance interne est nulle (r = 0), maintenant une tension U = E constante quel que soit le débit",
+            "Un générateur qui ne s'use jamais avec le temps",
+            "Un générateur qui fournit un courant continu d'intensité infinie sans fil",
+            "Une batterie qui n'a pas besoin d'être rechargée"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Un générateur idéal de tension possède une résistance interne nulle r = 0 Ω, ce qui implique que la tension à ses bornes reste strictement égale à sa f.é.m. E, quelle que soit la valeur du courant débité."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p1_ex6",
+          "type": "mcq",
+          "prompt": "Une batterie débite 10 A sous une tension de 11,5 V. Sachant que sa tension à vide est de 12,5 V, quelle est sa résistance interne ?",
+          "options": [
+            "0,10 Ω",
+            "1,0 Ω",
+            "0,25 Ω",
+            "1,25 Ω"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "r = (E − U) / I = (12,5 − 11,5) / 10 = 1,0 / 10 = 0,10 Ω."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p1_ex7",
+          "type": "mcq",
+          "prompt": "Pourquoi la tension aux bornes d'une pile réelle s'effondre-t-elle quand on lui demande un courant très intense ?",
+          "options": [
+            "À cause de la chute de tension interne r·I provoquée par sa résistance interne",
+            "Parce que la force électromotrice E s'annule instantanément",
+            "Parce que les électrons ralentissent à cause de la lumière",
+            "Parce que la loi des mailles ne s'applique plus"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "D'après U = E − r·I, plus le courant I débité est grand, plus le terme soustractif r·I augmente, ce qui fait chuter la tension disponible aux bornes de la pile."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p1_ex8",
+          "type": "mcq",
+          "prompt": "Sur un graphe U_PN = f(I), comment détermine-t-on graphiquement la résistance interne r d'une pile ?",
+          "options": [
+            "En calculant la valeur absolue de la pente de la droite : r = |ΔU / ΔI|",
+            "En lisant directement l'ordonnée à l'origine",
+            "En lisant l'abscisse à l'origine",
+            "En multipliant la tension maximale par l'intensité maximale"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'équation est U_PN = −r·I + E. La pente de la droite est a = −r, donc la résistance interne r est l'opposé de la pente : r = −(ΔU / ΔI) = |ΔU / ΔI|."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_physique_ch10_p2_point_fonctionnement_loi_de_pouillet",
+      "order": 2,
+      "title": "Point de fonctionnement d'un circuit et loi de Pouillet",
+      "summary": "Déterminer graphiquement et par calcul le point de fonctionnement F(IF, UF) d'une association dipôle actif-récepteur et appliquer la loi de Pouillet aux circuits série.",
+      "conceptExplanation": "1. Notion de point de fonctionnement F(I_F, U_F) :\nLorsqu'on connecte un dipôle actif (générateur : pile de f.é.m. E et résistance r) aux bornes d'un dipôle récepteur (passif ou non linéaire), ils s'imposent mutuellement leurs grandeurs électriques :\n- Ils sont traversés par le même courant d'intensité I_F.\n- Ils ont entre leurs bornes la même tension U_F.\nLe couple (I_F, U_F) s'appelle le point de fonctionnement du circuit.\n\n2. Détermination graphique du point de fonctionnement :\nOn trace sur un même repère cartésien avec les mêmes échelles :\n- La caractéristique du dipôle actif : U_PN = E − r·I (droite descendante).\n- La caractéristique du dipôle récepteur : U_AB = f(I) (droite passant par l'origine pour une résistance, ou courbe pour une diode/lampe).\nLe point d'intersection F des deux courbes correspond aux valeurs vérifiant simultanément les équations des deux dipôles : ses coordonnées sont (I_F, U_F).\nCette méthode graphique est indispensable lorsque le récepteur est non linéaire (diode, DEL, lampe).\n\n3. Détermination algébrique (cas d'un conducteur ohmique R) :\nLa pile impose U_PN = E − r·I et le résistor impose U_AB = R·I.\nComme les bornes sont directement reliées (U_PN = U_AB) :\nE − r·I = R·I  ⇒  (R + r) · I = E  ⇒  I_F = E / (R + r).\nLa tension au point de fonctionnement s'obtient alors indifféremment par :\nU_F = R · I_F  ou  U_F = E − r · I_F.\n\n4. Loi de Pouillet (circuit en série comportant plusieurs dipôles) :\nDans un circuit série à une seule maille comportant plusieurs générateurs montés en concordance (dont les f.é.m. s'ajoutent) et plusieurs résistances et résistances internes :\nL'intensité I du courant continu s'obtient en divisant la somme des forces électromotrices par la somme de toutes les résistances du circuit (conducteurs ohmiques + résistances internes) :\nI = (Σ E_i) / (Σ R_j + Σ r_i).\nExemple : deux piles (E₁, r₁) et (E₂, r₂) en série alimentant deux résistances R₁ et R₂ :\nI = (E₁ + E₂) / (R₁ + R₂ + r₁ + r₂).",
+      "formulas": [
+        {
+          "name": "Courant au point de fonctionnement (pile + résistor)",
+          "formula": "I_F = E / (R + r)",
+          "note": "E en V, R et r en Ω, I_F en A."
+        },
+        {
+          "name": "Tension au point de fonctionnement",
+          "formula": "U_F = R · I_F = E − r · I_F",
+          "note": "Tension commune aux bornes des deux dipôles."
+        },
+        {
+          "name": "Loi de Pouillet (généralisée)",
+          "formula": "I = (Σ E_i) / (Σ R_j + Σ r_i)",
+          "note": "Rapport de la somme des f.é.m. sur la somme des résistances totales."
+        }
+      ],
+      "keyRule": "Pour déterminer algébriquement le point de fonctionnement, on écrit TOUJOURS l'égalité des tensions aux bornes du générateur et du récepteur : U_générateur = U_récepteur ⇔ E − r·I = R·I. Pour plusieurs piles branchées en série, vérifier qu'elles sont montées en CONCORDANCE (le pôle + de l'une est relié au pôle − de la suivante).",
+      "workedExample": {
+        "title": "Exemple résolu : Application de la loi de Pouillet avec deux piles et deux résistances",
+        "statement": "On réalise un circuit série comprenant :\n- Deux piles montées en série concordance : E₁ = 4,5 V (r₁ = 1,0 Ω) et E₂ = 1,5 V (r₂ = 0,5 Ω).\n- Deux conducteurs ohmiques : R₁ = 8,5 Ω et R₂ = 14,0 Ω.\n1. Écrire l'expression littérale de l'intensité I du courant d'après la loi de Pouillet.\n2. Calculer la valeur numérique de I.\n3. Calculer la tension disponible aux bornes de chaque résistance.",
+        "methodSteps": [
+          "Étape 1 : Écrire la loi de Pouillet : I = (E₁ + E₂) / (R₁ + R₂ + r₁ + r₂).",
+          "Étape 2 : Calculer la somme des f.é.m. : Σ E = 4,5 + 1,5 = 6,0 V.",
+          "Étape 3 : Calculer la somme des résistances : Σ R_tot = R₁ + R₂ + r₁ + r₂ = 8,5 + 14,0 + 1,0 + 0,5 = 24,0 Ω.",
+          "Étape 4 : Calculer l'intensité I : I = 6,0 V / 24,0 Ω = 0,25 A = 250 mA.",
+          "Étape 5 : Calculer les tensions partielles : U_R1 = R₁ × I = 8,5 × 0,25 = 2,125 V, et U_R2 = R₂ × I = 14,0 × 0,25 = 3,50 V."
+        ],
+        "conclusion": "L'intensité du courant dans le circuit série est de 0,25 A (250 mA) et les tensions aux bornes des résistances sont respectivement 2,13 V et 3,50 V."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_physique_ch10_p2_ex1",
+          "type": "mcq",
+          "prompt": "Qu'est-ce que le point de fonctionnement d'un circuit électrique associant un générateur et un récepteur ?",
+          "options": [
+            "Le couple de valeurs (IF, UF) de l'intensité du courant dans le circuit et de la tension commune aux bornes des deux dipôles",
+            "La valeur maximale de la température atteinte par le générateur",
+            "Le moment précis où le circuit est allumé",
+            "La position physique de l'interrupteur sur la platine d'essai"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le point de fonctionnement F(IF, UF) est l'unique état électrique stable défini par l'intensité IF commune qui traverse les composants et la tension UF commune à leurs bornes."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p2_ex2",
+          "type": "mcq",
+          "prompt": "Une pile de f.é.m. E = 4,0 V et de résistance interne r = 1,0 Ω est branchée aux bornes d'un résistor R = 15,0 Ω. Quelle est l'intensité IF dans le circuit ?",
+          "options": [
+            "0,25 A",
+            "0,27 A",
+            "4,0 A",
+            "0,50 A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par la loi d'Ohm généralisée : IF = E / (R + r) = 4,0 / (15,0 + 1,0) = 4,0 / 16,0 = 0,25 A."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p2_ex3",
+          "type": "mcq",
+          "prompt": "Dans le circuit précédent (E = 4 V, r = 1 Ω, R = 15 Ω, IF = 0,25 A), quelle est la tension UF aux bornes de la pile ?",
+          "options": [
+            "3,75 V",
+            "4,0 V",
+            "0,25 V",
+            "3,50 V"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "UF = R × IF = 15 × 0,25 = 3,75 V (ou UF = E − r·IF = 4,0 − (1 × 0,25) = 3,75 V)."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p2_ex4",
+          "type": "mcq",
+          "prompt": "Comment détermine-t-on graphiquement le point de fonctionnement d'une pile associée à un dipôle non linéaire (comme une DEL ou une diode) ?",
+          "options": [
+            "À l'intersection des courbes caractéristiques du générateur et du récepteur tracées sur le même graphique",
+            "En mesurant la surface comprise sous la courbe de la diode",
+            "En additionnant les ordonnées à l'origine des deux composants",
+            "En divisant la pente de la pile par la pente de la diode"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le point de fonctionnement correspond à l'état où tension et intensité sont simultanément égales pour les deux dipôles, ce qui géométriquement correspond au point d'intersection des deux caractéristiques."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p2_ex5",
+          "type": "mcq",
+          "prompt": "Selon la loi de Pouillet, comment s'exprime l'intensité I dans un circuit série composé de générateurs et de résistors ?",
+          "options": [
+            "I = (Σ Ei) / (Σ Rj + Σ ri)",
+            "I = (Σ Rj) / (Σ Ei + Σ ri)",
+            "I = (Σ Ei) × (Σ Rj)",
+            "I = (Σ Ei − Σ ri) / Σ Rj"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La loi de Pouillet stipule que l'intensité s'obtient en divisant la somme des f.é.m. des générateurs en concordance par la somme totale de toutes les résistances (internes et externes) du circuit."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p2_ex6",
+          "type": "mcq",
+          "prompt": "Deux piles identiques (E = 1,5 V, r = 0,2 Ω) sont montées en série concordance pour alimenter une lampe de résistance R = 5,6 Ω. Que vaut le courant I ?",
+          "options": [
+            "0,50 A",
+            "0,25 A",
+            "0,53 A",
+            "1,0 A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "I = (E₁ + E₂) / (R + r₁ + r₂) = (1,5 + 1,5) / (5,6 + 0,2 + 0,2) = 3,0 / 6,0 = 0,50 A."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p2_ex7",
+          "type": "mcq",
+          "prompt": "Si l'on augmente la résistance extérieure R d'un circuit alimenté par une pile (E, r), que devient le point de fonctionnement (IF, UF) ?",
+          "options": [
+            "IF diminue et UF augmente pour se rapprocher de E",
+            "IF augmente et UF diminue",
+            "IF et UF augmentent tous les deux",
+            "IF et UF restent strictement inchangés"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Quand R augmente, le dénominateur de IF = E / (R+r) augmente donc IF diminue. Par conséquent, la chute interne r·IF faiblit et la tension disponible UF = E − r·IF augmente pour se rapprocher de la f.é.m. à vide E."
+        },
+        {
+          "id": "seconde_c_physique_ch10_p2_ex8",
+          "type": "mcq",
+          "prompt": "Un générateur (E = 12 V, r = 2 Ω) est branché sur une résistance de protection Rp = 10 Ω et un potentiomètre réglable Rh (0 à 100 Ω). Quelle est l'intensité maximale que peut débiter le circuit ?",
+          "options": [
+            "1,0 A (pour Rh = 0 Ω)",
+            "6,0 A",
+            "0,107 A",
+            "0,12 A"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le courant est maximal lorsque la résistance réglable est minimale (Rh = 0 Ω) : I_max = E / (r + Rp + 0) = 12 / (2 + 10) = 12 / 12 = 1,0 A."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// EXPORTATION DE TOUS LES CHAPITRES DE PHYSIQUE 2de C (10 LEÇONS OFFICIELLES)
 // ============================================================================
 export const physique2deCChapters: CurriculumChapter[] = [
   physique2deCLeMouvementChapter,
@@ -1603,4 +3149,9 @@ export const physique2deCChapters: CurriculumChapter[] = [
   physique2deCEquilibreDeuxTroisForcesChapter,
   physique2deCPrincipeInertieChapter,
   physique2deCEquilibreSolideAxeFixeChapter,
+  physique2deCQuantiteDeMouvementChapter,
+  physique2deCIntensiteCourantContinuChapter,
+  physique2deCTensionElectriqueChapter,
+  physique2deCDipolesPassifsChapter,
+  physique2deCDipoleActifPointFonctionnementChapter,
 ];
