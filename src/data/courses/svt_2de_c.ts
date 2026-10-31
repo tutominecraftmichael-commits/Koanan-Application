@@ -18,8 +18,14 @@
 // - Leçon 9 : La division cellulaire (mitose) (4h)
 // - Leçon 10 : L'évolution de l'équipement chromosomique (4h)
 //
-// Volume horaire officiel total : 30 heures d'enseignement
-// Standard d'excellence : 10 chapitres, 20 points de cours, 160 QCM interactifs (8 QCM par point)
+// THÈME 4 : LA NUTRITION MINÉRALE DE LA PLANTE VERTE (Leçons 11 à 14)
+// - Leçon 11 : L'absorption de l'eau par la plante (4h)
+// - Leçon 12 : L'influence des sels minéraux sur la croissance de la plante verte (4h)
+// - Leçon 13 : L'absorption des sels minéraux par la plante verte (2h)
+// - Leçon 14 : Le devenir des substances absorbées par la plante verte (4h)
+//
+// Volume horaire officiel total : 44 heures d'enseignement
+// Standard d'excellence : 14 chapitres, 28 points de cours, 224 QCM interactifs (8 QCM par point)
 // ============================================================================
 
 import type { CurriculumChapter } from '../../lib/curriculum/types';
@@ -2922,7 +2928,1157 @@ export const svt2deCEvolutionEquipementChromosomiqueChapter: CurriculumChapter =
 };
 
 // ============================================================================
-// EXPORT DU CURRICULUM COMPLET SVT 2de C (10 CHAPITRES, 20 POINTS, 160 QCM)
+// LEÇON 11 : L'ABSORPTION DE L'EAU PAR LA PLANTE
+// ============================================================================
+export const svt2deCAbsorptionEauPlanteChapter: CurriculumChapter = {
+  "id": "seconde_c_svt_ch11_absorption_eau_plante",
+  "subjectId": "svt",
+  "gradeLevel": "seconde_c",
+  "order": 11,
+  "officialVolumeHours": 4,
+  "title": "Leçon 11 — L'absorption de l'eau par la plante",
+  "summary": "Structure cytologique du poil absorbant, mise en évidence de l'absorption hydrique racinaire (zone pilifère), états de turgescence et de plasmolyse, et mécanisme biophysique de l'osmose (loi de Van 't Hoff, osmomètre de Dutrochet et calcul de la pression osmotique).",
+  "points": [
+    {
+      "id": "seconde_c_svt_ch11_p1_poil_absorbant_turgescence_plasmolyse",
+      "order": 1,
+      "title": "Structure du poil absorbant, zone d'absorption et états de turgescence/plasmolyse",
+      "summary": "Identifier la zone pilifère racinaire, décrire l'ultrastructure du poil absorbant et expliquer les états cellulaires de turgescence et de plasmolyse selon la concentration du milieu externe.",
+      "conceptExplanation": "1. Mise en évidence de la zone d'absorption racinaire :\n- Lorsqu'on place une jeune racine de plantule dans un tube à essai contenant de l'eau surmontée d'huile minérale imperméable :\n  * Si seule la zone pilifère (recouverte de poils absorbants) est immergée dans l'eau, la plante absorbe l'eau et continue sa croissance normale.\n  * Si la zone pilifère est immergée dans l'huile (tandis que la coiffe et la zone subéreuse sont dans l'eau), la plante fane et se dessèche rapidement.\n- Conclusion : L'absorption de l'eau et des sels minéraux s'effectue exclusivement au niveau de la zone pilifère de la racine.\n\n2. Organisation cytologique du poil absorbant :\n- Le poil absorbant est une cellule végétale vivante géante allongée (longueur de 1 à 2 mm, diamètre de 10 à 15 µm), issue du prolongement latéral d'une cellule épidermique de l'assise pilifère racinaire.\n- Constituants principaux :\n  * Une paroi pectocellulosique externe fine et très perméable à l'eau et aux solutés.\n  * Une membrane plasmique mince sous-jacente semi-perméable.\n  * Un cytoplasme réduit repoussé en une fine couche périphérique le long de la paroi.\n  * Un noyau unique, souvent allongé et excentré à l'extrémité du poil.\n  * Une immense vacuole centrale remplie de suc vacuolaire (solution aqueuse riche en sels minéraux, acides organiques et sucres, développant une forte pression osmotique interne).\n\n3. Comportement de la cellule végétale selon la concentration du milieu :\nA. En milieu hypotonique (milieu externe moins concentré que le suc vacuolaire, ex : eau distillée) :\n- L'eau pénètre massivement dans la cellule vers la vacuole par osmose.\n- La vacuole gonfle considérablement et s'éclaircit (dilution des pigments).\n- Le cytoplasme et la membrane plasmique sont fortement plaqués contre la paroi rigide externe.\n- La cellule est dite en état de turgescence (la pression hydrostatique interne équilibre la tension de la paroi cellulosique inextensible).\n\nB. En milieu hypertonique (milieu externe plus concentré que le suc vacuolaire, ex : solution de NaCl ou saccharose concentrée) :\n- L'eau quitte la cellule et diffuse vers le milieu extérieur par osmose.\n- La vacuole se rétracte, diminue de volume et se concentre (coloration intense).\n- Le cytoplasme se rétracte et la membrane plasmique se décolle de la paroi cellulosique, ne restant attachée que par de fins ponts appelés tractus cytoplasmiques (ou plasmodesmes).\n- La cellule est dite en état de plasmolyse.\n\nC. En milieu isotonique (concentration externe égale à la concentration du suc vacuolaire) :\n- Les flux d'eau entrants et sortants sont rigoureusement égaux (flux net nul) ; la cellule conserve son volume et son aspect normal de référence.",
+      "formulas": [
+        {
+          "name": "État de turgescence",
+          "formula": "Concentration externe < Concentration vacuolaire ⟹ Entrée nette d'eau (vacuole gonflée)",
+          "note": "La paroi squelettique empêche l'éclatement de la cellule végétale."
+        },
+        {
+          "name": "État de plasmolyse",
+          "formula": "Concentration externe > Concentration vacuolaire ⟹ Sortie nette d'eau (décollement membranaire)",
+          "note": "Présence de tractus reliant la membrane décollée à la paroi."
+        }
+      ],
+      "keyRule": "L'ABSORPTION DE L'EAU A LIEU UNIQUEMENT DANS LA ZONE PILIFÈRE PAR LES POILS ABSORBANTS (cellules végétales géantes à vacuole volumineuse). En milieu hypotonique, l'eau entre et la cellule est TURGESCENTE ; en milieu hypertonique, l'eau sort et la cellule est PLASMOLYSÉE avec décollement de la membrane plasmique.",
+      "workedExample": {
+        "title": "Exemple résolu : Diagnostic de l'état de cellules épidermiques d'oignon violet",
+        "statement": "Des fragments d'épiderme d'oignon rouge sont immergés dans deux boîtes de Petri distinctes :\n- Boîte 1 : eau distillée (concentration en solutés nulle).\n- Boîte 2 : eau salée à 10 % de NaCl (environ 1,7 mol/L).\n1. Décrire l'aspect microscopique des cellules dans la boîte 1 et donner leur état physiologique.\n2. Décrire l'aspect des cellules dans la boîte 2 et donner leur état physiologique.\n3. Expliquer le sens du mouvement de l'eau dans chaque boîte.",
+        "methodSteps": [
+          "Étape 1 : Analyse pour la boîte 1 (eau distillée) :\nL'eau distillée est hypotonique par rapport au suc vacuolaire. L'eau entre par osmose dans la vacuole qui gonfle au maximum et repousse le cytoplasme contre la paroi pectocellulosique : la cellule est en turgescence.",
+          "Étape 2 : Analyse pour la boîte 2 (eau salée à 10 %) :\nLa solution saline est hypertonique par rapport au suc vacuolaire. L'eau sort de la cellule vers le milieu extérieur par osmose. La vacuole se rétracte et la membrane plasmique se décolle de la paroi en laissant des tractus cytoplasmiques : la cellule est en plasmolyse.",
+          "Étape 3 : Sens du mouvement net de l'eau :\n- Boîte 1 : flux d'eau du milieu extérieur vers l'intérieur de la vacuole (milieu hypotonique → hypertonique).\n- Boîte 2 : flux d'eau de la vacuole vers le milieu extérieur (milieu hypotonique vacuolaire → milieu hypertonique externe)."
+        ],
+        "conclusion": "Les cellules de la boîte 1 sont turgescentes (entrée d'eau) et celles de la boîte 2 sont plasmolysées (sortie d'eau)."
+      },
+      "exercises": [
+        {
+          "id": "svt_2c_c11_p1_q1",
+          "type": "mcq",
+          "prompt": "Au niveau de quelle région précise de la racine s'effectue l'absorption de l'eau par la plante verte ?",
+          "options": [
+            "Au niveau de la zone pilifère garnie de poils absorbants",
+            "Au niveau de la coiffe terminale protectrice",
+            "Au niveau de la zone subéreuse imperméable",
+            "Au niveau exclusif de la tige aérienne"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "C'est uniquement au niveau de la zone pilifère, grâce à l'immense surface d'échange des poils absorbants, que l'eau du sol est captée."
+        },
+        {
+          "id": "svt_2c_c11_p1_q2",
+          "type": "mcq",
+          "prompt": "Quelle est la nature cytologique exacte d'un poil absorbant de racine ?",
+          "options": [
+            "C'est une cellule végétale géante allongée issue de l'épiderme racinaire",
+            "C'est un tissu pluricellulaire complexe sans vacuole",
+            "C'est une fibre morte lignifiée conductrice de sève",
+            "C'est une colonie de bactéries symbiotiques fixatrices d'azote"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le poil absorbant est une cellule végétale uninucléée géante dotée d'une très grande vacuole remplie de suc vacuolaire concentré."
+        },
+        {
+          "id": "svt_2c_c11_p1_q3",
+          "type": "mcq",
+          "prompt": "Que se passe-t-il lorsqu'une cellule végétale vivante est plongée dans de l'eau distillée (milieu hypotonique) ?",
+          "options": [
+            "L'eau pénètre dans la vacuole qui gonfle et plaque la membrane contre la paroi : elle devient turgescente",
+            "L'eau sort de la cellule et la membrane plasmique se détache complètement de la paroi",
+            "La cellule éclate immédiatement en raison de l'absence de paroi pectocellulosique",
+            "La quantité d'eau reste strictement stationnaire sans aucun flux"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En milieu hypotonique, l'eau entre par osmose dans la vacuole. La cellule devient turgescente, contenue par sa paroi pectocellulosique rigide."
+        },
+        {
+          "id": "svt_2c_c11_p1_q4",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on l'état d'une cellule végétale dont la vacuole s'est rétractée et dont la membrane s'est décollée de la paroi après avoir perdu son eau en milieu hypertonique ?",
+          "options": [
+            "La plasmolyse",
+            "La turgescence",
+            "La dialyse facilitée",
+            "La mitose réductrice"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La plasmolyse correspond à la rétraction de la vacuole et au décollement de la membrane plasmique suite à une perte nette d'eau vers un milieu hypertonique."
+        },
+        {
+          "id": "svt_2c_c11_p1_q5",
+          "type": "mcq",
+          "prompt": "Qu'appelle-t-on les fins prolongements reliant encore le cytoplasme rétracté à la paroi pectocellulosique chez une cellule plasmolysée ?",
+          "options": [
+            "Les tractus cytoplasmiques",
+            "Les dictyosomes",
+            "Les centrioles",
+            "Les thylakoïdes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les tractus cytoplasmiques (ou ponts cytoplasmiques) maintiennent l'ancrage ponctuel de la membrane plasmique décollée à la paroi squelettique."
+        },
+        {
+          "id": "svt_2c_c11_p1_q6",
+          "type": "mcq",
+          "prompt": "Dans un milieu isotonique par rapport au suc vacuolaire, quel est l'aspect d'une cellule végétale ?",
+          "options": [
+            "Elle conserve une taille et une forme normales car les échanges d'eau s'équilibrent parfaitement",
+            "Elle est fortement turgescente et risque d'exploser",
+            "Elle est complètement plasmolysée avec une vacuole minuscule",
+            "Elle se vide intégralement de ses organites cytoplasmiques"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans une solution isotonique, les pressions osmotiques interne et externe sont égales : les flux d'eau entrants et sortants sont égaux, la cellule garde son volume normal."
+        },
+        {
+          "id": "svt_2c_c11_p1_q7",
+          "type": "mcq",
+          "prompt": "Pourquoi une cellule végétale turgescente n'éclate-t-elle pas sous la pression interne de l'eau, contrairement à une hématie animale ?",
+          "options": [
+            "Grâce à la résistance mécanique de sa paroi pectocellulosique rigide externe",
+            "Parce que la membrane plasmique végétale est totalement imperméable à l'eau",
+            "Parce que le noyau absorbe instantanément tout l'excès de liquide",
+            "Parce que les stomates rejettent l'eau directement dans le sol"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La paroi pectocellulosique rigide des végétaux s'oppose à la déformation élastique et contrebalance la pression osmotique, empêchant la lyse cellulaire."
+        },
+        {
+          "id": "svt_2c_c11_p1_q8",
+          "type": "mcq",
+          "prompt": "Si l'on replonge une cellule végétale fraîchement plasmolysée dans de l'eau distillée, que se passe-t-il ?",
+          "options": [
+            "Elle réabsorbe de l'eau et retrouve sa turgescence initiale : c'est la déplasmolyse",
+            "Elle meurt instantanément par dissolution de sa membrane",
+            "Elle reste irréversiblement plasmolysée pour toujours",
+            "Elle se divise immédiatement en quatre cellules haploïdes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Tant que la cellule est vivante, la plasmolyse est réversible : l'entrée d'eau en milieu hypotonique restaure le volume vacuolaire, phénomène appelé déplasmolyse."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch11_p2_osmose_pression_osmotique_dutrochet",
+      "order": 2,
+      "title": "Loi de l'osmose, osmomètre de Dutrochet et calcul de la pression osmotique",
+      "summary": "Expliquer l'expérience de l'osmomètre de Dutrochet, énoncer la loi de l'osmose et appliquer la formule de Van 't Hoff pour calculer la pression osmotique.",
+      "conceptExplanation": "1. Définition biophysique de l'osmose :\n- L'osmose est la diffusion passive de molécules d'eau à travers une membrane semi-perméable (ou hémiperméable, laissant passer le solvant eau mais retenant les solutés dissous).\n- Sens du déplacement spontané de l'eau : l'eau se déplace TOUJOURS du milieu le moins concentré en soluté (milieu hypotonique, plus riche en eau libre) vers le milieu le plus concentré en soluté (milieu hypertonique, où l'eau libre est retenue par solvatation), jusqu'à équilibre des concentrations (isotonie).\n\n2. L'expérience historique de l'osmomètre de Dutrochet (1826) :\n- Dispositif : un entonnoir prolongé par un tube fin et gradué est fermé à sa base évasée par une membrane semi-perméable (vessie animale ou cellophane collodionnée).\n- On remplit l'entonnoir d'une solution concentrée de soluté (ex : NaCl, glucose à 90 g/L ou saccharose) à un niveau initial h₀.\n- On plonge l'entonnoir dans un cristallisoir contenant de l'eau distillée (niveau n₁).\n- Observations après quelques heures : le niveau du liquide dans le tube fin monte régulièrement de h₀ à h₁ (dénivellation Δh), tandis que le niveau d'eau dans le cristallisoir baisse légèrement.\n- Interprétation : l'eau distillée traverse la membrane pour diluer la solution concentrée interne : c'est la force de succion osmotique.\n\n3. La pression osmotique (Pos ou P) et la formule de Van 't Hoff :\nLa pression osmotique est la pression qu'il faudrait exercer sur la solution la plus concentrée pour empêcher le passage spontané de l'eau pure à travers la membrane semi-perméable.\nElle se calcule par la loi de Van 't Hoff :\n  Pos = n · R · C · T\navec :\n- Pos : pression osmotique exprimée en atmosphères (atm) ou en Pascals (Pa), avec 1 atm = 10⁵ Pa = 1,013 × 10⁵ Pa.\n- n : nombre de particules osmotiquement actives libérées par mole de soluté en solution aqueuse (coefficient de dissociation ou d'ionisation) :\n  * Pour les molécules organiques non ionisables (glucose, saccharose, urée) : n = 1.\n  * Pour les électrolytes ionisables : n = nombre d'ions formés. Exemple : NaCl → Na⁺ + Cl⁻ ⟹ n = 2 ; CaCl₂ → Ca²⁺ + 2 Cl⁻ ⟹ n = 3.\n- R : constante molaire des gaz parfaits = 0,082 L·atm·mol⁻¹·K⁻¹ (ou 8,314 J·mol⁻¹·K⁻¹).\n- C : concentration molaire du soluté en mol/L (C = c_massique / M, avec M la masse molaire en g/mol et c_massique en g/L).\n- T : température absolue en Kelvin (K) : T = θ(°C) + 273.\n\n4. Prédiction du flux d'eau entre deux compartiments A et B :\n- Si Pos(A) > Pos(B) : le milieu A est hypertonique par rapport à B ; l'eau diffuse spontanément de B vers A.\n- Si Pos(A) = Pos(B) : solutions isotoniques ; aucun flux net d'eau.",
+      "formulas": [
+        {
+          "name": "Loi de Van 't Hoff pour la pression osmotique",
+          "formula": "Pos = n · R · C · T = n · R · (c / M) · (θ + 273)",
+          "note": "R = 0,082 L·atm·mol⁻¹·K⁻¹ ; Pos s'exprime en atmosphères (1 atm = 10⁵ Pa)."
+        },
+        {
+          "name": "Coefficient d'ionisation n",
+          "formula": "n = 1 (glucose, saccharose) ; n = 2 (NaCl) ; n = 3 (CaCl₂)",
+          "note": "Dépend de la dissociation électrolytique complète du soluté."
+        }
+      ],
+      "keyRule": "L'OSMOSE EST LE DÉPLACEMENT SPONTANÉ DE L'EAU DU MILIEU LE MOINS CONCENTRÉ (HYPOTONIQUE) VERS LE MILIEU LE PLUS CONCENTRÉ (HYPERTONIQUE). La pression osmotique Pos = n · R · C · T dépend du nombre de particules dissoutes n, de la concentration molaire C et de la température absolue T.",
+      "workedExample": {
+        "title": "Exemple résolu : Calcul comparatif de la pression osmotique et prédiction du flux d'eau",
+        "statement": "À une température de 28 °C, on prépare deux solutions aqueuses séparées par une membrane semi-perméable :\n- Solution 1 : chlorure de sodium (NaCl) à C₁ = 0,1 mol/L (M(NaCl) = 58,5 g/mol, totalement dissocié).\n- Solution 2 : glucose (C₆H₁₂O₆) à concentration pondérale c₂ = 36 g/L (M(glucose) = 180 g/mol).\nDonnées : R = 0,082 L·atm·mol⁻¹·K⁻¹ ; 1 atm = 10⁵ Pa.\n1. Calculer la température absolue T en Kelvin.\n2. Calculer la pression osmotique Pos₁ de la solution de NaCl.\n3. Calculer la concentration molaire C₂ puis la pression osmotique Pos₂ de la solution de glucose.\n4. Déterminer le sens du déplacement de l'eau à travers la membrane.",
+        "methodSteps": [
+          "Étape 1 : Calcul de la température absolue T :\nT = 28 + 273 = 301 K.",
+          "Étape 2 : Pression osmotique du NaCl (Pos₁) :\nLe NaCl se dissocie en Na⁺ et Cl⁻, d'où n = 2.\nPos₁ = n · R · C₁ · T = 2 × 0,082 × 0,1 × 301 = 4,936 atm (soit environ 4,94 × 10⁵ Pa).",
+          "Étape 3 : Concentration molaire et pression du glucose (Pos₂) :\nLe glucose est non dissociable, donc n = 1.\nC₂ = c₂ / M = 36 / 180 = 0,2 mol/L.\nPos₂ = 1 × 0,082 × 0,2 × 301 = 4,936 atm.",
+          "Étape 4 : Comparaison et sens du mouvement d'eau :\nOn constate que Pos₁ = Pos₂ = 4,936 atm.\nLes deux solutions sont rigoureusement isotoniques. Il n'y aura aucun transfert net d'eau entre les deux compartiments."
+        ],
+        "conclusion": "Les deux solutions développent la même pression osmotique (4,94 atm) : elles sont isotoniques, le système est à l'équilibre."
+      },
+      "exercises": [
+        {
+          "id": "svt_2c_c11_p2_q1",
+          "type": "mcq",
+          "prompt": "Quel est le sens spontané de déplacement des molécules d'eau lors du phénomène d'osmose ?",
+          "options": [
+            "Du milieu le moins concentré en soluté (hypotonique) vers le milieu le plus concentré (hypertonique)",
+            "Du milieu le plus concentré en soluté vers le milieu le moins concentré",
+            "De manière unidirectionnelle toujours de haut en bas sous l'effet de la gravité",
+            "Uniquement de la lumière vers l'obscurité"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'osmose attire l'eau du compartiment le plus dilué (hypotonique) vers le compartiment le plus concentré en soluté (hypertonique)."
+        },
+        {
+          "id": "svt_2c_c11_p2_q2",
+          "type": "mcq",
+          "prompt": "Dans l'expérience de l'osmomètre de Dutrochet, pourquoi le niveau du liquide monte-t-il dans le tube fin ?",
+          "options": [
+            "Parce que l'eau du cristallisoir pénètre par osmose dans l'entonnoir contenant la solution concentrée de soluté",
+            "Parce que la membrane semi-perméable se dissout et libère du gaz carbonique",
+            "Parce que la température de la pièce a brutalement augmenté de 100 °C",
+            "Parce que le soluté traverse massivement la membrane vers le cristallisoir"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'eau distillée externe est attirée vers la solution concentrée interne à travers la membrane semi-perméable, ce qui élève le niveau dans le tube vertical."
+        },
+        {
+          "id": "svt_2c_c11_p2_q3",
+          "type": "mcq",
+          "prompt": "Quelle est la valeur du coefficient de dissociation ionique n pour le chlorure de sodium (NaCl) en solution aqueuse ?",
+          "options": [
+            "n = 2, car chaque molécule de NaCl se dissocie en un ion Na⁺ et un ion Cl⁻",
+            "n = 1, car le NaCl ne se dissocie pas dans l'eau",
+            "n = 3, car il libère trois particules distinctes",
+            "n = 0, car les ions n'exercent aucune pression osmotique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le chlorure de sodium est un électrolyte fort qui s'ionise totalement en 2 ions : NaCl → Na⁺ + Cl⁻, donc n = 2."
+        },
+        {
+          "id": "svt_2c_c11_p2_q4",
+          "type": "mcq",
+          "prompt": "Quelle est la valeur du coefficient n pour une solution de saccharose (C₁₂H₂₂O₁₁) ou de glucose (C₆H₁₂O₆) ?",
+          "options": [
+            "n = 1, car ce sont des solutés moléculaires organiques neutres non ionisables",
+            "n = 12, correspondant au nombre d'atomes de carbone",
+            "n = 2, car la molécule se coupe spontanément en deux demi-sucres",
+            "n = 4, car ce sont des tétroses"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les oses et diosides comme le glucose et le saccharose se dissolvent sous forme de molécules entières sans s'ioniser, d'où n = 1."
+        },
+        {
+          "id": "svt_2c_c11_p2_q5",
+          "type": "mcq",
+          "prompt": "Comment s'exprime la température absolue T (en Kelvin) à partir de la température ambiante θ en degrés Celsius ?",
+          "options": [
+            "T = θ(°C) + 273",
+            "T = θ(°C) - 273",
+            "T = θ(°C) × 273",
+            "T = θ(°C) / 100"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le zéro absolu correspond à -273,15 °C ; on convertit donc la température Celsius en Kelvin en ajoutant 273 : T = θ + 273."
+        },
+        {
+          "id": "svt_2c_c11_p2_q6",
+          "type": "mcq",
+          "prompt": "Quelle est la pression osmotique approximative d'une solution de glucose à C = 0,5 mol/L à la température de 34 °C (T = 307 K, R = 0,082 L·atm·mol⁻¹·K⁻¹) ?",
+          "options": [
+            "12,59 atm",
+            "25,18 atm",
+            "6,29 atm",
+            "1,26 atm"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pos = n · R · C · T = 1 × 0,082 × 0,5 × (34 + 273) = 0,082 × 0,5 × 307 = 12,587 atm (environ 12,59 atm)."
+        },
+        {
+          "id": "svt_2c_c11_p2_q7",
+          "type": "mcq",
+          "prompt": "Que caractérise une membrane hémiperméable parfaite ?",
+          "options": [
+            "Elle laisse passer exclusivement les molécules d'eau et retient la totalité des solutés dissous",
+            "Elle laisse passer librement l'eau et tous les solutés sans distinction",
+            "Elle est totalement imperméable à l'eau comme aux solutés",
+            "Elle permet uniquement le passage des grosses protéines par endocytose"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une membrane strictement hémiperméable est sélectivement perméable au solvant (l'eau) et imperméable aux molécules et ions dissous."
+        },
+        {
+          "id": "svt_2c_c11_p2_q8",
+          "type": "mcq",
+          "prompt": "Deux solutions séparées par une membrane semi-perméable ont pour pressions osmotiques Pos(A) = 15 atm et Pos(B) = 8 atm. Quel sera le sens du flux d'eau ?",
+          "options": [
+            "L'eau passera du compartiment B vers le compartiment A",
+            "L'eau passera du compartiment A vers le compartiment B",
+            "Aucun transfert d'eau n'aura lieu car les deux pressions sont non nulles",
+            "L'eau s'évaporera instantanément dans les deux compartiments"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le compartiment B a la plus faible pression osmotique (hypotonique). L'eau diffuse donc de B vers A (milieu à plus forte pression osmotique hypertonique)."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 12 : L'INFLUENCE DES SELS MINÉRAUX SUR LA CROISSANCE DE LA PLANTE VERTE
+// ============================================================================
+export const svt2deCInfluenceSelsMinerauxCroissanceChapter: CurriculumChapter = {
+  "id": "seconde_c_svt_ch12_influence_sels_mineraux_croissance",
+  "subjectId": "svt",
+  "gradeLevel": "seconde_c",
+  "order": 12,
+  "officialVolumeHours": 4,
+  "title": "Leçon 12 — L'influence des sels minéraux sur la croissance de la plante verte",
+  "summary": "Courbe d'action d'un ion minéral (zone de carence, croissance maximale, dose optimale, zone de tolérance/consommation de luxe, seuil de toxicité, zone de toxicité) et interactions pluriminérales (facteur limitant, synergie et antagonisme).",
+  "points": [
+    {
+      "id": "seconde_c_svt_ch12_p1_courbe_action_ion_mineral_zones",
+      "order": 1,
+      "title": "Courbe d'action d'un sel minéral et zones physiologiques de croissance",
+      "summary": "Analyser la courbe d'action d'un ion minéral (ex : potassium K⁺ ou azote N), identifier les différentes zones de croissance et définir la dose optimale et le seuil de toxicité.",
+      "conceptExplanation": "1. Nécessité des éléments minéraux pour le végétal :\n- Les plantes vertes autotrophes ont besoin d'eau et d'ions minéraux prélevés dans le sol (azote N, phosphore P, potassium K, calcium Ca, magnésium Mg, fer Fe, oligo-éléments) pour synthétiser leur matière organique (protéines, acides nucléiques, chlorophylle, ATP, parois).\n- Pour mesurer l'influence précise de la concentration d'un ion minéral sur la croissance végétale, on cultive des plants (ex : maïs ou tomate) sur des solutions nutritives synthétiques de composition connue (liquide de Knop) en faisant varier la concentration d'un seul ion (ex : K⁺ de 0,5 à 2,5 g/L), tous les autres facteurs restant optimaux et constants.\n\n2. Allure et découpage de la courbe d'action d'un élément minéral :\nLa courbe représentant la masse de matière sèche produite en fonction de la concentration de l'ion présente classiquement 3 grandes régions et des points cardinaux remarquables :\n\nA. Zone de carence (ou de déficience) :\n- Aux concentrations faibles (ex : 0 à 1,5 g/L de K⁺), les besoins de la plante ne sont que partiellement couverts.\n- La production de matière sèche augmente de façon proportionnelle à la concentration apportée.\n- La plante souffre d'un manque nutritif : on observe des signes de carence (chlorose foliaire, développement rabougri, tiges frêles).\n\nB. La dose optimale (ou première concentration optimale) :\n- C'est la plus petite concentration d'un élément minéral qui permet d'atteindre la production maximale (100 % de croissance).\n- C'est la concentration agronomique idéale assurant le meilleur rendement pour un coût d'engrais minimal.\n\nC. Zone de tolérance et consommation de luxe :\n- Pour des concentrations modérées au-delà de la dose optimale (ex : de 1,5 à 2 g/L de K⁺), la production de matière sèche plafonne à son niveau maximal constant (plateau).\n- La plante continue d'absorber l'ion en excès sans aucun gain de rendement supplémentaire, mais sans effet indésirable : c'est la consommation de luxe.\n- La plante est dans sa zone de tolérance physiologique.\n\nD. Le seuil de toxicité et la zone de toxicité :\n- Seuil de toxicité : concentration critique précise à partir de laquelle la production commence à décliner.\n- Zone de toxicité (ex : au-delà de 2 g/L de K⁺) : les concentrations excessives deviennent nocives. L'absorption excessive perturbe le métabolisme cellulaire (inhibition enzymatique, déséquilibre osmotique, brûlures racinaires), provoquant la chute rapide de la masse de matière sèche, le dépérissement puis la mort du végétal.",
+      "formulas": [
+        {
+          "name": "Chronologie des zones sur la courbe d'action",
+          "formula": "Zone de carence → Croissance maximale (Dose optimale) → Zone de tolérance (Consommation de luxe) → Seuil de toxicité → Zone de toxicité",
+          "note": "Courbe unimodale asymétrique caractéristique de tout élément minéral."
+        },
+        {
+          "name": "Rendement de matière sèche",
+          "formula": "Production maximale = 100 % atteinte dès la première concentration optimale",
+          "note": "Au-delà, la fertilisation devient inutile puis dangereuse."
+        }
+      ],
+      "keyRule": "LA DOSE OPTIMALE EST LA PLUS PETITE DOSE PERMETTANT UNE CROISSANCE MAXIMALE. En deçà, c'est la zone de carence (croissance insuffisante) ; au plateau, c'est la consommation de luxe (zone de tolérance) ; au-delà du seuil de toxicité, la forte concentration inhibe la croissance et empoisonne la plante.",
+      "workedExample": {
+        "title": "Exemple résolu : Exploitation agronomique d'une courbe de croissance de tomate",
+        "statement": "On cultive des pieds de tomate en hydroponie avec des doses croissantes d'azote (N) :\n- De 1 à 4 mg/L : croissance passant de 20 % à 80 %.\n- À 5 mg/L : croissance atteignant 100 %.\n- De 5 à 8 mg/L : croissance constante et maximale à 100 %.\n- À 8 mg/L : la croissance commence à fléchir.\n- À 10 mg/L : la croissance s'effondre à 50 % avec nécrose des feuilles.\n1. Préciser la valeur de la dose optimale.\n2. Qualifier l'intervalle [5 mg/L ; 8 mg/L].\n3. Identifier le seuil de toxicité et la conséquence d'une dose de 10 mg/L.",
+        "methodSteps": [
+          "Étape 1 : Détermination de la dose optimale :\nLa plus petite concentration permettant d'obtenir la croissance maximale de 100 % est 5 mg/L : c'est la dose optimale.",
+          "Étape 2 : Intervalle [5 mg/L ; 8 mg/L] :\nLa croissance reste constante à 100 % malgré l'augmentation des apports d'azote : la plante est dans la zone de tolérance (consommation de luxe).",
+          "Étape 3 : Seuil de toxicité et toxicité :\nLe seuil de toxicité se situe à 8 mg/L (point d'inflexion où la courbe commence à chuter). À 10 mg/L, on est dans la zone de toxicité : l'excès d'azote inhibe la croissance et provoque des nécroses tissulaires."
+        ],
+        "conclusion": "La fertilisation recommandée est de 5 mg/L (dose optimale). Au-delà de 8 mg/L, l'engrais devient toxique pour la culture."
+      },
+      "exercises": [
+        {
+          "id": "svt_2c_c12_p1_q1",
+          "type": "mcq",
+          "prompt": "Comment définit-on la dose optimale d'un ion minéral pour une plante verte ?",
+          "options": [
+            "La plus petite concentration de ce minéral qui permet une croissance maximale de la plante",
+            "La concentration la plus élevée que la plante peut supporter avant de mourir",
+            "La concentration exacte où la production de matière sèche est nulle",
+            "La dose qui divise la taille de la racine par deux"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La dose optimale est la dose minimale requise pour que la plante exprime 100 % de son potentiel de croissance."
+        },
+        {
+          "id": "svt_2c_c12_p1_q2",
+          "type": "mcq",
+          "prompt": "Dans la zone de consommation de luxe (zone de tolérance), que constate-t-on quant à la production végétale ?",
+          "options": [
+            "La production de matière sèche reste constante et maximale malgré l'absorption accrue du minéral",
+            "La production de matière sèche augmente de façon exponentielle",
+            "La plante perd immédiatement toutes ses feuilles",
+            "La plante cesse toute absorption d'eau par les poils absorbants"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En consommation de luxe, la plante absorbe le sel minéral en quantité excédentaire sans aucun gain de biomasse supplémentaire, mais sans dommage."
+        },
+        {
+          "id": "svt_2c_c12_p1_q3",
+          "type": "mcq",
+          "prompt": "Qu'appelle-t-on le 'seuil de toxicité' sur une courbe d'action d'un élément minéral ?",
+          "options": [
+            "La concentration à partir de laquelle la production commence à diminuer sous l'effet de l'excès de sel",
+            "La concentration minimale indispensable à la survie de la graine",
+            "Le point où la matière sèche atteint son maximum pour la première fois",
+            "La quantité d'eau totale transpirée par la feuille en plein soleil"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le seuil de toxicité marque la limite haute de la zone de tolérance au-delà de laquelle l'élément devient nuisible à la plante."
+        },
+        {
+          "id": "svt_2c_c12_p1_q4",
+          "type": "mcq",
+          "prompt": "Quel est l'ordre chronologique exact d'apparition des zones sur une courbe d'action minérale en fonction de la concentration croissante ?",
+          "options": [
+            "Zone de carence → Dose optimale → Zone de tolérance → Seuil de toxicité → Zone de toxicité",
+            "Zone de toxicité → Seuil de toxicité → Zone de tolérance → Zone de carence",
+            "Dose optimale → Zone de carence → Zone de toxicité → Seuil de toxicité",
+            "Zone de tolérance → Zone de carence → Dose optimale → Zone de toxicité"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La concentration augmente de 0 vers les fortes valeurs : on traverse d'abord la carence, on atteint la dose optimale, puis le plateau de tolérance, le seuil de toxicité et enfin la zone de toxicité."
+        },
+        {
+          "id": "svt_2c_c12_p1_q5",
+          "type": "mcq",
+          "prompt": "Si un plant de maïs reçoit une dose d'engrais potassique située dans sa zone de carence, quel résultat observe-t-on ?",
+          "options": [
+            "Une production de matière sèche inférieure au maximum car ses besoins ne sont pas entièrement satisfaits",
+            "Une mort foudroyante par nécrose des racines",
+            "Une floraison précoce et une taille géante",
+            "Une absence totale de chlorophylle dans toute la plante"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En zone de carence, la dose de minéral est insuffisante pour permettre la croissance normale et optimale du végétal."
+        },
+        {
+          "id": "svt_2c_c12_p1_q6",
+          "type": "mcq",
+          "prompt": "Pourquoi un agriculteur a-t-il intérêt à apporter la dose optimale plutôt qu'une dose en consommation de luxe ?",
+          "options": [
+            "Pour maximiser la récolte tout en évitant les gaspillages d'engrais coûteux et les risques de pollution",
+            "Parce que la dose optimale triple la teneur en sucre par rapport à la consommation de luxe",
+            "Parce que la consommation de luxe diminue immédiatement la masse des grains récoltés",
+            "Parce que les engrais en consommation de luxe attirent obligatoirement les insectes ravageurs"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La dose optimale offre le meilleur ratio coût/bénéfice écologique et économique : au-delà, les engrais apportés ne rapportent plus aucun supplément de récolte."
+        },
+        {
+          "id": "svt_2c_c12_p1_q7",
+          "type": "mcq",
+          "prompt": "Quelle solution nutritive synthétique standardisée est historiquement utilisée au laboratoire pour étudier les besoins minéraux des plantes ?",
+          "options": [
+            "Le liquide de Knop",
+            "L'eau de chaux saturée",
+            "La liqueur de Fehling",
+            "L'eau iodée concentrée"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le liquide de Knop est une solution aqueuse artificielle équilibrée contenant tous les macro-éléments minéraux essentiels à la croissance des plantes vertes."
+        },
+        {
+          "id": "svt_2c_c12_p1_q8",
+          "type": "mcq",
+          "prompt": "Quel est l'effet d'une surdose importante d'engrais minéraux dans le sol sur les racines de la plante ?",
+          "options": [
+            "Le sol devient hypertonique par rapport aux racines, provoquant la plasmolyse des poils absorbants et la brûlure racinaire",
+            "Les racines absorbent dix fois plus d'eau que la normale et éclatent",
+            "La plante commence à produire son propre engrais chimique dans les feuilles",
+            "Les stomates s'ouvrent 24 heures sur 24 sans interruption"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'excès de sels minéraux augmente la pression osmotique du sol au-delà de celle du poil absorbant : l'eau est extraite de la plante (plasmolyse osmotique et brûlure chimique)."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch12_p2_interaction_pluriminerale_synergie_antagonisme",
+      "order": 2,
+      "title": "Interactions entre plusieurs sels minéraux : facteur limitant, synergie et antagonisme",
+      "summary": "Comprendre les interactions ioniques complexes lors de la nutrition minérale : identifier le facteur limitant (loi du minimum), distinguer la synergie de l'antagonisme et analyser des courbes pluriminérales.",
+      "conceptExplanation": "1. La complexité de la nutrition pluriminérale :\n- Dans la nature et en agriculture, les plantes absorbent simultanément un ensemble d'ions minéraux dissous dans la solution du sol.\n- Les effets combinés de ces minéraux ne sont pas une simple addition indépendante : les ions interagissent entre eux, influençant mutuellement leur vitesse d'absorption et leur métabolisme.\n\n2. La notion de facteur limitant (Loi du minimum de Liebig) :\n- Lorsqu'une plante est cultivée avec des doses croissantes d'un ion A (ex : potassium K⁺) en présence d'une faible dose d'un autre ion B (ex : phosphore à 0,1 g/L au lieu de 0,5 g/L) :\n  * La production maximale atteinte par la plante plafonne à une valeur nettement plus basse (ex : 0,46 g au lieu de 0,64 g de matière sèche).\n  * Même si l'on augmente indéfiniment la concentration en potassium, la plante ne peut pas grandir davantage car elle est bloquée par le manque de phosphore.\n- Définition : Un facteur limitant est un élément indispensable qui, par sa faible disponibilité relative, restreint ou plafonne la croissance de l'organisme, quel que soit le niveau des autres facteurs.\n\n3. La synergie minérale (interaction positive) :\n- On parle de synergie lorsque deux ou plusieurs éléments minéraux agissent conjointement pour stimuler mutuellement leur absorption ou potentialiser leurs effets physiologiques bénéfiques.\n- Exemple 1 : Le couple Potassium (K⁺) et Phosphore (P) à 0,5 g/L permet d'atteindre un niveau de production de biomasse bien supérieur à l'action isolée de chacun de ces minéraux.\n- Exemple 2 : L'addition de Chlorure de Calcium (CaCl₂) au milieu stimule fortement l'absorption du Rubidium (Rb⁺) en présence de Lithium (Li⁺), alors que le Lithium seul freinait cette absorption.\n\n4. L'antagonisme minéral (interaction négative ou d'inhibition) :\n- On parle d'antagonisme lorsqu'un élément minéral freine, inhibe ou empêche l'absorption ou l'efficacité physiologique d'un autre élément minéral.\n- Mécanismes : compétition pour les mêmes transporteurs membranaires (canaux ioniques ou perméases) ou précipitation chimique dans la rhizosphère.\n- Exemples classiques :\n  * Antagonisme Calcium / Magnésium (Ca²⁺ / Mg²⁺) : de fortes concentrations de magnésium diminuent l'efficacité du calcium sur la croissance de la plante aux faibles doses, car le rapport Ca/Mg doit rester équilibré.\n  * Antagonisme Potassium / Magnésium (K⁺ / Mg²⁺) : un excès de potassium dans le sol induit une carence induite en magnésium dans la plante (feuilles jaunissantes).",
+      "formulas": [
+        {
+          "name": "Principe de la loi du minimum (Liebig)",
+          "formula": "Rendement global = f(Élément le plus déficitaire = Facteur limitant)",
+          "note": "La capacité d'un tonneau est limitée par sa douve la plus courte."
+        },
+        {
+          "name": "Classification des interactions ioniques",
+          "formula": "Synergie (Effet combiné > Effets séparés)  vs  Antagonisme (Inhibition / Compétition mutuelle)",
+          "note": "Régit l'équilibre des formules d'engrais complexes (NPK)."
+        }
+      ],
+      "keyRule": "LE FACTEUR LIMITANT EST L'ÉLÉMENT INDISPENSABLE LE PLUS DÉFICITAIRE QUI PLAFONNE LA CROISSANCE DE LA PLANTE. LA SYNERGIE DÉSIGNE UNE COLLABORATION BÉNÉFIQUE OÙ DEUX MINÉRAUX RENFORCENT LEUR ACTION, TANDIS QUE L'ANTAGONISME EST UNE INHIBITION OÙ UN MINÉRAL EMPÊCHE L'ACTION D'UN AUTRE.",
+      "workedExample": {
+        "title": "Exemple résolu : Analyse de courbes de croissance de maïs sous l'action combinée de K et P",
+        "statement": "On mesure la masse de matière sèche de pieds de maïs en fonction de la concentration de K⁺ pour deux régimes de phosphore (P) :\n- Série 1 (P = 0,1 g/L) : la masse de matière sèche plafonne à 0,46 g entre 1,5 et 2,0 g/L de K⁺.\n- Série 2 (P = 0,5 g/L) : la masse de matière sèche atteint 0,64 g entre 1,5 et 2,0 g/L de K⁺.\n1. Expliquer pourquoi la série 1 ne dépasse pas 0,46 g malgré un apport abondant en potassium.\n2. Identifier le facteur limitant dans la série 1.\n3. Indiquer la nature de l'interaction entre le potassium et le phosphore dans la série 2.",
+        "methodSteps": [
+          "Étape 1 : Analyse du plafonnement de la série 1 :\nÀ 0,1 g/L de phosphore, la concentration en P est insuffisante pour permettre une production optimale de 0,64 g. Même avec un potassium optimal, la production reste bloquée à 0,46 g.",
+          "Étape 2 : Identification du facteur limitant :\nC'est la concentration insuffisante en phosphore (0,1 g/L) qui bride la croissance : le phosphore est donc le facteur limitant.",
+          "Étape 3 : Nature de l'interaction dans la série 2 :\nLorsque le phosphore passe à 0,5 g/L, l'efficacité du potassium est pleinement exploitée et la croissance atteint 0,64 g : le potassium et le phosphore agissent ensemble en synergie pour stimuler la croissance."
+        ],
+        "conclusion": "Le phosphore à 0,1 g/L est le facteur limitant ; à dose suffisante, K et P agissent en synergie."
+      },
+      "exercises": [
+        {
+          "id": "svt_2c_c12_p2_q1",
+          "type": "mcq",
+          "prompt": "Qu'est-ce qu'un facteur limitant dans la nutrition minérale des plantes ?",
+          "options": [
+            "L'élément nutritif indispensable le plus déficitaire qui plafonne et restreint la croissance globale de la plante",
+            "Le minéral le plus abondant dans l'atmosphère terrestre",
+            "Une toxine bactérienne qui détruit la coiffe racinaire",
+            "L'angle d'inclinaison des feuilles par rapport au soleil couchant"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Selon la loi du minimum, le rendement d'une culture est limité par l'élément minéral présent dans la plus faible proportion par rapport aux besoins."
+        },
+        {
+          "id": "svt_2c_c12_p2_q2",
+          "type": "mcq",
+          "prompt": "Comment qualifie-t-on l'interaction entre deux ions minéraux lorsque la présence de l'un stimule et amplifie l'absorption ou l'action bénéfique de l'autre ?",
+          "options": [
+            "Une synergie",
+            "Un antagonisme",
+            "Une carence induite",
+            "Une décomposition aérobie"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La synergie est une interaction positive dans laquelle l'effet conjugué de deux éléments dépasse la somme de leurs effets isolés."
+        },
+        {
+          "id": "svt_2c_c12_p2_q3",
+          "type": "mcq",
+          "prompt": "Comment qualifie-t-on l'interaction lorsque l'excès d'un ion minéral freine ou bloque l'absorption d'un autre ion par la racine ?",
+          "options": [
+            "Un antagonisme",
+            "Une synergie",
+            "Une symbiose mutualiste",
+            "Une autotrophie stricte"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'antagonisme désigne l'inhibition ou la compétition négative exercée par un ion sur l'absorption ou l'assimilation d'un autre ion."
+        },
+        {
+          "id": "svt_2c_c12_p2_q4",
+          "type": "mcq",
+          "prompt": "Lorsqu'une forte teneur en magnésium (Mg²⁺) diminue l'efficacité du calcium (Ca²⁺) sur la croissance, quel type d'interaction est mis en jeu ?",
+          "options": [
+            "Un antagonisme entre le magnésium et le calcium",
+            "Une synergie parfaite entre les deux cations",
+            "Une absence totale d'influence mutuelle",
+            "Une transformation du calcium en azote gazeux"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La baisse d'efficacité du calcium en présence d'un excès de magnésium illustre l'antagonisme compétitif entre ces deux cations divalents."
+        },
+        {
+          "id": "svt_2c_c12_p2_q5",
+          "type": "mcq",
+          "prompt": "Sur un graphique représentant deux courbes de croissance pour deux doses différentes d'un second minéral B, comment repère-t-on que B est un facteur limitant à faible dose ?",
+          "options": [
+            "Le plateau maximal de croissance est nettement inférieur à celui obtenu avec une dose plus élevée de B",
+            "La courbe démarre immédiatement à la valeur 100 %",
+            "La courbe forme une ligne verticale descendante",
+            "La dose optimale de l'élément A est divisée par mille"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le facteur limitant plafonne la hauteur du plateau de biomasse : même en augmentant le premier minéral, on ne peut franchir ce plafond bas."
+        },
+        {
+          "id": "svt_2c_c12_p2_q6",
+          "type": "mcq",
+          "prompt": "Quel scientifique a formulé la célèbre 'Loi du minimum' illustrée par la métaphore du tonneau aux douves inégales ?",
+          "options": [
+            "Justus von Liebig",
+            "René Dutrochet",
+            "Charles Darwin",
+            "Louis Pasteur"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le chimiste allemand Justus von Liebig a établi la loi du minimum en 1840, montrant qu'un sol ne produit qu'à hauteur de son nutriment le plus rare."
+        },
+        {
+          "id": "svt_2c_c12_p2_q7",
+          "type": "mcq",
+          "prompt": "Dans une expérience où l'absorption du Rubidium est stimulée par l'ajout conjoint de chlorure de calcium et de lithium, on observe :",
+          "options": [
+            "Une synergie entre le CaCl₂ et le Lithium favorisant l'absorption du Rubidium",
+            "Une toxicité immédiate qui tue tous les plants",
+            "Un arrêt complet de l'absorption hydrique",
+            "La disparition de tous les ions calcium de la racine"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'effet combiné du mélange CaCl₂-Li est supérieur à l'effet du lithium seul : il y a synergie entre ces sels pour faciliter l'absorption du Rubidium."
+        },
+        {
+          "id": "svt_2c_c12_p2_q8",
+          "type": "mcq",
+          "prompt": "Que recommandent les agronomes pour éviter les phénomènes d'antagonisme et de carence induite dans les cultures ?",
+          "options": [
+            "Apporter des engrais équilibrés (formules NPK adaptées) respectant les proportions relatives requises par l'espèce végétale",
+            "Épandre uniquement de très fortes doses massives d'un seul minéral au hasard",
+            "Interdire totalement l'irrigation des parcelles agricoles",
+            "Remplacer l'eau d'arrosage par de l'eau de mer saturée en sel"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une fertilisation équilibrée respectant les ratios physiologiques évite qu'un excès d'un élément ne bloque l'assimilation des autres éléments."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 13 : L'ABSORPTION DES SELS MINÉRAUX PAR LA PLANTE VERTE
+// ============================================================================
+export const svt2deCAbsorptionSelsMinerauxChapter: CurriculumChapter = {
+  "id": "seconde_c_svt_ch13_absorption_sels_mineraux_plante",
+  "subjectId": "svt",
+  "gradeLevel": "seconde_c",
+  "order": 13,
+  "officialVolumeHours": 2,
+  "title": "Leçon 13 — L'absorption des sels minéraux par la plante verte",
+  "summary": "Mise en évidence expérimentale du passage des solutés (dialyse), modèle de la membrane plasmique en mosaïque fluide, et mécanismes biophysiques de transport des ions : transports passifs (diffusion simple, diffusion facilitée par canaux et perméases) et transport actif dépendant de l'ATP.",
+  "points": [
+    {
+      "id": "seconde_c_svt_ch13_p1_dialyse_ultrastructure_membrane_plasmique",
+      "order": 1,
+      "title": "Mise en évidence de la dialyse et ultrastructure de la membrane plasmique",
+      "summary": "Définir la dialyse à travers une membrane perméable et décrire l'ultrastructure de la membrane plasmique (bicouche lipidique et protéines membranaires).",
+      "conceptExplanation": "1. Mise en évidence de l'absorption des solutés : la dialyse :\n- Expérience en laboratoire : lorsqu'on plonge des cellules de racines d'oignon dans une solution bleue de sulfate de cuivre (CuSO₄), on constate au microscope que l'intérieur des cellules devient bleu. Cela prouve que des substances minérales dissoutes franchissent la membrane cellulaire.\n- Expérience modèle : deux compartiments 1 et 2 sont séparés par une membrane perméable aux solutés. Au départ, le compartiment 1 est plus concentré en soluté S que le compartiment 2 (milieu 1 hypertonique, milieu 2 hypotonique). Après un certain temps, les solutés diffusent à travers la membrane jusqu'à ce que les deux compartiments aient exactement la même concentration : l'équilibre est atteint.\n- Définition de la dialyse : La dialyse est la diffusion passive de substances dissoutes (solutés) à travers une membrane perméable, s'effectuant spontanément du milieu le plus concentré (hypertonique) vers le milieu le moins concentré (hypotonique) jusqu'à égalisation des concentrations.\n\n2. Ultrastructure de la membrane plasmique (modèle de la mosaïque fluide) :\nAu microscope électronique, la membrane plasmique (épaisseur de 7,5 nm) présente une architecture moléculaire organisée en mosaïque fluide :\nA. Une bicouche de phospholipides :\n- Chaque molécule de phospholipide possède une tête polaire hydrophile (orientée vers les milieux aqueux intra- et extracellulaires) et deux queues d'acides gras hydrophobes / lipophiles (orientées face à face au cœur de la membrane).\n- Cette bicouche constitue une barrière imperméable aux ions et aux grosses molécules hydrophiles, mais laisse passer librement les gaz et les molécules liposolubles.\n\nB. Des protéines membranaires diversifiées intégrées dans la bicouche :\n- Des protéines intrinsèques (ou transmembranaires) qui traversent entièrement la bicouche de part en part. Certaines forment des pores aqueux (canaux hydriques / aquaporines) ou des canaux ionophores spécifiques laissant passer les ions minéraux.\n- Des protéines porteuses (ou perméases) qui lient spécifiquement un soluté et changent de conformation spatiale (effet navette) pour le basculer d'un côté à l'autre de la membrane.\n- Des protéines extrinsèques (périphériques) fixées à la surface interne ou externe de la bicouche.",
+      "formulas": [
+        {
+          "name": "Principe de la dialyse passive",
+          "formula": "Milieu hypertonique en soluté ⟶ Milieu hypotonique en soluté (jusqu'à égalisation des concentrations)",
+          "note": "Transport passif sans aucune consommation d'énergie chimique."
+        },
+        {
+          "name": "Structure de la membrane plasmique",
+          "formula": "Membrane = Bicouche de phospholipides (40 %) + Protéines intégrées & périphériques (55 %) + Glucides (5 %)",
+          "note": "Modèle de la mosaïque fluide (Singer et Nicolson, 1972)."
+        }
+      ],
+      "keyRule": "LA DIALYSE EST LA DIFFUSION PASSIVE DES SOLUTÉS À TRAVERS UNE MEMBRANE PERMÉABLE, DU MILIEU LE PLUS CONCENTRÉ VERS LE MOINS CONCENTRÉ. La membrane plasmique est constituée d'une bicouche phospholipidique hydrophobe dans laquelle sont insérées des protéines canaux et perméases régulant le passage des ions.",
+      "workedExample": {
+        "title": "Exemple résolu : Analyse d'un dispositif expérimental de dialyse",
+        "statement": "Un osmomètre est monté avec une membrane de cellophane séparant deux compartiments :\n- Compartiment interne : solution de glucose à 50 g/L (niveau initial a).\n- Cristallisoir externe : eau distillée.\nAu bout de 30 minutes, le liquide monte au niveau b. Après 4 heures, le liquide redescend au niveau c (niveau initial a).\n1. Expliquer la montée initiale du liquide au niveau b.\n2. Expliquer la redescente ultérieure du liquide au niveau c.\n3. En déduire la nature de la membrane de cellophane utilisée.",
+        "methodSteps": [
+          "Étape 1 : Explication de la montée initiale en b :\nAu départ, l'eau distillée diffuse plus rapidement par osmose vers la solution hypertonique de glucose que le glucose ne peut sortir : l'afflux d'eau fait monter le liquide dans le tube fin.",
+          "Étape 2 : Explication de la redescente en c :\nLa membrane de cellophane possède des pores laissant également passer les molécules de glucose : le glucose diffuse lentement vers le cristallisoir par dialyse. Les concentrations s'égalisent de part et d'autre (isotonie) et la pression hydrostatique ramène le liquide à son niveau initial.",
+          "Étape 3 : Nature de la membrane :\nLa membrane laisse passer à la fois le solvant (l'eau) et le soluté (glucose) : il s'agit donc d'une membrane perméable (et non d'une membrane hémiperméable stricte)."
+        ],
+        "conclusion": "Il y a eu d'abord osmose rapide de l'eau, puis dialyse plus lente du glucose à travers la membrane perméable jusqu'à équilibre."
+      },
+      "exercises": [
+        {
+          "id": "svt_2c_c13_p1_q1",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on le déplacement spontané de substances dissoutes (solutés) d'un milieu hypertonique vers un milieu hypotonique à travers une membrane perméable ?",
+          "options": [
+            "La dialyse (ou diffusion de soluté)",
+            "L'osmose",
+            "La photosynthèse",
+            "La turgescence vacuolaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La dialyse désigne la diffusion des solutés du milieu le plus concentré vers le moins concentré, alors que l'osmose concerne le déplacement du solvant (eau)."
+        },
+        {
+          "id": "svt_2c_c13_p1_q2",
+          "type": "mcq",
+          "prompt": "De quoi est constituée l'armature de base de la membrane plasmique selon le modèle de la mosaïque fluide ?",
+          "options": [
+            "D'une double couche (bicouche) de phospholipides amphiphiles",
+            "D'une paroi de cellulose rigide et épaisse",
+            "D'un réseau d'acide désoxyribonucléique",
+            "D'une couche uniforme de sels de calcium minéralisés"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La membrane plasmique est formée d'une double couche de phospholipides amphiphiles (têtes hydrophiles vers l'extérieur, queues lipophiles hydrophobes à l'intérieur)."
+        },
+        {
+          "id": "svt_2c_c13_p1_q3",
+          "type": "mcq",
+          "prompt": "Quelle est l'orientation des têtes hydrophiles des phospholipides dans la membrane cellulaire ?",
+          "options": [
+            "Elles sont tournées vers les milieux aqueux extracellulaire et intracellulaire (cytoplasme)",
+            "Elles sont enfouies face à face au centre de la bicouche",
+            "Elles sont toutes orientées vers l'intérieur du noyau",
+            "Elles forment des cristaux solides à la périphérie"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les têtes polaires hydrophiles sont en contact avec l'eau des milieux intra- et extracellulaires, tandis que les queues hydrophobes fuient l'eau au cœur de la membrane."
+        },
+        {
+          "id": "svt_2c_c13_p1_q4",
+          "type": "mcq",
+          "prompt": "Quel rôle jouent les protéines intégrées (transmembranaires) de la membrane plasmique ?",
+          "options": [
+            "Elles forment des canaux ioniques et des transporteurs facilitant le passage sélectif des ions et molécules polaires",
+            "Elles empêchent définitivement l'entrée de toute molécule minérale",
+            "Elles synthétisent directement l'ADN lors de la mitose",
+            "Elles transforment la cellule végétale en cellule animale"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les protéines transmembranaires constituent des voies de passage spécialisées (canaux, pores, perméases) indispensables au transit des ions polaires à travers la bicouche lipidique hydrophobe."
+        },
+        {
+          "id": "svt_2c_c13_p1_q5",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on une membrane qui laisse passer à la fois l'eau et les solutés dissous ?",
+          "options": [
+            "Une membrane perméable",
+            "Une membrane hémiperméable",
+            "Une membrane imperméable",
+            "Une membrane cutinisée étanche"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une membrane perméable laisse circuler aussi bien le solvant (eau) que les solutés dissous (diffusion par dialyse)."
+        },
+        {
+          "id": "svt_2c_c13_p1_q6",
+          "type": "mcq",
+          "prompt": "Quel état est atteint lorsque la quantité de solutés diffusant à travers la membrane est identique dans les deux compartiments ?",
+          "options": [
+            "L'état d'équilibre dynamique (égalisation des concentrations)",
+            "L'état de déshydratation irréversible",
+            "L'état de turgescence maximale explosive",
+            "L'état d'ébullition spontanée"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "À la fin de la dialyse, les concentrations s'égalisent de part et d'autre : les flux dans les deux sens deviennent égaux, marquant l'équilibre dynamique."
+        },
+        {
+          "id": "svt_2c_c13_p1_q7",
+          "type": "mcq",
+          "prompt": "Quelle expérience simple met en évidence l'absorption d'ions minéraux par les cellules de racine d'oignon au laboratoire ?",
+          "options": [
+            "L'immersion dans une solution bleue de sulfate de cuivre et l'observation de la coloration bleue à l'intérieur des cellules",
+            "La pesée des feuilles d'une plante exposée à l'obscurité",
+            "L'application d'un colorant noir sur la cuticule d'une tige",
+            "La mise sous cloche d'une graine en dormance"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le sulfate de cuivre pénètre à travers la membrane des cellules racinaires qui se colorent en bleu, attestant de l'absorption des ions cuivre."
+        },
+        {
+          "id": "svt_2c_c13_p1_q8",
+          "type": "mcq",
+          "prompt": "Qui a formulé en 1972 le modèle de la 'mosaïque fluide' pour décrire la membrane plasmique ?",
+          "options": [
+            "Singer et Nicolson",
+            "Watson et Crick",
+            "Dutrochet et Liebig",
+            "Robert Brown"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "S.J. Singer et G.L. Nicolson ont proposé en 1972 le modèle universellement admis de la mosaïque fluide membranaire."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch13_p2_transports_passifs_transports_actifs_atp",
+      "order": 2,
+      "title": "Transports passifs (diffusion simple et facilitée) et transport actif dépendant de l'ATP",
+      "summary": "Différencier le transport passif (diffusion libre et facilitée par perméases/canaux sans ATP) du transport actif (pompes ioniques contre gradient avec hydrolyse d'ATP).",
+      "conceptExplanation": "1. Classification des modes de transport transmembranaire des solutés :\nLe passage des ions minéraux et des molécules à travers la membrane plasmique de la cellule racinaire s'effectue selon deux grands mécanismes fondamentaux :\n\n2. Les transports passifs (sans dépense d'énergie métabolique) :\n- Caractéristique essentielle : ils s'effectuent TOUJOURS dans le sens du gradient de concentration (du milieu le plus concentré vers le milieu le moins concentré en soluté), spontanément, sans consommation d'ATP.\n- On distingue deux formes de transport passif :\n  A. La diffusion libre (ou diffusion simple) :\n     * Passage direct des molécules solubles à travers la bicouche phospholipidique ou par des canaux hydriques.\n     * Concerne les molécules liposolubles (vitamines A, D, E, K), les gaz dissous (O₂, CO₂) et très petites molécules non chargées.\n  B. La diffusion facilitée :\n     * Passage d'ions (K⁺, Na⁺, Ca²⁺, Cl⁻, NO₃⁻) ou de molécules polaires (glucose) incapables de traverser seuls la bicouche hydrophobe.\n     * Ce passage est accéléré et rendu possible par des protéines membranaires spécifiques :\n       - Soit par des canaux ioniques (ionophores) : tunnels aqueux bordés d'acides aminés chargés qui s'ouvrent sélectivement.\n       - Soit par des protéines porteuses appelées perméases (ou transporteurs navettes) : la perméase fixe spécifiquement l'ion sur sa face externe, subit un changement de conformation spatiale (rotation/basculement) et le libère sur la face interne, sans consommer d'énergie.\n\n3. Le transport actif (avec dépense d'énergie métabolique) :\n- Caractéristique essentielle : déplacement d'ions minéraux CONTRE leur gradient de concentration (du milieu le moins concentré vers le milieu le plus concentré).\n- Pourquoi est-il indispensable à la plante ? Dans le sol, les ions minéraux indispensables (K⁺, nitrates NO₃⁻, phosphates) sont souvent très dilués (quelques millimoles par litre), alors que la vacuole de la cellule végétale en contient des concentrations 100 à 1 000 fois plus élevées ! Pour accumuler ces ions vitaux, la racine doit donc les pomper contre le gradient.\n- Mécanisme moléculaire des pompes ioniques :\n  * Ce transport est assuré par des protéines transmembranaires appelées pompes ioniques (ex : pompe à protons H⁺-ATPase, pompe Na⁺/K⁺).\n  * Ces pompes fonctionnent grâce à l'énergie fournie par l'hydrolyse d'une molécule d'ATP (Adénosine Triphosphate) catalysée par l'activité enzymatique ATPase intégrée :\n    ATP + H₂O ⟶ ADP + Pi + Énergie\n    (Adénosine Triphosphate ⟶ Adénosine Diphosphate + Phosphate inorganique + Énergie libre utilisable)\n- Tout poison respiratoire (ex : cyanure) ou baisse de température qui inhibe la synthèse d'ATP dans les mitochondries bloque instantanément le transport actif des ions minéraux dans la racine.",
+      "formulas": [
+        {
+          "name": "Hydrolyse énergétique de l'ATP",
+          "formula": "ATP + H₂O ⟶ ADP + Pi + Énergie",
+          "note": "Fournit l'énergie nécessaire aux pompes ioniques contre le gradient."
+        },
+        {
+          "name": "Comparaison Transport passif vs Transport actif",
+          "formula": "Passif = Sens du gradient (Hyper ⟶ Hypo) sans ATP  |  Actif = Contre le gradient (Hypo ⟶ Hyper) avec ATP",
+          "note": "Le transport actif permet l'accumulation intracellulaire d'ions indispensables."
+        }
+      ],
+      "keyRule": "LE TRANSPORT PASSIF (DIFFUSION LIBRE ET FACILITÉE PAR CANAUX OU PERMÉASES) SE FAIT DANS LE SENS DU GRADIENT SANS CONSOMMATION D'ATP. LE TRANSPORT ACTIF S'EFFECTUE CONTRE LE GRADIENT DE CONCENTRATION GRÂCE À DES POMPES IONIQUES CONSOMMANT L'ÉNERGIE ISSUE DE L'HYDROLYSE DE L'ATP (ATP ⟶ ADP + Pi + E).",
+      "workedExample": {
+        "title": "Exemple résolu : Identification des mécanismes de passage d'ions à travers la membrane",
+        "statement": "Dans une cellule racinaire de maïs, on étudie 3 cas de transport ionique :\n- Cas 1 : Des ions K⁺ (plus concentrés dans le sol que dans l'eau d'imbibition cellulaire au laboratoire) traversent la membrane par des canaux sans consommation d'ATP.\n- Cas 2 : Un ion spécifique est capté par une perméase qui bascule pour le transférer à l'intérieur, dans le sens des concentrations décroissantes, sans utiliser d'ATP.\n- Cas 3 : Des ions nitrates NO₃⁻ (concentration externe = 0,5 mmol/L, concentration interne = 25 mmol/L) pénètrent dans la racine. Si l'on ajoute du cyanure (qui stoppe la synthèse d'ATP), ce transport s'arrête net.\n1. Qualifier le mode de transport dans chaque cas.\n2. Justifier la réponse pour le cas 3 et expliquer l'effet du cyanure.",
+        "methodSteps": [
+          "Étape 1 : Analyse du cas 1 :\nLe transport se fait dans le sens du gradient de concentration, par des canaux protéiques et sans consommation d'énergie (ATP) : il s'agit d'un transport passif par diffusion facilitée (ou libre par canaux transmembranaires).",
+          "Étape 2 : Analyse du cas 2 :\nL'intervention d'une protéine porteuse (perméase) assurant un effet navette dans le sens du gradient sans ATP caractérise une diffusion facilitée (transport passif).",
+          "Étape 3 : Analyse du cas 3 :\nLes ions NO₃⁻ passent d'un milieu peu concentré (0,5 mmol/L) vers un milieu 50 fois plus concentré (25 mmol/L) : le déplacement se fait contre le gradient de concentration. Ce transport nécessite l'hydrolyse de l'ATP produit par les mitochondries. Le cyanure inhibe la respiration mitochondriale, stoppant la production d'ATP et bloquant la pompe ionique : c'est un transport actif."
+        ],
+        "conclusion": "Cas 1 = transport passif par canaux ; Cas 2 = diffusion facilitée par perméases ; Cas 3 = transport actif assuré par pompes à ATP."
+      },
+      "exercises": [
+        {
+          "id": "svt_2c_c13_p2_q1",
+          "type": "mcq",
+          "prompt": "Quelle est la caractéristique distinctive fondamentale du transport actif par rapport au transport passif ?",
+          "options": [
+            "Il transporte les ions contre le gradient de concentration en consommant de l'énergie issue de l'hydrolyse de l'ATP",
+            "Il s'effectue sans aucune intervention de protéines membranaires",
+            "Il ne fonctionne que dans des cellules végétales mortes",
+            "Il fait obligatoirement sortir l'eau de la vacuole"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le transport actif nécessite des protéines de transport (pompes) et consomme de l'énergie métabolique (ATP) pour déplacer les solutés contre leur gradient de concentration."
+        },
+        {
+          "id": "svt_2c_c13_p2_q2",
+          "type": "mcq",
+          "prompt": "Quelle équation chimique représente la libération d'énergie utilisable par les pompes ioniques de la membrane ?",
+          "options": [
+            "ATP + H₂O ⟶ ADP + Pi + Énergie",
+            "Glucose + O₂ ⟶ CO₂ + H₂O",
+            "ADP + Pi + Énergie ⟶ ATP",
+            "6 CO₂ + 6 H₂O ⟶ C₆H₁₂O₆ + 6 O₂"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'hydrolyse de la liaison phosphoanhydre terminale de l'ATP libère de l'ADP, un phosphate inorganique (Pi) et de l'énergie directement couplée au transport actif."
+        },
+        {
+          "id": "svt_2c_c13_p2_q3",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on le transport passif d'ions minéraux dans le sens du gradient de concentration utilisant des perméases (protéines porteuses) ?",
+          "options": [
+            "La diffusion facilitée",
+            "La diffusion simple directe",
+            "La phagocytose",
+            "L'endocytose"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La diffusion facilitée utilise des perméases ou des canaux pour accélérer le passage passif des ions dans le sens de leur gradient sans consommer d'ATP."
+        },
+        {
+          "id": "svt_2c_c13_p2_q4",
+          "type": "mcq",
+          "prompt": "Pourquoi les racines des plantes ont-elles absolument besoin du transport actif pour absorber les ions du sol ?",
+          "options": [
+            "Parce que les ions minéraux utiles sont souvent beaucoup moins concentrés dans le sol que dans le suc vacuolaire des cellules racinaires",
+            "Parce que les poils absorbants refusent d'absorber l'eau sans consommer de graisse",
+            "Parce que les ions minéraux sont gazeux et s'échappent dans l'air",
+            "Parce que la membrane plasmique n'a pas de bicouche de lipides"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour pomper et accumuler des ions à forte concentration dans la vacuole à partir d'un sol dilué, la racine doit lutter contre le gradient grâce au transport actif."
+        },
+        {
+          "id": "svt_2c_c13_p2_q5",
+          "type": "mcq",
+          "prompt": "Quel est l'effet de l'application d'un inhibiteur respiratoire (comme le cyanure ou le dinitrophénol) sur l'absorption racinaire des nitrates contre le gradient ?",
+          "options": [
+            "L'absorption active est immédiatement stoppée car la synthèse d'ATP mitochondriale est bloquée",
+            "L'absorption devient dix fois plus rapide et spontanée",
+            "La plante se met à rejeter tout son oxygène par les racines",
+            "La paroi pectocellulosique se liquéfie instantanément"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le transport actif dépendant de l'ATP, tout poison respiratoire bloquant la chaîne respiratoire mitochondriale prive les pompes de carburant et arrête le transport."
+        },
+        {
+          "id": "svt_2c_c13_p2_q6",
+          "type": "mcq",
+          "prompt": "Parmi les modes de transport suivants, lequel classe-t-on parmi les transports passifs ?",
+          "options": [
+            "Le passage des ions par les canaux transmembranaires ionophores dans le sens du gradient",
+            "Le fonctionnement de la pompe Na⁺/K⁺ consommant de l'ATP",
+            "L'accumulation d'ions contre le gradient de concentration",
+            "L'hydrolyse enzymatique de l'ATP par l'ATPase"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le passage spontané à travers les canaux ionophores dans le sens du gradient de concentration est un transport passif ne nécessitant pas d'énergie."
+        },
+        {
+          "id": "svt_2c_c13_p2_q7",
+          "type": "mcq",
+          "prompt": "Comment fonctionne une protéine porteuse de type perméase lors d'un transport passif ?",
+          "options": [
+            "Elle fixe l'ion sur un site spécifique, subit un changement de conformation réversible et le libère de l'autre côté de la membrane",
+            "Elle brûle l'ion par réaction chimique pour en faire du gaz carbonique",
+            "Elle perfore la paroi cellulosique de façon définitive",
+            "Elle transforme l'ion minéral en molécule d'amidon insoluble"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les perméases fonctionnent par transition conformationnelle réversible (effet navette) sans rupture covalente ni hydrolyse d'ATP lors de la diffusion facilitée."
+        },
+        {
+          "id": "svt_2c_c13_p2_q8",
+          "type": "mcq",
+          "prompt": "Dans quel compartiment cellulaire l'ATP indispensable au transport actif des racines est-il principalement produit ?",
+          "options": [
+            "Dans les mitochondries, grâce à la respiration cellulaire",
+            "Dans les chloroplastes, par photosynthèse souterraine",
+            "Dans la paroi pectocellulosique externe",
+            "Dans le suc de la vacuole centrale"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les cellules des racines (non chlorophylliennes et vivant sous terre) produisent leur ATP par respiration cellulaire au sein de leurs mitochondries."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 14 : LE DEVENIR DES SUBSTANCES ABSORBÉES PAR LA PLANTE VERTE
+// ============================================================================
+export const svt2deCDevenirSubstancesAbsorbeesChapter: CurriculumChapter = {
+  "id": "seconde_c_svt_ch14_devenir_substances_absorbees_plante",
+  "subjectId": "svt",
+  "gradeLevel": "seconde_c",
+  "order": 14,
+  "officialVolumeHours": 4,
+  "title": "Leçon 14 — Le devenir des substances absorbées par la plante verte",
+  "summary": "Trajet et circulation des sèves (transit horizontal racinaire par osmose/transport actif, transit vertical de la sève brute dans le xylème sous la poussée racinaire et l'aspiration foliaire ; circulation de la sève élaborée dans le phloème), et mécanisme stomatique de la transpiration foliaire.",
+  "points": [
+    {
+      "id": "seconde_c_svt_ch14_p1_circulation_seves_brute_elaboree_xyleme_phloeme",
+      "order": 1,
+      "title": "Circulation de la sève brute (xylème) et de la sève élaborée (phloème)",
+      "summary": "Décrire le transit horizontal dans la racine, le transit vertical ascendant de la sève brute dans les vaisseaux de bois (xylème) et la distribution de la sève élaborée dans le phloème.",
+      "conceptExplanation": "1. Définition et composition des deux sèves végétales :\n- La sève brute : liquide transparent composé d'eau et de sels minéraux dissous (ions K⁺, Ca²⁺, NO₃⁻, PO₄³⁻, etc.) absorbés par les racines. C'est une sève minérale ascendante.\n- La sève élaborée : solution visqueuse riche en matières organiques solubles (saccharose, acides aminés, hormones végétales) fabriquées dans les feuilles par photosynthèse, diluées dans de l'eau. C'est une sève nourricière redistribuée à toute la plante.\n\n2. Le transit de la sève brute :\nA. Le transit horizontal (dans la racine) :\n- L'eau et les ions absorbés par le poil absorbant traversent horizontalement l'écorce racinaire (assise pilifère → parenchyme cortical) vers le cylindre central :\n  * Du poil absorbant jusqu'à l'endoderme, le gradient de succion (pression osmotique) est croissant : l'eau circule de cellule en cellule par osmose (transfert passif).\n  * Au niveau de l'endoderme (présentant les cadres imperméables de Caspary) et du péricycle, le gradient de succion devient décroissant : l'eau et surtout les ions minéraux franchissent cette barrière par transport actif pour être déversés dans les vaisseaux conducteurs.\n\nB. Le transit vertical ascendant (dans la tige et les feuilles) :\n- La sève brute monte des racines jusqu'aux feuilles à travers les vaisseaux de bois ou xylème (files longitudinales de cellules mortes aux parois épaissies et imprégnées de lignine imperméable, dont les cloisons transversales ont disparu pour former de longs tubes continus).\n- Les deux forces motrices de l'ascension de la sève brute :\n  1. La poussée racinaire (ou radiculaire) : moteur inférieur dû à l'afflux continu d'eau par osmose et transport actif dans le cylindre central de la racine, créant une pression hydrostatique positive (mise en évidence par le saignement de la vigne ou du maïs sectionné au printemps surmonté d'un manomètre à mercure).\n  2. L'aspiration foliaire (moteur dominant supérieur) : la perte d'eau continue par transpiration au niveau des feuilles crée une forte dépression osmotique (tension négative) qui « tire » la colonne d'eau ininterrompue vers le haut (cohésion des molécules d'eau liée aux liaisons hydrogène).\n\n3. La circulation de la sève élaborée :\n- Dans les feuilles éclairées, la sève brute est transformée en matière organique par photosynthèse :\n  6 CO₂ + 6 H₂O + lumière ⟶ C₆H₁₂O₆ (glucose) + 6 O₂\n- Le glucose est converti en saccharose et combiné aux ions azotés pour former des acides aminés constituant la sève élaborée.\n- Cette sève élaborée circule dans les tubes criblés du liber ou phloème (cellules vivantes superposées dont les parois transversales sont perforées de pores appelés cribles).\n- Trajet bidirectionnel (mouvements ascendant et descendant) : elle approvisionne tous les organes non chlorophylliens ou consommateurs :\n  * Vers le haut : bourgeons terminaux en croissance, fleurs, jeunes feuilles et fruits.\n  * Vers le bas : tige, tronc, racines et organes de réserve spécialisés (tubercules d'igname, manioc, pomme de terre, bulbes d'oignon, graines).",
+      "formulas": [
+        {
+          "name": "Moteurs de l'ascension de la sève brute",
+          "formula": "Ascension de la sève brute = Poussée racinaire (base) + Aspiration foliaire (sommet, dominante)",
+          "note": "Circulation ascendante exclusive dans les vaisseaux de bois (xylème)."
+        },
+        {
+          "name": "Devenir de la sève brute dans les feuilles",
+          "formula": "Sève brute (H₂O + ions) + CO₂ + Lumière ⟶ Sève élaborée (Saccharose, acides aminés) dans le phloème",
+          "note": "Circulation bidirectionnelle (vers les bourgeons, fruits, racines et réserves)."
+        }
+      ],
+      "keyRule": "LA SÈVE BRUTE (EAU + SELS MINÉRAUX) MONTE DES RACINES AUX FEUILLES DANS LES VAISSEAUX DE BOIS (XYLÈME) SOUS L'ACTION COMBINÉE DE LA POUSSÉE RACINAIRE ET DE L'ASPIRATION FOLIAIRE. LA SÈVE ÉLABORÉE (MATIÈRES ORGANIQUES DE PHOTOSYNTHÈSE) CIRCULE DANS LES TUBES CRIBLÉS DU LIBER (PHLOÈME) VERS TOUS LES ORGANES CONSOMMATEURS ET DE RÉSERVE.",
+      "workedExample": {
+        "title": "Exemple résolu : Analyse de l'expérience du pied de vigne sectionné (mise en évidence de la poussée racinaire)",
+        "statement": "Au printemps, on sectionne la tige d'un jeune pied de vigne à quelques centimètres au-dessus du sol et on raccorde hermétiquement le tronc à un tube coudé en U contenant du mercure (manomètre).\n- Au temps t₀ : le mercure est au niveau initial identique dans les deux branches du tube.\n- Au temps t₁ (après quelques heures) : un liquide aqueux s'est écoulé du tronc sectionné et pousse le mercure, créant une dénivellation de plusieurs centimètres.\n1. Quel liquide s'écoule du tronc sectionné ?\n2. Nommer la force motrice mise en évidence par cette expérience.\n3. Expliquer l'origine biophysique de cette poussée.\n4. Pourquoi cette force ne suffit-elle pas à elle seule pour expliquer la montée de la sève au sommet des arbres géants (ex : Fromager de 50 m de haut) ?",
+        "methodSteps": [
+          "Étape 1 : Nature du liquide écoulé :\nLe liquide qui exsude du tronc sectionné est la sève brute (eau et ions minéraux puisés dans le sol).",
+          "Étape 2 : Nom de la force motrice :\nIl s'agit de la poussée racinaire (ou radiculaire).",
+          "Étape 3 : Origine de la poussée racinaire :\nL'accumulation active d'ions minéraux dans les vaisseaux conducteurs de la racine par transport actif crée une forte pression osmotique qui attire continuellement l'eau du sol, refoulant la sève brute vers le haut sous pression hydrostatique positive.",
+          "Étape 4 : Limite de la poussée racinaire chez les grands arbres :\nLa poussée racinaire ne développe qu'une pression de 1 à 2 atmosphères (capable d'élever l'eau de 10 à 20 m au maximum). Pour faire monter la sève brute à 50 mètres de haut chez les grands arbres de la forêt ivoirienne, le moteur principal et indispensable est l'aspiration foliaire générée par la transpiration des feuilles."
+        ],
+        "conclusion": "L'expérience prouve l'existence de la poussée racinaire, qui collabore avec l'aspiration foliaire pour acheminer la sève brute dans tout l'appareil végétal."
+      },
+      "exercises": [
+        {
+          "id": "svt_2c_c14_p1_q1",
+          "type": "mcq",
+          "prompt": "Dans quels vaisseaux conducteurs circule la sève brute (eau et sels minéraux) de bas en haut dans la plante ?",
+          "options": [
+            "Dans les vaisseaux de bois ou xylème",
+            "Dans les tubes criblés du liber ou phloème",
+            "Dans les méristèmes apicaux",
+            "Dans la cuticule externe imperméable"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La sève brute est acheminée des racines vers les feuilles exclusivement à travers les vaisseaux de bois (xylème)."
+        },
+        {
+          "id": "svt_2c_c14_p1_q2",
+          "type": "mcq",
+          "prompt": "Dans quels tissus conducteurs circule la sève élaborée riche en substances organiques synthétisées par les feuilles ?",
+          "options": [
+            "Dans les tubes criblés du liber ou phloème",
+            "Dans les vaisseaux lignifiés de bois mort",
+            "Dans les poils absorbants",
+            "Dans la chambre sous-stomatique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La sève élaborée circule dans les tubes criblés du phloème (liber) pour nourrir l'ensemble des organes de la plante."
+        },
+        {
+          "id": "svt_2c_c14_p1_q3",
+          "type": "mcq",
+          "prompt": "Quelles sont les deux forces motrices qui assurent l'ascension continue de la sève brute dans la tige ?",
+          "options": [
+            "La poussée racinaire (à la base) et l'aspiration foliaire due à la transpiration (au sommet)",
+            "La gravité terrestre et la force centrifuge de la Terre",
+            "La fermentation alcoolique et la digestion lysosomiale",
+            "Le battement des centrioles du centrosome"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'ascension de la sève brute est assurée par la poussée racinaire qui refoule l'eau par le bas et l'aspiration foliaire qui la tire puissamment vers le haut."
+        },
+        {
+          "id": "svt_2c_c14_p1_q4",
+          "type": "mcq",
+          "prompt": "Vers quels organes la sève élaborée est-elle distribuée par le phloème ?",
+          "options": [
+            "Vers tous les organes consommateurs en croissance (bourgeons, fruits) et organes de réserve (tubercules, racines, graines)",
+            "Exclusivement vers l'atmosphère extérieure par évaporation",
+            "Uniquement vers les feuilles chlorophylliennes qui la fabriquent",
+            "Vers la cuticule transparente pour capter la lumière"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La sève élaborée a une circulation ascendante et descendante pour nourrir tous les organes non photosynthétiques et remplir les organes de réserve."
+        },
+        {
+          "id": "svt_2c_c14_p1_q5",
+          "type": "mcq",
+          "prompt": "Quelle est la caractéristique anatomique des vaisseaux de bois (xylème) ?",
+          "options": [
+            "Ce sont des cellules mortes allongées dont les parois sont imprégnées de lignine et dont les parois transversales ont disparu",
+            "Ce sont des cellules vivantes plurinucléées à parois cellulosiques très fines",
+            "Ce sont des sacs clos remplis d'amidon insoluble sans aucune communication",
+            "Ce sont des vacuoles géantes mobiles qui se déplacent le long de la tige"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le xylème est constitué de tubes continus formés de cellules végétales mortes lignifiées et vidées de leur cytoplasme pour laisser passer le flux d'eau."
+        },
+        {
+          "id": "svt_2c_c14_p1_q6",
+          "type": "mcq",
+          "prompt": "Dans la racine, comment l'eau circule-t-elle horizontalement du poil absorbant jusqu'à l'endoderme ?",
+          "options": [
+            "Par osmose, le gradient de succion des vacuoles étant croissant vers l'intérieur de l'écorce",
+            "Par transport actif consommant tout l'ATP cellulaire",
+            "Par évaporation spontanée dans les méats gazeux",
+            "Par décomposition bactérienne de la paroi"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans le parenchyme cortical de la racine, la concentration des vacuoles augmente progressivement du poil absorbant vers l'endoderme, créant un gradient osmotique favorable au passage de l'eau."
+        },
+        {
+          "id": "svt_2c_c14_p1_q7",
+          "type": "mcq",
+          "prompt": "Que constate-t-on si l'on pratique une décortication annulaire superficielle (enlèvement d'un anneau d'écorce et de phloème) sur le tronc d'un arbre ?",
+          "options": [
+            "La sève brute continue de monter par le bois, mais la sève élaborée s'accumule au-dessus de l'anneau créant un bourrelet de cicatrisation",
+            "L'arbre perd immédiatement toutes ses feuilles en cinq minutes",
+            "La sève brute s'échappe totalement et les racines éclatent",
+            "Les racines grossissent dix fois plus vite que les feuilles"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'expérience historique de décortication annulaire de Malpighi montre que le phloème est périphérique (la sève élaborée s'arrête et forme un bourrelet riche en sucres), alors que le xylème central reste intact et continue d'alimenter les feuilles en sève brute."
+        },
+        {
+          "id": "svt_2c_c14_p1_q8",
+          "type": "mcq",
+          "prompt": "Quelle est la principale matière organique soluble transportée par la sève élaborée chez la plupart des végétaux supérieurs ?",
+          "options": [
+            "Le saccharose",
+            "Le glycogène",
+            "L'amidon brut insoluble",
+            "Le chlorure de sodium"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le saccharose est la forme glucidique soluble prépondérante, chimiquement stable et non réductrice, utilisée pour véhiculer l'énergie dans la sève élaborée."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch14_p2_transpiration_foliaire_mecanisme_stomates",
+      "order": 2,
+      "title": "La transpiration foliaire et le mécanisme de régulation stomatique",
+      "summary": "Mettre en évidence la transpiration foliaire, décrire la structure d'un stomate et expliquer le mécanisme biophysique de l'ouverture et de la fermeture de l'ostiole sous l'effet de la lumière et de la turgescence.",
+      "conceptExplanation": "1. Mise en évidence et rôle de la transpiration foliaire :\n- Lorsqu'on enveloppe une feuille d'une plante en pot avec un sachet plastique transparent et étanche, on observe au bout de quelques heures l'apparition de buée et de gouttelettes d'eau liquide sur les parois intérieures du sachet.\n- La transpiration végétale est le rejet continu dans l'atmosphère d'une grande partie de l'eau absorbée par la racine (plus de 90 %) sous forme de vapeur d'eau.\n- Rôles majeurs de la transpiration :\n  * Elle est le moteur principal de l'aspiration foliaire qui permet à la sève brute de monter jusqu'à la cime des arbres.\n  * Elle assure la thermorégulation de la plante (l'évaporation consomme de la chaleur et protège les feuilles contre l'échauffement létal dû au soleil tropical).\n\n2. Siège de la transpiration : les stomates :\n- L'épiderme des feuilles (particulièrement la face inférieure protégée du soleil direct) est percé d'orifices microscopiques régulables appelés stomates.\n- Structure microscopique d'un stomate :\n  * Deux cellules épidermiques réniformes (en forme de haricot), appelées cellules stomatiques ou cellules de garde, délimitant entre elles une ouverture centrale ajustable appelée ostiole.\n  * Sous l'ostiole se trouve une cavité appelée chambre sous-stomatique communicant avec les méats du parenchyme lacuneux.\n  * Les cellules stomatiques contiennent des chloroplastes fonctionnels (contrairement aux autres cellules banales de l'épiderme qui en sont dépourvues).\n  * Particularité anatomique capitale : la paroi des cellules stomatiques qui borde l'ostiole est très épaisse et rigide, alors que la paroi externe opposée est mince et très élastique.\n\n3. Mécanisme biophysique d'ouverture et de fermeture de l'ostiole :\nL'état de l'ostiole (ouvert ou fermé) dépend des variations réversibles de turgescence des deux cellules de garde :\n\nA. Mécanisme de l'ouverture de l'ostiole (le jour / en présence de lumière) :\n- Dès l'approche du jour (vers 6 h du matin), la lumière stimule la photosynthèse dans les chloroplastes des cellules stomatiques et active les pompes ioniques qui font entrer massivement des ions potassium (K⁺) et du malate.\n- La concentration du suc vacuolaire des cellules stomatiques augmente fortement, élevant leur pression osmotique interne.\n- Par osmose, l'eau des cellules épidermiques voisines afflue dans les cellules stomatiques qui deviennent très turgescentes.\n- Sous l'effet de la turgescence, la paroi externe mince et souple s'étire et se bombe vers l'extérieur. En se distendant, elle tire mécaniquement sur la paroi interne épaisse rigide concave, ce qui écarte les deux cellules : l'ostiole s'ouvre largement (diamètre ostiolaire maximal vers 12 h à midi, atteignant 10 à 12 µm) et la transpiration devient maximale.\n\nB. Mécanisme de fermeture de l'ostiole (la nuit ou en cas de sécheresse hydrique) :\n- À l'obscurité (ou en cas de stress hydrique sous l'effet de l'acide abscissique), la photosynthèse s'arrête et les ions K⁺ sortent des cellules stomatiques.\n- La concentration vacuolaire diminue, la pression osmotique baisse.\n- L'eau quitte les cellules stomatiques par osmose : elles perdent leur turgescence (plasmolyse relative).\n- Les parois minces se détendent, les parois internes épaisses reprennent leur forme droite et viennent s'accoler : l'ostiole se ferme complètement (diamètre ostiolaire nul de 22 h à 2 h du matin), stoppant net la transpiration et protégeant la plante contre le flétrissement.",
+      "formulas": [
+        {
+          "name": "Cycle nycthéméral d'ouverture des stomates",
+          "formula": "Lumière (matin) ⟶ Entrée de K⁺ ⟶ Turgescence ⟶ Déformation des parois ⟶ Ouverture de l'ostiole (transpiration maximale à midi)",
+          "note": "Obscurité / Sécheresse ⟶ Perte de turgescence ⟶ Fermeture de l'ostiole (diamètre nul la nuit)."
+        },
+        {
+          "name": "Bilan hydrique de la plante",
+          "formula": "Bilan = Eau absorbée par les racines - Eau rejetée par transpiration foliaire",
+          "note": "Plus de 90 % de l'eau absorbée est restituée à l'atmosphère par transpiration."
+        }
+      ],
+      "keyRule": "L'OUVERTURE DE L'OSTIOLE EST RÉGULÉE PAR LA TURGESCENCE DES CELLULES STOMATIQUES. En présence de lumière, l'afflux d'ions et l'entrée d'eau font gonfler les cellules de garde : la paroi mince externe se distend et écarte la paroi épaisse interne, ouvrant l'ostiole. À l'obscurité ou en manque d'eau, la plasmolyse referme l'ostiole.",
+      "workedExample": {
+        "title": "Exemple résolu : Analyse de l'évolution du diamètre ostiolaire au cours d'une journée de 24 heures",
+        "statement": "Des élèves de 2nde C au Lycée de Niakara mesurent le diamètre ostiolaire des stomates d'une feuille de cotonnier au cours d'une journée ensoleillée :\n- De 22 h à 2 h : diamètre = 0 µm.\n- À 6 h : diamètre = 3,5 µm.\n- À 12 h (midi) : diamètre = 12 µm (maximum journalier).\n- À 18 h : diamètre = 9 µm.\n- À 22 h : diamètre = 0 µm.\n1. Analyser l'évolution du diamètre de l'ostiole au cours des 24 heures.\n2. Expliquer l'état de l'ostiole à 12 h et son mécanisme biophysique.\n3. Expliquer pourquoi l'ostiole est totalement fermé entre 22 h et 2 h.",
+        "methodSteps": [
+          "Étape 1 : Analyse de la cinétique du diamètre ostiolaire :\nLe diamètre est nul (ostiole fermé) la nuit de 22 h à 2 h. Il s'ouvre dès 4 h-6 h avec l'apparition du jour, s'élargit progressivement pour atteindre son pic de 12 µm à 12 h (pleine lumière et chaleur), puis diminue l'après-midi pour s'annuler à nouveau dès la tombée de la nuit à 22 h.",
+          "Étape 2 : Explication du pic à midi (12 h) :\nÀ midi, l'intensité lumineuse est maximale. La photosynthèse et l'accumulation active de solutés (ions K⁺) dans les cellules stomatiques élèvent leur pression osmotique : l'eau afflue massivement par osmose. Les cellules deviennent pleinement turgescentes, leurs parois minces se distendent au maximum, provoquant l'écartement maximal des parois épaisses internes et l'ouverture maximale de l'ostiole (transpiration maximale).",
+          "Étape 3 : Explication de la fermeture nocturne (22 h à 2 h) :\nEn l'absence totale de lumière, la photosynthèse s'arrête, les ions K⁺ sont évacués, la pression osmotique s'effondre. L'eau sort des cellules stomatiques qui se dégonflent (perte de turgescence). Les parois épaisses se réaccolent : l'ostiole est clos, ce qui évite toute perte d'eau inutile la nuit."
+        ],
+        "conclusion": "L'ouverture des stomates est asservie à la lumière par le biais de la turgescence osmotique des cellules de garde."
+      },
+      "exercises": [
+        {
+          "id": "svt_2c_c14_p2_q1",
+          "type": "mcq",
+          "prompt": "Sur quelle face de la feuille les stomates sont-ils généralement les plus abondants chez la plupart des végétaux terrestres ?",
+          "options": [
+            "Sur la face inférieure de la feuille (face abaxiale à l'abri du soleil direct)",
+            "Sur la face supérieure directement exposée aux rayons du soleil",
+            "Exclusivement sur le pétiole de fixation de la feuille",
+            "Sur les nervures principales lignifiées uniquement"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La face inférieure des feuilles contient la majorité des stomates, ce qui limite les pertes d'eau excessives dues à l'insolation directe."
+        },
+        {
+          "id": "svt_2c_c14_p2_q2",
+          "type": "mcq",
+          "prompt": "De quoi est constitué un stomate de l'épiderme foliaire ?",
+          "options": [
+            "De deux cellules stomatiques réniformes chlorophylliennes séparées par un pore réglable appelé ostiole",
+            "D'un canal cylindrique rigide percé au milieu d'une cellule morte",
+            "D'une vacuole géante flottant au-dessus de la cuticule",
+            "D'une paire de centrioles ciliés issus du centrosome"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le stomate comprend deux cellules de garde (cellules stomatiques) en forme de rein délimitant un orifice ajustable nommé ostiole."
+        },
+        {
+          "id": "svt_2c_c14_p2_q3",
+          "type": "mcq",
+          "prompt": "Quelle dissymétrie de structure pariétale des cellules stomatiques permet l'ouverture mécanique de l'ostiole sous l'effet de la turgescence ?",
+          "options": [
+            "La paroi bordant l'ostiole est très épaisse et rigide, alors que la paroi opposée est mince et très élastique",
+            "Les parois sont uniformément minces et se déchirent dès la première entrée d'eau",
+            "La paroi interne est recouverte d'émail osseux indestructible",
+            "Les parois sont entièrement absentes dans les cellules stomatiques"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Lorsque la cellule stomatique se gonfle d'eau, sa paroi mince externe se distend facilement vers l'extérieur et entraîne la paroi épaisse rigide qui s'écarte, ouvrant l'ostiole."
+        },
+        {
+          "id": "svt_2c_c14_p2_q4",
+          "type": "mcq",
+          "prompt": "À quel moment de la journée le diamètre d'ouverture de l'ostiole est-il généralement à son maximum chez une plante bien arrosée ?",
+          "options": [
+            "Au milieu de la journée (vers 12 h à midi), sous l'effet d'une luminosité maximale",
+            "Au milieu de la nuit (à 0 h / minuit)",
+            "Au coucher du soleil (vers 19 h)",
+            "Le diamètre reste strictement constant sans aucune variation jour/nuit"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "C'est en pleine matinée et à midi (ensoleillement maximal stimulant la photosynthèse et l'afflux d'ions) que l'ostiole atteint son diamètre maximal (jusqu'à 12 µm)."
+        },
+        {
+          "id": "svt_2c_c14_p2_q5",
+          "type": "mcq",
+          "prompt": "Que se passe-t-il au niveau des stomates en cas de sécheresse sévère ou d'atmosphère aride en plein après-midi ?",
+          "options": [
+            "Les cellules stomatiques perdent leur turgescence et l'ostiole se ferme pour limiter les pertes d'eau",
+            "L'ostiole s'ouvre deux fois plus grand pour tenter de capter l'humidité de l'air",
+            "Les stomates se détachent et tombent de la feuille",
+            "Les cellules stomatiques se transforment en cellules racinaires"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En cas de stress hydrique, la baisse de turgescence referme l'ostiole, protégeant la plante contre le dessèchement létal."
+        },
+        {
+          "id": "svt_2c_c14_p2_q6",
+          "type": "mcq",
+          "prompt": "Sous quelle forme physique principale l'eau transpirée est-elle rejetée par la plante verte dans l'atmosphère ?",
+          "options": [
+            "Sous forme de vapeur d'eau invisible",
+            "Sous forme de glace cristallisée",
+            "Sous forme de jets continus d'eau liquide sous pression",
+            "Sous forme d'hydrogène gazeux pur"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La transpiration foliaire libère l'eau sous forme gazeuse de vapeur d'eau à travers les stomates."
+        },
+        {
+          "id": "svt_2c_c14_p2_q7",
+          "type": "mcq",
+          "prompt": "Quel ion minéral joue un rôle moteur fondamental dans les flux d'eau et les variations de turgescence des cellules stomatiques ?",
+          "options": [
+            "L'ion potassium (K⁺)",
+            "L'ion ferrique (Fe³⁺)",
+            "L'ion sulfate (SO₄²⁻)",
+            "L'ion carbonate (CO₃²⁻)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'entrée active massive des ions K⁺ dans les cellules stomatiques sous l'effet de la lumière est le principal déclencheur de l'appel d'eau osmotique ouvrant l'ostiole."
+        },
+        {
+          "id": "svt_2c_c14_p2_q8",
+          "type": "mcq",
+          "prompt": "Quel est le rôle thermorégulateur capital assuré par la transpiration chez les plantes des régions chaudes comme la Côte d'Ivoire ?",
+          "options": [
+            "L'évaporation de l'eau absorbe de la chaleur latente, ce qui refroidit la surface des feuilles et évite la surchauffe",
+            "Elle augmente la température de la feuille de 50 °C pour brûler les parasites",
+            "Elle maintient les feuilles à 0 °C toute l'année",
+            "Elle n'a aucun impact thermique sur la température foliaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'évaporation de l'eau consomme de l'énergie thermique (chaleur latente de vaporisation), ce qui rafraîchit efficacement les tissus foliaires sous le fort ensoleillement tropical."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// EXPORT DU CURRICULUM COMPLET SVT 2de C (14 CHAPITRES, 28 POINTS, 224 QCM)
 // ============================================================================
 export const svt2deCChapters: CurriculumChapter[] = [
   svt2deCStructureGeologiqueChapter,
@@ -2935,4 +4091,8 @@ export const svt2deCChapters: CurriculumChapter[] = [
   svt2deCOrganisationCelluleChapter,
   svt2deCDivisionCellulaireMitoseChapter,
   svt2deCEvolutionEquipementChromosomiqueChapter,
+  svt2deCAbsorptionEauPlanteChapter,
+  svt2deCInfluenceSelsMinerauxCroissanceChapter,
+  svt2deCAbsorptionSelsMinerauxChapter,
+  svt2deCDevenirSubstancesAbsorbeesChapter,
 ];
