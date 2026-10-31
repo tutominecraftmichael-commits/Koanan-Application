@@ -1,5 +1,6 @@
 import { maths2deCGeometryChapters } from '../../data/courses/maths_2de_c';
 import { maths2deCNumericChapters } from '../../data/courses/maths_2de_c_numerique';
+import { chimie2deCChapters } from '../../data/courses/chimie_2de_c';
 import { maths2deACalculsNumeriquesChapter } from '../../data/courses/maths_2de_a';
 import {
   chimie2deAElementChimiqueChapter,
@@ -45384,587 +45385,18 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
       }
     ]
   },
+  ...chimie2deCChapters,
   {
-    "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique",
+    "id": "seconde_c_physique_ch3_mouvements_et_vitesse",
     "subjectId": "physique_chimie",
     "gradeLevel": "seconde_c",
     "order": 1,
-    "officialVolumeHours": 16,
-    "title": "Structure de l'atome et élément chimique",
-    "summary": "Noyau, cortège électronique, isotopes, formule électronique et tableau périodique.",
-    "points": [
-      {
-        "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1",
-        "order": 1,
-        "title": "Structure de l'atome et élément chimique : Notions Fondamentales & Lois",
-        "summary": "Concentrations molaires et massiques, facteur de dilution, couples redox et équilibrage des demi-équations.",
-        "conceptExplanation": "L'étude quantitative des solutions aqueuses et des transferts d'électrons est indispensable en chimie.\n\n1. Grandeurs fondamentales des solutions :\n- Quantité de matière : n = m / M (en mol).\n- Concentration molaire : C = n / V (en mol·L⁻¹).\n- Concentration massique : C_m = m / V = C · M (en g·L⁻¹).\n- Dilution : lors d'une dilution, la quantité de matière de soluté se conserve : C_initial · V_initial = C_final · V_final.\n  Facteur de dilution : F = C_initial / C_final = V_final / V_initial.\n\n2. Réactions d'oxydoréduction :\n- Un oxydant est une espèce chimique capable de capter au moins un électron : Ox + n e⁻ ⇌ Red.\n- Un réducteur est une espèce chimique capable de céder au moins un électron : Red ⇌ Ox + n e⁻.\n- Équilibrage des demi-équations en milieu acide :\n  1. Équilibrer les éléments chimiques autres que O et H.\n  2. Équilibrer l'élément oxygène O en ajoutant des molécules d'eau H₂O.\n  3. Équilibrer l'élément hydrogène H en ajoutant des ions H⁺ (ou H₃O⁺).\n  4. Équilibrer la charge électrique globale en ajoutant des électrons e⁻.",
-        "formulas": [
-          {
-            "name": "Conservation de matière en dilution",
-            "formula": "C_i · V_i = C_f · V_f  ⇒  V_i = (C_f · V_f) / C_i",
-            "note": "Le facteur de dilution est F = C_i / C_f = V_f / V_i > 1."
-          },
-          {
-            "name": "Relation entre C et C_m",
-            "formula": "C_m = C · M",
-            "note": "C en mol·L⁻¹, M en g·mol⁻¹, C_m en g·L⁻¹."
-          }
-        ],
-        "keyRule": "Dans une équation d'oxydoréduction globale, les électrons cédés par le réducteur doivent toujours être rigoureusement égaux aux électrons captés par l'oxydant (aucun électron libre n'apparaît dans l'équation bilan).",
-        "workedExample": {
-          "title": "Exemple résolu : Préparation par dilution d'une solution",
-          "statement": "On souhaite préparer un volume V_f = 100 mL d'une solution de permanganate de potassium à C_f = 2,0 × 10⁻³ mol·L⁻¹ à partir d'une solution mère à C_i = 5,0 × 10⁻² mol·L⁻¹. Quel volume de solution mère V_i faut-il prélever ?",
-          "methodSteps": [
-            "Étape 1 : Poser la loi de conservation de la quantité de matière de soluté : C_i · V_i = C_f · V_f.",
-            "Étape 2 : Isoler le volume mère à prélever : V_i = (C_f · V_f) / C_i.",
-            "Étape 3 : Calculer le facteur de dilution : F = C_i / C_f = (5,0 × 10⁻²) / (2,0 × 10⁻³) = 25.",
-            "Étape 4 : Calculer V_i : V_i = V_f / F = 100 mL / 25 = 4,0 mL."
-          ],
-          "conclusion": "Il faut prélever 4,0 mL de solution mère à l'aide d'une pipette jaugée munie d'une pro-pipette."
-        },
-        "exercises": [
-          {
-            "prompt": "Quelle est la concentration molaire C d'une solution contenant 0,05 mol de soluté dans 250 mL de solution ?",
-            "options": [
-              "0,20 mol·L⁻¹",
-              "0,05 mol·L⁻¹",
-              "0,0125 mol·L⁻¹",
-              "0,50 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "V = 250 mL = 0,250 L. C = n / V = 0,05 / 0,250 = 0,20 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex1",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Par définition, que fait un réducteur lors d'une réaction d'oxydoréduction ?",
-            "options": [
-              "Il cède un ou plusieurs électrons",
-              "Il capte un ou plusieurs électrons",
-              "Il capte un proton H⁺",
-              "Il neutralise les charges"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Un réducteur est un donneur d'électrons (il subit une oxydation) : Red → Ox + n e⁻.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex2",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Combien d'électrons sont échangés dans la demi-équation du couple MnO₄⁻ / Mn²⁺ en milieu acide ?",
-            "options": [
-              "5 électrons",
-              "2 électrons",
-              "7 électrons",
-              "1 électron"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "MnO₄⁻ + 8 H⁺ + 5 e⁻ ⇌ Mn²⁺ + 4 H₂O. Le manganèse passe du degré d'oxydation +VII à +II, échangeant 5 électrons.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex3",
-            "type": "mcq"
-          },
-          {
-            "prompt": "On dilue 10 fois une solution mère de concentration C₀ = 0,10 mol·L⁻¹. Quelle est la nouvelle concentration ?",
-            "options": [
-              "0,010 mol·L⁻¹",
-              "1,0 mol·L⁻¹",
-              "0,001 mol·L⁻¹",
-              "0,050 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Diluer 10 fois signifie que le facteur de dilution est F = 10, d'où C_f = C₀ / 10 = 0,010 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex4",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quel est le nombre d'oxydation du fer dans l'ion Fe³⁺ ?",
-            "options": [
-              "+III",
-              "+II",
-              "0",
-              "-III"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour un ion monoatomique, le nombre d'oxydation est égal à sa charge électrique, soit +III.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex5",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Si la masse molaire du glucose est M = 180 g·mol⁻¹, quelle masse faut-il pour préparer 500 mL à 0,10 mol·L⁻¹ ?",
-            "options": [
-              "9,0 g",
-              "18,0 g",
-              "4,5 g",
-              "90 g"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "n = C · V = 0,10 × 0,500 = 0,05 mol. m = n · M = 0,05 × 180 = 9,0 g.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex6",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Dans la réaction Zn + Cu²⁺ → Zn²⁺ + Cu, quelle espèce est oxydée ?",
-            "options": [
-              "Le zinc Zn (qui perd 2 électrons)",
-              "L'ion cuivre Cu²⁺",
-              "L'eau",
-              "L'ion zinc Zn²⁺"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le zinc passe de Zn à Zn²⁺ en cédant 2 électrons : Zn subit une oxydation, il est oxydé.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex7",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quelle verrerie de précision doit-on obligatoirement utiliser pour préparer une solution étalon par dilution ?",
-            "options": [
-              "Une pipette jaugée et une fiole jaugée",
-              "Une éprouvette graduée et un bêcher",
-              "Un erlenmeyer et un entonnoir",
-              "Un verre à pied et un agitateur"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour une dilution de précision, le prélèvement s'effectue à la pipette jaugée et le mélange final dans une fiole jaugée.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p1_ex8",
-            "type": "mcq"
-          }
-        ]
-      },
-      {
-        "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2",
-        "order": 2,
-        "title": "Structure de l'atome et élément chimique : Protocoles & Résolution d'Exercices",
-        "summary": "Méthodologie expérimentale, calculs littéraux et applications types aux interrogations.",
-        "conceptExplanation": "L'étude quantitative des solutions aqueuses et des transferts d'électrons est indispensable en chimie.\n\n1. Grandeurs fondamentales des solutions :\n- Quantité de matière : n = m / M (en mol).\n- Concentration molaire : C = n / V (en mol·L⁻¹).\n- Concentration massique : C_m = m / V = C · M (en g·L⁻¹).\n- Dilution : lors d'une dilution, la quantité de matière de soluté se conserve : C_initial · V_initial = C_final · V_final.\n  Facteur de dilution : F = C_initial / C_final = V_final / V_initial.\n\n2. Réactions d'oxydoréduction :\n- Un oxydant est une espèce chimique capable de capter au moins un électron : Ox + n e⁻ ⇌ Red.\n- Un réducteur est une espèce chimique capable de céder au moins un électron : Red ⇌ Ox + n e⁻.\n- Équilibrage des demi-équations en milieu acide :\n  1. Équilibrer les éléments chimiques autres que O et H.\n  2. Équilibrer l'élément oxygène O en ajoutant des molécules d'eau H₂O.\n  3. Équilibrer l'élément hydrogène H en ajoutant des ions H⁺ (ou H₃O⁺).\n  4. Équilibrer la charge électrique globale en ajoutant des électrons e⁻.",
-        "formulas": [
-          {
-            "name": "Conservation de matière en dilution",
-            "formula": "C_i · V_i = C_f · V_f  ⇒  V_i = (C_f · V_f) / C_i",
-            "note": "Le facteur de dilution est F = C_i / C_f = V_f / V_i > 1."
-          },
-          {
-            "name": "Relation entre C et C_m",
-            "formula": "C_m = C · M",
-            "note": "C en mol·L⁻¹, M en g·mol⁻¹, C_m en g·L⁻¹."
-          }
-        ],
-        "keyRule": "Dans une équation d'oxydoréduction globale, les électrons cédés par le réducteur doivent toujours être rigoureusement égaux aux électrons captés par l'oxydant (aucun électron libre n'apparaît dans l'équation bilan).",
-        "workedExample": {
-          "title": "Exemple résolu : Préparation par dilution d'une solution",
-          "statement": "On souhaite préparer un volume V_f = 100 mL d'une solution de permanganate de potassium à C_f = 2,0 × 10⁻³ mol·L⁻¹ à partir d'une solution mère à C_i = 5,0 × 10⁻² mol·L⁻¹. Quel volume de solution mère V_i faut-il prélever ?",
-          "methodSteps": [
-            "Étape 1 : Poser la loi de conservation de la quantité de matière de soluté : C_i · V_i = C_f · V_f.",
-            "Étape 2 : Isoler le volume mère à prélever : V_i = (C_f · V_f) / C_i.",
-            "Étape 3 : Calculer le facteur de dilution : F = C_i / C_f = (5,0 × 10⁻²) / (2,0 × 10⁻³) = 25.",
-            "Étape 4 : Calculer V_i : V_i = V_f / F = 100 mL / 25 = 4,0 mL."
-          ],
-          "conclusion": "Il faut prélever 4,0 mL de solution mère à l'aide d'une pipette jaugée munie d'une pro-pipette."
-        },
-        "exercises": [
-          {
-            "prompt": "Quelle est la concentration molaire C d'une solution contenant 0,05 mol de soluté dans 250 mL de solution ?",
-            "options": [
-              "0,20 mol·L⁻¹",
-              "0,05 mol·L⁻¹",
-              "0,0125 mol·L⁻¹",
-              "0,50 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "V = 250 mL = 0,250 L. C = n / V = 0,05 / 0,250 = 0,20 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex1",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Par définition, que fait un réducteur lors d'une réaction d'oxydoréduction ?",
-            "options": [
-              "Il cède un ou plusieurs électrons",
-              "Il capte un ou plusieurs électrons",
-              "Il capte un proton H⁺",
-              "Il neutralise les charges"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Un réducteur est un donneur d'électrons (il subit une oxydation) : Red → Ox + n e⁻.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex2",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Combien d'électrons sont échangés dans la demi-équation du couple MnO₄⁻ / Mn²⁺ en milieu acide ?",
-            "options": [
-              "5 électrons",
-              "2 électrons",
-              "7 électrons",
-              "1 électron"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "MnO₄⁻ + 8 H⁺ + 5 e⁻ ⇌ Mn²⁺ + 4 H₂O. Le manganèse passe du degré d'oxydation +VII à +II, échangeant 5 électrons.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex3",
-            "type": "mcq"
-          },
-          {
-            "prompt": "On dilue 10 fois une solution mère de concentration C₀ = 0,10 mol·L⁻¹. Quelle est la nouvelle concentration ?",
-            "options": [
-              "0,010 mol·L⁻¹",
-              "1,0 mol·L⁻¹",
-              "0,001 mol·L⁻¹",
-              "0,050 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Diluer 10 fois signifie que le facteur de dilution est F = 10, d'où C_f = C₀ / 10 = 0,010 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex4",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quel est le nombre d'oxydation du fer dans l'ion Fe³⁺ ?",
-            "options": [
-              "+III",
-              "+II",
-              "0",
-              "-III"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour un ion monoatomique, le nombre d'oxydation est égal à sa charge électrique, soit +III.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex5",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Si la masse molaire du glucose est M = 180 g·mol⁻¹, quelle masse faut-il pour préparer 500 mL à 0,10 mol·L⁻¹ ?",
-            "options": [
-              "9,0 g",
-              "18,0 g",
-              "4,5 g",
-              "90 g"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "n = C · V = 0,10 × 0,500 = 0,05 mol. m = n · M = 0,05 × 180 = 9,0 g.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex6",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Dans la réaction Zn + Cu²⁺ → Zn²⁺ + Cu, quelle espèce est oxydée ?",
-            "options": [
-              "Le zinc Zn (qui perd 2 électrons)",
-              "L'ion cuivre Cu²⁺",
-              "L'eau",
-              "L'ion zinc Zn²⁺"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le zinc passe de Zn à Zn²⁺ en cédant 2 électrons : Zn subit une oxydation, il est oxydé.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex7",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quelle verrerie de précision doit-on obligatoirement utiliser pour préparer une solution étalon par dilution ?",
-            "options": [
-              "Une pipette jaugée et une fiole jaugée",
-              "Une éprouvette graduée et un bêcher",
-              "Un erlenmeyer et un entonnoir",
-              "Un verre à pied et un agitateur"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour une dilution de précision, le prélèvement s'effectue à la pipette jaugée et le mélange final dans une fiole jaugée.",
-            "id": "seconde_c_physique_chimie_ch1_structure_de_l_atome_et_element_chimique_p2_ex8",
-            "type": "mcq"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire",
-    "subjectId": "physique_chimie",
-    "gradeLevel": "seconde_c",
-    "order": 2,
-    "officialVolumeHours": 16,
-    "title": "La mole et la concentration molaire",
-    "summary": "Constante d'Avogadro, quantité de matière n = m/M et concentration C = n/V.",
-    "points": [
-      {
-        "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p1",
-        "order": 1,
-        "title": "La mole et la concentration molaire : Notions Fondamentales & Lois",
-        "summary": "Concentrations molaires et massiques, facteur de dilution, couples redox et équilibrage des demi-équations.",
-        "conceptExplanation": "L'étude quantitative des solutions aqueuses et des transferts d'électrons est indispensable en chimie.\n\n1. Grandeurs fondamentales des solutions :\n- Quantité de matière : n = m / M (en mol).\n- Concentration molaire : C = n / V (en mol·L⁻¹).\n- Concentration massique : C_m = m / V = C · M (en g·L⁻¹).\n- Dilution : lors d'une dilution, la quantité de matière de soluté se conserve : C_initial · V_initial = C_final · V_final.\n  Facteur de dilution : F = C_initial / C_final = V_final / V_initial.\n\n2. Réactions d'oxydoréduction :\n- Un oxydant est une espèce chimique capable de capter au moins un électron : Ox + n e⁻ ⇌ Red.\n- Un réducteur est une espèce chimique capable de céder au moins un électron : Red ⇌ Ox + n e⁻.\n- Équilibrage des demi-équations en milieu acide :\n  1. Équilibrer les éléments chimiques autres que O et H.\n  2. Équilibrer l'élément oxygène O en ajoutant des molécules d'eau H₂O.\n  3. Équilibrer l'élément hydrogène H en ajoutant des ions H⁺ (ou H₃O⁺).\n  4. Équilibrer la charge électrique globale en ajoutant des électrons e⁻.",
-        "formulas": [
-          {
-            "name": "Conservation de matière en dilution",
-            "formula": "C_i · V_i = C_f · V_f  ⇒  V_i = (C_f · V_f) / C_i",
-            "note": "Le facteur de dilution est F = C_i / C_f = V_f / V_i > 1."
-          },
-          {
-            "name": "Relation entre C et C_m",
-            "formula": "C_m = C · M",
-            "note": "C en mol·L⁻¹, M en g·mol⁻¹, C_m en g·L⁻¹."
-          }
-        ],
-        "keyRule": "Dans une équation d'oxydoréduction globale, les électrons cédés par le réducteur doivent toujours être rigoureusement égaux aux électrons captés par l'oxydant (aucun électron libre n'apparaît dans l'équation bilan).",
-        "workedExample": {
-          "title": "Exemple résolu : Préparation par dilution d'une solution",
-          "statement": "On souhaite préparer un volume V_f = 100 mL d'une solution de permanganate de potassium à C_f = 2,0 × 10⁻³ mol·L⁻¹ à partir d'une solution mère à C_i = 5,0 × 10⁻² mol·L⁻¹. Quel volume de solution mère V_i faut-il prélever ?",
-          "methodSteps": [
-            "Étape 1 : Poser la loi de conservation de la quantité de matière de soluté : C_i · V_i = C_f · V_f.",
-            "Étape 2 : Isoler le volume mère à prélever : V_i = (C_f · V_f) / C_i.",
-            "Étape 3 : Calculer le facteur de dilution : F = C_i / C_f = (5,0 × 10⁻²) / (2,0 × 10⁻³) = 25.",
-            "Étape 4 : Calculer V_i : V_i = V_f / F = 100 mL / 25 = 4,0 mL."
-          ],
-          "conclusion": "Il faut prélever 4,0 mL de solution mère à l'aide d'une pipette jaugée munie d'une pro-pipette."
-        },
-        "exercises": [
-          {
-            "prompt": "Quelle est la concentration molaire C d'une solution contenant 0,05 mol de soluté dans 250 mL de solution ?",
-            "options": [
-              "0,20 mol·L⁻¹",
-              "0,05 mol·L⁻¹",
-              "0,0125 mol·L⁻¹",
-              "0,50 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "V = 250 mL = 0,250 L. C = n / V = 0,05 / 0,250 = 0,20 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p1_ex1",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Par définition, que fait un réducteur lors d'une réaction d'oxydoréduction ?",
-            "options": [
-              "Il cède un ou plusieurs électrons",
-              "Il capte un ou plusieurs électrons",
-              "Il capte un proton H⁺",
-              "Il neutralise les charges"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Un réducteur est un donneur d'électrons (il subit une oxydation) : Red → Ox + n e⁻.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p1_ex2",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Combien d'électrons sont échangés dans la demi-équation du couple MnO₄⁻ / Mn²⁺ en milieu acide ?",
-            "options": [
-              "5 électrons",
-              "2 électrons",
-              "7 électrons",
-              "1 électron"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "MnO₄⁻ + 8 H⁺ + 5 e⁻ ⇌ Mn²⁺ + 4 H₂O. Le manganèse passe du degré d'oxydation +VII à +II, échangeant 5 électrons.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p1_ex3",
-            "type": "mcq"
-          },
-          {
-            "prompt": "On dilue 10 fois une solution mère de concentration C₀ = 0,10 mol·L⁻¹. Quelle est la nouvelle concentration ?",
-            "options": [
-              "0,010 mol·L⁻¹",
-              "1,0 mol·L⁻¹",
-              "0,001 mol·L⁻¹",
-              "0,050 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Diluer 10 fois signifie que le facteur de dilution est F = 10, d'où C_f = C₀ / 10 = 0,010 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p1_ex4",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quel est le nombre d'oxydation du fer dans l'ion Fe³⁺ ?",
-            "options": [
-              "+III",
-              "+II",
-              "0",
-              "-III"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour un ion monoatomique, le nombre d'oxydation est égal à sa charge électrique, soit +III.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p1_ex5",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Si la masse molaire du glucose est M = 180 g·mol⁻¹, quelle masse faut-il pour préparer 500 mL à 0,10 mol·L⁻¹ ?",
-            "options": [
-              "9,0 g",
-              "18,0 g",
-              "4,5 g",
-              "90 g"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "n = C · V = 0,10 × 0,500 = 0,05 mol. m = n · M = 0,05 × 180 = 9,0 g.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p1_ex6",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Dans la réaction Zn + Cu²⁺ → Zn²⁺ + Cu, quelle espèce est oxydée ?",
-            "options": [
-              "Le zinc Zn (qui perd 2 électrons)",
-              "L'ion cuivre Cu²⁺",
-              "L'eau",
-              "L'ion zinc Zn²⁺"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le zinc passe de Zn à Zn²⁺ en cédant 2 électrons : Zn subit une oxydation, il est oxydé.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p1_ex7",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quelle verrerie de précision doit-on obligatoirement utiliser pour préparer une solution étalon par dilution ?",
-            "options": [
-              "Une pipette jaugée et une fiole jaugée",
-              "Une éprouvette graduée et un bêcher",
-              "Un erlenmeyer et un entonnoir",
-              "Un verre à pied et un agitateur"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour une dilution de précision, le prélèvement s'effectue à la pipette jaugée et le mélange final dans une fiole jaugée.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p1_ex8",
-            "type": "mcq"
-          }
-        ]
-      },
-      {
-        "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p2",
-        "order": 2,
-        "title": "La mole et la concentration molaire : Protocoles & Résolution d'Exercices",
-        "summary": "Méthodologie expérimentale, calculs littéraux et applications types aux interrogations.",
-        "conceptExplanation": "L'étude quantitative des solutions aqueuses et des transferts d'électrons est indispensable en chimie.\n\n1. Grandeurs fondamentales des solutions :\n- Quantité de matière : n = m / M (en mol).\n- Concentration molaire : C = n / V (en mol·L⁻¹).\n- Concentration massique : C_m = m / V = C · M (en g·L⁻¹).\n- Dilution : lors d'une dilution, la quantité de matière de soluté se conserve : C_initial · V_initial = C_final · V_final.\n  Facteur de dilution : F = C_initial / C_final = V_final / V_initial.\n\n2. Réactions d'oxydoréduction :\n- Un oxydant est une espèce chimique capable de capter au moins un électron : Ox + n e⁻ ⇌ Red.\n- Un réducteur est une espèce chimique capable de céder au moins un électron : Red ⇌ Ox + n e⁻.\n- Équilibrage des demi-équations en milieu acide :\n  1. Équilibrer les éléments chimiques autres que O et H.\n  2. Équilibrer l'élément oxygène O en ajoutant des molécules d'eau H₂O.\n  3. Équilibrer l'élément hydrogène H en ajoutant des ions H⁺ (ou H₃O⁺).\n  4. Équilibrer la charge électrique globale en ajoutant des électrons e⁻.",
-        "formulas": [
-          {
-            "name": "Conservation de matière en dilution",
-            "formula": "C_i · V_i = C_f · V_f  ⇒  V_i = (C_f · V_f) / C_i",
-            "note": "Le facteur de dilution est F = C_i / C_f = V_f / V_i > 1."
-          },
-          {
-            "name": "Relation entre C et C_m",
-            "formula": "C_m = C · M",
-            "note": "C en mol·L⁻¹, M en g·mol⁻¹, C_m en g·L⁻¹."
-          }
-        ],
-        "keyRule": "Dans une équation d'oxydoréduction globale, les électrons cédés par le réducteur doivent toujours être rigoureusement égaux aux électrons captés par l'oxydant (aucun électron libre n'apparaît dans l'équation bilan).",
-        "workedExample": {
-          "title": "Exemple résolu : Préparation par dilution d'une solution",
-          "statement": "On souhaite préparer un volume V_f = 100 mL d'une solution de permanganate de potassium à C_f = 2,0 × 10⁻³ mol·L⁻¹ à partir d'une solution mère à C_i = 5,0 × 10⁻² mol·L⁻¹. Quel volume de solution mère V_i faut-il prélever ?",
-          "methodSteps": [
-            "Étape 1 : Poser la loi de conservation de la quantité de matière de soluté : C_i · V_i = C_f · V_f.",
-            "Étape 2 : Isoler le volume mère à prélever : V_i = (C_f · V_f) / C_i.",
-            "Étape 3 : Calculer le facteur de dilution : F = C_i / C_f = (5,0 × 10⁻²) / (2,0 × 10⁻³) = 25.",
-            "Étape 4 : Calculer V_i : V_i = V_f / F = 100 mL / 25 = 4,0 mL."
-          ],
-          "conclusion": "Il faut prélever 4,0 mL de solution mère à l'aide d'une pipette jaugée munie d'une pro-pipette."
-        },
-        "exercises": [
-          {
-            "prompt": "Quelle est la concentration molaire C d'une solution contenant 0,05 mol de soluté dans 250 mL de solution ?",
-            "options": [
-              "0,20 mol·L⁻¹",
-              "0,05 mol·L⁻¹",
-              "0,0125 mol·L⁻¹",
-              "0,50 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "V = 250 mL = 0,250 L. C = n / V = 0,05 / 0,250 = 0,20 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p2_ex1",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Par définition, que fait un réducteur lors d'une réaction d'oxydoréduction ?",
-            "options": [
-              "Il cède un ou plusieurs électrons",
-              "Il capte un ou plusieurs électrons",
-              "Il capte un proton H⁺",
-              "Il neutralise les charges"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Un réducteur est un donneur d'électrons (il subit une oxydation) : Red → Ox + n e⁻.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p2_ex2",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Combien d'électrons sont échangés dans la demi-équation du couple MnO₄⁻ / Mn²⁺ en milieu acide ?",
-            "options": [
-              "5 électrons",
-              "2 électrons",
-              "7 électrons",
-              "1 électron"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "MnO₄⁻ + 8 H⁺ + 5 e⁻ ⇌ Mn²⁺ + 4 H₂O. Le manganèse passe du degré d'oxydation +VII à +II, échangeant 5 électrons.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p2_ex3",
-            "type": "mcq"
-          },
-          {
-            "prompt": "On dilue 10 fois une solution mère de concentration C₀ = 0,10 mol·L⁻¹. Quelle est la nouvelle concentration ?",
-            "options": [
-              "0,010 mol·L⁻¹",
-              "1,0 mol·L⁻¹",
-              "0,001 mol·L⁻¹",
-              "0,050 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Diluer 10 fois signifie que le facteur de dilution est F = 10, d'où C_f = C₀ / 10 = 0,010 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p2_ex4",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quel est le nombre d'oxydation du fer dans l'ion Fe³⁺ ?",
-            "options": [
-              "+III",
-              "+II",
-              "0",
-              "-III"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour un ion monoatomique, le nombre d'oxydation est égal à sa charge électrique, soit +III.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p2_ex5",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Si la masse molaire du glucose est M = 180 g·mol⁻¹, quelle masse faut-il pour préparer 500 mL à 0,10 mol·L⁻¹ ?",
-            "options": [
-              "9,0 g",
-              "18,0 g",
-              "4,5 g",
-              "90 g"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "n = C · V = 0,10 × 0,500 = 0,05 mol. m = n · M = 0,05 × 180 = 9,0 g.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p2_ex6",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Dans la réaction Zn + Cu²⁺ → Zn²⁺ + Cu, quelle espèce est oxydée ?",
-            "options": [
-              "Le zinc Zn (qui perd 2 électrons)",
-              "L'ion cuivre Cu²⁺",
-              "L'eau",
-              "L'ion zinc Zn²⁺"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le zinc passe de Zn à Zn²⁺ en cédant 2 électrons : Zn subit une oxydation, il est oxydé.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p2_ex7",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quelle verrerie de précision doit-on obligatoirement utiliser pour préparer une solution étalon par dilution ?",
-            "options": [
-              "Une pipette jaugée et une fiole jaugée",
-              "Une éprouvette graduée et un bêcher",
-              "Un erlenmeyer et un entonnoir",
-              "Un verre à pied et un agitateur"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour une dilution de précision, le prélèvement s'effectue à la pipette jaugée et le mélange final dans une fiole jaugée.",
-            "id": "seconde_c_physique_chimie_ch2_la_mole_et_la_concentration_molaire_p2_ex8",
-            "type": "mcq"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse",
-    "subjectId": "physique_chimie",
-    "gradeLevel": "seconde_c",
-    "order": 3,
     "officialVolumeHours": 16,
     "title": "Mouvements et vitesse",
     "summary": "Référentiels, trajectoire, vecteur vitesse moyenne et instantanée.",
     "points": [
       {
-        "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p1",
+        "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p1",
         "order": 1,
         "title": "Mouvements et vitesse : Notions Fondamentales & Lois",
         "summary": "Vecteur vitesse, accélération, repère de Frenet, mouvements rectilignes et circulaires.",
@@ -46009,7 +45441,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Dans la base de Frenet, la composante normale de l'accélération est a_n = v² / R.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p1_ex1",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p1_ex1",
             "type": "mcq"
           },
           {
@@ -46022,7 +45454,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "L'accélération tangentielle est a_t = dv/dt. Comme la vitesse est constante en valeur, sa dérivée est nulle : a_t = 0.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p1_ex2",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p1_ex2",
             "type": "mcq"
           },
           {
@@ -46035,7 +45467,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "v(t) = a · t = 4,0 × 3,0 = 12 m·s⁻¹.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p1_ex3",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p1_ex3",
             "type": "mcq"
           },
           {
@@ -46048,7 +45480,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "x(t) = 1/2 a t² = 0,5 × 4,0 × (3,0)² = 2,0 × 9 = 18 m.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p1_ex4",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p1_ex4",
             "type": "mcq"
           },
           {
@@ -46061,7 +45493,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Pour convertir des km/h en m·s⁻¹, on divise par 3,6 : 90 / 3,6 = 25 m·s⁻¹.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p1_ex5",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p1_ex5",
             "type": "mcq"
           },
           {
@@ -46074,7 +45506,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "En dérivant deux fois par rapport au temps : v(t) = -ω X_m sin(ω t) et a(t) = -ω² X_m cos(ω t) = -ω² x(t).",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p1_ex6",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p1_ex6",
             "type": "mcq"
           },
           {
@@ -46087,7 +45519,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Par définition cinématique, le vecteur vitesse v = dOM/dt est toujours tangent à la trajectoire au point considéré.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p1_ex7",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p1_ex7",
             "type": "mcq"
           },
           {
@@ -46100,13 +45532,13 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "v = R · ω = 2,0 × 5,0 = 10 m·s⁻¹.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p1_ex8",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p1_ex8",
             "type": "mcq"
           }
         ]
       },
       {
-        "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p2",
+        "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p2",
         "order": 2,
         "title": "Mouvements et vitesse : Protocoles & Résolution d'Exercices",
         "summary": "Méthodologie expérimentale, calculs littéraux et applications types aux interrogations.",
@@ -46151,7 +45583,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Dans la base de Frenet, la composante normale de l'accélération est a_n = v² / R.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p2_ex1",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p2_ex1",
             "type": "mcq"
           },
           {
@@ -46164,7 +45596,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "L'accélération tangentielle est a_t = dv/dt. Comme la vitesse est constante en valeur, sa dérivée est nulle : a_t = 0.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p2_ex2",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p2_ex2",
             "type": "mcq"
           },
           {
@@ -46177,7 +45609,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "v(t) = a · t = 4,0 × 3,0 = 12 m·s⁻¹.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p2_ex3",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p2_ex3",
             "type": "mcq"
           },
           {
@@ -46190,7 +45622,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "x(t) = 1/2 a t² = 0,5 × 4,0 × (3,0)² = 2,0 × 9 = 18 m.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p2_ex4",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p2_ex4",
             "type": "mcq"
           },
           {
@@ -46203,7 +45635,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Pour convertir des km/h en m·s⁻¹, on divise par 3,6 : 90 / 3,6 = 25 m·s⁻¹.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p2_ex5",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p2_ex5",
             "type": "mcq"
           },
           {
@@ -46216,7 +45648,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "En dérivant deux fois par rapport au temps : v(t) = -ω X_m sin(ω t) et a(t) = -ω² X_m cos(ω t) = -ω² x(t).",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p2_ex6",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p2_ex6",
             "type": "mcq"
           },
           {
@@ -46229,7 +45661,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Par définition cinématique, le vecteur vitesse v = dOM/dt est toujours tangent à la trajectoire au point considéré.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p2_ex7",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p2_ex7",
             "type": "mcq"
           },
           {
@@ -46242,7 +45674,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "v = R · ω = 2,0 × 5,0 = 10 m·s⁻¹.",
-            "id": "seconde_c_physique_chimie_ch3_mouvements_et_vitesse_p2_ex8",
+            "id": "seconde_c_physique_ch3_mouvements_et_vitesse_p2_ex8",
             "type": "mcq"
           }
         ]
@@ -46250,16 +45682,16 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
     ]
   },
   {
-    "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie",
+    "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie",
     "subjectId": "physique_chimie",
     "gradeLevel": "seconde_c",
-    "order": 4,
+    "order": 2,
     "officialVolumeHours": 18,
     "title": "Les forces et le principe d'inertie",
     "summary": "Forces de contact et à distance, 1ère loi de Newton et équilibre d'un solide.",
     "points": [
       {
-        "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p1",
+        "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p1",
         "order": 1,
         "title": "Les forces et le principe d'inertie : Notions Fondamentales & Lois",
         "summary": "Deuxième loi de Newton, principe fondamental de la dynamique, équations horaires et trajectoire d'un projectile.",
@@ -46299,7 +45731,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Σ F = P = m g. Par la 2ème loi de Newton, m a = m g, d'où a = g.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p1_ex1",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p1_ex1",
             "type": "mcq"
           },
           {
@@ -46312,7 +45744,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Comme aucune force n'agit selon l'axe horizontal Ox, a_x = 0, la vitesse v_x reste strictement constante.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p1_ex2",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p1_ex2",
             "type": "mcq"
           },
           {
@@ -46325,7 +45757,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La portée est proportionnelle à sin(2α). Elle est maximale lorsque sin(2α) = 1, c'est-à-dire 2α = 90°, d'où α = 45°.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p1_ex3",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p1_ex3",
             "type": "mcq"
           },
           {
@@ -46338,7 +45770,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "a = F / m = 6,0 / 2,0 = 3,0 m·s⁻².",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p1_ex4",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p1_ex4",
             "type": "mcq"
           },
           {
@@ -46351,7 +45783,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Au sommet de la trajectoire (la flèche), le projectile cesse de monter avant de redescendre : sa vitesse verticale s'annule momentanément.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p1_ex5",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p1_ex5",
             "type": "mcq"
           },
           {
@@ -46364,7 +45796,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Les trois lois de Newton ne sont valables que dans un référentiel galiléen (ou inertiel).",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p1_ex6",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p1_ex6",
             "type": "mcq"
           },
           {
@@ -46377,7 +45809,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "L'équation de la trajectoire y(x) ne dépend pas de la masse m : tous les corps ont la même trajectoire dans le vide.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p1_ex7",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p1_ex7",
             "type": "mcq"
           },
           {
@@ -46390,13 +45822,13 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le théorème de l'énergie cinétique stipule que la variation d'énergie cinétique entre deux points est égale à la somme des travaux des forces extérieures.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p1_ex8",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p1_ex8",
             "type": "mcq"
           }
         ]
       },
       {
-        "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p2",
+        "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p2",
         "order": 2,
         "title": "Les forces et le principe d'inertie : Protocoles & Résolution d'Exercices",
         "summary": "Méthodologie expérimentale, calculs littéraux et applications types aux interrogations.",
@@ -46436,7 +45868,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Σ F = P = m g. Par la 2ème loi de Newton, m a = m g, d'où a = g.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p2_ex1",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p2_ex1",
             "type": "mcq"
           },
           {
@@ -46449,7 +45881,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Comme aucune force n'agit selon l'axe horizontal Ox, a_x = 0, la vitesse v_x reste strictement constante.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p2_ex2",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p2_ex2",
             "type": "mcq"
           },
           {
@@ -46462,7 +45894,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La portée est proportionnelle à sin(2α). Elle est maximale lorsque sin(2α) = 1, c'est-à-dire 2α = 90°, d'où α = 45°.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p2_ex3",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p2_ex3",
             "type": "mcq"
           },
           {
@@ -46475,7 +45907,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "a = F / m = 6,0 / 2,0 = 3,0 m·s⁻².",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p2_ex4",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p2_ex4",
             "type": "mcq"
           },
           {
@@ -46488,7 +45920,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Au sommet de la trajectoire (la flèche), le projectile cesse de monter avant de redescendre : sa vitesse verticale s'annule momentanément.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p2_ex5",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p2_ex5",
             "type": "mcq"
           },
           {
@@ -46501,7 +45933,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Les trois lois de Newton ne sont valables que dans un référentiel galiléen (ou inertiel).",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p2_ex6",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p2_ex6",
             "type": "mcq"
           },
           {
@@ -46514,7 +45946,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "L'équation de la trajectoire y(x) ne dépend pas de la masse m : tous les corps ont la même trajectoire dans le vide.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p2_ex7",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p2_ex7",
             "type": "mcq"
           },
           {
@@ -46527,7 +45959,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le théorème de l'énergie cinétique stipule que la variation d'énergie cinétique entre deux points est égale à la somme des travaux des forces extérieures.",
-            "id": "seconde_c_physique_chimie_ch4_les_forces_et_le_principe_d_inertie_p2_ex8",
+            "id": "seconde_c_physique_ch4_les_forces_et_le_principe_d_inertie_p2_ex8",
             "type": "mcq"
           }
         ]
@@ -46535,16 +45967,16 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
     ]
   },
   {
-    "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle",
+    "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle",
     "subjectId": "physique_chimie",
     "gradeLevel": "seconde_c",
-    "order": 5,
+    "order": 3,
     "officialVolumeHours": 16,
     "title": "Loi de la gravitation universelle",
     "summary": "Interaction gravitationnelle de Newton F = G . m1.m2 / d^2 et champ de pesanteur.",
     "points": [
       {
-        "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p1",
+        "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p1",
         "order": 1,
         "title": "Loi de la gravitation universelle : Notions Fondamentales & Lois",
         "summary": "Loi de gravitation universelle, lois de Kepler, vitesse orbitale et satellite géostationnaire.",
@@ -46584,7 +46016,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La masse du satellite se simplifie dans l'équation fondamentale m a = G M m / r², donc la vitesse ne dépend pas de m.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p1_ex1",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p1_ex1",
             "type": "mcq"
           },
           {
@@ -46597,7 +46029,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Pour rester fixe au-dessus d'un point terrestre, le satellite doit tourner à la même vitesse angulaire que la Terre, soit T = 24 h.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p1_ex2",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p1_ex2",
             "type": "mcq"
           },
           {
@@ -46610,7 +46042,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La 1ère loi de Kepler (loi des orbites) affirme que les trajectoires des planètes sont des ellipses avec le Soleil à l'un des deux foyers.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p1_ex3",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p1_ex3",
             "type": "mcq"
           },
           {
@@ -46623,7 +46055,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le calcul à partir de la 3ème loi de Kepler donne r ≈ 42 164 km, d'où h = r - R_T ≈ 42 164 - 6 371 ≈ 35 800 km ≈ 36 000 km.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p1_ex4",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p1_ex4",
             "type": "mcq"
           },
           {
@@ -46636,7 +46068,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "T² ∝ r³. Si r est multiplié par 4, r³ est multiplié par 64. Donc T = √64 = 8 fois plus grande.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p1_ex5",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p1_ex5",
             "type": "mcq"
           },
           {
@@ -46649,7 +46081,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Seul le plan équatorial permet au satellite de rester constamment à la verticale d'une même latitude (latitude 0°).",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p1_ex6",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p1_ex6",
             "type": "mcq"
           },
           {
@@ -46662,7 +46094,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La loi des aires implique que la planète va plus vite lorsqu'elle est proche du Soleil (périhélie) que lorsqu'elle est loin (aphélie).",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p1_ex7",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p1_ex7",
             "type": "mcq"
           },
           {
@@ -46675,13 +46107,13 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Une fois satellisé, un satellite est en chute libre perpétuelle autour de la Terre uniquement guidé par la gravitation.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p1_ex8",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p1_ex8",
             "type": "mcq"
           }
         ]
       },
       {
-        "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p2",
+        "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p2",
         "order": 2,
         "title": "Loi de la gravitation universelle : Protocoles & Résolution d'Exercices",
         "summary": "Méthodologie expérimentale, calculs littéraux et applications types aux interrogations.",
@@ -46721,7 +46153,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La masse du satellite se simplifie dans l'équation fondamentale m a = G M m / r², donc la vitesse ne dépend pas de m.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p2_ex1",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p2_ex1",
             "type": "mcq"
           },
           {
@@ -46734,7 +46166,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Pour rester fixe au-dessus d'un point terrestre, le satellite doit tourner à la même vitesse angulaire que la Terre, soit T = 24 h.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p2_ex2",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p2_ex2",
             "type": "mcq"
           },
           {
@@ -46747,7 +46179,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La 1ère loi de Kepler (loi des orbites) affirme que les trajectoires des planètes sont des ellipses avec le Soleil à l'un des deux foyers.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p2_ex3",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p2_ex3",
             "type": "mcq"
           },
           {
@@ -46760,7 +46192,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le calcul à partir de la 3ème loi de Kepler donne r ≈ 42 164 km, d'où h = r - R_T ≈ 42 164 - 6 371 ≈ 35 800 km ≈ 36 000 km.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p2_ex4",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p2_ex4",
             "type": "mcq"
           },
           {
@@ -46773,7 +46205,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "T² ∝ r³. Si r est multiplié par 4, r³ est multiplié par 64. Donc T = √64 = 8 fois plus grande.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p2_ex5",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p2_ex5",
             "type": "mcq"
           },
           {
@@ -46786,7 +46218,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Seul le plan équatorial permet au satellite de rester constamment à la verticale d'une même latitude (latitude 0°).",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p2_ex6",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p2_ex6",
             "type": "mcq"
           },
           {
@@ -46799,7 +46231,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La loi des aires implique que la planète va plus vite lorsqu'elle est proche du Soleil (périhélie) que lorsqu'elle est loin (aphélie).",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p2_ex7",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p2_ex7",
             "type": "mcq"
           },
           {
@@ -46812,7 +46244,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Une fois satellisé, un satellite est en chute libre perpétuelle autour de la Terre uniquement guidé par la gravitation.",
-            "id": "seconde_c_physique_chimie_ch5_loi_de_la_gravitation_universelle_p2_ex8",
+            "id": "seconde_c_physique_ch5_loi_de_la_gravitation_universelle_p2_ex8",
             "type": "mcq"
           }
         ]
@@ -46820,16 +46252,16 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
     ]
   },
   {
-    "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance",
+    "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance",
     "subjectId": "physique_chimie",
     "gradeLevel": "seconde_c",
-    "order": 6,
+    "order": 4,
     "officialVolumeHours": 18,
     "title": "Travail d'une force et puissance",
     "summary": "Produit scalaire W = F . AB . cos(alpha), travail moteur et résistant.",
     "points": [
       {
-        "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p1",
+        "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p1",
         "order": 1,
         "title": "Travail d'une force et puissance : Notions Fondamentales & Lois",
         "summary": "Deuxième loi de Newton, principe fondamental de la dynamique, équations horaires et trajectoire d'un projectile.",
@@ -46869,7 +46301,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Σ F = P = m g. Par la 2ème loi de Newton, m a = m g, d'où a = g.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p1_ex1",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p1_ex1",
             "type": "mcq"
           },
           {
@@ -46882,7 +46314,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Comme aucune force n'agit selon l'axe horizontal Ox, a_x = 0, la vitesse v_x reste strictement constante.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p1_ex2",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p1_ex2",
             "type": "mcq"
           },
           {
@@ -46895,7 +46327,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La portée est proportionnelle à sin(2α). Elle est maximale lorsque sin(2α) = 1, c'est-à-dire 2α = 90°, d'où α = 45°.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p1_ex3",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p1_ex3",
             "type": "mcq"
           },
           {
@@ -46908,7 +46340,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "a = F / m = 6,0 / 2,0 = 3,0 m·s⁻².",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p1_ex4",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p1_ex4",
             "type": "mcq"
           },
           {
@@ -46921,7 +46353,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Au sommet de la trajectoire (la flèche), le projectile cesse de monter avant de redescendre : sa vitesse verticale s'annule momentanément.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p1_ex5",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p1_ex5",
             "type": "mcq"
           },
           {
@@ -46934,7 +46366,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Les trois lois de Newton ne sont valables que dans un référentiel galiléen (ou inertiel).",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p1_ex6",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p1_ex6",
             "type": "mcq"
           },
           {
@@ -46947,7 +46379,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "L'équation de la trajectoire y(x) ne dépend pas de la masse m : tous les corps ont la même trajectoire dans le vide.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p1_ex7",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p1_ex7",
             "type": "mcq"
           },
           {
@@ -46960,13 +46392,13 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le théorème de l'énergie cinétique stipule que la variation d'énergie cinétique entre deux points est égale à la somme des travaux des forces extérieures.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p1_ex8",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p1_ex8",
             "type": "mcq"
           }
         ]
       },
       {
-        "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p2",
+        "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p2",
         "order": 2,
         "title": "Travail d'une force et puissance : Protocoles & Résolution d'Exercices",
         "summary": "Méthodologie expérimentale, calculs littéraux et applications types aux interrogations.",
@@ -47006,7 +46438,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Σ F = P = m g. Par la 2ème loi de Newton, m a = m g, d'où a = g.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p2_ex1",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p2_ex1",
             "type": "mcq"
           },
           {
@@ -47019,7 +46451,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Comme aucune force n'agit selon l'axe horizontal Ox, a_x = 0, la vitesse v_x reste strictement constante.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p2_ex2",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p2_ex2",
             "type": "mcq"
           },
           {
@@ -47032,7 +46464,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La portée est proportionnelle à sin(2α). Elle est maximale lorsque sin(2α) = 1, c'est-à-dire 2α = 90°, d'où α = 45°.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p2_ex3",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p2_ex3",
             "type": "mcq"
           },
           {
@@ -47045,7 +46477,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "a = F / m = 6,0 / 2,0 = 3,0 m·s⁻².",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p2_ex4",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p2_ex4",
             "type": "mcq"
           },
           {
@@ -47058,7 +46490,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Au sommet de la trajectoire (la flèche), le projectile cesse de monter avant de redescendre : sa vitesse verticale s'annule momentanément.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p2_ex5",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p2_ex5",
             "type": "mcq"
           },
           {
@@ -47071,7 +46503,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Les trois lois de Newton ne sont valables que dans un référentiel galiléen (ou inertiel).",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p2_ex6",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p2_ex6",
             "type": "mcq"
           },
           {
@@ -47084,7 +46516,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "L'équation de la trajectoire y(x) ne dépend pas de la masse m : tous les corps ont la même trajectoire dans le vide.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p2_ex7",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p2_ex7",
             "type": "mcq"
           },
           {
@@ -47097,7 +46529,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le théorème de l'énergie cinétique stipule que la variation d'énergie cinétique entre deux points est égale à la somme des travaux des forces extérieures.",
-            "id": "seconde_c_physique_chimie_ch6_travail_d_une_force_et_puissance_p2_ex8",
+            "id": "seconde_c_physique_ch6_travail_d_une_force_et_puissance_p2_ex8",
             "type": "mcq"
           }
         ]
@@ -47105,301 +46537,16 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
     ]
   },
   {
-    "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement",
+    "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere",
     "subjectId": "physique_chimie",
     "gradeLevel": "seconde_c",
-    "order": 7,
-    "officialVolumeHours": 18,
-    "title": "Réactions chimiques et tableau d'avancement",
-    "summary": "Équation bilan, réactif limitant et avancement maximal xmax.",
-    "points": [
-      {
-        "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p1",
-        "order": 1,
-        "title": "Réactions chimiques et tableau d'avancement : Notions Fondamentales & Lois",
-        "summary": "Concentrations molaires et massiques, facteur de dilution, couples redox et équilibrage des demi-équations.",
-        "conceptExplanation": "L'étude quantitative des solutions aqueuses et des transferts d'électrons est indispensable en chimie.\n\n1. Grandeurs fondamentales des solutions :\n- Quantité de matière : n = m / M (en mol).\n- Concentration molaire : C = n / V (en mol·L⁻¹).\n- Concentration massique : C_m = m / V = C · M (en g·L⁻¹).\n- Dilution : lors d'une dilution, la quantité de matière de soluté se conserve : C_initial · V_initial = C_final · V_final.\n  Facteur de dilution : F = C_initial / C_final = V_final / V_initial.\n\n2. Réactions d'oxydoréduction :\n- Un oxydant est une espèce chimique capable de capter au moins un électron : Ox + n e⁻ ⇌ Red.\n- Un réducteur est une espèce chimique capable de céder au moins un électron : Red ⇌ Ox + n e⁻.\n- Équilibrage des demi-équations en milieu acide :\n  1. Équilibrer les éléments chimiques autres que O et H.\n  2. Équilibrer l'élément oxygène O en ajoutant des molécules d'eau H₂O.\n  3. Équilibrer l'élément hydrogène H en ajoutant des ions H⁺ (ou H₃O⁺).\n  4. Équilibrer la charge électrique globale en ajoutant des électrons e⁻.",
-        "formulas": [
-          {
-            "name": "Conservation de matière en dilution",
-            "formula": "C_i · V_i = C_f · V_f  ⇒  V_i = (C_f · V_f) / C_i",
-            "note": "Le facteur de dilution est F = C_i / C_f = V_f / V_i > 1."
-          },
-          {
-            "name": "Relation entre C et C_m",
-            "formula": "C_m = C · M",
-            "note": "C en mol·L⁻¹, M en g·mol⁻¹, C_m en g·L⁻¹."
-          }
-        ],
-        "keyRule": "Dans une équation d'oxydoréduction globale, les électrons cédés par le réducteur doivent toujours être rigoureusement égaux aux électrons captés par l'oxydant (aucun électron libre n'apparaît dans l'équation bilan).",
-        "workedExample": {
-          "title": "Exemple résolu : Préparation par dilution d'une solution",
-          "statement": "On souhaite préparer un volume V_f = 100 mL d'une solution de permanganate de potassium à C_f = 2,0 × 10⁻³ mol·L⁻¹ à partir d'une solution mère à C_i = 5,0 × 10⁻² mol·L⁻¹. Quel volume de solution mère V_i faut-il prélever ?",
-          "methodSteps": [
-            "Étape 1 : Poser la loi de conservation de la quantité de matière de soluté : C_i · V_i = C_f · V_f.",
-            "Étape 2 : Isoler le volume mère à prélever : V_i = (C_f · V_f) / C_i.",
-            "Étape 3 : Calculer le facteur de dilution : F = C_i / C_f = (5,0 × 10⁻²) / (2,0 × 10⁻³) = 25.",
-            "Étape 4 : Calculer V_i : V_i = V_f / F = 100 mL / 25 = 4,0 mL."
-          ],
-          "conclusion": "Il faut prélever 4,0 mL de solution mère à l'aide d'une pipette jaugée munie d'une pro-pipette."
-        },
-        "exercises": [
-          {
-            "prompt": "Quelle est la concentration molaire C d'une solution contenant 0,05 mol de soluté dans 250 mL de solution ?",
-            "options": [
-              "0,20 mol·L⁻¹",
-              "0,05 mol·L⁻¹",
-              "0,0125 mol·L⁻¹",
-              "0,50 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "V = 250 mL = 0,250 L. C = n / V = 0,05 / 0,250 = 0,20 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p1_ex1",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Par définition, que fait un réducteur lors d'une réaction d'oxydoréduction ?",
-            "options": [
-              "Il cède un ou plusieurs électrons",
-              "Il capte un ou plusieurs électrons",
-              "Il capte un proton H⁺",
-              "Il neutralise les charges"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Un réducteur est un donneur d'électrons (il subit une oxydation) : Red → Ox + n e⁻.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p1_ex2",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Combien d'électrons sont échangés dans la demi-équation du couple MnO₄⁻ / Mn²⁺ en milieu acide ?",
-            "options": [
-              "5 électrons",
-              "2 électrons",
-              "7 électrons",
-              "1 électron"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "MnO₄⁻ + 8 H⁺ + 5 e⁻ ⇌ Mn²⁺ + 4 H₂O. Le manganèse passe du degré d'oxydation +VII à +II, échangeant 5 électrons.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p1_ex3",
-            "type": "mcq"
-          },
-          {
-            "prompt": "On dilue 10 fois une solution mère de concentration C₀ = 0,10 mol·L⁻¹. Quelle est la nouvelle concentration ?",
-            "options": [
-              "0,010 mol·L⁻¹",
-              "1,0 mol·L⁻¹",
-              "0,001 mol·L⁻¹",
-              "0,050 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Diluer 10 fois signifie que le facteur de dilution est F = 10, d'où C_f = C₀ / 10 = 0,010 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p1_ex4",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quel est le nombre d'oxydation du fer dans l'ion Fe³⁺ ?",
-            "options": [
-              "+III",
-              "+II",
-              "0",
-              "-III"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour un ion monoatomique, le nombre d'oxydation est égal à sa charge électrique, soit +III.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p1_ex5",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Si la masse molaire du glucose est M = 180 g·mol⁻¹, quelle masse faut-il pour préparer 500 mL à 0,10 mol·L⁻¹ ?",
-            "options": [
-              "9,0 g",
-              "18,0 g",
-              "4,5 g",
-              "90 g"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "n = C · V = 0,10 × 0,500 = 0,05 mol. m = n · M = 0,05 × 180 = 9,0 g.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p1_ex6",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Dans la réaction Zn + Cu²⁺ → Zn²⁺ + Cu, quelle espèce est oxydée ?",
-            "options": [
-              "Le zinc Zn (qui perd 2 électrons)",
-              "L'ion cuivre Cu²⁺",
-              "L'eau",
-              "L'ion zinc Zn²⁺"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le zinc passe de Zn à Zn²⁺ en cédant 2 électrons : Zn subit une oxydation, il est oxydé.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p1_ex7",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quelle verrerie de précision doit-on obligatoirement utiliser pour préparer une solution étalon par dilution ?",
-            "options": [
-              "Une pipette jaugée et une fiole jaugée",
-              "Une éprouvette graduée et un bêcher",
-              "Un erlenmeyer et un entonnoir",
-              "Un verre à pied et un agitateur"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour une dilution de précision, le prélèvement s'effectue à la pipette jaugée et le mélange final dans une fiole jaugée.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p1_ex8",
-            "type": "mcq"
-          }
-        ]
-      },
-      {
-        "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p2",
-        "order": 2,
-        "title": "Réactions chimiques et tableau d'avancement : Protocoles & Résolution d'Exercices",
-        "summary": "Méthodologie expérimentale, calculs littéraux et applications types aux interrogations.",
-        "conceptExplanation": "L'étude quantitative des solutions aqueuses et des transferts d'électrons est indispensable en chimie.\n\n1. Grandeurs fondamentales des solutions :\n- Quantité de matière : n = m / M (en mol).\n- Concentration molaire : C = n / V (en mol·L⁻¹).\n- Concentration massique : C_m = m / V = C · M (en g·L⁻¹).\n- Dilution : lors d'une dilution, la quantité de matière de soluté se conserve : C_initial · V_initial = C_final · V_final.\n  Facteur de dilution : F = C_initial / C_final = V_final / V_initial.\n\n2. Réactions d'oxydoréduction :\n- Un oxydant est une espèce chimique capable de capter au moins un électron : Ox + n e⁻ ⇌ Red.\n- Un réducteur est une espèce chimique capable de céder au moins un électron : Red ⇌ Ox + n e⁻.\n- Équilibrage des demi-équations en milieu acide :\n  1. Équilibrer les éléments chimiques autres que O et H.\n  2. Équilibrer l'élément oxygène O en ajoutant des molécules d'eau H₂O.\n  3. Équilibrer l'élément hydrogène H en ajoutant des ions H⁺ (ou H₃O⁺).\n  4. Équilibrer la charge électrique globale en ajoutant des électrons e⁻.",
-        "formulas": [
-          {
-            "name": "Conservation de matière en dilution",
-            "formula": "C_i · V_i = C_f · V_f  ⇒  V_i = (C_f · V_f) / C_i",
-            "note": "Le facteur de dilution est F = C_i / C_f = V_f / V_i > 1."
-          },
-          {
-            "name": "Relation entre C et C_m",
-            "formula": "C_m = C · M",
-            "note": "C en mol·L⁻¹, M en g·mol⁻¹, C_m en g·L⁻¹."
-          }
-        ],
-        "keyRule": "Dans une équation d'oxydoréduction globale, les électrons cédés par le réducteur doivent toujours être rigoureusement égaux aux électrons captés par l'oxydant (aucun électron libre n'apparaît dans l'équation bilan).",
-        "workedExample": {
-          "title": "Exemple résolu : Préparation par dilution d'une solution",
-          "statement": "On souhaite préparer un volume V_f = 100 mL d'une solution de permanganate de potassium à C_f = 2,0 × 10⁻³ mol·L⁻¹ à partir d'une solution mère à C_i = 5,0 × 10⁻² mol·L⁻¹. Quel volume de solution mère V_i faut-il prélever ?",
-          "methodSteps": [
-            "Étape 1 : Poser la loi de conservation de la quantité de matière de soluté : C_i · V_i = C_f · V_f.",
-            "Étape 2 : Isoler le volume mère à prélever : V_i = (C_f · V_f) / C_i.",
-            "Étape 3 : Calculer le facteur de dilution : F = C_i / C_f = (5,0 × 10⁻²) / (2,0 × 10⁻³) = 25.",
-            "Étape 4 : Calculer V_i : V_i = V_f / F = 100 mL / 25 = 4,0 mL."
-          ],
-          "conclusion": "Il faut prélever 4,0 mL de solution mère à l'aide d'une pipette jaugée munie d'une pro-pipette."
-        },
-        "exercises": [
-          {
-            "prompt": "Quelle est la concentration molaire C d'une solution contenant 0,05 mol de soluté dans 250 mL de solution ?",
-            "options": [
-              "0,20 mol·L⁻¹",
-              "0,05 mol·L⁻¹",
-              "0,0125 mol·L⁻¹",
-              "0,50 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "V = 250 mL = 0,250 L. C = n / V = 0,05 / 0,250 = 0,20 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p2_ex1",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Par définition, que fait un réducteur lors d'une réaction d'oxydoréduction ?",
-            "options": [
-              "Il cède un ou plusieurs électrons",
-              "Il capte un ou plusieurs électrons",
-              "Il capte un proton H⁺",
-              "Il neutralise les charges"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Un réducteur est un donneur d'électrons (il subit une oxydation) : Red → Ox + n e⁻.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p2_ex2",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Combien d'électrons sont échangés dans la demi-équation du couple MnO₄⁻ / Mn²⁺ en milieu acide ?",
-            "options": [
-              "5 électrons",
-              "2 électrons",
-              "7 électrons",
-              "1 électron"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "MnO₄⁻ + 8 H⁺ + 5 e⁻ ⇌ Mn²⁺ + 4 H₂O. Le manganèse passe du degré d'oxydation +VII à +II, échangeant 5 électrons.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p2_ex3",
-            "type": "mcq"
-          },
-          {
-            "prompt": "On dilue 10 fois une solution mère de concentration C₀ = 0,10 mol·L⁻¹. Quelle est la nouvelle concentration ?",
-            "options": [
-              "0,010 mol·L⁻¹",
-              "1,0 mol·L⁻¹",
-              "0,001 mol·L⁻¹",
-              "0,050 mol·L⁻¹"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Diluer 10 fois signifie que le facteur de dilution est F = 10, d'où C_f = C₀ / 10 = 0,010 mol·L⁻¹.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p2_ex4",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quel est le nombre d'oxydation du fer dans l'ion Fe³⁺ ?",
-            "options": [
-              "+III",
-              "+II",
-              "0",
-              "-III"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour un ion monoatomique, le nombre d'oxydation est égal à sa charge électrique, soit +III.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p2_ex5",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Si la masse molaire du glucose est M = 180 g·mol⁻¹, quelle masse faut-il pour préparer 500 mL à 0,10 mol·L⁻¹ ?",
-            "options": [
-              "9,0 g",
-              "18,0 g",
-              "4,5 g",
-              "90 g"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "n = C · V = 0,10 × 0,500 = 0,05 mol. m = n · M = 0,05 × 180 = 9,0 g.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p2_ex6",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Dans la réaction Zn + Cu²⁺ → Zn²⁺ + Cu, quelle espèce est oxydée ?",
-            "options": [
-              "Le zinc Zn (qui perd 2 électrons)",
-              "L'ion cuivre Cu²⁺",
-              "L'eau",
-              "L'ion zinc Zn²⁺"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Le zinc passe de Zn à Zn²⁺ en cédant 2 électrons : Zn subit une oxydation, il est oxydé.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p2_ex7",
-            "type": "mcq"
-          },
-          {
-            "prompt": "Quelle verrerie de précision doit-on obligatoirement utiliser pour préparer une solution étalon par dilution ?",
-            "options": [
-              "Une pipette jaugée et une fiole jaugée",
-              "Une éprouvette graduée et un bêcher",
-              "Un erlenmeyer et un entonnoir",
-              "Un verre à pied et un agitateur"
-            ],
-            "correctAnswerIndex": 0,
-            "explanation": "Pour une dilution de précision, le prélèvement s'effectue à la pipette jaugée et le mélange final dans une fiole jaugée.",
-            "id": "seconde_c_physique_chimie_ch7_reactions_chimiques_et_tableau_d_avancement_p2_ex8",
-            "type": "mcq"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere",
-    "subjectId": "physique_chimie",
-    "gradeLevel": "seconde_c",
-    "order": 8,
+    "order": 5,
     "officialVolumeHours": 16,
     "title": "Réfraction et réflexion de la lumière",
     "summary": "Lois de Snell-Descartes, indice de réfraction et réflexion totale.",
     "points": [
       {
-        "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p1",
+        "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p1",
         "order": 1,
         "title": "Réfraction et réflexion de la lumière : Notions Fondamentales & Lois",
         "summary": "Lentilles convergentes, relation de conjugaison de Descartes, vergence et grandissement.",
@@ -47444,7 +46591,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "f' = 20 cm = 0,20 m. C = 1 / f' = 1 / 0,20 = +5,0 δ.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex1",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex1",
             "type": "mcq"
           },
           {
@@ -47457,7 +46604,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Tout rayon lumineux passant par le centre optique O d'une lentille mince n'est pas dévié.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex2",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex2",
             "type": "mcq"
           },
           {
@@ -47470,7 +46617,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le signe négatif indique une image renversée. La valeur absolue |γ| = 1,5 > 1 indique un agrandissement.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex3",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex3",
             "type": "mcq"
           },
           {
@@ -47483,7 +46630,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "En plaçant l'objet entre O et F, on obtient une image virtuelle, droite et agrandie : c'est l'effet loupe.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex4",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex4",
             "type": "mcq"
           },
           {
@@ -47496,7 +46643,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Les rayons issus de l'infini arrivent parallèles entre eux et convergent exactement dans le plan focal image, au foyer image F'.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex5",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex5",
             "type": "mcq"
           },
           {
@@ -47509,7 +46656,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La vergence s'exprime en dioptries (symbole δ, équivalent à m⁻¹).",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex6",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex6",
             "type": "mcq"
           },
           {
@@ -47522,7 +46669,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le cristallin est une lentille biconvexe souple dont la courbure est modifiée par les muscles ciliaires pour faire la mise au point.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex7",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex7",
             "type": "mcq"
           },
           {
@@ -47535,13 +46682,13 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La rétine tapisse le fond de l'œil et contient les photorécepteurs (cônes et bâtonnets) jouant le rôle d'écran.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex8",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p1_ex8",
             "type": "mcq"
           }
         ]
       },
       {
-        "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p2",
+        "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p2",
         "order": 2,
         "title": "Réfraction et réflexion de la lumière : Protocoles & Résolution d'Exercices",
         "summary": "Méthodologie expérimentale, calculs littéraux et applications types aux interrogations.",
@@ -47586,7 +46733,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "f' = 20 cm = 0,20 m. C = 1 / f' = 1 / 0,20 = +5,0 δ.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex1",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex1",
             "type": "mcq"
           },
           {
@@ -47599,7 +46746,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Tout rayon lumineux passant par le centre optique O d'une lentille mince n'est pas dévié.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex2",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex2",
             "type": "mcq"
           },
           {
@@ -47612,7 +46759,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le signe négatif indique une image renversée. La valeur absolue |γ| = 1,5 > 1 indique un agrandissement.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex3",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex3",
             "type": "mcq"
           },
           {
@@ -47625,7 +46772,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "En plaçant l'objet entre O et F, on obtient une image virtuelle, droite et agrandie : c'est l'effet loupe.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex4",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex4",
             "type": "mcq"
           },
           {
@@ -47638,7 +46785,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Les rayons issus de l'infini arrivent parallèles entre eux et convergent exactement dans le plan focal image, au foyer image F'.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex5",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex5",
             "type": "mcq"
           },
           {
@@ -47651,7 +46798,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La vergence s'exprime en dioptries (symbole δ, équivalent à m⁻¹).",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex6",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex6",
             "type": "mcq"
           },
           {
@@ -47664,7 +46811,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le cristallin est une lentille biconvexe souple dont la courbure est modifiée par les muscles ciliaires pour faire la mise au point.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex7",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex7",
             "type": "mcq"
           },
           {
@@ -47677,7 +46824,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La rétine tapisse le fond de l'œil et contient les photorécepteurs (cônes et bâtonnets) jouant le rôle d'écran.",
-            "id": "seconde_c_physique_chimie_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex8",
+            "id": "seconde_c_physique_ch8_refraction_et_reflexion_de_la_lumiere_p2_ex8",
             "type": "mcq"
           }
         ]
@@ -47685,16 +46832,16 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
     ]
   },
   {
-    "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il",
+    "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il",
     "subjectId": "physique_chimie",
     "gradeLevel": "seconde_c",
-    "order": 9,
+    "order": 6,
     "officialVolumeHours": 16,
     "title": "Les lentilles minces et l'œil",
     "summary": "Formule de conjugaison de Descartes et modélisation optique.",
     "points": [
       {
-        "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p1",
+        "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p1",
         "order": 1,
         "title": "Les lentilles minces et l'œil : Notions Fondamentales & Lois",
         "summary": "Lentilles convergentes, relation de conjugaison de Descartes, vergence et grandissement.",
@@ -47739,7 +46886,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "f' = 20 cm = 0,20 m. C = 1 / f' = 1 / 0,20 = +5,0 δ.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p1_ex1",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p1_ex1",
             "type": "mcq"
           },
           {
@@ -47752,7 +46899,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Tout rayon lumineux passant par le centre optique O d'une lentille mince n'est pas dévié.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p1_ex2",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p1_ex2",
             "type": "mcq"
           },
           {
@@ -47765,7 +46912,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le signe négatif indique une image renversée. La valeur absolue |γ| = 1,5 > 1 indique un agrandissement.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p1_ex3",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p1_ex3",
             "type": "mcq"
           },
           {
@@ -47778,7 +46925,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "En plaçant l'objet entre O et F, on obtient une image virtuelle, droite et agrandie : c'est l'effet loupe.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p1_ex4",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p1_ex4",
             "type": "mcq"
           },
           {
@@ -47791,7 +46938,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Les rayons issus de l'infini arrivent parallèles entre eux et convergent exactement dans le plan focal image, au foyer image F'.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p1_ex5",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p1_ex5",
             "type": "mcq"
           },
           {
@@ -47804,7 +46951,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La vergence s'exprime en dioptries (symbole δ, équivalent à m⁻¹).",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p1_ex6",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p1_ex6",
             "type": "mcq"
           },
           {
@@ -47817,7 +46964,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le cristallin est une lentille biconvexe souple dont la courbure est modifiée par les muscles ciliaires pour faire la mise au point.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p1_ex7",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p1_ex7",
             "type": "mcq"
           },
           {
@@ -47830,13 +46977,13 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La rétine tapisse le fond de l'œil et contient les photorécepteurs (cônes et bâtonnets) jouant le rôle d'écran.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p1_ex8",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p1_ex8",
             "type": "mcq"
           }
         ]
       },
       {
-        "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p2",
+        "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p2",
         "order": 2,
         "title": "Les lentilles minces et l'œil : Protocoles & Résolution d'Exercices",
         "summary": "Méthodologie expérimentale, calculs littéraux et applications types aux interrogations.",
@@ -47881,7 +47028,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "f' = 20 cm = 0,20 m. C = 1 / f' = 1 / 0,20 = +5,0 δ.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p2_ex1",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p2_ex1",
             "type": "mcq"
           },
           {
@@ -47894,7 +47041,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Tout rayon lumineux passant par le centre optique O d'une lentille mince n'est pas dévié.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p2_ex2",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p2_ex2",
             "type": "mcq"
           },
           {
@@ -47907,7 +47054,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le signe négatif indique une image renversée. La valeur absolue |γ| = 1,5 > 1 indique un agrandissement.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p2_ex3",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p2_ex3",
             "type": "mcq"
           },
           {
@@ -47920,7 +47067,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "En plaçant l'objet entre O et F, on obtient une image virtuelle, droite et agrandie : c'est l'effet loupe.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p2_ex4",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p2_ex4",
             "type": "mcq"
           },
           {
@@ -47933,7 +47080,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Les rayons issus de l'infini arrivent parallèles entre eux et convergent exactement dans le plan focal image, au foyer image F'.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p2_ex5",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p2_ex5",
             "type": "mcq"
           },
           {
@@ -47946,7 +47093,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La vergence s'exprime en dioptries (symbole δ, équivalent à m⁻¹).",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p2_ex6",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p2_ex6",
             "type": "mcq"
           },
           {
@@ -47959,7 +47106,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "Le cristallin est une lentille biconvexe souple dont la courbure est modifiée par les muscles ciliaires pour faire la mise au point.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p2_ex7",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p2_ex7",
             "type": "mcq"
           },
           {
@@ -47972,7 +47119,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
             ],
             "correctAnswerIndex": 0,
             "explanation": "La rétine tapisse le fond de l'œil et contient les photorécepteurs (cônes et bâtonnets) jouant le rôle d'écran.",
-            "id": "seconde_c_physique_chimie_ch9_les_lentilles_minces_et_l_il_p2_ex8",
+            "id": "seconde_c_physique_ch9_les_lentilles_minces_et_l_il_p2_ex8",
             "type": "mcq"
           }
         ]
