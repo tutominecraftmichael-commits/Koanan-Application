@@ -2501,7 +2501,1608 @@ export const chimie2deCMoleEtGrandeursMolairesChapter: CurriculumChapter = {
 
 // ============================================================================
 // LEÇON 6 : ÉQUATION-BILAN D’UNE RÉACTION CHIMIQUE
+
 // ============================================================================
+// LEÇON 6 : ÉQUATION-BILAN D'UNE RÉACTION CHIMIQUE
+// ============================================================================
+
+export const chimie2deCEquationBilanChapter: CurriculumChapter = {
+  "id": "seconde_c_chimie_ch6_equation_bilan",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 6,
+  "officialVolumeHours": 8,
+  "title": "Leçon 6 — Équation-bilan d'une réaction chimique",
+  "summary": "Écriture et équilibrage d'une équation-bilan, coefficients stœchiométriques, bilan molaire, réactif limitant et en excès, loi de Lavoisier sur la conservation de la masse, bilan massique et bilan volumique des gaz.",
+  "points": [
+    {
+      "id": "seconde_c_chimie_ch6_p1",
+      "order": 1,
+      "title": "Équation-bilan, stœchiométrie et réactif limitant",
+      "summary": "Règles d'écriture et d'équilibrage d'une équation chimique, signification des coefficients stœchiométriques, proportions stœchiométriques et détermination du réactif limitant.",
+      "conceptExplanation": "Une transformation chimique est un processus au cours duquel des espèces chimiques (les réactifs) disparaissent pour former de nouvelles espèces chimiques (les produits).\n\n1. Définition de l'équation-bilan :\nL'équation-bilan est la modélisation symbolique d'une réaction chimique. Elle s'écrit de manière générale :\na A + b B -> c C + d D\n- Les espèces A et B sont les réactifs (présents à l'état initial).\n- Les espèces C et D sont les produits (présents à l'état final).\n- Les nombres a, b, c et d sont les coefficients stœchiométriques. Ce sont des nombres entiers (ou rationnels simples) choisis pour assurer la conservation de chaque type d'atome.\n- Conventions de lecture : le signe « + » signifie « réagit avec » du côté des réactifs et « et » du côté des produits ; la flèche « -> » signifie « pour donner ».\n\n2. Règle d'ajustement (équilibrage) des coefficients :\nAu cours d'une réaction chimique, aucun atome ne se crée, aucun atome ne se détruit : les atomes des réactifs se réarrangent pour former les molécules des produits.\nExemples d'équilibrage :\n- Combustion du propane dans le dioxygène : C₃H₈ + 5 O₂ -> 3 CO₂ + 4 H₂O.\n- Réduction de l'oxyde de cuivre II par le carbone : 2 CuO + C -> 2 Cu + CO₂.\n- Réaction entre l'aluminium et le soufre : 2 Al + 3 S -> Al₂S₃.\n\n3. Bilan molaire et proportions stœchiométriques :\nLes coefficients stœchiométriques indiquent les proportions dans lesquelles les quantités de matière (en moles) réagissent et se forment :\n- Pour la réaction a A + b B -> c C + d D :\n  nA(réagi) / a = nB(réagi) / b = nC(formé) / c = nD(formé) / d.\n- Mélange stœchiométrique : Si les réactifs initiaux sont introduits dans les proportions nA(initial) / a = nB(initial) / b, alors tous les réactifs sont totalement consommés en même temps à la fin de la transformation : il ne reste aucun réactif en fin de réaction.\n\n4. Réactif limitant et réactif en excès :\nLorsque les réactifs ne sont pas introduits en proportions stœchiométriques :\n- On compare les rapports molaires initiaux nA / a et nB / b :\n  * Si nA / a < nB / b : le réactif A est en défaut (il s'épuise en premier). Il est appelé le RÉACTIF LIMITANT. C'est lui qui stoppe la réaction.\n  * Le réactif B est en excès (il en reste après la fin de la réaction).\n  * Quantité restante de B : n'(B) = nB(initial) - (b / a) x nA(initial).",
+      "formulas": [
+        {
+          "name": "Bilan molaire stœchiométrique",
+          "formula": "nA / a = nB / b = nC / c = nD / d",
+          "note": "Relation fondamentale reliant les moles consommées et produites."
+        },
+        {
+          "name": "Condition du réactif limitant",
+          "formula": "Si nA / a < nB / b ⟹ A est limitant",
+          "note": "Le réactif ayant le rapport molaire initial le plus faible s'épuise en premier."
+        },
+        {
+          "name": "Quantité restante du réactif en excès",
+          "formula": "n'(B) = nB(initial) − (b/a) · nA(initial)",
+          "note": "Mole de réactif en excès n'ayant pas réagi."
+        }
+      ],
+      "keyRule": "Pour identifier le réactif limitant, on divise la quantité de matière initiale de chaque réactif par son coefficient stœchiométrique respectif. Le plus petit quotient désigne impérativement le réactif limitant.",
+      "workedExample": {
+        "title": "Identification du réactif limitant et calcul des moles produites",
+        "statement": "On mélange 0,4 mol d'aluminium métallique (Al) et 0,9 mol de soufre en poudre (S). Par chauffage, il se forme du sulfure d'aluminium Al₂S₃ selon l'équation : 2 Al + 3 S -> Al₂S₃. 1) Le mélange est-il stœchiométrique ? 2) Quel est le réactif limitant ? 3) Détermine la quantité de matière de Al₂S₃ formé et la quantité restante de réactif en excès.",
+        "methodSteps": [
+          "1. Calculer les rapports stœchiométriques initiaux : n(Al) / 2 = 0,4 / 2 = 0,20 mol ; n(S) / 3 = 0,9 / 3 = 0,30 mol.",
+          "2. Comparer les rapports : 0,20 < 0,30, donc n(Al) / 2 < n(S) / 3. Les réactifs ne sont pas en proportions stœchiométriques.",
+          "3. Identifier le réactif limitant : Le quotient le plus faible correspond à l'aluminium Al. L'aluminium Al est donc le réactif limitant (il sera entièrement consommé). Le soufre S est en excès.",
+          "4. Calculer la quantité de Al₂S₃ formé : D'après le bilan stœchiométrique basé sur le réactif limitant : n(Al₂S₃) = n(Al) / 2 = 0,4 / 2 = 0,20 mol.",
+          "5. Calculer le soufre consommé et restant : n(S réagi) = 3 x (n(Al) / 2) = 3 x 0,20 = 0,60 mol. Quantité de soufre restante : n'(S) = n(S initial) - n(S réagi) = 0,90 - 0,60 = 0,30 mol."
+        ],
+        "conclusion": "L'aluminium est le réactif limitant, il se forme 0,20 mol de Al₂S₃ et il reste 0,30 mol de soufre non consommé."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch6_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est l'équation-bilan correctement équilibrée pour la réaction entre le fer (Fe) et le dioxygène (O₂) produisant de l'oxyde ferrique (Fe₂O₃) ?",
+          "options": [
+            "4 Fe + 3 O₂ -> 2 Fe₂O₃",
+            "2 Fe + 3 O₂ -> Fe₂O₃",
+            "Fe + O₂ -> Fe₂O₃",
+            "4 Fe + O₂ -> 2 Fe₂O₃"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "4 Fe (4 atomes de fer) et 3 O₂ (6 atomes d'oxygène) donnent 2 Fe₂O₃ (4 atomes de fer et 6 atomes d'oxygène). La conservation des atomes est vérifiée."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p1_ex2",
+          "type": "mcq",
+          "prompt": "Soit la réaction 2 Al + 3 S -> Al₂S₃. Que vaut le rapport stœchiométrique reliant n(Al) et n(S) consommés ?",
+          "options": [
+            "n(Al) / 2 = n(S) / 3",
+            "2 n(Al) = 3 n(S)",
+            "n(Al) / 3 = n(S) / 2",
+            "n(Al) + n(S) = 1"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les quantités de réactifs consommés sont proportionnelles à leurs coefficients stœchiométriques respectifs : n(Al) / 2 = n(S) / 3."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p1_ex3",
+          "type": "mcq",
+          "prompt": "On fait réagir 2 moles de méthane CH₄ avec 3 moles de dioxygène O₂ selon : CH₄ + 2 O₂ -> CO₂ + 2 H₂O. Quel est le réactif limitant ?",
+          "options": [
+            "Le dioxygène O₂ car 3/2 = 1,5 < 2/1 = 2",
+            "Le méthane CH₄ car 2 < 3",
+            "Le mélange est stœchiométrique",
+            "Le dioxyde de carbone CO₂"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Rapports initiaux : n(CH₄)/1 = 2/1 = 2 mol ; n(O₂)/2 = 3/2 = 1,5 mol. Comme 1,5 < 2, O₂ est en défaut et constitue le réactif limitant."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p1_ex4",
+          "type": "mcq",
+          "prompt": "Dans la réaction 2 H₂ + O₂ -> 2 H₂O, si l'on consomme totalement 6 moles de H₂, combien de moles de H₂O sont formées ?",
+          "options": [
+            "6 moles",
+            "3 moles",
+            "12 moles",
+            "4 moles"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "D'après les coefficients stœchiométriques, n(H₂O)/2 = n(H₂)/2, ce qui signifie que n(H₂O) = n(H₂) = 6 moles."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p1_ex5",
+          "type": "mcq",
+          "prompt": "Que signifie concrètement qu'un mélange de réactifs est 'stœchiométrique' ?",
+          "options": [
+            "Tous les réactifs sont entièrement consommés à la fin de la réaction",
+            "Il y a exactement le même nombre de grammes de chaque réactif",
+            "La réaction dégage de la chaleur",
+            "L'un des réactifs reste en grande quantité"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans un mélange stœchiométrique, les proportions initiales correspondent exactement aux coefficients de l'équation : tous les réactifs disparaissent en même temps."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p1_ex6",
+          "type": "mcq",
+          "prompt": "Soit la combustion de l'éthanol : C₂H₆O + 3 O₂ -> 2 CO₂ + 3 H₂O. Combien de moles de O₂ sont nécessaires pour brûler 2 moles de C₂H₆O ?",
+          "options": [
+            "6 moles",
+            "3 moles",
+            "2 moles",
+            "5 moles"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le bilan stœchiométrique impose n(O₂)/3 = n(C₂H₆O)/1. Pour n(C₂H₆O) = 2 moles, n(O₂) = 3 x 2 = 6 moles."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p1_ex7",
+          "type": "mcq",
+          "prompt": "Soit la réaction N₂ + 3 H₂ -> 2 NH₃. Si on part de 1 mol de N₂ et 4 mol de H₂, quelle est la quantité de H₂ restante à la fin ?",
+          "options": [
+            "1 mole",
+            "3 moles",
+            "0 mole",
+            "2 moles"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "1 mol de N₂ consomme 3 x 1 = 3 mol de H₂. N₂ est le réactif limitant. Quantité de H₂ restante : 4 - 3 = 1 mole."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p1_ex8",
+          "type": "mcq",
+          "prompt": "Quel est le coefficient stœchiométrique de O₂ dans l'équation équilibrée de combustion du butane : 2 C₄H₁₀ + ... O₂ -> 8 CO₂ + 10 H₂O ?",
+          "options": [
+            "13",
+            "26",
+            "10",
+            "8"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les produits contiennent (8 x 2) + (10 x 1) = 26 atomes d'oxygène. Il faut donc 13 molécules de O₂ (13 x 2 = 26 atomes O)."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_chimie_ch6_p2",
+      "order": 2,
+      "title": "Conservation de la matière (Lavoisier), bilans massiques et volumiques",
+      "summary": "Énoncé de la loi de Lavoisier sur la conservation de la masse, calcul des bilans massiques (m = n x M), et bilans volumiques pour les corps gazeux (loi d'Avogadro-Ampère).",
+      "conceptExplanation": "La chimie quantitative moderne a été fondée par Antoine-Laurent de Lavoisier à la fin du XVIIIe siècle grâce à l'usage systématique de la balance de précision.\n\n1. Loi de conservation de la masse (Loi de Lavoisier) :\n« Au cours d'une réaction chimique dans un système fermé, la masse totale des substances formées (produits) est rigoureusement égale à la masse totale des substances consommées (réactifs transformés). »\n∑ m(réactifs consommés) = ∑ m(produits formés).\nCette loi découle directement du fait que les atomes se conservent en genre et en nombre au cours d'une transformation chimique.\n\n2. Bilan massique d'une réaction chimique :\nÀ partir de l'équation-bilan a A + b B -> c C + d D et des masses molaires respectives M(A), M(B), M(C), M(D) :\n- Les masses réagissant selon les proportions stœchiométriques sont :\n  m(A) = a x M(A), m(B) = b x M(B), m(C) = c x M(C), m(D) = d x M(D).\n- La loi de Lavoisier impose alors : [a x M(A)] + [b x M(B)] = [c x M(C)] + [d x M(D)].\n- Exemple : 3 Fe + 2 O₂ -> Fe₃O₄\n  m(Fe) = 3 x 55,8 = 167,4 g\n  m(O₂) = 2 x 32 = 64,0 g\n  Somme des réactifs = 167,4 + 64,0 = 231,4 g.\n  m(Fe₃O₄) = (3 x 55,8) + (4 x 16) = 167,4 + 64 = 231,4 g.\n  La conservation est parfaitement vérifiée.\n\n3. Bilan volumique pour les gaz (Loi d'Avogadro-Ampère) :\nD'après la loi d'Avogadro-Ampère, dans les mêmes conditions de température et de pression, des volumes égaux de gaz différents renferment le même nombre de moles (Vm est identique pour tous les gaz) :\n- Comme V = n x Vm, les volumes gazeux mesurés dans les mêmes conditions de température et de pression sont proportionnels aux coefficients stœchiométriques de l'équation :\n  VA / a = VB / b = VC / c = VD / d.\n- Exemple de combustion du propane C₃H₈ (g) + 5 O₂ (g) -> 3 CO₂ (g) + 4 H₂O (g) :\n  1 volume de C₃H₈ consomme 5 volumes de O₂ pour former 3 volumes de CO₂ et 4 volumes de vapeur d'eau :\n  V(O₂) = 5 x V(C₃H₈) et V(CO₂) = 3 x V(C₃H₈).\n- Volume d'air nécessaire : Comme l'air contient en volume environ 20% (1/5) de dioxygène et 80% (4/5) de diazote, le volume d'air nécessaire à une combustion complète vaut :\n  V(air) = 5 x V(O₂).",
+      "formulas": [
+        {
+          "name": "Loi de conservation de la masse",
+          "formula": "∑ m(réactifs consommés) = ∑ m(produits formés)",
+          "note": "Principe de Lavoisier fondamental en système fermé."
+        },
+        {
+          "name": "Relation masse et mole",
+          "formula": "m = n × M",
+          "note": "Permet de convertir un bilan molaire en bilan massique."
+        },
+        {
+          "name": "Bilan volumique des gaz (à T et P constantes)",
+          "formula": "VA / a = VB / b = VC / c",
+          "note": "Proportionnalité directe des volumes gazeux (loi d'Avogadro-Ampère)."
+        },
+        {
+          "name": "Volume d'air pour une combustion",
+          "formula": "V(air) = 5 × V(O₂)",
+          "note": "L'air contient environ 20% de dioxygène en volume."
+        }
+      ],
+      "keyRule": "La masse totale se conserve toujours au cours d'une réaction chimique. Pour des gaz dans les mêmes conditions de température et de pression, les volumes réagissent et se forment exactement dans le rapport des coefficients stœchiométriques.",
+      "workedExample": {
+        "title": "Calcul du bilan volumique et de la masse formée lors d'une combustion",
+        "statement": "On brûle complètement 20 cm³ de gaz butane (C₄H₁₀) dans du dioxygène pur selon l'équation : 2 C₄H₁₀ (g) + 13 O₂ (g) -> 8 CO₂ (g) + 10 H₂O (l). 1) Calcule le volume de O₂ nécessaire et le volume d'air correspondant. 2) Calcule le volume de CO₂ gazeux dégagé dans les mêmes conditions.",
+        "methodSteps": [
+          "1. Établir la relation volumique stœchiométrique entre les gaz : V(C₄H₁₀) / 2 = V(O₂) / 13 = V(CO₂) / 8.",
+          "2. Calculer le volume de dioxygène V(O₂) : V(O₂) = (13 / 2) x V(C₄H₁₀) = 6,5 x 20 = 130 cm³.",
+          "3. Calculer le volume d'air correspondant : L'air contenant environ 20% de O₂, V(air) = 5 x V(O₂) = 5 x 130 = 650 cm³.",
+          "4. Calculer le volume de CO₂ dégagé : V(CO₂) = (8 / 2) x V(C₄H₁₀) = 4 x 20 = 80 cm³."
+        ],
+        "conclusion": "La combustion de 20 cm³ de butane nécessite 130 cm³ de O₂ (soit 650 cm³ d'air) et produit 80 cm³ de CO₂ gazeux."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch6_p2_ex1",
+          "type": "mcq",
+          "prompt": "Que stipule la loi de Lavoisier lors d'une réaction chimique dans un système fermé ?",
+          "options": [
+            "La masse totale des produits formés est égale à la masse totale des réactifs consommés",
+            "Le volume des gaz double toujours au cours de la réaction",
+            "Le nombre total de molécules reste constant",
+            "La masse diminue toujours avec le dégagement de chaleur"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Lavoisier a établi que rien ne se perd, rien ne se crée : la masse totale des réactifs transformés est rigoureusement égale à la masse totale des produits formés."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p2_ex2",
+          "type": "mcq",
+          "prompt": "On chauffe 10 g de calcaire CaCO₃ qui se décompose en 5,6 g d'oxyde de calcium CaO et un dégagement de dioxyde de carbone CO₂. Quelle est la masse de CO₂ dégagée ?",
+          "options": [
+            "4,4 g",
+            "5,6 g",
+            "10 g",
+            "15,6 g"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "D'après la loi de Lavoisier : m(CaCO₃) = m(CaO) + m(CO₂). Donc m(CO₂) = 10 - 5,6 = 4,4 g."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p2_ex3",
+          "type": "mcq",
+          "prompt": "Pour la réaction gazeuse CH₄ + 2 O₂ -> CO₂ + 2 H₂O (vapeur), quel volume de dioxygène est nécessaire pour brûler 15 L de méthane dans les mêmes conditions ?",
+          "options": [
+            "30 L",
+            "15 L",
+            "7,5 L",
+            "60 L"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "D'après les coefficients stœchiométriques gazeux : V(O₂) = 2 x V(CH₄) = 2 x 15 = 30 L."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p2_ex4",
+          "type": "mcq",
+          "prompt": "Si une réaction consomme 20 L de dioxygène pur, quel volume d'air contenant 20% de dioxygène a été prélevé ?",
+          "options": [
+            "100 L",
+            "4 L",
+            "40 L",
+            "200 L"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "V(air) = 5 x V(O₂) = 5 x 20 L = 100 L."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p2_ex5",
+          "type": "mcq",
+          "prompt": "Dans la réaction 2 H₂ (g) + O₂ (g) -> 2 H₂O (g), quel est le volume de vapeur d'eau formé à partir de 10 L de dihydrogène ?",
+          "options": [
+            "10 L",
+            "5 L",
+            "20 L",
+            "15 L"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le rapport volumique donne V(H₂O)/2 = V(H₂)/2, soit V(H₂O) = V(H₂) = 10 L."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p2_ex6",
+          "type": "mcq",
+          "prompt": "On fait réagir 12 g de carbone avec 32 g de dioxygène pour former du dioxyde de carbone CO₂ selon C + O₂ -> CO₂. Quelle masse de CO₂ obtient-on ?",
+          "options": [
+            "44 g",
+            "20 g",
+            "32 g",
+            "24 g"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les réactifs sont en proportions stœchiométriques (1 mol de C réagit avec 1 mol de O₂). Masse de CO₂ = 12 + 32 = 44 g."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p2_ex7",
+          "type": "mcq",
+          "prompt": "Pourquoi peut-on utiliser directement les volumes au lieu des quantités de matière pour une réaction entre corps gazeux ?",
+          "options": [
+            "Car selon la loi d'Avogadro-Ampère, le volume molaire est identique pour tous les gaz dans les mêmes conditions",
+            "Car tous les gaz ont la même masse volumique",
+            "Car les gaz ne possèdent pas de masse molaire",
+            "Car le volume d'un gaz est indépendant de la température"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "À même température et pression, V = n x Vm avec Vm identique pour tous les gaz. Les rapports volumiques sont donc strictement égaux aux rapports molaires."
+        },
+        {
+          "id": "seconde_c_chimie_ch6_p2_ex8",
+          "type": "mcq",
+          "prompt": "Soit la réaction N₂ (g) + 3 H₂ (g) -> 2 NH₃ (g). Si 60 L de dihydrogène réagissent totalement, quel volume d'ammoniac NH₃ obtient-on ?",
+          "options": [
+            "40 L",
+            "20 L",
+            "60 L",
+            "120 L"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "V(NH₃) / 2 = V(H₂) / 3 ⟹ V(NH₃) = (2 / 3) x V(H₂) = (2 / 3) x 60 = 40 L."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 7 : LE CHLORURE DE SODIUM SOLIDE
+// ============================================================================
+
+export const chimie2deCChlorureSodiumChapter: CurriculumChapter = {
+  "id": "seconde_c_chimie_ch7_chlorure_de_sodium",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 7,
+  "officialVolumeHours": 6,
+  "title": "Leçon 7 — Le chlorure de sodium solide",
+  "summary": "État naturel du sel, structure cristalline cubique à faces centrées du chlorure de sodium (NaCl), étude géométrique de la maille élémentaire, coordinence (6-6), cohésion électrostatique (Coulomb), propriétés physiques (isolant solide, conducteur en solution, température de fusion 801 °C) et calcul de la masse volumique.",
+  "points": [
+    {
+      "id": "seconde_c_chimie_ch7_p1",
+      "order": 1,
+      "title": "Réseau cristallin, structure de la maille et formule statistique",
+      "summary": "Description de la maille cubique à faces centrées du chlorure de sodium, dénombrement des ions Na⁺ et Cl⁻ appartenant en propre à la maille, et justification de la formule statistique NaCl.",
+      "conceptExplanation": "Le chlorure de sodium (NaCl), communément appelé sel de table ou sel de cuisine, est un solide cristallin très abondant dans la nature sous forme de sel gemme (halite) ou dissous dans l'eau de mer.\n\n1. Définition du réseau cristallin et de la maille :\n- Réseau cristallin : Un cristal de chlorure de sodium est un édifice ordonné, périodique et tridimensionnel résultant de l'empilement régulier et alterné d'ions sodium Na⁺ et d'ions chlorure Cl⁻.\n- La maille élémentaire : C'est le plus petit parallélépipède (ici un cube d'arête a) qui, répété indéfiniment par translation dans les trois directions de l'espace, engendre tout le cristal macroscopique.\n\n2. Disposition géométrique des ions dans la maille cubique de NaCl :\nLa maille du chlorure de sodium est constituée de deux sous-réseaux cubiques à faces centrées (CFC) décalés d'une demi-arête :\n- Les ions chlorure Cl⁻ (les plus volumineux, de rayon r(Cl⁻) ≈ 180 pm) occupent :\n  * Les 8 sommets du cube.\n  * Les centres des 6 faces du cube.\n- Les ions sodium Na⁺ (de rayon r(Na⁺) ≈ 100 pm) occupent :\n  * Les milieux des 12 arêtes du cube.\n  * Le centre géométrique du cube.\n- Coordinence et tangence : Chaque ion Na⁺ est entouré et tangent à 6 ions Cl⁻ voisins disposés en octaèdre. Réciproquement, chaque ion Cl⁻ est entouré de 6 ions Na⁺. On parle d'une coordinence (6-6). Deux ions de même signe ne se touchent jamais directement.\n\n3. Dénombrement des ions appartenant en propre à la maille élémentaire :\nUn ion situé sur un élément géométrique partagé entre plusieurs mailles adjacentes n'appartient que pour une fraction à la maille considérée :\n- Ions chlorure Cl⁻ :\n  * 8 ions aux sommets, partagés chacun entre 8 mailles : 8 x (1/8) = 1 ion en propre.\n  * 6 ions aux centres des faces, partagés entre 2 mailles : 6 x (1/2) = 3 ions en propre.\n  * Total en propre de Cl⁻ = 1 + 3 = 4 ions Cl⁻ par maille.\n- Ions sodium Na⁺ :\n  * 12 ions aux milieux des arêtes, partagés chacun entre 4 mailles : 12 x (1/4) = 3 ions en propre.\n  * 1 ion au centre du cube, exclusif à cette maille : 1 x 1 = 1 ion en propre.\n  * Total en propre de Na⁺ = 3 + 1 = 4 ions Na⁺ par maille.\n\n4. Justification de la formule statistique :\nIl y a exactement autant d'ions Na⁺ que d'ions Cl⁻ dans le réseau cristallin (rapport 4:4 = 1:1).\nLa neutralité électrique globale du cristal est donc parfaitement respectée. Elle se traduit par la formule statistique minimale NaCl (et non pas une formule moléculaire, car il n'existe pas de molécules individuelles isolées de NaCl dans le solide).",
+      "formulas": [
+        {
+          "name": "Ions Cl⁻ en propre par maille",
+          "formula": "N(Cl⁻) = 8 × (1/8) + 6 × (1/2) = 4 ions",
+          "note": "8 sommets et 6 centres de faces."
+        },
+        {
+          "name": "Ions Na⁺ en propre par maille",
+          "formula": "N(Na⁺) = 12 × (1/4) + 1 × 1 = 4 ions",
+          "note": "12 milieux d'arêtes et 1 centre de cube."
+        },
+        {
+          "name": "Formule statistique",
+          "formula": "NaCl (rapport 1:1)",
+          "note": "Traduit l'électroneutralité globale du réseau cristallin."
+        }
+      ],
+      "keyRule": "Un ion au sommet compte pour 1/8, sur une face pour 1/2, sur une arête pour 1/4, et au centre pour 1. La maille cubique de NaCl contient en propre exactement 4 ions Na⁺ et 4 ions Cl⁻.",
+      "workedExample": {
+        "title": "Dénombrement des ions dans un cristal de type chlorure de sodium",
+        "statement": "L'oxyde de magnésium (MgO) cristallise dans le même type de réseau que le chlorure de sodium (NaCl). Les ions oxyde O²⁻ occupent les sommets et les centres des faces du cube, tandis que les ions magnésium Mg²⁺ occupent les milieux des arêtes et le centre. Dénombre les ions de chaque nature appartenant en propre à la maille et vérifie la formule statistique.",
+        "methodSteps": [
+          "1. Dénombrer les ions O²⁻ : Sommets : 8 x (1/8) = 1 ion. Centres des faces : 6 x (1/2) = 3 ions. Total = 1 + 3 = 4 ions O²⁻.",
+          "2. Dénombrer les ions Mg²⁺ : Milieux des arêtes : 12 x (1/4) = 3 ions. Centre du cube : 1 x 1 = 1 ion. Total = 3 + 1 = 4 ions Mg²⁺.",
+          "3. Vérifier le bilan des charges : 4 ions Mg²⁺ apportent une charge positive de 4 x (+2e) = +8e. 4 ions O²⁻ apportent une charge négative de 4 x (-2e) = -8e. La charge totale est nulle (+8e - 8e = 0).",
+          "4. Établir la formule statistique : Le rapport entre Mg²⁺ et O²⁻ est de 4/4 = 1/1. La formule statistique minimale est bien MgO."
+        ],
+        "conclusion": "La maille contient en propre 4 ions Mg²⁺ et 4 ions O²⁻, confirmant l'électroneutralité et la formule statistique MgO."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch7_p1_ex1",
+          "type": "mcq",
+          "prompt": "Combien d'ions Na⁺ et d'ions Cl⁻ appartiennent en propre à une maille élémentaire de chlorure de sodium ?",
+          "options": [
+            "4 ions Na⁺ et 4 ions Cl⁻",
+            "1 ion Na⁺ et 1 ion Cl⁻",
+            "8 ions Na⁺ et 8 ions Cl⁻",
+            "12 ions Na⁺ et 6 ions Cl⁻"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le dénombrement géométrique donne 8x(1/8) + 6x(1/2) = 4 ions Cl⁻ et 12x(1/4) + 1 = 4 ions Na⁺ par maille."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p1_ex2",
+          "type": "mcq",
+          "prompt": "À combien de mailles élémentaires adjacentes appartient un ion situé au sommet d'un cube ?",
+          "options": [
+            "8 mailles",
+            "4 mailles",
+            "2 mailles",
+            "1 seule maille"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Un sommet est partagé par 8 cubes adjacents qui se rejoignent en ce point (4 dans le plan inférieur et 4 dans le plan supérieur)."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p1_ex3",
+          "type": "mcq",
+          "prompt": "Quelle est la coordinence de l'ion sodium Na⁺ dans le cristal de NaCl ?",
+          "options": [
+            "6 (chaque Na⁺ est entouré de 6 ions Cl⁻)",
+            "4 (structure tétraédrique)",
+            "8 (structure cubique centrée)",
+            "12 (structure hexagonale compacte)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans le réseau de NaCl, chaque ion Na⁺ est entouré de 6 ions Cl⁻ formant un octaèdre régulier : la coordinence est 6."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p1_ex4",
+          "type": "mcq",
+          "prompt": "Pourquoi la formule du chlorure de sodium solide s'écrit-elle 'NaCl' et non pas 'Na₄Cl₄' ?",
+          "options": [
+            "Car c'est une formule statistique représentant le rapport minimal entier entre les ions",
+            "Car il n'y a qu'un seul ion dans tout le cristal",
+            "Car c'est une molécule isolée contenant un atome Na et un atome Cl",
+            "Car le chiffre 4 s'annule par convention"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cristal est un réseau géant continu. La formule statistique indique la proportion minimale entre les ions garantissant l'électroneutralité, soit 1:1."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p1_ex5",
+          "type": "mcq",
+          "prompt": "Pour un ion situé au milieu d'une arête d'une maille cubique, quelle fraction appartient en propre à cette maille ?",
+          "options": [
+            "1/4",
+            "1/8",
+            "1/2",
+            "1"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une arête est commune à 4 cubes adjacents. Un ion situé au milieu d'une arête appartient donc pour 1/4 à la maille."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p1_ex6",
+          "type": "mcq",
+          "prompt": "Dans la maille réelle de chlorure de sodium, deux ions identiques (par exemple deux ions Na⁺) peuvent-ils être en contact tangentiel ?",
+          "options": [
+            "Non, deux ions de même signe ne se touchent jamais dans le cristal stable",
+            "Oui, tous les ions sommets se touchent",
+            "Oui, le long des diagonales des faces",
+            "Oui, à haute température seulement"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La répulsion électrostatique entre ions de même charge empêche leur contact : les ions Na⁺ ne touchent que les ions Cl⁻ voisins le long des arêtes."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p1_ex7",
+          "type": "mcq",
+          "prompt": "Quelle est la forme géométrique macroscopique caractéristique des monocristaux de sel gemme observés à la loupe ?",
+          "options": [
+            "Petits cubes translucides",
+            "Sphères parfaites",
+            "Aiguilles allongées",
+            "Plaquettes hexagonales"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La symétrie cubique de la maille microscopique se reflète à l'échelle macroscopique : le chlorure de sodium cristallise sous forme de petits cubes."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p1_ex8",
+          "type": "mcq",
+          "prompt": "Combien d'ions Na⁺ et Cl⁻ au total sont présents à l'intérieur d'une maille élémentaire en tenant compte de leurs fractions en propre ?",
+          "options": [
+            "8 ions au total (4 Na⁺ et 4 Cl⁻)",
+            "2 ions au total (1 Na⁺ et 1 Cl⁻)",
+            "14 ions au total",
+            "27 ions au total"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La maille contient en propre 4 ions Na⁺ et 4 ions Cl⁻, soit un total de 8 ions (correspondant à 4 groupements formulaires NaCl)."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_chimie_ch7_p2",
+      "order": 2,
+      "title": "Cohésion électrostatique, propriétés physiques et masse volumique du NaCl",
+      "summary": "Origine de la cohésion cristalline (loi de Coulomb), propriétés physiques remarquables (isolant à l'état solide, conducteur en solution ou fondu, température de fusion 801 °C), calcul de la longueur de l'arête a = 2(r₊ + r₋) et de la masse volumique.",
+      "conceptExplanation": "La structure ionique tridimensionnelle du chlorure de sodium confère à ce cristal des propriétés physiques macroscopiques bien précises.\n\n1. Origine de la cohésion du cristal (Interaction électrostatique) :\nLa cohésion et la solidité du cristal de NaCl résultent des forces d'attraction électrostatique (forces de Coulomb) qui s'exercent entre les cations Na⁺ et les anions Cl⁻ voisins.\n- Bien que des forces de répulsion existent entre ions de même signe, les ions opposés sont plus proches les uns des autres que les ions de même signe : le bilan énergétique global est fortement attractif.\n- Cette énergie réticulaire très élevée rend le cristal particulièrement compact et rigide.\n\n2. Propriétés physiques fondamentales :\n- Caractère isolant à l'état solide :\n  À l'état solide, le cristal de NaCl ne conduit pas le courant électrique (la lampe témoin d'un circuit reste éteinte). En effet, bien qu'il contienne des charges électriques (Na⁺ et Cl⁻), ces ions sont fermement verrouillés aux nœuds du réseau cristallin et ne peuvent pas se déplacer.\n- Conductivité à l'état liquide (fondu ou en solution) :\n  * En solution aqueuse, les molécules d'eau dissocient le cristal en ions hydratés Na⁺(aq) et Cl⁻(aq) qui deviennent libres de se mouvoir : la solution est conductrice.\n  * À l'état fondu (au-delà de 801 °C), l'agitation thermique détruit le réseau : les ions mobiles conduisent le courant.\n- Stabilité thermique et température de fusion élevée :\n  La température de fusion du NaCl est très élevée : Tf = 801 °C. Il faut fournir une énergie thermique considérable pour vaincre les fortes attractions coulombiennes interioniques.\n\n3. Calcul géométrique de l'arête de la maille et de la masse volumique :\n- Condition de contact le long de l'arête du cube :\n  L'arête du cube a contient un ion Cl⁻ au sommet, un ion Na⁺ au milieu, et un second ion Cl⁻ à l'autre sommet. La condition de tangence s'écrit :\n  a = 2 x r(Na⁺) + 2 x r(Cl⁻) = 2 x [r(Na⁺) + r(Cl⁻)].\n  Avec r(Na⁺) = 100 pm et r(Cl⁻) = 180 pm : a = 2 x (100 + 180) = 560 pm = 5,6 x 10⁻¹⁰ m.\n- Volume de la maille :\n  V = a³ = (5,6 x 10⁻¹⁰ m)³ ≈ 1,76 x 10⁻²⁸ m³ = 1,76 x 10⁻²² cm³.\n- Masse de la maille m(maille) :\n  La maille contenant en propre 4 ions Na⁺ et 4 ions Cl⁻ (soit 4 groupements NaCl de masse molaire M = 58,5 g/mol) :\n  m = [4 x M(NaCl)] / 𝒩A = [4 x 58,5] / (6,02 x 10²³) ≈ 3,887 x 10⁻²² g = 3,887 x 10⁻²⁵ kg.\n- Masse volumique ρ :\n  ρ = m / V = (3,887 x 10⁻²⁵ kg) / (1,76 x 10⁻²⁸ m³) ≈ 2,21 x 10³ kg/m³ = 2,21 g/cm³ (ou 2,21 kg/dm³).",
+      "formulas": [
+        {
+          "name": "Longueur de l'arête de la maille",
+          "formula": "a = 2 · [r(Na⁺) + r(Cl⁻)]",
+          "note": "Condition de contact le long des arêtes du cube."
+        },
+        {
+          "name": "Masse de la maille élémentaire",
+          "formula": "m = (4 × M(NaCl)) / 𝒩A",
+          "note": "Chaque maille contient en propre 4 groupements formulaires NaCl."
+        },
+        {
+          "name": "Masse volumique du cristal",
+          "formula": "ρ = m / V = [4 × M] / [𝒩A × a³]",
+          "note": "Valeur expérimentale : ρ ≈ 2,21 g/cm³ = 2 210 kg/m³."
+        }
+      ],
+      "keyRule": "Le sel solide est isolant car ses ions sont immobiles dans le réseau. En solution ou fondu, il devient conducteur car les ions sont mobiles. Sa masse volumique découle du rapport entre la masse des 4 unités NaCl et le volume de la maille a³.",
+      "workedExample": {
+        "title": "Calcul de l'arête et de la masse volumique du chlorure de sodium",
+        "statement": "On donne pour le chlorure de sodium : r(Na⁺) = 100 pm, r(Cl⁻) = 180 pm, M(Na) = 23 g/mol, M(Cl) = 35,5 g/mol, 𝒩A = 6,02 x 10²³ mol⁻¹. 1) Calcule la longueur de l'arête a en mètres. 2) Calcule le volume de la maille V. 3) Détermine la masse volumique ρ en g/cm³ et en kg/m³.",
+        "methodSteps": [
+          "1. Calculer la longueur de l'arête a : a = 2 x (r(Na⁺) + r(Cl⁻)) = 2 x (100 + 180) = 560 pm = 560 x 10⁻¹² m = 5,60 x 10⁻¹⁰ m.",
+          "2. Calculer le volume de la maille V : V = a³ = (5,60 x 10⁻¹⁰ m)³ = 1,756 x 10⁻²⁸ m³ (soit 1,756 x 10⁻²² cm³).",
+          "3. Calculer la masse de la maille m : M(NaCl) = 23 + 35,5 = 58,5 g/mol. m = 4 x M / 𝒩A = (4 x 58,5) / (6,02 x 10²³) = 3,887 x 10⁻²² g = 3,887 x 10⁻²⁵ kg.",
+          "4. Calculer la masse volumique ρ : ρ = m / V = (3,887 x 10⁻²² g) / (1,756 x 10⁻²² cm³) ≈ 2,21 g/cm³, soit 2 210 kg/m³."
+        ],
+        "conclusion": "L'arête mesure a = 560 pm et la masse volumique du cristal de chlorure de sodium est ρ = 2,21 g/cm³ = 2 210 kg/m³."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch7_p2_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est la température de fusion du chlorure de sodium NaCl à la pression atmosphérique normale ?",
+          "options": [
+            "801 °C",
+            "100 °C",
+            "1 500 °C",
+            "0 °C"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La température de fusion de NaCl est très élevée (Tf = 801 °C) en raison de la force considérable des liaisons électrostatiques entre les ions."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p2_ex2",
+          "type": "mcq",
+          "prompt": "Pourquoi un morceau de sel solide ne conduit-il pas le courant électrique ?",
+          "options": [
+            "Car ses ions Na⁺ et Cl⁻ sont immobiles et bloqués dans le réseau cristallin",
+            "Car il ne contient aucune particule chargée",
+            "Car c'est un composé covalent",
+            "Car les électrons sont absorbés par le noyau"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour conduire le courant, il faut des porteurs de charge mobiles. Dans le cristal solide, les ions sont immobilisés par les liaisons réticulaires."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p2_ex3",
+          "type": "mcq",
+          "prompt": "Sous quelle condition le chlorure de sodium devient-il conducteur de l'électricité ?",
+          "options": [
+            "À l'état fondu (liquide au-delà de 801 °C) ou en solution aqueuse",
+            "Uniquement lorsqu'il est sous forme de poudre très fine",
+            "Uniquement en présence de lumière ultraviolette",
+            "Il n'est jamais conducteur sous aucune forme"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La dissolution dans l'eau ou la fusion thermique libère les ions Na⁺ et Cl⁻ qui deviennent alors mobiles et permettent le passage du courant."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p2_ex4",
+          "type": "mcq",
+          "prompt": "Sachant que r(Na⁺) = 100 pm et r(Cl⁻) = 180 pm, quelle est la longueur de l'arête a de la maille élémentaire ?",
+          "options": [
+            "560 pm",
+            "280 pm",
+            "360 pm",
+            "200 pm"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Sur l'arête, a = 2 x [r(Na⁺) + r(Cl⁻)] = 2 x (100 + 180) = 2 x 280 = 560 pm."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p2_ex5",
+          "type": "mcq",
+          "prompt": "Quelle est la valeur approchée de la masse volumique du chlorure de sodium solide ?",
+          "options": [
+            "2,21 g/cm³ (soit 2 210 kg/m³)",
+            "1,00 g/cm³",
+            "7,80 g/cm³",
+            "0,50 g/cm³"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le calcul théorique et expérimental donne une masse volumique ρ ≈ 2,21 g/cm³ (ou 2,21 kg/dm³ = 2 210 kg/m³)."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p2_ex6",
+          "type": "mcq",
+          "prompt": "Quelle interaction physique fondamentale assure la cohésion et la stabilité du cristal de NaCl ?",
+          "options": [
+            "L'attraction électrostatique (forces coulombiennes) entre ions de signes opposés",
+            "La gravitation universelle de Newton",
+            "La force magnétique entre les pôles nord et sud",
+            "La tension superficielle de l'eau"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La cohésion des cristaux ioniques provient de l'attraction électrostatique mutuelle entre les cations positifs et les anions négatifs."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p2_ex7",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on le minerai naturel de chlorure de sodium solide extrait des mines terrestres ?",
+          "options": [
+            "Le sel gemme (ou halite)",
+            "La bauxite",
+            "La calcite",
+            "La pyrite"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le chlorure de sodium solide naturel présent dans les gisements sédimentaires est appelé sel gemme ou halite."
+        },
+        {
+          "id": "seconde_c_chimie_ch7_p2_ex8",
+          "type": "mcq",
+          "prompt": "Dans l'organisme humain, quel est l'un des rôles biologiques majeurs de l'ion sodium Na⁺ apporté par le sel ?",
+          "options": [
+            "La transmission de l'influx nerveux et le maintien de la pression osmotique",
+            "La fabrication directe de l'hémoglobine",
+            "Le stockage de l'oxygène dans les poumons",
+            "La synthèse de la chlorophylle"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les ions Na⁺ sont indispensables à la propagation des potentiels d'action nerveux et à la régulation de l'équilibre hydrique cellulaire."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 8 : SOLUTIONS AQUEUSES IONIQUES
+// ============================================================================
+
+export const chimie2deCSolutionsAqueusesChapter: CurriculumChapter = {
+  "id": "seconde_c_chimie_ch8_solutions_aqueuses_ioniques",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 8,
+  "officialVolumeHours": 8,
+  "title": "Leçon 8 — Solutions aqueuses ioniques",
+  "summary": "Dissolution d'un cristal ionique dans l'eau, étapes de dislocation et d'hydratation, bilans thermiques, solubilité et saturation, concentrations molaires et massiques, électroneutralité et électrolyse du chlorure de sodium.",
+  "points": [
+    {
+      "id": "seconde_c_chimie_ch8_p1_dissolution_thermique_solubilite",
+      "order": 1,
+      "title": "Dissolution d'un composé ionique, bilan thermique et solubilité",
+      "summary": "Comprendre les deux étapes fictives de la dissolution (dislocation et hydratation), leurs effets thermiques et les notions de saturation et de solubilité.",
+      "conceptExplanation": "La dissolution d'un cristal ionique dans l'eau s'interprète comme la succession de deux étapes fondamentales :\n1. La dislocation du cristal : rupture des liaisons électrostatiques entre les ions sous l'action polaire des molécules d'eau, suivie de leur dispersion. Cette rupture consomme de l'énergie (absorption de chaleur), notée Ed (énergie de dislocation).\n2. L'hydratation (ou solvatation) des ions : les ions libres dispersés s'entourent d'une enveloppe stable de molécules d'eau orientées selon leurs dipôles. Ce phénomène libère de l'énergie (dégagement de chaleur), notée Eh (énergie d'hydratation).\nLe bilan thermique global dépend de la compétition entre Ed et Eh :\n- Si Ed > Eh : la dissolution absorbe plus de chaleur qu'elle n'en dégage, la température du milieu diminue ; le phénomène est endothermique (exemple : dissolution du chlorure d'ammonium NH₄Cl).\n- Si Ed = Eh : la température reste rigoureusement constante ; la dissolution est athermique (exemples : chlorure de sodium NaCl, sulfate de cuivre CuSO₄).\n- Si Ed < Eh : le dégagement de solvatation domine, la température du milieu s'élève ; la dissolution est exothermique (exemple : hydroxyde de sodium NaOH).\nAu-delà d'une certaine quantité de soluté introduite, l'eau ne peut plus dissoudre de cristal : la solution est dite saturée. La solubilité s (ou S) représente la masse maximale ou la quantité maximale de soluté dissous par litre de solution saturée (en g/L ou mol/L). La solubilité dépend de la nature du soluté et augmente généralement avec la température.",
+      "formulas": [
+        {
+          "name": "Bilan énergétique de dissolution",
+          "formula": "Bilan = Ed (absorption) + Eh (dégagement)",
+          "note": "Ed est l'énergie absorbée pour briser le cristal, Eh est la chaleur libérée lors de la solvatation."
+        },
+        {
+          "name": "Dissolution endothermique",
+          "formula": "Ed > Eh ⟹ ΔT < 0 (baisse de température)",
+          "note": "Exemple type du programme ivoirien : chlorure d'ammonium NH₄Cl."
+        },
+        {
+          "name": "Dissolution athermique",
+          "formula": "Ed = Eh ⟹ ΔT = 0 (température constante)",
+          "note": "Exemple type : chlorure de sodium NaCl et sulfate de cuivre CuSO₄."
+        },
+        {
+          "name": "Dissolution exothermique",
+          "formula": "Ed < Eh ⟹ ΔT > 0 (hausse de température)",
+          "note": "Exemple type : hydroxyde de sodium NaOH solide."
+        },
+        {
+          "name": "Solubilité massique maximale",
+          "formula": "s = m(max) / V en g/L",
+          "note": "La solubilité augmente généralement avec l'élévation de la température."
+        }
+      ],
+      "keyRule": "La dissolution comprend deux étapes : la dislocation du cristal (qui absorbe de la chaleur, Ed) et l'hydratation des ions (qui dégage de la chaleur, Eh). Si Ed > Eh elle est endothermique, si Ed = Eh elle est athermique, si Ed < Eh elle est exothermique.",
+      "workedExample": {
+        "title": "Calcul de saturation et masse de soluté non dissous",
+        "statement": "On introduit 20 g de sulfate de sodium Na₂SO₄ dans de l'eau à 20 °C pour préparer un volume V = 100 cm³ de solution. Sachant que la solubilité massique du sulfate de sodium à 20 °C est s = 195 g/L, détermine si la solution obtenue est saturée et calcule la masse de soluté éventuellement non dissous.",
+        "methodSteps": [
+          "Convertir le volume de solution en litres : V = 100 cm³ = 100 × 10⁻³ L = 0,1 L.",
+          "Calculer la concentration massique C_m correspondant à la masse introduite : C_m = m / V = 20 g / 0,1 L = 200 g/L.",
+          "Comparer C_m à la solubilité s = 195 g/L : comme 200 g/L > 195 g/L, la limite de solubilité est dépassée. La solution est donc saturée.",
+          "Calculer la masse maximale dissoute m_dissous = s × V = 195 × 0,1 = 19,5 g.",
+          "Déterminer la masse du dépôt solide non dissous : m_dépôt = m_introduit − m_dissous = 20 g − 19,5 g = 0,5 g."
+        ],
+        "conclusion": "La solution est saturée et présente un dépôt solide de 0,5 g de sulfate de sodium au fond du récipient."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch8_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quelles sont les deux étapes fondamentales intervenant lors de la dissolution d'un cristal ionique dans l'eau ?",
+          "options": [
+            "La dislocation du réseau cristallin puis l'hydratation des ions",
+            "La fusion des ions puis leur évaporation",
+            "La neutralisation acido-basique puis la précipitation",
+            "L'électrolyse de l'eau puis l'oxydation des ions"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La dissolution se décompose fictivement en deux étapes : 1) rupture des liaisons électrostatiques et dispersion des ions (dislocation), 2) entouragement de chaque ion par une couronne de molécules d'eau dipolaires (hydratation ou solvatation)."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p1_ex2",
+          "type": "mcq",
+          "prompt": "Lorsqu'on dissout de la soude solide NaOH dans de l'eau, la température du milieu réactionnel augmente nettement (+8 °C). Comment qualifie-t-on ce phénomène ?",
+          "options": [
+            "Une dissolution exothermique car l'énergie d'hydratation libérée est supérieure à l'énergie de dislocation absorbée (Ed < Eh)",
+            "Une dissolution endothermique car le milieu a absorbé de la chaleur extérieure",
+            "Une dissolution athermique car les ions conservent leur structure",
+            "Une réaction de combustion vive spontanée"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une hausse de température indique un dégagement de chaleur vers le milieu extérieur : le phénomène est exothermique. Cela se produit lorsque l'énergie dégagée par l'hydratation Eh surpasse l'énergie absorbée pour disloquer le cristal Ed (Ed < Eh)."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p1_ex3",
+          "type": "mcq",
+          "prompt": "La dissolution du chlorure d'ammonium NH₄Cl dans l'eau s'accompagne d'un refroidissement mesuré (−2,5 °C). Quel est le bilan énergétique ?",
+          "options": [
+            "Ed > Eh : l'énergie absorbée pour casser le cristal est supérieure à l'énergie dégagée par l'hydratation (dissolution endothermique)",
+            "Ed < Eh : l'hydratation dégage plus de chaleur que la dislocation",
+            "Ed = Eh : les deux effets s'annulent exactement",
+            "L'eau s'évapore sous forme de vapeur froide"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une baisse de température correspond à une réaction endothermique : l'énergie de dislocation absorbée Ed est supérieure à l'énergie d'hydratation libérée Eh."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p1_ex4",
+          "type": "mcq",
+          "prompt": "Pour le chlorure de sodium NaCl et le sulfate de cuivre CuSO₄, la température de la solution reste rigoureusement inchangée pendant la dissolution. Que peut-on affirmer ?",
+          "options": [
+            "La dissolution est athermique car Ed = Eh",
+            "La dissolution est impossible à température ambiante",
+            "Le sel ne se disloque pas dans l'eau",
+            "L'énergie d'hydratation est nulle"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Lorsque la température ne varie pas (ΔT = 0 °C), la dissolution est athermique. L'énergie absorbée pour la dislocation Ed compense exactement l'énergie dégagée lors de la solvatation Eh."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p1_ex5",
+          "type": "mcq",
+          "prompt": "Comment définit-on la saturation d'une solution aqueuse ?",
+          "options": [
+            "C'est l'état où le solvant ne peut plus dissoudre de soluté supplémentaire, tout ajout formant un dépôt solide",
+            "C'est lorsque le liquide commence à bouillir spontanément",
+            "C'est lorsque la concentration de soluté est exactement égale à 1 mol/L",
+            "C'est lorsque le soluté change de couleur en passant en solution"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La saturation correspond à la limite de solubilité : au-delà de cette concentration maximale, tout soluté supplémentaire ajouté ne se dissout plus et se dépose au fond du récipient."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p1_ex6",
+          "type": "mcq",
+          "prompt": "À 20 °C, la solubilité du sel de table NaCl est de 360 g/L, et à 100 °C elle atteint 390 g/L. Quelle loi générale cela illustre-t-il ?",
+          "options": [
+            "La solubilité de la plupart des solides ioniques augmente avec l'élévation de la température",
+            "La solubilité d'un sel est strictement indépendante de la température",
+            "L'eau chaude détruit les molécules de sel",
+            "À haute température, le chlorure de sodium devient insoluble"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'agitation thermique facilite la dislocation du réseau cristallin ionique : pour la grande majorité des composés ioniques, la solubilité s s'accroît lorsque la température s'élève."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p1_ex7",
+          "type": "mcq",
+          "prompt": "On verse 40 g de sel NaCl dans 100 mL d'eau à 20 °C (solubilité s = 360 g/L). Quelle masse de sel reste non dissoute au fond du bécher ?",
+          "options": [
+            "4 g de sel solide non dissous",
+            "0 g car tout le sel est entièrement dissous",
+            "14 g de sel non dissous",
+            "40 g car le sel ne se dissout pas dans 100 mL"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans V = 100 mL = 0,1 L, la masse maximale pouvant se dissoudre est m_max = s × V = 360 × 0,1 = 36 g. Comme on a introduit 40 g, il reste m_dépôt = 40 − 36 = 4 g de sel solide."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p1_ex8",
+          "type": "mcq",
+          "prompt": "Pourquoi une solution aqueuse ionique conduit-elle le courant électrique alors que l'eau pure le conduit extrêmement peu ?",
+          "options": [
+            "Parce qu'elle contient des ions libres et mobiles (anions et cations) capables d'assurer le transfert de charges",
+            "Parce que les molécules d'eau se transforment en fils conducteurs métalliques",
+            "Parce que la dissolution crée des électrons libres dans le solvant",
+            "Parce que le sel attire directement l'électricité statique de l'air"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans les électrolytes, la conduction électrique est assurée par la migration ordonnée des porteurs de charges mobiles : les cations migrent vers la cathode et les anions vers l'anode."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_chimie_ch8_p2_concentrations_electroneutralite_electrolyse",
+      "order": 2,
+      "title": "Concentrations, électroneutralité et électrolyse d'une solution ionique",
+      "summary": "Maîtriser les calculs de concentrations (molaire, massique, par ion), la règle de neutralité électrique et les réactions d'oxydoréduction lors de l'électrolyse de NaCl.",
+      "conceptExplanation": "Pour une solution aqueuse de volume Vs contenant un soluté dissous de masse m, quantité n et masse molaire M :\n- Concentration molaire volumique C = n / Vs (en mol/L).\n- Concentration massique C_m = m / Vs (en g/L).\n- Relation fondamentale : C_m = C × M (car m = n × M).\nLors de la dissociation totale d'un composé ionique ApBq(s) ⟶ p A^q⁺ + q B^p⁻ :\n- Les concentrations molaires des ions sont : [A^q⁺] = p × C et [B^p⁻] = q × C.\n- Principe d'électroneutralité : toute solution ionique est globalement neutre. La somme totale des charges positives portées par les cations compense exactement la somme en valeur absolue des charges négatives portées par les anions :\n∑ z_cat × [Cation] = ∑ |z_an| × [Anion].\nExemple : pour une solution de CaCl₂ de concentration C, [Ca²⁺] = C et [Cl⁻] = 2C ; la neutralité donne 2 × [Ca²⁺] = [Cl⁻] (2C = 2C).\n\nÉlectrolyse d'une solution aqueuse de chlorure de sodium (NaCl) :\nSous l'action d'un courant continu appliqué par un générateur :\n- À l'anode (+) : oxydation des ions chlorure Cl⁻ en dichlore gazeux Cl₂ (reconnu par la décoloration de l'indigo) : 2 Cl⁻ ⟶ Cl₂ + 2 e⁻.\n- À la cathode (−) : réduction des molécules d'eau avec formation de dihydrogène H₂ (reconnu par la détonation à la flamme) et apparition d'ions hydroxyde OH⁻ (colorant le BBT en bleu) : 2 H₂O + 2 e⁻ ⟶ H₂ + 2 OH⁻.\n- Équation-bilan globale : 2 H₂O + 2 Cl⁻ ⟶ H₂ + Cl₂ + 2 OH⁻ (ou en présence d'ions spectateurs Na⁺ : 2 H₂O + 2 (Na⁺ + Cl⁻) ⟶ H₂ + Cl₂ + 2 (Na⁺ + OH⁻)). L'électrolyse produit donc du dichlore, du dihydrogène et de la soude caustique (NaOH).",
+      "formulas": [
+        {
+          "name": "Concentration molaire volumique",
+          "formula": "C = n / Vs",
+          "note": "En mol/L, où n est en moles et Vs en litres."
+        },
+        {
+          "name": "Concentration massique (pondérale)",
+          "formula": "C_m = m / Vs",
+          "note": "En g/L, où m est en grammes et Vs en litres."
+        },
+        {
+          "name": "Relation fondamentale entre C et C_m",
+          "formula": "C_m = C × M",
+          "note": "Permet de passer directement de la molarité à la teneur massique."
+        },
+        {
+          "name": "Concentration molaire d'un ion X",
+          "formula": "[X] = n(X) / Vs",
+          "note": "Reliée à C par le coefficient de dissociation du sel ionique."
+        },
+        {
+          "name": "Principe d'électroneutralité",
+          "formula": "∑ z_i · [Cation_i] = ∑ |z_j| · [Anion_j]",
+          "note": "La charge électrique nette d'une solution macroscopique est nulle."
+        },
+        {
+          "name": "Réaction à l'anode (+)",
+          "formula": "2 Cl⁻ ⟶ Cl₂ + 2 e⁻",
+          "note": "Oxydation des ions chlorure en dichlore décolorant l'indigo."
+        },
+        {
+          "name": "Réaction à la cathode (−)",
+          "formula": "2 H₂O + 2 e⁻ ⟶ H₂ + 2 OH⁻",
+          "note": "Réduction de l'eau en dihydrogène détonant et ions basiques."
+        },
+        {
+          "name": "Bilan global de l'électrolyse de NaCl(aq)",
+          "formula": "2 H₂O + 2 Cl⁻ ⟶ H₂ + Cl₂ + 2 OH⁻",
+          "note": "Production simultanée de dichlore, de dihydrogène et de soude NaOH."
+        }
+      ],
+      "keyRule": "La concentration massique vaut C_m = C × M. Toute solution ionique est neutre (∑ q⁺ = ∑ |q⁻|). Lors de l'électrolyse de NaCl(aq), l'anode dégage Cl₂ (décolore l'indigo) et la cathode dégage H₂ (détonne) en formant des ions OH⁻ (bleu au BBT).",
+      "workedExample": {
+        "title": "Calcul de concentrations, ions et vérification de la neutralité électrique",
+        "statement": "On dissout m = 11,1 g de chlorure de calcium CaCl₂ dans de l'eau distillée pour obtenir un volume Vs = 500 mL de solution. Données : M(Ca) = 40 g/mol ; M(Cl) = 35,5 g/mol. Calcule la concentration molaire C de la solution, les concentrations des ions en solution, et vérifie la neutralité électrique.",
+        "methodSteps": [
+          "Calculer la masse molaire de CaCl₂ : M = 40 + (2 × 35,5) = 111 g/mol.",
+          "Calculer la quantité de matière dissoute : n = m / M = 11,1 / 111 = 0,10 mol.",
+          "Calculer la concentration molaire : C = n / Vs = 0,10 mol / 0,5 L = 0,20 mol/L.",
+          "Écrire l'équation de dissociation : CaCl₂(s) ⟶ Ca²⁺(aq) + 2 Cl⁻(aq).",
+          "Déterminer la concentration des ions : [Ca²⁺] = C = 0,20 mol/L et [Cl⁻] = 2 × C = 2 × 0,20 = 0,40 mol/L.",
+          "Vérifier l'électroneutralité : charge positive totale = 2 × [Ca²⁺] = 2 × 0,20 = 0,40 mol/L de charges (+). Charge négative totale = 1 × [Cl⁻] = 0,40 mol/L de charges (−). On a bien 2 × [Ca²⁺] = [Cl⁻]."
+        ],
+        "conclusion": "La concentration molaire est C = 0,20 mol/L, avec [Ca²⁺] = 0,20 mol/L, [Cl⁻] = 0,40 mol/L, et l'électroneutralité 2[Ca²⁺] = [Cl⁻] est rigoureusement vérifiée."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch8_p2_ex1",
+          "type": "mcq",
+          "prompt": "Quelle formule relie directement la concentration massique C_m (en g/L), la concentration molaire C (en mol/L) et la masse molaire M (en g/mol) ?",
+          "options": [
+            "C_m = C × M",
+            "C_m = C / M",
+            "C_m = M / C",
+            "C_m = C + M"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Puisque C_m = m / V et m = n × M, on a C_m = (n × M) / V = (n / V) × M = C × M."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p2_ex2",
+          "type": "mcq",
+          "prompt": "Une solution de chlorure de sodium (M = 58,5 g/mol) a une concentration molaire C = 0,34 mol/L. Quelle est sa concentration massique C_m ?",
+          "options": [
+            "19,89 g/L",
+            "172,0 g/L",
+            "5,85 g/L",
+            "0,0058 g/L"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "C_m = C × M = 0,34 mol/L × 58,5 g/mol = 19,89 g/L."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p2_ex3",
+          "type": "mcq",
+          "prompt": "Dans une solution aqueuse de sulfate d'aluminium Al₂(SO₄)₃ de concentration C = 0,05 mol/L, quelles sont les concentrations respectives des ions Al³⁺ et SO₄²⁻ ?",
+          "options": [
+            "[Al³⁺] = 0,10 mol/L et [SO₄²⁻] = 0,15 mol/L",
+            "[Al³⁺] = 0,05 mol/L et [SO₄²⁻] = 0,05 mol/L",
+            "[Al³⁺] = 0,15 mol/L et [SO₄²⁻] = 0,10 mol/L",
+            "[Al³⁺] = 0,20 mol/L et [SO₄²⁻] = 0,30 mol/L"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'équation est Al₂(SO₄)₃ ⟶ 2 Al³⁺ + 3 SO₄²⁻. Donc [Al³⁺] = 2 × C = 2 × 0,05 = 0,10 mol/L et [SO₄²⁻] = 3 × C = 3 × 0,05 = 0,15 mol/L."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p2_ex4",
+          "type": "mcq",
+          "prompt": "Quelle relation traduit la neutralité électrique d'une solution de chlorure d'aluminium AlCl₃ ?",
+          "options": [
+            "3 × [Al³⁺] = [Cl⁻]",
+            "[Al³⁺] = 3 × [Cl⁻]",
+            "[Al³⁺] = [Cl⁻]",
+            "3 × [Al³⁺] + [Cl⁻] = 0"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Chaque cation Al³⁺ porte 3 charges positives (+3e) et chaque chlorure porte 1 charge négative (−1e). L'égalité des charges totales s'écrit 3 × [Al³⁺] = [Cl⁻]."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p2_ex5",
+          "type": "mcq",
+          "prompt": "Lors de l'électrolyse d'une solution aqueuse de chlorure de sodium, quel produit se dégage à l'anode (+), et comment le met-on en évidence ?",
+          "options": [
+            "Du dichlore gazeux Cl₂, mis en évidence par la décoloration d'une solution d'indigo",
+            "Du dihydrogène gazeux H₂, qui aboie à la flamme",
+            "Du dioxygène gazeux O₂, qui ranime un brin d'allumette incandescente",
+            "Du sodium métallique liquide qui s'enflamme"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "À l'anode positive, les ions chlorure subissent une oxydation : 2 Cl⁻ ⟶ Cl₂ + 2 e⁻. Le dichlore Cl₂ possède un puissant pouvoir décolorant, caractérisé par la décoloration de l'indigo."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p2_ex6",
+          "type": "mcq",
+          "prompt": "Lors de cette même électrolyse de NaCl(aq), quels phénomènes observe-t-on à la cathode (−) ?",
+          "options": [
+            "Un dégagement de gaz dihydrogène H₂ (détonation à la flamme) et une coloration bleue au BBT due aux ions hydroxyde OH⁻ formés",
+            "Un dépôt de cristaux blancs de sel",
+            "La formation d'acide chlorhydrique concentré virant le BBT au jaune",
+            "Aucun dégagement gazeux, uniquement un dépôt d'argent"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "À la cathode, l'eau est réduite : 2 H₂O + 2 e⁻ ⟶ H₂ + 2 OH⁻. Le gaz recueilli est le dihydrogène H₂ (légère détonation à la flamme) et les ions hydroxyde formés font virer le BBT au bleu (milieu basique)."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p2_ex7",
+          "type": "mcq",
+          "prompt": "Pourquoi les ions sodium Na⁺ ne réagissent-ils pas à la cathode lors de l'électrolyse d'une solution aqueuse de sel ?",
+          "options": [
+            "Parce que les ions Na⁺ sont très stables en milieu aqueux et que les molécules d'eau se réduisent préférentiellement à leur place",
+            "Parce que les ions Na⁺ portent une charge négative les repoussant de la cathode",
+            "Parce que le sodium est transformé en gaz insoluble",
+            "Parce que le sel n'a pas été dissous"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le potentiel de réduction de l'eau est nettement plus favorable que celui de Na⁺. En solution aqueuse, Na⁺ est un ion spectateur très stable, ce sont les molécules d'eau qui subissent la réduction."
+        },
+        {
+          "id": "seconde_c_chimie_ch8_p2_ex8",
+          "type": "mcq",
+          "prompt": "Quelle est l'équation-bilan globale de l'électrolyse d'une solution aqueuse de chlorure de sodium ?",
+          "options": [
+            "2 H₂O + 2 Cl⁻ ⟶ H₂ + Cl₂ + 2 OH⁻",
+            "NaCl + H₂O ⟶ NaOH + HCl",
+            "2 NaCl ⟶ 2 Na + Cl₂",
+            "2 H₂O ⟶ 2 H₂ + O₂"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En additionnant la réaction anodique (2 Cl⁻ ⟶ Cl₂ + 2 e⁻) et la réaction cathodique (2 H₂O + 2 e⁻ ⟶ H₂ + 2 OH⁻), les électrons s'annulent et donnent : 2 H₂O + 2 Cl⁻ ⟶ H₂ + Cl₂ + 2 OH⁻."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 9 : TESTS D'IDENTIFICATION DE QUELQUES IONS
+// ============================================================================
+
+export const chimie2deCTestsIdentificationIonsChapter: CurriculumChapter = {
+  "id": "seconde_c_chimie_ch9_tests_identification_ions",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 9,
+  "officialVolumeHours": 8,
+  "title": "Leçon 9 — Tests d'identification de quelques ions",
+  "summary": "Couleur des ions hydratés, test à la flamme, caractérisation des cations par précipitation à la soude, tests spécifiques des anions (chlorure, sulfate, carbonate, phosphate) et réactions à dégagement gazeux.",
+  "points": [
+    {
+      "id": "seconde_c_chimie_ch9_p1_couleurs_flamme_cations",
+      "order": 1,
+      "title": "Couleur des ions, test à la flamme et identification des cations",
+      "summary": "Identifier les cations en solution aqueuse par leur couleur propre, la coloration de la flamme et les réactions de précipitation avec la soude.",
+      "conceptExplanation": "En solution aqueuse, certains ions hydratés confèrent une couleur caractéristique au liquide :\n- Cu²⁺ : coloration bleue.\n- Fe²⁺ : vert pâle.\n- Fe³⁺ : jaune-orangé à rouille.\n- MnO₄⁻ : violette intense.\n- Cr₂O₇²⁻ : orangée.\n- Cr³⁺ : verte.\nAttention : une coloration donne une indication mais ne constitue pas une preuve formelle (ex : une solution bleue peut ne pas contenir d'ions Cu²⁺). Des tests chimiques spécifiques sont indispensables.\n\n1. Test à la flamme :\nEn trempant un fil de platine propre dans la solution et en le plaçant dans la flamme non éclairante d'un bec Bunsen :\n- Les ions sodium Na⁺ colorent la flamme en jaune vif persistant.\n- Les ions cuivre II Cu²⁺ colorent la flamme en vert.\n\n2. Identification des cations par précipitation à l'aide de la soude (Na⁺ + OH⁻) :\n- Ion cuivre II Cu²⁺ : forme un précipité bleu d'hydroxyde de cuivre II : Cu²⁺ + 2 OH⁻ ⟶ Cu(OH)₂↓.\n- Ion fer II Fe²⁺ : forme un précipité vert pâle (ou vert sale) d'hydroxyde de fer II : Fe²⁺ + 2 OH⁻ ⟶ Fe(OH)₂↓.\n- Ion fer III Fe³⁺ : forme un précipité rouille d'hydroxyde de fer III : Fe³⁺ + 3 OH⁻ ⟶ Fe(OH)₃↓.\n- Ion zinc Zn²⁺ : forme un précipité blanc d'hydroxyde de zinc Zn(OH)₂↓, soluble dans un excès de soude ou d'ammoniac (caractère amphotère) : Zn²⁺ + 2 OH⁻ ⟶ Zn(OH)₂↓.\n- Ion aluminium Al³⁺ : forme un précipité blanc gélatineux d'hydroxyde d'aluminium : Al³⁺ + 3 OH⁻ ⟶ Al(OH)₃↓.\n- Ion baryum Ba²⁺ : ne précipite pas avec la soude, mais forme un précipité blanc insoluble avec les ions sulfate SO₄²⁻ : Ba²⁺ + SO₄²⁻ ⟶ BaSO₄↓.",
+      "formulas": [
+        {
+          "name": "Test de précipitation Cu²⁺",
+          "formula": "Cu²⁺ + 2 OH⁻ ⟶ Cu(OH)₂↓ (précipité bleu)",
+          "note": "Formé par addition de quelques gouttes de soude dans la solution."
+        },
+        {
+          "name": "Test de précipitation Fe²⁺",
+          "formula": "Fe²⁺ + 2 OH⁻ ⟶ Fe(OH)₂↓ (précipité vert pâle)",
+          "note": "S'oxyde lentement à l'air en hydroxyde de fer III rouille."
+        },
+        {
+          "name": "Test de précipitation Fe³⁺",
+          "formula": "Fe³⁺ + 3 OH⁻ ⟶ Fe(OH)₃↓ (précipité rouille)",
+          "note": "Insoluble dans un excès d'hydroxyde de sodium."
+        },
+        {
+          "name": "Test de précipitation Zn²⁺",
+          "formula": "Zn²⁺ + 2 OH⁻ ⟶ Zn(OH)₂↓ (blanc amphotère)",
+          "note": "Ce précipité blanc se redissout en présence d'un excès de soude."
+        },
+        {
+          "name": "Test de précipitation Al³⁺",
+          "formula": "Al³⁺ + 3 OH⁻ ⟶ Al(OH)₃↓ (blanc gélatineux)",
+          "note": "Forme un gel blanc d'hydroxyde d'aluminium."
+        },
+        {
+          "name": "Tests à la flamme",
+          "formula": "Na⁺ : flamme jaune vif | Cu²⁺ : flamme verte",
+          "note": "Mise en évidence immédiate au fil de platine."
+        }
+      ],
+      "keyRule": "L'addition de soude permet d'identifier les cations : Cu²⁺ donne un précipité bleu, Fe²⁺ un précipité vert pâle, Fe³⁺ un précipité rouille, Zn²⁺ un précipité blanc soluble dans l'excès de réactif. Au test à la flamme, Na⁺ est jaune et Cu²⁺ est vert.",
+      "workedExample": {
+        "title": "Identification d'un cation métallique par tests croisés",
+        "statement": "On dispose d'un flacon incolore contenant une solution A. Lorsqu'on trempe une tige de platine dans A et qu'on la passe à la flamme, celle-ci devient verte. Lorsqu'on verse quelques gouttes de soude dans un échantillon de A, il se forme un abondant précipité bleu. Identifie le cation présent dans la solution et écris l'équation-bilan de précipitation.",
+        "methodSteps": [
+          "Analyser le test à la flamme : la coloration verte caractéristique de la flamme indique la présence d'ions cuivre II Cu²⁺.",
+          "Analyser le test chimique : l'apparition d'un précipité bleu lors de l'ajout d'ions hydroxyde OH⁻ confirme la formation d'hydroxyde de cuivre II Cu(OH)₂.",
+          "Écrire l'équation de précipitation : Cu²⁺(aq) + 2 OH⁻(aq) ⟶ Cu(OH)₂(s)↓."
+        ],
+        "conclusion": "Le cation présent dans la solution A est l'ion cuivre II Cu²⁺, selon la réaction Cu²⁺ + 2 OH⁻ ⟶ Cu(OH)₂↓."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch9_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est la couleur caractéristique conférée à la flamme d'un bec Bunsen par les ions sodium Na⁺ ?",
+          "options": [
+            "Jaune persistante",
+            "Verte",
+            "Bleue indigo",
+            "Rouge carmin"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La présence d'ions Na⁺ est immédiatement décelée au test à la flamme par une couleur jaune vive et persistante."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p1_ex2",
+          "type": "mcq",
+          "prompt": "L'addition de quelques gouttes d'hydroxyde de sodium (soude) dans une solution inconnue produit un précipité vert pâle. Quel est le cation identifié ?",
+          "options": [
+            "L'ion fer II (Fe²⁺)",
+            "L'ion fer III (Fe³⁺)",
+            "L'ion cuivre II (Cu²⁺)",
+            "L'ion zinc (Zn²⁺)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le précipité vert pâle est l'hydroxyde de fer II Fe(OH)₂, formé par la réaction Fe²⁺ + 2 OH⁻ ⟶ Fe(OH)₂↓."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p1_ex3",
+          "type": "mcq",
+          "prompt": "Quelle est la formule et la couleur du précipité formé lors du test des ions fer III (Fe³⁺) par la soude ?",
+          "options": [
+            "Fe(OH)₃, de couleur rouille",
+            "Fe(OH)₂, de couleur vert pâle",
+            "Cu(OH)₂, de couleur bleue",
+            "Fe₂O₃, de couleur noire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les ions Fe³⁺ réagissent avec les ions OH⁻ selon Fe³⁺ + 3 OH⁻ ⟶ Fe(OH)₃↓, formant un précipité gélatineux rouille."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p1_ex4",
+          "type": "mcq",
+          "prompt": "Quelle observation permet de distinguer sans ambiguïté les ions zinc Zn²⁺ des ions aluminium Al³⁺ lors de l'ajout de réactifs ?",
+          "options": [
+            "Le précipité blanc d'hydroxyde de zinc Zn(OH)₂ se redissout dans un excès de soude ou dans l'ammoniac",
+            "Zn²⁺ donne un précipité bleu alors qu'Al³⁺ donne un précipité jaune",
+            "Zn²⁺ colore la flamme en violet",
+            "Al³⁺ dégage spontanément du dichlore gazeux"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Zn(OH)₂ est amphotère et forme des complexes solubles : le précipité blanc de Zn(OH)₂ se redissout en milieu fortement basique (excès de soude) ou en présence d'ammoniac."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p1_ex5",
+          "type": "mcq",
+          "prompt": "Quelle est l'équation-bilan de la réaction de caractérisation des ions cuivre II (Cu²⁺) par la soude ?",
+          "options": [
+            "Cu²⁺ + 2 OH⁻ ⟶ Cu(OH)₂↓",
+            "Cu²⁺ + OH⁻ ⟶ CuOH↓",
+            "Cu + 2 OH⁻ ⟶ CuO + H₂",
+            "Cu²⁺ + 2 Cl⁻ ⟶ CuCl₂↓"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La réaction fait intervenir un ion Cu²⁺ et deux ions hydroxydes OH⁻ pour donner le précipité neutre Cu(OH)₂↓ (bleu)."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p1_ex6",
+          "type": "mcq",
+          "prompt": "Une solution est incolore et donne un précipité blanc lorsqu'on y ajoute quelques gouttes de solution de sulfate de sodium. Quel cation peut-on soupçonner ?",
+          "options": [
+            "L'ion baryum Ba²⁺ (formation de précipité de BaSO₄)",
+            "L'ion sodium Na⁺",
+            "L'ion cuivre Cu²⁺",
+            "L'ion permanganate MnO₄⁻"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les ions baryum Ba²⁺ réagissent spécifiquement avec les ions sulfate SO₄²⁻ pour donner un précipité blanc très insoluble de sulfate de baryum BaSO₄."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p1_ex7",
+          "type": "mcq",
+          "prompt": "Quelle couleur possède une solution aqueuse contenant des ions permanganate MnO₄⁻ ?",
+          "options": [
+            "Violette intense",
+            "Bleue claire",
+            "Verte",
+            "Jaune orangée"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'ion permanganate MnO₄⁻ confère à ses solutions une coloration violette très caractéristique et très intense."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p1_ex8",
+          "type": "mcq",
+          "prompt": "Pourquoi dit-on qu'une solution bleue ne contient pas obligatoirement des ions cuivre II Cu²⁺ ?",
+          "options": [
+            "Car d'autres espèces chimiques ou colorants peuvent donner une coloration bleue sans contenir de cuivre ; seul un test chimique apporte la preuve",
+            "Car les ions Cu²⁺ sont toujours incolores dans l'eau pure",
+            "Car le bleu est obligatoirement dû à l'ion fer II",
+            "Car la couleur d'une solution dépend uniquement de la lumière ambiante"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La couleur est un indice macroscopique, mais plusieurs substances ou colorants peuvent produire une même nuance. Seule la réaction caractéristique de précipitation valide la présence de l'espèce."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_chimie_ch9_p2_anions_degagement_gazeux",
+      "order": 2,
+      "title": "Identification des anions et tests par dégagement gazeux",
+      "summary": "Maîtriser les tests spécifiques des anions (chlorure, sulfate, carbonate, phosphate, nitrate) et les réactions à dégagement gazeux caractéristiques.",
+      "conceptExplanation": "L'identification des anions repose sur des tests de précipitation sélective ou sur des dégagements gazeux spécifiques :\n\n1. Ion chlorure Cl⁻ :\nOn ajoute quelques gouttes d'une solution de nitrate d'argent (Ag⁺ + NO₃⁻). Il se forme un précipité blanc de chlorure d'argent AgCl qui noircit à la lumière :\nAg⁺ + Cl⁻ ⟶ AgCl↓.\n\n2. Ion sulfate SO₄²⁻ :\nOn ajoute une solution de chlorure de baryum (Ba²⁺ + 2 Cl⁻) ou de nitrate de baryum. Il se forme un précipité blanc de sulfate de baryum BaSO₄, insoluble dans les acides :\nBa²⁺ + SO₄²⁻ ⟶ BaSO₄↓.\n\n3. Ion carbonate CO₃²⁻ (test avec dégagement gazeux) :\nOn verse quelques gouttes d'acide chlorhydrique (H₃O⁺ + Cl⁻) sur la solution ou le solide. On observe une vive effervescence avec dégagement de dioxyde de carbone CO₂ gazeux qui trouble l'eau de chaux :\nCO₃²⁻ + 2 H₃O⁺ ⟶ CO₂↑ + 3 H₂O.\n\n4. Ion phosphate PO₄³⁻ :\nEn présence du réactif molybdique en milieu acide et à chaud, il apparaît une coloration ou un précipité jaune caractéristique de phosphomolybdate.\n\n5. Ion nitrate NO₃⁻ :\nEn milieu acide chaud avec du sulfate de fer II, ou par réduction, on observe un anneau brun ou la décoloration du permanganate de potassium.\n\n6. Ion ammonium NH₄⁺ (cation décelable par gaz) :\nLorsqu'on chauffe une solution d'ammonium en présence de soude concentrée, il se dégage du gaz ammoniac NH₃ (odeur piquante), qui brunit le papier filtre imbibé de réactif de Nessler ou bleuit le papier pH humide :\nNH₄⁺ + OH⁻ ⟶ NH₃↑ + H₂O.",
+      "formulas": [
+        {
+          "name": "Caractérisation des chlorures",
+          "formula": "Ag⁺ + Cl⁻ ⟶ AgCl↓",
+          "note": "Précipité blanc qui noircit sous l'effet des rayons lumineux."
+        },
+        {
+          "name": "Caractérisation des sulfates",
+          "formula": "Ba²⁺ + SO₄²⁻ ⟶ BaSO₄↓",
+          "note": "Précipité blanc persistant et totalement insoluble en milieu acide."
+        },
+        {
+          "name": "Caractérisation des carbonates",
+          "formula": "CO₃²⁻ + 2 H₃O⁺ ⟶ CO₂↑ + 3 H₂O",
+          "note": "Effervescence avec dégagement gazeux troublant l'eau de chaux."
+        },
+        {
+          "name": "Caractérisation des ions ammonium",
+          "formula": "NH₄⁺ + OH⁻ ⟶ NH₃↑ + H₂O",
+          "note": "Gaz ammoniac décelable au réactif de Nessler (brunissement)."
+        },
+        {
+          "name": "Caractérisation des phosphates",
+          "formula": "PO₄³⁻ + réactif molybdique ⟶ coloration jaune",
+          "note": "Test spécifique réalisé en milieu acide réchauffé."
+        }
+      ],
+      "keyRule": "Ag⁺ précipite les Cl⁻ en blanc qui noircit au soleil ; Ba²⁺ précipite les SO₄²⁻ en blanc ; l'acide libère du CO₂ qui trouble l'eau de chaux à partir des CO₃²⁻ ; la soude à chaud libère du NH₃ à partir de NH₄⁺.",
+      "workedExample": {
+        "title": "Analyse qualitative complète d'une solution inconnue",
+        "statement": "On dispose d'une solution aqueuse inconnue S. On réalise deux tests successifs sur des fractions distinctes :\n1. L'ajout de nitrate d'argent produit un précipité blanc qui noircit sous les rayons du soleil.\n2. L'ajout de soude produit un précipité rouille.\nIdentifie les ions présents dans S, écris les équations des deux réactions et déduis le nom et la formule de la solution S.",
+        "methodSteps": [
+          "Le test 1 (précipité blanc qui noircit à la lumière avec Ag⁺) met en évidence l'anion chlorure Cl⁻ : Ag⁺ + Cl⁻ ⟶ AgCl↓.",
+          "Le test 2 (précipité rouille avec la soude OH⁻) met en évidence le cation fer III Fe³⁺ : Fe³⁺ + 3 OH⁻ ⟶ Fe(OH)₃↓.",
+          "Les ions constitutifs de la solution S sont donc Fe³⁺ et Cl⁻.",
+          "Par neutralité électrique, la formule du composé solide dissous est FeCl₃.",
+          "La solution S est une solution aqueuse de chlorure de fer III (ou chlorure ferrique)."
+        ],
+        "conclusion": "La solution S est du chlorure de fer III (FeCl₃), contenant les ions Fe³⁺ et Cl⁻."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch9_p2_ex1",
+          "type": "mcq",
+          "prompt": "Quel réactif permet de caractériser sans équivoque les ions chlorure Cl⁻ en solution aqueuse ?",
+          "options": [
+            "Le nitrate d'argent (Ag⁺ + NO₃⁻), donnant un précipité blanc qui noircit à la lumière",
+            "La soude caustique, donnant un précipité bleu",
+            "L'eau de chaux, qui se trouble immédiatement",
+            "Le sulfate de cuivre, devenant vert"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La réaction Ag⁺ + Cl⁻ ⟶ AgCl↓ produit du chlorure d'argent blanc, dont la particularité physique essentielle est de noircir progressivement à la lumière."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p2_ex2",
+          "type": "mcq",
+          "prompt": "Quel précipité est formé lors de la détection des ions sulfate SO₄²⁻ par les ions baryum Ba²⁺ ?",
+          "options": [
+            "BaSO₄, un précipité blanc insoluble dans les acides et ne noircissant pas à la lumière",
+            "AgCl, un précipité blanc qui jaunit",
+            "BaCl₂, un solide soluble",
+            "FeSO₄, un précipité vert foncé"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Ba²⁺ + SO₄²⁻ ⟶ BaSO₄↓ forme un précipité blanc de sulfate de baryum, très stable et totalement insoluble dans l'eau et dans les acides dilués."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p2_ex3",
+          "type": "mcq",
+          "prompt": "Lorsqu'on verse de l'acide chlorhydrique sur une poudre de craie (carbonate de calcium CaCO₃), quel phénomène observe-t-on ?",
+          "options": [
+            "Une vive effervescence avec dégagement de dioxyde de carbone CO₂ qui trouble l'eau de chaux",
+            "La formation d'un liquide violet sans gaz",
+            "Un dégagement de dihydrogène inflammable",
+            "Une absence totale de réaction à froid"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les ions carbonate réagissent avec l'acide : CO₃²⁻ + 2 H₃O⁺ ⟶ CO₂↑ + 3 H₂O. Le gaz dégagé est du CO₂, qui trouble l'eau de chaux."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p2_ex4",
+          "type": "mcq",
+          "prompt": "Quel test permet de caractériser expérimentalement le gaz ammoniac NH₃ dégagé lorsqu'on chauffe des ions ammonium NH₄⁺ avec de la soude ?",
+          "options": [
+            "Il brunit un papier filtre imbibé de réactif de Nessler (et possède une odeur piquante)",
+            "Il émet un bruit d'aboiement à l'approche d'une allumette",
+            "Il rallume une allumette à demi-éteinte",
+            "Il trouble l'eau de chaux en devenant laiteux"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le gaz ammoniac NH₃ formé par NH₄⁺ + OH⁻ ⟶ NH₃↑ + H₂O est un gaz basique d'odeur piquante qui brunit le réactif de Nessler."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p2_ex5",
+          "type": "mcq",
+          "prompt": "Une solution inconnue donne un précipité blanc avec le nitrate d'argent et un précipité vert pâle avec la soude. De quelle solution s'agit-il ?",
+          "options": [
+            "Une solution de chlorure de fer II (FeCl₂)",
+            "Une solution de chlorure de fer III (FeCl₃)",
+            "Une solution de sulfate de cuivre (CuSO₄)",
+            "Une solution de nitrate de sodium (NaNO₃)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le test au nitrate d'argent révèle les ions Cl⁻, et le test à la soude révèle les ions Fe²⁺ (précipité vert pâle de Fe(OH)₂). Il s'agit donc d'une solution de chlorure de fer II (FeCl₂)."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p2_ex6",
+          "type": "mcq",
+          "prompt": "Quel réactif utilise-t-on pour identifier spécifiquement les ions phosphate PO₄³⁻ en solution aqueuse ?",
+          "options": [
+            "Le réactif molybdique (formation d'un précipité ou d'une coloration jaune)",
+            "Le nitrate d'argent à l'obscurité",
+            "Le papier tournesol sec",
+            "La grenaille de zinc"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En présence de réactif nitro-molybdique en milieu acide et chaud, les ions phosphate forment un composé complexe jaune caractéristique (phosphomolybdate d'ammonium)."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p2_ex7",
+          "type": "mcq",
+          "prompt": "Dans l'équation de précipitation Ba²⁺ + SO₄²⁻ ⟶ BaSO₄↓ obtenue en mélangeant du chlorure de baryum et du sulfate de sodium, quel rôle jouent les ions Na⁺ et Cl⁻ ?",
+          "options": [
+            "Ce sont des ions spectateurs (ou indifférents) car ils ne participent pas à la formation du précipité",
+            "Ce sont les catalyseurs de la réaction chimique",
+            "Ils se transforment en gaz sous l'effet de la chaleur",
+            "Ils s'oxydent mutuellement en chlore et sodium"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les ions Na⁺ et Cl⁻ restent inchangés et libres en solution aqueuse avant et après le mélange : ce sont des ions spectateurs."
+        },
+        {
+          "id": "seconde_c_chimie_ch9_p2_ex8",
+          "type": "mcq",
+          "prompt": "Un laborantin verse de l'acide chlorhydrique sur un échantillon de roche prélevé en Côte d'Ivoire. Une effervescence se produit et le gaz trouble l'eau de chaux. Que peut-on conclure sur la roche ?",
+          "options": [
+            "Elle contient du calcaire (carbonate de calcium CaCO₃)",
+            "Elle est constituée exclusivement de quartz pur SiO₂",
+            "Elle contient du fer métallique pur",
+            "Elle est riche en chlorure de sodium cristallisé"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'effervescence avec dégagement de CO₂ troublant l'eau de chaux est le test géologique de référence prouvant la présence de carbonates (roche calcaire)."
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================================
+// LEÇON 10 : SOLUTIONS ACIDES ET BASIQUES. MESURE DE pH
+// ============================================================================
+
+export const chimie2deCSolutionsAcidesBasiquesChapter: CurriculumChapter = {
+  "id": "seconde_c_chimie_ch10_solutions_acides_basiques_ph",
+  "subjectId": "physique_chimie",
+  "gradeLevel": "seconde_c",
+  "order": 10,
+  "officialVolumeHours": 8,
+  "title": "Leçon 10 — Solutions acides et basiques. Mesure de pH",
+  "summary": "Solutions d'acide chlorhydrique et d'hydroxyde de sodium, attaques sur les métaux et le calcaire, notion de pH, relations d'acidité, produit ionique de l'eau et effet de la dilution.",
+  "points": [
+    {
+      "id": "seconde_c_chimie_ch10_p1_acide_chlorhydrique_soude_reactions",
+      "order": 1,
+      "title": "Solutions d'acide chlorhydrique et d'hydroxyde de sodium",
+      "summary": "Comprendre la nature ionique, la préparation exothermique et les propriétés chimiques distinctives des acides et des bases forts usuels.",
+      "conceptExplanation": "1. Solution d'acide chlorhydrique :\nLe chlorure d'hydrogène HCl est un gaz incolore, d'odeur piquante et suffocante, plus dense que l'air (M = 36,5 g/mol, d ≈ 1,26). Sa dissolution dans l'eau est très soluble et fortement exothermique.\nLors de sa dissolution, il subit une ionisation totale :\nHCl + H₂O ⟶ H₃O⁺ + Cl⁻ (où H₃O⁺ est l'ion hydronium ou oxonium).\nPropriétés caractéristiques de la solution d'acide chlorhydrique :\n- Action sur les indicateurs colorés : fait virer l'hélianthine au rouge, le bleu de bromothymol (BBT) au jaune, et laisse la phénolphtaléine incolore.\n- Action sur les métaux : attaque vivement le fer, le zinc et l'aluminium avec effervescence de dihydrogène H₂ (qui détonne à la flamme) :\n  • Fe + 2 H⁺ ⟶ Fe²⁺ + H₂↑\n  • Zn + 2 H⁺ ⟶ Zn²⁺ + H₂↑\n  • 2 Al + 6 H⁺ ⟶ 2 Al³⁺ + 3 H₂↑\n  NB : l'acide chlorhydrique n'a AUCUNE action sur le cuivre Cu !\n- Action sur le calcaire : attaque CaCO₃ avec dégagement de CO₂ qui trouble l'eau de chaux : CaCO₃ + 2 H₃O⁺ ⟶ Ca²⁺ + CO₂↑ + 3 H₂O.\n\n2. Solution d'hydroxyde de sodium (soude caustique NaOH) :\nLe solide NaOH est un composé ionique blanc, déliquescent, constitué d'ions Na⁺ et OH⁻. Sa dissolution dans l'eau est fortement exothermique :\nNaOH(s) ⟶ Na⁺(aq) + OH⁻(aq).\nPropriétés caractéristiques de la solution de soude :\n- Action sur les indicateurs colorés : maintient l'hélianthine jaune, fait virer le BBT au bleu franc, et fait virer la phénolphtaléine au violet/rose fuchsia.\n- Action sur les ions métalliques : forme des précipités d'hydroxydes insolubles (Cu(OH)₂ bleu, Fe(OH)₂ vert pâle, Fe(OH)₃ rouille, Zn(OH)₂ blanc, Al(OH)₃ blanc).\n- Action sur les ions ammonium : à chaud, dégage du gaz ammoniac NH₃ : NH₄⁺ + OH⁻ ⟶ NH₃↑ + H₂O.",
+      "formulas": [
+        {
+          "name": "Dissolution totale du gaz HCl",
+          "formula": "HCl + H₂O ⟶ H₃O⁺ + Cl⁻",
+          "note": "Réaction fortement exothermique créant des ions hydronium."
+        },
+        {
+          "name": "Dissolution de la soude NaOH",
+          "formula": "NaOH(s) ⟶ Na⁺ + OH⁻",
+          "note": "Réaction exothermique libérant des ions hydroxyde basiques."
+        },
+        {
+          "name": "Attaque du zinc par l'acide",
+          "formula": "Zn + 2 H₃O⁺ ⟶ Zn²⁺ + H₂↑ + 2 H₂O",
+          "note": "Effervescence avec dégagement de dihydrogène détonant."
+        },
+        {
+          "name": "Attaque du fer par l'acide",
+          "formula": "Fe + 2 H₃O⁺ ⟶ Fe²⁺ + H₂↑ + 2 H₂O",
+          "note": "Formation d'ions fer II vert pâle et de gaz dihydrogène."
+        },
+        {
+          "name": "Attaque du calcaire par l'acide",
+          "formula": "CaCO₃ + 2 H₃O⁺ ⟶ Ca²⁺ + CO₂↑ + 3 H₂O",
+          "note": "Dégagement de dioxyde de carbone troublant l'eau de chaux."
+        },
+        {
+          "name": "Inertie du cuivre métallique",
+          "formula": "Cu + H₃O⁺ ⟶ Pas de réaction",
+          "note": "L'acide chlorhydrique n'attaque pas le cuivre métallique."
+        }
+      ],
+      "keyRule": "HCl et NaOH se dissolvent avec fort dégagement de chaleur. L'acide colore le BBT en jaune et attaque Fe, Zn, Al (dégagement de H₂) mais JAMAIS le cuivre. La soude colore le BBT en bleu et précipite les cations métalliques.",
+      "workedExample": {
+        "title": "Calcul du volume de dihydrogène produit par attaque acide",
+        "statement": "On verse un excès d'acide chlorhydrique sur 1,3 g de poudre de zinc pur Zn (M = 65,4 g/mol). On recueille le gaz dégagé à 25 °C sous une pression où le volume molaire est Vm = 24 L/mol. Identifie le gaz formé, écris l'équation-bilan et calcule le volume de gaz dégagé.",
+        "methodSteps": [
+          "Identifier le gaz produit : l'action de l'acide chlorhydrique sur le zinc produit du dihydrogène gazeux H₂, caractérisé par une petite détonation à la flamme.",
+          "Écrire l'équation-bilan de la réaction d'oxydoréduction : Zn(s) + 2 H⁺(aq) ⟶ Zn²⁺(aq) + H₂(g)↑.",
+          "Calculer la quantité de matière de zinc ayant réagi : n(Zn) = m / M = 1,3 / 65,4 ≈ 0,020 mol.",
+          "D'après les coefficients stœchiométriques : n(H₂) = n(Zn) = 0,020 mol.",
+          "Calculer le volume de gaz recueilli : V(H₂) = n(H₂) × Vm = 0,020 mol × 24 L/mol = 0,48 L = 480 cm³."
+        ],
+        "conclusion": "Le gaz dégagé est le dihydrogène H₂, et son volume est de 0,48 L (480 cm³)."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch10_p1_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est la couleur prise par le bleu de bromothymol (BBT) en présence d'une solution d'acide chlorhydrique ?",
+          "options": [
+            "Jaune",
+            "Bleue",
+            "Verte",
+            "Rouge violette"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le BBT est jaune en milieu acide (pH < 6,0), vert en milieu neutre (6,0 < pH < 7,6), et bleu en milieu basique (pH > 7,6)."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p1_ex2",
+          "type": "mcq",
+          "prompt": "Parmi les métaux suivants, lequel n'est absolument PAS attaqué par une solution d'acide chlorhydrique diluée ?",
+          "options": [
+            "Le cuivre (Cu)",
+            "Le fer (Fe)",
+            "Le zinc (Zn)",
+            "L'aluminium (Al)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le cuivre possède un potentiel standard d'oxydoréduction supérieur à celui du couple H⁺/H₂ : il ne réagit pas avec les ions H⁺ de l'acide chlorhydrique."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p1_ex3",
+          "type": "mcq",
+          "prompt": "Quel gaz se dégage lorsqu'on fait réagir de l'acide chlorhydrique sur du calcaire (CaCO₃) ?",
+          "options": [
+            "Du dioxyde de carbone CO₂, qui trouble l'eau de chaux",
+            "Du dihydrogène H₂, qui explose à la flamme",
+            "Du dioxygène O₂, qui ravive la braise",
+            "Du dichlore Cl₂, qui décolore l'indigo"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La réaction CaCO₃ + 2 H₃O⁺ ⟶ Ca²⁺ + CO₂↑ + 3 H₂O produit du gaz dioxyde de carbone CO₂, caractérisé par le trouble de l'eau de chaux."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p1_ex4",
+          "type": "mcq",
+          "prompt": "Quelle est la coloration de la phénolphtaléine en présence d'une solution d'hydroxyde de sodium (soude) ?",
+          "options": [
+            "Rose violacée (fuchsia)",
+            "Incolore",
+            "Bleue indigo",
+            "Jaune canari"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La phénolphtaléine est incolore en milieu acide et neutre, et prend une teinte rose fuchsia à violette très marquée en milieu basique (pH > 8,2)."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p1_ex5",
+          "type": "mcq",
+          "prompt": "L'équation de dissolution du gaz chlorure d'hydrogène HCl dans l'eau s'écrit :",
+          "options": [
+            "HCl + H₂O ⟶ H₃O⁺ + Cl⁻",
+            "HCl ⟶ H⁺ + Cl⁻ sans interaction avec le solvant",
+            "2 HCl + H₂O ⟶ Cl₂ + H₂O + H₂",
+            "HCl + OH⁻ ⟶ H₂O + Cl⁻"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La molécule HCl réagit chimiquement avec l'eau par transfert de proton pour donner l'ion hydronium H₃O⁺ et l'ion chlorure Cl⁻."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p1_ex6",
+          "type": "mcq",
+          "prompt": "Pourquoi la dissolution de l'hydroxyde de sodium NaOH solide dans l'eau exige-t-elle des précautions particulières ?",
+          "options": [
+            "Parce qu'elle est fortement exothermique et libère une chaleur intense risquant de provoquer des projections corrosives",
+            "Parce qu'elle dégage spontanément du monoxyde de carbone mortel",
+            "Parce que la solution gèle instantanément en absorbant la chaleur",
+            "Parce que le récipient devient radioactif"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La dissolution de la soude est fortement exothermique (dégagement de chaleur violent). Le bécher s'échauffe très vite et la soude concentrée est extrêmement caustique pour les tissus."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p1_ex7",
+          "type": "mcq",
+          "prompt": "Quelle est l'équation-bilan simplifiée traduisant l'attaque de la limaille de fer par les ions hydronium de l'acide chlorhydrique ?",
+          "options": [
+            "Fe + 2 H⁺ ⟶ Fe²⁺ + H₂↑",
+            "Fe + 3 H⁺ ⟶ Fe³⁺ + 3/2 H₂↑",
+            "2 Fe + 6 H⁺ ⟶ 2 Fe³⁺ + 3 H₂↑",
+            "Fe + H⁺ ⟶ Fe⁺ + 1/2 H₂↑"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'acide chlorhydrique oxyde le fer métallique en ions fer II Fe²⁺ avec réduction des protons en dihydrogène : Fe + 2 H⁺ ⟶ Fe²⁺ + H₂↑."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p1_ex8",
+          "type": "mcq",
+          "prompt": "Quel gaz à odeur piquante se dégage lorsqu'on chauffe un mélange de soude et de chlorure d'ammonium NH₄Cl ?",
+          "options": [
+            "L'ammoniac NH₃",
+            "Le dichlore Cl₂",
+            "Le diazote N₂",
+            "Le sulfure d'hydrogène H₂S"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'ion ammonium réagit avec les ions hydroxyde à chaud selon NH₄⁺ + OH⁻ ⟶ NH₃↑ + H₂O, dégageant de l'ammoniac gazeux."
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_chimie_ch10_p2_definition_ph_echelle_dilution",
+      "order": 2,
+      "title": "Notion de pH, produit ionique de l'eau et effet de la dilution",
+      "summary": "Maîtriser la définition du pH, la relation [H₃O⁺] = 10⁻ᵖᴴ, l'échelle 0-14, le produit ionique Ke = 10⁻¹⁴ et la variation du pH lors de la dilution.",
+      "conceptExplanation": "1. Définition du pH :\nLe potentiel Hydrogène (pH) est un nombre sans unité qui mesure l'acidité ou la basicité d'une solution aqueuse diluée en fonction de sa concentration en ions hydronium [H₃O⁺] :\n[H₃O⁺] = 10⁻ᵖᴴ  ou  pH = −log[H₃O⁺] (avec [H₃O⁺] en mol/L).\nPlus la concentration en ions H₃O⁺ est grande, plus le pH est faible.\nCette échelle est rigoureusement définie entre 0 et 14 à 25 °C pour les solutions diluées (concentrations comprises entre 10⁻¹⁴ et 1 mol/L).\n\n2. Mesure du pH :\n- Approximative : papier pH (papier buvard imprégné d'un mélange d'indicateurs colorés dont la teinte est comparée à un nuancier).\n- Précise : pH-mètre étalonné (sonde électronique mesurant la différence de potentiel, précision de 0,05 unité).\n\n3. Classification des solutions aqueuses à 25 °C :\n- Solution acide : pH < 7 ⟺ [H₃O⁺] > 10⁻⁷ mol/L.\n- Solution neutre (ex : eau pure) : pH = 7 ⟺ [H₃O⁺] = [OH⁻] = 10⁻⁷ mol/L.\n- Solution basique : pH > 7 ⟺ [H₃O⁺] < 10⁻⁷ mol/L (soit [OH⁻] > 10⁻⁷ mol/L).\n\n4. Produit ionique de l'eau pure :\nDans toute solution aqueuse à 25 °C, l'auto-protolyse de l'eau impose la constante fondamentale :\nKe = [H₃O⁺] × [OH⁻] = 10⁻¹⁴.\nPar conséquent, pour une solution basique d'hydroxyde de sodium de concentration C en soude :\n[OH⁻] = C ⟹ [H₃O⁺] = 10⁻¹⁴ / [OH⁻] = 10⁻¹⁴ / C ⟹ pH = 14 + log(C).\nExemple : pour une solution de soude C = 10⁻³ mol/L, [H₃O⁺] = 10⁻¹⁴ / 10⁻³ = 10⁻¹¹ mol/L, donc pH = 11.\n\n5. Effet de la dilution sur le pH :\nDiluer consiste à ajouter de l'eau pure, ce qui diminue la concentration des espèces dissoutes :\n- Pour une solution acide : lors de la dilution, [H₃O⁺] diminue, donc son pH augmente et tend vers 7 (sans jamais dépasser 7).\n- Pour une solution basique : lors de la dilution, [OH⁻] diminue, donc son pH diminue et tend vers 7 (sans jamais descendre en dessous de 7).",
+      "formulas": [
+        {
+          "name": "Relation fondamentale du pH",
+          "formula": "[H₃O⁺] = 10⁻ᵖᴴ mol/L",
+          "note": "Permet de calculer directement la concentration hydronium."
+        },
+        {
+          "name": "Formule inverse logarithmique",
+          "formula": "pH = −log[H₃O⁺]",
+          "note": "Le pH diminue quand la concentration hydronium augmente."
+        },
+        {
+          "name": "Produit ionique de l'eau (à 25 °C)",
+          "formula": "Ke = [H₃O⁺] × [OH⁻] = 10⁻¹⁴",
+          "note": "Constante valable dans toute solution aqueuse diluée à 25 °C."
+        },
+        {
+          "name": "Solution neutre à 25 °C",
+          "formula": "pH = 7 ⟺ [H₃O⁺] = [OH⁻] = 10⁻⁷ mol/L",
+          "note": "Équilibre strict entre acidité et basicité."
+        },
+        {
+          "name": "pH d'une solution de base forte (soude)",
+          "formula": "[H₃O⁺] = 10⁻¹⁴ / C ⟹ pH = 14 + log C",
+          "note": "Par exemple pour C = 10⁻³ mol/L, pH = 14 − 3 = 11."
+        },
+        {
+          "name": "Effet de la dilution",
+          "formula": "Acide ⟹ pH ↗ vers 7 | Base ⟹ pH ↘ vers 7",
+          "note": "Le pH se rapproche toujours de 7 sans jamais franchir la neutralité."
+        }
+      ],
+      "keyRule": "À 25 °C, l'échelle s'étend de 0 à 14. [H₃O⁺] = 10⁻ᵖᴴ et [H₃O⁺]×[OH⁻] = 10⁻¹⁴. Diluer un acide augmente son pH vers 7 ; diluer une base diminue son pH vers 7.",
+      "workedExample": {
+        "title": "Calcul des concentrations ioniques et du pH d'une solution de soude",
+        "statement": "On prépare une solution aqueuse d'hydroxyde de sodium de concentration molaire C = 10⁻³ mol/L à 25 °C. 1) Écris l'équation de dissociation de NaOH dans l'eau. 2) Détermine les concentrations des ions OH⁻ et H₃O⁺. 3) Déduis-en la valeur du pH de cette solution.",
+        "methodSteps": [
+          "Écrire la dissociation totale : NaOH(s) ⟶ Na⁺(aq) + OH⁻(aq).",
+          "Calculer la concentration en ions hydroxyde : chaque mole de NaOH donne une mole d'ions OH⁻, donc [OH⁻] = C = 10⁻³ mol/L.",
+          "Utiliser le produit ionique de l'eau à 25 °C : [H₃O⁺] × [OH⁻] = 10⁻¹⁴.",
+          "En déduire [H₃O⁺] : [H₃O⁺] = 10⁻¹⁴ / [OH⁻] = 10⁻¹⁴ / 10⁻³ = 10⁻¹¹ mol/L.",
+          "Déterminer le pH : [H₃O⁺] = 10⁻ᵖᴴ = 10⁻¹¹ mol/L ⟹ pH = 11."
+        ],
+        "conclusion": "La solution de soude possède [OH⁻] = 10⁻³ mol/L, [H₃O⁺] = 10⁻¹¹ mol/L, et un pH basique de 11."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_chimie_ch10_p2_ex1",
+          "type": "mcq",
+          "prompt": "Une solution aqueuse a une concentration en ions hydronium [H₃O⁺] = 10⁻⁴ mol/L à 25 °C. Quel est son pH et sa nature ?",
+          "options": [
+            "pH = 4, la solution est acide",
+            "pH = 10, la solution est basique",
+            "pH = 7, la solution est neutre",
+            "pH = −4, la solution est ultra-acide"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Par définition, [H₃O⁺] = 10⁻ᵖᴴ. Comme [H₃O⁺] = 10⁻⁴ mol/L, pH = 4. Comme 4 < 7, la solution est acide."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p2_ex2",
+          "type": "mcq",
+          "prompt": "Quelle est la valeur du produit ionique de l'eau pure Ke = [H₃O⁺] × [OH⁻] à la température de 25 °C ?",
+          "options": [
+            "10⁻¹⁴",
+            "10⁻⁷",
+            "10¹⁴",
+            "1,0"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "À 25 °C, le produit des concentrations molaires des ions hydronium et hydroxyde dans toute solution aqueuse est constant et vaut Ke = 10⁻¹⁴."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p2_ex3",
+          "type": "mcq",
+          "prompt": "À 25 °C, une solution aqueuse de soude a une concentration [OH⁻] = 10⁻² mol/L. Quelle est la concentration en ions [H₃O⁺] et son pH ?",
+          "options": [
+            "[H₃O⁺] = 10⁻¹² mol/L et pH = 12",
+            "[H₃O⁺] = 10⁻² mol/L et pH = 2",
+            "[H₃O⁺] = 10⁻¹⁴ mol/L et pH = 14",
+            "[H₃O⁺] = 10⁻⁷ mol/L et pH = 7"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "[H₃O⁺] = Ke / [OH⁻] = 10⁻¹⁴ / 10⁻² = 10⁻¹² mol/L. Le pH est donc égal à 12 (solution basique)."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p2_ex4",
+          "type": "mcq",
+          "prompt": "On dilue 10 fois une solution d'acide chlorhydrique dont le pH initial est égal à 2,0. Que devient son pH ?",
+          "options": [
+            "Le pH augmente et passe à 3,0",
+            "Le pH diminue et passe à 1,0",
+            "Le pH passe instantanément à 12",
+            "Le pH ne change pas car c'est toujours le même acide"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une dilution par 10 divise la concentration [H₃O⁺] par 10 : de 10⁻² mol/L, elle passe à 10⁻³ mol/L. Le pH passe donc de 2,0 à 3,0 (il augmente vers 7)."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p2_ex5",
+          "type": "mcq",
+          "prompt": "Que se passe-t-il pour le pH d'une solution basique (ex : soude à pH = 12) lorsqu'on la dilue abondamment avec de l'eau pure ?",
+          "options": [
+            "Son pH diminue et tend progressivement vers 7 sans jamais descendre en dessous de 7",
+            "Son pH augmente et tend vers 14",
+            "Son pH chute brutalement à 0",
+            "Son pH reste fixé à 12"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La dilution diminue la concentration en ions OH⁻. Le pH de la base baisse donc en se rapprochant de la neutralité (pH = 7), sans jamais devenir acide."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p2_ex6",
+          "type": "mcq",
+          "prompt": "Parmi les solutions suivantes, quelle est la plus acide ?",
+          "options": [
+            "Le jus de citron (pH = 2,3)",
+            "Le vinaigre (pH = 3,0)",
+            "Le jus d'orange (pH = 3,5)",
+            "L'eau de pluie (pH = 6,2)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une solution est d'autant plus acide que sa valeur de pH est petite (car cela correspond à une plus grande concentration en ions H₃O⁺). Le jus de citron à pH = 2,3 est la plus acide."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p2_ex7",
+          "type": "mcq",
+          "prompt": "Quel appareil électronique permet d'obtenir une mesure directe et rigoureuse du pH avec une précision d'environ 0,05 unité ?",
+          "options": [
+            "Le pH-mètre",
+            "Le papier pH",
+            "Le thermomètre à mercure",
+            "Le baromètre anéroïde"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le pH-mètre est un millivoltmètre électronique muni d'une sonde combinée (électrode de verre et de référence) mesurant rigoureusement le pH à ±0,05 unité."
+        },
+        {
+          "id": "seconde_c_chimie_ch10_p2_ex8",
+          "type": "mcq",
+          "prompt": "Dans de l'eau pure à 25 °C, que vaut la concentration en ions hydroxyde [OH⁻] ?",
+          "options": [
+            "10⁻⁷ mol/L",
+            "10⁻¹⁴ mol/L",
+            "10⁻² mol/L",
+            "0 mol/L"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans l'eau pure à 25 °C, l'électroneutralité et l'équilibre d'autoprotolyse imposent [H₃O⁺] = [OH⁻]. Comme leur produit vaut 10⁻¹⁴, on a [H₃O⁺] = [OH⁻] = 10⁻⁷ mol/L."
+        }
+      ]
+    }
+  ]
+};
+
 
 export const chimie2deCChapters: CurriculumChapter[] = [
   chimie2deCElementChimiqueChapter,
@@ -2509,4 +4110,9 @@ export const chimie2deCChapters: CurriculumChapter[] = [
   chimie2deCClassificationPeriodiqueChapter,
   chimie2deCIonsEtMoleculesChapter,
   chimie2deCMoleEtGrandeursMolairesChapter,
+  chimie2deCEquationBilanChapter,
+  chimie2deCChlorureSodiumChapter,
+  chimie2deCSolutionsAqueusesChapter,
+  chimie2deCTestsIdentificationIonsChapter,
+  chimie2deCSolutionsAcidesBasiquesChapter,
 ];
