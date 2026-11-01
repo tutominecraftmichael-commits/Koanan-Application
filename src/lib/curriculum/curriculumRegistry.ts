@@ -30,6 +30,7 @@ import {
   svt2deAHabitudesAlimentairesEtSanteChapter,
 } from '../../data/courses/svt_2de_a';
 import type { CurriculumChapter, CurriculumGradeLevel, StemSubjectId } from './types';
+import { expandChapterTo6MiniLessons } from './curriculumExpander';
 
 // ============================================================================
 // BASE DE DONNÉES SCIENTIFIQUE OFFICIELLE DE CÔTE D'IVOIRE
@@ -91733,23 +91734,24 @@ export function getCurriculumChapters(
   ).sort((a, b) => a.order - b.order);
 
   if (exactMatches.length > 0) {
-    return exactMatches;
+    return exactMatches.map(expandChapterTo6MiniLessons);
   }
 
   // 3. Fallback même matière au niveau terminale ou 3ème
   const subjectChapters = CURRICULUM_REGISTRY.filter((c) => c.subjectId === subjectId);
   if (subjectChapters.length > 0) {
     const tleMatches = subjectChapters.filter((c) => c.gradeLevel === 'terminale_d' || c.gradeLevel === '3eme');
-    if (tleMatches.length > 0) return tleMatches.sort((a, b) => a.order - b.order);
-    return subjectChapters.slice(0, 12).sort((a, b) => a.order - b.order);
+    if (tleMatches.length > 0) return tleMatches.sort((a, b) => a.order - b.order).map(expandChapterTo6MiniLessons);
+    return subjectChapters.slice(0, 12).sort((a, b) => a.order - b.order).map(expandChapterTo6MiniLessons);
   }
 
   // 4. Fallback absolu : Mathématiques Terminale D
   return CURRICULUM_REGISTRY.filter(
     (c) => c.subjectId === 'maths' && c.gradeLevel === 'terminale_d'
-  ).sort((a, b) => a.order - b.order);
+  ).sort((a, b) => a.order - b.order).map(expandChapterTo6MiniLessons);
 }
 
 export function getCurriculumChapterById(chapterId: string): CurriculumChapter | undefined {
-  return CURRICULUM_REGISTRY.find((c) => c.id === chapterId);
+  const chap = CURRICULUM_REGISTRY.find((c) => c.id === chapterId);
+  return chap ? expandChapterTo6MiniLessons(chap) : undefined;
 }

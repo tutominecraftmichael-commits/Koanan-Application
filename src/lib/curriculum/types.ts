@@ -266,17 +266,11 @@ export interface CurriculumChapter {
 }
 
 /**
- * Quota strict de points essentiels (mini-leçons) requis selon la durée prévue dans l'emploi du temps
+ * Quota strict de points essentiels (mini-leçons) requis selon la règle officielle :
+ * RÈGLE ABSOLUE : 1 séance d'étude = 1 SEULE Mini-Leçon approfondie (jamais tout le chapitre !)
  */
-export function getRequiredPointsCountForDuration(durationMinutes: number): number {
-  if (durationMinutes <= 30) {
-    return 3; // Séance de 25 minutes = 3 mini-leçons à 8/8 obligatoires
-  }
-  if (durationMinutes <= 50) {
-    return 5; // Séance de 45 minutes = 5 mini-leçons à 8/8 obligatoires
-  }
-  // Séance plus longue (60 à 75 minutes) = 6 mini-leçons à 8/8 obligatoires
-  return 6;
+export function getRequiredPointsCountForDuration(_durationMinutes: number): number {
+  return 1;
 }
 
 export interface TutorPointSessionItem {

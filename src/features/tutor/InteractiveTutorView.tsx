@@ -15,7 +15,6 @@ import {
   Check,
   Target,
   Brain,
-  FileCheck2,
   BookOpen,
   HelpCircle,
   RotateCcw,
@@ -68,20 +67,15 @@ type LessonPhase =
 
 interface ProgressiveCourseSlice {
   stepBadge: string;
-  stepType: 'concept' | 'worked_example';
   stepIndex: number;
+  totalSteps: number;
   stepTitle: string;
   paragraphText?: string;
+  exerciseStatement?: string;
   formula?: PointFormula;
   konanTip?: string;
   keyRule?: string;
   visualSchema?: PointVisualSchema;
-  workedExample?: {
-    title: string;
-    statement: string;
-    stepNumber: number;
-    stepHint?: string;
-  };
 }
 
 /**
@@ -179,11 +173,12 @@ const PedagogicalParagraph: React.FC<{ text: string }> = ({ text }) => {
 };
 
 /**
- * Découpe la leçon en 8 écrans progressifs (Style Duolingo) :
- * - Écrans 1 à 4 : Un seul point de cours à la fois (4-5 lignes) + formule associée
- * - Écrans 5 à 8 : Exercice d'application pas-à-pas (énoncé en haut, sans spoiler de solution)
+ * Découpe la leçon en 10 écrans progressifs (Style Duolingo) :
+ * - Écrans 1 à 6 : Cours approfondi (Définition, Mécanisme, Formule décortiquée, Cas particuliers, Rédaction, Pièges)
+ * - Écrans 7 à 10 : Exercice d'application guidé en 4 questions cohérentes (Énoncé réel au sommet, sans boîte verte discordante)
  */
 function buildProgressiveCourseSlice(point: CurriculumPoint, stepIndex: number): ProgressiveCourseSlice {
+  const totalSteps = point.exercises?.length || 10;
   const rawParagraphs = point.conceptExplanation
     .split(/\n\s*\n/)
     .map(p => p.trim())
@@ -192,42 +187,55 @@ function buildProgressiveCourseSlice(point: CurriculumPoint, stepIndex: number):
   const paragraphs = rawParagraphs.length > 0 ? rawParagraphs : [point.conceptExplanation];
   const formulas = point.formulas || [];
 
-  if (stepIndex < 4) {
-    // Écrans 1 à 4 : Apprentissage progressif du cours (UN SEUL point à la fois, ultra aéré)
-    const pText = paragraphs[stepIndex] || paragraphs[paragraphs.length - 1] || point.summary;
-    const form = formulas[stepIndex] || (stepIndex === 0 && formulas.length > 0 ? formulas[0] : undefined);
+  const stepThemes = [
+    'Introduction & Définition du concept',
+    'Mécanisme, loi fondamentale & Propriétés',
+    'Formule officielle décortiquée & Unités SI',
+    'Cas particuliers, variantes & Validité',
+    'Méthode de rédaction type devoir',
+    'Réflexe d\'évaluation & Piège classique à éviter',
+  ];
+
+  if (stepIndex < 6 && stepIndex < totalSteps - 4) {
+    // Écrans 1 à 6 : Mini-carte de cours avec code couleur Bleu / Violet
+    const theme = stepThemes[stepIndex] || `Notion clé ${stepIndex + 1}`;
+    const pText = paragraphs[stepIndex % paragraphs.length] || point.summary;
+    const form = formulas[stepIndex % formulas.length] || (formulas.length > 0 ? formulas[0] : undefined);
+    const tip = stepIndex === 5 && point.keyRule
+      ? `Piège classique d'examen : ${point.keyRule}`
+      : stepIndex >= 2 && point.keyRule
+      ? `L'Astuce du Prof Konan : ${point.keyRule}`
+      : undefined;
 
     return {
-      stepBadge: `Étape ${stepIndex + 1}/8 · Cours pas-à-pas`,
-      stepType: 'concept',
+      stepBadge: `Étape ${stepIndex + 1}/${totalSteps} · ${theme}`,
       stepIndex,
+      totalSteps,
       stepTitle: point.title,
       paragraphText: pText,
       formula: form,
-      konanTip: stepIndex >= 2 && point.keyRule ? `L'Astuce du Prof Konan : ${point.keyRule}` : undefined,
+      konanTip: tip,
       keyRule: stepIndex === 3 ? point.keyRule : undefined,
       visualSchema: stepIndex === 1 ? point.visualSchema : undefined,
     };
   }
 
-  // Écrans 5 à 8 : Exercice d'application interactif pas-à-pas (Résolution par étapes)
-  const stepNumber = stepIndex - 3; // 1, 2, 3, 4
+  // Écrans 7 à 10 : Exercice d'application guidé en 4 questions (Données réelles au sommet, zéro boîte verte discordante)
+  const questionNum = (stepIndex - Math.max(0, totalSteps - 4)) + 1; // 1, 2, 3, 4
   const ex = point.workedExample;
-  const exTitle = ex?.title || "Exercice d'application pas-à-pas";
   const exStatement = ex?.statement || point.summary;
-  const stepHint = ex?.methodSteps?.[stepNumber - 1];
+  const currentStepHint = ex?.methodSteps?.[questionNum - 1] || `Question ${questionNum}/4 de résolution avec les données réelles de l'énoncé.`;
+  const form = formulas[questionNum % formulas.length] || (formulas.length > 0 ? formulas[0] : undefined);
 
   return {
-    stepBadge: `Étape ${stepIndex + 1}/8 · Exercice d'application`,
-    stepType: 'worked_example',
+    stepBadge: `Étape ${stepIndex + 1}/${totalSteps} · Exercice d'application (Question ${questionNum}/4)`,
     stepIndex,
+    totalSteps,
     stepTitle: point.title,
-    workedExample: {
-      title: exTitle,
-      statement: exStatement,
-      stepNumber,
-      stepHint,
-    },
+    exerciseStatement: exStatement,
+    paragraphText: currentStepHint,
+    formula: form,
+    konanTip: questionNum === 4 ? ex?.conclusion : undefined,
   };
 }
 
@@ -1114,6 +1122,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     );
   }
 
+  const totalSteps = pointExercises.length || 10;
+
   return (
     <div className="max-w-3xl mx-auto py-4 sm:py-6 px-3 sm:px-6 space-y-4">
       {/* 1. BARRE DE PROGRESSION STYLE DUOLINGO (TOP) */}
@@ -1127,9 +1137,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <X className="w-5 h-5 stroke-[2.5]" />
         </button>
 
-        {/* 8 Segments d'étapes visuels Style Duolingo */}
-        <div className="flex-1 min-w-0 flex items-center gap-1.5 sm:gap-2">
-          {Array.from({ length: 8 }).map((_, sIdx) => {
+        {/* Segments d'étapes visuels Style Duolingo */}
+        <div className="flex-1 min-w-0 flex items-center gap-1 sm:gap-1.5">
+          {Array.from({ length: totalSteps }).map((_, sIdx) => {
             const isMastered = masteredIndices.includes(sIdx);
             const isCurrent = sIdx === activeStepIndex;
 
@@ -1143,16 +1153,16 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             return (
               <div
                 key={sIdx}
-                className={`h-2.5 sm:h-3 flex-1 rounded-full transition-all duration-300 ${segClass}`}
-                title={`Étape ${sIdx + 1}/8`}
+                className={`h-2 sm:h-2.5 flex-1 rounded-full transition-all duration-300 ${segClass}`}
+                title={`Étape ${sIdx + 1}/${totalSteps}`}
               />
             );
           })}
         </div>
 
-        {/* Badge de score 8/8 */}
+        {/* Badge de score X/totalSteps */}
         <div className="shrink-0 px-2.5 py-1 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-xs font-black">
-          {masteredIndices.length} / 8
+          {masteredIndices.length} / {totalSteps}
         </div>
       </div>
 
@@ -1164,7 +1174,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             style={{ backgroundColor: subjectMeta.color }}
           />
           <span className="font-extrabold uppercase tracking-wide text-slate-700 dark:text-slate-300 truncate">
-            {subjectTitle} • {subCategoryLabel} • Ch. {currentItem.chapterOrder}
+            {subjectTitle} • {subCategoryLabel} • Ch. {currentItem.chapterOrder} • Mini-Leçon {currentItem.pointIndexInChapter + 1}/{currentItem.totalPointsInChapter}
           </span>
           <button
             type="button"
@@ -1186,7 +1196,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
           <div className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400">
             <Target className="w-3.5 h-3.5" />
-            <span>Étape {activeStepIndex + 1}/8</span>
+            <span>Étape {activeStepIndex + 1}/{totalSteps}</span>
           </div>
         </div>
       </div>
@@ -1197,93 +1207,78 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       {(phase === 'learning' || phase === 'catchup') && activeExercise && activeCourseSlice && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
           {/* PARTIE 1 : LA CARTE DE COURS PROGRESSIVE (1 POINT À LA FOIS OU ÉNONCÉ D'EXERCICE) */}
-          {activeCourseSlice.stepType === 'concept' ? (
-            <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-100 dark:border-slate-800 space-y-4 shadow-sm">
-              <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-                <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
-                  <BookOpen className="w-4 h-4 shrink-0" />
-                  <span className="text-[11px] font-black uppercase tracking-wider">
-                    {activeCourseSlice.stepBadge} • {currentPoint.title}
-                  </span>
-                </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300">
-                  Point {activeStepIndex + 1} / 4
+          <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-100 dark:border-slate-800 space-y-4 shadow-sm">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+                <BookOpen className="w-4 h-4 shrink-0" />
+                <span className="text-[11px] font-black uppercase tracking-wider">
+                  {activeCourseSlice.stepBadge} • {currentPoint.title}
                 </span>
               </div>
-
-              {/* Contenu structuré avec le code couleur pédagogique Bleu / Violet */}
-              {activeCourseSlice.paragraphText && (
-                <PedagogicalParagraph text={activeCourseSlice.paragraphText} />
-              )}
-
-              {/* Formule ou Propriété Clé associée à ce point précis */}
-              {activeCourseSlice.formula && (
-                <div className="p-3.5 sm:p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border-2 border-indigo-200 dark:border-indigo-500/30 space-y-2">
-                  <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
-                    <SubjectIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                    <span>Formule & Propriété Clé (Notation Officielle) : <MathRenderer text={activeCourseSlice.formula.name} /></span>
-                  </div>
-                  <div className="w-full text-center py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 text-xs sm:text-sm font-black text-indigo-700 dark:text-indigo-300 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    <MathFormula latex={activeCourseSlice.formula.formula} display={true} />
-                  </div>
-                  {activeCourseSlice.formula.note && (
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                      <MathRenderer text={activeCourseSlice.formula.note} />
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {/* Support Visuel / Schéma si présent */}
-              {activeCourseSlice.visualSchema && (
-                <VisualSchemaRenderer schema={activeCourseSlice.visualSchema} />
-              )}
-
-              {/* Astuce Konan si présente */}
-              {activeCourseSlice.konanTip && (
-                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 to-cyan-50/70 dark:from-indigo-950/40 dark:to-cyan-950/20 border border-indigo-200/80 dark:border-indigo-500/30 flex items-start gap-3 shadow-2xs">
-                  <div className="shrink-0 pt-0.5">
-                    <KonanCube size={40} showStars={true} glow={true} />
-                  </div>
-                  <div className="space-y-1 min-w-0 flex-1">
-                    <span className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
-                      <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
-                      <span>L'Astuce du Professeur Konan</span>
-                    </span>
-                    <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed">
-                      <MathRenderer text={activeCourseSlice.konanTip} />
-                    </p>
-                  </div>
-                </div>
-              )}
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300">
+                Étape {activeStepIndex + 1} / {totalSteps}
+              </span>
             </div>
-          ) : (
-            // Écrans 5 à 8 : Exercice d'application interactif pas-à-pas (PAS DE SOLUTION D'AVANCE !)
-            <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-emerald-200 dark:border-emerald-700/60 space-y-4 shadow-sm">
-              <div className="flex items-center justify-between gap-2 border-b border-emerald-100 dark:border-slate-800 pb-3">
-                <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
-                  <FileCheck2 className="w-4 h-4 shrink-0" />
-                  <span className="text-[11px] font-black uppercase tracking-wider">
-                    {activeCourseSlice.stepBadge} • Étape {activeCourseSlice.workedExample?.stepNumber} sur 4
-                  </span>
-                </div>
-                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-800 dark:text-emerald-300">
-                  Résolution guidée
-                </span>
-              </div>
 
-              {/* Énoncé de l'exercice d'application (Sans spoiler de solution) */}
-              <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/40 space-y-1.5">
-                <div className="text-xs font-black uppercase tracking-wider text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5">
-                  <FileCheck2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                  <span><MathRenderer text={activeCourseSlice.workedExample?.title || "Exercice d'application"} /></span>
+            {/* Énoncé concret de l'exercice d'application (aux étapes de résolution guidée) */}
+            {activeCourseSlice.exerciseStatement && (
+              <div className="p-3.5 sm:p-4 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/40 space-y-1.5">
+                <div className="text-xs font-black uppercase tracking-wider text-indigo-900 dark:text-indigo-300 flex items-center gap-1.5">
+                  <Target className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                  <span>Énoncé de l'exercice d'application (Données réelles)</span>
                 </div>
                 <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-semibold leading-relaxed pt-1">
-                  <MathRenderer text={activeCourseSlice.workedExample?.statement || ""} />
+                  <MathRenderer text={activeCourseSlice.exerciseStatement} />
                 </div>
               </div>
-            </div>
-          )}
+            )}
+
+            {/* Contenu structuré avec le code couleur pédagogique Bleu / Violet */}
+            {activeCourseSlice.paragraphText && (
+              <PedagogicalParagraph text={activeCourseSlice.paragraphText} />
+            )}
+
+            {/* Formule ou Propriété Clé associée à ce point précis */}
+            {activeCourseSlice.formula && (
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border-2 border-indigo-200 dark:border-indigo-500/30 space-y-2">
+                <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
+                  <SubjectIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                  <span>Formule & Propriété Clé (Notation Officielle) : <MathRenderer text={activeCourseSlice.formula.name} /></span>
+                </div>
+                <div className="w-full text-center py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 text-xs sm:text-sm font-black text-indigo-700 dark:text-indigo-300 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <MathFormula latex={activeCourseSlice.formula.formula} display={true} />
+                </div>
+                {activeCourseSlice.formula.note && (
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                    <MathRenderer text={activeCourseSlice.formula.note} />
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Support Visuel / Schéma si présent */}
+            {activeCourseSlice.visualSchema && (
+              <VisualSchemaRenderer schema={activeCourseSlice.visualSchema} />
+            )}
+
+            {/* Astuce Konan si présente */}
+            {activeCourseSlice.konanTip && (
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 to-cyan-50/70 dark:from-indigo-950/40 dark:to-cyan-950/20 border border-indigo-200/80 dark:border-indigo-500/30 flex items-start gap-3 shadow-2xs">
+                <div className="shrink-0 pt-0.5">
+                  <KonanCube size={40} showStars={true} glow={true} />
+                </div>
+                <div className="space-y-1 min-w-0 flex-1">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                    <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
+                    <span>L'Astuce du Professeur Konan</span>
+                  </span>
+                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed">
+                    <MathRenderer text={activeCourseSlice.konanTip} />
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* PARTIE 2 : LE TEST DE COMPRÉHENSION IMMÉDIAT (ADAPTÉ STRICTEMENT À L'ÉTAPE) */}
           <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
@@ -1291,9 +1286,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               <span className="font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
                 <Target className="w-4 h-4" />
                 <span>
-                  {activeStepIndex < 4
-                    ? `QCM ${activeStepIndex + 1}/4 · Compréhension du cours`
-                    : `QCM ${activeStepIndex + 1}/8 · Résolution (Étape ${activeStepIndex - 3}/4)`}
+                  {activeStepIndex < totalSteps - 4
+                    ? `QCM ${activeStepIndex + 1}/${totalSteps} · Compréhension du cours`
+                    : `QCM ${activeStepIndex + 1}/${totalSteps} · Exercice d'application (Question ${activeStepIndex - (totalSteps - 5)}/4)`}
                 </span>
               </span>
 
