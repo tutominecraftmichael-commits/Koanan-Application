@@ -1815,8 +1815,8 @@ export function App() {
         className="hidden"
       />
 
-      {/* Persistent Navbar (Masquée sur la console Administrateur et sur l'accueil Onboarding immersif) */}
-      {activeView !== 'admin' && activeView !== 'landing' && (
+      {/* Persistent Navbar (Masquée sur la console Administrateur, sur l'accueil Onboarding immersif et pendant la leçon du Tuteur) */}
+      {activeView !== 'admin' && activeView !== 'landing' && activeView !== 'tutor' && (
         <Navbar
           activeView={activeView}
           onNavigate={handleNavigate}
@@ -1849,7 +1849,7 @@ export function App() {
       )}
 
       {/* Bouton Flottant d'Accès Rapide Admin si session admin active (STRICTEMENT LOCAL UNIQUEMENT) */}
-      {isLocalAdminEnvironment() && activeView !== 'admin' && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
+      {isLocalAdminEnvironment() && activeView !== 'admin' && activeView !== 'tutor' && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
         <button
           onClick={() => setActiveView('admin')}
           className="fixed bottom-5 right-5 z-50 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs shadow-2xl shadow-purple-600/40 border border-purple-400/40 flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all"
@@ -1860,7 +1860,7 @@ export function App() {
       )}
 
       {/* Main View Container */}
-      <main className={`flex-1 w-full mx-auto overflow-x-hidden ${activeView === 'landing' || activeView === 'admin'
+      <main className={`flex-1 w-full mx-auto overflow-x-hidden ${activeView === 'landing' || activeView === 'admin' || activeView === 'tutor'
         ? 'max-w-full p-0'
         : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
         }`}>

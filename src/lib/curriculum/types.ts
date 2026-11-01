@@ -36,28 +36,7 @@ export interface GradeLevelMeta {
 }
 
 export const GRADE_LEVELS: GradeLevelMeta[] = [
-  // Collège (Côte d'Ivoire)
-  {
-    id: '6eme',
-    label: 'Classe de 6ème',
-    category: 'college',
-    badge: '6ème',
-    description: 'Premier cycle du Collège — 120h/an (4h/semaine)',
-  },
-  {
-    id: '5eme',
-    label: 'Classe de 5ème',
-    category: 'college',
-    badge: '5ème',
-    description: 'Premier cycle du Collège — 120h/an (4h/semaine)',
-  },
-  {
-    id: '4eme',
-    label: 'Classe de 4ème',
-    category: 'college',
-    badge: '4ème',
-    description: 'Premier cycle du Collège — 120h/an (4h/semaine)',
-  },
+  // Collège (Côte d'Ivoire) - Classe d'examen BEPC
   {
     id: '3eme',
     label: 'Classe de 3ème',

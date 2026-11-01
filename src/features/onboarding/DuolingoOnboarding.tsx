@@ -762,12 +762,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       detectedGrade = 'seconde_a';
     } else if (/\b(?:3e|3ème|3eme|troisieme)\b/i.test(textToScan)) {
       detectedGrade = '3eme';
-    } else if (/\b(?:4e|4ème|4eme|quatrieme)\b/i.test(textToScan)) {
-      detectedGrade = '4eme';
-    } else if (/\b(?:5e|5ème|5eme|cinquieme)\b/i.test(textToScan)) {
-      detectedGrade = '5eme';
-    } else if (/\b(?:6e|6ème|6eme|sixieme)\b/i.test(textToScan)) {
-      detectedGrade = '6eme';
     }
 
     if (detectedGrade) {
@@ -2180,18 +2174,15 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                     </div>
                   </div>
 
-                  {/* 3. Collège (6ème à 3ème) */}
+                  {/* 3. Collège (Classe d'examen 3ème / BEPC uniquement) */}
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 mb-2.5">
                       <GraduationCap className="w-3.5 h-3.5" />
-                      <span>Collège — Premier Cycle (6ème à 3ème)</span>
+                      <span>Collège — Classe d'Examen (3ème / BEPC)</span>
                     </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-w-xl">
                       {[
                         { id: '3eme', label: 'Classe de 3ème', badge: '3ème', desc: 'Préparation officielle au BEPC (14 chapitres)' },
-                        { id: '4eme', label: 'Classe de 4ème', badge: '4ème', desc: 'Second degré & géométrie (11 chapitres)' },
-                        { id: '5eme', label: 'Classe de 5ème', badge: '5ème', desc: 'Symétrie axiale & fractions (12 chapitres)' },
-                        { id: '6eme', label: 'Classe de 6ème', badge: '6ème', desc: 'Initiation collège & décimaux (13 chapitres)' },
                       ].map(lvl => {
                         const isSelected = selectedGradeLevel === lvl.id;
                         return (
@@ -2202,31 +2193,31 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                               soundFX.playCheckmarkPop();
                               setSelectedGradeLevel(lvl.id as CurriculumGradeLevel);
                             }}
-                            className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
+                            className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
                               isSelected
                                 ? 'bg-emerald-50/90 dark:bg-emerald-950/60 border-emerald-600 dark:border-emerald-400 shadow-md shadow-emerald-600/10'
                                 : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-emerald-300'
                             }`}
                           >
                             <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-1.5">
-                                <span className="text-[11px] font-black px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-black px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
                                   {lvl.badge}
                                 </span>
-                                <h3 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white truncate">
                                   {lvl.label}
                                 </h3>
                               </div>
-                              <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
                                 {lvl.desc}
                               </p>
                             </div>
-                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
                               isSelected
                                 ? 'border-emerald-600 bg-emerald-600 text-white'
                                 : 'border-slate-300 dark:border-slate-600'
                             }`}>
-                              {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                              {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                             </div>
                           </button>
                         );
