@@ -49,36 +49,53 @@ export function saveStudentProgressMap(
 export function getChapterSubCategory(chapter: CurriculumChapter): StemSubCategory {
   if (chapter.subjectId === 'svt') return 'svt';
 
-  const text = (chapter.title + ' ' + (chapter.summary || '')).toLowerCase();
+  const id = chapter.id || '';
+  const text = ((chapter.title || '') + ' ' + (chapter.summary || '')).toLowerCase();
 
   if (chapter.subjectId === 'physique_chimie') {
-    if (chapter.id.includes('_chimie_')) return 'chimie';
-    if (chapter.id.includes('_physique_')) return 'physique';
+    // 1. Identifiants explicites non ambigus (ex: seconde_c_chimie_ch1 ou seconde_c_physique_ch1)
+    if (/(^|_)physique(_|$)/.test(id) && !id.includes('physique_chimie')) return 'physique';
+    if (/(^|_)chimie(_|$)/.test(id) && !id.includes('physique_chimie')) return 'chimie';
 
-    // 1. Notions exclusivement physiques
-    const isExclusivelyPhysique = /énergie mécanique|energie mecanique|énergie cinétique|energie cinetique|cinématique|cinematique|mouvement|vitesse et accélération|dynamique|lois de newton|travail|puissance|pesanteur|gravitation|satellite|poids et masse|masse et poids|électricité|courant|tension|résistance|circuit|rlc|condensateur|bobine|champ|induction|optique|lentille|lumière|miroir|ondes|interférences|radioactivité|nucléaire|noyau|équilibre|equilibre|deux forces|forces\b/.test(text);
-    if (isExclusivelyPhysique) return 'physique';
+    // 2. Mots-clés rigoureux de Chimie
+    const isChimie = /(?:chimie|chimique|atome|molaire|mole\b|acide|base\b|ph\b|solutions? aqueuse|oxyd|r[eé]duction|redox|dosage|titrage|est[eé]rif|ester|savon|alcool|amine|amide|acides? amin[eé]|alcane|alc[eé]ne|alcyne|hydrocarbure|polym[eè]re|ions?\b|chlorure|sels?\b|dissolution|pr[eé]cipit|solubilit[eé]|cin[eé]tique chimique|constante d'acidit[eé]|ka\b|combustion)/i.test(text);
 
-    // 2. Notions de chimie
-    const isChimie = /chimie|chimique|solution|acide|base|ph\b|oxyd|réduction|redox|dosage|titrage|estérif|ester|alcool|cinétique|molaire|atome\b|organique|molécule|ion\b|ions|savon|amine|amide|électrolyse|engrais|hydrocarbure|alcane|alcène|alcyne|acides aminés/.test(text);
-    if (isChimie) return 'chimie';
+    // 3. Mots-clés rigoureux de Physique
+    const isPhysique = /(?:physique|mouvement|cin[eé]matique|dynamique|force|pesanteur|gravitation|newton|travail|puissance|[eé]nergie|m[eé]canique|oscillat|vitesse|acc[eé]l[eé]ration|quantit[eé] de mouvement|[eé]quilibre|[eé]lectricit[eé]|courant|tension|r[eé]sistance|dip[oô]le|circuit|rlc|condensateur|bobine|champ|coulomb|lorentz|induction|optique|lentille|lumi[eè]re|ondes?|radioactivit[eé]|nucl[eé]aire|calorim[eé]trie|thermique|masse et poids|poids et masse)/i.test(text);
 
-    return 'physique';
+    if (isChimie && !isPhysique) return 'chimie';
+    if (isPhysique && !isChimie) return 'physique';
+
+    // Arbitrage par le titre direct en cas de chevauchement
+    const title = (chapter.title || '').toLowerCase();
+    if (/(?:chimie|chimique|solution|acide|base|ph|atome|mole|ion|est[eé]rif|alcane|oxyd)/i.test(title)) return 'chimie';
+    if (/(?:mouvement|cin[eé]matique|force|[eé]nergie|travail|puissance|newton|poids|masse|courant|tension|[eé]lectr|optique|lentille|onde|m[eé]canique)/i.test(title)) return 'physique';
+
+    return isChimie ? 'chimie' : 'physique';
   }
 
   if (chapter.subjectId === 'maths') {
-    if (chapter.id.includes('_geometrie_')) return 'geometrie';
-    if (chapter.id.includes('_numerique_')) return 'numerique';
+    if (id.includes('_geometrie_')) return 'geometrie';
+    if (id.includes('_numerique_')) return 'numerique';
 
-    // 1. Notions explicitement numériques / algébriques
-    if (/racine|calcul littéral|calcul numérique|fractions|puissances|équation|inéquation|système|polynôme|suites|limite|dériv|primitive|intégral|logarithme|exponentielle|probab|statistique|dénombrement/i.test(text)) {
-      if (!/vecteur|géométrie/i.test(text)) return 'numerique';
-    }
+    const title = (chapter.title || '').toLowerCase();
 
-    // 2. Notions de géométrie
-    const isGeometrie = /géométrie|geometrie|droite|point|segment|angle|triangle|cercle|disque|quadrilatère|parallélogramme|rectangle|losange|\bcarré\b|trapèze|pyramide|cône|pavé|cube|prisme|sphère|solide|thales|thalès|pythagore|trigonométrie|barycentre|produit scalaire|espace|transformation|homothétie|rotation|translation|symétrie|similitude|droites remarquables|projection|coordonnées|repérage|repère|vecteur/i.test(text);
+    // 1. Mots-clés stricts de Géométrie dans le titre
+    const isGeometrie = /(?:g[eé]om[eé]trie|vecteur|droite|segment|angle|triangle|cercle|disque|quadrilat[eè]re|parall[eé]logramme|rectangle|losange|\bcarr[eé]\b|trap[eè]ze|pyramide|c[oô]ne|pav[eé]|cube|prisme|sph[eè]re|solide|thal[eè]s|pythagore|trigonom[eé]trie|barycentre|produit scalaire|espace|transformation|homoth[eé]tie|rotation|translation|sym[eé]trie|similitude|projection|rep[eè]re|rep[eé]rage|perspective)/i.test(title);
 
-    return isGeometrie ? 'geometrie' : 'numerique';
+    // 2. Mots-clés stricts de Numérique / Algèbre dans le titre
+    const isNumerique = /(?:num[eé]rique|calcul|nombre|fraction|d[eé]cimal|puissance|racine|fonction|polyn[oô]me|[eé]quation|in[eé]quation|syst[eè]me|suite|limite|d[eé]riv|int[eé]gral|primitive|logarithm|exponentielle|statistique|probabilit|d[eé]nombrement|proportionnalit[eé])/i.test(title);
+
+    if (isGeometrie && !isNumerique) return 'geometrie';
+    if (isNumerique && !isGeometrie) return 'numerique';
+
+    // Priorité géométrique sur les titres ambigus (ex: "Équations de droites")
+    if (/(?:droite|vecteur|triangle|cercle|plan|espace|sym[eé]trie|translation|angle)/i.test(title)) return 'geometrie';
+
+    // Vérification contextuelle globale
+    if (/(?:g[eé]om[eé]trie|vecteur|thal[eè]s|pythagore|trigonom[eé]trie|barycentre|produit scalaire|homoth[eé]tie|rotation)/i.test(text)) return 'geometrie';
+
+    return 'numerique';
   }
 
   return 'svt';
@@ -242,7 +259,7 @@ export function buildTutorSessionPayload(
 
   // Filtrer uniquement les chapitres de la sous-catégorie active
   let subChapters = allChapters.filter(c => getChapterSubCategory(c) === activeSubCategory);
-  if (subChapters.length === 0) {
+  if (subChapters.length === 0 && subjectId === 'svt') {
     subChapters = allChapters;
   }
   subChapters.sort((a, b) => a.order - b.order);

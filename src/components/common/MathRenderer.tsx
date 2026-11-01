@@ -5,6 +5,21 @@ import { StackedFraction, renderTextWithStackedFractions } from './StackedFracti
 export { StackedFraction, renderTextWithStackedFractions };
 
 /**
+ * Helper qui applique un remplacement regex UNIQUEMENT en dehors des blocs mathématiques ($...$ et $$...$$).
+ * Protège les formules déjà balisées contre toute altération accidentelle.
+ */
+function replaceNotInMath(str: string, regex: RegExp, replacer: (...args: any[]) => string): string {
+  if (!str) return '';
+  const subParts = str.split(/(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$)/g);
+  return subParts
+    .map((subChunk, subIdx) => {
+      if (subIdx % 2 === 1) return subChunk;
+      return subChunk.replace(regex, replacer);
+    })
+    .join('');
+}
+
+/**
  * Prétraite automatiquement tout texte en convertissant les expressions mathématiques,
  * les fractions avec slashs et les variables à indices en syntaxe KaTeX officielle.
  * Garantit ZÉRO underscore (_) et ZÉRO slash (/) visible dans les formules.
@@ -90,6 +105,50 @@ export function cleanFormulasAndIndices(text: string): string {
   s = s.replace(/\bd\s*=\s*M\s*\/\s*29\b/g, '$$$$d = \\frac{M}{29}$$$$');
   s = s.replace(/\bC_m\s*=\s*M\s*×\s*C\b/g, '$$$$\\mathcal{C}_m = M \\times C$$$$');
 
+  // 6. Cinématique & Mécanique (équations de vitesse instantanée, forces, Archimède)
+  s = s.replace(
+    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[0-9i\-+]+\}?M_\{?[0-9i\-+]+\}?\s*\/\s*\(?\s*t_\{?[0-9i\-+]+\}?\s*[−\-]\s*t_\{?[0-9i\-+]+\}?\s*\)?\s*=\s*M_\{?[0-9i\-+]+\}?M_\{?[0-9i\-+]+\}?\s*\/\s*\(?\s*2\s*[τ\tau]\s*\)?/g,
+    '$$$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{t_{i+1} - t_{i-1}} = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$$$'
+  );
+
+  s = s.replace(
+    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[0-9i\-+]+\}?M_\{?[0-9i\-+]+\}?\s*\/\s*\(?\s*2\s*[τ\tau]\s*\)?/g,
+    '$$$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$$$'
+  );
+
+  s = s.replace(
+    /v\s*\(\s*t[₂2]\s*\)\s*=\s*M[₁1]M[₃3]\s*\/\s*\(?\s*2\s*[τ\tau]\s*\)?/g,
+    '$$$$v(t_2) = \\frac{M_1 M_3}{2\\tau}$$$$'
+  );
+
+  s = s.replace(
+    /v\s*\(\s*t[₁1]\s*\)\s*=\s*M[₀0]M[₂2]\s*\/\s*\(?\s*2\s*[τ\tau]\s*\)?/g,
+    '$$$$v(t_1) = \\frac{M_0 M_2}{2\\tau}$$$$'
+  );
+
+  s = s.replace(
+    /F_\{?([A-Za-z0-9\/]+)\}?\s*=\s*[−\-]\s*F_\{?([A-Za-z0-9\/]+)\}?/g,
+    '$$$$F_{$1} = -F_{$2}$$$$'
+  );
+
+  s = s.replace(
+    /P_A\s*=\s*m_fluide\s*[×·*]\s*g\s*=\s*ρ_fluide\s*[×·*]\s*V_immerg[eé]\s*[×·*]\s*g/g,
+    '$$$$P_A = m_{\\text{fluide}} \\times g = \\rho_{\\text{fluide}} \\times V_{\\text{immergé}} \\times g$$$$'
+  );
+
+  s = s.replace(/P'\s*=\s*P\s*[−\-]\s*P_A/g, '$$$$P\' = P - P_A$$$$');
+  s = s.replace(/P_A\s*=\s*P\s*[−\-]\s*P'/g, '$$$$P_A = P - P\'$$$$');
+  s = s.replace(/\bV_m\s*=\s*d\s*\/\s*Δt\b/g, '$$$$V_m = \\frac{d}{\\Delta t}$$$$');
+
+  s = s.replace(
+    /\bv[₁1]\s*=\s*v[₂2]\s*=\s*v[₃3]\s*=\s*constante\b/g,
+    '$$$$v_1 = v_2 = v_3 = \\text{constante}$$$$'
+  );
+  s = s.replace(
+    /\bv_\{?i\+1\}?\s*[−\-]\s*v_i\s*=\s*constante\b/g,
+    '$$$$v_{i+1} - v_i = \\text{constante}$$$$'
+  );
+
   // Découpage préservant les blocs mathématiques déjà balisés ($...$ et $$...$$)
   const parts = s.split(/(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$)/g);
 
@@ -100,41 +159,70 @@ export function cleanFormulasAndIndices(text: string): string {
     let t = chunk;
 
     // Fractions isolées dans le texte français
-    t = t.replace(/(-\s*)?d\[([A-Za-z0-9_]+)\]\/dt/g, (_, neg, sym) => `$${neg ? '- ' : ''}\\frac{d[${sym}]}{dt}$`);
-    t = t.replace(/d\s*n_([A-Za-z0-9_]+)\/dt/g, '$\\frac{dn_{$1}}{dt}$');
-    t = t.replace(/Δ\[([^\]]+)\]\s*\/\s*Δt/g, '$\\frac{\\Delta[$1]}{\\Delta t}$');
-    t = t.replace(/\(1\/V\)/g, '$\\frac{1}{V}$');
-    t = t.replace(/\b1\/V\b/g, '$\\frac{1}{V}$');
-    t = t.replace(/\b1\/2\b/g, '$\\frac{1}{2}$');
-    t = t.replace(/\(16,0\s*×\s*10⁻³\)\s*\/\s*2/g, '$\\frac{16{,}0 \\times 10^{-3}}{2}$');
+    t = replaceNotInMath(t, /(-\s*)?d\[([A-Za-z0-9_]+)\]\/dt/g, (_, neg, sym) => `$${neg ? '- ' : ''}\\frac{d[${sym}]}{dt}$`);
+    t = replaceNotInMath(t, /d\s*n_([A-Za-z0-9_]+)\/dt/g, (_, sym) => `$\\frac{dn_{${sym}}}{dt}$`);
+    t = replaceNotInMath(t, /Δ\[([^\]]+)\]\s*\/\s*Δt/g, (_, sym) => `$\\frac{\\Delta[${sym}]}{\\Delta t}$`);
+    t = replaceNotInMath(t, /\(1\/V\)/g, () => '$\\frac{1}{V}$');
+    t = replaceNotInMath(t, /\b1\/V\b/g, () => '$\\frac{1}{V}$');
+    t = replaceNotInMath(t, /\b1\/2\b/g, () => '$\\frac{1}{2}$');
+    t = replaceNotInMath(t, /\(16,0\s*×\s*10⁻³\)\s*\/\s*2/g, () => '$\\frac{16{,}0 \\times 10^{-3}}{2}$');
 
     // Fractions ou racines LaTeX isolées sans délimiteur $ (ex: \frac{12}{6} ou -\frac{31}{11})
-    t = t.replace(/(?<!\$)([+\-]?\\frac\{[^{}]+\}\{[^{}]+\})(?!\$)/g, '$$$1$$');
-    t = t.replace(/(?<!\$)([+\-]?\\sqrt\{[^{}]+\})(?!\$)/g, '$$$1$$');
+    t = replaceNotInMath(t, /(?<!\$)([+\-]?\\frac\{[^{}]+\}\{[^{}]+\})(?!\$)/g, (_, expr) => `$$${expr}$$`);
+    t = replaceNotInMath(t, /(?<!\$)([+\-]?\\sqrt\{[^{}]+\})(?!\$)/g, (_, expr) => `$$${expr}$$`);
 
     // Demi-réaction dans le texte
-    t = t.replace(/\bt[₁1]\/[₂2]\b/g, '$t_{1/2}$');
-    t = t.replace(/t₁\/₂/g, '$t_{1/2}$');
-    t = t.replace(/\bt_\{?1\/2\}?/g, '$t_{1/2}$');
+    t = replaceNotInMath(t, /\bt[₁1]\/[₂2]\b/g, () => '$t_{1/2}$');
+    t = replaceNotInMath(t, /t₁\/₂/g, () => '$t_{1/2}$');
+    t = replaceNotInMath(t, /\bt_\{?1\/2\}?/g, () => '$t_{1/2}$');
+
+    // Normes de vecteurs (ex: ||v(t_i)||, ||v(t)||, ||F_{A/B}||)
+    t = replaceNotInMath(t, /\|\|\s*([a-zA-Z])(?:\(([a-zA-Z0-9_{}\-+]+)\))?\s*\|\|/g, (_, sym, arg) => {
+      return arg ? `$\\|${sym}(${arg})\\|$` : `$\\|${sym}\\|$`;
+    });
+
+    // Fonctions avec variables ou indices (ex: v(t_i), v(t), v(t_1))
+    t = replaceNotInMath(t, /\bv\((t_?[i0-9]?)\)/g, (_, arg) => `$v(${arg})$`);
+    t = replaceNotInMath(t, /\bv\(t\)/g, () => '$v(t)$');
+
+    // Paires de points avec indices (ex: M_{i-1}M_{i+1})
+    t = replaceNotInMath(t, /\b([A-Z])_\{([^}]+)\}([A-Z])_\{([^}]+)\}\b/g, (_, p1, i1, p2, i2) => `$${p1}_{${i1}}${p2}_{${i2}}$`);
+
+    // Variables avec indices entre accolades (ex: M_{i-1}, M_{i+1}, t_{i+1}, F_{A/B})
+    t = replaceNotInMath(t, /\b([A-Za-z])_\{([^}]+)\}/g, (_, sym, sub) => `$${sym}_{${sub}}$`);
+
+    // Points avec indices Unicode (ex: M₀, M₁, M₂...)
+    t = replaceNotInMath(t, /(?<![A-Za-z0-9])([A-Z])([₀₁₂₃₄₅₆₇₈₉])/g, (_, sym, sub) => {
+      const map: Record<string, string> = { '₀':'0', '₁':'1', '₂':'2', '₃':'3', '₄':'4', '₅':'5', '₆':'6', '₇':'7', '₈':'8', '₉':'9' };
+      return `$${sym}_${map[sub] || sub}$`;
+    });
+
+    // Subscripts nommés usuels (ex: m_fluide, V_immergé, R_N, P_A)
+    t = replaceNotInMath(t, /\b([A-Za-z])_(fluide|immerg[eé]|air|eau|solide|sol|terre|max|min|ext|int|initial|final|eq)\b/g, (_, sym, sub) => `$${sym}_{\\text{${sub}}}$`);
 
     // Variables avec indices mathématiques (élimine tout _ visible)
-    t = t.replace(/\bv_d\(A\)/g, '$v_d(A)$');
-    t = t.replace(/\bv_a\(C\)/g, '$v_a(C)$');
-    t = t.replace(/\bv_m\(([^)]+)\)/g, '$v_m($1)$');
-    t = t.replace(/\bv_([dam])\b/g, '$v_$1$');
-    t = t.replace(/\bn_([A-Za-z0-9]+)\b/g, '$n_$1$');
-    t = t.replace(/\bx_max\b/g, '$x_{\\max}$');
-    t = t.replace(/\[([A-Za-z0-9_]+)\]_max\b/g, '$[$1]_{\\max}$');
-    t = t.replace(/\[([A-Za-z0-9_]+)\][₀0]\b/g, '$[$1]_0$');
-    t = t.replace(/\[([A-Za-z0-9_]+)\]_0\b/g, '$[$1]_0$');
-    t = t.replace(/\[([A-Za-z0-9_]+)\][₁1]\b/g, '$[$1]_1$');
-    t = t.replace(/\[([A-Za-z0-9_]+)\][₂2]\b/g, '$[$1]_2$');
-    t = t.replace(/\bEc\b/g, '$E_c$');
-    t = t.replace(/\bEp\b/g, '$E_p$');
-    t = t.replace(/\bEm\b/g, '$E_m$');
+    t = replaceNotInMath(t, /\bv_d\(A\)/g, () => '$v_d(A)$');
+    t = replaceNotInMath(t, /\bv_a\(C\)/g, () => '$v_a(C)$');
+    t = replaceNotInMath(t, /\bv_m\(([^)]+)\)/g, (_, arg) => `$v_m(${arg})$`);
+    t = replaceNotInMath(t, /\bv_([dam])\b/g, (_, arg) => `$v_${arg}$`);
+    t = replaceNotInMath(t, /\bn_([A-Za-z0-9]+)\b/g, (_, arg) => `$n_${arg}$`);
+    t = replaceNotInMath(t, /\bx_max\b/g, () => '$x_{\\max}$');
+    t = replaceNotInMath(t, /\[([A-Za-z0-9_]+)\]_max\b/g, (_, arg) => `$[${arg}]_{\\max}$`);
+    t = replaceNotInMath(t, /\[([A-Za-z0-9_]+)\][₀0]\b/g, (_, arg) => `$[${arg}]_0$`);
+    t = replaceNotInMath(t, /\[([A-Za-z0-9_]+)\]_0\b/g, (_, arg) => `$[${arg}]_0$`);
+    t = replaceNotInMath(t, /\[([A-Za-z0-9_]+)\][₁1]\b/g, (_, arg) => `$[${arg}]_1$`);
+    t = replaceNotInMath(t, /\[([A-Za-z0-9_]+)\][₂2]\b/g, (_, arg) => `$[${arg}]_2$`);
+    t = replaceNotInMath(t, /\bEc\b/g, () => '$E_c$');
+    t = replaceNotInMath(t, /\bEp\b/g, () => '$E_p$');
+    t = replaceNotInMath(t, /\bEm\b/g, () => '$E_m$');
 
-    // Tout autre identifiant à indice isolé (ex: E_c, F_ext, T_0, N_0)
-    t = t.replace(/\b([a-zA-Z])_([a-zA-Z0-9]+)\b/g, '$$$1_{$2}$$');
+    // Lettres grecques dans le texte (tau, rho)
+    t = replaceNotInMath(t, /(\d+)\s*[τ\tau]\b/g, (_, num) => `$${num}\\tau$`);
+    t = replaceNotInMath(t, /(?<=\s|^|[([,;])τ(?=\s|$|[)\].,;:])/g, () => '$\\tau$');
+    t = replaceNotInMath(t, /\bρ\b/g, () => '$\\rho$');
+
+    // Tout autre identifiant à indice isolé (ex: E_c, F_ext, T_0, N_0, M_i, t_i)
+    t = replaceNotInMath(t, /\b([a-zA-Z])_([a-zA-Z0-9]+)\b/g, (_, sym, sub) => `$${sym}_{${sub}}$`);
 
     return t;
   });
@@ -153,6 +241,12 @@ export function sanitizeFormulaForKatex(raw: string): string {
 
   // 1. Suppression des délimiteurs $ ou $$ si déjà présents
   s = s.replace(/^\$\$([\s\S]*)\$\$$/, '$1').replace(/^\$([\s\S]*)\$$/, '$1').trim();
+
+  // 1.1 Unification du signe moins Unicode
+  s = s.replace(/−/g, '-');
+
+  // 1.2 Protection des interactions physiques et fractions d'indices (ex: F_{A/B}, F_{B/A}, t_{1/2})
+  s = s.replace(/_\{([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}/g, '_{$1/$2}');
 
   // 2. Réparation des sauts de page ou résidus de parsing (\x0crac -> \frac)
   s = s.replace(/\x0crac\{([^{}]+)\}\{([^{}]+)\}/g, '\\frac{$1}{$2}');
@@ -233,6 +327,13 @@ export function sanitizeFormulaForKatex(raw: string): string {
   s = s.replace(/Δ/g, '\\Delta ');
   s = s.replace(/·/g, '\\cdot ');
   s = s.replace(/×/g, '\\times ');
+  s = s.replace(/τ/g, '\\tau ');
+  s = s.replace(/ρ/g, '\\rho ');
+  s = s.replace(/θ/g, '\\theta ');
+  s = s.replace(/ω/g, '\\omega ');
+  s = s.replace(/λ/g, '\\lambda ');
+  s = s.replace(/μ/g, '\\mu ');
+  s = s.replace(/π/g, '\\pi ');
   s = s.replace(/→|->/g, '\\to ');
   s = s.replace(/⇒|=>/g, '\\implies ');
   s = s.replace(/⇔|<=>/g, '\\iff ');
@@ -250,6 +351,10 @@ export function sanitizeFormulaForKatex(raw: string): string {
   s = s.replace(/ℂ/g, '\\mathbb{C}');
   s = s.replace(/Σ/g, '\\sum ');
   s = s.replace(/∫/g, '\\int ');
+
+  // 7.1 Indices textuels avec accents
+  s = s.replace(/_fluide\b/g, '_{\\text{fluide}}');
+  s = s.replace(/_immerg[eé]\b/g, '_{\\text{immergé}}');
 
   // 8. Exposants et indices isolés
   s = s.replace(/²/g, '^2');
@@ -272,10 +377,10 @@ export function sanitizeFormulaForKatex(raw: string): string {
   s = s.replace(/√([a-zA-Z0-9]+)/g, '\\sqrt{$1}');
 
   // 10. Vraies fractions horizontales de manuel scolaire (\frac{...}{...})
-  // 10.1 Parenthèses complexes : (A) / (B) ou (A) / B
+  // 10.1 Parenthèses complexes : (A) / (B) ou (A) / B ou A / (B)
   s = s.replace(/(?<!\\frac\{)\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, '\\frac{$1}{$2}');
-  s = s.replace(/(?<!\\frac\{)\(([^()]+)\)\s*\/\s*([a-zA-Z0-9_{\\^}]+)/g, '\\frac{$1}{$2}');
-  s = s.replace(/(?<!\\frac\{)(?<![a-zA-Z0-9_\\])([a-zA-Z0-9_{\\^]+)\s*\/\s*\(([^()]+)\)/g, '\\frac{$1}{$2}');
+  s = s.replace(/(?<!\\frac\{)\(([^()]+)\)\s*\/\s*([a-zA-Z0-9_\\{}\\^\\+\\-]+)/g, '\\frac{$1}{$2}');
+  s = s.replace(/(?<!\\frac\{)(?<![a-zA-Z0-9_\\{])([a-zA-Z0-9_\\{}\\^\\+\\-]+)\s*\/\s*\(([^()]+)\)/g, '\\frac{$1}{$2}');
 
   // 10.2 Dérivées & taux de variation : d[A]/dt, dn_A/dt, \Delta[A]/\Delta t, dx/dt, dv/dt
   s = s.replace(/(?<!\\frac\{)d\[([A-Za-z0-9_\\{}]+)\]\s*\/\s*dt/g, '\\frac{d[$1]}{dt}');
@@ -292,7 +397,7 @@ export function sanitizeFormulaForKatex(raw: string): string {
   s = s.replace(/(?<!\\frac\{)\[([A-Za-z0-9_\\{}]+)\]_max\s*\/\s*2/g, '\\frac{[$1]_{\\max}}{2}');
 
   // 10.4 Quotients de variables simples : n / V, m / V, m / M, V / V_m, etc.
-  s = s.replace(/(?<!\\frac\{)(?<![a-zA-Z0-9_\\])\b([a-zA-Z0-9_{}]+)\s*\/\s*([a-zA-Z0-9_{}]+)\b(?![a-zA-Z0-9_\\])/g, '\\frac{$1}{$2}');
+  s = s.replace(/(?<!\{)(?<!\\frac\{)(?<![a-zA-Z0-9_\\{])\b([a-zA-Z0-9_{}]+)\s*\/\s*([a-zA-Z0-9_{}]+)\b(?![a-zA-Z0-9_\\}])/g, '\\frac{$1}{$2}');
 
   // 11. Variables et indices usuels
   s = s.replace(/\bv_d\(([^)]+)\)/g, 'v_d($1)');

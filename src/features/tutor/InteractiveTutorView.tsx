@@ -41,8 +41,11 @@ import {
   initializeSubCategoryPosition,
   recordCompletedTutorSession,
   getSubCategoryName,
+  getSubCategoryQuestion,
+  getChapterSubCategory,
   getActiveSubCategoryForSession
 } from '../../lib/curriculum/studentProgressService';
+import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
 import { soundFX } from '../../lib/audioEffects';
 import { KonanCube } from '../../components/common/KonanCube';
 import { MathRenderer, MathFormula, VisualSchemaRenderer } from '../../components/common/MathRenderer';
@@ -219,6 +222,32 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   useEffect(() => {
     refreshSessionPayload(activeSubCategory);
   }, [userId, stemSubjectId, gradeLevel, subjectTitle, durationMinutes, activeSubCategory]);
+
+  // Permet à l'élève de changer d'onglet (ex: Chimie <-> Physique ou Géométrie <-> Numérique) SANS fermer le sélecteur
+  const handleSwitchSubCategoryInSelector = (newSubCat: StemSubCategory) => {
+    try { soundFX.playClick(); } catch {}
+    setActiveSubCategory(newSubCat);
+    setSelectedChapter(null);
+    const allChaps = getCurriculumChapters(stemSubjectId, gradeLevel);
+    const filtered = allChaps
+      .filter((c) => getChapterSubCategory(c) === newSubCat)
+      .sort((a, b) => a.order - b.order);
+    setAvailableSubChapters(filtered);
+    setSubCategoryQuestionText(getSubCategoryQuestion(newSubCat));
+  };
+
+  // Permet d'ouvrir le sélecteur de chapitre à tout moment depuis la séance
+  const handleOpenChapterSelector = () => {
+    try { soundFX.playClick(); } catch {}
+    const allChaps = getCurriculumChapters(stemSubjectId, gradeLevel);
+    const filtered = allChaps
+      .filter((c) => getChapterSubCategory(c) === activeSubCategory)
+      .sort((a, b) => a.order - b.order);
+    setAvailableSubChapters(filtered);
+    setSubCategoryQuestionText(getSubCategoryQuestion(activeSubCategory));
+    setSelectedChapter(null);
+    setShowChapterSelector(true);
+  };
 
   // Validation du diagnostic initial pour cette sous-catégorie
   const handleConfirmInitialChapter = (chapterId: string) => {
@@ -417,23 +446,36 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
         <div className="max-w-xl w-full bg-white dark:bg-slate-900 border-2 border-indigo-200 dark:border-indigo-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 animate-in zoom-in-95 duration-200 my-auto">
           {/* En-tête */}
-          <div className="flex items-center gap-4">
-            <div className="shrink-0">
-              <KonanCube size={54} showStars={false} glow={true} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
-                  {subjectTitle} • {subCategoryLabel}
-                </span>
-                <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                  {availableSubChapters.length} chapitres officiels
-                </span>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="shrink-0">
+                <KonanCube size={54} showStars={false} glow={true} />
               </div>
-              <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-tight mt-1">
-                {subCategoryQuestionText || `À quel chapitre êtes-vous arrivés en ${subCategoryLabel} ?`}
-              </h2>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                    {subjectTitle} • {subCategoryLabel}
+                  </span>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                    {availableSubChapters.length} chapitres officiels
+                  </span>
+                </div>
+                <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-tight mt-1">
+                  {subCategoryQuestionText || `À quel chapitre êtes-vous arrivés en ${subCategoryLabel} ?`}
+                </h2>
+              </div>
             </div>
+
+            {sessionPayload && sessionPayload.itemsToReview.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setShowChapterSelector(false)}
+                className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-slate-700 dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 mt-1"
+                title="Fermer et reprendre la séance"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
 
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -454,9 +496,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       type="button"
                       onClick={() => {
                         if (activeSubCategory !== 'chimie') {
-                          setActiveSubCategory('chimie');
-                          setSelectedChapter(null);
-                          refreshSessionPayload('chimie');
+                          handleSwitchSubCategoryInSelector('chimie');
                         }
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
@@ -476,9 +516,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       type="button"
                       onClick={() => {
                         if (activeSubCategory !== 'physique') {
-                          setActiveSubCategory('physique');
-                          setSelectedChapter(null);
-                          refreshSessionPayload('physique');
+                          handleSwitchSubCategoryInSelector('physique');
                         }
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
@@ -500,9 +538,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       type="button"
                       onClick={() => {
                         if (activeSubCategory !== 'numerique') {
-                          setActiveSubCategory('numerique');
-                          setSelectedChapter(null);
-                          refreshSessionPayload('numerique');
+                          handleSwitchSubCategoryInSelector('numerique');
                         }
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
@@ -522,9 +558,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       type="button"
                       onClick={() => {
                         if (activeSubCategory !== 'geometrie') {
-                          setActiveSubCategory('geometrie');
-                          setSelectedChapter(null);
-                          refreshSessionPayload('geometrie');
+                          handleSwitchSubCategoryInSelector('geometrie');
                         }
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
@@ -594,7 +628,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="pt-2 flex items-center justify-between gap-3 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
-              onClick={onExit}
+              onClick={() => {
+                if (sessionPayload && sessionPayload.itemsToReview.length > 0) {
+                  setShowChapterSelector(false);
+                } else {
+                  onExit();
+                }
+              }}
               className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               Annuler
@@ -719,6 +759,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">
               {subjectTitle} • {subCategoryLabel} • Leçon {activeItemIndex + 1}/{items.length}
             </span>
+            <button
+              type="button"
+              onClick={handleOpenChapterSelector}
+              className="text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors cursor-pointer ml-1"
+              title="Changer de chapitre"
+            >
+              Changer
+            </button>
           </div>
         </div>
 
@@ -846,6 +894,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <span className="font-extrabold uppercase tracking-wide text-slate-700 dark:text-slate-300 truncate">
             {subjectTitle} • {subCategoryLabel} • Ch. {currentItem.chapterOrder}
           </span>
+          <button
+            type="button"
+            onClick={handleOpenChapterSelector}
+            className="text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors cursor-pointer shrink-0"
+            title="Changer de chapitre"
+          >
+            Changer
+          </button>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
