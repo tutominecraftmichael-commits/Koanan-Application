@@ -952,7 +952,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               <div className="space-y-4 animate-in fade-in duration-150">
                 {/* 1. Contexte & Définition claire (Partir de zéro) */}
                 {activeCourseSlice.contextAndDefinition && (
-                  <div className="p-3.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-800/40 space-y-1.5">
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-800/40 space-y-1.5">
                     <div className="flex items-center gap-1.5 text-blue-900 dark:text-blue-300 text-[11px] font-black uppercase tracking-wider">
                       <BookOpen className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                       <span>D'où on part ? (Comprendre sans formule)</span>
@@ -968,7 +968,49 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   <VisualSchemaRenderer schema={activeCourseSlice.visualSchema} />
                 )}
 
-                {/* 2. Paragraphes d'explication du cours détaillés pas-à-pas */}
+                {/* 2. Formules ou Propriétés Clés (Mises en valeur immédiatement pour un repérage rapide sur mobile & desktop) */}
+                {activeCourseSlice.formulas && activeCourseSlice.formulas.length > 0 && (
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-500/30 space-y-3">
+                    <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
+                      <SubjectIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                      <span>Formule & Propriété Clé (Notation Officielle)</span>
+                    </div>
+                    <div className="grid gap-2.5 grid-cols-1 md:grid-cols-2">
+                      {activeCourseSlice.formulas.map((form, fIdx) => {
+                        const isTextDescription =
+                          !/[=+\-*/\\]|\\frac|\\sum|\\to|\\iff|\\implies/.test(form.formula) &&
+                          /\s/.test(form.formula.trim());
+
+                        return (
+                          <div
+                            key={fIdx}
+                            className="p-3 sm:p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 space-y-2 shadow-2xs transition-all hover:border-indigo-300 dark:hover:border-indigo-600/50"
+                          >
+                            <span className="text-[11px] font-extrabold text-indigo-950 dark:text-indigo-200 block">
+                              <MathRenderer text={form.name} />
+                            </span>
+                            {isTextDescription ? (
+                              <div className="py-2 px-2.5 rounded-lg bg-indigo-50/60 dark:bg-slate-800/80 border border-indigo-100/80 dark:border-slate-700/80 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-snug">
+                                <MathRenderer text={form.formula} />
+                              </div>
+                            ) : (
+                              <div className="text-xs sm:text-sm font-black text-indigo-700 dark:text-indigo-300 py-0.5">
+                                <MathFormula latex={form.formula} display={true} />
+                              </div>
+                            )}
+                            {form.note && (
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                                <MathRenderer text={form.note} />
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. Paragraphes d'explication du cours détaillés pas-à-pas */}
                 <div className="space-y-2.5">
                   {activeCourseSlice.paragraphs.map((para, pIdx) => (
                     <div
@@ -980,7 +1022,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   ))}
                 </div>
 
-                {/* 3. Mascotte KONAN : Bulle de dialogue interactive avec l'Astuce du Professeur */}
+                {/* 4. Mascotte KONAN : Bulle de dialogue interactive avec l'Astuce du Professeur */}
                 {activeCourseSlice.konanTip && (
                   <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 to-cyan-50/70 dark:from-indigo-950/40 dark:to-cyan-950/20 border border-indigo-200/80 dark:border-indigo-500/30 flex items-start gap-3 shadow-2xs">
                     <div className="shrink-0 pt-0.5">
@@ -994,36 +1036,6 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed">
                         <MathRenderer text={activeCourseSlice.konanTip} />
                       </p>
-                    </div>
-                  </div>
-                )}
-
-                {/* 4. Formules ou Propriétés mises en évidence (strictement celles associées à la notion) */}
-                {activeCourseSlice.formulas && activeCourseSlice.formulas.length > 0 && (
-                  <div className="p-3.5 sm:p-4 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-500/30 space-y-2.5">
-                    <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
-                      <SubjectIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                      <span>Formule & Propriété Clé (Notation Officielle)</span>
-                    </div>
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      {activeCourseSlice.formulas.map((form, fIdx) => (
-                        <div
-                          key={fIdx}
-                          className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 space-y-1.5 shadow-2xs"
-                        >
-                          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 block">
-                            <MathRenderer text={form.name} />
-                          </span>
-                          <div className="text-xs sm:text-sm font-black text-indigo-700 dark:text-indigo-300 overflow-x-auto py-1">
-                            <MathFormula latex={form.formula} display={true} />
-                          </div>
-                          {form.note && (
-                            <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                              <MathRenderer text={form.note} />
-                            </p>
-                          )}
-                        </div>
-                      ))}
                     </div>
                   </div>
                 )}

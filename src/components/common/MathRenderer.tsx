@@ -107,28 +107,50 @@ export function cleanFormulasAndIndices(text: string): string {
 
   // 6. Cinématique & Mécanique (équations de vitesse instantanée, forces, Archimède)
   s = s.replace(
-    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[0-9i\-+]+\}?M_\{?[0-9i\-+]+\}?\s*\/\s*\(?\s*t_\{?[0-9i\-+]+\}?\s*[−\-]\s*t_\{?[0-9i\-+]+\}?\s*\)?\s*=\s*M_\{?[0-9i\-+]+\}?M_\{?[0-9i\-+]+\}?\s*\/\s*\(?\s*2\s*[τ\tau]\s*\)?/g,
-    '$$$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{t_{i+1} - t_{i-1}} = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$$$'
+    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*t_\{?[^}]+\}?\s*[−\-]\s*t_\{?[^}]+\}?\s*\)?\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?/g,
+    () => '$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{t_{i+1} - t_{i-1}} = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$'
   );
 
   s = s.replace(
-    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[0-9i\-+]+\}?M_\{?[0-9i\-+]+\}?\s*\/\s*\(?\s*2\s*[τ\tau]\s*\)?/g,
-    '$$$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$$$'
+    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?/g,
+    () => '$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$'
   );
 
   s = s.replace(
-    /v\s*\(\s*t[₂2]\s*\)\s*=\s*M[₁1]M[₃3]\s*\/\s*\(?\s*2\s*[τ\tau]\s*\)?/g,
-    '$$$$v(t_2) = \\frac{M_1 M_3}{2\\tau}$$$$'
+    /v\s*\(\s*t[₂2]\s*\)\s*=\s*M[₁1]M[₃3]\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?/g,
+    () => '$$v(t_2) = \\frac{M_1 M_3}{2\\tau}$$'
   );
 
   s = s.replace(
-    /v\s*\(\s*t[₁1]\s*\)\s*=\s*M[₀0]M[₂2]\s*\/\s*\(?\s*2\s*[τ\tau]\s*\)?/g,
-    '$$$$v(t_1) = \\frac{M_0 M_2}{2\\tau}$$$$'
+    /v\s*\(\s*t[₁1]\s*\)\s*=\s*M[₀0]M[₂2]\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?/g,
+    () => '$$v(t_1) = \\frac{M_0 M_2}{2\\tau}$$'
   );
 
+  // Équation de trajectoire d'un projectile : y(x) = - g / (2 v₀² cos² α) · x² + (tan α) · x + h
+  s = s.replace(
+    /y\(x\)\s*=\s*-\s*g\s*\/\s*\(?2\s*v[₀0]²\s*cos²\s*α\)?\s*[·*]\s*x²\s*\+\s*\(?tan\s*α\)?\s*[·*]\s*x\s*\+\s*([a-zA-Z0-9_]+)/g,
+    (_, h) => `$$y(x) = - \\frac{g}{2 v_0^2 \\cos^2 \\alpha} x^2 + (\\tan \\alpha) x + ${h}$$`
+  );
+
+  // Chaîne PFD projectile : Σ F_ext = P ⇒ m · a = m · g ⇒ a = g
+  s = s.replace(
+    /(?:∑|Σ|\\sum)\s*F_ext\s*=\s*P\s*(?:⇒|=>)\s*m\s*[·*]\s*a\s*=\s*m\s*[·*]\s*g\s*(?:⇒|=>)\s*a\s*=\s*g/g,
+    () => '$$\\sum \\vec{F}_{\\text{ext}} = \\vec{P} \\implies m \\cdot \\vec{a} = m \\cdot \\vec{g} \\implies \\vec{a} = \\vec{g}$$'
+  );
+
+  // Σ F_ext = m · a
+  s = s.replace(/(?:∑|Σ|\\sum)\s*F_ext\s*=\s*m\s*[·*]\s*a/g, () => '$$\\sum \\vec{F}_{\\text{ext}} = m \\cdot \\vec{a}$$');
+
+  // Σ F_ext = 0 ⟺ v_G = vecteur constant
+  s = s.replace(/(?:∑|Σ|\\sum)\s*F_ext\s*=\s*0\s*(?:⟺|<=>|\\iff)\s*v_G\s*=\s*vecteur\s*constant/g, () => '$$\\sum \\vec{F}_{\\text{ext}} = \\vec{0} \\iff \\vec{v}_G = \\vec{\\text{cste}}$$');
+
+  // Σ F_ext = 0
+  s = s.replace(/(?:∑|Σ|\\sum)\s*F_ext\s*=\s*0/g, () => '$\\sum \\vec{F}_{\\text{ext}} = \\vec{0}$');
+
+  // 3ème loi de Newton : F_{A/B} = - F_{B/A}
   s = s.replace(
     /F_\{?([A-Za-z0-9\/]+)\}?\s*=\s*[−\-]\s*F_\{?([A-Za-z0-9\/]+)\}?/g,
-    '$$$$F_{$1} = -F_{$2}$$$$'
+    (_, f1, f2) => `$$F_{${f1}} = -F_{${f2}}$$`
   );
 
   s = s.replace(
@@ -176,6 +198,23 @@ export function cleanFormulasAndIndices(text: string): string {
     t = replaceNotInMath(t, /t₁\/₂/g, () => '$t_{1/2}$');
     t = replaceNotInMath(t, /\bt_\{?1\/2\}?/g, () => '$t_{1/2}$');
 
+    // Repère d'étude mécanique (O, i, j)
+    t = replaceNotInMath(t, /\(O,\s*i,\s*j\)/g, () => '$(O, \\vec{i}, \\vec{j})$');
+
+    // Équations horaires et coordonnées projectile
+    t = replaceNotInMath(t, /\ba_x\s*=\s*0\s*;\s*a_y\s*=\s*-\s*g\b/g, () => '$a_x = 0$ ; $a_y = -g$');
+    t = replaceNotInMath(t, /\bv_x\(t\)\s*=\s*v[₀0]\s*cos\s*α\s*;\s*v_y\(t\)\s*=\s*-\s*g\s*t\s*\+\s*v[₀0]\s*sin\s*α/g, () => '$v_x(t) = v_0 \\cos \\alpha$ ; $v_y(t) = -gt + v_0 \\sin \\alpha$');
+    t = replaceNotInMath(t, /\bx\(t\)\s*=\s*\(v[₀0]\s*cos\s*α\)\s*t\s*;\s*y\(t\)\s*=\s*-\s*1\/2\s*g\s*t²\s*\+\s*\(v[₀0]\s*sin\s*α\)\s*t\s*\+\s*([a-zA-Z0-9_]+)/g, (_, h) => `$x(t) = (v_0 \\cos \\alpha) t$ ; $y(t) = -\\frac{1}{2}gt^2 + (v_0 \\sin \\alpha) t + ${h}$`);
+
+    // Poids et dynamique
+    t = replaceNotInMath(t, /\bP\s*=\s*m\s*[·*×]\s*g\b/g, () => '$P = m \\cdot g$');
+    t = replaceNotInMath(t, /\bv\s*=\s*constante\b/g, () => '$v = \\text{constante}$');
+    t = replaceNotInMath(t, /\bv_G\s*=\s*vecteur\s*constant\b/g, () => '$\\vec{v}_G = \\vec{\\text{cste}}$');
+    t = replaceNotInMath(t, /\bv_G\s*=\s*constante\b/g, () => '$v_G = \\text{constante}$');
+    t = replaceNotInMath(t, /\bv_y\s*=\s*0\b/g, () => '$v_y = 0$');
+    t = replaceNotInMath(t, /\by\s*=\s*0\b/g, () => '$y = 0$');
+    t = replaceNotInMath(t, /\(x₀\s*=\s*0,\s*y₀\s*=\s*h\)/g, () => '($x_0 = 0$, $y_0 = h$)');
+
     // Normes de vecteurs (ex: ||v(t_i)||, ||v(t)||, ||F_{A/B}||)
     t = replaceNotInMath(t, /\|\|\s*([a-zA-Z])(?:\(([a-zA-Z0-9_{}\-+]+)\))?\s*\|\|/g, (_, sym, arg) => {
       return arg ? `$\\|${sym}(${arg})\\|$` : `$\\|${sym}\\|$`;
@@ -186,9 +225,9 @@ export function cleanFormulasAndIndices(text: string): string {
     t = replaceNotInMath(t, /\bv\(t\)/g, () => '$v(t)$');
 
     // Paires de points avec indices (ex: M_{i-1}M_{i+1})
-    t = replaceNotInMath(t, /\b([A-Z])_\{([^}]+)\}([A-Z])_\{([^}]+)\}\b/g, (_, p1, i1, p2, i2) => `$${p1}_{${i1}}${p2}_{${i2}}$`);
+    t = replaceNotInMath(t, /\b([A-Z])_\{([^}]+)\}\s*([A-Z])_\{([^}]+)\}(?![a-zA-Z0-9_])/g, (_, p1, i1, p2, i2) => `$${p1}_{${i1}}${p2}_{${i2}}$`);
 
-    // Variables avec indices entre accolades (ex: M_{i-1}, M_{i+1}, t_{i+1}, F_{A/B})
+    // Variables avec indices entre accolades (ex: M_{i-1}, M_{i+1}, t_{i+1}, F_{A/B}, F_{B/A})
     t = replaceNotInMath(t, /\b([A-Za-z])_\{([^}]+)\}/g, (_, sym, sub) => `$${sym}_{${sub}}$`);
 
     // Points avec indices Unicode (ex: M₀, M₁, M₂...)
@@ -245,8 +284,24 @@ export function sanitizeFormulaForKatex(raw: string): string {
   // 1.1 Unification du signe moins Unicode
   s = s.replace(/−/g, '-');
 
+  // Si la formule passée est une phrase descriptive en français sans opérateur mathématique
+  const hasMathOp = /[=+\-*/\\]|\\frac|\\sum|\\to|\\iff|\\implies|<|>/.test(s);
+  if (!hasMathOp && /\s/.test(s)) {
+    return `\\text{${s}}`;
+  }
+
   // 1.2 Protection des interactions physiques et fractions d'indices (ex: F_{A/B}, F_{B/A}, t_{1/2})
   s = s.replace(/_\{([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}/g, '_{$1/$2}');
+
+  // Remplacement des termes physiques fréquents pour éviter les lettres collées en italique
+  s = s.replace(/\bvecteur\s+constant\b/g, '\\vec{\\text{cste}}');
+  s = s.replace(/\bconstante\b/g, '\\text{cste}');
+  s = s.replace(/\brepos\b/g, '\\text{repos}');
+  s = s.replace(/\bmouvement\s+rectiligne\s+uniforme\b/g, '\\text{MRU}');
+  s = s.replace(/\bcirculaire\s+uniforme\b/g, '\\text{circulaire uniforme}');
+  s = s.replace(/\\sum\s*F_ext\b/g, '\\sum \\vec{F}_{\\text{ext}}');
+  s = s.replace(/\bF_ext\b/g, '\\vec{F}_{\\text{ext}}');
+  s = s.replace(/\bv_G\b/g, '\\vec{v}_G');
 
   // 2. Réparation des sauts de page ou résidus de parsing (\x0crac -> \frac)
   s = s.replace(/\x0crac\{([^{}]+)\}\{([^{}]+)\}/g, '\\frac{$1}{$2}');
@@ -479,7 +534,7 @@ export const MathFormula: React.FC<MathFormulaProps> = ({ latex, display = false
   if (display) {
     return (
       <div
-        className={`my-2 text-center overflow-x-auto py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 text-sm sm:text-base text-indigo-700 dark:text-indigo-300 font-medium ${className}`}
+        className={`my-1.5 text-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-2 px-2.5 sm:py-2.5 sm:px-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 text-xs sm:text-sm md:text-base text-indigo-700 dark:text-indigo-300 font-medium ${className}`}
         dangerouslySetInnerHTML={{ __html: renderedHtml }}
       />
     );
@@ -597,7 +652,7 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = ''
           return (
             <span
               key={idx}
-              className="block my-2.5 overflow-x-auto text-center py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 text-indigo-700 dark:text-indigo-300 font-medium shadow-2xs"
+              className="block my-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden text-center py-2 px-2.5 sm:py-2.5 sm:px-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 text-xs sm:text-sm md:text-base text-indigo-700 dark:text-indigo-300 font-medium shadow-2xs"
               dangerouslySetInnerHTML={{ __html: segment.html }}
             />
           );

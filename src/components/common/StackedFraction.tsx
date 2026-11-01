@@ -130,10 +130,18 @@ export function renderTextWithStackedFractions(text: string): React.ReactNode {
     const fullMatch = match[0];
 
     // Ignorer si c'est un format de date ou un compteur exclu (ex: 8/8 dans un badge "Objectif 8/8")
-    // mais dans les explications, les fractions doivent être rendues.
-    // Si précédé de "Étape " ou "Question " ou "Leçon ", on laisse tel quel pour les badges.
-    const prefix = cleaned.slice(Math.max(0, matchIndex - 12), matchIndex);
-    if (/Étape\s*$|Question\s*$|Leçon\s*$|Partie\s*$/i.test(prefix)) {
+    // ou une interaction de forces / notation d'indice (ex: F_{A/B}, F_A/B, t_{1/2})
+    // ou une unité physique usuelle (km/h, m/s, mol/L, g/L, N/kg, etc.)
+    const prefix = cleaned.slice(Math.max(0, matchIndex - 15), matchIndex);
+    const suffix = cleaned.slice(matchIndex + fullMatch.length, matchIndex + fullMatch.length + 5);
+
+    if (
+      /Étape\s*$|Question\s*$|Leçon\s*$|Partie\s*$/i.test(prefix) ||
+      /[_{]\s*$/.test(prefix) ||
+      /^\s*}/.test(suffix) ||
+      /^(?:km\/h|m\/s|mol\/L|g\/L|N\/kg|N\/m|J\/K)$/i.test(fullMatch.trim()) ||
+      /^[A-Z]\/[A-Z]$/.test(fullMatch.trim())
+    ) {
       continue;
     }
 

@@ -996,23 +996,23 @@ export const physique2deCPrincipeInertieChapter: CurriculumChapter = {
       "formulas": [
         {
           "name": "Condition de système pseudo-isolé",
-          "formula": "∑ F_ext = 0",
+          "formula": "\\sum \\vec{F}_{\\text{ext}} = \\vec{0}",
           "note": "Les forces extérieures appliquées se compensent exactement à tout instant."
         },
         {
           "name": "Principe de l'inertie (1ère loi de Newton)",
-          "formula": "∑ F_ext = 0 ⟺ v_G = vecteur constant",
-          "note": "v_G = 0 (repos) ou v_G = constante ≠ 0 (mouvement rectiligne uniforme)."
+          "formula": "\\sum \\vec{F}_{\\text{ext}} = \\vec{0} \\iff \\vec{v}_G = \\vec{\\text{cste}}",
+          "note": "\\vec{v}_G = \\vec{0} (repos) ou \\vec{v}_G = \\vec{\\text{cste}} \\neq \\vec{0} (mouvement rectiligne uniforme)."
         },
         {
           "name": "Mouvement d'ensemble",
-          "formula": "Mouvement décrit par le centre d'inertie G",
-          "note": "Rectiligne et uniforme dans un référentiel galiléen si ∑ F_ext = 0."
+          "formula": "\\vec{v}_G = \\vec{\\text{cste}}",
+          "note": "Mouvement décrit par le centre d'inertie G (rectiligne et uniforme dans le référentiel galiléen si \\sum \\vec{F}_{\\text{ext}} = \\vec{0})."
         },
         {
           "name": "Mouvement propre",
-          "formula": "Mouvement relatif par rapport au repère lié à G",
-          "note": "Circulaire uniforme autour de l'axe passant par G."
+          "formula": "\\text{Rotation uniforme autour de } G",
+          "note": "Mouvement relatif des points du solide par rapport au repère lié au centre d'inertie G (circulaire uniforme)."
         }
       ],
       "keyRule": "Si ∑ F_ext = 0, le centre d'inertie G reste au repos ou persévère dans son mouvement rectiligne uniforme (MRU). Le mouvement d'ensemble est celui de G, le mouvement propre s'effectue autour de G.",
