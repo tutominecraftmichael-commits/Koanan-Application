@@ -124,30 +124,29 @@ export function getSubCategoryQuestion(subCategory: StemSubCategory): string {
 
 /**
  * Calcule automatiquement la sous-discipline à lancer pour la séance actuelle selon l'alternance
- * (Chimie ↔ Physique et Géométrie ↔ Numérique)
+ * (Chimie ↔ Physique et Géométrie ↔ Numérique).
+ * Retourne null si l'élève est nouveau et n'a pas encore choisi son premier volet (Règle 1).
  */
 export function getActiveSubCategoryForSession(
   userId: string,
   subjectId: StemSubjectId
-): StemSubCategory {
+): StemSubCategory | null {
   if (subjectId === 'svt') return 'svt';
 
   const progressMap = getStudentProgressMap(userId);
   const prog = progressMap[subjectId];
 
+  // RÈGLE 1 : Si l'élève n'a encore jamais validé de séance dans cette matière, il doit choisir librement
+  if (!prog || !prog.lastAlternatedSubCategory) {
+    return null;
+  }
+
+  // RÈGLE 2 & 3 : Alternance stricte imposée
   if (subjectId === 'physique_chimie') {
-    // Règle d'alternance ivoirienne : 1ère séance = Chimie, 2ème = Physique, puis alternance continue
-    if (!prog || !prog.lastAlternatedSubCategory) {
-      return 'chimie';
-    }
     return prog.lastAlternatedSubCategory === 'chimie' ? 'physique' : 'chimie';
   }
 
   if (subjectId === 'maths') {
-    // Règle d'alternance ivoirienne : 1ère séance = Géométrie, 2ème = Numérique, puis alternance continue
-    if (!prog || !prog.lastAlternatedSubCategory) {
-      return 'geometrie';
-    }
     return prog.lastAlternatedSubCategory === 'geometrie' ? 'numerique' : 'geometrie';
   }
 
@@ -231,6 +230,19 @@ export function initializeSubjectPosition(
   return initializeSubCategoryPosition(userId, subjectId, subCategory, gradeLevel, startingChapterId);
 }
 
+export interface BuildTutorSessionResult {
+  needsVoletChoice: boolean;
+  needsPositioning: boolean;
+  isSecondSessionAlternance: boolean;
+  previousSubCategory?: StemSubCategory;
+  alternanceBannerText?: string;
+  availableChapters: CurriculumChapter[];
+  subCategory: StemSubCategory;
+  subCategoryName: string;
+  subCategoryQuestion: string;
+  payload?: TutorSessionPayload;
+}
+
 /**
  * Prépare le contenu d'une séance selon la durée prévue et l'alternance des sous-catégories
  */
@@ -241,21 +253,33 @@ export function buildTutorSessionPayload(
   gradeLevel: CurriculumGradeLevel,
   durationMinutes: number = 25,
   requestedSubCategory?: StemSubCategory
-): {
-  needsPositioning: boolean;
-  availableChapters: CurriculumChapter[];
-  subCategory: StemSubCategory;
-  subCategoryName: string;
-  subCategoryQuestion: string;
-  payload?: TutorSessionPayload;
-} {
-  const activeSubCategory = requestedSubCategory || getActiveSubCategoryForSession(userId, subjectId);
-  const subCategoryName = getSubCategoryName(activeSubCategory);
-  const subCategoryQuestion = getSubCategoryQuestion(activeSubCategory);
-
+): BuildTutorSessionResult {
   const progressMap = getStudentProgressMap(userId);
   const subjectProgress = progressMap[subjectId];
   const allChapters = getCurriculumChapters(subjectId, gradeLevel);
+
+  // RÈGLE 1 : Si aucun volet n'est spécifié et que l'élève n'a jamais validé de séance dans cette matière à double volet
+  const computedSubCategory = getActiveSubCategoryForSession(userId, subjectId);
+  const needsVoletChoice = !requestedSubCategory && computedSubCategory === null && (subjectId === 'physique_chimie' || subjectId === 'maths');
+
+  if (needsVoletChoice) {
+    const defaultSub: StemSubCategory = subjectId === 'physique_chimie' ? 'physique' : 'numerique';
+    return {
+      needsVoletChoice: true,
+      needsPositioning: false,
+      isSecondSessionAlternance: false,
+      availableChapters: [],
+      subCategory: defaultSub,
+      subCategoryName: getSubCategoryName(defaultSub),
+      subCategoryQuestion: subjectId === 'physique_chimie'
+        ? 'Par quel volet souhaites-tu commencer aujourd’hui ?'
+        : 'Par quel domaine souhaites-tu commencer aujourd’hui ?',
+    };
+  }
+
+  const activeSubCategory: StemSubCategory = requestedSubCategory || computedSubCategory || (subjectId === 'physique_chimie' ? 'physique' : subjectId === 'maths' ? 'numerique' : 'svt');
+  const subCategoryName = getSubCategoryName(activeSubCategory);
+  const subCategoryQuestion = getSubCategoryQuestion(activeSubCategory);
 
   // Filtrer uniquement les chapitres de la sous-catégorie active
   let subChapters = allChapters.filter(c => getChapterSubCategory(c) === activeSubCategory);
@@ -268,10 +292,31 @@ export function buildTutorSessionPayload(
   const subProg = subjectProgress?.subCategories?.[activeSubCategory];
   const isPositioned = Boolean(subProg?.positioningCompleted && subProg?.currentChapterId);
 
+  // RÈGLE 2 : Détection de la deuxième séance (alternance obligatoire, zéro négociation)
+  const hasPreviousSession = Boolean(subjectProgress?.lastAlternatedSubCategory);
+  const isSecondSessionAlternance = hasPreviousSession && !isPositioned && (subjectId === 'physique_chimie' || subjectId === 'maths');
+  let alternanceBannerText: string | undefined = undefined;
+
+  if (isSecondSessionAlternance) {
+    if (activeSubCategory === 'chimie') {
+      alternanceBannerText = "La dernière séance tu as travaillé la Physique, aujourd'hui place à la Chimie !";
+    } else if (activeSubCategory === 'physique') {
+      alternanceBannerText = "La dernière séance tu as travaillé la Chimie, aujourd'hui place à la Physique !";
+    } else if (activeSubCategory === 'geometrie') {
+      alternanceBannerText = "La dernière séance tu as travaillé le Domaine Numérique, aujourd'hui place à la Géométrie !";
+    } else if (activeSubCategory === 'numerique') {
+      alternanceBannerText = "La dernière séance tu as travaillé la Géométrie, aujourd'hui place au Domaine Numérique !";
+    }
+  }
+
   // Si l'élève n'a pas encore indiqué à quel chapitre il est arrivé dans CETTE sous-catégorie
   if (!isPositioned) {
     return {
+      needsVoletChoice: false,
       needsPositioning: true,
+      isSecondSessionAlternance,
+      previousSubCategory: subjectProgress?.lastAlternatedSubCategory,
+      alternanceBannerText,
       availableChapters: subChapters,
       subCategory: activeSubCategory,
       subCategoryName,
@@ -286,7 +331,9 @@ export function buildTutorSessionPayload(
 
   if (!activeChapter || subChapters.length === 0) {
     return {
+      needsVoletChoice: false,
       needsPositioning: false,
+      isSecondSessionAlternance: false,
       availableChapters: subChapters,
       subCategory: activeSubCategory,
       subCategoryName,
@@ -353,7 +400,9 @@ export function buildTutorSessionPayload(
   }
 
   return {
+    needsVoletChoice: false,
     needsPositioning: false,
+    isSecondSessionAlternance: false,
     availableChapters: subChapters,
     subCategory: activeSubCategory,
     subCategoryName,

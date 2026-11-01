@@ -201,6 +201,17 @@ export function cleanFormulasAndIndices(text: string): string {
     // Repère d'étude mécanique (O, i, j)
     t = replaceNotInMath(t, /\(O,\s*i,\s*j\)/g, () => '$(O, \\vec{i}, \\vec{j})$');
 
+    // Équations vectorielles et égalités orphelines (ex: \sum \vec{F}_{\text{ext}} = \vec{0}, \vec{v}_G = \vec{0}, \vec{v}_G = \vec{\text{cste}} \neq \vec{0})
+    t = replaceNotInMath(t, /\\sum\s*\\vec\{[^{}]+\}(?:_\{(?:[^{}]+|\{[^{}]+\})*\}|_[a-zA-Z0-9]+)?\s*=\s*\\vec\{[^{}]+\}/g, (m) => `$${m.trim()}$`);
+    t = replaceNotInMath(t, /\\vec\{[^{}]+\}(?:_\{(?:[^{}]+|\{[^{}]+\})*\}|_[a-zA-Z0-9]+)?(?:\s*(?:=|\\neq|≠)\s*\\vec\{(?:\\text\{[^{}]+\}|[^{}]+)\}(?:_\{(?:[^{}]+|\{[^{}]+\})*\}|_[a-zA-Z0-9]+)?)+(?!\$)/g, (m) => `$${m.trim()}$`);
+    t = replaceNotInMath(t, /\\vec\{[^{}]+\}\s*=\s*[a-zA-Z0-9_]+\s*\\cdot\s*\\vec\{[^{}]+\}/g, (m) => `$${m.trim()}$`);
+
+    // Vecteurs isolés orphelins (ex: \vec{v}_G, \vec{0}, \vec{P}, \vec{cste}, \vec{a}, \vec{g}, \vec{F})
+    t = replaceNotInMath(t, /\\vec\{(?:\\text\{[^{}]+\}|[^{}]+)\}(?:_\{(?:[^{}]+|\{[^{}]+\})*\}|_[a-zA-Z0-9]+)?/g, (m) => `$${m}$`);
+
+    // Symboles LaTeX isolés orphelins (ex: \times, \rightarrow, \to, \neq, \sum, \cdot)
+    t = replaceNotInMath(t, /\\(?:times|rightarrow|to|neq|sum|cdot)\b/g, (m) => `$${m}$`);
+
     // Équations horaires et coordonnées projectile
     t = replaceNotInMath(t, /\ba_x\s*=\s*0\s*;\s*a_y\s*=\s*-\s*g\b/g, () => '$a_x = 0$ ; $a_y = -g$');
     t = replaceNotInMath(t, /\bv_x\(t\)\s*=\s*v[₀0]\s*cos\s*α\s*;\s*v_y\(t\)\s*=\s*-\s*g\s*t\s*\+\s*v[₀0]\s*sin\s*α/g, () => '$v_x(t) = v_0 \\cos \\alpha$ ; $v_y(t) = -gt + v_0 \\sin \\alpha$');

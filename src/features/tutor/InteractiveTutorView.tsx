@@ -12,16 +12,14 @@ import {
   Calculator,
   Atom,
   Dna,
-  Zap,
   Check,
   Target,
   Brain,
   FileCheck2,
   BookOpen,
   HelpCircle,
-  ChevronDown,
-  ChevronUp,
-  RotateCcw
+  RotateCcw,
+  RefreshCw
 } from 'lucide-react';
 import type {
   CurriculumChapter,
@@ -70,27 +68,122 @@ type LessonPhase =
 
 interface ProgressiveCourseSlice {
   stepBadge: string;
+  stepType: 'concept' | 'worked_example';
+  stepIndex: number;
   stepTitle: string;
-  contextAndDefinition?: string;
-  paragraphs: string[];
+  paragraphText?: string;
+  formula?: PointFormula;
   konanTip?: string;
-  formulas: PointFormula[];
   keyRule?: string;
   visualSchema?: PointVisualSchema;
-  workedExamplePart?: {
+  workedExample?: {
     title: string;
     statement: string;
-    steps: { index: number; text: string }[];
-    conclusion?: string;
+    stepNumber: number;
+    stepHint?: string;
   };
 }
 
 /**
- * Fournit l'intégralité du cours de la notion clé sans rien skipper :
- * Considère que l'élève part de zéro et lui explique le "pourquoi" et le "comment"
- * avec des mots simples, le cours complet pas-à-pas, l'exemple résolu et les vraies formules associées.
+ * Composant de paragraphe pédagogique :
+ * - Notions clés et termes scientifiques en GRAS BLEU (ex: Système pseudo-isolé, Mitose, Chloroplaste)
+ * - Lois fondamentales, théorèmes et principes en CARTE DOUCE VIOLETTE
+ * - Puces structurées, aérées, zéro mur de texte
  */
-function buildProgressiveCourseSlice(point: CurriculumPoint, _stepIndex: number): ProgressiveCourseSlice {
+const PedagogicalParagraph: React.FC<{ text: string }> = ({ text }) => {
+  if (!text) return null;
+
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+  return (
+    <div className="space-y-3 text-xs sm:text-sm leading-relaxed">
+      {lines.map((line, lIdx) => {
+        // Détection de titre numéroté (ex: "1. Vitesse moyenne :")
+        const isNumberedTitle = /^[1-4]\.\s+/.test(line);
+        if (isNumberedTitle) {
+          const num = line.match(/^[1-4]/)?.[0] || '1';
+          const titleContent = line.replace(/^[1-4]\.\s+/, '');
+          return (
+            <div
+              key={lIdx}
+              className="text-sm sm:text-base font-black text-slate-900 dark:text-white pt-1 flex items-center gap-2"
+            >
+              <span className="w-6 h-6 rounded-lg bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 flex items-center justify-center text-xs font-black shrink-0">
+                {num}
+              </span>
+              <span><MathRenderer text={titleContent} /></span>
+            </div>
+          );
+        }
+
+        // Détection d'une loi fondamentale, d'un théorème ou du principe d'inertie (CODE COULEUR VIOLET OBLIGATOIRE)
+        const isFundamentalLaw = /(?:1ère|2ème|3ème)\s+loi|principe d'inertie|théorème|loi fondamentale|loi de newton|condition d'équilibre/i.test(line);
+        if (isFundamentalLaw) {
+          return (
+            <div
+              key={lIdx}
+              className="p-3.5 my-2 rounded-2xl bg-purple-50/90 dark:bg-purple-950/40 border-2 border-purple-200 dark:border-purple-800/60 text-purple-950 dark:text-purple-100 font-medium shadow-2xs space-y-1.5"
+            >
+              <div className="flex items-center gap-1.5 text-purple-700 dark:text-purple-300 text-[11px] font-black uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                <span>Loi Fondamentale & Propriété Clé</span>
+              </div>
+              <div className="leading-relaxed">
+                <MathRenderer text={line.startsWith('-') ? line.slice(1).trim() : line} />
+              </div>
+            </div>
+          );
+        }
+
+        // Détection de définition ou notion clé (CODE COULEUR BLEU OBLIGATOIRE)
+        if (line.startsWith('-') || line.startsWith('•')) {
+          const cleanLine = line.replace(/^[-•]\s*/, '');
+          const colonIdx = cleanLine.indexOf(':');
+
+          if (colonIdx > 0 && colonIdx < 55) {
+            const term = cleanLine.slice(0, colonIdx).trim();
+            const definition = cleanLine.slice(colonIdx + 1).trim();
+
+            return (
+              <div key={lIdx} className="flex items-start gap-2 text-slate-700 dark:text-slate-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 mt-2" />
+                <div className="leading-relaxed font-medium">
+                  <span className="text-blue-600 dark:text-blue-400 font-extrabold mr-1.5">
+                    <MathRenderer text={term} /> :
+                  </span>
+                  <MathRenderer text={definition} />
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div key={lIdx} className="flex items-start gap-2 text-slate-700 dark:text-slate-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 mt-2" />
+              <div className="leading-relaxed font-medium">
+                <MathRenderer text={cleanLine} />
+              </div>
+            </div>
+          );
+        }
+
+        // Paragraphe classique
+        return (
+          <p key={lIdx} className="text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+            <MathRenderer text={line} />
+          </p>
+        );
+      })}
+    </div>
+  );
+};
+
+/**
+ * Découpe la leçon en 8 écrans progressifs (Style Duolingo) :
+ * - Écrans 1 à 4 : Un seul point de cours à la fois (4-5 lignes) + formule associée
+ * - Écrans 5 à 8 : Exercice d'application pas-à-pas (énoncé en haut, sans spoiler de solution)
+ */
+function buildProgressiveCourseSlice(point: CurriculumPoint, stepIndex: number): ProgressiveCourseSlice {
   const rawParagraphs = point.conceptExplanation
     .split(/\n\s*\n/)
     .map(p => p.trim())
@@ -98,28 +191,43 @@ function buildProgressiveCourseSlice(point: CurriculumPoint, _stepIndex: number)
 
   const paragraphs = rawParagraphs.length > 0 ? rawParagraphs : [point.conceptExplanation];
   const formulas = point.formulas || [];
+
+  if (stepIndex < 4) {
+    // Écrans 1 à 4 : Apprentissage progressif du cours (UN SEUL point à la fois, ultra aéré)
+    const pText = paragraphs[stepIndex] || paragraphs[paragraphs.length - 1] || point.summary;
+    const form = formulas[stepIndex] || (stepIndex === 0 && formulas.length > 0 ? formulas[0] : undefined);
+
+    return {
+      stepBadge: `Étape ${stepIndex + 1}/8 · Cours pas-à-pas`,
+      stepType: 'concept',
+      stepIndex,
+      stepTitle: point.title,
+      paragraphText: pText,
+      formula: form,
+      konanTip: stepIndex >= 2 && point.keyRule ? `L'Astuce du Prof Konan : ${point.keyRule}` : undefined,
+      keyRule: stepIndex === 3 ? point.keyRule : undefined,
+      visualSchema: stepIndex === 1 ? point.visualSchema : undefined,
+    };
+  }
+
+  // Écrans 5 à 8 : Exercice d'application interactif pas-à-pas (Résolution par étapes)
+  const stepNumber = stepIndex - 3; // 1, 2, 3, 4
   const ex = point.workedExample;
-  const methodSteps = ex?.methodSteps || [];
+  const exTitle = ex?.title || "Exercice d'application pas-à-pas";
+  const exStatement = ex?.statement || point.summary;
+  const stepHint = ex?.methodSteps?.[stepNumber - 1];
 
   return {
-    stepBadge: 'Point de cours officiel',
+    stepBadge: `Étape ${stepIndex + 1}/8 · Exercice d'application`,
+    stepType: 'worked_example',
+    stepIndex,
     stepTitle: point.title,
-    contextAndDefinition: point.summary,
-    paragraphs,
-    konanTip: point.keyRule
-      ? `L’Astuce du Prof Konan : ${point.keyRule}`
-      : 'L’Astuce du Prof Konan : Pose toujours ta démarche et tes calculs au brouillon avant de valider ta réponse.',
-    formulas,
-    keyRule: point.keyRule,
-    visualSchema: point.visualSchema,
-    workedExamplePart: ex
-      ? {
-          title: ex.title,
-          statement: ex.statement,
-          steps: methodSteps.map((t, i) => ({ index: i + 1, text: t })),
-          conclusion: ex.conclusion,
-        }
-      : undefined,
+    workedExample: {
+      title: exTitle,
+      statement: exStatement,
+      stepNumber,
+      stepHint,
+    },
   };
 }
 
@@ -135,9 +243,15 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 }) => {
   // 1. Sous-catégorie active calculée selon la règle d'alternance officielle ivoirienne
   // (Physique-Chimie -> Chimie ↔ Physique, Maths -> Géométrie ↔ Numérique)
-  const [activeSubCategory, setActiveSubCategory] = useState<StemSubCategory>(() =>
-    getActiveSubCategoryForSession(userId, stemSubjectId)
-  );
+  const [activeSubCategory, setActiveSubCategory] = useState<StemSubCategory>(() => {
+    const computed = getActiveSubCategoryForSession(userId, stemSubjectId);
+    return computed || (stemSubjectId === 'physique_chimie' ? 'physique' : stemSubjectId === 'maths' ? 'numerique' : 'svt');
+  });
+
+  // États pour le choix du premier volet (Règle 1) et l'alternance obligatoire (Règle 2)
+  const [needsVoletChoice, setNeedsVoletChoice] = useState<boolean>(false);
+  const [isSecondSessionAlternance, setIsSecondSessionAlternance] = useState<boolean>(false);
+  const [alternanceBannerText, setAlternanceBannerText] = useState<string>('');
 
   // État du diagnostic de positionnement initial pour cette sous-catégorie
   const [showChapterSelector, setShowChapterSelector] = useState<boolean>(false);
@@ -165,8 +279,6 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean>(false);
   // Affichage de la justification à la demande (bouton "Pourquoi ?") sur bonne réponse
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
-  // Dépliement / repliement du cours pour confort de lecture
-  const [isCourseExpanded, setIsCourseExpanded] = useState<boolean>(true);
 
   // Indices des étapes manquées au premier passage (pour la boucle de rattrapage)
   const [missedIndices, setMissedIndices] = useState<number[]>([]);
@@ -184,7 +296,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const [showExitConfirmModal, setShowExitConfirmModal] = useState<boolean>(false);
 
   // Charger ou recharger le payload de session avec la sous-catégorie active
-  const refreshSessionPayload = (subCatToUse: StemSubCategory = activeSubCategory) => {
+  const refreshSessionPayload = (subCatToUse?: StemSubCategory) => {
     const res = buildTutorSessionPayload(
       userId,
       stemSubjectId,
@@ -194,8 +306,17 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       subCatToUse
     );
 
+    setNeedsVoletChoice(res.needsVoletChoice);
+    setIsSecondSessionAlternance(res.isSecondSessionAlternance);
+    setAlternanceBannerText(res.alternanceBannerText || '');
     setAvailableSubChapters(res.availableChapters);
     setSubCategoryQuestionText(res.subCategoryQuestion);
+    setActiveSubCategory(res.subCategory);
+
+    if (res.needsVoletChoice) {
+      setShowChapterSelector(false);
+      return;
+    }
 
     if (res.needsPositioning) {
       setShowChapterSelector(true);
@@ -220,8 +341,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   };
 
   useEffect(() => {
-    refreshSessionPayload(activeSubCategory);
-  }, [userId, stemSubjectId, gradeLevel, subjectTitle, durationMinutes, activeSubCategory]);
+    refreshSessionPayload();
+  }, [userId, stemSubjectId, gradeLevel, subjectTitle, durationMinutes]);
 
   // Permet à l'élève de changer d'onglet (ex: Chimie <-> Physique ou Géométrie <-> Numérique) SANS fermer le sélecteur
   const handleSwitchSubCategoryInSelector = (newSubCat: StemSubCategory) => {
@@ -439,6 +560,131 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   };
 
   // =========================================================================
+  // VUE 0 : RÈGLE 1 — CHOIX DU PREMIER VOLET (NOUVEL ÉLÈVE)
+  // =========================================================================
+  if (needsVoletChoice) {
+    return (
+      <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div className="max-w-xl w-full bg-white dark:bg-slate-900 border-2 border-indigo-200 dark:border-indigo-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in zoom-in-95 duration-200 my-auto">
+          {/* En-tête */}
+          <div className="flex items-center gap-4">
+            <div className="shrink-0">
+              <KonanCube size={56} showStars={true} glow={true} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                {subjectTitle} • Première séance
+              </span>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight mt-1">
+                {stemSubjectId === 'physique_chimie'
+                  ? 'Par quel volet souhaites-tu commencer aujourd’hui ?'
+                  : 'Par quel domaine mathématique souhaites-tu commencer aujourd’hui ?'}
+              </h2>
+            </div>
+          </div>
+
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            En Côte d’Ivoire, le programme officiel de <strong>{subjectTitle}</strong> comporte deux volets complémentaires.
+            Choisis librement par lequel tu démarres : Konan alternera ensuite automatiquement à chaque séance !
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            {stemSubjectId === 'physique_chimie' ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    try { soundFX.playClick(); } catch {}
+                    refreshSessionPayload('physique');
+                  }}
+                  className="p-5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 bg-white dark:bg-slate-800/60 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    ⚡
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                      Physique
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
+                      Mécanique, forces, mouvements et circuits électriques.
+                    </p>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    try { soundFX.playClick(); } catch {}
+                    refreshSessionPayload('chimie');
+                  }}
+                  className="p-5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 bg-white dark:bg-slate-800/60 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    🧪
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                      Chimie
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
+                      Atomes, solutions aqueuses, ions et réactions acido-basiques.
+                    </p>
+                  </div>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    try { soundFX.playClick(); } catch {}
+                    refreshSessionPayload('numerique');
+                  }}
+                  className="p-5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 bg-white dark:bg-slate-800/60 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    🔢
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                      Domaine Numérique
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
+                      Calculs, ensembles, équations, inéquations et fonctions.
+                    </p>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    try { soundFX.playClick(); } catch {}
+                    refreshSessionPayload('geometrie');
+                  }}
+                  className="p-5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 bg-white dark:bg-slate-800/60 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    📐
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                      Géométrie
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
+                      Vecteurs, repérage, produit scalaire et transformations.
+                    </p>
+                  </div>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
   // VUE 1 : DIAGNOSTIC INITIAL (OÙ EN ÊTES-VOUS DANS CETTE SOUS-DISCIPLINE ?)
   // =========================================================================
   if (showChapterSelector) {
@@ -483,100 +729,116 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             Konan alternera automatiquement ensuite vos séances pour couvrir harmonieusement tout le programme.
           </p>
 
-          {/* Choix clair de la sous-discipline pour le positionnement */}
-          {(stemSubjectId === 'physique_chimie' || stemSubjectId === 'maths') && (
-            <div className="space-y-2">
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
-                Choisis la matière à positionner aujourd'hui :
-              </span>
-              <div className="grid grid-cols-2 gap-2.5">
-                {stemSubjectId === 'physique_chimie' ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (activeSubCategory !== 'chimie') {
-                          handleSwitchSubCategoryInSelector('chimie');
-                        }
-                      }}
-                      className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
-                        activeSubCategory === 'chimie'
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
-                          : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
-                      }`}
-                    >
-                      <span className="text-2xl select-none">🧪</span>
-                      <div className="min-w-0">
-                        <div className="text-xs sm:text-sm font-black">Chimie</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Atomes, Réactions...</div>
-                      </div>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (activeSubCategory !== 'physique') {
-                          handleSwitchSubCategoryInSelector('physique');
-                        }
-                      }}
-                      className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
-                        activeSubCategory === 'physique'
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
-                          : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
-                      }`}
-                    >
-                      <span className="text-2xl select-none">⚡</span>
-                      <div className="min-w-0">
-                        <div className="text-xs sm:text-sm font-black">Physique</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Mécanique, Électricité...</div>
-                      </div>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (activeSubCategory !== 'numerique') {
-                          handleSwitchSubCategoryInSelector('numerique');
-                        }
-                      }}
-                      className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
-                        activeSubCategory === 'numerique'
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
-                          : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
-                      }`}
-                    >
-                      <span className="text-2xl select-none">🔢</span>
-                      <div className="min-w-0">
-                        <div className="text-xs sm:text-sm font-black">Numérique</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Calculs, Fonctions...</div>
-                      </div>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (activeSubCategory !== 'geometrie') {
-                          handleSwitchSubCategoryInSelector('geometrie');
-                        }
-                      }}
-                      className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
-                        activeSubCategory === 'geometrie'
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
-                          : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
-                      }`}
-                    >
-                      <span className="text-2xl select-none">📐</span>
-                      <div className="min-w-0">
-                        <div className="text-xs sm:text-sm font-black">Géométrie</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Vecteurs, Droites...</div>
-                      </div>
-                    </button>
-                  </>
-                )}
+          {/* Bannière d'alternance obligatoire (Règle 2) */}
+          {isSecondSessionAlternance ? (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/60 dark:to-purple-950/50 border-2 border-indigo-300 dark:border-indigo-700 flex items-center gap-3.5 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <RefreshCw className="w-5 h-5 animate-spin-slow" />
+              </div>
+              <div className="space-y-0.5">
+                <div className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
+                  Alternance obligatoire (Zéro négociation)
+                </div>
+                <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white leading-snug">
+                  {alternanceBannerText || `La dernière séance tu as travaillé l'autre volet, aujourd'hui place à la ${subCategoryLabel} !`}
+                </p>
               </div>
             </div>
+          ) : (
+            (stemSubjectId === 'physique_chimie' || stemSubjectId === 'maths') && sessionPayload && (
+              <div className="space-y-2">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
+                  Changer de volet :
+                </span>
+                <div className="grid grid-cols-2 gap-2.5">
+                  {stemSubjectId === 'physique_chimie' ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (activeSubCategory !== 'chimie') {
+                            handleSwitchSubCategoryInSelector('chimie');
+                          }
+                        }}
+                        className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
+                          activeSubCategory === 'chimie'
+                            ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                            : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                        }`}
+                      >
+                        <span className="text-2xl select-none">🧪</span>
+                        <div className="min-w-0">
+                          <div className="text-xs sm:text-sm font-black">Chimie</div>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Atomes, Réactions...</div>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (activeSubCategory !== 'physique') {
+                            handleSwitchSubCategoryInSelector('physique');
+                          }
+                        }}
+                        className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
+                          activeSubCategory === 'physique'
+                            ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                            : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                        }`}
+                      >
+                        <span className="text-2xl select-none">⚡</span>
+                        <div className="min-w-0">
+                          <div className="text-xs sm:text-sm font-black">Physique</div>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Mécanique, Électricité...</div>
+                        </div>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (activeSubCategory !== 'numerique') {
+                            handleSwitchSubCategoryInSelector('numerique');
+                          }
+                        }}
+                        className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
+                          activeSubCategory === 'numerique'
+                            ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                            : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                        }`}
+                      >
+                        <span className="text-2xl select-none">🔢</span>
+                        <div className="min-w-0">
+                          <div className="text-xs sm:text-sm font-black">Numérique</div>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Calculs, Fonctions...</div>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (activeSubCategory !== 'geometrie') {
+                            handleSwitchSubCategoryInSelector('geometrie');
+                          }
+                        }}
+                        className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
+                          activeSubCategory === 'geometrie'
+                            ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                            : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                        }`}
+                      >
+                        <span className="text-2xl select-none">📐</span>
+                        <div className="min-w-0">
+                          <div className="text-xs sm:text-sm font-black">Géométrie</div>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Vecteurs, Droites...</div>
+                        </div>
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )
           )}
 
           {/* Indicateur de sélection en cours */}
@@ -852,12 +1114,6 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     );
   }
 
-  const totalLessonPoints = items.length;
-  const currentItemNumber = activeItemIndex + 1;
-  const totalSteps = pointExercises.length || 1;
-  // La barre de progression augmente UNIQUEMENT sur une bonne réponse (strictement gelée en cas de faute)
-  const progressPercent = Math.min(100, Math.round((masteredIndices.length / totalSteps) * 100));
-
   return (
     <div className="max-w-3xl mx-auto py-4 sm:py-6 px-3 sm:px-6 space-y-4">
       {/* 1. BARRE DE PROGRESSION STYLE DUOLINGO (TOP) */}
@@ -871,16 +1127,32 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <X className="w-5 h-5 stroke-[2.5]" />
         </button>
 
-        {/* Barre de progression fluide avec reflet brillant */}
-        <div className="flex-1 min-w-0">
-          <div className="relative w-full h-3.5 sm:h-4 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 shadow-inner">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 transition-all duration-500 ease-out relative shadow-sm"
-              style={{ width: `${progressPercent}%` }}
-            >
-              <div className="absolute top-0.5 inset-x-1.5 h-1 bg-white/40 rounded-full pointer-events-none" />
-            </div>
-          </div>
+        {/* 8 Segments d'étapes visuels Style Duolingo */}
+        <div className="flex-1 min-w-0 flex items-center gap-1.5 sm:gap-2">
+          {Array.from({ length: 8 }).map((_, sIdx) => {
+            const isMastered = masteredIndices.includes(sIdx);
+            const isCurrent = sIdx === activeStepIndex;
+
+            let segClass = 'bg-slate-200 dark:bg-slate-800';
+            if (isMastered) {
+              segClass = 'bg-emerald-500 shadow-xs shadow-emerald-500/30';
+            } else if (isCurrent) {
+              segClass = 'bg-indigo-500 ring-2 ring-indigo-500/30 animate-pulse';
+            }
+
+            return (
+              <div
+                key={sIdx}
+                className={`h-2.5 sm:h-3 flex-1 rounded-full transition-all duration-300 ${segClass}`}
+                title={`Étape ${sIdx + 1}/8`}
+              />
+            );
+          })}
+        </div>
+
+        {/* Badge de score 8/8 */}
+        <div className="shrink-0 px-2.5 py-1 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-xs font-black">
+          {masteredIndices.length} / 8
         </div>
       </div>
 
@@ -914,194 +1186,115 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
           <div className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400">
             <Target className="w-3.5 h-3.5" />
-            <span>Mini-leçon {currentItemNumber}/{totalLessonPoints}</span>
+            <span>Étape {activeStepIndex + 1}/8</span>
           </div>
         </div>
       </div>
 
       {/* =================================================================== */}
-      {/* COURS CONTINU + APPLICATION IMMÉDIATE                              */}
+      {/* MODE DUOLINGO : 1 SEUL POINT DE COURS -> 1 QCM -> SUIVANT           */}
       {/* =================================================================== */}
       {(phase === 'learning' || phase === 'catchup') && activeExercise && activeCourseSlice && (
-        <div className="space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-200">
-          {/* PARTIE A : LE BLOC DE COURS COMPLET DE LA NOTION */}
-          <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-100 dark:border-slate-800 space-y-4 shadow-sm">
-            <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-              <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
-                <BookOpen className="w-4 h-4 shrink-0" />
-                <span className="text-[11px] font-black uppercase tracking-wider">
-                  Cours officiel • {currentPoint.title}
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
+          {/* PARTIE 1 : LA CARTE DE COURS PROGRESSIVE (1 POINT À LA FOIS OU ÉNONCÉ D'EXERCICE) */}
+          {activeCourseSlice.stepType === 'concept' ? (
+            <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-100 dark:border-slate-800 space-y-4 shadow-sm">
+              <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+                <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+                  <BookOpen className="w-4 h-4 shrink-0" />
+                  <span className="text-[11px] font-black uppercase tracking-wider">
+                    {activeCourseSlice.stepBadge} • {currentPoint.title}
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300">
+                  Point {activeStepIndex + 1} / 4
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsCourseExpanded(prev => !prev)}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                title={isCourseExpanded ? 'Replier le cours' : 'Déplier le cours'}
-              >
-                <span>{isCourseExpanded ? 'Replier' : 'Voir le cours'}</span>
-                {isCourseExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-              </button>
-            </div>
 
-            <h2 className="text-base sm:text-xl font-black text-slate-900 dark:text-white leading-snug">
-              <MathRenderer text={activeCourseSlice.stepTitle} />
-            </h2>
+              {/* Contenu structuré avec le code couleur pédagogique Bleu / Violet */}
+              {activeCourseSlice.paragraphText && (
+                <PedagogicalParagraph text={activeCourseSlice.paragraphText} />
+              )}
 
-            {isCourseExpanded && (
-              <div className="space-y-4 animate-in fade-in duration-150">
-                {/* 1. Contexte & Définition claire (Partir de zéro) */}
-                {activeCourseSlice.contextAndDefinition && (
-                  <div className="p-3.5 sm:p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-800/40 space-y-1.5">
-                    <div className="flex items-center gap-1.5 text-blue-900 dark:text-blue-300 text-[11px] font-black uppercase tracking-wider">
-                      <BookOpen className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                      <span>D'où on part ? (Comprendre sans formule)</span>
-                    </div>
-                    <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
-                      <MathRenderer text={activeCourseSlice.contextAndDefinition} />
+              {/* Formule ou Propriété Clé associée à ce point précis */}
+              {activeCourseSlice.formula && (
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border-2 border-indigo-200 dark:border-indigo-500/30 space-y-2">
+                  <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
+                    <SubjectIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                    <span>Formule & Propriété Clé (Notation Officielle) : <MathRenderer text={activeCourseSlice.formula.name} /></span>
+                  </div>
+                  <div className="w-full text-center py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 text-xs sm:text-sm font-black text-indigo-700 dark:text-indigo-300 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    <MathFormula latex={activeCourseSlice.formula.formula} display={true} />
+                  </div>
+                  {activeCourseSlice.formula.note && (
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                      <MathRenderer text={activeCourseSlice.formula.note} />
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Support Visuel / Schéma si présent */}
+              {activeCourseSlice.visualSchema && (
+                <VisualSchemaRenderer schema={activeCourseSlice.visualSchema} />
+              )}
+
+              {/* Astuce Konan si présente */}
+              {activeCourseSlice.konanTip && (
+                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 to-cyan-50/70 dark:from-indigo-950/40 dark:to-cyan-950/20 border border-indigo-200/80 dark:border-indigo-500/30 flex items-start gap-3 shadow-2xs">
+                  <div className="shrink-0 pt-0.5">
+                    <KonanCube size={40} showStars={true} glow={true} />
+                  </div>
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                      <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
+                      <span>L'Astuce du Professeur Konan</span>
+                    </span>
+                    <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed">
+                      <MathRenderer text={activeCourseSlice.konanTip} />
                     </p>
                   </div>
-                )}
-
-                {/* Support Visuel / Schéma Géométrique ou Tableau Structuré */}
-                {activeCourseSlice.visualSchema && (
-                  <VisualSchemaRenderer schema={activeCourseSlice.visualSchema} />
-                )}
-
-                {/* 2. Formules ou Propriétés Clés (Mises en valeur immédiatement pour un repérage rapide sur mobile & desktop) */}
-                {activeCourseSlice.formulas && activeCourseSlice.formulas.length > 0 && (
-                  <div className="p-3.5 sm:p-4 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-500/30 space-y-3">
-                    <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
-                      <SubjectIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                      <span>Formule & Propriété Clé (Notation Officielle)</span>
-                    </div>
-                    <div className="grid gap-2.5 grid-cols-1 md:grid-cols-2">
-                      {activeCourseSlice.formulas.map((form, fIdx) => {
-                        const isTextDescription =
-                          !/[=+\-*/\\]|\\frac|\\sum|\\to|\\iff|\\implies/.test(form.formula) &&
-                          /\s/.test(form.formula.trim());
-
-                        return (
-                          <div
-                            key={fIdx}
-                            className="p-3 sm:p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 space-y-2 shadow-2xs transition-all hover:border-indigo-300 dark:hover:border-indigo-600/50"
-                          >
-                            <span className="text-[11px] font-extrabold text-indigo-950 dark:text-indigo-200 block">
-                              <MathRenderer text={form.name} />
-                            </span>
-                            {isTextDescription ? (
-                              <div className="py-2 px-2.5 rounded-lg bg-indigo-50/60 dark:bg-slate-800/80 border border-indigo-100/80 dark:border-slate-700/80 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-snug">
-                                <MathRenderer text={form.formula} />
-                              </div>
-                            ) : (
-                              <div className="text-xs sm:text-sm font-black text-indigo-700 dark:text-indigo-300 py-0.5">
-                                <MathFormula latex={form.formula} display={true} />
-                              </div>
-                            )}
-                            {form.note && (
-                              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                                <MathRenderer text={form.note} />
-                              </p>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* 3. Paragraphes d'explication du cours détaillés pas-à-pas */}
-                <div className="space-y-2.5">
-                  {activeCourseSlice.paragraphs.map((para, pIdx) => (
-                    <div
-                      key={pIdx}
-                      className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium whitespace-pre-line"
-                    >
-                      <MathRenderer text={para} />
-                    </div>
-                  ))}
                 </div>
-
-                {/* 4. Mascotte KONAN : Bulle de dialogue interactive avec l'Astuce du Professeur */}
-                {activeCourseSlice.konanTip && (
-                  <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 to-cyan-50/70 dark:from-indigo-950/40 dark:to-cyan-950/20 border border-indigo-200/80 dark:border-indigo-500/30 flex items-start gap-3 shadow-2xs">
-                    <div className="shrink-0 pt-0.5">
-                      <KonanCube size={42} showStars={true} glow={true} />
-                    </div>
-                    <div className="space-y-1 min-w-0 flex-1">
-                      <span className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
-                        <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
-                        <span>L'Astuce du Professeur Konan</span>
-                      </span>
-                      <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed">
-                        <MathRenderer text={activeCourseSlice.konanTip} />
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {/* 5. Exemple Résolu Pas-à-Pas */}
-                {activeCourseSlice.workedExamplePart && (
-                  <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/25 border border-emerald-200 dark:border-emerald-500/30 space-y-3">
-                    <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 text-[11px] font-black uppercase tracking-wider">
-                      <FileCheck2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                      <span><MathRenderer text={activeCourseSlice.workedExamplePart.title} /></span>
-                    </div>
-
-                    <div className="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-100 dark:border-slate-800 text-xs font-semibold text-slate-800 dark:text-slate-200">
-                      <span className="font-black text-emerald-700 dark:text-emerald-400 mr-1.5">Énoncé :</span>
-                      <MathRenderer text={activeCourseSlice.workedExamplePart.statement} />
-                    </div>
-
-                    <div className="space-y-2">
-                      {activeCourseSlice.workedExamplePart.steps.map((st) => (
-                        <div
-                          key={st.index}
-                          className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300"
-                        >
-                          <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-black text-[11px] flex items-center justify-center shrink-0 mt-0.5">
-                            {st.index}
-                          </span>
-                          <div className="leading-relaxed font-medium">
-                            <MathRenderer text={st.text} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {activeCourseSlice.workedExamplePart.conclusion && (
-                      <div className="pt-2 border-t border-emerald-200/70 dark:border-slate-800 flex items-start gap-2 text-xs font-bold text-emerald-900 dark:text-emerald-300">
-                        <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5 stroke-[3]" />
-                        <span>Conclusion : <MathRenderer text={activeCourseSlice.workedExamplePart.conclusion} /></span>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* 6. Règle d'or / Réflexe d'Examen */}
-                {activeCourseSlice.keyRule && (
-                  <div className="p-3.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-500/30 flex items-start gap-2.5">
-                    <Zap className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                    <div className="space-y-0.5">
-                      <span className="text-[11px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-300 block">
-                        Réflexe d'Examen National (BEPC / BAC)
-                      </span>
-                      <p className="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
-                        <MathRenderer text={activeCourseSlice.keyRule} />
-                      </p>
-                    </div>
-                  </div>
-                )}
+              )}
+            </div>
+          ) : (
+            // Écrans 5 à 8 : Exercice d'application interactif pas-à-pas (PAS DE SOLUTION D'AVANCE !)
+            <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-emerald-200 dark:border-emerald-700/60 space-y-4 shadow-sm">
+              <div className="flex items-center justify-between gap-2 border-b border-emerald-100 dark:border-slate-800 pb-3">
+                <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
+                  <FileCheck2 className="w-4 h-4 shrink-0" />
+                  <span className="text-[11px] font-black uppercase tracking-wider">
+                    {activeCourseSlice.stepBadge} • Étape {activeCourseSlice.workedExample?.stepNumber} sur 4
+                  </span>
+                </div>
+                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-800 dark:text-emerald-300">
+                  Résolution guidée
+                </span>
               </div>
-            )}
-          </div>
 
-          {/* PARTIE B : LE TEST DE COMPRÉHENSION IMMÉDIAT (ADAPTÉ À L'ÉTAPE) */}
+              {/* Énoncé de l'exercice d'application (Sans spoiler de solution) */}
+              <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/40 space-y-1.5">
+                <div className="text-xs font-black uppercase tracking-wider text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5">
+                  <FileCheck2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span><MathRenderer text={activeCourseSlice.workedExample?.title || "Exercice d'application"} /></span>
+                </div>
+                <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-semibold leading-relaxed pt-1">
+                  <MathRenderer text={activeCourseSlice.workedExample?.statement || ""} />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PARTIE 2 : LE TEST DE COMPRÉHENSION IMMÉDIAT (ADAPTÉ STRICTEMENT À L'ÉTAPE) */}
           <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
             <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
               <span className="font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
                 <Target className="w-4 h-4" />
-                <span>Test de compréhension immédiat</span>
+                <span>
+                  {activeStepIndex < 4
+                    ? `QCM ${activeStepIndex + 1}/4 · Compréhension du cours`
+                    : `QCM ${activeStepIndex + 1}/8 · Résolution (Étape ${activeStepIndex - 3}/4)`}
+                </span>
               </span>
 
               {phase === 'catchup' && (
@@ -1263,18 +1456,20 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 <button
                   type="button"
                   onClick={handleContinueAfterFeedback}
-                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 select-none"
+                  className={`w-full py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wide uppercase transition-all cursor-pointer flex items-center justify-center gap-2 select-none active:translate-y-1 ${
+                    isAnswerCorrect
+                      ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46]'
+                      : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-[0_5px_0_#b45309] hover:shadow-[0_2px_0_#b45309]'
+                  }`}
                 >
                   <span>
                     {phase === 'catchup'
-                      ? 'Question suivante'
-                      : exerciseIndex < totalSteps - 1
-                        ? 'Question suivante'
-                        : missedIndices.length > 0
-                          ? 'Reprendre les questions non comprises'
-                          : 'Terminer la leçon'}
+                      ? (isAnswerCorrect ? "Continuer le rattrapage 🚀" : "Question suivante ➡️")
+                      : isAnswerCorrect
+                        ? (activeStepIndex === 7 ? "Terminer et valider la mini-leçon 🏆" : "Continuer vers l'Étape suivante 🚀")
+                        : (activeStepIndex === 7 ? "Passer à la boucle de rattrapage 🔁" : "J'ai compris, étape suivante ➡️")}
                   </span>
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-5 h-5 stroke-[2.5]" />
                 </button>
               )}
             </div>
