@@ -334,7 +334,28 @@ function buildStepPedagogy(
   }
 
   // =========================================================================
-  // 4. BRANCHE SVT (100% PURE BIOLOGIE & GÉOLOGIE)
+  // 4. BRANCHE FRANÇAIS & LETTRES (100% PURE LITTÉRAIRE & MÉTHODOLOGIE CI)
+  // =========================================================================
+  if (subject === 'francais') {
+    const defaultFrenchFormula = formulas[stepIdx % Math.max(1, formulas.length)] || {
+      name: "Règle méthodologique officielle de français",
+      formula: "\\text{Idée directrice} + \\text{Citation entre guillemets} + \\text{Outil stylistique} + \\text{Interprétation (effet de sens)}",
+      note: "Démarche officielle d'expression écrite et de commentaire composé (MENA Côte d'Ivoire).",
+    };
+
+    return {
+      title: `Méthodologie & Analyse Littéraire (Étape ${stepIdx + 1})`,
+      paragraphText: `Règle de composition et d'analyse littéraire :
+• Principe fondamental : ${explanation || point.summary}
+• Démarche d'analyse : S'appuyer sur le texte d'auteur, repérer les indices stylistiques et grammaticaux et en dégager les effets de sens sans paraphraser.
+• Rigueur formelle : Soigner l'expression écrite, respecter la structure des paragraphes et la progression des centres d'intérêt.`,
+      formula: defaultFrenchFormula,
+      konanTip: "L'Astuce du Professeur Konan : Toujours associer la citation à un procédé littéraire précis et expliquer l'effet produit !",
+    };
+  }
+
+  // =========================================================================
+  // 5. BRANCHE SVT (100% PURE BIOLOGIE & GÉOLOGIE)
   // =========================================================================
   const defaultSvtFormula = formulas[stepIdx % Math.max(1, formulas.length)] || {
     name: "Propriété biologique & géologique",
@@ -409,6 +430,22 @@ function generateSubjectSpecificExercise(
       ],
       correctAnswerIndex: 0,
       explanation: `Dans le Système International (SI), l'unité légale normalisée de vitesse est le mètre par seconde (m/s). On rappelle que 1 m/s = 3,6 km/h.`,
+    };
+  }
+
+  if (subject === 'francais') {
+    return {
+      id: stepId,
+      type: 'mcq',
+      prompt: `Dans la leçon de français « ${chapter.title} », quelle règle méthodologique officielle doit obligatoirement être appliquée ?`,
+      options: [
+        `Toute affirmation littéraire doit être appuyée par une citation textuelle précise, analysée avec un outil linguistique et interprétée.`,
+        `Le commentaire composé doit être rédigé sous forme de tirets et de numéros de vers.`,
+        `L'introduction du commentaire composé doit être découpée en cinq paragraphes distincts.`,
+        `Le verbe « étayer » exige de contredire systématiquement la thèse défendue par l'auteur.`,
+      ],
+      correctAnswerIndex: 0,
+      explanation: `En français (expression écrite et commentaire composé), chaque argument s'appuie sur une citation exacte entre guillemets dont on analyse le procédé stylistique et l'effet de sens.`,
     };
   }
 

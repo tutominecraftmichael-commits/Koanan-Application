@@ -3,6 +3,7 @@ import { maths2deCNumericChapters } from '../../data/courses/maths_2de_c_numeriq
 import { chimie2deCChapters } from '../../data/courses/chimie_2de_c';
 import { physique2deCChapters } from '../../data/courses/physique_2de_c';
 import { svt2deCChapters } from '../../data/courses/svt_2de_c';
+import { francais2deAChapters } from '../../data/courses/francais_2de_a';
 import { maths2deACalculsNumeriquesChapter } from '../../data/courses/maths_2de_a';
 import {
   chimie2deAElementChimiqueChapter,
@@ -80595,6 +80596,7 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
   svt2deALaReproductionConformeMitoseChapter,
   svt2deADiversiteComportementsAlimentairesChapter,
   svt2deAHabitudesAlimentairesEtSanteChapter,
+  ...francais2deAChapters,
   {
     "id": "premiere_d_svt_ch1_genetique_humaine_et_transmission_des_caracteres",
     "subjectId": "svt",

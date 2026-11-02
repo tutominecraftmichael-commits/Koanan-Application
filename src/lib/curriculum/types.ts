@@ -134,13 +134,13 @@ export const GRADE_LEVELS: GradeLevelMeta[] = [
   },
 ];
 
-export type StemSubjectId = 'maths' | 'physique_chimie' | 'svt';
+export type StemSubjectId = 'maths' | 'physique_chimie' | 'svt' | 'francais';
 
 export interface StemSubjectMeta {
   id: StemSubjectId;
   name: string;
   color: string;
-  iconName: 'Calculator' | 'Atom' | 'Dna';
+  iconName: 'Calculator' | 'Atom' | 'Dna' | 'BookOpen';
   aliases: string[]; // Variantes courantes dans les EDT (ex: 'SP', 'MATH', 'CHIMIE')
 }
 
@@ -191,6 +191,26 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
       'sciences naturelles',
       'sciences de la vie et de la terre',
       'bio',
+    ],
+  },
+  francais: {
+    id: 'francais',
+    name: 'Français',
+    color: '#EC4899', // Rose/fuchsia littéraire
+    iconName: 'BookOpen',
+    aliases: [
+      'francais',
+      'français',
+      'expression ecrite',
+      'expression écrite',
+      'litterature',
+      'littérature',
+      'commentaire compose',
+      'commentaire composé',
+      'production ecrite',
+      'production écrite',
+      'lettres',
+      'fr',
     ],
   },
 };
@@ -306,7 +326,7 @@ export interface TutorPointSessionItem {
 // ÉTAT DE PROGRESSION DE L'ÉLÈVE (SAUVEGARDÉ PAR MATIÈRE)
 // ============================================================================
 
-export type StemSubCategory = 'chimie' | 'physique' | 'geometrie' | 'numerique' | 'svt';
+export type StemSubCategory = 'chimie' | 'physique' | 'geometrie' | 'numerique' | 'svt' | 'francais';
 
 export interface SubCategoryStudentProgress {
   subCategory: StemSubCategory;

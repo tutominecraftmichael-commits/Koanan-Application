@@ -48,6 +48,7 @@ export function saveStudentProgressMap(
  */
 export function getChapterSubCategory(chapter: CurriculumChapter): StemSubCategory {
   if (chapter.subjectId === 'svt') return 'svt';
+  if (chapter.subjectId === 'francais') return 'francais';
 
   const id = chapter.id || '';
   const text = ((chapter.title || '') + ' ' + (chapter.summary || '')).toLowerCase();
@@ -107,6 +108,7 @@ export function getSubCategoryName(subCategory: StemSubCategory): string {
     case 'physique': return 'Physique';
     case 'geometrie': return 'Géométrie';
     case 'numerique': return 'Numérique';
+    case 'francais': return 'Français';
     default: return 'SVT';
   }
 }
@@ -117,6 +119,7 @@ export function getSubCategoryQuestion(subCategory: StemSubCategory): string {
     case 'physique': return 'À quel chapitre êtes-vous arrivés en Physique ?';
     case 'geometrie': return 'À quel chapitre êtes-vous arrivés en Géométrie ?';
     case 'numerique': return 'À quel chapitre êtes-vous arrivés en Numérique ?';
+    case 'francais': return 'À quel chapitre êtes-vous arrivés en Français ?';
     case 'svt': return 'À quel chapitre êtes-vous arrivés en SVT ?';
     default: return 'À quel chapitre êtes-vous arrivés en SVT ?';
   }
@@ -132,6 +135,7 @@ export function getActiveSubCategoryForSession(
   subjectId: StemSubjectId
 ): StemSubCategory | null {
   if (subjectId === 'svt') return 'svt';
+  if (subjectId === 'francais') return 'francais';
 
   const progressMap = getStudentProgressMap(userId);
   const prog = progressMap[subjectId];
@@ -226,7 +230,7 @@ export function initializeSubjectPosition(
   startingChapterId: string
 ): SubjectStudentProgress {
   const chapter = getCurriculumChapterById(startingChapterId);
-  const subCategory = chapter ? getChapterSubCategory(chapter) : (subjectId === 'physique_chimie' ? 'chimie' : subjectId === 'maths' ? 'geometrie' : 'svt');
+  const subCategory = chapter ? getChapterSubCategory(chapter) : (subjectId === 'physique_chimie' ? 'chimie' : subjectId === 'maths' ? 'geometrie' : subjectId === 'francais' ? 'francais' : 'svt');
   return initializeSubCategoryPosition(userId, subjectId, subCategory, gradeLevel, startingChapterId);
 }
 
@@ -277,13 +281,13 @@ export function buildTutorSessionPayload(
     };
   }
 
-  const activeSubCategory: StemSubCategory = requestedSubCategory || computedSubCategory || (subjectId === 'physique_chimie' ? 'physique' : subjectId === 'maths' ? 'numerique' : 'svt');
+  const activeSubCategory: StemSubCategory = requestedSubCategory || computedSubCategory || (subjectId === 'physique_chimie' ? 'physique' : subjectId === 'maths' ? 'numerique' : subjectId === 'francais' ? 'francais' : 'svt');
   const subCategoryName = getSubCategoryName(activeSubCategory);
   const subCategoryQuestion = getSubCategoryQuestion(activeSubCategory);
 
   // Filtrer uniquement les chapitres de la sous-catégorie active
   let subChapters = allChapters.filter(c => getChapterSubCategory(c) === activeSubCategory);
-  if (subChapters.length === 0 && subjectId === 'svt') {
+  if (subChapters.length === 0 && (subjectId === 'svt' || subjectId === 'francais')) {
     subChapters = allChapters;
   }
   subChapters.sort((a, b) => a.order - b.order);

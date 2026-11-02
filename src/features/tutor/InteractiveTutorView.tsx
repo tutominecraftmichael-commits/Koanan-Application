@@ -251,7 +251,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // (Physique-Chimie -> Chimie ↔ Physique, Maths -> Géométrie ↔ Numérique)
   const [activeSubCategory, setActiveSubCategory] = useState<StemSubCategory>(() => {
     const computed = getActiveSubCategoryForSession(userId, stemSubjectId);
-    return computed || (stemSubjectId === 'physique_chimie' ? 'physique' : stemSubjectId === 'maths' ? 'numerique' : 'svt');
+    return computed || (stemSubjectId === 'physique_chimie' ? 'physique' : stemSubjectId === 'maths' ? 'numerique' : stemSubjectId === 'francais' ? 'francais' : 'svt');
   });
 
   // États pour le choix du premier volet (Règle 1) et l'alternance obligatoire (Règle 2)
