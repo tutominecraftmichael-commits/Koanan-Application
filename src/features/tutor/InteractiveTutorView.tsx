@@ -205,14 +205,14 @@ function buildProgressiveCourseSlice(point: CurriculumPoint, stepIndex: number):
   const formulas = point.formulas || [];
 
   const stepThemes = [
-    'Définition essentielle & Notion clé',
-    'Mécanisme fondamental & Lois directrices',
-    'Formule officielle décortiquée & Unités SI',
-    'Conditions de validité & Cas particuliers',
-    'Méthode de rédaction type devoir',
-    'Réflexe officiel d\'évaluation & Pièges classiques',
-    'Application guidée (Données réelles & Choix de la loi)',
-    'Application guidée (Résolution complète & Bilan)',
+    'Notion Fondamentale & Définition',
+    'Propriété Clé & Règle du Cours',
+    'Formule Officielle & Expression',
+    'Conditions d\'Application & Validité',
+    'Calcul d\'Application & Démarche',
+    'Piège d\'Examen & Réflexe Méthodologique',
+    'Situation d\'Évaluation Guidée',
+    'Bilan & Résolution Complète',
   ];
 
   const theme = stepThemes[stepIndex] || `Notion clé ${stepIndex + 1}`;
