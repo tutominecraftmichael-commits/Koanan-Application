@@ -1652,8 +1652,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 <KonanCube size={125} showStars={true} glow={true} className="animate-float" />
               </div>
 
-              <div className="relative bg-slate-900/95 border border-slate-800 rounded-3xl p-4 shadow-xl backdrop-blur-xl text-left w-full">
-                <p className="text-sm font-bold text-white leading-relaxed">
+              <div className="relative bg-white dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-xl backdrop-blur-xl text-left w-full">
+                <p className="text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
                   « <WordByWordBubble text={bubbleMessage} speed={35} /> »
                 </p>
               </div>

@@ -26,8 +26,7 @@ import {
   ChevronUp,
   BookOpen,
   Moon,
-  Zap,
-  RotateCcw
+  Zap
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
@@ -187,8 +186,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     : (activeDisplaySessions[0] || null);
 
   const completedToday = completedTodaySessions.length;
-  const totalMissedMinutes = rescheduledTodaySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
-  const totalMissedHoursText = formatMinutesToHours(totalMissedMinutes);
 
   const currentWeekRange = getWeekDateRange(now);
   const weekSessions = studySessions.filter(s => s.date ? isDateInWeek(s.date, currentWeekRange.mondayStr, currentWeekRange.sundayStr) : true);
@@ -515,38 +512,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 {/* Daily Catch-up Rescheduled Banner with Clear Breakdown */}
                 {rescheduledTodaySessions.length > 0 && (
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-amber-50/70 dark:from-amber-950/70 dark:via-slate-900 dark:to-indigo-950/50 border border-amber-200 dark:border-amber-500/50 shadow-sm dark:shadow-xl space-y-3.5 text-xs">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div className="flex items-start gap-2.5 min-w-0">
-                        <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0 mt-0.5">
-                          <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-                        </div>
-                        <div className="space-y-1 min-w-0">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-extrabold text-amber-900 dark:text-amber-300 uppercase tracking-wide text-xs">
-                              ⚠️ Réaménagement intelligent : {rescheduledTodaySessions.length} session(s) non validée(s)
-                            </span>
-                            <Badge variant="amber" size="sm" className="font-bold px-2 py-0.5 animate-pulse">
-                              {totalMissedHoursText} à rattraper aujourd'hui
-                            </Badge>
-                          </div>
-                          <p className="text-amber-950/80 dark:text-slate-300 text-xs leading-relaxed">
-                            Vos créneaux non respectés ont été replacés pour ce soir afin de ne perdre aucune heure de révision.
-                          </p>
-                        </div>
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0">
+                        <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                       </div>
-
-                      <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<CheckCircle2 className="w-4 h-4 text-slate-950" />}
-                          onClick={() => onToggleSessionComplete(rescheduledTodaySessions[0].id)}
-                          className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-[0_4px_0_0_#b45309] active:translate-y-0.5 active:shadow-[0_2px_0_0_#b45309] cursor-pointer transition-all"
-                          title="Valider la première séance de rattrapage"
-                        >
-                          ⚡ Valider le rattrapage
-                        </Button>
-                      </div>
+                      <span className="font-black text-amber-900 dark:text-amber-300 text-sm tracking-wide">
+                        ({rescheduledTodaySessions.length}) Séance(s) à faire
+                      </span>
                     </div>
 
                     {/* DÉTAIL CLAIR ET ÉPURÉ DES SÉANCES REPORTÉES CE SOIR */}
@@ -757,15 +729,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                               </div>
 
                               <div className="flex items-center justify-end shrink-0 pl-4 sm:pl-0">
-                                <button
-                                  type="button"
-                                  onClick={() => onToggleSessionComplete(session.id)}
-                                  className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 hover:bg-rose-50 dark:bg-slate-800 dark:hover:bg-rose-950/40 text-slate-600 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-400 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-2xs"
-                                  title="Annuler la validation de cette séance"
-                                >
-                                  <RotateCcw className="w-3.5 h-3.5" />
-                                  <span>Annuler</span>
-                                </button>
+                                <span className="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-black flex items-center gap-1.5 select-none">
+                                  <CheckCircle2 className="w-3.5 h-3.5 stroke-[3]" />
+                                  <span>Validée</span>
+                                </span>
                               </div>
                             </div>
                           );

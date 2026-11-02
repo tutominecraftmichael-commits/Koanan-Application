@@ -1506,8 +1506,15 @@ export function App() {
       return;
     }
 
+    // Règle stricte : Une séance validée ne peut JAMAIS être annulée
+    if (target.completed) {
+      soundFX.playNotificationPing();
+      showToast('🔒 Cette séance d\'étude est déjà validée et enregistrée.', 4000);
+      return;
+    }
+
     soundFX.playCheckmarkPop();
-    const willBeCompleted = !target.completed;
+    const willBeCompleted = true;
     const updatedSessions = state.studySessions.map(s =>
       s.id === sessionId
         ? {

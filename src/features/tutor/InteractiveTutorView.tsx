@@ -1137,32 +1137,21 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <X className="w-5 h-5 stroke-[2.5]" />
         </button>
 
-        {/* Segments d'étapes visuels Style Duolingo */}
-        <div className="flex-1 min-w-0 flex items-center gap-1 sm:gap-1.5">
-          {Array.from({ length: totalSteps }).map((_, sIdx) => {
-            const isMastered = masteredIndices.includes(sIdx);
-            const isCurrent = sIdx === activeStepIndex;
+        {/* Barre de progression continue Style Duolingo (Couleur Bleue) */}
+        <div className="flex-1 flex items-center gap-3 min-w-0">
+          <div className="flex-1 h-3.5 sm:h-4 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300 dark:border-slate-800/80 p-0.5 shadow-inner">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 dark:from-blue-500 dark:via-indigo-500 dark:to-cyan-400 transition-all duration-500 ease-out relative shadow-sm"
+              style={{ width: `${Math.min(100, Math.max(0, (masteredIndices.length / totalSteps) * 100))}%` }}
+            >
+              <div className="absolute top-0.5 left-2 right-2 h-1 bg-white/35 rounded-full" />
+            </div>
+          </div>
 
-            let segClass = 'bg-slate-200 dark:bg-slate-800';
-            if (isMastered) {
-              segClass = 'bg-emerald-500 shadow-xs shadow-emerald-500/30';
-            } else if (isCurrent) {
-              segClass = 'bg-indigo-500 ring-2 ring-indigo-500/30 animate-pulse';
-            }
-
-            return (
-              <div
-                key={sIdx}
-                className={`h-2 sm:h-2.5 flex-1 rounded-full transition-all duration-300 ${segClass}`}
-                title={`Étape ${sIdx + 1}/${totalSteps}`}
-              />
-            );
-          })}
-        </div>
-
-        {/* Badge de score X/totalSteps */}
-        <div className="shrink-0 px-2.5 py-1 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-xs font-black">
-          {masteredIndices.length} / {totalSteps}
+          {/* Badge de score X/totalSteps */}
+          <div className="shrink-0 px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black font-mono">
+            {masteredIndices.length} / {totalSteps}
+          </div>
         </div>
       </div>
 
