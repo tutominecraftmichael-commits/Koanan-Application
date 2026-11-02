@@ -1626,13 +1626,13 @@ export function App() {
    * Callback de complétion du Tuteur Interactif Duolingo :
    * Valide la séance, incrémente les statistiques et affiche la célébration.
    */
-  const handleCompleteTutorSession = (studySessionId?: string, earnedPoints = 50) => {
+  const handleCompleteTutorSession = (studySessionId?: string) => {
     if (studySessionId) {
       handleToggleSessionComplete(studySessionId);
     }
     setActiveTutorSession(null);
     setActiveView('dashboard');
-    showToast(`🏆 Félicitations ! Séance validée avec succès dans ton tuteur interactif KONAN (+${earnedPoints} XP) !`, 6000);
+    showToast('🏆 Félicitations ! Séance validée avec succès dans ton tuteur interactif KONAN !', 6000);
   };
 
   /**
@@ -2145,8 +2145,8 @@ export function App() {
               setActiveTutorSession(null);
               setActiveView('dashboard');
             }}
-            onSessionCompleted={(sessionId, points) => {
-              handleCompleteTutorSession(sessionId, points);
+            onSessionCompleted={(sessionId) => {
+              handleCompleteTutorSession(sessionId);
             }}
           />
         )}

@@ -147,10 +147,10 @@ export function cleanFormulasAndIndices(text: string): string {
   // Σ F_ext = 0
   s = s.replace(/(?:∑|Σ|\\sum)\s*F_ext\s*=\s*0/g, () => '$\\sum \\vec{F}_{\\text{ext}} = \\vec{0}$');
 
-  // 3ème loi de Newton : F_{A/B} = - F_{B/A}
+  // 3ème loi de Newton : F_{A/B} = - F_{B/A} ou \vec{F}_{A/B} = -\vec{F}_{B/A}
   s = s.replace(
-    /F_\{?([A-Za-z0-9\/]+)\}?\s*=\s*[−\-]\s*F_\{?([A-Za-z0-9\/]+)\}?/g,
-    (_, f1, f2) => `$$F_{${f1}} = -F_{${f2}}$$`
+    /(?:\\vec\{F\}|F)_\{?([A-Za-z0-9\/]+)\}?\s*=\s*[−\-]\s*(?:\\vec\{F\}|F)_\{?([A-Za-z0-9\/]+)\}?/g,
+    (_, f1, f2) => `$$\\vec{F}_{${f1}} = -\\vec{F}_{${f2}}$$`
   );
 
   s = s.replace(
@@ -235,6 +235,9 @@ export function cleanFormulasAndIndices(text: string): string {
     t = replaceNotInMath(t, /\bv\((t_?[i0-9]?)\)/g, (_, arg) => `$v(${arg})$`);
     t = replaceNotInMath(t, /\bv\(t\)/g, () => '$v(t)$');
 
+    // Forces d'interaction réciproque (ex: F_{A/B}, F_{B/A}, \vec{F}_{A/B})
+    t = replaceNotInMath(t, /(?:\\vec\{F\}|F)_\{?([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}?/g, (_, a, b) => `$\\vec{F}_{${a}/${b}}$`);
+
     // Paires de points avec indices (ex: M_{i-1}M_{i+1})
     t = replaceNotInMath(t, /\b([A-Z])_\{([^}]+)\}\s*([A-Z])_\{([^}]+)\}(?![a-zA-Z0-9_])/g, (_, p1, i1, p2, i2) => `$${p1}_{${i1}}${p2}_{${i2}}$`);
 
@@ -301,10 +304,22 @@ export function sanitizeFormulaForKatex(raw: string): string {
     return `\\text{${s}}`;
   }
 
+  // Phrases avec égalité littérale en français (ex: Nombre de protons = Nombre d'électrons)
+  if (/^[A-Za-zÀ-ÿ\s'()-]+\s*=\s*[A-Za-zÀ-ÿ\s'()-]+$/.test(s) && !s.includes('\\')) {
+    const eqIdx = s.indexOf('=');
+    const left = s.slice(0, eqIdx).trim();
+    const right = s.slice(eqIdx + 1).trim();
+    return `\\text{${left}} = \\text{${right}}`;
+  }
+
   // 1.2 Protection des interactions physiques et fractions d'indices (ex: F_{A/B}, F_{B/A}, t_{1/2})
   s = s.replace(/_\{([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}/g, '_{$1/$2}');
 
   // Remplacement des termes physiques fréquents pour éviter les lettres collées en italique
+  s = s.replace(/\bMouvement\s+décrit\s+par\s+le\s+centre\s+d'inertie\s+G\b/gi, '\\text{Mouvement de } G \\text{ (MRU)}');
+  s = s.replace(/\bMouvement\s+relatif\s+par\s+rapport\s+au\s+repère\s+lié\s+à\s+G\b/gi, '\\text{Mouvement relatif par rapport à } G');
+  s = s.replace(/\bRotation\s+uniforme\s+autour\s+de\s+G\b/gi, '\\text{Rotation uniforme autour de } G');
+  s = s.replace(/\bCondition\s+de\s+système\s+pseudo-isolé\b/gi, '\\text{Condition de système pseudo-isolé}');
   s = s.replace(/\bvecteur\s+constant\b/g, '\\vec{\\text{cste}}');
   s = s.replace(/\bconstante\b/g, '\\text{cste}');
   s = s.replace(/\brepos\b/g, '\\text{repos}');

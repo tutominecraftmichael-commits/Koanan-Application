@@ -55,15 +55,15 @@ export interface InteractiveTutorViewProps {
   studySessionId?: string;
   durationMinutes?: number;
   onExit: () => void;
-  onSessionCompleted: (sessionId?: string, earnedXp?: number) => void;
+  onSessionCompleted: (sessionId?: string) => void;
 }
 
 type LessonPhase =
   | 'intro' // Écran d'introduction animé de la mini-leçon (Présentation, Enjeu Bac/BEPC, Objectifs)
-  | 'learning' // Défilement continu : Cours progressif (1/8 à 8/8) + Test de compréhension immédiat
-  | 'catchup' // Boucle de rattrapage (Rappel du cours ciblé + Question manquée) pour atteindre 8/8
-  | 'point_celebration' // Validation d'une mini-leçon à 8/8
-  | 'session_celebration'; // Victoire globale de la séance d'EDT (toutes mini-leçons à 8/8)
+  | 'learning' // Défilement continu : Cours progressif + Test de compréhension immédiat
+  | 'catchup' // Boucle de rattrapage (Rappel du cours ciblé + Question manquée) pour atteindre 100%
+  | 'point_celebration' // Validation d'une mini-leçon
+  | 'session_celebration'; // Victoire globale de la séance d'EDT
 
 interface ProgressiveCourseSlice {
   stepBadge: string;
@@ -563,8 +563,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   // Fermeture finale et validation dans l'emploi du temps
   const handleFinishAndExit = () => {
-    const earnedXp = Math.max(50, items.length * 20);
-    onSessionCompleted(studySessionId, earnedXp);
+    onSessionCompleted(studySessionId);
   };
 
   // =========================================================================
@@ -944,13 +943,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         <div className="space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30 text-xs font-black uppercase tracking-wider">
             <Check className="w-4 h-4 stroke-[3]" />
-            <span>Quota 100% validé • {subCategoryLabel} (8/8 partout)</span>
+            <span>Quota 100% validé • {subCategoryLabel}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
             Séance de {subCategoryLabel} Maîtrisée !
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">
-            Tu as validé avec succès l'intégralité des <strong>{items.length} mini-leçons</strong> avec le score d'excellence requis de <strong>8/8</strong>.
+            Tu as validé avec succès l'intégralité des <strong>{items.length} mini-leçons</strong> avec le score d'excellence requis.
             Lors de ta prochaine séance, Konan alternera automatiquement pour aborder la seconde partie de ton programme !
           </p>
         </div>
@@ -975,7 +974,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   </span>
                 </div>
                 <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 shrink-0 pl-2">
-                  8/8 ✓
+                  100% ✓
                 </span>
               </div>
             ))}
@@ -998,6 +997,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // VUE 3 : ÉCRAN D'INTRODUCTION ANIMÉ DE LA MINI-LEÇON (ÉTAPE 0)
   // =========================================================================
   if (phase === 'intro' && currentItem && currentPoint) {
+    const numQuestions = currentPoint.exercises?.length || 10;
     const objectives = [
       `Comprendre le contexte réel et la définition simple de : ${currentPoint.title}`,
       currentPoint.formulas && currentPoint.formulas.length > 0
@@ -1006,7 +1006,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       currentPoint.keyRule
         ? `Retenir le réflexe d'examen : ${currentPoint.keyRule.slice(0, 85)}...`
         : `Éviter les erreurs classiques et pièges fréquents signalés aux examens`,
-      `Réussir les 8 exercices de compréhension pour sécuriser la note maximale (8/8)`
+      `Réussir les ${numQuestions} exercices progressifs pour valider cette notion à 100%`
     ];
 
     return (
@@ -1524,7 +1524,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 Voulez-vous quitter cette séance ?
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Votre progression sur cette mini-leçon ne sera pas enregistrée si vous quittez avant d’avoir validé les 8 questions.
+                Votre progression sur cette mini-leçon ne sera pas enregistrée si vous quittez avant d’avoir validé l'intégralité des étapes.
               </p>
             </div>
 
