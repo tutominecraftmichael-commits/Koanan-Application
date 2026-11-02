@@ -3,7 +3,6 @@
 // ============================================================================
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  X,
   Sparkles,
   CheckCircle2,
   AlertCircle,
@@ -699,16 +698,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               </div>
             </div>
 
-            {sessionPayload && sessionPayload.itemsToReview.length > 0 && (
-              <button
-                type="button"
-                onClick={() => setShowChapterSelector(false)}
-                className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-slate-700 dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 mt-1"
-                title="Fermer et reprendre la séance"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
+            {/* L'utilisateur ne doit pas quitter tant qu'il n'a pas validé sa session */}
           </div>
 
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -970,9 +960,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         <button
           type="button"
           onClick={handleFinishAndExit}
-          className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+          className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
         >
-          <span>Valider et Enregistrer dans mon planning 🚀</span>
+          <span>Valider et Enregistrer dans mon planning</span>
           <ArrowRight className="w-5 h-5" />
         </button>
       </div>
@@ -1373,8 +1363,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   onClick={handleContinueAfterFeedback}
                   className={`w-full py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wide uppercase transition-all cursor-pointer flex items-center justify-center gap-2 select-none active:translate-y-1 ${
                     isAnswerCorrect
-                      ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46]'
-                      : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-[0_5px_0_#b45309] hover:shadow-[0_2px_0_#b45309]'
+                      ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
+                      : 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300/60 dark:border-amber-400/50 shadow-[0_5px_0_#d97706] hover:shadow-[0_2px_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
                   }`}
                 >
                   <span>
@@ -1418,7 +1408,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             <button
               type="button"
               onClick={handleContinueToNextLesson}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs sm:text-sm tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
             >
               <span className="flex items-center gap-2">
                 {activeItemIndex < items.length - 1

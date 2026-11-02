@@ -314,10 +314,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     onToggleSessionComplete(nextStudySession.id);
                   }
                 }}
-                className={`w-full sm:w-auto cursor-pointer text-xs font-extrabold whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-1 ${
+                className={`w-full sm:w-auto cursor-pointer text-xs font-black whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-1 ${
                   nextStudySession.isRescheduledToday
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] hover:shadow-[0_2px_0_0_#b45309]'
-                    : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46]'
+                    ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
+                    : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                 }`}
               >
                 {nextStudySession.isRescheduledToday ? 'Démarrer la séance' : 'Valider la session'}
@@ -652,7 +652,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           <Button
                             variant={isRescheduled ? "secondary" : "glow"}
                             size="sm"
-                            leftIcon={<CheckCircle2 className={`w-4 h-4 ${isRescheduled ? 'text-slate-950' : 'text-slate-950'}`} />}
+                            leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
                             onClick={() => {
                               if (onStartFocusSession) {
                                 onStartFocusSession(session);
@@ -660,10 +660,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                 onToggleSessionComplete(session.id);
                               }
                             }}
-                            className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-1 ${
+                            className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-1 ${
                               isRescheduled
-                                ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] hover:shadow-[0_2px_0_0_#b45309]'
-                                : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46]'
+                                ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
+                                : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                             }`}
                           >
                             <span>{isRescheduled ? 'Démarrer la séance' : 'Valider la session'}</span>

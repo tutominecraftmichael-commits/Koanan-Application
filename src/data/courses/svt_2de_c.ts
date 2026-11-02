@@ -43,41 +43,34 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
   "summary": "Organisation géologique de la Côte d'Ivoire en deux grands ensembles (socle cristallin 97,5 % et bassin sédimentaire côtier 2,5 %), accidents géologiques majeurs (failles, plis et discordances) et diversité des roches.",
   "points": [
     {
-      "id": "seconde_c_svt_ch1_p1_grands_ensembles_geologiques_socle_bassin",
+      "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin",
       "order": 1,
-      "title": "Les grands ensembles géologiques : socle cristallin et bassin sédimentaire",
-      "summary": "Distinguer le socle cristallin précambrien (domaines archéen et protérozoïque) du bassin sédimentaire côtier méso-cénozoïque et connaître leur répartition géographique.",
-      "conceptExplanation": "1. Présentation générale du cadre géologique ivoirien :\nLe territoire de la Côte d'Ivoire appartient au craton ouest-africain (dorsale de Man ou dorsale Léo). Il est subdivisé en deux grands ensembles géologiques distincts par leur âge, leur étendue et leur nature lithologique :\n- Le socle cristallin (ou précambrien) qui couvre 97,5 % du territoire national.\n- Le bassin sédimentaire côtier qui n'occupe que 2,5 % du territoire au Sud le long du littoral.\n\n2. Le socle cristallin (97,5 % du territoire) :\nIl date du Précambrien (4 000 à 540 millions d'années). Il est scindé en deux domaines géologiques d'âges différents, séparés par une immense faille subméridienne : la faille de Sassandra (direction Nord-Sud) :\n- Le domaine Archéen (ou domaine de Kéniéma-Man) :\n  * Localisation : situé exclusivement à l'Ouest de la faille de Sassandra (région montagneuse de Man, Danané, Guiglo, Tabou).\n  * Âge : Précambrien inférieur (4 000 à 2 500 Ma), façonné par les cycles orogéniques léonnien et libérien. C'est le domaine le plus ancien et le plus accidenté.\n  * Roches caractéristiques : charnockites, granites anciens, gneiss, quartzites ferrugineux (itabirites), pyroxénites, migmatites, schistes.\n  * Métamorphisme : de degré mésozonal à catazonal (hautes températures et fortes pressions).\n- Le domaine Protérozoïque (ou domaine Baoulé-Mossi ou Birrimien) :\n  * Localisation : situé à l'Est de la faille de Sassandra, il couvre le Nord, le Centre et une partie du Sud-Est ivoirien. C'est le domaine le plus vaste et le plus récent du socle.\n  * Âge : Précambrien supérieur (2 500 à 540 Ma), structuré lors du mégacycle orogénique éburnéen (1 800 à 2 500 Ma).\n  * Roches caractéristiques : granitoïdes éburnéens (granites concordants et discordants), schistes birrimiens, formations volcano-sédimentaires (ceintures de roches vertes).\n  * Métamorphisme : de degré épizonal à mésozonal.\n\n3. Le bassin sédimentaire côtier (2,5 % du territoire) :\n- Localisation : s'étire en une étroite bande littorale en forme de croissant le long du golfe de Guinée, de Fresco à l'Ouest jusqu'à Assinie à l'Est (et se prolonge au Ghana).\n- Âge : mis en place à partir de l'ère Secondaire (Crétacé supérieur, vers 135 Ma, lors de l'ouverture de l'océan Atlantique Sud) et se poursuit au Tertiaire et Quaternaire.\n- Lithologie : constitué de sédiments non plissés tels que des sables fins à grossiers, des argiles, des grès ferrugineux et des conglomérats.\n- Structure interne : traversé d'Ouest en Est par la grande faille des lagunes (rejet vertical descendant vers le Sud pouvant atteindre 5 000 m).",
+      "title": "Les deux grands ensembles géologiques : socle cristallin et bassin côtier",
+      "summary": "Distinguer le socle cristallin précambrien (97,5 %) du bassin sédimentaire côtier (2,5 %) et identifier leur cadre d'appartenance au craton ouest-africain.",
+      "conceptExplanation": "Le territoire ivoirien appartient au craton ouest-africain (dorsale de Man ou Léo). Il est divisé en deux grands ensembles géologiques : le socle cristallin précambrien qui couvre 97,5 % du territoire national, et le bassin sédimentaire côtier qui n'occupe que 2,5 % au Sud le long du littoral atlantique.",
       "formulas": [
         {
-          "name": "Répartition des ensembles géologiques de Côte d'Ivoire",
-          "formula": "Socle cristallin (97,5 %) + Bassin sédimentaire (2,5 %) = 100 %",
+          "name": "Répartition des ensembles géologiques",
+          "formula": "Socle cristallin : 97,5 % | Bassin sédimentaire côtier : 2,5 %",
           "note": "Le socle précambrien domine quasi-totalement le territoire."
-        },
-        {
-          "name": "Subdivision du socle cristallin",
-          "formula": "Domaine Archéen (Ouest) | Faille de Sassandra | Domaine Protérozoïque (Est/Centre/Nord)",
-          "note": "La faille de Sassandra est la frontière tectonique majeure du socle."
         }
       ],
-      "keyRule": "Pour situer les domaines du socle cristallin : l'ARCHÉEN (le plus vieux, 4 000 à 2 500 Ma, région de Man) est toujours à l'OUEST de la faille de Sassandra. Le PROTÉROZOÏQUE (Baoulé-Mossi/Birrimien, plus récent, 2 500 à 540 Ma) est toujours à l'EST. Le bassin sédimentaire (2,5 %) est uniquement au SUD sur le littoral.",
+      "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
       "workedExample": {
-        "title": "Exemple résolu : Identification des ensembles géologiques sur une carte de Côte d'Ivoire",
-        "statement": "Un élève observe une carte muette de la Côte d'Ivoire divisée en trois zones notées A, B et C, ainsi qu'une ligne de fracture F1 :\n- Zone A : située à l'Ouest, comprenant Man et Danané.\n- Zone B : située au Centre et à l'Est, comprenant Bouaké et Korhogo.\n- Zone C : bande littorale étroite au Sud comprenant Abidjan et Grand-Bassam.\n- Ligne F1 : fracture séparant la zone A de la zone B.\nIdentifier les zones A, B, C et la ligne F1, puis indiquer l'âge géologique relatif de A par rapport à B.",
+        "title": "Identification sur carte muette",
+        "statement": "Une carte présente deux zones A (97,5 %) et B (2,5 % au Sud). Nommer A et B.",
         "methodSteps": [
-          "Étape 1 : Identifier la ligne frontière F1 : il s'agit de la faille géologique de Sassandra de direction générale Nord-Sud.",
-          "Étape 2 : Identifier la zone A : située à l'Ouest de la faille de Sassandra, c'est le domaine Archéen (ou Kéniéma-Man).",
-          "Étape 3 : Identifier la zone B : située à l'Est de la faille de Sassandra sur la grande majorité du pays, c'est le domaine Protérozoïque (ou Baoulé-Mossi / Birrimien). L'ensemble {A + B} forme le socle cristallin (97,5 %).",
-          "Étape 4 : Identifier la zone C : bande côtière littorale de Fresco à Assinie, c'est le bassin sédimentaire côtier (2,5 %).",
-          "Étape 5 : Comparer les âges de A et B : le domaine Archéen A (Précambrien inférieur, 4 000 à 2 500 Ma) est beaucoup plus ancien que le domaine Protérozoïque B (Précambrien supérieur, 2 500 à 540 Ma)."
+          "Étape 1 : Constater la proportion majoritaire de 97,5 % : il s'agit du socle cristallin précambrien.",
+          "Étape 2 : Identifier la bande littorale de 2,5 % au Sud : c'est le bassin sédimentaire côtier.",
+          "Étape 3 : Conclure sur la qualification de pays de socle."
         ],
-        "conclusion": "A = Domaine Archéen, B = Domaine Protérozoïque, C = Bassin sédimentaire côtier, F1 = Faille de Sassandra. L'Archéen est le domaine le plus ancien de la Côte d'Ivoire."
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
-          "id": "seconde_c_svt_ch1_p1_ex1",
+          "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex1",
           "type": "mcq",
-          "prompt": "Quelle proportion du territoire de la Côte d'Ivoire est occupée par le socle cristallin ?",
+          "prompt": "Quelle proportion du territoire de la Côte d'Ivoire est occupée par le socle cristallin précambrien ?",
           "options": [
             "97,5 %",
             "2,5 %",
@@ -85,246 +78,4164 @@ export const svt2deCStructureGeologiqueChapter: CurriculumChapter = {
             "75 %"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Le socle cristallin précambrien occupe la quasi-totalité du territoire ivoirien (97,5 %), tandis que le bassin sédimentaire côtier n'en représente que 2,5 %."
+          "explanation": "Le socle précambrien recouvre 97,5 % du territoire national, ce qui fait de la Côte d'Ivoire un pays de socle."
         },
         {
-          "id": "seconde_c_svt_ch1_p1_ex2",
+          "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex2",
           "type": "mcq",
-          "prompt": "Quel accident géologique majeur sépare le domaine archéen du domaine protérozoïque en Côte d'Ivoire ?",
+          "prompt": "Où se situe géographiquement le bassin sédimentaire côtier en Côte d'Ivoire ?",
+          "options": [
+            "Au Sud, en bordure du golfe de Guinée",
+            "Au Nord, vers Korhogo",
+            "À l'Ouest, dans la région de Man",
+            "Au Centre, près de Bouaké"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le bassin sédimentaire forme un croissant étroit situé exclusivement au Sud le long du golfe de Guinée, de Fresco à Assinie."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex3",
+          "type": "mcq",
+          "prompt": "À quel mégabloc géologique ancien du continent africain appartient le territoire ivoirien ?",
+          "options": [
+            "Au craton ouest-africain (dorsale de Man ou Léo)",
+            "Au bassin du Congo",
+            "Au craton du Kalahari",
+            "À la chaîne alpine"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La Côte d'Ivoire s'enracine dans la dorsale de Man, partie méridionale du craton ouest-africain, stable depuis des centaines de millions d'années."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex4",
+          "type": "mcq",
+          "prompt": "Quelle est la différence d'âge fondamentale entre le socle cristallin et le bassin sédimentaire ?",
+          "options": [
+            "Le socle date du Précambrien alors que le bassin date du Secondaire au Quaternaire",
+            "Le bassin est plus ancien que le socle",
+            "Ils ont exactement le même âge géologique",
+            "Le socle date du Quaternaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le socle s'est formé au Précambrien (4 000 à 540 Ma) alors que le bassin est très récent, né à l'ère Secondaire (135 Ma)."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex5",
+          "type": "mcq",
+          "prompt": "Quels sont les deux grands domaines géologiques qui composent le socle cristallin ivoirien ?",
+          "options": [
+            "Le domaine Archéen et le domaine Protérozoïque",
+            "Le domaine Saharien et le domaine Sahélien",
+            "Le domaine Côtier et le domaine Océanique",
+            "Le domaine Jurassique et le domaine Crétacé"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le socle cristallin est divisé en domaine Archéen (à l'Ouest) et domaine Protérozoïque ou Birrimien (à l'Est et au Centre)."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex6",
+          "type": "mcq",
+          "prompt": "Comment se nomme la faille subméridienne majeure séparant l'Archéen du Protérozoïque ?",
           "options": [
             "La faille de Sassandra",
             "La faille des lagunes",
-            "La faille du Haut N'Zi",
-            "La faille de Dimbokro"
+            "La faille du Bandama",
+            "La faille de San-Pédro"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "La faille de Sassandra, orientée Nord-Sud, est la fracture tectonique majeure séparant le domaine archéen à l'Ouest du domaine protérozoïque à l'Est."
+          "explanation": "La faille de Sassandra, d'orientation générale Nord-Sud, est la fracture majeure qui sépare les deux domaines du socle."
         },
         {
-          "id": "seconde_c_svt_ch1_p1_ex3",
+          "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex7",
           "type": "mcq",
-          "prompt": "À quelle ère géologique s'est mis en place le socle cristallin ivoirien ?",
+          "prompt": "Quelle est la nature pétrographique dominante des roches du socle de Côte d'Ivoire ?",
           "options": [
-            "Au Précambrien (4 000 à 540 millions d'années)",
-            "À l'ère Primaire (Paléozoïque)",
-            "À l'ère Secondaire (Mésozoïque)",
-            "À l'ère Quaternaire (Cénozoïque)"
+            "Des roches magmatiques (granitoïdes) et des roches métamorphiques (gneiss, schistes)",
+            "Uniquement du sable meuble et des galets",
+            "Uniquement du calcaire et de la craie",
+            "Des laves volcaniques basaltiques récentes"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Le socle cristallin ivoirien est très ancien : il s'est édifié durant le Précambrien entre 4 000 et 540 millions d'années avant notre ère."
+          "explanation": "Le terme cristallin indique que le socle est constitué de roches magmatiques plutoniques et métamorphiques indurées."
         },
         {
-          "id": "seconde_c_svt_ch1_p1_ex4",
+          "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex8",
           "type": "mcq",
-          "prompt": "Dans quelle région de Côte d'Ivoire se situe principalement le domaine géologique archéen ?",
+          "prompt": "Pourquoi qualifie-t-on la Côte d'Ivoire de « pays de socle » ?",
           "options": [
-            "À l'Ouest de la faille de Sassandra, dans la région montagneuse de Man",
-            "Au Nord du pays, autour de Korhogo",
-            "Au Centre, dans la région de Bouaké",
-            "Sur le littoral Sud, entre Abidjan et Assinie"
+            "Parce que 97,5 % du territoire national repose directement sur le socle précambrien",
+            "Parce que le pays est constitué d'îles volcaniques",
+            "Parce que l'océan recouvre 97,5 % des terres",
+            "Parce que le pétrole couvre tout le pays"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Le domaine archéen (Kéniéma-Man) est situé à l'Ouest de la faille de Sassandra, dans la région occidentale montagneuse de Man, Danané et Guiglo."
+          "explanation": "L'expression « pays de socle » traduit le fait que la géologie et les paysages ivoiriens sont gouvernés à 97,5 % par le socle ancien."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · Proportion du socle cristallin",
+          "stepTheme": "Proportion du socle cristallin",
+          "stepTitle": "Proportion du socle cristallin",
+          "paragraphText": "Le socle cristallin précambrien recouvre 97,5 % de la superficie ivoirienne, constituant la quasi-totalité de l'assise géologique nationale.",
+          "formula": {
+            "name": "Proportion du socle cristallin",
+            "formula": "Socle cristallin : 97,5 % | Bassin côtier : 2,5 %",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Retiens 97,5 % pour le socle cristallin !",
+          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex1",
+            "type": "mcq",
+            "prompt": "Quelle proportion du territoire de la Côte d'Ivoire est occupée par le socle cristallin précambrien ?",
+            "options": [
+              "97,5 %",
+              "2,5 %",
+              "50 %",
+              "75 %"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le socle précambrien recouvre 97,5 % du territoire national, ce qui fait de la Côte d'Ivoire un pays de socle."
+          }
         },
         {
-          "id": "seconde_c_svt_ch1_p1_ex5",
-          "type": "mcq",
-          "prompt": "Quel est l'autre nom donné au domaine géologique Protérozoïque en Côte d'Ivoire ?",
-          "options": [
-            "Le domaine Baoulé-Mossi ou Birrimien",
-            "Le domaine de Kéniéma-Man",
-            "Le domaine du Continental Terminal",
-            "Le bassin de Taoudenni"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Le domaine Protérozoïque est également appelé domaine Baoulé-Mossi ou domaine Birrimien (structuré lors du mégacycle éburnéen)."
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · Localisation géographique du bassin sédimentaire",
+          "stepTheme": "Localisation géographique du bassin sédimentaire",
+          "stepTitle": "Localisation géographique du bassin sédimentaire",
+          "paragraphText": "Le bassin sédimentaire côtier forme une étroite frange littorale de 20 à 35 km de large s'étirant d'Ouest en Est entre Fresco et Assinie.",
+          "formula": {
+            "name": "Localisation géographique du bassin sédimentaire",
+            "formula": "Bassin côtier : Bande littorale Sud (Fresco à Assinie)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le bassin sédimentaire est uniquement au Sud en bordure de mer !",
+          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex2",
+            "type": "mcq",
+            "prompt": "Où se situe géographiquement le bassin sédimentaire côtier en Côte d'Ivoire ?",
+            "options": [
+              "Au Sud, en bordure du golfe de Guinée",
+              "Au Nord, vers Korhogo",
+              "À l'Ouest, dans la région de Man",
+              "Au Centre, près de Bouaké"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le bassin sédimentaire forme un croissant étroit situé exclusivement au Sud le long du golfe de Guinée, de Fresco à Assinie."
+          }
         },
         {
-          "id": "seconde_c_svt_ch1_p1_ex6",
-          "type": "mcq",
-          "prompt": "Entre quelles localités littorales s'étend le bassin sédimentaire côtier de Côte d'Ivoire ?",
-          "options": [
-            "De Fresco à Assinie",
-            "De San Pedro à Tabou",
-            "De Sassandra à Grand-Lahou",
-            "D'Abidjan à Bouna"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Le bassin sédimentaire côtier ivoirien forme un croissant littoral s'étendant d'Ouest en Est depuis Fresco jusqu'à Assinie."
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · Appartenance au craton ouest-africain",
+          "stepTheme": "Appartenance au craton ouest-africain",
+          "stepTitle": "Appartenance au craton ouest-africain",
+          "paragraphText": "Un craton est une vaste portion continentale de la croûte terrestre devenue stable après d'anciennes orogenèses précambriennes.",
+          "formula": {
+            "name": "Appartenance au craton ouest-africain",
+            "formula": "Territoire ivoirien : Craton Ouest-Africain (Dorsale de Man)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Retiens le terme officiel : Craton Ouest-Africain (Dorsale de Man) !",
+          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex3",
+            "type": "mcq",
+            "prompt": "À quel mégabloc géologique ancien du continent africain appartient le territoire ivoirien ?",
+            "options": [
+              "Au craton ouest-africain (dorsale de Man ou Léo)",
+              "Au bassin du Congo",
+              "Au craton du Kalahari",
+              "À la chaîne alpine"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La Côte d'Ivoire s'enracine dans la dorsale de Man, partie méridionale du craton ouest-africain, stable depuis des centaines de millions d'années."
+          }
         },
         {
-          "id": "seconde_c_svt_ch1_p1_ex7",
-          "type": "mcq",
-          "prompt": "À quel événement géodynamique mondial correspond l'ouverture et le début de formation du bassin sédimentaire ivoirien ?",
-          "options": [
-            "L'ouverture de l'océan Atlantique Sud au Crétacé",
-            "La surrection de la chaîne alpine au Tertiaire",
-            "La glaciation quaternaire",
-            "L'orogénèse libérienne au Précambrien"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Le bassin sédimentaire ivoirien a commencé à se mettre en place au Crétacé (ère secondaire, vers 135 Ma) lors de la dislocation de la Pangée et de l'ouverture de l'océan Atlantique Sud."
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Différence d'âge entre socle et bassin",
+          "stepTheme": "Différence d'âge entre socle et bassin",
+          "stepTitle": "Différence d'âge entre socle et bassin",
+          "paragraphText": "Le socle précambrien est immensément plus vieux que le bassin sédimentaire récent mis en place lors de l'ouverture de l'Atlantique.",
+          "formula": {
+            "name": "Différence d'âge entre socle et bassin",
+            "formula": "Socle précambrien (4 000 - 540 Ma) vs Bassin côtier (135 - 0 Ma)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le socle est très ancien (Précambrien), le bassin est récent (Secondaire à Quaternaire) !",
+          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex4",
+            "type": "mcq",
+            "prompt": "Quelle est la différence d'âge fondamentale entre le socle cristallin et le bassin sédimentaire ?",
+            "options": [
+              "Le socle date du Précambrien alors que le bassin date du Secondaire au Quaternaire",
+              "Le bassin est plus ancien que le socle",
+              "Ils ont exactement le même âge géologique",
+              "Le socle date du Quaternaire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le socle s'est formé au Précambrien (4 000 à 540 Ma) alors que le bassin est très récent, né à l'ère Secondaire (135 Ma)."
+          }
         },
         {
-          "id": "seconde_c_svt_ch1_p1_ex8",
-          "type": "mcq",
-          "prompt": "Quels types de roches prédominent dans le bassin sédimentaire côtier ivoirien ?",
-          "options": [
-            "Des sables, des argiles, des grès et des conglomérats",
-            "Des granites, des basaltes et des gabbros",
-            "Des gneiss, des micaschistes et des quartzites",
-            "Des charnockites et des péridotites"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "Le bassin sédimentaire est constitué de roches sédimentaires détritiques d'âges crétacé à quaternaire : sables, argiles, grès ferrugineux et conglomérats."
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Les deux domaines du socle cristallin",
+          "stepTheme": "Les deux domaines du socle cristallin",
+          "stepTitle": "Les deux domaines du socle cristallin",
+          "paragraphText": "Le socle ivoirien est scindé en deux grandes provinces d'âges distincts : l'Archéen (Ouest) et le Protérozoïque (Est/Centre/Nord).",
+          "formula": {
+            "name": "Les deux domaines du socle cristallin",
+            "formula": "Socle précambrien = Domaine Archéen (Ouest) + Domaine Protérozoïque (Est)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Retiens les 2 domaines : Archéen à l'Ouest, Protérozoïque à l'Est !",
+          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex5",
+            "type": "mcq",
+            "prompt": "Quels sont les deux grands domaines géologiques qui composent le socle cristallin ivoirien ?",
+            "options": [
+              "Le domaine Archéen et le domaine Protérozoïque",
+              "Le domaine Saharien et le domaine Sahélien",
+              "Le domaine Côtier et le domaine Océanique",
+              "Le domaine Jurassique et le domaine Crétacé"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le socle cristallin est divisé en domaine Archéen (à l'Ouest) et domaine Protérozoïque ou Birrimien (à l'Est et au Centre)."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · La faille de Sassandra, frontière du socle",
+          "stepTheme": "La faille de Sassandra, frontière du socle",
+          "stepTitle": "La faille de Sassandra, frontière du socle",
+          "paragraphText": "La faille de Sassandra traverse verticalement la Côte d'Ivoire du Nord au Sud, constituant une suture géologique fondamentale.",
+          "formula": {
+            "name": "La faille de Sassandra, frontière du socle",
+            "formula": "Domaine Archéen (Ouest) | Faille de Sassandra | Domaine Protérozoïque (Est)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La faille de Sassandra est Nord-Sud et sépare l'Ouest de l'Est !",
+          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex6",
+            "type": "mcq",
+            "prompt": "Comment se nomme la faille subméridienne majeure séparant l'Archéen du Protérozoïque ?",
+            "options": [
+              "La faille de Sassandra",
+              "La faille des lagunes",
+              "La faille du Bandama",
+              "La faille de San-Pédro"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La faille de Sassandra, d'orientation générale Nord-Sud, est la fracture majeure qui sépare les deux domaines du socle."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Pétrographie dominante du socle",
+          "stepTheme": "Pétrographie dominante du socle",
+          "stepTitle": "Pétrographie dominante du socle",
+          "paragraphText": "Le socle est formé de roches cristallines dures (granites, granodiorites) et de roches métamorphiques (gneiss, migmatites, schistes).",
+          "formula": {
+            "name": "Pétrographie dominante du socle",
+            "formula": "Roches du socle = Roches magmatiques + Roches métamorphiques",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Socle cristallin = roches magmatiques + roches métamorphiques !",
+          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex7",
+            "type": "mcq",
+            "prompt": "Quelle est la nature pétrographique dominante des roches du socle de Côte d'Ivoire ?",
+            "options": [
+              "Des roches magmatiques (granitoïdes) et des roches métamorphiques (gneiss, schistes)",
+              "Uniquement du sable meuble et des galets",
+              "Uniquement du calcaire et de la craie",
+              "Des laves volcaniques basaltiques récentes"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le terme cristallin indique que le socle est constitué de roches magmatiques plutoniques et métamorphiques indurées."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · La Côte d'Ivoire, pays de socle",
+          "stepTheme": "La Côte d'Ivoire, pays de socle",
+          "stepTitle": "La Côte d'Ivoire, pays de socle",
+          "paragraphText": "L'immense majorité du sol, du relief et des eaux souterraines de la Côte d'Ivoire est façonnée par le socle cristallin précambrien.",
+          "formula": {
+            "name": "La Côte d'Ivoire, pays de socle",
+            "formula": "Côte d'Ivoire : Pays de socle (97,5 % de socle précambrien)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La Côte d'Ivoire est un pays de socle car le socle occupe 97,5 % du territoire !",
+          "keyRule": "Retenir les chiffres officiels MENA : socle cristallin = 97,5 % (la quasi-totalité du pays) ; bassin sédimentaire côtier = 2,5 % (au Sud).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex8",
+            "type": "mcq",
+            "prompt": "Pourquoi qualifie-t-on la Côte d'Ivoire de « pays de socle » ?",
+            "options": [
+              "Parce que 97,5 % du territoire national repose directement sur le socle précambrien",
+              "Parce que le pays est constitué d'îles volcaniques",
+              "Parce que l'océan recouvre 97,5 % des terres",
+              "Parce que le pétrole couvre tout le pays"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'expression « pays de socle » traduit le fait que la géologie et les paysages ivoiriens sont gouvernés à 97,5 % par le socle ancien."
+          }
         }
       ]
     },
     {
-      "id": "seconde_c_svt_ch1_p2_accidents_geologiques_failles_plis_discordances",
+      "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man",
       "order": 2,
-      "title": "Les accidents géologiques de Côte d'Ivoire : failles, plis et discordances",
-      "summary": "Identifier et caractériser les failles tectoniques, les plis anticlinaux/synclinaux et les discordances stratigraphiques observés en Côte d'Ivoire.",
-      "conceptExplanation": "1. Notions d'accidents géologiques :\nUn accident géologique est une anomalie ou déformation structurale affectant les couches de roches de l'écorce terrestre sous l'effet de forces tectoniques internes (compression, extension, cisaillement). On distingue trois catégories principales en Côte d'Ivoire : les failles, les plis et les discordances.\n\n2. Les failles (déformations cassantes) :\n- Définition : Une faille est une cassure ou fracture de l'écorce terrestre accompagnée d'un déplacement relatif (rejet) des deux compartiments séparés.\n- En Côte d'Ivoire, les failles sont les accidents géologiques les plus nombreux et les plus répandus :\n  * La faille de Sassandra : accident tectonique majeur orienté Nord-Sud séparant le domaine archéen et le domaine protérozoïque.\n  * La faille des lagunes : faille est-ouest affectant le bassin sédimentaire de Grand-Lahou à Allangouanou, avec un rejet vertical plongeant vers le Sud atteignant 5 000 m.\n  * Autres failles notables : faille de Danané, faille des Monts Trou (Guiglo), faille de Soubré, faille du Haut N'Zi (Bouaké), faille de Dimbokro.\n\n3. Les plis (déformations souples continues) :\n- Définition : Un pli est une déformation souple et continue de couches géologiques sous l'action de contraintes tectoniques compressives, sans rupture ni cassure.\n- Éléments géométriques d'un pli : charnière (zone de courbure maximale), flancs (parties latérales situées de part et d'autre de la charnière), plan axial (surface passant par les charnières de toutes les couches).\n- Types de plis : anticlinal (pli convexe vers le haut, couches les plus anciennes au cœur) et synclinal (pli concave vers le haut, couches les plus récentes au cœur).\n- Localisation en Côte d'Ivoire :\n  * Plis de Man dans le domaine archéen.\n  * Plis de Tortiya et de Fêtèkro dans le domaine protérozoïque.\n  * ATTENTION : Il n'y a aucun pli dans le bassin sédimentaire côtier ivoirien (les couches sont sub-horizontales).\n\n4. Les discordances (discontinuités stratigraphiques) :\n- Définition : Une discordance est la superposition géométrique de couches de terrains sédimentaires récents (déposées horizontalement) sur un socle rocheux plus ancien plissé et préalablement érodé.\n- Chronologie de mise en place d'une discordance :\n  1. Dépôt des couches sédimentaires anciennes à l'horizontale.\n  2. Phase tectonique compressive entraînant le plissement des couches.\n  3. Émersion et érosion de la partie supérieure des plis (surface d'érosion).\n  4. Nouvelle sédimentation (transgression marine) déposant horizontalement les nouvelles couches sédimentaires au-dessus de la surface érodée.\n- Les trois grandes discordances en Côte d'Ivoire :\n  * La discordance de base du Birrimien observée à Odienné.\n  * La discordance Abronienne observée à Bondoukou.\n  * La discordance de base du Néogène au niveau du bassin sédimentaire côtier.",
+      "title": "Le domaine Archéen (Kéniéma-Man) : Âge, localisation et orogenèses anciennes",
+      "summary": "Localiser le domaine archéen à l'Ouest de la faille de Sassandra, dater son édification au Précambrien inférieur (4 000 à 2 500 Ma) et comprendre sa cratonisation.",
+      "conceptExplanation": "Le domaine Archéen (Kéniéma-Man) est situé exclusivement à l'Ouest de la faille de Sassandra. Il s'est formé au Précambrien inférieur entre 4 000 et 2 500 millions d'années. Il a subi deux mégacycles orogéniques successifs : le Léonnien et le Libérien, achevant sa cratonisation à 2 500 Ma.",
       "formulas": [
         {
-          "name": "Classification des accidents géologiques",
-          "formula": "Faille (déformation cassante) vs Pli (déformation souple) vs Discordance (contact stratigraphique érodé)",
-          "note": "Témoins des contraintes tectoniques subies au cours des temps géologiques."
-        },
-        {
-          "name": "Types de plis",
-          "formula": "Anticlinal (courbure vers le haut ∩) / Synclinal (courbure vers le bas ∪)",
-          "note": "Formés par compression latérale de roches ductiles."
+          "name": "Chronologie du domaine Archéen",
+          "formula": "Âge Archéen : 4 000 à 2 500 Ma (Précambrien inférieur)",
+          "note": "Les roches les plus anciennes de Côte d'Ivoire (> 2,5 milliards d'années)."
         }
       ],
-      "keyRule": "NE PAS CONFONDRE : une FAILLE comporte une fracture avec déplacement de compartiments. Un PLI est une déformation souple continue SANS cassure. Une DISCORDANCE est un contact anormal où des couches horizontales neuves reposent sur des strates plissées érodées.",
+      "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
       "workedExample": {
-        "title": "Exemple résolu : Reconstitution de l'histoire géologique d'une discordance",
-        "statement": "Sur une falaise côtière, on observe un ensemble inférieur formé de micaschistes plissés et biseautés par une surface plane horizontale, surmonté par des couches horizontales régulières de grès et de sables. Nommer cette structure géologique et ordonner chronologiquement les étapes de sa formation.",
+        "title": "Datation relative du bloc de Man",
+        "statement": "Expliquer pourquoi les roches de Man sont qualifiées de roches du Précambrien inférieur.",
         "methodSteps": [
-          "Étape 1 : Identifier la structure : des couches sédimentaires horizontales reposent sur un socle plissé et érodé ; il s'agit d'une discordance angulaire géologique.",
-          "Étape 2 : Établir la chronologie des événements géologiques :",
-          "1. Dépôt horizontal initial des sédiments anciens marins.",
-          "2. Pression tectonique compressive provoquant le plissement et le métamorphisme (formation des micaschistes plissés).",
-          "3. Arrêt de la compression, émersion de la région et érosion météorique rabotant le sommet des plis.",
-          "4. Nouvelle transgression marine déposant à l'horizontale les couches de sables et de grès récents."
+          "Étape 1 : Identifier la localisation à l'Ouest de la faille de Sassandra (domaine de Kéniéma-Man).",
+          "Étape 2 : Rappeler la fourchette chronologique officielle : 4 000 à 2 500 Ma.",
+          "Étape 3 : Conclure sur l'appartenance au Précambrien inférieur (Archéen)."
         ],
-        "conclusion": "La structure observée est une discordance. Elle témoigne d'un cycle complet : sédimentation ancienne, tectonique compressive plissante, érosion de surface et reprise de la sédimentation moderne."
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
       },
       "exercises": [
         {
-          "id": "seconde_c_svt_ch1_p2_ex1",
+          "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex1",
           "type": "mcq",
-          "prompt": "Quelle est la définition exacte d'une faille géologique ?",
+          "prompt": "Dans quelle région de Côte d'Ivoire se situe exclusivement le domaine géologique archéen ?",
           "options": [
-            "Une cassure de l'écorce terrestre accompagnée d'un déplacement relatif des deux compartiments séparés",
-            "Une ondulation continue et souple des couches sans aucune fracture",
-            "Une couche de terre fertile enrichie en matière organique",
-            "Une accumulation de cristaux de quartz au fond d'un fleuve"
+            "À l'Ouest de la faille de Sassandra, dans la région de Man et Danané",
+            "Au Centre, dans la région du V baoulé vers Bouaké",
+            "À l'Est, dans la région d'Abengourou",
+            "Au Sud, le long des plages de San-Pédro"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Une faille est une déformation cassante : c'est une fracture de la lithosphère avec déplacement relatif (rejet) des compartiments de part et d'autre du plan de faille."
+          "explanation": "Le domaine archéen (Kéniéma-Man) est situé exclusivement à l'Ouest de la faille de Sassandra (régions de Man, Danané, Touba, Guiglo)."
         },
         {
-          "id": "seconde_c_svt_ch1_p2_ex2",
+          "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex2",
           "type": "mcq",
-          "prompt": "Quelle grande faille est-ouest traverse le bassin sédimentaire ivoirien de Grand-Lahou jusqu'au Ghana ?",
+          "prompt": "Quel est l'âge géologique du domaine Archéen ivoirien ?",
           "options": [
-            "La faille des lagunes",
-            "La faille de Sassandra",
-            "La faille de Danané",
-            "La faille des Monts Trou"
+            "Le Précambrien inférieur (4 000 à 2 500 millions d'années)",
+            "Le Précambrien supérieur (1 000 à 540 Ma)",
+            "L'ère Primaire (540 à 250 Ma)",
+            "L'ère Jurassique (200 à 145 Ma)"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "La faille des lagunes traverse d'Ouest en Est le bassin sédimentaire côtier de Grand-Lahou à Allangouanou au Ghana, avec un rejet pouvant atteindre 5 000 m."
+          "explanation": "L'Archéen correspond au Précambrien le plus ancien, daté entre 4 000 et 2 500 millions d'années."
         },
         {
-          "id": "seconde_c_svt_ch1_p2_ex3",
+          "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex3",
           "type": "mcq",
-          "prompt": "Comment appelle-t-on un pli de couches sédimentaires dont la courbure est convexe vers le haut ?",
+          "prompt": "Quels sont les deux grands cycles orogéniques qui ont structuré le domaine archéen en Côte d'Ivoire ?",
           "options": [
-            "Un anticlinal",
+            "Les cycles Léonnien et Libérien",
+            "Les cycles Hercynien et Alpin",
+            "Les cycles Calédonien et Varisque",
+            "Les cycles Jurassique et Crétacé"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le domaine archéen a été plissé et métamorphisé par le cycle Léonnien (3 000 Ma) puis par le cycle Libérien (2 600 Ma)."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex4",
+          "type": "mcq",
+          "prompt": "Quel type de relief caractéristique observe-t-on dans le domaine archéen de Man ?",
+          "options": [
+            "Un relief montagneux très accidenté avec les plus hauts sommets de Côte d'Ivoire",
+            "Une plaine basse côtière au ras de l'eau",
+            "Un plateau sablonneux horizontal sans aucune pente",
+            "Des dunes de sable sahariennes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le domaine archéen abrite les plus hauts reliefs du pays : le Mont Tonkoui (1 189 m) et les Monts Nimba (1 752 m)."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex5",
+          "type": "mcq",
+          "prompt": "Quel degré de métamorphisme caractérise les roches profondes du domaine archéen ?",
+          "options": [
+            "Un métamorphisme régional de haut degré (catazonal : faciès des granulites)",
+            "Un métamorphisme superficiel faible",
+            "Une absence totale de métamorphisme",
+            "Un métamorphisme hydrothermal froid"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Enfouies à plus de 25 km, les roches archéennes ont été recristallisées sous très hautes températures (> 700 °C) en catazone."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex6",
+          "type": "mcq",
+          "prompt": "Pourquoi qualifie-t-on le domaine archéen de « noyau cratonique stable » ?",
+          "options": [
+            "Parce qu'il n'a plus subi d'orogenèse plissante depuis sa cratonisation à 2 500 Ma",
+            "Parce qu'il s'est effondré au fond de l'océan",
+            "Parce qu'il est en éruption volcanique permanente",
+            "Parce qu'il a été construit par les hommes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Depuis 2 500 Ma, le bloc de Man est devenu rigide et n'a plus été déformé par des plissements, formant un bouclier stable."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex7",
+          "type": "mcq",
+          "prompt": "Quelle grande ville ivoirienne est la métropole géologique du domaine archéen ?",
+          "options": [
+            "Man (capitale du Tonkpi)",
+            "Bouaké (capitale du Gbêkê)",
+            "Korhogo (capitale du Poro)",
+            "Abidjan"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Man est la ville emblématique entourée par les massifs de charnockites et de quartzites ferrugineux de l'Archéen."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex8",
+          "type": "mcq",
+          "prompt": "Sous quel autre nom officiel désigne-t-on le domaine archéen dans le programme ivoirien ?",
+          "options": [
+            "Le domaine de Kéniéma-Man",
+            "Le domaine Baoulé-Mossi",
+            "Le domaine du Littoral",
+            "Le domaine Guinéen côtier"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans tous les manuels de SVT du MENA, le domaine archéen est nommé « domaine de Kéniéma-Man »."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · Localisation du domaine Archéen à l'Ouest",
+          "stepTheme": "Localisation du domaine Archéen à l'Ouest",
+          "stepTitle": "Localisation du domaine Archéen à l'Ouest",
+          "paragraphText": "Le domaine Archéen est strictement circonscrit à l'Ouest de la faille de Sassandra, englobant tout l'Ouest montagneux ivoirien.",
+          "formula": {
+            "name": "Localisation du domaine Archéen à l'Ouest",
+            "formula": "Domaine Archéen = Région Ouest (Man, Danané, Guiglo, Tabou)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Archéen = Ouest = Man, Danané et Guiglo !",
+          "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex1",
+            "type": "mcq",
+            "prompt": "Dans quelle région de Côte d'Ivoire se situe exclusivement le domaine géologique archéen ?",
+            "options": [
+              "À l'Ouest de la faille de Sassandra, dans la région de Man et Danané",
+              "Au Centre, dans la région du V baoulé vers Bouaké",
+              "À l'Est, dans la région d'Abengourou",
+              "Au Sud, le long des plages de San-Pédro"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le domaine archéen (Kéniéma-Man) est situé exclusivement à l'Ouest de la faille de Sassandra (régions de Man, Danané, Touba, Guiglo)."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · Âge absolu du domaine Archéen",
+          "stepTheme": "Âge absolu du domaine Archéen",
+          "stepTitle": "Âge absolu du domaine Archéen",
+          "paragraphText": "Les roches du domaine archéen ont plus de 2,5 milliards d'années, forgées lors des premiers âges de la Terre.",
+          "formula": {
+            "name": "Âge absolu du domaine Archéen",
+            "formula": "Âge Archéen : 4 000 à 2 500 Ma (Précambrien inférieur)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Retiens 4 000 à 2 500 Ma pour l'Archéen !",
+          "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex2",
+            "type": "mcq",
+            "prompt": "Quel est l'âge géologique du domaine Archéen ivoirien ?",
+            "options": [
+              "Le Précambrien inférieur (4 000 à 2 500 millions d'années)",
+              "Le Précambrien supérieur (1 000 à 540 Ma)",
+              "L'ère Primaire (540 à 250 Ma)",
+              "L'ère Jurassique (200 à 145 Ma)"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'Archéen correspond au Précambrien le plus ancien, daté entre 4 000 et 2 500 millions d'années."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · Les orogenèses léonnienne et libérienne",
+          "stepTheme": "Les orogenèses léonnienne et libérienne",
+          "stepTitle": "Les orogenèses léonnienne et libérienne",
+          "paragraphText": "L'édification du bloc archéen résulte de deux orogenèses précambriennes successives : le Léonnien puis le Libérien.",
+          "formula": {
+            "name": "Les orogenèses léonnienne et libérienne",
+            "formula": "Orogenèse léonnienne (3 000 Ma) -> Orogenèse libérienne (2 600 Ma)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Retiens les 2 orogenèses : Léonnien puis Libérien !",
+          "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex3",
+            "type": "mcq",
+            "prompt": "Quels sont les deux grands cycles orogéniques qui ont structuré le domaine archéen en Côte d'Ivoire ?",
+            "options": [
+              "Les cycles Léonnien et Libérien",
+              "Les cycles Hercynien et Alpin",
+              "Les cycles Calédonien et Varisque",
+              "Les cycles Jurassique et Crétacé"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le domaine archéen a été plissé et métamorphisé par le cycle Léonnien (3 000 Ma) puis par le cycle Libérien (2 600 Ma)."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Morphologie et relief du domaine Archéen",
+          "stepTheme": "Morphologie et relief du domaine Archéen",
+          "stepTitle": "Morphologie et relief du domaine Archéen",
+          "paragraphText": "La région des dix-huit montagnes de Man doit son relief culminant à la résistance remarquable des roches archéennes à l'érosion.",
+          "formula": {
+            "name": "Morphologie et relief du domaine Archéen",
+            "formula": "Domaine Archéen : Relief montagneux culminant (Mont Tonkoui, Monts Nimba)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Domaine Archéen = Région des dix-huit montagnes de Man !",
+          "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex4",
+            "type": "mcq",
+            "prompt": "Quel type de relief caractéristique observe-t-on dans le domaine archéen de Man ?",
+            "options": [
+              "Un relief montagneux très accidenté avec les plus hauts sommets de Côte d'Ivoire",
+              "Une plaine basse côtière au ras de l'eau",
+              "Un plateau sablonneux horizontal sans aucune pente",
+              "Des dunes de sable sahariennes"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le domaine archéen abrite les plus hauts reliefs du pays : le Mont Tonkoui (1 189 m) et les Monts Nimba (1 752 m)."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Métamorphisme catazonal de haut degré",
+          "stepTheme": "Métamorphisme catazonal de haut degré",
+          "stepTitle": "Métamorphisme catazonal de haut degré",
+          "paragraphText": "Le métamorphisme de l'Archéen est catazonal (hautes températures et fortes pressions), donnant naissance au faciès des granulites.",
+          "formula": {
+            "name": "Métamorphisme catazonal de haut degré",
+            "formula": "Métamorphisme archéen : Catazonal (Hautes T et P -> Faciès granulite)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Archéen = métamorphisme de haut degré (catazonal / granulite) !",
+          "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex5",
+            "type": "mcq",
+            "prompt": "Quel degré de métamorphisme caractérise les roches profondes du domaine archéen ?",
+            "options": [
+              "Un métamorphisme régional de haut degré (catazonal : faciès des granulites)",
+              "Un métamorphisme superficiel faible",
+              "Une absence totale de métamorphisme",
+              "Un métamorphisme hydrothermal froid"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Enfouies à plus de 25 km, les roches archéennes ont été recristallisées sous très hautes températures (> 700 °C) en catazone."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Cratonisation et stabilité du bloc de Man",
+          "stepTheme": "Cratonisation et stabilité du bloc de Man",
+          "stepTitle": "Cratonisation et stabilité du bloc de Man",
+          "paragraphText": "La cratonisation libérienne a transformé l'Archéen en une masse continentale indéformable qui a servi de butoir aux orogenèses suivantes.",
+          "formula": {
+            "name": "Cratonisation et stabilité du bloc de Man",
+            "formula": "Cratonisation libérienne (2 500 Ma) -> Stabilité continentale définitive",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le domaine archéen est stable depuis 2 500 millions d'années !",
+          "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex6",
+            "type": "mcq",
+            "prompt": "Pourquoi qualifie-t-on le domaine archéen de « noyau cratonique stable » ?",
+            "options": [
+              "Parce qu'il n'a plus subi d'orogenèse plissante depuis sa cratonisation à 2 500 Ma",
+              "Parce qu'il s'est effondré au fond de l'océan",
+              "Parce qu'il est en éruption volcanique permanente",
+              "Parce qu'il a été construit par les hommes"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Depuis 2 500 Ma, le bloc de Man est devenu rigide et n'a plus été déformé par des plissements, formant un bouclier stable."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Man, cœur géologique du domaine Archéen",
+          "stepTheme": "Man, cœur géologique du domaine Archéen",
+          "stepTitle": "Man, cœur géologique du domaine Archéen",
+          "paragraphText": "La cuvette de Man et ses pitons rocheux constituent le terrain d'étude privilégié des géologues pour le socle archéen.",
+          "formula": {
+            "name": "Man, cœur géologique du domaine Archéen",
+            "formula": "Ville de Man = Cœur du domaine Archéen de Côte d'Ivoire",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Ville de Man = Métropole de l'Archéen !",
+          "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex7",
+            "type": "mcq",
+            "prompt": "Quelle grande ville ivoirienne est la métropole géologique du domaine archéen ?",
+            "options": [
+              "Man (capitale du Tonkpi)",
+              "Bouaké (capitale du Gbêkê)",
+              "Korhogo (capitale du Poro)",
+              "Abidjan"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Man est la ville emblématique entourée par les massifs de charnockites et de quartzites ferrugineux de l'Archéen."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · Appellation officielle : domaine de Kéniéma-Man",
+          "stepTheme": "Appellation officielle : domaine de Kéniéma-Man",
+          "stepTitle": "Appellation officielle : domaine de Kéniéma-Man",
+          "paragraphText": "L'appellation 'domaine de Kéniéma-Man' rappelle la continuité géologique de ce bloc très ancien s'étendant vers la Guinée et le Libéria.",
+          "formula": {
+            "name": "Appellation officielle : domaine de Kéniéma-Man",
+            "formula": "Domaine Archéen = Domaine de Kéniéma-Man",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Domaine Archéen = Domaine de Kéniéma-Man !",
+          "keyRule": "Archéen = Ouest de la faille de Sassandra = Région montagneuse de Man = 4 000 à 2 500 Ma (Précambrien inférieur) = Orogenèses léonnienne et libérienne.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex8",
+            "type": "mcq",
+            "prompt": "Sous quel autre nom officiel désigne-t-on le domaine archéen dans le programme ivoirien ?",
+            "options": [
+              "Le domaine de Kéniéma-Man",
+              "Le domaine Baoulé-Mossi",
+              "Le domaine du Littoral",
+              "Le domaine Guinéen côtier"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Dans tous les manuels de SVT du MENA, le domaine archéen est nommé « domaine de Kéniéma-Man »."
+          }
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites",
+      "order": 3,
+      "title": "Pétrographie de l'Archéen : Charnockites, granulites et itabirites",
+      "summary": "Identifier les roches caractéristiques du domaine archéen (charnockites, granulites, gneiss à hypersthène, itabirites) et les gisements de fer.",
+      "conceptExplanation": "Le domaine archéen est caractérisé par un ensemble lithologique unique formé à haute température et haute pression : les charnockites (granitoïdes à hypersthène), les granulites, les migmatites et les itabirites (quartzites ferrugineux rubanés constituant les grands gisements de fer de Man et du Mont Nimba).",
+      "formulas": [
+        {
+          "name": "Lithologie diagnostique de l'Archéen",
+          "formula": "Roches archéennes = Charnockites + Granulites + Itabirites (Quartzites à Fer)",
+          "note": "Roches de très haute résistance mécanique."
+        }
+      ],
+      "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
+      "workedExample": {
+        "title": "Reconnaissance d'un échantillon rocheux de Man",
+        "statement": "Un échantillon présente une texture grenue sombre avec présence d'hypersthène. Identifier la roche et son domaine.",
+        "methodSteps": [
+          "Étape 1 : Observer le minéral caractéristique : hypersthène (pyroxène anhydre de haute température).",
+          "Étape 2 : Conclure sur la nature pétrographique : charnockite.",
+          "Étape 3 : Attribuer au domaine Archéen de Kéniéma-Man."
+        ],
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex1",
+          "type": "mcq",
+          "prompt": "Quelle roche magmatique plutonique à hypersthène est emblématique du domaine archéen de Man ?",
+          "options": [
+            "La charnockite",
+            "Le basalte vacuolaire",
+            "Le calcaire coquillier",
+            "La craie blanche"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La charnockite est un granitoïde sombre à hypersthène cristallisé sous haute température dans le faciès granulite."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex2",
+          "type": "mcq",
+          "prompt": "Qu'est-ce qu'une itabirite dans le domaine archéen ivoirien ?",
+          "options": [
+            "Un quartzite ferrugineux rubané riche en magnétite et hématite (minerai de fer)",
+            "Une roche calcaire contenant des coquilles fossiles",
+            "Une coulée de lave basaltique liquide récente",
+            "Une couche d'argile meuble humide"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les itabirites sont des quartzites rubanés composés d'une alternance de lits de quartz blanc et de lits d'oxydes de fer noirs (hématite, magnétite)."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex3",
+          "type": "mcq",
+          "prompt": "Quel minéral ferromagnésien anhydre de haute température est le marqueur de la charnockite ?",
+          "options": [
+            "L'hypersthène (pyroxène orthorhombique)",
+            "La calcite",
+            "Le gypse",
+            "L'halite"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'hypersthène est le pyroxène anhydre typique des conditions métamorphiques extrêmes (> 700 °C) de l'Archéen."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex4",
+          "type": "mcq",
+          "prompt": "Sur quels monts du domaine archéen de Man se situent les réserves majeures d'itabirites ferrifères ?",
+          "options": [
+            "Le Mont Klahoyo et le Mont Gao",
+            "Le Mont Korhogo",
+            "La colline de Bouaké",
+            "Le plateau d'Abidjan"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les Monts Klahoyo et Gao (proches de Man) ainsi que les Monts Nimba renferment des centaines de millions de tonnes de fer dans les itabirites."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex5",
+          "type": "mcq",
+          "prompt": "Quel faciès métamorphique régional est caractéristique des roches profondes de l'Archéen ?",
+          "options": [
+            "Le faciès des granulites",
+            "Le faciès des schistes verts",
+            "Le faciès des zéolites",
+            "Le faciès des cornéennes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le faciès granulite correspond aux températures (> 700 °C) et pressions (> 8 kbar) les plus intenses de la lithosphère continentale."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex6",
+          "type": "mcq",
+          "prompt": "Quelle roche métamorphique rubanée résulte de la fusion partielle (anatexie) dans le socle archéen ?",
+          "options": [
+            "La migmatite",
+            "Le gypse",
+            "La bauxite",
+            "L'argile rouge"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La migmatite est une roche mixte formée lorsque la roche métamorphique commence à fondre partiellement en profondeur."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex7",
+          "type": "mcq",
+          "prompt": "Quelle texture microscopique présentent généralement les granulites et charnockites archéennes ?",
+          "options": [
+            "Une texture granoblastique polygonale compacte",
+            "Une texture vitreuse avec des bulles de gaz",
+            "Une texture fibreuse meuble",
+            "Une texture sédimentaire argileuse"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Sous forte pression continue, les cristaux se réarrangent en mosaïque serrée appelée texture granoblastique."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex8",
+          "type": "mcq",
+          "prompt": "Pour quelle propriété physique majeure les roches archéennes sont-elles recherchées en génie civil ?",
+          "options": [
+            "Leur dureté extrême, compacité et haute résistance à l'écrasement mécanique",
+            "Leur faible poids et leur flottabilité",
+            "Leur dissolution facile à l'eau",
+            "Leur mollesse"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les granites et charnockites archéens fournissent les meilleurs granulats concassés pour les bétons de barrage et de routes lourdes."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · La charnockite, roche archéenne emblématique",
+          "stepTheme": "La charnockite, roche archéenne emblématique",
+          "stepTitle": "La charnockite, roche archéenne emblématique",
+          "paragraphText": "La charnockite contient du quartz, des feldspaths et de l'hypersthène. C'est la roche reine des massifs de Man.",
+          "formula": {
+            "name": "La charnockite, roche archéenne emblématique",
+            "formula": "Charnockite = Granitoïde à hypersthène formé en faciès granulite",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Charnockite = roche magmatique caractéristique de Man !",
+          "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex1",
+            "type": "mcq",
+            "prompt": "Quelle roche magmatique plutonique à hypersthène est emblématique du domaine archéen de Man ?",
+            "options": [
+              "La charnockite",
+              "Le basalte vacuolaire",
+              "Le calcaire coquillier",
+              "La craie blanche"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La charnockite est un granitoïde sombre à hypersthène cristallisé sous haute température dans le faciès granulite."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · Les itabirites ou quartzites ferrugineux",
+          "stepTheme": "Les itabirites ou quartzites ferrugineux",
+          "stepTitle": "Les itabirites ou quartzites ferrugineux",
+          "paragraphText": "Ces roches métamorphiques sédimentaires anciennes constituent les plus grands gisements de fer de Côte d'Ivoire.",
+          "formula": {
+            "name": "Les itabirites ou quartzites ferrugineux",
+            "formula": "Itabirites = Quartzites ferrugineux rubanés (Quartz + Oxydes de Fer)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Itabirites = quartzites ferrugineux = gisements de fer de Man et Nimba !",
+          "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex2",
+            "type": "mcq",
+            "prompt": "Qu'est-ce qu'une itabirite dans le domaine archéen ivoirien ?",
+            "options": [
+              "Un quartzite ferrugineux rubané riche en magnétite et hématite (minerai de fer)",
+              "Une roche calcaire contenant des coquilles fossiles",
+              "Une coulée de lave basaltique liquide récente",
+              "Une couche d'argile meuble humide"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les itabirites sont des quartzites rubanés composés d'une alternance de lits de quartz blanc et de lits d'oxydes de fer noirs (hématite, magnétite)."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · L'hypersthène, marqueur minéralogique",
+          "stepTheme": "L'hypersthène, marqueur minéralogique",
+          "stepTitle": "L'hypersthène, marqueur minéralogique",
+          "paragraphText": "La présence d'hypersthène prouve que le magma s'est équilibré dans des conditions totalement privées d'eau en croûte profonde.",
+          "formula": {
+            "name": "L'hypersthène, marqueur minéralogique",
+            "formula": "Minéral repère archéen : Hypersthène (Pyroxène de haute T)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Hypersthène = minéral clé de la charnockite de Man !",
+          "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex3",
+            "type": "mcq",
+            "prompt": "Quel minéral ferromagnésien anhydre de haute température est le marqueur de la charnockite ?",
+            "options": [
+              "L'hypersthène (pyroxène orthorhombique)",
+              "La calcite",
+              "Le gypse",
+              "L'halite"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'hypersthène est le pyroxène anhydre typique des conditions métamorphiques extrêmes (> 700 °C) de l'Archéen."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Gisements de fer du Mont Klahoyo et du Mont Gao",
+          "stepTheme": "Gisements de fer du Mont Klahoyo et du Mont Gao",
+          "stepTitle": "Gisements de fer du Mont Klahoyo et du Mont Gao",
+          "paragraphText": "Les crêtes rocheuses de Klahoyo et Gao résistent à l'érosion grâce à l'extrême dureté du quartzite ferrugineux.",
+          "formula": {
+            "name": "Gisements de fer du Mont Klahoyo et du Mont Gao",
+            "formula": "Gisements de Klahoyo et Gao : Itabirites archéennes de Man",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Fer de Klahoyo et Gao = itabirites archéennes !",
+          "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex4",
+            "type": "mcq",
+            "prompt": "Sur quels monts du domaine archéen de Man se situent les réserves majeures d'itabirites ferrifères ?",
+            "options": [
+              "Le Mont Klahoyo et le Mont Gao",
+              "Le Mont Korhogo",
+              "La colline de Bouaké",
+              "Le plateau d'Abidjan"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les Monts Klahoyo et Gao (proches de Man) ainsi que les Monts Nimba renferment des centaines de millions de tonnes de fer dans les itabirites."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Le faciès des granulites",
+          "stepTheme": "Le faciès des granulites",
+          "stepTitle": "Le faciès des granulites",
+          "paragraphText": "Ce faciès de haut degré déshydrate complètement les roches et donne naissance aux textures denses et massives de l'Archéen.",
+          "formula": {
+            "name": "Le faciès des granulites",
+            "formula": "Faciès granulite : Température > 700 °C et Pression > 8 kbar",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Archéen = Faciès granulite (températures et pressions extrêmes) !",
+          "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex5",
+            "type": "mcq",
+            "prompt": "Quel faciès métamorphique régional est caractéristique des roches profondes de l'Archéen ?",
+            "options": [
+              "Le faciès des granulites",
+              "Le faciès des schistes verts",
+              "Le faciès des zéolites",
+              "Le faciès des cornéennes"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le faciès granulite correspond aux températures (> 700 °C) et pressions (> 8 kbar) les plus intenses de la lithosphère continentale."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Les migmatites et l'anatexie",
+          "stepTheme": "Les migmatites et l'anatexie",
+          "stepTitle": "Les migmatites et l'anatexie",
+          "paragraphText": "Les migmatites présentent un rubanement alternant des veines magmatiques claires et des bandes métamorphiques sombres.",
+          "formula": {
+            "name": "Les migmatites et l'anatexie",
+            "formula": "Anatexie crustale -> Migmatite (Fusion partielle de la roche)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Migmatite = roche issue de la fusion partielle en profondeur !",
+          "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex6",
+            "type": "mcq",
+            "prompt": "Quelle roche métamorphique rubanée résulte de la fusion partielle (anatexie) dans le socle archéen ?",
+            "options": [
+              "La migmatite",
+              "Le gypse",
+              "La bauxite",
+              "L'argile rouge"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La migmatite est une roche mixte formée lorsque la roche métamorphique commence à fondre partiellement en profondeur."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Texture granoblastique des roches profondes",
+          "stepTheme": "Texture granoblastique des roches profondes",
+          "stepTitle": "Texture granoblastique des roches profondes",
+          "paragraphText": "Cette texture compacte sans vides intergranulaires confère aux roches archéennes une résistance mécanique colossale.",
+          "formula": {
+            "name": "Texture granoblastique des roches profondes",
+            "formula": "Roches catazonales -> Texture granoblastique polygonale",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Granulites et charnockites = texture granoblastique polygonale !",
+          "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex7",
+            "type": "mcq",
+            "prompt": "Quelle texture microscopique présentent généralement les granulites et charnockites archéennes ?",
+            "options": [
+              "Une texture granoblastique polygonale compacte",
+              "Une texture vitreuse avec des bulles de gaz",
+              "Une texture fibreuse meuble",
+              "Une texture sédimentaire argileuse"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Sous forte pression continue, les cristaux se réarrangent en mosaïque serrée appelée texture granoblastique."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · Propriétés mécaniques des roches archéennes",
+          "stepTheme": "Propriétés mécaniques des roches archéennes",
+          "stepTitle": "Propriétés mécaniques des roches archéennes",
+          "paragraphText": "Leur très forte densité et leur recristallisation totale empêchent toute fracturation facile sous les charges industrielles.",
+          "formula": {
+            "name": "Propriétés mécaniques des roches archéennes",
+            "formula": "Charnockite & Granite archéen -> Haute résistance mécanique",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Charnockite et granite = roches très dures et compactes !",
+          "keyRule": "Charnockite = granitoïde à hypersthène (faciès granulite). Itabirite = quartzite ferrugineux rubané (minerai de fer de Klahoyo, Gao et Nimba).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p3_petrographie_archen_charnockites_itabirites_ex8",
+            "type": "mcq",
+            "prompt": "Pour quelle propriété physique majeure les roches archéennes sont-elles recherchées en génie civil ?",
+            "options": [
+              "Leur dureté extrême, compacité et haute résistance à l'écrasement mécanique",
+              "Leur faible poids et leur flottabilité",
+              "Leur dissolution facile à l'eau",
+              "Leur mollesse"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les granites et charnockites archéens fournissent les meilleurs granulats concassés pour les bétons de barrage et de routes lourdes."
+          }
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique",
+      "order": 4,
+      "title": "La faille de Sassandra : Fracture subméridienne majeure et suture géologique",
+      "summary": "Analyser l'orientation subméridienne de la faille de Sassandra, son rôle de suture tectonique et les contrastes de part et d'autre.",
+      "conceptExplanation": "La faille de Sassandra est la fracture tectonique majeure du socle ivoirien. D'orientation subméridienne (Nord-Sud), elle sépare le domaine Archéen à l'Ouest (4 000 à 2 500 Ma) du domaine Protérozoïque à l'Est (2 500 à 540 Ma). Elle a guidé le cours du fleuve Sassandra et est jalonnée de roches cisaillées (mylonites).",
+      "formulas": [
+        {
+          "name": "Frontière tectonique subméridienne",
+          "formula": "Domaine Archéen (Ouest) | Faille de Sassandra | Domaine Protérozoïque (Est)",
+          "note": "La faille de Sassandra est la suture géologique centrale de la Côte d'Ivoire."
+        }
+      ],
+      "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
+      "workedExample": {
+        "title": "Analyse d'une coupe Ouest-Est franchissant la faille",
+        "statement": "Une coupe géologique traverse la faille de Sassandra d'Ouest en Est. Quel changement d'âge observe-t-on ?",
+        "methodSteps": [
+          "Étape 1 : Localiser la faille de direction subméridienne Nord-Sud.",
+          "Étape 2 : Noter le domaine occidental : Archéen d'âge Précambrien inférieur (4 000 à 2 500 Ma).",
+          "Étape 3 : Noter le passage au domaine oriental : Protérozoïque d'âge Précambrien supérieur (2 500 à 540 Ma).",
+          "Étape 4 : Conclure que la faille fait passer d'un socle très ancien à un socle plus jeune de plus d'un milliard d'années."
+        ],
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est l'orientation générale (direction géographique) de la faille de Sassandra ?",
+          "options": [
+            "Subméridienne (direction générale Nord-Sud)",
+            "Strictement Est-Ouest",
+            "Nord-Est vers Sud-Ouest",
+            "Circulaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La faille de Sassandra est orientée Nord-Sud (subméridienne) sur toute sa traversée du territoire national."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex2",
+          "type": "mcq",
+          "prompt": "Quel rôle géologique fondamental joue la faille de Sassandra dans le socle ivoirien ?",
+          "options": [
+            "Elle constitue la suture tectonique majeure séparant l'Archéen du Protérozoïque",
+            "Elle sépare la Côte d'Ivoire de l'océan Atlantique",
+            "Elle entoure le bassin côtier",
+            "Elle empêche les séismes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La faille de Sassandra est la frontière structurale séparant les deux grands domaines d'âges très différents du socle."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex3",
+          "type": "mcq",
+          "prompt": "Quel contraste d'âge observe-t-on en franchissant la faille de Sassandra d'Ouest en Est ?",
+          "options": [
+            "On passe de roches très anciennes (> 2 500 Ma) à l'Ouest à des roches plus jeunes (< 2 500 Ma) à l'Est",
+            "On passe d'un socle jeune à un socle plus vieux",
+            "L'âge est strictement identique des deux côtés",
+            "L'Est a 5 milliards d'années"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le franchissement de la faille fait rajeunir le socle rocheux de plus d'un milliard d'années en un seul contact tectonique."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex4",
+          "type": "mcq",
+          "prompt": "Quel grand fleuve ivoirien suit sur une large partie de son tracé le couloir de cette faille ?",
+          "options": [
+            "Le fleuve Sassandra",
+            "Le fleuve Comoé",
+            "Le fleuve Cavally",
+            "La rivière Agnéby"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'érosion fluviale exploite toujours les zones de roches broyées par les failles : le fleuve Sassandra emprunte ce couloir."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex5",
+          "type": "mcq",
+          "prompt": "Qu'est-ce qu'une mylonite que l'on observe le long du plan de la faille de Sassandra ?",
+          "options": [
+            "Une roche métamorphique broyée et cisaillée mécaniquement lors du jeu de la faille",
+            "Une roche calcaire sédimentaire riche en coquilles",
+            "Une roche volcanique liquide émise par un cratère",
+            "Un cristal de sel marin"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les mylonites résultent de la déformation plastique et du broyage dynamique des minéraux le long des zones de cisaillement ductile."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex6",
+          "type": "mcq",
+          "prompt": "Dans quelle localité côtière du Sud-Ouest la faille de Sassandra atteint-elle le golfe de Guinée ?",
+          "options": [
+            "À la ville de Sassandra",
+            "À Abidjan",
+            "À San-Pédro",
+            "À Grand-Bassam"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La faille de Sassandra débouche sur le littoral au niveau de la ville portuaire de Sassandra où elle rejoint l'océan."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex7",
+          "type": "mcq",
+          "prompt": "Quel type de mouvement tectonique a affecté la faille de Sassandra lors du cycle éburnéen (2 100 Ma) ?",
+          "options": [
+            "Un coulissage latéral ductile (rejeu en décrochement)",
+            "Une ouverture océanique avec cratère volcanique",
+            "Un affaissement sans frottement",
+            "Une absence totale de contrainte"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Durant l'orogenèse éburnéenne, la faille de Sassandra a rejoué en un grand couloir de décrochement ductile crustal."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex8",
+          "type": "mcq",
+          "prompt": "Comment la faille de Sassandra se manifeste-t-elle sur le terrain géologique ?",
+          "options": [
+            "Par un couloir subméridien de roches cisaillées, mylonitisées et orientées Nord-Sud",
+            "Par un gouffre volcanique béant sans fond",
+            "Par une montagne de lave en fusion",
+            "Elle est totalement invisible et introuvable"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Sur le terrain, les géologues identifient la faille par les foliations mylonitiques verticales orientées Nord-Sud."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · Orientation subméridienne Nord-Sud",
+          "stepTheme": "Orientation subméridienne Nord-Sud",
+          "stepTitle": "Orientation subméridienne Nord-Sud",
+          "paragraphText": "L'adjectif subméridien signifie qui suit approximativement le tracé d'un méridien géographique (axe Nord-Sud).",
+          "formula": {
+            "name": "Orientation subméridienne Nord-Sud",
+            "formula": "Direction de la faille de Sassandra : Subméridienne (Nord-Sud)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Faille de Sassandra = direction Nord-Sud (subméridienne) !",
+          "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex1",
+            "type": "mcq",
+            "prompt": "Quelle est l'orientation générale (direction géographique) de la faille de Sassandra ?",
+            "options": [
+              "Subméridienne (direction générale Nord-Sud)",
+              "Strictement Est-Ouest",
+              "Nord-Est vers Sud-Ouest",
+              "Circulaire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La faille de Sassandra est orientée Nord-Sud (subméridienne) sur toute sa traversée du territoire national."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · Rôle de frontière et de suture tectonique",
+          "stepTheme": "Rôle de frontière et de suture tectonique",
+          "stepTitle": "Rôle de frontière et de suture tectonique",
+          "paragraphText": "Cette fracture crustale profonde juxtapose un bloc ancien rigide (l'Archéen) et une ceinture plus jeune (le Birrimien).",
+          "formula": {
+            "name": "Rôle de frontière et de suture tectonique",
+            "formula": "Faille de Sassandra = Frontière tectonique majeure du socle ivoirien",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La faille sépare l'Archéen à l'Ouest du Protérozoïque à l'Est !",
+          "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex2",
+            "type": "mcq",
+            "prompt": "Quel rôle géologique fondamental joue la faille de Sassandra dans le socle ivoirien ?",
+            "options": [
+              "Elle constitue la suture tectonique majeure séparant l'Archéen du Protérozoïque",
+              "Elle sépare la Côte d'Ivoire de l'océan Atlantique",
+              "Elle entoure le bassin côtier",
+              "Elle empêche les séismes"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La faille de Sassandra est la frontière structurale séparant les deux grands domaines d'âges très différents du socle."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · Contraste d'âge de part et d'autre de la faille",
+          "stepTheme": "Contraste d'âge de part et d'autre de la faille",
+          "stepTitle": "Contraste d'âge de part et d'autre de la faille",
+          "paragraphText": "À l'Ouest s'étend le Précambrien inférieur (4 000 à 2 500 Ma) ; à l'Est commence le Précambrien supérieur (2 500 à 540 Ma).",
+          "formula": {
+            "name": "Contraste d'âge de part et d'autre de la faille",
+            "formula": "Ouest : Archéen (> 2 500 Ma) | Est : Protérozoïque (< 2 500 Ma)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : L'Ouest (Archéen) est plus vieux que l'Est (Protérozoïque) !",
+          "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex3",
+            "type": "mcq",
+            "prompt": "Quel contraste d'âge observe-t-on en franchissant la faille de Sassandra d'Ouest en Est ?",
+            "options": [
+              "On passe de roches très anciennes (> 2 500 Ma) à l'Ouest à des roches plus jeunes (< 2 500 Ma) à l'Est",
+              "On passe d'un socle jeune à un socle plus vieux",
+              "L'âge est strictement identique des deux côtés",
+              "L'Est a 5 milliards d'années"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le franchissement de la faille fait rajeunir le socle rocheux de plus d'un milliard d'années en un seul contact tectonique."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Guidage hydrographique du fleuve Sassandra",
+          "stepTheme": "Guidage hydrographique du fleuve Sassandra",
+          "stepTitle": "Guidage hydrographique du fleuve Sassandra",
+          "paragraphText": "Le lit du fleuve Sassandra est directement guidé par la zone de faiblesse structurale créée par la faille géologique.",
+          "formula": {
+            "name": "Guidage hydrographique du fleuve Sassandra",
+            "formula": "Réseau hydrographique : Le fleuve Sassandra est guidé par la faille éponyme",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le cours du fleuve Sassandra est guidé par la faille de Sassandra !",
+          "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex4",
+            "type": "mcq",
+            "prompt": "Quel grand fleuve ivoirien suit sur une large partie de son tracé le couloir de cette faille ?",
+            "options": [
+              "Le fleuve Sassandra",
+              "Le fleuve Comoé",
+              "Le fleuve Cavally",
+              "La rivière Agnéby"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'érosion fluviale exploite toujours les zones de roches broyées par les failles : le fleuve Sassandra emprunte ce couloir."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Mylonitisation et roches broyées",
+          "stepTheme": "Mylonitisation et roches broyées",
+          "stepTitle": "Mylonitisation et roches broyées",
+          "paragraphText": "Le frottement sous forte contrainte le long de la faille produit des bandes de mylonites rubanées caractéristiques.",
+          "formula": {
+            "name": "Mylonitisation et roches broyées",
+            "formula": "Zone de cisaillement ductile -> Formation de mylonites",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Mylonite = roche broyée et cisaillée le long de la faille !",
+          "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex5",
+            "type": "mcq",
+            "prompt": "Qu'est-ce qu'une mylonite que l'on observe le long du plan de la faille de Sassandra ?",
+            "options": [
+              "Une roche métamorphique broyée et cisaillée mécaniquement lors du jeu de la faille",
+              "Une roche calcaire sédimentaire riche en coquilles",
+              "Une roche volcanique liquide émise par un cratère",
+              "Un cristal de sel marin"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les mylonites résultent de la déformation plastique et du broyage dynamique des minéraux le long des zones de cisaillement ductile."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Aboutissement littoral à Sassandra",
+          "stepTheme": "Aboutissement littoral à Sassandra",
+          "stepTitle": "Aboutissement littoral à Sassandra",
+          "paragraphText": "C'est précisément parce qu'elle aboutit à la ville côtière de Sassandra qu'elle a été baptisée ainsi par les géologues.",
+          "formula": {
+            "name": "Aboutissement littoral à Sassandra",
+            "formula": "Terminaison méridionale : Ville littorale de Sassandra",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La faille aboutit au littoral au niveau de la ville de Sassandra !",
+          "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex6",
+            "type": "mcq",
+            "prompt": "Dans quelle localité côtière du Sud-Ouest la faille de Sassandra atteint-elle le golfe de Guinée ?",
+            "options": [
+              "À la ville de Sassandra",
+              "À Abidjan",
+              "À San-Pédro",
+              "À Grand-Bassam"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La faille de Sassandra débouche sur le littoral au niveau de la ville portuaire de Sassandra où elle rejoint l'océan."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Rejeu ductile lors de l'Éburnéen",
+          "stepTheme": "Rejeu ductile lors de l'Éburnéen",
+          "stepTitle": "Rejeu ductile lors de l'Éburnéen",
+          "paragraphText": "Les contraintes horizontales Est-Ouest ont provoqué un coulissage des compartiments le long de la faille.",
+          "formula": {
+            "name": "Rejeu ductile lors de l'Éburnéen",
+            "formula": "Orogenèse éburnéenne -> Rejeu en décrochement ductile de la faille de Sassandra",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La faille de Sassandra a rejoué en cisaillement lors du cycle éburnéen !",
+          "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex7",
+            "type": "mcq",
+            "prompt": "Quel type de mouvement tectonique a affecté la faille de Sassandra lors du cycle éburnéen (2 100 Ma) ?",
+            "options": [
+              "Un coulissage latéral ductile (rejeu en décrochement)",
+              "Une ouverture océanique avec cratère volcanique",
+              "Un affaissement sans frottement",
+              "Une absence totale de contrainte"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Durant l'orogenèse éburnéenne, la faille de Sassandra a rejoué en un grand couloir de décrochement ductile crustal."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · Manifestation sur le terrain",
+          "stepTheme": "Manifestation sur le terrain",
+          "stepTitle": "Manifestation sur le terrain",
+          "paragraphText": "Le passage de la faille se traduit par des affleurements de granites écrasés et de schistes de cisaillement subméridiens.",
+          "formula": {
+            "name": "Manifestation sur le terrain",
+            "formula": "Indice de terrain : Foliations mylonitiques verticales d'orientation Nord-Sud",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Sur le terrain : couloir de roches cisaillées (mylonites) d'orientation Nord-Sud !",
+          "keyRule": "Faille de Sassandra = Direction Nord-Sud (subméridienne) = Sépare l'Archéen (Ouest) du Protérozoïque (Est) = Guidage du fleuve Sassandra.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p4_faille_de_sassandra_frontiere_tectonique_ex8",
+            "type": "mcq",
+            "prompt": "Comment la faille de Sassandra se manifeste-t-elle sur le terrain géologique ?",
+            "options": [
+              "Par un couloir subméridien de roches cisaillées, mylonitisées et orientées Nord-Sud",
+              "Par un gouffre volcanique béant sans fond",
+              "Par une montagne de lave en fusion",
+              "Elle est totalement invisible et introuvable"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Sur le terrain, les géologues identifient la faille par les foliations mylonitiques verticales orientées Nord-Sud."
+          }
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen",
+      "order": 5,
+      "title": "Le domaine Protérozoïque (Baoulé-Mossi / Birrimien) : Âge et cycle éburnéen",
+      "summary": "Localiser le domaine protérozoïque (Est/Centre/Nord), comprendre son âge (2 500 à 540 Ma) et le rôle fondateur du mégacycle orogénique éburnéen (2 100 Ma).",
+      "conceptExplanation": "Le domaine Protérozoïque (ou Baoulé-Mossi) s'étend à l'Est de la faille de Sassandra et couvre les deux tiers du socle ivoirien. Il date du Précambrien supérieur (2 500 à 540 Ma) et a été entièrement structuré lors du mégacycle orogénique éburnéen (2 100 Ma), d'où son nom international de Birrimien.",
+      "formulas": [
+        {
+          "name": "Chronologie du domaine Protérozoïque",
+          "formula": "Protérozoïque : 2 500 à 540 Ma | Orogenèse Éburnéenne : 2 100 Ma",
+          "note": "Domaine le plus étendu du socle ivoirien."
+        }
+      ],
+      "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
+      "workedExample": {
+        "title": "Comparaison géographique des deux domaines",
+        "statement": "Un élève affirme que le domaine de Bouaké et Korhogo est archéen. Corriger son affirmation.",
+        "methodSteps": [
+          "Étape 1 : Situer Bouaké (Centre) et Korhogo (Nord) par rapport à la faille de Sassandra : ils sont à l'Est.",
+          "Étape 2 : Rappeler que toute la zone à l'Est de la faille appartient au domaine Protérozoïque (Birrimien / Baoulé-Mossi).",
+          "Étape 3 : Conclure que ces villes reposent sur le socle protérozoïque façonné par l'orogenèse éburnéenne."
+        ],
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex1",
+          "type": "mcq",
+          "prompt": "Quelle portion géographique du socle cristallin est occupée par le domaine Protérozoïque ?",
+          "options": [
+            "Tout le Centre, le Nord et l'Est du pays (environ les deux tiers du socle)",
+            "Uniquement une bande de 10 km au bord de mer",
+            "Uniquement le sommet du Mont Nimba",
+            "Une île au milieu du lac Kossou"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le domaine Protérozoïque s'étend sur toute la partie située à l'Est de la faille de Sassandra, couvrant la majorité du pays."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex2",
+          "type": "mcq",
+          "prompt": "Quel est l'âge géologique officiel du domaine Protérozoïque ivoirien ?",
+          "options": [
+            "Le Précambrien supérieur (2 500 à 540 millions d'années)",
+            "L'ère Tertiaire (65 à 2 Ma)",
+            "L'époque contemporaine",
+            "Moins de 10 000 ans"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le Protérozoïque succède à l'Archéen et s'étend de 2 500 à 540 millions d'années."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex3",
+          "type": "mcq",
+          "prompt": "Quel grand cycle orogénique mondial a donné naissance et forme au domaine birrimien ?",
+          "options": [
+            "Le mégacycle orogénique éburnéen (vers 2 100 Ma)",
+            "Le cycle hercynien",
+            "Le cycle alpin",
+            "Le cycle calédonien"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'orogenèse éburnéenne (du nom latin de la Côte d'Ivoire, Côte d'Ivoire = Eburnea) s'est déroulée entre 2 400 et 1 800 Ma."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex4",
+          "type": "mcq",
+          "prompt": "Sous quel autre nom est communément désigné le domaine Protérozoïque en Afrique de l'Ouest ?",
+          "options": [
+            "Le domaine Baoulé-Mossi (ou Birrimien)",
+            "Le domaine du Sahara occidental",
+            "Le domaine Atlantique",
+            "Le domaine Congolais"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "On l'appelle domaine Baoulé-Mossi car il s'étend du pays Baoulé en Côte d'Ivoire jusqu'au plateau Mossi au Burkina Faso."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex5",
+          "type": "mcq",
+          "prompt": "Quelles grandes villes ivoiriennes reposent directement sur le domaine birrimien protérozoïque ?",
+          "options": [
+            "Bouaké, Korhogo, Yamoussoukro et Abengourou",
+            "Uniquement la ville de Man",
+            "Uniquement la ville de Danané",
+            "Aucune ville ivoirienne"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Situées au Centre, au Nord et à l'Est, toutes ces grandes agglomérations sont bâties sur le socle birrimien."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex6",
+          "type": "mcq",
+          "prompt": "Quel contraste orographique (de relief) distingue le Birrimien de l'Archéen ?",
+          "options": [
+            "Le Birrimien présente des plateaux ondulés et des pénéplaines au lieu de hautes montagnes",
+            "Le Birrimien a des volcans actifs en éruption",
+            "Le Birrimien est recouvert par la mer",
+            "Le Birrimien est parfaitement plat comme une table"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'orogenèse éburnéenne a été suivie d'une très longue pénéplanation créant de vastes plateaux cuirassés au Centre et au Nord."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex7",
+          "type": "mcq",
+          "prompt": "Quel degré de métamorphisme caractérise les formations birrimiennes comparé à l'Archéen ?",
+          "options": [
+            "Un métamorphisme de degré plus faible (épizonal à mésozonal : schistes verts et amphibolites)",
+            "Un métamorphisme ultra-profond de catazone",
+            "Aucun métamorphisme",
+            "Une vitrification volcanique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le Birrimien a cristallisé à moyenne et faible profondeur, donnant le faciès des schistes verts (épizone)."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex8",
+          "type": "mcq",
+          "prompt": "Pourquoi le cycle éburnéen porte-t-il ce nom dans la géologie mondiale ?",
+          "options": [
+            "En référence au nom latin de la Côte d'Ivoire (Eburnea / Côte des Éléphants) où il fut défini",
+            "En référence à un chercheur nommé Éburnéen",
+            "En référence à une fleur locale",
+            "C'est un mot d'origine anglaise"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le mégacycle éburnéen a été défini en Côte d'Ivoire et est aujourd'hui utilisé par tous les géologues de la planète."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · Étendue géographique du domaine Protérozoïque",
+          "stepTheme": "Étendue géographique du domaine Protérozoïque",
+          "stepTitle": "Étendue géographique du domaine Protérozoïque",
+          "paragraphText": "Le domaine Protérozoïque (Baoulé-Mossi) est la plus grande entité géologique de la Côte d'Ivoire.",
+          "formula": {
+            "name": "Étendue géographique du domaine Protérozoïque",
+            "formula": "Domaine Protérozoïque : Centre + Nord + Est (2/3 du socle)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Protérozoïque = Centre, Nord et Est de la Côte d'Ivoire !",
+          "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex1",
+            "type": "mcq",
+            "prompt": "Quelle portion géographique du socle cristallin est occupée par le domaine Protérozoïque ?",
+            "options": [
+              "Tout le Centre, le Nord et l'Est du pays (environ les deux tiers du socle)",
+              "Uniquement une bande de 10 km au bord de mer",
+              "Uniquement le sommet du Mont Nimba",
+              "Une île au milieu du lac Kossou"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le domaine Protérozoïque s'étend sur toute la partie située à l'Est de la faille de Sassandra, couvrant la majorité du pays."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · Âge absolu du domaine Protérozoïque",
+          "stepTheme": "Âge absolu du domaine Protérozoïque",
+          "stepTitle": "Âge absolu du domaine Protérozoïque",
+          "paragraphText": "Formé au Précambrien supérieur, il est plus jeune que l'Archéen de plus d'un milliard d'années.",
+          "formula": {
+            "name": "Âge absolu du domaine Protérozoïque",
+            "formula": "Âge Protérozoïque : 2 500 à 540 Ma (Précambrien supérieur)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Retiens 2 500 à 540 Ma pour le Protérozoïque !",
+          "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex2",
+            "type": "mcq",
+            "prompt": "Quel est l'âge géologique officiel du domaine Protérozoïque ivoirien ?",
+            "options": [
+              "Le Précambrien supérieur (2 500 à 540 millions d'années)",
+              "L'ère Tertiaire (65 à 2 Ma)",
+              "L'époque contemporaine",
+              "Moins de 10 000 ans"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le Protérozoïque succède à l'Archéen et s'étend de 2 500 à 540 millions d'années."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · L'orogenèse éburnéenne (2 100 Ma)",
+          "stepTheme": "L'orogenèse éburnéenne (2 100 Ma)",
+          "stepTitle": "L'orogenèse éburnéenne (2 100 Ma)",
+          "paragraphText": "L'orogenèse éburnéenne est l'événement tectono-métamorphique majeur qui a soudé les ceintures birrimiennes au craton.",
+          "formula": {
+            "name": "L'orogenèse éburnéenne (2 100 Ma)",
+            "formula": "Cycle orogénique éburnéen (2 100 Ma) -> Structuration du Birrimien",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : L'Éburnéen (2 100 Ma) a façonné tout le Protérozoïque ivoirien !",
+          "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex3",
+            "type": "mcq",
+            "prompt": "Quel grand cycle orogénique mondial a donné naissance et forme au domaine birrimien ?",
+            "options": [
+              "Le mégacycle orogénique éburnéen (vers 2 100 Ma)",
+              "Le cycle hercynien",
+              "Le cycle alpin",
+              "Le cycle calédonien"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'orogenèse éburnéenne (du nom latin de la Côte d'Ivoire, Côte d'Ivoire = Eburnea) s'est déroulée entre 2 400 et 1 800 Ma."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Appellation Baoulé-Mossi / Birrimien",
+          "stepTheme": "Appellation Baoulé-Mossi / Birrimien",
+          "stepTitle": "Appellation Baoulé-Mossi / Birrimien",
+          "paragraphText": "Le terme Birrimien provient de la rivière Birim au Ghana où ces séries sédimentaires et volcaniques ont été décrites.",
+          "formula": {
+            "name": "Appellation Baoulé-Mossi / Birrimien",
+            "formula": "Domaine Protérozoïque = Domaine Baoulé-Mossi = Birrimien",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Protérozoïque = Domaine Baoulé-Mossi ou Birrimien !",
+          "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex4",
+            "type": "mcq",
+            "prompt": "Sous quel autre nom est communément désigné le domaine Protérozoïque en Afrique de l'Ouest ?",
+            "options": [
+              "Le domaine Baoulé-Mossi (ou Birrimien)",
+              "Le domaine du Sahara occidental",
+              "Le domaine Atlantique",
+              "Le domaine Congolais"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "On l'appelle domaine Baoulé-Mossi car il s'étend du pays Baoulé en Côte d'Ivoire jusqu'au plateau Mossi au Burkina Faso."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Villes du domaine Protérozoïque",
+          "stepTheme": "Villes du domaine Protérozoïque",
+          "stepTitle": "Villes du domaine Protérozoïque",
+          "paragraphText": "Le V baoulé (Yamoussoukro, Bouaké) et les savanes du Nord (Korhogo) reposent sur les granitoïdes et schistes birrimiens.",
+          "formula": {
+            "name": "Villes du domaine Protérozoïque",
+            "formula": "Villes birrimiennes : Bouaké, Yamoussoukro, Korhogo, Bondoukou, Daloa",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Bouaké, Yamoussoukro, Korhogo = Domaine Protérozoïque !",
+          "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex5",
+            "type": "mcq",
+            "prompt": "Quelles grandes villes ivoiriennes reposent directement sur le domaine birrimien protérozoïque ?",
+            "options": [
+              "Bouaké, Korhogo, Yamoussoukro et Abengourou",
+              "Uniquement la ville de Man",
+              "Uniquement la ville de Danané",
+              "Aucune ville ivoirienne"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Situées au Centre, au Nord et à l'Est, toutes ces grandes agglomérations sont bâties sur le socle birrimien."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Relief de plateaux et pénéplaines birrimiennes",
+          "stepTheme": "Relief de plateaux et pénéplaines birrimiennes",
+          "stepTitle": "Relief de plateaux et pénéplaines birrimiennes",
+          "paragraphText": "Contrairement aux massifs montagneux de Man, le Birrimien forme un paysage de bas plateaux et d'inselbergs granitiques.",
+          "formula": {
+            "name": "Relief de plateaux et pénéplaines birrimiennes",
+            "formula": "Relief Protérozoïque : Pénéplaines ondulées + Inselbergs granitiques",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Protérozoïque = plateaux ondulés et inselbergs (relief moins abrupt que Man) !",
+          "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex6",
+            "type": "mcq",
+            "prompt": "Quel contraste orographique (de relief) distingue le Birrimien de l'Archéen ?",
+            "options": [
+              "Le Birrimien présente des plateaux ondulés et des pénéplaines au lieu de hautes montagnes",
+              "Le Birrimien a des volcans actifs en éruption",
+              "Le Birrimien est recouvert par la mer",
+              "Le Birrimien est parfaitement plat comme une table"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'orogenèse éburnéenne a été suivie d'une très longue pénéplanation créant de vastes plateaux cuirassés au Centre et au Nord."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Métamorphisme épizonal à mésozonal",
+          "stepTheme": "Métamorphisme épizonal à mésozonal",
+          "stepTitle": "Métamorphisme épizonal à mésozonal",
+          "paragraphText": "Les températures et pressions subies lors de l'Éburnéen étaient modérées comparées au catazonal archéen.",
+          "formula": {
+            "name": "Métamorphisme épizonal à mésozonal",
+            "formula": "Métamorphisme birrimien : Épizone à Mésozone (Faciès schistes verts)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Birrimien = métamorphisme épizonal (schistes verts) moins poussé que l'Archéen !",
+          "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex7",
+            "type": "mcq",
+            "prompt": "Quel degré de métamorphisme caractérise les formations birrimiennes comparé à l'Archéen ?",
+            "options": [
+              "Un métamorphisme de degré plus faible (épizonal à mésozonal : schistes verts et amphibolites)",
+              "Un métamorphisme ultra-profond de catazone",
+              "Aucun métamorphisme",
+              "Une vitrification volcanique"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le Birrimien a cristallisé à moyenne et faible profondeur, donnant le faciès des schistes verts (épizone)."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · Origine du nom du mégacycle Éburnéen",
+          "stepTheme": "Origine du nom du mégacycle Éburnéen",
+          "stepTitle": "Origine du nom du mégacycle Éburnéen",
+          "paragraphText": "Le terme rend hommage à la Côte d'Ivoire (Costa Eburnea), référence internationale pour la géologie du Précambrien supérieur.",
+          "formula": {
+            "name": "Origine du nom du mégacycle Éburnéen",
+            "formula": "Cycle Éburnéen : Défini en Côte d'Ivoire (Costa Eburnea)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Éburnéen vient de Costa Eburnea (Côte d'Ivoire en latin) !",
+          "keyRule": "Protérozoïque = Birrimien = Domaine Baoulé-Mossi = Est, Centre et Nord = 2 500 à 540 Ma = Orogenèse éburnéenne (2 100 Ma).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p5_domaine_proterozoique_birrimien_eburneen_ex8",
+            "type": "mcq",
+            "prompt": "Pourquoi le cycle éburnéen porte-t-il ce nom dans la géologie mondiale ?",
+            "options": [
+              "En référence au nom latin de la Côte d'Ivoire (Eburnea / Côte des Éléphants) où il fut défini",
+              "En référence à un chercheur nommé Éburnéen",
+              "En référence à une fleur locale",
+              "C'est un mot d'origine anglaise"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le mégacycle éburnéen a été défini en Côte d'Ivoire et est aujourd'hui utilisé par tous les géologues de la planète."
+          }
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or",
+      "order": 6,
+      "title": "Lithologie et métallogénie du Birrimien : Granitoïdes, roches vertes et or",
+      "summary": "Identifier les granites concordants et discordants éburnéens, les ceintures de roches vertes volcano-sédimentaires et les gisements d'or.",
+      "conceptExplanation": "Le Protérozoïque birrimien est constitué de deux ensembles majeurs : les ceintures de roches vertes volcano-sédimentaires (schistes birrimiens plissés, métavulcanites) et de gigantesques massifs de granitoïdes éburnéens (granites concordants syntectoniques et granites discordants tarditectoniques). C'est la province métallogénique de l'or en Côte d'Ivoire (mines de Tongon, Ity, Bonikro, Yaouré).",
+      "formulas": [
+        {
+          "name": "Lithologie birrimienne et métallogénie",
+          "formula": "Birrimien = Granitoïdes éburnéens + Ceintures de roches vertes (Schistes) -> Gisements d'Or",
+          "note": "Les filons de quartz aurifère sont piégés dans les zones de cisaillement birrimiennes."
+        }
+      ],
+      "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
+      "workedExample": {
+        "title": "Localisation des grandes mines d'or",
+        "statement": "Expliquer pourquoi les mines d'or de Tongon (Nord) et Bonikro (Centre) sont dans le Birrimien.",
+        "methodSteps": [
+          "Étape 1 : Constater leur localisation géographique à l'Est de la faille de Sassandra.",
+          "Étape 2 : Rappeler que les minéralisations aurifères hydrothermales se sont mises en place lors de l'Éburnéen (2 100 Ma).",
+          "Étape 3 : Conclure que les ceintures de roches vertes birrimiennes renferment la quasi-totalité des filons d'or ivoiriens."
+        ],
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est la roche sédimentaire métamorphisée la plus répandue dans les sillons birrimiens ?",
+          "options": [
+            "Le schiste birrimien (micaschiste et séricitoschiste)",
+            "Le sel gemme blanc",
+            "La craie tendre",
+            "Le charbon de terre"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les schistes birrimiens proviennent de boues et argiles océaniques comprimées et plissées lors de l'Éburnéen."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex2",
+          "type": "mcq",
+          "prompt": "Qu'appelle-t-on les « ceintures de roches vertes » dans le domaine birrimien ?",
+          "options": [
+            "Des bandes allongées de roches volcaniques et sédimentaires métamorphisées en faciès schistes verts",
+            "Des forêts d'arbres à feuilles vertes",
+            "Des champs de canne à sucre",
+            "Des peintures sur roches"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Ces ceintures résultent d'anciens arcs insulaires océaniques métamorphisés où la chlorite et l'épidote donnent une teinte verte."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex3",
+          "type": "mcq",
+          "prompt": "Quelle ressource minière précieuse majeure de la Côte d'Ivoire est associée au Birrimien ?",
+          "options": [
+            "L'or (gisements filoniens et disséminés)",
+            "L'émeraude verte",
+            "Le rubis rouge",
+            "Le sel gemme"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Toutes les grandes mines d'or ivoiriennes (Tongon, Yaouré, Bonikro, Agbaou, Ity) sont encaissées dans le Birrimien."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex4",
+          "type": "mcq",
+          "prompt": "Comment distingue-t-on les granites concordants des granites discordants éburnéens ?",
+          "options": [
+            "Les concordants épousent la déformation des schistes alors que les discordants coupent nettement les structures",
+            "Les concordants sont liquides et les discordants solides",
+            "Les concordants sont blancs et les discordants noirs",
+            "Il n'y a aucune différence"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les granites concordants (syntectoniques) se sont mis en place pendant le plissement ; les discordants (tarditectoniques) ont recoupé les plis déjà formés."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex5",
+          "type": "mcq",
+          "prompt": "Quelles célèbres mines d'or ivoiriennes sont situées dans le socle birrimien ?",
+          "options": [
+            "Tongon (M'Bengué), Yaouré (Angovia) et Bonikro (Hirrémé)",
+            "Les mines de fer de Man",
+            "Les puits de pétrole de Grand-Bassam",
+            "Les salines de Grand-Lahou"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Ces exploitations industrielles extraient l'or piégé dans les zones de cisaillement ductile des ceintures birrimiennes."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex6",
+          "type": "mcq",
+          "prompt": "Quelle roche magmatique filonienne blanche riche en silice est le vecteur principal de l'or ?",
+          "options": [
+            "Le filon de quartz hydrothermal",
+            "Le calcaire coquillier",
+            "L'argile rouge latéritique",
+            "Le gypse"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les fluides chauds ascendants précipitent la silice pure sous forme de quartz laiteux en piégeant les paillettes d'or natif."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex7",
+          "type": "mcq",
+          "prompt": "En plus de l'or, quel autre minerai métallique stratégique est extrait du Birrimien (ex: à Bondoukou et Lauzoua) ?",
+          "options": [
+            "Le manganèse",
+            "Le mercure",
+            "L'uranium radioactif",
+            "Le platine liquide"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La Côte d'Ivoire exploite d'importants gisements de manganèse sédimentaire métamorphisé dans les sillons birrimiens."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex8",
+          "type": "mcq",
+          "prompt": "Quel type de métamorphisme thermique se développe au contact des granites discordants birrimiens ?",
+          "options": [
+            "Le métamorphisme de contact (cornéennes)",
+            "Le métamorphisme de choc météoritique",
+            "La fusion totale du pays",
+            "Aucune transformation"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La chaleur du magma intrusif cuit les schistes encaissants, créant une auréole de métamorphisme de contact (cornéennes)."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · Les schistes birrimiens",
+          "stepTheme": "Les schistes birrimiens",
+          "stepTitle": "Les schistes birrimiens",
+          "paragraphText": "Les schistes birrimiens se débitent en feuillets réguliers et forment le remplissage des ceintures volcano-sédimentaires.",
+          "formula": {
+            "name": "Les schistes birrimiens",
+            "formula": "Sillons birrimiens : Schistes argileux métamorphisés (Micaschistes)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Schistes birrimiens = roches métamorphiques feuilletées du Protérozoïque !",
+          "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex1",
+            "type": "mcq",
+            "prompt": "Quelle est la roche sédimentaire métamorphisée la plus répandue dans les sillons birrimiens ?",
+            "options": [
+              "Le schiste birrimien (micaschiste et séricitoschiste)",
+              "Le sel gemme blanc",
+              "La craie tendre",
+              "Le charbon de terre"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les schistes birrimiens proviennent de boues et argiles océaniques comprimées et plissées lors de l'Éburnéen."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · Les ceintures de roches vertes (greenstone belts)",
+          "stepTheme": "Les ceintures de roches vertes (greenstone belts)",
+          "stepTitle": "Les ceintures de roches vertes (greenstone belts)",
+          "paragraphText": "Ces bandes étroites sont enserrées entre les grands massifs de granitoïdes éburnéens.",
+          "formula": {
+            "name": "Les ceintures de roches vertes (greenstone belts)",
+            "formula": "Ceintures de roches vertes : Métavulcanites + Schistes (Minéraux verts : Chlorite, Épidote)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Ceintures de roches vertes = anciennes roches volcaniques et sédimentaires birrimiennes !",
+          "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex2",
+            "type": "mcq",
+            "prompt": "Qu'appelle-t-on les « ceintures de roches vertes » dans le domaine birrimien ?",
+            "options": [
+              "Des bandes allongées de roches volcaniques et sédimentaires métamorphisées en faciès schistes verts",
+              "Des forêts d'arbres à feuilles vertes",
+              "Des champs de canne à sucre",
+              "Des peintures sur roches"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Ces ceintures résultent d'anciens arcs insulaires océaniques métamorphisés où la chlorite et l'épidote donnent une teinte verte."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · Métallogénie de l'or birrimien",
+          "stepTheme": "Métallogénie de l'or birrimien",
+          "stepTitle": "Métallogénie de l'or birrimien",
+          "paragraphText": "Les circulations hydrothermales liées aux granites éburnéens ont déposé l'or dans les failles et filons de quartz.",
+          "formula": {
+            "name": "Métallogénie de l'or birrimien",
+            "formula": "Birrimien ivoirien -> Principale province aurifère d'Afrique de l'Ouest",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Birrimien = domaine de prédilection des mines d'or ivoiriennes !",
+          "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex3",
+            "type": "mcq",
+            "prompt": "Quelle ressource minière précieuse majeure de la Côte d'Ivoire est associée au Birrimien ?",
+            "options": [
+              "L'or (gisements filoniens et disséminés)",
+              "L'émeraude verte",
+              "Le rubis rouge",
+              "Le sel gemme"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Toutes les grandes mines d'or ivoiriennes (Tongon, Yaouré, Bonikro, Agbaou, Ity) sont encaissées dans le Birrimien."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Granites concordants vs discordants",
+          "stepTheme": "Granites concordants vs discordants",
+          "stepTitle": "Granites concordants vs discordants",
+          "paragraphText": "La concordance structurale traduit la contemporanéité du magma et de la compression orogénique.",
+          "formula": {
+            "name": "Granites concordants vs discordants",
+            "formula": "Granites concordants (Syntectoniques) vs Granites discordants (Tarditectoniques)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Concordants = parallèles aux couches ; Discordants = recoupent les couches !",
+          "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex4",
+            "type": "mcq",
+            "prompt": "Comment distingue-t-on les granites concordants des granites discordants éburnéens ?",
+            "options": [
+              "Les concordants épousent la déformation des schistes alors que les discordants coupent nettement les structures",
+              "Les concordants sont liquides et les discordants solides",
+              "Les concordants sont blancs et les discordants noirs",
+              "Il n'y a aucune différence"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les granites concordants (syntectoniques) se sont mis en place pendant le plissement ; les discordants (tarditectoniques) ont recoupé les plis déjà formés."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Mines d'or industrielles birrimiennes",
+          "stepTheme": "Mines d'or industrielles birrimiennes",
+          "stepTitle": "Mines d'or industrielles birrimiennes",
+          "paragraphText": "L'or est associé à des sulfures (pyrite, arsénopyrite) dans des filons de quartz hydrothermal.",
+          "formula": {
+            "name": "Mines d'or industrielles birrimiennes",
+            "formula": "Mines d'or en activité : Tongon, Yaouré, Bonikro, Agbaou, Sissingué",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Tongon, Yaouré et Bonikro = grandes mines d'or du Birrimien !",
+          "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex5",
+            "type": "mcq",
+            "prompt": "Quelles célèbres mines d'or ivoiriennes sont situées dans le socle birrimien ?",
+            "options": [
+              "Tongon (M'Bengué), Yaouré (Angovia) et Bonikro (Hirrémé)",
+              "Les mines de fer de Man",
+              "Les puits de pétrole de Grand-Bassam",
+              "Les salines de Grand-Lahou"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Ces exploitations industrielles extraient l'or piégé dans les zones de cisaillement ductile des ceintures birrimiennes."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Les filons de quartz aurifère",
+          "stepTheme": "Les filons de quartz aurifère",
+          "stepTitle": "Les filons de quartz aurifère",
+          "paragraphText": "C'est ce quartz aurifère qui est broyé dans les usines d'extraction minière ou cherché par les orpailleurs traditionnels.",
+          "formula": {
+            "name": "Les filons de quartz aurifère",
+            "formula": "Vecteur aurifère : Filons de quartz hydrothermal (SiO2) à or natif",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le quartz en filon est la roche mère porteuse de l'or !",
+          "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex6",
+            "type": "mcq",
+            "prompt": "Quelle roche magmatique filonienne blanche riche en silice est le vecteur principal de l'or ?",
+            "options": [
+              "Le filon de quartz hydrothermal",
+              "Le calcaire coquillier",
+              "L'argile rouge latéritique",
+              "Le gypse"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les fluides chauds ascendants précipitent la silice pure sous forme de quartz laiteux en piégeant les paillettes d'or natif."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Gisements de manganèse birrimien",
+          "stepTheme": "Gisements de manganèse birrimien",
+          "stepTitle": "Gisements de manganèse birrimien",
+          "paragraphText": "Le manganèse est un métal indispensable à la sidérurgie mondiale pour la fabrication des aciers inoxydables.",
+          "formula": {
+            "name": "Gisements de manganèse birrimien",
+            "formula": "Métallogénie birrimienne complémentaire : Gisements de manganèse (Mn)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Manganèse de Lauzoua et Bondoukou = ressource métallique birrimienne !",
+          "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex7",
+            "type": "mcq",
+            "prompt": "En plus de l'or, quel autre minerai métallique stratégique est extrait du Birrimien (ex: à Bondoukou et Lauzoua) ?",
+            "options": [
+              "Le manganèse",
+              "Le mercure",
+              "L'uranium radioactif",
+              "Le platine liquide"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La Côte d'Ivoire exploite d'importants gisements de manganèse sédimentaire métamorphisé dans les sillons birrimiens."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · Auréoles de métamorphisme de contact",
+          "stepTheme": "Auréoles de métamorphisme de contact",
+          "stepTitle": "Auréoles de métamorphisme de contact",
+          "paragraphText": "Cette cuisson thermique modifie la minéralogie sans que la roche ne soit broyée par une contrainte tectonique.",
+          "formula": {
+            "name": "Auréoles de métamorphisme de contact",
+            "formula": "Intrusion magmatique chaude -> Auréole de contact (Cornéennes)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Intrusion de granite = métamorphisme de contact (cornéennes) !",
+          "keyRule": "Birrimien = Ceintures de roches vertes (schistes) + Granitoïdes éburnéens = Principale réserve d'or de Côte d'Ivoire.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p6_lithologie_metallogenie_birrimien_or_ex8",
+            "type": "mcq",
+            "prompt": "Quel type de métamorphisme thermique se développe au contact des granites discordants birrimiens ?",
+            "options": [
+              "Le métamorphisme de contact (cornéennes)",
+              "Le métamorphisme de choc météoritique",
+              "La fusion totale du pays",
+              "Aucune transformation"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La chaleur du magma intrusif cuit les schistes encaissants, créant une auréole de métamorphisme de contact (cornéennes)."
+          }
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique",
+      "order": 7,
+      "title": "Le bassin sédimentaire côtier : Fresco à Assinie et ouverture de l'Atlantique",
+      "summary": "Délimiter le bassin côtier (2,5 %), dater sa naissance au Crétacé (135 Ma) lors de l'ouverture de l'océan Atlantique et décrire ses couches non plissées.",
+      "conceptExplanation": "Le bassin sédimentaire côtier ivoirien occupe 2,5 % du territoire au Sud. Il s'étend en croissant de Fresco à l'Ouest jusqu'à Assinie à l'Est sur 350 km. Il est né au Crétacé (135 Ma, ère Secondaire) lors du rifting et de la séparation de l'Amérique du Sud et de l'Afrique. Ses sédiments marins et continentaux (sables, argiles, grès) sont subhorizontaux et non plissés.",
+      "formulas": [
+        {
+          "name": "Caractéristiques du bassin sédimentaire",
+          "formula": "Bassin côtier : 2,5 % | Fresco à Assinie | Âge Crétacé (135 Ma) | Couches non plissées",
+          "note": "Opposé au socle par son âge jeune et l'absence de métamorphisme."
+        }
+      ],
+      "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
+      "workedExample": {
+        "title": "Différenciation structurale socle vs bassin",
+        "statement": "Un géologue examine des couches d'argiles et de sables horizontales à Grand-Bassam. Pourquoi ne sont-elles pas métamorphisées ?",
+        "methodSteps": [
+          "Étape 1 : Constater la position littorale à Grand-Bassam (bassin sédimentaire côtier).",
+          "Étape 2 : Rappeler l'âge récent Crétacé à Quaternaire (135 Ma à nos jours).",
+          "Étape 3 : Noter que ce bassin n'a jamais été enfoui en profondeur ni soumis à une orogenèse compressive : les couches sont restées meubles ou diagénétiques."
+        ],
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex1",
+          "type": "mcq",
+          "prompt": "Entre quelles localités côtières s'étend le bassin sédimentaire ivoirien d'Ouest en Est ?",
+          "options": [
+            "De Fresco à Assinie (frontière du Ghana)",
+            "De San-Pédro à Tabou",
+            "De Sassandra à Grand-Lahou",
+            "D'Abidjan à Yamoussoukro"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le bassin sédimentaire commence à l'embouchure du fleuve Sassandra vers Fresco et s'achève à Assinie au Ghana."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex2",
+          "type": "mcq",
+          "prompt": "À quelle période géologique a débuté la formation du bassin sédimentaire côtier ivoirien ?",
+          "options": [
+            "Au Crétacé supérieur (vers 135 Ma, ère Secondaire)",
+            "Au Précambrien inférieur",
+            "Il y a un milliard d'années",
+            "Au Quaternaire récent (10 000 ans)"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le bassin sédimentaire s'est ouvert il y a 135 millions d'années, marquant le début de l'histoire géologique moderne du pays."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex3",
+          "type": "mcq",
+          "prompt": "Quel événement géodynamique planétaire majeur est à l'origine de l'ouverture du bassin côtier ?",
+          "options": [
+            "La séparation de l'Amérique du Sud et de l'Afrique et l'ouverture de l'océan Atlantique Sud",
+            "La chute d'un astéroïde sur Abidjan",
+            "L'assèchement de la mer Méditerranée",
+            "Une grande glaciation polaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La rupture du supercontinent Gondwana a fracturé la croûte ivoirienne, laissant l'océan Atlantique envahir la marge continentale."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex4",
+          "type": "mcq",
+          "prompt": "Quel trait structural fondamental différencie les couches du bassin côtier de celles du socle birrimien ?",
+          "options": [
+            "Les couches du bassin sont subhorizontales et non plissées, sans aucun métamorphisme",
+            "Les couches du bassin sont verticales et cuites",
+            "Le bassin est plus dur que le granite",
+            "Il n'y a pas de différence"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Déposées calmement au fond de l'eau, les strates sédimentaires n'ont subi aucun plissement orogénique."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex5",
+          "type": "mcq",
+          "prompt": "Quelles sont les roches et formations géologiques caractéristiques du bassin sédimentaire côtier ?",
+          "options": [
+            "Des sables meubles, argiles bariolées, grès ferrugineux et vases lagunaires",
+            "Des charnockites et des granites durs",
+            "Des basaltes volcaniques noirs",
+            "Des marbres blancs catazonaux"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Ces roches sédimentaires détritiques proviennent de l'érosion continue du socle cristallin transportée par les fleuves."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex6",
+          "type": "mcq",
+          "prompt": "Quelle grande métropole ivoirienne de plus de 5 millions d'habitants repose sur le bassin sédimentaire côtier ?",
+          "options": [
+            "Abidjan (avec Grand-Bassam et Jacqueville)",
+            "Bouaké",
+            "Korhogo",
+            "Man"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Abidjan, le port autonome et toutes les communes lagunaires sont édifiés sur les sables et grès du bassin côtier."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex7",
+          "type": "mcq",
+          "prompt": "Comment nomme-t-on la formation géologique sédimentaire rouge superficielle très répandue à Abidjan ?",
+          "options": [
+            "Le Continental Terminal (sables et argiles ocre-rouge du Tertiaire)",
+            "Le granite de Bondoukou",
+            "L'itabirite de Gao",
+            "La moraine glaciaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le Continental Terminal forme les plateaux d'Abidjan (Cocody, Plateau, Yopougon) entaillés par les vallées de talwegs."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex8",
+          "type": "mcq",
+          "prompt": "Quelle ressource vitale pour la ville d'Abidjan est contenue dans les sables profonds du bassin côtier ?",
+          "options": [
+            "La grande nappe phréatique d'eau douce potable d'Abidjan (nappe du Continental Terminal et du Crétacé)",
+            "Des diamants bleus",
+            "De l'or pur liquide",
+            "Du sel radioactif"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'eau potable de toute l'agglomération d'Abidjan est pompée exclusivement dans les aquifères poreux du bassin sédimentaire."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · Limites géographiques du bassin côtier",
+          "stepTheme": "Limites géographiques du bassin côtier",
+          "stepTitle": "Limites géographiques du bassin côtier",
+          "paragraphText": "Le croissant sédimentaire s'amenuise vers l'Ouest (biseauté à Fresco) et s'épaissit vers l'Est vers le Ghana.",
+          "formula": {
+            "name": "Limites géographiques du bassin côtier",
+            "formula": "Bassin côtier ivoirien : S'étend de Fresco (Ouest) à Assinie (Est)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Bassin côtier = de Fresco à Assinie le long du littoral atlantique !",
+          "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex1",
+            "type": "mcq",
+            "prompt": "Entre quelles localités côtières s'étend le bassin sédimentaire ivoirien d'Ouest en Est ?",
+            "options": [
+              "De Fresco à Assinie (frontière du Ghana)",
+              "De San-Pédro à Tabou",
+              "De Sassandra à Grand-Lahou",
+              "D'Abidjan à Yamoussoukro"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le bassin sédimentaire commence à l'embouchure du fleuve Sassandra vers Fresco et s'achève à Assinie au Ghana."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · Âge de mise en place du bassin",
+          "stepTheme": "Âge de mise en place du bassin",
+          "stepTitle": "Âge de mise en place du bassin",
+          "paragraphText": "Pendant que le socle a plus de 2 milliards d'années, le bassin a moins de 135 millions d'années.",
+          "formula": {
+            "name": "Âge de mise en place du bassin",
+            "formula": "Âge du bassin côtier : Crétacé (135 Ma, Mésozoïque)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Retiens 135 millions d'années (Crétacé) pour le bassin sédimentaire !",
+          "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex2",
+            "type": "mcq",
+            "prompt": "À quelle période géologique a débuté la formation du bassin sédimentaire côtier ivoirien ?",
+            "options": [
+              "Au Crétacé supérieur (vers 135 Ma, ère Secondaire)",
+              "Au Précambrien inférieur",
+              "Il y a un milliard d'années",
+              "Au Quaternaire récent (10 000 ans)"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le bassin sédimentaire s'est ouvert il y a 135 millions d'années, marquant le début de l'histoire géologique moderne du pays."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · Rifting et ouverture de l'océan Atlantique Sud",
+          "stepTheme": "Rifting et ouverture de l'océan Atlantique Sud",
+          "stepTitle": "Rifting et ouverture de l'océan Atlantique Sud",
+          "paragraphText": "Cette ouverture océanique a créé des fossés d'effondrement remplis de sédiments marins successifs.",
+          "formula": {
+            "name": "Rifting et ouverture de l'océan Atlantique Sud",
+            "formula": "Ouverture de l'océan Atlantique Sud -> Rifting et transgression marine côtière",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le bassin est né de l'ouverture de l'océan Atlantique Sud au Crétacé !",
+          "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex3",
+            "type": "mcq",
+            "prompt": "Quel événement géodynamique planétaire majeur est à l'origine de l'ouverture du bassin côtier ?",
+            "options": [
+              "La séparation de l'Amérique du Sud et de l'Afrique et l'ouverture de l'océan Atlantique Sud",
+              "La chute d'un astéroïde sur Abidjan",
+              "L'assèchement de la mer Méditerranée",
+              "Une grande glaciation polaire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La rupture du supercontinent Gondwana a fracturé la croûte ivoirienne, laissant l'océan Atlantique envahir la marge continentale."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Absence de plissement et de métamorphisme",
+          "stepTheme": "Absence de plissement et de métamorphisme",
+          "stepTitle": "Absence de plissement et de métamorphisme",
+          "paragraphText": "Les sédiments du bassin côtier sont restés tabulaires et meubles (sables, vases, argiles) ou faiblement cimentés.",
+          "formula": {
+            "name": "Absence de plissement et de métamorphisme",
+            "formula": "Couches sédimentaires côtières : Subhorizontales, non plissées et non métamorphisées",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Bassin côtier = couches horizontales régulières non plissées !",
+          "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex4",
+            "type": "mcq",
+            "prompt": "Quel trait structural fondamental différencie les couches du bassin côtier de celles du socle birrimien ?",
+            "options": [
+              "Les couches du bassin sont subhorizontales et non plissées, sans aucun métamorphisme",
+              "Les couches du bassin sont verticales et cuites",
+              "Le bassin est plus dur que le granite",
+              "Il n'y a pas de différence"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Déposées calmement au fond de l'eau, les strates sédimentaires n'ont subi aucun plissement orogénique."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Lithologie sédimentaire détritique",
+          "stepTheme": "Lithologie sédimentaire détritique",
+          "stepTitle": "Lithologie sédimentaire détritique",
+          "paragraphText": "On y trouve également des niveaux calcaires fossilifères marins riches en foraminifères et coquilles de mollusques.",
+          "formula": {
+            "name": "Lithologie sédimentaire détritique",
+            "formula": "Roches du bassin : Sables + Argiles + Grès ferrugineux + Calcaires",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Sables, argiles et grès = roches du bassin sédimentaire côtier !",
+          "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex5",
+            "type": "mcq",
+            "prompt": "Quelles sont les roches et formations géologiques caractéristiques du bassin sédimentaire côtier ?",
+            "options": [
+              "Des sables meubles, argiles bariolées, grès ferrugineux et vases lagunaires",
+              "Des charnockites et des granites durs",
+              "Des basaltes volcaniques noirs",
+              "Des marbres blancs catazonaux"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Ces roches sédimentaires détritiques proviennent de l'érosion continue du socle cristallin transportée par les fleuves."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Abidjan sur le bassin sédimentaire",
+          "stepTheme": "Abidjan sur le bassin sédimentaire",
+          "stepTitle": "Abidjan sur le bassin sédimentaire",
+          "paragraphText": "Cette situation littorale procure à Abidjan son réseau de lagunes (Ébrié) et son accès direct à l'océan.",
+          "formula": {
+            "name": "Abidjan sur le bassin sédimentaire",
+            "formula": "Métropole du bassin côtier : Abidjan et son agglomération lagunaire",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Abidjan repose entièrement sur le bassin sédimentaire côtier !",
+          "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex6",
+            "type": "mcq",
+            "prompt": "Quelle grande métropole ivoirienne de plus de 5 millions d'habitants repose sur le bassin sédimentaire côtier ?",
+            "options": [
+              "Abidjan (avec Grand-Bassam et Jacqueville)",
+              "Bouaké",
+              "Korhogo",
+              "Man"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Abidjan, le port autonome et toutes les communes lagunaires sont édifiés sur les sables et grès du bassin côtier."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Le Continental Terminal",
+          "stepTheme": "Le Continental Terminal",
+          "stepTitle": "Le Continental Terminal",
+          "paragraphText": "Cette nappe sablo-argileuse continentale s'est déposée à la fin du Tertiaire sous climat tropical chaud et humide.",
+          "formula": {
+            "name": "Le Continental Terminal",
+            "formula": "Formation superficielle d'Abidjan : Continental Terminal (Tertiaire)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Continental Terminal = sables et argiles rouges des plateaux d'Abidjan !",
+          "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex7",
+            "type": "mcq",
+            "prompt": "Comment nomme-t-on la formation géologique sédimentaire rouge superficielle très répandue à Abidjan ?",
+            "options": [
+              "Le Continental Terminal (sables et argiles ocre-rouge du Tertiaire)",
+              "Le granite de Bondoukou",
+              "L'itabirite de Gao",
+              "La moraine glaciaire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le Continental Terminal forme les plateaux d'Abidjan (Cocody, Plateau, Yopougon) entaillés par les vallées de talwegs."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · L'aquifère majeur d'Abidjan",
+          "stepTheme": "L'aquifère majeur d'Abidjan",
+          "stepTitle": "L'aquifère majeur d'Abidjan",
+          "paragraphText": "La grande perméabilité des sables côtiers constitue le réservoir hydrogéologique le plus précieux du pays.",
+          "formula": {
+            "name": "L'aquifère majeur d'Abidjan",
+            "formula": "Aquifère côtier -> Approvisionnement exclusif en eau potable d'Abidjan",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La nappe d'eau potable d'Abidjan se trouve dans le bassin sédimentaire !",
+          "keyRule": "Bassin côtier = 2,5 % = Sud (Fresco à Assinie) = Crétacé (135 Ma, ère Secondaire) = Ouverture Atlantique = Couches horizontales non plissées.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex8",
+            "type": "mcq",
+            "prompt": "Quelle ressource vitale pour la ville d'Abidjan est contenue dans les sables profonds du bassin côtier ?",
+            "options": [
+              "La grande nappe phréatique d'eau douce potable d'Abidjan (nappe du Continental Terminal et du Crétacé)",
+              "Des diamants bleus",
+              "De l'or pur liquide",
+              "Du sel radioactif"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'eau potable de toute l'agglomération d'Abidjan est pompée exclusivement dans les aquifères poreux du bassin sédimentaire."
+          }
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole",
+      "order": 8,
+      "title": "La faille des lagunes et ressources hydrogéologiques et pétrolières",
+      "summary": "Localiser la faille des lagunes (direction Est-Ouest), évaluer son rejet vertical (5 000 m), et comprendre son rôle pétrolier et hydrogéologique.",
+      "conceptExplanation": "La faille des lagunes est la fracture majeure du Sud ivoirien. D'orientation Est-Ouest, elle sépare le socle cristallin au Nord du bassin sédimentaire affaissé au Sud. Son rejet vertical descendant vers l'océan atteint jusqu'à 5 000 mètres. Elle contrôle la barrière lagunaire, piège les gisements de pétrole et de gaz naturel offshore (champs Espoir, Baobab, Baleine) et protège les aquifères d'Abidjan.",
+      "formulas": [
+        {
+          "name": "Accident tectonique du bassin côtier",
+          "formula": "Faille des lagunes : Direction Est-Ouest | Rejet vertical descendant = 5 000 m",
+          "note": "Faille normale d'effondrement liée à l'ouverture de l'océan Atlantique."
+        }
+      ],
+      "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
+      "workedExample": {
+        "title": "Calcul de l'épaisseur sédimentaire au Sud de la faille",
+        "statement": "Au Nord de la faille des lagunes, le socle affleure à la surface (0 m). Au Sud, la couche sédimentaire descend à 5 000 m. Quel est le rejet de la faille ?",
+        "methodSteps": [
+          "Étape 1 : Identifier le compartiment effondré (Sud / Mer) et le compartiment soulevé (Nord / Socle).",
+          "Étape 2 : Calculer la différence d'altitude du toit du socle : 5 000 m - 0 m = 5 000 m.",
+          "Étape 3 : Conclure que la faille normale des lagunes a un rejet vertical de 5 000 m."
+        ],
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est l'orientation géographique de la grande faille des lagunes ?",
+          "options": [
+            "Direction générale Est-Ouest (parallèle au littoral)",
+            "Strictement Nord-Sud",
+            "Diagonale Nord-Ouest",
+            "Verticale circulaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Contrairement à la faille de Sassandra (Nord-Sud), la faille des lagunes s'étire parallèlement à la côte d'Est en Ouest."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex2",
+          "type": "mcq",
+          "prompt": "À combien de mètres est estimé le rejet vertical maximal de la faille des lagunes plongeant vers l'océan ?",
+          "options": [
+            "Jusqu'à 5 000 mètres (5 km)",
+            "Seulement 2 mètres",
+            "50 mètres",
+            "100 000 mètres"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Ce rejet colossal de 5 km d'affaissement a permis l'accumulation d'une colonne colossale de sédiments marins mésozoïques."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex3",
+          "type": "mcq",
+          "prompt": "Quelle ressource énergétique fossile stratégique de la Côte d'Ivoire est piégée au large du bassin côtier ?",
+          "options": [
+            "Le pétrole brut et le gaz naturel offshore",
+            "Le charbon de bois fossile",
+            "L'uranium enrichi",
+            "L'énergie éolienne"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les failles normales d'effondrement ont compartimenté le bassin et piégé les hydrocarbures dans des réservoirs de grès profond."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex4",
+          "type": "mcq",
+          "prompt": "Comment se nomme le gisement pétrolier géant historique récemment découvert et exploité au large d'Assinie ?",
+          "options": [
+            "Le gisement Baleine (et le gisement Calao)",
+            "Le gisement Éléphant",
+            "Le gisement Sahel",
+            "Le gisement Sahara"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le gisement Baleine, découvert par Eni, recèle des milliards de barils de pétrole et d'immenses réserves de gaz associé."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex5",
+          "type": "mcq",
+          "prompt": "Quels sont les deux compartiments tectoniques séparés par la faille des lagunes ?",
+          "options": [
+            "Le compartiment Nord soulevé (socle cristallin) et le compartiment Sud affaissé (bassin sédimentaire)",
+            "L'Afrique et l'Europe",
+            "L'océan Indien et l'océan Pacifique",
+            "Le pôle Nord et le pôle Sud"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Au Nord de la faille, le socle rocheux dur est à l'air libre ; au Sud, il est enfoui sous 5 km de sédiments marins."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex6",
+          "type": "mcq",
+          "prompt": "Comment la faille des lagunes influence-t-elle le réseau hydrographique et lagunaire d'Abidjan ?",
+          "options": [
+            "Elle a guidé l'alignement rectiligne des lagunes (lagune Ébrié, lagune de Grand-Lahou, lagune Aby)",
+            "Elle a fait disparaître tous les fleuves",
+            "Elle crée des tsunamis quotidiens",
+            "Elle a asséché la mer"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'enfoncement tectonique au Sud a créé la dépression où les eaux fluviales et marines se sont rassemblées en chapelet de lagunes."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex7",
+          "type": "mcq",
+          "prompt": "Quel risque environnemental guette la nappe d'eau douce d'Abidjan en bordure de la faille des lagunes ?",
+          "options": [
+            "L'intrusion et la biseautage salé des eaux marines ou lagunaires en cas de surpompage",
+            "L'explosion de lave volcanique",
+            "Le gel sous forme de banquise",
+            "La disparition de l'atmosphère"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Si l'on pompe excessivement la nappe douce, l'eau salée de la lagune et de l'océan s'infiltre à travers les sables perméables."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex8",
+          "type": "mcq",
+          "prompt": "Quel est le type tectonique exact de la faille des lagunes (mouvement relatif) ?",
+          "options": [
+            "Une faille normale distensive",
+            "Une faille inverse compressive",
+            "Un pli synclinal",
+            "Une discordance érosive"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une faille normale est provoquée par un mouvement d'extension (écartement) : le compartiment supérieur descend le long du plan de faille."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · Orientation Est-Ouest de la faille des lagunes",
+          "stepTheme": "Orientation Est-Ouest de la faille des lagunes",
+          "stepTitle": "Orientation Est-Ouest de la faille des lagunes",
+          "paragraphText": "Elle court de Fresco jusqu'à la frontière ghanéenne le long du cordon lagunaire ivoirien.",
+          "formula": {
+            "name": "Orientation Est-Ouest de la faille des lagunes",
+            "formula": "Direction : Est-Ouest (parallèle à la côte du golfe de Guinée)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Faille des lagunes = direction Est-Ouest (parallèle au littoral) !",
+          "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex1",
+            "type": "mcq",
+            "prompt": "Quelle est l'orientation géographique de la grande faille des lagunes ?",
+            "options": [
+              "Direction générale Est-Ouest (parallèle au littoral)",
+              "Strictement Nord-Sud",
+              "Diagonale Nord-Ouest",
+              "Verticale circulaire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Contrairement à la faille de Sassandra (Nord-Sud), la faille des lagunes s'étire parallèlement à la côte d'Est en Ouest."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · Rejet vertical colossal de 5 000 mètres",
+          "stepTheme": "Rejet vertical colossal de 5 000 mètres",
+          "stepTitle": "Rejet vertical colossal de 5 000 mètres",
+          "paragraphText": "Le compartiment Sud s'est effondré de 5 000 mètres par rapport au compartiment continental Nord.",
+          "formula": {
+            "name": "Rejet vertical colossal de 5 000 mètres",
+            "formula": "Rejet vertical de la faille des lagunes : Rejet vertical jusqu'à 5 000 m",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Retiens 5 000 mètres de rejet vertical pour la faille des lagunes !",
+          "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex2",
+            "type": "mcq",
+            "prompt": "À combien de mètres est estimé le rejet vertical maximal de la faille des lagunes plongeant vers l'océan ?",
+            "options": [
+              "Jusqu'à 5 000 mètres (5 km)",
+              "Seulement 2 mètres",
+              "50 mètres",
+              "100 000 mètres"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Ce rejet colossal de 5 km d'affaissement a permis l'accumulation d'une colonne colossale de sédiments marins mésozoïques."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · Gisements de pétrole et gaz naturel offshore",
+          "stepTheme": "Gisements de pétrole et gaz naturel offshore",
+          "stepTitle": "Gisements de pétrole et gaz naturel offshore",
+          "paragraphText": "Les forages pétroliers en eaux profondes découvrent d'immenses gisements grâce aux structures créées par la tectonique du bassin.",
+          "formula": {
+            "name": "Gisements de pétrole et gaz naturel offshore",
+            "formula": "Ressource stratégique côtière : Pétrole et Gaz naturel offshore",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Pétrole et gaz naturel = ressources majeures du bassin côtier !",
+          "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex3",
+            "type": "mcq",
+            "prompt": "Quelle ressource énergétique fossile stratégique de la Côte d'Ivoire est piégée au large du bassin côtier ?",
+            "options": [
+              "Le pétrole brut et le gaz naturel offshore",
+              "Le charbon de bois fossile",
+              "L'uranium enrichi",
+              "L'énergie éolienne"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les failles normales d'effondrement ont compartimenté le bassin et piégé les hydrocarbures dans des réservoirs de grès profond."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Le champ pétrolier Baleine",
+          "stepTheme": "Le champ pétrolier Baleine",
+          "stepTitle": "Le champ pétrolier Baleine",
+          "paragraphText": "Ce gisement de classe mondiale propulse la Côte d'Ivoire au rang de grand producteur d'énergie en Afrique de l'Ouest.",
+          "formula": {
+            "name": "Le champ pétrolier Baleine",
+            "formula": "Gisement géant offshore : Champ Baleine (puits à plus de 3 000 m)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Champ pétrolier Baleine = gisement géant découvert au large de la Côte d'Ivoire !",
+          "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex4",
+            "type": "mcq",
+            "prompt": "Comment se nomme le gisement pétrolier géant historique récemment découvert et exploité au large d'Assinie ?",
+            "options": [
+              "Le gisement Baleine (et le gisement Calao)",
+              "Le gisement Éléphant",
+              "Le gisement Sahel",
+              "Le gisement Sahara"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le gisement Baleine, découvert par Eni, recèle des milliards de barils de pétrole et d'immenses réserves de gaz associé."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Compartiments de la faille des lagunes",
+          "stepTheme": "Compartiments de la faille des lagunes",
+          "stepTitle": "Compartiments de la faille des lagunes",
+          "paragraphText": "Il s'agit typiquement d'une faille normale distensive résultant de l'étirement continental lors de l'ouverture océanique.",
+          "formula": {
+            "name": "Compartiments de la faille des lagunes",
+            "formula": "Nord : Socle soulevé | Sud : Bassin sédimentaire effondré (5 000 m)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Nord = socle soulevé ; Sud = bassin sédimentaire affaissé vers la mer !",
+          "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex5",
+            "type": "mcq",
+            "prompt": "Quels sont les deux compartiments tectoniques séparés par la faille des lagunes ?",
+            "options": [
+              "Le compartiment Nord soulevé (socle cristallin) et le compartiment Sud affaissé (bassin sédimentaire)",
+              "L'Afrique et l'Europe",
+              "L'océan Indien et l'océan Pacifique",
+              "Le pôle Nord et le pôle Sud"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Au Nord de la faille, le socle rocheux dur est à l'air libre ; au Sud, il est enfoui sous 5 km de sédiments marins."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Alignement morphologique des lagunes",
+          "stepTheme": "Alignement morphologique des lagunes",
+          "stepTitle": "Alignement morphologique des lagunes",
+          "paragraphText": "Le système lagunaire ivoirien, long de 300 km, est le produit direct du tracé rectiligne Est-Ouest de cette faille.",
+          "formula": {
+            "name": "Alignement morphologique des lagunes",
+            "formula": "Tectonique côtière -> Morphologie linéaire Est-Ouest du réseau lagunaire",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La faille des lagunes a guidé l'alignement Est-Ouest de nos lagunes !",
+          "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex6",
+            "type": "mcq",
+            "prompt": "Comment la faille des lagunes influence-t-elle le réseau hydrographique et lagunaire d'Abidjan ?",
+            "options": [
+              "Elle a guidé l'alignement rectiligne des lagunes (lagune Ébrié, lagune de Grand-Lahou, lagune Aby)",
+              "Elle a fait disparaître tous les fleuves",
+              "Elle crée des tsunamis quotidiens",
+              "Elle a asséché la mer"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'enfoncement tectonique au Sud a créé la dépression où les eaux fluviales et marines se sont rassemblées en chapelet de lagunes."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Risque d'intrusion saline (biseau salé)",
+          "stepTheme": "Risque d'intrusion saline (biseau salé)",
+          "stepTitle": "Risque d'intrusion saline (biseau salé)",
+          "paragraphText": "La proximité de l'océan exige une gestion rigoureuse des forages pour préserver la qualité de l'eau potable abidjanaise.",
+          "formula": {
+            "name": "Risque d'intrusion saline (biseau salé)",
+            "formula": "Surpompage des forages -> Avancée du biseau d'eau salée dans l'aquifère",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le risque majeur est l'intrusion d'eau salée dans la nappe d'eau potable !",
+          "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex7",
+            "type": "mcq",
+            "prompt": "Quel risque environnemental guette la nappe d'eau douce d'Abidjan en bordure de la faille des lagunes ?",
+            "options": [
+              "L'intrusion et la biseautage salé des eaux marines ou lagunaires en cas de surpompage",
+              "L'explosion de lave volcanique",
+              "Le gel sous forme de banquise",
+              "La disparition de l'atmosphère"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Si l'on pompe excessivement la nappe douce, l'eau salée de la lagune et de l'océan s'infiltre à travers les sables perméables."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · Mécanisme de faille normale distensive",
+          "stepTheme": "Mécanisme de faille normale distensive",
+          "stepTitle": "Mécanisme de faille normale distensive",
+          "paragraphText": "Elle témoigne de la rupture par étirement de la plaque africaine au Crétacé lors de la dérive continentale.",
+          "formula": {
+            "name": "Mécanisme de faille normale distensive",
+            "formula": "Extension tectonique crustale -> Faille normale avec compartiment effondré",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Faille des lagunes = faille normale distensive !",
+          "keyRule": "Faille des lagunes = Direction Est-Ouest = Rejet vertical descendant de 5 000 m vers le Sud = Piégeage des hydrocarbures (Baleine, Espoir, Baobab).",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p8_faille_des_lagunes_hydrogeologie_petrole_ex8",
+            "type": "mcq",
+            "prompt": "Quel est le type tectonique exact de la faille des lagunes (mouvement relatif) ?",
+            "options": [
+              "Une faille normale distensive",
+              "Une faille inverse compressive",
+              "Un pli synclinal",
+              "Une discordance érosive"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Une faille normale est provoquée par un mouvement d'extension (écartement) : le compartiment supérieur descend le long du plan de faille."
+          }
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles",
+      "order": 9,
+      "title": "Les accidents tectoniques cassants : Failles normales, inverses et décrochements",
+      "summary": "Définir une faille, identifier ses éléments géométriques (plan, miroir, compartiments, rejets) et distinguer les régimes tectoniques (distension, compression, coulissage).",
+      "conceptExplanation": "Une faille est une déformation cassante de la lithosphère caractérisée par une fracture avec déplacement relatif des deux blocs rocheux. On distingue trois grands types selon les forces : la faille normale (écartement / distension, allongement), la faille inverse (rapprochement / compression, raccourcissement) et le décrochement (coulissage horizontal le long d'un plan vertical).",
+      "formulas": [
+        {
+          "name": "Types et régimes de failles",
+          "formula": "Faille Normale (Distension) | Faille Inverse (Compression) | Décrochement (Coulissage)",
+          "note": "Rejet total = racine carrée du rejet vertical au carré plus le rejet horizontal au carré."
+        }
+      ],
+      "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
+      "workedExample": {
+        "title": "Reconnaissance d'une faille sur une coupe",
+        "statement": "Sur un affleurement, le plan de faille est incliné et le compartiment situé au-dessus descend par rapport à l'autre. Nommer la faille.",
+        "methodSteps": [
+          "Étape 1 : Observer le plan incliné et le mouvement du compartiment supérieur (toit).",
+          "Étape 2 : Constater que le toit descend : c'est le mouvement typique d'une extension de terrain.",
+          "Étape 3 : Conclure qu'il s'agit d'une faille normale liée à un régime tectonique de distension."
+        ],
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est la définition scientifique exacte d'une faille géologique ?",
+          "options": [
+            "Une fracture de l'écorce terrestre avec déplacement relatif des deux compartiments rocheux séparés",
+            "Une simple fissure sans aucun mouvement des blocs",
+            "Un pli régulier sans aucune cassure",
+            "Une coulée d'eau souterraine"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pour qu'il y ait faille au sens géologique, la cassure doit impérativement s'accompagner d'un déplacement mesurable (rejet)."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex2",
+          "type": "mcq",
+          "prompt": "Comment nomme-t-on la surface polie et striée par le frottement des blocs le long de la faille ?",
+          "options": [
+            "Le miroir de faille",
+            "Le toit de faille",
+            "La charnière",
+            "Le flanc"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le frottement mécanique écrasant polit le plan de fracture et y imprime des stries parallèles à la direction du déplacement."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex3",
+          "type": "mcq",
+          "prompt": "Quel type de faille est provoqué par un régime tectonique d'extension (distension) ?",
+          "options": [
+            "Une faille normale (écartement et allongement du terrain)",
+            "Une faille inverse",
+            "Un chevauchement alpin",
+            "Un anticlinal"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans une faille normale, les blocs s'écartent et le compartiment supérieur descend le long du plan de faille."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex4",
+          "type": "mcq",
+          "prompt": "Quel type de faille est engendré par un régime tectonique de compression (rapprochement) ?",
+          "options": [
+            "Une faille inverse (rapprochement et raccourcissement du terrain)",
+            "Une faille normale",
+            "Un fossé d'effondrement",
+            "Un graben"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Sous l'effet d'une poussée compressive, le compartiment supérieur monte par-dessus le compartiment inférieur."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex5",
+          "type": "mcq",
+          "prompt": "Comment appelle-t-on une faille où les deux blocs coulissent horizontalement l'un contre l'autre ?",
+          "options": [
+            "Un décrochement (dextre ou sénestre)",
+            "Une faille normale",
             "Un synclinal",
-            "Un graben",
             "Une discordance"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Un anticlinal est un pli convexe vers le haut en forme d'arche (∩), où les couches les plus anciennes se trouvent au cœur du pli."
+          "explanation": "Dans un décrochement, le déplacement est purement horizontal le long d'un plan de faille vertical."
         },
         {
-          "id": "seconde_c_svt_ch1_p2_ex4",
+          "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex6",
           "type": "mcq",
-          "prompt": "Où observe-t-on des plis géologiques dans le domaine protérozoïque en Côte d'Ivoire ?",
+          "prompt": "Comment désigne-t-on la mesure chiffrée de la distance de déplacement entre les deux compartiments ?",
           "options": [
-            "À Tortiya et à Fêtèkro",
-            "À Man et à Danané",
-            "À Grand-Bassam et Assinie",
-            "Uniquement au sommet du mont Nimba"
+            "Le rejet de la faille (rejet vertical, horizontal ou oblique)",
+            "La vitesse de la faille",
+            "Le rayon de courbure",
+            "L'indice de réfraction"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Dans le domaine protérozoïque ivoirien, des plis tectoniques majeurs sont observés notamment à Tortiya et à Fêtèkro (alors que les plis de Man appartiennent à l'Archéen)."
+          "explanation": "Le rejet quantifie l'ampleur géométrique de la déformation cassante subie par la couche géologique repère."
         },
         {
-          "id": "seconde_c_svt_ch1_p2_ex5",
+          "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex7",
           "type": "mcq",
-          "prompt": "Trouve-t-on des plis géologiques dans le bassin sédimentaire côtier de Côte d'Ivoire ?",
+          "prompt": "Quel grand accident du socle ivoirien est un exemple historique de rejeu en décrochement ductile ?",
           "options": [
-            "Non, les couches du bassin sédimentaire sont horizontales et non plissées",
-            "Oui, de très grands plis anticlinaux à Abidjan",
-            "Oui, uniquement sous la lagune Ébrié",
-            "Oui, formés lors de l'orogénèse libérienne"
+            "La faille de Sassandra",
+            "La lagune Ébrié",
+            "Le canal de Vridi",
+            "La plage d'Assinie"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Le bassin sédimentaire côtier ivoirien ne présente aucun pli : ses couches sédimentaires ont été déposées de manière tabulaire sub-horizontale."
+          "explanation": "Lors du cycle éburnéen, la faille de Sassandra a fonctionné comme un couloir de décrochement cisaillant les granitoïdes."
         },
         {
-          "id": "seconde_c_svt_ch1_p2_ex6",
+          "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex8",
           "type": "mcq",
-          "prompt": "Qu'est-ce qu'une discordance géologique ?",
+          "prompt": "Que se passe-t-il pour une couche géologique repère traversée par une faille sur le terrain ?",
           "options": [
-            "La superposition de couches sédimentaires récentes horizontales sur un socle ancien préalablement plissé et érodé",
-            "Une séparation brutale entre deux continents qui dérivent",
-            "Une roche magmatique qui refuse de cristalliser",
-            "Un tremblement de terre sous-marin sans dégâts"
+            "Elle est brutalement interrompue et décalée en deux tronçons situés à des niveaux différents",
+            "Elle reste continue sans aucun saut",
+            "Elle se liquéfie",
+            "Elle se transforme en diamant"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Une discordance est une discontinuité géométrique où des couches sédimentaires récentes reposent sur une surface d'érosion recoupant des terrains plus anciens déformés ou plissés."
+          "explanation": "L'interruption et le décalage géométrique d'une couche continue est le critère diagnostique absolu d'une faille sur le terrain."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · Définition d'une faille tectonique",
+          "stepTheme": "Définition d'une faille tectonique",
+          "stepTitle": "Définition d'une faille tectonique",
+          "paragraphText": "La rupture se produit lorsque les contraintes mécaniques dépassent la limite d'élasticité et de rupture de la roche.",
+          "formula": {
+            "name": "Définition d'une faille tectonique",
+            "formula": "Faille = Fracture crustale + Déplacement relatif des compartiments (Rejet)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Une faille est une cassure AVEC déplacement des compartiments !",
+          "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex1",
+            "type": "mcq",
+            "prompt": "Quelle est la définition scientifique exacte d'une faille géologique ?",
+            "options": [
+              "Une fracture de l'écorce terrestre avec déplacement relatif des deux compartiments rocheux séparés",
+              "Une simple fissure sans aucun mouvement des blocs",
+              "Un pli régulier sans aucune cassure",
+              "Une coulée d'eau souterraine"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Pour qu'il y ait faille au sens géologique, la cassure doit impérativement s'accompagner d'un déplacement mesurable (rejet)."
+          }
         },
         {
-          "id": "seconde_c_svt_ch1_p2_ex7",
-          "type": "mcq",
-          "prompt": "Dans quelle localité ivoirienne observe-t-on la célèbre discordance de base du Birrimien ?",
-          "options": [
-            "À Odienné",
-            "À Bondoukou",
-            "À San Pedro",
-            "À Yamoussoukro"
-          ],
-          "correctAnswerIndex": 0,
-          "explanation": "La discordance de base du Birrimien est observable dans la région d'Odienné (Nord-Ouest de la Côte d'Ivoire)."
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · Le miroir de faille et les stries",
+          "stepTheme": "Le miroir de faille et les stries",
+          "stepTitle": "Le miroir de faille et les stries",
+          "paragraphText": "Les stries tectoniques sur le miroir indiquent précisément aux géologues le sens et l'angle du déplacement des blocs.",
+          "formula": {
+            "name": "Le miroir de faille et les stries",
+            "formula": "Plan de fracture poli -> Miroir de faille (avec stries de frottement)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le plan poli et strié est le miroir de faille !",
+          "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex2",
+            "type": "mcq",
+            "prompt": "Comment nomme-t-on la surface polie et striée par le frottement des blocs le long de la faille ?",
+            "options": [
+              "Le miroir de faille",
+              "Le toit de faille",
+              "La charnière",
+              "Le flanc"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le frottement mécanique écrasant polit le plan de fracture et y imprime des stries parallèles à la direction du déplacement."
+          }
         },
         {
-          "id": "seconde_c_svt_ch1_p2_ex8",
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · Mécanisme de la faille normale",
+          "stepTheme": "Mécanisme de la faille normale",
+          "stepTitle": "Mécanisme de la faille normale",
+          "paragraphText": "Les failles normales amincissent la croûte et augmentent la surface horizontale du terrain.",
+          "formula": {
+            "name": "Mécanisme de la faille normale",
+            "formula": "Régime de distension (Écartement) -> Faille normale",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Distension (écartement) = faille normale !",
+          "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex3",
+            "type": "mcq",
+            "prompt": "Quel type de faille est provoqué par un régime tectonique d'extension (distension) ?",
+            "options": [
+              "Une faille normale (écartement et allongement du terrain)",
+              "Une faille inverse",
+              "Un chevauchement alpin",
+              "Un anticlinal"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Dans une faille normale, les blocs s'écartent et le compartiment supérieur descend le long du plan de faille."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Mécanisme de la faille inverse",
+          "stepTheme": "Mécanisme de la faille inverse",
+          "stepTitle": "Mécanisme de la faille inverse",
+          "paragraphText": "Les failles inverses provoquent un raccourcissement horizontal et un épaississement vertical du terrain.",
+          "formula": {
+            "name": "Mécanisme de la faille inverse",
+            "formula": "Régime de compression (Poussée) -> Faille inverse",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Compression (rapprochement) = faille inverse !",
+          "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex4",
+            "type": "mcq",
+            "prompt": "Quel type de faille est engendré par un régime tectonique de compression (rapprochement) ?",
+            "options": [
+              "Une faille inverse (rapprochement et raccourcissement du terrain)",
+              "Une faille normale",
+              "Un fossé d'effondrement",
+              "Un graben"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Sous l'effet d'une poussée compressive, le compartiment supérieur monte par-dessus le compartiment inférieur."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Le décrochement tectonique",
+          "stepTheme": "Le décrochement tectonique",
+          "stepTitle": "Le décrochement tectonique",
+          "paragraphText": "On distingue le décrochement dextre (vers la droite) et sénestre (vers la gauche) selon le sens perçu par un observateur.",
+          "formula": {
+            "name": "Le décrochement tectonique",
+            "formula": "Coulissage horizontal pur -> Décrochement tectonique",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Décrochement = coulissage horizontal des compartiments !",
+          "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex5",
+            "type": "mcq",
+            "prompt": "Comment appelle-t-on une faille où les deux blocs coulissent horizontalement l'un contre l'autre ?",
+            "options": [
+              "Un décrochement (dextre ou sénestre)",
+              "Une faille normale",
+              "Un synclinal",
+              "Une discordance"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Dans un décrochement, le déplacement est purement horizontal le long d'un plan de faille vertical."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Le rejet de faille",
+          "stepTheme": "Le rejet de faille",
+          "stepTitle": "Le rejet de faille",
+          "paragraphText": "On décompose souvent le rejet total en rejet vertical (saut d'altitude) et rejet horizontal.",
+          "formula": {
+            "name": "Le rejet de faille",
+            "formula": "Déplacement mesuré des blocs = Rejet de la faille",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le déplacement des blocs se nomme le rejet de la faille !",
+          "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex6",
+            "type": "mcq",
+            "prompt": "Comment désigne-t-on la mesure chiffrée de la distance de déplacement entre les deux compartiments ?",
+            "options": [
+              "Le rejet de la faille (rejet vertical, horizontal ou oblique)",
+              "La vitesse de la faille",
+              "Le rayon de courbure",
+              "L'indice de réfraction"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le rejet quantifie l'ampleur géométrique de la déformation cassante subie par la couche géologique repère."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Exemple ivoirien de décrochement",
+          "stepTheme": "Exemple ivoirien de décrochement",
+          "stepTitle": "Exemple ivoirien de décrochement",
+          "paragraphText": "Ce cisaillement transcurrent a imprimé aux roches des déformations horizontales visibles sur des dizaines de kilomètres.",
+          "formula": {
+            "name": "Exemple ivoirien de décrochement",
+            "formula": "Faille de Sassandra : Couloir de décrochement lors de l'Éburnéen",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La faille de Sassandra est l'exemple type de décrochement dans notre socle !",
+          "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex7",
+            "type": "mcq",
+            "prompt": "Quel grand accident du socle ivoirien est un exemple historique de rejeu en décrochement ductile ?",
+            "options": [
+              "La faille de Sassandra",
+              "La lagune Ébrié",
+              "Le canal de Vridi",
+              "La plage d'Assinie"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Lors du cycle éburnéen, la faille de Sassandra a fonctionné comme un couloir de décrochement cisaillant les granitoïdes."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · Discontinuité et saut de couche",
+          "stepTheme": "Discontinuité et saut de couche",
+          "stepTitle": "Discontinuité et saut de couche",
+          "paragraphText": "Le géologue retrouve la suite de la couche en marchant plus haut ou plus bas selon la direction du rejet.",
+          "formula": {
+            "name": "Discontinuité et saut de couche",
+            "formula": "Présence de faille -> Décalage visible et discontinuité de la couche repère",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La faille interrompt et décale nettement la couche géologique !",
+          "keyRule": "Déformation cassante = Faille (avec déplacement / rejet). Faille normale = distension. Faille inverse = compression. Décrochement = coulissage.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p9_accidents_tectoniques_cassants_failles_ex8",
+            "type": "mcq",
+            "prompt": "Que se passe-t-il pour une couche géologique repère traversée par une faille sur le terrain ?",
+            "options": [
+              "Elle est brutalement interrompue et décalée en deux tronçons situés à des niveaux différents",
+              "Elle reste continue sans aucun saut",
+              "Elle se liquéfie",
+              "Elle se transforme en diamant"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'interruption et le décalage géométrique d'une couche continue est le critère diagnostique absolu d'une faille sur le terrain."
+          }
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis",
+      "order": 10,
+      "title": "Les accidents tectoniques souples : Plis anticlinaux et synclinaux birrimiens",
+      "summary": "Définir un pli géologique (déformation souple sans rupture), analyser ses éléments (charnière, flancs, plan axial) et distinguer anticlinaux et synclinaux.",
+      "conceptExplanation": "Un pli est une déformation tectonique souple et continue provoquée par des forces compressives agissant sur des roches ductiles sans provoquer de fracture. On distingue : l'anticlinal (pli à courbure convexe vers le haut, couches les plus anciennes au cœur) et le synclinal (pli à courbure concave vers le haut, couches les plus récentes au cœur). On les observe dans les schistes birrimiens.",
+      "formulas": [
+        {
+          "name": "Typologie des plis géologiques",
+          "formula": "Anticlinal (Courbure convexe ∩) vs Synclinal (Courbure concave ∪)",
+          "note": "Les plis résultent de contraintes horizontales de compression sur roches ductiles."
+        }
+      ],
+      "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
+      "workedExample": {
+        "title": "Détermination de la nature d'un pli par l'âge des strates",
+        "statement": "Une structure plissée présente en son centre des roches du Crétacé entourées par des roches du Tertiaire. S'agit-il d'un anticlinal ou d'un synclinal ?",
+        "methodSteps": [
+          "Étape 1 : Rappeler la chronologie : le Crétacé est plus ancien que le Tertiaire.",
+          "Étape 2 : Constater que les couches du cœur sont les plus anciennes.",
+          "Étape 3 : Conclure que la structure est un anticlinal (les couches anciennes occupent le centre de la courbure convexe)."
+        ],
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex1",
           "type": "mcq",
-          "prompt": "Où se situe la discordance Abronienne en Côte d'Ivoire ?",
+          "prompt": "Quelle est la définition exacte d'un pli en géologie structurale ?",
           "options": [
-            "À Bondoukou",
-            "À Fresco",
-            "À Man",
-            "À Sassandra"
+            "Une déformation souple et continue des couches géologiques sans aucune rupture ni cassure",
+            "Une fracture brutale de la roche avec déplacement des blocs",
+            "Un éboulement de falaise causé par la pluie",
+            "Un cratère volcanique circulaire"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "La discordance Abronienne est située dans la région de Bondoukou (Nord-Est de la Côte d'Ivoire)."
+          "explanation": "Contrairement à la faille qui est une rupture cassante, le pli est une déformation plastique et ductile continue."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex2",
+          "type": "mcq",
+          "prompt": "Comment nomme-t-on un pli dont la courbure est convexe vers le haut (en forme de voûte ou de dôme) ?",
+          "options": [
+            "Un anticlinal",
+            "Un synclinal",
+            "Une faille normale",
+            "Un graben"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans un anticlinal, les couches s'élèvent en bosse (convexe vers le ciel), et les strates les plus anciennes occupent le cœur."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex3",
+          "type": "mcq",
+          "prompt": "Comment qualifie-t-on un pli dont la courbure est concave vers le haut (en forme de berceau ou de cuvette) ?",
+          "options": [
+            "Un synclinal",
+            "Un anticlinal",
+            "Un horst",
+            "Un dyke"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Dans un synclinal, les couches plongent en cuvette concave, et les couches les plus jeunes et récentes occupent le centre."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex4",
+          "type": "mcq",
+          "prompt": "Comment s'appelle la zone de courbure maximale reliant les deux flancs d'un pli ?",
+          "options": [
+            "La charnière du pli",
+            "Le miroir",
+            "Le rejet",
+            "Le fossé"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La charnière est la ligne axiale où la courbure des couches est la plus prononcée."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex5",
+          "type": "mcq",
+          "prompt": "Quel grand type de force tectonique engendre la formation de plis ?",
+          "options": [
+            "Des forces de compression horizontale (rapprochement et poussée des couches)",
+            "Des forces de distension (écartement)",
+            "Des forces magnétiques polaires",
+            "L'attraction de la Lune"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Seules les forces de compression latérale peuvent comprimer des couches horizontales et les contraindre à onduler en plis."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex6",
+          "type": "mcq",
+          "prompt": "Dans quel ensemble géologique ivoirien observe-t-on typiquement des plis anticlinaux et synclinaux ?",
+          "options": [
+            "Dans les schistes du domaine Protérozoïque birrimien",
+            "Dans les sables meubles de Grand-Bassam",
+            "Dans l'eau de la lagune Ébrié",
+            "Les plis n'existent pas en Côte d'Ivoire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'orogenèse éburnéenne a puissamment comprimé et plissé les formations sédimentaires birrimiennes sur tout le territoire oriental."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex7",
+          "type": "mcq",
+          "prompt": "Pourquoi n'observe-t-on AUCUN pli dans le bassin sédimentaire côtier d'Abidjan ?",
+          "options": [
+            "Parce que le bassin sédimentaire n'a subi aucune compression orogénique depuis son dépôt au Crétacé",
+            "Parce que les roches sont trop vieilles",
+            "Parce que les séismes ont tout détruit",
+            "Parce que le sel empêche les plis"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Depuis 135 millions d'années, la marge littorale est en régime de distension et de subsidence calme, sans orogenèse compressive."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex8",
+          "type": "mcq",
+          "prompt": "Comment nomme-t-on le plan imaginaire divisant un pli en deux parties à peu près symétriques ?",
+          "options": [
+            "Le plan axial du pli",
+            "Le plan de faille",
+            "Le plan équatorial",
+            "Le plan de stratification"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le plan axial passe par toutes les charnières des couches successives superposées du pli."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · Définition d'un pli géologique",
+          "stepTheme": "Définition d'un pli géologique",
+          "stepTitle": "Définition d'un pli géologique",
+          "paragraphText": "Le pliage se produit en profondeur lorsque la roche, sous haute température et pression, devient malléable et plastique.",
+          "formula": {
+            "name": "Définition d'un pli géologique",
+            "formula": "Pli = Déformation continue et souple (Ductile) sans fracture",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Un pli est une déformation souple et continue SANS cassure !",
+          "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex1",
+            "type": "mcq",
+            "prompt": "Quelle est la définition exacte d'un pli en géologie structurale ?",
+            "options": [
+              "Une déformation souple et continue des couches géologiques sans aucune rupture ni cassure",
+              "Une fracture brutale de la roche avec déplacement des blocs",
+              "Un éboulement de falaise causé par la pluie",
+              "Un cratère volcanique circulaire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Contrairement à la faille qui est une rupture cassante, le pli est une déformation plastique et ductile continue."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · L'anticlinal (courbure convexe vers le haut)",
+          "stepTheme": "L'anticlinal (courbure convexe vers le haut)",
+          "stepTitle": "L'anticlinal (courbure convexe vers le haut)",
+          "paragraphText": "Les deux flancs de l'anticlinal divergent en pente descendante à partir de la ligne de crête (charnière).",
+          "formula": {
+            "name": "L'anticlinal (courbure convexe vers le haut)",
+            "formula": "Courbure convexe vers le haut -> Anticlinal (Couches anciennes au cœur)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Anticlinal = courbure en bosse convexe vers le haut !",
+          "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex2",
+            "type": "mcq",
+            "prompt": "Comment nomme-t-on un pli dont la courbure est convexe vers le haut (en forme de voûte ou de dôme) ?",
+            "options": [
+              "Un anticlinal",
+              "Un synclinal",
+              "Une faille normale",
+              "Un graben"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Dans un anticlinal, les couches s'élèvent en bosse (convexe vers le ciel), et les strates les plus anciennes occupent le cœur."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · Le synclinal (courbure concave vers le haut)",
+          "stepTheme": "Le synclinal (courbure concave vers le haut)",
+          "stepTitle": "Le synclinal (courbure concave vers le haut)",
+          "paragraphText": "Les deux flancs du synclinal convergent en descendant vers la ligne de fond de cuvette (charnière).",
+          "formula": {
+            "name": "Le synclinal (courbure concave vers le haut)",
+            "formula": "Courbure concave vers le haut -> Synclinal (Couches récentes au cœur)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Synclinal = courbure en creux concave vers le haut !",
+          "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex3",
+            "type": "mcq",
+            "prompt": "Comment qualifie-t-on un pli dont la courbure est concave vers le haut (en forme de berceau ou de cuvette) ?",
+            "options": [
+              "Un synclinal",
+              "Un anticlinal",
+              "Un horst",
+              "Un dyke"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Dans un synclinal, les couches plongent en cuvette concave, et les couches les plus jeunes et récentes occupent le centre."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · La charnière d'un pli",
+          "stepTheme": "La charnière d'un pli",
+          "stepTitle": "La charnière d'un pli",
+          "paragraphText": "C'est au niveau de la charnière que les contraintes mécaniques de déformation plastique ont été maximales.",
+          "formula": {
+            "name": "La charnière d'un pli",
+            "formula": "Zone de courbure maximale = Charnière du pli",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La ligne de courbure maximale est la charnière du pli !",
+          "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex4",
+            "type": "mcq",
+            "prompt": "Comment s'appelle la zone de courbure maximale reliant les deux flancs d'un pli ?",
+            "options": [
+              "La charnière du pli",
+              "Le miroir",
+              "Le rejet",
+              "Le fossé"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La charnière est la ligne axiale où la courbure des couches est la plus prononcée."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Régime de compression plissante",
+          "stepTheme": "Régime de compression plissante",
+          "stepTitle": "Régime de compression plissante",
+          "paragraphText": "Ces poussées résultent du rapprochement de plaques ou de blocs tectoniques lors des orogenèses.",
+          "formula": {
+            "name": "Régime de compression plissante",
+            "formula": "Forces compressives horizontales -> Plissement des séries sédimentaires ductiles",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Les plis sont causés par des forces de compression horizontale !",
+          "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex5",
+            "type": "mcq",
+            "prompt": "Quel grand type de force tectonique engendre la formation de plis ?",
+            "options": [
+              "Des forces de compression horizontale (rapprochement et poussée des couches)",
+              "Des forces de distension (écartement)",
+              "Des forces magnétiques polaires",
+              "L'attraction de la Lune"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Seules les forces de compression latérale peuvent comprimer des couches horizontales et les contraindre à onduler en plis."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Plis dans les schistes birrimiens",
+          "stepTheme": "Plis dans les schistes birrimiens",
+          "stepTitle": "Plis dans les schistes birrimiens",
+          "paragraphText": "Les affleurements de schistes montrent des successions spectaculaires de microplis et mégaplis éburnéens.",
+          "formula": {
+            "name": "Plis dans les schistes birrimiens",
+            "formula": "Schistes birrimiens éburnéens -> Présence massive de plis anticlinaux et synclinaux",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Les schistes birrimiens sont plissés par l'orogenèse éburnéenne !",
+          "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex6",
+            "type": "mcq",
+            "prompt": "Dans quel ensemble géologique ivoirien observe-t-on typiquement des plis anticlinaux et synclinaux ?",
+            "options": [
+              "Dans les schistes du domaine Protérozoïque birrimien",
+              "Dans les sables meubles de Grand-Bassam",
+              "Dans l'eau de la lagune Ébrié",
+              "Les plis n'existent pas en Côte d'Ivoire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'orogenèse éburnéenne a puissamment comprimé et plissé les formations sédimentaires birrimiennes sur tout le territoire oriental."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Absence d'orogenèse plissante au Sud",
+          "stepTheme": "Absence d'orogenèse plissante au Sud",
+          "stepTitle": "Absence d'orogenèse plissante au Sud",
+          "paragraphText": "Sans compression tectonique, les sédiments restent parfaitement horizontaux et tabulaires.",
+          "formula": {
+            "name": "Absence d'orogenèse plissante au Sud",
+            "formula": "Marge passive distensive -> Absence de plissement dans le bassin côtier",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le bassin côtier est en distension calme : zéro plissement orogénique !",
+          "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex7",
+            "type": "mcq",
+            "prompt": "Pourquoi n'observe-t-on AUCUN pli dans le bassin sédimentaire côtier d'Abidjan ?",
+            "options": [
+              "Parce que le bassin sédimentaire n'a subi aucune compression orogénique depuis son dépôt au Crétacé",
+              "Parce que les roches sont trop vieilles",
+              "Parce que les séismes ont tout détruit",
+              "Parce que le sel empêche les plis"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Depuis 135 millions d'années, la marge littorale est en régime de distension et de subsidence calme, sans orogenèse compressive."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · Le plan axial du pli",
+          "stepTheme": "Le plan axial du pli",
+          "stepTitle": "Le plan axial du pli",
+          "paragraphText": "Selon l'inclinaison du plan axial, on classe les plis en plis droits, plis déjetés, plis déversés ou plis couchés.",
+          "formula": {
+            "name": "Le plan axial du pli",
+            "formula": "Symétrie du pli = Plan axial",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Le plan axial divise le pli en deux flancs symétriques !",
+          "keyRule": "Déformation souple = Pli (SANS cassure). Anticlinal = courbure vers le haut (convexe), couches anciennes au centre. Synclinal = creux vers le bas (concave), couches récentes au centre.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p10_accidents_tectoniques_souples_plis_ex8",
+            "type": "mcq",
+            "prompt": "Comment nomme-t-on le plan imaginaire divisant un pli en deux parties à peu près symétriques ?",
+            "options": [
+              "Le plan axial du pli",
+              "Le plan de faille",
+              "Le plan équatorial",
+              "Le plan de stratification"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le plan axial passe par toutes les charnières des couches successives superposées du pli."
+          }
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion",
+      "order": 11,
+      "title": "Les discordances géologiques : Définition, surface d'érosion et processus",
+      "summary": "Définir une discordance géologique angulaire, identifier la surface d'érosion et reconstituer chronologiquement les étapes de formation d'une discordance.",
+      "conceptExplanation": "Une discordance géologique est un contact anormal et irrégulier séparant deux ensembles rocheux superposés d'âges différents, où les couches supérieures reposent sur les tranches biseautées et érodées de couches inférieures plus anciennes plissées. Elle témoigne d'un cycle géologique complet : sédimentation 1, plissement orogénique, émersion et érosion de surface, puis nouvelle transgression marine et sédimentation 2.",
+      "formulas": [
+        {
+          "name": "Chronologie absolue d'une discordance",
+          "formula": "Sédimentation 1 -> Plissement -> Émersion & Érosion -> Transgression -> Sédimentation 2",
+          "note": "La surface séparatrice porte le nom de surface de discordance (ou surface d'érosion)."
+        }
+      ],
+      "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
+      "workedExample": {
+        "title": "Reconstitution des étapes d'une discordance géologique",
+        "statement": "Ordonner chronologiquement les 4 étapes qui créent une discordance angulaire.",
+        "methodSteps": [
+          "Étape 1 : Dépôt horizontal des sédiments anciens au fond de l'eau.",
+          "Étape 2 : Pression compressive plissant et dressant les couches anciennes (orogenèse).",
+          "Étape 3 : Émersion au-dessus de l'eau et érosion météorique rabotant les sommets des plis.",
+          "Étape 4 : Retour de la mer (transgression) déposant de nouvelles couches sédimentaires horizontales sur la surface érodée."
+        ],
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex1",
+          "type": "mcq",
+          "prompt": "Quelle est la définition exacte d'une discordance géologique ?",
+          "options": [
+            "Un contact anormal où des couches sédimentaires récentes reposent sur des couches plus anciennes préalablement plissées et érodées",
+            "Une cassure de terrain avec rejet vertical",
+            "Une explosion volcanique sous-marine",
+            "Une fusion totale des minéraux"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La discordance matérialise une interruption majeure dans la sédimentation accompagnée d'une déformation tectonique intermédiaire."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex2",
+          "type": "mcq",
+          "prompt": "Comment nomme-t-on la limite physique séparant l'ensemble inférieur plissé de l'ensemble supérieur horizontal ?",
+          "options": [
+            "La surface de discordance (ou surface d'érosion)",
+            "Le plan de faille miroir",
+            "La charnière axiale",
+            "Le cratère d'impact"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Cette surface représente l'ancienne surface terrestre rabotée par le vent, les fleuves et les vagues avant la nouvelle sédimentation."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex3",
+          "type": "mcq",
+          "prompt": "Quelle est la toute première étape chronologique de la genèse d'une discordance géologique ?",
+          "options": [
+            "Le dépôt horizontal des sédiments anciens dans un bassin sédimentaire initial",
+            "L'érosion des falaises",
+            "L'évaporation totale de la mer",
+            "La fonte du manteau terrestre"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Toute discordance débute obligatoirement par une phase de sédimentation sous-marine normale créant la roche mère ancienne."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex4",
+          "type": "mcq",
+          "prompt": "Quel événement tectonique intervient obligatoirement en deuxième étape pour déformer les couches anciennes ?",
+          "options": [
+            "Une orogenèse compressive qui plisse, métamorphise et dresse les couches anciennes",
+            "Une distension créant un fossé",
+            "Une marée d'équinoxe",
+            "Un refroidissement hivernal"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les forces orogéniques plissent les couches anciennes : sans ce plissement tectonique, il n'y aurait aucune discordance d'angle."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex5",
+          "type": "mcq",
+          "prompt": "Quel phénomène météorologique et géomorphologique intervient en troisième étape ?",
+          "options": [
+            "L'émersion des couches et leur érosion rabotant le sommet des plis",
+            "Une pluie de météorites",
+            "Une inondation instantanée",
+            "Une éruption volcanique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le soulèvement hors de l'eau expose les reliefs plissés à l'action destructrice du climat, nivelant le paysage en pénéplaine."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex6",
+          "type": "mcq",
+          "prompt": "Quel phénomène marin permet en quatrième étape le dépôt de nouvelles couches sédimentaires ?",
+          "options": [
+            "Une transgression marine (la mer revient et recouvre la surface érodée)",
+            "Une régression marine définitive",
+            "La congélation des eaux",
+            "Un courant d'air marin"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La remontée des eaux marines ou l'affaissement du bassin permet à la sédimentation de reprendre pacifiquement à l'horizontale."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex7",
+          "type": "mcq",
+          "prompt": "Quelle roche conglomératique trouve-t-on très souvent déposée directement sur la surface de discordance ?",
+          "options": [
+            "Un conglomérat de base (poudingue ou brèche sédimentaire à galets)",
+            "Du sel fin",
+            "Du pétrole liquide",
+            "Du basalte vacuolaire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les galets arrachés à l'ancien socle par les vagues de la mer qui avance sont cimentés pour former le conglomérat de base."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex8",
+          "type": "mcq",
+          "prompt": "Pourquoi les discordances géologiques sont-elles fondamentales pour les géologues ?",
+          "options": [
+            "Parce qu'elles prouvent qu'un cycle orogénique et d'érosion s'est achevé avant qu'un nouveau ne commence",
+            "Parce qu'elles indiquent où trouver de l'eau gazeuse",
+            "Parce qu'elles annoncent la fin du monde",
+            "Elles n'ont aucun intérêt scientifique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une discordance est une archive géologique majeure : elle sépare deux ères ou deux cycles de l'histoire de la Terre."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · Définition d'une discordance stratigraphique",
+          "stepTheme": "Définition d'une discordance stratigraphique",
+          "stepTitle": "Définition d'une discordance stratigraphique",
+          "paragraphText": "L'angle géométrique entre les deux séries de couches donne son nom à la discordance angulaire.",
+          "formula": {
+            "name": "Définition d'une discordance stratigraphique",
+            "formula": "Discordance = Couches récentes horizontales sur couches anciennes plissées et érodées",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Discordance = couches neuves reposant sur des couches anciennes plissées et érodées !",
+          "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex1",
+            "type": "mcq",
+            "prompt": "Quelle est la définition exacte d'une discordance géologique ?",
+            "options": [
+              "Un contact anormal où des couches sédimentaires récentes reposent sur des couches plus anciennes préalablement plissées et érodées",
+              "Une cassure de terrain avec rejet vertical",
+              "Une explosion volcanique sous-marine",
+              "Une fusion totale des minéraux"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La discordance matérialise une interruption majeure dans la sédimentation accompagnée d'une déformation tectonique intermédiaire."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · La surface de discordance ou paléosurface d'érosion",
+          "stepTheme": "La surface de discordance ou paléosurface d'érosion",
+          "stepTitle": "La surface de discordance ou paléosurface d'érosion",
+          "paragraphText": "Elle est souvent soulignée sur le terrain par un conglomérat de base formé de galets roulés.",
+          "formula": {
+            "name": "La surface de discordance ou paléosurface d'érosion",
+            "formula": "Limite entre les deux ensembles = Surface de discordance (Paléosurface d'érosion)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La ligne de séparation est la surface de discordance ou surface d'érosion !",
+          "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex2",
+            "type": "mcq",
+            "prompt": "Comment nomme-t-on la limite physique séparant l'ensemble inférieur plissé de l'ensemble supérieur horizontal ?",
+            "options": [
+              "La surface de discordance (ou surface d'érosion)",
+              "Le plan de faille miroir",
+              "La charnière axiale",
+              "Le cratère d'impact"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Cette surface représente l'ancienne surface terrestre rabotée par le vent, les fleuves et les vagues avant la nouvelle sédimentation."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · Première étape : Sédimentation ancienne",
+          "stepTheme": "Première étape : Sédimentation ancienne",
+          "stepTitle": "Première étape : Sédimentation ancienne",
+          "paragraphText": "Ces sédiments se déposent en couches initialement horizontales et concordantes.",
+          "formula": {
+            "name": "Première étape : Sédimentation ancienne",
+            "formula": "Étape 1 : Sédimentation initiale en couches horizontales",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Étape 1 = dépôt sédimentaire horizontal des couches anciennes !",
+          "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex3",
+            "type": "mcq",
+            "prompt": "Quelle est la toute première étape chronologique de la genèse d'une discordance géologique ?",
+            "options": [
+              "Le dépôt horizontal des sédiments anciens dans un bassin sédimentaire initial",
+              "L'érosion des falaises",
+              "L'évaporation totale de la mer",
+              "La fonte du manteau terrestre"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Toute discordance débute obligatoirement par une phase de sédimentation sous-marine normale créant la roche mère ancienne."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Deuxième étape : Compression et plissement orogénique",
+          "stepTheme": "Deuxième étape : Compression et plissement orogénique",
+          "stepTitle": "Deuxième étape : Compression et plissement orogénique",
+          "paragraphText": "Les contraintes horizontales redressent les strates qui perdent leur horizontalité primitive.",
+          "formula": {
+            "name": "Deuxième étape : Compression et plissement orogénique",
+            "formula": "Étape 2 : Compression orogénique -> Plissement des couches anciennes",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Étape 2 = orogenèse compressive qui plisse et redresse les couches anciennes !",
+          "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex4",
+            "type": "mcq",
+            "prompt": "Quel événement tectonique intervient obligatoirement en deuxième étape pour déformer les couches anciennes ?",
+            "options": [
+              "Une orogenèse compressive qui plisse, métamorphise et dresse les couches anciennes",
+              "Une distension créant un fossé",
+              "Une marée d'équinoxe",
+              "Un refroidissement hivernal"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les forces orogéniques plissent les couches anciennes : sans ce plissement tectonique, il n'y aurait aucune discordance d'angle."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Troisième étape : Émersion et érosion de surface",
+          "stepTheme": "Troisième étape : Émersion et érosion de surface",
+          "stepTitle": "Troisième étape : Émersion et érosion de surface",
+          "paragraphText": "L'érosion biseaute les têtes de couches plissées et prépare la future surface de contact.",
+          "formula": {
+            "name": "Troisième étape : Émersion et érosion de surface",
+            "formula": "Étape 3 : Émersion au-dessus de l'eau et rabotage érosif des plis",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Étape 3 = émersion et érosion qui rabotent les sommets des plis !",
+          "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex5",
+            "type": "mcq",
+            "prompt": "Quel phénomène météorologique et géomorphologique intervient en troisième étape ?",
+            "options": [
+              "L'émersion des couches et leur érosion rabotant le sommet des plis",
+              "Une pluie de météorites",
+              "Une inondation instantanée",
+              "Une éruption volcanique"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le soulèvement hors de l'eau expose les reliefs plissés à l'action destructrice du climat, nivelant le paysage en pénéplaine."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Quatrième étape : Transgression marine nouvelle",
+          "stepTheme": "Quatrième étape : Transgression marine nouvelle",
+          "stepTitle": "Quatrième étape : Transgression marine nouvelle",
+          "paragraphText": "Les nouveaux sédiments recouvrent la surface d'érosion en formant de nouvelles strates bien planes.",
+          "formula": {
+            "name": "Quatrième étape : Transgression marine nouvelle",
+            "formula": "Étape 4 : Transgression marine -> Nouvelle sédimentation concordante",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Étape 4 = transgression marine qui redépose des couches sédimentaires horizontales !",
+          "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex6",
+            "type": "mcq",
+            "prompt": "Quel phénomène marin permet en quatrième étape le dépôt de nouvelles couches sédimentaires ?",
+            "options": [
+              "Une transgression marine (la mer revient et recouvre la surface érodée)",
+              "Une régression marine définitive",
+              "La congélation des eaux",
+              "Un courant d'air marin"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La remontée des eaux marines ou l'affaissement du bassin permet à la sédimentation de reprendre pacifiquement à l'horizontale."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · Le conglomérat de base transgressif",
+          "stepTheme": "Le conglomérat de base transgressif",
+          "stepTitle": "Le conglomérat de base transgressif",
+          "paragraphText": "La présence de galets remaniés du socle dans la roche sus-jacente prouve indubitablement la discordance.",
+          "formula": {
+            "name": "Le conglomérat de base transgressif",
+            "formula": "Base de la nouvelle série = Conglomérat de base à galets remaniés",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Un conglomérat de base (galets cimentés) souligne la surface de discordance !",
+          "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex7",
+            "type": "mcq",
+            "prompt": "Quelle roche conglomératique trouve-t-on très souvent déposée directement sur la surface de discordance ?",
+            "options": [
+              "Un conglomérat de base (poudingue ou brèche sédimentaire à galets)",
+              "Du sel fin",
+              "Du pétrole liquide",
+              "Du basalte vacuolaire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les galets arrachés à l'ancien socle par les vagues de la mer qui avance sont cimentés pour former le conglomérat de base."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · Importance chronologique des discordances",
+          "stepTheme": "Importance chronologique des discordances",
+          "stepTitle": "Importance chronologique des discordances",
+          "paragraphText": "Elles permettent de délimiter dans le temps les grandes révolutions géologiques et orogéniques de la planète.",
+          "formula": {
+            "name": "Importance chronologique des discordances",
+            "formula": "Discordance = Marqueur absolu de rupture de cycle dans l'histoire de la Terre",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La discordance sépare deux cycles complets de l'histoire géologique !",
+          "keyRule": "Discordance = contact anormal où des couches neuves horizontales reposent sur un socle ancien plissé et raboté par l'érosion. Témoin d'un cycle orogénique complet.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p11_discordances_geologiques_surface_erosion_ex8",
+            "type": "mcq",
+            "prompt": "Pourquoi les discordances géologiques sont-elles fondamentales pour les géologues ?",
+            "options": [
+              "Parce qu'elles prouvent qu'un cycle orogénique et d'érosion s'est achevé avant qu'un nouveau ne commence",
+              "Parce qu'elles indiquent où trouver de l'eau gazeuse",
+              "Parce qu'elles annoncent la fin du monde",
+              "Elles n'ont aucun intérêt scientifique"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Une discordance est une archive géologique majeure : elle sépare deux ères ou deux cycles de l'histoire de la Terre."
+          }
+        }
+      ]
+    },
+    {
+      "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique",
+      "order": 12,
+      "title": "Discordances majeures ivoiriennes (Kokumbo et Abronienne) et synthèse",
+      "summary": "Identifier les discordances historiques ivoiriennes (discordance de Kokumbo, discordance Abronienne) et synthétiser l'histoire géologique de la Côte d'Ivoire.",
+      "conceptExplanation": "En Côte d'Ivoire, les discordances majeures attestent des mégacycles orogéniques successifs : la discordance de Kokumbo (discordance de base du Tarkwaïen sur le Birrimien plissé) et la discordance Abronienne (dans la région de Bondoukou / Bouna). Ces structures couronnent la synthèse de l'histoire géologique ivoirienne : cratonisation archéenne (Libérien), structuration protérozoïque (Éburnéen) et ouverture atlantique (Crétacé).",
+      "formulas": [
+        {
+          "name": "Synthèse de l'histoire géologique de la Côte d'Ivoire",
+          "formula": "Archéen (4 000-2 500 Ma) -> Birrimien (2 500-540 Ma) -> Bassin Côtier (135 Ma à nos jours)",
+          "note": "Marquée par les discordances majeures de Kokumbo et Abronienne."
+        }
+      ],
+      "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
+      "workedExample": {
+        "title": "Reconstitution de la discordance de Kokumbo",
+        "statement": "À Kokumbo, on observe des grès et conglomérats tarkwaïens reposant sur des schistes birrimiens plissés. Reconstituer l'histoire géologique.",
+        "methodSteps": [
+          "Étape 1 : Dépôt et plissement orogénique des schistes birrimiens lors du cycle éburnéen.",
+          "Étape 2 : Émersion et érosion météorique rabotant les schistes birrimiens.",
+          "Étape 3 : Dépôt en discordance des sédiments détritiques du Tarkwaïen (conglomérats et grès à Kokumbo).",
+          "Étape 4 : Conclure que Kokumbo est la localité type de la discordance éburnéenne ivoirienne."
+        ],
+        "conclusion": "Cette démarche méthodique conforme au programme MENA garantit la pleine maîtrise de la notion pour les devoirs et examens."
+      },
+      "exercises": [
+        {
+          "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex1",
+          "type": "mcq",
+          "prompt": "Dans quelle localité géologique célèbre de Côte d'Ivoire affleure la discordance de base du Tarkwaïen ?",
+          "options": [
+            "À Kokumbo (dans la région de Toumodi au Centre)",
+            "À San-Pédro",
+            "À Korhogo",
+            "À Grand-Bassam"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Kokumbo est le site de référence national où l'on observe les conglomérats tarkwaïens reposant en discordance sur le Birrimien."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex2",
+          "type": "mcq",
+          "prompt": "Quelles formations géologiques reposent en discordance sur les schistes birrimiens à Kokumbo ?",
+          "options": [
+            "Les sédiments détritiques du Tarkwaïen (grès quartzitiques et conglomérats aurifères)",
+            "Les sables du Continental Terminal",
+            "Les charnockites de Man",
+            "Les calcaires d'Abidjan"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le Tarkwaïen est une série continentale tarditectonique formée de galets et grès déposés sur les schistes érodés."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex3",
+          "type": "mcq",
+          "prompt": "Comment nomme-t-on la seconde discordance géologique majeure observée dans l'Est ivoirien ?",
+          "options": [
+            "La discordance Abronienne (dans la région de Bondoukou et Bouna)",
+            "La discordance de Danané",
+            "La discordance de Sassandra",
+            "La discordance de Fresco"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La discordance Abronienne marque la superposition de séries sédimentaires anciennes sur le socle granito-gneissique de l'Est."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex4",
+          "type": "mcq",
+          "prompt": "Quelle orogenèse majeure est directement responsable du plissement des roches antérieures à la discordance de Kokumbo ?",
+          "options": [
+            "L'orogenèse éburnéenne (vers 2 100 millions d'années)",
+            "L'orogenèse alpine",
+            "L'orogenèse calédonienne",
+            "L'ouverture atlantique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "C'est la fin de la première phase de l'Éburnéen qui a plissé les schistes avant le dépôt du Tarkwaïen."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex5",
+          "type": "mcq",
+          "prompt": "Dans quel ordre chronologique exact se sont mis en place les trois grands ensembles géologiques ivoiriens ?",
+          "options": [
+            "1. Domaine Archéen -> 2. Domaine Protérozoïque -> 3. Bassin sédimentaire côtier",
+            "1. Bassin côtier -> 2. Archéen -> 3. Protérozoïque",
+            "1. Protérozoïque -> 2. Bassin côtier -> 3. Archéen",
+            "Tous les trois se sont formés en même temps"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'Archéen s'est formé il y a plus de 2,5 milliards d'années, suivi du Protérozoïque (2,5 à 0,54 Ga), et enfin du bassin côtier (0,135 Ga)."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex6",
+          "type": "mcq",
+          "prompt": "Quelle grande conclusion métallogénique résume la géologie économique de la Côte d'Ivoire ?",
+          "options": [
+            "L'Archéen recèle le fer (Man), le Birrimien recèle l'or et le manganèse, et le bassin côtier recèle le pétrole et l'eau",
+            "La Côte d'Ivoire n'a aucune ressource géologique",
+            "Tout le territoire ne contient que du calcaire",
+            "Le pétrole se trouve à Man"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Chaque grand domaine géologique est le berceau d'une richesse économique nationale précise."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex7",
+          "type": "mcq",
+          "prompt": "Quel événement tectonique cassant d'âge secondaire a achevé la découpe du littoral ivoirien ?",
+          "options": [
+            "Le jeu de la faille des lagunes accompagnant l'ouverture de l'océan Atlantique Sud",
+            "La faille du Nil",
+            "L'orogenèse himalayenne",
+            "L'éruption du Vésuve"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L'effondrement de 5 km le long de la faille des lagunes a séparé définitivement l'Afrique de l'Amérique du Sud."
+        },
+        {
+          "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex8",
+          "type": "mcq",
+          "prompt": "Quel est le devoir civique et scientifique d'un citoyen ivoirien instruit en SVT ?",
+          "options": [
+            "Connaître les ressources de son sous-sol géologique et veiller à leur gestion durable et écologique",
+            "Vendre clandestinement les minerais",
+            "Détruire les roches au marteau",
+            "Polluer les nappes phréatiques d'eau douce"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La connaissance rigoureuse de la géologie permet d'exploiter les minerais sans détruire l'environnement ni empoisonner l'eau."
+        }
+      ],
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepBadge": "Étape 1/8 · La discordance géologique de Kokumbo",
+          "stepTheme": "La discordance géologique de Kokumbo",
+          "stepTitle": "La discordance géologique de Kokumbo",
+          "paragraphText": "Ce contact stratigraphique spectaculaire est étudié par tous les étudiants en géologie de Côte d'Ivoire.",
+          "formula": {
+            "name": "La discordance géologique de Kokumbo",
+            "formula": "Site officiel de discordance : Kokumbo (Région du Bélier / Toumodi)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Discordance majeure ivoirienne = Kokumbo (près de Toumodi) !",
+          "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex1",
+            "type": "mcq",
+            "prompt": "Dans quelle localité géologique célèbre de Côte d'Ivoire affleure la discordance de base du Tarkwaïen ?",
+            "options": [
+              "À Kokumbo (dans la région de Toumodi au Centre)",
+              "À San-Pédro",
+              "À Korhogo",
+              "À Grand-Bassam"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Kokumbo est le site de référence national où l'on observe les conglomérats tarkwaïens reposant en discordance sur le Birrimien."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepBadge": "Étape 2/8 · Le Tarkwaïen en discordance sur le Birrimien",
+          "stepTheme": "Le Tarkwaïen en discordance sur le Birrimien",
+          "stepTitle": "Le Tarkwaïen en discordance sur le Birrimien",
+          "paragraphText": "Ces conglomérats contiennent parfois des paléoplacers d'or piégés dans les galets.",
+          "formula": {
+            "name": "Le Tarkwaïen en discordance sur le Birrimien",
+            "formula": "Série discordante à Kokumbo : Grès et Conglomérats du Tarkwaïen",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : À Kokumbo : les grès et conglomérats du Tarkwaïen reposent sur le Birrimien !",
+          "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex2",
+            "type": "mcq",
+            "prompt": "Quelles formations géologiques reposent en discordance sur les schistes birrimiens à Kokumbo ?",
+            "options": [
+              "Les sédiments détritiques du Tarkwaïen (grès quartzitiques et conglomérats aurifères)",
+              "Les sables du Continental Terminal",
+              "Les charnockites de Man",
+              "Les calcaires d'Abidjan"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le Tarkwaïen est une série continentale tarditectonique formée de galets et grès déposés sur les schistes érodés."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepBadge": "Étape 3/8 · La discordance Abronienne (Bondoukou)",
+          "stepTheme": "La discordance Abronienne (Bondoukou)",
+          "stepTitle": "La discordance Abronienne (Bondoukou)",
+          "paragraphText": "Son nom dérive du royaume Abron dans le district du Zanzan où elle a été identifiée par les géologues.",
+          "formula": {
+            "name": "La discordance Abronienne (Bondoukou)",
+            "formula": "Discordance orientale : Discordance Abronienne (Bondoukou / Bouna)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Discordance de l'Est ivoirien = Discordance Abronienne (Bondoukou) !",
+          "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex3",
+            "type": "mcq",
+            "prompt": "Comment nomme-t-on la seconde discordance géologique majeure observée dans l'Est ivoirien ?",
+            "options": [
+              "La discordance Abronienne (dans la région de Bondoukou et Bouna)",
+              "La discordance de Danané",
+              "La discordance de Sassandra",
+              "La discordance de Fresco"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La discordance Abronienne marque la superposition de séries sédimentaires anciennes sur le socle granito-gneissique de l'Est."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepBadge": "Étape 4/8 · Rôle de l'orogenèse éburnéenne",
+          "stepTheme": "Rôle de l'orogenèse éburnéenne",
+          "stepTitle": "Rôle de l'orogenèse éburnéenne",
+          "paragraphText": "Le plissement éburnéen a redressé les couches qui ont ensuite été tronquées par l'érosion avant le Tarkwaïen.",
+          "formula": {
+            "name": "Rôle de l'orogenèse éburnéenne",
+            "formula": "Orogenèse responsable : Mégacycle Éburnéen (2 100 Ma)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : L'orogenèse éburnéenne a plissé les roches avant la discordance de Kokumbo !",
+          "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex4",
+            "type": "mcq",
+            "prompt": "Quelle orogenèse majeure est directement responsable du plissement des roches antérieures à la discordance de Kokumbo ?",
+            "options": [
+              "L'orogenèse éburnéenne (vers 2 100 millions d'années)",
+              "L'orogenèse alpine",
+              "L'orogenèse calédonienne",
+              "L'ouverture atlantique"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "C'est la fin de la première phase de l'Éburnéen qui a plissé les schistes avant le dépôt du Tarkwaïen."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepBadge": "Étape 5/8 · Chronologie absolue des trois ensembles",
+          "stepTheme": "Chronologie absolue des trois ensembles",
+          "stepTitle": "Chronologie absolue des trois ensembles",
+          "paragraphText": "C'est la règle d'or de la géologie ivoirienne : de l'Ouest ancien vers l'Est plus jeune, puis le Sud littoral récent.",
+          "formula": {
+            "name": "Chronologie absolue des trois ensembles",
+            "formula": "Ordre chronologique : Archéen (> 2 500 Ma) -> Birrimien (2 100 Ma) -> Bassin côtier (135 Ma)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Chronologie : 1. Archéen -> 2. Protérozoïque (Birrimien) -> 3. Bassin côtier !",
+          "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex5",
+            "type": "mcq",
+            "prompt": "Dans quel ordre chronologique exact se sont mis en place les trois grands ensembles géologiques ivoiriens ?",
+            "options": [
+              "1. Domaine Archéen -> 2. Domaine Protérozoïque -> 3. Bassin sédimentaire côtier",
+              "1. Bassin côtier -> 2. Archéen -> 3. Protérozoïque",
+              "1. Protérozoïque -> 2. Bassin côtier -> 3. Archéen",
+              "Tous les trois se sont formés en même temps"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'Archéen s'est formé il y a plus de 2,5 milliards d'années, suivi du Protérozoïque (2,5 à 0,54 Ga), et enfin du bassin côtier (0,135 Ga)."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepBadge": "Étape 6/8 · Synthèse métallogénique de la Côte d'Ivoire",
+          "stepTheme": "Synthèse métallogénique de la Côte d'Ivoire",
+          "stepTitle": "Synthèse métallogénique de la Côte d'Ivoire",
+          "paragraphText": "Cette corrélation parfaite entre province géologique et matière première est la base de l'économie minière ivoirienne.",
+          "formula": {
+            "name": "Synthèse métallogénique de la Côte d'Ivoire",
+            "formula": "Synthèse : Archéen (Fer) | Birrimien (Or, Manganèse) | Bassin côtier (Pétrole, Gaz, Eau)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Archéen = Fer de Man ; Birrimien = Or et Manganèse ; Bassin = Pétrole et Eau !",
+          "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex6",
+            "type": "mcq",
+            "prompt": "Quelle grande conclusion métallogénique résume la géologie économique de la Côte d'Ivoire ?",
+            "options": [
+              "L'Archéen recèle le fer (Man), le Birrimien recèle l'or et le manganèse, et le bassin côtier recèle le pétrole et l'eau",
+              "La Côte d'Ivoire n'a aucune ressource géologique",
+              "Tout le territoire ne contient que du calcaire",
+              "Le pétrole se trouve à Man"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Chaque grand domaine géologique est le berceau d'une richesse économique nationale précise."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepBadge": "Étape 7/8 · La faille des lagunes, ultime cicatrice tectonique",
+          "stepTheme": "La faille des lagunes, ultime cicatrice tectonique",
+          "stepTitle": "La faille des lagunes, ultime cicatrice tectonique",
+          "paragraphText": "Cette fracturation normale clôt l'histoire géologique structurale majeure de la Côte d'Ivoire.",
+          "formula": {
+            "name": "La faille des lagunes, ultime cicatrice tectonique",
+            "formula": "Ultime accident majeur : Faille des lagunes (Crétacé - 135 Ma)",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : La faille des lagunes a achevé la géométrie de notre façade maritime !",
+          "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex7",
+            "type": "mcq",
+            "prompt": "Quel événement tectonique cassant d'âge secondaire a achevé la découpe du littoral ivoirien ?",
+            "options": [
+              "Le jeu de la faille des lagunes accompagnant l'ouverture de l'océan Atlantique Sud",
+              "La faille du Nil",
+              "L'orogenèse himalayenne",
+              "L'éruption du Vésuve"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L'effondrement de 5 km le long de la faille des lagunes a séparé définitivement l'Afrique de l'Amérique du Sud."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepBadge": "Étape 8/8 · Gestion durable des ressources de la Terre",
+          "stepTheme": "Gestion durable des ressources de la Terre",
+          "stepTitle": "Gestion durable des ressources de la Terre",
+          "paragraphText": "L'apprentissage des SVT selon le programme MENA forme des citoyens éclairés capables de protéger le patrimoine national.",
+          "formula": {
+            "name": "Gestion durable des ressources de la Terre",
+            "formula": "Citoyenneté scientifique : Valorisation et protection durable du sous-sol national",
+            "note": "Notion officielle du programme de SVT 2de C (MENA Côte d'Ivoire)."
+          },
+          "konanTip": "L'Astuce du Professeur Konan : Maîtriser la géologie pour valoriser et protéger durablement nos ressources nationales !",
+          "keyRule": "Discordance de Kokumbo = Tarkwaïen sur Birrimien plissé (au Centre). Discordance Abronienne = Est (Bondoukou). Histoire géologique = Archéen -> Protérozoïque -> Bassin côtier.",
+          "exercise": {
+            "id": "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex8",
+            "type": "mcq",
+            "prompt": "Quel est le devoir civique et scientifique d'un citoyen ivoirien instruit en SVT ?",
+            "options": [
+              "Connaître les ressources de son sous-sol géologique et veiller à leur gestion durable et écologique",
+              "Vendre clandestinement les minerais",
+              "Détruire les roches au marteau",
+              "Polluer les nappes phréatiques d'eau douce"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La connaissance rigoureuse de la géologie permet d'exploiter les minerais sans détruire l'environnement ni empoisonner l'eau."
+          }
         }
       ]
     }
   ]
 };
 
-// ============================================================================
-// LEÇON 2 : L'ALTÉRATION CHIMIQUE DES ROCHES MAGMATIQUES
-// ============================================================================
 export const svt2deCAlterationRochesMagmatiquesChapter: CurriculumChapter = {
   "id": "seconde_c_svt_ch2_alteration_chimique_roches_magmatiques",
   "subjectId": "svt",
