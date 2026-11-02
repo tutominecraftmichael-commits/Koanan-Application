@@ -181,7 +181,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
           </button>
           {isCatchupMode ? (
             <Badge variant="amber" size="sm" className="font-bold px-2.5 py-0.5 border border-amber-500/50 bg-amber-500/20 text-amber-200 animate-pulse">
-              🔄 Chrono Spécial Rattrapage
+              Chrono Spécial Rattrapage
             </Badge>
           ) : (
             <Badge variant="cyan" dot size="sm">Deep Work</Badge>
@@ -354,7 +354,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
 
           <div className="space-y-1">
             <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-              {isCatchupMode ? '🎉 Rattrapage réussi et validé avec succès !' : 'Session accomplie avec succès !'}
+              {isCatchupMode ? 'Rattrapage réussi et validé avec succès !' : 'Session accomplie avec succès !'}
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               {isCatchupMode 

@@ -229,7 +229,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               title={t('clickForGuide', lang)}
             >
               <Badge variant={meta.variant} size="sm" className="group-hover:ring-1 group-hover:ring-cyan-400 whitespace-nowrap text-[11px] py-1 px-2.5">
-                {meta.label} ℹ️
+                {meta.label}
               </Badge>
             </button>
           ))}
@@ -312,7 +312,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             <div className="space-y-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-extrabold text-emerald-900 dark:text-emerald-300 uppercase tracking-wide text-xs">
-                  🌙 Programme terminé — À demain !
+                  Programme terminé — À demain !
                 </span>
                 <Badge variant="emerald" size="sm" className="font-bold">
                   Barres à 0%
@@ -467,22 +467,21 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       </span>
                       {session.isRescheduledToday && session.originalStartTime && (
                         <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-500/40">
-                          ⏰ Ratée à {session.originalStartTime} ➔ Replacée à {session.startTime}
+                          Manquée à {session.originalStartTime} ➔ Replacée à {session.startTime}
                         </span>
                       )}
                       {isToday && (
                         <Badge variant="cyan" size="sm" className="text-[10px] px-1.5 py-0 font-bold">
-                          ✨ Aujourd'hui
+                          Aujourd'hui
                         </Badge>
                       )}
                       {session.isRescheduledToday && (
                         <Badge variant="amber" size="sm" className="text-[10px] px-1.5 py-0 font-bold" title={session.rescheduledReason}>
-                          🔄 Rattrapage ({subject.name})
+                          Rattrapage ({subject.name})
                         </Badge>
                       )}
                       {session.pacingMethod && (
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex items-center gap-1 shadow-xs">
-                          <span>🧠</span>
                           <span className="truncate max-w-[120px]">
                             {getPacingStrategy(session.pacingMethod).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
                           </span>
@@ -501,7 +500,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         title={t('clickForGuide', lang)}
                       >
                         <Badge variant={badgeType.variant} size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
-                          {badgeType.label} ℹ️
+                          {badgeType.label}
                         </Badge>
                       </button>
                       {session.isExamPrep && (
@@ -510,7 +509,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                             ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30'
                             : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30'
                         }`}>
-                          <span>{session.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
+                          <span>{session.examType === 'devoir' ? 'Devoir' : 'Examen'}</span>
                           {(() => {
                             const sub = subjects.find(s => s.id === session.subjectId);
                             const countdown = getSessionExamCountdown(session.dayOfWeek, sub?.examDate);
@@ -551,7 +550,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         className="w-full flex items-center justify-between p-2.5 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900/60 transition-colors cursor-pointer"
                       >
                         <span className="flex items-center gap-1.5 text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
-                          <span>📋 Protocole & Checklist ({session.objectives.length} étapes)</span>
+                          <span>Protocole & Checklist ({session.objectives.length} étapes)</span>
                         </span>
                         {openChecklists.has(session.id) ? (
                           <ChevronUp className="w-3.5 h-3.5 text-slate-400" />
@@ -593,13 +592,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                             onToggleSessionComplete(session.id);
                           }
                         }}
-                        className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer active:translate-y-0.5 ${
+                        className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer active:translate-y-1 ${
                           session.isRescheduledToday
-                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] active:shadow-[0_2px_0_0_#b45309]'
-                            : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
+                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] hover:shadow-[0_2px_0_0_#b45309]'
+                            : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46]'
                         }`}
                       >
-                        {session.isRescheduledToday ? '⚡ Démarrer la séance' : 'Valider la session'}
+                        {session.isRescheduledToday ? 'Démarrer la séance' : 'Valider la session'}
                       </Button>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 select-none">
@@ -733,7 +732,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                     }}
                     className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/40 shrink-0 cursor-pointer hover:bg-amber-500/30 transition-colors ml-2"
                   >
-                    ⭐ Découvrir PRO
+                    Découvrir PRO
                   </button>
                 </div>
               );
@@ -881,7 +880,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         #{comboIndex}
                       </span>
                     )}
-                    {isLocked && <span className="text-[9px] text-amber-500">⭐</span>}
+                    {isLocked && <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500 shrink-0" />}
                   </button>
                 );
               })}
@@ -992,7 +991,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                             )}
                             {isLocked && (
                               <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
-                                ⭐ PRO
+                                PRO
                               </span>
                             )}
                             {isPrimaryRec && !isCombined && (
@@ -1099,7 +1098,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                             }}
                             className="text-xs font-bold cursor-pointer bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 border-amber-400"
                           >
-                            ⭐ Débloquer avec KONAN PRO
+                            Débloquer avec KONAN PRO
                           </Button>
                         ) : (
                           <Button

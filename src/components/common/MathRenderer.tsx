@@ -527,8 +527,23 @@ export function sanitizeFormulaForKatex(raw: string): string {
   // 12. Virgules décimales françaises (8,0 -> 8{,}0)
   s = s.replace(/(\d+),(\d+)/g, '$1{,}$2');
 
-  // 13. Texte explicatif français intégré dans la formule
-  s = s.replace(/\((où[^\)]+)\)/g, '(\\text{$1})');
+  // 13. Expressions et mots français intégrés dans la formule mathématique
+  // Empêche absolument le collage des lettres en italique mathématique KaTeX
+  s = s.replace(/Attention\s+aux\s+conversions\s*:/gi, '\\text{Attention aux conversions : }');
+  s = s.replace(/Résultat\s+encadré/gi, '\\text{Résultat encadré}');
+  s = s.replace(/(?<!\\text\{)Incertitude/gi, '\\text{Incertitude}');
+  s = s.replace(/(?<!\\text\{)Unité\s+SI/gi, '\\text{Unité SI}');
+  s = s.replace(/(?<!\\text\{)croissante/gi, '\\text{croissante}');
+  s = s.replace(/(?<!\\text\{)décroissante/gi, '\\text{décroissante}');
+
+  // Remplacement des parenthèses contenant du texte français (ex: (croissante), (décroissante), (remplacer x par a))
+  s = s.replace(/(?<!\\text)\(([a-zA-ZÀ-ÿ\s'-]{2,})\)/g, '\\;\\text{($1)}');
+
+  // Remplacement des crochets contenant du texte français (ex: [Unité SI])
+  s = s.replace(/(?<!\\text)\[([a-zA-ZÀ-ÿ\s'-]{2,})\]/g, '\\;\\text{[$1]}');
+
+  // Sécurisation du signe pourcentage pour éviter que KaTeX ne commente la suite de la ligne
+  s = s.replace(/(?<!\\)%/g, '\\%');
 
   return s;
 }
@@ -634,6 +649,20 @@ export const SmartKeyFormulaBox: React.FC<SmartKeyFormulaBoxProps> = ({
     return false;
   }, [formula]);
 
+  // Si la formule contient des sous-équations séparées par ';' ou un saut de ligne,
+  // on les découpe en lignes distinctes empilées verticalement pour éliminer tout scroll horizontal
+  const formulaLines = useMemo(() => {
+    if (!formula || isDescriptiveText) return [];
+    const str = String(formula).trim();
+    if (str.includes(';') || str.includes('\n')) {
+      return str
+        .split(/[;\n]/)
+        .map(line => line.replace(/^\\quad\s*/, '').replace(/\\quad\s*$/, '').trim())
+        .filter(line => line.length > 0);
+    }
+    return [str];
+  }, [formula, isDescriptiveText]);
+
   return (
     <div className={`p-3.5 sm:p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border-2 border-indigo-200 dark:border-indigo-500/30 space-y-2.5 ${className}`}>
       <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
@@ -641,14 +670,22 @@ export const SmartKeyFormulaBox: React.FC<SmartKeyFormulaBoxProps> = ({
         <span>Formule & Propriété Clé (Notation Officielle) : <MathRenderer text={name} /></span>
       </div>
 
-      <div className="w-full text-center py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 text-xs sm:text-sm md:text-base font-black text-indigo-800 dark:text-indigo-200">
+      <div className="w-full text-center py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 text-xs sm:text-sm md:text-base font-black text-indigo-800 dark:text-indigo-200 overflow-hidden">
         {isDescriptiveText ? (
           <div className="break-words whitespace-normal leading-relaxed text-slate-900 dark:text-white font-extrabold px-1">
             <MathRenderer text={formula} />
           </div>
+        ) : formulaLines.length > 1 ? (
+          <div className="flex flex-col items-center justify-center gap-2.5 w-full py-1 text-center">
+            {formulaLines.map((line, idx) => (
+              <div key={idx} className="w-full flex justify-center items-center py-1 border-b border-indigo-100/50 dark:border-slate-800/60 last:border-b-0">
+                <MathFormula latex={line} display={false} className="text-xs sm:text-sm md:text-base font-bold text-center" />
+              </div>
+            ))}
+          </div>
         ) : (
-          <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <MathFormula latex={formula} display={true} />
+          <div className="w-full flex justify-center items-center py-1">
+            <MathFormula latex={formula} display={false} className="text-xs sm:text-sm md:text-base font-bold text-center" />
           </div>
         )}
       </div>

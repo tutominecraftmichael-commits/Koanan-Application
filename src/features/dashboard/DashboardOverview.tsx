@@ -221,14 +221,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   : planTier === 'pro' 
                   ? 'gold-shimmer-text font-black' 
                   : 'text-gradient-primary'
-              }>{studentName}</span> 👋
+              }>{studentName}</span>
             </h1>
 
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
               {isCycleCompletedToday ? (
-                <span>🌟 <strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Programme 100% validé !</strong> Repos bien mérité, on reprend demain.</span>
+                <span><strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Programme 100% validé !</strong> Repos bien mérité, on reprend demain.</span>
               ) : isDayFullyComplete ? (
-                <span>🎉 <strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
+                <span><strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
               ) : (
                 <>
                   Cursus <strong className="text-slate-700 dark:text-slate-200 font-semibold">{academicLevel}</strong> synchronisé.
@@ -274,7 +274,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40'
                         : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
                     }`}>
-                      <span>{nextStudySession.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
+                      <span>{nextStudySession.examType === 'devoir' ? 'Devoir' : 'Examen'}</span>
                       {(() => {
                         const sub = subjects.find(s => s.id === nextStudySession.subjectId);
                         const countdown = getSessionExamCountdown(nextStudySession.dayOfWeek, sub?.examDate);
@@ -285,7 +285,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   )}
                   {nextStudySession.isRescheduledToday && (
                     <Badge variant="amber" size="sm" className="text-[9px] px-1.5 py-0 font-bold animate-pulse">
-                      🔄 Rattrapage
+                      Rattrapage
                     </Badge>
                   )}
                 </div>
@@ -298,7 +298,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   </span>
                   {nextStudySession.isRescheduledToday && nextStudySession.originalStartTime && (
                     <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-500/40">
-                      ⏰ Ratée à {nextStudySession.originalStartTime} ➔ Replacée à {nextStudySession.startTime}
+                      Manquée à {nextStudySession.originalStartTime} ➔ Replacée à {nextStudySession.startTime}
                     </span>
                   )}
                 </div>
@@ -314,13 +314,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     onToggleSessionComplete(nextStudySession.id);
                   }
                 }}
-                className={`w-full sm:w-auto cursor-pointer text-xs font-extrabold whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-0.5 ${
+                className={`w-full sm:w-auto cursor-pointer text-xs font-extrabold whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-1 ${
                   nextStudySession.isRescheduledToday
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] active:shadow-[0_2px_0_0_#b45309]'
-                    : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] hover:shadow-[0_2px_0_0_#b45309]'
+                    : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46]'
                 }`}
               >
-                {nextStudySession.isRescheduledToday ? '⚡ Démarrer la séance' : 'Valider la session'}
+                {nextStudySession.isRescheduledToday ? 'Démarrer la séance' : 'Valider la session'}
               </Button>
             </div>
           )}
@@ -473,10 +473,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </div>
                 <div className="space-y-2 max-w-md mx-auto">
                   <span className="inline-block px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300 text-xs font-bold uppercase tracking-wider">
-                    🎉 Objectif Semaine Validé
+                    Objectif Semaine Validé
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                    À demain ! 🌙
+                    À demain !
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     Toutes les barres de progression sont à zéro. Reposez-vous bien aujourd'hui, on reprend tout dès demain avec votre nouveau planning !
@@ -558,7 +558,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <Card className="text-center py-6 sm:py-8 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 shadow-xs">
                     <p className="text-xs text-slate-500 dark:text-slate-400">
                       {completedToday > 0 
-                        ? '✨ Bravo ! Toutes vos sessions prévues aujourd’hui sont complétées.'
+                        ? 'Bravo ! Toutes vos sessions prévues aujourd’hui sont complétées.'
                         : 'Aucune session d’étude active pour aujourd’hui.'}
                     </p>
                     <Button
@@ -592,7 +592,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             </span>
                             {isRescheduled && session.originalStartTime && (
                               <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-500/40">
-                                ⏰ Ratée à {session.originalStartTime} ➔ Replacée à {session.startTime}
+                                Manquée à {session.originalStartTime} ➔ Replacée à {session.startTime}
                               </span>
                             )}
                             {session.isExamPrep && (
@@ -601,7 +601,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                   ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40'
                                   : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
                               }`}>
-                                <span>{session.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
+                                <span>{session.examType === 'devoir' ? 'Devoir' : 'Examen'}</span>
                                 {(() => {
                                   const sub = subjects.find(s => s.id === session.subjectId);
                                   const countdown = getSessionExamCountdown(session.dayOfWeek, sub?.examDate);
@@ -616,12 +616,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             )}
                             {isRescheduled && (
                               <Badge variant="amber" size="sm" className="text-[10px] px-2 py-0.5 font-bold animate-pulse" title={session.rescheduledReason || "Rattrapage du jour même uniquement (aucun report au lendemain)"}>
-                                🔄 Rattrapage ce soir ({sub?.name || 'Session'})
+                                Rattrapage ce soir ({sub?.name || 'Session'})
                               </Badge>
                             )}
                             {session.pacingMethod && (
                               <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-cyan-300 border border-indigo-200 dark:border-indigo-500/30 font-mono">
-                                🧠 {session.pacingMethod === 'feynman' ? 'Feynman' : session.pacingMethod === 'time_blocking' ? 'Time Blocking' : session.pacingMethod === 'pomodoro' ? 'Pomodoro' : session.pacingMethod === 'two_minutes_rule' ? '2-Min' : 'Répétition'}
+                                {session.pacingMethod === 'feynman' ? 'Feynman' : session.pacingMethod === 'time_blocking' ? 'Time Blocking' : session.pacingMethod === 'pomodoro' ? 'Pomodoro' : session.pacingMethod === 'two_minutes_rule' ? '2-Min' : 'Répétition'}
                               </span>
                             )}
                             <button
@@ -636,7 +636,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                  session.type === 'deep_summary' ? t('deepSummaryLabel', lang) :
                                  session.type === 'flashcards' ? t('activeRecallLabel', lang) :
                                  session.type === 'exam_simulation' ? t('examSimulationLabel', lang) :
-                                 t('consolidationLabel', lang)} ℹ️
+                                 t('consolidationLabel', lang)}
                               </Badge>
                             </button>
                           </div>
@@ -660,13 +660,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                 onToggleSessionComplete(session.id);
                               }
                             }}
-                            className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-0.5 ${
+                            className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-1 ${
                               isRescheduled
-                                ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] active:shadow-[0_2px_0_0_#b45309]'
-                                : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
+                                ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] hover:shadow-[0_2px_0_0_#b45309]'
+                                : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46]'
                             }`}
                           >
-                            <span>{isRescheduled ? '⚡ Démarrer la séance' : 'Valider la session'}</span>
+                            <span>{isRescheduled ? 'Démarrer la séance' : 'Valider la session'}</span>
                           </Button>
                         </div>
                       </div>

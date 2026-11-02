@@ -643,7 +643,12 @@ export function App() {
   }, []);
 
   const showToast = (msg: string, duration = 5000) => {
-    setToastMessage(msg);
+    // Purge absolue de tous les émojis pour une interface sobre, élégante et professionnelle
+    const cleanMsg = msg
+      .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1FA00}-\u{1FAFF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}]/gu, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+    setToastMessage(cleanMsg);
     if (toastTimeoutRef.current) {
       clearTimeout(toastTimeoutRef.current);
     }
@@ -663,14 +668,14 @@ export function App() {
     }
 
     if (state.isDemoMode && view === 'upload-schedule') {
-      showToast('ℹ️ En mode démo, l’importation d’emploi du temps est désactivée : votre EDT est déjà prédéfini à l’avance. Connectez-vous pour importer le vôtre (jusqu’à 3 imports gratuits).');
+      showToast('En mode démo, l’importation d’emploi du temps est désactivée : votre EDT est déjà prédéfini à l’avance. Connectez-vous pour importer le vôtre (jusqu’à 3 imports gratuits).');
       return;
     }
 
     // Formule KONAN PRO : Connexion impérative obligatoire (aucun accès anonyme ou démo non authentifié)
     if (view === 'pro-wizard') {
       if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
-        showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte Google pour passer à KONAN PRO.');
+        showToast('Connexion requise : Vous devez impérativement être connecté avec votre compte Google pour passer à KONAN PRO.');
         setActiveView('auth');
         return;
       }
@@ -678,7 +683,7 @@ export function App() {
 
     const isAuthenticated = Boolean(state.userAccount?.isLoggedIn || state.isDemoMode);
     if (!isAuthenticated && view !== 'landing' && view !== 'auth') {
-      showToast('🔒 Connexion requise : Veuillez vous connecter avec Google pour accéder à l’application.');
+      showToast('Connexion requise : Veuillez vous connecter avec Google pour accéder à l’application.');
       setActiveView('auth');
       return;
     }
@@ -728,11 +733,11 @@ export function App() {
     hasGreetedAuthRef.current = profile.googleId;
     const resolvedTier = finalUserState.planTier || effectivePlan;
     if (resolvedTier === 'pro') {
-      showToast(`⭐ Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PRO actif)`);
+      showToast(`Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PRO actif)`);
     } else if (resolvedTier === 'plus') {
-      showToast(`👑 Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PLUS actif)`);
+      showToast(`Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PLUS actif)`);
     } else {
-      showToast(`✨ Bonne Arrivée ! ${finalName} — Votre Code Konan : ${studentKonanId}`);
+      showToast(`Bonne Arrivée ! ${finalName} — Votre Code Konan : ${studentKonanId}`);
     }
 
     // Célébration lors de la toute première connexion
@@ -880,7 +885,7 @@ export function App() {
     // Formule KONAN PRO ou KONAN PLUS : Ouverture du Guide EDT Pro pas à pas avec Konan
     if (planId === 'pro' || planId === 'plus') {
       if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
-        showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte pour configurer votre EDT Pro avec Konan.');
+        showToast('Connexion requise : Vous devez impérativement être connecté avec votre compte pour configurer votre EDT Pro avec Konan.');
         setActiveView('auth');
         return;
       }
@@ -910,7 +915,7 @@ export function App() {
     }
     setState(nextState);
 
-    showToast(`✨ Modèle KONAN Gratuit actif pour votre compte.`);
+    showToast(`Modèle KONAN Gratuit actif pour votre compte.`);
     if (activeView === 'landing' || activeView === 'auth') {
       setActiveView('dashboard');
     }
@@ -958,7 +963,7 @@ export function App() {
       }
       return next;
     });
-    showToast(`👥 Groupe KONAN PLUS : ${ids.length}/4 IDs rattachés avec succès.`);
+    showToast(`Groupe KONAN PLUS : ${ids.length}/4 IDs rattachés avec succès.`);
   };
 
   /**
@@ -1003,7 +1008,7 @@ export function App() {
       }
       return next;
     });
-    showToast(`👥 Groupe KONAN PLUS mis à jour (${emails.length}/4 membres actifs).`);
+    showToast(`Groupe KONAN PLUS mis à jour (${emails.length}/4 membres actifs).`);
   };
 
   /**
@@ -1052,7 +1057,7 @@ export function App() {
       target_16: 'Mention Très Bien (16/20)',
       major_promotion: 'Major de Promotion (Excellence)',
     };
-    showToast(`🎯 Objectif académique activé : ${goalLabels[goal]} !`);
+    showToast(`Objectif académique activé : ${goalLabels[goal]} !`);
   };
 
   /**
@@ -1358,12 +1363,12 @@ export function App() {
 
     // 🌟 Uniquement si l'utilisateur vient de cliquer explicitement sur le modèle KONAN PRO ou KONAN PLUS, lancer le guide EDT Pro
     if (payload.launchProWizard && (payload.planTier === 'pro' || payload.planTier === 'plus')) {
-      showToast('🚀 Bienvenue dans le Guide EDT Pro avec Konan !');
+      showToast('Bienvenue dans le Guide EDT Pro avec Konan !');
       setActiveView('pro-wizard');
       return;
     }
 
-    showToast('🎉 Emploi du temps synchronisé & planning d’étude optimisé généré !');
+    showToast('Emploi du temps synchronisé & planning d’étude optimisé généré !');
     setActiveView('dashboard');
   };
 
@@ -1471,7 +1476,7 @@ export function App() {
       return next;
     });
 
-    showToast(`✅ Nom et filière enregistrés : ${updated.name} (${updated.academicLevel})`);
+    showToast(`Nom et filière enregistrés : ${updated.name} (${updated.academicLevel})`);
   };
 
   const handleRegeneratePlan = () => {
@@ -1487,7 +1492,7 @@ export function App() {
       }
       return nextState;
     });
-    showToast('✨ Votre planning d’étude a été réorganisé avec succès !');
+    showToast('Votre planning d’étude a été réorganisé avec succès !');
   };
 
   const handleToggleSessionComplete = (sessionId: string) => {
@@ -1502,14 +1507,14 @@ export function App() {
     // Anti-cheat verification: Only allow validating today's study sessions
     if (target.dayOfWeek !== currentDayIndex) {
       soundFX.playNotificationPing();
-      showToast(`🔒 Anti-triche : Vous pouvez uniquement valider les révisions prévues pour aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
+      showToast(`Anti-triche : Vous pouvez uniquement valider les révisions prévues pour aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
       return;
     }
 
     // Règle stricte : Une séance validée ne peut JAMAIS être annulée
     if (target.completed) {
       soundFX.playNotificationPing();
-      showToast('🔒 Cette séance d\'étude est déjà validée et enregistrée.', 4000);
+      showToast('Cette séance d\'étude est déjà validée et enregistrée.', 4000);
       return;
     }
 
@@ -1554,13 +1559,13 @@ export function App() {
 
       if (willAllBeCompleted) {
         setIsUltimateCelebrationOpen(true);
-        showToast(`🏆 Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
+        showToast(`Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
       } else if (isDayFullyComplete) {
         soundFX.playCelebrationFanfare();
-        showToast(`🎉 Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
+        showToast(`Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
       } else {
         soundFX.playCelebrationFanfare();
-        showToast(`🎉 Félicitations ! Tu as validé la leçon "${target.title}" avec succès !`, 5000);
+        showToast(`Félicitations ! Tu as validé la leçon "${target.title}" avec succès !`, 5000);
       }
     }
 
@@ -1597,7 +1602,7 @@ export function App() {
     // Anti-cheat verification: Only allow launching today's study sessions
     if (session.dayOfWeek !== currentDayIndex) {
       soundFX.playNotificationPing();
-      showToast(`🔒 Anti-triche : Vous pouvez uniquement lancer le chronomètre pour les révisions d'aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
+      showToast(`Anti-triche : Vous pouvez uniquement lancer le chronomètre pour les révisions d'aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
       return;
     }
 
@@ -1639,7 +1644,7 @@ export function App() {
     }
     setActiveTutorSession(null);
     setActiveView('dashboard');
-    showToast('🏆 Félicitations ! Séance validée avec succès dans ton tuteur interactif KONAN !', 6000);
+    showToast('Félicitations ! Séance validée avec succès dans ton tuteur interactif KONAN !', 6000);
   };
 
   /**
@@ -1670,11 +1675,11 @@ export function App() {
 
     if (willAllBeCompleted) {
       setIsUltimateCelebrationOpen(true);
-      showToast(`🏆 Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
+      showToast(`Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
     } else if (isDayFullyComplete) {
-      showToast(`🎉 Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
+      showToast(`Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
     } else {
-      showToast(`🎉 Félicitations ! Séance "${target.title}" validée avec succès dans le chronomètre Focus !`, 5000);
+      showToast(`Félicitations ! Séance "${target.title}" validée avec succès dans le chronomètre Focus !`, 5000);
     }
 
     setState(prev => {
@@ -1729,7 +1734,7 @@ export function App() {
     });
 
     setIsUltimateCelebrationOpen(false);
-    showToast(`🌟 Félicitations ! Toutes les barres de progression sont à zéro. Reposez-vous bien, à demain !`, 6000);
+    showToast(`Félicitations ! Toutes les barres de progression sont à zéro. Reposez-vous bien, à demain !`, 6000);
   };
 
   const handleStartNewCycleEarly = () => {
@@ -1743,7 +1748,7 @@ export function App() {
       }
       return nextState;
     });
-    showToast('🚀 Révisions réactivées pour aujourd’hui !');
+    showToast('Révisions réactivées pour aujourd’hui !');
   };
 
   const handleAddCustomSession = (session: StudySession) => {
