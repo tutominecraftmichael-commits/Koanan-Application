@@ -91722,12 +91722,14 @@ export function getCurriculumChapters(
   subjectId: StemSubjectId,
   gradeLevel: CurriculumGradeLevel
 ): CurriculumChapter[] {
-  // 1. Résolution des alias
+  // 1. Résolution des alias et correspondances de filière
   const resolvedGrade: CurriculumGradeLevel =
     gradeLevel === 'terminale_a'
       ? 'terminale_a1'
       : gradeLevel === 'premiere_a'
       ? 'premiere_a1'
+      : gradeLevel === 'seconde_c'
+      ? (subjectId === 'maths' ? 'seconde_a' : 'premiere_d')
       : gradeLevel;
 
   // 2. Recherche exacte
@@ -91739,15 +91741,25 @@ export function getCurriculumChapters(
     return exactMatches.map(expandChapterTo6MiniLessons);
   }
 
-  // 3. Fallback même matière au niveau terminale ou 3ème
+  // 3. Fallback même matière : Si Collège (3ème), STRICTEMENT réservé au Collège (JAMAIS de Lycée ni Terminale !)
   const subjectChapters = CURRICULUM_REGISTRY.filter((c) => c.subjectId === subjectId);
   if (subjectChapters.length > 0) {
-    const tleMatches = subjectChapters.filter((c) => c.gradeLevel === 'terminale_d' || c.gradeLevel === '3eme');
+    if (gradeLevel === '3eme' || gradeLevel === '4eme' || gradeLevel === '5eme' || gradeLevel === '6eme') {
+      const collegeMatches = subjectChapters.filter((c) => c.gradeLevel === gradeLevel || c.gradeLevel === '3eme');
+      if (collegeMatches.length > 0) return collegeMatches.sort((a, b) => a.order - b.order).map(expandChapterTo6MiniLessons);
+    }
+    const tleMatches = subjectChapters.filter((c) => c.gradeLevel === 'terminale_d');
     if (tleMatches.length > 0) return tleMatches.sort((a, b) => a.order - b.order).map(expandChapterTo6MiniLessons);
     return subjectChapters.slice(0, 12).sort((a, b) => a.order - b.order).map(expandChapterTo6MiniLessons);
   }
 
-  // 4. Fallback absolu : Mathématiques Terminale D
+  // 4. Fallback absolu : Mathématiques 3ème pour le collège, Terminale D pour le lycée
+  if (gradeLevel === '3eme' || gradeLevel === '4eme' || gradeLevel === '5eme' || gradeLevel === '6eme') {
+    return CURRICULUM_REGISTRY.filter(
+      (c) => c.subjectId === 'maths' && c.gradeLevel === '3eme'
+    ).sort((a, b) => a.order - b.order).map(expandChapterTo6MiniLessons);
+  }
+
   return CURRICULUM_REGISTRY.filter(
     (c) => c.subjectId === 'maths' && c.gradeLevel === 'terminale_d'
   ).sort((a, b) => a.order - b.order).map(expandChapterTo6MiniLessons);

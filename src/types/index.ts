@@ -282,6 +282,7 @@ export interface ExtractedPdfSchedule {
   fileName: string;
   fileSize: number;
   academicTrack: string;
+  gradeLevel?: string;
   detectedConfidence: number; // 0 to 100%
   subjects: ExtractedSubjectCandidate[];
   slots: ExtractedClassCandidate[];

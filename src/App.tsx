@@ -1337,18 +1337,26 @@ export function App() {
     setState(prev => {
       const nextPdfCount = (prev.pdfImportsCount || prev.userAccount?.pdfImportsCount || 0) + 1;
       const effectiveTier = payload.planTier || prev.planTier || prev.userAccount?.planTier || 'free';
+      const effectiveAcademicLevel = payload.preferences.academicLevel || prev.academicLevel;
+      const effectiveGradeLevel = payload.preferences.gradeLevel || prev.preferences?.gradeLevel || prev.userAccount?.gradeLevel;
       const updated: AppState = {
         ...prev,
-        academicLevel: payload.preferences.academicLevel || prev.academicLevel,
+        academicLevel: effectiveAcademicLevel,
         planTier: effectiveTier,
         subjects: payload.subjects,
         classSlots: payload.classSlots,
-        preferences: payload.preferences,
+        preferences: {
+          ...payload.preferences,
+          academicLevel: effectiveAcademicLevel,
+          gradeLevel: effectiveGradeLevel,
+        },
         studySessions: payload.studySessions,
         logs: [],
         pdfImportsCount: nextPdfCount,
         userAccount: prev.userAccount ? {
           ...prev.userAccount,
+          academicLevel: effectiveAcademicLevel,
+          gradeLevel: effectiveGradeLevel,
           planTier: effectiveTier,
           pdfImportsCount: nextPdfCount,
         } : undefined,
@@ -1932,6 +1940,8 @@ export function App() {
               pdfImportsCount={state.pdfImportsCount || state.userAccount?.pdfImportsCount || 0}
               userEmail={state.userAccount?.email}
               userId={state.userAccount?.googleId}
+              initialAcademicLevel={state.userAccount?.academicLevel || state.academicLevel}
+              initialGradeLevel={(state.userAccount?.gradeLevel || state.preferences?.gradeLevel) as any}
               onApplyExtractedSchedule={handleApplyExtractedSchedule}
               onCancel={() => setActiveView('dashboard')}
               onViewPricing={handleViewPricing}
