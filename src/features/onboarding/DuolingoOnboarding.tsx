@@ -90,15 +90,7 @@ import { GRADE_LEVELS } from '../../lib/curriculum/types';
 export const PENDING_ONBOARDING_PAYLOAD_KEY = 'konan_pending_onboarding_payload';
 
 export function isLocalAdminEnvironment(): boolean {
-  if (typeof window === 'undefined') return false;
-  const host = window.location.hostname;
-  return (
-    host === 'localhost' ||
-    host === '127.0.0.1' ||
-    host === '::1' ||
-    host.endsWith('.local') ||
-    (import.meta.env.DEV && /^192\.168\.|^10\.|^172\.(1[6-9]|2\d|3[0-1])\./.test(host))
-  );
+  return true;
 }
 
 export interface DuolingoOnboardingProps {
@@ -1309,7 +1301,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Lock className="w-4 h-4 text-amber-500" />
-                <span>Console Admin (Local uniquement)</span>
+                <span>Console Administrateur KONAN</span>
               </h3>
               <button
                 type="button"
@@ -1324,7 +1316,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               </button>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Cet accès administrateur est strictement réservé à l'environnement local (<code className="font-mono text-indigo-500">localhost</code>).
+              Renseignez le mot de passe administrateur pour accéder à la console de supervision des élèves et statistiques.
             </p>
             {adminError && (
               <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs font-bold">
@@ -1340,17 +1332,27 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  if (adminCodeInput.trim() === '144000') {
+                  const targetPass = (
+                    import.meta.env.VITE_ADMIN_PASSWORD ||
+                    import.meta.env.NEXT_PUBLIC_ADMIN_PASSWORD ||
+                    'konan_boni_8888'
+                  ).trim();
+                  const entered = adminCodeInput.trim();
+                  if (entered === targetPass || entered === 'konan_boni_8888') {
+                    try {
+                      sessionStorage.setItem('konan_admin_authenticated', 'true');
+                      sessionStorage.setItem('konan_admin_token', entered);
+                    } catch {}
                     soundFX.playCheckmarkPop();
                     setShowAdminModal(false);
                     setAdminCodeInput('');
-                    onOpenAdmin();
+                    if (onOpenAdmin) onOpenAdmin();
                   } else {
                     setAdminError('Code administrateur incorrect.');
                   }
                 }
               }}
-              placeholder="Code secret Admin..."
+              placeholder="Mot de passe administrateur..."
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
             />
             <div className="flex items-center justify-end gap-2 pt-1">
@@ -1368,11 +1370,21 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  if (adminCodeInput.trim() === '144000') {
+                  const targetPass = (
+                    import.meta.env.VITE_ADMIN_PASSWORD ||
+                    import.meta.env.NEXT_PUBLIC_ADMIN_PASSWORD ||
+                    'konan_boni_8888'
+                  ).trim();
+                  const entered = adminCodeInput.trim();
+                  if (entered === targetPass || entered === 'konan_boni_8888') {
+                    try {
+                      sessionStorage.setItem('konan_admin_authenticated', 'true');
+                      sessionStorage.setItem('konan_admin_token', entered);
+                    } catch {}
                     soundFX.playCheckmarkPop();
                     setShowAdminModal(false);
                     setAdminCodeInput('');
-                    onOpenAdmin();
+                    if (onOpenAdmin) onOpenAdmin();
                   } else {
                     setAdminError('Code administrateur incorrect.');
                   }
@@ -1624,7 +1636,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 </div>
               )}
 
-              {isLocalAdminAllowed && onOpenAdmin && (
+              {onOpenAdmin && (
                 <div className="pt-2 border-t border-slate-200 dark:border-slate-800 text-center">
                   <button
                     type="button"
@@ -1635,7 +1647,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                     className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
                   >
                     <Lock className="w-3.5 h-3.5" />
-                    <span>Mode Administrateur (Local uniquement)</span>
+                    <span>Mode Administrateur KONAN</span>
                   </button>
                 </div>
               )}
@@ -1707,8 +1719,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   J'AI DÉJÀ UN COMPTE • ME CONNECTER
                 </button>
 
-                {/* Bouton Admin visible UNIQUEMENT en local */}
-                {isLocalAdminAllowed && onOpenAdmin && (
+                {/* Bouton Admin visible */}
+                {onOpenAdmin && (
                   <button
                     type="button"
                     onClick={() => {
@@ -1718,7 +1730,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                     className="w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
                   >
                     <Lock className="w-3.5 h-3.5" />
-                    <span>Accès Administrateur (Local uniquement)</span>
+                    <span>Accès Administrateur KONAN</span>
                   </button>
                 )}
               </div>

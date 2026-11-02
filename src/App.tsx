@@ -80,7 +80,7 @@ import { PlannerView } from './features/planner/PlannerView';
 import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
 import { FocusMode } from './features/focus/FocusMode';
 import { PresetModal } from './features/onboarding/PresetModal';
-import { DuolingoOnboarding, isLocalAdminEnvironment } from './features/onboarding/DuolingoOnboarding';
+import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding';
 import { ProWizardView } from './features/pro/ProWizardView';
 import { AdminDashboard } from './features/admin/AdminDashboard';
 import { InteractiveTutorView } from './features/tutor/InteractiveTutorView';
@@ -1855,14 +1855,14 @@ export function App() {
         />
       )}
 
-      {/* Bouton Flottant d'Accès Rapide Admin si session admin active (STRICTEMENT LOCAL UNIQUEMENT) */}
-      {isLocalAdminEnvironment() && activeView !== 'admin' && activeView !== 'tutor' && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
+      {/* Bouton Flottant d'Accès Rapide Admin si session admin active */}
+      {activeView !== 'admin' && activeView !== 'tutor' && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
         <button
           onClick={() => setActiveView('admin')}
           className="fixed bottom-5 right-5 z-50 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs shadow-2xl shadow-purple-600/40 border border-purple-400/40 flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all"
         >
           <ShieldCheck className="w-4 h-4 text-purple-300" />
-          <span>Console Admin (Local)</span>
+          <span>Console Admin</span>
         </button>
       )}
 
@@ -1872,8 +1872,8 @@ export function App() {
         : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
         }`}>
 
-        {/* Real-time Administrator Console (Strictement Privée & Locale Uniquement) */}
-        {activeView === 'admin' && isLocalAdminEnvironment() && (
+        {/* Real-time Administrator Console */}
+        {activeView === 'admin' && (
           <AdminDashboard
             onSwitchToStudentView={() => setActiveView('dashboard')}
             onExitAdmin={() => {
@@ -1891,7 +1891,7 @@ export function App() {
           <DuolingoOnboarding
             currentUser={state.userAccount?.isLoggedIn ? state.userAccount : null}
             onOpenLogin={() => setActiveView('auth')}
-            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
+            onOpenAdmin={() => setActiveView('admin')}
             onLoginSuccess={(user) => {
               handleLoginSuccess(user);
             }}
@@ -1913,7 +1913,7 @@ export function App() {
             onLoginSuccess={handleLoginSuccess}
             onEnterDemoMode={handleEnterDemoMode}
             onBackToLanding={() => setActiveView('landing')}
-            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
+            onOpenAdmin={() => setActiveView('admin')}
             currentProfile={state.userAccount}
           />
         )}
