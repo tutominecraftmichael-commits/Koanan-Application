@@ -178,14 +178,18 @@ const PedagogicalParagraph: React.FC<{ text: string }> = ({ text }) => {
  * - Chaque étape i dispose de SA PROPRE fiche de cours dédiée, de sa formule/règle et de son QCM.
  * - Le bloc de cours du haut change OBLIGATOIREMENT à chaque étape (zéro paragraphe figé).
  */
-function buildProgressiveCourseSlice(point: CurriculumPoint, stepIndex: number): ProgressiveCourseSlice {
-  const totalSteps = point.exercises?.length || 8;
+function buildProgressiveCourseSlice(
+  point: CurriculumPoint,
+  stepIndex: number,
+  exercise?: InteractiveExercise
+): ProgressiveCourseSlice {
+  const totalSteps = 8;
 
   // 1. Priorité absolue : Fiche de cours structurée dédiée à cette étape (Liaison 1-pour-1)
   if (point.structuredSteps && point.structuredSteps[stepIndex]) {
     const step = point.structuredSteps[stepIndex];
     return {
-      stepBadge: step.stepBadge,
+      stepBadge: `Étape ${stepIndex + 1}/8 · ${step.stepTitle || point.title.replace(/mini-leçon\s*\d+\/\d+\s*:\s*/i, '')}`,
       stepIndex,
       totalSteps,
       stepTitle: step.stepTitle || point.title,
@@ -197,47 +201,42 @@ function buildProgressiveCourseSlice(point: CurriculumPoint, stepIndex: number):
     };
   }
 
-  // 2. Fallback pour points existants : découpage intelligent sans jamais répéter le même paragraphe
-  const rawParagraphs = point.conceptExplanation
-    ? point.conceptExplanation
-        .split(/\n\s*\n/)
-        .map(p => p.trim())
-        .filter(Boolean)
-    : [point.summary];
+  // 2. Fallback intelligent ancré 1-pour-1 sur l'exercice actif (zéro répétition, zéro cours figé)
+  if (exercise) {
+    const cleanPrompt = exercise.prompt.replace(/\?$/, '').trim();
+    const explanation = (exercise.explanation || '').trim();
+    const cleanExplanation = explanation.replace(/^Bonne réponse\s*:\s*[^.]+\.\s*/i, '').trim();
 
-  const paragraphs = rawParagraphs.length > 0 ? rawParagraphs : [point.conceptExplanation || point.summary];
-  const formulas = point.formulas || [];
+    const fallbackTitle = cleanPrompt.length > 55 ? `${cleanPrompt.slice(0, 52)}...` : cleanPrompt;
+    const formulas = point.formulas || [];
+    const dedicatedFormula = formulas[stepIndex] || (formulas.length > 0 ? formulas[stepIndex % formulas.length] : undefined);
 
-  const stepThemes = [
-    'Notion Fondamentale & Définition',
-    'Propriété Clé & Règle du Cours',
-    'Formule Officielle & Expression',
-    'Conditions d\'Application & Validité',
-    'Calcul d\'Application & Démarche',
-    'Piège d\'Examen & Réflexe Méthodologique',
-    'Situation d\'Évaluation Guidée',
-    'Bilan & Résolution Complète',
-  ];
+    const paragraph = cleanExplanation.length > 15
+      ? `• Notion clé de l'étape : ${cleanPrompt}\n• Explication officielle : ${cleanExplanation}\n• Règle essentielle : Appliquer avec rigueur la méthode du cours pour répondre avec certitude.`
+      : (point.conceptExplanation ? point.conceptExplanation.split(/\n\s*\n/)[stepIndex % Math.max(1, point.conceptExplanation.split(/\n\s*\n/).length)] : point.summary);
 
-  const theme = stepThemes[stepIndex] || `Notion clé ${stepIndex + 1}`;
-  const pText = paragraphs[stepIndex % paragraphs.length] || point.summary;
-  const form = formulas[stepIndex % Math.max(1, formulas.length)] || (formulas.length > 0 ? formulas[0] : undefined);
-  const tip = stepIndex === 5 && point.keyRule
-    ? `Piège classique d'examen : ${point.keyRule}`
-    : stepIndex >= 2 && point.keyRule
-    ? `L'Astuce du Prof Konan : ${point.keyRule}`
-    : undefined;
+    return {
+      stepBadge: `Étape ${stepIndex + 1}/8 · ${fallbackTitle}`,
+      stepIndex,
+      totalSteps: 8,
+      stepTitle: fallbackTitle,
+      paragraphText: paragraph,
+      formula: dedicatedFormula,
+      konanTip: `L'Astuce du Professeur Konan : ${cleanExplanation.split('.')[0] || point.keyRule || "Bien lire chaque proposition avant de valider !"}`,
+      keyRule: point.keyRule,
+      visualSchema: stepIndex === 1 ? point.visualSchema : undefined,
+    };
+  }
 
+  const cleanPointTitle = point.title.replace(/mini-leçon\s*\d+\/\d+\s*:\s*/i, '');
   return {
-    stepBadge: `Étape ${stepIndex + 1}/${totalSteps} · ${theme}`,
+    stepBadge: `Étape ${stepIndex + 1}/8 · ${cleanPointTitle}`,
     stepIndex,
-    totalSteps,
-    stepTitle: point.title,
-    paragraphText: pText,
-    formula: form,
-    konanTip: tip,
-    keyRule: stepIndex === 3 ? point.keyRule : undefined,
-    visualSchema: stepIndex === 1 ? point.visualSchema : undefined,
+    totalSteps: 8,
+    stepTitle: cleanPointTitle,
+    paragraphText: point.conceptExplanation || point.summary,
+    formula: point.formulas && point.formulas.length > 0 ? point.formulas[0] : undefined,
+    keyRule: point.keyRule,
   };
 }
 
@@ -410,8 +409,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // Portion du cours progressif associée à l'étape active
   const activeCourseSlice: ProgressiveCourseSlice | null = useMemo(() => {
     if (!currentPoint) return null;
-    return buildProgressiveCourseSlice(currentPoint, activeStepIndex);
-  }, [currentPoint, activeStepIndex]);
+    return buildProgressiveCourseSlice(currentPoint, activeStepIndex, activeExercise);
+  }, [currentPoint, activeStepIndex, activeExercise]);
 
   const subCategoryLabel = getSubCategoryName(activeSubCategory);
 
@@ -1125,7 +1124,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             style={{ backgroundColor: subjectMeta.color }}
           />
           <span className="font-extrabold uppercase tracking-wide text-slate-700 dark:text-slate-300 truncate">
-            {subjectTitle} • {subCategoryLabel} • Ch. {currentItem.chapterOrder} • Mini-Leçon {currentItem.pointIndexInChapter + 1}/{currentItem.totalPointsInChapter}
+            {subjectTitle} • {subCategoryLabel} • Ch. {currentItem.chapterOrder} • Mini-Leçon {currentItem.pointIndexInChapter + 1} sur {currentItem.totalPointsInChapter}
           </span>
         </div>
 
@@ -1139,7 +1138,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
           <div className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400">
             <Target className="w-3.5 h-3.5" />
-            <span>Étape {activeStepIndex + 1}/{totalSteps}</span>
+            <span>Étape {activeStepIndex + 1}/8 · 8/8 requis</span>
           </div>
         </div>
       </div>
@@ -1155,7 +1154,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
                 <BookOpen className="w-4 h-4 shrink-0" />
                 <span className="text-[11px] font-black uppercase tracking-wider">
-                  {activeCourseSlice.stepBadge} • {currentPoint.title}
+                  {activeCourseSlice.stepBadge}
                 </span>
               </div>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300">

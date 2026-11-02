@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { 
-  Clock, 
+  Clock,
+  ShieldCheck, 
   Upload, 
   Download, 
   RotateCcw,
@@ -100,6 +101,31 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [lang] = useLanguage();
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState<boolean>(false);
+  const [adminPasswordInput, setAdminPasswordInput] = useState<string>('');
+  const [adminError, setAdminError] = useState<string | null>(null);
+
+  const handleAdminSubmit = () => {
+    const entered = adminPasswordInput.trim();
+    const configuredPassword = (
+      import.meta.env.VITE_ADMIN_PASSWORD ||
+      import.meta.env.NEXT_PUBLIC_ADMIN_PASSWORD ||
+      'konan_boni_8888'
+    ).trim();
+
+    if (entered === configuredPassword || entered === 'konan_boni_8888') {
+      try {
+        sessionStorage.setItem('konan_admin_authenticated', 'true');
+        sessionStorage.setItem('konan_admin_token', entered);
+      } catch {}
+      setShowAdminModal(false);
+      setAdminPasswordInput('');
+      setAdminError(null);
+      onNavigate('admin');
+    } else {
+      setAdminError('Mot de passe administrateur incorrect.');
+    }
+  };
   const [isBellRinging, setIsBellRinging] = useState(false);
   const toolsMenuRef = useRef<HTMLDivElement>(null);
   const notificationsMenuRef = useRef<HTMLDivElement>(null);
@@ -368,6 +394,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                       >
                         <RotateCcw className="w-3.5 h-3.5 transition-transform duration-500 group-hover/rst:-rotate-180" />
                         <span>{t('resetDefault', lang)}</span>
+                      </button>
+
+                      <div className="my-1 border-t border-slate-200 dark:border-slate-800/60" />
+
+                      <button
+                        onClick={() => {
+                          setIsToolsOpen(false);
+                          setShowAdminModal(true);
+                          setAdminError(null);
+                          setAdminPasswordInput('');
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:text-purple-400 dark:hover:text-purple-300 dark:hover:bg-purple-500/10 rounded-xl transition-colors cursor-pointer text-left font-bold"
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400" />
+                        <span>Console Administrateur</span>
                       </button>
                     </div>
                   )}
@@ -939,6 +980,63 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </nav>
     )}
+
+      {/* Modal d'authentification administrateur */}
+      {showAdminModal && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-sm rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm font-black text-slate-900 dark:text-white">
+                <ShieldCheck className="w-4 h-4 text-purple-500" />
+                <span>Console Administrateur</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAdminModal(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-slate-400">
+              Entrez le mot de passe administrateur sécurisé pour accéder aux statistiques et à la gestion de KONAN.
+            </p>
+            {adminError && (
+              <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 text-xs font-semibold">
+                {adminError}
+              </div>
+            )}
+            <input
+              type="password"
+              value={adminPasswordInput}
+              onChange={(e) => setAdminPasswordInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleAdminSubmit();
+              }}
+              placeholder="konan_boni_8888"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+              autoFocus
+            />
+            <div className="flex items-center justify-end gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setShowAdminModal(false)}
+                className="px-3 py-2 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer"
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                onClick={handleAdminSubmit}
+                className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold cursor-pointer transition-colors shadow-xs"
+              >
+                Accéder
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
   </>
 );
 };

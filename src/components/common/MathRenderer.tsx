@@ -645,7 +645,7 @@ export const SmartKeyFormulaBox: React.FC<SmartKeyFormulaBoxProps> = ({
     const str = String(formula).trim();
     if (str.includes('%')) return true;
     const frenchWords = str.split(/\s+/).filter(w => /^[a-zA-ZÀ-ÿ]{3,}$/.test(w));
-    if (frenchWords.length >= 3) return true;
+    if (frenchWords.length >= 3 && !/[=\+\-\*/<>]/.test(str)) return true;
     return false;
   }, [formula]);
 
@@ -663,6 +663,45 @@ export const SmartKeyFormulaBox: React.FC<SmartKeyFormulaBoxProps> = ({
     return [str];
   }, [formula, isDescriptiveText]);
 
+  // Rendu intelligent des expressions descriptives avec badges colorés (ex: Socle cristallin / Bassin sédimentaire)
+  const renderDescriptiveContent = (raw: string) => {
+    // Si la formule présente des sous-ensembles ou pourcentages séparés par '+', '|' ou ';'
+    if (raw.includes('+') || raw.includes('|') || raw.includes(';')) {
+      const parts = raw.split(/[+|;]/).map(p => p.trim()).filter(Boolean);
+      return (
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 py-1">
+          {parts.map((part, pIdx) => {
+            const isPct = part.includes('%');
+            const isSocle = /socle/i.test(part);
+            const isBassin = /bassin/i.test(part);
+            const badgeColor = isSocle
+              ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800'
+              : isBassin
+              ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 border-amber-200 dark:border-amber-800'
+              : isPct
+              ? 'bg-purple-50 dark:bg-purple-950/60 text-purple-900 dark:text-purple-200 border-purple-200 dark:border-purple-800'
+              : 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-200 border-indigo-200 dark:border-indigo-800';
+
+            return (
+              <span
+                key={pIdx}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs sm:text-sm font-extrabold tracking-tight shadow-xs ${badgeColor}`}
+              >
+                {part}
+              </span>
+            );
+          })}
+        </div>
+      );
+    }
+
+    return (
+      <div className="break-words whitespace-normal leading-relaxed text-slate-900 dark:text-white font-extrabold px-2 py-1">
+        <MathRenderer text={raw} />
+      </div>
+    );
+  };
+
   return (
     <div className={`p-3.5 sm:p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border-2 border-indigo-200 dark:border-indigo-500/30 space-y-2.5 ${className}`}>
       <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
@@ -672,9 +711,7 @@ export const SmartKeyFormulaBox: React.FC<SmartKeyFormulaBoxProps> = ({
 
       <div className="w-full text-center py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 text-xs sm:text-sm md:text-base font-black text-indigo-800 dark:text-indigo-200 overflow-hidden">
         {isDescriptiveText ? (
-          <div className="break-words whitespace-normal leading-relaxed text-slate-900 dark:text-white font-extrabold px-1">
-            <MathRenderer text={formula} />
-          </div>
+          renderDescriptiveContent(formula)
         ) : formulaLines.length > 1 ? (
           <div className="flex flex-col items-center justify-center gap-2.5 w-full py-1 text-center">
             {formulaLines.map((line, idx) => (

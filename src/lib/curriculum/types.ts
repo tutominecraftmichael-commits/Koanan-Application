@@ -308,8 +308,8 @@ export interface CurriculumChapter {
  */
 export function getRequiredPointsCountForDuration(durationMinutes: number): number {
   if (durationMinutes <= 30) return 3;
-  if (durationMinutes <= 60) return 4;
-  return 7;
+  if (durationMinutes <= 55) return 5;
+  return 8;
 }
 
 export interface TutorPointSessionItem {

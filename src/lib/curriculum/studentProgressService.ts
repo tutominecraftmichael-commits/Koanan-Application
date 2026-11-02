@@ -362,29 +362,24 @@ export function buildTutorSessionPayload(
     ptIdx = 0;
   }
 
-  while (itemsToReview.length < targetPointsCount && chIdx < subChapters.length) {
-    const chap = subChapters[chIdx];
-    if (ptIdx < chap.points.length) {
-      const point = chap.points[ptIdx];
-      if (!seenPointIds.has(point.id)) {
-        seenPointIds.add(point.id);
-        const isLast = ptIdx === chap.points.length - 1;
-        itemsToReview.push({
-          point,
-          chapterId: chap.id,
-          chapterTitle: chap.title,
-          chapterOrder: chap.order,
-          pointIndexInChapter: ptIdx,
-          isLastPointOfChapter: isLast,
-          totalPointsInChapter: chap.points.length,
-        });
-      }
-      ptIdx++;
-    } else {
-      // Fin du chapitre dans cette sous-matière : passage au chapitre suivant s'il existe
-      chIdx++;
-      ptIdx = 0;
+  // RÈGLE STRICTE DU PROJET : Une séance reste STRICTEMENT dans le même chapitre.
+  // INTERDICTION formelle de déborder sur le chapitre suivant au milieu d'une séance.
+  while (itemsToReview.length < targetPointsCount && ptIdx < activeChapter.points.length) {
+    const point = activeChapter.points[ptIdx];
+    if (!seenPointIds.has(point.id)) {
+      seenPointIds.add(point.id);
+      const isLast = ptIdx === activeChapter.points.length - 1;
+      itemsToReview.push({
+        point,
+        chapterId: activeChapter.id,
+        chapterTitle: activeChapter.title,
+        chapterOrder: activeChapter.order,
+        pointIndexInChapter: ptIdx,
+        isLastPointOfChapter: isLast,
+        totalPointsInChapter: activeChapter.points.length,
+      });
     }
+    ptIdx++;
   }
 
   // Si itemsToReview est vide (fin de programme ou premier index hors limites), prendre au moins le premier point valide

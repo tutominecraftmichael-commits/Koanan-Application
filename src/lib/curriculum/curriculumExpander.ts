@@ -27,85 +27,150 @@ import type {
  */
 
 export function expandChapterTo10MiniLessons(chapter: CurriculumChapter): CurriculumChapter {
-  return expandChapterTo6MiniLessons(chapter);
+  return expandChapterTo12MiniLessons(chapter);
 }
 
 export function expandChapterTo6MiniLessons(chapter: CurriculumChapter): CurriculumChapter {
+  return expandChapterTo12MiniLessons(chapter);
+}
+
+/**
+ * DÉCOUPAGE PROFOND DES CHAPITRES (STRICTEMENT 10 À 12 MINI-LEÇONS PAR CHAPITRE)
+ * 
+ * Règle d'or du projet :
+ * - Un élève ne doit JAMAIS terminer un chapitre en 1 ou 2 séances.
+ * - Chaque chapitre officiel comporte au minimum 10 à 12 mini-leçons complètes (de 8 questions chacune).
+ * - Chaque question dispose de sa propre fiche de cours dédiée en liaison 1-pour-1 (zéro cours figé).
+ */
+export function expandChapterTo12MiniLessons(chapter: CurriculumChapter): CurriculumChapter {
   const existingPoints = chapter.points || [];
   if (existingPoints.length === 0) {
     return chapter;
   }
 
-  // Si le chapitre dispose déjà de points structurés à 8 étapes sans mélange, on vérifie leur intégrité
-  const isAlreadyStructured = existingPoints.every(
-    p => p.exercises && p.exercises.length === 8 && p.structuredSteps && p.structuredSteps.length === 8
-  );
-  if (isAlreadyStructured) {
-    return chapter;
+  // Si le chapitre dispose déjà de 10 à 12 points à 8 étapes sans mélange, on vérifie leur intégrité
+  if (existingPoints.length >= 10 && existingPoints.length <= 14) {
+    const isAlreadyFullyStructured = existingPoints.every(
+      p => p.exercises && p.exercises.length === 8 && p.structuredSteps && p.structuredSteps.length === 8
+    );
+    if (isAlreadyFullyStructured) {
+      return chapter;
+    }
   }
 
   const subject = chapter.subjectId;
   const isChimie = subject === 'physique_chimie' && /chimie|atome|mole|solution|ion|acide|base|dosage|reaction|cuivre|chlorure/i.test(chapter.title);
 
-  // Parcourir chaque point naturel du chapitre et structurer ses 8 étapes pas-à-pas
-  const updatedPoints: CurriculumPoint[] = existingPoints.map((point) => {
+  // 1. Déterminer le facteur de sous-découpage pour atteindre 10 à 12 mini-leçons
+  let subLessonsPerPoint = 1;
+  if (existingPoints.length === 1) {
+    subLessonsPerPoint = 12;
+  } else if (existingPoints.length === 2) {
+    subLessonsPerPoint = 6; // 2 * 6 = 12 mini-leçons
+  } else if (existingPoints.length === 3) {
+    subLessonsPerPoint = 4; // 3 * 4 = 12 mini-leçons
+  } else if (existingPoints.length === 4) {
+    subLessonsPerPoint = 3; // 4 * 3 = 12 mini-leçons
+  } else if (existingPoints.length <= 6) {
+    subLessonsPerPoint = 2; // 5*2=10 ou 6*2=12 mini-leçons
+  }
+
+  const updatedPoints: CurriculumPoint[] = [];
+  let globalOrder = 1;
+
+  for (let ptIdx = 0; ptIdx < existingPoints.length; ptIdx++) {
+    const point = existingPoints[ptIdx];
     const rawExercises: InteractiveExercise[] = Array.isArray(point.exercises) && point.exercises.length > 0
       ? point.exercises
       : (point.exercise ? [point.exercise] : []);
-
     const pointFormulas: PointFormula[] = point.formulas || [];
 
-    // Garantir exactement 8 exercices pour ce point
-    const exercises: InteractiveExercise[] = [];
-    const structuredSteps: StructuredLessonStep[] = [];
-
-    for (let stepIdx = 0; stepIdx < 8; stepIdx++) {
-      const stepNum = stepIdx + 1;
-      const stepId = `${point.id}_step${stepNum}`;
-
-      // 1. Sélection de l'exercice (priorité absolue aux exercices authentiques du point)
-      let ex: InteractiveExercise;
-      if (stepIdx < rawExercises.length && rawExercises[stepIdx]) {
-        ex = {
-          ...rawExercises[stepIdx],
-          id: stepId,
-        };
-      } else {
-        // Compléter avec un exercice authentique cohérent avec la matière
-        ex = generateSubjectSpecificExercise(subject, isChimie, chapter, point, stepNum, stepId);
+    // Découper ce point en sous-leçons si nécessaire
+    for (let subIdx = 0; subIdx < subLessonsPerPoint; subIdx++) {
+      if (updatedPoints.length >= 12 && ptIdx > 0) {
+        break; // Limiter à 12 mini-leçons pour un équilibre parfait
       }
-      exercises.push(ex);
 
-      // 2. Génération de l'explication de cours claire, complète et courte (Liaison 1-pour-1)
-      const { title, paragraphText, formula, konanTip } = buildStepPedagogy(
-        ex,
-        chapter,
-        point,
-        stepIdx,
-        pointFormulas
-      );
+      const pointOrder = globalOrder++;
+      const subId = subLessonsPerPoint > 1 ? `${point.id}_sub${subIdx + 1}` : point.id;
 
-      structuredSteps.push({
-        stepNumber: stepNum,
-        stepBadge: `Étape ${stepNum}/8 · ${title}`,
-        stepTheme: title,
-        stepTitle: title,
-        paragraphText,
-        formula,
-        konanTip,
+      // Titre spécifique et descriptif de la mini-leçon
+      let subTitle = point.title;
+      if (subLessonsPerPoint > 1) {
+        if (subIdx < rawExercises.length && rawExercises[subIdx]?.prompt) {
+          const promptClean = rawExercises[subIdx].prompt.replace(/\?$/, '').trim();
+          subTitle = promptClean.length > 60 ? `${promptClean.slice(0, 58)}...` : promptClean;
+        } else {
+          subTitle = `${point.title} (Partie ${subIdx + 1})`;
+        }
+      }
+
+      // Construction de 8 exercices distincts pour cette mini-leçon
+      const exercises: InteractiveExercise[] = [];
+      const structuredSteps: StructuredLessonStep[] = [];
+
+      for (let stepIdx = 0; stepIdx < 8; stepIdx++) {
+        const stepNum = stepIdx + 1;
+        const stepId = `${subId}_step${stepNum}`;
+
+        let ex: InteractiveExercise;
+        // Priorité aux exercices existants
+        const exCandidateIndex = (subIdx * 8 + stepIdx) % Math.max(1, rawExercises.length);
+        if (rawExercises.length > 0 && rawExercises[exCandidateIndex]) {
+          ex = {
+            ...rawExercises[exCandidateIndex],
+            id: stepId,
+          };
+        } else {
+          ex = generateSubjectSpecificExercise(subject, isChimie, chapter, point, stepNum, stepId);
+        }
+        exercises.push(ex);
+
+        // Liaison 1-pour-1 entre le cours du haut et le QCM du bas
+        const { title, paragraphText, formula, konanTip } = buildStepPedagogy(
+          ex,
+          chapter,
+          point,
+          stepIdx,
+          pointFormulas
+        );
+
+        structuredSteps.push({
+          stepNumber: stepNum,
+          stepBadge: `Étape ${stepNum}/8 · ${title}`,
+          stepTheme: title,
+          stepTitle: title,
+          paragraphText,
+          formula,
+          konanTip,
+          keyRule: point.keyRule,
+          visualSchema: stepIdx === 1 ? point.visualSchema : undefined,
+          exercise: ex,
+        });
+      }
+
+      updatedPoints.push({
+        id: subId,
+        order: pointOrder,
+        title: subTitle,
+        summary: point.summary || chapter.summary,
+        conceptExplanation: point.conceptExplanation || point.summary,
+        formulas: pointFormulas,
         keyRule: point.keyRule,
-        visualSchema: stepIdx === 1 ? point.visualSchema : undefined,
-        exercise: ex,
+        workedExample: point.workedExample || {
+          title: `Application guidée : ${subTitle}`,
+          statement: `Exercice d'application et démarche de résolution pour ${subTitle}.`,
+          methodSteps: [
+            "Étape 1 : Identifier méthodiquement les données et la question posée.",
+            "Étape 2 : Appliquer la règle officielle ou la formule du cours.",
+            "Étape 3 : Conclure en justifiant rigoureusement le résultat obtenu."
+          ]
+        },
+        exercises,
+        structuredSteps,
       });
     }
-
-    return {
-      ...point,
-      exercises,
-      structuredSteps,
-      summary: point.summary || chapter.summary,
-    };
-  });
+  }
 
   return {
     ...chapter,
@@ -355,22 +420,170 @@ function buildStepPedagogy(
   }
 
   // =========================================================================
-  // 5. BRANCHE SVT (100% PURE BIOLOGIE & GÉOLOGIE)
-  // =========================================================================
+  // 5. BRANCHE SVT (100% PURE BIOLOGIE & GÉOLOGIE — ADAPTATION STRICTE AU PROGRAMME)
+  const isGeologie = /géologie|roche|socle|bassin|faille|pli|métamorphisme|sédimentaire|archéen|birrimien|protérozoïque|craton|man|sassandra/i.test(chapter.title) || /géologie|roche|socle|faille|pli|archéen|bassin/i.test(point.title);
+
+  if (isGeologie) {
+    if (/socle|bassin|97,5|2,5/i.test(prompt) || /socle|bassin/i.test(explanation)) {
+      return {
+        title: "Grands ensembles géologiques (Socle vs Bassin)",
+        paragraphText: `Le territoire de la Côte d'Ivoire appartient au craton ouest-africain :
+• Socle cristallin précambrien : Il recouvre 97,5 % du territoire national (très ancien, induré).
+• Bassin sédimentaire côtier : Il n'occupe que 2,5 % au Sud le long du littoral (récent, méso-cénozoïque).
+• Caractère géologique : La Côte d'Ivoire est un archétype de « pays de socle ».`,
+        formula: {
+          name: "Répartition des ensembles géologiques ivoiriens",
+          formula: "Socle cristallin : 97,5 % | Bassin sédimentaire côtier : 2,5 %",
+          note: "Le socle précambrien domine quasi-totalement le territoire national."
+        },
+        konanTip: "L'Astuce du Professeur Konan : Retiens 97,5 % pour le socle et 2,5 % pour le bassin côtier !",
+      };
+    }
+
+    if (/faille de sassandra|subméridienne|frontière/i.test(prompt) || /sassandra/i.test(explanation)) {
+      return {
+        title: "La faille de Sassandra (Frontière tectonique subméridienne)",
+        paragraphText: `La faille de Sassandra est l'accident tectonique majeur du socle ivoirien :
+• Orientation : Direction subméridienne (sens général Nord-Sud).
+• Rôle de frontière : Elle sépare nettement le domaine Archéen à l'Ouest du domaine Protérozoïque à l'Est.
+• Conséquence : Elle fait passer d'un socle très ancien (> 2 500 Ma) à l'Ouest à un socle plus jeune à l'Est.`,
+        formula: {
+          name: "Frontière tectonique subméridienne",
+          formula: "\\text{Domaine Archéen (Ouest)} \\longleftrightarrow [\\text{Faille de Sassandra}] \\longleftrightarrow \\text{Domaine Protérozoïque (Est)}",
+          note: "La faille de Sassandra est la suture géologique centrale de la Côte d'Ivoire."
+        },
+        konanTip: "L'Astuce du Professeur Konan : La faille de Sassandra est Nord-Sud et sépare l'Ouest de l'Est !",
+      };
+    }
+
+    if (/archéen|man|danané|charnockite|tonkpi|nimba|libérien|léonnien/i.test(prompt) || /archéen|man/i.test(explanation)) {
+      return {
+        title: "Le domaine Archéen (Kéniéma-Man)",
+        paragraphText: `Le domaine Archéen occupe exclusivement la partie Ouest du socle :
+• Âge géologique : Précambrien inférieur (4 000 à 2 500 Ma, orogenèses léonnienne et libérienne).
+• Relief & Roches : Région montagneuse de Man (Tonkoui, Nimba), roches catazonales (charnockites, granulites, itabirites).
+• Cratonisation : C'est le noyau stable le plus ancien et le plus induré du pays.`,
+        formula: {
+          name: "Caractéristiques du domaine Archéen",
+          formula: "\\text{Archéen (Ouest)} : 4\\,000 \\text{ à } 2\\,500 \\text{ Ma} \\implies \\text{Faciès granulite & charnockites}",
+          note: "Métamorphisme catazonal de haute température et forte pression."
+        },
+        konanTip: "L'Astuce du Professeur Konan : Archéen = Ouest = Man = 4 000 à 2 500 millions d'années !",
+      };
+    }
+
+    if (/protérozoïque|birrimien|baoulé|éburnéen|roches vertes/i.test(prompt) || /protérozoïque|birrimien/i.test(explanation)) {
+      return {
+        title: "Le domaine Protérozoïque (Baoulé-Mossi / Birrimien)",
+        paragraphText: `Le domaine Protérozoïque couvre le Centre, le Nord et l'Est du socle :
+• Âge géologique : Précambrien supérieur (2 500 à 540 Ma, mégacycle orogénique éburnéen vers 2 100 Ma).
+• Lithologie : Granitoïdes éburnéens concordants et discordants, ceintures de roches vertes volcano-sédimentaires.
+• Métamorphisme : De degré épizonal à mésozonal (schistes verts et amphibolites).`,
+        formula: {
+          name: "Caractéristiques du domaine Protérozoïque",
+          formula: "\\text{Protérozoïque (Est)} : 2\\,500 \\text{ à } 540 \\text{ Ma} \\implies \\text{Mégacycle éburnéen (2\\,100 Ma)}",
+          note: "Le domaine le plus vaste du socle, riche en gisements aurifères birrimiens."
+        },
+        konanTip: "L'Astuce du Professeur Konan : Protérozoïque = Birrimien = Est/Centre = Orogenèse éburnéenne !",
+      };
+    }
+
+    if (/faille des lagunes|rejet|littoral|fresco|bassin côtier/i.test(prompt) || /lagunes|bassin/i.test(explanation)) {
+      return {
+        title: "Le bassin sédimentaire côtier & La faille des lagunes",
+        paragraphText: `Le bassin sédimentaire ivoirien s'étire en croissant au Sud :
+• Âge & Lithologie : Mis en place au Secondaire (Crétacé, 135 Ma) ; sables, argiles et grès non plissés.
+• Faille des lagunes : Faille Est-Ouest majeure avec un rejet vertical plongeant vers la mer jusqu'à 5 000 m.
+• Intérêt économique : Ressources en eaux souterraines douces et gisements pétroliers offshore.`,
+        formula: {
+          name: "Accident majeur du bassin sédimentaire",
+          formula: "\\text{Faille des lagunes (Est-Ouest)} \\implies \\text{Rejet vertical descendant de } 5\\,000 \\text{ m}",
+          note: "Sépare les sédiments récents au Sud du socle cristallin au Nord."
+        },
+        konanTip: "L'Astuce du Professeur Konan : La faille des lagunes est Est-Ouest et a un rejet vertical de 5 000 m !",
+      };
+    }
+
+    if (/faille|cassure|miroir|rejet/i.test(prompt) || /faille/i.test(explanation)) {
+      return {
+        title: "Les accidents tectoniques cassants (Failles)",
+        paragraphText: `Une faille est une cassure de terrain avec déplacement relatif des compartiments :
+• Éléments géométriques : Plan de faille, compartiment soulevé, compartiment effondré, rejet de faille.
+• Types de failles : Failles normales (distension), failles inverses (compression) et décrochements (coulissage).
+• Rôle sur le réseau d'eau : Les failles guident préférentiellement les cours d'eau en Côte d'Ivoire.`,
+        formula: {
+          name: "Géométrie d'une faille tectonique",
+          formula: "\\text{Faille} = \\text{Plan de faille} + \\text{Rejet vertical } R_v + \\text{Rejet horizontal } R_h",
+          note: "Entraîne une discontinuité des couches géologiques observables sur le terrain."
+        },
+        konanTip: "L'Astuce du Professeur Konan : Faille = cassure avec déplacement des compartiments !",
+      };
+    }
+
+    if (/pli|anticlinal|synclinal|charnière|flanc/i.test(prompt) || /pli/i.test(explanation)) {
+      return {
+        title: "Les accidents tectoniques souples (Plis)",
+        paragraphText: `Un pli est une déformation continue sans rupture provoquée par des forces de compression :
+• Anticlinal : Pli dont la courbure est convexe vers le haut (couches les plus anciennes au cœur).
+• Synclinal : Pli dont la courbure est concave vers le haut (couches les plus récentes au cœur).
+• Localisation : Observés dans les schistes du Birrimien, absents dans le bassin côtier non plissé.`,
+        formula: {
+          name: "Types fondamentaux de plis géologiques",
+          formula: "\\text{Anticlinal (Convexe vers le haut)} \\quad ; \\quad \\text{Synclinal (Concave vers le haut)}",
+          note: "Les plis témoignent de poussées tectoniques horizontales de compression."
+        },
+        konanTip: "L'Astuce du Professeur Konan : Anticlinal = bosse convexe ; Synclinal = creux concave !",
+      };
+    }
+
+    if (/discordance|kokumbo|abronienne|contact anormal|érosion/i.test(prompt) || /discordance/i.test(explanation)) {
+      return {
+        title: "Les discordances géologiques en Côte d'Ivoire",
+        paragraphText: `Une discordance est un contact anormal séparant deux formations géologiques d'âges distincts :
+• Genèse : Émersion, plissement, érosion de la formation ancienne, puis sédimentation de la nouvelle couche.
+• Discordance de Kokumbo : Célèbre discordance de base du Birrimien sur le socle ancien.
+• Discordance Abronienne : Observée dans l'Est ivoirien (région de Bondoukou / Bouna).`,
+        formula: {
+          name: "Définition d'une discordance géologique",
+          formula: "\\text{Discordance} = \\text{Surface d'érosion séparant deux cycles géologiques distincts}",
+          note: "La discordance de base du Birrimien affleure typiquement à Kokumbo."
+        },
+        konanTip: "L'Astuce du Professeur Konan : Discordance de base du Birrimien = Kokumbo !",
+      };
+    }
+
+    const defaultGeoFormula = formulas[stepIdx % Math.max(1, formulas.length)] || {
+      name: "Propriété géologique officielle",
+      formula: "\\text{Socle cristallin (97,5 \\%)} + \\text{Bassin sédimentaire (2,5 \\%)} = 100\\,\\%",
+      note: "Programme officiel de SVT 2de C (MENA Côte d'Ivoire).",
+    };
+
+    return {
+      title: `Notion & Observation Géologique (Étape ${stepIdx + 1})`,
+      paragraphText: `Principe géologique fondamental :
+• Règle officielle : ${explanation || point.summary}
+• Démarche d'analyse : S'appuyer sur la carte géologique, identifier les contacts tectoniques et la nature des roches.
+• Rigueur : Utiliser le vocabulaire exact du programme MENA pour justifier l'observation.`,
+      formula: defaultGeoFormula,
+      konanTip: "L'Astuce du Professeur Konan : Toujours associer le type de roche à son domaine géologique !",
+    };
+  }
+
+  // Branche SVT Biologie (Cellule, Mitose, Écologie, Nutrition)
   const defaultSvtFormula = formulas[stepIdx % Math.max(1, formulas.length)] || {
-    name: "Propriété biologique & géologique",
-    formula: "\\text{Grossissement} = \\text{Grossissement de l'objectif} \\times \\text{Grossissement de l'oculaire}",
-    note: "Observations au microscope optique.",
+    name: "Propriété biologique officielle",
+    formula: "\\text{Cellule mère } (2n) \\xrightarrow{\\text{Mitose}} 2 \\text{ Cellules filles génétiquement identiques } (2n)",
+    note: "Conservation intégrale du programme génétique et du nombre de chromosomes.",
   };
 
   return {
-    title: `Connaissance Scientifique du Vivant & de la Terre (Étape ${stepIdx + 1})`,
-    paragraphText: `Notion biologique ou géologique fondamentale :
+    title: `Connaissance Biologique Fondamentale (Étape ${stepIdx + 1})`,
+    paragraphText: `Principe du vivant et du fonctionnement cellulaire :
 • Définition & Observation : ${explanation || point.summary}
-• Mécanisme du vivant / de la Terre : Analyser les données observables ou expérimentales pour comprendre le fonctionnement du système.
-• Vocabulaire scientifique : Utiliser les termes précis et normalisés du programme officiel du MENA.`,
+• Mécanisme biologique : Analyser les données expérimentales ou microscopiques pour expliquer le phénomène.
+• Rigueur : Employer les termes précis et normalisés de la biologie moderne.`,
     formula: defaultSvtFormula,
-    konanTip: "L'Astuce du Professeur Konan : Utiliser scrupuleusement les termes scientifiques exacts dans ta justification !",
+    konanTip: "L'Astuce du Professeur Konan : Retiens que la mitose conserve le caryotype à 2n chromosomes !",
   };
 }
 
