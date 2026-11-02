@@ -9,9 +9,6 @@ import {
   AlertCircle,
   ArrowRight,
   Award,
-  Calculator,
-  Atom,
-  Dna,
   Check,
   Target,
   Brain,
@@ -45,7 +42,7 @@ import {
 import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
 import { soundFX } from '../../lib/audioEffects';
 import { KonanCube } from '../../components/common/KonanCube';
-import { MathRenderer, MathFormula, VisualSchemaRenderer } from '../../components/common/MathRenderer';
+import { MathRenderer, VisualSchemaRenderer, SmartKeyFormulaBox } from '../../components/common/MathRenderer';
 
 export interface InteractiveTutorViewProps {
   userId: string;
@@ -173,69 +170,70 @@ const PedagogicalParagraph: React.FC<{ text: string }> = ({ text }) => {
 };
 
 /**
- * Découpe la leçon en 10 écrans progressifs (Style Duolingo) :
- * - Écrans 1 à 6 : Cours approfondi (Définition, Mécanisme, Formule décortiquée, Cas particuliers, Rédaction, Pièges)
- * - Écrans 7 à 10 : Exercice d'application guidé en 4 questions cohérentes (Énoncé réel au sommet, sans boîte verte discordante)
+ * Découpe la leçon en 8 écrans progressifs (Style Duolingo) avec liaison 1-POUR-1 ABSOLUE :
+ * - Chaque étape i dispose de SA PROPRE fiche de cours dédiée, de sa formule/règle et de son QCM.
+ * - Le bloc de cours du haut change OBLIGATOIREMENT à chaque étape (zéro paragraphe figé).
  */
 function buildProgressiveCourseSlice(point: CurriculumPoint, stepIndex: number): ProgressiveCourseSlice {
-  const totalSteps = point.exercises?.length || 10;
-  const rawParagraphs = point.conceptExplanation
-    .split(/\n\s*\n/)
-    .map(p => p.trim())
-    .filter(Boolean);
+  const totalSteps = point.exercises?.length || 8;
 
-  const paragraphs = rawParagraphs.length > 0 ? rawParagraphs : [point.conceptExplanation];
-  const formulas = point.formulas || [];
-
-  const stepThemes = [
-    'Introduction & Définition du concept',
-    'Mécanisme, loi fondamentale & Propriétés',
-    'Formule officielle décortiquée & Unités SI',
-    'Cas particuliers, variantes & Validité',
-    'Méthode de rédaction type devoir',
-    'Réflexe d\'évaluation & Piège classique à éviter',
-  ];
-
-  if (stepIndex < 6 && stepIndex < totalSteps - 4) {
-    // Écrans 1 à 6 : Mini-carte de cours avec code couleur Bleu / Violet
-    const theme = stepThemes[stepIndex] || `Notion clé ${stepIndex + 1}`;
-    const pText = paragraphs[stepIndex % paragraphs.length] || point.summary;
-    const form = formulas[stepIndex % formulas.length] || (formulas.length > 0 ? formulas[0] : undefined);
-    const tip = stepIndex === 5 && point.keyRule
-      ? `Piège classique d'examen : ${point.keyRule}`
-      : stepIndex >= 2 && point.keyRule
-      ? `L'Astuce du Prof Konan : ${point.keyRule}`
-      : undefined;
-
+  // 1. Priorité absolue : Fiche de cours structurée dédiée à cette étape (Liaison 1-pour-1)
+  if (point.structuredSteps && point.structuredSteps[stepIndex]) {
+    const step = point.structuredSteps[stepIndex];
     return {
-      stepBadge: `Étape ${stepIndex + 1}/${totalSteps} · ${theme}`,
+      stepBadge: step.stepBadge,
       stepIndex,
       totalSteps,
-      stepTitle: point.title,
-      paragraphText: pText,
-      formula: form,
-      konanTip: tip,
-      keyRule: stepIndex === 3 ? point.keyRule : undefined,
-      visualSchema: stepIndex === 1 ? point.visualSchema : undefined,
+      stepTitle: step.stepTitle || point.title,
+      paragraphText: step.paragraphText,
+      formula: step.formula,
+      keyRule: step.keyRule,
+      konanTip: step.konanTip,
+      visualSchema: step.visualSchema,
     };
   }
 
-  // Écrans 7 à 10 : Exercice d'application guidé en 4 questions (Données réelles au sommet, zéro boîte verte discordante)
-  const questionNum = (stepIndex - Math.max(0, totalSteps - 4)) + 1; // 1, 2, 3, 4
-  const ex = point.workedExample;
-  const exStatement = ex?.statement || point.summary;
-  const currentStepHint = ex?.methodSteps?.[questionNum - 1] || `Question ${questionNum}/4 de résolution avec les données réelles de l'énoncé.`;
-  const form = formulas[questionNum % formulas.length] || (formulas.length > 0 ? formulas[0] : undefined);
+  // 2. Fallback pour points existants : découpage intelligent sans jamais répéter le même paragraphe
+  const rawParagraphs = point.conceptExplanation
+    ? point.conceptExplanation
+        .split(/\n\s*\n/)
+        .map(p => p.trim())
+        .filter(Boolean)
+    : [point.summary];
+
+  const paragraphs = rawParagraphs.length > 0 ? rawParagraphs : [point.conceptExplanation || point.summary];
+  const formulas = point.formulas || [];
+
+  const stepThemes = [
+    'Définition essentielle & Notion clé',
+    'Mécanisme fondamental & Lois directrices',
+    'Formule officielle décortiquée & Unités SI',
+    'Conditions de validité & Cas particuliers',
+    'Méthode de rédaction type devoir',
+    'Réflexe officiel d\'évaluation & Pièges classiques',
+    'Application guidée (Données réelles & Choix de la loi)',
+    'Application guidée (Résolution complète & Bilan)',
+  ];
+
+  const theme = stepThemes[stepIndex] || `Notion clé ${stepIndex + 1}`;
+  const pText = paragraphs[stepIndex % paragraphs.length] || point.summary;
+  const form = formulas[stepIndex % Math.max(1, formulas.length)] || (formulas.length > 0 ? formulas[0] : undefined);
+  const tip = stepIndex === 5 && point.keyRule
+    ? `Piège classique d'examen : ${point.keyRule}`
+    : stepIndex >= 2 && point.keyRule
+    ? `L'Astuce du Prof Konan : ${point.keyRule}`
+    : undefined;
 
   return {
-    stepBadge: `Étape ${stepIndex + 1}/${totalSteps} · Exercice d'application (Question ${questionNum}/4)`,
+    stepBadge: `Étape ${stepIndex + 1}/${totalSteps} · ${theme}`,
     stepIndex,
     totalSteps,
     stepTitle: point.title,
-    exerciseStatement: exStatement,
-    paragraphText: currentStepHint,
+    paragraphText: pText,
     formula: form,
-    konanTip: questionNum === 4 ? ex?.conclusion : undefined,
+    konanTip: tip,
+    keyRule: stepIndex === 3 ? point.keyRule : undefined,
+    visualSchema: stepIndex === 1 ? point.visualSchema : undefined,
   };
 }
 
@@ -424,13 +422,6 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     if (!currentPoint) return null;
     return buildProgressiveCourseSlice(currentPoint, activeStepIndex);
   }, [currentPoint, activeStepIndex]);
-
-  // Icône dynamique de matière
-  const SubjectIcon = useMemo(() => {
-    if (stemSubjectId === 'maths') return Calculator;
-    if (stemSubjectId === 'physique_chimie') return Atom;
-    return Dna;
-  }, [stemSubjectId]);
 
   const subCategoryLabel = getSubCategoryName(activeSubCategory);
 
@@ -997,7 +988,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // VUE 3 : ÉCRAN D'INTRODUCTION ANIMÉ DE LA MINI-LEÇON (ÉTAPE 0)
   // =========================================================================
   if (phase === 'intro' && currentItem && currentPoint) {
-    const numQuestions = currentPoint.exercises?.length || 10;
+    const numQuestions = currentPoint.exercises?.length || 8;
     const objectives = [
       `Comprendre le contexte réel et la définition simple de : ${currentPoint.title}`,
       currentPoint.formulas && currentPoint.formulas.length > 0
@@ -1006,7 +997,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       currentPoint.keyRule
         ? `Retenir le réflexe d'examen : ${currentPoint.keyRule.slice(0, 85)}...`
         : `Éviter les erreurs classiques et pièges fréquents signalés aux examens`,
-      `Réussir les ${numQuestions} exercices progressifs pour valider cette notion à 100%`
+      `Réussir les ${numQuestions} étapes progressives pour valider cette leçon avec un score de 8/8`
     ];
 
     return (
@@ -1122,7 +1113,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     );
   }
 
-  const totalSteps = pointExercises.length || 10;
+  const totalSteps = pointExercises.length || 8;
 
   return (
     <div className="max-w-3xl mx-auto py-4 sm:py-6 px-3 sm:px-6 space-y-4">
@@ -1209,40 +1200,18 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               </span>
             </div>
 
-            {/* Énoncé concret de l'exercice d'application (aux étapes de résolution guidée) */}
-            {activeCourseSlice.exerciseStatement && (
-              <div className="p-3.5 sm:p-4 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/40 space-y-1.5">
-                <div className="text-xs font-black uppercase tracking-wider text-indigo-900 dark:text-indigo-300 flex items-center gap-1.5">
-                  <Target className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                  <span>Énoncé de l'exercice d'application (Données réelles)</span>
-                </div>
-                <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-semibold leading-relaxed pt-1">
-                  <MathRenderer text={activeCourseSlice.exerciseStatement} />
-                </div>
-              </div>
-            )}
-
-            {/* Contenu structuré avec le code couleur pédagogique Bleu / Violet */}
+            {/* Contenu structuré avec le code couleur pédagogique Bleu / Violet (Liaison 1-pour-1 avec le QCM) */}
             {activeCourseSlice.paragraphText && (
               <PedagogicalParagraph text={activeCourseSlice.paragraphText} />
             )}
 
             {/* Formule ou Propriété Clé associée à ce point précis */}
             {activeCourseSlice.formula && (
-              <div className="p-3.5 sm:p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border-2 border-indigo-200 dark:border-indigo-500/30 space-y-2">
-                <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
-                  <SubjectIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                  <span>Formule & Propriété Clé (Notation Officielle) : <MathRenderer text={activeCourseSlice.formula.name} /></span>
-                </div>
-                <div className="w-full text-center py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 text-xs sm:text-sm font-black text-indigo-700 dark:text-indigo-300 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  <MathFormula latex={activeCourseSlice.formula.formula} display={true} />
-                </div>
-                {activeCourseSlice.formula.note && (
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                    <MathRenderer text={activeCourseSlice.formula.note} />
-                  </p>
-                )}
-              </div>
+              <SmartKeyFormulaBox
+                name={activeCourseSlice.formula.name}
+                formula={activeCourseSlice.formula.formula}
+                note={activeCourseSlice.formula.note}
+              />
             )}
 
             {/* Support Visuel / Schéma si présent */}
@@ -1275,9 +1244,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               <span className="font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
                 <Target className="w-4 h-4" />
                 <span>
-                  {activeStepIndex < totalSteps - 4
-                    ? `QCM ${activeStepIndex + 1}/${totalSteps} · Compréhension du cours`
-                    : `QCM ${activeStepIndex + 1}/${totalSteps} · Exercice d'application (Question ${activeStepIndex - (totalSteps - 5)}/4)`}
+                  {activeCourseSlice.stepBadge
+                    ? `${activeCourseSlice.stepBadge} · Test de compréhension`
+                    : `QCM ${activeStepIndex + 1}/${totalSteps} · Compréhension`}
                 </span>
               </span>
 

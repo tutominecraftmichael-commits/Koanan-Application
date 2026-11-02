@@ -1822,8 +1822,8 @@ export function App() {
         className="hidden"
       />
 
-      {/* Persistent Navbar (Masquée sur la console Administrateur, sur l'accueil Onboarding immersif et pendant la leçon du Tuteur) */}
-      {activeView !== 'admin' && activeView !== 'landing' && activeView !== 'tutor' && (
+      {/* Persistent Navbar (Masquée sur la console Administrateur, sur l'accueil Onboarding immersif et pendant la leçon du Tuteur / Mode Focus) */}
+      {activeView !== 'admin' && activeView !== 'landing' && activeView !== 'tutor' && activeView !== 'focus' && (
         <Navbar
           activeView={activeView}
           onNavigate={handleNavigate}

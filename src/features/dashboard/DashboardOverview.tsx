@@ -320,7 +320,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
                 }`}
               >
-                {nextStudySession.isRescheduledToday ? '⚡ Valider le rattrapage' : 'Valider la session'}
+                {nextStudySession.isRescheduledToday ? '⚡ Démarrer la séance' : 'Valider la session'}
               </Button>
             </div>
           )}
@@ -666,7 +666,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                 : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
                             }`}
                           >
-                            <span>{isRescheduled ? '⚡ Valider le rattrapage' : 'Valider la session'}</span>
+                            <span>{isRescheduled ? '⚡ Démarrer la séance' : 'Valider la session'}</span>
                           </Button>
                         </div>
                       </div>

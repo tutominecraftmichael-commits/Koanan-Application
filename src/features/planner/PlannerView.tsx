@@ -344,7 +344,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             <div className="space-y-1.5 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wide text-[11px]">
-                  🔄 Rattrapage intelligent (Jour même uniquement) ({studySessions.filter(s => s.isRescheduledToday).length})
+                  ({studySessions.filter(s => s.isRescheduledToday && !s.completed).length}) Séance(s) à faire
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-500/40">
                   Jour même
@@ -354,22 +354,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 Vos séances non effectuées plus tôt ont été replacées ce soir (fin max à minuit 00:00). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées à minuit sans impacter le programme de demain.
               </p>
             </div>
-          </div>
-          <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
-            {(() => {
-              const firstCatchup = studySessions.find(s => s.isRescheduledToday && !s.completed && s.dayOfWeek === currentDayIndex);
-              return firstCatchup ? (
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<CheckCircle2 className="w-4 h-4 text-slate-950" />}
-                  onClick={() => onToggleSessionComplete(firstCatchup.id)}
-                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-[0_4px_0_0_#b45309] active:translate-y-0.5 active:shadow-[0_2px_0_0_#b45309] cursor-pointer transition-all"
-                >
-                  ⚡ Valider le rattrapage
-                </Button>
-              ) : null;
-            })()}
           </div>
         </div>
       )}
@@ -615,7 +599,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                             : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
                         }`}
                       >
-                        {session.isRescheduledToday ? '⚡ Valider le rattrapage' : 'Valider la session'}
+                        {session.isRescheduledToday ? '⚡ Démarrer la séance' : 'Valider la session'}
                       </Button>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 select-none">

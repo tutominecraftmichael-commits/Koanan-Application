@@ -329,12 +329,13 @@ const WordByWordBubble: React.FC<{ text: string; speed?: number }> = ({
   text,
   speed = 32,
 }) => {
-  const [visibleCount, setVisibleCount] = useState<number>(0);
-  const words = text.split(' ');
+  const words = useMemo(() => (text ? text.split(' ') : []), [text]);
+  const [visibleCount, setVisibleCount] = useState<number>(words.length);
 
   useEffect(() => {
-    setVisibleCount(0);
-    let current = 0;
+    if (!words.length) return;
+    setVisibleCount(1);
+    let current = 1;
     const interval = setInterval(() => {
       current++;
       setVisibleCount(current);
@@ -346,10 +347,10 @@ const WordByWordBubble: React.FC<{ text: string; speed?: number }> = ({
   }, [text, speed, words.length]);
 
   return (
-    <span>
-      {words.slice(0, visibleCount).join(' ')}
+    <span className="text-slate-900 dark:text-white font-extrabold">
+      {(visibleCount > 0 ? words.slice(0, visibleCount) : words).join(' ')}
       {visibleCount < words.length && (
-        <span className="inline-block w-1.5 h-3.5 ml-1 bg-cyan-400 animate-pulse align-middle" />
+        <span className="inline-block w-1.5 h-3.5 ml-1 bg-cyan-500 dark:bg-cyan-400 animate-pulse align-middle" />
       )}
     </span>
   );

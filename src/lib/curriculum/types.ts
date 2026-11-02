@@ -239,6 +239,19 @@ export interface PointWorkedExample {
   visualSchema?: PointVisualSchema;
 }
 
+export interface StructuredLessonStep {
+  stepNumber: number; // 1 to 8
+  stepBadge: string;
+  stepTheme: string;
+  stepTitle: string;
+  paragraphText: string;
+  formula?: PointFormula;
+  keyRule?: string;
+  konanTip?: string;
+  visualSchema?: PointVisualSchema;
+  exercise: InteractiveExercise;
+}
+
 export interface CurriculumPoint {
   id: string;
   order: number;
@@ -251,6 +264,7 @@ export interface CurriculumPoint {
   visualSchema?: PointVisualSchema; // Support visuel (figure géométrique SVG, tableau de signes/variations, arbre de probabilité)
   exercises: InteractiveExercise[]; // Exactement 8 questions à valider (règle stricte du 8/8)
   exercise?: InteractiveExercise; // Rétrocompatibilité
+  structuredSteps?: StructuredLessonStep[]; // 8 étapes séquentielles 1-pour-1 (cours dédié + formule dédiée + QCM dédié)
 }
 
 export interface CurriculumChapter {

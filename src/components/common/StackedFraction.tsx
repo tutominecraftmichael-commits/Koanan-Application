@@ -81,6 +81,10 @@ export function cleanRawMathCode(raw: string): string {
   // Supprime délimiteurs LaTeX $ et $$
   s = s.replace(/\$\$/g, '').replace(/\$/g, '');
 
+  // Protection absolue des indices de mécanique et forces (ex: F_{A/B}, F_{B/A}, M_{i-1}, t_{1/2})
+  s = s.replace(/(?:\\vec\{F\}|F)_\{?([A-Za-z0-9\/]+)\}?/g, '__FORCE_NOTATION_$1__');
+  s = s.replace(/\b([MTvt])_\{([^}]+)\}/g, '__VAR_NOTATION_$1_$2__');
+
   // Convertit \frac{a}{b} en a/b
   s = s.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '($1)/($2)');
   s = s.replace(/\\sqrt\{([^{}]+)\}/g, '√($1)');
@@ -102,6 +106,13 @@ export function cleanRawMathCode(raw: string): string {
   s = s.replace(/\s*-\s*(?=\d+\/\d+)/g, ' −');
 
   return s;
+}
+
+function restoreProtectedPlaceholders(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/__FORCE_NOTATION_([^_]+)__/g, 'F_{$1}')
+    .replace(/__VAR_NOTATION_([^_]+)_([^_]+)__/g, '$1_{$2}');
 }
 
 /**
@@ -146,7 +157,7 @@ export function renderTextWithStackedFractions(text: string): React.ReactNode {
     }
 
     if (matchIndex > lastIndex) {
-      parts.push(cleaned.slice(lastIndex, matchIndex));
+      parts.push(restoreProtectedPlaceholders(cleaned.slice(lastIndex, matchIndex)));
     }
 
     const isNegative = match[1] === '−' || match[1] === '-';
@@ -164,8 +175,8 @@ export function renderTextWithStackedFractions(text: string): React.ReactNode {
     parts.push(
       <StackedFraction
         key={`frac-${matchIndex}`}
-        numerator={rawNum}
-        denominator={rawDen}
+        numerator={restoreProtectedPlaceholders(rawNum)}
+        denominator={restoreProtectedPlaceholders(rawDen)}
         negative={isNegative}
       />
     );
@@ -174,8 +185,8 @@ export function renderTextWithStackedFractions(text: string): React.ReactNode {
   }
 
   if (lastIndex < cleaned.length) {
-    parts.push(cleaned.slice(lastIndex));
+    parts.push(restoreProtectedPlaceholders(cleaned.slice(lastIndex)));
   }
 
-  return parts.length > 0 ? parts : cleaned;
+  return parts.length > 0 ? parts : restoreProtectedPlaceholders(cleaned);
 }

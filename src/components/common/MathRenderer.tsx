@@ -105,14 +105,27 @@ export function cleanFormulasAndIndices(text: string): string {
   s = s.replace(/\bd\s*=\s*M\s*\/\s*29\b/g, '$$$$d = \\frac{M}{29}$$$$');
   s = s.replace(/\bC_m\s*=\s*M\s*×\s*C\b/g, '$$$$\\mathcal{C}_m = M \\times C$$$$');
 
-  // 6. Cinématique & Mécanique (équations de vitesse instantanée, forces, Archimède)
+  // 1. Normalisation universelle des tirets et signes moins
+  s = s.replace(/[−–—]/g, '-');
+
+  // Formule complète vitesse instantanée sur enregistrement : v(t_i) = M_{i-1}M_{i+1} / (t_{i+1} - t_{i-1}) = M_{i-1}M_{i+1} / (2τ)
   s = s.replace(
-    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*t_\{?[^}]+\}?\s*[−\-]\s*t_\{?[^}]+\}?\s*\)?\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?/g,
+    /v\s*\(\s*t_?\{?i\}?\s*\)\s*=\s*M_?\{?i\s*-\s*1\}?\s*M_?\{?i\s*\+\s*1\}?\s*\/\s*\(?\s*t_?\{?i\s*\+\s*1\}?\s*-\s*t_?\{?i\s*-\s*1\}?\s*\)?\s*=\s*M_?\{?i\s*-\s*1\}?\s*M_?\{?i\s*\+\s*1\}?\s*\/\s*\(?\s*2\s*(?:\\?tau|τ)\s*\)?\.?/gi,
+    () => '$$$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{t_{i+1} - t_{i-1}} = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$$$'
+  );
+
+  s = s.replace(
+    /v\s*\(\s*t_?\{?i\}?\s*\)\s*=\s*M_?\{?i\s*-\s*1\}?\s*M_?\{?i\s*\+\s*1\}?\s*\/\s*\(?\s*2\s*(?:\\?tau|τ)\s*\)?\.?/gi,
+    () => '$$$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$$$'
+  );
+
+  s = s.replace(
+    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*t_\{?[^}]+\}?\s*-\s*t_\{?[^}]+\}?\s*\)?\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?\.?/g,
     () => '$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{t_{i+1} - t_{i-1}} = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$'
   );
 
   s = s.replace(
-    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?/g,
+    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?\.?/g,
     () => '$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$'
   );
 
@@ -235,11 +248,23 @@ export function cleanFormulasAndIndices(text: string): string {
     t = replaceNotInMath(t, /\bv\((t_?[i0-9]?)\)/g, (_, arg) => `$v(${arg})$`);
     t = replaceNotInMath(t, /\bv\(t\)/g, () => '$v(t)$');
 
+    // 3ème loi de Newton complète dans le texte : F_{A/B} = - F_{B/A}
+    t = replaceNotInMath(
+      t,
+      /(?:\\vec\{F\}|F)_\{?([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}?\s*=\s*[−\-]\s*(?:\\vec\{F\}|F)_\{?([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}?/g,
+      (_, a1, b1, a2, b2) => `$$\\vec{F}_{${a1}/${b1}} = -\\vec{F}_{${a2}/${b2}}$$`
+    );
+
     // Forces d'interaction réciproque (ex: F_{A/B}, F_{B/A}, \vec{F}_{A/B})
     t = replaceNotInMath(t, /(?:\\vec\{F\}|F)_\{?([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}?/g, (_, a, b) => `$\\vec{F}_{${a}/${b}}$`);
 
     // Paires de points avec indices (ex: M_{i-1}M_{i+1})
+    t = replaceNotInMath(t, /\b([A-Z])_\{?i\s*-\s*1\}?\s*([A-Z])_\{?i\s*\+\s*1\}?/gi, (_, p1, p2) => `$${p1}_{i-1}${p2}_{i+1}$`);
     t = replaceNotInMath(t, /\b([A-Z])_\{([^}]+)\}\s*([A-Z])_\{([^}]+)\}(?![a-zA-Z0-9_])/g, (_, p1, i1, p2, i2) => `$${p1}_{${i1}}${p2}_{${i2}}$`);
+
+    // Variables avec indices temporels et cinématiques (ex: M_{i-1}, M_{i+1}, t_{i-1}, t_{i+1}, M_i, t_i)
+    t = replaceNotInMath(t, /\b([Mt])_\{?i\s*([+\-])\s*1\}?/gi, (_, sym, sign) => `$${sym}_{i${sign}1}$`);
+    t = replaceNotInMath(t, /\b([Mt])_i\b/g, (_, sym) => `$${sym}_i$`);
 
     // Variables avec indices entre accolades (ex: M_{i-1}, M_{i+1}, t_{i+1}, F_{A/B}, F_{B/A})
     t = replaceNotInMath(t, /\b([A-Za-z])_\{([^}]+)\}/g, (_, sym, sub) => `$${sym}_{${sub}}$`);
@@ -298,6 +323,9 @@ export function sanitizeFormulaForKatex(raw: string): string {
   // 1.1 Unification du signe moins Unicode
   s = s.replace(/−/g, '-');
 
+  // Protection absolue contre le % qui commente le reste de la formule en LaTeX
+  s = s.replace(/(?<!\\)%/g, '\\%');
+
   // Si la formule passée est une phrase descriptive en français sans opérateur mathématique
   const hasMathOp = /[=+\-*/\\]|\\frac|\\sum|\\to|\\iff|\\implies|<|>/.test(s);
   if (!hasMathOp && /\s/.test(s)) {
@@ -315,14 +343,18 @@ export function sanitizeFormulaForKatex(raw: string): string {
   // 1.2 Protection des interactions physiques et fractions d'indices (ex: F_{A/B}, F_{B/A}, t_{1/2})
   s = s.replace(/_\{([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}/g, '_{$1/$2}');
 
-  // Remplacement des termes physiques fréquents pour éviter les lettres collées en italique
+  // Remplacement des termes fréquents pour éviter les lettres collées en italique
+  s = s.replace(/\bSocle\s+cristallin\b/gi, '\\text{Socle cristallin}');
+  s = s.replace(/\bBassin\s+sédimentaire\b/gi, '\\text{Bassin sédimentaire}');
   s = s.replace(/\bMouvement\s+décrit\s+par\s+le\s+centre\s+d'inertie\s+G\b/gi, '\\text{Mouvement de } G \\text{ (MRU)}');
   s = s.replace(/\bMouvement\s+relatif\s+par\s+rapport\s+au\s+repère\s+lié\s+à\s+G\b/gi, '\\text{Mouvement relatif par rapport à } G');
   s = s.replace(/\bRotation\s+uniforme\s+autour\s+de\s+G\b/gi, '\\text{Rotation uniforme autour de } G');
   s = s.replace(/\bCondition\s+de\s+système\s+pseudo-isolé\b/gi, '\\text{Condition de système pseudo-isolé}');
-  s = s.replace(/\bvecteur\s+constant\b/g, '\\vec{\\text{cste}}');
-  s = s.replace(/\bconstante\b/g, '\\text{cste}');
-  s = s.replace(/\brepos\b/g, '\\text{repos}');
+  s = s.replace(/\bCondition\s+d'équilibre\b/gi, '\\text{Condition d\'équilibre}');
+  s = s.replace(/\bvecteur\s+constant\b/gi, '\\vec{\\text{cste}}');
+  s = s.replace(/\bvecteur\s+nul\b/gi, '\\vec{0}');
+  s = s.replace(/\bconstante\b/gi, '\\text{cste}');
+  s = s.replace(/\brepos\b/gi, '\\text{repos}');
   s = s.replace(/\bmouvement\s+rectiligne\s+uniforme\b/g, '\\text{MRU}');
   s = s.replace(/\bcirculaire\s+uniforme\b/g, '\\text{circulaire uniforme}');
   s = s.replace(/\\sum\s*F_ext\b/g, '\\sum \\vec{F}_{\\text{ext}}');
@@ -571,6 +603,62 @@ export const MathFormula: React.FC<MathFormulaProps> = ({ latex, display = false
       className={`inline-block text-indigo-700 dark:text-indigo-300 align-middle ${className}`}
       dangerouslySetInnerHTML={{ __html: renderedHtml }}
     />
+  );
+};
+
+export interface SmartKeyFormulaBoxProps {
+  name: string;
+  formula: string;
+  note?: string;
+  className?: string;
+}
+
+/**
+ * Encadré intelligent "FORMULE & PROPRIÉTÉ CLÉ" :
+ * - Si la formule est descriptive (pourcentages, termes géologiques, phrases en français),
+ *   affiche un rendu HTML aéré et net sans aucun mot collé ni barre de défilement.
+ * - Si c'est une équation mathématique ou chimique pure, utilise le rendu KaTeX officiel.
+ */
+export const SmartKeyFormulaBox: React.FC<SmartKeyFormulaBoxProps> = ({
+  name,
+  formula,
+  note,
+  className = '',
+}) => {
+  const isDescriptiveText = useMemo(() => {
+    if (!formula) return false;
+    const str = String(formula).trim();
+    if (str.includes('%')) return true;
+    const frenchWords = str.split(/\s+/).filter(w => /^[a-zA-ZÀ-ÿ]{3,}$/.test(w));
+    if (frenchWords.length >= 3) return true;
+    return false;
+  }, [formula]);
+
+  return (
+    <div className={`p-3.5 sm:p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border-2 border-indigo-200 dark:border-indigo-500/30 space-y-2.5 ${className}`}>
+      <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
+        <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
+        <span>Formule & Propriété Clé (Notation Officielle) : <MathRenderer text={name} /></span>
+      </div>
+
+      <div className="w-full text-center py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 text-xs sm:text-sm md:text-base font-black text-indigo-800 dark:text-indigo-200">
+        {isDescriptiveText ? (
+          <div className="break-words whitespace-normal leading-relaxed text-slate-900 dark:text-white font-extrabold px-1">
+            <MathRenderer text={formula} />
+          </div>
+        ) : (
+          <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <MathFormula latex={formula} display={true} />
+          </div>
+        )}
+      </div>
+
+      {note && (
+        <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+          <MathRenderer text={note} />
+        </p>
+      )}
+    </div>
   );
 };
 
