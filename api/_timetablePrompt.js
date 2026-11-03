@@ -110,10 +110,11 @@ export function buildTimetablePrompt(format) {
 
 /**
  * Modèles essayés dans l'ordre (repli automatique si l'un est saturé ou indisponible).
- * Vérifiés le 2026-11-03 avec la liste des modèles de l'API (gemini-2.0-flash et gemini-1.5-flash
- * n'existent plus). Les alias « -latest » suivent automatiquement le modèle courant de Google.
+ * Testés le 2026-11-03 avec la clé de production : gemini-2.0-flash, gemini-1.5-flash et
+ * gemini-2.5-flash-lite ne sont plus disponibles pour les nouveaux comptes. Les alias « -latest »
+ * suivent automatiquement le modèle courant de Google.
  */
-export const TIMETABLE_MODELS = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash-lite', 'gemini-flash-lite-latest'];
+export const TIMETABLE_MODELS = ['gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-flash-latest', 'gemini-3.5-flash-lite', 'gemini-flash-lite-latest'];
 
 export const ALLOWED_MIME_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 

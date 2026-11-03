@@ -7,40 +7,17 @@
  * 2. ZÉRO SCAN DE LA COLLECTION USERS : Le cron ne lit JAMAIS les 149 utilisateurs.
  *    Il exécute UNE SEULE requête légère sur `push_queue` où sendAt <= Date.now() (limitée à 50).
  * 3. DÉPILAGE AUTOMATIQUE : Chaque enveloppe traitée est envoyée puis immédiatement supprimée.
- * 4. MODE TEST PRIVÉ : ?test=konanapp369@gmail.com envoie une alerte directe à l'abonnement enregistré dans push_queue.
+ * 4. MODE TEST PRIVÉ : ?test=<email> envoie une alerte directe à l'abonnement enregistré dans push_queue.
+ * 5. ACCÈS PROTÉGÉ : toute requête (traitement de la file ET mode test) doit fournir le secret CRON_SECRET
+ *    dans l'en-tête « X-Cron-Secret » (ou « Authorization: Bearer … »). Clés VAPID lues uniquement
+ *    depuis les variables d'environnement (VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT).
  */
 
-import fs from 'fs';
-import path from 'path';
 import webpush from 'web-push';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
-
-function loadLocalEnvIfPresent() {
-  const envFiles = ['.env.local', '.env'];
-  for (const file of envFiles) {
-    try {
-      const fullPath = path.resolve(process.cwd(), file);
-      if (fs.existsSync(fullPath)) {
-        const content = fs.readFileSync(fullPath, 'utf8');
-        content.split('\n').forEach((line) => {
-          const trimmed = line.trim();
-          if (trimmed && !trimmed.startsWith('#')) {
-            const eqIdx = trimmed.indexOf('=');
-            if (eqIdx > 0) {
-              const k = trimmed.slice(0, eqIdx).trim();
-              const v = trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, '');
-              if (!process.env[k]) {
-                process.env[k] = v;
-              }
-            }
-          }
-        });
-      }
-    } catch {}
-  }
-}
+import { loadLocalEnvIfPresent, secretsMatch, providedSecret } from './_env.js';
 
 // Initialisation sécurisée de Firebase Admin
 function getFirebaseServices() {
@@ -83,34 +60,51 @@ function getFirebaseServices() {
   return { db, auth, app };
 }
 
-// Configuration des clés VAPID Web Push
-const VAPID_PUBLIC_KEY =
-  process.env.VAPID_PUBLIC_KEY ||
-  process.env.VITE_VAPID_PUBLIC_KEY ||
-  'BCCK7MYVcGKEJajUGbH_g-5hXdyE81jUbfFhvoFrlaBIu1jAzX1eGGhhCF7LoloWxWsgwklkz6txOobnfxYIpZc';
-
-const VAPID_PRIVATE_KEY =
-  process.env.VAPID_PRIVATE_KEY ||
-  'RPg92tF_70AeHG2oO76Twm8fO8nHDEtXUV8X3sp1mhw';
-
-const VAPID_SUBJECT =
-  process.env.VAPID_SUBJECT ||
-  'mailto:contact@konan-ai.com';
-
-try {
-  webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
-} catch (vapidErr) {
-  console.warn('[cron-notifications] Notice VAPID :', vapidErr.message);
+/**
+ * Clés VAPID Web Push : UNIQUEMENT dans les variables serveur (Vercel), jamais dans le code.
+ * Renvoie un message d'erreur si elles manquent (le serveur refuse alors d'envoyer).
+ */
+function configureVapid() {
+  const publicKey = String(process.env.VAPID_PUBLIC_KEY || process.env.VITE_VAPID_PUBLIC_KEY || '').trim();
+  const privateKey = String(process.env.VAPID_PRIVATE_KEY || '').trim();
+  const subject = String(process.env.VAPID_SUBJECT || 'mailto:contact@konan-ai.com').trim();
+  if (!publicKey || !privateKey) return 'VAPID_NOT_CONFIGURED';
+  try {
+    webpush.setVapidDetails(subject, publicKey, privateKey);
+    return null;
+  } catch {
+    return 'VAPID_INVALID';
+  }
 }
 
 export default async function handler(req, res) {
-  // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  // Compatibilité avec le serveur de développement Vite (réponse Node brute, sans res.status / res.json)
+  if (typeof res.status !== 'function') {
+    res.status = (code) => { res.statusCode = code; return res; };
+    res.json = (data) => { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(data)); return res; };
+  }
+  // Pas d'en-tête CORS : ce point d'accès est appelé de serveur à serveur (cron-job.org), jamais par un navigateur.
+  res.setHeader('Cache-Control', 'no-store');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (req.method !== 'GET' && req.method !== 'POST') {
+    res.setHeader('Allow', 'GET, POST');
+    return res.status(405).json({ success: false, error: 'METHOD_NOT_ALLOWED' });
+  }
+
+  // CONTRÔLE D'ACCÈS : secret partagé CRON_SECRET, envoyé par cron-job.org dans l'en-tête « X-Cron-Secret »
+  // (ou « Authorization: Bearer … »). S'applique aussi au mode ?test=. Sans secret configuré : refus.
+  loadLocalEnvIfPresent();
+  const expectedSecret = String(process.env.CRON_SECRET || '').trim();
+  if (!expectedSecret) {
+    return res.status(503).json({ success: false, error: 'CRON_NOT_CONFIGURED' });
+  }
+  if (!secretsMatch(providedSecret(req, 'x-cron-secret'), expectedSecret)) {
+    return res.status(401).json({ success: false, error: 'UNAUTHORIZED' });
+  }
+
+  const vapidError = configureVapid();
+  if (vapidError) {
+    return res.status(503).json({ success: false, error: vapidError });
   }
 
   const startTime = Date.now();

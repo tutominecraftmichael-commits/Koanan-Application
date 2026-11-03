@@ -173,6 +173,14 @@ GEMINI_API_KEY=votre_cle_gemini_ici
 # Console administrateur : mot de passe vérifié uniquement par le serveur
 ADMIN_PASSWORD=choisissez_un_mot_de_passe_long_et_unique
 
+# Notifications push : clés VAPID (la privée reste côté serveur) et secret du cron
+# Générer une paire : npx web-push generate-vapid-keys
+VAPID_PUBLIC_KEY=votre_cle_publique_vapid
+VITE_VAPID_PUBLIC_KEY=votre_cle_publique_vapid
+VAPID_PRIVATE_KEY=votre_cle_privee_vapid
+# cron-job.org doit envoyer l'en-tête « X-Cron-Secret: <CRON_SECRET> » à /api/cron-notifications
+CRON_SECRET=une_longue_chaine_aleatoire
+
 # Configuration Firebase
 VITE_FIREBASE_API_KEY=votre_api_key_firebase
 VITE_FIREBASE_AUTH_DOMAIN=votre-projet.firebaseapp.com

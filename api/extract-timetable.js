@@ -12,9 +12,8 @@
  * - nombre d'appels limité par adresse IP (au mieux, par instance du serveur).
  */
 
-import fs from 'fs';
-import path from 'path';
 import { GoogleGenAI } from '@google/genai';
+import { loadLocalEnvIfPresent } from './_env.js';
 import {
   buildTimetablePrompt,
   TIMETABLE_MODELS,
@@ -28,22 +27,6 @@ const MAX_BASE64_CHARS = 4_200_000;
 const RATE_LIMIT = 8; // appels
 const RATE_WINDOW_MS = 10 * 60 * 1000; // par tranche de 10 minutes
 const recentCalls = new Map();
-
-function loadLocalEnvIfPresent() {
-  if (process.env.GEMINI_API_KEY) return;
-  for (const file of ['.env.local', '.env']) {
-    try {
-      const fullPath = path.resolve(process.cwd(), file);
-      if (!fs.existsSync(fullPath)) continue;
-      for (const line of fs.readFileSync(fullPath, 'utf8').split('\n')) {
-        const m = line.trim().match(/^GEMINI_API_KEY\s*=\s*(.+)$/);
-        if (m && !process.env.GEMINI_API_KEY) process.env.GEMINI_API_KEY = m[1].trim().replace(/^['"]|['"]$/g, '');
-      }
-    } catch {
-      // fichier illisible : ignoré
-    }
-  }
-}
 
 function sendJson(res, status, data) {
   res.statusCode = status;
