@@ -9,9 +9,20 @@
 import { auth, db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 
+// Clé PUBLIQUE VAPID (publique par nature). La clé privée correspondante n'existe que côté serveur.
+// Rotation du 2026-11-03 : l'ancienne paire était exposée dans le dépôt public.
 export const VAPID_PUBLIC_KEY =
   import.meta.env.VITE_VAPID_PUBLIC_KEY ||
-  'BCCK7MYVcGKEJajUGbH_g-5hXdyE81jUbfFhvoFrlaBIu1jAzX1eGGhhCF7LoloWxWsgwklkz6txOobnfxYIpZc';
+  'BFMUUoknQ9de4CCl1wew4j3SGHtMDBRpk9DhE1vAH3OewLXF8m43FhO26yq1X5eeOZ97jNvbScN_41u10gxy4PY';
+
+/** Vrai si l'abonnement existant a été créé avec une autre clé publique (ex. avant une rotation). */
+function subscriptionUsesOtherKey(subscription: PushSubscription, currentKey: Uint8Array): boolean {
+  const used = subscription.options?.applicationServerKey;
+  if (!used) return false; // navigateur qui n'expose pas la clé : on garde l'abonnement
+  const usedBytes = new Uint8Array(used);
+  if (usedBytes.length !== currentKey.length) return true;
+  return usedBytes.some((b, i) => b !== currentKey[i]);
+}
 
 /**
  * Convertit une clé VAPID base64url en Uint8Array pour l'API PushManager
@@ -95,11 +106,21 @@ export async function subscribeToWebPush(
     await navigator.serviceWorker.ready;
 
     // 4. Obtenir ou créer la souscription Push avec la clé publique VAPID
+    const serverKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
     let subscription = await registration.pushManager.getSubscription();
+    // Abonnement créé avec une ancienne clé (rotation) : le serveur ne pourrait plus l'utiliser -> on le renouvelle
+    if (subscription && subscriptionUsesOtherKey(subscription, serverKey)) {
+      try {
+        await subscription.unsubscribe();
+      } catch {
+        // échec de désabonnement : on tente quand même un nouvel abonnement
+      }
+      subscription = null;
+    }
     if (!subscription) {
       subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as BufferSource,
+        applicationServerKey: serverKey as BufferSource,
       });
     }
 

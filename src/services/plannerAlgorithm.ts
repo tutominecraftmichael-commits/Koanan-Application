@@ -8,6 +8,7 @@ import type {
 } from '../types';
 import { parseTimeToMinutes, minutesToTimeString, generateId, getDaysRemaining, getDaysRemainingFrom, isNonAcademicSubject } from '../lib/utils';
 import { getPacingStrategy } from '../lib/pacingStrategies';
+import { EXAM_PREP_PAUSED, withoutPausedExamPrep } from '../lib/featureFlags';
 import { validateBackendPermissions } from '../lib/subscriptionGuard';
 import type { PlanTier } from '../types';
 
@@ -29,6 +30,9 @@ export function generateOptimizedStudyPlan(
   preferences: StudyPreferences,
   userOrTier?: PlanTier | { tier?: PlanTier; planTier?: PlanTier; isPro?: boolean }
 ): StudySession[] {
+  // Préparation aux devoirs/examens en pause (mise à jour) : les dates d'épreuve sont ignorées
+  subjects = withoutPausedExamPrep(subjects);
+
   // RÈGLE STRICTE : Exclure systématiquement toute matière non révisable (EPS, Sport, devoirs, permanence)
   const revisableSubjects = subjects.filter(sub => !isNonAcademicSubject(sub.name));
   if (revisableSubjects.length === 0) return [];
@@ -39,7 +43,8 @@ export function generateOptimizedStudyPlan(
     : userOrTier;
   
   const resolvedTier: PlanTier = (userContext?.planTier || (userContext as any)?.tier) ?? 'free';
-  const isExamFeatureAllowed = resolvedTier === 'pro' || resolvedTier === 'plus';
+  // Fonction devoirs/examens : réservée à Pro/Plus, et coupée pour tous pendant sa mise à jour
+  const isExamFeatureAllowed = (resolvedTier === 'pro' || resolvedTier === 'plus') && !EXAM_PREP_PAUSED;
 
   let effectivePreferences = preferences;
   if (userContext) {
@@ -739,6 +744,8 @@ export function synchronizeSessionsWithExamCountdowns(
   subjects: Subject[]
 ): StudySession[] {
   if (!sessions || sessions.length === 0) return [];
+  // Préparation aux devoirs/examens en pause (mise à jour) : aucune durée n'est recalibrée
+  if (EXAM_PREP_PAUSED) return sessions;
   const subjectsMap = new Map(subjects.map(s => [s.id, s]));
 
   const referenceDate = new Date();

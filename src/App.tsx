@@ -80,9 +80,13 @@ import { PlannerView } from './features/planner/PlannerView';
 import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
 import { FocusMode } from './features/focus/FocusMode';
 import { PresetModal } from './features/onboarding/PresetModal';
-import { DuolingoOnboarding, isLocalAdminEnvironment } from './features/onboarding/DuolingoOnboarding';
+import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding';
 import { ProWizardView } from './features/pro/ProWizardView';
 import { AdminDashboard } from './features/admin/AdminDashboard';
+import { InteractiveTutorView } from './features/tutor/InteractiveTutorView';
+import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum } from './lib/curriculum/curriculumMatcher';
+import { getCurriculumChapters } from './lib/curriculum/curriculumRegistry';
+import type { StemSubjectId, CurriculumGradeLevel } from './lib/curriculum/types';
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
@@ -92,6 +96,13 @@ export function App() {
   // Jamais de compte connecté d'office, jamais de saut instantané vers le tableau de bord.
   const [activeView, setActiveView] = useState<ActiveAppView>('landing');
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
+  const [activeTutorSession, setActiveTutorSession] = useState<{
+    subjectTitle: string;
+    stemSubjectId: StemSubjectId;
+    gradeLevel: CurriculumGradeLevel;
+    studySessionId?: string;
+    durationMinutes?: number;
+  } | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
@@ -633,7 +644,12 @@ export function App() {
   }, []);
 
   const showToast = (msg: string, duration = 5000) => {
-    setToastMessage(msg);
+    // Purge absolue de tous les émojis pour une interface sobre, élégante et professionnelle
+    const cleanMsg = msg
+      .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1FA00}-\u{1FAFF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}]/gu, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+    setToastMessage(cleanMsg);
     if (toastTimeoutRef.current) {
       clearTimeout(toastTimeoutRef.current);
     }
@@ -653,14 +669,14 @@ export function App() {
     }
 
     if (state.isDemoMode && view === 'upload-schedule') {
-      showToast('ℹ️ En mode démo, l’importation d’emploi du temps est désactivée : votre EDT est déjà prédéfini à l’avance. Connectez-vous pour importer le vôtre (jusqu’à 3 imports gratuits).');
+      showToast('En mode démo, l’importation d’emploi du temps est désactivée : votre EDT est déjà prédéfini à l’avance. Connectez-vous pour importer le vôtre (jusqu’à 3 imports gratuits).');
       return;
     }
 
     // Formule KONAN PRO : Connexion impérative obligatoire (aucun accès anonyme ou démo non authentifié)
     if (view === 'pro-wizard') {
       if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
-        showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte Google pour passer à KONAN PRO.');
+        showToast('Connexion requise : Vous devez impérativement être connecté avec votre compte Google pour passer à KONAN PRO.');
         setActiveView('auth');
         return;
       }
@@ -668,7 +684,7 @@ export function App() {
 
     const isAuthenticated = Boolean(state.userAccount?.isLoggedIn || state.isDemoMode);
     if (!isAuthenticated && view !== 'landing' && view !== 'auth') {
-      showToast('🔒 Connexion requise : Veuillez vous connecter avec Google pour accéder à l’application.');
+      showToast('Connexion requise : Veuillez vous connecter avec Google pour accéder à l’application.');
       setActiveView('auth');
       return;
     }
@@ -718,11 +734,11 @@ export function App() {
     hasGreetedAuthRef.current = profile.googleId;
     const resolvedTier = finalUserState.planTier || effectivePlan;
     if (resolvedTier === 'pro') {
-      showToast(`⭐ Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PRO actif)`);
+      showToast(`Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PRO actif)`);
     } else if (resolvedTier === 'plus') {
-      showToast(`👑 Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PLUS actif)`);
+      showToast(`Bonne Arrivée ! ${finalName} — Code Konan : ${studentKonanId} (KONAN PLUS actif)`);
     } else {
-      showToast(`✨ Bonne Arrivée ! ${finalName} — Votre Code Konan : ${studentKonanId}`);
+      showToast(`Bonne Arrivée ! ${finalName} — Votre Code Konan : ${studentKonanId}`);
     }
 
     // Célébration lors de la toute première connexion
@@ -842,7 +858,7 @@ export function App() {
       }
     }
 
-    // 🔒 TANT QUE L'UTILISATEUR N'A PAS ACCEPTÉ :
+    //  TANT QUE L'UTILISATEUR N'A PAS ACCEPTÉ :
     // - Son compte Google et son email ne sont PAS enregistrés dans la base de données
     // - Aucun accès au dashboard
     // - Affichage immédiat de l'affiche de confidentialité
@@ -870,7 +886,7 @@ export function App() {
     // Formule KONAN PRO ou KONAN PLUS : Ouverture du Guide EDT Pro pas à pas avec Konan
     if (planId === 'pro' || planId === 'plus') {
       if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
-        showToast('🔒 Connexion requise : Vous devez impérativement être connecté avec votre compte pour configurer votre EDT Pro avec Konan.');
+        showToast('Connexion requise : Vous devez impérativement être connecté avec votre compte pour configurer votre EDT Pro avec Konan.');
         setActiveView('auth');
         return;
       }
@@ -900,7 +916,7 @@ export function App() {
     }
     setState(nextState);
 
-    showToast(`✨ Modèle KONAN Gratuit actif pour votre compte.`);
+    showToast(`Modèle KONAN Gratuit actif pour votre compte.`);
     if (activeView === 'landing' || activeView === 'auth') {
       setActiveView('dashboard');
     }
@@ -948,7 +964,7 @@ export function App() {
       }
       return next;
     });
-    showToast(`👥 Groupe KONAN PLUS : ${ids.length}/4 IDs rattachés avec succès.`);
+    showToast(`Groupe KONAN PLUS : ${ids.length}/4 IDs rattachés avec succès.`);
   };
 
   /**
@@ -993,7 +1009,7 @@ export function App() {
       }
       return next;
     });
-    showToast(`👥 Groupe KONAN PLUS mis à jour (${emails.length}/4 membres actifs).`);
+    showToast(`Groupe KONAN PLUS mis à jour (${emails.length}/4 membres actifs).`);
   };
 
   /**
@@ -1042,7 +1058,7 @@ export function App() {
       target_16: 'Mention Très Bien (16/20)',
       major_promotion: 'Major de Promotion (Excellence)',
     };
-    showToast(`🎯 Objectif académique activé : ${goalLabels[goal]} !`);
+    showToast(`Objectif académique activé : ${goalLabels[goal]} !`);
   };
 
   /**
@@ -1081,7 +1097,7 @@ export function App() {
       // Enregistre en base de données et ouvre l'accès à l'application
       await finalizeUserLogin(profile, acceptedUserState, effectivePlan, finalName, studentKonanId);
       soundFX.playVictoryCelebration();
-      showToast(`✨ Bienvenue sur KONAN AI ! Votre compte Google est maintenant enregistré et sécurisé.`);
+      showToast(` Bienvenue sur KONAN AI ! Votre compte Google est maintenant enregistré et sécurisé.`);
       return;
     }
 
@@ -1113,7 +1129,7 @@ export function App() {
 
     setIsPrivacyModalOpen(false);
     soundFX.playVictoryCelebration();
-    showToast(`✨ Vos préférences de confidentialité ont été mises à jour.`);
+    showToast(` Vos préférences de confidentialité ont été mises à jour.`);
   };
 
   /**
@@ -1209,7 +1225,7 @@ export function App() {
     });
 
     setState(demo);
-    showToast(`🎓 Mode Démo activé (${demo.academicLevel}). Modèle Gratuit (Free) actif.`);
+    showToast(` Mode Démo activé (${demo.academicLevel}). Modèle Gratuit (Free) actif.`);
     setActiveView('dashboard');
   };
 
@@ -1278,7 +1294,7 @@ export function App() {
     launchProWizard?: boolean;
   }) => {
     if (state.isDemoMode) {
-      showToast('⚠️ En mode démo, l’emploi du temps est prédéfini à l’avance et ne peut pas pas être modifié par importation.');
+      showToast('️ En mode démo, l’emploi du temps est prédéfini à l’avance et ne peut pas pas être modifié par importation.');
       return;
     }
 
@@ -1322,18 +1338,26 @@ export function App() {
     setState(prev => {
       const nextPdfCount = (prev.pdfImportsCount || prev.userAccount?.pdfImportsCount || 0) + 1;
       const effectiveTier = payload.planTier || prev.planTier || prev.userAccount?.planTier || 'free';
+      const effectiveAcademicLevel = payload.preferences.academicLevel || prev.academicLevel;
+      const effectiveGradeLevel = payload.preferences.gradeLevel || prev.preferences?.gradeLevel || prev.userAccount?.gradeLevel;
       const updated: AppState = {
         ...prev,
-        academicLevel: payload.preferences.academicLevel || prev.academicLevel,
+        academicLevel: effectiveAcademicLevel,
         planTier: effectiveTier,
         subjects: payload.subjects,
         classSlots: payload.classSlots,
-        preferences: payload.preferences,
+        preferences: {
+          ...payload.preferences,
+          academicLevel: effectiveAcademicLevel,
+          gradeLevel: effectiveGradeLevel,
+        },
         studySessions: payload.studySessions,
         logs: [],
         pdfImportsCount: nextPdfCount,
         userAccount: prev.userAccount ? {
           ...prev.userAccount,
+          academicLevel: effectiveAcademicLevel,
+          gradeLevel: effectiveGradeLevel,
           planTier: effectiveTier,
           pdfImportsCount: nextPdfCount,
         } : undefined,
@@ -1346,14 +1370,14 @@ export function App() {
       return updated;
     });
 
-    // 🌟 Uniquement si l'utilisateur vient de cliquer explicitement sur le modèle KONAN PRO ou KONAN PLUS, lancer le guide EDT Pro
+    //  Uniquement si l'utilisateur vient de cliquer explicitement sur le modèle KONAN PRO ou KONAN PLUS, lancer le guide EDT Pro
     if (payload.launchProWizard && (payload.planTier === 'pro' || payload.planTier === 'plus')) {
-      showToast('🚀 Bienvenue dans le Guide EDT Pro avec Konan !');
+      showToast('Bienvenue dans le Guide EDT Pro avec Konan !');
       setActiveView('pro-wizard');
       return;
     }
 
-    showToast('🎉 Emploi du temps synchronisé & planning d’étude optimisé généré !');
+    showToast('Emploi du temps synchronisé & planning d’étude optimisé généré !');
     setActiveView('dashboard');
   };
 
@@ -1461,7 +1485,7 @@ export function App() {
       return next;
     });
 
-    showToast(`✅ Nom et filière enregistrés : ${updated.name} (${updated.academicLevel})`);
+    showToast(`Nom et filière enregistrés : ${updated.name} (${updated.academicLevel})`);
   };
 
   const handleRegeneratePlan = () => {
@@ -1477,7 +1501,7 @@ export function App() {
       }
       return nextState;
     });
-    showToast('✨ Votre planning d’étude a été réorganisé avec succès !');
+    showToast('Votre planning d’étude a été réorganisé avec succès !');
   };
 
   const handleToggleSessionComplete = (sessionId: string) => {
@@ -1492,12 +1516,19 @@ export function App() {
     // Anti-cheat verification: Only allow validating today's study sessions
     if (target.dayOfWeek !== currentDayIndex) {
       soundFX.playNotificationPing();
-      showToast(`🔒 Anti-triche : Vous pouvez uniquement valider les révisions prévues pour aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
+      showToast(`Anti-triche : Vous pouvez uniquement valider les révisions prévues pour aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
+      return;
+    }
+
+    // Règle stricte : Une séance validée ne peut JAMAIS être annulée
+    if (target.completed) {
+      soundFX.playNotificationPing();
+      showToast('Cette séance d\'étude est déjà validée et enregistrée.', 4000);
       return;
     }
 
     soundFX.playCheckmarkPop();
-    const willBeCompleted = !target.completed;
+    const willBeCompleted = true;
     const updatedSessions = state.studySessions.map(s =>
       s.id === sessionId
         ? {
@@ -1537,13 +1568,13 @@ export function App() {
 
       if (willAllBeCompleted) {
         setIsUltimateCelebrationOpen(true);
-        showToast(`🏆 Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
+        showToast(`Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
       } else if (isDayFullyComplete) {
         soundFX.playCelebrationFanfare();
-        showToast(`🎉 Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
+        showToast(`Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
       } else {
         soundFX.playCelebrationFanfare();
-        showToast(`🎉 Félicitations ! Tu as validé la leçon "${target.title}" avec succès !`, 5000);
+        showToast(`Félicitations ! Tu as validé la leçon "${target.title}" avec succès !`, 5000);
       }
     }
 
@@ -1580,13 +1611,60 @@ export function App() {
     // Anti-cheat verification: Only allow launching today's study sessions
     if (session.dayOfWeek !== currentDayIndex) {
       soundFX.playNotificationPing();
-      showToast(`🔒 Anti-triche : Vous pouvez uniquement lancer le chronomètre pour les révisions d'aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
+      showToast(`Anti-triche : Vous pouvez uniquement lancer le chronomètre pour les révisions d'aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
       return;
+    }
+
+    // VÉRIFICATION CORRESPONDANCE PROGRAMME OFFICIEL (MATHS, PHYSIQUE-CHIMIE, SVT)
+    const sub = state.subjects.find(s => s.id === session.subjectId);
+    const subjectName = sub?.name || session.title;
+    // Classe STRICTE : jamais de classe devinée (ex: Terminale D par défaut)
+    const resolvedGrade = tryResolveGradeLevel(
+      state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel
+    );
+    const stemMatchForTutor = matchSubjectToStemCurriculum(subjectName);
+
+    if (stemMatchForTutor.isStemSubject && !resolvedGrade) {
+      showToast("Indique ta classe exacte avec sa série (ex : Tle D, 1ère A1) en réimportant ton emploi du temps pour débloquer les cours guidés. Séance lancée en mode chronomètre.", 7000);
+    } else if (
+      resolvedGrade &&
+      stemMatchForTutor.stemSubjectId &&
+      shouldLaunchInteractiveTutor(subjectName, resolvedGrade) &&
+      getCurriculumChapters(stemMatchForTutor.stemSubjectId, resolvedGrade).length === 0
+    ) {
+      showToast(`Le cours guidé de ${subjectName} pour ta classe est en préparation. Séance lancée en mode chronomètre.`, 6000);
+    } else if (resolvedGrade && shouldLaunchInteractiveTutor(subjectName, resolvedGrade)) {
+      const stemMatch = stemMatchForTutor;
+      if (stemMatch.isStemSubject && stemMatch.stemSubjectId) {
+        setActiveTutorSession({
+          subjectTitle: subjectName,
+          stemSubjectId: stemMatch.stemSubjectId,
+          gradeLevel: resolvedGrade,
+          studySessionId: session.id,
+          durationMinutes: session.durationMinutes || 25,
+        });
+        setActiveView('tutor');
+        soundFX.playCheckmarkPop();
+        return;
+      }
     }
 
     setFocusSession(session);
     setActiveView('focus');
     soundFX.playCheckmarkPop();
+  };
+
+  /**
+   * Callback de complétion du Tuteur Interactif Duolingo :
+   * Valide la séance, incrémente les statistiques et affiche la célébration.
+   */
+  const handleCompleteTutorSession = (studySessionId?: string) => {
+    if (studySessionId) {
+      handleToggleSessionComplete(studySessionId);
+    }
+    setActiveTutorSession(null);
+    setActiveView('dashboard');
+    showToast('Félicitations ! Séance validée avec succès dans ton tuteur interactif KONAN !', 6000);
   };
 
   /**
@@ -1617,11 +1695,11 @@ export function App() {
 
     if (willAllBeCompleted) {
       setIsUltimateCelebrationOpen(true);
-      showToast(`🏆 Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
+      showToast(`Félicitations ! Tu as validé 100% de tes objectifs et l'ensemble de tes heures de révision !`, 6000);
     } else if (isDayFullyComplete) {
-      showToast(`🎉 Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
+      showToast(`Félicitations ! Toutes les révisions prévues pour aujourd'hui sont validées avec succès !`, 6000);
     } else {
-      showToast(`🎉 Félicitations ! Séance "${target.title}" validée avec succès dans le chronomètre Focus !`, 5000);
+      showToast(`Félicitations ! Séance "${target.title}" validée avec succès dans le chronomètre Focus !`, 5000);
     }
 
     setState(prev => {
@@ -1676,7 +1754,7 @@ export function App() {
     });
 
     setIsUltimateCelebrationOpen(false);
-    showToast(`🌟 Félicitations ! Toutes les barres de progression sont à zéro. Reposez-vous bien, à demain !`, 6000);
+    showToast(`Félicitations ! Toutes les barres de progression sont à zéro. Reposez-vous bien, à demain !`, 6000);
   };
 
   const handleStartNewCycleEarly = () => {
@@ -1690,7 +1768,7 @@ export function App() {
       }
       return nextState;
     });
-    showToast('🚀 Révisions réactivées pour aujourd’hui !');
+    showToast('Révisions réactivées pour aujourd’hui !');
   };
 
   const handleAddCustomSession = (session: StudySession) => {
@@ -1769,8 +1847,8 @@ export function App() {
         className="hidden"
       />
 
-      {/* Persistent Navbar (Masquée sur la console Administrateur et sur l'accueil Onboarding immersif) */}
-      {activeView !== 'admin' && activeView !== 'landing' && (
+      {/* Persistent Navbar (Masquée sur la console Administrateur, sur l'accueil Onboarding immersif et pendant la leçon du Tuteur / Mode Focus) */}
+      {activeView !== 'admin' && activeView !== 'landing' && activeView !== 'tutor' && activeView !== 'focus' && (
         <Navbar
           activeView={activeView}
           onNavigate={handleNavigate}
@@ -1802,25 +1880,25 @@ export function App() {
         />
       )}
 
-      {/* Bouton Flottant d'Accès Rapide Admin si session admin active (STRICTEMENT LOCAL UNIQUEMENT) */}
-      {isLocalAdminEnvironment() && activeView !== 'admin' && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
+      {/* Bouton Flottant d'Accès Rapide Admin si session admin active */}
+      {activeView !== 'admin' && activeView !== 'tutor' && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
         <button
           onClick={() => setActiveView('admin')}
           className="fixed bottom-5 right-5 z-50 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs shadow-2xl shadow-purple-600/40 border border-purple-400/40 flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all"
         >
           <ShieldCheck className="w-4 h-4 text-purple-300" />
-          <span>Console Admin (Local)</span>
+          <span>Console Admin</span>
         </button>
       )}
 
       {/* Main View Container */}
-      <main className={`flex-1 w-full mx-auto overflow-x-hidden ${activeView === 'landing' || activeView === 'admin'
+      <main className={`flex-1 w-full mx-auto overflow-x-hidden ${activeView === 'landing' || activeView === 'admin' || activeView === 'tutor'
         ? 'max-w-full p-0'
         : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
         }`}>
 
-        {/* Real-time Administrator Console (Strictement Privée & Locale Uniquement) */}
-        {activeView === 'admin' && isLocalAdminEnvironment() && (
+        {/* Real-time Administrator Console */}
+        {activeView === 'admin' && (
           <AdminDashboard
             onSwitchToStudentView={() => setActiveView('dashboard')}
             onExitAdmin={() => {
@@ -1838,7 +1916,7 @@ export function App() {
           <DuolingoOnboarding
             currentUser={state.userAccount?.isLoggedIn ? state.userAccount : null}
             onOpenLogin={() => setActiveView('auth')}
-            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
+            onOpenAdmin={() => setActiveView('admin')}
             onLoginSuccess={(user) => {
               handleLoginSuccess(user);
             }}
@@ -1860,7 +1938,7 @@ export function App() {
             onLoginSuccess={handleLoginSuccess}
             onEnterDemoMode={handleEnterDemoMode}
             onBackToLanding={() => setActiveView('landing')}
-            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
+            onOpenAdmin={() => setActiveView('admin')}
             currentProfile={state.userAccount}
           />
         )}
@@ -1874,6 +1952,8 @@ export function App() {
               pdfImportsCount={state.pdfImportsCount || state.userAccount?.pdfImportsCount || 0}
               userEmail={state.userAccount?.email}
               userId={state.userAccount?.googleId}
+              initialAcademicLevel={state.userAccount?.academicLevel || state.academicLevel}
+              initialGradeLevel={(state.userAccount?.gradeLevel || state.preferences?.gradeLevel) as any}
               onApplyExtractedSchedule={handleApplyExtractedSchedule}
               onCancel={() => setActiveView('dashboard')}
               onViewPricing={handleViewPricing}
@@ -2086,6 +2166,25 @@ export function App() {
           )
         )}
 
+        {/* Tuteur Interactif Duolingo (Maths, Physique-Chimie, SVT - Programme Officiel CI) */}
+        {activeView === 'tutor' && activeTutorSession && (
+          <InteractiveTutorView
+            userId={state.userAccount?.googleId || 'local_student'}
+            subjectTitle={activeTutorSession.subjectTitle}
+            gradeLevel={activeTutorSession.gradeLevel}
+            stemSubjectId={activeTutorSession.stemSubjectId}
+            studySessionId={activeTutorSession.studySessionId}
+            durationMinutes={activeTutorSession.durationMinutes}
+            onExit={() => {
+              setActiveTutorSession(null);
+              setActiveView('dashboard');
+            }}
+            onSessionCompleted={(sessionId) => {
+              handleCompleteTutorSession(sessionId);
+            }}
+          />
+        )}
+
         {/* Analytics: STRICTLY PROTECTED */}
         {activeView === 'analytics' && (
           (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
@@ -2209,7 +2308,7 @@ export function App() {
         studentName={effectiveStudentName}
       />
 
-      {/* 👑 Royal Step-by-Step Celebration & Onboarding Modal for KONAN PLUS */}
+      {/*  Royal Step-by-Step Celebration & Onboarding Modal for KONAN PLUS */}
       <KonanPlusActivationModal
         isOpen={isPlusActivationModalOpen}
         onClose={() => setIsPlusActivationModalOpen(false)}
@@ -2227,7 +2326,7 @@ export function App() {
         invitedBy={state.invitedBy || state.userAccount?.invitedBy}
       />
 
-      {/* 👑 KONAN PLUS: 4 COMPTES INVITÉS / GROUPE MODAL */}
+      {/*  KONAN PLUS: 4 COMPTES INVITÉS / GROUPE MODAL */}
       <KonanPlusGroupModal
         isOpen={isPlusGroupModalOpen}
         onClose={() => setIsPlusGroupModalOpen(false)}
@@ -2243,7 +2342,7 @@ export function App() {
         invitedBy={state.invitedBy || state.userAccount?.invitedBy}
       />
 
-      {/* 👑 KONAN PLUS: 3 OBJECTIFS SCOLAIRES MODAL */}
+      {/*  KONAN PLUS: 3 OBJECTIFS SCOLAIRES MODAL */}
       <AcademicGoalSelectorModal
         isOpen={isAcademicGoalModalOpen}
         onClose={() => setIsAcademicGoalModalOpen(false)}
@@ -2277,7 +2376,7 @@ export function App() {
 
 
 
-      {/* 🛡️ PRIVACY & FIREBASE CLOUD DATA PROTECTION MODAL (Mandatory on 1st login) */}
+      {/* ️ PRIVACY & FIREBASE CLOUD DATA PROTECTION MODAL (Mandatory on 1st login) */}
       <PrivacyPolicyModal
         isOpen={isPrivacyModalOpen}
         onClose={() => {
@@ -2327,7 +2426,7 @@ export function App() {
         </footer>
       )}
 
-      {/* 🚀 Cinematic 3D Entrance Animation */}
+      {/*  Cinematic 3D Entrance Animation */}
       <KonanEntranceSplash
         onComplete={() => {
           // L'animation d'entrée ne force JAMAIS la redirection vers le dashboard :
@@ -2339,7 +2438,7 @@ export function App() {
         }}
       />
 
-      {/* 📱 PWA Universal Mobile & Desktop Install Prompt */}
+      {/*  PWA Universal Mobile & Desktop Install Prompt */}
       <PwaInstallPromptModal />
     </div>
 

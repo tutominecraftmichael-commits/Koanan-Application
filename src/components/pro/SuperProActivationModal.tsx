@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { soundFX } from '../../lib/audioEffects';
+import { EXAM_PREP_PAUSED, EXAM_PREP_PAUSED_MESSAGE } from '../../lib/featureFlags';
 
 export interface SuperProActivationModalProps {
   isOpen: boolean;
@@ -42,8 +43,10 @@ export const SuperProActivationModal: React.FC<SuperProActivationModalProps> = (
     {
       icon: Target,
       title: "Adaptation Examens & Devoirs",
-      desc: "Indiquez vos dates de partiels et devoirs surveillés. L'algorithme intensifie automatiquement vos révisions à l'approche du jour J.",
-      tag: "Priorité Intelligente",
+      desc: EXAM_PREP_PAUSED
+        ? EXAM_PREP_PAUSED_MESSAGE
+        : "Indiquez vos dates de partiels et devoirs surveillés. L'algorithme intensifie automatiquement vos révisions à l'approche du jour J.",
+      tag: EXAM_PREP_PAUSED ? "Mise à jour" : "Priorité Intelligente",
       color: "from-sky-500/20 to-blue-500/10 border-sky-500/30 text-sky-300",
       badgeColor: "bg-sky-500/20 text-sky-300 border-sky-500/40",
     },

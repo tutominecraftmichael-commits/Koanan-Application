@@ -89,9 +89,9 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           {/* Badge Méthode : Capsule (pill) horizontale au contour lumineux dégradé très fin */}
           <div className="flex justify-center px-2">
             <div className="p-[1px] rounded-full bg-gradient-to-r from-blue-500/40 via-purple-500/30 to-cyan-400/40 shadow-sm dark:shadow-[0_0_20px_rgba(59,130,246,0.25)] inline-block max-w-full">
-              <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white/95 dark:bg-[#0A0E1A]/95 backdrop-blur-md text-indigo-950 dark:text-sky-200 border border-indigo-100 dark:border-transparent text-xs sm:text-sm font-semibold tracking-wide">
-                <span className="flex h-2 w-2 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-ping shrink-0" />
-                <span className="break-words">Méthode Pédagogique Active & Répétition Espacée</span>
+              <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white dark:bg-[#0A0E1A]/95 backdrop-blur-md text-slate-900 dark:text-sky-200 border border-slate-200 dark:border-transparent text-xs sm:text-sm font-bold tracking-wide">
+                <span className="flex h-2 w-2 rounded-full bg-cyan-600 dark:bg-cyan-400 animate-ping shrink-0" />
+                <span className="break-words text-slate-900 dark:text-sky-200 font-bold">Méthode Pédagogique Active & Répétition Espacée</span>
               </div>
             </div>
           </div>

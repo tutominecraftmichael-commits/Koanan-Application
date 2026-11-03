@@ -12,6 +12,8 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { formatMinutesToHours, getDaysRemaining, getSessionExamCountdown, parseTimeToMinutes, getWeekDateRange, isDateInWeek } from '../../lib/utils';
+import { EXAM_PREP_PAUSED } from '../../lib/featureFlags';
+import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
 import { 
   Sparkles, 
   Calendar, 
@@ -26,8 +28,7 @@ import {
   ChevronUp,
   BookOpen,
   Moon,
-  Zap,
-  RotateCcw
+  Zap
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
@@ -187,8 +188,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     : (activeDisplaySessions[0] || null);
 
   const completedToday = completedTodaySessions.length;
-  const totalMissedMinutes = rescheduledTodaySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
-  const totalMissedHoursText = formatMinutesToHours(totalMissedMinutes);
 
   const currentWeekRange = getWeekDateRange(now);
   const weekSessions = studySessions.filter(s => s.date ? isDateInWeek(s.date, currentWeekRange.mondayStr, currentWeekRange.sundayStr) : true);
@@ -224,14 +223,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   : planTier === 'pro' 
                   ? 'gold-shimmer-text font-black' 
                   : 'text-gradient-primary'
-              }>{studentName}</span> 👋
+              }>{studentName}</span>
             </h1>
 
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
               {isCycleCompletedToday ? (
-                <span>🌟 <strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Programme 100% validé !</strong> Repos bien mérité, on reprend demain.</span>
+                <span><strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Programme 100% validé !</strong> Repos bien mérité, on reprend demain.</span>
               ) : isDayFullyComplete ? (
-                <span>🎉 <strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
+                <span><strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
               ) : (
                 <>
                   Cursus <strong className="text-slate-700 dark:text-slate-200 font-semibold">{academicLevel}</strong> synchronisé.
@@ -277,7 +276,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40'
                         : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
                     }`}>
-                      <span>{nextStudySession.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
+                      <span>{nextStudySession.examType === 'devoir' ? 'Devoir' : 'Examen'}</span>
                       {(() => {
                         const sub = subjects.find(s => s.id === nextStudySession.subjectId);
                         const countdown = getSessionExamCountdown(nextStudySession.dayOfWeek, sub?.examDate);
@@ -288,7 +287,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   )}
                   {nextStudySession.isRescheduledToday && (
                     <Badge variant="amber" size="sm" className="text-[9px] px-1.5 py-0 font-bold animate-pulse">
-                      🔄 Rattrapage
+                      Rattrapage
                     </Badge>
                   )}
                 </div>
@@ -301,7 +300,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   </span>
                   {nextStudySession.isRescheduledToday && nextStudySession.originalStartTime && (
                     <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-500/40">
-                      ⏰ Ratée à {nextStudySession.originalStartTime} ➔ Replacée à {nextStudySession.startTime}
+                      Manquée à {nextStudySession.originalStartTime} → Replacée à {nextStudySession.startTime}
                     </span>
                   )}
                 </div>
@@ -317,13 +316,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     onToggleSessionComplete(nextStudySession.id);
                   }
                 }}
-                className={`w-full sm:w-auto cursor-pointer text-xs font-extrabold whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-0.5 ${
+                className={`w-full sm:w-auto cursor-pointer text-xs font-black whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-1 ${
                   nextStudySession.isRescheduledToday
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] active:shadow-[0_2px_0_0_#b45309]'
-                    : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
+                    ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
+                    : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                 }`}
               >
-                {nextStudySession.isRescheduledToday ? '⚡ Valider le rattrapage' : 'Valider la session'}
+                {nextStudySession.isRescheduledToday ? 'Démarrer la séance' : 'Valider la session'}
               </Button>
             </div>
           )}
@@ -476,10 +475,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 </div>
                 <div className="space-y-2 max-w-md mx-auto">
                   <span className="inline-block px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300 text-xs font-bold uppercase tracking-wider">
-                    🎉 Objectif Semaine Validé
+                    Objectif Semaine Validé
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                    À demain ! 🌙
+                    À demain !
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     Toutes les barres de progression sont à zéro. Reposez-vous bien aujourd'hui, on reprend tout dès demain avec votre nouveau planning !
@@ -515,38 +514,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 {/* Daily Catch-up Rescheduled Banner with Clear Breakdown */}
                 {rescheduledTodaySessions.length > 0 && (
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-amber-50/70 dark:from-amber-950/70 dark:via-slate-900 dark:to-indigo-950/50 border border-amber-200 dark:border-amber-500/50 shadow-sm dark:shadow-xl space-y-3.5 text-xs">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div className="flex items-start gap-2.5 min-w-0">
-                        <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0 mt-0.5">
-                          <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-                        </div>
-                        <div className="space-y-1 min-w-0">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-extrabold text-amber-900 dark:text-amber-300 uppercase tracking-wide text-xs">
-                              ⚠️ Réaménagement intelligent : {rescheduledTodaySessions.length} session(s) non validée(s)
-                            </span>
-                            <Badge variant="amber" size="sm" className="font-bold px-2 py-0.5 animate-pulse">
-                              {totalMissedHoursText} à rattraper aujourd'hui
-                            </Badge>
-                          </div>
-                          <p className="text-amber-950/80 dark:text-slate-300 text-xs leading-relaxed">
-                            Vos créneaux non respectés ont été replacés pour ce soir afin de ne perdre aucune heure de révision.
-                          </p>
-                        </div>
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0">
+                        <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                       </div>
-
-                      <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<CheckCircle2 className="w-4 h-4 text-slate-950" />}
-                          onClick={() => onToggleSessionComplete(rescheduledTodaySessions[0].id)}
-                          className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-[0_4px_0_0_#b45309] active:translate-y-0.5 active:shadow-[0_2px_0_0_#b45309] cursor-pointer transition-all"
-                          title="Valider la première séance de rattrapage"
-                        >
-                          ⚡ Valider le rattrapage
-                        </Button>
-                      </div>
+                      <span className="font-black text-amber-900 dark:text-amber-300 text-sm tracking-wide">
+                        ({rescheduledTodaySessions.length}) Séance(s) à faire
+                      </span>
                     </div>
 
                     {/* DÉTAIL CLAIR ET ÉPURÉ DES SÉANCES REPORTÉES CE SOIR */}
@@ -586,7 +560,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <Card className="text-center py-6 sm:py-8 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 shadow-xs">
                     <p className="text-xs text-slate-500 dark:text-slate-400">
                       {completedToday > 0 
-                        ? '✨ Bravo ! Toutes vos sessions prévues aujourd’hui sont complétées.'
+                        ? 'Bravo ! Toutes vos sessions prévues aujourd’hui sont complétées.'
                         : 'Aucune session d’étude active pour aujourd’hui.'}
                     </p>
                     <Button
@@ -620,7 +594,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             </span>
                             {isRescheduled && session.originalStartTime && (
                               <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-500/40">
-                                ⏰ Ratée à {session.originalStartTime} ➔ Replacée à {session.startTime}
+                                Manquée à {session.originalStartTime} → Replacée à {session.startTime}
                               </span>
                             )}
                             {session.isExamPrep && (
@@ -629,7 +603,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                   ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40'
                                   : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
                               }`}>
-                                <span>{session.examType === 'devoir' ? 'Devoir' : '⚡ Examen'}</span>
+                                <span>{session.examType === 'devoir' ? 'Devoir' : 'Examen'}</span>
                                 {(() => {
                                   const sub = subjects.find(s => s.id === session.subjectId);
                                   const countdown = getSessionExamCountdown(session.dayOfWeek, sub?.examDate);
@@ -644,12 +618,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             )}
                             {isRescheduled && (
                               <Badge variant="amber" size="sm" className="text-[10px] px-2 py-0.5 font-bold animate-pulse" title={session.rescheduledReason || "Rattrapage du jour même uniquement (aucun report au lendemain)"}>
-                                🔄 Rattrapage ce soir ({sub?.name || 'Session'})
+                                Rattrapage ce soir ({sub?.name || 'Session'})
                               </Badge>
                             )}
                             {session.pacingMethod && (
                               <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-cyan-300 border border-indigo-200 dark:border-indigo-500/30 font-mono">
-                                🧠 {session.pacingMethod === 'feynman' ? 'Feynman' : session.pacingMethod === 'time_blocking' ? 'Time Blocking' : session.pacingMethod === 'pomodoro' ? 'Pomodoro' : session.pacingMethod === 'two_minutes_rule' ? '2-Min' : 'Répétition'}
+                                {session.pacingMethod === 'feynman' ? 'Feynman' : session.pacingMethod === 'time_blocking' ? 'Time Blocking' : session.pacingMethod === 'pomodoro' ? 'Pomodoro' : session.pacingMethod === 'two_minutes_rule' ? '2-Min' : 'Répétition'}
                               </span>
                             )}
                             <button
@@ -664,7 +638,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                  session.type === 'deep_summary' ? t('deepSummaryLabel', lang) :
                                  session.type === 'flashcards' ? t('activeRecallLabel', lang) :
                                  session.type === 'exam_simulation' ? t('examSimulationLabel', lang) :
-                                 t('consolidationLabel', lang)} ℹ️
+                                 t('consolidationLabel', lang)}
                               </Badge>
                             </button>
                           </div>
@@ -680,7 +654,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           <Button
                             variant={isRescheduled ? "secondary" : "glow"}
                             size="sm"
-                            leftIcon={<CheckCircle2 className={`w-4 h-4 ${isRescheduled ? 'text-slate-950' : 'text-slate-950'}`} />}
+                            leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
                             onClick={() => {
                               if (onStartFocusSession) {
                                 onStartFocusSession(session);
@@ -688,13 +662,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                 onToggleSessionComplete(session.id);
                               }
                             }}
-                            className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-0.5 ${
+                            className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-1 ${
                               isRescheduled
-                                ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] active:shadow-[0_2px_0_0_#b45309]'
-                                : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 border border-emerald-400 shadow-[0_4px_0_0_#065f46] active:shadow-[0_2px_0_0_#065f46]'
+                                ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
+                                : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                             }`}
                           >
-                            <span>{isRescheduled ? '⚡ Valider le rattrapage' : 'Valider la session'}</span>
+                            <span>{isRescheduled ? 'Démarrer la séance' : 'Valider la session'}</span>
                           </Button>
                         </div>
                       </div>
@@ -757,15 +731,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                               </div>
 
                               <div className="flex items-center justify-end shrink-0 pl-4 sm:pl-0">
-                                <button
-                                  type="button"
-                                  onClick={() => onToggleSessionComplete(session.id)}
-                                  className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 hover:bg-rose-50 dark:bg-slate-800 dark:hover:bg-rose-950/40 text-slate-600 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-400 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-2xs"
-                                  title="Annuler la validation de cette séance"
-                                >
-                                  <RotateCcw className="w-3.5 h-3.5" />
-                                  <span>Annuler</span>
-                                </button>
+                                <span className="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-black flex items-center gap-1.5 select-none">
+                                  <CheckCircle2 className="w-3.5 h-3.5 stroke-[3]" />
+                                  <span>Validée</span>
+                                </span>
                               </div>
                             </div>
                           );
@@ -790,7 +759,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <Target className="w-4 h-4 text-rose-500 dark:text-rose-400" />
                 Examens & Devoirs Surveillés
               </h3>
-              {planTier === 'free' && (
+              {planTier === 'free' && !EXAM_PREP_PAUSED && (
                 <button
                   type="button"
                   onClick={onUpgradeToPro || onViewPricing}
@@ -802,7 +771,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               )}
             </div>
 
-            {planTier === 'free' ? (
+            {EXAM_PREP_PAUSED ? (
+              <ExamPrepPausedNotice />
+            ) : planTier === 'free' ? (
               <div className="p-3.5 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/30 space-y-2.5 text-xs">
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   Le compte à rebours et l'adaptation automatique du planning aux dates de partiels et devoirs surveillés sont inclus dans <strong className="text-amber-600 dark:text-amber-400 font-extrabold">KONAN PRO</strong> (version PRO ouverte).
@@ -861,7 +832,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     onClick={() => onNavigate('planner')}
                     className="w-full text-xs font-bold py-2 border-amber-300 dark:border-amber-500/30 text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-500/10 cursor-pointer"
                   >
-                    ⚡ Réviser en priorité selon mes épreuves
+                     Réviser en priorité selon mes épreuves
                   </Button>
                 )}
               </div>

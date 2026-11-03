@@ -3,41 +3,16 @@
  * Endpoint : /api/admin-data
  * 
  * RÈGLES DE SÉCURITÉ :
- * 1. Accès strictement protégé par mot de passe (NEXT_PUBLIC_ADMIN_PASSWORD).
+ * 1. Accès strictement protégé par mot de passe : variable secrète serveur ADMIN_PASSWORD,
+ *    envoyée par le client dans l'en-tête « Authorization: Bearer … ». « ?verify=1 » vérifie seulement.
  * 2. Invisible et inaccessible aux élèves.
  * 3. Lecture Firestore via Firebase Admin SDK pour agréger en direct les statistiques
  *    et la liste complète des utilisateurs (149+ comptes réels).
  */
 
-import fs from 'fs';
-import path from 'path';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-
-function loadLocalEnvIfPresent() {
-  const envFiles = ['.env.local', '.env'];
-  for (const file of envFiles) {
-    try {
-      const fullPath = path.resolve(process.cwd(), file);
-      if (fs.existsSync(fullPath)) {
-        const content = fs.readFileSync(fullPath, 'utf8');
-        content.split('\n').forEach((line) => {
-          const trimmed = line.trim();
-          if (trimmed && !trimmed.startsWith('#')) {
-            const eqIdx = trimmed.indexOf('=');
-            if (eqIdx > 0) {
-              const k = trimmed.slice(0, eqIdx).trim();
-              const v = trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, '');
-              if (!process.env[k]) {
-                process.env[k] = v;
-              }
-            }
-          }
-        });
-      }
-    } catch {}
-  }
-}
+import { loadLocalEnvIfPresent, secretsMatch, providedSecret } from './_env.js';
 
 function getFirebaseAdmin() {
   loadLocalEnvIfPresent();
@@ -69,14 +44,8 @@ function getFirebaseAdmin() {
 }
 
 export default async function handler(req, res) {
-  // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    return res.status ? res.status(200).end() : res.end();
-  }
+  // Pas d'en-tête CORS : la console n'est appelée que par le site lui-même (même origine).
+  res.setHeader('Cache-Control', 'no-store');
 
   const sendJson = (status, data) => {
     if (res.status && typeof res.status === 'function') {
@@ -88,36 +57,34 @@ export default async function handler(req, res) {
   };
 
   // 1. VÉRIFICATION DU MOT DE PASSE ADMINISTRATEUR
+  // Le mot de passe n'existe QUE côté serveur, dans la variable secrète ADMIN_PASSWORD (Vercel ou .env local).
+  // Jamais de VITE_/NEXT_PUBLIC_ (ces variables sont copiées dans le code public) ni de valeur écrite en dur.
   loadLocalEnvIfPresent();
-  const expectedPassword = (
-    process.env.NEXT_PUBLIC_ADMIN_PASSWORD ||
-    process.env.VITE_ADMIN_PASSWORD ||
-    process.env.ADMIN_PASSWORD ||
-    ''
-  ).trim();
-
-  const authHeader = req.headers.authorization || req.headers.Authorization || '';
-  let providedPassword = '';
-  if (authHeader.startsWith('Bearer ')) {
-    providedPassword = authHeader.slice(7).trim();
-  } else if (req.query && req.query.password) {
-    providedPassword = String(req.query.password).trim();
-  }
-
+  const expectedPassword = String(process.env.ADMIN_PASSWORD || '').trim();
   if (!expectedPassword) {
-    return sendJson(403, {
+    return sendJson(503, {
       success: false,
-      error: 'ADMIN_PASSWORD_NOT_CONFIGURED',
-      message: 'La variable NEXT_PUBLIC_ADMIN_PASSWORD n\'est pas encore configurée dans votre fichier .env.local.',
+      error: 'ADMIN_NOT_CONFIGURED',
+      message: "Console admin non configurée : définissez la variable secrète ADMIN_PASSWORD sur le serveur.",
     });
   }
 
-  if (!providedPassword || providedPassword !== expectedPassword) {
+  // Mot de passe accepté uniquement dans l'en-tête Authorization (jamais dans l'adresse, qui finit dans les journaux),
+  // comparé à temps constant
+  const isValidAdminPassword = secretsMatch(providedSecret(req), expectedPassword);
+
+  if (!isValidAdminPassword) {
     return sendJson(401, {
       success: false,
       error: 'UNAUTHORIZED',
       message: 'Mot de passe administrateur incorrect ou manquant.',
     });
+  }
+
+  // « ?verify=1 » : simple vérification du mot de passe (écran de connexion), sans charger les données
+  const requestUrl = new URL(req.url || '/', 'http://localhost');
+  if (requestUrl.searchParams.get('verify') === '1') {
+    return sendJson(200, { success: true, authenticated: true });
   }
 
   // 2. CONNEXION FIRESTORE

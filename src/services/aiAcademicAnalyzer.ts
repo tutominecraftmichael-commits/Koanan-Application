@@ -11,6 +11,7 @@ import type {
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
 import { DEFAULT_PREFERENCES } from '../lib/presets';
 import { getPacingStrategy, analyzeScheduleDaytimeMetrics } from '../lib/pacingStrategies';
+import { resolveGradeLevel } from '../lib/curriculum/curriculumMatcher';
 
 export interface AcademicAnalysisReport {
   overallWorkloadScore: number; // 0 to 100
@@ -375,6 +376,7 @@ export function buildStateFromExtractedSchedule(
     ...DEFAULT_PREFERENCES,
     studentName: studentName || 'Étudiant KONAN',
     academicLevel: schedule.academicTrack,
+    gradeLevel: schedule.gradeLevel || resolveGradeLevel(schedule.academicTrack),
     targetDailyStudyMinutes: recommendedDailyMinutes,
     chronotype,
     pacing: pacingStrategy.id,

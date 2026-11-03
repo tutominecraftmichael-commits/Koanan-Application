@@ -29,7 +29,8 @@ import {
   Moon,
   Clock,
   ChevronDown,
-  BarChart2
+  BarChart2,
+  BookOpen
 } from 'lucide-react';
 import type { 
   Subject, 
@@ -64,6 +65,9 @@ import {
   type PacingRecommendation
 } from '../../lib/pacingStrategies';
 import { WaitlistModal } from '../../components/common/WaitlistModal';
+import type { CurriculumGradeLevel } from '../../lib/curriculum/types';
+import { GRADE_LEVELS } from '../../lib/curriculum/types';
+import { resolveGradeLevel } from '../../lib/curriculum/curriculumMatcher';
 
 export interface PdfUploadViewProps {
   studentName: string;
@@ -71,6 +75,8 @@ export interface PdfUploadViewProps {
   pdfImportsCount?: number;
   userEmail?: string;
   userId?: string;
+  initialAcademicLevel?: string;
+  initialGradeLevel?: CurriculumGradeLevel;
   onApplyExtractedSchedule: (payload: {
     subjects: Subject[];
     classSlots: ClassSlot[];
@@ -125,6 +131,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   pdfImportsCount = 0,
   userEmail = '',
   userId = '',
+  initialAcademicLevel,
+  initialGradeLevel,
   onApplyExtractedSchedule,
   onCancel,
   onViewPricing,
@@ -133,8 +141,29 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   // Navigation entre les 2 étapes fluides
   const [currentStep, setCurrentStep] = useState<'upload' | 'customize'>('upload');
 
-  // Étape 1 : Importation & Texte
-  const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType>('lmd');
+  // Résolution initiale du niveau académique et du format
+  const resolvedInitialGrade: CurriculumGradeLevel = useMemo(() => {
+    if (initialGradeLevel) return initialGradeLevel;
+    if (initialAcademicLevel) return resolveGradeLevel(initialAcademicLevel);
+    return 'seconde_c';
+  }, [initialGradeLevel, initialAcademicLevel]);
+
+  const initialFormat: ScheduleFormatType = useMemo(() => {
+    if (resolvedInitialGrade === 'superieur_lmd') return 'lmd';
+    if (resolvedInitialGrade === 'superieur_bts') return 'tpcm';
+    return 'scolaire';
+  }, [resolvedInitialGrade]);
+
+  // Étape 1 : Importation, Catégorie & Classe/Filière
+  const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType>(initialFormat);
+  const [selectedGradeLevel, setSelectedGradeLevel] = useState<CurriculumGradeLevel>(resolvedInitialGrade);
+  const [customFiliere, setCustomFiliere] = useState<string>(() => {
+    if (initialAcademicLevel && (resolvedInitialGrade === 'superieur_lmd' || resolvedInitialGrade === 'superieur_bts')) {
+      return initialAcademicLevel;
+    }
+    return '';
+  });
+  const [selectedLmdLevel, setSelectedLmdLevel] = useState<string>('Licence 3 (L3)');
   const [scheduleText, setScheduleText] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
@@ -192,9 +221,25 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     }
   }, [scheduleText, selectedFormat]);
 
-  // Changement de catégorie académique (LMD, BTS, Lycée) : re-catégorise et transforme le texte en direct
+  // Changement de catégorie académique (LMD, BTS, Lycée) : synchronise la classe/filière
   const handleFormatChange = (newFormat: ScheduleFormatType) => {
     setSelectedFormat(newFormat);
+    if (newFormat === 'scolaire') {
+      if (selectedGradeLevel === 'superieur_bts' || selectedGradeLevel === 'superieur_lmd') {
+        setSelectedGradeLevel('seconde_c');
+      }
+    } else if (newFormat === 'tpcm') {
+      setSelectedGradeLevel('superieur_bts');
+      if (!customFiliere) {
+        setCustomFiliere("BTS Informatique Développeur d'Application (IDA)");
+      }
+    } else if (newFormat === 'lmd') {
+      setSelectedGradeLevel('superieur_lmd');
+      if (!customFiliere) {
+        setCustomFiliere('ESATIC (Abidjan)');
+      }
+    }
+
     if (scheduleText.trim().length > 10) {
       try {
         const parsed = parseStructuredScheduleTruth(scheduleText, FORMAT_CONFIG[newFormat].fileName, newFormat);
@@ -318,7 +363,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
     setIsAnalyzing(false);
     if (!hasGeminiApiKey()) {
-      setError("Clé API Gemini non configurée et aucun créneau détecté localement. Cliquez sur '🔑 Configurer la clé' ou collez votre emploi du temps ci-dessous.");
+      setError("Clé API Gemini non configurée et aucun créneau détecté localement. Cliquez sur 'Configurer la clé' ou collez votre emploi du temps ci-dessous.");
     } else {
       setError("Aucun créneau n'a pu être extrait automatiquement de ce fichier. Vous pouvez coller ou saisir votre emploi du temps dans l'éditeur texte ci-dessous.");
     }
@@ -493,6 +538,22 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     setProModalPacingNotice(null);
   };
 
+  // Calcul du libellé officiel de la classe ou filière
+  const getAcademicTrackLabel = (): string => {
+    if (selectedFormat === 'scolaire') {
+      const match = GRADE_LEVELS.find(g => g.id === selectedGradeLevel);
+      return match ? match.label : 'Seconde C (Scientifique)';
+    }
+    if (selectedFormat === 'tpcm') {
+      return customFiliere.trim() || 'BTS / Filière Technique';
+    }
+    if (selectedFormat === 'lmd') {
+      const prefix = selectedLmdLevel ? `${selectedLmdLevel} - ` : '';
+      return customFiliere.trim() ? `${prefix}${customFiliere.trim()}` : `${prefix}Licence Universitaire (LMD)`;
+    }
+    return 'Enseignement Supérieur';
+  };
+
   // Génération finale du planning d'étude
   const handleFinalSubmit = () => {
     const activeSubjects = editableSubjects.filter(s => s.enabled);
@@ -502,11 +563,13 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     }
 
     try {
+      const academicTrackLabel = getAcademicTrackLabel();
       // Reconstituer l'objet ExtractedPdfSchedule avec les matières et coefficients modifiés
       const finalSchedule = {
         fileName: selectedFile?.name || FORMAT_CONFIG[selectedFormat].fileName,
         fileSize: selectedFile?.size || 1024,
-        academicTrack: selectedFormat === 'lmd' ? 'Licence Universitaire' : selectedFormat === 'tpcm' ? 'BTS / Technique' : 'Scolaire (Lycée)',
+        academicTrack: academicTrackLabel,
+        gradeLevel: selectedGradeLevel,
         detectedConfidence: 95,
         subjects: activeSubjects.map(s => ({
           id: s.id,
@@ -543,6 +606,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
         selectedPacings,
         planTier
       );
+
+      finalPayload.preferences.gradeLevel = selectedGradeLevel;
+      finalPayload.preferences.academicLevel = academicTrackLabel;
 
       onApplyExtractedSchedule(finalPayload);
     } catch (err: any) {
@@ -744,7 +810,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 onClick={() => setShowKeyModal(true)}
                 className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap"
               >
-                🔑 Configurer la clé
+                Configurer la clé
               </button>
             </div>
           )}
@@ -775,6 +841,322 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 );
               })}
             </div>
+          </div>
+
+          
+          {/* SECTION: CONFIGURATION DE LA CLASSE OU FILIÈRE (Isolation stricte des cours) */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <div>
+                <h3 className="text-xs sm:text-sm font-extrabold text-white flex items-center gap-2">
+                  <GraduationCap className="w-4 h-4 text-indigo-400 shrink-0" />
+                  <span>
+                    {selectedFormat === 'scolaire' 
+                      ? 'Classe officielle (Programme national de Côte d’Ivoire)' 
+                      : selectedFormat === 'tpcm' 
+                      ? 'Filière technique (BTS / Prépa)' 
+                      : 'Niveau & Filière universitaire (LMD / Grandes Écoles)'}
+                  </span>
+                </h3>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  {selectedFormat === 'scolaire'
+                    ? 'Sélectionnez votre classe exacte. Les cours et devoirs sont strictement isolés (ex: les cours de 3ème sont réservés à la 3ème et jamais mélangés).'
+                    : selectedFormat === 'tpcm'
+                    ? 'Configurez votre filière BTS pour adapter vos matières et modules techniques.'
+                    : 'Précisez votre niveau et établissement pour structurer votre planning d’étude.'}
+                </p>
+              </div>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shrink-0 self-start sm:self-auto">
+                {selectedFormat === 'scolaire' 
+                  ? (GRADE_LEVELS.find(g => g.id === selectedGradeLevel)?.badge || 'Classe')
+                  : selectedFormat === 'tpcm' 
+                  ? 'BTS' 
+                  : (selectedLmdLevel || 'LMD')}
+              </span>
+            </div>
+
+            {/* SYSTÈME SCOLAIRE : SÉLECTION STRICTE DE LA CLASSE (Collège 3ème, Lycée Scientifique, Lycée Littéraire) */}
+            {selectedFormat === 'scolaire' && (
+              <div className="space-y-4">
+                {/* 1. Collège - Classe d'examen 3ème */}
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5 mb-2">
+                    <GraduationCap className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Collège — Classe d'Examen BEPC</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundFX.playCheckmarkPop();
+                        setSelectedGradeLevel('3eme');
+                      }}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                        selectedGradeLevel === '3eme'
+                          ? 'bg-emerald-950/60 border-emerald-500 text-white shadow-sm ring-1 ring-emerald-500/50'
+                          : 'bg-slate-800/40 border-slate-700/60 text-slate-300 hover:border-emerald-500/40 hover:bg-slate-800/70'
+                      }`}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                            3ème
+                          </span>
+                          <span className="text-xs font-bold text-white">Classe de 3ème</span>
+                        </div>
+                        <p className="text-[10px] text-slate-400 mt-0.5 truncate">
+                          Programme officiel BEPC — Maths, Physique-Chimie, SVT (14 chapitres)
+                        </p>
+                      </div>
+                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                        selectedGradeLevel === '3eme' ? 'border-emerald-500 bg-emerald-500 text-slate-950' : 'border-slate-600'
+                      }`}>
+                        {selectedGradeLevel === '3eme' && <Check className="w-3 h-3 stroke-[3]" />}
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. Lycée - Séries Scientifiques */}
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5 mb-2">
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Lycée — Séries Scientifiques (Maths, PC, SVT)</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                    {[
+                      { id: 'seconde_c', label: 'Seconde C', badge: '2nde C', desc: 'Sciences pures — Maths (5h/sem), PC, SVT' },
+                      { id: 'premiere_d', label: 'Première D', badge: '1ère D', desc: 'Sciences Expérimentales — SVT, PC & Maths' },
+                      { id: 'premiere_c', label: 'Première C', badge: '1ère C', desc: 'Sciences Exactes — Maths approfondies & PC' },
+                      { id: 'terminale_d', label: 'Terminale D', badge: 'Tle D', desc: 'Bac D — SVT, Maths & Sciences Physiques' },
+                      { id: 'terminale_c', label: 'Terminale C', badge: 'Tle C', desc: 'Bac C — Maths pures (8h/sem) & PC' },
+                    ].map(lvl => {
+                      const isSelected = selectedGradeLevel === lvl.id;
+                      return (
+                        <button
+                          key={lvl.id}
+                          type="button"
+                          onClick={() => {
+                            soundFX.playCheckmarkPop();
+                            setSelectedGradeLevel(lvl.id as CurriculumGradeLevel);
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
+                            isSelected
+                              ? 'bg-indigo-950/60 border-indigo-500 text-white shadow-sm ring-1 ring-indigo-500/50'
+                              : 'bg-slate-800/40 border-slate-700/60 text-slate-300 hover:border-indigo-500/40 hover:bg-slate-800/70'
+                          }`}
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300">
+                                {lvl.badge}
+                              </span>
+                              <span className="text-xs font-bold text-white truncate">{lvl.label}</span>
+                            </div>
+                            <p className="text-[10px] text-slate-400 mt-0.5 truncate">{lvl.desc}</p>
+                          </div>
+                          <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                            isSelected ? 'border-indigo-500 bg-indigo-500 text-white' : 'border-slate-600'
+                          }`}>
+                            {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 3. Lycée - Séries Littéraires */}
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-purple-400 flex items-center gap-1.5 mb-2">
+                    <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+                    <span>Lycée — Séries Littéraires (Distinction A1 & A2)</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                    {[
+                      { id: 'seconde_a', label: 'Seconde A', badge: '2de A', desc: 'Tronc commun littéraire général' },
+                      { id: 'premiere_a1', label: 'Première A1', badge: '1re A1', desc: 'Littéraire avec Maths approfondies' },
+                      { id: 'premiere_a2', label: 'Première A2', badge: '1re A2', desc: 'Littéraire classique' },
+                      { id: 'terminale_a1', label: 'Terminale A1', badge: 'Tle A1', desc: 'Bac A1 — Primitives & Calcul intégral' },
+                      { id: 'terminale_a2', label: 'Terminale A2', badge: 'Tle A2', desc: 'Bac A2 — Littéraire pure (sans intégrales)' },
+                    ].map(lvl => {
+                      const isSelected = selectedGradeLevel === lvl.id;
+                      return (
+                        <button
+                          key={lvl.id}
+                          type="button"
+                          onClick={() => {
+                            soundFX.playCheckmarkPop();
+                            setSelectedGradeLevel(lvl.id as CurriculumGradeLevel);
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
+                            isSelected
+                              ? 'bg-purple-950/60 border-purple-500 text-white shadow-sm ring-1 ring-purple-500/50'
+                              : 'bg-slate-800/40 border-slate-700/60 text-slate-300 hover:border-purple-500/40 hover:bg-slate-800/70'
+                          }`}
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">
+                                {lvl.badge}
+                              </span>
+                              <span className="text-xs font-bold text-white truncate">{lvl.label}</span>
+                            </div>
+                            <p className="text-[10px] text-slate-400 mt-0.5 truncate">{lvl.desc}</p>
+                          </div>
+                          <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                            isSelected ? 'border-purple-500 bg-purple-500 text-white' : 'border-slate-600'
+                          }`}>
+                            {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SYSTÈME BTS : FILIÈRE TECHNIQUE */}
+            {selectedFormat === 'tpcm' && (
+              <div className="space-y-3">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-indigo-400 block">
+                  Spécialité BTS courante :
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {[
+                    "BTS Informatique Développeur d'Application (IDA)",
+                    "BTS Réseaux Informatiques & Télécommunications (RIT)",
+                    "BTS Gestion Commerciale (GEC)",
+                    "BTS Finance Comptabilité & Gestion des Entreprises (FCGE)",
+                    "BTS Ressources Humaines & Communication (RHC)",
+                    "BTS Systèmes Électroniques & Informatiques (SEI)",
+                  ].map(filiere => {
+                    const isSelected = customFiliere === filiere;
+                    return (
+                      <button
+                        key={filiere}
+                        type="button"
+                        onClick={() => {
+                          soundFX.playCheckmarkPop();
+                          setCustomFiliere(filiere);
+                          setSelectedGradeLevel('superieur_bts');
+                        }}
+                        className={`p-2.5 rounded-xl border text-left text-xs font-semibold transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                          isSelected
+                            ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
+                            : 'bg-slate-800/40 text-slate-300 border-slate-700/60 hover:border-indigo-400/50'
+                        }`}
+                      >
+                        <span className="truncate">{filiere}</span>
+                        {isSelected && <Check className="w-4 h-4 shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 mb-1">
+                    Ou saisissez votre filière BTS personnalisée :
+                  </label>
+                  <input
+                    type="text"
+                    value={customFiliere}
+                    onChange={(e) => {
+                      setCustomFiliere(e.target.value);
+                      setSelectedGradeLevel('superieur_bts');
+                    }}
+                    placeholder="Ex: BTS Bâtiment & Travaux Publics, BTS Mines & Géologie..."
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-medium text-white focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* SYSTÈME LMD : NIVEAU & UNIVERSITÉ */}
+            {selectedFormat === 'lmd' && (
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-indigo-400 block mb-1.5">
+                    1. Degré d'étude universitaire :
+                  </label>
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                    {['Licence 1 (L1)', 'Licence 2 (L2)', 'Licence 3 (L3)', 'Master 1 (M1)', 'Master 2 (M2)', 'Doctorat'].map(deg => {
+                      const isSelected = selectedLmdLevel === deg;
+                      return (
+                        <button
+                          key={deg}
+                          type="button"
+                          onClick={() => {
+                            soundFX.playCheckmarkPop();
+                            setSelectedLmdLevel(deg);
+                            setSelectedGradeLevel('superieur_lmd');
+                          }}
+                          className={`py-1.5 px-2 rounded-lg text-xs font-bold text-center transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-indigo-600 text-white shadow-sm'
+                              : 'bg-slate-800/60 text-slate-300 hover:bg-slate-800 border border-slate-700/60'
+                          }`}
+                        >
+                          {deg.split(' ')[0]} {deg.match(/\((.*?)\)/)?.[0] || ''}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-indigo-400 block mb-1.5">
+                    2. Établissement / Filière de référence :
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                    {[
+                      'ESATIC (Abidjan)',
+                      'INP-HB (Yamoussoukro)',
+                      'UFHB (Cocody)',
+                      'UNA (Abobo-Adjamé)',
+                      'UVCI (Virtuelle)',
+                      'Autre Grande École',
+                    ].map(school => {
+                      const isSelected = customFiliere.startsWith(school);
+                      return (
+                        <button
+                          key={school}
+                          type="button"
+                          onClick={() => {
+                            soundFX.playCheckmarkPop();
+                            setCustomFiliere(school === 'Autre Grande École' ? '' : school);
+                            setSelectedGradeLevel('superieur_lmd');
+                          }}
+                          className={`p-2 rounded-lg text-xs font-medium text-left truncate transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-indigo-950/80 border border-indigo-500 text-indigo-200'
+                              : 'bg-slate-800/40 text-slate-300 border border-slate-700/60 hover:bg-slate-800'
+                          }`}
+                        >
+                          {school}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 mb-1">
+                    Filière ou mention exacte :
+                  </label>
+                  <input
+                    type="text"
+                    value={customFiliere}
+                    onChange={(e) => {
+                      setCustomFiliere(e.target.value);
+                      setSelectedGradeLevel('superieur_lmd');
+                    }}
+                    placeholder="Ex: ESATIC — SRIT L3, INP-HB Informatique, UFHB Math-Info..."
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-medium text-white focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* SECTION: SOURCE DU DOCUMENT */}
@@ -907,7 +1289,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 <span>Fichier texte extrait ({FORMAT_CONFIG[selectedFormat].fileName})</span>
                 {detectedSlotsCount > 0 && (
                   <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">
-                    ✓ {detectedSlotsCount} cours détecté{detectedSlotsCount > 1 ? 's' : ''}
+                     {detectedSlotsCount} cours détecté{detectedSlotsCount > 1 ? 's' : ''}
                   </span>
                 )}
               </label>
@@ -1128,7 +1510,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                           
                           <div className="text-xs text-slate-300 leading-relaxed">
                             <span className="font-semibold text-white flex items-center gap-1.5 mb-1">
-                              <span>📊 Diagnostic de votre emploi du temps</span>
+                              <span>Diagnostic de votre emploi du temps</span>
                             </span>
                             <p className={`${showFullDiagnostic ? '' : 'line-clamp-3'} whitespace-pre-line text-slate-300`}>
                               {pacingRecommendation.rationale}
@@ -1147,7 +1529,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       {isRecActive ? (
                         <div className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-center gap-2">
                           <Check className="w-4 h-4 text-emerald-400" />
-                          <span>✓ Recommandation active</span>
+                          <span> Recommandation active</span>
                         </div>
                       ) : (
                         <button
@@ -1220,7 +1602,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       <div className="flex flex-wrap items-center justify-end gap-1 shrink-0">
                         {isPrimaryRec && (
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/30">
-                            ★ Recommandé
+                             Recommandé
                           </span>
                         )}
                         {isRecommended && !isPrimaryRec && (
@@ -1235,7 +1617,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                               : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white'
                           }`}>
                             {isSelected 
-                              ? (planTier !== 'free' && selectedPacings.length > 1 ? `✓ Méthode ${selectedPacings.indexOf(strategy.id) + 1}/3` : '✓ Sélectionnée')
+                              ? (planTier !== 'free' && selectedPacings.length > 1 ? ` Méthode ${selectedPacings.indexOf(strategy.id) + 1}/3` : ' Sélectionnée')
                               : (planTier !== 'free' ? '+ Combiner' : 'Inclus')}
                           </span>
                         ) : (
@@ -1335,7 +1717,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               className="w-full py-4 px-6 text-sm sm:text-base font-bold text-white rounded-2xl cursor-pointer bg-gradient-to-r from-[#6366F1] to-[#4F46E5] hover:from-[#5558E6] hover:to-[#4338CA] shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/40 flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98]"
             >
               <Calendar className="w-5 h-5 text-white shrink-0" />
-              <span>Générer mon planning d'étude avec ces paramètres ({editableSubjects.filter(s => s.enabled).length} matières) ⚡</span>
+              <span>Générer mon planning d'étude avec ces paramètres ({editableSubjects.filter(s => s.enabled).length} matières) </span>
             </button>
 
             <button

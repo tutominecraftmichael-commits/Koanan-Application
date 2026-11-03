@@ -55,8 +55,8 @@ const METHODS_DATA: Record<SessionType, MethodInfo> = {
       '3. Open your course materials only afterward to check for gaps and errors in red ink.',
       '4. Focus the remainder of the session on the 20% of concepts you forgot.',
     ],
-    neuroTipFr: '🧠 Règle d\'or : La relecture passive donne l\'illusion de savoir. Seul l\'effort cognitif de recherche mentale consolide les connexions synaptiques.',
-    neuroTipEn: '🧠 Golden Rule: Passive rereading generates fluency illusion. Only the cognitive strain of memory retrieval creates lasting synaptic consolidation.',
+    neuroTipFr: 'Règle d\'or : La relecture passive donne l\'illusion de savoir. Seul l\'effort cognitif de recherche mentale consolide les connexions synaptiques.',
+    neuroTipEn: 'Golden Rule: Passive rereading generates fluency illusion. Only the cognitive strain of memory retrieval creates lasting synaptic consolidation.',
   },
 
   exercises: {
@@ -78,8 +78,8 @@ const METHODS_DATA: Record<SessionType, MethodInfo> = {
       '3. If stuck, explicitly write down what is blocking you before checking a minimal hint.',
       '4. Write out the final step-by-step resolution and grade it against the official mark scheme.',
     ],
-    neuroTipFr: '🎯 Règle d\'or : Ne lisez jamais la correction en pensant "oui c\'est logique". Refaites immédiatement l\'exercice intégralement sans aide 24h plus tard.',
-    neuroTipEn: '🎯 Golden Rule: Never read the answer key thinking "that makes sense". Re-solve the entire problem from scratch without assistance 24 hours later.',
+    neuroTipFr: 'Règle d\'or : Ne lisez jamais la correction en pensant "oui c\'est logique". Refaites immédiatement l\'exercice intégralement sans aide 24h plus tard.',
+    neuroTipEn: 'Golden Rule: Never read the answer key thinking "that makes sense". Re-solve the entire problem from scratch without assistance 24 hours later.',
   },
 
   deep_summary: {
@@ -101,8 +101,8 @@ const METHODS_DATA: Record<SessionType, MethodInfo> = {
       '3. Avoid verbatim copying: rewrite and synthesize in your own analytical words.',
       '4. Conclude with a dedicated "Common Exam Pitfalls" box.',
     ],
-    neuroTipFr: '💡 Règle d\'or : Une fiche n\'est pas un cours miniature. C\'est un déclencheur mnésique. Si elle dépasse 2 pages, vous n\'avez pas encore fait l\'effort de synthèse.',
-    neuroTipEn: '💡 Golden Rule: A cheat sheet is not a miniature book. It is a memory trigger. If it exceeds 2 pages, true synthesis has not yet occurred.',
+    neuroTipFr: 'Règle d\'or : Une fiche n\'est pas un cours miniature. C\'est un déclencheur mnésique. Si elle dépasse 2 pages, vous n\'avez pas encore fait l\'effort de synthèse.',
+    neuroTipEn: 'Golden Rule: A cheat sheet is not a miniature book. It is a memory trigger. If it exceeds 2 pages, true synthesis has not yet occurred.',
   },
 
   flashcards: {
@@ -124,8 +124,8 @@ const METHODS_DATA: Record<SessionType, MethodInfo> = {
       '3. If answered effortlessly, categorize the card into the "Day +7" review bucket.',
       '4. If hesitant or incorrect, place it back at the front of the deck to re-test before concluding.',
     ],
-    neuroTipFr: '⚡ Règle d\'or : La rétention s\'active lors de l\'effort de rappel, pas lors de la vérification. Laissez à votre cerveau au moins 10 secondes pour chercher avant de retourner la carte.',
-    neuroTipEn: '⚡ Golden Rule: Consolidation triggers during the retrieval attempt, not during verification. Give your brain at least 10 seconds of focused search before flipping.',
+    neuroTipFr: 'Règle d\'or : La rétention s\'active lors de l\'effort de rappel, pas lors de la vérification. Laissez à votre cerveau au moins 10 secondes pour chercher avant de retourner la carte.',
+    neuroTipEn: 'Golden Rule: Consolidation triggers during the retrieval attempt, not during verification. Give your brain at least 10 seconds of focused search before flipping.',
   },
 
   exam_simulation: {
@@ -147,8 +147,8 @@ const METHODS_DATA: Record<SessionType, MethodInfo> = {
       '3. Scan the entire prompt for 3 minutes to triage highest-yield problems first.',
       '4. Do not let one difficult question stall you: skip it and return with remaining time.',
     ],
-    neuroTipFr: '🛡️ Règle d\'or : La gestion du temps est une compétence distincte de la connaissance théorique. S\'entraîner sous chrono évite la panique le jour J.',
-    neuroTipEn: '🛡️ Golden Rule: Time management is an autonomous skill distinct from factual knowledge. Timed practice inoculates against exam-day panic.',
+    neuroTipFr: '️ Règle d\'or : La gestion du temps est une compétence distincte de la connaissance théorique. S\'entraîner sous chrono évite la panique le jour J.',
+    neuroTipEn: '️ Golden Rule: Time management is an autonomous skill distinct from factual knowledge. Timed practice inoculates against exam-day panic.',
   },
 
   consolidation: {
@@ -170,8 +170,8 @@ const METHODS_DATA: Record<SessionType, MethodInfo> = {
       '3. Re-execute the problem from scratch until every transition is crystal-clear.',
       '4. Formulate the specific rule or mental cue that prevents future repetition.',
     ],
-    neuroTipFr: '🔍 Règle d\'or : Une erreur analysée et corrigée vaut 10 exercices réussis par hasard. C\'est là que réside votre véritable marge de progression.',
-    neuroTipEn: '🔍 Golden Rule: A diagnosed and corrected error yields 10x more progress than a problem solved by luck. This is where top grades are built.',
+    neuroTipFr: 'Règle d\'or : Une erreur analysée et corrigée vaut 10 exercices réussis par hasard. C\'est là que réside votre véritable marge de progression.',
+    neuroTipEn: 'Golden Rule: A diagnosed and corrected error yields 10x more progress than a problem solved by luck. This is where top grades are built.',
   },
 };
 

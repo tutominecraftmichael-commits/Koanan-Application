@@ -5,6 +5,7 @@ import type {
   DayOfWeek 
 } from '../types';
 import { parseTimeToMinutes, minutesToTimeString, isNonAcademicSubject } from '../lib/utils';
+import { withoutPausedExamPrep } from '../lib/featureFlags';
 
 export interface RescheduleResult {
   updatedSessions: StudySession[];
@@ -291,6 +292,8 @@ export function evaluateDailyCatchup(
   currentDate: Date = new Date(),
   subjects: Array<{ id: string; name: string; examDate?: string; examTime?: string; examType?: string }> = []
 ): RescheduleResult {
+  // Préparation aux devoirs/examens en pause (mise à jour) : les dates d'épreuve sont ignorées
+  subjects = withoutPausedExamPrep(subjects);
   const todayDayOfWeek = getTodayDayOfWeek(currentDate);
   const todayDateStr = getTodayDateString(currentDate);
   const currentMinute = currentDate.getHours() * 60 + currentDate.getMinutes();

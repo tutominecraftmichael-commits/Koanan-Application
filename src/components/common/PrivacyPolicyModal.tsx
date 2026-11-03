@@ -30,7 +30,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
   studentName = 'Étudiant',
   studentEmail,
 }) => {
-  const [hasAgreed, setHasAgreed] = useState(false);
+  const [hasAgreed, setHasAgreed] = useState(true);
 
   if (!isOpen) return null;
 

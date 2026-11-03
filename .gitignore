@@ -26,3 +26,6 @@ scratch/
 *.njsproj
 *.sln
 *.sw?
+
+# PDF officiels des cours (local uniquement)
+cours_pdf/

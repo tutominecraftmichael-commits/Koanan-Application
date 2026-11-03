@@ -19,6 +19,8 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
+import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
+import { EXAM_PREP_PAUSED } from '../../lib/featureFlags';
 
 export interface SubjectManagerProps {
   subjects: Subject[];
@@ -201,7 +203,9 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
             <span>Matières & Coefficients</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
-            Paramétrez vos coefficients et dates d'examens pour calibrer vos temps de révision.
+            {EXAM_PREP_PAUSED
+              ? 'Paramétrez vos coefficients et vos notes visées pour calibrer vos temps de révision.'
+              : "Paramétrez vos coefficients et dates d'examens pour calibrer vos temps de révision."}
           </p>
         </div>
 
@@ -349,8 +353,10 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                     </span>
                   </div>
 
-                  {subject.examDate ? (
-                    <div 
+                  {EXAM_PREP_PAUSED ? (
+                    <ExamPrepPausedNotice compact />
+                  ) : subject.examDate ? (
+                    <div
                       onClick={() => handleOpenEdit(subject)}
                       className="flex items-center justify-between p-2 rounded-xl bg-cyan-50/60 dark:bg-cyan-950/30 border border-cyan-200/80 dark:border-cyan-500/30 hover:border-cyan-400 transition-all cursor-pointer group"
                       title="Cliquer pour modifier la date d'examen ou DS"
@@ -520,15 +526,20 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
               onChange={(e) => setTargetGrade(Number(e.target.value))}
             />
 
-            <Input
-              label="Date du devoir surveillé ou de l'épreuve"
-              type="date"
-              value={examDate}
-              onChange={(e) => setExamDate(e.target.value)}
-            />
+            {!EXAM_PREP_PAUSED && (
+              <Input
+                label="Date du devoir surveillé ou de l'épreuve"
+                type="date"
+                value={examDate}
+                onChange={(e) => setExamDate(e.target.value)}
+              />
+            )}
           </div>
 
-          {examDate && (
+          {/* Pendant la pause, la date déjà enregistrée est conservée telle quelle (non modifiable) */}
+          {EXAM_PREP_PAUSED && <ExamPrepPausedNotice />}
+
+          {!EXAM_PREP_PAUSED && examDate && (
             <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
