@@ -5,7 +5,10 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const apiKey = env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY || '';
+  // Clé Gemini : UNIQUEMENT côté serveur (api/extract-timetable.js). Jamais injectée dans le code public.
+  // En développement local, on la passe au serveur Vite (process.env), qui n'est pas envoyé au navigateur.
+  const serverGeminiKey = env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY || '';
+  if (serverGeminiKey && !process.env.GEMINI_API_KEY) process.env.GEMINI_API_KEY = serverGeminiKey;
   const buildTimestamp = Date.now().toString();
 
   return {
@@ -47,6 +50,18 @@ export default defineConfig(({ mode }) => {
               res.end(JSON.stringify({ error: err?.message || 'Internal Server Error' }));
             }
           });
+          server.middlewares.use('/api/extract-timetable', async (req, res) => {
+            try {
+              // @ts-ignore
+              const { default: handler } = await import('./api/extract-timetable.js');
+              await handler(req, res);
+            } catch (err: any) {
+              console.error('[extract-timetable-dev] Erreur:', err?.message);
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: 'Internal Server Error' }));
+            }
+          });
           server.middlewares.use('/api/cron-notifications', async (req, res) => {
             try {
               // @ts-ignore
@@ -64,9 +79,6 @@ export default defineConfig(({ mode }) => {
     ],
     envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
     define: {
-      'process.env.GEMINI_API_KEY': JSON.stringify(apiKey),
-      'process.env.VITE_GEMINI_API_KEY': JSON.stringify(apiKey),
-      'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(apiKey),
       '__APP_BUILD_ID__': JSON.stringify(buildTimestamp),
     },
     server: {
