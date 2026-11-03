@@ -170,7 +170,11 @@ Renseignez vos identifiants Firebase et votre clé Gemini :
 # (api/extract-timetable.js). Ne pas créer de VITE_GEMINI_API_KEY (copiée dans le code public).
 GEMINI_API_KEY=votre_cle_gemini_ici
 
-# Console administrateur : mot de passe vérifié uniquement par le serveur
+# Console administrateur : comptes INDIVIDUELS (connexion Google + autorisation « admin »).
+# Donner / retirer l'accès : node scripts/set-admin-claim.mjs <email> [--remove]   (liste : --list)
+# Activez la validation en deux étapes sur chaque compte Google administrateur.
+# Transition uniquement : tant que ADMIN_PASSWORD existe, l'ancien mot de passe partagé reste accepté.
+# Supprimez ADMIN_PASSWORD de Vercel pour le désactiver définitivement.
 ADMIN_PASSWORD=choisissez_un_mot_de_passe_long_et_unique
 
 # Notifications push : clés VAPID (la privée reste côté serveur) et secret du cron

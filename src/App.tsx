@@ -85,6 +85,7 @@ import { ProWizardView } from './features/pro/ProWizardView';
 import { AdminDashboard } from './features/admin/AdminDashboard';
 import { InteractiveTutorView } from './features/tutor/InteractiveTutorView';
 import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum } from './lib/curriculum/curriculumMatcher';
+import { clearAdminSession } from './lib/adminAuth';
 import { getCurriculumChapters } from './lib/curriculum/curriculumRegistry';
 import type { StemSubjectId, CurriculumGradeLevel } from './lib/curriculum/types';
 
@@ -1902,10 +1903,7 @@ export function App() {
           <AdminDashboard
             onSwitchToStudentView={() => setActiveView('dashboard')}
             onExitAdmin={() => {
-              try {
-                sessionStorage.removeItem('konan_admin_authenticated');
-                sessionStorage.removeItem('konan_admin_token');
-              } catch { }
+              clearAdminSession();
               setActiveView('landing');
             }}
           />

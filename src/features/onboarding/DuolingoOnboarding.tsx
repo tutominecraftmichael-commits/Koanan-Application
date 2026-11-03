@@ -46,6 +46,7 @@ import { WaitlistModal } from '../../components/common/WaitlistModal';
 import { soundFX } from '../../lib/audioEffects';
 import { EXAM_PREP_PAUSED, EXAM_PREP_PAUSED_MESSAGE } from '../../lib/featureFlags';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
+import { AdminGoogleLoginButton } from '../../components/common/AdminGoogleLoginButton';
 import {
   parseTimetableDocument,
   loadDemoPdfTemplate,
@@ -1333,13 +1334,22 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               </button>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Renseignez le mot de passe administrateur pour accéder à la console de supervision des élèves et statistiques.
+              Connectez-vous avec votre compte Google administrateur pour accéder à la console de supervision des élèves et statistiques.
             </p>
             {adminError && (
               <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs font-bold">
                 {adminError}
               </div>
             )}
+            <AdminGoogleLoginButton
+              onSuccess={() => {
+                soundFX.playCheckmarkPop();
+                setShowAdminModal(false);
+                setAdminCodeInput('');
+                if (onOpenAdmin) onOpenAdmin();
+              }}
+              onError={setAdminError}
+            />
             <input
               type="password"
               value={adminCodeInput}
@@ -1350,7 +1360,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               onKeyDown={(e) => {
                 if (e.key === 'Enter') void submitAdminCode();
               }}
-              placeholder="Mot de passe administrateur..."
+              placeholder="Mot de passe temporaire"
+              aria-label="Mot de passe administrateur temporaire"
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
             />
             <div className="flex items-center justify-end gap-2 pt-1">

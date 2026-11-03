@@ -25,6 +25,7 @@ import {
 } from '../../lib/firebase';
 import { generateKonanId } from '../../lib/konanId';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
+import { AdminGoogleLoginButton } from '../../components/common/AdminGoogleLoginButton';
 
 export interface AuthPageProps {
   onLoginSuccess: (profile: UserAccount, preferences?: { chronotype: Chronotype }) => void;
@@ -784,14 +785,25 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             </div>
 
             <p className="text-xs text-slate-300 leading-relaxed">
-              Entrez le mot de passe administrateur configuré dans votre fichier <code className="px-1.5 py-0.5 rounded bg-black/40 text-purple-300 font-mono text-[10px]">.env.local</code> pour accéder à la supervision temps réel.
+              Connectez-vous avec votre compte Google administrateur pour accéder à la supervision temps réel.
             </p>
+
+            <div className="text-slate-300">
+              <AdminGoogleLoginButton
+                onSuccess={() => {
+                  setShowAdminModal(false);
+                  setAdminError(null);
+                  if (onOpenAdmin) onOpenAdmin();
+                }}
+                onError={setAdminError}
+              />
+            </div>
 
             <form onSubmit={handleAdminAuthSubmit} className="space-y-3 pt-1">
               <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
                   <Lock className="w-3.5 h-3.5 text-purple-400" />
-                  <span>Mot de passe Administrateur</span>
+                  <span>Mot de passe temporaire</span>
                 </label>
                 <div className="relative">
                   <input
@@ -800,7 +812,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                     onChange={(e) => setAdminPasswordInput(e.target.value)}
                     placeholder="••••••••••••"
                     required
-                    autoFocus
                     className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 pr-16"
                   />
                   <button
