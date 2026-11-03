@@ -17,15 +17,24 @@ import { loadLocalEnvIfPresent, secretsMatch, providedSecret } from './_env.js';
 
 // Bibliothèques lourdes chargées SEULEMENT après la vérification du secret (voir loadHeavyModules) :
 // un appel non autorisé ne les charge jamais, et un échec de chargement renvoie un diagnostic clair.
-let webpush;
-let initializeApp, getApps, cert, getFirestore, getAuth;
+// NB : firebase-admin/auth n'est PAS utilisé : sur Vercel (Node 22), sa dépendance jwks-rsa -> jose (ESM)
+// ne se charge pas (« require() of ES Module … not supported »). La recherche d'un compte par email
+// se fait directement dans Firestore (collection users, champ email).
+let webpush, initializeApp, getApps, cert, getFirestore;
+let modulesLoaded = false;
 
 async function loadHeavyModules() {
-  if (webpush) return;
-  webpush = (await import('web-push')).default;
-  ({ initializeApp, getApps, cert } = await import('firebase-admin/app'));
-  ({ getFirestore } = await import('firebase-admin/firestore'));
-  ({ getAuth } = await import('firebase-admin/auth'));
+  if (modulesLoaded) return;
+  // Chargement « tout ou rien » : les variables ne sont renseignées que si TOUT s'est chargé
+  const [wp, appMod, fsMod] = await Promise.all([
+    import('web-push'),
+    import('firebase-admin/app'),
+    import('firebase-admin/firestore'),
+  ]);
+  webpush = wp.default;
+  ({ initializeApp, getApps, cert } = appMod);
+  ({ getFirestore } = fsMod);
+  modulesLoaded = true;
 }
 
 // Initialisation sécurisée de Firebase Admin
@@ -61,12 +70,7 @@ function getFirebaseServices() {
   }
 
   const db = getFirestore(app);
-  let auth = null;
-  try {
-    auth = getAuth(app);
-  } catch {}
-
-  return { db, auth, app };
+  return { db, app };
 }
 
 /**
@@ -153,7 +157,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const { db, auth } = fb;
+    const { db } = fb;
 
     // =========================================================================
     // CAS 1 : MODE TEST PRIVÉ (?test=mon_email)
@@ -182,24 +186,25 @@ export default async function handler(req, res) {
         console.warn('[cron-notifications] Notice lecture test push_queue :', qErr.message);
       }
 
-      // 2. Si non trouvé dans push_queue, recherche par Auth UID pour retrouver le device
-      if (!subscription && auth) {
+      // 2. Si non trouvé dans push_queue, recherche du compte par son email dans Firestore (collection users)
+      if (!subscription) {
         try {
-          const authUser = await auth.getUserByEmail(testEmail);
-          if (authUser && authUser.uid) {
-            const devDoc = await db.collection('push_queue').doc(`device_${authUser.uid}`).get();
+          const userSnap = await db.collection('users').where('email', '==', testEmail).limit(1).get();
+          const userId = userSnap.empty ? null : userSnap.docs[0].id;
+          if (userId) {
+            const devDoc = await db.collection('push_queue').doc(`device_${userId}`).get();
             if (devDoc.exists && devDoc.data()?.subscription?.endpoint) {
               subscription = devDoc.data().subscription;
-              targetSource = `push_queue device_${authUser.uid}`;
+              targetSource = `push_queue device_${userId}`;
             } else {
-              // Secours : lecture unique du document users pour récupérer la souscription
-              const userDoc = await db.collection('users').doc(authUser.uid).get();
-              if (userDoc.exists && userDoc.data()?.webPushSubscription?.endpoint) {
-                subscription = userDoc.data().webPushSubscription;
-                targetSource = `users/${authUser.uid} (synchronisé vers push_queue)`;
+              // Secours : souscription enregistrée sur le document de l'utilisateur
+              const userData = userSnap.docs[0].data();
+              if (userData?.webPushSubscription?.endpoint) {
+                subscription = userData.webPushSubscription;
+                targetSource = `users/${userId} (synchronisé vers push_queue)`;
                 // Sauvegarde immédiate dans push_queue pour les futurs tests
-                await db.collection('push_queue').doc(`device_${authUser.uid}`).set({
-                  userId: authUser.uid,
+                await db.collection('push_queue').doc(`device_${userId}`).set({
+                  userId,
                   email: testEmail,
                   subscription,
                   sendAt: 9999999999999,
