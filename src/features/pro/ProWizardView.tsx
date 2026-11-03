@@ -15,6 +15,8 @@ import { generateOptimizedStudyPlan } from '../../services/plannerAlgorithm';
 import { downloadStudyPlanICS, getGoogleCalendarImportUrl } from '../../services/googleCalendarService';
 import { getDaysRemaining, generateId } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
+import { EXAM_PREP_PAUSED } from '../../lib/featureFlags';
+import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
 import {
   ArrowLeft,
   ArrowRight,
@@ -449,6 +451,9 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
       return `Étape 1 sur 4 : Choisis jusqu'à 3 méthodes cognitives (${selectedCombinedPacings.length}/3 sélectionnées). Clique sur « Appliquer le conseil » si tu veux que je configure la combinaison idéale pour tes matières !`;
     }
     if (currentStep === 2) {
+      if (EXAM_PREP_PAUSED) {
+        return `Étape 2 sur 4 : Ajuste le coefficient et la difficulté de tes ${subjectsList.length} matières. La préparation aux devoirs et examens est momentanément indisponible pour mise à jour.`;
+      }
       return `Étape 2 sur 4 : Ajoute les dates de tes prochains devoirs, contrôles ou examens sur tes ${subjectsList.length} matières. Je vais automatiquement intensifier tes séances à l'approche du Jour-J !`;
     }
     if (currentStep === 3) {
@@ -573,7 +578,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5">
           {[
             { step: 1, label: 'Méthodes' },
-            { step: 2, label: 'Devoirs' },
+            { step: 2, label: EXAM_PREP_PAUSED ? 'Matières' : 'Devoirs' },
             { step: 3, label: 'Planning' },
             { step: 4, label: 'Agenda' },
           ].map(s => {
@@ -764,7 +769,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                 rightIcon={<ArrowRight className="w-4 h-4" />}
                 className="font-bold text-xs sm:text-sm px-6 shadow-md"
               >
-                Continuer vers Devoirs & Examens
+                {EXAM_PREP_PAUSED ? 'Continuer vers mes matières' : 'Continuer vers Devoirs & Examens'}
               </Button>
             </div>
           </div>
@@ -792,12 +797,15 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
 
             <div className="space-y-1">
               <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
-                Renseignez vos échéances de devoirs et examens
+                {EXAM_PREP_PAUSED ? 'Ajustez vos matières' : 'Renseignez vos échéances de devoirs et examens'}
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-300">
-                Ajustez les coefficients et la difficulté. Pour les matières avec épreuves, cochez la case pour programmer la date.
+                {EXAM_PREP_PAUSED
+                  ? 'Ajustez le coefficient et la difficulté de chaque matière.'
+                  : 'Ajustez les coefficients et la difficulté. Pour les matières avec épreuves, cochez la case pour programmer la date.'}
               </p>
             </div>
+            {EXAM_PREP_PAUSED && <ExamPrepPausedNotice />}
 
             {/* Liste des matières en accordéon intelligent */}
             <div className="space-y-2.5">
@@ -834,7 +842,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                             <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white break-words">
                               {subject.name}
                             </h4>
-                            {hasExam && daysRemaining !== null && (
+                            {!EXAM_PREP_PAUSED && hasExam && daysRemaining !== null && (
                               <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/40 inline-flex items-center gap-1 shrink-0">
                                 <Flame className="w-2.5 h-2.5" />
                                 J-{daysRemaining}
@@ -922,7 +930,10 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                           </div>
                         </div>
 
-                        {/* Bloc Devoir / Examen programmé */}
+                        {/* Bloc Devoir / Examen programmé (en pause pendant la mise à jour) */}
+                        {EXAM_PREP_PAUSED ? (
+                          <ExamPrepPausedNotice compact />
+                        ) : (
                         <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60 space-y-3">
                           <div className="flex items-center justify-between">
                             <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 cursor-pointer select-none">
@@ -982,6 +993,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                             </div>
                           )}
                         </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -1148,7 +1160,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                     </div>
                     <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60 flex flex-col items-center justify-center">
                       <span className="text-xl font-bold text-amber-500 dark:text-amber-400 font-mono">
-                        {subjectsList.filter(s => s.examDate).length}
+                        {EXAM_PREP_PAUSED ? 0 : subjectsList.filter(s => s.examDate).length}
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                         Échéances
@@ -1294,7 +1306,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                     leftIcon={<ArrowLeft className="w-4 h-4" />}
                     className="font-bold text-xs sm:text-sm px-5 py-3"
                   >
-                    Retour aux devoirs & examens
+                    {EXAM_PREP_PAUSED ? 'Retour aux matières' : 'Retour aux devoirs & examens'}
                   </Button>
 
                   <Button
@@ -1333,7 +1345,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                   leftIcon={<ArrowLeft className="w-4 h-4" />}
                   className="font-bold text-xs"
                 >
-                  Retour aux devoirs & examens
+                  {EXAM_PREP_PAUSED ? 'Retour aux matières' : 'Retour aux devoirs & examens'}
                 </Button>
               </div>
             )}

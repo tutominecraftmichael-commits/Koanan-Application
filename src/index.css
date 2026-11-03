@@ -886,6 +886,13 @@ html.light .bg-slate-950\/50 {
   color: #0F172A !important;
 }
 
+html.light .bg-slate-900\/95 p,
+html.light .bg-slate-900 p,
+html.light .bg-slate-900\/95 .text-white,
+html.light .bg-slate-900 .text-white {
+  color: #0F172A !important;
+}
+
 html.light .bg-slate-800,
 html.light .bg-slate-800\/90,
 html.light .bg-slate-800\/80,

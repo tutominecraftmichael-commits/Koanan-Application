@@ -1,0 +1,1099 @@
+import React, { useMemo } from 'react';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+import { StackedFraction, renderTextWithStackedFractions } from './StackedFraction';
+import { SketchFunctionPlot, SketchSignTable, SketchVariationTable } from './SketchFigure';
+import type { PointVisualSchema } from '../../lib/curriculum/types';
+export { StackedFraction, renderTextWithStackedFractions };
+
+/**
+ * Helper qui applique un remplacement regex UNIQUEMENT en dehors des blocs mathématiques ($...$ et $$...$$).
+ * Protège les formules déjà balisées contre toute altération accidentelle.
+ */
+function replaceNotInMath(str: string, regex: RegExp, replacer: (...args: any[]) => string): string {
+  if (!str) return '';
+  const subParts = str.split(/(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$)/g);
+  return subParts
+    .map((subChunk, subIdx) => {
+      if (subIdx % 2 === 1) return subChunk;
+      return subChunk.replace(regex, replacer);
+    })
+    .join('');
+}
+
+/**
+ * Prétraite automatiquement tout texte en convertissant les expressions mathématiques,
+ * les fractions avec slashs et les variables à indices en syntaxe KaTeX officielle.
+ * Garantit ZÉRO underscore (_) et ZÉRO slash (/) visible dans les formules.
+ */
+export function cleanFormulasAndIndices(text: string): string {
+  if (!text) return '';
+
+  let s = text;
+
+  // 1. Équations cinétiques complètes avec vitesses de disparition et d'apparition
+  s = s.replace(
+    /-\s*Vitesse volumique de disparition du réactif\s*([A-Za-z0-9_]+)\s*:\s*v_d\(\1\)\s*=\s*-\s*\(?1\/V\)?\s*·?\s*\(?d\s*n_\1\s*\/\s*dt\)?\s*=\s*-\s*d\[\1\]\/dt/g,
+    '- Vitesse volumique de disparition du réactif $1 :\n$$$$v_d($1) = - \\frac{1}{V} \\cdot \\frac{dn_{$1}}{dt} = - \\frac{d[$1]}{dt}$$$$'
+  );
+
+  s = s.replace(
+    /-\s*Vitesse volumique d'apparition du produit\s*([A-Za-z0-9_]+)\s*:\s*v_a\(\1\)\s*=\s*\(?1\/V\)?\s*·?\s*\(?d\s*n_\1\s*\/\s*dt\)?\s*=\s*d\[\1\]\/dt/g,
+    "- Vitesse volumique d'apparition du produit $1 :\n$$$$v_a($1) = \\frac{1}{V} \\cdot \\frac{dn_{$1}}{dt} = \\frac{d[$1]}{dt}$$$$"
+  );
+
+  // Formules isolées de vitesse de disparition / apparition
+  s = s.replace(
+    /v_d\(([A-Za-z0-9]+)\)\s*=\s*-\s*\(?1\/V\)?\s*·?\s*\(?d\s*n_\1\s*\/\s*dt\)?\s*=\s*-\s*d\[\1\]\/dt/g,
+    '$$$$v_d($1) = - \\frac{1}{V} \\cdot \\frac{dn_{$1}}{dt} = - \\frac{d[$1]}{dt}$$$$'
+  );
+
+  s = s.replace(
+    /v_a\(([A-Za-z0-9]+)\)\s*=\s*\(?1\/V\)?\s*·?\s*\(?d\s*n_\1\s*\/\s*dt\)?\s*=\s*d\[\1\]\/dt/g,
+    '$$$$v_a($1) = \\frac{1}{V} \\cdot \\frac{dn_{$1}}{dt} = \\frac{d[$1]}{dt}$$$$'
+  );
+
+  // Équation de réaction chimique générique (a A + b B -> c C + d D)
+  s = s.replace(
+    /([a-z]\s+[A-Z]\s*\+\s*[a-z]\s+[A-Z]\s*(?:→|->)\s*[a-z]\s+[A-Z]\s*\+\s*[a-z]\s+[A-Z])/g,
+    '$$$$$1$$$$'
+  );
+
+  // 2. Équations de temps de demi-réaction et avancement maximal
+  s = s.replace(
+    /x\((?:t[₁1]\/[₂2]|t_\{?1\/2\}?|t1\/2)\)\s*=\s*x_max\s*\/\s*2/g,
+    '$$$$x(t_{1/2}) = \\frac{x_{\\max}}{2}$$$$'
+  );
+
+  s = s.replace(
+    /\[([A-Za-z0-9_]+)\]\((?:t[₁1]\/[₂2]|t_\{?1\/2\}?|t1\/2)\)\s*=\s*\[\1\](?:[₀0]|_0)\s*\/\s*2/g,
+    '$$$$[$1](t_{1/2}) = \\frac{[$1]_0}{2}$$$$'
+  );
+
+  // 3. Vitesse moyenne et calculs avec fractions
+  s = s.replace(
+    /v_m\(([^)]+)\)\s*=\s*Δ\[([^\]]+)\]\s*\/\s*Δt\s*=\s*\(\[([^\]]+)\]₂\s*-\s*\[([^\]]+)\]₁\)\s*\/\s*\(t₂\s*-\s*t₁\)/g,
+    '$$$$v_m($1) = \\frac{\\Delta[$2]}{\\Delta t} = \\frac{[$3]_2 - [$4]_1}{t_2 - t_1}$$$$'
+  );
+
+  s = s.replace(
+    /v_m\s*=\s*\(?([0-9,\s×·\-]+)\)?\s*\/\s*\(?([0-9,\s×·\-]+)\)?\s*=\s*([0-9,\s×·\^⁻¹²³\-]+)\s*mol·L⁻¹·min⁻¹/g,
+    '$$$$v_m = \\frac{$1}{$2} = $3 \\text{ mol}\\cdot\\text{L}^{-1}\\cdot\\text{min}^{-1}$$$$'
+  );
+
+  s = s.replace(
+    /\[([A-Za-z0-9_]+)\]\((?:t[₁1]\/[₂2]|t_\{?1\/2\}?|t1\/2)\)\s*=\s*\(?([0-9,\s×·\^⁻¹²³\-]+)\)?\s*\/\s*2\s*=\s*([0-9,\s×·\^⁻¹²³\-]+)\s*mol·L⁻¹/g,
+    '$$$$[$1](t_{1/2}) = \\frac{$2}{2} = $3 \\text{ mol}\\cdot\\text{L}^{-1}$$$$'
+  );
+
+  s = s.replace(
+    /à\s+t\s*=\s*(?:t[₁1]\/[₂2]|t_\{?1\/2\}?|t1\/2)\s*,\s*\[([^\]]+)\]\((?:t[₁1]\/[₂2]|t_\{?1\/2\}?|t1\/2)\)\s*=\s*\[\1\]_max\s*\/\s*2/g,
+    'à $t = t_{1/2}$, $$$$[$1](t_{1/2}) = \\frac{[$1]_{\\max}}{2}$$$$'
+  );
+
+  // 4. Énergie mécanique et théorèmes
+  s = s.replace(
+    /\bEc\s*=\s*1\/2\s*m\s*v\^2\b/g,
+    '$$$$E_c = \\frac{1}{2}mv^2$$$$'
+  );
+
+  // 5. Formules de chimie et grandeurs molaires
+  s = s.replace(/\bC\s*=\s*n\s*\/\s*V(?:_s)?\b/g, '$$$$C = \\frac{n}{V}$$$$');
+  s = s.replace(/\bC_m\s*=\s*m\s*\/\s*V(?:_s)?\b/g, '$$$$\\mathcal{C}_m = \\frac{m}{V}$$$$');
+  s = s.replace(/\bn\s*=\s*m\s*\/\s*M\b/g, '$$$$n = \\frac{m}{M}$$$$');
+  s = s.replace(/\bn\s*=\s*V\s*\/\s*V_m\b/g, '$$$$n = \\frac{V}{V_m}$$$$');
+  s = s.replace(/\bρ\s*=\s*m\s*\/\s*V\b/g, '$$$$\\rho = \\frac{m}{V}$$$$');
+  s = s.replace(/\bd\s*=\s*ρ\s*\/\s*ρ_0\b/g, '$$$$d = \\frac{\\rho}{\\rho_0}$$$$');
+  s = s.replace(/\bd\s*=\s*M\s*\/\s*29\b/g, '$$$$d = \\frac{M}{29}$$$$');
+  s = s.replace(/\bC_m\s*=\s*M\s*×\s*C\b/g, '$$$$\\mathcal{C}_m = M \\times C$$$$');
+
+  // 1. Normalisation universelle des tirets et signes moins
+  s = s.replace(/[−–—]/g, '-');
+
+  // Formule complète vitesse instantanée sur enregistrement : v(t_i) = M_{i-1}M_{i+1} / (t_{i+1} - t_{i-1}) = M_{i-1}M_{i+1} / (2τ)
+  s = s.replace(
+    /v\s*\(\s*t_?\{?i\}?\s*\)\s*=\s*M_?\{?i\s*-\s*1\}?\s*M_?\{?i\s*\+\s*1\}?\s*\/\s*\(?\s*t_?\{?i\s*\+\s*1\}?\s*-\s*t_?\{?i\s*-\s*1\}?\s*\)?\s*=\s*M_?\{?i\s*-\s*1\}?\s*M_?\{?i\s*\+\s*1\}?\s*\/\s*\(?\s*2\s*(?:\\?tau|τ)\s*\)?\.?/gi,
+    () => '$$$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{t_{i+1} - t_{i-1}} = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$$$'
+  );
+
+  s = s.replace(
+    /v\s*\(\s*t_?\{?i\}?\s*\)\s*=\s*M_?\{?i\s*-\s*1\}?\s*M_?\{?i\s*\+\s*1\}?\s*\/\s*\(?\s*2\s*(?:\\?tau|τ)\s*\)?\.?/gi,
+    () => '$$$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$$$'
+  );
+
+  s = s.replace(
+    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*t_\{?[^}]+\}?\s*-\s*t_\{?[^}]+\}?\s*\)?\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?\.?/g,
+    () => '$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{t_{i+1} - t_{i-1}} = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$'
+  );
+
+  s = s.replace(
+    /v\s*\(\s*t_?[i0-9]?\s*\)\s*=\s*M_\{?[^}]+\}?\s*M_\{?[^}]+\}?\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?\.?/g,
+    () => '$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$'
+  );
+
+  s = s.replace(
+    /v\s*\(\s*t[₂2]\s*\)\s*=\s*M[₁1]M[₃3]\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?/g,
+    () => '$$v(t_2) = \\frac{M_1 M_3}{2\\tau}$$'
+  );
+
+  s = s.replace(
+    /v\s*\(\s*t[₁1]\s*\)\s*=\s*M[₀0]M[₂2]\s*\/\s*\(?\s*2\s*(?:\\tau|τ)\s*\)?/g,
+    () => '$$v(t_1) = \\frac{M_0 M_2}{2\\tau}$$'
+  );
+
+  // Équation de trajectoire d'un projectile : y(x) = - g / (2 v₀² cos² α) · x² + (tan α) · x + h
+  s = s.replace(
+    /y\(x\)\s*=\s*-\s*g\s*\/\s*\(?2\s*v[₀0]²\s*cos²\s*α\)?\s*[·*]\s*x²\s*\+\s*\(?tan\s*α\)?\s*[·*]\s*x\s*\+\s*([a-zA-Z0-9_]+)/g,
+    (_, h) => `$$y(x) = - \\frac{g}{2 v_0^2 \\cos^2 \\alpha} x^2 + (\\tan \\alpha) x + ${h}$$`
+  );
+
+  // Chaîne PFD projectile : Σ F_ext = P ⇒ m · a = m · g ⇒ a = g
+  s = s.replace(
+    /(?:∑|Σ|\\sum)\s*F_ext\s*=\s*P\s*(?:⇒|=>)\s*m\s*[·*]\s*a\s*=\s*m\s*[·*]\s*g\s*(?:⇒|=>)\s*a\s*=\s*g/g,
+    () => '$$\\sum \\vec{F}_{\\text{ext}} = \\vec{P} \\implies m \\cdot \\vec{a} = m \\cdot \\vec{g} \\implies \\vec{a} = \\vec{g}$$'
+  );
+
+  // Σ F_ext = m · a
+  s = s.replace(/(?:∑|Σ|\\sum)\s*F_ext\s*=\s*m\s*[·*]\s*a/g, () => '$$\\sum \\vec{F}_{\\text{ext}} = m \\cdot \\vec{a}$$');
+
+  // Σ F_ext = 0 ⟺ v_G = vecteur constant
+  s = s.replace(/(?:∑|Σ|\\sum)\s*F_ext\s*=\s*0\s*(?:⟺|<=>|\\iff)\s*v_G\s*=\s*vecteur\s*constant/g, () => '$$\\sum \\vec{F}_{\\text{ext}} = \\vec{0} \\iff \\vec{v}_G = \\vec{\\text{cste}}$$');
+
+  // Σ F_ext = 0
+  s = s.replace(/(?:∑|Σ|\\sum)\s*F_ext\s*=\s*0/g, () => '$\\sum \\vec{F}_{\\text{ext}} = \\vec{0}$');
+
+  // 3ème loi de Newton : F_{A/B} = - F_{B/A} ou \vec{F}_{A/B} = -\vec{F}_{B/A}
+  s = s.replace(
+    /(?:\\vec\{F\}|F)_\{?([A-Za-z0-9\/]+)\}?\s*=\s*[−\-]\s*(?:\\vec\{F\}|F)_\{?([A-Za-z0-9\/]+)\}?/g,
+    (_, f1, f2) => `$$\\vec{F}_{${f1}} = -\\vec{F}_{${f2}}$$`
+  );
+
+  s = s.replace(
+    /P_A\s*=\s*m_fluide\s*[×·*]\s*g\s*=\s*ρ_fluide\s*[×·*]\s*V_immerg[eé]\s*[×·*]\s*g/g,
+    '$$$$P_A = m_{\\text{fluide}} \\times g = \\rho_{\\text{fluide}} \\times V_{\\text{immergé}} \\times g$$$$'
+  );
+
+  s = s.replace(/P'\s*=\s*P\s*[−\-]\s*P_A/g, '$$$$P\' = P - P_A$$$$');
+  s = s.replace(/P_A\s*=\s*P\s*[−\-]\s*P'/g, '$$$$P_A = P - P\'$$$$');
+  s = s.replace(/\bV_m\s*=\s*d\s*\/\s*Δt\b/g, '$$$$V_m = \\frac{d}{\\Delta t}$$$$');
+
+  s = s.replace(
+    /\bv[₁1]\s*=\s*v[₂2]\s*=\s*v[₃3]\s*=\s*constante\b/g,
+    '$$$$v_1 = v_2 = v_3 = \\text{constante}$$$$'
+  );
+  s = s.replace(
+    /\bv_\{?i\+1\}?\s*[−\-]\s*v_i\s*=\s*constante\b/g,
+    '$$$$v_{i+1} - v_i = \\text{constante}$$$$'
+  );
+
+  // Découpage préservant les blocs mathématiques déjà balisés ($...$ et $$...$$)
+  const parts = s.split(/(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$)/g);
+
+  const cleanedParts = parts.map((chunk, idx) => {
+    // Si c'est un bloc math ($...$), on ne le modifie pas ici
+    if (idx % 2 === 1) return chunk;
+
+    let t = chunk;
+
+    // Fractions isolées dans le texte français
+    t = replaceNotInMath(t, /(-\s*)?d\[([A-Za-z0-9_]+)\]\/dt/g, (_, neg, sym) => `$${neg ? '- ' : ''}\\frac{d[${sym}]}{dt}$`);
+    t = replaceNotInMath(t, /d\s*n_([A-Za-z0-9_]+)\/dt/g, (_, sym) => `$\\frac{dn_{${sym}}}{dt}$`);
+    t = replaceNotInMath(t, /Δ\[([^\]]+)\]\s*\/\s*Δt/g, (_, sym) => `$\\frac{\\Delta[${sym}]}{\\Delta t}$`);
+    t = replaceNotInMath(t, /\(1\/V\)/g, () => '$\\frac{1}{V}$');
+    t = replaceNotInMath(t, /\b1\/V\b/g, () => '$\\frac{1}{V}$');
+    t = replaceNotInMath(t, /\b1\/2\b/g, () => '$\\frac{1}{2}$');
+    t = replaceNotInMath(t, /\(16,0\s*×\s*10⁻³\)\s*\/\s*2/g, () => '$\\frac{16{,}0 \\times 10^{-3}}{2}$');
+
+    // Fractions ou racines LaTeX isolées sans délimiteur $ (ex: \frac{12}{6} ou -\frac{31}{11})
+    t = replaceNotInMath(t, /(?<!\$)([+\-]?\\frac\{[^{}]+\}\{[^{}]+\})(?!\$)/g, (_, expr) => `$$${expr}$$`);
+    t = replaceNotInMath(t, /(?<!\$)([+\-]?\\sqrt\{[^{}]+\})(?!\$)/g, (_, expr) => `$$${expr}$$`);
+
+    // Demi-réaction dans le texte
+    t = replaceNotInMath(t, /\bt[₁1]\/[₂2]\b/g, () => '$t_{1/2}$');
+    t = replaceNotInMath(t, /t₁\/₂/g, () => '$t_{1/2}$');
+    t = replaceNotInMath(t, /\bt_\{?1\/2\}?/g, () => '$t_{1/2}$');
+
+    // Repère d'étude mécanique (O, i, j)
+    t = replaceNotInMath(t, /\(O,\s*i,\s*j\)/g, () => '$(O, \\vec{i}, \\vec{j})$');
+
+    // Équations vectorielles et égalités orphelines (ex: \sum \vec{F}_{\text{ext}} = \vec{0}, \vec{v}_G = \vec{0}, \vec{v}_G = \vec{\text{cste}} \neq \vec{0})
+    t = replaceNotInMath(t, /\\sum\s*\\vec\{[^{}]+\}(?:_\{(?:[^{}]+|\{[^{}]+\})*\}|_[a-zA-Z0-9]+)?\s*=\s*\\vec\{[^{}]+\}/g, (m) => `$${m.trim()}$`);
+    t = replaceNotInMath(t, /\\vec\{[^{}]+\}(?:_\{(?:[^{}]+|\{[^{}]+\})*\}|_[a-zA-Z0-9]+)?(?:\s*(?:=|\\neq|≠)\s*\\vec\{(?:\\text\{[^{}]+\}|[^{}]+)\}(?:_\{(?:[^{}]+|\{[^{}]+\})*\}|_[a-zA-Z0-9]+)?)+(?!\$)/g, (m) => `$${m.trim()}$`);
+    t = replaceNotInMath(t, /\\vec\{[^{}]+\}\s*=\s*[a-zA-Z0-9_]+\s*\\cdot\s*\\vec\{[^{}]+\}/g, (m) => `$${m.trim()}$`);
+
+    // Vecteurs isolés orphelins (ex: \vec{v}_G, \vec{0}, \vec{P}, \vec{cste}, \vec{a}, \vec{g}, \vec{F})
+    t = replaceNotInMath(t, /\\vec\{(?:\\text\{[^{}]+\}|[^{}]+)\}(?:_\{(?:[^{}]+|\{[^{}]+\})*\}|_[a-zA-Z0-9]+)?/g, (m) => `$${m}$`);
+
+    // Symboles LaTeX isolés orphelins (ex: \times, \rightarrow, \to, \neq, \sum, \cdot)
+    t = replaceNotInMath(t, /\\(?:times|rightarrow|to|neq|sum|cdot)\b/g, (m) => `$${m}$`);
+
+    // Équations horaires et coordonnées projectile
+    t = replaceNotInMath(t, /\ba_x\s*=\s*0\s*;\s*a_y\s*=\s*-\s*g\b/g, () => '$a_x = 0$ ; $a_y = -g$');
+    t = replaceNotInMath(t, /\bv_x\(t\)\s*=\s*v[₀0]\s*cos\s*α\s*;\s*v_y\(t\)\s*=\s*-\s*g\s*t\s*\+\s*v[₀0]\s*sin\s*α/g, () => '$v_x(t) = v_0 \\cos \\alpha$ ; $v_y(t) = -gt + v_0 \\sin \\alpha$');
+    t = replaceNotInMath(t, /\bx\(t\)\s*=\s*\(v[₀0]\s*cos\s*α\)\s*t\s*;\s*y\(t\)\s*=\s*-\s*1\/2\s*g\s*t²\s*\+\s*\(v[₀0]\s*sin\s*α\)\s*t\s*\+\s*([a-zA-Z0-9_]+)/g, (_, h) => `$x(t) = (v_0 \\cos \\alpha) t$ ; $y(t) = -\\frac{1}{2}gt^2 + (v_0 \\sin \\alpha) t + ${h}$`);
+
+    // Poids et dynamique
+    t = replaceNotInMath(t, /\bP\s*=\s*m\s*[·*×]\s*g\b/g, () => '$P = m \\cdot g$');
+    t = replaceNotInMath(t, /\bv\s*=\s*constante\b/g, () => '$v = \\text{constante}$');
+    t = replaceNotInMath(t, /\bv_G\s*=\s*vecteur\s*constant\b/g, () => '$\\vec{v}_G = \\vec{\\text{cste}}$');
+    t = replaceNotInMath(t, /\bv_G\s*=\s*constante\b/g, () => '$v_G = \\text{constante}$');
+    t = replaceNotInMath(t, /\bv_y\s*=\s*0\b/g, () => '$v_y = 0$');
+    t = replaceNotInMath(t, /\by\s*=\s*0\b/g, () => '$y = 0$');
+    t = replaceNotInMath(t, /\(x₀\s*=\s*0,\s*y₀\s*=\s*h\)/g, () => '($x_0 = 0$, $y_0 = h$)');
+
+    // Normes de vecteurs (ex: ||v(t_i)||, ||v(t)||, ||F_{A/B}||)
+    t = replaceNotInMath(t, /\|\|\s*([a-zA-Z])(?:\(([a-zA-Z0-9_{}\-+]+)\))?\s*\|\|/g, (_, sym, arg) => {
+      return arg ? `$\\|${sym}(${arg})\\|$` : `$\\|${sym}\\|$`;
+    });
+
+    // Fonctions avec variables ou indices (ex: v(t_i), v(t), v(t_1))
+    t = replaceNotInMath(t, /\bv\((t_?[i0-9]?)\)/g, (_, arg) => `$v(${arg})$`);
+    t = replaceNotInMath(t, /\bv\(t\)/g, () => '$v(t)$');
+
+    // 3ème loi de Newton complète dans le texte : F_{A/B} = - F_{B/A}
+    t = replaceNotInMath(
+      t,
+      /(?:\\vec\{F\}|F)_\{?([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}?\s*=\s*[−\-]\s*(?:\\vec\{F\}|F)_\{?([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}?/g,
+      (_, a1, b1, a2, b2) => `$$\\vec{F}_{${a1}/${b1}} = -\\vec{F}_{${a2}/${b2}}$$`
+    );
+
+    // Forces d'interaction réciproque (ex: F_{A/B}, F_{B/A}, \vec{F}_{A/B})
+    t = replaceNotInMath(t, /(?:\\vec\{F\}|F)_\{?([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}?/g, (_, a, b) => `$\\vec{F}_{${a}/${b}}$`);
+
+    // Paires de points avec indices (ex: M_{i-1}M_{i+1})
+    t = replaceNotInMath(t, /\b([A-Z])_\{?i\s*-\s*1\}?\s*([A-Z])_\{?i\s*\+\s*1\}?/gi, (_, p1, p2) => `$${p1}_{i-1}${p2}_{i+1}$`);
+    t = replaceNotInMath(t, /\b([A-Z])_\{([^}]+)\}\s*([A-Z])_\{([^}]+)\}(?![a-zA-Z0-9_])/g, (_, p1, i1, p2, i2) => `$${p1}_{${i1}}${p2}_{${i2}}$`);
+
+    // Variables avec indices temporels et cinématiques (ex: M_{i-1}, M_{i+1}, t_{i-1}, t_{i+1}, M_i, t_i)
+    t = replaceNotInMath(t, /\b([Mt])_\{?i\s*([+\-])\s*1\}?/gi, (_, sym, sign) => `$${sym}_{i${sign}1}$`);
+    t = replaceNotInMath(t, /\b([Mt])_i\b/g, (_, sym) => `$${sym}_i$`);
+
+    // Variables avec indices entre accolades (ex: M_{i-1}, M_{i+1}, t_{i+1}, F_{A/B}, F_{B/A})
+    t = replaceNotInMath(t, /\b([A-Za-z])_\{([^}]+)\}/g, (_, sym, sub) => `$${sym}_{${sub}}$`);
+
+    // Points avec indices Unicode (ex: M₀, M₁, M₂...)
+    t = replaceNotInMath(t, /(?<![A-Za-z0-9])([A-Z])([₀₁₂₃₄₅₆₇₈₉])/g, (_, sym, sub) => {
+      const map: Record<string, string> = { '₀':'0', '₁':'1', '₂':'2', '₃':'3', '₄':'4', '₅':'5', '₆':'6', '₇':'7', '₈':'8', '₉':'9' };
+      return `$${sym}_${map[sub] || sub}$`;
+    });
+
+    // Subscripts nommés usuels (ex: m_fluide, V_immergé, R_N, P_A)
+    t = replaceNotInMath(t, /\b([A-Za-z])_(fluide|immerg[eé]|air|eau|solide|sol|terre|max|min|ext|int|initial|final|eq)\b/g, (_, sym, sub) => `$${sym}_{\\text{${sub}}}$`);
+
+    // Variables avec indices mathématiques (élimine tout _ visible)
+    t = replaceNotInMath(t, /\bv_d\(A\)/g, () => '$v_d(A)$');
+    t = replaceNotInMath(t, /\bv_a\(C\)/g, () => '$v_a(C)$');
+    t = replaceNotInMath(t, /\bv_m\(([^)]+)\)/g, (_, arg) => `$v_m(${arg})$`);
+    t = replaceNotInMath(t, /\bv_([dam])\b/g, (_, arg) => `$v_${arg}$`);
+    t = replaceNotInMath(t, /\bn_([A-Za-z0-9]+)\b/g, (_, arg) => `$n_${arg}$`);
+    t = replaceNotInMath(t, /\bx_max\b/g, () => '$x_{\\max}$');
+    t = replaceNotInMath(t, /\[([A-Za-z0-9_]+)\]_max\b/g, (_, arg) => `$[${arg}]_{\\max}$`);
+    t = replaceNotInMath(t, /\[([A-Za-z0-9_]+)\][₀0]\b/g, (_, arg) => `$[${arg}]_0$`);
+    t = replaceNotInMath(t, /\[([A-Za-z0-9_]+)\]_0\b/g, (_, arg) => `$[${arg}]_0$`);
+    t = replaceNotInMath(t, /\[([A-Za-z0-9_]+)\][₁1]\b/g, (_, arg) => `$[${arg}]_1$`);
+    t = replaceNotInMath(t, /\[([A-Za-z0-9_]+)\][₂2]\b/g, (_, arg) => `$[${arg}]_2$`);
+    t = replaceNotInMath(t, /\bEc\b/g, () => '$E_c$');
+    t = replaceNotInMath(t, /\bEp\b/g, () => '$E_p$');
+    t = replaceNotInMath(t, /\bEm\b/g, () => '$E_m$');
+
+    // Lettres grecques dans le texte (tau, rho)
+    t = replaceNotInMath(t, /(\d+)\s*[τ\tau]\b/g, (_, num) => `$${num}\\tau$`);
+    t = replaceNotInMath(t, /(?<=\s|^|[([,;])τ(?=\s|$|[)\].,;:])/g, () => '$\\tau$');
+    t = replaceNotInMath(t, /\bρ\b/g, () => '$\\rho$');
+
+    // Tout autre identifiant à indice isolé (ex: E_c, F_ext, T_0, N_0, M_i, t_i)
+    t = replaceNotInMath(t, /\b([a-zA-Z])_([a-zA-Z0-9]+)\b/g, (_, sym, sub) => `$${sym}_{${sub}}$`);
+
+    return t;
+  });
+
+  return cleanedParts.join('');
+}
+
+// ---------------------------------------------------------------------------
+// Exposants / indices Unicode -> LaTeX, par séries entières (aⁿ⁺ᵖ -> a^{n+p}, C₆H₁₂O₆ -> C_{6}H_{12}O_{6})
+// ---------------------------------------------------------------------------
+const SUP_MAP: Record<string, string> = {
+  '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9',
+  '⁺': '+', '⁻': '-', '⁼': '=', '⁽': '(', '⁾': ')',
+  'ⁿ': 'n', 'ⁱ': 'i', 'ᵖ': 'p', 'ˣ': 'x', 'ʸ': 'y', 'ᵐ': 'm', 'ᵏ': 'k', 'ᵃ': 'a', 'ᵇ': 'b', 'ᶜ': 'c', 'ᵈ': 'd', 'ᵉ': 'e', 'ᵗ': 't', 'ᴴ': 'H',
+};
+const SUB_MAP: Record<string, string> = {
+  '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9',
+  '₊': '+', '₋': '-', '₌': '=', '₍': '(', '₎': ')',
+  'ₐ': 'a', 'ₑ': 'e', 'ₒ': 'o', 'ₓ': 'x', 'ᵢ': 'i', 'ⱼ': 'j', 'ₙ': 'n', 'ₘ': 'm', 'ₚ': 'p', 'ₜ': 't', 'ₖ': 'k',
+};
+const SUP_RUN = new RegExp(`[${Object.keys(SUP_MAP).join('')}]+`, 'g');
+const SUB_RUN = new RegExp(`[${Object.keys(SUB_MAP).join('')}]+`, 'g');
+
+export function convertUnicodeScripts(s: string): string {
+  return s
+    .replace(SUP_RUN, (m) => `^{${[...m].map((c) => SUP_MAP[c]).join('')}}`)
+    .replace(SUB_RUN, (m) => `_{${[...m].map((c) => SUB_MAP[c]).join('')}}`);
+}
+
+// ---------------------------------------------------------------------------
+// Mots en mode mathématique : texte droit pour le français, opérateurs pour log/sin…
+// ---------------------------------------------------------------------------
+const VERBATIM_ARG_CMDS = new Set([
+  'text', 'mathrm', 'operatorname', 'mathbb', 'textbf', 'mathbf', 'textit', 'mathit', 'mbox', 'rm',
+  'begin', 'end', 'color', 'textcolor', 'hspace', 'vspace', 'label', 'tag', 'mathcal', 'mathfrak',
+]);
+const MATH_FUNCS = new Set(['sin', 'cos', 'tan', 'log', 'ln', 'exp', 'lim', 'max', 'min', 'sup', 'inf', 'det', 'arg', 'gcd']);
+const NAMED_OPS = new Set(['pgcd', 'ppcm', 'mod', 'card']);
+const SMALL_WORDS = new Set(['et', 'ou', 'si', 'de', 'du', 'en', 'le', 'la', 'un', 'à', 'au', 'où', 'sa', 'son', 'par']);
+const UNIT_WORDS = new Set(['km', 'cm', 'mm', 'kg', 'mg', 'mL', 'cL', 'dL', 'kJ', 'kW', 'Hz', 'Pa', 'nm']);
+
+function wrapWordRuns(free: string, chem: boolean): string {
+  const tokens = free.match(/[A-Za-zÀ-ÖØ-öø-ÿ]+(?:['’][A-Za-zÀ-ÖØ-öø-ÿ]+)*|\s+|[^A-Za-zÀ-ÖØ-öø-ÿ\s]+/g);
+  if (!tokens) return free;
+  const isWord = (t: string) => /^[A-Za-zÀ-ÖØ-öø-ÿ]/.test(t);
+  const isText = (w: string) =>
+    !MATH_FUNCS.has(w) && !NAMED_OPS.has(w) &&
+    (w.length >= 3 || SMALL_WORDS.has(w.toLowerCase()) || UNIT_WORDS.has(w) || /[À-ÖØ-öø-ÿ'’]/.test(w) || (chem && /^[A-Z]/.test(w)));
+  let out = '';
+  let i = 0;
+  while (i < tokens.length) {
+    const t = tokens[i];
+    if (!isWord(t)) { out += t; i++; continue; }
+    if (MATH_FUNCS.has(t)) { out += `\\${t} `; i++; continue; }
+    if (NAMED_OPS.has(t)) { out += `\\operatorname{${t}}`; i++; continue; }
+    if (!isText(t)) { out += t; i++; continue; }
+    // Regroupe les mots « texte » consécutifs séparés seulement par des espaces
+    const group = [t];
+    let j = i + 1;
+    while (j + 1 < tokens.length && /^\s+$/.test(tokens[j]) && isWord(tokens[j + 1]) && isText(tokens[j + 1])) {
+      group.push(tokens[j], tokens[j + 1]);
+      j += 2;
+    }
+    const before = out.slice(-1);
+    const after = tokens[j] ?? '';
+    const body = group.join('');
+    if (before === '_' || before === '^') out += `{\\text{${body}}}`;
+    else if (before === '{' || before === '(' || before === '' || /[A-Za-z0-9]/.test(before)) {
+      out += `\\text{${body}${/^\s/.test(after) ? ' ' : ''}}`;
+    } else out += `\\text{${/\s/.test(before) ? ' ' : ''}${body}${/^\s/.test(after) ? ' ' : ''}}`;
+    i = j;
+  }
+  return out;
+}
+
+/** Parcourt la formule en protégeant les commandes LaTeX et le contenu de \text{…}, \begin{…}, etc. */
+export function wrapFrenchWordsInMath(s: string, chem: boolean): string {
+  let out = '';
+  let free = '';
+  let i = 0;
+  const flush = () => { out += wrapWordRuns(free, chem); free = ''; };
+  while (i < s.length) {
+    if (s[i] === '\\') {
+      const m = /^\\([A-Za-z]+)/.exec(s.slice(i));
+      flush();
+      if (!m) { out += s.slice(i, i + 2); i += 2; continue; }
+      let j = i + m[0].length;
+      if (VERBATIM_ARG_CMDS.has(m[1])) {
+        while (s[j] === ' ') j++;
+        if (s[j] === '{') {
+          let depth = 0;
+          for (; j < s.length; j++) {
+            if (s[j] === '\\') { j++; continue; }
+            if (s[j] === '{') depth++;
+            else if (s[j] === '}') { depth--; if (depth === 0) { j++; break; } }
+          }
+        }
+      }
+      out += s.slice(i, j);
+      i = j;
+      continue;
+    }
+    free += s[i];
+    i++;
+  }
+  flush();
+  return out;
+}
+
+/**
+ * Découpe une formule en lignes (sur « ; », saut de ligne, \qquad, ou \quad pour les longues formules)
+ * sans jamais couper à l'intérieur d'accolades, d'un \left…\right ou d'une espace LaTeX « \; ».
+ */
+export function splitFormulaLines(raw: string): string[] {
+  const str = String(raw ?? '').trim();
+  if (!str) return [];
+  const lines: string[] = [];
+  let cur = '';
+  let depth = 0;
+  const long = str.length > 35;
+  for (let i = 0; i < str.length; i++) {
+    const c = str[i];
+    if (c === '\\') {
+      const m = /^\\([A-Za-z]+|.)/.exec(str.slice(i));
+      const tok = m ? m[0] : c;
+      if (tok === '\\left') depth++;
+      else if (tok === '\\right') depth = Math.max(0, depth - 1);
+      if (depth === 0 && tok === '\\qquad') { lines.push(cur); cur = ''; i += tok.length - 1; continue; }
+      if (depth === 0 && tok === '\\quad') {
+        const rest = str.slice(i + tok.length);
+        if (/^\s*;/.test(rest)) { lines.push(cur); cur = ''; i += tok.length + rest.indexOf(';'); continue; }
+        if (long && /^\s*[a-zA-Z\\|]/.test(rest)) { lines.push(cur); cur = ''; i += tok.length - 1; continue; }
+      }
+      cur += tok;
+      i += tok.length - 1;
+      continue;
+    }
+    if (c === '{') depth++;
+    else if (c === '}') depth = Math.max(0, depth - 1);
+    if (depth === 0 && (c === ';' || c === '\n')) { lines.push(cur); cur = ''; continue; }
+    cur += c;
+  }
+  lines.push(cur);
+  const trimmed = lines.map((l) => l.trim()).filter(Boolean);
+  // Un opérateur isolé (≠, ⟺, ⟹, →, =…) n'est pas une ligne : on le rattache au début de la ligne suivante
+  const cleaned: string[] = [];
+  let carry = '';
+  for (const l of trimmed) {
+    if (/^(\\(neq|ne|iff|implies|Longrightarrow|Rightarrow|longrightarrow|rightarrow|to|leq|geq|approx|equiv)|[=<>≠⟺⟹→⇔⇒])$/.test(l)) {
+      carry += `${l} `;
+      continue;
+    }
+    cleaned.push(carry + l);
+    carry = '';
+  }
+  if (carry && cleaned.length) cleaned[cleaned.length - 1] += ` ${carry.trim()}`;
+  return cleaned.length ? cleaned : [str];
+}
+
+/** Vrai si la « formule » est en réalité une phrase descriptive (pourcentages, mots, sans opérateur). */
+export function isDescriptiveFormula(formula: string): boolean {
+  if (!formula) return false;
+  const str = String(formula).trim();
+  if (str.includes('%')) return true;
+  const frenchWords = str.split(/\s+/).filter((w) => /^[a-zA-ZÀ-ÿ]{3,}$/.test(w));
+  return frenchWords.length >= 3 && !/[=\+\-\*/<>]/.test(str);
+}
+
+/**
+ * Nettoie et prépare une formule mathématique ou chimique pour un rendu KaTeX irréprochable.
+ * Transforme les fractions courantes (ex: d[A]/dt -> \frac{d[A]}{dt}), les puissances et les indices
+ * en syntaxe KaTeX officielle digne d'un manuel scolaire.
+ */
+export function sanitizeFormulaForKatex(raw: string): string {
+  if (!raw) return '';
+  let s = String(raw).trim();
+
+  // 1. Suppression des délimiteurs $ ou $$ si déjà présents
+  s = s.replace(/^\$\$([\s\S]*)\$\$$/, '$1').replace(/^\$([\s\S]*)\$$/, '$1').trim();
+
+  // 1.1 Unification du signe moins Unicode
+  s = s.replace(/−/g, '-');
+
+  // Protection absolue contre le % qui commente le reste de la formule en LaTeX
+  s = s.replace(/(?<!\\)%/g, '\\%');
+
+  // Réaction chimique (flèche + espèces avec indices ou charges) : les symboles seront écrits droits
+  const isChem = /(->|→|⟶|\\to\b|\\longrightarrow|\\rightarrow|\\xrightarrow)/.test(s) && /[A-Z][a-z]?\s*(?:[₀₁₂₃₄₅₆₇₈₉⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻ⁿ]|_|\^)/.test(s);
+
+  // Si la formule passée est une phrase descriptive en français sans opérateur mathématique
+  const hasMathOp = /[=+\-*/\\_^<>≈≤≥≠×÷→⟶⟹⟺⇒⇔±√∑∈⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻ⁿ₀₁₂₃₄₅₆₇₈₉]/.test(s);
+  if (!hasMathOp && /\s/.test(s)) {
+    return `\\text{${s.replace(/&/g, '\\&').replace(/#/g, '\\#')}}`;
+  }
+
+  // Esperluette hors environnement aligné
+  if (!/\\begin\{/.test(s)) s = s.replace(/(?<!\\)&/g, '\\&');
+
+  // Prime typographique après une lettre (M’ -> M')
+  s = s.replace(/([A-Za-z])’(?![A-Za-zÀ-ÿ])/g, "$1'");
+
+  // Flèches et symboles Unicode courants
+  s = s.replace(/⟹/g, '\\Longrightarrow ').replace(/⟺/g, '\\iff ').replace(/⟶/g, '\\longrightarrow ');
+  s = s.replace(/↓/g, '\\downarrow ').replace(/↑/g, '\\uparrow ').replace(/∑/g, '\\sum ').replace(/∅/g, '\\emptyset ');
+  s = s.replace(/∩/g, '\\cap ').replace(/∪/g, '\\cup ').replace(/÷/g, '\\div ').replace(/°/g, '^{\\circ}');
+
+  // Phrases avec égalité littérale en français (ex: Nombre de protons = Nombre d'électrons)
+  if (/^[A-Za-zÀ-ÿ\s'()-]+\s*=\s*[A-Za-zÀ-ÿ\s'()-]+$/.test(s) && !s.includes('\\')) {
+    const eqIdx = s.indexOf('=');
+    const left = s.slice(0, eqIdx).trim();
+    const right = s.slice(eqIdx + 1).trim();
+    return `\\text{${left}} = \\text{${right}}`;
+  }
+
+  // 1.2 Protection des interactions physiques et fractions d'indices (ex: F_{A/B}, F_{B/A}, t_{1/2})
+  s = s.replace(/_\{([A-Za-z0-9]+)\/([A-Za-z0-9]+)\}/g, '_{$1/$2}');
+
+  // Remplacement des termes fréquents pour éviter les lettres collées en italique
+  s = s.replace(/\bSocle\s+cristallin\b/gi, '\\text{Socle cristallin}');
+  s = s.replace(/\bBassin\s+sédimentaire\b/gi, '\\text{Bassin sédimentaire}');
+  s = s.replace(/\bMouvement\s+décrit\s+par\s+le\s+centre\s+d'inertie\s+G\b/gi, '\\text{Mouvement de } G \\text{ (MRU)}');
+  s = s.replace(/\bMouvement\s+relatif\s+par\s+rapport\s+au\s+repère\s+lié\s+à\s+G\b/gi, '\\text{Mouvement relatif par rapport à } G');
+  s = s.replace(/\bRotation\s+uniforme\s+autour\s+de\s+G\b/gi, '\\text{Rotation uniforme autour de } G');
+  s = s.replace(/\bCondition\s+de\s+système\s+pseudo-isolé\b/gi, '\\text{Condition de système pseudo-isolé}');
+  s = s.replace(/\bCondition\s+d'équilibre\b/gi, '\\text{Condition d\'équilibre}');
+  s = s.replace(/\bvecteur\s+constant\b/gi, '\\vec{\\text{cste}}');
+  s = s.replace(/\bvecteur\s+nul\b/gi, '\\vec{0}');
+  s = s.replace(/\bconstante\b/gi, '\\text{cste}');
+  s = s.replace(/\brepos\b/gi, '\\text{repos}');
+  s = s.replace(/\bmouvement\s+rectiligne\s+uniforme\b/g, '\\text{MRU}');
+  s = s.replace(/\bcirculaire\s+uniforme\b/g, '\\text{circulaire uniforme}');
+  s = s.replace(/\\sum\s*F_ext\b/g, '\\sum \\vec{F}_{\\text{ext}}');
+  s = s.replace(/\bF_ext\b/g, '\\vec{F}_{\\text{ext}}');
+  s = s.replace(/\bv_G\b/g, '\\vec{v}_G');
+
+  // 2. Réparation des sauts de page ou résidus de parsing (\x0crac -> \frac)
+  s = s.replace(/\x0crac\{([^{}]+)\}\{([^{}]+)\}/g, '\\frac{$1}{$2}');
+  s = s.replace(/(?<!\\f)(?<!\\)rac\{([^{}]+)\}\{([^{}]+)\}/g, '\\frac{$1}{$2}');
+
+  // 3. Covariance et statistiques
+  s = s.replace(/Cov\(([^)]+)\)\s*\/\s*V\(([^)]+)\)/g, '\\frac{\\text{Cov}($1)}{V($2)}');
+  s = s.replace(/Cov\(([^)]+)\)\s*\/\s*\(([^)]+)\)/g, '\\frac{\\text{Cov}($1)}{$2}');
+  s = s.replace(/y_barre/g, '\\bar{y}');
+  s = s.replace(/x_barre/g, '\\bar{x}');
+  s = s.replace(/σ_([XY])/g, '\\sigma_{$1}');
+
+  // 4. Nettoyage des résidus textuels
+  s = s.replace(/AimpliesBquad/g, 'A \\implies B');
+  s = s.replace(/AimpliesB/g, 'A \\implies B');
+  s = s.replace(/mathbb([A-Z])/g, '\\mathbb{$1}');
+  s = s.replace(/\\mathbb\{?([A-Z])\}?/g, '\\mathbb{$1}');
+  // Mots-clés LaTeX écrits sans « \ » : uniquement s'ils sont isolés (pas « Chiffre » -> « Ch\iffre »)
+  s = s.replace(/(?<![A-Za-z])\\?setminus(?![A-Za-z])/g, '\\setminus');
+  s = s.replace(/(?<![A-Za-z])\\?implies(?![A-Za-z])/g, '\\implies');
+  s = s.replace(/(?<![A-Za-z])\\?iff(?![A-Za-z])/g, '\\iff');
+  s = s.replace(/(?<![A-Za-z])\\?qquad(?![A-Za-z])/g, '\\qquad');
+  s = s.replace(/(?<![A-Za-z])\\?quad(?![A-Za-z])/g, '\\quad');
+
+  // 5. Espèces chimiques et temps de demi-réaction
+  s = s.replace(/\[H₃O⁺\]/g, '[\\text{H}_3\\text{O}^+]');
+  s = s.replace(/\[HO⁻\]/g, '[\\text{HO}^-]');
+  s = s.replace(/\[OH⁻\]/g, '[\\text{OH}^-]');
+  s = s.replace(/\[I₂\]/g, '[\\text{I}_2]');
+  s = s.replace(/\[I⁻\]/g, '[\\text{I}^-]');
+  s = s.replace(/H₃O\+/g, '\\text{H}_3\\text{O}^+');
+  s = s.replace(/H₃O⁺/g, '\\text{H}_3\\text{O}^+');
+  s = s.replace(/OH⁻/g, '\\text{OH}^-');
+  s = s.replace(/HO⁻/g, '\\text{HO}^-');
+  s = s.replace(/H₂O₂/g, '\\text{H}_2\\text{O}_2');
+  s = s.replace(/H₂O/g, '\\text{H}_2\\text{O}');
+  s = s.replace(/CO₂/g, '\\text{CO}_2');
+  s = s.replace(/O₂/g, '\\text{O}_2');
+  s = s.replace(/N₂/g, '\\text{N}_2');
+  s = s.replace(/I₂/g, '\\text{I}_2');
+  s = s.replace(/I⁻/g, '\\text{I}^-');
+  s = s.replace(/S₂O₈²⁻/g, '\\text{S}_2\\text{O}_8^{2-}');
+  s = s.replace(/S₄O₆²⁻/g, '\\text{S}_4\\text{O}_6^{2-}');
+  s = s.replace(/MnO₄⁻/g, '\\text{MnO}_4^-');
+
+  // Temps de demi-réaction : préservé sous forme standard t_{1/2}
+  s = s.replace(/\bt[1₁]\/[2₂]\b/g, 't_{1/2}');
+  s = s.replace(/t₁\/₂/g, 't_{1/2}');
+  s = s.replace(/t_\{?1\/2\}?/g, 't_{1/2}');
+
+  // 6. Puissances de 10 : traitées par la conversion générale des exposants (étape 8)
+
+  // Unités physiques et chimiques avec points médians et exposants
+  s = s.replace(/mol·L⁻¹·min⁻¹/g, '\\text{ mol}\\cdot\\text{L}^{-1}\\cdot\\text{min}^{-1}');
+  s = s.replace(/mol·L⁻¹·s⁻¹/g, '\\text{ mol}\\cdot\\text{L}^{-1}\\cdot\\text{s}^{-1}');
+  s = s.replace(/mol·L⁻¹/g, '\\text{ mol}\\cdot\\text{L}^{-1}');
+  s = s.replace(/g·mol⁻¹/g, '\\text{ g}\\cdot\\text{mol}^{-1}');
+  s = s.replace(/m·s⁻¹/g, '\\text{ m}\\cdot\\text{s}^{-1}');
+  s = s.replace(/m·s⁻²/g, '\\text{ m}\\cdot\\text{s}^{-2}');
+
+  // 7. Conversion des symboles de base avec espaces de séparation indispensables pour LaTeX
+  s = s.replace(/Δ/g, '\\Delta ');
+  s = s.replace(/·/g, '\\cdot ');
+  s = s.replace(/×/g, '\\times ');
+  s = s.replace(/τ/g, '\\tau ');
+  s = s.replace(/ρ/g, '\\rho ');
+  s = s.replace(/θ/g, '\\theta ');
+  s = s.replace(/ω/g, '\\omega ');
+  s = s.replace(/λ/g, '\\lambda ');
+  s = s.replace(/μ/g, '\\mu ');
+  s = s.replace(/π/g, '\\pi ');
+  s = s.replace(/⇔|<=>/g, '\\iff ');
+  s = s.replace(/→|->/g, '\\to ');
+  s = s.replace(/⇒|=>/g, '\\implies ');
+  s = s.replace(/≠/g, '\\neq ');
+  s = s.replace(/≤|<=/g, '\\leq ');
+  s = s.replace(/≥|>=/g, '\\geq ');
+  s = s.replace(/≈/g, '\\approx ');
+  s = s.replace(/±/g, '\\pm ');
+  s = s.replace(/∞/g, '\\infty ');
+  s = s.replace(/∈/g, '\\in ');
+  s = s.replace(/ℝ/g, '\\mathbb{R}');
+  s = s.replace(/ℕ/g, '\\mathbb{N}');
+  s = s.replace(/ℤ/g, '\\mathbb{Z}');
+  s = s.replace(/ℚ/g, '\\mathbb{Q}');
+  s = s.replace(/ℂ/g, '\\mathbb{C}');
+  s = s.replace(/Σ/g, '\\sum ');
+  s = s.replace(/∫/g, '\\int ');
+
+  // 7.1 Indices textuels avec accents
+  s = s.replace(/_fluide\b/g, '_{\\text{fluide}}');
+  s = s.replace(/_immerg[eé]\b/g, '_{\\text{immergé}}');
+
+  // 8. Exposants et indices Unicode, par séries entières (aⁿ⁺ᵖ -> a^{n+p}, H₁₂ -> H_{12}, Cu²⁺ -> Cu^{2+})
+  s = convertUnicodeScripts(s);
+  // Indice de plusieurs lettres sans accolades (U_AK -> U_{AK}, m_atome -> m_{atome}) ; jamais H_3O ni C_1V_1
+  s = s.replace(/_([A-Za-zÀ-ÖØ-öø-ÿ]{2,})(?![_^{A-Za-zÀ-ÖØ-öø-ÿ])/g, '_{$1}');
+
+  // 9. Racines carrées
+  s = s.replace(/√\(([^)]+)\)/g, '\\sqrt{$1}');
+  s = s.replace(/√([a-zA-Z0-9]+)/g, '\\sqrt{$1}');
+  // √(a / b) -> racine d'une vraie fraction ; √a / √b -> fraction de racines
+  s = s.replace(/\\sqrt\{\s*([a-zA-Z0-9]+)\s*\/\s*([a-zA-Z0-9]+)\s*\}/g, '\\sqrt{\\frac{$1}{$2}}');
+  s = s.replace(/\\sqrt\{([^{}]+)\}\s*\/\s*\\sqrt\{([^{}]+)\}/g, '\\frac{\\sqrt{$1}}{\\sqrt{$2}}');
+
+  // 10. Vraies fractions horizontales de manuel scolaire (\frac{...}{...})
+  // 10.1 Parenthèses complexes : (A) / (B) ou (A) / B ou A / (B)
+  s = s.replace(/(?<!\\frac\{)\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, '\\frac{$1}{$2}');
+  s = s.replace(/(?<!\\frac\{)\(([^()]+)\)\s*\/\s*([a-zA-Z0-9_\\{}\\^\\+\\-]+)/g, '\\frac{$1}{$2}');
+  s = s.replace(/(?<!\\frac\{)(?<![a-zA-Z0-9_\\{])([a-zA-Z0-9_\\{}\\^\\+\\-]+)\s*\/\s*\(([^()]+)\)/g, '\\frac{$1}{$2}');
+
+  // 10.2 Dérivées & taux de variation : d[A]/dt, dn_A/dt, \Delta[A]/\Delta t, dx/dt, dv/dt
+  s = s.replace(/(?<!\\frac\{)d\[([A-Za-z0-9_\\{}]+)\]\s*\/\s*dt/g, '\\frac{d[$1]}{dt}');
+  s = s.replace(/(?<!\\frac\{)d\s*n_\{?([A-Za-z0-9_]+)\}?\s*\/\s*dt/g, '\\frac{dn_{$1}}{dt}');
+  s = s.replace(/(?<!\\frac\{)\\Delta\s*\[([A-Za-z0-9_\\{}]+)\]\s*\/\s*\\Delta\s*t/g, '\\frac{\\Delta[$1]}{\\Delta t}');
+  s = s.replace(/(?<!\\frac\{)\\Delta\s*([a-zA-Z])\s*\/\s*\\Delta\s*([a-zA-Z])/g, '\\frac{\\Delta $1}{\\Delta $2}');
+  s = s.replace(/(?<!\\frac\{)\bd\s*([a-zA-Z])\s*\/\s*dt/g, '\\frac{d$1}{dt}');
+  s = s.replace(/(?<!\\frac\{)\b1\s*\/\s*V\b/g, '\\frac{1}{V}');
+  s = s.replace(/(?<!t_\{)(?<!\\frac\{)\b1\s*\/\s*2\b/g, '\\frac{1}{2}');
+
+  // 10.3 Grandeurs cinétiques sur nombre : x_max / 2, [A]_0 / 2, etc.
+  s = s.replace(/(?<!\\frac\{)x_max\s*\/\s*2/g, '\\frac{x_{\\max}}{2}');
+  s = s.replace(/(?<!\\frac\{)\[([A-Za-z0-9_\\{}]+)\]_0\s*\/\s*2/g, '\\frac{[$1]_0}{2}');
+  s = s.replace(/(?<!\\frac\{)\[([A-Za-z0-9_\\{}]+)\]_max\s*\/\s*2/g, '\\frac{[$1]_{\\max}}{2}');
+
+  // 10.4 Quotients de variables simples : n / V, m / V, m / M, V / V_m, etc.
+  // Un « terme » = lettres/chiffres suivis d'indices ou d'exposants bien formés (a, n_A, 10^{-14}, a^{n})
+  // (jamais à l'intérieur d'un \text{…} : « m/s », « Appuyer / Confirmer » restent du texte)
+  s = s
+    .split(/(\\text\{(?:[^{}]|\{[^{}]*\})*\})/)
+    .map((part, idx) =>
+      idx % 2 === 1
+        ? part
+        : part.replace(
+            /(?<![\\a-zA-Z0-9_{}^])([a-zA-Z0-9]+(?:[_^](?:\{[^{}]*\}|[a-zA-Z0-9]))*)\s*\/\s*([a-zA-Z0-9]+(?:[_^](?:\{[^{}]*\}|[a-zA-Z0-9]))*)(?![a-zA-Z0-9_{^])/g,
+            '\\frac{$1}{$2}',
+          ),
+    )
+    .join('');
+
+  // 11. Variables et indices usuels
+  s = s.replace(/\bv_d\(([^)]+)\)/g, 'v_d($1)');
+  s = s.replace(/\bv_a\(([^)]+)\)/g, 'v_a($1)');
+  s = s.replace(/\bv_d\b/g, 'v_d');
+  s = s.replace(/\bv_a\b/g, 'v_a');
+  s = s.replace(/\bv_m\b/g, 'v_m');
+  s = s.replace(/\bx_max\b/g, 'x_{\\max}');
+  s = s.replace(/\[([A-Za-z0-9_\\{}]+)\]_max\b/g, '[$1]_{\\max}');
+  s = s.replace(/\bEc\b/g, 'E_c');
+  s = s.replace(/\bEp\b/g, 'E_p');
+  s = s.replace(/\bEm\b/g, 'E_m');
+
+  // 12. Virgules décimales françaises (8,0 -> 8{,}0)
+  s = s.replace(/(\d+),(\d+)/g, '$1{,}$2');
+
+  // 13. Expressions et mots français intégrés dans la formule mathématique
+  // Empêche absolument le collage des lettres en italique mathématique KaTeX
+  s = s.replace(/Attention\s+aux\s+conversions\s*:/gi, '\\text{Attention aux conversions : }');
+  s = s.replace(/Résultat\s+encadré/gi, '\\text{Résultat encadré}');
+  s = s.replace(/(?<!\\text\{)Incertitude/gi, '\\text{Incertitude}');
+  s = s.replace(/(?<!\\text\{)Unité\s+SI/gi, '\\text{Unité SI}');
+  s = s.replace(/(?<!\\text\{)croissante/gi, '\\text{croissante}');
+  s = s.replace(/(?<!\\text\{)décroissante/gi, '\\text{décroissante}');
+
+  // Remplacement des parenthèses contenant du texte français (ex: (croissante), (décroissante), (remplacer x par a))
+  s = s.replace(/(?<!\\text)\(([a-zA-ZÀ-ÿ\s'-]{2,})\)/g, '\\;\\text{($1)}');
+
+  // Remplacement des crochets contenant du texte français (ex: [Unité SI])
+  s = s.replace(/(?<!\\text)\[([a-zA-ZÀ-ÿ\s'-]{2,})\]/g, '\\;\\text{[$1]}');
+
+  // Sécurisation du signe pourcentage pour éviter que KaTeX ne commente la suite de la ligne
+  s = s.replace(/(?<!\\)%/g, '\\%');
+
+  // 14. Mots français en texte droit (et, ou, pour tout, avec…), fonctions (log, sin…) et,
+  // pour une réaction chimique, symboles des espèces en droit (Cu, Na, Cl…)
+  s = wrapFrenchWordsInMath(s, isChem);
+
+  return s;
+}
+
+/**
+ * Nettoyeur Unicode de secours (sans déformation de texte)
+ */
+export function formatMathUnicode(raw: string): string {
+  if (!raw) return '';
+  let s = String(raw);
+  s = s.replace(/\$\$/g, '').replace(/\$/g, '');
+  s = s.replace(/\\text\{([^}]+)\}/g, '$1');
+  s = s.replace(/\\mathrm\{([^}]+)\}/g, '$1');
+  s = s.replace(/\\mathbf\{([^}]+)\}/g, '$1');
+  s = s.replace(/[\x0c]?\\?frac\{([^{}]+)\}\{([^{}]+)\}/g, '($1) / ($2)');
+  s = s.replace(/[\x0c]?rac\{([^{}]+)\}\{([^{}]+)\}/g, '($1) / ($2)');
+  s = s.replace(/\\mathbb\{?R\}?/g, 'ℝ').replace(/mathbbR/g, 'ℝ');
+  s = s.replace(/\\mathbb\{?N\}?/g, 'ℕ').replace(/mathbbN/g, 'ℕ');
+  s = s.replace(/\\mathbb\{?Z\}?/g, 'ℤ').replace(/mathbbZ/g, 'ℤ');
+  s = s.replace(/\\mathbb\{?Q\}?/g, 'ℚ').replace(/mathbbQ/g, 'ℚ');
+  s = s.replace(/\\mathbb\{?C\}?/g, 'ℂ').replace(/mathbbC/g, 'ℂ');
+  s = s.replace(/\\setminus/g, ' \\ ').replace(/setminus/g, ' \\ ');
+  s = s.replace(/\\infty/g, '∞').replace(/infty/g, '∞');
+  s = s.replace(/AimpliesBquad/g, 'A ⇒ B').replace(/AimpliesB/g, 'A ⇒ B');
+  s = s.replace(/\\implies/g, ' ⇒ ').replace(/implies/g, ' ⇒ ');
+  s = s.replace(/\\iff/g, ' ⇔ ').replace(/iff/g, ' ⇔ ');
+  s = s.replace(/\\Delta/g, 'Δ');
+  s = s.replace(/\\sqrt\{([^{}]+)\}/g, '√($1)');
+  s = s.replace(/\\lim_\{([^}]+)\}/g, 'lim ($1)');
+  s = s.replace(/\\to/g, ' → ');
+  s = s.replace(/\\vec\{([^{}]+)\}/g, 'vec($1)');
+  return s.trim();
+}
+
+export interface MathFormulaProps {
+  latex: string;
+  display?: boolean;
+  className?: string;
+}
+
+/**
+ * Composant de rendu officiel pour formules mathématiques :
+ * Génère un rendu KaTeX authentique (vraie barre de fraction horizontale,
+ * vraies racines, vrais symboles de dérivées et de limites).
+ */
+export const MathFormula: React.FC<MathFormulaProps> = ({ latex, display = false, className = '' }) => {
+  const renderedHtml = useMemo(() => {
+    if (!latex) return '';
+    const sanitized = sanitizeFormulaForKatex(latex);
+    try {
+      return katex.renderToString(sanitized, {
+        throwOnError: false,
+        displayMode: display,
+        strict: false,
+      });
+    } catch {
+      return latex;
+    }
+  }, [latex, display]);
+
+  if (display) {
+    return (
+      <div
+        className={`my-1.5 text-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-2 px-2.5 sm:py-2.5 sm:px-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 text-xs sm:text-sm md:text-base text-indigo-700 dark:text-indigo-300 font-medium ${className}`}
+        dangerouslySetInnerHTML={{ __html: renderedHtml }}
+      />
+    );
+  }
+
+  return (
+    <span
+      className={`inline-block text-indigo-700 dark:text-indigo-300 align-middle ${className}`}
+      dangerouslySetInnerHTML={{ __html: renderedHtml }}
+    />
+  );
+};
+
+export interface SmartKeyFormulaBoxProps {
+  name: string;
+  formula: string;
+  note?: string;
+  className?: string;
+}
+
+/**
+ * Encadré intelligent "FORMULE & PROPRIÉTÉ CLÉ" :
+ * - Si la formule est descriptive (pourcentages, termes géologiques, phrases en français),
+ *   affiche un rendu HTML aéré et net sans aucun mot collé ni barre de défilement.
+ * - Si c'est une équation mathématique ou chimique pure, utilise le rendu KaTeX officiel.
+ */
+export const SmartKeyFormulaBox: React.FC<SmartKeyFormulaBoxProps> = ({
+  name,
+  formula,
+  note,
+  className = '',
+}) => {
+  const isDescriptiveText = useMemo(() => isDescriptiveFormula(formula), [formula]);
+
+  // Si la formule contient des sous-équations séparées par ';' ou un saut de ligne,
+  // on les découpe en lignes distinctes empilées verticalement pour éliminer tout scroll horizontal
+  // (sans jamais couper à l'intérieur d'accolades, d'un \left…\right ou d'un « \; »)
+  const formulaLines = useMemo(() => {
+    if (!formula || isDescriptiveText) return [];
+    return splitFormulaLines(formula);
+  }, [formula, isDescriptiveText]);
+
+  // Rendu intelligent des expressions descriptives avec badges colorés (ex: Socle cristallin / Bassin sédimentaire)
+  const renderDescriptiveContent = (raw: string) => {
+    // Si la formule présente des sous-ensembles ou pourcentages séparés par '+', '|' ou ';'
+    if (raw.includes('+') || raw.includes('|') || raw.includes(';')) {
+      const parts = raw.split(/[+|;]/).map(p => p.trim()).filter(Boolean);
+      return (
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 py-1">
+          {parts.map((part, pIdx) => {
+            const isPct = part.includes('%');
+            const isSocle = /socle/i.test(part);
+            const isBassin = /bassin/i.test(part);
+            const badgeColor = isSocle
+              ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800'
+              : isBassin
+              ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 border-amber-200 dark:border-amber-800'
+              : isPct
+              ? 'bg-purple-50 dark:bg-purple-950/60 text-purple-900 dark:text-purple-200 border-purple-200 dark:border-purple-800'
+              : 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-200 border-indigo-200 dark:border-indigo-800';
+
+            return (
+              <span
+                key={pIdx}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs sm:text-sm font-extrabold tracking-tight shadow-xs ${badgeColor}`}
+              >
+                {part}
+              </span>
+            );
+          })}
+        </div>
+      );
+    }
+
+    return (
+      <div className="break-words whitespace-normal leading-relaxed text-slate-900 dark:text-white font-extrabold px-2 py-1">
+        <MathRenderer text={raw} />
+      </div>
+    );
+  };
+
+  return (
+    <div className={`p-3.5 sm:p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border-2 border-indigo-200 dark:border-indigo-500/30 space-y-2.5 ${className}`}>
+      <div className="flex items-center gap-1.5 text-indigo-900 dark:text-indigo-300 text-[11px] font-black uppercase tracking-wider">
+        <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
+        <span>Formule & Propriété Clé (Notation Officielle) : <MathRenderer text={name} /></span>
+      </div>
+
+      <div className="w-full text-center py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 text-xs sm:text-sm md:text-base font-black text-indigo-800 dark:text-indigo-200 overflow-x-auto max-w-full [scrollbar-width:none]">
+        {isDescriptiveText ? (
+          renderDescriptiveContent(formula)
+        ) : formulaLines.length > 1 ? (
+          <div className="flex flex-col items-center justify-center gap-2.5 w-full py-1 text-center">
+            {formulaLines.map((line, idx) => (
+              <div key={idx} className="w-full flex justify-center items-center py-1 border-b border-indigo-100/50 dark:border-slate-800/60 last:border-b-0">
+                <MathFormula latex={line} display={false} className="text-xs sm:text-sm md:text-base font-bold text-center" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="w-full flex justify-center items-center py-1">
+            <MathFormula latex={formula} display={false} className="text-xs sm:text-sm md:text-base font-bold text-center" />
+          </div>
+        )}
+      </div>
+
+      {note && (
+        <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+          <MathRenderer text={note} />
+        </p>
+      )}
+    </div>
+  );
+};
+
+export interface MathRendererProps {
+  text: string;
+  className?: string;
+}
+
+/**
+ * Rendu de texte mixte cours / mathématiques :
+ * - Le texte français normal n'est JAMAIS altéré ni déformé.
+ * - Les fractions et indices mathématiques sont automatiquement convertis en KaTeX pur.
+ * - ZÉRO tiret du bas (_) et ZÉRO slash (/) visible dans les formules.
+ */
+export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = '' }) => {
+  const segments = useMemo(() => {
+    if (!text) return null;
+
+    // Prétraitement intelligent pour éliminer tout '_' ou '/' dans les notations
+    const pretreated = cleanFormulasAndIndices(text);
+
+    // Détection de délimiteurs de formules ($...$, $$...$$, \[...\], \(...\))
+    const hasMathDelimiters = /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/.test(pretreated);
+
+    if (!hasMathDelimiters) {
+      // Aucun délimiteur : texte pur intact
+      return pretreated;
+    }
+
+    const regex = /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g;
+    const parts: Array<{ type: 'text'; content: string } | { type: 'math'; html: string; display: boolean }> = [];
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+
+    while ((match = regex.exec(pretreated)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push({
+          type: 'text',
+          content: pretreated.slice(lastIndex, match.index),
+        });
+      }
+
+      const raw = match[0];
+      let mathContent = raw;
+      let display = false;
+
+      if (raw.startsWith('$$') && raw.endsWith('$$')) {
+        mathContent = raw.slice(2, -2);
+        display = true;
+      } else if (raw.startsWith('$') && raw.endsWith('$')) {
+        mathContent = raw.slice(1, -1);
+        display = false;
+      } else if (raw.startsWith('\\[') && raw.endsWith('\\]')) {
+        mathContent = raw.slice(2, -2);
+        display = true;
+      } else if (raw.startsWith('\\(') && raw.endsWith('\\)')) {
+        mathContent = raw.slice(2, -2);
+        display = false;
+      }
+
+      const sanitized = sanitizeFormulaForKatex(mathContent);
+      let rendered = '';
+      try {
+        rendered = katex.renderToString(sanitized, {
+          throwOnError: false,
+          displayMode: display,
+          strict: false,
+        });
+      } catch {
+        rendered = raw;
+      }
+
+      parts.push({
+        type: 'math',
+        html: rendered,
+        display,
+      });
+
+      lastIndex = regex.lastIndex;
+    }
+
+    if (lastIndex < pretreated.length) {
+      parts.push({
+        type: 'text',
+        content: pretreated.slice(lastIndex),
+      });
+    }
+
+    return parts;
+  }, [text]);
+
+  if (!segments) return null;
+
+  if (typeof segments === 'string') {
+    return <span className={className}>{renderTextWithStackedFractions(segments)}</span>;
+  }
+
+  return (
+    <span className={`math-rendered-text leading-relaxed ${className}`}>
+      {segments.map((segment, idx) => {
+        if (segment.type === 'text') {
+          return <React.Fragment key={idx}>{renderTextWithStackedFractions(segment.content)}</React.Fragment>;
+        }
+        if (segment.display) {
+          return (
+            <span
+              key={idx}
+              className="block my-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden text-center py-2 px-2.5 sm:py-2.5 sm:px-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 text-xs sm:text-sm md:text-base text-indigo-700 dark:text-indigo-300 font-medium shadow-2xs"
+              dangerouslySetInnerHTML={{ __html: segment.html }}
+            />
+          );
+        }
+        return (
+          <span
+            key={idx}
+            className="inline-math align-middle mx-0.5"
+            dangerouslySetInnerHTML={{ __html: segment.html }}
+          />
+        );
+      })}
+    </span>
+  );
+};
+
+export interface VisualSchemaProps {
+  schema: PointVisualSchema;
+  className?: string;
+}
+
+/**
+ * Support visuel pédagogique : Schémas géométriques SVG,
+ * tableaux de signes et de variations, arbres pondérés.
+ */
+export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, className = '' }) => {
+  return (
+    <div className={`p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-200/80 dark:border-indigo-500/30 shadow-xs space-y-2.5 my-3 ${className}`}>
+      {schema.title && (
+        <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
+          <span>Figure / Support Visuel : {schema.title}</span>
+          <span className="text-[10px] px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+            {schema.type === 'geometry_svg'
+              ? 'Géométrie'
+              : schema.type === 'variation_table'
+              ? 'Tableau de variation'
+              : schema.type === 'sign_table'
+              ? 'Tableau de signe'
+              : schema.type === 'probability_tree'
+              ? 'Arbre pondéré'
+              : schema.type === 'function_plot'
+              ? 'Courbe'
+              : 'Schéma'}
+          </span>
+        </div>
+      )}
+
+      {/* Figures dessinées « au feutre » (courbes exactes calculées par le code) */}
+      {schema.plot && <SketchFunctionPlot spec={schema.plot} />}
+      {schema.variation && <SketchVariationTable spec={schema.variation} />}
+      {schema.signs && <SketchSignTable spec={schema.signs} />}
+
+      {schema.svgContent && (
+        <div
+          className="flex items-center justify-center py-2 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200/70 dark:border-slate-800 overflow-x-auto"
+          dangerouslySetInnerHTML={{ __html: schema.svgContent }}
+        />
+      )}
+
+      {schema.tableData && (
+        <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+          <table className="w-full text-xs text-center border-collapse">
+            <thead>
+              <tr className="bg-indigo-50/70 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700">
+                {schema.tableData.headers.map((h, i) => (
+                  <th key={i} className="py-2 px-3 font-extrabold text-slate-900 dark:text-white border-r border-slate-200 dark:border-slate-700 last:border-r-0">
+                    <MathRenderer text={String(h)} />
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {schema.tableData.rows.map((row, rIdx) => (
+                <tr
+                  key={rIdx}
+                  className="border-b border-slate-200 dark:border-slate-800 last:border-b-0 hover:bg-slate-50 dark:hover:bg-slate-800/40"
+                >
+                  {row.map((cell, cIdx) => (
+                    <td
+                      key={cIdx}
+                      className="py-2.5 px-3 font-medium text-slate-800 dark:text-slate-200 border-r border-slate-200 dark:border-slate-800 last:border-r-0"
+                    >
+                      <MathRenderer text={String(cell)} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {schema.caption && (
+        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium italic text-center">
+          {schema.caption}
+        </p>
+      )}
+    </div>
+  );
+};

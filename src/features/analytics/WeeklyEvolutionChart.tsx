@@ -49,8 +49,9 @@ export const WeeklyEvolutionChart: React.FC<WeeklyEvolutionChartProps> = ({
   const daysData: DayStat[] = useMemo(() => {
     let runningCompleted = 0;
     let runningPlanned = 0;
+    const result: DayStat[] = [];
 
-    return DAYS_META.map((meta) => {
+    for (const meta of DAYS_META) {
       const daySessions = studySessions.filter((s) => s.dayOfWeek === meta.id);
       const completedSessions = daySessions.filter((s) => s.completed);
 
@@ -71,7 +72,7 @@ export const WeeklyEvolutionChart: React.FC<WeeklyEvolutionChartProps> = ({
 
       const rate = plannedCount > 0 ? Math.round((completedCount / plannedCount) * 100) : 0;
 
-      return {
+      result.push({
         dayId: meta.id,
         dayName: meta.name,
         dayShort: meta.short,
@@ -83,8 +84,10 @@ export const WeeklyEvolutionChart: React.FC<WeeklyEvolutionChartProps> = ({
         isPast: meta.id < currentDayIndex,
         completionRate: rate,
         completedSubjects: completedSubjectNames,
-      };
-    });
+      });
+    }
+
+    return result;
   }, [studySessions, subjects, currentDayIndex]);
 
   const totalCompletedThisWeek = daysData[daysData.length - 1]?.cumulativeCompleted || 0;

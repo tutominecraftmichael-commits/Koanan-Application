@@ -3,7 +3,8 @@
  * Endpoint : /api/admin-data
  * 
  * RÈGLES DE SÉCURITÉ :
- * 1. Accès strictement protégé par mot de passe (NEXT_PUBLIC_ADMIN_PASSWORD).
+ * 1. Accès strictement protégé par mot de passe : variable secrète serveur ADMIN_PASSWORD,
+ *    envoyée par le client dans l'en-tête « Authorization: Bearer … ». « ?verify=1 » vérifie seulement.
  * 2. Invisible et inaccessible aux élèves.
  * 3. Lecture Firestore via Firebase Admin SDK pour agréger en direct les statistiques
  *    et la liste complète des utilisateurs (149+ comptes réels).
@@ -11,6 +12,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { timingSafeEqual } from 'crypto';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
@@ -88,36 +90,39 @@ export default async function handler(req, res) {
   };
 
   // 1. VÉRIFICATION DU MOT DE PASSE ADMINISTRATEUR
+  // Le mot de passe n'existe QUE côté serveur, dans la variable secrète ADMIN_PASSWORD (Vercel ou .env local).
+  // Jamais de VITE_/NEXT_PUBLIC_ (ces variables sont copiées dans le code public) ni de valeur écrite en dur.
   loadLocalEnvIfPresent();
-  const expectedPassword = (
-    process.env.NEXT_PUBLIC_ADMIN_PASSWORD ||
-    process.env.VITE_ADMIN_PASSWORD ||
-    process.env.ADMIN_PASSWORD ||
-    ''
-  ).trim();
-
-  const authHeader = req.headers.authorization || req.headers.Authorization || '';
-  let providedPassword = '';
-  if (authHeader.startsWith('Bearer ')) {
-    providedPassword = authHeader.slice(7).trim();
-  } else if (req.query && req.query.password) {
-    providedPassword = String(req.query.password).trim();
-  }
-
+  const expectedPassword = String(process.env.ADMIN_PASSWORD || '').trim();
   if (!expectedPassword) {
-    return sendJson(403, {
+    return sendJson(503, {
       success: false,
-      error: 'ADMIN_PASSWORD_NOT_CONFIGURED',
-      message: 'La variable NEXT_PUBLIC_ADMIN_PASSWORD n\'est pas encore configurée dans votre fichier .env.local.',
+      error: 'ADMIN_NOT_CONFIGURED',
+      message: "Console admin non configurée : définissez la variable secrète ADMIN_PASSWORD sur le serveur.",
     });
   }
 
-  if (!providedPassword || providedPassword !== expectedPassword) {
+  // Mot de passe accepté uniquement dans l'en-tête Authorization (jamais dans l'adresse, qui finit dans les journaux)
+  const authHeader = req.headers.authorization || req.headers.Authorization || '';
+  const providedPassword = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
+
+  // Comparaison à temps constant (évite de deviner le mot de passe en mesurant les temps de réponse)
+  const a = Buffer.from(providedPassword);
+  const b = Buffer.from(expectedPassword);
+  const isValidAdminPassword = providedPassword.length > 0 && a.length === b.length && timingSafeEqual(a, b);
+
+  if (!isValidAdminPassword) {
     return sendJson(401, {
       success: false,
       error: 'UNAUTHORIZED',
       message: 'Mot de passe administrateur incorrect ou manquant.',
     });
+  }
+
+  // « ?verify=1 » : simple vérification du mot de passe (écran de connexion), sans charger les données
+  const requestUrl = new URL(req.url || '/', 'http://localhost');
+  if (requestUrl.searchParams.get('verify') === '1') {
+    return sendJson(200, { success: true, authenticated: true });
   }
 
   // 2. CONNEXION FIRESTORE
