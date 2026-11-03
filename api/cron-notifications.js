@@ -13,11 +13,20 @@
  *    depuis les variables d'environnement (VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT).
  */
 
-import webpush from 'web-push';
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-import { getAuth } from 'firebase-admin/auth';
 import { loadLocalEnvIfPresent, secretsMatch, providedSecret } from './_env.js';
+
+// Bibliothèques lourdes chargées SEULEMENT après la vérification du secret (voir loadHeavyModules) :
+// un appel non autorisé ne les charge jamais, et un échec de chargement renvoie un diagnostic clair.
+let webpush;
+let initializeApp, getApps, cert, getFirestore, getAuth;
+
+async function loadHeavyModules() {
+  if (webpush) return;
+  webpush = (await import('web-push')).default;
+  ({ initializeApp, getApps, cert } = await import('firebase-admin/app'));
+  ({ getFirestore } = await import('firebase-admin/firestore'));
+  ({ getAuth } = await import('firebase-admin/auth'));
+}
 
 // Initialisation sécurisée de Firebase Admin
 function getFirebaseServices() {
@@ -100,6 +109,20 @@ export default async function handler(req, res) {
   }
   if (!secretsMatch(providedSecret(req, 'x-cron-secret'), expectedSecret)) {
     return res.status(401).json({ success: false, error: 'UNAUTHORIZED' });
+  }
+
+  // Appel autorisé : chargement des bibliothèques (message précis si l'une ne peut pas se charger,
+  // ex. version de Node trop ancienne sur le serveur)
+  try {
+    await loadHeavyModules();
+  } catch (loadErr) {
+    console.error('[cron-notifications] Chargement des modules impossible :', loadErr);
+    return res.status(500).json({
+      success: false,
+      error: 'MODULE_LOAD_FAILED',
+      detail: String(loadErr?.message || loadErr).slice(0, 200),
+      node: process.version,
+    });
   }
 
   const vapidError = configureVapid();
