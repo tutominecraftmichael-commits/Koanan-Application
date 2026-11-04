@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '../../lib/utils';
 import { X } from 'lucide-react';
 import { Button } from './Button';
@@ -54,24 +55,28 @@ export const Modal: React.FC<ModalProps> = ({
     '16:9': 'max-w-6xl xl:max-w-7xl w-[96vw]',
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 overflow-y-auto">
+  // Rendue directement dans <body> : aucun conteneur animé ne peut l'enfermer sous la barre de navigation mobile.
+  return createPortal(
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-2 sm:p-6">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity animate-in fade-in"
         onClick={onClose}
       />
 
-      {/* Dialog */}
+      {/* Dialog : hauteur limitée à l'écran réel du téléphone (dvh), contenu défilant, en-tête toujours visible */}
       <div
         className={cn(
-          'relative w-full bg-white border border-slate-200 shadow-2xl dark:bg-slate-900 dark:border-slate-700/80 rounded-2xl overflow-hidden z-10 animate-in zoom-in-95 duration-200 text-slate-900 dark:text-slate-100',
+          'relative w-full flex flex-col max-h-[calc(100dvh-1rem)] sm:max-h-[90vh] bg-white border border-slate-200 shadow-2xl dark:bg-slate-900 dark:border-slate-700/80 rounded-2xl overflow-hidden z-10 animate-in zoom-in-95 duration-200 text-slate-900 dark:text-slate-100',
           maxWidths[maxWidth]
         )}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-3.5 sm:p-6 border-b border-slate-200 dark:border-slate-800/80">
+        <div className="shrink-0 flex items-start justify-between p-3.5 sm:p-6 border-b border-slate-200 dark:border-slate-800/80">
           <div>
             <h2 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">{title}</h2>
             {description && <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5 sm:mt-1">{description}</p>}
@@ -88,10 +93,11 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-3 sm:p-6 max-h-[85vh] sm:max-h-[82vh] overflow-y-auto text-slate-800 dark:text-slate-200">
+        <div className="flex-1 min-h-0 p-3 sm:p-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] overflow-y-auto overscroll-contain text-slate-800 dark:text-slate-200">
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
