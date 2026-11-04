@@ -1190,10 +1190,10 @@ export const GEO_2DE_L03_TECHNIQUES_REPRESENTATION_TERRE: CurriculumChapter = {
             "type": "mcq",
             "prompt": "Quel élément de la carte permet de s'orienter ?",
             "options": [
-              "Le titre",
-              "Le cadre",
+              "Le titre de la carte",
+              "Le cadre de la carte",
               "L'orientation (la flèche du Nord)",
-              "La date d'édition"
+              "La date d'édition de la carte"
             ],
             "correctAnswerIndex": 2,
             "explanation": "La flèche du Nord indique le Nord géographique et permet de s'orienter."
@@ -1292,10 +1292,10 @@ export const GEO_2DE_L03_TECHNIQUES_REPRESENTATION_TERRE: CurriculumChapter = {
           "type": "mcq",
           "prompt": "Quel élément de la carte permet de s'orienter ?",
           "options": [
-            "Le titre",
-            "Le cadre",
+            "Le titre de la carte",
+            "Le cadre de la carte",
             "L'orientation (la flèche du Nord)",
-            "La date d'édition"
+            "La date d'édition de la carte"
           ],
           "correctAnswerIndex": 2,
           "explanation": "La flèche du Nord indique le Nord géographique et permet de s'orienter."

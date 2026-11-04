@@ -1087,10 +1087,10 @@ export const HIST_2DE_T2_L02_EGYPTE_ANCIENNE: CurriculumChapter = {
             "type": "mcq",
             "prompt": "Comment appelle-t-on les périodes de troubles entre les grands Empires égyptiens ?",
             "options": [
-              "Les dynasties",
+              "Les grandes dynasties",
               "Les périodes intermédiaires",
-              "Les nomes",
-              "Les crues"
+              "Les nomes (provinces)",
+              "Les crues du Nil"
             ],
             "correctAnswerIndex": 1,
             "explanation": "Les périodes intermédiaires séparent l'Ancien, le Moyen et le Nouvel Empire."
@@ -1229,10 +1229,10 @@ export const HIST_2DE_T2_L02_EGYPTE_ANCIENNE: CurriculumChapter = {
           "type": "mcq",
           "prompt": "Comment appelle-t-on les périodes de troubles entre les grands Empires égyptiens ?",
           "options": [
-            "Les dynasties",
+            "Les grandes dynasties",
             "Les périodes intermédiaires",
-            "Les nomes",
-            "Les crues"
+            "Les nomes (provinces)",
+            "Les crues du Nil"
           ],
           "correctAnswerIndex": 1,
           "explanation": "Les périodes intermédiaires séparent l'Ancien, le Moyen et le Nouvel Empire."

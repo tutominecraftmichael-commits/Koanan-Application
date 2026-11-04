@@ -31,6 +31,9 @@ import { HIST_2DE_T2_L01_PREHISTOIRE } from '../../data/courses/seconde/hist_2de
 import { HIST_2DE_T2_L02_EGYPTE_ANCIENNE } from '../../data/courses/seconde/hist_2de_egypte_ancienne';
 import { HIST_2DE_T2_L03_DEMOCRATIE_ATHENIENNE } from '../../data/courses/seconde/hist_2de_democratie_athenienne';
 import { HIST_2DE_T2_L04_SOUDAN_OCCIDENTAL } from '../../data/courses/seconde/hist_2de_soudan_occidental';
+import { HIST_2DE_T2_L05_TRAITES_DES_NOIRS } from '../../data/courses/seconde/hist_2de_traites_des_noirs';
+import { HIST_2DE_T3_L01_NEOLITHIQUE_CI } from '../../data/courses/seconde/hist_2de_neolithique_cote_ivoire';
+import { HIST_2DE_T3_L02_PEUPLES_CI } from '../../data/courses/seconde/hist_2de_peuples_cote_ivoire';
 import { PHILO_TLE_L01_DISSERTATION } from '../../data/courses/terminale/philo_tle_dissertation';
 import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/philo_tle_commentaire_texte';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
@@ -91798,6 +91801,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   HIST_2DE_T2_L02_EGYPTE_ANCIENNE,
   HIST_2DE_T2_L03_DEMOCRATIE_ATHENIENNE,
   HIST_2DE_T2_L04_SOUDAN_OCCIDENTAL,
+  HIST_2DE_T2_L05_TRAITES_DES_NOIRS,
+  HIST_2DE_T3_L01_NEOLITHIQUE_CI,
+  HIST_2DE_T3_L02_PEUPLES_CI,
   ...maths2deCGeometryChapters,
   ...maths2deCNumericChapters,
   ...chimie2deCChapters,
