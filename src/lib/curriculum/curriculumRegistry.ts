@@ -23,6 +23,7 @@ import { GEO_2DE_L03_TECHNIQUES_REPRESENTATION_TERRE } from '../../data/courses/
 import { GEO_2DE_T2_L01_MILIEU_SUBEQUATORIAL } from '../../data/courses/seconde/geo_2de_milieu_subequatorial';
 import { GEO_2DE_T2_L02_MILIEU_TROPICAL } from '../../data/courses/seconde/geo_2de_milieu_tropical';
 import { GEO_2DE_T2_L03_ENVIRONNEMENT_MENACE } from '../../data/courses/seconde/geo_2de_environnement_menace';
+import { GEO_2DE_T3_L01_MILIEUX_BIOGEOGRAPHIQUES } from '../../data/courses/seconde/geo_2de_milieux_biogeographiques';
 import { GEO_2DE_T3_L02_PROBLEMES_ENVIRONNEMENTAUX } from '../../data/courses/seconde/geo_2de_problemes_environnementaux';
 import { HIST_2DE_L01_HISTOIRE_FORMATION_CITOYEN } from '../../data/courses/seconde/hist_2de_histoire_formation_citoyen';
 import { HIST_2DE_L02_METHODES_ETUDE_HISTOIRE } from '../../data/courses/seconde/hist_2de_methodes_etude_histoire';
@@ -91792,6 +91793,7 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   GEO_2DE_T2_L01_MILIEU_SUBEQUATORIAL,
   GEO_2DE_T2_L02_MILIEU_TROPICAL,
   GEO_2DE_T2_L03_ENVIRONNEMENT_MENACE,
+  GEO_2DE_T3_L01_MILIEUX_BIOGEOGRAPHIQUES,
   GEO_2DE_T3_L02_PROBLEMES_ENVIRONNEMENTAUX,
   // 2nde A — Histoire (format v2)
   HIST_2DE_L01_HISTOIRE_FORMATION_CITOYEN,
