@@ -44,6 +44,9 @@ import { FR_2DE_PL_L05_FIGURES_ANALOGIE_SUBSTITUTION } from '../../data/courses/
 import { FR_2DE_PL_L05B_FIGURES_AMPLIFICATION_ATTENUATION } from '../../data/courses/seconde/fr_2de_figures_amplification_attenuation';
 import { FR_2DE_PL_L05C_FIGURES_OPPOSITION_CONSTRUCTION } from '../../data/courses/seconde/fr_2de_figures_opposition_construction';
 import { FR_2DE_PL_L06_VERSIFICATION_VERS_STROPHES } from '../../data/courses/seconde/fr_2de_versification_vers_strophes';
+import { FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME } from '../../data/courses/seconde/fr_2de_versification_sonorites_rythme';
+import { FR_2DE_PL_L07_IMPLICITE } from '../../data/courses/seconde/fr_2de_implicite';
+import { FR_2DE_SF_L02_EXPOSE_ORAL } from '../../data/courses/seconde/fr_2de_expose_oral';
 import { PHILO_TLE_L01_DISSERTATION } from '../../data/courses/terminale/philo_tle_dissertation';
 import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/philo_tle_commentaire_texte';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
@@ -91824,6 +91827,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   FR_2DE_PL_L05B_FIGURES_AMPLIFICATION_ATTENUATION,
   FR_2DE_PL_L05C_FIGURES_OPPOSITION_CONSTRUCTION,
   FR_2DE_PL_L06_VERSIFICATION_VERS_STROPHES,
+  FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME,
+  FR_2DE_PL_L07_IMPLICITE,
+  FR_2DE_SF_L02_EXPOSE_ORAL,
   ...maths2deCGeometryChapters,
   ...maths2deCNumericChapters,
   ...chimie2deCChapters,
