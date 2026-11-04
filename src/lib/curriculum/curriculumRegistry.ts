@@ -38,6 +38,9 @@ import { HIST_2DE_T3_L02_PEUPLES_CI } from '../../data/courses/seconde/hist_2de_
 import { FR_2DE_PL_L01_FONCTIONS_LANGAGE } from '../../data/courses/seconde/fr_2de_fonctions_langage';
 import { FR_2DE_PL_L02_CONNECTEURS_LOGIQUES } from '../../data/courses/seconde/fr_2de_connecteurs_logiques';
 import { FR_2DE_PL_L02B_EXPRESSION_OPINION } from '../../data/courses/seconde/fr_2de_expression_opinion';
+import { FR_2DE_PL_L03_SEMANTIQUE } from '../../data/courses/seconde/fr_2de_semantique';
+import { FR_2DE_PL_L04_ENONCIATION } from '../../data/courses/seconde/fr_2de_enonciation';
+import { FR_2DE_PL_L05_FIGURES_ANALOGIE_SUBSTITUTION } from '../../data/courses/seconde/fr_2de_figures_analogie_substitution';
 import { PHILO_TLE_L01_DISSERTATION } from '../../data/courses/terminale/philo_tle_dissertation';
 import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/philo_tle_commentaire_texte';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
@@ -91812,6 +91815,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
   FR_2DE_PL_L02_CONNECTEURS_LOGIQUES,
   FR_2DE_PL_L02B_EXPRESSION_OPINION,
+  FR_2DE_PL_L03_SEMANTIQUE,
+  FR_2DE_PL_L04_ENONCIATION,
+  FR_2DE_PL_L05_FIGURES_ANALOGIE_SUBSTITUTION,
   ...maths2deCGeometryChapters,
   ...maths2deCNumericChapters,
   ...chimie2deCChapters,
