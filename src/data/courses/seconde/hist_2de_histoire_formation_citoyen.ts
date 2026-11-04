@@ -6,7 +6,9 @@ export const HIST_2DE_L01_HISTOIRE_FORMATION_CITOYEN: CurriculumChapter = {
   "id": "seconde_a_hg_histoire_l01_histoire_formation_citoyen",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 1,
   "title": "Leçon 1 : L'histoire et la formation du citoyen",
   "summary": "Ce qu'est l'histoire, son objet, ses fonctions et ce qu'elle apporte au citoyen et à la société.",

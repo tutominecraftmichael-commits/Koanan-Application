@@ -6,7 +6,9 @@ export const HIST_2DE_L03_METHODOLOGIE_DISSERTATION_COMMENTAIRE: CurriculumChapt
   "id": "seconde_a_hg_histoire_l03_methodologie_dissertation_commentaire",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 3,
   "title": "Leçon 3 : La méthodologie de la dissertation et du commentaire de document",
   "summary": "La structure et la démarche de la dissertation, les types de sujets, et la technique du commentaire de document.",

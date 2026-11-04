@@ -6,7 +6,9 @@ export const HIST_2DE_L02_METHODES_ETUDE_HISTOIRE: CurriculumChapter = {
   "id": "seconde_a_hg_histoire_l02_methodes_etude_histoire",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 2,
   "title": "Leçon 2 : Les méthodes d'étude de l'histoire",
   "summary": "Les sources de l'histoire et la démarche scientifique de l'historien : collecte, critique, interprétation et synthèse.",

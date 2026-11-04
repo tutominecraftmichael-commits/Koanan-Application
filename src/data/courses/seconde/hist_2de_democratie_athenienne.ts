@@ -6,7 +6,9 @@ export const HIST_2DE_T2_L03_DEMOCRATIE_ATHENIENNE: CurriculumChapter = {
   "id": "seconde_a_hg_histoire_t2_l03_democratie_athenienne",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 6,
   "title": "Thème 2, leçon 3 : La démocratie athénienne",
   "summary": "Athènes, les réformateurs, les institutions, la démocratie directe, ses limites et son héritage.",

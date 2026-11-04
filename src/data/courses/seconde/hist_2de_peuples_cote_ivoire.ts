@@ -6,7 +6,9 @@ export const HIST_2DE_T3_L02_PEUPLES_CI: CurriculumChapter = {
   "id": "seconde_a_hg_histoire_t3_l02_peuples_ci",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 10,
   "title": "Thème 3, leçon 2 : Les peuples de Côte d'Ivoire, diversité et unité",
   "summary": "Les premiers habitants, les migrations, la diversité des organisations et ce qui unit les peuples ivoiriens.",

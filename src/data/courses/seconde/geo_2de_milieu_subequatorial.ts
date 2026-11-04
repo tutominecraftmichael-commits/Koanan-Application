@@ -6,7 +6,9 @@ export const GEO_2DE_T2_L01_MILIEU_SUBEQUATORIAL: CurriculumChapter = {
   "id": "seconde_a_hg_geographie_t2_l01_milieu_subequatorial",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 4,
   "title": "Thème 2, leçon 1 : Le milieu subéquatorial ivoirien",
   "summary": "Les atouts naturels et humains du sud ivoirien et ses activités économiques : le poumon économique du pays.",

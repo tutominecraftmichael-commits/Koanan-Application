@@ -6,7 +6,9 @@ export const HIST_2DE_T2_L01_PREHISTOIRE: CurriculumChapter = {
   "id": "seconde_a_hg_histoire_t2_l01_prehistoire",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 4,
   "title": "Thème 2, leçon 1 : La préhistoire en Afrique et dans le reste du monde",
   "summary": "Les grandes périodes de la préhistoire, l'évolution de l'espèce humaine et l'Afrique, berceau de l'humanité.",

@@ -6,7 +6,9 @@ export const GEO_2DE_T2_L02_MILIEU_TROPICAL: CurriculumChapter = {
   "id": "seconde_a_hg_geographie_t2_l02_milieu_tropical",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 5,
   "title": "Thème 2, leçon 2 : Le milieu tropical ivoirien",
   "summary": "Le relief, le climat, la population et les activités du centre et du nord, et les politiques de mise en valeur.",

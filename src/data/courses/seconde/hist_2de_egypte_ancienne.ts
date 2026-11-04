@@ -6,7 +6,9 @@ export const HIST_2DE_T2_L02_EGYPTE_ANCIENNE: CurriculumChapter = {
   "id": "seconde_a_hg_histoire_t2_l02_egypte_ancienne",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 5,
   "title": "Thème 2, leçon 2 : La civilisation de l'Égypte ancienne",
   "summary": "Le Nil, le pharaon, la société, la religion, les grandes périodes et le déclin de l'Égypte ancienne.",

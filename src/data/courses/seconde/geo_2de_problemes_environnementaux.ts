@@ -6,7 +6,9 @@ export const GEO_2DE_T3_L02_PROBLEMES_ENVIRONNEMENTAUX: CurriculumChapter = {
   "id": "seconde_a_hg_geographie_t3_l02_problemes_environnementaux_actuels",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 8,
   "title": "Thème 3, leçon 2 : Les problèmes environnementaux actuels",
   "summary": "Les grands problèmes environnementaux du monde, leurs causes, leurs conséquences et les initiatives pour y répondre.",

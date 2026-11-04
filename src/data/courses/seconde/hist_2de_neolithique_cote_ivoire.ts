@@ -6,7 +6,9 @@ export const HIST_2DE_T3_L01_NEOLITHIQUE_CI: CurriculumChapter = {
   "id": "seconde_a_hg_histoire_t3_l01_neolithique_ci",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 9,
   "title": "Thème 3, leçon 1 : La révolution néolithique en Côte d'Ivoire",
   "summary": "Les sites et les vestiges du néolithique ivoirien, et les changements économiques et sociaux qu'il apporte.",

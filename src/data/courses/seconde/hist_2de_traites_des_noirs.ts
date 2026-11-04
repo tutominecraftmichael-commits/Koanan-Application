@@ -6,7 +6,9 @@ export const HIST_2DE_T2_L05_TRAITES_DES_NOIRS: CurriculumChapter = {
   "id": "seconde_a_hg_histoire_t2_l05_traites_des_noirs",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 8,
   "title": "Thème 2, leçon 5 : Les traites des Noirs",
   "summary": "La traite transsaharienne et la traite atlantique : causes, commerce triangulaire, conséquences et abolition.",

@@ -6,7 +6,9 @@ export const GEO_2DE_T2_L03_ENVIRONNEMENT_MENACE: CurriculumChapter = {
   "id": "seconde_a_hg_geographie_t2_l03_environnement_menace",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 6,
   "title": "Thème 2, leçon 3 : L'espace ivoirien, un environnement menacé",
   "summary": "Les facteurs de dégradation, les menaces sur les milieux naturel et urbain, et les actions pour préserver l'environnement.",

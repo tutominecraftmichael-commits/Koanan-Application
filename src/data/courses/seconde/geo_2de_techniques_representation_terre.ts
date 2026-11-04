@@ -6,7 +6,9 @@ export const GEO_2DE_L03_TECHNIQUES_REPRESENTATION_TERRE: CurriculumChapter = {
   "id": "seconde_a_hg_geographie_l03_techniques_representation_terre",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 3,
   "title": "Leçon 3 : Les techniques de représentation de la Terre",
   "summary": "Le globe et la carte, les types de cartes, les projections, les nouvelles techniques, l'élaboration d'une carte et le profil topographique.",

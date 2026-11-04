@@ -6,7 +6,9 @@ export const HIST_2DE_T2_L04_SOUDAN_OCCIDENTAL: CurriculumChapter = {
   "id": "seconde_a_hg_histoire_t2_l04_soudan_occidental",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 7,
   "title": "Thème 2, leçon 4 : La civilisation du Soudan occidental au Moyen Âge",
   "summary": "La civilisation du Soudan occidental avant l'islam, l'islamisation pacifique et par le djihad, et son impact.",

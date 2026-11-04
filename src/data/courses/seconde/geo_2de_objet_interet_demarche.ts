@@ -6,7 +6,9 @@ export const GEO_2DE_L01_OBJET_INTERET_DEMARCHE: CurriculumChapter = {
   "id": "seconde_a_hg_geographie_l01_objet_interet_demarche",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 1,
   "title": "Leçon 1 : La géographie, objet, intérêt et démarche",
   "summary": "Ce qu'est la géographie, ses domaines, ses outils, sa démarche en cinq étapes et son utilité.",

@@ -6,7 +6,9 @@ export const GEO_2DE_L02_PLANETE_TERRE: CurriculumChapter = {
   "id": "seconde_a_hg_geographie_l02_planete_terre",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 2,
   "title": "Leçon 2 : La planète Terre",
   "summary": "La Terre dans le système solaire, sa forme, sa structure, ses mouvements (rotation, révolution) et la tectonique des plaques.",

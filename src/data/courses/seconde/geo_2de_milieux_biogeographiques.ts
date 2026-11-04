@@ -6,7 +6,9 @@ export const GEO_2DE_T3_L01_MILIEUX_BIOGEOGRAPHIQUES: CurriculumChapter = {
   "id": "seconde_a_hg_geographie_t3_l01_milieux_biogeographiques",
   "subjectId": "histoire_geo",
   "gradeLevel": "seconde_a",
-  "alsoForGrades": [],
+  "alsoForGrades": [
+    "seconde_c"
+  ],
   "order": 7,
   "title": "Thème 3, leçon 1 : Les grands milieux biogéographiques du monde",
   "summary": "Les zones chaude, tempérées et froides : leurs climats, leurs sols, leur végétation, leur relief et les activités des hommes.",
