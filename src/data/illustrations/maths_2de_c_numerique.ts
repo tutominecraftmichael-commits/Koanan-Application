@@ -16,14 +16,6 @@ const stairsPieces = [-4, -3, -2, -1, 0, 1, 2, 3].map((n) => ({
   includeTo: false,
 }));
 
-const fractionalPartPieces = [-2, -1, 0, 1, 2].map((n) => ({
-  expr: n === 0 ? 'x' : n < 0 ? `x+${-n}` : `x-${n}`,
-  from: n,
-  to: n + 1,
-  includeFrom: true,
-  includeTo: false,
-}));
-
 const partieEntiere: PointVisualSchema = {
   type: 'function_plot',
   title: 'La fonction partie entière',
@@ -43,44 +35,6 @@ const valeurAbsolueParMorceaux: PointVisualSchema = {
     ],
     verticalLines: [{ x: 2, label: 'x = 2', color: 'slate' }],
     points: [{ x: 2, y: 0, label: '(2 ; 0)', color: 'violet' }],
-  },
-};
-
-const lectureParMorceaux: PointVisualSchema = {
-  type: 'function_plot',
-  title: 'Lire une fonction définie par morceaux',
-  caption: 'g(x) = x + 2 si x < 0 et g(x) = −2x + 1 si x ≥ 0. En x = 0, le rond vide (0 ; 2) est exclu et le point plein (0 ; 1) est inclus : g(0) = 1.',
-  plot: {
-    xMin: -3, xMax: 3, yMin: -5, yMax: 3,
-    curves: [
-      { color: 'orange', pieces: [{ expr: 'x+2', from: -3, to: 0, includeTo: false }] },
-      { color: 'blue', pieces: [{ expr: '-2x+1', from: 0, to: 3, includeFrom: true }] },
-    ],
-  },
-};
-
-const partieDecimale: PointVisualSchema = {
-  type: 'function_plot',
-  title: 'La partie décimale x − E(x)',
-  caption: 'Chaque « dent de scie » part de 0 (point plein) et s’arrête juste avant 1 (rond vide).',
-  plot: {
-    xMin: -2, xMax: 3, yMin: -0.5, yMax: 1.5, yStep: 0.5,
-    curves: [{ color: 'violet', pieces: fractionalPartPieces }],
-    horizontalLines: [{ y: 1, label: 'y = 1', color: 'orange' }],
-  },
-};
-
-const forfaitTelephone: PointVisualSchema = {
-  type: 'function_plot',
-  title: 'Forfait de 2 h puis dépassement',
-  caption: 'Jusqu’à 120 min, on paie 300 F CFA. Au-delà, chaque minute coûte 25 F CFA de plus : la courbe monte.',
-  plot: {
-    xMin: 0, xMax: 160, yMin: 0, yMax: 1400, xStep: 20, yStep: 200,
-    curves: [{ color: 'blue', pieces: [{ expr: '300', from: 0, to: 120 }, { expr: '300+25(x-120)', from: 120, to: 160 }] }],
-    points: [
-      { x: 120, y: 300, label: '120 min', color: 'violet' },
-      { x: 153, y: 1125, label: '153 min : 1 125 F', color: 'orange' },
-    ],
   },
 };
 
@@ -134,21 +88,6 @@ const variationInverse: PointVisualSchema = {
   },
 };
 
-const comparaisonPuissances: PointVisualSchema = {
-  type: 'function_plot',
-  title: 'x², x et √x entre 0 et 1',
-  caption: 'Pour x = 0,25 : x² = 0,0625, puis x = 0,25, puis √x = 0,5. Entre 0 et 1, la racine est au-dessus, le carré en dessous.',
-  plot: {
-    xMin: 0, xMax: 0.6, yMin: 0, yMax: 0.8, xStep: 0.1, yStep: 0.2,
-    curves: [
-      { color: 'blue', label: 'x²', pieces: [{ expr: 'x^2', from: 0, to: 0.6 }] },
-      { color: 'green', label: 'x', pieces: [{ expr: 'x', from: 0, to: 0.6 }] },
-      { color: 'violet', label: '√x', pieces: [{ expr: 'sqrt(x)', from: 0, to: 0.6 }] },
-    ],
-    verticalLines: [{ x: 0.25, label: 'x = 0,25', color: 'orange' }],
-  },
-};
-
 const valeurAbsolue: PointVisualSchema = {
   type: 'function_plot',
   title: 'La fonction valeur absolue',
@@ -157,17 +96,6 @@ const valeurAbsolue: PointVisualSchema = {
     xMin: -4, xMax: 4, yMin: -1, yMax: 4,
     curves: [{ color: 'blue', label: 'y = |x|', pieces: [{ expr: 'abs(x)', from: -4, to: 4 }] }],
     points: [{ x: 0, y: 0, label: 'minimum 0', color: 'orange' }],
-  },
-};
-
-const variationCube: PointVisualSchema = {
-  type: 'variation_table',
-  title: 'Variations de la fonction cube',
-  caption: 'Une seule flèche qui monte : chaque nombre (même −27) est atteint une seule fois.',
-  variation: {
-    fLabel: 'x³',
-    xValues: ['−∞', '+∞'],
-    values: [{ level: 'bottom' }, { level: 'top' }],
   },
 };
 
@@ -185,20 +113,91 @@ const hyperbole: PointVisualSchema = {
   },
 };
 
+const parabole: PointVisualSchema = {
+  type: 'function_plot',
+  title: 'La fonction carré',
+  caption: 'Une parabole de sommet O : elle descend jusqu’à 0, puis remonte. Les points (−2 ; 4) et (2 ; 4) sont symétriques par rapport à l’axe des ordonnées.',
+  plot: {
+    xMin: -3, xMax: 3, yMin: -1, yMax: 9,
+    curves: [{ color: 'blue', label: 'y = x²', pieces: [{ expr: 'x^2', from: -3, to: 3 }] }],
+    points: [
+      { x: 0, y: 0, label: 'minimum 0', color: 'orange' },
+      { x: -2, y: 4, label: '(−2 ; 4)', color: 'violet' },
+      { x: 2, y: 4, label: '(2 ; 4)', color: 'violet' },
+    ],
+  },
+};
+
+const troisMorceaux: PointVisualSchema = {
+  type: 'function_plot',
+  title: 'Une fonction à trois morceaux',
+  caption: 'f(x) = −x − 5 sur ]−∞ ; 0], (3/2)x + 1 sur ]0 ; 2[, x − 5 sur [2 ; +∞[. La courbe coupe l’axe des abscisses en −5 et en 5 seulement.',
+  plot: {
+    xMin: -7, xMax: 7, yMin: -6, yMax: 5,
+    curves: [
+      { color: 'blue', pieces: [{ expr: '-x-5', from: -7, to: 0, includeTo: true }] },
+      { color: 'orange', pieces: [{ expr: '1,5x+1', from: 0, to: 2, includeFrom: false, includeTo: false }] },
+      { color: 'green', pieces: [{ expr: 'x-5', from: 2, to: 7, includeFrom: true }] },
+    ],
+    points: [
+      { x: -5, y: 0, label: 'x = −5', color: 'violet' },
+      { x: 5, y: 0, label: 'x = 5', color: 'violet' },
+    ],
+  },
+};
+
+const quatreMorceaux: PointVisualSchema = {
+  type: 'function_plot',
+  title: 'Une fonction à quatre morceaux',
+  caption: 'La droite y = −3 ne rencontre jamais la courbe : l’équation f(x) = −3 n’a pas de solution. Ronds vides : valeurs exclues (6 et −2 en x = −4, x = 3 et x = 4).',
+  plot: {
+    xMin: -7, xMax: 9, yMin: -11, yMax: 9, yStep: 2,
+    curves: [
+      { color: 'blue', pieces: [{ expr: '3x+8', from: -6, to: -4, includeFrom: true, includeTo: true }] },
+      { color: 'orange', pieces: [{ expr: '-8/7x+10/7', from: -4, to: 3, includeFrom: false, includeTo: false }] },
+      { color: 'green', pieces: [{ expr: '-1', from: 3, to: 4, includeFrom: true, includeTo: true }] },
+      { color: 'violet', pieces: [{ expr: '2,5x-12', from: 4, to: 8, includeFrom: false, includeTo: true }] },
+    ],
+    horizontalLines: [{ y: -3, label: 'y = −3', color: 'slate' }],
+  },
+};
+
+const deuxForfaits: PointVisualSchema = {
+  type: 'function_plot',
+  title: 'Comparer les deux forfaits',
+  caption: 'x = minutes de dépassement. Les deux droites se croisent en x = 3 : au-delà, le forfait 1 (bleu) est moins cher. Pour 33 min : 1 125 F contre 2 625 F.',
+  plot: {
+    xMin: 0, xMax: 40, yMin: 0, yMax: 3200, xStep: 5, yStep: 400,
+    curves: [
+      { color: 'blue', label: 'forfait 1', pieces: [{ expr: '300+25x', from: 0, to: 40 }] },
+      { color: 'orange', label: 'forfait 2', pieces: [{ expr: '150+75x', from: 0, to: 40 }] },
+    ],
+    points: [
+      { x: 33, y: 1125, label: '1 125 F', color: 'blue' },
+      { x: 33, y: 2625, label: '2 625 F', color: 'orange' },
+    ],
+  },
+};
+
+// Identifiants des exercices de la leçon 13 (v2) : <id du chapitre>_pNN_qK
+const L13 = 'seconde_c_maths_numerique_l13_fonctions_elementaires_';
+
 export const MATHS_2DE_C_NUMERIQUE_ILLUSTRATIONS: Record<string, ExerciseIllustration> = {
-  // Point 1 : fonctions affines par intervalles et partie entière
-  seconde_c_maths_numerique_ch5_p1_ex1: { course: partieEntiere },
-  seconde_c_maths_numerique_ch5_p1_ex3: { course: valeurAbsolueParMorceaux },
-  seconde_c_maths_numerique_ch5_p1_ex5: { course: lectureParMorceaux },
-  seconde_c_maths_numerique_ch5_p1_ex6: { course: partieDecimale },
-  seconde_c_maths_numerique_ch5_p1_ex8: { course: forfaitTelephone },
-  // Point 2 : fonctions de référence
-  seconde_c_maths_numerique_ch5_p2_ex1: { course: racineCarree },
-  seconde_c_maths_numerique_ch5_p2_ex2: { course: fonctionCube },
-  seconde_c_maths_numerique_ch5_p2_ex3: { course: variationCarre },
-  seconde_c_maths_numerique_ch5_p2_ex4: { course: variationInverse },
-  seconde_c_maths_numerique_ch5_p2_ex5: { course: comparaisonPuissances },
-  seconde_c_maths_numerique_ch5_p2_ex6: { course: valeurAbsolue },
-  seconde_c_maths_numerique_ch5_p2_ex7: { course: variationCube },
-  seconde_c_maths_numerique_ch5_p2_ex8: { course: hyperbole },
+  // Mini-leçons 1 et 2 : fonctions affines par intervalles
+  [`${L13}p01_q4`]: { course: valeurAbsolueParMorceaux },
+  [`${L13}p02_q7`]: { course: troisMorceaux },
+  // Mini-leçon 3 : partie entière
+  [`${L13}p03_q6`]: { course: partieEntiere },
+  // Mini-leçon 4 : carré et valeur absolue
+  [`${L13}p04_q2`]: { course: variationCarre },
+  [`${L13}p04_q4`]: { course: parabole },
+  [`${L13}p04_q6`]: { course: valeurAbsolue },
+  // Mini-leçon 5 : racine carrée, inverse, cube
+  [`${L13}p05_q1`]: { course: racineCarree },
+  [`${L13}p05_q4`]: { course: variationInverse },
+  [`${L13}p05_q6`]: { course: hyperbole },
+  [`${L13}p05_q7`]: { course: fonctionCube },
+  // Mini-leçon 6 : lecture graphique et forfaits
+  [`${L13}p06_q6`]: { course: quatreMorceaux },
+  [`${L13}p06_q7`]: { course: deuxForfaits },
 };
