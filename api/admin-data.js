@@ -3,8 +3,12 @@
  * Endpoint : /api/admin-data
  * 
  * RÈGLES DE SÉCURITÉ :
- * 1. Accès strictement protégé par mot de passe : variable secrète serveur ADMIN_PASSWORD,
- *    envoyée par le client dans l'en-tête « Authorization: Bearer … ». « ?verify=1 » vérifie seulement.
+ * 1. Accès par COMPTE ADMINISTRATEUR INDIVIDUEL : jeton d'identité Firebase (Authorization: Bearer <ID token>)
+ *    d'un compte connecté par Google, portant l'autorisation « admin » (custom claim posé par
+ *    scripts/set-admin-claim.mjs), connecté depuis moins de 12 h. La validation en deux étapes du compte
+ *    Google sert de double authentification.
+ *    Transition : tant que la variable ADMIN_PASSWORD existe, l'ancien mot de passe partagé reste accepté.
+ *    Supprimer ADMIN_PASSWORD de Vercel le désactive définitivement. « ?verify=1 » vérifie seulement.
  * 2. Invisible et inaccessible aux élèves.
  * 3. Lecture Firestore via Firebase Admin SDK pour agréger en direct les statistiques
  *    et la liste complète des utilisateurs (149+ comptes réels).
@@ -13,6 +17,7 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { loadLocalEnvIfPresent, secretsMatch, providedSecret } from './_env.js';
+import { verifyAdminIdToken } from './_firebaseToken.js';
 
 function getFirebaseAdmin() {
   loadLocalEnvIfPresent();
@@ -56,29 +61,27 @@ export default async function handler(req, res) {
     res.end(JSON.stringify(data));
   };
 
-  // 1. VÉRIFICATION DU MOT DE PASSE ADMINISTRATEUR
-  // Le mot de passe n'existe QUE côté serveur, dans la variable secrète ADMIN_PASSWORD (Vercel ou .env local).
-  // Jamais de VITE_/NEXT_PUBLIC_ (ces variables sont copiées dans le code public) ni de valeur écrite en dur.
+  // 1. IDENTIFICATION DE L'ADMINISTRATEUR (jamais via l'adresse, qui finit dans les journaux)
   loadLocalEnvIfPresent();
-  const expectedPassword = String(process.env.ADMIN_PASSWORD || '').trim();
-  if (!expectedPassword) {
-    return sendJson(503, {
-      success: false,
-      error: 'ADMIN_NOT_CONFIGURED',
-      message: "Console admin non configurée : définissez la variable secrète ADMIN_PASSWORD sur le serveur.",
-    });
-  }
-
-  // Mot de passe accepté uniquement dans l'en-tête Authorization (jamais dans l'adresse, qui finit dans les journaux),
-  // comparé à temps constant
-  const isValidAdminPassword = secretsMatch(providedSecret(req), expectedPassword);
-
-  if (!isValidAdminPassword) {
-    return sendJson(401, {
-      success: false,
-      error: 'UNAUTHORIZED',
-      message: 'Mot de passe administrateur incorrect ou manquant.',
-    });
+  const credential = providedSecret(req);
+  if (credential.split('.').length === 3) {
+    // a) Compte administrateur individuel : jeton d'identité Firebase (connexion Google + autorisation admin)
+    const check = await verifyAdminIdToken(credential);
+    if (!check.ok) {
+      return sendJson(check.status, { success: false, error: check.error, message: check.message });
+    }
+  } else {
+    // b) Transition : ancien mot de passe partagé, accepté SEULEMENT si ADMIN_PASSWORD est encore défini
+    const expectedPassword = String(process.env.ADMIN_PASSWORD || '').trim();
+    if (!expectedPassword || !secretsMatch(credential, expectedPassword)) {
+      return sendJson(401, {
+        success: false,
+        error: 'UNAUTHORIZED',
+        message: expectedPassword
+          ? 'Mot de passe administrateur incorrect ou manquant.'
+          : 'Connectez-vous avec votre compte Google administrateur.',
+      });
+    }
   }
 
   // « ?verify=1 » : simple vérification du mot de passe (écran de connexion), sans charger les données

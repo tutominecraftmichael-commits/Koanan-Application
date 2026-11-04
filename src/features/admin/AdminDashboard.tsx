@@ -14,6 +14,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
+import { getAdminAuthorizationHeader } from '../../lib/adminAuth';
 
 export interface AdminUserRecord {
   id: string;
@@ -85,8 +86,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [selectedPlanFilter, setSelectedPlanFilter] = useState<'all' | 'pro' | 'plus' | 'free' | 'push' | 'catchup'>('all');
   const [selectedUserDetail, setSelectedUserDetail] = useState<AdminUserRecord | null>(null);
 
-  const token = adminPassword || (typeof window !== 'undefined' ? sessionStorage.getItem('konan_admin_token') || '' : '');
-
   // Fonction de récupération des données temps réel
   const fetchAdminData = async (isManual = false) => {
     if (isManual) setIsLoading(true);
@@ -96,8 +95,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
+      // Jeton Google frais du compte administrateur (ou mot de passe de transition)
+      const authorization = adminPassword ? `Bearer ${adminPassword}` : await getAdminAuthorizationHeader();
+      if (authorization) {
+        headers['Authorization'] = authorization;
       }
 
       const url = isManual ? '/api/admin-data?force=true' : '/api/admin-data';
@@ -140,7 +141,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   // (Pas de boucle automatique de polling : rafraîchissement manuel via le bouton "Actualiser")
   useEffect(() => {
     fetchAdminData(true);
-  }, [token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adminPassword]);
 
   // Horloge relative de dernière synchronisation
   useEffect(() => {

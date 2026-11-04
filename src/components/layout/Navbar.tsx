@@ -27,6 +27,7 @@ import { useLanguage, t } from '../../lib/i18n';
 import { formatNotificationTime } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
+import { AdminGoogleLoginButton } from '../common/AdminGoogleLoginButton';
 import { 
   AnimatedDashboardIcon,
   AnimatedSubjectsIcon,
@@ -991,13 +992,22 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-400">
-              Entrez le mot de passe administrateur sécurisé pour accéder aux statistiques et à la gestion de KONAN.
+              Connectez-vous avec votre compte Google administrateur pour accéder aux statistiques et à la gestion de KONAN.
             </p>
             {adminError && (
               <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 text-xs font-semibold">
                 {adminError}
               </div>
             )}
+            <AdminGoogleLoginButton
+              onSuccess={() => {
+                setShowAdminModal(false);
+                setAdminPasswordInput('');
+                setAdminError(null);
+                onNavigate('admin');
+              }}
+              onError={setAdminError}
+            />
             <input
               type="password"
               value={adminPasswordInput}
@@ -1005,10 +1015,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleAdminSubmit();
               }}
-              placeholder="Mot de passe administrateur"
-              aria-label="Mot de passe administrateur"
+              placeholder="Mot de passe temporaire"
+              aria-label="Mot de passe administrateur temporaire"
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
-              autoFocus
             />
             <div className="flex items-center justify-end gap-2 pt-1">
               <button
