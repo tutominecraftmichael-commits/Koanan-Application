@@ -26,6 +26,157 @@ import type {
  * 3. COHÉRENCE TOTALE ENTRE LE COURS DU HAUT ET LE QCM DU BAS (Liaison 1-pour-1).
  */
 
+// ============================================================================
+// CARTES « ANCRÉES DANS LE COURS » (contenus v1)
+// Chaque carte reprend le passage du cours officiel (conceptExplanation) qui répond le mieux à SA
+// question, avec une formule seulement si elle s'y rapporte. Aucune phrase générique ; en calcul,
+// jamais la solution affichée avant que l'élève réponde (elle reste dans l'explication du QCM).
+// ============================================================================
+const GROUNDING_STOPWORDS = new Set(
+  ('les des une est que qui dans pour par sur avec son ses leur aux cette quel quelle quels quelles comment ' +
+    'pourquoi combien elle ils ont sont etre plus moins tres tout tous toute fait faut entre lors apres avant ' +
+    'parmi suivant suivante suivantes laquelle lequel lesquels calcule calculer donne exact exacte officiel ' +
+    'officielle forme valeur nombre dont mais ainsi alors donc sous chez celui celle ceux comme meme').split(' '),
+);
+
+function groundingTokens(text: string): string[] {
+  return (text || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .split(' ')
+    .filter((w) => w.length > 3 && !GROUNDING_STOPWORDS.has(w))
+    // Pluriel ramené au singulier : « quotients » rejoint « quotient »
+    .map((w) => (w.length > 4 && /[sx]$/.test(w) ? w.slice(0, -1) : w));
+}
+
+/**
+ * Passages candidats du cours : chaque section, et pour une section trop longue, des morceaux qui
+ * gardent l'intitulé de la section et ne coupent jamais une puce (« - » avec ses sous-puces « * »).
+ */
+function conceptExcerpts(concept: string): string[] {
+  const blocks = (concept || '').split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
+  const out: string[] = [];
+  for (const block of blocks) {
+    if (block.length <= 650) {
+      out.push(block);
+      continue;
+    }
+    const lines = block.split('\n');
+    const heading = /:\s*$/.test(lines[0]) || lines[0].length < 90 ? lines[0] : '';
+    // Regroupe chaque puce de premier niveau avec les lignes indentées qui la suivent
+    const items: string[] = [];
+    for (const line of heading ? lines.slice(1) : lines) {
+      const continuation = /^\s+\S/.test(line) && items.length > 0;
+      if (continuation) items[items.length - 1] += `\n${line}`;
+      else items.push(line);
+    }
+    let current = heading;
+    for (const item of items) {
+      if (current && current !== heading && (current + '\n' + item).length > 560) {
+        out.push(current);
+        current = heading ? `${heading}\n${item}` : item;
+      } else {
+        current = current ? `${current}\n${item}` : item;
+      }
+    }
+    if (current && current !== heading) out.push(current);
+  }
+  return out;
+}
+
+function normalizeForCompare(text: string): string {
+  return (text || '').toLowerCase().normalize('NFD').replace(/\p{M}/gu, '').replace(/\s+/g, '');
+}
+
+/**
+ * Question de calcul : la bonne réponse est un résultat chiffré que l'élève doit obtenir lui-même.
+ * En maths, toute réponse chiffrée compte comme un calcul ; ailleurs (SVT, HG…), un chiffre peut être
+ * une donnée du cours à retenir (97,5 % du territoire) : seul l'énoncé « calcule… » en fait un calcul.
+ */
+function isCalculationQuestion(exercise: InteractiveExercise, subjectId: string): boolean {
+  const correct = String(exercise.options?.[exercise.correctAnswerIndex ?? 0] ?? '');
+  if (!/\d/.test(correct)) return false;
+  if (subjectId === 'maths') return true;
+  return /calcul|combien|simplifi|[ée]cri[st]|valeur|quel(le)? (volume|masse|quantit|concentration|densit|vitesse|distance|intensit|prix|nombre)|arrondi|approximation|encadrement|pourcentage|imc|formule [ée]lectronique|structure [ée]lectronique|configuration [ée]lectronique/i.test(exercise.prompt || '');
+}
+
+function buildGroundedStep(
+  exercise: InteractiveExercise,
+  point: CurriculumPoint,
+  stepIdx: number,
+  formulas: PointFormula[],
+  subjectId: string,
+): { title: string; paragraphText: string; formula?: PointFormula; konanTip?: string } {
+  const correct = String(exercise.options?.[exercise.correctAnswerIndex ?? 0] ?? '');
+  const calc = isCalculationQuestion(exercise, subjectId);
+  const promptTokens = new Set(groundingTokens(exercise.prompt));
+  const answerTokens = new Set(groundingTokens(correct));
+  const score = (text: string) => {
+    const t = new Set(groundingTokens(text));
+    let s = 0;
+    for (const w of promptTokens) if (t.has(w)) s += 1;
+    for (const w of answerTokens) if (t.has(w)) s += 2;
+    return s;
+  };
+
+  // 1. Passage du cours le plus pertinent (en calcul : jamais un passage qui contient déjà la réponse)
+  const answerKey = normalizeForCompare(correct);
+  const titleTokens = new Set(groundingTokens(point.title));
+  let best = '';
+  let bestScore = 0;
+  let fallback = '';
+  let fallbackScore = -1;
+  for (const excerpt of conceptExcerpts(point.conceptExplanation || '')) {
+    // (une réponse d'un seul caractère, « 1 », ne se cherche pas : elle figure dans presque toute règle)
+    if (calc && answerKey.length > 1 && normalizeForCompare(excerpt).includes(answerKey)) continue;
+    const s = score(excerpt);
+    if (s > bestScore) {
+      best = excerpt;
+      bestScore = s;
+    }
+    // Repli : le passage le plus proche du titre de la mini-leçon (la règle qu'on applique)
+    // (à égalité, le passage le plus développé : une règle complète plutôt qu'une phrase d'introduction)
+    const ts = groundingTokens(excerpt).filter((w) => titleTokens.has(w)).length * 1000 + Math.min(excerpt.length, 600);
+    if (ts > fallbackScore) {
+      fallback = excerpt;
+      fallbackScore = ts;
+    }
+  }
+
+  // 2. Formule seulement si elle se rapporte vraiment à la question (au moins deux points communs)
+  let formula: PointFormula | undefined;
+  let formulaScore = 0;
+  for (const f of formulas) {
+    const s = score(`${f.name} ${f.formula} ${f.note || ''}`);
+    if (s > formulaScore) {
+      formula = f;
+      formulaScore = s;
+    }
+  }
+  if (formulaScore < 2) formula = undefined;
+  // En calcul, une formule qui contient déjà le résultat ne s'affiche pas
+  if (formula && calc && answerKey.length > 1 && normalizeForCompare(`${formula.formula} ${formula.note || ''}`).includes(answerKey)) {
+    formula = undefined;
+  }
+
+  // 3. Texte de la carte : passage du cours ; à défaut, l'explication (hors calcul) ; à défaut, le résumé
+  let paragraphText = best && bestScore >= 2 ? best : '';
+  if (!paragraphText) {
+    const explanation = (exercise.explanation || '').trim();
+    paragraphText = !calc && explanation ? explanation : best || fallback || point.summary || '';
+  }
+  if (paragraphText.length > 700) paragraphText = `${paragraphText.slice(0, 680).replace(/\s+\S*$/, '')}…`;
+
+  // Titre : intitulé de la section retenue s'il est court, sinon la formule, sinon le titre de la mini-leçon
+  const firstLine = paragraphText.split('\n')[0].trim();
+  const sectionTitle = /^\d+[.)]\s*(.{3,70}?)\s*:?\s*$/.exec(firstLine)?.[1];
+  const title = sectionTitle || formula?.name || (stepIdx === 0 ? point.title : `${point.title} (${stepIdx + 1})`);
+
+  return { title, paragraphText, formula };
+}
+
 /**
  * Détermine si un chapitre de Physique-Chimie relève de la CHIMIE.
  * 1. L'identifiant officiel fait foi (ex: seconde_c_chimie_ch1 / seconde_c_physique_ch8).
@@ -204,11 +355,10 @@ function buildStepPedagogy(
 ): {
   title: string;
   paragraphText: string;
-  formula: PointFormula;
+  formula?: PointFormula;
   konanTip?: string;
 } {
   const subject = chapter.subjectId;
-  const isChimie = isChimieChapter(chapter);
   const prompt = exercise.prompt || '';
   const explanation = (exercise.explanation || '').trim();
 
@@ -356,89 +506,20 @@ function buildStepPedagogy(
       };
     }
 
-    // Mathématiques par défaut : explication claire et complète de l'étape
-    const fallbackFormula = formulas[stepIdx % Math.max(1, formulas.length)] || {
-      name: "Propriété mathématique officielle",
-      formula: "f(x) = y",
-      note: "Règle du programme de mathématiques.",
-    };
-
-    return {
-      title: `Propriété & Méthode de calcul (Étape ${stepIdx + 1})`,
-      paragraphText: `Règle mathématique à appliquer pour cette étape :
-• Définition & Principe : ${explanation || point.summary}
-• Démarche de résolution : Poser rigoureusement l'expression mathématique, respecter les règles de priorité et justifier chaque étape.
-• Rigueur : Toujours vérifier que les valeurs trouvées respectent les contraintes de l'énoncé.`,
-      formula: fallbackFormula,
-      konanTip: "L'Astuce du Professeur Konan : Justifier chaque étape par la propriété du cours correspondante !",
-    };
+    // Mathématiques par défaut : passage du cours officiel qui répond à cette question
+    return buildGroundedStep(exercise, point, stepIdx, formulas, subject);
   }
 
   // =========================================================================
-  // 2. BRANCHE CHIMIE (100% PURE CHIMIE)
+  // 2. PHYSIQUE-CHIMIE ET FRANÇAIS : la carte reprend le passage du cours officiel qui répond
+  // à la question (plus de fiche générique « conversion mL / km/h » plaquée sur toutes les leçons).
   // =========================================================================
-  if (isChimie) {
-    const defaultChemFormula = formulas[stepIdx % Math.max(1, formulas.length)] || {
-      name: "Relation chimique officielle",
-      formula: "C = \\frac{n}{V} = \\frac{m}{M \\cdot V}",
-      note: "Avec C en mol/L, n en mol et V en litres (L).",
-    };
-
-    return {
-      title: `Notion & Loi Chimique (Étape ${stepIdx + 1})`,
-      paragraphText: `Principe chimique et grandeurs mesurables :
-• Règle fondamentale : ${explanation || point.summary}
-• Conservation de la matière : Dans toute réaction chimique, les atomes et les charges électriques se conservent rigoureusement.
-• Unités usuelles : Les volumes de solutions doivent obligatoirement être convertis en litres (1 mL = 10⁻³ L) pour calculer la concentration C = n / V en mol/L.`,
-      formula: defaultChemFormula,
-      konanTip: "L'Astuce du Professeur Konan : Penser à convertir les millilitres en litres (diviser par 1 000) avant de calculer C = n / V !",
-    };
+  if (subject === 'physique_chimie' || subject === 'francais') {
+    return buildGroundedStep(exercise, point, stepIdx, formulas, subject);
   }
 
   // =========================================================================
-  // 3. BRANCHE PHYSIQUE (100% PURE PHYSIQUE)
-  // =========================================================================
-  if (subject === 'physique_chimie') {
-    const defaultPhysFormula = formulas[stepIdx % Math.max(1, formulas.length)] || {
-      name: "Loi physique officielle",
-      formula: stepIdx % 2 === 0 ? "V_m = \\frac{d}{\\Delta t}" : "\\sum \\vec{F}_{\\text{ext}} = \\vec{0}",
-      note: "Grandeurs légales en unités du Système International (SI).",
-    };
-
-    return {
-      title: `Loi & Modélisation Physique (Étape ${stepIdx + 1})`,
-      paragraphText: `Loi physique et modélisation expérimentale :
-• Énoncé du principe : ${explanation || point.summary}
-• Grandeurs légales du Système International : Distance en mètres (m), durée en secondes (s), force en Newtons (N), énergie en Joules (J) et vitesse en m/s (1 m/s = 3,6 km/h).
-• Interprétation : Toujours vérifier que l'ordre de grandeur obtenu correspond au comportement réel du mobile.`,
-      formula: defaultPhysFormula,
-      konanTip: "L'Astuce du Professeur Konan : Convertir la vitesse en m/s (diviser km/h par 3,6) avant de poser un calcul cinématique !",
-    };
-  }
-
-  // =========================================================================
-  // 4. BRANCHE FRANÇAIS & LETTRES (100% PURE LITTÉRAIRE & MÉTHODOLOGIE CI)
-  // =========================================================================
-  if (subject === 'francais') {
-    const defaultFrenchFormula = formulas[stepIdx % Math.max(1, formulas.length)] || {
-      name: "Règle méthodologique officielle de français",
-      formula: "\\text{Idée directrice} + \\text{Citation entre guillemets} + \\text{Outil stylistique} + \\text{Interprétation (effet de sens)}",
-      note: "Démarche officielle d'expression écrite et de commentaire composé (MENA Côte d'Ivoire).",
-    };
-
-    return {
-      title: `Méthodologie & Analyse Littéraire (Étape ${stepIdx + 1})`,
-      paragraphText: `Règle de composition et d'analyse littéraire :
-• Principe fondamental : ${explanation || point.summary}
-• Démarche d'analyse : S'appuyer sur le texte d'auteur, repérer les indices stylistiques et grammaticaux et en dégager les effets de sens sans paraphraser.
-• Rigueur formelle : Soigner l'expression écrite, respecter la structure des paragraphes et la progression des centres d'intérêt.`,
-      formula: defaultFrenchFormula,
-      konanTip: "L'Astuce du Professeur Konan : Toujours associer la citation à un procédé littéraire précis et expliquer l'effet produit !",
-    };
-  }
-
-  // =========================================================================
-  // 5. BRANCHE SVT (100% PURE BIOLOGIE & GÉOLOGIE — ADAPTATION STRICTE AU PROGRAMME)
+  // 3. BRANCHE SVT (100% PURE BIOLOGIE & GÉOLOGIE — ADAPTATION STRICTE AU PROGRAMME)
   // Mots entiers uniquement : « man » ne doit plus attraper « humaine », ni « pli » « multiplication ».
   const isGeologie = /\b(g[ée]ologi\w*|roche\w*|socles?|bassins?|faille\w*|plis?|pliss\w*|m[ée]tamorphi\w*|s[ée]dimentaires?|arch[ée]en(ne)?s?|birrimien(ne)?s?|prot[ée]rozo[iï]que|cratons?|man|sassandra)\b/i.test(chapter.title) || /\b(g[ée]ologi\w*|roche\w*|socles?|faille\w*|plis?|pliss\w*|arch[ée]en(ne)?s?|bassins?)\b/i.test(point.title);
 
@@ -571,39 +652,11 @@ function buildStepPedagogy(
       };
     }
 
-    const defaultGeoFormula = formulas[stepIdx % Math.max(1, formulas.length)] || {
-      name: "Propriété géologique officielle",
-      formula: "\\text{Socle cristallin (97,5 \\%)} + \\text{Bassin sédimentaire (2,5 \\%)} = 100\\,\\%",
-      note: "Programme officiel de SVT 2de C (MENA Côte d'Ivoire).",
-    };
-
-    return {
-      title: `Notion & Observation Géologique (Étape ${stepIdx + 1})`,
-      paragraphText: `Principe géologique fondamental :
-• Règle officielle : ${explanation || point.summary}
-• Démarche d'analyse : S'appuyer sur la carte géologique, identifier les contacts tectoniques et la nature des roches.
-• Rigueur : Utiliser le vocabulaire exact du programme MENA pour justifier l'observation.`,
-      formula: defaultGeoFormula,
-      konanTip: "L'Astuce du Professeur Konan : Toujours associer le type de roche à son domaine géologique !",
-    };
+    return buildGroundedStep(exercise, point, stepIdx, formulas, subject);
   }
 
-  // Branche SVT Biologie (Cellule, Mitose, Écologie, Nutrition)
-  const defaultSvtFormula = formulas[stepIdx % Math.max(1, formulas.length)] || {
-    name: "Propriété biologique officielle",
-    formula: "\\text{Cellule mère } (2n) \\xrightarrow{\\text{Mitose}} 2 \\text{ Cellules filles génétiquement identiques } (2n)",
-    note: "Conservation intégrale du programme génétique et du nombre de chromosomes.",
-  };
-
-  return {
-    title: `Connaissance Biologique Fondamentale (Étape ${stepIdx + 1})`,
-    paragraphText: `Principe du vivant et du fonctionnement cellulaire :
-• Définition & Observation : ${explanation || point.summary}
-• Mécanisme biologique : Analyser les données expérimentales ou microscopiques pour expliquer le phénomène.
-• Rigueur : Employer les termes précis et normalisés de la biologie moderne.`,
-    formula: defaultSvtFormula,
-    konanTip: "L'Astuce du Professeur Konan : Retiens que la mitose conserve le caryotype à 2n chromosomes !",
-  };
+  // Biologie (cellule, nutrition, écologie…) : passage du cours officiel qui répond à cette question
+  return buildGroundedStep(exercise, point, stepIdx, formulas, subject);
 }
 
 /**

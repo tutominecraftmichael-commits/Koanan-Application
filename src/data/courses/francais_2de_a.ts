@@ -13,6 +13,7 @@ export const francais2deAExpressionEcriteAnalyseSujetChapter: CurriculumChapter 
   id: 'seconde_a_francais_ch1_production_ecrite_analyse_sujet',
   subjectId: 'francais',
   gradeLevel: 'seconde_a',
+  alsoForGrades: ['seconde_c'],
   order: 1,
   officialVolumeHours: 12,
   title: 'Expression Écrite : Analyser le sujet et rechercher les idées',
@@ -93,9 +94,9 @@ Ne jamais confondre ces deux verbes ! Se tromper d'orientation (réfuter au lieu
           prompt: 'Que devez-vous faire si la consigne vous ordonne : « Réfutez cette affirmation de l\'auteur » ?',
           options: [
             'Démontrer que la thèse est inexacte, contestable ou insuffisante en développant des contre-arguments',
-            'Être pleinement d\'accord avec l\'auteur et abonder dans son sens',
-            'Copier intégralement le paragraphe d\'où est tirée la citation',
-            'Écrire un poème en alexandrins avec des rimes croisées'
+            'Démontrer que la thèse est juste en développant des arguments qui la confirment',
+            'Montrer d\'abord que la thèse est juste, puis qu\'elle est fausse, sans prendre position',
+            'Résumer la thèse de l\'auteur et la reformuler avec ses propres mots'
           ],
           correctAnswerIndex: 0,
           explanation: '« Réfuter » consiste à contredire la thèse, à en démontrer les limites ou la fausseté à l\'aide d\'une argumentation opposée.'
@@ -119,9 +120,9 @@ Ne jamais confondre ces deux verbes ! Se tromper d'orientation (réfuter au lieu
           prompt: 'Quel risque majeur encourt un élève qui développe des contre-arguments alors que la consigne demandait d\'« étayer » la pensée de l\'auteur ?',
           options: [
             'Le hors-sujet ou contresens méthodologique majeur sur la consigne',
-            'Une simple faute de ponctuation sans impact sur la note',
-            'Une pénalité de temps de 5 minutes par le surveillant',
-            'L\'obligation de recommencer l\'épreuve de SVT'
+            'Une simple maladresse d\'expression, sans conséquence sur la note',
+            'Une introduction jugée trop courte par le correcteur',
+            'Un manque d\'exemples, mais l\'argumentation reste valable'
           ],
           correctAnswerIndex: 0,
           explanation: 'Adopter la position inverse de celle exigée par le verbe directeur (réfuter au lieu d\'étayer) est sanctionné comme un contresens sur la consigne.'
@@ -217,9 +218,9 @@ Dans le sujet « La tradition orale n'est pas un frein à l'éclosion d'une soci
           prompt: 'Dans la citation de Stella et Joël de Rosnay, à quoi renvoie métaphoriquement l\'expression « le terrain » ?',
           options: [
             'À notre corps, notre organisme et notre état de santé général',
-            'À une parcelle agricole cultivable en zone rurale',
-            'À un terrain de football homologué par la FIFA',
-            'Aux limites géographiques des frontières d\'un État'
+            'À notre cadre de vie, c\'est-à-dire notre quartier et notre maison',
+            'À notre environnement naturel, c\'est-à-dire les sols et les forêts',
+            'À notre entourage familial et à nos relations sociales'
           ],
           correctAnswerIndex: 0,
           explanation: 'En médecine et en biologie, « préparer le terrain » désigne métaphoriquement le corps humain et son immunité face aux agents pathogènes.'
@@ -243,9 +244,9 @@ Dans le sujet « La tradition orale n'est pas un frein à l'éclosion d'une soci
           prompt: 'Que signifie l\'expression « mourir prématurément » dans l\'analyse d\'un sujet de production écrite ?',
           options: [
             'Perdre la vie de façon précoce ou hâtive, avant le terme naturel de l\'espérance de vie',
-            'Décéder après avoir dépassé l\'âge de 100 ans',
-            'S\'endormir profondément après une journée de labeur',
-            'Être guéri miraculeusement d\'une pathologie chronique'
+            'Mourir de vieillesse, au terme naturel de l\'espérance de vie',
+            'Mourir brutalement d\'un accident, quel que soit son âge',
+            'Être gravement malade sans forcément perdre la vie'
           ],
           correctAnswerIndex: 0,
           explanation: '« Prématurément » signifie avant l\'heure normale, c\'est-à-dire une mort précoce et prématurée.'
@@ -380,9 +381,9 @@ Une idée générale sans exemple concret ne convainc pas le correcteur. Chaque 
           prompt: 'Pour étayer l\'affirmation de Joël et Stella de Rosnay sur la responsabilité humaine dans les maladies, quel exemple concret relève du domaine alimentaire ?',
           options: [
             'La consommation excessive d\'aliments trop gras, trop salés, trop sucrés et de cubes d\'assaisonnement chimiques',
-            'Le non-respect des feux tricolores par les automobilistes',
-            'La lecture prolongée de romans littéraires en plein air',
-            'La pratique quotidienne de la course à pied'
+            'La sédentarité due au temps passé devant les écrans et au manque d\'activité physique',
+            'La pollution de l\'air des villes par les fumées des véhicules et des usines',
+            'L\'automédication avec des médicaments achetés dans la rue sans ordonnance'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'alimentation industrielle excessive en sel, sucre, graisses et additifs chimiques est une cause directe de maladies chroniques (hypertension, diabète).'
@@ -393,9 +394,9 @@ Une idée générale sans exemple concret ne convainc pas le correcteur. Chaque 
           prompt: 'Pour réfuter l\'affirmation de Francis Bebey (montrer les limites de la tradition orale), quel argument historique pertinent peut-on avancer ?',
           options: [
             'La mémoire humaine ne pouvant tout archiver fidèlement, les faits historiques oraux finissent par s\'altérer et tomber dans la légende',
-            'La tradition orale permet d\'imprimer des millions de livres en quelques secondes',
-            'Les griots possédaient des enregistreurs numériques au Moyen Âge',
-            'La parole orale est plus durable et inaltérable que la gravure sur pierre'
+            'La tradition orale permet de conserver l\'histoire d\'un peuple sans aucune perte de détail',
+            'Les griots transmettent fidèlement la mémoire collective d\'une génération à l\'autre',
+            'La parole des anciens est plus vivante et plus chaleureuse que les livres d\'histoire'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'absence d\'écrits favorise l\'oubli ou la déformation légendaire des événements historiques réels au fil des générations.'
@@ -406,9 +407,9 @@ Une idée générale sans exemple concret ne convainc pas le correcteur. Chaque 
           prompt: 'Sur le plan environnemental, quel exemple illustre le fait que l\'homme « prépare le terrain aux maladies » ?',
           options: [
             'L\'utilisation abusive de pesticides et d\'engrais chimiques qui polluent les nappes phréatiques et les aliments',
-            'La plantation d\'arbres fruitiers dans une cour d\'école',
-            'L\'installation de panneaux solaires non polluants',
-            'Le tri sélectif régulier des déchets ménagers biodégradables'
+            'La consommation excessive d\'aliments trop gras, trop salés et trop sucrés',
+            'La sédentarité et l\'abandon de toute activité physique régulière',
+            'La consommation d\'alcool et de tabac dès l\'adolescence'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'épandage massif de produits chimiques agricoles pollue la chaîne alimentaire et l\'eau, provoquant intoxications et cancers.'
@@ -419,9 +420,9 @@ Une idée générale sans exemple concret ne convainc pas le correcteur. Chaque 
           prompt: 'Pourquoi est-il fortement recommandé de varier les domaines d\'investigation (social, sanitaire, environnemental, civique) ?',
           options: [
             'Pour enrichir l\'argumentation, éviter la répétition monotone et montrer une vaste culture générale',
-            'Pour remplir la feuille plus vite en écrivant de gros caractères',
-            'Pour tromper le correcteur sur le véritable sujet',
-            'Pour pouvoir citer des équations de physique au milieu du devoir'
+            'Pour pouvoir développer un seul argument très long dans chaque partie du devoir',
+            'Pour éviter d\'avoir à donner des exemples précis et vérifiables',
+            'Pour répéter la même idée sous plusieurs formes et convaincre le correcteur'
           ],
           correctAnswerIndex: 0,
           explanation: 'Varier les domaines confère de la richesse, de la hauteur de vue et du dynamisme au devoir argumentatif.'
@@ -432,9 +433,9 @@ Une idée générale sans exemple concret ne convainc pas le correcteur. Chaque 
           prompt: 'Sur le plan juridique et social, quelle faiblesse de la tradition orale peut-on citer en exemple ?',
           options: [
             'Les accords verbaux de gré à gré non formalisés par écrit sont vulnérables à la mauvaise foi et sources de conflits fonciers',
-            'Les contrats signés chez le notaire sont toujours déchirés par le vent',
-            'La tradition orale garantit la sécurité absolue de tous les biens immobiliers',
-            'Il n\'y a jamais eu de conflit de succession dans les sociétés traditionnelles'
+            'Les accords verbaux sont plus sûrs que les écrits, car ils reposent sur l\'honneur des témoins',
+            'La tradition orale empêche tout conflit foncier grâce à l\'autorité des chefs coutumiers',
+            'Les contrats écrits sont inutiles dans les villages, où chacun connaît les limites des terres'
           ],
           correctAnswerIndex: 0,
           explanation: 'En l\'absence de trace écrite juridique, les promesses orales peuvent être reniées, engendrant d\'interminables litiges fonciers et financiers.'
@@ -445,9 +446,9 @@ Une idée générale sans exemple concret ne convainc pas le correcteur. Chaque 
           prompt: 'Comment formule-t-on efficacement la « question directrice » au brouillon pour lancer la recherche d\'idées ?',
           options: [
             'En transformant l\'opinion de l\'auteur et la consigne en une question ouverte « Comment ? » ou « En quoi ? »',
-            'En demandant l\'heure exacte au surveillant de la salle',
-            'En recopiant le titre de l\'œuvre cinq fois consécutives',
-            'En cherchant la date de naissance de l\'imprimeur du texte'
+            'En recopiant mot pour mot l\'opinion de l\'auteur entre guillemets au brouillon',
+            'En résumant le sujet en une phrase affirmative qui donne déjà la conclusion',
+            'En posant une question fermée à laquelle on répond simplement par « oui » ou « non »'
           ],
           correctAnswerIndex: 0,
           explanation: 'La question directrice (« En quoi l\'homme est-il responsable... ? ») canalise la réflexion et génère naturellement une suite d\'arguments pertinents.'
@@ -458,9 +459,9 @@ Une idée générale sans exemple concret ne convainc pas le correcteur. Chaque 
           prompt: 'Quelle est la différence fondamentale entre un « argument » et un « exemple » dans une production écrite ?',
           options: [
             'L\'argument énonce l\'idée abstraite et générale ; l\'exemple fournit le fait concret, précis et vérifiable qui illustre l\'argument',
-            'L\'argument est toujours faux alors que l\'exemple est toujours vrai',
-            'L\'argument s\'écrit en chiffres romains et l\'exemple en lettres grecques',
-            'Il n\'y a aucune différence, ce sont deux synonymes parfaits'
+            'L\'argument est un fait concret et vérifiable ; l\'exemple est l\'idée générale qu\'il démontre',
+            'L\'argument reprend la thèse de l\'auteur ; l\'exemple est une citation tirée du texte étudié',
+            'L\'argument s\'emploie pour réfuter et l\'exemple pour étayer ; ils ne vont jamais ensemble'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'argument est la justification rationnelle de la thèse ; l\'exemple est l\'ancrage concret dans le réel (fait d\'actualité, expérience vécue, référence culturelle).'
@@ -474,6 +475,7 @@ export const francais2deACommentaireComposeAnalyseLibelleChapter: CurriculumChap
   id: 'seconde_a_francais_ch2_commentaire_compose_analyse_libelle',
   subjectId: 'francais',
   gradeLevel: 'seconde_a',
+  alsoForGrades: ['seconde_c'],
   order: 2,
   officialVolumeHours: 14,
   title: 'Le Commentaire Composé : Libellé & Construction du Sens',
@@ -590,9 +592,9 @@ C'est PARCE QU'IL éprouve une amertume insupportable face à la méchanceté hu
           prompt: 'Dans le poème de Victor Hugo, que signifie l\'expression latine du titre « Veni, vidi, vixi » ?',
           options: [
             '« Je suis venu, j\'ai vu, j\'ai vécu » (détournant la formule victorieuse de César « vici » en un constat d\'achèvement douloureux « vixi »)',
-            '« Je viens, je vois, je vaincrai » (formule militaire romaine)',
-            '« Bienvenue dans ma maison de campagne »',
-            '« Le temps s\'enfuit sans retour »'
+            '« Je suis venu, j\'ai vu, j\'ai vaincu » (reprise fidèle de la formule victorieuse de César)',
+            '« Je viendrai, je verrai, je vivrai » (promesse d\'un avenir heureux)',
+            '« Viens, vois et vis » (invitation à profiter pleinement de la vie)'
           ],
           correctAnswerIndex: 0,
           explanation: 'Hugo remplace le fameux « vici » (j\'ai vaincu) de Jules César par « vixi » (j\'ai vécu) pour signifier que son existence terrestre est désormais achevée.'
@@ -629,9 +631,9 @@ C'est PARCE QU'IL éprouve une amertume insupportable face à la méchanceté hu
           prompt: 'Comment formule-t-on l\'« Idée générale » d\'un texte à commenter ?',
           options: [
             'En résumant en une phrase synthétique le thème central, la tonalité et le message ou l\'émotion majeure véhiculée par l\'auteur',
-            'En recopiant le premier vers du texte sans guillemets',
-            'En énumérant la liste de toutes les rimes féminines',
-            'En indiquant le nombre total de mots du texte'
+            'En recopiant le libellé du sujet et en y ajoutant le nom de l\'auteur et le titre',
+            'En racontant le texte vers après vers, dans l\'ordre, sans en dégager le sens',
+            'En donnant son avis personnel sur le texte et en disant s\'il nous a plu'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'idée générale condense en une phrase percutante la teneur globale du texte, sa tonalité et la visée de l\'auteur.'
@@ -697,9 +699,9 @@ Pour chaque centre d'intérêt, le candidat dresse au brouillon un tableau d'ana
           prompt: 'Quelles sont les trois colonnes obligatoires de la grille préparatoire d\'analyse du commentaire composé ?',
           options: [
             'Indices textuels, Outils d\'analyse (procédés stylistiques/grammaticaux) et Interprétations (effets de sens)',
-            'Titre du chapitre, Résumé du texte et Date de naissance de l\'auteur',
-            'Calculs numériques, Grandeurs physiques et Unités légales',
-            'Questions de cours, Réponses d\'élèves et Note sur 20'
+            'Indices textuels, Résumé de chaque strophe et Avis personnel de l\'élève',
+            'Citations, Biographie de l\'auteur et Contexte historique de l\'œuvre',
+            'Procédés stylistiques, Mots difficiles du texte et Leur définition au dictionnaire'
           ],
           correctAnswerIndex: 0,
           explanation: 'La démarche officielle repose sur le triptyque : Indices textuels -> Outils d\'analyse -> Interprétations.'
@@ -710,9 +712,9 @@ Pour chaque centre d'intérêt, le candidat dresse au brouillon un tableau d'ana
           prompt: 'Dans « Veni, vidi, vixi », quel procédé stylistique est utilisé dans l\'expression « bagne terrestre où ne s\'ouvre aucune aile » ?',
           options: [
             'Une métaphore filée carcérale associée à une négation totale marquant l\'enfermement et l\'absence de liberté',
-            'Une litote exprimant une joie de vivre éclatante',
-            'Un euphémisme atténuant un succès sportif',
-            'Une anaphore sur la lettre Z'
+            'Une comparaison qui rapproche la vie du poète d\'un voyage joyeux et plein de liberté',
+            'Une hyperbole qui exagère la beauté du monde terrestre aux yeux du poète',
+            'Une personnification de la terre qui accueille le poète avec bienveillance'
           ],
           correctAnswerIndex: 0,
           explanation: 'Le « bagne terrestre » est une métaphore de la Terre vue comme une prison, et « aucune aile » symbolise l\'impossibilité de s\'évader vers le ciel.'
@@ -723,9 +725,9 @@ Pour chaque centre d'intérêt, le candidat dresse au brouillon un tableau d'ana
           prompt: 'Dans « Veni, vidi, vixi », que traduit grammaticalement la répétition des verbes au passé composé (« j\'ai fait », « j\'ai servi », « j\'ai vu », « j\'ai porté ») ?',
           options: [
             'L\'aspect accompli des actions, signifiant que le poète dresse le bilan d\'une existence achevée et qu\'il est au bout de sa route',
-            'Une action future incertaine qui aura lieu l\'année prochaine',
-            'Une habitude banale sans aucune importance pour le narrateur',
-            'Un ordre militaire donné à des soldats en marche'
+            'L\'aspect inaccompli des actions, montrant que le poète n\'a pas encore achevé son œuvre',
+            'Une valeur de vérité générale, exprimant des actions que tout homme accomplit',
+            'Une valeur d\'habitude, décrivant les gestes que le poète répète chaque jour'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'aspect accompli du passé composé souligne la fin définitive du cycle : tout ce que le poète avait à accomplir est fait, sa vie est révolue.'
@@ -736,9 +738,9 @@ Pour chaque centre d'intérêt, le candidat dresse au brouillon un tableau d'ana
           prompt: 'Dans « Veni, vidi, vixi », quelle figure de style oppose « servi, veillé » à « riait de ma peine, objet de haine » ?',
           options: [
             'Une antithèse (opposition de termes contraires mettant en relief l\'ingratitude des hommes face au dévouement du poète)',
-            'Une allitération en voyelles ouvertes',
-            'Une antiphrase ironique',
-            'Une métonymie spatiale'
+            'Un oxymore (alliance de deux mots contraires dans une même expression)',
+            'Une gradation (succession de termes d\'intensité croissante)',
+            'Un parallélisme (reprise d\'une même construction de phrase)'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'antithèse souligne le contraste douloureux entre la générosité bienveillante du poète et la cruelle malveillance qu\'il a reçue en retour.'
@@ -762,9 +764,9 @@ Pour chaque centre d'intérêt, le candidat dresse au brouillon un tableau d'ana
           prompt: 'Dans l\'expression de Victor Hugo « en ma sombre paresse », quel procédé poétique associe deux mots de sens apparemment contradictoires ?',
           options: [
             'Un oxymore (alliance frappante de mots traduisant une apathie douloureuse et résignée)',
-            'Un pléonasme inutile',
-            'Une hyperbole mathématique',
-            'Une assonance en consonne liquide'
+            'Une antithèse (opposition de deux idées dans deux phrases distinctes)',
+            'Une métaphore (comparaison sans outil entre deux réalités)',
+            'Un euphémisme (atténuation d\'une réalité trop dure)'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'oxymore « sombre paresse » unit la noirceur morale au découragement apathique d\'un homme qui a renoncé à lutter.'
@@ -775,9 +777,9 @@ Pour chaque centre d'intérêt, le candidat dresse au brouillon un tableau d'ana
           prompt: 'Dans « Femme noire » de Senghor, que produit la répétition initiale du vers « Femme nue, femme noire » ?',
           options: [
             'Une anaphore et une apostrophe lyrique célébrant la beauté, la pureté et la dignité sacrée de la femme africaine',
-            'Une erreur de typographie commise par l\'éditeur',
-            'Un dialogue théâtral comique entre deux personnages',
-            'Une question rhétorique sans réponse'
+            'Une gradation descendante qui affaiblit peu à peu l\'image de la femme',
+            'Une antithèse qui oppose la nudité de la femme à sa couleur de peau',
+            'Une comparaison qui rapproche la femme noire d\'un paysage africain'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'anaphore solennelle scande le poème comme une incantation et rend un hommage vibrant à l\'essence de la féminité noire.'
@@ -804,6 +806,7 @@ export const francais2deACommentaireComposePlanDetailleChapter: CurriculumChapte
   id: 'seconde_a_francais_ch3_commentaire_compose_organisation_plan',
   subjectId: 'francais',
   gradeLevel: 'seconde_a',
+  alsoForGrades: ['seconde_c'],
   order: 3,
   officialVolumeHours: 14,
   title: 'Le Commentaire Composé : Organisation des Idées & Plan Détaillé',
@@ -884,9 +887,9 @@ Pour le Centre d'intérêt 1 : « L'amertume du poète » :
           prompt: 'Dans l\'organisation du commentaire de « Femme noire », comment s\'articulent logiquement les deux sous-centres du portrait de la femme ?',
           options: [
             'Sous-centre 1 : Le portrait physique plastique et sensuel ; Sous-centre 2 : Le portrait moral maternel et protecteur',
-            'Sous-centre 1 : La description d\'un animal de la savane ; Sous-centre 2 : Un exposé de géographie physique',
-            'Sous-centre 1 : Les critiques contre l\'Europe ; Sous-centre 2 : Les danses rituelles',
-            'Sous-centre 1 : L\'âge de la femme ; Sous-centre 2 : Sa profession'
+            'Sous-centre 1 : Le portrait moral maternel et protecteur ; Sous-centre 2 : Le portrait physique plastique et sensuel',
+            'Sous-centre 1 : La critique de la colonisation ; Sous-centre 2 : L\'éloge de la civilisation européenne',
+            'Sous-centre 1 : La tristesse du poète en exil ; Sous-centre 2 : Son désir de retour au pays natal'
           ],
           correctAnswerIndex: 0,
           explanation: 'Le poète dépeint d\'abord la splendeur physique et sculpturale de la femme noire, avant de révéler son aura spirituelle et maternelle protectrice.'
@@ -910,9 +913,9 @@ Pour le Centre d'intérêt 1 : « L'amertume du poète » :
           prompt: 'Que doit contenir chaque sous-centre d\'intérêt dans le plan détaillé préparé au brouillon ?',
           options: [
             'Une idée directrice claire, les citations d\'appui entre guillemets, le procédé d\'analyse et l\'interprétation de sens',
-            'Uniquement une citation sans aucun commentaire',
-            'La note que l\'élève espère obtenir à la fin du trimestre',
-            'Un dessin schématique représentant le poète'
+            'Uniquement les citations du texte, l\'analyse étant réservée à la rédaction finale',
+            'Le résumé de la partie du texte concernée, sans citation ni procédé',
+            'Une idée directrice et l\'avis personnel de l\'élève sur le poème'
           ],
           correctAnswerIndex: 0,
           explanation: 'Le plan détaillé fixe l\'ossature complète : idée + citations textuelles + outils d\'analyse stylistique + interprétation littéraire.'
@@ -949,9 +952,9 @@ Pour le Centre d'intérêt 1 : « L'amertume du poète » :
           prompt: 'Quelle est la fonction d\'une phrase de transition entre deux centres d\'intérêt dans le plan détaillé ?',
           options: [
             'Faire un bilan synthétique de la première partie et annoncer l\'axe d\'analyse de la seconde partie',
-            'Annoncer que l\'heure de la récréation approche',
-            'Raconter une anecdote personnelle vécue par l\'élève',
-            'Demander au professeur de corriger avec indulgence'
+            'Résumer le texte étudié avant de commencer la seconde partie',
+            'Répéter mot pour mot l\'annonce du plan faite dans l\'introduction',
+            'Donner la conclusion générale du devoir avant la deuxième partie'
           ],
           correctAnswerIndex: 0,
           explanation: 'La transition assure la fluidité du devoir en résumant ce qui vient d\'être démontré et en ouvrant logiquement sur le centre d\'intérêt suivant.'
@@ -965,6 +968,7 @@ export const francais2deACommentaireComposeRedactionCIChapter: CurriculumChapter
   id: 'seconde_a_francais_ch4_commentaire_compose_redaction_centre_interet',
   subjectId: 'francais',
   gradeLevel: 'seconde_a',
+  alsoForGrades: ['seconde_c'],
   order: 4,
   officialVolumeHours: 14,
   title: 'Le Commentaire Composé : Rédaction d\'un Centre d\'Intérêt',
@@ -1063,9 +1067,9 @@ Pour éviter la paraphrase et fluidifier l'analyse, employer des formules dynami
           prompt: 'Dans l\'exemple rédigé sur « Le dormeur du Val », quelle figure syntaxique est analysée dans « C\'est un trou de verdure » ; « c\'est un petit val qui mousse de rayons » ?',
           options: [
             'L\'emploi de présentatifs mettant vigoureusement en relief le décor naturel',
-            'Une interrogation indirecte totale',
-            'Une proposition subordonnée concessive',
-            'Une interjection d\'effroi'
+            'Une anaphore qui exprime l\'angoisse croissante du poète',
+            'Une phrase exclamative qui traduit l\'effroi devant la mort',
+            'Une interrogation rhétorique qui interpelle directement le lecteur'
           ],
           correctAnswerIndex: 0,
           explanation: 'Le présentatif « c\'est » permet de poser le décor sous les yeux du lecteur comme un tableau vivant qui s\'offre immédiatement au regard.'
@@ -1089,9 +1093,9 @@ Pour éviter la paraphrase et fluidifier l'analyse, employer des formules dynami
           prompt: 'Dans « Le dormeur du Val », quels types de notations sensorielles l\'analyse relève-t-elle pour montrer que la nature met les sens en éveil ?',
           options: [
             'Des notations tactiles (« frais cresson »), visuelles (« lit vert », « lumière ») et olfactives (« parfums »)',
-            'Uniquement des sensations gustatives de plats cuisinés',
-            'Des données thermiques mesurées en degrés Celsius',
-            'Des bruits d\'avions et de sirènes militaires'
+            'Des notations uniquement auditives (« chante », « bruit ») qui évoquent le silence du val',
+            'Des notations uniquement visuelles qui décrivent les couleurs du paysage',
+            'Des notations gustatives et auditives qui annoncent la mort du soldat'
           ],
           correctAnswerIndex: 0,
           explanation: 'Rimbaud convoque tous les sens (le toucher du cresson, la vue de la lumière verte, l\'odorat des parfums) pour peindre une nature enchanteresse.'
@@ -1102,9 +1106,9 @@ Pour éviter la paraphrase et fluidifier l'analyse, employer des formules dynami
           prompt: 'Comment doit être insérée une citation du texte dans le paragraphe rédigé ?',
           options: [
             'Entre guillemets français (« ... ») et insérée grammaticalement dans la phrase de l\'élève',
-            'Soulignée en rouge avec un point d\'interrogation au-dessus',
-            'Écrite verticalement dans la marge de gauche',
-            'Séparée par une ligne blanche de pointillés'
+            'Entre parenthèses et placée à la fin du paragraphe, sans lien avec la phrase',
+            'Sans guillemets, reformulée librement avec les mots de l\'élève',
+            'Entre guillemets, mais isolée seule sur une ligne avant l\'analyse'
           ],
           correctAnswerIndex: 0,
           explanation: 'Les citations doivent être rigoureusement entourées de guillemets et s\'intégrer harmonieusement dans la syntaxe de la phrase rédigée.'
@@ -1115,9 +1119,9 @@ Pour éviter la paraphrase et fluidifier l'analyse, employer des formules dynami
           prompt: 'Que doit comporter la fin de la première grande partie pour assurer la cohérence avec la deuxième grande partie ?',
           options: [
             'Une phrase de transition faisant le bilan du premier centre d\'intérêt et annonçant le second',
-            'La formule « À suivre au prochain numéro »',
-            'La signature manuscrite du candidat',
-            'Une page entièrement blanche'
+            'Un résumé complet du texte étudié, repris depuis le premier vers',
+            'La conclusion générale du devoir, avec l\'avis personnel de l\'élève',
+            'Une nouvelle citation du texte, sans analyse, pour clore la partie'
           ],
           correctAnswerIndex: 0,
           explanation: 'La phrase de transition conclut le premier axe d\'étude et introduit avec élégance le second centre d\'intérêt.'
@@ -1131,6 +1135,7 @@ export const francais2deACommentaireComposeRedactionIntroChapter: CurriculumChap
   id: 'seconde_a_francais_ch5_commentaire_compose_redaction_introduction',
   subjectId: 'francais',
   gradeLevel: 'seconde_a',
+  alsoForGrades: ['seconde_c'],
   order: 5,
   officialVolumeHours: 12,
   title: 'Le Commentaire Composé : Rédaction de l\'Introduction',
@@ -1205,9 +1210,9 @@ export const francais2deACommentaireComposeRedactionIntroChapter: CurriculumChap
           prompt: 'Dans quel ordre chronologique strict les trois étapes de l\'introduction doivent-elles se succéder ?',
           options: [
             '1. Contextualisation/Perspective générale -> 2. Présentation du texte -> 3. Annonce du plan',
-            '1. Annonce du plan -> 2. Conclusion générale -> 3. Nom de l\'auteur',
-            '1. Présentation du texte -> 2. Annonce du plan -> 3. Amorce générale',
-            '1. Signature de la copie -> 2. Biographie -> 3. Titre du texte'
+            '1. Annonce du plan -> 2. Présentation du texte -> 3. Perspective générale',
+            '1. Présentation du texte -> 2. Annonce du plan -> 3. Perspective générale',
+            '1. Présentation du texte -> 2. Perspective générale -> 3. Annonce du plan'
           ],
           correctAnswerIndex: 0,
           explanation: 'La démarche va toujours du général au particulier : Amorce générale -> Présentation du texte précis -> Annonce du plan du devoir.'
@@ -1218,9 +1223,9 @@ export const francais2deACommentaireComposeRedactionIntroChapter: CurriculumChap
           prompt: 'Quels sont les quatre éléments obligatoires pour réussir l\'étape de « Présentation du texte » dans l\'introduction ?',
           options: [
             'Le nom de l\'auteur, le titre du texte, le titre de l\'œuvre d\'origine (avec date) et l\'idée générale',
-            'L\'âge de l\'auteur, son numéro de téléphone, sa nationalité et sa religion',
-            'Le nombre de pages du recueil, le prix en francs CFA et le nom de l\'imprimeur',
-            'Uniquement le prénom de l\'auteur sans aucun autre détail'
+            'Le nom de l\'auteur, sa biographie complète, le titre du texte et le résumé du poème',
+            'Le titre du texte, le genre littéraire, le nombre de strophes et le type de rimes',
+            'Le nom de l\'auteur, le titre du texte, l\'annonce du plan et l\'avis de l\'élève'
           ],
           correctAnswerIndex: 0,
           explanation: 'La présentation académique exige d\'identifier l\'auteur, le texte, l\'œuvre de référence avec sa date, et de dégager l\'idée générale du passage.'
@@ -1231,9 +1236,9 @@ export const francais2deACommentaireComposeRedactionIntroChapter: CurriculumChap
           prompt: 'En quoi consiste l\'« amorce » ou « perspective générale » au début de l\'introduction ?',
           options: [
             'À situer le texte en partant d\'une considération générale sur le thème, le genre ou l\'époque littéraire',
-            'À recopier le premier vers du poème en lettres capitales',
-            'À raconter comment l\'élève s\'est réveillé le matin de l\'épreuve',
-            'À saluer poliment le professeur qui corrige la copie'
+            'À présenter l\'auteur, le titre du texte et l\'œuvre dont il est extrait',
+            'À annoncer les centres d\'intérêt qui seront étudiés dans le développement',
+            'À résumer le texte en quelques lignes avant de le commenter'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'amorce donne de la hauteur au devoir en reliant le sujet à une thématique universelle, à un genre littéraire ou au contexte de création.'
@@ -1244,9 +1249,9 @@ export const francais2deACommentaireComposeRedactionIntroChapter: CurriculumChap
           prompt: 'Comment doit être formulée l\'étape de l\'« Annonce du plan » dans l\'introduction ?',
           options: [
             'En formulant avec élégance les deux centres d\'intérêt du libellé à l\'aide de connecteurs d\'articulation (« d\'une part... d\'autre part »)',
-            'En écrivant : « Grand I : Amertume. Grand II : Mort. »',
-            'En disant : « Je vais faire ce que le sujet a demandé »',
-            'En posant des équations mathématiques'
+            'En écrivant les titres des parties sous forme de liste : « I. L\'amertume ; II. La mort »',
+            'En annonçant uniquement le premier centre d\'intérêt, le second étant gardé pour la transition',
+            'En posant au lecteur une série de questions sans indiquer l\'ordre des parties'
           ],
           correctAnswerIndex: 0,
           explanation: 'L\'annonce du plan doit être élégamment rédigée dans le cours du paragraphe, en reprenant fidèlement les axes des centres d\'intérêt.'
@@ -1257,9 +1262,9 @@ export const francais2deACommentaireComposeRedactionIntroChapter: CurriculumChap
           prompt: 'Dans l\'évaluation sur « Le dormeur du Val » de Rimbaud, quelle perspective générale est la plus adaptée pour l\'amorce ?',
           options: [
             'Le traitement du thème universel de la guerre et de la mort tragique de la jeunesse par les poètes du XIXe siècle',
-            'L\'essor des chemins de fer en France au dix-neuvième siècle',
-            'L\'invention de la photographie en noir et blanc',
-            'Le cours du dollar sur les marchés internationaux'
+            'La biographie complète d\'Arthur Rimbaud, de sa naissance à sa mort',
+            'Le thème de la beauté de la nature dans la poésie de tous les siècles',
+            'Le résumé détaillé du poème, strophe par strophe'
           ],
           correctAnswerIndex: 0,
           explanation: 'Situer le poème dans la tradition poétique évoquant l\'absurdité de la guerre et le fauchage tragique de jeunes vies constitue l\'amorce idéale.'
@@ -1270,9 +1275,9 @@ export const francais2deACommentaireComposeRedactionIntroChapter: CurriculumChap
           prompt: 'Quelle maladresse majeure doit-on absolument éviter lors de la rédaction de l\'amorce d\'une introduction ?',
           options: [
             'Commencer par des formules clichés, vagues et démesurées comme « Depuis la nuit des temps, l\'homme... » ou « De tout temps... »',
-            'Nommer le titre de l\'œuvre entre guillemets',
-            'Faire une phrase de plus de dix mots',
-            'Utiliser des verbes conjugués au présent de l\'indicatif'
+            'Présenter l\'auteur, le titre et l\'œuvre dont le texte est extrait',
+            'Situer le texte dans son époque ou dans son mouvement littéraire',
+            'Annoncer clairement les deux centres d\'intérêt à la fin de l\'introduction'
           ],
           correctAnswerIndex: 0,
           explanation: 'Les formules creuses du type « De tout temps » sont bannies par les inspecteurs pédagogiques au profit d\'une amorce précise et littéraire.'
@@ -1283,9 +1288,9 @@ export const francais2deACommentaireComposeRedactionIntroChapter: CurriculumChap
           prompt: 'Que doit faire l\'élève sur sa copie immédiatement après avoir terminé de rédiger le paragraphe de l\'introduction ?',
           options: [
             'Sauter une ou deux lignes pour matérialiser nettement la fin de l\'introduction avant d\'entamer le développement',
-            'Tracer un grand trait rouge oblique barrant la page',
-            'Écrire le mot « FIN DE L\'INTRODUCTION » en gros caractères',
-            'Rendre immédiatement sa copie au surveillant sans faire le développement'
+            'Enchaîner directement sur le développement, sans sauter de ligne',
+            'Sauter une ligne après chaque phrase de l\'introduction pour aérer la copie',
+            'Écrire un titre « Développement » avant de commencer la première partie'
           ],
           correctAnswerIndex: 0,
           explanation: 'Sauter une ou deux lignes est la convention typographique qui sépare élégamment l\'introduction du corps du devoir.'

@@ -530,9 +530,9 @@ Le vecteur-vitesse n'est pas constant : il conserve sa direction et son sens, ma
           prompt: "Au cours d'un Mouvement Rectiligne Uniforme, que peut-on dire du vecteur-vitesse v ?",
           options: [
             "Le vecteur-vitesse est constant (il conserve sa direction, son sens et sa valeur)",
-            "Le vecteur-vitesse change de sens toutes les secondes",
-            "Seule la direction du vecteur-vitesse varie",
-            "Le vecteur-vitesse est nul"
+            'Seule sa valeur est constante, sa direction et son sens peuvent changer',
+            'Seule sa direction est constante, sa valeur augmente régulièrement',
+            'Il est nul, car le mobile parcourt toujours la même distance'
           ],
           correctAnswerIndex: 0,
           explanation: "Dans un MRU, la direction ne change pas (ligne droite), le sens est invariant et la valeur est constante : le vecteur-vitesse v est donc rigoureusement constant."
@@ -595,9 +595,9 @@ Le vecteur-vitesse n'est pas constant : il conserve sa direction et son sens, ma
           prompt: "Au cours d'un mouvement rectiligne uniformément varié, qu'est-ce qui reste invariant dans le vecteur-vitesse ?",
           options: [
             "Sa direction et son sens restent invariants (seule sa norme varie)",
-            "Sa valeur numérique reste invariante",
-            "Rien ne reste invariant",
-            "Sa position d'origine reste fixe"
+            'Sa valeur (norme) reste invariante, seule sa direction change',
+            'Sa direction reste invariante, mais son sens s\'inverse régulièrement',
+            'Seul son point d\'application reste fixe, tout le reste varie'
           ],
           correctAnswerIndex: 0,
           explanation: "En ligne droite sans demi-tour, la direction (la droite) et le sens du vecteur-vitesse restent constants, tandis que sa valeur numérique (norme) augmente ou diminue."
@@ -715,9 +715,9 @@ Sur un schéma, les deux flèches représentant les vecteurs-forces F₁ et F₂
           prompt: "Deux forces ont la même valeur de 5 N et sont de sens opposés, mais sont portées par deux droites parallèles distinctes non confondues. Le solide est-il en équilibre de translation et de rotation ?",
           options: [
             "Non, car elles n'ont pas la même droite d'action (elles forment un couple qui fait tourner le solide)",
-            "Oui, le solide est parfaitement immobile",
-            "Oui, car 5 N - 5 N = 0 N",
-            "Oui, car les droites sont parallèles"
+            'Oui, car les deux forces ont la même valeur et des sens opposés',
+            'Oui, car la somme vectorielle des deux forces est nulle (5 N − 5 N = 0)',
+            'Oui, car deux forces parallèles et opposées se compensent toujours'
           ],
           correctAnswerIndex: 0,
           explanation: "Deux forces de droites d'action distinctes créent un couple de rotation qui fait tourner le solide. L'équilibre exige qu'elles aient STRICTEMENT la même droite d'action."
@@ -854,9 +854,9 @@ Un objet flottant immobile à la surface d'un liquide (ou remonté à la surface
           prompt: "Sur un plan incliné rugueux, en quelles composantes se décompose la réaction R du support ?",
           options: [
             "Une réaction normale R_N perpendiculaire au plan et une force de frottement f parallèle au plan",
-            "Deux forces verticales identiques",
-            "Le poids et la poussée d'Archimède",
-            "Une tension et un champ magnétique"
+            'Le poids P vertical et une réaction normale R_N perpendiculaire au plan',
+            'Une force de frottement f verticale et une réaction parallèle au plan',
+            'Une réaction normale R_N verticale et le poids P parallèle au plan'
           ],
           correctAnswerIndex: 0,
           explanation: "La réaction du support rugueux se décompose en une composante normale R_N (empêchant l'enfoncement) et une force de frottement tangentielle f (s'opposant au glissement) : R = R_N + f."
@@ -888,9 +888,9 @@ Un objet flottant immobile à la surface d'un liquide (ou remonté à la surface
           prompt: "Où s'applique la poussée d'Archimède P_A exercée par l'eau sur un corps immergé ?",
           options: [
             "Au centre de poussée (centre de gravité de la partie immergée)",
-            "Au centre de la Terre",
-            "Au fond du récipient",
-            "À la surface de l'air libre"
+            'Au centre de gravité du corps entier, même s\'il n\'est qu\'en partie immergé',
+            'Au point de contact entre le corps et la surface de l\'eau',
+            'Au fond du récipient, là où l\'eau exerce la plus forte pression'
           ],
           correctAnswerIndex: 0,
           explanation: "La poussée d'Archimède s'applique au centre de poussée, qui coïncide avec le centre de gravité du volume de fluide déplacé."
@@ -1023,9 +1023,9 @@ Explication mécanique : Dans n'importe quelle position de roulement, le centre 
           prompt: "Pourquoi l'équilibre d'une personne portant une charge sur la tête sans les mains est-il classé comme instable ?",
           options: [
             "Parce que le moindre écart engendre un basculement qui fait tomber la charge",
-            "Parce que la charge s'envole vers le haut",
-            "Parce que la réaction de la tête est nulle",
-            "Parce que le poids disparaît à chaque pas"
+            'Parce que la charge revient d\'elle-même à sa position après un écart',
+            'Parce que le poids de la charge est compensé par la réaction de la tête',
+            'Parce que le centre de gravité de la charge est situé sous le point d\'appui'
           ],
           correctAnswerIndex: 0,
           explanation: "C'est un équilibre instable typique : le centre de gravité de la charge est situé au-dessus du point d'appui, provoquant un basculement dès qu'une déviation se produit."

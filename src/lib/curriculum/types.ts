@@ -174,6 +174,8 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
       'physique-chimie',
       'physique chimie',
       'sciences physiques',
+      'sc physiques',
+      'physiques',
       'sp',
       'phys',
       'chim',
@@ -191,6 +193,7 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
       'sciences naturelles',
       'sciences de la vie et de la terre',
       'bio',
+      'sn',
     ],
   },
   francais: {
@@ -211,6 +214,14 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
       'production écrite',
       'lettres',
       'fr',
+      // Activités de français qui apparaissent séparément dans certains emplois du temps
+      'grammaire',
+      'orthographe',
+      'conjugaison',
+      'vocabulaire',
+      'lecture',
+      'lecture methodique',
+      'lecture méthodique',
     ],
   },
   histoire_geo: {
@@ -241,6 +252,7 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
     aliases: [
       'philosophie',
       'philo',
+      'philosophy',
     ],
   },
 };

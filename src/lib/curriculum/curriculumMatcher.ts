@@ -164,10 +164,16 @@ export interface MatchResult {
  */
 export function matchSubjectToStemCurriculum(subjectName: string): MatchResult {
   if (!subjectName) return { isStemSubject: false };
-  const clean = normalizeCurriculumText(subjectName);
+  let clean = normalizeCurriculumText(subjectName);
+  // Sigle écrit lettre par lettre (« P.C », « S V T », « H-G ») : on recolle les lettres -> « pc », « svt », « hg »
+  if (/^([a-z] )+[a-z]$/.test(clean)) clean = clean.replace(/ /g, '');
 
   // L'Éducation Physique et Sportive n'est PAS de la Physique-Chimie (le mot « physique » piégeait l'alias)
   if (/\b(eps|sports?|sportives?)\b|education physique/.test(clean)) {
+    return { isStemSubject: false };
+  }
+  // « Histoire de l'art », « Histoire des religions » : matières sans cours (le mot « histoire » piégeait l'alias)
+  if (/\bhistoire (de l |de la |des |du )?(art|arts|religion|religions|musique)\b/.test(clean)) {
     return { isStemSubject: false };
   }
 
@@ -193,6 +199,24 @@ export function matchSubjectToStemCurriculum(subjectName: string): MatchResult {
   }
 
   return { isStemSubject: false };
+}
+
+/**
+ * Histoire et Géographie sont deux disciplines distinctes au lycée ivoirien, souvent inscrites
+ * séparément dans l'emploi du temps. Le nom de la matière décide du volet :
+ * - « Histoire », « Hist »            -> uniquement les leçons d'Histoire ;
+ * - « Géographie », « Géo »           -> uniquement les leçons de Géographie ;
+ * - « HG », « Histoire-Géographie »   -> null : les deux volets, en alternance.
+ */
+export function voletFromSubjectName(subjectId: StemSubjectId, subjectName: string): 'histoire' | 'geographie' | null {
+  if (subjectId !== 'histoire_geo') return null;
+  let clean = normalizeCurriculumText(subjectName);
+  if (/^([a-z] )+[a-z]$/.test(clean)) clean = clean.replace(/ /g, '');
+  const hasHistoire = /\b(histoire|hist|historique)\b/.test(clean);
+  const hasGeo = /\b(geographie|geo|geographique)\b/.test(clean);
+  if (hasHistoire && !hasGeo) return 'histoire';
+  if (hasGeo && !hasHistoire) return 'geographie';
+  return null;
 }
 
 /**

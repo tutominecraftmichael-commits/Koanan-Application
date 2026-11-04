@@ -17,6 +17,36 @@ import { HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE } from '../../data/courses/te
 import { HIST_TLE_T2_L04_UNION_AFRICAINE } from '../../data/courses/terminale/hist_tle_union_africaine';
 import { HIST_TLE_T3_L01_MONDE_OCCIDENTAL } from '../../data/courses/terminale/hist_tle_monde_occidental';
 import { HIST_TLE_T3_L02_MUTATIONS_CIVILISATION_NEGRO_AFRICAINE } from '../../data/courses/terminale/hist_tle_mutations_civilisation_negro_africaine';
+import { GEO_2DE_L01_OBJET_INTERET_DEMARCHE } from '../../data/courses/seconde/geo_2de_objet_interet_demarche';
+import { GEO_2DE_L02_PLANETE_TERRE } from '../../data/courses/seconde/geo_2de_planete_terre';
+import { GEO_2DE_L03_TECHNIQUES_REPRESENTATION_TERRE } from '../../data/courses/seconde/geo_2de_techniques_representation_terre';
+import { GEO_2DE_T2_L01_MILIEU_SUBEQUATORIAL } from '../../data/courses/seconde/geo_2de_milieu_subequatorial';
+import { GEO_2DE_T2_L02_MILIEU_TROPICAL } from '../../data/courses/seconde/geo_2de_milieu_tropical';
+import { GEO_2DE_T2_L03_ENVIRONNEMENT_MENACE } from '../../data/courses/seconde/geo_2de_environnement_menace';
+import { GEO_2DE_T3_L01_MILIEUX_BIOGEOGRAPHIQUES } from '../../data/courses/seconde/geo_2de_milieux_biogeographiques';
+import { GEO_2DE_T3_L02_PROBLEMES_ENVIRONNEMENTAUX } from '../../data/courses/seconde/geo_2de_problemes_environnementaux';
+import { HIST_2DE_L01_HISTOIRE_FORMATION_CITOYEN } from '../../data/courses/seconde/hist_2de_histoire_formation_citoyen';
+import { HIST_2DE_L02_METHODES_ETUDE_HISTOIRE } from '../../data/courses/seconde/hist_2de_methodes_etude_histoire';
+import { HIST_2DE_L03_METHODOLOGIE_DISSERTATION_COMMENTAIRE } from '../../data/courses/seconde/hist_2de_methodologie_dissertation_commentaire';
+import { HIST_2DE_T2_L01_PREHISTOIRE } from '../../data/courses/seconde/hist_2de_prehistoire';
+import { HIST_2DE_T2_L02_EGYPTE_ANCIENNE } from '../../data/courses/seconde/hist_2de_egypte_ancienne';
+import { HIST_2DE_T2_L03_DEMOCRATIE_ATHENIENNE } from '../../data/courses/seconde/hist_2de_democratie_athenienne';
+import { HIST_2DE_T2_L04_SOUDAN_OCCIDENTAL } from '../../data/courses/seconde/hist_2de_soudan_occidental';
+import { HIST_2DE_T2_L05_TRAITES_DES_NOIRS } from '../../data/courses/seconde/hist_2de_traites_des_noirs';
+import { HIST_2DE_T3_L01_NEOLITHIQUE_CI } from '../../data/courses/seconde/hist_2de_neolithique_cote_ivoire';
+import { HIST_2DE_T3_L02_PEUPLES_CI } from '../../data/courses/seconde/hist_2de_peuples_cote_ivoire';
+import { FR_2DE_PL_L01_FONCTIONS_LANGAGE } from '../../data/courses/seconde/fr_2de_fonctions_langage';
+import { FR_2DE_PL_L02_CONNECTEURS_LOGIQUES } from '../../data/courses/seconde/fr_2de_connecteurs_logiques';
+import { FR_2DE_PL_L02B_EXPRESSION_OPINION } from '../../data/courses/seconde/fr_2de_expression_opinion';
+import { FR_2DE_PL_L03_SEMANTIQUE } from '../../data/courses/seconde/fr_2de_semantique';
+import { FR_2DE_PL_L04_ENONCIATION } from '../../data/courses/seconde/fr_2de_enonciation';
+import { FR_2DE_PL_L05_FIGURES_ANALOGIE_SUBSTITUTION } from '../../data/courses/seconde/fr_2de_figures_analogie_substitution';
+import { FR_2DE_PL_L05B_FIGURES_AMPLIFICATION_ATTENUATION } from '../../data/courses/seconde/fr_2de_figures_amplification_attenuation';
+import { FR_2DE_PL_L05C_FIGURES_OPPOSITION_CONSTRUCTION } from '../../data/courses/seconde/fr_2de_figures_opposition_construction';
+import { FR_2DE_PL_L06_VERSIFICATION_VERS_STROPHES } from '../../data/courses/seconde/fr_2de_versification_vers_strophes';
+import { FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME } from '../../data/courses/seconde/fr_2de_versification_sonorites_rythme';
+import { FR_2DE_PL_L07_IMPLICITE } from '../../data/courses/seconde/fr_2de_implicite';
+import { FR_2DE_SF_L02_EXPOSE_ORAL } from '../../data/courses/seconde/fr_2de_expose_oral';
 import { PHILO_TLE_L01_DISSERTATION } from '../../data/courses/terminale/philo_tle_dissertation';
 import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/philo_tle_commentaire_texte';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
@@ -91768,6 +91798,38 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   PHILO_TLE_L08_PROGRES_BONHEUR,
   PHILO_TLE_L09_LANGAGE_VERITE,
   PHILO_TLE_L10_CONNAISSANCE_SCIENTIFIQUE,
+  // 2nde A — Géographie (format v2)
+  GEO_2DE_L01_OBJET_INTERET_DEMARCHE,
+  GEO_2DE_L02_PLANETE_TERRE,
+  GEO_2DE_L03_TECHNIQUES_REPRESENTATION_TERRE,
+  GEO_2DE_T2_L01_MILIEU_SUBEQUATORIAL,
+  GEO_2DE_T2_L02_MILIEU_TROPICAL,
+  GEO_2DE_T2_L03_ENVIRONNEMENT_MENACE,
+  GEO_2DE_T3_L01_MILIEUX_BIOGEOGRAPHIQUES,
+  GEO_2DE_T3_L02_PROBLEMES_ENVIRONNEMENTAUX,
+  // 2nde A — Histoire (format v2)
+  HIST_2DE_L01_HISTOIRE_FORMATION_CITOYEN,
+  HIST_2DE_L02_METHODES_ETUDE_HISTOIRE,
+  HIST_2DE_L03_METHODOLOGIE_DISSERTATION_COMMENTAIRE,
+  HIST_2DE_T2_L01_PREHISTOIRE,
+  HIST_2DE_T2_L02_EGYPTE_ANCIENNE,
+  HIST_2DE_T2_L03_DEMOCRATIE_ATHENIENNE,
+  HIST_2DE_T2_L04_SOUDAN_OCCIDENTAL,
+  HIST_2DE_T2_L05_TRAITES_DES_NOIRS,
+  HIST_2DE_T3_L01_NEOLITHIQUE_CI,
+  HIST_2DE_T3_L02_PEUPLES_CI,
+  FR_2DE_PL_L01_FONCTIONS_LANGAGE,
+  FR_2DE_PL_L02_CONNECTEURS_LOGIQUES,
+  FR_2DE_PL_L02B_EXPRESSION_OPINION,
+  FR_2DE_PL_L03_SEMANTIQUE,
+  FR_2DE_PL_L04_ENONCIATION,
+  FR_2DE_PL_L05_FIGURES_ANALOGIE_SUBSTITUTION,
+  FR_2DE_PL_L05B_FIGURES_AMPLIFICATION_ATTENUATION,
+  FR_2DE_PL_L05C_FIGURES_OPPOSITION_CONSTRUCTION,
+  FR_2DE_PL_L06_VERSIFICATION_VERS_STROPHES,
+  FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME,
+  FR_2DE_PL_L07_IMPLICITE,
+  FR_2DE_SF_L02_EXPOSE_ORAL,
   ...maths2deCGeometryChapters,
   ...maths2deCNumericChapters,
   ...chimie2deCChapters,

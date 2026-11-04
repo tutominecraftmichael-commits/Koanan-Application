@@ -313,10 +313,10 @@ Une synapse comprend 3 éléments anatomiques :
           type: 'mcq',
           prompt: 'Pourquoi la transmission du message nerveux au niveau d’une synapse est-elle strictement unidirectionnelle ?',
           options: [
-            'Parce que le sang circule dans un seul sens',
+            'Parce que l’influx nerveux ne peut circuler que des dendrites vers le corps cellulaire',
             'Parce que les vésicules sont uniquement dans l’élément présynaptique et les récepteurs sur l’élément postsynaptique',
-            'Parce que les dendrites repoussent l’influx électrique',
-            'Parce que l’axone est dépourvu de membrane plasmique'
+            'Parce que le neurotransmetteur est détruit avant d’atteindre l’élément postsynaptique',
+            'Parce que les récepteurs sont dans l’élément présynaptique et les vésicules dans le postsynaptique'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -432,10 +432,10 @@ Un anesthésique local (ou un curare) bloque la transmission synaptique soit en 
           type: 'mcq',
           prompt: 'Que devient l’acétylcholine après son hydrolyse par l’acétylcholinestérase ?',
           options: [
-            'Elle est éliminée dans les urines immédiatement',
-            'Elle est recapturée par la terminaison présynaptique pour être recyclée',
-            'Elle se transforme en gaz carbonique toxique',
-            'Elle dissout la gaine de myéline'
+            'Elle reste fixée sur les récepteurs postsynaptiques jusqu’à l’influx suivant',
+            'Ses produits (choline et acétate) sont recaptés par la terminaison présynaptique pour être recyclés',
+            'Elle passe dans l’élément postsynaptique où elle est stockée dans des vésicules',
+            'Elle est transportée par le sang jusqu’aux reins pour être éliminée dans l’urine'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -456,9 +456,9 @@ Un anesthésique local (ou un curare) bloque la transmission synaptique soit en 
           prompt: 'Quelle est la conséquence si une toxine bloque l’action de l’acétylcholinestérase ?',
           options: [
             'L’acétylcholine reste fixée sur les récepteurs, provoquant une stimulation et des contractions musculaires permanentes',
-            'Le muscle cesse immédiatement de fonctionner et se relâche',
-            'Les os deviennent fragiles',
-            'La peau ne ressent plus la chaleur'
+            'L’acétylcholine est détruite plus vite, provoquant une paralysie flasque du muscle',
+            'L’acétylcholine n’est plus libérée par les vésicules, le muscle ne se contracte plus',
+            'Les récepteurs postsynaptiques disparaissent et l’influx ne franchit plus la synapse'
           ],
           correctAnswerIndex: 0,
           explanation:
@@ -586,10 +586,10 @@ Conclusion : L'ovaire contrôle l'utérus par l'intermédiaire de molécules dé
           type: 'mcq',
           prompt: 'Pourquoi un coq castré auquel on greffe un testicule sous la peau retrouve-t-il sa crête rouge mais reste stérile ?',
           options: [
-            'Parce que le testicule greffé ne reçoit pas de sang',
+            'Parce que le testicule greffé produit des spermatozoïdes, mais plus de testostérone',
             'Parce que la testostérone passe dans le sang, mais les spermatozoïdes n’ont pas de conduit pour sortir',
-            'Parce que le foie détruit immédiatement les spermatozoïdes',
-            'Parce que le coq refuse de chanter'
+            'Parce que la greffe rétablit la fonction exocrine mais pas la fonction endocrine',
+            'Parce que la testostérone ne peut pas passer dans le sang depuis la peau'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -600,10 +600,10 @@ Conclusion : L'ovaire contrôle l'utérus par l'intermédiaire de molécules dé
           type: 'mcq',
           prompt: 'Quel effet direct provoque l’ablation des deux ovaires (ovariectomie) chez une rate adulte ?',
           options: [
-            'Une augmentation de la fécondité',
+            'Une muqueuse utérine plus épaisse et des cycles plus rapprochés',
             'L’arrêt du cycle utérin, l’atrophie de la muqueuse utérine et la stérilité',
-            'Une accélération de la ponte des ovules',
-            'Le développement de testicules'
+            'Aucun effet sur l’utérus, car les ovaires ne produisent que des ovules',
+            'L’arrêt de la ponte des ovules, mais la muqueuse utérine reste intacte'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -637,10 +637,10 @@ Conclusion : L'ovaire contrôle l'utérus par l'intermédiaire de molécules dé
           type: 'mcq',
           prompt: 'Quelle expérience prouve de manière irréfutable que les ovaires agissent sur l’utérus par voie chimique sanguine ?',
           options: [
-            'L’observation au microscope de l’utérus',
+            'La section des nerfs reliant les ovaires à l’utérus, sans effet sur la muqueuse',
             'L’injection d’extraits ovariens solubles à une rate ovariectomisée rétablit la muqueuse utérine',
-            'La privation d’eau chez la rate',
-            'La section de la moelle épinière'
+            'La greffe d’un ovaire à côté de l’utérus en conservant les nerfs ovariens',
+            'L’ablation de l’utérus chez une rate dont les ovaires sont conservés'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -727,10 +727,10 @@ Pourquoi ? Parce que la cellule cible possède sur sa membrane plasmique (ou dan
           type: 'mcq',
           prompt: 'Pourquoi une hormone n’agit-elle que sur ses cellules cibles et pas sur toutes les cellules du corps ?',
           options: [
-            'Parce que le sang ne va que vers les cellules cibles',
+            'Parce que le sang conduit l’hormone uniquement vers les organes cibles',
             'Parce que seules les cellules cibles possèdent des récepteurs spécifiques complémentaires de l’hormone',
-            'Parce que les autres cellules dorment',
-            'Parce que l’hormone est filtrée par le cœur'
+            'Parce que l’hormone pénètre dans toutes les cellules mais n’agit que sur certaines',
+            'Parce que seules les cellules cibles fabriquent elles-mêmes cette hormone'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -750,10 +750,10 @@ Pourquoi ? Parce que la cellule cible possède sur sa membrane plasmique (ou dan
           type: 'mcq',
           prompt: 'De quoi dépend l’intensité de la réponse cellulaire à un signal hormonal ?',
           options: [
-            'De la couleur des cheveux de l’individu',
+            'Uniquement de la vitesse de circulation du sang qui transporte l’hormone',
             'De la concentration plasmatique de l’hormone et du nombre de récepteurs disponibles',
-            'De la vitesse de l’influx nerveux le long de l’axone',
-            'Du volume d’air contenu dans les poumons'
+            'Uniquement de la taille de la glande endocrine qui produit l’hormone',
+            'De la vitesse de l’influx nerveux qui accompagne la sécrétion hormonale'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -788,9 +788,9 @@ Pourquoi ? Parce que la cellule cible possède sur sa membrane plasmique (ou dan
           prompt: 'Quelle est la différence fondamentale entre la communication nerveuse et la communication hormonale ?',
           options: [
             'Le message nerveux est rapide et véhiculé par des neurones ; le message hormonal est plus lent et véhiculé par le sang',
-            'Le message hormonal est électrique tandis que le message nerveux est liquide',
-            'Le message nerveux ne concerne que les plantes',
-            'La communication hormonale n’utilise aucun récepteur cellulaire'
+            'Le message nerveux est lent et véhiculé par le sang ; le message hormonal est rapide et véhiculé par les neurones',
+            'Le message nerveux agit sur tout l’organisme ; le message hormonal agit sur un seul muscle à la fois',
+            'Les deux messages sont électriques, mais le message hormonal est plus rapide'
           ],
           correctAnswerIndex: 0,
           explanation:
@@ -899,10 +899,10 @@ Elle correspond à la zone du globe où la vie végétale, animale et microbienn
           type: 'mcq',
           prompt: 'Qu’est-ce que la lithosphère ?',
           options: [
-            'La couche d’air riche en oxygène',
+            'La partie superficielle liquide du globe formée par les océans et les mers',
             'La partie superficielle solide du globe comprenant la croûte terrestre et le manteau supérieur',
-            'L’ensemble des animaux marins',
-            'Le noyau liquide en fusion de la Terre'
+            'L’enveloppe gazeuse qui entoure la Terre jusqu’à environ 1 000 km d’altitude',
+            'La partie profonde du globe comprenant le manteau inférieur et le noyau'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -913,10 +913,10 @@ Elle correspond à la zone du globe où la vie végétale, animale et microbienn
           type: 'mcq',
           prompt: 'Quelles sont les limites approximatives d’extension verticale de la biosphère ?',
           options: [
-            'De 0 à 100 mètres seulement',
+            'De −100 m sous les mers jusqu’à +1 000 m sur les plus hautes collines',
             'De -11 000 m dans les fosses océaniques jusqu’à +9 000 m sur les sommets montagneux',
-            'Du centre de la Terre jusqu’à la Lune',
-            'Exclusivement dans les déserts chauds'
+            'Du centre de la Terre (−6 400 km) jusqu’à la haute atmosphère (+100 km)',
+            'De la surface des océans jusqu’à +3 000 m, la vie étant absente des fonds marins'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -927,10 +927,10 @@ Elle correspond à la zone du globe où la vie végétale, animale et microbienn
           type: 'mcq',
           prompt: 'Sous quelle forme trouve-t-on la deuxième plus grande réserve d’eau sur Terre (environ 2,5 %) ?',
           options: [
-            'Sous forme d’eau gazeuse dans les nuages',
+            'Sous forme d’eau liquide douce dans les fleuves, les lacs et les rivières',
             'Sous forme d’eau solide dans les calottes glaciaires et les glaciers polaires',
-            'Dans les piscines municipales',
-            'Dans les fleuves tropicaux'
+            'Sous forme de vapeur d’eau dans l’atmosphère et les nuages',
+            'Sous forme d’eau souterraine dans les nappes phréatiques des continents'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -956,9 +956,9 @@ Elle correspond à la zone du globe où la vie végétale, animale et microbienn
           prompt: 'Pourquoi qualifie-t-on la biosphère de « mince pellicule » par rapport au rayon de la Terre ?',
           options: [
             'Parce qu’elle mesure moins de 20 km d’épaisseur totale face aux 6 400 km de rayon terrestre',
-            'Parce qu’elle ne contient aucune plante',
-            'Parce qu’elle est faite de plastique',
-            'Parce qu’elle disparaît la nuit'
+            'Parce qu’elle ne recouvre qu’une petite partie de la surface des continents',
+            'Parce qu’elle ne contient qu’un petit nombre d’espèces vivantes',
+            'Parce qu’elle mesure environ 2 000 km d’épaisseur face aux 6 400 km de rayon'
           ],
           correctAnswerIndex: 0,
           explanation:
@@ -1034,10 +1034,10 @@ L'eau de l'hydrosphère s'évapore dans l'atmosphère, retombe sous forme de pr�
           type: 'mcq',
           prompt: 'Quel rôle majeur la partie superficielle de la lithosphère (le sol) joue-t-elle pour les végétaux terrestres ?',
           options: [
-            'Elle leur fournit la lumière du soleil',
+            'Il fournit aux plantes le dioxyde de carbone nécessaire à la photosynthèse',
             'Elle leur sert de support d’ancrage et leur apporte l’eau et les sels minéraux indispensables',
-            'Elle produit les nuages de pluie',
-            'Elle absorbe tous les rayons ultraviolets'
+            'Il fournit aux plantes l’énergie lumineuse indispensable à leur croissance',
+            'Il produit l’oxygène que les racines rejettent ensuite dans l’atmosphère'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -1048,10 +1048,10 @@ L'eau de l'hydrosphère s'évapore dans l'atmosphère, retombe sous forme de pr�
           type: 'mcq',
           prompt: 'Comment la biosphère contribue-t-elle activement à la composition de l’atmosphère ?',
           options: [
-            'En absorbant tout l’azote disponible',
+            'En libérant du dioxyde de carbone par la photosynthèse et de l’azote par la respiration',
             'En libérant du dioxygène par la photosynthèse et de la vapeur d’eau par évapotranspiration',
-            'En fabriquant des roches granitiques dans l’air',
-            'En créant le champ magnétique terrestre'
+            'En absorbant le dioxygène de l’air par la photosynthèse des végétaux verts',
+            'En libérant de l’ozone par la respiration des animaux et des micro-organismes'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -1377,9 +1377,9 @@ export const svt2deALaProductionMatiereOrganiqueChapter: CurriculumChapter = {
           "prompt": "Pourquoi les animaux et l'Homme sont-ils qualifiés d'hétérotrophes vis-à-vis de la matière organique ?",
           "options": [
             "Parce qu'ils sont incapables de produire leur matière organique et doivent consommer d'autres êtres vivants",
-            "Parce qu'ils réalisent la photosynthèse avec leur peau à la plage",
-            "Parce qu'ils n'ont besoin d'aucun aliment pour grandir",
-            "Parce qu'ils ne consomment que des cailloux et du sable"
+            'Parce qu\'ils fabriquent leur matière organique à partir de l\'eau et des sels minéraux',
+            'Parce qu\'ils réalisent la photosynthèse grâce à la lumière absorbée par leur peau',
+            'Parce qu\'ils produisent leur matière organique uniquement à partir du CO₂ de l\'air'
           ],
           "correctAnswerIndex": 0,
           "explanation": "L'Homme et les animaux sont hétérotrophes : ils dépendent entièrement des matières organiques élaborées par les autotrophes végétaux (soit directement en mangeant des plantes, soit indirectement via les herbivores)."
@@ -1490,9 +1490,9 @@ export const svt2deALeChangementClimatiqueChapter: CurriculumChapter = {
           "prompt": "Quelle activité humaine constitue la première source de rejet excessif de dioxyde de carbone (CO₂) ?",
           "options": [
             "L'extraction et la combustion des énergies fossiles (charbon, pétrole, gaz naturel)",
-            "La fabrication de briques en terre crue",
-            "L'usage de pirogues à rames sur les lagunes",
-            "La plantation de parcs arborés dans les villes"
+            'La respiration des êtres humains et des animaux d\'élevage',
+            'L\'évaporation de l\'eau des océans et des lagunes côtières',
+            'La photosynthèse des forêts et des grandes plantations agricoles'
           ],
           "correctAnswerIndex": 0,
           "explanation": "La combustion d'énergies fossiles pour les centrales thermiques, les usines et les transports motorisés est la cause humaine numéro un des émissions de CO₂."
@@ -1600,9 +1600,9 @@ export const svt2deALeChangementClimatiqueChapter: CurriculumChapter = {
           "prompt": "Quelle est la cause physique directe de l'élévation du niveau moyen des océans du globe ?",
           "options": [
             "La fonte des calottes glaciaires continentales combinée à la dilatation thermique de l'eau réchauffée",
-            "L'accumulation des bouteilles plastiques rejetées à la mer",
-            "Le déplacement des grands navires porte-conteneurs",
-            "L'assèchement des puits d'eau villageois"
+            'L\'augmentation des précipitations, qui remplissent davantage les océans chaque année',
+            'Le dépôt de sédiments apportés par les fleuves, qui soulève le fond des océans',
+            'La fonte de la banquise flottante de l\'Arctique, seule cause de la montée des eaux'
           ],
           "correctAnswerIndex": 0,
           "explanation": "L'eau de mer se dilate quand sa température augmente, et la fonte des glaciers et calottes continentales (Groenland, Antarctique) déverse d'immenses volumes d'eau dans les océans."
@@ -1639,9 +1639,9 @@ export const svt2deALeChangementClimatiqueChapter: CurriculumChapter = {
           "prompt": "Pourquoi le reboisement constitue-t-il une solution naturelle capitale contre le réchauffement climatique ?",
           "options": [
             "Parce que les arbres absorbent le CO₂ atmosphérique par photosynthèse et le stockent durablement sous forme de bois",
-            "Parce que les feuilles d'arbres attirent les météores et arrêtent le vent",
-            "Parce que les forêts refroidissent la Terre en supprimant le soleil",
-            "Parce que les arbres absorbent le sel de mer"
+            'Parce que les arbres rejettent du CO₂ la nuit, ce qui refroidit l\'atmosphère',
+            'Parce que les forêts font de l\'ombre au sol et empêchent le soleil de chauffer la Terre',
+            'Parce que les arbres absorbent la vapeur d\'eau, principal gaz responsable du réchauffement'
           ],
           "correctAnswerIndex": 0,
           "explanation": "Les forêts sont des puits de carbone vitaux : en grandissant, les arbres séquestrent des milliards de tonnes de carbone minéral dans leur tronc et leurs racines."
@@ -1652,9 +1652,9 @@ export const svt2deALeChangementClimatiqueChapter: CurriculumChapter = {
           "prompt": "Quelle perturbation climatique majeure frappe de plus en plus les zones rurales d'Afrique de l'Ouest ?",
           "options": [
             "La baisse de la pluviométrie, les sécheresses prolongées et la prolifération des feux de brousse",
-            "L'apparition de tempêtes de neige sur la lagune Ébrié",
-            "La chute brutale de la température nocturne à −30°C",
-            "L'arrêt complet des marées océaniques"
+            'La hausse régulière des pluies et l\'extension des forêts denses vers le nord',
+            'Le refroidissement des températures et l\'allongement de la saison des pluies',
+            'La disparition de l\'harmattan et la stabilité des récoltes d\'une année à l\'autre'
           ],
           "correctAnswerIndex": 0,
           "explanation": "Le dérèglement climatique se traduit en Afrique de l'Ouest par des saisons des pluies plus courtes et irrégulières, des sécheresses et un risque accru de feux de brousse."
@@ -1665,9 +1665,9 @@ export const svt2deALeChangementClimatiqueChapter: CurriculumChapter = {
           "prompt": "Pourquoi l'utilisation des transports en commun contribue-t-elle à freiner le changement climatique ?",
           "options": [
             "Parce qu'un bus ou train transporte des dizaines de personnes en consommant beaucoup moins de carburant que des dizaines de voitures individuelles",
-            "Parce qu'un autobus ne roule qu'avec de l'eau de pluie",
-            "Parce que les transports en commun fabriquent de l'ozone dans la ville",
-            "Parce qu'ils empêchent les nuages d'inondation d'éclater"
+            'Parce que les bus et les trains ne rejettent aucun gaz, quel que soit le carburant utilisé',
+            'Parce qu\'ils roulent plus vite que les voitures et restent donc moins longtemps sur la route',
+            'Parce qu\'ils absorbent le dioxyde de carbone rejeté par les voitures qui circulent autour d\'eux'
           ],
           "correctAnswerIndex": 0,
           "explanation": "Transporter collectivement les voyageurs permet de réduire massivement le parc de véhicules particuliers et les rejets de CO₂ liés au trafic routier."
@@ -1678,9 +1678,9 @@ export const svt2deALeChangementClimatiqueChapter: CurriculumChapter = {
           "prompt": "Quel comportement éco-responsable individuel permet à chaque élève de contribuer à la lutte pour le climat ?",
           "options": [
             "Éviter le gaspillage d'électricité, planter des arbres et proscrire les feux de brousse et le brûlage de déchets plastiques",
-            "Brûler des pneus usagés dans la rue après les cours",
-            "Laisser les appareils allumés 24h sur 24 pour user les batteries",
-            "Couper les arbres du quartier pour faire du feu"
+            'Brûler les déchets plastiques dans la cour pour réduire le volume des ordures du quartier',
+            'Remplacer les arbres de l\'école par des surfaces bétonnées plus faciles à entretenir',
+            'Laisser les ampoules et ventilateurs allumés en classe, car l\'électricité ne pollue jamais'
           ],
           "correctAnswerIndex": 0,
           "explanation": "Chaque geste compte : la sobriété énergétique, la protection des arbres et l'abandon du brûlage à l'air libre protègent directement la qualité de l'atmosphère."
@@ -2053,9 +2053,9 @@ export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
           "prompt": "Quel événement mécanique fondamental caractérise l'anaphase de la mitose ?",
           "options": [
             "La division des centromères et la migration des chromatides sœurs vers les pôles opposés (ascension polaire)",
-            "La disparition de la membrane plasmique de la cellule",
-            "La fusion de deux cellules filles en une seule",
-            "La fabrication de vacuoles riches en chlorophylle"
+            'L\'alignement des chromosomes à deux chromatides sur la plaque équatoriale',
+            'La condensation des chromosomes et la disparition de l\'enveloppe nucléaire',
+            'La réapparition de l\'enveloppe nucléaire autour des deux lots de chromosomes'
           ],
           "correctAnswerIndex": 0,
           "explanation": "L'anaphase se caractérise par la rupture du centromère de chaque chromosome : les chromatides sœurs migrent en sens inverse vers chaque pôle grâce aux fibres du fuseau."
@@ -2079,9 +2079,9 @@ export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
           "prompt": "Comment s'effectue la division du cytoplasme (cytodiérèse) chez la cellule animale lors de la télophase ?",
           "options": [
             "Par un simple étranglement du cytoplasme (sillon de division)",
-            "Par la construction d'une épaisse paroi en bois",
-            "Par explosion suivie de reconstitution magique",
-            "Par évaporation complète de l'eau cellulaire"
+            'Par la construction d\'une nouvelle paroi du centre vers la périphérie',
+            'Par la formation d\'une plaque cellulaire à partir des vésicules du Golgi',
+            'Par la disparition de la membrane plasmique entre les deux noyaux'
           ],
           "correctAnswerIndex": 0,
           "explanation": "La membrane souple de la cellule animale se resserre au milieu comme un fil qu'on tire, séparant les deux cellules par un sillon d'étranglement."
@@ -2092,9 +2092,9 @@ export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
           "prompt": "Comment s'effectue la cytodiérèse chez une cellule végétale entourée d'une paroi pectocellulosique ?",
           "options": [
             "Par la construction d'une nouvelle paroi squelettique rigide du centre vers la périphérie",
-            "Par étranglement de la membrane comme chez l'animal",
-            "Par expulsion du noyau hors de la feuille",
-            "Par injection d'acide dans le sol"
+            'Par un étranglement de la membrane, comme chez la cellule animale',
+            'Par un sillon de division qui se creuse de l\'extérieur vers l\'intérieur',
+            'Par le dédoublement de l\'ancienne paroi sans formation de nouvelle paroi'
           ],
           "correctAnswerIndex": 0,
           "explanation": "La paroi rigide de cellulose ne peut pas s'étrangler : les vésicules golgiennes s'accumulent au centre pour bâtir une nouvelle paroi mitoyenne transversale."
@@ -2118,9 +2118,9 @@ export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
           "prompt": "Pourquoi la mitose est-elle qualifiée de reproduction « conforme » ?",
           "options": [
             "Parce qu'elle conserve fidèlement et intégralement le caryotype et l'information génétique de la cellule mère",
-            "Parce qu'elle respecte les règles administratives de l'établissement scolaire",
-            "Parce qu'elle modifie au hasard 50% des gènes de l'organisme",
-            "Parce qu'elle fabrique des spermatozoïdes"
+            'Parce qu\'elle produit des cellules filles ayant deux fois plus de chromosomes',
+            'Parce qu\'elle donne des cellules filles ayant la moitié des chromosomes (n)',
+            'Parce qu\'elle mélange les chromosomes de deux cellules mères différentes'
           ],
           "correctAnswerIndex": 0,
           "explanation": "On parle de reproduction conforme car chaque cellule fille reçoit une copie exacte et fidèle de l'ADN parental : le caryotype est préservé à 100% sans altération."
@@ -2176,9 +2176,9 @@ export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
           "prompt": "Combien de cellules environ composent le corps d'un être humain adulte formé à partir d'une seule cellule-œuf ?",
           "options": [
             "Environ 10¹⁷ cellules (100 millions de milliards de cellules)",
-            "Exactement 46 cellules",
-            "Environ 5000 cellules",
-            "Moins d'un million de cellules"
+            'Exactement 46 cellules (une par chromosome du caryotype)',
+            'Environ 10⁶ cellules (un million de cellules)',
+            'Environ 10⁹ cellules (un milliard de cellules)'
           ],
           "correctAnswerIndex": 0,
           "explanation": "À partir de l'unique cellule-œuf initiale, des millions de vagues de mitoses successives bâtissent l'organisme adulte composé de plus de 10¹⁷ cellules."
@@ -2215,9 +2215,9 @@ export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
           "prompt": "Que se produit-il dans un tissu si les mécanismes de contrôle de la mitose sont altérés et que les cellules se multiplient anarchiquement ?",
           "options": [
             "La formation d'une tumeur (prolifération anarchique pouvant aboutir au cancer)",
-            "Le tissu devient magiquement immortel sans aucun problème de santé",
-            "Les cellules se transforment instantanément en eau stérile",
-            "Le nombre de chromosomes chute à zéro"
+            'Les cellules cessent de se diviser et le tissu se dessèche rapidement',
+            'Les cellules se divisent plus lentement, ce qui ralentit la croissance',
+            'Les cellules perdent leur noyau et deviennent incapables de fonctionner'
           ],
           "correctAnswerIndex": 0,
           "explanation": "Une perte de régulation de la mitose engendre une prolifération cellulaire anarchique et incontrôlée, caractéristique des tumeurs et néoplasmes cancéreux."
@@ -2241,9 +2241,9 @@ export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
           "prompt": "Chez les végétaux supérieurs, dans quelles zones anatomiques la mitose est-elle particulièrement active pour assurer la croissance ?",
           "options": [
             "Dans les méristèmes terminaux des racines et des bourgeons de tiges",
-            "Dans l'écorce de bois mort desséché",
-            "Au centre de la sève brute ascendante",
-            "Dans les grains de sable du sol"
+            'Dans les feuilles adultes, au niveau des cellules chlorophylliennes',
+            'Dans les vaisseaux conducteurs de sève brute de la tige',
+            'Dans les fleurs fanées, au moment de la chute des pétales'
           ],
           "correctAnswerIndex": 0,
           "explanation": "Les méristèmes apicaux (racinaires et caulinaires) sont des zones de mitoses perpétuelles assurant l'allongement continu des organes végétaux."
@@ -2254,9 +2254,9 @@ export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
           "prompt": "Pourquoi le caryotype est-il conservé inchangé au cours des millions de mitoses de la vie d'un individu ?",
           "options": [
             "Parce que la séparation égale des chromatides sœurs à l'anaphase transmet une copie exacte du matériel génétique à chaque cellule fille",
-            "Parce que le noyau ne contient pas d'ADN pendant la division",
-            "Parce que la cellule mère ne donne qu'une seule cellule fille",
-            "Parce que les chromosomes sont détruits puis reconstruits au hasard"
+            'Parce que chaque cellule fille reçoit la moitié des chromosomes de la cellule mère',
+            'Parce que les chromosomes ne sont pas dupliqués avant la division de la cellule',
+            'Parce que les cellules filles reçoivent au hasard un nombre variable de chromosomes'
           ],
           "correctAnswerIndex": 0,
           "explanation": "Grâce à la duplication préalable de l'ADN et au partage équitable des deux chromatides sœurs identiques lors de l'anaphase, chaque cellule fille hérite du même jeu de 46 chromosomes."
@@ -2382,10 +2382,10 @@ export const svt2deADiversiteComportementsAlimentairesChapter: CurriculumChapter
           type: 'mcq',
           prompt: 'Qu’est-ce que le « loco soukouè » préparé dans l’Ouest ivoirien ?',
           options: [
-            'Une soupe de poisson séché',
+            'Une sauce graine préparée à partir de noix de palme',
             'Un foutou préparé à partir de banane plantain très mûre',
-            'Un rôti de cabri sauvage',
-            'Une boisson gazeuse sucrée'
+            'Un foutou préparé à partir d’igname bouillie et pilée',
+            'Un attiéké préparé à partir de manioc fermenté'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -2396,10 +2396,10 @@ export const svt2deADiversiteComportementsAlimentairesChapter: CurriculumChapter
           type: 'mcq',
           prompt: 'Comment définit-on scientifiquement la notion d’habitude alimentaire ?',
           options: [
-            'Une obligation médicale temporaire de jeûne',
+            'Un régime alimentaire temporaire prescrit par un médecin pour soigner une maladie',
             'Le choix récurrent et coutumier que fait une personne ou une communauté quant aux aliments qu’elle consomme',
-            'La digestion complète d’un repas par les sucs gastriques',
-            'L’interdiction de consommer du sel de cuisine'
+            'L’ensemble des aliments disponibles sur les marchés d’une région à une saison donnée',
+            'La quantité d’énergie qu’un individu doit consommer chaque jour pour rester en bonne santé'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -2495,7 +2495,7 @@ Les habitudes alimentaires sont également modulées par l'héritage social :
           id: 'seconde_a_svt_ch8_p2_ex3',
           type: 'mcq',
           prompt: 'Où rencontre-t-on principalement des sols hydromorphes propices aux cocotiers et au maraîchage en Côte d’Ivoire ?',
-          options: ['Sur les hauts sommets du mont Nimba', 'Sur le littoral marin et les zones marécageuses des bas-fonds', 'Dans le désert du Sahara', 'Au centre de la ville de Bouaké'],
+          options: ['Sur les plateaux granitiques bien drainés du Centre', 'Sur le littoral marin et les zones marécageuses des bas-fonds', 'Dans les zones de savane sèche du Nord', 'Sur les pentes montagneuses de la région de Man'],
           correctAnswerIndex: 1,
           explanation:
             'Les sols hydromorphes sont des sols saturés d’eau situés le long des côtes lagunaires et dans les bas-fonds inondables.'
@@ -2513,7 +2513,7 @@ Les habitudes alimentaires sont également modulées par l'héritage social :
           id: 'seconde_a_svt_ch8_p2_ex5',
           type: 'mcq',
           prompt: 'Parmi les facteurs suivants, lequel relève de la diversité sociologique influençant le comportement alimentaire ?',
-          options: ['La teneur du sol en silice', 'Les croyances religieuses et les tabous alimentaires ancestraux', 'La pression atmosphérique', 'La hauteur de la nappe phréatique'],
+          options: ['La nature des sols et leur richesse en éléments minéraux', 'Les croyances religieuses et les tabous alimentaires ancestraux', 'La répartition des pluies au cours de l\'année', 'Le type de végétation dominant dans la région'],
           correctAnswerIndex: 1,
           explanation:
             'Les tabous claniques, les croyances religieuses et les coutumes familiales constituent les facteurs sociologiques déterminants du régime alimentaire.'
@@ -2523,10 +2523,10 @@ Les habitudes alimentaires sont également modulées par l'héritage social :
           type: 'mcq',
           prompt: 'Pourquoi le climat attiéen du Sud est-il propice à la production de banane plantain et de manioc tout au long de l’année ?',
           options: [
-            'Parce qu’il y neige en juillet',
+            'Parce qu’il est marqué par une seule saison des pluies très courte',
             'Parce qu’il bénéficie d’une forte pluviométrie répartie sur deux saisons des pluies',
-            'Parce qu’il n’y a jamais de soleil',
-            'Parce que le vent du nord y souffle sans arrêt'
+            'Parce qu’il est sec et chaud, ce qui convient aux cultures de manioc',
+            'Parce que l’harmattan y apporte l’humidité nécessaire toute l’année'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -2537,10 +2537,10 @@ Les habitudes alimentaires sont également modulées par l'héritage social :
           type: 'mcq',
           prompt: 'Qu’est-ce qu’un tabou alimentaire dans les traditions de nombreuses communautés ivoiriennes ?',
           options: [
-            'Un plat servi uniquement aux nouveau-nés',
+            'Un aliment réservé aux fêtes et aux grandes cérémonies de la communauté',
             'Une interdiction sacrée ou coutumière de chasser ou de consommer une espèce animale ou végétale',
-            'Un instrument de musique utilisé pendant les repas',
-            'Un marché de vivres ouvert le dimanche'
+            'Une recette traditionnelle transmise de génération en génération',
+            'Un aliment déconseillé par les médecins en raison de sa richesse en graisses'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -2551,10 +2551,10 @@ Les habitudes alimentaires sont également modulées par l'héritage social :
           type: 'mcq',
           prompt: 'En conclusion, de quoi résulte la diversité des comportements alimentaires de l’homme en Côte d’Ivoire ?',
           options: [
-            'Exclusivement du prix des produits importés d’Europe',
+            'Uniquement des facteurs naturels (sols, climats, végétation), sans influence des traditions',
             'De l’action combinée des habitudes alimentaires, des facteurs naturels (sols, climats, végétation) et des facteurs socioculturels',
-            'D’un décret gouvernemental',
-            'Du hasard sans aucune explication logique'
+            'Uniquement des croyances religieuses et des tabous, sans lien avec le milieu naturel',
+            'Uniquement du niveau de revenu des familles et du prix des produits sur les marchés'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -2669,10 +2669,10 @@ Ils contiennent des composés chimiques (comme les glucosides cyanogénétiques)
           type: 'mcq',
           prompt: 'Pourquoi qualifie-t-on des aliments comme le manioc ou le chou d’aliments « goîtrogènes » ?',
           options: [
-            'Parce qu’ils contiennent trop de sucre rapide',
+            'Parce qu’ils apportent un excès d’iode qui fait gonfler la thyroïde',
             'Parce qu’ils favorisent l’élimination de l’iode ou bloquent son utilisation par la thyroïde',
-            'Parce qu’ils colorent la peau en jaune',
-            'Parce qu’ils détruisent les globules rouges'
+            'Parce qu’ils sont trop riches en glucides et favorisent l’obésité',
+            'Parce qu’ils contiennent des graisses qui bouchent les artères'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -2683,10 +2683,10 @@ Ils contiennent des composés chimiques (comme les glucosides cyanogénétiques)
           type: 'mcq',
           prompt: 'Que se passe-t-il dans les follicules de la thyroïde en cas de carence prolongée en iode ?',
           options: [
-            'La thyroïde rétrécit et disparaît',
+            'Les follicules se vident et la thyroïde rétrécit jusqu’à disparaître complètement',
             'Les follicules se remplissent de substance colloïde précurseur sans pouvoir achever la synthèse des hormones, d’où son gonflement',
-            'Elle sécrète du suc pancréatique',
-            'Elle se transforme en os dur'
+            'Les follicules produisent davantage d’hormones thyroïdiennes, d’où une hyperactivité',
+            'Les follicules fabriquent des hormones sans iode, et la glande garde une taille normale'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -2697,10 +2697,10 @@ Ils contiennent des composés chimiques (comme les glucosides cyanogénétiques)
           type: 'mcq',
           prompt: 'Quel moyen simple, efficace et obligatoire de santé publique permet de prévenir l’apparition du goître dans les populations ?',
           options: [
-            'L’interdiction de boire de l’eau minérale',
-            'La consommation exclusive de viande rouge',
+            'La consommation régulière de manioc et de chou',
+            'La réduction de la consommation de sel de cuisine',
             'L’iodation systématique du sel de cuisine de consommation courante',
-            'L’arrêt de toute pratique sportive'
+            'L’ajout de sucre aux aliments des jeunes enfants'
           ],
           correctAnswerIndex: 2,
           explanation:
@@ -2843,10 +2843,10 @@ Pour préserver sa santé, l'alimentation doit être variée et équilibrée :
           type: 'mcq',
           prompt: 'Qu’est-ce qu’une plaque d’athérome à l’origine de l’artériosclérose ?',
           options: [
-            'Un os cassé dans la jambe',
+            'Un caillot de sang qui circule librement dans les veines',
             'Un dépôt graisseux riche en mauvais cholestérol sur la paroi interne des artères',
-            'Une infection virale de la gorge',
-            'Un muscle artificiel'
+            'Une inflammation du muscle cardiaque due à une infection',
+            'Un rétrécissement des artères dû à la contraction des muscles'
           ],
           correctAnswerIndex: 1,
           explanation:
@@ -2856,7 +2856,7 @@ Pour préserver sa santé, l'alimentation doit être variée et équilibrée :
           id: 'seconde_a_svt_ch9_p2_ex6',
           type: 'mcq',
           prompt: 'Quelle est la conséquence directe de l’obstruction complète d’une artère coronaire par un caillot (thrombose) ?',
-          options: ['L’infarctus du myocarde (crise cardiaque)', 'Le goître endémique', 'La fracture du fémur', 'La rougeole'],
+          options: ['L’infarctus du myocarde (crise cardiaque)', 'L’hypertension artérielle (tension trop élevée)', 'L’artériosclérose (durcissement des artères)', 'Le diabète (excès de sucre dans le sang)'],
           correctAnswerIndex: 0,
           explanation:
             'Les artères coronaires irriguent le myocarde (muscle cardiaque). Leur occlusion brutale prive le cœur d’oxygène et cause un infarctus.'
@@ -2880,10 +2880,10 @@ Pour préserver sa santé, l'alimentation doit être variée et équilibrée :
           type: 'mcq',
           prompt: 'Quel comportement protecteur permet de limiter le risque d’artériosclérose et d’obésité ?',
           options: [
-            'Passer 12 heures par jour assis sans bouger en grignotant des sucreries',
+            'Consommer chaque jour beaucoup de graisses animales et de fritures pour avoir de l’énergie',
             'Adopter une alimentation variée et équilibrée pauvre en graisses animales et pratiquer une activité physique régulière',
-            'Supprimer complètement l’eau de boisson',
-            'Manger exclusivement des aliments ultra-transformés'
+            'Supprimer complètement les glucides et les lipides de son alimentation quotidienne',
+            'Manger peu mais très souvent des aliments sucrés, en limitant toute activité physique'
           ],
           correctAnswerIndex: 1,
           explanation:
