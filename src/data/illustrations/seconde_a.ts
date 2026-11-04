@@ -271,4 +271,12 @@ export const SECONDE_A_ILLUSTRATIONS: Record<string, ExerciseIllustration> = {
       tableData: {"headers":["Région","Peuples cités","Aliment de base","Plat"],"rows":[["Nord (savane)","Sénoufo","Maïs, mil","Kabato (tô) à la sauce feuille"],["Centre","Baoulé","Igname","Foutou, n’gbô (ragoût)"],["Sud lagunaire","Adjoukrou, Ébrié","Manioc","Attiéké"],["Ouest forestier","Bété, Wè, Dan","Riz, manioc","Riz à la sauce graine ou kplé"]]},
     },
   },
+  "seconde_a_francais_ch3_p1_ex1": {
+    course: {
+      type: 'custom_svg',
+      title: "Le plan détaillé (Hugo, « Veni, vidi, vixi »)",
+      caption: "Chaque centre d’intérêt se découpe en au moins deux sous-centres, du plus visible au plus profond. Chaque sous-centre deviendra un paragraphe.",
+      tableData: {"headers":["Partie","Sous-centre","Indices du texte"],"rows":[["I. L’amertume du poète","A. Ses ressentiments face à sa condition sociale","« servi », « veillé », « riait de ma peine »"],["","B. Le malaise et la souffrance","« bagne terrestre », « forçats humains »"],["","C. L’indifférence amère","« ne daigne plus même répondre », « sombre paresse »"],["II. L’aspiration à la mort","A. Le bilan d’une vie achevée","« j’ai fait », « j’ai servi », « j’ai vu »"],["","B. La mort comme délivrance","« Ouvrez-moi les portes de la nuit »"]]},
+    },
+  },
 };

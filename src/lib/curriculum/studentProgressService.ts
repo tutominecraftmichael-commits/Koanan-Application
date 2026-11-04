@@ -12,6 +12,7 @@ import type {
 import { END_OF_CHAPTER_MARKER, getSessionMiniLessonQuota } from './types';
 import { getCurriculumChapterById, getCurriculumChapters, normalizeGradeForLookup } from './curriculumRegistry';
 import { isChimieChapter } from './curriculumExpander';
+import { voletFromSubjectName } from './curriculumMatcher';
 
 const PROGRESS_STORAGE_PREFIX = 'konan_curriculum_progress_v1_';
 
@@ -351,6 +352,10 @@ export function buildTutorSessionPayload(
   durationMinutes: number = 25,
   requestedSubCategory?: StemSubCategory
 ): BuildTutorSessionResult {
+  // Matière inscrite « Histoire » ou « Géographie » (et non « HG ») : ce volet seul, sans alternance
+  const voletImposedByName = voletFromSubjectName(subjectId, subjectName);
+  if (voletImposedByName) requestedSubCategory = voletImposedByName;
+
   const subjectProgress = readSubjectProgress(getStudentProgressMap(userId), subjectId, gradeLevel);
   const allChapters = getCurriculumChapters(subjectId, gradeLevel);
 
@@ -399,7 +404,8 @@ export function buildTutorSessionPayload(
   let subChapters = chaptersOfSubCategory(allChapters, subjectId, activeSubCategory);
 
   // Si ce volet n'a pas encore de cours pour cette classe, basculer sur le volet jumeau qui en a
-  if (subChapters.length === 0) {
+  // (jamais pour une matière nommée « Histoire » ou « Géographie » : pas d'Histoire dans un créneau de Géographie)
+  if (subChapters.length === 0 && !voletImposedByName) {
     const sibling = SIBLING_SUBCATEGORY[activeSubCategory];
     const siblingChapters = sibling ? chaptersOfSubCategory(allChapters, subjectId, sibling) : [];
     if (sibling && siblingChapters.length > 0) {
@@ -434,7 +440,7 @@ export function buildTutorSessionPayload(
   // RÈGLE 2 : Détection de la deuxième séance (alternance obligatoire, zéro négociation)
   const hasPreviousSession = Boolean(subjectProgress?.lastAlternatedSubCategory);
   // Pas de bannière d'alternance si l'on retombe sur le même volet (l'autre volet n'a pas encore de cours)
-  const isSecondSessionAlternance = hasPreviousSession && !isPositioned
+  const isSecondSessionAlternance = hasPreviousSession && !isPositioned && !voletImposedByName
     && activeSubCategory !== subjectProgress?.lastAlternatedSubCategory
     && isTwoVoletSubject(subjectId);
   let alternanceBannerText: string | undefined = undefined;
