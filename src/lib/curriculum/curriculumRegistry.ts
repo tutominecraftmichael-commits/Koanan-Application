@@ -28,6 +28,9 @@ import { HIST_2DE_L01_HISTOIRE_FORMATION_CITOYEN } from '../../data/courses/seco
 import { HIST_2DE_L02_METHODES_ETUDE_HISTOIRE } from '../../data/courses/seconde/hist_2de_methodes_etude_histoire';
 import { HIST_2DE_L03_METHODOLOGIE_DISSERTATION_COMMENTAIRE } from '../../data/courses/seconde/hist_2de_methodologie_dissertation_commentaire';
 import { HIST_2DE_T2_L01_PREHISTOIRE } from '../../data/courses/seconde/hist_2de_prehistoire';
+import { HIST_2DE_T2_L02_EGYPTE_ANCIENNE } from '../../data/courses/seconde/hist_2de_egypte_ancienne';
+import { HIST_2DE_T2_L03_DEMOCRATIE_ATHENIENNE } from '../../data/courses/seconde/hist_2de_democratie_athenienne';
+import { HIST_2DE_T2_L04_SOUDAN_OCCIDENTAL } from '../../data/courses/seconde/hist_2de_soudan_occidental';
 import { PHILO_TLE_L01_DISSERTATION } from '../../data/courses/terminale/philo_tle_dissertation';
 import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/philo_tle_commentaire_texte';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
@@ -91792,6 +91795,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   HIST_2DE_L02_METHODES_ETUDE_HISTOIRE,
   HIST_2DE_L03_METHODOLOGIE_DISSERTATION_COMMENTAIRE,
   HIST_2DE_T2_L01_PREHISTOIRE,
+  HIST_2DE_T2_L02_EGYPTE_ANCIENNE,
+  HIST_2DE_T2_L03_DEMOCRATIE_ATHENIENNE,
+  HIST_2DE_T2_L04_SOUDAN_OCCIDENTAL,
   ...maths2deCGeometryChapters,
   ...maths2deCNumericChapters,
   ...chimie2deCChapters,
