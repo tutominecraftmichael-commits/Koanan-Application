@@ -367,10 +367,13 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* fill-mode « backwards » et non « both » : une animation qui reste appliquée après la fin
+   crée une couche d'affichage (stacking context) qui piège les fenêtres ouvertes depuis l'écran
+   sous la barre de navigation mobile. Toutes les entrées finissent à l'état normal, donc rien ne change à l'œil. */
 .animate-in {
   animation-duration: 0.35s;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  animation-fill-mode: both;
+  animation-fill-mode: backwards;
 }
 
 .fade-in {
