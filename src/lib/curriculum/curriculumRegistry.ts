@@ -26,6 +26,8 @@ import { GEO_2DE_T2_L03_ENVIRONNEMENT_MENACE } from '../../data/courses/seconde/
 import { GEO_2DE_T3_L02_PROBLEMES_ENVIRONNEMENTAUX } from '../../data/courses/seconde/geo_2de_problemes_environnementaux';
 import { HIST_2DE_L01_HISTOIRE_FORMATION_CITOYEN } from '../../data/courses/seconde/hist_2de_histoire_formation_citoyen';
 import { HIST_2DE_L02_METHODES_ETUDE_HISTOIRE } from '../../data/courses/seconde/hist_2de_methodes_etude_histoire';
+import { HIST_2DE_L03_METHODOLOGIE_DISSERTATION_COMMENTAIRE } from '../../data/courses/seconde/hist_2de_methodologie_dissertation_commentaire';
+import { HIST_2DE_T2_L01_PREHISTOIRE } from '../../data/courses/seconde/hist_2de_prehistoire';
 import { PHILO_TLE_L01_DISSERTATION } from '../../data/courses/terminale/philo_tle_dissertation';
 import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/philo_tle_commentaire_texte';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
@@ -91788,6 +91790,8 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   // 2nde A — Histoire (format v2)
   HIST_2DE_L01_HISTOIRE_FORMATION_CITOYEN,
   HIST_2DE_L02_METHODES_ETUDE_HISTOIRE,
+  HIST_2DE_L03_METHODOLOGIE_DISSERTATION_COMMENTAIRE,
+  HIST_2DE_T2_L01_PREHISTOIRE,
   ...maths2deCGeometryChapters,
   ...maths2deCNumericChapters,
   ...chimie2deCChapters,
