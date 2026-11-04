@@ -4,7 +4,7 @@ importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js');
 
 // Version du Service Worker pour forcer la mise à jour sur smartphone et PWA installée
-const SW_VERSION = 'v-2026-10-25-05';
+const SW_VERSION = 'v-2026-11-04-01';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -207,6 +207,12 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
+
+  // Requêtes vers d'autres sites (Google Sign-In apis.google.com, polices, avatars, Firebase…) :
+  // on ne les intercepte JAMAIS. Le fetch() d'un Service Worker obéit à la règle connect-src de la CSP,
+  // qui n'autorise pas ces domaines : en les interceptant, le SW faisait échouer le script de connexion
+  // Google (auth/internal-error). Le navigateur les charge alors normalement avec la CSP de la page.
+  if (url.origin !== self.location.origin) return;
 
   // version.json et le Service Worker doivent TOUJOURS être cherchés sur le réseau sans aucun cache
   if (url.pathname === '/version.json' || url.pathname.includes('firebase-messaging-sw.js') || url.pathname.includes('sw.js')) {
