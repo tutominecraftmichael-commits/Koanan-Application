@@ -20,6 +20,9 @@ import { HIST_TLE_T3_L02_MUTATIONS_CIVILISATION_NEGRO_AFRICAINE } from '../../da
 import { GEO_2DE_L01_OBJET_INTERET_DEMARCHE } from '../../data/courses/seconde/geo_2de_objet_interet_demarche';
 import { GEO_2DE_L02_PLANETE_TERRE } from '../../data/courses/seconde/geo_2de_planete_terre';
 import { GEO_2DE_L03_TECHNIQUES_REPRESENTATION_TERRE } from '../../data/courses/seconde/geo_2de_techniques_representation_terre';
+import { GEO_2DE_T2_L01_MILIEU_SUBEQUATORIAL } from '../../data/courses/seconde/geo_2de_milieu_subequatorial';
+import { GEO_2DE_T2_L02_MILIEU_TROPICAL } from '../../data/courses/seconde/geo_2de_milieu_tropical';
+import { GEO_2DE_T2_L03_ENVIRONNEMENT_MENACE } from '../../data/courses/seconde/geo_2de_environnement_menace';
 import { PHILO_TLE_L01_DISSERTATION } from '../../data/courses/terminale/philo_tle_dissertation';
 import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/philo_tle_commentaire_texte';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
@@ -91775,6 +91778,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   GEO_2DE_L01_OBJET_INTERET_DEMARCHE,
   GEO_2DE_L02_PLANETE_TERRE,
   GEO_2DE_L03_TECHNIQUES_REPRESENTATION_TERRE,
+  GEO_2DE_T2_L01_MILIEU_SUBEQUATORIAL,
+  GEO_2DE_T2_L02_MILIEU_TROPICAL,
+  GEO_2DE_T2_L03_ENVIRONNEMENT_MENACE,
   ...maths2deCGeometryChapters,
   ...maths2deCNumericChapters,
   ...chimie2deCChapters,
