@@ -17,6 +17,9 @@ import { HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE } from '../../data/courses/te
 import { HIST_TLE_T2_L04_UNION_AFRICAINE } from '../../data/courses/terminale/hist_tle_union_africaine';
 import { HIST_TLE_T3_L01_MONDE_OCCIDENTAL } from '../../data/courses/terminale/hist_tle_monde_occidental';
 import { HIST_TLE_T3_L02_MUTATIONS_CIVILISATION_NEGRO_AFRICAINE } from '../../data/courses/terminale/hist_tle_mutations_civilisation_negro_africaine';
+import { GEO_2DE_L01_OBJET_INTERET_DEMARCHE } from '../../data/courses/seconde/geo_2de_objet_interet_demarche';
+import { GEO_2DE_L02_PLANETE_TERRE } from '../../data/courses/seconde/geo_2de_planete_terre';
+import { GEO_2DE_L03_TECHNIQUES_REPRESENTATION_TERRE } from '../../data/courses/seconde/geo_2de_techniques_representation_terre';
 import { PHILO_TLE_L01_DISSERTATION } from '../../data/courses/terminale/philo_tle_dissertation';
 import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/philo_tle_commentaire_texte';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
@@ -91768,6 +91771,10 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   PHILO_TLE_L08_PROGRES_BONHEUR,
   PHILO_TLE_L09_LANGAGE_VERITE,
   PHILO_TLE_L10_CONNAISSANCE_SCIENTIFIQUE,
+  // 2nde A — Géographie (format v2)
+  GEO_2DE_L01_OBJET_INTERET_DEMARCHE,
+  GEO_2DE_L02_PLANETE_TERRE,
+  GEO_2DE_L03_TECHNIQUES_REPRESENTATION_TERRE,
   ...maths2deCGeometryChapters,
   ...maths2deCNumericChapters,
   ...chimie2deCChapters,
