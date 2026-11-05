@@ -7,9 +7,7 @@ import { formatMinutesToHours, getWeekDateRange, isDateInWeek } from '../../lib/
 import { 
   BarChart3, 
   CheckCircle2, 
-  Award, 
   Clock, 
-  Star, 
   Brain
 } from 'lucide-react';
 import { useLanguage, t } from '../../lib/i18n';
@@ -111,19 +109,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     ? Math.min(100, Math.round((completedSessionsCount / totalPlannedSessions) * 100))
     : (totalPlannedMinutes > 0 ? Math.min(100, Math.round((totalCompletedMinutes / totalPlannedMinutes) * 100)) : 0);
 
-  // Real Focus Calculation pour la période
-  const validCompletedLogs = filteredLogs.filter(l => 
-    filteredSessions.some(s => s.id === l.sessionId && s.completed) ||
-    (completedSessions.length > 0 && l.satisfactionRating > 0)
-  );
-
-  const hasCompletedWork = completedSessions.length > 0 || totalCompletedMinutes > 0;
-  const hasValidLogs = hasCompletedWork && validCompletedLogs.length > 0;
-
-  const numericAverageRating = hasValidLogs
-    ? Number((validCompletedLogs.reduce((acc, l) => acc + l.satisfactionRating, 0) / validCompletedLogs.length).toFixed(1))
-    : 0;
-
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
       
@@ -176,8 +161,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </div>
       </div>
 
-      {/* KPI TOP TILES (2 COLONNES COMPACTES SUR MOBILE, 3 SUR DESKTOP) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-4">
+      {/* KPI TOP TILES (2 COLONNES) */}
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
         
         <Card className="p-3 sm:p-5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-1.5 sm:space-y-3 interactive-card shadow-xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs font-semibold uppercase">
@@ -210,40 +195,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             </span>
           </div>
           <ProgressBar value={completionRate} size="sm" showPercentage={false} color="emerald" />
-        </Card>
-
-        <Card className="p-3 sm:p-5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-1.5 sm:space-y-3 interactive-card shadow-xs col-span-2 sm:col-span-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs font-semibold uppercase">
-            <span className="truncate">Focus Moyen</span>
-            <div className={`p-1 sm:p-2 rounded-lg shrink-0 ${hasValidLogs ? 'bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'}`}>
-              <Star className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${hasValidLogs ? 'fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400' : 'text-slate-400 dark:text-slate-600'}`} />
-            </div>
-          </div>
-          <div className="flex items-baseline justify-between sm:block">
-            <div>
-              <span className={`text-lg sm:text-3xl font-extrabold font-mono ${hasValidLogs ? 'text-amber-600 dark:text-amber-300' : 'text-slate-400 dark:text-slate-500'}`}>
-                {hasValidLogs ? (
-                  <AnimatedCounter value={numericAverageRating} suffix=" / 5" decimals={1} className="text-amber-600 dark:text-amber-300" />
-                ) : (
-                  '0.0 / 5'
-                )}
-              </span>
-              <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-                {hasValidLogs ? `Sur ${validCompletedLogs.length} session${validCompletedLogs.length > 1 ? 's' : ''}` : 'Aucun cours effectué'}
-              </p>
-            </div>
-            <div className="flex items-center gap-0.5 self-center sm:self-auto sm:mt-2">
-              {Array.from({ length: 5 }).map((_, i) => {
-                const isFilled = hasValidLogs && i < Math.round(numericAverageRating);
-                return (
-                  <Star 
-                    key={i} 
-                    className={`w-3 h-3 ${isFilled ? 'fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400' : 'text-slate-300 dark:text-slate-700 fill-none'}`} 
-                  />
-                );
-              })}
-            </div>
-          </div>
         </Card>
 
       </div>
@@ -290,47 +241,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </div>
       </Card>
 
-      {/* RECENT STUDY SESSIONS LOGS */}
-      <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-xs">
-        <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-          <Award className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 dark:text-amber-400" />
-          <span>Journal d'Étude Récent</span>
-        </h2>
-
-        {logs.length === 0 ? (
-          <p className="text-xs text-slate-500 dark:text-slate-400 italic py-4 text-center">
-            Aucun historique de session. Validez vos séances du jour dans votre planning pour créer votre historique !
-          </p>
-        ) : (
-          <div className="divide-y divide-slate-100 dark:divide-slate-800/80">
-            {logs.slice(0, 5).map(log => {
-              const sub = subjects.find(s => s.id === log.subjectId);
-              return (
-                <div key={log.id} className="py-2.5 sm:py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
-                  <div className="space-y-0.5 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 dark:text-white truncate">{sub?.name || 'Matière'}</span>
-                      <Badge variant="cyan" size="sm" className="text-[10px] px-1.5 py-0 font-mono">{log.durationMinutes} min</Badge>
-                    </div>
-                    <p className="text-slate-600 dark:text-slate-400 text-[11px] truncate">{log.summary}</p>
-                  </div>
-
-                  <div className="flex items-center gap-2 self-start sm:self-auto">
-                    <div className="flex items-center gap-0.5">
-                      {Array.from({ length: log.satisfactionRating }).map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400" />
-                      ))}
-                    </div>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
-                      {new Date(log.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </Card>
 
     </div>
   );
