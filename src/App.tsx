@@ -825,6 +825,8 @@ export function App() {
     userState.konanId = studentKonanId;
     userState.userAccount = {
       ...profile,
+      // La photo choisie par l'élève survit à chaque reconnexion (Google ne la remplace pas)
+      customAvatar: userState.userAccount?.customAvatar,
       konanId: studentKonanId,
       planTier: effectivePlan,
       name: finalName,
@@ -1487,6 +1489,28 @@ export function App() {
     });
 
     showToast(`Nom et filière enregistrés : ${updated.name} (${updated.academicLevel})`);
+  };
+
+  /** Photo de profil choisie dans les réglages (null = revenir à la photo du compte Google). */
+  const handleUpdateAvatar = (dataUrl: string | null) => {
+    setState(prev => {
+      if (!prev.userAccount) return prev;
+      const next: AppState = {
+        ...prev,
+        userAccount: {
+          ...prev.userAccount,
+          // Chaîne vide (et non undefined) : Firestore efface alors aussi l'ancienne photo sur les autres appareils
+          customAvatar: dataUrl || '',
+          lastSyncedAt: new Date().toISOString(),
+        },
+      };
+      saveAppState(next);
+      if (prev.userAccount.googleId && !prev.isDemoMode) {
+        saveUserState(prev.userAccount.googleId, next);
+      }
+      return next;
+    });
+    showToast(dataUrl ? 'Photo de profil mise à jour.' : 'Photo de profil retirée : retour à la photo de ton compte.');
   };
 
   const handleRegeneratePlan = () => {
@@ -2244,6 +2268,7 @@ export function App() {
         onLogout={handleLogout}
 
         onUpdateProfile={handleUpdateProfile}
+        onUpdateAvatar={state.userAccount ? handleUpdateAvatar : undefined}
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}
         onResetData={handleResetData}
