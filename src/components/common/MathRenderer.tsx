@@ -645,8 +645,11 @@ export function sanitizeFormulaForKatex(raw: string): string {
   // 10. Vraies fractions horizontales de manuel scolaire (\frac{...}{...})
   // 10.1 Parenthèses complexes : (A) / (B) ou (A) / B ou A / (B)
   s = s.replace(/(?<!\\frac\{)\(([^()]+)\)\s*\/\s*\(([^()]+)\)/g, '\\frac{$1}{$2}');
-  s = s.replace(/(?<!\\frac\{)\(([^()]+)\)\s*\/\s*([a-zA-Z0-9_\\{}\\^\\+\\-]+)/g, '\\frac{$1}{$2}');
-  s = s.replace(/(?<!\\frac\{)(?<![a-zA-Z0-9_\\{])([a-zA-Z0-9_\\{}\\^\\+\\-]+)\s*\/\s*\(([^()]+)\)/g, '\\frac{$1}{$2}');
+  // Priorité des opérations : le terme collé au « / » ne contient jamais de + ou − hors accolades
+  // (« (a+b)/2+3 » donne \frac{a+b}{2}+3 et « x-1/(x+2) » donne x-\frac{1}{x+2}).
+  // Un terme = lettres/chiffres/commandes, suivis d'indices ou d'exposants bien formés (10^{-3}, n_{A}).
+  s = s.replace(/(?<!\\frac\{)\(([^()]+)\)\s*\/\s*((?:\\[a-zA-Z]+|[a-zA-Z0-9])+(?:[_^](?:\{[^{}]*\}|[a-zA-Z0-9]))*)/g, '\\frac{$1}{$2}');
+  s = s.replace(/(?<!\\frac\{)(?<![a-zA-Z0-9_\\{}])((?:\\[a-zA-Z]+|[a-zA-Z0-9])+(?:[_^](?:\{[^{}]*\}|[a-zA-Z0-9]))*)\s*\/\s*\(([^()]+)\)/g, '\\frac{$1}{$2}');
 
   // 10.2 Dérivées & taux de variation : d[A]/dt, dn_A/dt, \Delta[A]/\Delta t, dx/dt, dv/dt
   s = s.replace(/(?<!\\frac\{)d\[([A-Za-z0-9_\\{}]+)\]\s*\/\s*dt/g, '\\frac{d[$1]}{dt}');
