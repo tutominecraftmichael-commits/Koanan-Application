@@ -176,6 +176,8 @@ export interface UserAccount {
   name: string;
   email: string;
   avatar: string;
+  /** Photo de profil choisie par l'élève (petite image JPEG en data URL). Prioritaire sur `avatar`. */
+  customAvatar?: string;
   googleId: string;
   academicLevel: string;
   gradeLevel?: string;

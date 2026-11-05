@@ -26,6 +26,7 @@ import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
 import { formatNotificationTime } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
+import { getDisplayAvatar } from '../../lib/avatar';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
 import { AdminGoogleLoginButton } from '../common/AdminGoogleLoginButton';
 import { 
@@ -751,9 +752,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                       title="Voir mon profil et paramètres"
                       className="hidden lg:flex items-center gap-1 sm:gap-2 hover:opacity-90 transition-opacity cursor-pointer text-left shrink-0"
                     >
-                      {userAccount.avatar ? (
+                      {getDisplayAvatar(userAccount) ? (
                         <img
-                          src={userAccount.avatar}
+                          src={getDisplayAvatar(userAccount)}
                           alt={displayName}
                           className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-indigo-500/40 shadow-xs shrink-0"
                         />
@@ -955,18 +956,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             }}
             className="flex flex-col items-center justify-center py-1 px-1 w-full rounded-xl transition-all cursor-pointer relative text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
           >
-            {userAccount?.avatar ? (
+            {/* Photo plus grande que les autres icônes : on la reconnaît d'un coup d'œil */}
+            {getDisplayAvatar(userAccount) ? (
               <img
-                src={userAccount.avatar}
+                src={getDisplayAvatar(userAccount)}
                 alt="Profil"
-                className="w-4.5 h-4.5 rounded-full object-cover border border-indigo-400/50 shadow-xs"
+                className="w-7 h-7 -mt-1.5 rounded-full object-cover ring-2 ring-indigo-500/60 dark:ring-indigo-400/70 shadow-sm"
               />
             ) : (
-              <div className="w-4.5 h-4.5 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-[9px] font-bold text-white shadow-xs">
-                {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-3 h-3" />}
+              <div className="w-7 h-7 -mt-1.5 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 ring-2 ring-indigo-500/40 dark:ring-indigo-400/50 flex items-center justify-center text-xs font-bold text-white shadow-sm">
+                {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
               </div>
             )}
-            <span className="text-[10px] mt-1 font-medium tracking-tight truncate max-w-full">
+            <span className="text-[10px] font-medium tracking-tight truncate max-w-full">
               Profil
             </span>
           </button>

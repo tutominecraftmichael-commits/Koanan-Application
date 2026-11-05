@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, 
   Settings, 
@@ -13,7 +13,8 @@ import {
   GraduationCap,
   Save
 } from 'lucide-react';
-import { Clock, Zap, Sun, Moon } from 'lucide-react';
+import { Clock, Zap, Sun, Moon, Camera } from 'lucide-react';
+import { getDisplayAvatar, resizeImageToAvatar } from '../../lib/avatar';
 import type { UserAccount, AcademicGoal } from '../../types';
 import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
@@ -45,6 +46,8 @@ interface SettingsModalProps {
     phoneNumber?: string; 
     countryCode?: string 
   }) => void;
+  /** Nouvelle photo de profil (data URL), ou null pour revenir à la photo du compte. */
+  onUpdateAvatar?: (dataUrl: string | null) => void;
   onExportData?: () => void;
   onImportData?: () => void;
   onResetData?: () => void;
@@ -69,6 +72,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   isDemoMode,
   onLogout,
   onUpdateProfile,
+  onUpdateAvatar,
   onExportData,
   onImportData,
   onResetData,
@@ -88,6 +92,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [editName, setEditName] = useState('');
   const [editFiliere, setEditFiliere] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isAvatarBusy, setIsAvatarBusy] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   const currentPlan = planTier || userAccount?.planTier || 'free';
 
@@ -103,6 +110,24 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   if (!isOpen) return null;
 
   const displayName = editName || studentName || userAccount?.name || 'Étudiant';
+  const currentAvatar = getDisplayAvatar(userAccount);
+
+  const handleAvatarFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // permet de rechoisir la même photo
+    if (!file || !onUpdateAvatar) return;
+    setAvatarError(null);
+    setIsAvatarBusy(true);
+    try {
+      const dataUrl = await resizeImageToAvatar(file);
+      onUpdateAvatar(dataUrl);
+      soundFX.playCheckmarkPop();
+    } catch (err) {
+      setAvatarError(err instanceof Error ? err.message : 'Impossible de changer la photo.');
+    } finally {
+      setIsAvatarBusy(false);
+    }
+  };
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,17 +196,54 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               
               {/* Profile Card Header */}
               <div className="flex items-center gap-3.5 pb-3 border-b border-slate-200 dark:border-slate-800/60">
-                {userAccount?.avatar ? (
-                  <img
-                    src={userAccount.avatar}
-                    alt={displayName}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-indigo-500/40 shadow-md shrink-0"
+                {/* Photo de profil : la toucher ouvre la galerie pour la changer */}
+                <div className="flex flex-col items-center gap-1 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => avatarInputRef.current?.click()}
+                    disabled={!onUpdateAvatar || isAvatarBusy}
+                    aria-label="Changer la photo de profil"
+                    className="relative w-16 h-16 rounded-full shrink-0 cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 disabled:cursor-default"
+                  >
+                    {currentAvatar ? (
+                      <img
+                        src={currentAvatar}
+                        alt={displayName}
+                        className="w-16 h-16 rounded-full object-cover border-2 border-indigo-500/40 shadow-md"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                        {displayName.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    {isAvatarBusy && (
+                      <span className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center">
+                        <span className="w-6 h-6 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+                      </span>
+                    )}
+                    {onUpdateAvatar && (
+                      <span className="absolute -bottom-0.5 -right-0.5 w-6 h-6 rounded-full bg-indigo-600 text-white border-2 border-white dark:border-slate-900 flex items-center justify-center shadow group-hover:bg-indigo-500 transition-colors">
+                        <Camera className="w-3.5 h-3.5" />
+                      </span>
+                    )}
+                  </button>
+                  {onUpdateAvatar && userAccount?.customAvatar && !isAvatarBusy && (
+                    <button
+                      type="button"
+                      onClick={() => { setAvatarError(null); onUpdateAvatar(null); }}
+                      className="text-[10px] font-semibold text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 cursor-pointer"
+                    >
+                      Retirer ma photo
+                    </button>
+                  )}
+                  <input
+                    ref={avatarInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleAvatarFile}
                   />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
-                    {displayName.charAt(0).toUpperCase()}
-                  </div>
-                )}
+                </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <h4 className={`text-sm font-bold truncate ${
@@ -223,8 +285,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <ShieldCheck className="w-3 h-3 text-cyan-500 dark:text-cyan-400" />
                     <span>{isDemoMode ? t('demoIsolated', lang) : t('secureSession', lang)}</span>
                   </div>
+                  {onUpdateAvatar && (
+                    <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                      Touche ta photo pour la changer.
+                    </p>
+                  )}
                 </div>
               </div>
+              {avatarError && (
+                <p role="alert" className="-mt-2 text-xs font-medium text-rose-600 dark:text-rose-400">
+                  {avatarError}
+                </p>
+              )}
 
               {/* Formulaire d'édition STRICTE : 1. Nom, 2. Filière */}
               <form onSubmit={handleSaveProfile} className="space-y-3.5 pt-1">
