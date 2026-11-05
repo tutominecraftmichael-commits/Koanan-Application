@@ -46,6 +46,9 @@ import { GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION } from '../../data/courses/p
 import { HIST_1RE_T1_L01_ESSOR_CAPITALISME } from '../../data/courses/premiere/hist_1re_essor_capitalisme';
 import { HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES } from '../../data/courses/premiere/hist_1re_revolutions_industrielles';
 import { HIST_1RE_T2_L01_IMPERIALISME_CONGRES_BERLIN } from '../../data/courses/premiere/hist_1re_imperialisme_congres_berlin';
+import { HIST_1RE_T2_L02_RESISTANCES_CONQUETE_CI } from '../../data/courses/premiere/hist_1re_resistances_conquete_ci';
+import { HIST_1RE_T2_L03_COLONISATION_COTE_IVOIRE } from '../../data/courses/premiere/hist_1re_colonisation_cote_ivoire';
+import { HIST_1RE_T3_L01_PREMIERE_GUERRE_MONDIALE } from '../../data/courses/premiere/hist_1re_premiere_guerre_mondiale';
 import { FR_2DE_PL_L01_FONCTIONS_LANGAGE } from '../../data/courses/seconde/fr_2de_fonctions_langage';
 import { FR_2DE_PL_L02_CONNECTEURS_LOGIQUES } from '../../data/courses/seconde/fr_2de_connecteurs_logiques';
 import { FR_2DE_PL_L02B_EXPRESSION_OPINION } from '../../data/courses/seconde/fr_2de_expression_opinion';
@@ -91842,6 +91845,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   HIST_1RE_T1_L01_ESSOR_CAPITALISME,
   HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES,
   HIST_1RE_T2_L01_IMPERIALISME_CONGRES_BERLIN,
+  HIST_1RE_T2_L02_RESISTANCES_CONQUETE_CI,
+  HIST_1RE_T2_L03_COLONISATION_COTE_IVOIRE,
+  HIST_1RE_T3_L01_PREMIERE_GUERRE_MONDIALE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
   FR_2DE_PL_L02_CONNECTEURS_LOGIQUES,
   FR_2DE_PL_L02B_EXPRESSION_OPINION,
