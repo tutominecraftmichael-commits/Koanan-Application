@@ -130,7 +130,16 @@ export function renderTextWithStackedFractions(text: string): React.ReactNode {
   // - Séparateur /
   // - Dénominateur: parenthèses avec contenu OU nombre/expression simple
   // Exemples gérés: "3/5", "-4/5", "−4/5", "41/14", "(3 × 2 + 5 × 7)/14", "16/15", "8/27", "1/25"
-  const fractionRegex = /(?:([−-])?\s*(\([^\(\)]+\)|[a-zA-Z0-9√²³ⁿ]+(?:\s*[+−×·]\s*[a-zA-Z0-9√²³ⁿ]+)*)\s*\/\s*(\([^\(\)]+\)|[a-zA-Z0-9√²³ⁿ]+))/g;
+  // PRIORITÉ DES OPÉRATIONS : la division passe avant + et −. Dans « 4 − 35/11 », seul 35 est au numérateur
+  // (sinon on afficherait (4 − 35)/11 = −31/11 au lieu de 9/11). Un + ou − n'entre donc JAMAIS dans un
+  // numérateur sans parenthèses ; × et · restent permis car (a × b)/c = a × (b/c).
+  // Un nombre se lit EN ENTIER : « 10 000 » (espace des milliers) et « 0,038 » (virgule décimale) ne sont
+  // jamais coupés (sinon « 0,038 / 2 » s'afficherait « 0, » suivi de la fraction 038/2).
+  const ATOM = String.raw`(?:\d{1,3}(?:[   ]\d{3})+(?:,\d+)?|[a-zA-Z0-9√²³ⁿ]+(?:,\d+)?)`;
+  const fractionRegex = new RegExp(
+    String.raw`(?:([−-])?\s*(?<![\d,])(\([^\(\)]+\)|${ATOM}(?:\s*[×·]\s*${ATOM})*)\s*\/\s*(\([^\(\)]+\)|${ATOM})(?![\d,]))`,
+    'g',
+  );
 
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
