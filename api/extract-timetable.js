@@ -12,15 +12,9 @@
  * - nombre d'appels limité par adresse IP (au mieux, par instance du serveur).
  */
 
-import { GoogleGenAI } from '@google/genai';
 import { loadLocalEnvIfPresent } from './_env.js';
-import {
-  buildTimetablePrompt,
-  TIMETABLE_MODELS,
-  normalizeMime,
-  stripDataUrlPrefix,
-  cleanTimetableOutput,
-} from './_timetablePrompt.js';
+import { normalizeMime, stripDataUrlPrefix } from './_timetablePrompt.js';
+import { extractTimetable } from './_timetableExtract.js';
 
 // ~3 Mo de fichier (en base64). Au-delà, Vercel refuse de toute façon les corps de plus de 4,5 Mo.
 const MAX_BASE64_CHARS = 4_200_000;
@@ -125,20 +119,17 @@ export default async function handler(req, res) {
   }
   const mimeType = normalizeMime(fileBase64, typeof body?.mimeType === 'string' ? body.mimeType : '');
 
-  const ai = new GoogleGenAI({ apiKey });
-  const prompt = buildTimetablePrompt(format);
-  for (const model of TIMETABLE_MODELS) {
-    try {
-      const response = await ai.models.generateContent({
-        model,
-        contents: [{ role: 'user', parts: [{ inlineData: { data, mimeType } }, { text: prompt }] }],
-      });
-      const text = cleanTimetableOutput(response.text || '');
-      if (text.length > 5) return sendJson(res, 200, { text, model });
-    } catch (err) {
-      // On n'écrit jamais la clé : seulement le nom du modèle et le début du message d'erreur
-      console.warn(`[extract-timetable] ${model} indisponible : ${String(err?.message || err).slice(0, 120)}`);
-    }
+  // Classe de l'élève (ex. « 2nde C ») : sert à choisir la bonne grille quand le document en contient plusieurs
+  const classHint = typeof body?.classHint === 'string' ? body.classHint.slice(0, 40) : '';
+  const result = await extractTimetable({ apiKey, data, mimeType, format, classHint });
+  if (result && result.text) {
+    return sendJson(res, 200, {
+      text: result.text,
+      model: result.model,
+      classes: result.classes,
+      chosenClass: result.chosenClass,
+      warnings: result.warnings,
+    });
   }
   return sendJson(res, 502, {
     error: 'EXTRACTION_FAILED',

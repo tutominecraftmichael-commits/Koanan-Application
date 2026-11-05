@@ -56,7 +56,7 @@ import {
   type ScheduleFormatType
 } from '../../services/pdfParserService';
 import {
-  extraireEmploiDuTemps,
+  extraireEmploiDuTempsDetaille,
   convertFileToBase64,
   hasGeminiApiKey,
   setCustomGeminiApiKey
@@ -89,6 +89,8 @@ import type {
 } from '../../types';
 import type { CurriculumGradeLevel } from '../../lib/curriculum/types';
 import { GRADE_LEVELS } from '../../lib/curriculum/types';
+import type { StructuredTimetableResult } from '../../services/geminiExtractionService';
+import { ExtractionReviewBar } from '../schedule/ExtractionReviewBar';
 
 export const PENDING_ONBOARDING_PAYLOAD_KEY = 'konan_pending_onboarding_payload';
 
@@ -391,6 +393,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   // Étape 3 : Extraction & Transformation en fichier texte (.txt)
   const [uploadedFileName, setUploadedFileName] = useState<string>('');
   const [scheduleText, setScheduleText] = useState<string>('');
+  // Résultat de la dernière lecture par l'IA : classes trouvées dans le document et points à vérifier
+  const [extraction, setExtraction] = useState<StructuredTimetableResult | null>(null);
+  const [activeExtractedClass, setActiveExtractedClass] = useState<string>('');
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [analysisStatus, setAnalysisStatus] = useState<string>('');
   const [extractionError, setExtractionError] = useState<string | null>(null);
@@ -581,6 +586,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
     soundFX.playCheckmarkPop();
     setUploadedFileName(file.name);
+    setExtraction(null);
+    setActiveExtractedClass('');
     setExtractionError(null);
     setIsAnalyzing(true);
     setAnalysisStatus(`Extraction & catégorisation ${activeSystem.title} en cours...`);
@@ -589,7 +596,14 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     try {
       const mimeType = file.type || (isPdf ? 'application/pdf' : 'image/jpeg');
       const base64 = await convertFileToBase64(file);
-      const aiRawText = await extraireEmploiDuTemps(base64, mimeType, activeFormat);
+      // La classe de l'élève aide à choisir la bonne grille quand le document en contient plusieurs
+      const classHint = GRADE_LEVELS.find(g => g.id === selectedGradeLevel)?.badge || '';
+      const extracted = await extraireEmploiDuTempsDetaille(base64, mimeType, activeFormat, classHint);
+      const aiRawText = extracted.text;
+      if (aiRawText && aiRawText.trim().length > 10) {
+        setExtraction(extracted);
+        setActiveExtractedClass(extracted.chosenClass);
+      }
 
       if (aiRawText && aiRawText.trim().length > 10) {
         const parsedAi = parseStructuredScheduleTruth(
@@ -1985,6 +1999,19 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       </button>
                     </div>
                   )}
+                </div>
+
+                <div className="mb-3">
+                  <ExtractionReviewBar
+                    result={extraction}
+                    activeClass={activeExtractedClass}
+                    onSelectClass={(name, text) => {
+                      soundFX.playCheckmarkPop();
+                      setActiveExtractedClass(name);
+                      const parsed = parseStructuredScheduleTruth(text.trim(), activeSystem.fileName, activeFormat);
+                      setScheduleText(parsed.slots.length > 0 ? formatExtractedScheduleToFormatText(parsed, activeFormat) || text.trim() : text.trim());
+                    }}
+                  />
                 </div>
 
                 <textarea
