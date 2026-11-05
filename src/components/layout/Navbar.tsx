@@ -27,6 +27,7 @@ import { useLanguage, t } from '../../lib/i18n';
 import { formatNotificationTime } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
 import { getDisplayAvatar } from '../../lib/avatar';
+import { isLocalAdminEnvironment } from '../../lib/adminAccess';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
 import { AdminGoogleLoginButton } from '../common/AdminGoogleLoginButton';
 import { 
@@ -390,6 +391,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <span>{t('resetDefault', lang)}</span>
                       </button>
 
+                      {/* Console Administrateur : seulement en local, jamais visible des élèves en ligne */}
+                      {isLocalAdminEnvironment() && (<>
                       <div className="my-1 border-t border-slate-200 dark:border-slate-800/60" />
 
                       <button
@@ -404,6 +407,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <ShieldCheck className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400" />
                         <span>Console Administrateur</span>
                       </button>
+                      </>)}
                     </div>
                   )}
                 </div>

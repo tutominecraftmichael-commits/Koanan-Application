@@ -213,29 +213,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         </div>
       </div>
 
-      {/* Interactive Method Guidance Bar (Fluid Horizontal Ribbon) */}
-      <div className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/40 to-indigo-50/90 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-900 border border-indigo-200 dark:border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-xs">
-        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 shrink-0">
-          <Brain className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-          <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">{t('clickForGuide', lang)}</span>
-        </div>
-        <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center gap-2 pb-1 sm:pb-0">
-          {(Object.entries(sessionTypeBadges) as [SessionType, { label: string; variant: 'primary' | 'cyan' | 'emerald' | 'amber' | 'purple' }][]).map(([type, meta]) => (
-            <button
-              key={type}
-              type="button"
-              onClick={() => setSelectedExplainerType(type)}
-              className="cursor-pointer hover:scale-105 transition-all text-left group shrink-0"
-              title={t('clickForGuide', lang)}
-            >
-              <Badge variant={meta.variant} size="sm" className="group-hover:ring-1 group-hover:ring-cyan-400 whitespace-nowrap text-[11px] py-1 px-2.5">
-                {meta.label}
-              </Badge>
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* METRIC STRIP */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
         <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 interactive-card shadow-xs">

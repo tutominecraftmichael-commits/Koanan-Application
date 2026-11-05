@@ -94,9 +94,8 @@ import { ExtractionReviewBar } from '../schedule/ExtractionReviewBar';
 
 export const PENDING_ONBOARDING_PAYLOAD_KEY = 'konan_pending_onboarding_payload';
 
-export function isLocalAdminEnvironment(): boolean {
-  return true;
-}
+import { isLocalAdminEnvironment } from '../../lib/adminAccess';
+export { isLocalAdminEnvironment };
 
 export interface DuolingoOnboardingProps {
   onComplete: (data: {
@@ -1640,7 +1639,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 </div>
               )}
 
-              {onOpenAdmin && (
+              {isLocalAdminAllowed && onOpenAdmin && (
                 <div className="pt-2 border-t border-slate-200 dark:border-slate-800 text-center">
                   <button
                     type="button"
@@ -1723,8 +1722,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   J'AI DÉJÀ UN COMPTE • ME CONNECTER
                 </button>
 
-                {/* Bouton Admin visible */}
-                {onOpenAdmin && (
+                {/* Bouton Admin : seulement en local, jamais visible des élèves en ligne */}
+                {isLocalAdminAllowed && onOpenAdmin && (
                   <button
                     type="button"
                     onClick={() => {

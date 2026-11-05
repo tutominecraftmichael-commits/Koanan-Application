@@ -87,6 +87,7 @@ import { InteractiveTutorView } from './features/tutor/InteractiveTutorView';
 import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum } from './lib/curriculum/curriculumMatcher';
 import { clearAdminSession } from './lib/adminAuth';
 import { getCurriculumChapters } from './lib/curriculum/curriculumRegistry';
+import { isLocalAdminEnvironment } from './lib/adminAccess';
 import type { StemSubjectId, CurriculumGradeLevel } from './lib/curriculum/types';
 
 export function App() {
@@ -665,7 +666,8 @@ export function App() {
    */
   const handleNavigate = (view: ActiveAppView) => {
     if (view === 'admin') {
-      setActiveView('admin');
+      // Console administrateur : seulement sur l'ordinateur de développement, jamais sur le site en ligne
+      if (isLocalAdminEnvironment()) setActiveView('admin');
       return;
     }
 
@@ -1906,7 +1908,7 @@ export function App() {
       )}
 
       {/* Bouton Flottant d'Accès Rapide Admin si session admin active */}
-      {activeView !== 'admin' && activeView !== 'tutor' && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
+      {activeView !== 'admin' && activeView !== 'tutor' && isLocalAdminEnvironment() && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
         <button
           onClick={() => setActiveView('admin')}
           className="fixed bottom-5 right-5 z-50 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs shadow-2xl shadow-purple-600/40 border border-purple-400/40 flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all"
@@ -1923,7 +1925,7 @@ export function App() {
         }`}>
 
         {/* Real-time Administrator Console */}
-        {activeView === 'admin' && (
+        {activeView === 'admin' && isLocalAdminEnvironment() && (
           <AdminDashboard
             onSwitchToStudentView={() => setActiveView('dashboard')}
             onExitAdmin={() => {
@@ -1938,7 +1940,7 @@ export function App() {
           <DuolingoOnboarding
             currentUser={state.userAccount?.isLoggedIn ? state.userAccount : null}
             onOpenLogin={() => setActiveView('auth')}
-            onOpenAdmin={() => setActiveView('admin')}
+            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
             onLoginSuccess={(user) => {
               handleLoginSuccess(user);
             }}
@@ -1960,7 +1962,7 @@ export function App() {
             onLoginSuccess={handleLoginSuccess}
             onEnterDemoMode={handleEnterDemoMode}
             onBackToLanding={() => setActiveView('landing')}
-            onOpenAdmin={() => setActiveView('admin')}
+            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
             currentProfile={state.userAccount}
           />
         )}
