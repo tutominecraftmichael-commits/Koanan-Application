@@ -1047,8 +1047,19 @@ export function cleanSubjectTitle(
   if (LYCEE_SUBJECT_ACRONYMS[upperInitial]) return LYCEE_SUBJECT_ACRONYMS[upperInitial];
   if (LYCEE_SUBJECT_ACRONYMS[dotStrippedInitial]) return LYCEE_SUBJECT_ACRONYMS[dotStrippedInitial];
 
+  // Les noms composés et les sigles entre parenthèses font partie du nom : « Histoire-Géographie »,
+  // « Sciences de la Vie et de la Terre (SVT) », « LV2 (Espagnol / Allemand) ». On les protège du nettoyage
+  // ci-dessous (qui retire tirets, barres et parenthèses parasites), puis on les restitue.
+  const protectedGroups: string[] = [];
+  const protectedText = trimmed
+    .replace(/\(([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s/&'’-]{1,40})\)/g, (group) => {
+      protectedGroups.push(group);
+      return ` \u0000${protectedGroups.length - 1}\u0000 `;
+    })
+    .replace(/([A-Za-zÀ-ÿ])-(?=[A-Za-zÀ-ÿ])/g, '$1‑');
+
   // Remove Days, Dates, Times, Course Types, Rooms, Leftover noise
-  let cleaned = trimmed
+  let cleaned = protectedText
     .replace(/\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi, ' ')
     .replace(/\b(lun|mar|mer|jeu|ven|sam|dim|mon|tue|wed|thu|fri|sat|sun)\.?\b/gi, ' ')
     .replace(/\b\d{1,2}[/-]\d{1,2}([/-]\d{2,4})?\b/g, ' ')
@@ -1073,6 +1084,13 @@ export function cleanSubjectTitle(
   while (/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/i.test(cleaned)) {
     cleaned = cleaned.replace(/\b([A-Za-zÀ-ÿ0-9.]+)\s+\1\b/gi, '$1');
   }
+
+  // Restitution des noms composés et des sigles protégés
+  cleaned = cleaned
+    .replace(/\u0000(\d+)\u0000/g, (_, i) => protectedGroups[Number(i)] || '')
+    .replace(/‑/g, '-')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
 
   // Acronym re-check on cleaned text
   const upperCleaned = cleaned.toUpperCase().replace(/\s+/g, '');
@@ -1333,7 +1351,9 @@ export function harmonizeAndDeduplicateSlots<T extends HarmonizableSlot>(slots: 
         ? current.subjectId === prev.subjectId
         : (nameA.length > 0 && nameB.length > 0 && nameA.replace(/[^a-z0-9à-ÿ]/g, '') === nameB.replace(/[^a-z0-9à-ÿ]/g, ''));
 
-      if (sameSubject && Math.abs(curStart - prevEnd) <= 15 && curEnd > prevStart) {
+      // Fusion seulement si les deux cours se touchent vraiment (≤ 5 min) : deux heures séparées par
+      // une récréation ou une pause de 15 min restent deux créneaux distincts.
+      if (sameSubject && Math.abs(curStart - prevEnd) <= 5 && curEnd > prevStart) {
         prev.endTime = minutesToTimeString(Math.max(prevEnd, curEnd));
         if (!prev.room && current.room) prev.room = current.room;
         if (!prev.professor && current.professor) prev.professor = current.professor;

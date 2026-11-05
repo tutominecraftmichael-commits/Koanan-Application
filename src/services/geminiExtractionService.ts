@@ -1,12 +1,11 @@
-import { GoogleGenAI } from "@google/genai";
 import {
   PROMPT_OFFICIEL,
-  buildTimetablePrompt,
-  TIMETABLE_MODELS,
   normalizeMime,
   stripDataUrlPrefix,
-  cleanTimetableOutput,
 } from "../../api/_timetablePrompt.js";
+import { extractTimetable, type StructuredTimetableResult } from "../../api/_timetableExtract.js";
+
+export type { StructuredTimetableResult };
 
 export { PROMPT_OFFICIEL };
 
@@ -49,19 +48,21 @@ export const setCustomGeminiApiKey = (key: string): void => {
 // Au-delà, le serveur (Vercel) refuse la requête : on prévient l'élève avant l'envoi.
 const MAX_BASE64_CHARS = 4_200_000;
 
+type ExtractFormat = "lmd" | "tpcm" | "scolaire";
+
 /** Lecture via le serveur Konan (clé Gemini secrète côté serveur). */
-async function extractViaServer(fileBase64: string, mimeType: string, format?: "lmd" | "tpcm" | "scolaire"): Promise<string> {
+async function extractViaServer(fileBase64: string, mimeType: string, format?: ExtractFormat, classHint?: string): Promise<StructuredTimetableResult> {
   let res: Response;
   try {
     res = await fetch("/api/extract-timetable", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fileBase64, mimeType, format }),
+      body: JSON.stringify({ fileBase64, mimeType, format, classHint }),
     });
   } catch {
     throw new Error("Impossible de joindre le serveur. Vérifiez votre connexion puis réessayez.");
   }
-  let data: { text?: string; message?: string } = {};
+  let data: Partial<StructuredTimetableResult> & { message?: string } = {};
   try {
     data = await res.json();
   } catch {
@@ -71,50 +72,59 @@ async function extractViaServer(fileBase64: string, mimeType: string, format?: "
   if (!res.ok || !data.text) {
     throw new Error(data.message || "L'IA n'a pas pu lire ce document. Réessayez ou saisissez vos cours à la main.");
   }
-  return data.text;
+  return {
+    text: data.text,
+    model: data.model,
+    classes: Array.isArray(data.classes) ? data.classes : [],
+    chosenClass: data.chosenClass || "",
+    warnings: Array.isArray(data.warnings) ? data.warnings : [],
+  };
 }
 
-/** Lecture directe depuis le navigateur avec la clé personnelle de l'utilisateur. */
-async function extractWithPersonalKey(apiKey: string, fileBase64: string, mimeType: string, format?: "lmd" | "tpcm" | "scolaire"): Promise<string> {
-  const ai = new GoogleGenAI({ apiKey });
-  const prompt = buildTimetablePrompt(format);
-  const data = stripDataUrlPrefix(fileBase64);
-  const effectiveMime = normalizeMime(fileBase64, mimeType);
-  let lastError: unknown = null;
-  for (const model of TIMETABLE_MODELS) {
-    try {
-      const response = await ai.models.generateContent({
-        model,
-        contents: [{ role: "user", parts: [{ inlineData: { data, mimeType: effectiveMime } }, { text: prompt }] }],
-      });
-      const raw = cleanTimetableOutput(response.text || "");
-      if (raw.length > 5) return raw;
-    } catch (err) {
-      console.warn(`[KONAN AI] Modèle ${model} indisponible, bascule vers le suivant...`);
-      lastError = err;
-    }
-  }
-  throw lastError || new Error("Impossible d'extraire l'emploi du temps avec l'IA. Vérifiez votre connexion.");
+/** Lecture directe depuis le navigateur avec la clé personnelle de l'utilisateur (même méthode que le serveur). */
+async function extractWithPersonalKey(apiKey: string, fileBase64: string, mimeType: string, format?: ExtractFormat, classHint?: string): Promise<StructuredTimetableResult> {
+  const result = await extractTimetable({
+    apiKey,
+    data: stripDataUrlPrefix(fileBase64),
+    mimeType: normalizeMime(fileBase64, mimeType),
+    format,
+    classHint,
+  });
+  if (!result || !result.text) throw new Error("Impossible d'extraire l'emploi du temps avec l'IA. Vérifiez votre connexion.");
+  return result;
 }
 
 /**
- * C'est cette fonction que l'application appelle quand l'étudiant choisit un PDF ou prend une photo.
- * fileBase64 : contenu du fichier en base64 ; mimeType : "application/pdf", "image/jpeg"…
+ * Lecture complète : emploi du temps de la classe retenue + toutes les classes trouvées dans le document
+ * (pour laisser l'élève choisir la sienne) + alertes (chevauchements, plusieurs classes…).
+ * classHint : classe de l'élève si on la connaît (ex. « 2nde C »).
+ */
+export async function extraireEmploiDuTempsDetaille(
+  fileBase64: string,
+  mimeType: string = "image/jpeg",
+  format?: ExtractFormat,
+  classHint?: string
+): Promise<StructuredTimetableResult> {
+  const personalKey = getApiKey();
+  if (personalKey) return extractWithPersonalKey(personalKey, fileBase64, mimeType, format, classHint);
+  if (stripDataUrlPrefix(fileBase64).length > MAX_BASE64_CHARS) {
+    throw new Error("Fichier trop lourd (3 Mo maximum). Prenez une photo plus légère ou découpez le PDF.");
+  }
+  return extractViaServer(fileBase64, mimeType, format, classHint);
+}
+
+/**
+ * Version simple (texte seul), conservée pour les appels existants.
  * format : "lmd" (Université), "tpcm" (BTS) ou "scolaire" (Collège/Lycée).
  */
 export async function extraireEmploiDuTemps(
   fileBase64: string,
   mimeType: string = "image/jpeg",
-  format?: "lmd" | "tpcm" | "scolaire"
+  format?: ExtractFormat,
+  classHint?: string
 ): Promise<string> {
-  const personalKey = getApiKey();
-  if (personalKey) return extractWithPersonalKey(personalKey, fileBase64, mimeType, format);
-  if (stripDataUrlPrefix(fileBase64).length > MAX_BASE64_CHARS) {
-    throw new Error("Fichier trop lourd (3 Mo maximum). Prenez une photo plus légère ou découpez le PDF.");
-  }
-  return extractViaServer(fileBase64, mimeType, format);
+  return (await extraireEmploiDuTempsDetaille(fileBase64, mimeType, format, classHint)).text;
 }
-
 /**
  * Optimise et compresse intelligemment les photos prises sur smartphone (iPhone, Android)
  * pour éviter les dépassements de mémoire (OOM) et garantir un téléversement instantané (< 1s).

@@ -51,7 +51,7 @@ import {
   type ScheduleFormatType 
 } from '../../services/pdfParserService';
 import { 
-  extraireEmploiDuTemps, 
+  extraireEmploiDuTempsDetaille, 
   convertFileToBase64,
   hasGeminiApiKey,
   setCustomGeminiApiKey
@@ -67,6 +67,8 @@ import {
 import { WaitlistModal } from '../../components/common/WaitlistModal';
 import type { CurriculumGradeLevel } from '../../lib/curriculum/types';
 import { GRADE_LEVELS } from '../../lib/curriculum/types';
+import type { StructuredTimetableResult } from '../../services/geminiExtractionService';
+import { ExtractionReviewBar } from './ExtractionReviewBar';
 import { resolveGradeLevel } from '../../lib/curriculum/curriculumMatcher';
 
 export interface PdfUploadViewProps {
@@ -165,6 +167,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   });
   const [selectedLmdLevel, setSelectedLmdLevel] = useState<string>('Licence 3 (L3)');
   const [scheduleText, setScheduleText] = useState<string>('');
+  // Résultat de la dernière lecture par l'IA : classes trouvées dans le document et points à vérifier
+  const [extraction, setExtraction] = useState<StructuredTimetableResult | null>(null);
+  const [activeExtractedClass, setActiveExtractedClass] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -292,6 +297,12 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
     if (galleryInputRef.current) galleryInputRef.current.value = '';
   };
 
+  // Texte affiché dans l'éditeur : remis au format de la catégorie choisie (LMD, BTS, Lycée)
+  const toEditorText = (raw: string, fileName: string): string => {
+    const parsed = parseStructuredScheduleTruth(raw.trim(), fileName, selectedFormat);
+    return parsed.slots.length > 0 ? formatExtractedScheduleToFormatText(parsed, selectedFormat) || raw.trim() : raw.trim();
+  };
+
   // Traitement direct du fichier uploadé
   const handleFileSelected = async (file: File) => {
     // 1. Validation de sécurité & intégrité : taille maximale 15 Mo
@@ -324,23 +335,23 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
     setError(null);
     setSelectedFile(file);
+    setExtraction(null);
+    setActiveExtractedClass('');
     setIsAnalyzing(true);
 
     try {
       const mimeType = file.type || (file.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
       const base64 = await convertFileToBase64(file);
 
-      // Appel IA direct natif avec catégorisation stricte (LMD, BTS, Lycée)
-      const aiResult = await extraireEmploiDuTemps(base64, mimeType, selectedFormat);
+      // Lecture structurée par l'IA (LMD, BTS, Lycée) ; la classe de l'élève aide à choisir la bonne grille
+      const classHint = GRADE_LEVELS.find(g => g.id === selectedGradeLevel)?.badge || '';
+      const extracted = await extraireEmploiDuTempsDetaille(base64, mimeType, selectedFormat, classHint);
+      const aiResult = extracted.text;
 
       if (aiResult && aiResult.trim().length > 10) {
-        const parsedAi = parseStructuredScheduleTruth(aiResult.trim(), file.name, selectedFormat);
-        if (parsedAi.slots.length > 0) {
-          const categorizedText = formatExtractedScheduleToFormatText(parsedAi, selectedFormat);
-          setScheduleText(categorizedText || aiResult.trim());
-        } else {
-          setScheduleText(aiResult.trim());
-        }
+        setExtraction(extracted);
+        setActiveExtractedClass(extracted.chosenClass);
+        setScheduleText(toEditorText(aiResult, file.name));
         setIsAnalyzing(false);
         return;
       }
@@ -1314,6 +1325,18 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   </button>
                 </div>
               )}
+            </div>
+
+            <div className="mb-3">
+              <ExtractionReviewBar
+                result={extraction}
+                activeClass={activeExtractedClass}
+                onSelectClass={(name, text) => {
+                  soundFX.playCheckmarkPop();
+                  setActiveExtractedClass(name);
+                  setScheduleText(toEditorText(text, selectedFile?.name || 'edt.txt'));
+                }}
+              />
             </div>
 
             <textarea
