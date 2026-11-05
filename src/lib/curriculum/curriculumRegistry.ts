@@ -41,6 +41,8 @@ import { GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE } from '../../data/courses/prem
 import { GEO_1RE_T2_L02_URBANISATION_FRANCE } from '../../data/courses/premiere/geo_1re_urbanisation_france';
 import { GEO_1RE_T3_L01_ORGANISATION_ADMINISTRATIVE_CI } from '../../data/courses/premiere/geo_1re_organisation_administrative_ci';
 import { GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI } from '../../data/courses/premiere/geo_1re_amenagement_territoire_ci';
+import { GEO_1RE_T4_L01_FACTEURS_MONDIALISATION } from '../../data/courses/premiere/geo_1re_facteurs_mondialisation';
+import { GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION } from '../../data/courses/premiere/geo_1re_consequences_mondialisation';
 import { FR_2DE_PL_L01_FONCTIONS_LANGAGE } from '../../data/courses/seconde/fr_2de_fonctions_langage';
 import { FR_2DE_PL_L02_CONNECTEURS_LOGIQUES } from '../../data/courses/seconde/fr_2de_connecteurs_logiques';
 import { FR_2DE_PL_L02B_EXPRESSION_OPINION } from '../../data/courses/seconde/fr_2de_expression_opinion';
@@ -91831,6 +91833,8 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   GEO_1RE_T2_L02_URBANISATION_FRANCE,
   GEO_1RE_T3_L01_ORGANISATION_ADMINISTRATIVE_CI,
   GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI,
+  GEO_1RE_T4_L01_FACTEURS_MONDIALISATION,
+  GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
   FR_2DE_PL_L02_CONNECTEURS_LOGIQUES,
   FR_2DE_PL_L02B_EXPRESSION_OPINION,
