@@ -25,6 +25,7 @@ import {
 } from '../../lib/firebase';
 import { generateKonanId } from '../../lib/konanId';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
+import { isLocalAdminEnvironment } from '../../lib/adminAccess';
 import { AdminGoogleLoginButton } from '../../components/common/AdminGoogleLoginButton';
 
 export interface AuthPageProps {
@@ -734,8 +735,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             </div>
           )}
 
-          {/* Mode Administrateur */}
-          {onOpenAdmin && (
+          {/* Mode Administrateur : seulement en local, jamais visible des élèves en ligne */}
+          {isLocalAdminEnvironment() && onOpenAdmin && (
             <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 space-y-1.5 relative z-10">
               <button
                 type="button"
