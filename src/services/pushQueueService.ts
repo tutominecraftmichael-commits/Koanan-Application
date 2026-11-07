@@ -14,8 +14,7 @@
  * dernière synchronisation), et une enveloppe devenue inutile est supprimée.
  */
 
-import { doc, deleteDoc, writeBatch } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { callPushSync } from './pushApi';
 import type { ClassSlot, StudyPreferences, StudySession, Subject } from '../types';
 import { evaluateDailyCatchup, getTodayDateString } from './sessionRescheduler';
 import { ALERT_KINDS, type KonanAlertKind, type KonanSituation } from '../../api/_konanVoice.js';
@@ -48,6 +47,11 @@ export interface AlertPlanInput {
 }
 
 const MINUTE = 60 * 1000;
+/** Nom du document d'une alerte : uniquement lettres, chiffres, « _ » et « - » (accepté par le serveur). */
+function alertDocId(uid: string, sessionId: string, ymd: string, kind: KonanAlertKind): string {
+  const safe = String(sessionId).replace(/[^A-Za-z0-9_-]/g, '-').slice(0, 120);
+  return `${uid}_${safe}_${ymd.replace(/-/g, '')}_${kind}`;
+}
 const PLAN_CACHE_PREFIX = 'konan_push_plan_v2_';
 const STARTED_PREFIX = 'konan_started_sessions_';
 
@@ -151,7 +155,7 @@ export function planAlerts(
         if (sendAt < minSendAt) return;
         const key = `${s.id}_${ymd}_${kind}`;
         out.push({
-          id: `${uid}_${s.id}_${ymd.replace(/-/g, '')}_${kind}`,
+          id: alertDocId(uid, s.id, ymd, kind),
           key, kind, situation: ALERT_KINDS[kind].situation, sendAt,
           rattrapageA: null, isRattrapage: false, ...base, ...extra,
         });
@@ -232,7 +236,7 @@ let syncAgain: (() => Promise<void>) | null = null;
  * À appeler pour tout élève connecté (Gratuit, Pro, Plus) dont l'appareil est abonné aux notifications.
  */
 export async function syncPushPlan(uid: string, input: AlertPlanInput, now: Date = new Date()): Promise<{ written: number; deleted: number }> {
-  if (!db || !uid) return { written: 0, deleted: 0 };
+  if (!uid) return { written: 0, deleted: 0 };
   if (syncRunning) {
     // Une synchronisation tourne déjà : on rejouera la plus récente juste après
     syncAgain = async () => { await syncPushPlan(uid, input, new Date()); };
@@ -258,13 +262,18 @@ export async function syncPushPlan(uid: string, input: AlertPlanInput, now: Date
       .filter(([id, info]) => !nextDocs[id] && info.sendAt > nowMs)
       .map(([id]) => id);
 
-    for (let i = 0; i < toWrite.length; i += 400) {
-      const batch = writeBatch(db);
-      for (const w of toWrite.slice(i, i + 400)) batch.set(doc(db, 'push_queue', w.id), w.data);
-      await batch.commit();
+    // Écriture par le serveur KONAN (/api/push-sync), par paquets
+    for (let i = 0; i < Math.max(toWrite.length, toDelete.length); i += 300) {
+      const result = await callPushSync({
+        action: 'plan',
+        writes: toWrite.slice(i, i + 300),
+        deletes: toDelete.slice(i, i + 300),
+      });
+      if (!result.success) {
+        console.warn('[KONAN alertes] Synchronisation refusée :', result.error);
+        return { written: 0, deleted: 0 }; // la mémoire locale n'est pas mise à jour : on réessaiera
+      }
     }
-    // Suppressions une par une : une enveloppe déjà envoyée (donc disparue) ne doit pas bloquer les autres
-    await Promise.allSettled(toDelete.map((id) => deleteDoc(doc(db!, 'push_queue', id))));
 
     writeCache(uid, { docs: nextDocs });
     return { written: toWrite.length, deleted: toDelete.length };
@@ -284,11 +293,11 @@ export async function syncPushPlan(uid: string, input: AlertPlanInput, now: Date
  */
 export async function cancelSessionAlerts(uid: string, sessionId: string, now: Date = new Date()): Promise<void> {
   markSessionStarted(sessionId, now);
-  if (!db || !uid || !sessionId) return;
-  const ymd = getTodayDateString(now).replace(/-/g, '');
+  if (!uid || !sessionId) return;
+  const ymd = getTodayDateString(now);
   const kinds: KonanAlertKind[] = ['retard', 'manquee', 'rattrapage'];
-  const ids = kinds.map((k) => `${uid}_${sessionId}_${ymd}_${k}`);
-  await Promise.allSettled(ids.map((id) => deleteDoc(doc(db!, 'push_queue', id))));
+  const ids = kinds.map((k) => alertDocId(uid, sessionId, ymd, k));
+  await callPushSync({ action: 'cancel', ids }).catch(() => {});
   const cache = readCache(uid);
   ids.forEach((id) => { delete cache.docs[id]; });
   writeCache(uid, cache);
