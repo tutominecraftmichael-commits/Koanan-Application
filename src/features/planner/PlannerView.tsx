@@ -22,7 +22,6 @@ import {
   CheckCircle2, 
   Check,
   RefreshCw, 
-  Flame, 
   Filter, 
   Calendar, 
   Plus,
@@ -214,7 +213,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
       </div>
 
       {/* METRIC STRIP */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-4">
         <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 interactive-card shadow-xs">
           <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0">
             <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -245,7 +244,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             }
             setIsStrategyModalOpen(true);
           }}
-          className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 hover:border-cyan-500/50 cursor-pointer transition-all group interactive-card shadow-xs"
+          className="col-span-2 sm:col-span-1 p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 hover:border-cyan-500/50 cursor-pointer transition-all group interactive-card shadow-xs"
           title="Cliquez pour consulter ou changer la méthode d'espacement active"
         >
           <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform shrink-0">
@@ -265,16 +264,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 ? `${preferences.combinedPacings.length} Méthodes Combinées`
                 : activePacing.title}
             </p>
-          </div>
-        </Card>
-
-        <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 interactive-card shadow-xs">
-          <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
-            <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Équilibre</p>
-            <p className="text-sm sm:text-lg font-bold text-amber-600 dark:text-amber-400 font-mono">Anti-Burnout</p>
           </div>
         </Card>
       </div>
@@ -391,17 +380,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
       {/* SESSIONS LIST */}
       {filteredSessions.length === 0 ? (
-        <Card className="text-center p-8 sm:p-12 space-y-4 border-slate-800">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mx-auto">
-            <Sparkles className="w-6 h-6" />
-          </div>
-          <h3 className="text-base sm:text-lg font-bold text-white">Aucune session d'étude pour ce filtre</h3>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
-            Cliquez sur "Réorganiser mes révisions" ou modifiez les filtres pour afficher vos sessions de travail.
-          </p>
-          <Button variant="primary" size="sm" onClick={handleRegenerate}>
-            Générer maintenant
-          </Button>
+        <Card className="text-center p-8 sm:p-12 border-slate-200 dark:border-slate-800">
+          <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Aucune session d'étude</h3>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
@@ -728,7 +708,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <span className="font-bold text-slate-900 dark:text-white text-[11px] uppercase tracking-wide shrink-0">
-                          Recommandation KONAN :
+                          Recommandation de KONAN :
                         </span>
                         {targetPacings.map(id => (
                           <span key={id} className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-cyan-300 dark:border-indigo-500/40">
