@@ -1,10 +1,12 @@
 /* eslint-disable no-undef */
-// Service Worker Firebase Cloud Messaging (FCM) en arrière-plan pour KONAN AI
-importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js');
+// Service Worker de KONAN : réception des notifications push (Web Push standard + clés VAPID).
+//
+// Il ne charge plus Firebase Messaging : l'ancien script (importé depuis www.gstatic.com) abonnait le
+// téléphone avec une AUTRE clé que celle du serveur, ce qui cassait l'abonnement à chaque ouverture,
+// et pouvait faire échouer l'installation du Service Worker hors connexion. Le nom du fichier est
+// conservé pour que les téléphones déjà inscrits reçoivent cette version automatiquement.
 
-// Version du Service Worker pour forcer la mise à jour sur smartphone et PWA installée
-const SW_VERSION = 'v-2026-11-04-01';
+const SW_VERSION = 'v-2026-11-07-01';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -12,215 +14,88 @@ self.addEventListener('install', () => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          console.log('[KONAN SW] Nettoyage ancien cache:', cacheName);
-          return caches.delete(cacheName);
-        })
-      );
-    }).then(() => self.clients.claim())
+    caches.keys()
+      .then((names) => Promise.all(names.map((name) => caches.delete(name))))
+      .then(() => self.clients.claim())
   );
 });
 
-// Configuration Firebase automatique du projet KONAN
-const firebaseConfig = {
-  apiKey: "AIzaSyA4Azn3VXwTC2xdAsCm1yMKq0QEoDalzg4",
-  authDomain: "konanai-ed046.firebaseapp.com",
-  projectId: "konanai-ed046",
-  storageBucket: "konanai-ed046.firebasestorage.app",
-  messagingSenderId: "928627074050",
-  appId: "1:928627074050:web:a5bc9ace090ba9347df31b",
-};
-
-firebase.initializeApp(firebaseConfig);
-
-let messaging = null;
-try {
-  messaging = firebase.messaging();
-} catch (err) {
-  console.warn('[firebase-messaging-sw.js] Messaging non supporté ou erreur init:', err);
-}
-
-if (messaging) {
-  messaging.onBackgroundMessage((payload) => {
-    console.log('[firebase-messaging-sw.js] Notification en arrière-plan reçue :', payload);
-
-    const rawTitle =
-      payload?.notification?.title ||
-      payload?.data?.title ||
-      "KONAN";
-
-    const title = String(rawTitle)
-      .replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '')
-      .trim() || "KONAN";
-
-    const body =
-      payload?.notification?.body ||
-      payload?.data?.body ||
-      "C’est l’heure de poser le téléphone deux secondes. Viens te concentrer, je compte sur toi ! 👊📚";
-
-    const notificationOptions = {
-      body,
-      icon: "/cube-icon.png",
-      badge: "/cube-badge.png",
-      tag: payload?.data?.tag || "konan-study-reminder",
-      vibrate: [500, 250, 500, 250, 500],
-      renotify: true,
-      sound: "default",
-      requireInteraction: true,
-      priority: "high",
-      data: {
-        url: payload?.data?.url || "/",
-        sessionId: payload?.data?.sessionId,
-        ...payload?.data,
-      },
-    };
-
-    return self.registration.showNotification(title, notificationOptions);
-  });
-}
-
-// Écouteur Web Push natif standard (W3C Push API) pour réveiller le téléphone
-// même quand l'application est totalement fermée et que l'écran est verrouillé
-self.addEventListener('push', (event) => {
-  let title = 'KONAN';
-  let body = 'C’est l’heure de poser le téléphone deux secondes. Viens te concentrer, je compte sur toi ! 👊📚';
-  let tag = 'konan-study-alert';
-  let customData = { url: '/' };
-
-  if (event.data) {
-    try {
-      const data = event.data.json();
-      title = data.title || data.notification?.title || data.data?.title || 'KONAN';
-      body = data.body || data.notification?.body || data.data?.body || body;
-      tag = data.tag || data.data?.tag || 'konan-study-alert';
-      customData = data.data || { url: data.url || '/' };
-    } catch (e) {
-      body = event.data.text() || body;
-    }
-  }
-
-  const cleanTitle = String(title)
-    .replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '')
-    .trim() || 'KONAN';
-  const cleanBody = String(body)
-    .replace(/^(?:Notification\s*complice|Notification\s*énervée|Parent\s*énervé|Alerte|Notification)\s*[:\-–—]?\s*/i, '')
-    .trim();
-
-  const options = {
-    body: cleanBody,
-    icon: '/cube-icon.png',
-    badge: '/cube-badge.png',
-    vibrate: [500, 250, 500, 250, 500],
-    sound: 'default',
-    tag,
-    renotify: true,
-    requireInteraction: true,
-    priority: 'high',
-    data: customData,
+function readPush(event) {
+  const fallback = {
+    title: 'KONAN',
+    body: 'C’est l’heure de ta révision. Viens, je t’attends.',
+    tag: 'konan-study-alert',
+    data: { url: '/' },
   };
+  if (!event.data) return fallback;
+  try {
+    const raw = event.data.json();
+    return {
+      title: raw.title || raw.notification?.title || fallback.title,
+      body: raw.body || raw.notification?.body || fallback.body,
+      tag: raw.tag || raw.data?.tag || fallback.tag,
+      icon: raw.icon,
+      badge: raw.badge,
+      data: { url: '/', ...(raw.data || {}) },
+    };
+  } catch {
+    return { ...fallback, body: event.data.text() || fallback.body };
+  }
+}
 
-  event.waitUntil(self.registration.showNotification(cleanTitle, options));
+self.addEventListener('push', (event) => {
+  const msg = readPush(event);
+  event.waitUntil((async () => {
+    // L'élève a l'application ouverte devant lui : la bannière KONAN s'affiche dans l'appli,
+    // pas besoin d'une notification système en double.
+    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const visible = windows.find((c) => c.visibilityState === 'visible' && c.focused);
+    if (visible) {
+      visible.postMessage({ type: 'KONAN_PUSH', title: msg.title, body: msg.body, data: msg.data });
+      return;
+    }
+    await self.registration.showNotification(msg.title, {
+      body: msg.body,
+      icon: msg.icon || '/cube-icon.png',
+      badge: msg.badge || '/cube-badge.png',
+      tag: msg.tag,
+      renotify: true,
+      vibrate: [300, 150, 300],
+      data: msg.data,
+    });
+  })());
 });
-
-// Map des timers de rappels locaux planifiés (déclenchés 5 min avant même en arrière-plan)
-const scheduledTimers = new Map();
 
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-    return;
-  }
-
-  if (event.data && event.data.type === 'SCHEDULE_UPCOMING_REMINDERS') {
-    const reminders = event.data.reminders;
-    if (!Array.isArray(reminders)) return;
-
-    // Nettoyer les anciens timers
-    for (const [, timer] of scheduledTimers.entries()) {
-      clearTimeout(timer);
-    }
-    scheduledTimers.clear();
-
-    const now = Date.now();
-    reminders.forEach((rem) => {
-      // rem.targetTimestamp est l'horodatage exact correspondant à (startTime - 5 minutes)
-      const delay = rem.targetTimestamp - now;
-      if (delay > 0 && delay < 24 * 3600 * 1000) {
-        const notifOptions = {
-          body: rem.body,
-          icon: '/cube-icon.png',
-          badge: '/cube-badge.png',
-          tag: rem.tag || 'konan-study-reminder',
-          vibrate: [300, 150, 300],
-          renotify: true,
-          data: { url: '/', sessionId: rem.sessionId, ...(rem.data || {}) },
-        };
-
-        // Si le navigateur / smartphone supporte Notification Triggers au niveau de l'OS :
-        if ('showTrigger' in Notification.prototype && typeof TimestampTrigger !== 'undefined') {
-          try {
-            notifOptions.showTrigger = new TimestampTrigger(rem.targetTimestamp);
-            self.registration.showNotification(rem.title || 'KONAN', notifOptions);
-            return;
-          } catch (triggerErr) {
-            console.warn('[firebase-messaging-sw.js] Notification Triggers non disponible, repli sur timer actif :', triggerErr);
-          }
-        }
-
-        const timerId = setTimeout(() => {
-          self.registration.showNotification(rem.title || 'KONAN', notifOptions);
-          scheduledTimers.delete(rem.id);
-        }, delay);
-        scheduledTimers.set(rem.id, timerId);
-      }
-    });
-    console.log(`[firebase-messaging-sw.js] ${scheduledTimers.size} rappels d'étude (5 min avant) armés avec succès.`);
-  }
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+  if (event.data && event.data.type === 'KONAN_SW_VERSION') event.source?.postMessage({ type: 'KONAN_SW_VERSION', version: SW_VERSION });
 });
 
-// Clic sur la notification : ouvre ou focus directement l'application KONAN
+// Clic sur la notification : ouvre KONAN (ou remet l'onglet au premier plan)
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const targetUrl = event.notification.data?.url || '/';
-
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
-        if (client.url.includes(self.location.origin) && 'focus' in client) {
-          if ('navigate' in client && targetUrl && targetUrl !== '/') {
-            client.navigate(targetUrl);
-          }
-          return client.focus();
-        }
+        if (client.url.startsWith(self.location.origin) && 'focus' in client) return client.focus();
       }
-      if (self.clients.openWindow) {
-        return self.clients.openWindow(targetUrl);
-      }
+      return self.clients.openWindow ? self.clients.openWindow(targetUrl) : undefined;
     })
   );
 });
 
-// Événement fetch : Réseau en priorité absolue pour le HTML et version.json
+// Réseau d'abord pour la page et version.json ; on n'intercepte jamais les autres sites
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-
   const url = new URL(event.request.url);
-
-  // Requêtes vers d'autres sites (Google Sign-In apis.google.com, polices, avatars, Firebase…) :
-  // on ne les intercepte JAMAIS. Le fetch() d'un Service Worker obéit à la règle connect-src de la CSP,
-  // qui n'autorise pas ces domaines : en les interceptant, le SW faisait échouer le script de connexion
-  // Google (auth/internal-error). Le navigateur les charge alors normalement avec la CSP de la page.
   if (url.origin !== self.location.origin) return;
+  if (url.pathname.startsWith('/api/')) return;
 
-  // version.json et le Service Worker doivent TOUJOURS être cherchés sur le réseau sans aucun cache
-  if (url.pathname === '/version.json' || url.pathname.includes('firebase-messaging-sw.js') || url.pathname.includes('sw.js')) {
+  if (url.pathname === '/version.json' || url.pathname.endsWith('sw.js')) {
     event.respondWith(fetch(event.request, { cache: 'no-store' }));
     return;
   }
-
-  // Pour les pages (HTML / Navigation PWA), toujours le réseau en priorité pour charger les dernières mises à jour
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request, { cache: 'no-cache' })
@@ -228,11 +103,5 @@ self.addEventListener('fetch', (event) => {
     );
     return;
   }
-
-  // Pour les autres requêtes (assets hachés, images), réseau d'abord avec repli cache si hors ligne
-  event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
-    })
-  );
+  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
 });

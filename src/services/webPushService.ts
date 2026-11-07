@@ -63,9 +63,19 @@ export function getWebPushPermission(): NotificationPermission {
  * Abonne le téléphone aux notifications Web Push en arrière-plan
  * et enregistre la souscription dans Firestore (réservé aux abonnés Pro / Plus)
  */
+/** Clé courte et stable d'un abonnement (sert de nom de champ dans Firestore). */
+function endpointKey(endpoint: string): string {
+  let h = 5381;
+  for (let i = 0; i < endpoint.length; i++) h = ((h * 33) ^ endpoint.charCodeAt(i)) >>> 0;
+  return `d${h.toString(36)}`;
+}
+
+type SubscribeOptions = { planTier?: string; onSubscribed?: () => void };
+
 export async function subscribeToWebPush(
   uidParam?: string,
-  emailParam?: string
+  emailParam?: string,
+  options: SubscribeOptions = {}
 ): Promise<{ success: boolean; error?: string }> {
   if (!isWebPushSupported()) {
     return { success: false, error: 'Web Push non supporté sur cet appareil' };
@@ -98,10 +108,12 @@ export async function subscribeToWebPush(
       return { success: false, error: 'Permission refusée par l\'utilisateur' };
     }
 
-    // 3. S'assurer que le Service Worker est bien enregistré
+    // 3. S'assurer que le Service Worker est bien enregistré (et à jour)
     let registration = await navigator.serviceWorker.getRegistration('/');
     if (!registration) {
       registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', { scope: '/' });
+    } else {
+      registration.update().catch(() => {});
     }
     await navigator.serviceWorker.ready;
 
@@ -138,6 +150,7 @@ export async function subscribeToWebPush(
       const payload: Record<string, any> = {
         webPushSubscription: subJson,
         pushNotificationsEnabled: true,
+        notificationsEnabled: true,
         webPushUpdatedAt: new Date().toISOString(),
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
         timezoneOffsetMinutes: new Date().getTimezoneOffset(),
@@ -149,7 +162,7 @@ export async function subscribeToWebPush(
       await setDoc(userRef, payload, { merge: true });
       console.log(`[KONAN WebPush] Souscription sauvegardée dans Firestore pour ${effectiveUid}`);
 
-      // Enregistrer également l'appareil dans push_queue pour les tests et la distribution
+      // Fiche « appareils » lue par le serveur d'envoi : un abonnement par appareil (téléphone, ordinateur…)
       try {
         const deviceQueueRef = doc(db, 'push_queue', `device_${effectiveUid}`);
         await setDoc(
@@ -157,10 +170,17 @@ export async function subscribeToWebPush(
           {
             userId: effectiveUid,
             email: userEmail ? userEmail.toLowerCase().trim() : '',
-            subscription: subJson,
-            sendAt: 9999999999999,
-            title: 'Device Registration',
-            body: 'Abonnement push actif pour cet appareil',
+            subscriptions: {
+              [endpointKey(subJson.endpoint || '')]: {
+                subscription: subJson,
+                updatedAt: new Date().toISOString(),
+                device: navigator.userAgent.slice(0, 120),
+              },
+            },
+            planTier: options.planTier || 'pro',
+            notificationsEnabled: true,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
+            sendAt: 9999999999999, // jamais « à échéance » : cette fiche n'est pas une notification
             sessionId: 'device_sub',
             type: 'device_sub',
             updatedAt: new Date().toISOString(),
@@ -172,6 +192,7 @@ export async function subscribeToWebPush(
       }
     }
 
+    options.onSubscribed?.();
     return { success: true };
   } catch (err: any) {
     console.error('[KONAN WebPush] Erreur abonnement push :', err);
@@ -183,11 +204,13 @@ export async function subscribeToWebPush(
  * Enregistrement silencieux et automatique du téléphone en arrière-plan
  * Dès qu'un utilisateur en mode Pro ouvre l'application.
  */
-let autoSubscribed = false;
+let firstClickArmed = false;
+let lastSilentSyncAt = 0;
 export async function autoRegisterWebPushIfPro(
   planTier?: string,
   uidParam?: string,
-  emailParam?: string
+  emailParam?: string,
+  onSubscribed?: () => void
 ): Promise<void> {
   if (!isWebPushSupported()) return;
 
@@ -195,26 +218,33 @@ export async function autoRegisterWebPushIfPro(
   if (effectivePlan !== 'pro' && effectivePlan !== 'plus') {
     return;
   }
+  const options: SubscribeOptions = { planTier: effectivePlan, onSubscribed };
 
-  // Si la permission est déjà accordée, synchroniser immédiatement sans déranger l'élève
+  // Permission déjà accordée : abonnement silencieux (au plus une fois toutes les 10 minutes)
   if (Notification.permission === 'granted') {
-    subscribeToWebPush(uidParam, emailParam).catch((err) => {
+    if (Date.now() - lastSilentSyncAt < 10 * 60 * 1000) {
+      onSubscribed?.();
+      return;
+    }
+    lastSilentSyncAt = Date.now();
+    subscribeToWebPush(uidParam, emailParam, options).catch((err) => {
       console.warn('[AutoWebPush] Erreur synchro silencieuse:', err);
     });
     return;
   }
 
-  // Si la permission est encore en 'default', demander une seule fois lors de la première interaction naturelle de l'élève
-  if (Notification.permission === 'default' && !autoSubscribed) {
-    autoSubscribed = true;
+  // Permission jamais demandée : Chrome exige un geste de l'élève. On la demande donc au tout premier
+  // toucher ou clic dans l'application (aucun menu à ouvrir, aucune étape en plus).
+  if (Notification.permission === 'default' && !firstClickArmed) {
+    firstClickArmed = true;
     const triggerSilentRequest = () => {
-      window.removeEventListener('click', triggerSilentRequest);
-      window.removeEventListener('touchstart', triggerSilentRequest);
-      subscribeToWebPush(uidParam, emailParam).catch(() => {});
+      window.removeEventListener('click', triggerSilentRequest, true);
+      window.removeEventListener('touchend', triggerSilentRequest, true);
+      subscribeToWebPush(uidParam, emailParam, options).catch(() => {});
     };
 
-    window.addEventListener('click', triggerSilentRequest, { once: true });
-    window.addEventListener('touchstart', triggerSilentRequest, { once: true });
+    window.addEventListener('click', triggerSilentRequest, { once: true, capture: true });
+    window.addEventListener('touchend', triggerSilentRequest, { once: true, capture: true });
   }
 }
 
