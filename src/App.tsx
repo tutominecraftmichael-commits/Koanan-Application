@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback, Suspense } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback, Suspense, startTransition } from 'react';
 import { GraduationCap } from 'lucide-react';
 import type { AppState } from './services/storage';
 import {
@@ -77,6 +77,7 @@ import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelecto
 // (l'appli démarre ainsi avec ~1 Mo au lieu de ~10 Mo de code). Les cours guidés (≈ 7 Mo)
 // ne sont téléchargés qu'à l'ouverture d'une séance.
 import { DashboardOverview } from './features/dashboard/DashboardOverview';
+import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding'; // premier écran de tous : chargé tout de suite
 import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
 import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum } from './lib/curriculum/curriculumMatcher';
 import { clearAdminSession } from './lib/adminAuth';
@@ -89,7 +90,6 @@ const loadSubjectManager = () => import('./features/subjects/SubjectManager').th
 const loadPlannerView = () => import('./features/planner/PlannerView').then(m => m.PlannerView);
 const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashboard').then(m => m.AnalyticsDashboard);
 const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
-const loadDuolingoOnboarding = () => import('./features/onboarding/DuolingoOnboarding').then(m => m.DuolingoOnboarding);
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
 const ScheduleManager = lazyView(loadScheduleManager);
@@ -97,7 +97,6 @@ const SubjectManager = lazyView(loadSubjectManager);
 const PlannerView = lazyView(loadPlannerView);
 const AnalyticsDashboard = lazyView(loadAnalyticsDashboard);
 const FocusMode = lazyView(loadFocusMode);
-const DuolingoOnboarding = lazyView(loadDuolingoOnboarding);
 const PresetModal = lazyView(() => import('./features/onboarding/PresetModal').then(m => m.PresetModal));
 const ProWizardView = lazyView(() => import('./features/pro/ProWizardView').then(m => m.ProWizardView));
 const AdminDashboard = lazyView(() => import('./features/admin/AdminDashboard').then(m => m.AdminDashboard));
@@ -110,7 +109,12 @@ export function App() {
 
   // Règle absolue : L'utilisateur arrive TOUJOURS sur l'interface d'accueil (landing) en tant que visiteur non connecté.
   // Jamais de compte connecté d'office, jamais de saut instantané vers le tableau de bord.
-  const [activeView, setActiveView] = useState<ActiveAppView>('landing');
+  const [activeView, setActiveViewState] = useState<ActiveAppView>('landing');
+  // Changement de page en « transition » : la page actuelle reste affichée (avec ses animations)
+  // jusqu'à ce que la suivante soit prête, sans écran de chargement intermédiaire.
+  const setActiveView = useCallback((view: ActiveAppView) => {
+    startTransition(() => setActiveViewState(view));
+  }, []);
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [activeTutorSession, setActiveTutorSession] = useState<{
     subjectTitle: string;
@@ -613,16 +617,14 @@ export function App() {
     state.cycleCompletedDate,
   ]);
 
-  // Fluidité : une fois l'élève connecté, on précharge en silence les pages qu'il ouvre le plus
-  // (pas les cours guidés, trop lourds pour un forfait mobile)
-  const isLoggedInForPrefetch = Boolean(state.userAccount?.isLoggedIn);
+  // Fluidité : dès l'ouverture, on précharge en silence toutes les pages courantes (≈ 300 Ko au total),
+  // pour qu'elles s'ouvrent instantanément. Seuls les cours guidés (trop lourds) attendent la séance.
   useEffect(() => {
-    if (isLoggedInForPrefetch) {
-      prefetchViews([loadPlannerView, loadScheduleManager, loadSubjectManager, loadFocusMode, loadAnalyticsDashboard]);
-    } else {
-      prefetchViews([loadAuthPage, loadDuolingoOnboarding]);
-    }
-  }, [isLoggedInForPrefetch]);
+    prefetchViews([
+      loadAuthPage, loadPlannerView, loadScheduleManager,
+      loadSubjectManager, loadFocusMode, loadAnalyticsDashboard, loadPdfUploadView,
+    ]);
+  }, []);
 
   // Dépôt immédiat des alertes de la semaine (après activation des notifications par l'élève)
   const syncAlertsNow = useCallback(() => {
