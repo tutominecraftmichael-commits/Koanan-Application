@@ -74,6 +74,18 @@ export default defineConfig(({ mode }) => {
               res.end(JSON.stringify({ error: err?.message || 'Internal Server Error' }));
             }
           });
+          // Vérification « ce compte existe-t-il ? » (connexion / inscription)
+          server.middlewares.use('/api/account-exists', async (req, res) => {
+            try {
+              // @ts-ignore
+              const { default: handler } = await import('./api/account-exists.js');
+              await handler(req, res);
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: err?.message || 'Internal Server Error' }));
+            }
+          });
           // Enregistrement des appareils et des alertes (notifications)
           server.middlewares.use('/api/push-sync', async (req, res) => {
             try {

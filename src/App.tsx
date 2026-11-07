@@ -665,8 +665,12 @@ export function App() {
           await handleLoginSuccess(profile);
           setActiveView('dashboard');
         }
-      } catch (err) {
-        console.warn('Vérification redirection Google mobile:', err);
+      } catch (err: any) {
+        console.warn('Vérification redirection Google mobile:', err?.code || err);
+        // Compte Google inexistant (connexion) ou déjà inscrit (inscription) : on l'explique à l'élève
+        if (err?.code === 'auth/user-not-found' || err?.code === 'auth/email-already-in-use') {
+          showToast(err.message, 8000);
+        }
       }
     };
 
