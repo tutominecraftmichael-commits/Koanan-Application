@@ -121,7 +121,7 @@ export const PwaInstallPromptModal: React.FC = () => {
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 p-0.5 shrink-0 shadow-md">
                 <div className="w-full h-full rounded-[10px] bg-slate-950 flex items-center justify-center overflow-hidden">
-                  <img src="/logo-konan.png" alt="Cube KONAN" className="w-7 h-7 object-contain" />
+                  <img src="/icons/konan-icon-192.png" alt="Icône KONAN" className="w-7 h-7 rounded-lg object-cover" />
                 </div>
               </div>
 
@@ -175,7 +175,7 @@ export const PwaInstallPromptModal: React.FC = () => {
 
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center shrink-0">
-                <img src="/logo-konan.png" alt="Cube KONAN" className="w-8 h-8 object-contain" />
+                <img src="/icons/konan-icon-192.png" alt="Icône KONAN" className="w-8 h-8 rounded-lg object-cover" />
               </div>
               <div>
                 <h3 className="text-base font-bold text-white flex items-center gap-1.5">
