@@ -543,29 +543,17 @@ export function App() {
   }, [state.studySessions.length, state.classSlots.length, activeView]);
 
   // =========================================================================
-  // ÉTAPE 1 : CONDITION SIMPLE GRATUIT VS PRO (Web Push Arrière-Plan)
-  // 1. Gratuit : ZÉRO notification, désabonnement immédiat.
-  // 2. Pro / Plus : Activation automatique des notifications Web Push.
+  // NOTIFICATIONS DE RÉVISION : pour TOUS les élèves connectés (Gratuit, Pro et Plus).
+  // Activées d'office, aucun réglage à aller chercher :
+  // 1) abonnement du téléphone (permission demandée au premier toucher si elle ne l'a jamais été) ;
+  // 2) dépôt des alertes des 7 prochains jours dans push_queue, une fois l'appareil abonné.
   // =========================================================================
   useEffect(() => {
     const effectivePlan = state.userAccount?.planTier || state.planTier || 'free';
     const uid = state.userAccount?.googleId || state.userAccount?.email;
     const email = state.userAccount?.email;
 
-    if (effectivePlan === 'free') {
-      // Utilisateur en mode Gratuit : ZÉRO notification (ni fermée, ni ouverte)
-      if (uid) {
-        import('./services/webPushService').then(({ unsubscribeFromWebPush }) => {
-          unsubscribeFromWebPush(uid).catch(() => { });
-        });
-      }
-      return;
-    }
-
-    // Utilisateur Pro ou Plus : notifications activées d'office (aucun réglage à aller chercher).
-    // 1) abonnement du téléphone (permission demandée au premier toucher si elle ne l'a jamais été) ;
-    // 2) dépôt des alertes des 7 prochains jours dans push_queue, une fois l'appareil abonné.
-    if ((effectivePlan === 'pro' || effectivePlan === 'plus') && uid && !state.isDemoMode) {
+    if (state.userAccount?.isLoggedIn && uid && !state.isDemoMode) {
       const planInput = {
         studySessions: state.studySessions,
         subjects: state.subjects,
@@ -582,8 +570,8 @@ export function App() {
         });
       };
       const timer = setTimeout(() => {
-        import('./services/webPushService').then(({ autoRegisterWebPushIfPro }) => {
-          autoRegisterWebPushIfPro(effectivePlan, uid, email, syncAlerts).catch(() => { });
+        import('./services/webPushService').then(({ autoRegisterWebPush }) => {
+          autoRegisterWebPush(effectivePlan, uid, email, syncAlerts).catch(() => { });
         });
       }, 1500); // regroupe les changements rapprochés du planning en une seule synchronisation
       return () => clearTimeout(timer);
@@ -593,6 +581,7 @@ export function App() {
     state.planTier,
     state.userAccount?.googleId,
     state.userAccount?.email,
+    state.userAccount?.isLoggedIn,
     state.isDemoMode,
     state.studySessions,
     state.subjects,
@@ -1594,7 +1583,7 @@ export function App() {
     if (willBeCompleted) {
       // Séance faite : plus aucune relance pour elle aujourd'hui
       const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
-      if (currentUid && (effectivePlanTier === 'pro' || effectivePlanTier === 'plus')) {
+      if (currentUid && !state.isDemoMode) {
         import('./services/pushQueueService').then(({ cancelSessionAlerts }) => {
           cancelSessionAlerts(currentUid, target.id).catch(() => { });
         }).catch(() => { });
@@ -1659,7 +1648,7 @@ export function App() {
     {
       const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
       import('./services/pushQueueService').then(({ cancelSessionAlerts, markSessionStarted }) => {
-        if (currentUid && (effectivePlanTier === 'pro' || effectivePlanTier === 'plus')) {
+        if (currentUid && !state.isDemoMode) {
           cancelSessionAlerts(currentUid, session.id).catch(() => { });
         } else {
           markSessionStarted(session.id);
@@ -2443,10 +2432,10 @@ export function App() {
         studentEmail={pendingAuth?.profile.email || state.userAccount?.email}
       />
 
-      {/* Alertes KONAN dans l'appli (bannière + son) pour les comptes Pro */}
+      {/* Alertes KONAN dans l'appli (bannière + son) pour tous les élèves connectés */}
       <KonanReminderBanner
         appState={state}
-        enabled={Boolean((effectivePlanTier === 'pro' || effectivePlanTier === 'plus') && state.userAccount?.isLoggedIn && !state.isDemoMode)}
+        enabled={Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode)}
         onOpenSession={(sessionId) => {
           const target = state.studySessions.find(s => s.id === sessionId);
           if (target) handleStartFocusSession(target);

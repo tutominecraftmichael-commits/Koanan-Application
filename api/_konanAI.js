@@ -7,6 +7,7 @@ import {
   buildKonanPrompt,
   fallbackMessage,
   KONAN_SYSTEM_INSTRUCTION,
+  MESSAGE_ANGLES,
   validateAiMessage,
 } from './_konanVoice.js';
 
@@ -25,8 +26,8 @@ async function getClient(apiKey) {
 /**
  * @returns {Promise<{ title: string, body: string, source: 'ia' | 'secours', reason?: string }>}
  */
-export async function generateKonanMessage(ctx, { apiKey, seed = '', timeoutMs = AI_TIMEOUT_MS } = {}) {
-  const secours = (reason) => ({ ...fallbackMessage(ctx, seed), source: 'secours', reason });
+export async function generateKonanMessage(ctx, { apiKey, seed = '', timeoutMs = AI_TIMEOUT_MS, recent = [] } = {}) {
+  const secours = (reason) => ({ ...fallbackMessage(ctx, seed, recent), source: 'secours', reason });
   if (!apiKey) return secours('pas de clé IA');
 
   // Chargement de la bibliothèque Gemini (une fois par serveur) HORS du chronomètre des 3 secondes
@@ -37,6 +38,9 @@ export async function generateKonanMessage(ctx, { apiKey, seed = '', timeoutMs =
     aiClientPromise = null;
     return secours('bibliothèque IA indisponible');
   }
+
+  // Un angle d'écriture tiré au hasard à chaque message : KONAN ne dit jamais deux fois la même chose
+  const angle = MESSAGE_ANGLES[Math.floor(Math.random() * MESSAGE_ANGLES.length)];
 
   const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
   let timer;
@@ -51,12 +55,12 @@ export async function generateKonanMessage(ctx, { apiKey, seed = '', timeoutMs =
     const call = (async () => {
       const response = await ai.models.generateContent({
         model: MODEL,
-        contents: [{ role: 'user', parts: [{ text: buildKonanPrompt(ctx) }] }],
+        contents: [{ role: 'user', parts: [{ text: buildKonanPrompt(ctx, { angle, recent }) }] }],
         config: {
           systemInstruction: KONAN_SYSTEM_INSTRUCTION,
           // Pas de responseJsonSchema : gemini-3.5-flash-lite le refuse (400). Le format est vérifié par validateAiMessage.
           responseMimeType: 'application/json',
-          temperature: 0.9,
+          temperature: 1.1,
           maxOutputTokens: 300,
           // Les modèles Gemini 3 refusent thinkingBudget: 0 ; « minimal » = réponse la plus rapide
           thinkingConfig: { thinkingLevel: 'minimal' },
@@ -73,7 +77,8 @@ export async function generateKonanMessage(ctx, { apiKey, seed = '', timeoutMs =
     let parsed = null;
     try { parsed = JSON.parse(String(result).trim()); } catch { parsed = null; }
     const checked = validateAiMessage(parsed, ctx);
-    return checked ? { ...checked, source: 'ia' } : secours('réponse IA inutilisable');
+    if (checked && recent.includes(checked.body)) return secours('réponse IA identique à un message récent');
+    return checked ? { ...checked, source: 'ia', angle } : secours('réponse IA inutilisable');
   } catch (err) {
     const status = err?.status || err?.code || '';
     let detail = String(err?.message || '');

@@ -31,11 +31,12 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'METHOD_NOT_ALLOWED' });
   loadLocalEnvIfPresent();
   try {
-    const { context } = await readBody(req);
+    const { context, recent } = await readBody(req);
     if (!context || typeof context !== 'object' || !context.situation) return send(res, 400, { error: 'BAD_CONTEXT' });
+    const recentList = Array.isArray(recent) ? recent.map(String).slice(0, 12) : [];
     const startedAt = Date.now();
-    const ia = await generateKonanMessage(context, { apiKey: String(process.env.GEMINI_API_KEY || '').trim(), seed: String(Date.now()) });
-    return send(res, 200, { ia, secours: fallbackMessage(context, 'test'), durationMs: Date.now() - startedAt });
+    const ia = await generateKonanMessage(context, { apiKey: String(process.env.GEMINI_API_KEY || '').trim(), seed: String(Date.now()), recent: recentList });
+    return send(res, 200, { ia, secours: fallbackMessage(context, 'test', recentList), durationMs: Date.now() - startedAt });
   } catch (err) {
     return send(res, 500, { error: String(err?.message || err).slice(0, 120) });
   }

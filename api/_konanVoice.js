@@ -172,12 +172,6 @@ export function buildStudentContext(user, alert, now = new Date(), tz = DEFAULT_
 // ---------------------------------------------------------------------------
 // Banque de messages locale (secours instantané, toujours à l'heure)
 // ---------------------------------------------------------------------------
-function pick(list, seed) {
-  let h = 0;
-  for (const ch of String(seed || '')) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return list[h % list.length];
-}
-
 function fill(template, ctx) {
   return template
     .replace(/\{prenom\}/g, ctx.prenom || '')
@@ -194,47 +188,95 @@ const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
 const BANK = {
   avant: {
-    titles: ['C’est KONAN 👋', '{prenom}, on y va ?', 'Dans 5 minutes : {matiere}'],
+    titles: [
+      'C’est KONAN 👋', '{prenom}, on y va ?', 'Dans 5 minutes : {matiere}', 'Petit rappel du grand frère',
+      'Prépare-toi, {prenom}', 'L’heure approche…', 'Ton cahier t’appelle', 'On se voit dans 5 minutes ?',
+    ],
     bodies: [
       'Dans 5 minutes, on attaque {matiere}. Pose le téléphone, prends ton cahier, je t’attends.',
       '{prenom}, {matiere} commence dans 5 minutes. {duree} minutes bien concentré et on en parle plus.',
-      'Petit rappel du grand frère : {matiere} dans 5 minutes. Les bonnes notes ne tombent pas du ciel.',
+      'Les bonnes notes ne tombent pas du ciel. {matiere} dans 5 minutes, installe-toi.',
       'Bois un peu d’eau, installe-toi : {matiere} démarre dans 5 minutes. Je compte sur toi.',
+      'Dans 5 minutes, c’est toi et {matiere}. Range les réseaux, ils seront encore là après.',
+      '{prenom}, le gbaka de {matiere} part dans 5 minutes. Ne le rate pas, je garde ta place.',
+      'Je ne vais pas te supplier… mais {matiere} commence dans 5 minutes, hein. Viens.',
+      'Ce soir tu seras fier de toi. Ça commence par {matiere}, dans 5 minutes.',
+      '5 minutes avant {matiere}. Trouve un coin calme, ouvre ton cahier, et on y va ensemble.',
+      'Ton futur toi te dit merci d’avance : {matiere} dans 5 minutes. On ne négocie pas.',
     ],
   },
   rattrapage: {
-    titles: ['Deuxième chance', '{prenom}, c’est l’heure du rattrapage', 'Rattrapage : {matiere}'],
+    titles: [
+      'Deuxième chance', '{prenom}, c’est l’heure du rattrapage', 'Rattrapage : {matiere}', 'On remet ça ?',
+      'Je t’avais gardé une place', 'Cette fois, c’est la bonne',
+    ],
     bodies: [
       'Ta séance de {matiere} replacée, c’est dans 5 minutes. Cette fois, je compte vraiment sur toi.',
       '{prenom}, deuxième chance pour {matiere} : ça commence dans 5 minutes. On ne la rate pas.',
       'Le rattrapage de {matiere} démarre dans 5 minutes. Fais-le, et tu te coucheras la tête haute.',
+      'Je t’ai gardé {matiere} au chaud. Dans 5 minutes, on la fait pour de bon.',
+      'Pas de troisième chance ce soir : {matiere} dans 5 minutes. Montre-moi ce que tu vaux.',
+      'Rattrapage de {matiere} dans 5 minutes. Juste {duree} minutes, et la journée est sauvée.',
     ],
   },
   retard: {
-    titles: ['Tu m’as oublié ?', 'Au revoir, j’imagine…', '{prenom}… ?'],
+    titles: [
+      'Tu m’as oublié ?', 'Au revoir, j’imagine…', '{prenom}… ?', 'Allô, tu es où ?',
+      'Je t’attends toujours', 'C’est comme ça alors ?', 'Ça fait mal, hein',
+    ],
     bodies: [
       'Ça fait 15 minutes que {matiere} a commencé et toujours rien. Tu m’as abandonné ?',
       'Je t’attends depuis 15 minutes pour {matiere}. Les réseaux peuvent attendre, toi tu ne peux pas.',
       '15 minutes de retard sur {matiere}… Je fais comme si je n’avais rien vu. Viens vite.',
+      'Ton cahier de {matiere} pleure tout seul depuis 15 minutes. Tu vas le laisser comme ça ?',
+      'Bon. {matiere} a commencé il y a 15 minutes et tu n’es pas là. Je ne dis rien, mais je vois tout.',
+      '{prenom}, il est encore temps. {matiere} a juste 15 minutes d’avance sur toi. Rattrape-la !',
     ],
     withCatchup: [
       'Ça fait 15 minutes que {matiere} t’attend. Si tu ne viens pas, je te la replace à {rattrapage}.',
       'Tu m’as abandonné ? {matiere} a commencé il y a 15 minutes. Sinon, rendez-vous à {rattrapage}.',
+      '15 minutes que je t’attends pour {matiere}. Viens maintenant, ou on se retrouve à {rattrapage}.',
+      'Je ne te vois pas sur {matiere}… Dernière chance maintenant, sinon c’est à {rattrapage}.',
+      '{prenom}, {matiere} a commencé sans toi. Je te laisse jusqu’à {rattrapage}, pas une minute de plus.',
     ],
   },
   manquee: {
-    titles: ['Pas de panique', 'Je t’ai gardé une place', 'Séance replacée'],
+    titles: [
+      'Pas de panique', 'Je t’ai gardé une place', 'Séance replacée', 'On respire',
+      'Ce n’est pas fini', 'J’ai tout arrangé',
+    ],
     bodies: [
       'Tu as raté {matiere}, mais ne t’inquiète pas : je l’ai replacée à {rattrapage}. Je te préviens 5 minutes avant.',
       '{matiere} est passée sans toi. Pas grave, on la rattrape à {rattrapage}. Ce soir, on ne lâche rien.',
       'J’ai vu que tu n’as pas pu faire {matiere}. Respire : elle est replacée à {rattrapage}, je te rappelle.',
+      'Ça arrive à tout le monde. {matiere} est déplacée à {rattrapage}, et là je compte sur toi.',
+      'Pas de stress pour {matiere} : rendez-vous à {rattrapage}. Je m’occupe de te le rappeler.',
+      'Je ne t’en veux pas pour {matiere}. Je l’ai remise à {rattrapage}, on la fait ensemble.',
     ],
     noSlot: [
       'Tu as raté {matiere} et je n’ai plus de créneau libre aujourd’hui. Demain, on repart du bon pied ?',
       '{matiere} est passée sans toi aujourd’hui. Ce n’est pas grave, mais demain je ne te lâche pas.',
+      'Plus de place ce soir pour {matiere}. Repose-toi bien, demain on se rattrape ensemble.',
+      'Aujourd’hui {matiere} t’a échappé. Demain est un nouveau jour, et je serai là dès le début.',
     ],
   },
 };
+
+/**
+ * Choisit un élément de la liste en partant d'une position tirée du « seed », en sautant ceux
+ * déjà envoyés récemment à l'élève (pour ne pas répéter les mêmes phrases).
+ */
+function pickFresh(list, seed, render, recent) {
+  if (!list.length) return '';
+  let h = 0;
+  for (const ch of String(seed || '')) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const recentSet = new Set((recent || []).map((r) => String(r).trim()));
+  for (let i = 0; i < list.length; i++) {
+    const text = render(list[(h + i) % list.length]);
+    if (!recentSet.has(text)) return text;
+  }
+  return render(list[h % list.length]);
+}
 
 /** Le type d'alerte (avant, retard, manquee, rattrapage) déduit du contexte. */
 export function kindFromContext(ctx) {
@@ -245,9 +287,10 @@ export function kindFromContext(ctx) {
 
 /**
  * Message de secours : court (au plus ~180 caractères), adapté à la situation.
+ * @param recent derniers messages envoyés à l'élève (titres et textes) : on évite de les répéter
  * @returns {{ title: string, body: string }}
  */
-export function fallbackMessage(ctx, seed = '') {
+export function fallbackMessage(ctx, seed = '', recent = []) {
   const kind = kindFromContext(ctx);
   const set = BANK[kind];
   const key = `${seed}|${ctx.matiere}|${kind}`;
@@ -257,8 +300,9 @@ export function fallbackMessage(ctx, seed = '') {
   if (kind === 'retard' && ctx.rattrapageA) bodies = set.withCatchup;
   if (kind === 'manquee' && !ctx.rattrapageA) bodies = set.noSlot;
 
-  const title = capitalize(fill(pick(usable(set.titles), key + 't'), ctx)) || 'C’est KONAN 👋';
-  let body = capitalize(fill(pick(usable(bodies), key + 'b'), ctx));
+  const render = (t) => capitalize(fill(t, ctx));
+  const title = pickFresh(usable(set.titles), key + 't', render, recent) || 'C’est KONAN 👋';
+  let body = pickFresh(usable(bodies), key + 'b', render, recent);
 
   // Petites touches de « conscience », seulement si le message reste court
   const extras = [];
@@ -284,7 +328,20 @@ export const KONAN_SYSTEM_INSTRUCTION = [
   'Règles : tutoiement, français simple et correct, 1 ou 2 phrases, au plus un emoji, jamais d’insulte ni de honte publique, n’invente aucune date, aucune heure, aucune note ni aucun chiffre absent du contexte. Écris les heures à la française : « 18h », « 19h30 » (jamais « 18:00 »).',
 ].join('\n');
 
-export function buildKonanPrompt(ctx) {
+/** Angles d'écriture : un différent à chaque notification, pour que KONAN ne radote jamais. */
+export const MESSAGE_ANGLES = [
+  'humour léger, comme un grand frère qui taquine',
+  'faux drame à la Duolingo (tu fais semblant d’être vexé ou abandonné)',
+  'défi : tu le mets au défi de te prouver qu’il est capable',
+  'fierté : pense à la fierté de sa famille et à la sienne ce soir',
+  'avenir : les bonnes notes d’aujourd’hui préparent le métier et les revenus de demain',
+  'complicité : vous êtes une équipe, tu l’attends pour travailler ensemble',
+  'image du quotidien ivoirien (maquis, gbaka, garba, match de foot, marché…)',
+  'calme et rassurant, très court et doux',
+  'énergie : ton motivant de coach sportif avant un match',
+];
+
+export function buildKonanPrompt(ctx, { angle = '', recent = [] } = {}) {
   const situations = {
     '5_MIN_AVANT': ctx.estRattrapage
       ? 'La séance de RATTRAPAGE commence dans 5 minutes.'
@@ -298,9 +355,13 @@ export function buildKonanPrompt(ctx) {
     `Situation : ${situations[ctx.situation] || situations['5_MIN_AVANT']}`,
     'Rappel : « historique.rateeHier » parle de la veille ; la séance de la situation est celle d’aujourd’hui.',
     `Contexte de l’élève (JSON) : ${JSON.stringify(ctx)}`,
-    'Écris la notification à afficher sur son téléphone.',
+    angle ? `Angle à utiliser pour CE message : ${angle}.` : '',
+    recent.length
+      ? `Derniers messages déjà reçus par l’élève (ne reprends ni leurs phrases, ni leurs titres, ni leurs tournures) : ${JSON.stringify(recent.slice(0, 6))}`
+      : '',
+    'Écris une notification NOUVELLE et surprenante, jamais la même formule que d’habitude, à afficher sur son téléphone.',
     'Réponds en JSON : {"titre": "au plus 40 caractères", "message": "1 ou 2 phrases, au plus 160 caractères"}.',
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 }
 
 /** Vérifie la réponse de l'IA ; renvoie null si elle n'est pas utilisable (on prend alors le secours). */

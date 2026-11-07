@@ -3,7 +3,7 @@
  * 
  * Permet l'envoi de notifications push fiables même lorsque l'application
  * est TOTALEMENT FERMÉE et le téléphone en veille.
- * Enregistrement 100% silencieux et automatique en arrière-plan pour les abonnés Pro.
+ * Enregistrement 100% silencieux et automatique en arrière-plan pour tous les élèves connectés (Gratuit, Pro, Plus).
  */
 
 import { auth, db } from '../lib/firebase';
@@ -61,7 +61,7 @@ export function getWebPushPermission(): NotificationPermission {
 
 /**
  * Abonne le téléphone aux notifications Web Push en arrière-plan
- * et enregistre la souscription dans Firestore (réservé aux abonnés Pro / Plus)
+ * et enregistre la souscription dans Firestore (tous les élèves connectés)
  */
 /** Clé courte et stable d'un abonnement (sert de nom de champ dans Firestore). */
 function endpointKey(endpoint: string): string {
@@ -139,7 +139,7 @@ export async function subscribeToWebPush(
     const subJson = subscription.toJSON();
     console.log('[KONAN WebPush] Souscription Push active pour', effectiveUid, subJson.endpoint?.slice(0, 35));
 
-    // 5. Enregistrer dans Firestore pour le compte Pro
+    // 5. Enregistrer dans Firestore pour le compte de l'élève
     if (db) {
       const userRef = doc(db, 'users', effectiveUid);
       const userEmail =
@@ -177,7 +177,7 @@ export async function subscribeToWebPush(
                 device: navigator.userAgent.slice(0, 120),
               },
             },
-            planTier: options.planTier || 'pro',
+            planTier: options.planTier || 'free',
             notificationsEnabled: true,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
             sendAt: 9999999999999, // jamais « à échéance » : cette fiche n'est pas une notification
@@ -202,11 +202,14 @@ export async function subscribeToWebPush(
 
 /**
  * Enregistrement silencieux et automatique du téléphone en arrière-plan
- * Dès qu'un utilisateur en mode Pro ouvre l'application.
+ * Dès qu'un élève connecté ouvre l'application.
  */
 let firstClickArmed = false;
 let lastSilentSyncAt = 0;
-export async function autoRegisterWebPushIfPro(
+/**
+ * Abonnement automatique du téléphone aux rappels de révision, pour TOUS les élèves (Gratuit, Pro, Plus).
+ */
+export async function autoRegisterWebPush(
   planTier?: string,
   uidParam?: string,
   emailParam?: string,
@@ -214,10 +217,7 @@ export async function autoRegisterWebPushIfPro(
 ): Promise<void> {
   if (!isWebPushSupported()) return;
 
-  const effectivePlan = String(planTier || '').toLowerCase().trim();
-  if (effectivePlan !== 'pro' && effectivePlan !== 'plus') {
-    return;
-  }
+  const effectivePlan = String(planTier || 'free').toLowerCase().trim() || 'free';
   const options: SubscribeOptions = { planTier: effectivePlan, onSubscribed };
 
   // Permission déjà accordée : abonnement silencieux (au plus une fois toutes les 10 minutes)

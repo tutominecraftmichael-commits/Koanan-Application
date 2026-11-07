@@ -3,11 +3,11 @@
  * Endpoint : /api/cron-notifications, appelé CHAQUE MINUTE par cron-job.org.
  *
  * Comment ça marche :
- * 1. L'application de l'élève Pro dépose à l'avance, dans la collection `push_queue`, une « enveloppe »
+ * 1. L'application de l'élève dépose à l'avance, dans la collection `push_queue`, une « enveloppe »
  *    par alerte prévue sur les 7 prochains jours (sans texte : juste la séance, l'heure et la situation).
  * 2. Ce travailleur lit UNIQUEMENT les enveloppes arrivées à échéance (sendAt <= maintenant).
- * 3. Pour chacune, il relit la fiche de l'élève (users/{uid}) : élève toujours Pro ? séance pas déjà faite,
- *    pas déplacée ? Puis il construit le contexte de l'élève et demande à Gemini d'écrire le message
+ * 3. Pour chacune, il relit la fiche de l'élève (users/{uid}) : séance pas déjà faite, pas déplacée ?
+ *    (Notifications pour TOUS les élèves : Gratuit, Pro et Plus.) Puis il construit le contexte de l'élève et demande à Gemini d'écrire le message
  *    (3 secondes maximum, sinon banque de messages locale), et l'envoie sur TOUS ses appareils.
  * 4. Chaque enveloppe traitée est supprimée. Une enveloppe en retard de plus de 20 minutes est jetée sans envoi.
  *
@@ -165,14 +165,31 @@ function checkEnvelope(env, userData) {
   return { ok: true, alert: { ...env, rattrapageA: rescheduledThatDay ? s.startTime : env.rattrapageA || null } };
 }
 
-async function writeMessage(alert, userData, deviceData, now) {
+/** Derniers messages reçus par l'élève (titres et textes), mémorisés sur sa fiche « appareils ». */
+function recentOf(deviceData) {
+  return Array.isArray(deviceData?.recentMessages) ? deviceData.recentMessages.map(String).slice(0, 12) : [];
+}
+
+async function writeMessage(alert, userData, deviceData, now, recent = recentOf(deviceData)) {
   const tz = deviceData?.timezone || DEFAULT_TIMEZONE;
   const ctx = buildStudentContext(userData || {}, alert, now, tz);
   const message = await generateKonanMessage(ctx, {
     apiKey: String(process.env.GEMINI_API_KEY || '').trim(),
     seed: `${alert.sessionId}|${alert.date}|${alert.kind}`,
+    recent,
   });
   return { ctx, message };
+}
+
+/** Mémorise les messages envoyés (les 12 derniers) pour que KONAN ne se répète pas. */
+async function rememberMessages(db, userId, previous, sentMessages) {
+  if (!sentMessages.length) return;
+  const recentMessages = [...sentMessages.flatMap((m) => [m.body, m.title]), ...previous].slice(0, 12);
+  try {
+    await db.collection('push_queue').doc(`device_${userId}`).set({ recentMessages }, { merge: true });
+  } catch {
+    // non bloquant
+  }
 }
 
 function pushPayload(message, alert) {
@@ -324,25 +341,32 @@ export default async function handler(req, res) {
     const people = await loadUsers(db, envelopes.map((e) => e.data.userId));
     const stats = { found: envelopes.length, sent: 0, delivered: 0, ai: 0, fallback: 0, skipped: {}, errors: [] };
     const skip = (reason) => { stats.skipped[reason] = (stats.skipped[reason] || 0) + 1; };
+    const sentByUser = new Map(); // messages envoyés pendant ce passage, par élève
 
     await mapWithLimit(envelopes, 8, async (e) => {
       const env = e.data;
       const person = people.get(env.userId) || {};
       if (nowMs - Number(env.sendAt) > STALE_MS) return skip('trop tard (plus de 20 min)');
-      if (planTierOf(person.user, person.device) === 'free') return skip('élève non Pro');
+      // Notifications ouvertes à TOUS les élèves (Gratuit, Pro, Plus) : pas de filtre sur la formule
       const subs = subscriptionsOf(person.device);
       if (!subs.length) return skip('aucun appareil abonné');
       const check = checkEnvelope(env, person.user);
       if (!check.ok) return skip(check.reason);
 
-      const { message } = await writeMessage(check.alert, person.user, person.device, now);
+      const already = sentByUser.get(env.userId) || [];
+      const recent = [...already.flatMap((m) => [m.body, m.title]), ...recentOf(person.device)];
+      const { message } = await writeMessage(check.alert, person.user, person.device, now, recent);
       if (message.source === 'ia') stats.ai += 1; else stats.fallback += 1;
       const sent = await sendToDevices(subs, pushPayload(message, check.alert));
+      if (sent.delivered > 0) sentByUser.set(env.userId, [...already, message]);
       stats.sent += 1;
       stats.delivered += sent.delivered;
       if (sent.errors.length && stats.errors.length < 10) stats.errors.push(...sent.errors);
       await removeDeadSubscriptions(db, env.userId, sent.dead);
     });
+
+    await Promise.all([...sentByUser.entries()].map(([userId, msgs]) =>
+      rememberMessages(db, userId, recentOf(people.get(userId)?.device), msgs)));
 
     // Chaque enveloppe traitée (envoyée ou écartée) quitte la file
     for (let i = 0; i < envelopes.length; i += 400) {

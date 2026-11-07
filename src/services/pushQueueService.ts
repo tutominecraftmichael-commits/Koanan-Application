@@ -229,7 +229,7 @@ let syncAgain: (() => Promise<void>) | null = null;
 
 /**
  * Dépose dans push_queue les alertes des 7 prochains jours (seulement ce qui a changé).
- * À appeler pour un élève Pro dont l'appareil est abonné aux notifications.
+ * À appeler pour tout élève connecté (Gratuit, Pro, Plus) dont l'appareil est abonné aux notifications.
  */
 export async function syncPushPlan(uid: string, input: AlertPlanInput, now: Date = new Date()): Promise<{ written: number; deleted: number }> {
   if (!db || !uid) return { written: 0, deleted: 0 };

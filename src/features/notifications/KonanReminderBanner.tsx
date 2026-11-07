@@ -12,7 +12,7 @@ import {
 } from '../../../api/_konanVoice.js';
 
 /**
- * Alertes KONAN DANS l'application (bannière animée + son), pour tous les comptes Pro.
+ * Alertes KONAN DANS l'application (bannière animée + son), pour tous les élèves connectés (Gratuit, Pro, Plus).
  * Elles marchent même si le navigateur refuse les notifications : tant que l'appli est ouverte,
  * KONAN prévient l'élève 5 minutes avant, à 15 minutes de retard, à la fin d'une séance manquée
  * et avant le rattrapage. Quand une notification push arrive pendant que l'appli est au premier plan,
@@ -52,6 +52,24 @@ function writeShown(ymd: string, keys: Set<string>) {
   }
 }
 
+// Derniers messages affichés (titres et textes) : KONAN évite de les répéter
+const RECENT_KEY = 'konan_recent_messages';
+function readRecent(): string[] {
+  try {
+    const raw = localStorage.getItem(RECENT_KEY);
+    return raw ? (JSON.parse(raw) as string[]).slice(0, 12) : [];
+  } catch {
+    return [];
+  }
+}
+function rememberMessage(title: string, body: string) {
+  try {
+    localStorage.setItem(RECENT_KEY, JSON.stringify([body, title, ...readRecent()].slice(0, 12)));
+  } catch {
+    // non bloquant
+  }
+}
+
 function planInputOf(st: AppState): AlertPlanInput {
   return {
     studySessions: st.studySessions || [],
@@ -64,7 +82,7 @@ function planInputOf(st: AppState): AlertPlanInput {
 
 interface KonanReminderBannerProps {
   appState: AppState;
-  /** Compte Pro connecté (hors démo) */
+  /** Élève connecté (hors démo), quelle que soit sa formule */
   enabled: boolean;
   onOpenSession: (sessionId: string) => void;
   onOpenPlanner: () => void;
@@ -80,6 +98,7 @@ export const KonanReminderBanner: React.FC<KonanReminderBannerProps> = ({ appSta
   const show = useCallback((next: Banner) => {
     // Même alerte déjà affichée (ex. le message de l'IA arrive après la bannière locale) : on met juste le texte à jour
     if (bannerRef.current?.key !== next.key) soundFX.playNotificationPing();
+    rememberMessage(next.title, next.body);
     setBanner(next);
   }, []);
 
@@ -102,7 +121,7 @@ export const KonanReminderBanner: React.FC<KonanReminderBannerProps> = ({ appSta
       writeShown(ymd, shown);
       const latest = fresh[fresh.length - 1];
       const ctx = buildStudentContext(st, latest, now);
-      show({ key: latest.key, ...fallbackMessage(ctx, latest.key), sessionId: latest.sessionId, kind: latest.kind });
+      show({ key: latest.key, ...fallbackMessage(ctx, latest.key, readRecent()), sessionId: latest.sessionId, kind: latest.kind });
     };
     tick();
     const id = setInterval(tick, 15_000);
@@ -247,7 +266,7 @@ const KonanVoiceTestPanel: React.FC<{ appState: AppState; onShow: (b: Banner) =>
         const res = await fetch('/api/konan-voice', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ context: ctx }),
+          body: JSON.stringify({ context: ctx, recent: readRecent() }),
           signal: controller.signal,
         });
         clearTimeout(timer);
@@ -255,10 +274,10 @@ const KonanVoiceTestPanel: React.FC<{ appState: AppState; onShow: (b: Banner) =>
         title = json?.ia?.title;
         body = json?.ia?.body;
         note = json?.ia?.source === 'ia'
-          ? `Écrit par l’IA en ${(Number(json.durationMs) / 1000).toFixed(1)} s`
+          ? `Écrit par l’IA en ${(Number(json.durationMs) / 1000).toFixed(1)} s · angle : ${json.ia.angle || '?'}`
           : `Message de secours (${json?.ia?.reason || 'IA indisponible'})`;
       } catch {
-        const fb = fallbackMessage(ctx, String(Date.now()));
+        const fb = fallbackMessage(ctx, String(Date.now()), readRecent());
         title = fb.title;
         body = fb.body;
         note = 'Message de secours (serveur de test injoignable)';
