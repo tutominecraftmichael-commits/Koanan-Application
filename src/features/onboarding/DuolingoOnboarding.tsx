@@ -40,7 +40,7 @@ import {
   Cpu,
   LogIn
 } from 'lucide-react';
-import { KonanCube } from '../../components/common/KonanCube';
+import { KonanMascot } from '../../components/common/KonanMascot';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { WaitlistModal } from '../../components/common/WaitlistModal';
 import { soundFX } from '../../lib/audioEffects';
@@ -362,6 +362,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   onLoginSuccess,
 }) => {
   const [step, setStep] = useState<OnboardingStepId>('welcome');
+  // Pages d'introduction des nouveaux (avant les questions) : 2 = KONAN salue, 3 = KONAN saute de joie
+  const [introPage, setIntroPage] = useState<null | 'hello' | 'questions'>(null);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [showExistingLogin, setShowExistingLogin] = useState<boolean>(false);
 
@@ -525,9 +527,32 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       setAuthError(null);
       return;
     }
+    if (step === 'study_type') {
+      // Retour vers la page 3 (« Je vais te poser quelques questions »)
+      setStep('welcome');
+      setIntroPage('questions');
+      return;
+    }
     if (currentStepIndex > 0) {
       setStep(STEP_ORDER[currentStepIndex - 1]);
     }
+  };
+
+  /** Page 1 → « Commencer » : début du parcours des nouveaux */
+  const startNewcomerJourney = () => {
+    soundFX.playCheckmarkPop();
+    setAuthFullName('');
+    setAuthEmail('');
+    setAuthPassword('');
+    setAuthError(null);
+    setAccountExistsRedirect(false);
+    setRegisteredProfile(null);
+    try {
+      sessionStorage.setItem('konan_onboarding_in_progress', 'true');
+    } catch {
+      // Ignore
+    }
+    setIntroPage('hello');
   };
 
   // Changement du système d'études (LMD / BTS / Lycée) : re-catégorise et transforme immédiatement le fichier texte (.txt)
@@ -1260,16 +1285,16 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       case 'welcome':
         return "Salut ! Moi c'est Konan. Prêt à organiser tes études et réussir sans t'épuiser ?";
       case 'study_type':
-        return "Choisis ton système d'études (LMD, BTS ou Lycée) : il catégorise l'extraction et structure ton fichier texte (.txt) !";
+        return "Choisis ton système d'études (LMD, BTS ou Lycée) : il catégorise l'extraction et structure ton fichier texte !";
       case 'upload':
         return isAnalyzing
           ? `Je décortique ton emploi du temps et le transforme au format ${activeSystem.title}...`
           : liveParsedPreview.slots.length > 0
           ? `Extraction réussie : ${liveParsedPreview.slots.length} créneaux classés en fichier texte ${activeSystem.title} !`
-          : `Importe ton emploi du temps (PDF ou Photo) pour l'extraire en fichier texte ${activeSystem.title}.`;
+          : `Importe ton emploi du temps (PDF ou photos) pour l'extraire en fichier texte ${activeSystem.title}.`;
       case 'grade_level':
         return studyType === 'lycee'
-          ? "Quelle est ta classe et ta série ? Cela me permet d'activer le programme officiel de Côte d'Ivoire !"
+          ? "Choisis ta classe et ta série. Cela permet d'activer le programme officiel de la CI !"
           : "Précise ta filière d'études pour ajuster ton accompagnement sur mesure.";
       case 'customize':
         return 'Vérifie tes matières extraites, ajuste leurs coefficients et choisis ta méthode de révision.';
@@ -1504,15 +1529,23 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           step === 'pricing_models' && !showExistingLogin ? 'max-w-7xl' : 'max-w-2xl'
         } mx-auto px-4 py-3 flex flex-col justify-center z-10 transition-all duration-300`}
       >
-        {/* Cube Konan + Bulle de parole en haut des étapes */}
+        {/* Mascotte KONAN qui prend des notes sur sa montre hologramme + bulle de parole */}
         {step !== 'welcome' && (
-          <div className="mb-4 flex items-center gap-3 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/90 rounded-2xl p-3 max-w-3xl mx-auto w-full shadow-sm">
-            <div className="shrink-0">
-              <KonanCube size={54} showStars={false} glow={true} />
+          <div className="mb-4 flex items-center gap-2 sm:gap-3 max-w-3xl mx-auto w-full">
+            <div className="shrink-0 -my-2">
+              {/* « Tout est prêt » : il referme son hologramme, des étoiles tournent, pouce levé */}
+              <KonanMascot pose={step === 'account_setup' ? 'done' : 'notes'} size={84} />
             </div>
-            <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug text-left">
-              « <WordByWordBubble text={bubbleMessage} speed={25} /> »
-            </p>
+            <div className="relative flex-1 bg-white dark:bg-slate-900/90 border-2 border-slate-200 dark:border-slate-700 rounded-2xl px-3.5 py-3 shadow-sm">
+              {/* Pointe de la bulle, vers la mascotte */}
+              <span
+                aria-hidden="true"
+                className="absolute -left-[9px] top-1/2 -translate-y-1/2 w-4 h-4 rotate-45 bg-white dark:bg-slate-900 border-l-2 border-b-2 border-slate-200 dark:border-slate-700"
+              />
+              <p className="relative text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug text-left">
+                <WordByWordBubble text={bubbleMessage} speed={25} />
+              </p>
+            </div>
           </div>
         )}
 
@@ -1657,88 +1690,111 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
             </form>
           )}
 
-          {/* ÉTAPE 1 : ACCUEIL */}
-          {!showExistingLogin && step === 'welcome' && (
-            <div className="flex flex-col items-center text-center space-y-6 py-4 max-w-md mx-auto">
-              <div
-                className="relative group cursor-pointer"
-                onClick={() => soundFX.playStreakIgniteChime()}
-              >
-                <div className="absolute -inset-6 rounded-full bg-gradient-to-tr from-cyan-500/25 to-purple-500/25 blur-2xl animate-pulse" />
-                <KonanCube size={125} showStars={true} glow={true} className="animate-float" />
-              </div>
+          {/* PAGE 1 : ACCUEIL — « J'ai déjà un compte ? » / « Nouveau sur KONAN ? » */}
+          {!showExistingLogin && step === 'welcome' && introPage === null && (
+            <div className="flex flex-col items-center text-center max-w-md mx-auto w-full py-6 space-y-5 animate-in fade-in duration-300">
+              <p className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">KONAN</p>
 
-              <div className="relative bg-white dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-xl backdrop-blur-xl text-left w-full">
-                <p className="text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
-                  « <WordByWordBubble text={bubbleMessage} speed={35} /> »
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
-                  Ton frère pour tes{' '}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-500 dark:from-cyan-400 dark:to-indigo-400">
-                    révisions
-                  </span>
-                </h1>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Choisis ton système (<strong className="text-slate-900 dark:text-slate-200">LMD, BTS, Lycée</strong>), extrais ton EDT en fichier texte structuré et génère ton planning de révision sur mesure.
-                </p>
-              </div>
-
-              <div className="w-full space-y-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    soundFX.playCheckmarkPop();
-                    setAuthFullName('');
-                    setAuthEmail('');
-                    setAuthPassword('');
-                    setAuthError(null);
-                    setAccountExistsRedirect(false);
-                    setRegisteredProfile(null);
-                    try {
-                      sessionStorage.setItem('konan_onboarding_in_progress', 'true');
-                    } catch {
-                      // Ignore
-                    }
-                    setStep('study_type');
-                  }}
-                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <span>JE CRÉE MON PLANNING 🚀</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    soundFX.playCheckmarkPop();
-                    setAuthError(null);
-                    setShowExistingLogin(true);
-                  }}
-                  className="w-full py-3.5 px-6 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/90 text-slate-800 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white font-bold text-xs sm:text-sm border-2 border-slate-200 dark:border-slate-800 transition-all cursor-pointer uppercase shadow-xs"
-                >
-                  J'AI DÉJÀ UN COMPTE • ME CONNECTER
-                </button>
-
-                {/* Bouton Admin : seulement en local, jamais visible des élèves en ligne */}
-                {isLocalAdminAllowed && onOpenAdmin && (
+              <div className="w-full rounded-3xl bg-white dark:bg-slate-900/90 border-2 border-slate-200 dark:border-slate-800 shadow-xl p-6 space-y-6">
+                <div className="space-y-3">
+                  <p className="text-base font-extrabold text-slate-900 dark:text-white">J'ai déjà un compte ?</p>
                   <button
                     type="button"
                     onClick={() => {
                       soundFX.playCheckmarkPop();
-                      setShowAdminModal(true);
+                      setAuthError(null);
+                      setShowExistingLogin(true);
                     }}
-                    className="w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                    className="w-full py-3.5 px-6 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-indigo-600 dark:text-indigo-300 font-extrabold text-sm uppercase tracking-wide border-2 border-slate-200 dark:border-slate-700 shadow-[0_4px_0_0_#CBD5E1] dark:shadow-[0_4px_0_0_#1E293B] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
                   >
-                    <Lock className="w-3.5 h-3.5" />
-                    <span>Accès Administrateur KONAN</span>
+                    Se connecter
                   </button>
-                )}
+                </div>
+
+                <div className="h-px bg-slate-200 dark:bg-slate-800" />
+
+                <div className="space-y-3">
+                  <p className="text-base font-extrabold text-slate-900 dark:text-white">Nouveau sur KONAN ?</p>
+                  <button
+                    type="button"
+                    onClick={startNewcomerJourney}
+                    className="w-full py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white font-black text-sm sm:text-base uppercase tracking-wide shadow-[0_5px_0_0_#047857] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <span>Commencer</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
+
+              {/* Bouton Admin : seulement en local, jamais visible des élèves en ligne */}
+              {isLocalAdminAllowed && onOpenAdmin && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFX.playCheckmarkPop();
+                    setShowAdminModal(true);
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Accès Administrateur KONAN</span>
+                </button>
+              )}
             </div>
           )}
+
+          {/* PAGES 2 ET 3 : KONAN se présente (salut), puis annonce les questions (saut de joie) */}
+          {!showExistingLogin && step === 'welcome' && introPage !== null && (
+            <div key={introPage} className="flex flex-col items-center text-center max-w-md mx-auto w-full min-h-[70vh] py-4">
+              <div className="w-full flex items-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFX.playCheckmarkPop();
+                    setIntroPage(introPage === 'questions' ? 'hello' : null);
+                  }}
+                  className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all active:scale-95 cursor-pointer shadow-xs"
+                  aria-label="Retour"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex-1 flex flex-col items-center justify-center gap-2 w-full">
+                {/* Bulle de parole au-dessus de KONAN */}
+                <div className="relative bg-white dark:bg-slate-900/95 border-2 border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-3.5 shadow-md max-w-[19rem] animate-in fade-in zoom-in-95 duration-300">
+                  <p className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-snug">
+                    <WordByWordBubble
+                      text={introPage === 'hello' ? 'Salut, je suis Konan !' : 'Je vais te poser quelques questions pour commencer.'}
+                      speed={70}
+                    />
+                  </p>
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-1/2 -bottom-[9px] -translate-x-1/2 w-4 h-4 rotate-45 bg-white dark:bg-slate-900 border-r-2 border-b-2 border-slate-200 dark:border-slate-700"
+                  />
+                </div>
+                <KonanMascot pose={introPage === 'hello' ? 'wave' : 'jump'} size={210} />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  soundFX.playCheckmarkPop();
+                  if (introPage === 'hello') {
+                    setIntroPage('questions');
+                  } else {
+                    setIntroPage(null);
+                    setStep('study_type');
+                  }
+                }}
+                className="w-full mt-4 py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white font-black text-sm sm:text-base uppercase tracking-wide shadow-[0_5px_0_0_#047857] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
+              >
+                Continuer
+              </button>
+            </div>
+          )}
+
 
           {/* ÉTAPE 2 : CHOIX DU SYSTÈME D'ÉTUDES (CATÉGORISE L'EXTRACTION .TXT) */}
           {!showExistingLogin && step === 'study_type' && (

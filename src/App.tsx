@@ -110,6 +110,8 @@ export function App() {
   // Règle absolue : L'utilisateur arrive TOUJOURS sur l'interface d'accueil (landing) en tant que visiteur non connecté.
   // Jamais de compte connecté d'office, jamais de saut instantané vers le tableau de bord.
   const [activeView, setActiveViewState] = useState<ActiveAppView>('landing');
+  // Vrai tant qu'on ne sait pas encore si l'élève est déjà connecté (Firebase restaure la session)
+  const [authPending, setAuthPending] = useState<boolean>(true);
   // Changement de page en « transition » : la page actuelle reste affichée (avec ses animations)
   // jusqu'à ce que la suivante soit prête, sans écran de chargement intermédiaire.
   const setActiveView = useCallback((view: ActiveAppView) => {
@@ -673,6 +675,9 @@ export function App() {
     // Écoute des changements d'état d'authentification Firebase :
     const unsubscribeAuth = onFirebaseAuthStateChange(async (firebaseUser) => {
       if (!isMounted) return;
+      // Élève déjà connecté : il ira directement au tableau de bord (on garde l'accueil caché jusque-là).
+      // Une fois l'accueil affiché, on ne le cache plus jamais (sinon un nouveau perdrait son parcours).
+      setAuthPending((pending) => pending && Boolean(firebaseUser));
       if (sessionStorage.getItem('konan_onboarding_in_progress') === 'true') {
         return;
       }
@@ -690,10 +695,14 @@ export function App() {
         };
         await handleLoginSuccess(profile);
       }
+      setAuthPending(false);
     });
+    // Au plus 4 s d'attente : sans réponse de Firebase (hors ligne…), on affiche l'accueil
+    const authTimeout = setTimeout(() => setAuthPending(false), 4000);
 
     return () => {
       isMounted = false;
+      clearTimeout(authTimeout);
       unsubscribeAuth();
     };
   }, []);
@@ -2013,7 +2022,8 @@ export function App() {
         )}
 
         {/* Parcours d'Onboarding Immersif & Animé Style Duolingo (Page d'accueil épurée) */}
-        {activeView === 'landing' && (
+        {activeView === 'landing' && authPending && !state.userAccount?.isLoggedIn && <ViewLoader />}
+        {activeView === 'landing' && !authPending && (
           <DuolingoOnboarding
             currentUser={state.userAccount?.isLoggedIn ? state.userAccount : null}
             onOpenLogin={() => setActiveView('auth')}
