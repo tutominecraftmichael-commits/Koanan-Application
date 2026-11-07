@@ -53,7 +53,51 @@ export function prefetchViews(loaders: Array<() => Promise<unknown>>) {
 
 /** Écran d'attente très léger pendant le chargement d'une page. */
 export const ViewLoader: React.FC = () => (
-  <div className="flex items-center justify-center py-24" role="status" aria-label="Chargement">
-    <div className="w-8 h-8 rounded-full border-[3px] border-slate-200 dark:border-slate-700 border-t-indigo-500 dark:border-t-indigo-400 animate-spin motion-reduce:animate-none" />
+  <div className="flex flex-col items-center justify-center gap-3 py-24" role="status" aria-live="polite">
+    <div className="w-9 h-9 rounded-full border-[3px] border-slate-200 dark:border-slate-700 border-t-indigo-500 dark:border-t-indigo-400 animate-spin motion-reduce:animate-none" />
+    <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">Chargement…</p>
   </div>
 );
+
+/**
+ * Si une page n'arrive pas à se charger (connexion coupée, site en cours de mise à jour), on affiche
+ * un message clair avec « Réessayer » au lieu d'un écran vide.
+ */
+export class ViewErrorBoundary extends React.Component<{ children: React.ReactNode; resetKey?: string }, { error: Error | null }> {
+  state: { error: Error | null } = { error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  componentDidCatch(error: Error) {
+    console.error('[KONAN] Page impossible à afficher :', error);
+  }
+
+  componentDidUpdate(prev: { resetKey?: string }) {
+    // On change de page : on retente l'affichage
+    if (this.state.error && prev.resetKey !== this.props.resetKey) this.setState({ error: null });
+  }
+
+  render() {
+    if (!this.state.error) return this.props.children;
+    const offline = typeof navigator !== 'undefined' && navigator.onLine === false;
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 py-20 px-6 text-center">
+        <p className="text-base font-extrabold text-slate-900 dark:text-white">
+          {offline ? 'Pas de connexion Internet' : 'Cette page n’a pas pu s’ouvrir'}
+        </p>
+        <p className="text-sm text-slate-600 dark:text-slate-300 max-w-sm">
+          {offline ? 'Reconnecte-toi puis réessaie.' : 'Le site vient peut-être d’être mis à jour. Réessaie, ça prend une seconde.'}
+        </p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold cursor-pointer"
+        >
+          Réessayer
+        </button>
+      </div>
+    );
+  }
+}
