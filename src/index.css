@@ -1132,3 +1132,42 @@ html.dark .active\:bg-white:not([class*="dark:active:bg-"]):active,
 }
 
 
+
+/* ============================================================================
+   FLUIDITÉ SUR TÉLÉPHONE (2026-11-07)
+   Objectif : un défilement et des transitions sans saccade, même sur un Android d'entrée de gamme.
+   ============================================================================ */
+
+/* 1. Le flou d'arrière-plan (backdrop-filter) recalcule toute la zone derrière l'élément à chaque image
+      de défilement : c'est l'effet le plus coûteux sur téléphone. Sur écran tactile ou petit écran, on le
+      retire ; les fonds concernés sont déjà presque opaques (bg-…/80 à /95), le rendu reste le même. */
+@media (pointer: coarse), (max-width: 1024px) {
+  [class*="backdrop-blur"],
+  .glass-panel,
+  .glass-card {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* 2. Halos flous qui « respirent » en boucle (flou + animation = redessin permanent) : figés. */
+  .blur-xl.animate-pulse, .blur-2xl.animate-pulse, .blur-3xl.animate-pulse,
+  .blur-xl.animate-pulse-slow, .blur-2xl.animate-pulse-slow, .blur-3xl.animate-pulse-slow,
+  .animate-pulse-slow, .animate-float {
+    animation: none !important;
+  }
+}
+
+/* 3. Toucher instantané : pas d'attente de double-tap sur les boutons et liens. */
+a, button, [role="button"], input, select, textarea, label {
+  touch-action: manipulation;
+}
+
+/* 4. Respect du réglage « réduire les animations » du téléphone. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

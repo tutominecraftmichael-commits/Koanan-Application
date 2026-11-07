@@ -1,7 +1,6 @@
 import React, { StrictMode, Component, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import 'katex/dist/katex.min.css'
 import App from './App.tsx'
 import { initPwaAutoUpdate } from './services/pwaUpdateService'
 

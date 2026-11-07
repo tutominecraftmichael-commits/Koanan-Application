@@ -3,7 +3,7 @@ import {
   normalizeMime,
   stripDataUrlPrefix,
 } from "../../api/_timetablePrompt.js";
-import { extractTimetable, type StructuredTimetableResult } from "../../api/_timetableExtract.js";
+import type { StructuredTimetableResult } from "../../api/_timetableExtract.js";
 
 export type { StructuredTimetableResult };
 
@@ -83,6 +83,8 @@ async function extractViaServer(fileBase64: string, mimeType: string, format?: E
 
 /** Lecture directe depuis le navigateur avec la clé personnelle de l'utilisateur (même méthode que le serveur). */
 async function extractWithPersonalKey(apiKey: string, fileBase64: string, mimeType: string, format?: ExtractFormat, classHint?: string): Promise<StructuredTimetableResult> {
+  // Bibliothèque Gemini (≈ 800 Ko) chargée seulement si l'élève utilise sa propre clé
+  const { extractTimetable } = await import("../../api/_timetableExtract.js");
   const result = await extractTimetable({
     apiKey,
     data: stripDataUrlPrefix(fileBase64),
