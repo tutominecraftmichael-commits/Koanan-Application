@@ -58,6 +58,34 @@ export type PushDeviceStatus =
   | 'ios-install'     // iPhone / iPad : il faut d'abord ajouter KONAN à l'écran d'accueil
   | 'unsupported';    // navigateur sans notifications push
 
+// Preuve locale que le serveur a enregistré l'abonnement de cet appareil (renouvelée chaque jour)
+const REGISTERED_KEY = 'konan_push_registered';
+const REREGISTER_MS = 24 * 60 * 60 * 1000;
+function isRegisteredOnServer(endpoint: string): boolean {
+  try {
+    const raw = JSON.parse(localStorage.getItem(REGISTERED_KEY) || 'null');
+    return Boolean(raw && raw.key === endpointKey(endpoint) && raw.uid === auth?.currentUser?.uid && Date.now() - raw.at < REREGISTER_MS);
+  } catch {
+    return false;
+  }
+}
+function markRegisteredOnServer(endpoint: string, uid: string) {
+  try {
+    localStorage.setItem(REGISTERED_KEY, JSON.stringify({ key: endpointKey(endpoint), uid, at: Date.now() }));
+  } catch {
+    // stockage indisponible : on réenregistrera simplement à la prochaine ouverture
+  }
+}
+
+/** Attend que Firebase ait restauré la connexion de l'élève (au plus 8 s). */
+async function waitForAuth(): Promise<void> {
+  if (!auth || auth.currentUser) return;
+  await Promise.race([
+    auth.authStateReady().catch(() => {}),
+    new Promise((r) => setTimeout(r, 8000)),
+  ]);
+}
+
 /** État des notifications sur CET appareil (sans rien demander à l'élève). */
 export async function getPushDeviceStatus(): Promise<PushDeviceStatus> {
   if (typeof window === 'undefined') return 'unsupported';
@@ -72,7 +100,8 @@ export async function getPushDeviceStatus(): Promise<PushDeviceStatus> {
     const sub = await reg?.pushManager.getSubscription();
     if (!sub) return 'ask';
     if (subscriptionUsesOtherKey(sub, urlBase64ToUint8Array(VAPID_PUBLIC_KEY))) return 'ask';
-    return 'active';
+    // « Actif » seulement si le serveur a bien reçu CET abonnement (un abonnement local seul ne sert à rien)
+    return isRegisteredOnServer(sub.endpoint) ? 'active' : 'ask';
   } catch {
     return 'ask';
   }
@@ -168,6 +197,7 @@ export async function subscribeToWebPush(
 
     // 5. Enregistrer dans Firestore
     if (!db) return { success: false, error: 'Base de données indisponible' };
+    await waitForAuth();
     if (!auth?.currentUser) return { success: false, error: 'Connexion au compte pas encore prête, réessaie dans quelques secondes' };
     {
       const userEmail =
@@ -222,6 +252,7 @@ export async function subscribeToWebPush(
       }
     }
 
+    markRegisteredOnServer(subJson.endpoint || '', auth?.currentUser?.uid || effectiveUid);
     options.onSubscribed?.();
     return { success: true };
   } catch (err: any) {
@@ -235,7 +266,8 @@ export async function subscribeToWebPush(
  * Dès qu'un élève connecté ouvre l'application.
  */
 let firstClickArmed = false;
-let lastSilentSyncAt = 0;
+let silentAttemptRunning = false;
+let lastSilentFailureAt = 0;
 /**
  * Abonnement automatique du téléphone aux rappels de révision, pour TOUS les élèves (Gratuit, Pro, Plus).
  */
@@ -250,16 +282,24 @@ export async function autoRegisterWebPush(
   const effectivePlan = String(planTier || 'free').toLowerCase().trim() || 'free';
   const options: SubscribeOptions = { planTier: effectivePlan, onSubscribed };
 
-  // Permission déjà accordée : abonnement silencieux (au plus une fois toutes les 10 minutes)
+  // Permission déjà accordée : si le serveur a déjà cet appareil (enregistré il y a moins de 24 h), on dépose
+  // juste les alertes ; sinon on (ré)enregistre l'appareil en silence. Un échec est retenté 1 minute plus tard.
   if (Notification.permission === 'granted') {
-    if (Date.now() - lastSilentSyncAt < 10 * 60 * 1000) {
+    if ((await getPushDeviceStatus()) === 'active') {
       onSubscribed?.();
       return;
     }
-    lastSilentSyncAt = Date.now();
-    subscribeToWebPush(uidParam, emailParam, options).catch((err) => {
-      console.warn('[AutoWebPush] Erreur synchro silencieuse:', err);
-    });
+    if (silentAttemptRunning || Date.now() - lastSilentFailureAt < 60 * 1000) return;
+    silentAttemptRunning = true;
+    try {
+      const result = await subscribeToWebPush(uidParam, emailParam, options);
+      if (!result.success) {
+        lastSilentFailureAt = Date.now();
+        console.warn('[AutoWebPush] Enregistrement de l’appareil impossible :', result.error);
+      }
+    } finally {
+      silentAttemptRunning = false;
+    }
     return;
   }
 
