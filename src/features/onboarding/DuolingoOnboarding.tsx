@@ -1533,7 +1533,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         {step !== 'welcome' && (
           <div className="mb-4 flex items-center gap-2 sm:gap-3 max-w-3xl mx-auto w-full">
             <div className="shrink-0 -my-2">
-              <KonanMascot pose="notes" size={84} />
+              {/* « Tout est prêt » : il referme son hologramme, des étoiles tournent, pouce levé */}
+              <KonanMascot pose={step === 'account_setup' ? 'done' : 'notes'} size={84} />
             </div>
             <div className="relative flex-1 bg-white dark:bg-slate-900/90 border-2 border-slate-200 dark:border-slate-700 rounded-2xl px-3.5 py-3 shadow-sm">
               {/* Pointe de la bulle, vers la mascotte */}

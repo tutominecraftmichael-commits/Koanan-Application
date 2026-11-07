@@ -9,9 +9,10 @@ import React, { useId } from 'react';
  * - wave   : salue de la main en regardant l'élève droit dans les yeux ;
  * - jump   : saute de joie, puis ses yeux s'illuminent ;
  * - notes  : écrit sur sa montre, qui projette un hologramme ;
+ * - done   : a fini de noter — referme son hologramme, des étoiles tournent autour de lui, pouce levé ;
  * - idle   : immobile, cligne des yeux.
  */
-export type KonanMascotPose = 'wave' | 'jump' | 'notes' | 'idle';
+export type KonanMascotPose = 'wave' | 'jump' | 'notes' | 'done' | 'idle';
 
 interface KonanMascotProps {
   pose?: KonanMascotPose;
@@ -40,6 +41,16 @@ const CSS = `
 .km-line { stroke-dasharray: 36; stroke-dashoffset: 36; animation: km-write 2.4s linear infinite; }
 .km-line-2 { animation-delay: 0.6s; }
 .km-line-3 { animation-delay: 1.2s; }
+.km-thumb-arm { transform-origin: 160px 106px; animation: km-thumb 0.7s cubic-bezier(.34,1.56,.64,1) 0.5s both; }
+.km-holo-close { transform-origin: 187px 92px; animation: km-holo-close 0.6s ease-in both; }
+.km-orbit { transform-origin: 117px 112px; animation: km-orbit 7s linear infinite; }
+.km-orbit-in { animation: km-fade-in 0.5s ease-out 0.7s both; }
+.km-twinkle { animation: km-sparkle-loop 1.4s ease-in-out infinite; }
+@keyframes km-thumb { from { transform: rotate(28deg); } to { transform: rotate(0deg); } }
+@keyframes km-holo-close { 0% { transform: scale(1, 1); opacity: 1; } 70% { transform: scale(0.15, 0.05); opacity: 0.9; } 100% { transform: scale(0, 0); opacity: 0; } }
+@keyframes km-orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes km-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes km-sparkle-loop { 0%,100% { transform: scale(0.75); } 50% { transform: scale(1.15); } }
 @keyframes km-blink { 0%,92%,100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
 @keyframes km-wave { from { transform: rotate(-16deg); } to { transform: rotate(12deg); } }
 @keyframes km-pop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -90,7 +101,7 @@ const Watch: React.FC<{ glow?: boolean }> = ({ glow }) => (
  * Gant blanc de dessin animé. Repère : poignet en (0,0), la main s'étend vers -y.
  * kind : open (main ouverte, paume vers l'élève), fist (poing), point (index tendu).
  */
-const Glove: React.FC<{ x: number; y: number; rotate?: number; kind?: 'open' | 'fist' | 'point'; watch?: boolean; glowWatch?: boolean }> = ({
+const Glove: React.FC<{ x: number; y: number; rotate?: number; kind?: 'open' | 'fist' | 'point' | 'thumb'; watch?: boolean; glowWatch?: boolean }> = ({
   x, y, rotate = 0, kind = 'fist', watch, glowWatch,
 }) => (
   <g transform={`translate(${x} ${y}) rotate(${rotate})`}>
@@ -119,6 +130,17 @@ const Glove: React.FC<{ x: number; y: number; rotate?: number; kind?: 'open' | '
         <ellipse cx="0" cy="-11" rx="10" ry="9.5" fill={WHITE} stroke={INK} strokeWidth="2" />
         <path d="M-6 -18 Q-3 -15 0 -18 Q3 -15 6 -18" fill="none" stroke={INK} strokeWidth="1.4" strokeLinecap="round" />
         <ellipse cx="-8.5" cy="-8.5" rx="3.6" ry="5.5" transform="rotate(-25 -8.5 -8.5)" fill={WHITE} stroke={INK} strokeWidth="1.8" />
+      </>
+    )}
+    {kind === 'thumb' && (
+      <>
+        {/* Pouce bien dressé */}
+        <path d="M-13 -24 L-13 -40 Q-13 -47 -6.5 -47 Q0 -47 0 -40 L0 -24 Z" fill={WHITE} stroke={INK} strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="M-9.5 -42 Q-6.5 -44 -3.5 -42" fill="none" stroke={INK} strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.5" />
+        {/* Poing, doigts repliés vers l'élève */}
+        <rect x="-14" y="-28" width="28" height="25" rx="9" fill={WHITE} stroke={INK} strokeWidth="2.2" />
+        <path d="M-6 -21 Q4 -23 12 -21 M-6 -15 Q4 -17 12 -15 M-6 -9 Q3 -11 11 -9" fill="none" stroke={INK} strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.75" />
+        <path d="M-14 -16 Q-9 -14 -6 -21" fill="none" stroke={INK} strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.75" />
       </>
     )}
     {kind === 'point' && (
@@ -167,7 +189,7 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
 
   // Regard : droit vers l'élève, sauf en prise de notes (vers la montre, en bas à droite)
   const look = pose === 'notes' ? { x: 3, y: 4 } : { x: 0, y: 0 };
-  const openMouth = pose === 'wave' || pose === 'jump';
+  const openMouth = pose === 'wave' || pose === 'jump' || pose === 'done';
 
   const eye = (cx: number) => (
     <g>
@@ -223,6 +245,19 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
           <g className="km-tap">
             <Limb d="M60 108 Q66 170 140 168" />
             <Glove x={140} y={168} rotate={62} kind="point" />
+          </g>
+        </>
+      );
+    }
+    if (pose === 'done') {
+      return (
+        <>
+          <Limb d="M60 106 Q44 122 44 142" />
+          <Glove x={44} y={142} rotate={180} kind="fist" />
+          {/* Bras levé, pouce en l'air, montre au poignet */}
+          <g className="km-thumb-arm">
+            <Limb d="M160 106 Q194 110 188 84" />
+            <Glove x={188} y={84} rotate={4} kind="thumb" watch />
           </g>
         </>
       );
@@ -293,6 +328,15 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
       {/* Bras et mains (devant le corps) */}
       {arms}
 
+      {/* Tout est noté : l'hologramme se replie dans la montre */}
+      {pose === 'done' && (
+        <g className="km-holo-close">
+          <polygon points="183,90 191,90 214,40 160,40" fill={`url(#${holo})`} opacity="0.55" />
+          <rect x="156" y="4" width="62" height="38" rx="6" fill="#22D3EE" fillOpacity="0.16" stroke="#22D3EE" strokeWidth="2" />
+          <path d="M164 14 L206 14 M164 23 L198 23 M164 32 L206 32" stroke="#CFFAFE" strokeWidth="2.8" strokeLinecap="round" />
+        </g>
+      )}
+
       {/* Hologramme projeté par la montre */}
       {pose === 'notes' && (
         <g className="km-holo">
@@ -315,7 +359,7 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
       className={`km-root overflow-visible ${className}`}
       role="img"
       aria-label={
-        pose === 'wave' ? 'KONAN te salue' : pose === 'jump' ? 'KONAN saute de joie' : pose === 'notes' ? 'KONAN prend des notes sur sa montre' : 'KONAN'
+        pose === 'wave' ? 'KONAN te salue' : pose === 'jump' ? 'KONAN saute de joie' : pose === 'notes' ? 'KONAN prend des notes sur sa montre' : pose === 'done' ? 'KONAN lève le pouce : tout est prêt' : 'KONAN'
       }
     >
       <style>{CSS}</style>
@@ -336,6 +380,32 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
       {/* Ombre au sol */}
       <ellipse className={pose === 'jump' ? 'km-jump-shadow' : undefined} cx="117" cy="215" rx="52" ry="7" fill="#0B2545" fillOpacity="0.25" />
       <g className="km-pop">{body}</g>
+      {/* Étoiles qui tournent autour de KONAN quand tout est prêt */}
+      {pose === 'done' && (
+        <g className="km-orbit-in">
+          <g className="km-orbit">
+            {[
+              { x: 117, y: 14, r: 1 },
+              { x: 209, y: 112, r: 0.8 },
+              { x: 117, y: 208, r: 0.9 },
+              { x: 25, y: 112, r: 0.75 },
+              { x: 182, y: 44, r: 0.6 },
+              { x: 52, y: 180, r: 0.6 },
+            ].map((s, i) => (
+              <path
+                key={i}
+                className="km-twinkle"
+                style={{ transformOrigin: `${s.x}px ${s.y}px`, animationDelay: `${i * 0.23}s` }}
+                d={`M${s.x} ${s.y - 9 * s.r} L${s.x + 2.6 * s.r} ${s.y - 2.6 * s.r} L${s.x + 9 * s.r} ${s.y} L${s.x + 2.6 * s.r} ${s.y + 2.6 * s.r} L${s.x} ${s.y + 9 * s.r} L${s.x - 2.6 * s.r} ${s.y + 2.6 * s.r} L${s.x - 9 * s.r} ${s.y} L${s.x - 2.6 * s.r} ${s.y - 2.6 * s.r} Z`}
+                fill="#FDE047"
+                stroke="#F59E0B"
+                strokeWidth="1.2"
+                strokeLinejoin="round"
+              />
+            ))}
+          </g>
+        </g>
+      )}
     </svg>
   );
 };
