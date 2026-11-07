@@ -51,6 +51,33 @@ export function isWebPushSupported(): boolean {
   );
 }
 
+export type PushDeviceStatus =
+  | 'active'          // abonné : les notifications arrivent même appli fermée
+  | 'ask'             // permission jamais demandée (ou abonnement à refaire) : bouton « Activer »
+  | 'blocked'         // bloquées dans les réglages du navigateur
+  | 'ios-install'     // iPhone / iPad : il faut d'abord ajouter KONAN à l'écran d'accueil
+  | 'unsupported';    // navigateur sans notifications push
+
+/** État des notifications sur CET appareil (sans rien demander à l'élève). */
+export async function getPushDeviceStatus(): Promise<PushDeviceStatus> {
+  if (typeof window === 'undefined') return 'unsupported';
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const standalone = window.matchMedia?.('(display-mode: standalone)').matches || (navigator as any).standalone === true;
+  if (!isWebPushSupported()) return isIOS && !standalone ? 'ios-install' : 'unsupported';
+  if (Notification.permission === 'denied') return 'blocked';
+  if (Notification.permission !== 'granted') return 'ask';
+  try {
+    const reg = await navigator.serviceWorker.getRegistration('/');
+    const sub = await reg?.pushManager.getSubscription();
+    if (!sub) return 'ask';
+    if (subscriptionUsesOtherKey(sub, urlBase64ToUint8Array(VAPID_PUBLIC_KEY))) return 'ask';
+    return 'active';
+  } catch {
+    return 'ask';
+  }
+}
+
 /**
  * Récupère le statut actuel de permission
  */
@@ -105,7 +132,7 @@ export async function subscribeToWebPush(
     }
 
     if (permission !== 'granted') {
-      return { success: false, error: 'Permission refusée par l\'utilisateur' };
+      return { success: false, error: permission === 'denied' ? 'Notifications bloquées dans le navigateur' : 'Autorisation pas encore donnée' };
     }
 
     // 3. S'assurer que le Service Worker est bien enregistré (et à jour)
@@ -139,30 +166,16 @@ export async function subscribeToWebPush(
     const subJson = subscription.toJSON();
     console.log('[KONAN WebPush] Souscription Push active pour', effectiveUid, subJson.endpoint?.slice(0, 35));
 
-    // 5. Enregistrer dans Firestore pour le compte de l'élève
-    if (db) {
-      const userRef = doc(db, 'users', effectiveUid);
+    // 5. Enregistrer dans Firestore
+    if (!db) return { success: false, error: 'Base de données indisponible' };
+    if (!auth?.currentUser) return { success: false, error: 'Connexion au compte pas encore prête, réessaie dans quelques secondes' };
+    {
       const userEmail =
         auth?.currentUser?.email ||
         emailParam ||
         (uidParam && uidParam.includes('@') ? uidParam : undefined);
 
-      const payload: Record<string, any> = {
-        webPushSubscription: subJson,
-        pushNotificationsEnabled: true,
-        notificationsEnabled: true,
-        webPushUpdatedAt: new Date().toISOString(),
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
-        timezoneOffsetMinutes: new Date().getTimezoneOffset(),
-      };
-      if (userEmail) {
-        payload.email = userEmail.toLowerCase().trim();
-      }
-
-      await setDoc(userRef, payload, { merge: true });
-      console.log(`[KONAN WebPush] Souscription sauvegardée dans Firestore pour ${effectiveUid}`);
-
-      // Fiche « appareils » lue par le serveur d'envoi : un abonnement par appareil (téléphone, ordinateur…)
+      // 5a. Fiche « appareils » lue par le serveur d'envoi (ESSENTIELLE) : un abonnement par appareil
       try {
         const deviceQueueRef = doc(db, 'push_queue', `device_${effectiveUid}`);
         await setDoc(
@@ -187,8 +200,25 @@ export async function subscribeToWebPush(
           },
           { merge: true }
         );
-      } catch (qErr) {
-        console.warn('[KONAN WebPush] Notice enregistrement queue device:', qErr);
+      } catch (qErr: any) {
+        console.warn('[KONAN WebPush] Enregistrement de l’appareil impossible :', qErr);
+        return { success: false, error: `Enregistrement de l’appareil impossible (${qErr?.code || qErr?.message || 'erreur inconnue'})` };
+      }
+
+      // 5b. Copie sur la fiche élève (facultative : les règles peuvent la refuser selon la formule)
+      try {
+        const payload: Record<string, any> = {
+          webPushSubscription: subJson,
+          pushNotificationsEnabled: true,
+          notificationsEnabled: true,
+          webPushUpdatedAt: new Date().toISOString(),
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
+          timezoneOffsetMinutes: new Date().getTimezoneOffset(),
+        };
+        if (userEmail) payload.email = userEmail.toLowerCase().trim();
+        await setDoc(doc(db, 'users', effectiveUid), payload, { merge: true });
+      } catch (uErr) {
+        console.warn('[KONAN WebPush] Copie sur la fiche élève ignorée :', uErr);
       }
     }
 

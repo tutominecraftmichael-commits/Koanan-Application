@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { GraduationCap } from 'lucide-react';
 import type { AppState } from './services/storage';
 import {
@@ -53,6 +53,7 @@ import { generateId, isNonAcademicSubject } from './lib/utils';
 import { Sparkles, X, ShieldCheck } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
 import { KonanReminderBanner } from './features/notifications/KonanReminderBanner';
+import { NotificationActivationCard } from './features/notifications/NotificationActivationCard';
 
 // Layout
 import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
@@ -589,6 +590,21 @@ export function App() {
     state.preferences,
     state.cycleCompletedDate,
   ]);
+
+  // Dépôt immédiat des alertes de la semaine (après activation des notifications par l'élève)
+  const syncAlertsNow = useCallback(() => {
+    const authUid = auth?.currentUser?.uid;
+    if (!authUid || state.isDemoMode) return;
+    import('./services/pushQueueService').then(({ syncPushPlan }) => {
+      syncPushPlan(authUid, {
+        studySessions: state.studySessions,
+        subjects: state.subjects,
+        classSlots: state.classSlots,
+        preferences: state.preferences,
+        cycleCompletedDate: state.cycleCompletedDate,
+      }).catch(() => { });
+    }).catch(() => { });
+  }, [state.isDemoMode, state.studySessions, state.subjects, state.classSlots, state.preferences, state.cycleCompletedDate]);
 
   // Gestion d'authentification mobile et synchronisation au démarrage
   useEffect(() => {
@@ -2039,6 +2055,17 @@ export function App() {
         {/* Dashboard: STRICTLY PROTECTED */}
         {activeView === 'dashboard' && (
           (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
+            <>
+            {state.userAccount?.isLoggedIn && !state.isDemoMode && (
+              <div className="mb-4">
+                <NotificationActivationCard
+                  uid={state.userAccount?.googleId}
+                  email={state.userAccount?.email}
+                  planTier={effectivePlanTier}
+                  onActivated={syncAlertsNow}
+                />
+              </div>
+            )}
             <DashboardOverview
               studentName={effectiveStudentName}
               academicLevel={state.academicLevel}
@@ -2068,6 +2095,7 @@ export function App() {
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
               userUid={state.userAccount?.googleId}
             />
+            </>
           ) : (
             <div className="text-center py-16 space-y-4">
               <p className="text-lg text-white font-bold">Veuillez vous connecter pour accéder à votre tableau de bord.</p>
