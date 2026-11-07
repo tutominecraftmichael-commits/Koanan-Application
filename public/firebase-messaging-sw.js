@@ -6,7 +6,7 @@
 // et pouvait faire échouer l'installation du Service Worker hors connexion. Le nom du fichier est
 // conservé pour que les téléphones déjà inscrits reçoivent cette version automatiquement.
 
-const SW_VERSION = 'v-2026-11-07-01';
+const SW_VERSION = 'v-2026-11-07-02';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -45,15 +45,8 @@ function readPush(event) {
 
 self.addEventListener('push', (event) => {
   const msg = readPush(event);
+  // Toujours une vraie notification du téléphone (jamais de message affiché dans l'application)
   event.waitUntil((async () => {
-    // L'élève a l'application ouverte devant lui : la bannière KONAN s'affiche dans l'appli,
-    // pas besoin d'une notification système en double.
-    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-    const visible = windows.find((c) => c.visibilityState === 'visible' && c.focused);
-    if (visible) {
-      visible.postMessage({ type: 'KONAN_PUSH', title: msg.title, body: msg.body, data: msg.data });
-      return;
-    }
     await self.registration.showNotification(msg.title, {
       body: msg.body,
       icon: msg.icon || '/cube-icon.png',

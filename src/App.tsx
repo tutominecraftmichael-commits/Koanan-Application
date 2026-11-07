@@ -52,7 +52,7 @@ import type {
 import { generateId, isNonAcademicSubject } from './lib/utils';
 import { Sparkles, X, ShieldCheck } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
-import { KonanReminderBanner } from './features/notifications/KonanReminderBanner';
+import { KonanVoiceTestPanel } from './features/notifications/KonanReminderBanner';
 import { NotificationActivationCard } from './features/notifications/NotificationActivationCard';
 
 // Layout
@@ -541,7 +541,8 @@ export function App() {
       clearInterval(interval);
       window.removeEventListener('focus', handleFocus);
     };
-  }, [state.studySessions.length, state.classSlots.length, activeView]);
+    // Relancé dès que le planning change (ex. données rechargées depuis le cloud), pas seulement toutes les 30 s
+  }, [state.studySessions, state.classSlots, activeView]);
 
   // =========================================================================
   // NOTIFICATIONS DE RÉVISION : pour TOUS les élèves connectés (Gratuit, Pro et Plus).
@@ -570,12 +571,21 @@ export function App() {
           syncPushPlan(authUid, planInput).catch(() => { });
         });
       };
-      const timer = setTimeout(() => {
+      const register = () => {
         import('./services/webPushService').then(({ autoRegisterWebPush }) => {
           autoRegisterWebPush(effectivePlan, uid, email, syncAlerts).catch(() => { });
         });
-      }, 1500); // regroupe les changements rapprochés du planning en une seule synchronisation
-      return () => clearTimeout(timer);
+      };
+      const timer = setTimeout(register, 1500); // regroupe les changements rapprochés du planning
+      // Tant que l'appareil n'est pas enregistré, on retente au retour dans l'appli et toutes les 2 minutes
+      const retry = setInterval(register, 2 * 60 * 1000);
+      const onVisible = () => { if (document.visibilityState === 'visible') register(); };
+      document.addEventListener('visibilitychange', onVisible);
+      return () => {
+        clearTimeout(timer);
+        clearInterval(retry);
+        document.removeEventListener('visibilitychange', onVisible);
+      };
     }
   }, [
     state.userAccount?.planTier,
@@ -2460,16 +2470,8 @@ export function App() {
         studentEmail={pendingAuth?.profile.email || state.userAccount?.email}
       />
 
-      {/* Alertes KONAN dans l'appli (bannière + son) pour tous les élèves connectés */}
-      <KonanReminderBanner
-        appState={state}
-        enabled={Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode)}
-        onOpenSession={(sessionId) => {
-          const target = state.studySessions.find(s => s.id === sessionId);
-          if (target) handleStartFocusSession(target);
-        }}
-        onOpenPlanner={() => setActiveView('planner')}
-      />
+      {/* Rappels KONAN : uniquement en notification du téléphone (rien dans l'appli). Bouton de test en développement. */}
+      {import.meta.env.DEV && <KonanVoiceTestPanel appState={state} />}
 
       {/* Floating Notification Toast (Full multi-line sentence, zero truncation, crystal clear in light and dark mode) */}
       {toastMessage && (
