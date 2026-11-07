@@ -77,7 +77,7 @@ import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelecto
 // (l'appli démarre ainsi avec ~1 Mo au lieu de ~10 Mo de code). Les cours guidés (≈ 7 Mo)
 // ne sont téléchargés qu'à l'ouverture d'une séance.
 import { DashboardOverview } from './features/dashboard/DashboardOverview';
-import { ViewLoader, lazyView, prefetchViews } from './components/common/ViewLoader';
+import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
 import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum } from './lib/curriculum/curriculumMatcher';
 import { clearAdminSession } from './lib/adminAuth';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
@@ -1996,6 +1996,7 @@ export function App() {
         ? 'max-w-full p-0'
         : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
         }`}>
+        <ViewErrorBoundary resetKey={activeView}>
         <Suspense fallback={<ViewLoader />}>
 
         {/* Real-time Administrator Console */}
@@ -2333,6 +2334,7 @@ export function App() {
           />
         )}
         </Suspense>
+        </ViewErrorBoundary>
       </main>
 
       {/* Academic Track Presets Modal (ONLY FOR DEMO MODE) */}

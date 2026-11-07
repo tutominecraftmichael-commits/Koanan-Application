@@ -101,6 +101,12 @@ export default defineConfig(({ mode }) => {
         }
       }
     ],
+    // Bibliothèques chargées à la demande : préparées dès le démarrage du serveur de développement.
+    // Sans cela, Vite les découvre en pleine session, se « réoptimise » et peut renvoyer des 504
+    // (page blanche) jusqu'au redémarrage.
+    optimizeDeps: {
+      include: ['pdfjs-dist', '@google/genai', 'katex'],
+    },
     envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
     define: {
       '__APP_BUILD_ID__': JSON.stringify(buildTimestamp),
