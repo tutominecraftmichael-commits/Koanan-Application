@@ -52,6 +52,7 @@ import type {
 import { generateId, isNonAcademicSubject } from './lib/utils';
 import { Sparkles, X, ShieldCheck } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
+import { KonanReminderBanner } from './features/notifications/KonanReminderBanner';
 
 // Layout
 import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
@@ -542,50 +543,51 @@ export function App() {
   }, [state.studySessions.length, state.classSlots.length, activeView]);
 
   // =========================================================================
-  // ÉTAPE 1 : CONDITION SIMPLE GRATUIT VS PRO (Web Push Arrière-Plan)
-  // 1. Gratuit : ZÉRO notification, désabonnement immédiat.
-  // 2. Pro / Plus : Activation automatique des notifications Web Push.
+  // NOTIFICATIONS DE RÉVISION : pour TOUS les élèves connectés (Gratuit, Pro et Plus).
+  // Activées d'office, aucun réglage à aller chercher :
+  // 1) abonnement du téléphone (permission demandée au premier toucher si elle ne l'a jamais été) ;
+  // 2) dépôt des alertes des 7 prochains jours dans push_queue, une fois l'appareil abonné.
   // =========================================================================
   useEffect(() => {
     const effectivePlan = state.userAccount?.planTier || state.planTier || 'free';
     const uid = state.userAccount?.googleId || state.userAccount?.email;
     const email = state.userAccount?.email;
 
-    if (effectivePlan === 'free') {
-      // Utilisateur en mode Gratuit : ZÉRO notification (ni fermée, ni ouverte)
-      if (uid) {
-        import('./services/webPushService').then(({ unsubscribeFromWebPush }) => {
-          unsubscribeFromWebPush(uid).catch(() => { });
+    if (state.userAccount?.isLoggedIn && uid && !state.isDemoMode) {
+      const planInput = {
+        studySessions: state.studySessions,
+        subjects: state.subjects,
+        classSlots: state.classSlots,
+        preferences: state.preferences,
+        cycleCompletedDate: state.cycleCompletedDate,
+      };
+      const syncAlerts = () => {
+        // Identifiant Firebase réel (les règles Firestore l'exigent pour écrire dans push_queue)
+        const authUid = auth?.currentUser?.uid || (uid.includes('@') ? '' : uid);
+        if (!authUid) return;
+        import('./services/pushQueueService').then(({ syncPushPlan }) => {
+          syncPushPlan(authUid, planInput).catch(() => { });
         });
-      }
-      return;
-    }
-
-    // Utilisateur en mode Pro ou Plus : activation automatique Web Push silencieuse
-    if (effectivePlan === 'pro' || effectivePlan === 'plus') {
-      import('./services/webPushService').then(({ autoRegisterWebPushIfPro }) => {
-        autoRegisterWebPushIfPro(effectivePlan, uid, email).catch(() => { });
-      });
-
-      // Synchroniser également le token FCM si supporté
-      if (uid) {
-        import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
-          enableStudentPushNotifications(uid).catch(() => { });
+      };
+      const timer = setTimeout(() => {
+        import('./services/webPushService').then(({ autoRegisterWebPush }) => {
+          autoRegisterWebPush(effectivePlan, uid, email, syncAlerts).catch(() => { });
         });
-
-        // Synchroniser automatiquement les enveloppes du jour dans la file push_queue
-        import('./services/pushQueueService').then(({ syncTodaySessionsToPushQueue }) => {
-          syncTodaySessionsToPushQueue(uid, email || '', state.studySessions, state.subjects).catch(() => { });
-        });
-      }
+      }, 1500); // regroupe les changements rapprochés du planning en une seule synchronisation
+      return () => clearTimeout(timer);
     }
   }, [
     state.userAccount?.planTier,
     state.planTier,
     state.userAccount?.googleId,
     state.userAccount?.email,
+    state.userAccount?.isLoggedIn,
+    state.isDemoMode,
     state.studySessions,
     state.subjects,
+    state.classSlots,
+    state.preferences,
+    state.cycleCompletedDate,
   ]);
 
   // Gestion d'authentification mobile et synchronisation au démarrage
@@ -1579,11 +1581,11 @@ export function App() {
     };
 
     if (willBeCompleted) {
-      // Supprimer immédiatement l'enveloppe catchup dans push_queue
-      const currentUid = state.userAccount?.googleId || auth?.currentUser?.uid;
-      if (currentUid && (effectivePlanTier === 'pro' || effectivePlanTier === 'plus')) {
-        import('./services/pushQueueService').then(({ removeSessionCatchupFromQueue }) => {
-          removeSessionCatchupFromQueue(currentUid, target.id);
+      // Séance faite : plus aucune relance pour elle aujourd'hui
+      const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
+      if (currentUid && !state.isDemoMode) {
+        import('./services/pushQueueService').then(({ cancelSessionAlerts }) => {
+          cancelSessionAlerts(currentUid, target.id).catch(() => { });
         }).catch(() => { });
       }
 
@@ -1640,6 +1642,18 @@ export function App() {
       soundFX.playNotificationPing();
       showToast(`Anti-triche : Vous pouvez uniquement lancer le chronomètre pour les révisions d'aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
       return;
+    }
+
+    // L'élève ouvre sa séance : KONAN annule les relances « retard », « manquée » et « rattrapage »
+    {
+      const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
+      import('./services/pushQueueService').then(({ cancelSessionAlerts, markSessionStarted }) => {
+        if (currentUid && !state.isDemoMode) {
+          cancelSessionAlerts(currentUid, session.id).catch(() => { });
+        } else {
+          markSessionStarted(session.id);
+        }
+      }).catch(() => { });
     }
 
     // VÉRIFICATION CORRESPONDANCE PROGRAMME OFFICIEL (MATHS, PHYSIQUE-CHIMIE, SVT)
@@ -2416,6 +2430,17 @@ export function App() {
         isGatekeeper={Boolean(pendingAuth || (state.userAccount?.isLoggedIn && !state.privacyPolicyAccepted))}
         studentName={pendingAuth?.profile.name || effectiveStudentName}
         studentEmail={pendingAuth?.profile.email || state.userAccount?.email}
+      />
+
+      {/* Alertes KONAN dans l'appli (bannière + son) pour tous les élèves connectés */}
+      <KonanReminderBanner
+        appState={state}
+        enabled={Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode)}
+        onOpenSession={(sessionId) => {
+          const target = state.studySessions.find(s => s.id === sessionId);
+          if (target) handleStartFocusSession(target);
+        }}
+        onOpenPlanner={() => setActiveView('planner')}
       />
 
       {/* Floating Notification Toast (Full multi-line sentence, zero truncation, crystal clear in light and dark mode) */}

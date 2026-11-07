@@ -34,7 +34,6 @@ import { SessionExplainerModal } from '../../components/common/SessionExplainerM
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
 import { useLanguage, t } from '../../lib/i18n';
 import type { SessionType } from '../../types';
-import { enableStudentPushNotifications } from '../../services/fcmNotificationService';
 
 export interface DashboardOverviewProps {
   studentName: string;
@@ -99,7 +98,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onOpenGoalModal: _onOpenGoalModal,
   isGroupGuest: _isGroupGuest = false,
   invitedBy: _invitedBy,
-  userUid,
+  userUid: _userUid,
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -107,26 +106,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
   const [showCompletedSessions, setShowCompletedSessions] = useState(false);
 
-  // Notifications Web Push (Firebase Cloud Messaging)
-  // Pour les membres PRO et PLUS : synchronisation automatique et silencieuse du token FCM en arrière-plan
-  // Aucun bouton manuel ni test n'est affiché sur le tableau de bord.
-  React.useEffect(() => {
-    const isProOrPlus = planTier === 'pro' || planTier === 'plus';
-    if (!isProOrPlus) return;
-
-    const effectiveUid = userUid || _konanId;
-    if (typeof window !== 'undefined' && 'Notification' in window && 'serviceWorker' in navigator) {
-      if (Notification.permission === 'granted') {
-        enableStudentPushNotifications(effectiveUid).catch(() => {});
-      } else if (Notification.permission === 'default') {
-        Notification.requestPermission().then((perm) => {
-          if (perm === 'granted') {
-            enableStudentPushNotifications(effectiveUid).catch(() => {});
-          }
-        }).catch(() => {});
-      }
-    }
-  }, [planTier, userUid, _konanId]);
+  // Notifications : gérées une seule fois pour toute l'appli (App.tsx, webPushService + pushQueueService).
 
 
   const now = new Date();

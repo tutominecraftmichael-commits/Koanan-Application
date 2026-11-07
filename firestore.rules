@@ -119,14 +119,22 @@ service cloud.firestore {
     // 5. FILE D'ATTENTE DES NOTIFICATIONS PUSH (PUSH_QUEUE)
     // =========================================================================
     match /push_queue/{queueId} {
+      // Le nom du document commence par l'identifiant de l'élève : « device_<uid> » ou « <uid>_<séance>_<date>_<type> »
+      function ownsQueueId() {
+        return queueId == 'device_' + request.auth.uid || queueId.matches(request.auth.uid + '_.*');
+      }
       // Chaque utilisateur connecté peut lire ou supprimer ses propres enveloppes
       allow read, delete: if isAuthenticated() && (
         resource.data.userId == request.auth.uid
       );
-      // L'utilisateur peut créer ou mettre à jour ses propres enveloppes prêtes à l'envoi
-      allow create, update: if isAuthenticated() && (
-        request.resource.data.userId == request.auth.uid
-      );
+      // Création : uniquement sous son propre identifiant
+      allow create: if isAuthenticated()
+        && request.resource.data.userId == request.auth.uid
+        && ownsQueueId();
+      // Mise à jour : uniquement ses propres documents (impossible de s'approprier la fiche d'un autre élève)
+      allow update: if isAuthenticated()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == request.auth.uid;
     }
 
     // =========================================================================

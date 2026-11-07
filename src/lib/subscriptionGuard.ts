@@ -227,12 +227,7 @@ export function validateBackendPermissions(
     }
 
     case 'SEND_REMINDER': {
-      if (actualTier === 'free') {
-        throw new SubscriptionForbiddenError(
-          'Les notifications de rappel d’étude 30 minutes avant la session sont réservées aux membres Pro',
-          'pro'
-        );
-      }
+      // Rappels de révision ouverts à tous les élèves (Gratuit, Pro, Plus) depuis le 2026-11-07
       break;
     }
 
