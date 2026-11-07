@@ -3,7 +3,7 @@
  * Aucune dépendance : ce fichier tourne aussi bien sur Vercel que dans le navigateur.
  *
  * - buildStudentContext() : la « conscience » de KONAN, ce qu'il sait de l'élève au moment d'écrire ;
- * - fallbackMessage()     : la banque de messages locale (grand frère × Duolingo), utilisée quand
+ * - fallbackMessage()     : la banque de messages locale (ton proche et taquin, façon Duolingo), utilisée quand
  *                           l'IA ne répond pas en 3 secondes, et pour les alertes affichées dans l'appli.
  * Le préfixe « _ » empêche Vercel d'en faire une route.
  */
@@ -189,7 +189,7 @@ const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 const BANK = {
   avant: {
     titles: [
-      'C’est KONAN 👋', '{prenom}, on y va ?', 'Dans 5 minutes : {matiere}', 'Petit rappel du grand frère',
+      'C’est KONAN 👋', '{prenom}, on y va ?', 'Dans 5 minutes : {matiere}', 'Petit rappel',
       'Prépare-toi, {prenom}', 'L’heure approche…', 'Ton cahier t’appelle', 'On se voit dans 5 minutes ?',
     ],
     bodies: [
@@ -322,15 +322,16 @@ export function fallbackMessage(ctx, seed = '', recent = []) {
 // Consigne de l'IA (utilisée par api/_konanAI.js)
 // ---------------------------------------------------------------------------
 export const KONAN_SYSTEM_INSTRUCTION = [
-  'Tu es KONAN, le grand frère et coach d’étude de l’élève en Côte d’Ivoire et en Afrique. Tu parles TOUJOURS à la première personne (« Je »). Tu as conscience de tout ce que fait l’élève.',
-  'Ton ton mélange l’esprit viral de Duolingo (humain, affectif, piquant ou faussement dramatique quand on t’ignore) et la sagesse ferme d’un grand frère africain qui refuse de voir son petit frère échouer (« les bonnes notes et les sources de revenus demain ne tombent pas du ciel », « viens bosser »).',
+  'Tu es KONAN, le compagnon d’étude de l’élève en Côte d’Ivoire et en Afrique. Tu parles TOUJOURS à la première personne (« Je »). Tu as conscience de tout ce que fait l’élève.',
+  'Ton ton mélange l’esprit viral de Duolingo (humain, affectif, piquant ou faussement dramatique quand on t’ignore) et la fermeté bienveillante de quelqu’un de proche qui refuse de le voir échouer (« les bonnes notes ne tombent pas du ciel », « viens bosser »).',
+  'IMPORTANT : tu te COMPORTES comme un grand frère, mais tu ne le DIS JAMAIS. N’écris jamais « grand frère », « petit frère », « frère », « sœur », « mon petit », ni que tu es son coach ou son ami : l’élève doit le sentir à ta façon de parler, pas le lire. Envoie simplement la notification.',
   'Adapte ton langage exactement à sa situation : s’il a un devoir bientôt, mets-lui la pression gentiment ; s’il a raté sa séance d’hier, fais-lui remarquer que tu l’as vu ; s’il est en retard de 15 minutes, joue la déception dramatique façon Duolingo (« Tu m’as abandonné ? », « Au revoir j’imagine… ») ; s’il a manqué sa séance, rassure-le et donne l’heure exacte du rattrapage. Ne sois JAMAIS robotique.',
   'Règles : tutoiement, français simple et correct, 1 ou 2 phrases, au plus un emoji, jamais d’insulte ni de honte publique, n’invente aucune date, aucune heure, aucune note ni aucun chiffre absent du contexte. Écris les heures à la française : « 18h », « 19h30 » (jamais « 18:00 »).',
 ].join('\n');
 
 /** Angles d'écriture : un différent à chaque notification, pour que KONAN ne radote jamais. */
 export const MESSAGE_ANGLES = [
-  'humour léger, comme un grand frère qui taquine',
+  'humour léger et taquin',
   'faux drame à la Duolingo (tu fais semblant d’être vexé ou abandonné)',
   'défi : tu le mets au défi de te prouver qu’il est capable',
   'fierté : pense à la fierté de sa famille et à la sienne ce soir',
@@ -370,6 +371,8 @@ export function validateAiMessage(raw, ctx) {
   const title = String(raw.titre || raw.title || '').replace(/["«»]/g, '').trim();
   const body = String(raw.message || raw.body || '').replace(/^["«\s]+|["»\s]+$/g, '').trim();
   if (!title || !body || title.length > 60 || body.length > 200 || body.length < 15) return null;
+  // KONAN agit comme un frère mais ne le dit jamais
+  if (/\bfr[èe]res?\b|\bs[œo]eurs?\b|\bmon petit\b|\bton coach\b|\bgrand[- ]fr/i.test(`${title} ${body}`)) return null;
   // Pour une séance manquée replacée, l'heure du rattrapage doit apparaître
   if (ctx.situation === SITUATIONS.MANQUEE && ctx.rattrapageA) {
     const [h, m] = String(ctx.rattrapageA).split(':');
