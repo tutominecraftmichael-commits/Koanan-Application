@@ -8,6 +8,7 @@
 
 import { auth, db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import { callPushSync } from './pushApi';
 
 // Clé PUBLIQUE VAPID (publique par nature). La clé privée correspondante n'existe que côté serveur.
 // Rotation du 2026-11-03 : l'ancienne paire était exposée dans le dépôt public.
@@ -195,63 +196,24 @@ export async function subscribeToWebPush(
     const subJson = subscription.toJSON();
     console.log('[KONAN WebPush] Souscription Push active pour', effectiveUid, subJson.endpoint?.slice(0, 35));
 
-    // 5. Enregistrer dans Firestore
-    if (!db) return { success: false, error: 'Base de données indisponible' };
+    // 5. Enregistrement de l'appareil PAR LE SERVEUR KONAN (/api/push-sync, après vérification du compte)
     await waitForAuth();
     if (!auth?.currentUser) return { success: false, error: 'Connexion au compte pas encore prête, réessaie dans quelques secondes' };
-    {
-      const userEmail =
-        auth?.currentUser?.email ||
-        emailParam ||
-        (uidParam && uidParam.includes('@') ? uidParam : undefined);
-
-      // 5a. Fiche « appareils » lue par le serveur d'envoi (ESSENTIELLE) : un abonnement par appareil
-      try {
-        const deviceQueueRef = doc(db, 'push_queue', `device_${effectiveUid}`);
-        await setDoc(
-          deviceQueueRef,
-          {
-            userId: effectiveUid,
-            email: userEmail ? userEmail.toLowerCase().trim() : '',
-            subscriptions: {
-              [endpointKey(subJson.endpoint || '')]: {
-                subscription: subJson,
-                updatedAt: new Date().toISOString(),
-                device: navigator.userAgent.slice(0, 120),
-              },
-            },
-            planTier: options.planTier || 'free',
-            notificationsEnabled: true,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
-            sendAt: 9999999999999, // jamais « à échéance » : cette fiche n'est pas une notification
-            sessionId: 'device_sub',
-            type: 'device_sub',
-            updatedAt: new Date().toISOString(),
-          },
-          { merge: true }
-        );
-      } catch (qErr: any) {
-        console.warn('[KONAN WebPush] Enregistrement de l’appareil impossible :', qErr);
-        return { success: false, error: `Enregistrement de l’appareil impossible (${qErr?.code || qErr?.message || 'erreur inconnue'})` };
-      }
-
-      // 5b. Copie sur la fiche élève (facultative : les règles peuvent la refuser selon la formule)
-      try {
-        const payload: Record<string, any> = {
-          webPushSubscription: subJson,
-          pushNotificationsEnabled: true,
-          notificationsEnabled: true,
-          webPushUpdatedAt: new Date().toISOString(),
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
-          timezoneOffsetMinutes: new Date().getTimezoneOffset(),
-        };
-        if (userEmail) payload.email = userEmail.toLowerCase().trim();
-        await setDoc(doc(db, 'users', effectiveUid), payload, { merge: true });
-      } catch (uErr) {
-        console.warn('[KONAN WebPush] Copie sur la fiche élève ignorée :', uErr);
-      }
+    const userEmail =
+      auth.currentUser.email ||
+      emailParam ||
+      (uidParam && uidParam.includes('@') ? uidParam : undefined);
+    const registered = await callPushSync({
+      action: 'register',
+      subscription: subJson,
+      planTier: options.planTier || 'free',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
+      email: userEmail ? userEmail.toLowerCase().trim() : '',
+      device: navigator.userAgent.slice(0, 120),
+    });
+    if (!registered.success) {
+      return { success: false, error: `Enregistrement de l’appareil impossible (${registered.error})` };
     }
-
     markRegisteredOnServer(subJson.endpoint || '', auth?.currentUser?.uid || effectiveUid);
     options.onSubscribed?.();
     return { success: true };
