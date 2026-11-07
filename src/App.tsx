@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback, Suspense } from 'react';
 import { GraduationCap } from 'lucide-react';
 import type { AppState } from './services/storage';
 import {
@@ -73,23 +73,35 @@ import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelecto
 
 
 // Views
-import { AuthPage } from './features/auth/AuthPage';
-import { PdfUploadView } from './features/schedule/PdfUploadView';
+// Le tableau de bord est chargé tout de suite ; les autres pages se chargent à la demande
+// (l'appli démarre ainsi avec ~1 Mo au lieu de ~10 Mo de code). Les cours guidés (≈ 7 Mo)
+// ne sont téléchargés qu'à l'ouverture d'une séance.
 import { DashboardOverview } from './features/dashboard/DashboardOverview';
-import { ScheduleManager } from './features/schedule/ScheduleManager';
-import { SubjectManager } from './features/subjects/SubjectManager';
-import { PlannerView } from './features/planner/PlannerView';
-import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
-import { FocusMode } from './features/focus/FocusMode';
-import { PresetModal } from './features/onboarding/PresetModal';
-import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding';
-import { ProWizardView } from './features/pro/ProWizardView';
-import { AdminDashboard } from './features/admin/AdminDashboard';
-import { InteractiveTutorView } from './features/tutor/InteractiveTutorView';
+import { ViewLoader, lazyView, prefetchViews } from './components/common/ViewLoader';
 import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum } from './lib/curriculum/curriculumMatcher';
 import { clearAdminSession } from './lib/adminAuth';
-import { getCurriculumChapters } from './lib/curriculum/curriculumRegistry';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
+
+const loadAuthPage = () => import('./features/auth/AuthPage').then(m => m.AuthPage);
+const loadPdfUploadView = () => import('./features/schedule/PdfUploadView').then(m => m.PdfUploadView);
+const loadScheduleManager = () => import('./features/schedule/ScheduleManager').then(m => m.ScheduleManager);
+const loadSubjectManager = () => import('./features/subjects/SubjectManager').then(m => m.SubjectManager);
+const loadPlannerView = () => import('./features/planner/PlannerView').then(m => m.PlannerView);
+const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashboard').then(m => m.AnalyticsDashboard);
+const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
+const loadDuolingoOnboarding = () => import('./features/onboarding/DuolingoOnboarding').then(m => m.DuolingoOnboarding);
+const AuthPage = lazyView(loadAuthPage);
+const PdfUploadView = lazyView(loadPdfUploadView);
+const ScheduleManager = lazyView(loadScheduleManager);
+const SubjectManager = lazyView(loadSubjectManager);
+const PlannerView = lazyView(loadPlannerView);
+const AnalyticsDashboard = lazyView(loadAnalyticsDashboard);
+const FocusMode = lazyView(loadFocusMode);
+const DuolingoOnboarding = lazyView(loadDuolingoOnboarding);
+const PresetModal = lazyView(() => import('./features/onboarding/PresetModal').then(m => m.PresetModal));
+const ProWizardView = lazyView(() => import('./features/pro/ProWizardView').then(m => m.ProWizardView));
+const AdminDashboard = lazyView(() => import('./features/admin/AdminDashboard').then(m => m.AdminDashboard));
+const InteractiveTutorView = lazyView(() => import('./features/tutor/InteractiveTutorView').then(m => m.InteractiveTutorView));
 import type { StemSubjectId, CurriculumGradeLevel } from './lib/curriculum/types';
 
 export function App() {
@@ -600,6 +612,17 @@ export function App() {
     state.preferences,
     state.cycleCompletedDate,
   ]);
+
+  // Fluidité : une fois l'élève connecté, on précharge en silence les pages qu'il ouvre le plus
+  // (pas les cours guidés, trop lourds pour un forfait mobile)
+  const isLoggedInForPrefetch = Boolean(state.userAccount?.isLoggedIn);
+  useEffect(() => {
+    if (isLoggedInForPrefetch) {
+      prefetchViews([loadPlannerView, loadScheduleManager, loadSubjectManager, loadFocusMode, loadAnalyticsDashboard]);
+    } else {
+      prefetchViews([loadAuthPage, loadDuolingoOnboarding]);
+    }
+  }, [isLoggedInForPrefetch]);
 
   // Dépôt immédiat des alertes de la semaine (après activation des notifications par l'élève)
   const syncAlertsNow = useCallback(() => {
@@ -1657,7 +1680,7 @@ export function App() {
    * Directly redirects the user to the interactive focus chronometer
    * upon clicking "Valider la séance" / "Valider".
    */
-  const handleStartFocusSession = (session: StudySession) => {
+  const handleStartFocusSession = async (session: StudySession) => {
     const currentDayIndex = (new Date().getDay() + 6) % 7;
     const dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
     const currentDayName = dayNames[currentDayIndex];
@@ -1691,14 +1714,24 @@ export function App() {
     );
     const stemMatchForTutor = matchSubjectToStemCurriculum(subjectName);
 
+    // Les cours guidés (≈ 7 Mo) ne sont téléchargés qu'ici, au lancement d'une séance de matière à cours
+    const wantsTutor = Boolean(resolvedGrade && stemMatchForTutor.stemSubjectId && shouldLaunchInteractiveTutor(subjectName, resolvedGrade));
+    let hasChapters = false;
+    if (wantsTutor) {
+      try {
+        const { getCurriculumChapters } = await import('./lib/curriculum/curriculumRegistry');
+        hasChapters = getCurriculumChapters(stemMatchForTutor.stemSubjectId!, resolvedGrade!).length > 0;
+      } catch {
+        showToast('Connexion trop faible pour charger le cours guidé. Séance lancée en mode chronomètre.', 6000);
+        setFocusSession(session);
+        setActiveView('focus');
+        return;
+      }
+    }
+
     if (stemMatchForTutor.isStemSubject && !resolvedGrade) {
       showToast("Indique ta classe exacte avec sa série (ex : Tle D, 1ère A1) en réimportant ton emploi du temps pour débloquer les cours guidés. Séance lancée en mode chronomètre.", 7000);
-    } else if (
-      resolvedGrade &&
-      stemMatchForTutor.stemSubjectId &&
-      shouldLaunchInteractiveTutor(subjectName, resolvedGrade) &&
-      getCurriculumChapters(stemMatchForTutor.stemSubjectId, resolvedGrade).length === 0
-    ) {
+    } else if (wantsTutor && !hasChapters) {
       showToast(`Le cours guidé de ${subjectName} pour ta classe est en préparation. Séance lancée en mode chronomètre.`, 6000);
     } else if (resolvedGrade && shouldLaunchInteractiveTutor(subjectName, resolvedGrade)) {
       const stemMatch = stemMatchForTutor;
@@ -1963,6 +1996,7 @@ export function App() {
         ? 'max-w-full p-0'
         : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
         }`}>
+        <Suspense fallback={<ViewLoader />}>
 
         {/* Real-time Administrator Console */}
         {activeView === 'admin' && isLocalAdminEnvironment() && (
@@ -2298,16 +2332,19 @@ export function App() {
             showToast={showToast}
           />
         )}
+        </Suspense>
       </main>
 
       {/* Academic Track Presets Modal (ONLY FOR DEMO MODE) */}
       {state.isDemoMode && (
-        <PresetModal
-          isOpen={isPresetModalOpen}
-          onClose={() => setIsPresetModalOpen(false)}
-          onSelectPreset={handleSelectPreset}
-          currentLevel={state.academicLevel}
-        />
+        <Suspense fallback={null}>
+          <PresetModal
+            isOpen={isPresetModalOpen}
+            onClose={() => setIsPresetModalOpen(false)}
+            onSelectPreset={handleSelectPreset}
+            currentLevel={state.academicLevel}
+          />
+        </Suspense>
       )}
 
       {/* User Settings & Profile Modal */}
