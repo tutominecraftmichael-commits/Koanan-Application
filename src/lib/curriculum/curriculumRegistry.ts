@@ -51,6 +51,9 @@ import { HIST_1RE_T2_L03_COLONISATION_COTE_IVOIRE } from '../../data/courses/pre
 import { HIST_1RE_T3_L01_PREMIERE_GUERRE_MONDIALE } from '../../data/courses/premiere/hist_1re_premiere_guerre_mondiale';
 import { HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE } from '../../data/courses/premiere/hist_1re_seconde_guerre_mondiale';
 import { HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES } from '../../data/courses/premiere/hist_1re_violences_masse_genocides';
+import { MATHS_1RE_L01_EQUATIONS_INEQUATIONS } from '../../data/courses/premiere/maths_1re_equations_inequations';
+import { MATHS_1RE_L02_DENOMBREMENT } from '../../data/courses/premiere/maths_1re_denombrement';
+import { MATHS_1RE_L03_GENERALITES_FONCTIONS } from '../../data/courses/premiere/maths_1re_generalites_fonctions';
 import { FR_2DE_PL_L01_FONCTIONS_LANGAGE } from '../../data/courses/seconde/fr_2de_fonctions_langage';
 import { FR_2DE_PL_L02_CONNECTEURS_LOGIQUES } from '../../data/courses/seconde/fr_2de_connecteurs_logiques';
 import { FR_2DE_PL_L02B_EXPRESSION_OPINION } from '../../data/courses/seconde/fr_2de_expression_opinion';
@@ -91852,6 +91855,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   HIST_1RE_T3_L01_PREMIERE_GUERRE_MONDIALE,
   HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE,
   HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES,
+  MATHS_1RE_L01_EQUATIONS_INEQUATIONS,
+  MATHS_1RE_L02_DENOMBREMENT,
+  MATHS_1RE_L03_GENERALITES_FONCTIONS,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
   FR_2DE_PL_L02_CONNECTEURS_LOGIQUES,
   FR_2DE_PL_L02B_EXPRESSION_OPINION,
