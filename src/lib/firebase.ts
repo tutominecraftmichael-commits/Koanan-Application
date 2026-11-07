@@ -16,6 +16,7 @@ import {
   onAuthStateChanged,
   type User as FirebaseUser
 } from 'firebase/auth';
+import { checkAccountExists } from '../services/accountCheck';
 
 export interface FirebaseConfig {
   apiKey: string;
@@ -147,6 +148,47 @@ export interface RealAuthUser {
   isNewUser?: boolean;
 }
 
+/** Erreur de connexion avec un code lisible par l'interface (auth/user-not-found, auth/email-already-in-use…). */
+function authError(code: string, message: string): Error {
+  const err = new Error(message);
+  (err as any).code = code;
+  return err;
+}
+
+/**
+ * Mot de passe d'un NOUVEAU compte : au moins 8 caractères, avec des lettres et des chiffres.
+ * Renvoie le problème à afficher, ou null si le mot de passe convient.
+ */
+export function checkNewPassword(password: string): string | null {
+  const p = String(password || '');
+  if (p.length < 8) return 'Ton mot de passe doit comporter au moins 8 caractères.';
+  if (!/[A-Za-zÀ-ÿ]/.test(p) || !/\d/.test(p)) return 'Ton mot de passe doit contenir des lettres ET des chiffres.';
+  return null;
+}
+
+/**
+ * Mode de connexion Google :
+ * - 'login'  : « J'ai déjà un compte » — le compte Google doit déjà exister dans KONAN ;
+ * - 'signup' : inscription d'un nouveau — le compte Google ne doit PAS encore exister ;
+ * - 'any'    : ancien comportement (connexion ou création).
+ */
+export type GoogleAuthMode = 'login' | 'signup' | 'any';
+const GOOGLE_MODE_KEY = 'konan_google_auth_mode';
+
+/** Applique la règle du mode après une connexion Google (popup ou redirection). */
+async function enforceGoogleMode(mode: GoogleAuthMode, user: FirebaseUser, isNewUser: boolean): Promise<void> {
+  if (mode === 'login' && isNewUser) {
+    // Google vient de créer un compte : ce n'était donc pas un compte KONAN existant -> on l'annule
+    try { await user.delete(); } catch { /* supprimé ou session déjà fermée */ }
+    try { if (auth) await firebaseSignOut(auth); } catch { /* ignore */ }
+    throw authError('auth/user-not-found', "Aucun compte KONAN n'existe avec ce compte Google. Crée ton compte en touchant « Commencer ».");
+  }
+  if (mode === 'signup' && !isNewUser) {
+    try { if (auth) await firebaseSignOut(auth); } catch { /* ignore */ }
+    throw authError('auth/email-already-in-use', 'Ce compte Google est déjà inscrit sur KONAN. Connecte-toi avec « J’ai déjà un compte ».');
+  }
+}
+
 /**
  * Checks whether an email/Gmail address already exists in Firebase Auth,
  * Cloud Firestore `users` collection, or local storage.
@@ -197,7 +239,7 @@ export function isMobileBrowser(): boolean {
 /**
  * Real Google Sign-in with Popup via Firebase Authentication
  */
-export async function signInWithGoogleReal(): Promise<RealAuthUser> {
+export async function signInWithGoogleReal(mode: GoogleAuthMode = 'any'): Promise<RealAuthUser> {
   if (!auth) {
     throw new Error('CONFIG_MISSING: Firebase n\'est pas encore configuré.');
   }
@@ -214,6 +256,7 @@ export async function signInWithGoogleReal(): Promise<RealAuthUser> {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
     const additionalInfo = getAdditionalUserInfo(result);
+    await enforceGoogleMode(mode, user, additionalInfo?.isNewUser === true);
     let alreadyExists = additionalInfo?.isNewUser === false;
 
     if (!alreadyExists && db && !isFirestoreQuotaBlocked()) {
@@ -245,8 +288,10 @@ export async function signInWithGoogleReal(): Promise<RealAuthUser> {
       isNewUser: !alreadyExists,
     };
   } catch (error: any) {
-    console.error('Firebase Google Sign-In Error:', error);
+    console.error('Firebase Google Sign-In Error:', error?.code);
 
+    // Règle du mode (compte inexistant / déjà inscrit) : message tel quel
+    if (error.code === 'auth/user-not-found' || error.code === 'auth/email-already-in-use') throw error;
     if (error.code === 'auth/popup-closed-by-user') {
       throw new Error('La fenêtre de connexion Google a été fermée avant la validation.');
     }
@@ -269,17 +314,7 @@ export async function signInWithGoogleReal(): Promise<RealAuthUser> {
       throw new Error('Requête annulée suite à une ouverture concurrente.');
     }
     if (error.code === 'auth/network-request-failed') {
-      // En environnement de développement local, permettre la continuité
-      if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-        console.warn('[KONAN Dev] Mode local : simulation Google suite à indisponibilité réseau.');
-        return {
-          uid: 'google_dev_student',
-          displayName: 'Étudiant Konan',
-          email: 'etudiant.konan@gmail.com',
-          photoURL: 'https://api.dicebear.com/7.x/bottts/svg?seed=KonanDev',
-          isNewUser: false,
-        };
-      }
+      // Plus aucune « session de démonstration » sans vraie connexion, même en local
       throw new Error('Erreur de réseau : vérifiez votre connexion Internet.');
     }
 
@@ -290,10 +325,12 @@ export async function signInWithGoogleReal(): Promise<RealAuthUser> {
 /**
  * Real Google Sign-in via Redirect (ideal for Mobile Safari / Chrome Mobile)
  */
-export async function signInWithGoogleRedirectReal(): Promise<void> {
+export async function signInWithGoogleRedirectReal(mode: GoogleAuthMode = 'any'): Promise<void> {
   if (!auth) {
     throw new Error('CONFIG_MISSING: Firebase n\'est pas configuré.');
   }
+  // Le mode est retrouvé au retour de Google (la page est rechargée entre-temps)
+  try { sessionStorage.setItem(GOOGLE_MODE_KEY, mode); } catch { /* ignore */ }
 
   if (typeof window !== 'undefined' && window.location.hostname === '127.0.0.1') {
     window.location.href = window.location.href.replace('127.0.0.1', 'localhost');
@@ -321,6 +358,12 @@ export async function checkGoogleRedirectResult(): Promise<RealAuthUser | null> 
   try {
     const result = await getRedirectResult(auth);
     if (result && result.user) {
+      let mode: GoogleAuthMode = 'any';
+      try {
+        mode = (sessionStorage.getItem(GOOGLE_MODE_KEY) as GoogleAuthMode) || 'any';
+        sessionStorage.removeItem(GOOGLE_MODE_KEY);
+      } catch { /* ignore */ }
+      await enforceGoogleMode(mode, result.user, getAdditionalUserInfo(result)?.isNewUser === true);
       return {
         uid: result.user.uid,
         displayName: result.user.displayName,
@@ -330,7 +373,9 @@ export async function checkGoogleRedirectResult(): Promise<RealAuthUser | null> 
     }
     return null;
   } catch (error: any) {
-    console.error('Firebase Redirect Result Error:', error);
+    console.error('Firebase Redirect Result Error:', error?.code);
+    // Compte Google inexistant (connexion) ou déjà inscrit (inscription) : le message doit s'afficher
+    if (error.code === 'auth/user-not-found' || error.code === 'auth/email-already-in-use') throw error;
     if (error.code === 'auth/unauthorized-domain') {
       const err = new Error('UNAUTHORIZED_DOMAIN');
       (err as any).code = 'auth/unauthorized-domain';
@@ -353,6 +398,18 @@ export async function signInWithEmailReal(
 
   const cleanEmail = (email || '').trim().toLowerCase();
 
+  // 1. Le compte doit EXISTER dans KONAN (vérifié par le serveur) : jamais de création en douce
+  const account = await checkAccountExists(cleanEmail);
+  if (account.exists === false) {
+    throw authError('auth/user-not-found', "Ce compte n'existe pas dans KONAN. Crée ton compte en touchant « Commencer ».");
+  }
+  if (account.exists && account.disabled) {
+    throw authError('auth/user-disabled', 'Ce compte étudiant a été désactivé.');
+  }
+  if (account.exists && !account.providers.includes('password') && account.providers.includes('google.com')) {
+    throw authError('auth/use-google', 'Ce compte a été créé avec Google : connecte-toi avec le bouton « Se connecter avec Google ».');
+  }
+
   try {
     const result = await signInWithEmailAndPassword(auth, cleanEmail, password);
     const user = result.user;
@@ -364,33 +421,17 @@ export async function signInWithEmailReal(
       isNewUser: false,
     };
   } catch (error: any) {
-    console.error('Firebase Email Sign-In Error:', error);
-
-    const isLocal = typeof window !== 'undefined' && (
-      window.location.hostname === 'localhost' || 
-      window.location.hostname === '127.0.0.1'
-    );
-    if (isLocal && (error.code === 'auth/operation-not-allowed' || error.code === 'auth/network-request-failed')) {
-      console.warn('[KONAN Dev] Mode local : validation de session de développement pour', cleanEmail);
-      const cleanName = cleanEmail.split('@')[0] || 'Étudiant';
-      return {
-        uid: `dev_${encodeURIComponent(cleanEmail).replace(/[^a-zA-Z0-9]/g, '_')}`,
-        displayName: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
-        email: cleanEmail,
-        photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(cleanName)}`,
-        isNewUser: false,
-      };
-    }
+    console.error('Firebase Email Sign-In Error:', error?.code);
 
     if (error.code === 'auth/user-not-found') {
-      const notFoundErr = new Error('Ce compte n\'existe pas encore. Cliquez sur "Créer mon compte" pour commencer.');
-      (notFoundErr as any).code = 'auth/user-not-found';
-      throw notFoundErr;
+      throw authError('auth/user-not-found', "Ce compte n'existe pas dans KONAN. Crée ton compte en touchant « Commencer ».");
     }
     if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-      const credErr = new Error('Identifiant ou mot de passe incorrect.');
-      (credErr as any).code = 'auth/invalid-credential';
-      throw credErr;
+      // Le compte existe (vérifié plus haut) : c'est donc le mot de passe qui ne correspond pas
+      throw authError(
+        'auth/invalid-credential',
+        account.exists ? 'Mot de passe incorrect.' : 'Adresse email ou mot de passe incorrect.',
+      );
     }
     if (error.code === 'auth/invalid-email') {
       throw new Error('Adresse email invalide.');
@@ -426,6 +467,21 @@ export async function signUpWithEmailReal(
 
   const cleanEmail = (email || '').trim().toLowerCase();
 
+  // Mot de passe solide pour tout nouveau compte
+  const passwordProblem = checkNewPassword(password);
+  if (passwordProblem) throw authError('auth/weak-password', passwordProblem);
+
+  // L'adresse ne doit PAS déjà avoir un compte : sinon on invite à se connecter (jamais de connexion en douce)
+  const account = await checkAccountExists(cleanEmail);
+  if (account.exists) {
+    throw authError(
+      'auth/email-already-in-use',
+      account.providers.includes('google.com') && !account.providers.includes('password')
+        ? 'Ce compte existe déjà (créé avec Google). Connecte-toi avec le bouton Google.'
+        : 'Ce compte existe déjà. Connecte-toi avec ton mot de passe.',
+    );
+  }
+
   try {
     const result = await createUserWithEmailAndPassword(auth, cleanEmail, password);
     const user = result.user;
@@ -460,39 +516,13 @@ export async function signUpWithEmailReal(
   } catch (error: any) {
     console.error('Firebase Email Sign-Up Error:', error);
 
-    // Si le compte existe déjà dans Firebase, tenter automatiquement la connexion par mot de passe !
+    // Le compte existe déjà : on ne connecte JAMAIS en douce, on invite à se connecter
     if (error.code === 'auth/email-already-in-use') {
-      try {
-        const existingLogin = await signInWithEmailReal(cleanEmail, password);
-        return {
-          ...existingLogin,
-          isNewUser: false,
-        };
-      } catch (signInErr: any) {
-        const inUseErr = new Error('Ce compte existe déjà avec cet email. Veuillez saisir le mot de passe associé pour vous connecter.');
-        (inUseErr as any).code = 'auth/email-already-in-use';
-        throw inUseErr;
-      }
-    }
-
-    const isLocal = typeof window !== 'undefined' && (
-      window.location.hostname === 'localhost' || 
-      window.location.hostname === '127.0.0.1'
-    );
-    if (isLocal && (error.code === 'auth/operation-not-allowed' || error.code === 'auth/network-request-failed')) {
-      console.warn('[KONAN Dev] Mode local : création de compte en session locale pour', cleanEmail);
-      const finalName = displayName?.trim() || cleanEmail.split('@')[0] || 'Étudiant';
-      return {
-        uid: `dev_${encodeURIComponent(cleanEmail).replace(/[^a-zA-Z0-9]/g, '_')}`,
-        displayName: finalName.charAt(0).toUpperCase() + finalName.slice(1),
-        email: cleanEmail,
-        photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(finalName)}`,
-        isNewUser: true,
-      };
+      throw authError('auth/email-already-in-use', 'Ce compte existe déjà. Connecte-toi avec ton mot de passe.');
     }
 
     if (error.code === 'auth/weak-password') {
-      throw new Error('Le mot de passe doit comporter au moins 6 caractères.');
+      throw authError('auth/weak-password', 'Mot de passe trop faible : au moins 8 caractères, avec des lettres et des chiffres.');
     }
     if (error.code === 'auth/invalid-email') {
       throw new Error('Format d\'adresse email invalide.');

@@ -72,8 +72,10 @@ import {
 import {
   signInWithGoogleReal,
   signInWithEmailReal,
-  signUpWithEmailReal
+  signUpWithEmailReal,
+  checkNewPassword
 } from '../../lib/firebase';
+import { checkAccountExists } from '../../services/accountCheck';
 import { generateKonanId } from '../../lib/konanId';
 import { validateStrictEmail } from '../auth/AuthPage';
 import type {
@@ -985,8 +987,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       return;
     }
 
-    if (!authPassword || authPassword.length < 6) {
-      setAuthError('Le mot de passe doit comporter au moins 6 caractères.');
+    const passwordProblem = checkNewPassword(authPassword);
+    if (passwordProblem) {
+      setAuthError(passwordProblem);
       return;
     }
 
@@ -1002,7 +1005,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         // Ignore
       }
 
-      // Inscription ou connexion automatique sans blocage artificiel
+      // Inscription : refusée si l'adresse a déjà un compte (l'élève est alors invité à se connecter)
       const authUser = await signUpWithEmailReal(cleanEmail, authPassword, cleanName);
 
       const profile: UserAccount = {
@@ -1054,7 +1057,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         // Ignore
       }
 
-      const realUser = await signInWithGoogleReal();
+      // Inscription Google : refusée si ce compte Google est déjà inscrit sur KONAN
+      const realUser = await signInWithGoogleReal('signup');
       if (realUser) {
         const resolvedName = realUser.displayName || authFullName.trim() || 'Étudiant';
         setAuthFullName(resolvedName);
@@ -1083,7 +1087,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         setStep('pricing_models');
       }
     } catch (err: any) {
-      if (err?.code === 'auth/unauthorized-domain' || err?.message === 'UNAUTHORIZED_DOMAIN') {
+      if (err?.code === 'auth/email-already-in-use') {
+        setAccountExistsRedirect(true);
+        setAuthError(err.message);
+      } else if (err?.code === 'auth/unauthorized-domain' || err?.message === 'UNAUTHORIZED_DOMAIN') {
         setAuthError('Domaine non autorisé. Ouvrez l\'application sur http://localhost:5173 (et non 127.0.0.1) ou utilisez la connexion par Email.');
       } else {
         setAuthError(err?.message || 'Inscription Google interrompue.');
@@ -1135,7 +1142,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         // Ignore
       }
       const hasExtractedSchedule = generatedSlots.length > 0 && generatedSubjects.length > 0;
-      const realUser = await signInWithGoogleReal();
+      // Connexion : le compte Google doit déjà exister dans KONAN
+      const realUser = await signInWithGoogleReal('login');
       if (realUser) {
         const resolvedName = realUser.displayName || authFullName.trim() || 'Étudiant';
         const pendingPayload = hasExtractedSchedule
@@ -1164,6 +1172,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         onLoginSuccess(profile);
       }
     } catch (err: any) {
+      setCanCreateFromLogin(err?.code === 'auth/user-not-found');
       setAuthError(err?.message || 'Connexion Google interrompue.');
     } finally {
       setIsSubmittingAuth(false);
@@ -1222,56 +1231,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       onLoginSuccess(profile);
     } catch (err: any) {
       const msg = err?.message || '';
-      if (err?.code === 'auth/user-not-found' || msg.includes("n'existe pas")) {
-        setCanCreateFromLogin(true);
-        setAuthError("Ce compte n'existe pas encore. Vous pouvez le créer directement en un clic ci-dessous avec ce mot de passe :");
-      } else {
-        setAuthError(msg || "Ce compte n'est pas reconnu ou le mot de passe est incorrect.");
-      }
-    } finally {
-      setIsSubmittingAuth(false);
-    }
-  };
-
-  // Création directe d'un compte à partir des identifiants saisis dans le formulaire de connexion
-  const handleCreateAccountFromExistingForm = async () => {
-    setAuthError(null);
-    setCanCreateFromLogin(false);
-    setIsSubmittingAuth(true);
-    try {
-      const emailPrefix = authEmail.split('@')[0];
-      const cleanName = emailPrefix ? emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1) : 'Étudiant';
-      const cleanEmail = authEmail.trim().toLowerCase();
-
-      const authUser = await signUpWithEmailReal(cleanEmail, authPassword, cleanName);
-      const hasExtractedSchedule = generatedSlots.length > 0 && generatedSubjects.length > 0;
-      const pendingPayload = hasExtractedSchedule
-        ? buildAndPersistFinalPayload(cleanName, selectedPlan)
-        : null;
-
-      const profile: UserAccount = {
-        name: cleanName,
-        email: authUser.email || cleanEmail,
-        avatar:
-          authUser.photoURL ||
-          `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(cleanName)}`,
-        googleId: authUser.uid,
-        konanId: generateKonanId(authUser.uid || authUser.email || undefined),
-        academicLevel: activeSystem.title || 'Licence Universitaire',
-        isLoggedIn: true,
-        isDemo: false,
-        planTier: selectedPlan,
-        lastSyncedAt: new Date().toISOString(),
-      };
-
-      soundFX.playStreakIgniteChime();
-      setShowExistingLogin(false);
-      if (pendingPayload) {
-        onComplete({ ...pendingPayload, launchProWizard: false });
-      }
-      onLoginSuccess(profile);
-    } catch (createErr: any) {
-      setAuthError(createErr?.message || 'Impossible de créer le compte.');
+      // Compte inexistant : on l'explique et on propose de CRÉER un compte (parcours des nouveaux)
+      setCanCreateFromLogin(err?.code === 'auth/user-not-found');
+      setAuthError(msg || "Ce compte n'est pas reconnu ou le mot de passe est incorrect.");
     } finally {
       setIsSubmittingAuth(false);
     }
@@ -1584,12 +1546,16 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   {canCreateFromLogin && (
                     <button
                       type="button"
-                      onClick={handleCreateAccountFromExistingForm}
-                      disabled={isSubmittingAuth}
+                      onClick={() => {
+                        // Pas de création en douce : le nouveau passe par le parcours d'inscription
+                        setShowExistingLogin(false);
+                        setCanCreateFromLogin(false);
+                        startNewcomerJourney();
+                      }}
                       className="w-full mt-1 py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-slate-950" />
-                      <span>Créer ce compte directement avec cet email</span>
+                      <span>Je suis nouveau : créer mon compte</span>
                     </button>
                   )}
                 </div>
@@ -2674,6 +2640,19 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         setAuthError(null);
                       }
                     }}
+                    onBlur={async () => {
+                      // Vérification immédiate : cette adresse a-t-elle déjà un compte ?
+                      if (!validateStrictEmail(authEmail).isValid) return;
+                      try {
+                        const account = await checkAccountExists(authEmail);
+                        if (account.exists) {
+                          setAccountExistsRedirect(true);
+                          setAuthError('Ce compte existe déjà. Connecte-toi avec « J’ai déjà un compte ».');
+                        }
+                      } catch {
+                        // trop de vérifications : la validation finale vérifiera de nouveau
+                      }
+                    }}
                     placeholder="Ton adresse Gmail / Email (nouveau compte)"
                     className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
                   />
@@ -2684,10 +2663,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
-                    minLength={6}
+                    minLength={8}
                     value={authPassword}
                     onChange={(e) => setAuthPassword(e.target.value)}
-                    placeholder="Choisis un mot de passe (min. 6 caractères)"
+                    placeholder="Mot de passe : 8 caractères min., lettres et chiffres"
                     className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
                   />
                   <button

@@ -21,7 +21,8 @@ import {
   signInWithEmailReal,
   signUpWithEmailReal,
   resetPasswordReal,
-  isMobileBrowser
+  isMobileBrowser,
+  checkNewPassword
 } from '../../lib/firebase';
 import { generateKonanId } from '../../lib/konanId';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
@@ -242,7 +243,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     try {
       if (isMobile) {
         try {
-          const googleUser = await signInWithGoogleReal();
+          const googleUser = await signInWithGoogleReal(isRegistering ? 'signup' : 'login');
           const profile: UserAccount = {
             name: googleUser.displayName || 'Étudiant',
             email: googleUser.email || '',
@@ -263,12 +264,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             setIsLoading(false);
             return;
           }
-          await signInWithGoogleRedirectReal();
+          await signInWithGoogleRedirectReal(isRegistering ? 'signup' : 'login');
           return;
         }
       }
 
-      const googleUser = await signInWithGoogleReal();
+      const googleUser = await signInWithGoogleReal(isRegistering ? 'signup' : 'login');
       const profile: UserAccount = {
         name: googleUser.displayName || 'Étudiant',
         email: googleUser.email || '',
@@ -287,7 +288,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         setShowDomainHelp(true);
       } else if (err.message === 'POPUP_BLOCKED' || err.code === 'auth/popup-blocked') {
         try {
-          await signInWithGoogleRedirectReal();
+          await signInWithGoogleRedirectReal(isRegistering ? 'signup' : 'login');
           return;
         } catch {
           setErrorMessage('La fenêtre popup Google a été bloquée. Vous pouvez vous connecter via l\'onglet "Email" ci-dessous.');
@@ -309,7 +310,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     setSuccessMessage(null);
     setShowDomainHelp(false);
     try {
-      await signInWithGoogleRedirectReal();
+      await signInWithGoogleRedirectReal(isRegistering ? 'signup' : 'login');
     } catch (err: any) {
       console.error('Google Redirect Error:', err);
       setIsLoading(false);
@@ -363,8 +364,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
       return;
     }
 
-    // 2. Contrôle du mot de passe
-    if (!password || password.length < 6) {
+    // 2. Contrôle du mot de passe (nouveau compte : 8 caractères min., lettres et chiffres)
+    if (isRegistering) {
+      const passwordProblem = checkNewPassword(password);
+      if (passwordProblem) {
+        setErrorMessage(passwordProblem);
+        return;
+      }
+    } else if (!password || password.length < 6) {
       setErrorMessage('Le mot de passe doit comporter au moins 6 caractères.');
       return;
     }
