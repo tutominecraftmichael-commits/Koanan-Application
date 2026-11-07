@@ -86,7 +86,7 @@ export const KonanVoiceTestPanel: React.FC<{ appState: AppState }> = ({ appState
       setLast(`${title} — ${body} (${note})`);
       if ('Notification' in window && Notification.permission === 'granted' && 'serviceWorker' in navigator) {
         const reg = await navigator.serviceWorker.getRegistration('/');
-        await reg?.showNotification(title, { body, icon: '/icons/konan-icon-192.png', badge: '/cube-badge.png', tag: `konan-test-${kind}` }).catch(() => {});
+        await reg?.showNotification(title, { body, icon: '/icons/konan-notif-192.png', badge: '/cube-badge.png', tag: `konan-test-${kind}` }).catch(() => {});
       }
     } finally {
       setBusy(null);

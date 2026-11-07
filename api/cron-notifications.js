@@ -196,7 +196,7 @@ function pushPayload(message, alert) {
   return JSON.stringify({
     title: message.title,
     body: message.body,
-    icon: '/icons/konan-icon-192.png',
+    icon: '/icons/konan-notif-192.png',
     badge: '/cube-badge.png',
     tag: `konan-${alert.sessionId}-${alert.kind}`,
     data: {
