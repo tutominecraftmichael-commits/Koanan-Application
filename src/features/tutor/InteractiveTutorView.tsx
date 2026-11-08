@@ -390,6 +390,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const [recallIndex, setRecallIndex] = useState<number>(0);
   // Pomodoro : secondes de vrai travail (le chrono s'arrête si l'élève quitte l'appli ou ne fait plus rien)
   const [workSeconds, setWorkSeconds] = useState<number>(0);
+  // Le compte à rebours ne démarre qu'au clic sur « Commencer la leçon » (pas pendant l'accueil ni la révision du jour)
+  const [timerStarted, setTimerStarted] = useState<boolean>(false);
   const [pauseLeft, setPauseLeft] = useState<number>(POMODORO_PAUSE_SEC);
   const [timeUpCounted, setTimeUpCounted] = useState<boolean>(true);
   // Marque-page de reprise (séance précédente arrêtée au milieu d'une mini-leçon)
@@ -494,6 +496,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
    * par la fin du temps), on reprend à l'étape exacte, avec les étapes déjà réussies conservées.
    */
   const startLearningAt = (fallbackIndex: number, point?: CurriculumPoint) => {
+    setTimerStarted(true);
     setSelectedOptionIndex(null);
     setIsAnswerChecked(false);
     setIsAnswerCorrect(false);
@@ -857,14 +860,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const timedPhase = phase === 'warmup' || phase === 'intro' || phase === 'learning' || phase === 'catchup' || phase === 'recall' || phase === 'point_celebration' || phase === 'feynman';
   const { isIdle: coachIdle } = coach;
   useEffect(() => {
-    if (!workLimitSec || !timedPhase) return;
+    if (!workLimitSec || !timedPhase || !timerStarted) return;
     const timer = setInterval(() => {
       // Le chrono ne compte pas quand l'élève a quitté l'appli ou ne fait plus rien
       if (document.visibilityState === 'hidden' || coachIdle) return;
       setWorkSeconds((s) => s + 1);
     }, 1000);
     return () => clearInterval(timer);
-  }, [workLimitSec, timedPhase, coachIdle]);
+  }, [workLimitSec, timedPhase, coachIdle, timerStarted]);
 
   /** Fin des 25 minutes : marque-page si on est au milieu d'une mini-leçon, alternance, puis pause. */
   const handleTimeUp = () => {
@@ -955,7 +958,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     )}
     <span
       className={`shrink-0 px-2.5 py-1 rounded-xl text-xs font-black font-mono tabular-nums border ${coachIdle ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500' : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300'}`}
-      title={coachIdle ? 'Chrono en pause : tu ne travailles plus' : 'Temps de travail restant (Pomodoro)'}
+      title={!timerStarted ? 'Le chrono démarre quand tu commences la leçon' : coachIdle ? 'Chrono en pause : tu ne travailles plus' : 'Temps de travail restant'}
     >
       ⏱ {fmtClock(workLimitSec - workSeconds)}{coachIdle ? ' · pause' : ''}
     </span>
@@ -1606,7 +1609,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="p-3.5 rounded-2xl bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-left text-xs sm:text-sm text-rose-900 dark:text-rose-100 font-semibold leading-relaxed">
             <strong>{isTimeBlocking ? 'Séance Time Blocking :' : 'Séance Pomodoro :'}</strong> {Math.round(workLimitSec / 60)} minutes de vrai travail
             {isTimeBlocking ? ' sur cette seule matière, sans changer de sujet' : ''}, puis {POMODORO_PAUSE_SEC / 60} minutes de pause.
-            Le chrono s’arrête si tu quittes l’appli ou si tu ne fais plus rien.
+            Le chrono démarre quand tu cliques sur « Commencer la leçon », et il s’arrête si tu quittes l’appli ou si tu ne fais plus rien.
           </div>
         )}
 
