@@ -444,9 +444,6 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             <Calendar className="w-7 h-7 sm:w-8 sm:h-8 text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>Emploi du Temps & Grille Hebdomadaire</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-2xl">
-            Visualisez vos cours scolaires fixes et vos créneaux de travail personnel organisés selon vos disponibilités.
-          </p>
         </div>
 
         {/* Action Controls - Compact Horizontal Toolbar */}

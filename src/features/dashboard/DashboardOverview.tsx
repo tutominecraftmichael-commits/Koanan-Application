@@ -525,21 +525,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                 {session.pacingMethod === 'feynman' ? 'Feynman' : session.pacingMethod === 'time_blocking' ? 'Time Blocking' : session.pacingMethod === 'pomodoro' ? 'Pomodoro' : session.pacingMethod === 'two_minutes_rule' ? '2-Min' : 'Répétition'}
                               </span>
                             )}
-                            <button
+                            {session.type !== 'spaced_review' && <button
                               type="button"
                               onClick={() => setSelectedExplainerType(session.type)}
                               className="cursor-pointer hover:scale-105 transition-transform"
                               title={t('clickForGuide', lang)}
                             >
                               <Badge variant="primary" size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
-                                {session.type === 'spaced_review' ? t('spacedReviewLabel', lang) :
-                                 session.type === 'exercises' ? t('exercisesLabel', lang) :
+                                {session.type === 'exercises' ? t('exercisesLabel', lang) :
                                  session.type === 'deep_summary' ? t('deepSummaryLabel', lang) :
                                  session.type === 'flashcards' ? t('activeRecallLabel', lang) :
                                  session.type === 'exam_simulation' ? t('examSimulationLabel', lang) :
                                  t('consolidationLabel', lang)}
                               </Badge>
-                            </button>
+                            </button>}
                           </div>
 
                           <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">
