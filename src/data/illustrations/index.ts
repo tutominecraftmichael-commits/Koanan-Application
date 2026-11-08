@@ -3,6 +3,7 @@ import { MATHS_2DE_C_NUMERIQUE_ILLUSTRATIONS } from './maths_2de_c_numerique';
 import { GEO_TERMINALE_ILLUSTRATIONS } from './geo_terminale';
 import { SECONDE_A_ILLUSTRATIONS } from './seconde_a';
 import { SCENE_ILLUSTRATIONS } from './scenes';
+import { GENERATED_SCENES } from './generatedScenes';
 
 /**
  * Figure(s) rattachée(s) à une question, repérée par l'identifiant ORIGINAL de l'exercice :
@@ -14,13 +15,31 @@ export interface ExerciseIllustration {
   question?: PointVisualSchema;
 }
 
+/** Scènes générées (Gemini choisit, le moteur de KONAN dessine), au même format que les autres figures. */
+const GENERATED_ILLUSTRATIONS: Record<string, ExerciseIllustration> = Object.fromEntries(
+  Object.entries(GENERATED_SCENES).map(([id, s]) => [
+    id,
+    { course: { type: 'custom_svg', scene: true, title: s.title, caption: s.caption, sceneSpec: s.spec } },
+  ]),
+);
+
 const ALL_ILLUSTRATIONS: Record<string, ExerciseIllustration> = {
-  // Scènes illustrées d'abord : une figure (schéma, carte…) déjà prévue pour la même étape reste prioritaire
+  // Ordre de priorité (le dernier gagne) : scènes générées < scènes dessinées à la main < figures
+  // (schéma, carte, courbe…) déjà prévues pour la même étape.
+  ...GENERATED_ILLUSTRATIONS,
   ...SCENE_ILLUSTRATIONS,
   ...MATHS_2DE_C_NUMERIQUE_ILLUSTRATIONS,
   ...GEO_TERMINALE_ILLUSTRATIONS,
   ...SECONDE_A_ILLUSTRATIONS,
 };
+
+/** Étapes déjà illustrées à la main (figure ou scène) : le générateur de scènes n'y touche pas. */
+export const HANDMADE_ILLUSTRATION_IDS: ReadonlySet<string> = new Set([
+  ...Object.keys(SCENE_ILLUSTRATIONS),
+  ...Object.keys(MATHS_2DE_C_NUMERIQUE_ILLUSTRATIONS),
+  ...Object.keys(GEO_TERMINALE_ILLUSTRATIONS),
+  ...Object.keys(SECONDE_A_ILLUSTRATIONS),
+]);
 
 function withIllustration(exercise: InteractiveExercise): InteractiveExercise {
   const ill = ALL_ILLUSTRATIONS[exercise.id];
