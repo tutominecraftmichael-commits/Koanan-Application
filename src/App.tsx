@@ -20,7 +20,6 @@ import {
   mergeInvitationsFromCloud,
   invitationBroadcastChannel
 } from './services/storage';
-import { KonanEntranceSplash } from './components/common/KonanEntranceSplash';
 
 import { generateOptimizedStudyPlan, mergePreservingCompletedSessions, synchronizeSessionsWithExamCountdowns } from './services/plannerAlgorithm';
 import { transitionUserState } from './services/tierTransitionService';
@@ -105,7 +104,6 @@ import type { StemSubjectId, CurriculumGradeLevel } from './lib/curriculum/types
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
-  const pendingPrivacyModalRef = useRef<boolean>(false);
 
   // Règle absolue : L'utilisateur arrive TOUJOURS sur l'interface d'accueil (landing) en tant que visiteur non connecté.
   // Jamais de compte connecté d'office, jamais de saut instantané vers le tableau de bord.
@@ -710,6 +708,11 @@ export function App() {
       unsubscribeAuth();
     };
   }, []);
+
+  // Écran d'ouverture « KONAN » (index.html) : retiré dès qu'on sait si l'élève est connecté
+  useEffect(() => {
+    if (!authPending) (window as Window & { __konanHideSplash?: () => void }).__konanHideSplash?.();
+  }, [authPending]);
 
   const showToast = (msg: string, duration = 5000) => {
     // Purge absolue de tous les émojis pour une interface sobre, élégante et professionnelle
@@ -2560,18 +2563,6 @@ export function App() {
           <p className="text-slate-600 dark:text-slate-300 font-medium">Conçu et développé par Christ Michaël Boni</p>
         </footer>
       )}
-
-      {/*  Cinematic 3D Entrance Animation */}
-      <KonanEntranceSplash
-        onComplete={() => {
-          // L'animation d'entrée ne force JAMAIS la redirection vers le dashboard :
-          // L'utilisateur reste sur sa vue actuelle (notamment l'interface d'accueil 'landing').
-          if (pendingPrivacyModalRef.current) {
-            setIsPrivacyModalOpen(true);
-            pendingPrivacyModalRef.current = false;
-          }
-        }}
-      />
 
       {/*  PWA Universal Mobile & Desktop Install Prompt */}
       <PwaInstallPromptModal />
