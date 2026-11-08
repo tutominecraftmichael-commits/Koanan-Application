@@ -236,6 +236,9 @@ const columnsSvg = (x: number, y: number, k = 1) => `<g transform="translate(${x
 
 interface Decor { back: string; ground: number }
 
+/** Décors d'intérieur : pas de soleil dans le ciel. */
+const INDOOR: ReadonlySet<SettingId> = new Set(['salle_classe', 'laboratoire', 'tribunal', 'bureau']);
+
 function decor(setting: SettingId, time: 'jour' | 'soir' | 'nuit'): Decor {
   const sky = time === 'nuit' ? '#1E2A4A' : time === 'soir' ? '#FCC89B' : '#BFE7FB';
   const night = time === 'nuit';
@@ -291,7 +294,8 @@ const pastille = (inner: string) => `<circle cx="0" cy="0" r="34" fill="#FFFFFF"
 
 function propSvg(kind: PropId): { svg: string; floating?: boolean; sky?: boolean } {
   switch (kind) {
-    case 'livre_ouvert': return { svg: `<path d="M-30,0 L0,-6 L30,0 L30,-30 L0,-36 L-30,-30 Z" fill="#F8FAFC" stroke="#B91C1C" stroke-width="3"/><line x1="0" y1="-36" x2="0" y2="-6" stroke="#CBD5E1" stroke-width="2"/>` };
+    // Livre ouvert posé sur un petit pupitre (jamais par terre)
+    case 'livre_ouvert': return { svg: `<rect x="-6" y="-46" width="12" height="46" fill="#92400E"/><rect x="-22" y="-4" width="44" height="6" rx="3" fill="#78350F"/><path d="M-34,-48 L34,-48 L30,-40 L-30,-40 Z" fill="#B45309"/><path d="M-30,-50 L0,-56 L30,-50 L30,-78 L0,-84 L-30,-78 Z" fill="#F8FAFC" stroke="#B91C1C" stroke-width="3"/><line x1="0" y1="-84" x2="0" y2="-56" stroke="#CBD5E1" stroke-width="2"/><path d="M-24,-74 L-6,-77 M-24,-66 L-6,-69 M6,-77 L24,-74 M6,-69 L24,-66" stroke="#94A3B8" stroke-width="1.6"/>` };
     case 'globe': return { svg: `<rect x="-3" y="-20" width="6" height="20" fill="#78350F"/><rect x="-16" y="-4" width="32" height="6" rx="3" fill="#78350F"/><circle cx="0" cy="-42" r="24" fill="#38BDF8"/><path d="M-14,-52 q8,-6 14,2 t10,10 q-8,6 -14,0 Z M2,-32 q8,-2 10,6 q-6,4 -10,-6 Z" fill="#22C55E"/>` };
     case 'microscope': return { svg: `<rect x="-22" y="-6" width="44" height="8" rx="3" fill="#334155"/><path d="M8,-6 L8,-40 Q8,-50 -4,-56" stroke="#334155" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="-14" y="-74" width="12" height="28" rx="4" fill="#64748B" transform="rotate(-25 -8 -60)"/><rect x="-16" y="-24" width="26" height="5" fill="#94A3B8"/>` };
     case 'plante': return { svg: `<path d="M-16,0 L-12,-22 L12,-22 L16,0 Z" fill="#C2410C"/><path d="M0,-22 Q-2,-50 0,-62" stroke="#15803D" stroke-width="3" fill="none"/><ellipse cx="-12" cy="-44" rx="12" ry="6" fill="#22C55E" transform="rotate(-30 -12 -44)"/><ellipse cx="12" cy="-50" rx="12" ry="6" fill="#22C55E" transform="rotate(30 12 -50)"/>` };
@@ -304,7 +308,7 @@ function propSvg(kind: PropId): { svg: string; floating?: boolean; sky?: boolean
     case 'pirogue': return { svg: `<path d="M-50,-10 Q0,6 50,-10 Q40,4 0,6 Q-40,4 -50,-10 Z" fill="#92400E"/><line x1="20" y1="-40" x2="10" y2="4" stroke="#78350F" stroke-width="3"/>` };
     case 'chameau': return { svg: `<g transform="scale(0.9)">${[-26, -12, 14, 28].map((lx) => limb([[lx, -40], [lx, 0]], '#C2884D', 8)).join('')}<ellipse cx="0" cy="-48" rx="38" ry="18" fill="#C2884D"/><ellipse cx="-4" cy="-64" rx="18" ry="14" fill="#C2884D"/><path d="M30,-52 Q44,-62 44,-84 L54,-86 Q56,-60 38,-44 Z" fill="#C2884D"/><ellipse cx="54" cy="-88" rx="12" ry="7" fill="#C2884D"/><circle cx="57" cy="-90" r="1.8" fill="${INK}"/></g>` };
     case 'vache': return { svg: `${[-24, -10, 12, 26].map((lx) => limb([[lx, -26], [lx, 0]], '#F5F5F4', 7)).join('')}<ellipse cx="0" cy="-34" rx="34" ry="16" fill="#F5F5F4"/><circle cx="-10" cy="-38" r="7" fill="#57534E"/><circle cx="12" cy="-30" r="5" fill="#57534E"/><ellipse cx="38" cy="-42" rx="12" ry="10" fill="#F5F5F4"/><path d="M34,-52 l-4,-8 M44,-52 l4,-8" stroke="#A8A29E" stroke-width="3" stroke-linecap="round"/><circle cx="41" cy="-44" r="1.8" fill="${INK}"/>` };
-    case 'poisson': return { svg: `<ellipse cx="0" cy="-20" rx="24" ry="12" fill="#F97316"/><path d="M20,-20 L36,-32 L36,-8 Z" fill="#F97316"/><circle cx="-12" cy="-23" r="2.5" fill="${INK}"/>`, floating: true };
+    case 'poisson': return { svg: pastille(`<ellipse cx="-4" cy="0" rx="18" ry="10" fill="#F97316"/><path d="M12,0 L26,-10 L26,10 Z" fill="#F97316"/><circle cx="-13" cy="-3" r="2.3" fill="${INK}"/>`), floating: true };
     case 'cacao': return { svg: `<ellipse cx="0" cy="-26" rx="14" ry="24" fill="#C2410C"/><path d="M0,-50 L0,-2 M-7,-46 Q-10,-26 -7,-6 M7,-46 Q10,-26 7,-6" stroke="#9A3412" stroke-width="2" fill="none"/>` };
     case 'tableau': return { svg: `<rect x="-40" y="-90" width="80" height="56" rx="4" fill="#14532D" stroke="#92400E" stroke-width="5"/><path d="M-26,-70 L20,-70 M-26,-54 L6,-54" stroke="#F8FAFC" stroke-width="3" stroke-linecap="round"/><line x1="-30" y1="-34" x2="-38" y2="0" stroke="#92400E" stroke-width="4"/><line x1="30" y1="-34" x2="38" y2="0" stroke="#92400E" stroke-width="4"/>` };
     case 'urne': return { svg: `<rect x="-24" y="-40" width="48" height="40" rx="4" fill="#E0F2FE" stroke="#0369A1" stroke-width="3"/><rect x="-12" y="-44" width="24" height="5" fill="#0369A1"/><rect x="-6" y="-58" width="12" height="16" fill="#F8FAFC" stroke="#94A3B8"/>` };
@@ -375,12 +379,15 @@ export function renderScene(spec: SceneSpec, opts: { id?: string; label?: string
   for (const p of spec.props ?? []) {
     const drawn = propSvg(p.kind);
     if (!drawn.svg) continue;
-    if (drawn.sky) { parts.push(`<g transform="translate(${p.place === 'gauche' ? 90 : p.place === 'centre' ? 260 : 400},64)">${drawn.svg}</g>`); continue; }
+    if (drawn.sky) { parts.push(`<g transform="translate(${p.place === 'gauche' ? 90 : 260},64)">${drawn.svg}</g>`); continue; }
     if (drawn.floating) {
       // Pastille d'idée en l'air, du côté opposé à la bulle de parole pour ne jamais être cachée
       const speakerX = spec.bubble ? xs[spec.bubble.from] ?? 260 : null;
       const wanted = p.place === 'gauche' ? 70 : p.place === 'droite' ? 450 : p.place === 'centre' ? 260 : speakerX !== null ? (speakerX <= 260 ? 450 : 70) : 150 + (fondIndex++ % 2) * 220;
-      const fx = speakerX !== null && Math.abs(wanted - speakerX) < 150 ? (speakerX <= 260 ? 450 : 70) : wanted;
+      // Ni sous la bulle de parole, ni sur le soleil (ou la lune) du décor
+      const hasSun = !INDOOR.has(spec.setting);
+      const blocked = (x: number) => (speakerX !== null && Math.abs(x - speakerX) < 150) || (hasSun && Math.abs(x - 445) < 90);
+      const fx = [wanted, 70, 260, 450, 160, 360].find((x) => !blocked(x)) ?? 70;
       parts.push(`<g transform="translate(${fx},74)">${drawn.svg}</g>`);
       continue;
     }

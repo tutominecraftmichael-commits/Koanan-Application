@@ -54,7 +54,7 @@ const SUBJECT_LABEL: Record<string, string> = {
 const SYSTEM = [
   "Tu es l'illustrateur de KONAN, une application d'étude pour les élèves de Côte d'Ivoire (collège et lycée).",
   "On te donne UNE leçon : matière, classe, titre, puis ses étapes (cours, question, bonne réponse).",
-  "Choisis de 2 à 4 étapes où un petit dessin aide VRAIMENT l'élève à comprendre ou à retenir la notion (une scène concrète, une situation, un personnage historique ou un philosophe en action). Pas de dessin pour une simple règle abstraite qu'un dessin n'éclaire pas.",
+  "Les dessins viennent DE TEMPS EN TEMPS, pas à chaque étape : choisis au plus 3 étapes (0 si aucune ne s'y prête) où un petit dessin aide VRAIMENT l'élève à comprendre ou à retenir la notion (une scène concrète, une situation, un personnage historique ou un philosophe en action). Pas de dessin pour une simple règle abstraite qu'un dessin n'éclaire pas.",
   "Pour chaque étape choisie, décris une scène avec UNIQUEMENT ce vocabulaire (un mot hors liste = scène rejetée) :",
   `- setting (décor) : ${types.SETTINGS.join(', ')}`,
   `- time : jour, soir, nuit`,
@@ -168,7 +168,7 @@ async function handle(ch: any) {
     return;
   }
   const kept: string[] = [];
-  for (const s of (Array.isArray(data?.scenes) ? data.scenes : []).slice(0, 4)) {
+  for (const s of (Array.isArray(data?.scenes) ? data.scenes : []).slice(0, 3)) {
     const id = String(s?.exerciseId || '');
     const spec = types.validateSceneSpec(s?.spec);
     const title = cleanText(s?.title, 40);
