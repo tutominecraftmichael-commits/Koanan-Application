@@ -184,9 +184,16 @@ async function inspectUser(db, email, now) {
       envoi: new Date(Number(e.sendAt)).toISOString().slice(0, 16).replace('T', ' ') + ' UTC',
       echue: Number(e.sendAt) <= now.getTime(),
     }));
+  const deviceSnap = await db.collection('push_queue').doc(`device_${userId}`).get();
+  const deviceMap = deviceSnap.exists ? deviceSnap.get('subscriptions') || {} : {};
+  const appareils = Object.values(deviceMap).map((d) => ({
+    appareil: String(d?.device || '').replace(/^Mozilla\/5\.0 \(([^)]*)\).*/, '$1').slice(0, 60),
+    inscritLe: d?.updatedAt || null,
+  }));
   return {
     success: true,
     inspect: true,
+    appareils,
     cloud: {
       lastSyncedAt: user.lastSyncedAt || null,
       matieres: subjects.map((x) => x?.name).filter(Boolean),
@@ -230,7 +237,7 @@ function pushPayload(message, alert) {
     title: message.title,
     body: message.body,
     icon: '/icons/konan-notif-192.png',
-    badge: '/cube-badge.png',
+    badge: '/icons/konan-badge-96.png',
     tag: `konan-${alert.sessionId}-${alert.kind}`,
     data: {
       url: '/',

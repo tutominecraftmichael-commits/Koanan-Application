@@ -6,7 +6,7 @@
 // et pouvait faire échouer l'installation du Service Worker hors connexion. Le nom du fichier est
 // conservé pour que les téléphones déjà inscrits reçoivent cette version automatiquement.
 
-const SW_VERSION = 'v-2026-11-08-02';
+const SW_VERSION = 'v-2026-11-08-03';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -50,7 +50,7 @@ self.addEventListener('push', (event) => {
     await self.registration.showNotification(msg.title, {
       body: msg.body,
       icon: msg.icon || '/icons/konan-notif-192.png',
-      badge: msg.badge || '/cube-badge.png',
+      badge: msg.badge || '/icons/konan-badge-96.png',
       tag: msg.tag,
       renotify: true,
       vibrate: [300, 150, 300],
