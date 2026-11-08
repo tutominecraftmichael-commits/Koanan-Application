@@ -2,6 +2,7 @@ import type { CurriculumChapter, InteractiveExercise, PointVisualSchema } from '
 import { MATHS_2DE_C_NUMERIQUE_ILLUSTRATIONS } from './maths_2de_c_numerique';
 import { GEO_TERMINALE_ILLUSTRATIONS } from './geo_terminale';
 import { SECONDE_A_ILLUSTRATIONS } from './seconde_a';
+import { SCENE_ILLUSTRATIONS } from './scenes';
 
 /**
  * Figure(s) rattachée(s) à une question, repérée par l'identifiant ORIGINAL de l'exercice :
@@ -14,6 +15,8 @@ export interface ExerciseIllustration {
 }
 
 const ALL_ILLUSTRATIONS: Record<string, ExerciseIllustration> = {
+  // Scènes illustrées d'abord : une figure (schéma, carte…) déjà prévue pour la même étape reste prioritaire
+  ...SCENE_ILLUSTRATIONS,
   ...MATHS_2DE_C_NUMERIQUE_ILLUSTRATIONS,
   ...GEO_TERMINALE_ILLUSTRATIONS,
   ...SECONDE_A_ILLUSTRATIONS,

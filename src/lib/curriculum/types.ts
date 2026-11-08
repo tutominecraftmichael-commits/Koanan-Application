@@ -278,6 +278,8 @@ export interface PointVisualSchema {
   variation?: VariationTableSpec;
   /** Tableau de signes structuré (type 'sign_table'). */
   signs?: SignTableSpec;
+  /** Scène illustrée (dessin d'ambiance façon livre illustré) plutôt qu'un schéma. */
+  scene?: boolean;
 }
 
 /** Couleurs du code pédagogique Konan utilisables dans les figures. */

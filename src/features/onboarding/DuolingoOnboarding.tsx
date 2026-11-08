@@ -322,30 +322,37 @@ interface EditableSubjectItem {
 /**
  * Composant texte avec animation mot par mot (Machine à écrire vivante Konan)
  */
-const WordByWordBubble: React.FC<{ text: string; speed?: number }> = ({
+const WordByWordBubble: React.FC<{ text: string; speed?: number; delayMs?: number }> = ({
   text,
   speed = 32,
+  delayMs = 0,
 }) => {
   const words = useMemo(() => (text ? text.split(' ') : []), [text]);
-  const [visibleCount, setVisibleCount] = useState<number>(words.length);
+  const [visibleCount, setVisibleCount] = useState<number>(delayMs > 0 ? 0 : words.length);
 
   useEffect(() => {
     if (!words.length) return;
-    setVisibleCount(1);
-    let current = 1;
-    const interval = setInterval(() => {
-      current++;
-      setVisibleCount(current);
-      if (current >= words.length) {
-        clearInterval(interval);
-      }
-    }, speed);
-    return () => clearInterval(interval);
-  }, [text, speed, words.length]);
+    let interval: ReturnType<typeof setInterval> | undefined;
+    // Pendant le délai (ex. KONAN saute deux fois), la bulle attend avant de parler
+    setVisibleCount(delayMs > 0 ? 0 : 1);
+    const start = setTimeout(() => {
+      setVisibleCount(1);
+      let current = 1;
+      interval = setInterval(() => {
+        current++;
+        setVisibleCount(current);
+        if (current >= words.length && interval) clearInterval(interval);
+      }, speed);
+    }, delayMs);
+    return () => {
+      clearTimeout(start);
+      if (interval) clearInterval(interval);
+    };
+  }, [text, speed, words.length, delayMs]);
 
   return (
     <span className="text-slate-900 dark:text-white font-extrabold">
-      {(visibleCount > 0 ? words.slice(0, visibleCount) : words).join(' ')}
+      {words.slice(0, visibleCount).join(' ')}
       {visibleCount < words.length && (
         <span className="inline-block w-1.5 h-3.5 ml-1 bg-cyan-500 dark:bg-cyan-400 animate-pulse align-middle" />
       )}
@@ -1464,8 +1471,13 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         {step !== 'welcome' && (
           <div className="mb-4 flex items-center gap-2 sm:gap-3 max-w-3xl mx-auto w-full">
             <div className="shrink-0 -my-2">
-              {/* « Tout est prêt » : il referme son hologramme, des étoiles tournent, pouce levé */}
-              <KonanMascot pose={step === 'account_setup' ? 'done' : 'notes'} size={84} />
+              {/* « Tout est prêt » : il referme son hologramme, des étoiles tournent, pouce levé.
+                  Choix de la formule : il saute de joie deux fois, puis parle. */}
+              <KonanMascot
+                key={step === 'pricing_models' ? 'pricing' : 'other'}
+                pose={step === 'account_setup' ? 'done' : step === 'pricing_models' ? 'jump' : 'notes'}
+                size={84}
+              />
             </div>
             <div className="relative flex-1 bg-white dark:bg-slate-900/90 border-2 border-slate-200 dark:border-slate-700 rounded-2xl px-3.5 py-3 shadow-sm">
               {/* Pointe de la bulle, vers la mascotte */}
@@ -1474,7 +1486,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 className="absolute -left-[9px] top-1/2 -translate-y-1/2 w-4 h-4 rotate-45 bg-white dark:bg-slate-900 border-l-2 border-b-2 border-slate-200 dark:border-slate-700"
               />
               <p className="relative text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug text-left">
-                <WordByWordBubble text={bubbleMessage} speed={25} />
+                <WordByWordBubble text={bubbleMessage} speed={25} delayMs={step === 'pricing_models' ? 1750 : 0} />
               </p>
             </div>
           </div>
