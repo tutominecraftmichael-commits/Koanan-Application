@@ -67,6 +67,30 @@ function parseGradeStrict(clean: string): CurriculumGradeLevel | null {
   return null;
 }
 
+const GRADE_LABELS: Partial<Record<CurriculumGradeLevel, string>> = {
+  '6eme': '6ème', '5eme': '5ème', '4eme': '4ème', '3eme': '3ème',
+  seconde_a: 'Seconde A', seconde_c: 'Seconde C',
+  premiere_a: 'Première A', premiere_a1: 'Première A1', premiere_a2: 'Première A2', premiere_c: 'Première C', premiere_d: 'Première D',
+  terminale_a: 'Terminale A', terminale_a1: 'Terminale A1', terminale_a2: 'Terminale A2', terminale_c: 'Terminale C', terminale_d: 'Terminale D',
+  superieur_bts: 'BTS', superieur_lmd: 'Université (LMD)',
+};
+
+/**
+ * Nom lisible de la VRAIE classe de l'élève (« Terminale D », « Seconde A »…), lu d'abord dans la classe
+ * choisie à l'inscription. Ne renvoie jamais une classe devinée : null si elle est inconnue.
+ * `freeText` (ex. filière saisie à l'université) n'est utilisé que pour l'enseignement supérieur.
+ */
+export function studentClassLabel(gradeId: string | undefined, freeText?: string): string | null {
+  const grade = tryResolveGradeLevel(gradeId);
+  if (!grade) return null;
+  if (grade.startsWith('superieur')) {
+    const t = String(freeText || '').trim();
+    // « Licence Universitaire » est la valeur par défaut posée à la connexion, pas une vraie filière
+    if (t && !/^licence universitaire$/i.test(t)) return t;
+  }
+  return GRADE_LABELS[grade] ?? null;
+}
+
 const EXACT_GRADE_IDS: CurriculumGradeLevel[] = [
   '6eme', '5eme', '4eme', '3eme',
   'seconde_c', 'seconde_a',

@@ -183,9 +183,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>{t('plannerTitle', lang)}</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            {t('plannerSubtitle', lang)}
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -456,9 +453,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         className="cursor-pointer hover:scale-105 transition-transform shrink-0"
                         title={t('clickForGuide', lang)}
                       >
-                        <Badge variant={badgeType.variant} size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
-                          {badgeType.label}
-                        </Badge>
+                        {/* Pas d'étiquette « Spaced Review » sur les séances */}
+                        {session.type !== 'spaced_review' && (
+                          <Badge variant={badgeType.variant} size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
+                            {badgeType.label}
+                          </Badge>
+                        )}
                       </button>
                       {session.isExamPrep && (
                         <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-xs ${

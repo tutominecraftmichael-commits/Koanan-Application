@@ -112,7 +112,7 @@ export const TRANSLATIONS = {
     clickForGuide: '💡 Cliquez sur une méthode pour afficher le protocole et les consignes.',
 
     // Session Types & Explainers
-    spacedReviewLabel: 'Spaced Review',
+    spacedReviewLabel: 'Répétition espacée',
     spacedReviewDesc: 'Répétition Espacée : Ancrer à long terme',
     exercisesLabel: 'Pratique & Annales',
     exercisesDesc: 'Résolution d\'exercices et annales d\'examens',

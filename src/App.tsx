@@ -78,7 +78,7 @@ import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelecto
 import { DashboardOverview } from './features/dashboard/DashboardOverview';
 import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding'; // premier écran de tous : chargé tout de suite
 import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
-import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum } from './lib/curriculum/curriculumMatcher';
+import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
 import { clearAdminSession } from './lib/adminAuth';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
 
@@ -260,6 +260,12 @@ export function App() {
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
     ? state.userAccount.name
     : (state.studentName || 'Étudiant');
+  // Vraie classe de l'élève (choisie à l'inscription), jamais la valeur par défaut « Licence Universitaire »
+  const isDefaultLevel = /^licence universitaire$/i.test(String(state.academicLevel || '').trim());
+  const effectiveClassLabel = studentClassLabel(
+    state.userAccount?.gradeLevel || state.preferences?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel),
+    isDefaultLevel ? undefined : state.academicLevel,
+  ) || '';
 
   // Bascule automatique de semaine (rollover d'agenda) sans pop-up de bilan
   useEffect(() => {
@@ -858,7 +864,8 @@ export function App() {
     if (preferences?.chronotype) {
       userState.preferences.chronotype = preferences.chronotype;
     }
-    userState.academicLevel = profile.academicLevel || userState.academicLevel;
+    // La classe déjà enregistrée l'emporte : le profil Google n'a qu'une valeur par défaut (« Licence Universitaire »)
+    userState.academicLevel = userState.academicLevel || profile.academicLevel;
     userState.studentName = finalName;
 
     // Si l'utilisateur vient de terminer le parcours d'onboarding avec extraction d'EDT, fusionner immédiatement ses cours et matières
@@ -2145,7 +2152,7 @@ export function App() {
             )}
             <DashboardOverview
               studentName={effectiveStudentName}
-              academicLevel={state.academicLevel}
+              academicLevel={effectiveClassLabel}
               subjects={state.subjects}
               classSlots={state.classSlots}
               studySessions={state.studySessions}
@@ -2191,7 +2198,7 @@ export function App() {
           (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
             <ScheduleManager
               studentName={effectiveStudentName}
-              academicLevel={state.academicLevel}
+              academicLevel={effectiveClassLabel}
               subjects={state.subjects}
               classSlots={state.classSlots}
               studySessions={state.studySessions}

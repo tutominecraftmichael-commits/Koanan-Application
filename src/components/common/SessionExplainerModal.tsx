@@ -37,7 +37,7 @@ interface MethodInfo {
 
 const METHODS_DATA: Record<SessionType, MethodInfo> = {
   spaced_review: {
-    titleFr: 'Spaced Review (Répétition Espacée)',
+    titleFr: 'Répétition espacée',
     titleEn: 'Spaced Review (Spaced Repetition)',
     badgeVariant: 'primary',
     icon: Clock,
