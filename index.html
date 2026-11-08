@@ -27,14 +27,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Police arrondie de l'écran d'ouverture : seulement les lettres K, O, N, A (fichier minuscule) -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&text=KONA&display=block" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&text=KONA&display=fallback" rel="stylesheet">
     <style>
       /* Écran d'ouverture : après le visage (écran du téléphone), « KONAN » sur le même bleu ciel */
       #konan-splash {
         position: fixed; inset: 0; z-index: 2147483000;
         background: #90D8F8;
         display: flex; align-items: center; justify-content: center;
-        transition: opacity 0.28s ease;
+        transition: opacity 0.2s ease;
         /* Ni sélection, ni copie, ni « Toucher pour rechercher », ni surbrillance au toucher */
         -webkit-user-select: none; user-select: none;
         -webkit-touch-callout: none;
@@ -49,12 +49,9 @@
         letter-spacing: 0.04em;
         color: #ffffff;
         text-shadow: 0 3px 0 rgba(30, 120, 170, 0.35);
-        animation: konan-splash-in 0.45s cubic-bezier(.2,.9,.3,1.25) both;
         pointer-events: none;
         -webkit-user-select: none; user-select: none;
       }
-      @keyframes konan-splash-in { from { transform: scale(0.86); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-      @media (prefers-reduced-motion: reduce) { #konan-splash-word { animation: none; } }
     </style>
   </head>
   <body class="bg-[#090D16] text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white min-h-screen overflow-x-hidden">
@@ -62,7 +59,7 @@
     <script>
       // L'appli retire l'écran d'ouverture dès qu'elle est prête, puis remet la couleur du thème en haut
       (function () {
-        var MIN_MS = 1100; // durée minimale pour que « KONAN » se voie
+        var MIN_MS = 450; // juste le temps de voir « KONAN », puis l'appli
         var done = false;
         window.__konanHideSplash = function () {
           if (done) return;
@@ -74,11 +71,11 @@
             if (m) m.setAttribute('content', m.getAttribute('data-app-color') || '#091427');
             if (!el) return;
             el.classList.add('is-hiding');
-            setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 320);
+            setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 230);
           }, wait);
         };
         // Sécurité : jamais bloqué sur l'écran d'ouverture
-        setTimeout(window.__konanHideSplash, 7000);
+        setTimeout(window.__konanHideSplash, 5000);
       })();
     </script>
     <div id="root"></div>
