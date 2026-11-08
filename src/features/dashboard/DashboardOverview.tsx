@@ -186,9 +186,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           {/* User & Curriculum Greeting */}
           <div className="space-y-1.5 sm:space-y-2 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant={isCycleCompletedToday || isDayFullyComplete ? "emerald" : "cyan"} size="sm" dot>
-                {isCycleCompletedToday ? "Cycle Validé 100%" : isDayFullyComplete ? "Journée Validée 100%" : "Anti-Burnout Actif"}
-              </Badge>
+              {(isCycleCompletedToday || isDayFullyComplete) && (
+                <Badge variant="emerald" size="sm" dot>
+                  {isCycleCompletedToday ? "Cycle Validé 100%" : "Journée Validée 100%"}
+                </Badge>
+              )}
               <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
             </div>
             

@@ -424,7 +424,6 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800/80 pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Badge variant="cyan" size="sm" dot>Synchronisé</Badge>
             <span className="text-xs text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1.5">
               <span className={
                 planTier === 'plus'

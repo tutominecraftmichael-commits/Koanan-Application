@@ -64,10 +64,7 @@ import {
 import { buildStateFromExtractedSchedule } from '../../services/aiAcademicAnalyzer';
 import {
   PACING_STRATEGIES,
-  getPacingStrategy,
   isPacingAllowedForPlan,
-  recommendPacingStrategies,
-  type PacingRecommendation
 } from '../../lib/pacingStrategies';
 import {
   signInWithGoogleReal,
@@ -412,7 +409,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   const [extractedSlots, setExtractedSlots] = useState<ExtractedClassCandidate[]>([]);
   const [selectedPacings, setSelectedPacings] = useState<StudyPacing[]>(['pomodoro']);
   const [chronotype, setChronotype] = useState<Chronotype>('evening');
-  const [showFullDiagnostic, setShowFullDiagnostic] = useState<boolean>(false);
 
   // Étape 5 & 6 : Compte (Nouvel utilisateur) puis Modèles d'accompagnement
   const [selectedPlan, setSelectedPlan] = useState<'free' | 'pro' | 'plus'>('pro');
@@ -507,20 +503,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     }
     return groups;
   }, [liveParsedPreview.slots]);
-
-  // Recommandation KONAN IA selon l'emploi du temps extrait
-  const pacingRecommendation: PacingRecommendation = useMemo(() => {
-    const activeCount = editableSubjects.filter(s => s.enabled).length || liveParsedPreview.subjects.length || 6;
-    const referenceSlots = extractedSlots.length > 0 ? extractedSlots : liveParsedPreview.slots;
-    return recommendPacingStrategies(
-      activeCount,
-      referenceSlots.map(s => ({
-        startTime: s.startTime,
-        endTime: s.endTime,
-        dayOfWeek: s.dayOfWeek,
-      }))
-    );
-  }, [editableSubjects, extractedSlots, liveParsedPreview]);
 
   const handleBack = () => {
     soundFX.playCheckmarkPop();
@@ -773,19 +755,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     }));
 
     setEditableSubjects(editableList);
-
-    // Appliquer par défaut la recommandation IA
-    const rec = recommendPacingStrategies(
-      editableList.length,
-      harmonized.map(s => ({
-        startTime: s.startTime,
-        endTime: s.endTime,
-        dayOfWeek: s.dayOfWeek,
-      }))
-    );
-    if (rec?.primaryId) {
-      setSelectedPacings([rec.primaryId]);
-    }
 
     // Détection automatique intelligente de la classe et série à partir de l'EDT
     const textToScan = `${scheduleText} ${uploadedFileName}`.toLowerCase();
@@ -2438,33 +2407,13 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   <span>2. Méthode de Révision & Diagnostic KONAN</span>
                 </h2>
 
-                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/50 to-indigo-50/90 dark:from-indigo-950/60 dark:via-slate-900/90 dark:to-slate-900 border border-indigo-200 dark:border-indigo-500/30 space-y-2">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <BarChart2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                    <span className="text-xs font-black uppercase tracking-wider text-indigo-900 dark:text-indigo-300">
-                      Recommandation de KONAN :
-                    </span>
-                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-500/20 text-indigo-900 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30">
-                      {getPacingStrategy(pacingRecommendation.primaryId).title}
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                      {pacingRecommendation.contextTag}
-                    </span>
-                  </div>
-                  <p
-                    className={`text-xs text-slate-800 dark:text-slate-300 leading-relaxed font-medium ${
-                      showFullDiagnostic ? '' : 'line-clamp-2'
-                    }`}
-                  >
-                    {pacingRecommendation.rationale}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setShowFullDiagnostic(!showFullDiagnostic)}
-                    className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
-                  >
-                    {showFullDiagnostic ? 'Voir moins ▴' : 'Lire le diagnostic complet ▾'}
-                  </button>
+                {/* La recommandation de KONAN est réservée à KONAN PRO : pendant l'inscription
+                    (formule pas encore choisie), on l'annonce seulement. */}
+                <div className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
+                  <BarChart2 className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" />
+                  <span>
+                    Avec <strong>KONAN PRO</strong>, KONAN analyse vos créneaux libres et vous recommande la meilleure méthode.
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
