@@ -83,8 +83,8 @@ export function generateFormattedAcademicScheduleText(
   const centeredTitle = ' '.repeat(titlePadding) + title;
 
   const studentDisplay = (studentName || 'Étudiant').trim();
-  const filiereDisplay = (academicLevel || 'Enseignement Supérieur').trim();
-  const infoRow = `  Étudiant : ${studentDisplay.padEnd(18)} Filière : ${filiereDisplay}`;
+  const filiereDisplay = (academicLevel || 'non renseignée').trim();
+  const infoRow = `  Étudiant : ${studentDisplay.padEnd(18)} Classe : ${filiereDisplay}`;
 
   const lines: string[] = [];
   lines.push(line88);
@@ -432,8 +432,12 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   ? 'gold-shimmer-text font-bold'
                   : 'text-slate-700 dark:text-slate-300 font-semibold'
               }>{studentName}</span>
-              <span>•</span>
-              <span>{academicLevel}</span>
+              {academicLevel && (
+                <>
+                  <span>•</span>
+                  <span>{academicLevel}</span>
+                </>
+              )}
             </span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">

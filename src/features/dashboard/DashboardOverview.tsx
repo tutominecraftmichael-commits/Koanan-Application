@@ -211,7 +211,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <span><strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
               ) : (
                 <>
-                  Cursus <strong className="text-slate-700 dark:text-slate-200 font-semibold">{academicLevel}</strong> synchronisé.
+                  {academicLevel && (
+                    <>Classe : <strong className="text-slate-700 dark:text-slate-200 font-semibold">{academicLevel}</strong>.</>
+                  )}
                   {allTodaysStudySessions.length > 0
                     ? ` ${activeDisplaySessions.length} session(s) active(s) (${completedToday} terminée(s)).`
                     : ` Journée d'assimilation libre.`}
