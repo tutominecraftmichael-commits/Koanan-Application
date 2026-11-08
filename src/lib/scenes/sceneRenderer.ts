@@ -141,6 +141,32 @@ const MOUTHS: Record<MoodId, string> = {
 
 export interface DrawnCharacter { svg: string; hands: [number, number]; headTop: [number, number] }
 
+/**
+ * Véhicule vu de côté, dessiné PAR-DESSUS le personnage (repère du personnage : pieds en 0, regard à droite).
+ * La vitre est un cadre vide : on voit la tête et les épaules du conducteur / passager.
+ */
+function vehicleSvg(kind: 'voiture' | 'gbaka' | 'train'): string {
+  const wheel = (x: number) => `<circle cx="${x}" cy="-4" r="13" fill="#1F2937"/><circle cx="${x}" cy="-4" r="5" fill="#9CA3AF"/>`;
+  if (kind === 'voiture') {
+    return `<path d="M-78,-60 L-50,-60 L-36,-128 L52,-128 L74,-60 L96,-58 Q104,-56 104,-44 L104,-20 L-82,-20 L-82,-52 Q-82,-60 -78,-60 Z M-26,-118 L-36,-66 L42,-66 L44,-118 Z" fill="#DC2626" fill-rule="evenodd"/>` +
+      `<path d="M-26,-118 L44,-118 L42,-66 L-36,-66 Z" fill="none" stroke="#7F1D1D" stroke-width="4" stroke-linejoin="round"/>` +
+      `<rect x="96" y="-52" width="10" height="7" rx="2" fill="#FDE68A"/>` + wheel(-48) + wheel(70);
+  }
+  if (kind === 'gbaka') {
+    return `<path d="M-96,-150 L92,-150 Q108,-150 108,-132 L108,-20 L-100,-20 L-100,-140 Q-100,-150 -96,-150 Z M-34,-136 L-34,-70 L40,-70 L40,-136 Z" fill="#FACC15" fill-rule="evenodd"/>` +
+      `<rect x="-34" y="-136" width="74" height="66" fill="none" stroke="#A16207" stroke-width="4"/>` +
+      `<rect x="-90" y="-136" width="44" height="40" rx="4" fill="#BAE6FD" fill-opacity="0.7" stroke="#A16207" stroke-width="3"/>` +
+      `<rect x="56" y="-136" width="40" height="40" rx="4" fill="#BAE6FD" fill-opacity="0.7" stroke="#A16207" stroke-width="3"/>` +
+      `<rect x="-100" y="-60" width="208" height="8" fill="#16A34A"/>` + wheel(-62) + wheel(74);
+  }
+  // train : voiture de wagon avec une grande fenêtre
+  return `<path d="M-110,-150 L110,-150 L110,-20 L-110,-20 Z M-34,-136 L-34,-70 L40,-70 L40,-136 Z" fill="#2563EB" fill-rule="evenodd"/>` +
+    `<rect x="-34" y="-136" width="74" height="66" fill="none" stroke="#1E3A8A" stroke-width="4"/>` +
+    `<rect x="-100" y="-136" width="50" height="44" rx="4" fill="#BAE6FD" fill-opacity="0.7"/><rect x="56" y="-136" width="44" height="44" rx="4" fill="#BAE6FD" fill-opacity="0.7"/>` +
+    `<rect x="-110" y="-46" width="220" height="6" fill="#FACC15"/>` + wheel(-70) + wheel(-38) + wheel(46) + wheel(78) +
+    `<rect x="-120" y="6" width="240" height="5" fill="#57534E"/>`;
+}
+
 export function drawCharacter(c: SceneCharacter, x: number, y: number, face: 1 | -1, scale: number): DrawnCharacter {
   const look = LOOKS[c.costume];
   const skin = SKIN_COLORS[c.skin ?? look.skin];
@@ -150,7 +176,8 @@ export function drawCharacter(c: SceneCharacter, x: number, y: number, face: 1 |
   const longBody = look.body === 'robe' || look.body === 'toge' || look.body === 'boubou';
 
   // Jambes + chaussures
-  const legs = legsFor(pose);
+  // Assis dans un véhicule : pas de jambes (elles sont dans la voiture)
+  const legs = c.vehicle ? [] : legsFor(pose);
   const legColor = longBody ? skin : look.bottom ?? '#334155';
   for (const leg of legs) parts.push(limb(leg, legColor, longBody ? 7 : 10));
   for (const leg of legs) {
@@ -216,6 +243,9 @@ export function drawCharacter(c: SceneCharacter, x: number, y: number, face: 1 |
   const held = c.holding ?? (c.bound ? undefined : look.held);
   if (held) parts.push(heldItem(held, hx, hy));
   parts.push(`<circle cx="${hx}" cy="${hy}" r="4.6" fill="${skin}"/>`);
+
+  // Assis dans un véhicule : la carrosserie cache le bas du corps, la tête se voit par la vitre
+  if (c.vehicle) parts.push(vehicleSvg(c.vehicle));
 
   const sx = s * face;
   return {

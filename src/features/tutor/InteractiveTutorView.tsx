@@ -235,6 +235,20 @@ const PedagogicalParagraph: React.FC<{ text: string }> = ({ text }) => {
  * - Chaque étape i dispose de SA PROPRE fiche de cours dédiée, de sa formule/règle et de son QCM.
  * - Le bloc de cours du haut change OBLIGATOIREMENT à chaque étape (zéro paragraphe figé).
  */
+/**
+ * Titre coupé par « … » ou « ... » : on le complète avec la phrase entière de la question quand elle
+ * commence pareil, sinon on retire simplement les points de suspension. Jamais de phrase coupée à l'écran.
+ */
+function completeTruncatedTitle(title?: string, fullText?: string): string | undefined {
+  if (!title) return title;
+  const t = title.trim();
+  if (!/(\.\.\.|…)$/.test(t)) return t;
+  const base = t.replace(/\s*(\.\.\.|…)$/, '').trim();
+  const full = (fullText || '').replace(/\s+/g, ' ').trim();
+  if (full && full.toLowerCase().startsWith(base.toLowerCase().slice(0, Math.max(10, base.length - 3)))) return full;
+  return base;
+}
+
 function buildProgressiveCourseSlice(
   point: CurriculumPoint,
   stepIndex: number,
@@ -246,12 +260,14 @@ function buildProgressiveCourseSlice(
   // 1. Priorité absolue : Fiche de cours structurée dédiée à cette étape (Liaison 1-pour-1)
   if (point.structuredSteps && point.structuredSteps[stepIndex]) {
     const step = point.structuredSteps[stepIndex];
+    // Certains titres d'étape ont été enregistrés coupés (« Un automobiliste roule sur… ») : on remet la phrase entière
+    const stepTitle = completeTruncatedTitle(step.stepTitle, step.exercise?.prompt) || point.title.replace(/mini-leçon\s*\d+\/\d+\s*:\s*/i, '');
     return {
-      stepBadge: `Étape ${stepIndex + 1}/${totalSteps} · ${step.stepTitle || point.title.replace(/mini-leçon\s*\d+\/\d+\s*:\s*/i, '')}`,
+      stepBadge: `Étape ${stepIndex + 1}/${totalSteps} · ${stepTitle}`,
       stepKind: step.stepKind,
       stepIndex,
       totalSteps,
-      stepTitle: step.stepTitle || point.title,
+      stepTitle: stepTitle || point.title,
       paragraphText: step.paragraphText,
       formula: step.formula,
       keyRule: step.keyRule,
@@ -267,7 +283,8 @@ function buildProgressiveCourseSlice(
     const explanation = (exercise.explanation || '').trim();
     const cleanExplanation = explanation.replace(/^Bonne réponse\s*:\s*[^.]+\.\s*/i, '').trim();
 
-    const fallbackTitle = cleanPrompt.length > 55 ? `${cleanPrompt.slice(0, 52)}...` : cleanPrompt;
+    // Titre complet (jamais coupé par « … ») : l'affichage passe à la ligne si besoin
+    const fallbackTitle = cleanPrompt;
     const formulas = point.formulas || [];
     const dedicatedFormula = formulas[stepIndex] || (formulas.length > 0 ? formulas[stepIndex % formulas.length] : undefined);
 
@@ -1268,7 +1285,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs sm:text-sm font-black">Chimie</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Atomes, Réactions...</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 break-words min-w-0">Atomes et réactions</div>
                       </div>
                     </button>
 
@@ -1290,7 +1307,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs sm:text-sm font-black">Physique</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Mécanique, Électricité...</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 break-words min-w-0">Mécanique et électricité</div>
                       </div>
                     </button>
                   </>
@@ -1314,7 +1331,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs sm:text-sm font-black">Numérique</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Calculs, Fonctions...</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 break-words min-w-0">Calculs et fonctions</div>
                       </div>
                     </button>
 
@@ -1336,7 +1353,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs sm:text-sm font-black">Géométrie</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Vecteurs, Droites...</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 break-words min-w-0">Vecteurs et droites</div>
                       </div>
                     </button>
                   </>
@@ -1348,7 +1365,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           {/* Indicateur de sélection en cours */}
           {selectedChapter ? (
             <div className="px-3.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-300">
-              <span className="font-bold flex items-center gap-1.5 truncate">
+              <span className="font-bold flex items-center gap-1.5 break-words min-w-0">
                 <CheckCircle2 size={15} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
                 Chapitre sélectionné : {selectedChapter.title.startsWith('Leçon') ? selectedChapter.title : `Ch. ${selectedChapter.order} — ${selectedChapter.title}`}
               </span>
@@ -1381,7 +1398,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-indigo-300 dark:hover:border-slate-600'
                   }`}
                 >
-                  <span className="text-xs sm:text-sm font-bold truncate">
+                  <span className="text-xs sm:text-sm font-bold break-words min-w-0">
                     {ch.title.startsWith('Leçon') ? ch.title : `Ch. ${ch.order} — ${ch.title}`}
                   </span>
                   <span className="text-[11px] font-mono text-slate-400 shrink-0 font-semibold">{ch.officialVolumeHours || 10}h</span>
@@ -1436,7 +1453,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     return (
       <div className="max-w-2xl mx-auto py-6 px-4 space-y-4">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 truncate">
+          <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 break-words min-w-0">
             {subjectTitle} • {subCategoryLabel} • Mini-leçon {activeItemIndex + 1}/{items.length}
           </span>
           {pomodoroPill}
@@ -1541,7 +1558,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
                     <Check className="w-3 h-3 stroke-[3]" />
                   </div>
-                  <span className="font-extrabold text-slate-800 dark:text-slate-200 truncate">
+                  <span className="font-extrabold text-slate-800 dark:text-slate-200 break-words min-w-0">
                     {item.point.title}
                   </span>
                 </div>
@@ -1576,7 +1593,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         ? `Manipuler la formule officielle : ${currentPoint.formulas[0].name}`
         : `Identifier les principes d’application et la démarche rigoureuse`,
       currentPoint.keyRule
-        ? `Retenir le réflexe d'examen : ${currentPoint.keyRule.slice(0, 85)}...`
+        ? `Retenir le réflexe d'examen : ${currentPoint.keyRule}`
         : `Éviter les erreurs classiques et pièges fréquents signalés aux examens`,
       `Réussir les ${numQuestions} étapes progressives pour valider cette leçon avec un score de ${numQuestions}/${numQuestions}`
     ];
@@ -1671,7 +1688,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             {objectives.map((obj, i) => (
               <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-semibold">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                <span>{obj}</span>
+                {/* Phrase complète, formules dessinées (jamais de « $ » ni de « … ») */}
+                <span className="min-w-0 break-words"><MathRenderer text={obj} /></span>
               </li>
             ))}
           </ul>
@@ -1746,12 +1764,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
       {/* 2. FIL D'ARIANE / CONTEXTE DE LA LEÇON */}
       <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1 pb-1 border-b border-slate-100 dark:border-slate-800/60">
-        <div className="flex items-center gap-2 truncate">
+        <div className="flex items-center gap-2 break-words min-w-0">
           <span
             className="w-2.5 h-2.5 rounded-full shrink-0"
             style={{ backgroundColor: subjectMeta.color }}
           />
-          <span className="font-extrabold uppercase tracking-wide text-slate-700 dark:text-slate-300 truncate">
+          <span className="font-extrabold uppercase tracking-wide text-slate-700 dark:text-slate-300 break-words min-w-0">
             {phase === 'warmup'
               ? `${subjectTitle} • ${subCategoryLabel} • Révision du jour`
               : `${subjectTitle} • ${subCategoryLabel} • Ch. ${currentItem.chapterOrder} • Mini-leçon ${activeItemIndex + 1} sur ${items.length} de la séance`}
@@ -1816,7 +1834,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 ) : (
                   <BookOpen className="w-4 h-4 shrink-0" />
                 )}
-                <span className="text-[11px] font-black uppercase tracking-wider truncate">
+                <span className="text-[11px] font-black uppercase tracking-wider break-words min-w-0">
                   {retrievalMode ? `Rappel du cours · ${activeCourseSlice.stepBadge}` : activeCourseSlice.stepBadge}
                 </span>
               </div>
