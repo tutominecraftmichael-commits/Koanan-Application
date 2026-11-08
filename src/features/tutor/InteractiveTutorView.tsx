@@ -57,6 +57,7 @@ import { soundFX } from '../../lib/audioEffects';
 import { KonanCube } from '../../components/common/KonanCube';
 import { findReviewExercise, forgetReview, getDueReviews, recordReviewAnswer } from '../../lib/curriculum/reviewMemory';
 import { useKonanCoach, KonanCoachBubble } from './konanCoach';
+import { FeynmanChallenge } from './FeynmanChallenge';
 import { MathRenderer, VisualSchemaRenderer, SmartKeyFormulaBox } from '../../components/common/MathRenderer';
 
 export interface InteractiveTutorViewProps {
@@ -81,6 +82,7 @@ interface WarmupItem {
 }
 
 type LessonPhase =
+  | 'feynman' // Feynman : « Explique-le simplement » (oral ou écrit) après la mini-leçon
   | 'time_up' // Pomodoro : temps de travail écoulé → pause, puis matière suivante
   | 'warmup' // Révision du jour : questions dues (révision espacée), de mémoire, avant la leçon
   | 'recall' // Rappel actif : 3 questions de la mini-leçon, de mémoire, fiche cachée
@@ -310,10 +312,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 }) => {
   // Rappel actif : se tester de mémoire (question avant la fiche, rappel en fin de mini-leçon)
   const isActiveRecall = pacingMethod === 'active_recall_spaced' || pacingMethod === 'active_recall' || pacingMethod === 'spaced_repetition';
-  // Pomodoro : la séance dure le temps prévu au planning (25 min de VRAI travail), puis 5 min de pause
+  // Pomodoro : la séance dure le temps prévu au planning (25 min de VRAI travail), puis 5 min de pause.
+  // Time Blocking : même principe sur un long bloc d'une seule matière (75 min), puis 15 min de pause.
   const isPomodoro = pacingMethod === 'pomodoro';
-  const workLimitSec = isPomodoro ? Math.max(1, durationMinutes || 25) * 60 : null;
-  const POMODORO_PAUSE_SEC = 5 * 60;
+  const isTimeBlocking = pacingMethod === 'time_blocking' || pacingMethod === 'deep_work';
+  const workLimitSec = isPomodoro || isTimeBlocking ? Math.max(1, durationMinutes || (isTimeBlocking ? 75 : 25)) * 60 : null;
+  const POMODORO_PAUSE_SEC = (isTimeBlocking ? 15 : 5) * 60;
+  // Feynman : après chaque mini-leçon, l'élève explique la notion avec ses mots (à l'oral ou par écrit)
+  const isFeynman = pacingMethod === 'feynman';
   // Règle des 2 minutes : on démarre tout de suite, sans écran d'accueil ; après 2 minutes, « Tu continues ? »
   const isTwoMinutes = pacingMethod === 'two_minutes_rule';
   // 1. Sous-catégorie active calculée selon la règle d'alternance officielle ivoirienne
@@ -739,6 +745,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       setPhase('recall');
       return;
     }
+    if (isFeynman) {
+      // La mini-leçon est acquise (enregistrée tout de suite), puis l'élève l'explique avec ses mots
+      try { soundFX.playVictoryJingle(); } catch {}
+      recordPointDone();
+      setPhase('feynman');
+      return;
+    }
     handleMiniLessonValidated();
   };
 
@@ -830,7 +843,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // =========================================================================
   // POMODORO : chrono de VRAI travail, fin de séance, pause
   // =========================================================================
-  const timedPhase = phase === 'warmup' || phase === 'intro' || phase === 'learning' || phase === 'catchup' || phase === 'recall' || phase === 'point_celebration';
+  const timedPhase = phase === 'warmup' || phase === 'intro' || phase === 'learning' || phase === 'catchup' || phase === 'recall' || phase === 'point_celebration' || phase === 'feynman';
   const { isIdle: coachIdle } = coach;
   useEffect(() => {
     if (!workLimitSec || !timedPhase) return;
@@ -1375,6 +1388,30 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // VUE 2 : CÉLÉBRATION GLOBALE DE FIN DE SÉANCE D'EDT
   // =========================================================================
   // =========================================================================
+  // FEYNMAN : « EXPLIQUE-LE SIMPLEMENT » APRÈS LA MINI-LEÇON
+  // =========================================================================
+  if (phase === 'feynman' && currentPoint) {
+    const reference = [currentPoint.summary, currentPoint.keyRule, (currentPoint as { conceptExplanation?: string }).conceptExplanation]
+      .filter(Boolean).join(' ').slice(0, 1500);
+    return (
+      <div className="max-w-2xl mx-auto py-6 px-4 space-y-4">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 truncate">
+            {subjectTitle} • {subCategoryLabel} • Mini-leçon {activeItemIndex + 1}/{items.length}
+          </span>
+          {pomodoroPill}
+        </div>
+        <FeynmanChallenge
+          notion={currentPoint.title}
+          reference={reference}
+          classe={gradeLevel.replace(/_/g, ' ')}
+          onDone={() => setPhase('point_celebration')}
+        />
+      </div>
+    );
+  }
+
+  // =========================================================================
   // POMODORO : TEMPS DE TRAVAIL ÉCOULÉ → PAUSE, PUIS MATIÈRE SUIVANTE
   // =========================================================================
   if (phase === 'time_up') {
@@ -1389,7 +1426,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             <div className="space-y-2">
               <h2 className="text-2xl font-black text-slate-900 dark:text-white">{workedMin} minute{workedMin > 1 ? 's' : ''} de vrai travail !</h2>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Pause ! 5 minutes, bois de l’eau et repose tes yeux.
+                Pause ! {POMODORO_PAUSE_SEC / 60} minutes, bois de l’eau et repose tes yeux.
                 {(isTwoVoletLabel(subCategoryLabel)) ? ` La prochaine fois, on passera à l’autre volet ; et quand ${subCategoryLabel} reviendra, tu reprendras exactement là où tu t’es arrêté.` : ' La prochaine fois, tu reprendras exactement là où tu t’es arrêté.'}
               </p>
             </div>
@@ -1527,11 +1564,19 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </div>
         )}
 
-        {/* Pomodoro : la règle du jeu en une ligne */}
-        {isPomodoro && activeItemIndex === 0 && (
+        {/* Pomodoro / Time Blocking : la règle du jeu en une ligne */}
+        {workLimitSec && activeItemIndex === 0 && (
           <div className="p-3.5 rounded-2xl bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-left text-xs sm:text-sm text-rose-900 dark:text-rose-100 font-semibold leading-relaxed">
-            <strong>Séance Pomodoro :</strong> {Math.round((workLimitSec || 1500) / 60)} minutes de vrai travail, puis 5 minutes de pause.
+            <strong>{isTimeBlocking ? 'Séance Time Blocking :' : 'Séance Pomodoro :'}</strong> {Math.round(workLimitSec / 60)} minutes de vrai travail
+            {isTimeBlocking ? ' sur cette seule matière, sans changer de sujet' : ''}, puis {POMODORO_PAUSE_SEC / 60} minutes de pause.
             Le chrono s’arrête si tu quittes l’appli ou si tu ne fais plus rien.
+          </div>
+        )}
+
+        {/* Feynman : la règle du jeu en une ligne */}
+        {isFeynman && activeItemIndex === 0 && (
+          <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-left text-xs sm:text-sm text-amber-900 dark:text-amber-100 font-semibold leading-relaxed">
+            <strong>Séance Feynman :</strong> à la fin de chaque leçon, tu l’expliques avec tes mots, à l’oral ou par écrit. KONAN te dit si c’est juste, clair et simple.
           </div>
         )}
 
