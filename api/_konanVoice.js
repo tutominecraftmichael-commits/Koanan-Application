@@ -354,6 +354,7 @@ export function buildKonanPrompt(ctx, { angle = '', recent = [] } = {}) {
   };
   return [
     `Situation : ${situations[ctx.situation] || situations['5_MIN_AVANT']}`,
+    `La séance porte UNIQUEMENT sur « ${ctx.matiere} » : ne cite aucune autre matière.`,
     'Rappel : « historique.rateeHier » parle de la veille ; la séance de la situation est celle d’aujourd’hui.',
     `Contexte de l’élève (JSON) : ${JSON.stringify(ctx)}`,
     angle ? `Angle à utiliser pour CE message : ${angle}.` : '',
@@ -365,12 +366,43 @@ export function buildKonanPrompt(ctx, { angle = '', recent = [] } = {}) {
   ].filter(Boolean).join('\n');
 }
 
+/** Familles de matières : un message ne doit citer QUE la matière de la séance. */
+const SUBJECT_FAMILIES = [
+  (w) => w === 'svt',
+  (w) => w.startsWith('physique') || w.startsWith('chimi') || w === 'pc',
+  (w) => w.startsWith('math'),
+  (w) => w.startsWith('francais'),
+  (w) => w.startsWith('anglais'),
+  (w) => w.startsWith('espagnol'),
+  (w) => w.startsWith('allemand'),
+  (w) => w.startsWith('histoire') || w.startsWith('geograph') || w === 'hg',
+  (w) => w.startsWith('philo'),
+  (w) => w.startsWith('economi'),
+  (w) => w.startsWith('informatique'),
+  (w) => w === 'eps',
+];
+const wordsOf = (text) => String(text || '')
+  .toLowerCase()
+  .normalize('NFD')
+  .replace(/[̀-ͯ]/g, '')
+  .split(/[^a-z0-9]+/)
+  .filter(Boolean);
+
+/** Vrai si le texte cite une matière qui n'est pas celle de la séance. */
+export function mentionsOtherSubject(text, matiere) {
+  const words = wordsOf(text);
+  const own = wordsOf(matiere);
+  return SUBJECT_FAMILIES.some((isFamily) => words.some(isFamily) && !own.some(isFamily));
+}
+
 /** Vérifie la réponse de l'IA ; renvoie null si elle n'est pas utilisable (on prend alors le secours). */
 export function validateAiMessage(raw, ctx) {
   if (!raw || typeof raw !== 'object') return null;
   const title = String(raw.titre || raw.title || '').replace(/["«»]/g, '').trim();
   const body = String(raw.message || raw.body || '').replace(/^["«\s]+|["»\s]+$/g, '').trim();
   if (!title || !body || title.length > 60 || body.length > 200 || body.length < 15) return null;
+  // Jamais une autre matière que celle de la séance
+  if (mentionsOtherSubject(`${title} ${body}`, ctx.matiere)) return null;
   // KONAN agit comme un frère mais ne le dit jamais
   if (/\bfr[èe]res?\b|\bs[œo]eurs?\b|\bmon petit\b|\bton coach\b|\bgrand[- ]fr/i.test(`${title} ${body}`)) return null;
   // Pour une séance manquée replacée, l'heure du rattrapage doit apparaître

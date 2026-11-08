@@ -60,7 +60,8 @@ export type PushDeviceStatus =
   | 'unsupported';    // navigateur sans notifications push
 
 // Preuve locale que le serveur a enregistré l'abonnement de cet appareil (renouvelée chaque jour)
-const REGISTERED_KEY = 'konan_push_registered';
+// v2 : force un nouvel enregistrement après la mise à jour, pour détacher ce téléphone des autres comptes
+const REGISTERED_KEY = 'konan_push_registered_v2';
 const REREGISTER_MS = 24 * 60 * 60 * 1000;
 function isRegisteredOnServer(endpoint: string): boolean {
   try {
@@ -277,6 +278,30 @@ export async function autoRegisterWebPush(
 
     window.addEventListener('click', triggerSilentRequest, { once: true, capture: true });
     window.addEventListener('touchend', triggerSilentRequest, { once: true, capture: true });
+  }
+}
+
+/**
+ * À la DÉCONNEXION (avant de fermer la session Firebase) : ce téléphone quitte le compte, pour ne plus
+ * recevoir ses notifications. L'abonnement du navigateur est gardé : le prochain compte connecté le reprend.
+ */
+export async function detachDeviceFromAccount(): Promise<void> {
+  try {
+    localStorage.removeItem(REGISTERED_KEY);
+  } catch {
+    // stockage indisponible : sans effet
+  }
+  if (!isWebPushSupported() || !auth?.currentUser) return;
+  try {
+    const reg = await navigator.serviceWorker.getRegistration('/');
+    const sub = await reg?.pushManager.getSubscription();
+    if (!sub?.endpoint) return;
+    await Promise.race([
+      callPushSync({ action: 'unregister', endpoint: sub.endpoint }),
+      new Promise((r) => setTimeout(r, 4000)), // la déconnexion n'attend jamais plus de 4 s
+    ]);
+  } catch {
+    // hors connexion : le prochain compte connecté détachera ce téléphone de toute façon
   }
 }
 
