@@ -202,11 +202,6 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
             <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-500 dark:text-indigo-400 shrink-0" />
             <span>Matières & Coefficients</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
-            {EXAM_PREP_PAUSED
-              ? 'Paramétrez vos coefficients et vos notes visées pour calibrer vos temps de révision.'
-              : "Paramétrez vos coefficients et dates d'examens pour calibrer vos temps de révision."}
-          </p>
         </div>
 
         <div className="grid grid-cols-2 gap-2 w-full sm:w-auto">
@@ -446,7 +441,6 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={editingSubjectId ? "Modifier la matière" : "Ajouter une matière"}
-        description="Ajustez les pondérations pour calibrer le temps d'étude."
         maxWidth="md"
       >
         <form onSubmit={handleSave} className="space-y-4">

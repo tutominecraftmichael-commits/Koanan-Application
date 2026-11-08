@@ -860,7 +860,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               </div>
               <div className="space-y-0.5">
                 <div className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
-                  Alternance obligatoire (Zéro négociation)
+                  Alternance obligatoire
                 </div>
                 <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white leading-snug">
                   {alternanceBannerText || `La dernière séance tu as travaillé l'autre volet, aujourd'hui place à la ${subCategoryLabel} !`}
