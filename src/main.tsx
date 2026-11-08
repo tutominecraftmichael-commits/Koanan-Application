@@ -25,6 +25,7 @@ class RootErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('Root ErrorBoundary caught an error:', error, errorInfo);
+    (window as Window & { __konanHideSplash?: () => void }).__konanHideSplash?.();
   }
 
   render() {
