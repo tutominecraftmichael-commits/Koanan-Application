@@ -913,6 +913,14 @@ html.light .bg-slate-900 .text-white {
   color: #0F172A !important;
 }
 
+/* Texte blanc posé sur un fond sombre qui devient clair en mode jour (toutes les opacités, y compris
+   les champs de saisie) : il passe en foncé. Jamais à l'intérieur d'un bouton coloré ou d'un dégradé. */
+html.light [class*="bg-slate-900"] .text-white:not(button *):not([class*="bg-"]):not([class*="from-"] *),
+html.light [class*="bg-slate-950"] .text-white:not(button *):not([class*="bg-"]):not([class*="from-"] *),
+html.light .text-white[class*="bg-slate-9"]:not([class*="dark:bg-slate-9"]) {
+  color: #0F172A !important;
+}
+
 html.light .bg-slate-800,
 html.light .bg-slate-800\/90,
 html.light .bg-slate-800\/80,
@@ -1135,4 +1143,22 @@ html.dark .active\:bg-white:not([class*="dark:active:bg-"]):active,
    (aucun effet sur l'apparence ni sur les animations). */
 a, button, [role="button"], input, select, textarea, label {
   touch-action: manipulation;
+}
+
+/* Bouton immobile avec un reflet de lumière qui le traverse (donne envie de cliquer, sans sautiller) */
+.konan-btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  transform: translateX(-130%);
+  animation: konan-btn-shine 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes konan-btn-shine {
+  0%, 35% { transform: translateX(-130%); }
+  75%, 100% { transform: translateX(130%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .konan-btn-shine::after { animation: none; display: none; }
 }

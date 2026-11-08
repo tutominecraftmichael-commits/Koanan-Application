@@ -759,12 +759,12 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug">
+              <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
                 {currentStep === 'upload' 
                   ? "Extraction & Catégorisation de l'EDT" 
                   : "Configuration des Matières & Méthodes"}
               </h1>
-              <span className="bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/30 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
+              <span className="bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] border dark:border-[#6366F1]/30 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
                 {currentStep === 'upload' ? 'Étape 1/2' : 'Étape 2/2'}
               </span>
             </div>
@@ -1374,15 +1374,15 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           {/* 1. LISTE DES MATIÈRES & COEFFICIENTS */}
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-2">
-              <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-indigo-400 shrink-0" />
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Sliders className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
                 <span>1. Coefficients & Notes Cibles de vos Matières</span>
               </h2>
-              <span className="text-xs font-mono font-bold text-[#818CF8] shrink-0">
+              <span className="text-xs font-mono font-bold text-indigo-600 dark:text-[#818CF8] shrink-0">
                 {editableSubjects.filter(s => s.enabled).length} / {editableSubjects.length} actives
               </span>
             </div>
-            <p className="text-[13px] text-slate-400 leading-[1.4]">
+            <p className="text-[13px] text-slate-600 dark:text-slate-400 leading-[1.4]">
               Ajustez le coefficient de chaque matière : plus le coefficient est élevé, plus l'algorithme lui réserve des créneaux de travail.
             </p>
 
@@ -1392,8 +1392,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   key={subject.id}
                   className={`p-4 rounded-xl border space-y-3 transition-all ${
                     subject.enabled
-                      ? 'bg-[#131B2E]/50 border-white/5 hover:border-white/10 shadow-xs'
-                      : 'bg-[#131B2E]/20 border-white/5 opacity-50'
+                      ? 'bg-white border-slate-200 hover:border-slate-300 dark:bg-[#131B2E]/50 dark:border-white/5 dark:hover:border-white/10 shadow-xs'
+                      : 'bg-slate-50 border-slate-200 dark:bg-[#131B2E]/20 dark:border-white/5 opacity-60'
                   }`}
                 >
                   {/* Ligne supérieure : Checkbox + point de couleur + Nom de la matière */}
@@ -1402,7 +1402,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       type="checkbox"
                       checked={subject.enabled}
                       onChange={() => handleToggleSubject(subject.id)}
-                      className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-white/5 border-white/20 shrink-0 cursor-pointer"
+                      className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-white border-slate-300 dark:bg-white/5 dark:border-white/20 shrink-0 cursor-pointer"
                       title={subject.enabled ? "Désactiver cette matière" : "Activer cette matière"}
                     />
                     <div 
@@ -1413,30 +1413,30 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       type="text"
                       value={subject.name}
                       onChange={(e) => handleUpdateName(subject.id, e.target.value)}
-                      className="bg-transparent border-b border-transparent hover:border-white/20 focus:border-indigo-500 focus:bg-white/5 px-1 py-0.5 rounded text-xs sm:text-sm font-semibold text-white focus:outline-none flex-1 min-w-0 transition-colors break-words"
+                      className="bg-transparent border-b border-transparent hover:border-slate-300 dark:hover:border-white/20 focus:border-indigo-500 focus:bg-slate-50 dark:focus:bg-white/5 px-1 py-0.5 rounded text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none flex-1 min-w-0 transition-colors break-words"
                       placeholder="Nom de la matière"
                     />
                   </div>
 
                   {/* Ligne inférieure de contrôles : Cible à gauche + Widget Coefficient à droite */}
-                  <div className="flex justify-between items-center bg-black/20 p-2 sm:p-2.5 rounded-lg border border-white/5 gap-2">
-                    
+                  <div className="flex justify-between items-center bg-slate-50 dark:bg-black/20 p-2 sm:p-2.5 rounded-lg border border-slate-200 dark:border-white/5 gap-2">
+
                     {/* Sélecteur Note Cible avec petite flèche ▾ */}
                     <div className="relative flex items-center">
-                      <span className="text-[11px] sm:text-xs text-slate-400 font-medium mr-1.5 whitespace-nowrap">Cible :</span>
+                      <span className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 font-medium mr-1.5 whitespace-nowrap">Cible :</span>
                       <div className="relative flex items-center">
                         <select
                           value={subject.targetGrade}
                           onChange={(e) => handleUpdateTargetGrade(subject.id, Number(e.target.value))}
-                          className="appearance-none bg-white/5 hover:bg-white/10 border border-white/10 rounded-md px-2.5 py-1 pr-6 text-xs font-semibold text-white focus:outline-none focus:border-indigo-500 cursor-pointer transition-colors"
+                          className="appearance-none bg-white hover:bg-slate-100 border border-slate-300 dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 rounded-md px-2.5 py-1 pr-6 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 cursor-pointer transition-colors"
                         >
-                          <option value={10} className="bg-[#0B0F19] text-white">10/20 (Validation)</option>
-                          <option value={12} className="bg-[#0B0F19] text-white">12/20 (Assez Bien)</option>
-                          <option value={14} className="bg-[#0B0F19] text-white">14/20 (Bien)</option>
-                          <option value={16} className="bg-[#0B0F19] text-white">16/20 (Très Bien)</option>
-                          <option value={18} className="bg-[#0B0F19] text-white">18/20 (Major)</option>
+                          <option value={10} className="bg-white text-slate-900 dark:bg-[#0B0F19] dark:text-white">10/20 (Validation)</option>
+                          <option value={12} className="bg-white text-slate-900 dark:bg-[#0B0F19] dark:text-white">12/20 (Assez Bien)</option>
+                          <option value={14} className="bg-white text-slate-900 dark:bg-[#0B0F19] dark:text-white">14/20 (Bien)</option>
+                          <option value={16} className="bg-white text-slate-900 dark:bg-[#0B0F19] dark:text-white">16/20 (Très Bien)</option>
+                          <option value={18} className="bg-white text-slate-900 dark:bg-[#0B0F19] dark:text-white">18/20 (Major)</option>
                         </select>
-                        <ChevronDown className="w-3.5 h-3.5 text-slate-400 pointer-events-none absolute right-1.5" />
+                        <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 pointer-events-none absolute right-1.5" />
                       </div>
                     </div>
 
@@ -1446,20 +1446,20 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                         type="button"
                         onClick={() => handleUpdateCoeff(subject.id, -1)}
                         disabled={subject.coefficient <= 1}
-                        className="w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
+                        className="w-7 h-7 rounded-md bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-slate-900 dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 dark:text-slate-300 dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-colors cursor-pointer shrink-0"
                         title="Diminuer coefficient"
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
                       <div className="px-1 text-center min-w-[50px]">
-                        <span className="text-[9px] text-slate-400 block font-mono leading-none">COEFF</span>
-                        <span className="text-xs font-bold text-[#818CF8] leading-tight">{subject.coefficient}</span>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-400 block font-mono leading-none">COEFF</span>
+                        <span className="text-xs font-bold text-indigo-600 dark:text-[#818CF8] leading-tight">{subject.coefficient}</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleUpdateCoeff(subject.id, 1)}
                         disabled={subject.coefficient >= 10}
-                        className="w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
+                        className="w-7 h-7 rounded-md bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-slate-900 dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 dark:text-slate-300 dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-colors cursor-pointer shrink-0"
                         title="Augmenter coefficient"
                       >
                         <Plus className="w-3.5 h-3.5" />
@@ -1476,26 +1476,26 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
           <div className="space-y-3 pt-2">
             <div>
               <div className="flex items-center justify-between gap-2">
-                <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" />
                   <span>2. Technique d’Espacement & Méthode de Révision</span>
                 </h2>
-                <span className="text-[11px] font-semibold text-slate-400 shrink-0">
-                  Formule active : <strong className={planTier === 'pro' ? 'text-amber-500' : planTier === 'plus' ? 'text-indigo-400' : 'text-slate-300'}>{planTier.toUpperCase()}</strong>
+                <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 shrink-0">
+                  Formule active : <strong className={planTier === 'pro' ? 'text-amber-600 dark:text-amber-500' : planTier === 'plus' ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-700 dark:text-slate-300'}>{planTier.toUpperCase()}</strong>
                 </span>
               </div>
               {planTier !== 'free' ? (
                 <div className="flex flex-wrap items-center justify-between gap-2 mt-1">
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400">
                     La méthode recommandée ci-dessous est calibrée sur votre emploi du temps. Vous pouvez aussi combiner librement jusqu'à 3 techniques.
                   </p>
-                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-cyan-400" />
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border-cyan-200 dark:bg-cyan-500/10 dark:text-cyan-300 border dark:border-cyan-500/30 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
                     {selectedPacings.length}/3 méthode{selectedPacings.length > 1 ? 's' : ''} sélectionnée{selectedPacings.length > 1 ? 's' : ''}
                   </span>
                 </div>
               ) : (
-                <p className="text-[11px] text-slate-400 mt-0.5">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
                   Choisissez comment KONAN cadence vos séances d'étude en dehors de vos cours.
                 </p>
               )}
@@ -1503,7 +1503,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
             {/* BANNIÈRE DE RECOMMANDATION CONTEXTUELLE */}
             {planTier !== 'free' ? (
-              <div className="rounded-xl bg-gradient-to-r from-indigo-950/60 via-slate-900/80 to-blue-950/40 border border-indigo-500/20 p-4 sm:p-5 shadow-lg shadow-indigo-950/30 space-y-3">
+              <div className="rounded-xl bg-gradient-to-r from-indigo-50 via-white to-sky-50 border border-indigo-200 dark:from-indigo-950/60 dark:via-slate-900/80 dark:to-blue-950/40 dark:border-indigo-500/20 p-4 sm:p-5 shadow-sm dark:shadow-lg dark:shadow-indigo-950/30 space-y-3">
                 {(() => {
                   const targetPacings = pacingRecommendation.recommendedIds && pacingRecommendation.recommendedIds.length > 0
                     ? pacingRecommendation.recommendedIds
@@ -1513,35 +1513,35 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   return (
                     <div className="space-y-3">
                       <div className="flex items-start gap-3 min-w-0">
-                        <div className="p-2 rounded-xl bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/30 shrink-0 mt-0.5">
-                          <BarChart2 className="w-4 h-4 text-[#818CF8]" />
+                        <div className="p-2 rounded-xl bg-indigo-100 text-indigo-600 border border-indigo-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] dark:border-[#6366F1]/30 shrink-0 mt-0.5">
+                          <BarChart2 className="w-4 h-4 text-indigo-600 dark:text-[#818CF8]" />
                         </div>
                         <div className="min-w-0 flex-1 space-y-1.5">
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="text-xs font-black uppercase tracking-wider text-[#818CF8]">
+                            <span className="text-xs font-black uppercase tracking-wider text-indigo-700 dark:text-[#818CF8]">
                               RECOMMANDATION KONAN
                             </span>
                             {targetPacings.map(id => (
-                              <span key={id} className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#6366F1]/20 text-[#818CF8] font-bold border border-[#6366F1]/30">
+                              <span key={id} className="text-[10px] px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] font-bold border dark:border-[#6366F1]/30">
                                 {getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
                               </span>
                             ))}
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 border dark:border-slate-700">
                               {pacingRecommendation.contextTag}
                             </span>
                           </div>
-                          
-                          <div className="text-xs text-slate-300 leading-relaxed">
-                            <span className="font-semibold text-white flex items-center gap-1.5 mb-1">
+
+                          <div className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                            <span className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5 mb-1">
                               <span>Diagnostic de votre emploi du temps</span>
                             </span>
-                            <p className={`${showFullDiagnostic ? '' : 'line-clamp-3'} whitespace-pre-line text-slate-300`}>
+                            <p className={`${showFullDiagnostic ? '' : 'line-clamp-3'} whitespace-pre-line text-slate-700 dark:text-slate-300`}>
                               {pacingRecommendation.rationale}
                             </p>
                             <button
                               type="button"
                               onClick={() => setShowFullDiagnostic(!showFullDiagnostic)}
-                              className="text-xs font-bold text-[#818CF8] hover:text-white mt-1 inline-flex items-center gap-1 cursor-pointer transition-colors"
+                              className="text-xs font-bold text-indigo-700 hover:text-indigo-900 dark:text-[#818CF8] dark:hover:text-white mt-1 inline-flex items-center gap-1 cursor-pointer transition-colors"
                             >
                               {showFullDiagnostic ? 'Voir moins ▴' : 'Voir plus ▾'}
                             </button>
@@ -1550,8 +1550,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       </div>
 
                       {isRecActive ? (
-                        <div className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-center gap-2">
-                          <Check className="w-4 h-4 text-emerald-400" />
+                        <div className="w-full py-2.5 px-4 rounded-xl bg-emerald-50 border-emerald-300 text-emerald-800 dark:bg-emerald-500/20 border dark:border-emerald-500/40 dark:text-emerald-300 text-xs font-bold flex items-center justify-center gap-2">
+                          <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                           <span> Recommandation active</span>
                         </div>
                       ) : (
@@ -1571,9 +1571,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 })()}
               </div>
             ) : (
-              <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-400">
+              <div className="p-3.5 rounded-xl bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-900/70 border dark:border-slate-800 dark:text-slate-400 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                  <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" />
                   <span>
                     Les recommandations personnalisées selon la charge horaire de vos cours sont réservées à <strong>KONAN PRO</strong>.
                   </span>
@@ -1582,7 +1582,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   <button
                     type="button"
                     onClick={onViewPricing}
-                    className="text-[11px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 cursor-pointer hover:bg-amber-500/30 transition-colors text-center"
+                    className="text-[11px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 border dark:border-amber-500/40 shrink-0 cursor-pointer hover:bg-amber-200 dark:hover:bg-amber-500/30 transition-colors text-center"
                   >
                     ⭐ Découvrir KONAN PRO
                   </button>
@@ -1603,20 +1603,20 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     onClick={() => handleSelectPacingStrategy(strategy.id)}
                     className={`group p-4 rounded-xl border transition-all duration-200 cursor-pointer relative active:scale-[0.99] ${
                       isSelected
-                        ? 'bg-[#131B2E]/70 border-[#6366F1] shadow-md shadow-indigo-950/50 ring-1 ring-[#6366F1]/50'
+                        ? 'bg-indigo-50 border-indigo-500 dark:bg-[#131B2E]/70 dark:border-[#6366F1] shadow-md dark:shadow-indigo-950/50 ring-1 ring-indigo-500/40 dark:ring-[#6366F1]/50'
                         : isPrimaryRec
-                        ? 'bg-[#131B2E]/50 border-cyan-500/40 hover:border-cyan-500'
+                        ? 'bg-white border-cyan-400 hover:border-cyan-500 dark:bg-[#131B2E]/50 dark:border-cyan-500/40'
                         : isAllowed
-                        ? 'bg-[#131B2E]/40 border-white/5 hover:border-white/10 hover:bg-[#131B2E]/60'
-                        : 'bg-black/20 border-white/5 opacity-70'
+                        ? 'bg-white border-slate-200 hover:border-slate-300 dark:bg-[#131B2E]/40 dark:border-white/5 dark:hover:border-white/10 dark:hover:bg-[#131B2E]/60'
+                        : 'bg-slate-50 border-slate-200 dark:bg-black/20 dark:border-white/5 opacity-70'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
-                        <h3 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                        <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
                           {strategy.title}
                         </h3>
-                        <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+                        <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium mt-0.5">
                           {strategy.tagline}
                         </p>
                       </div>
@@ -1624,12 +1624,12 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       {/* Badges */}
                       <div className="flex flex-wrap items-center justify-end gap-1 shrink-0">
                         {isPrimaryRec && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/30">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] border dark:border-[#6366F1]/30">
                              Recommandé
                           </span>
                         )}
                         {isRecommended && !isPrimaryRec && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border-cyan-200 dark:bg-cyan-500/10 dark:text-cyan-300 border dark:border-cyan-500/30">
                             Alternatif
                           </span>
                         )}
@@ -1637,7 +1637,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
                             isSelected
                               ? 'bg-[#6366F1] text-white shadow-xs'
-                              : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white'
+                              : 'bg-slate-100 border border-slate-200 text-slate-700 dark:bg-white/5 dark:border-white/10 dark:text-slate-300 dark:hover:text-white'
                           }`}>
                             {isSelected 
                               ? (planTier !== 'free' && selectedPacings.length > 1 ? ` Méthode ${selectedPacings.indexOf(strategy.id) + 1}/3` : ' Sélectionnée')
@@ -1652,12 +1652,12 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       </div>
                     </div>
 
-                    <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+                    <p className="text-xs text-slate-700 dark:text-slate-300 mt-2 leading-relaxed">
                       {strategy.explanation}
                     </p>
 
-                    <div className="mt-2.5 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
-                      <span className="font-mono text-slate-300">{strategy.badge}</span>
+                    <div className="mt-2.5 pt-2 border-t border-slate-200 dark:border-white/5 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                      <span className="font-mono text-slate-700 dark:text-slate-300">{strategy.badge}</span>
                       {!isAllowed && (
                         <span className="text-amber-400 text-[10px] font-semibold">
                           Cliquez pour débloquer
@@ -1672,8 +1672,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
           {/* 3. MOMENT PRÉFÉRÉ D'ÉTUDE (CHRONOTYPE) */}
           <div className="space-y-2.5 pt-2">
-            <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-indigo-400" />
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
               <span>Moment de la journée le plus productif pour vous</span>
             </label>
             <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
@@ -1716,7 +1716,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     className={`group p-3 rounded-xl border text-xs font-medium transition-all duration-200 cursor-pointer text-center flex items-center justify-center gap-2 active:scale-95 ${
                       isSelected
                         ? 'bg-gradient-to-r from-indigo-600 to-violet-600 border-indigo-400 text-white shadow-md shadow-indigo-500/30 ring-2 ring-indigo-400/40 font-bold scale-[1.01]'
-                        : 'bg-transparent border-white/5 text-slate-400 hover:text-white hover:bg-white/5 hover:border-white/10'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 dark:bg-transparent dark:border-white/5 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5 dark:hover:border-white/10'
                     }`}
                   >
                     <Icon className={`w-4 h-4 shrink-0 transition-transform duration-300 ${
@@ -1749,7 +1749,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 soundFX.playCheckmarkPop();
                 setCurrentStep('upload');
               }}
-              className="text-sm text-slate-400 hover:text-white py-2.5 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+              className="text-sm text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white py-2.5 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Retour au document</span>

@@ -967,18 +967,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   /** Chrono Pomodoro affiché en haut (temps de travail restant). */
   const pomodoroPill = workLimitSec ? (
-    <span className="flex items-center gap-1.5 shrink-0">
-    {isTimeBlocking && (
-      <span className="px-2 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300" title="Une seule matière, sans distraction, jusqu'à la pause">
-        Mode concentration
-      </span>
-    )}
     <span
-      className={`shrink-0 px-2.5 py-1 rounded-xl text-xs font-black font-mono tabular-nums border ${coachIdle ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500' : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300'}`}
+      className={`shrink-0 whitespace-nowrap px-2.5 py-1 rounded-xl text-xs font-black font-mono tabular-nums border ${coachIdle ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500' : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300'}`}
       title={!timerStarted ? 'Le chrono démarre quand tu commences la leçon' : coachIdle ? 'Chrono en pause : tu ne travailles plus' : 'Temps de travail restant'}
     >
       ⏱ {fmtClock(workLimitSec - workSeconds)}{coachIdle ? ' · pause' : ''}
-    </span>
     </span>
   ) : null;
 
@@ -1452,7 +1445,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       .filter(Boolean).join(' ').slice(0, 1500);
     return (
       <div className="max-w-2xl mx-auto py-6 px-4 space-y-4">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 break-words min-w-0">
             {subjectTitle} • {subCategoryLabel} • Mini-leçon {activeItemIndex + 1}/{items.length}
           </span>
@@ -1601,7 +1594,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     return (
       <div className="max-w-2xl mx-auto py-6 sm:py-10 px-4 space-y-6 text-center animate-in zoom-in-95 duration-300">
         {/* Top bar avec alternance */}
-        <div className="flex items-center justify-center pb-3 border-b border-slate-200/80 dark:border-slate-800">
+        <div className="flex flex-col items-center gap-2 pb-3 border-b border-slate-200/80 dark:border-slate-800">
           <div className="flex items-center gap-2">
             <span
               className="w-2.5 h-2.5 rounded-full shrink-0"
@@ -1610,8 +1603,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">
               {subjectTitle} • {subCategoryLabel} • Leçon {activeItemIndex + 1}/{items.length}
             </span>
-            {pomodoroPill}
           </div>
+          {/* Chrono sur sa propre ligne : toujours visible en entier */}
+          {pomodoroPill}
         </div>
 
         {/* Reprise : la séance précédente de ce volet s'était arrêtée au milieu de cette mini-leçon */}
@@ -1705,7 +1699,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               if (isTimeBlocking && activeItemIndex === 0) enterFocusMode();
               startLearningAt(0, currentPoint);
             }}
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto animate-bounce hover:animate-none"
+            className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto relative overflow-hidden konan-btn-shine"
           >
             <span>C'est parti ! Commencer la leçon</span>
             <ArrowRight className="w-5 h-5" />
@@ -1741,11 +1735,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       {/* KONAN réagit (inactivité, réponses au hasard, série de bonnes réponses…) */}
       <KonanCoachBubble message={coach.message} onDismiss={coach.dismiss} onAction={coach.imHere} />
       {kickPrompt}
-      {/* 1. BARRE DE PROGRESSION STYLE DUOLINGO (TOP) */}
-      <div className="flex items-center gap-3 w-full pb-1">
-        {/* Barre de progression continue Style Duolingo (Couleur Bleue) */}
-        <div className="flex-1 flex items-center gap-3 min-w-0">
-          <div className="flex-1 h-3.5 sm:h-4 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300 dark:border-slate-800/80 p-0.5 shadow-inner">
+      {/* 1. BARRE DE PROGRESSION STYLE DUOLINGO (TOP) : toute la largeur, bien visible sur téléphone */}
+      <div className="space-y-2 w-full pb-1">
+        <div className="flex items-center gap-2.5 w-full">
+          {/* Barre de progression continue Style Duolingo (Couleur Bleue) */}
+          <div className="flex-1 min-w-0 h-4 sm:h-5 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300 dark:border-slate-800/80 p-0.5 shadow-inner">
             <div
               className="h-full rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 dark:from-blue-500 dark:via-indigo-500 dark:to-cyan-400 transition-all duration-500 ease-out relative shadow-sm"
               style={{ width: `${Math.min(100, Math.max(0, (barDone / barTotal) * 100))}%` }}
@@ -1755,11 +1749,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </div>
 
           {/* Badge de score X/totalSteps */}
-          <div className="shrink-0 px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black font-mono">
+          <div className="shrink-0 px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black font-mono tabular-nums">
             {barDone} / {barTotal}
           </div>
-          {pomodoroPill}
         </div>
+        {/* Chrono (Pomodoro / Time Blocking) sur sa propre ligne : jamais caché ni coupé */}
+        {pomodoroPill && <div className="flex justify-end">{pomodoroPill}</div>}
       </div>
 
       {/* 2. FIL D'ARIANE / CONTEXTE DE LA LEÇON */}
