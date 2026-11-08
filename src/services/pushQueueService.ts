@@ -52,7 +52,11 @@ function alertDocId(uid: string, sessionId: string, ymd: string, kind: KonanAler
   const safe = String(sessionId).replace(/[^A-Za-z0-9_-]/g, '-').slice(0, 120);
   return `${uid}_${safe}_${ymd.replace(/-/g, '')}_${kind}`;
 }
-const PLAN_CACHE_PREFIX = 'konan_push_plan_v2_';
+const PLAN_CACHE_PREFIX = 'konan_push_plan_v3_';
+/** Dernier planning complet envoyé au serveur par CET appareil (empreinte + heure). */
+const ACTIVE_PLAN_PREFIX = 'konan_push_active_v3_';
+/** Un appareil ouvert reprend la main sur les alertes au moins toutes les 30 minutes. */
+const REPLACE_EVERY_MS = 30 * MINUTE;
 const STARTED_PREFIX = 'konan_started_sessions_';
 
 function atLocal(ymd: string, hhmm: string): number {
@@ -213,7 +217,7 @@ function hashOf(text: string): string {
 function envelopeOf(uid: string, a: PlannedAlert) {
   return {
     userId: uid,
-    v: 2,
+    v: 3,
     kind: a.kind,
     situation: a.situation,
     sendAt: a.sendAt,
@@ -231,12 +235,29 @@ function envelopeOf(uid: string, a: PlannedAlert) {
 let syncRunning = false;
 let syncAgain: (() => Promise<void>) | null = null;
 
+function readActivePlan(uid: string): { hash: string; at: number } | null {
+  try {
+    const raw = localStorage.getItem(`${ACTIVE_PLAN_PREFIX}${uid}`);
+    const parsed = raw ? JSON.parse(raw) : null;
+    return parsed && typeof parsed.hash === 'string' ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
 /**
- * Dépose dans push_queue les alertes des 7 prochains jours (seulement ce qui a changé).
+ * Dépose dans push_queue les alertes des 7 prochains jours.
  * À appeler pour tout élève connecté (Gratuit, Pro, Plus) dont l'appareil est abonné aux notifications.
+ *
+ * Les notifications suivent le planning de l'appareil que l'élève UTILISE : seul un appareil ouvert à
+ * l'écran synchronise, et il demande au serveur d'effacer toute autre alerte future de l'élève
+ * (anciens plannings, autre téléphone ou PC resté sur une vieille version, mémoire effacée par une
+ * réinstallation…). Sans cela, d'anciennes alertes partaient avec une autre matière ou une autre heure.
  */
 export async function syncPushPlan(uid: string, input: AlertPlanInput, now: Date = new Date()): Promise<{ written: number; deleted: number }> {
   if (!uid) return { written: 0, deleted: 0 };
+  // Un appareil en arrière-plan (onglet oublié, PC resté ouvert) ne touche pas aux alertes
+  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return { written: 0, deleted: 0 };
   if (syncRunning) {
     // Une synchronisation tourne déjà : on rejouera la plus récente juste après
     syncAgain = async () => { await syncPushPlan(uid, input, new Date()); };
@@ -262,6 +283,14 @@ export async function syncPushPlan(uid: string, input: AlertPlanInput, now: Date
       .filter(([id, info]) => !nextDocs[id] && info.sendAt > nowMs)
       .map(([id]) => id);
 
+    // Faut-il demander au serveur d'effacer TOUTES les autres alertes futures de l'élève ?
+    const planHash = hashOf(alerts.map((a) => `${a.id}:${nextDocs[a.id].h}`).join('|'));
+    const active = readActivePlan(uid);
+    const needReplace = Object.keys(cache.docs).length === 0
+      || !active || active.hash !== planHash || nowMs - active.at > REPLACE_EVERY_MS;
+
+    if (!toWrite.length && !toDelete.length && !needReplace) return { written: 0, deleted: 0 };
+
     // Écriture par le serveur KONAN (/api/push-sync), par paquets
     for (let i = 0; i < Math.max(toWrite.length, toDelete.length); i += 300) {
       const result = await callPushSync({
@@ -275,8 +304,24 @@ export async function syncPushPlan(uid: string, input: AlertPlanInput, now: Date
       }
     }
 
+    // Ce planning devient la référence : le serveur efface toute autre alerte future de l'élève
+    let replaced = 0;
+    if (needReplace || toWrite.length || toDelete.length) {
+      const result = await callPushSync({ action: 'plan', writes: [], deletes: [], replaceFuture: true, keep: alerts.map((a) => a.id) });
+      if (!result.success) {
+        console.warn('[KONAN alertes] Nettoyage refusé :', result.error);
+        return { written: toWrite.length, deleted: toDelete.length };
+      }
+      replaced = Number(result.replaced) || 0;
+      try {
+        localStorage.setItem(`${ACTIVE_PLAN_PREFIX}${uid}`, JSON.stringify({ hash: planHash, at: nowMs }));
+      } catch {
+        // stockage plein : on refera simplement le nettoyage la prochaine fois
+      }
+    }
+
     writeCache(uid, { docs: nextDocs });
-    return { written: toWrite.length, deleted: toDelete.length };
+    return { written: toWrite.length, deleted: toDelete.length + replaced };
   } catch (err: any) {
     console.warn('[KONAN alertes] Synchronisation impossible :', err?.message || err);
     return { written: 0, deleted: 0 };

@@ -10,6 +10,9 @@
  * Corps JSON :
  *   { action: 'register', subscription: {endpoint, keys:{p256dh, auth}}, planTier, timezone, email, device }
  *   { action: 'plan', writes: [{ id, data }], deletes: [id] }
+ *   { action: 'plan', replaceFuture: true, keep: [id] }  → efface toute autre alerte FUTURE de l'élève
+ *     (anciens plannings, autre appareil resté sur une vieille version) : le planning de l'appareil
+ *     que l'élève utilise devient la seule référence.
  *   { action: 'cancel', ids: [id] }
  */
 import { loadLocalEnvIfPresent } from './_env.js';
@@ -18,6 +21,7 @@ import { verifyFirebaseIdToken } from './_firebaseToken.js';
 const KINDS = new Set(['avant', 'retard', 'manquee', 'rattrapage']);
 const SITUATIONS = new Set(['5_MIN_AVANT', 'RETARD_15_MIN', 'SEANCE_MANQUEE']);
 const MAX_ITEMS = 400;
+const MAX_KEEP = 3000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 let initializeApp, getApps, cert, getFirestore;
@@ -90,7 +94,7 @@ export function cleanEnvelope(data, uid, nowMs = Date.now()) {
   const hhmm = (v) => (typeof v === 'string' && /^\d{1,2}:\d{2}$/.test(v) ? v : null);
   return {
     userId: uid,
-    v: 2,
+    v: Number(data.v) === 3 ? 3 : 2,
     kind: data.kind,
     situation: data.situation,
     sendAt,
@@ -188,6 +192,22 @@ export default async function handler(req, res) {
         else rejected += 1;
       }
       for (const id of deleteIds) ops.push({ type: 'delete', id });
+
+      // Planning de référence : toute autre alerte future de cet élève est effacée
+      let replaced = 0;
+      if (body.action === 'plan' && body.replaceFuture === true && Array.isArray(body.keep)) {
+        const keep = new Set(body.keep.slice(0, MAX_KEEP).filter((id) => isOwnId(id, uid)));
+        const nowMs = now.getTime();
+        const mine = await db.collection('push_queue').where('userId', '==', uid).get();
+        for (const doc of mine.docs) {
+          if (!doc.id.startsWith(`${uid}_`) || keep.has(doc.id)) continue;
+          if (Number(doc.get('sendAt')) <= nowMs) continue; // déjà échue : le cron s'en occupe
+          if (ops.some((o) => o.id === doc.id)) continue;
+          ops.push({ type: 'delete', id: doc.id });
+          replaced += 1;
+        }
+      }
+
       for (let i = 0; i < ops.length; i += 450) {
         const batch = db.batch();
         for (const op of ops.slice(i, i + 450)) {
@@ -197,7 +217,7 @@ export default async function handler(req, res) {
         }
         await batch.commit();
       }
-      return send(res, 200, { success: true, written: ops.filter((o) => o.type === 'set').length, deleted: deleteIds.length, rejected });
+      return send(res, 200, { success: true, written: ops.filter((o) => o.type === 'set').length, deleted: deleteIds.length, replaced, rejected });
     }
 
     return send(res, 400, { success: false, error: 'UNKNOWN_ACTION' });

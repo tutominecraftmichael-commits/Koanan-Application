@@ -5,7 +5,7 @@
  */
 import { auth } from '../lib/firebase';
 
-export type PushSyncResult = { success: boolean; error?: string; written?: number; deleted?: number };
+export type PushSyncResult = { success: boolean; error?: string; written?: number; deleted?: number; replaced?: number };
 
 const ERROR_LABELS: Record<string, string> = {
   UNAUTHORIZED: 'connexion au compte non reconnue, reconnecte-toi',
@@ -32,7 +32,7 @@ export async function callPushSync(body: Record<string, unknown>): Promise<PushS
   try {
     let r = await attempt(false);
     if (!r.ok && (r.json?.error === 'TOKEN_EXPIRED' || r.status === 401)) r = await attempt(true);
-    if (r.ok) return { success: true, written: r.json.written, deleted: r.json.deleted };
+    if (r.ok) return { success: true, written: r.json.written, deleted: r.json.deleted, replaced: r.json.replaced };
     const code = String(r.json?.error || `HTTP ${r.status}`);
     return { success: false, error: ERROR_LABELS[code] || code };
   } catch (err: any) {

@@ -20,7 +20,6 @@ import { loadLocalEnvIfPresent, secretsMatch, providedSecret } from './_env.js';
 import {
   ALERT_KINDS,
   buildStudentContext,
-  dayOfWeekOf,
   DEFAULT_TIMEZONE,
   ymdIn,
 } from './_konanVoice.js';
@@ -145,24 +144,58 @@ function checkEnvelope(env, userData) {
   if (!env?.kind || !ALERT_KINDS[env.kind] || !env.sessionId || !env.date) {
     return { ok: false, reason: 'ancienne enveloppe' };
   }
-  const sessions = Array.isArray(userData?.studySessions) ? userData.studySessions : null;
-  if (!sessions) return { ok: true, alert: env }; // fiche absente : on fait confiance à l'enveloppe
+  // Enveloppes d'avant la v3 : déposées sans nettoyage des anciens plannings, elles pouvaient
+  // annoncer une matière ou une heure qui n'existe plus. L'application les remplace dès son ouverture.
+  if (Number(env.v) !== 3) return { ok: false, reason: 'ancienne enveloppe (v2)' };
 
+  // L'enveloppe vient du planning de l'appareil que l'élève utilise (le serveur efface toutes les
+  // autres) : c'est elle qui fait foi pour la matière et l'heure. La fiche cloud peut être en retard
+  // sur ce planning ; on ne s'en sert que pour savoir si la séance est déjà faite.
+  if (userData?.cycleCompletedDate === env.date) return { ok: false, reason: 'programme du jour terminé' };
+  const sessions = Array.isArray(userData?.studySessions) ? userData.studySessions : [];
   const s = sessions.find((x) => x && x.id === env.sessionId);
-  if (!s) return { ok: false, reason: 'séance supprimée' };
-  if (s.completed) return { ok: false, reason: 'séance déjà faite' };
-  if (s.dayOfWeek !== dayOfWeekOf(env.date)) return { ok: false, reason: 'séance changée de jour' };
-  if (userData.cycleCompletedDate === env.date) return { ok: false, reason: 'programme du jour terminé' };
+  if (s?.completed && s.subjectId === env.subjectId) return { ok: false, reason: 'séance déjà faite' };
+  return { ok: true, alert: env };
+}
 
-  const original = s.isRescheduledToday && s.originalStartTime ? s.originalStartTime : s.startTime;
-  const rescheduledThatDay = Boolean(s.isRescheduledToday && s.rescheduledDate === env.date);
-
-  if (env.kind === 'rattrapage') {
-    if (rescheduledThatDay && s.startTime !== env.rattrapageA) return { ok: false, reason: 'rattrapage déplacé' };
-    return { ok: true, alert: env };
-  }
-  if (original !== env.startTime) return { ok: false, reason: 'horaire changé' };
-  return { ok: true, alert: { ...env, rattrapageA: rescheduledThatDay ? s.startTime : env.rattrapageA || null } };
+/**
+ * Lecture seule, pour vérifier ce que le serveur enverra à un élève : matières de sa fiche cloud et
+ * alertes en attente. Aucune notification n'est envoyée.
+ */
+async function inspectUser(db, email, now) {
+  const userSnap = await db.collection('users').where('email', '==', email).limit(1).get();
+  if (userSnap.empty) return { success: false, diagnostic: 'USER_NOT_FOUND' };
+  const userId = userSnap.docs[0].id;
+  const user = userSnap.docs[0].data() || {};
+  const subjects = Array.isArray(user.subjects) ? user.subjects : [];
+  const nameOf = (id) => subjects.find((x) => x?.id === id)?.name || '?';
+  const days = ['lun', 'mar', 'mer', 'jeu', 'ven', 'sam', 'dim'];
+  const queue = await db.collection('push_queue').where('userId', '==', userId).get();
+  const envelopes = queue.docs
+    .filter((d) => d.id.startsWith(`${userId}_`))
+    .map((d) => d.data())
+    .sort((a, b) => Number(a.sendAt) - Number(b.sendAt))
+    .map((e) => ({
+      v: e.v || 2,
+      kind: e.kind,
+      date: e.date,
+      seance: e.startTime,
+      matiere: e.subjectName,
+      envoi: new Date(Number(e.sendAt)).toISOString().slice(0, 16).replace('T', ' ') + ' UTC',
+      echue: Number(e.sendAt) <= now.getTime(),
+    }));
+  return {
+    success: true,
+    inspect: true,
+    cloud: {
+      lastSyncedAt: user.lastSyncedAt || null,
+      matieres: subjects.map((x) => x?.name).filter(Boolean),
+      seances: (Array.isArray(user.studySessions) ? user.studySessions : [])
+        .map((x) => `${days[x?.dayOfWeek] || '?'} ${x?.startTime}-${x?.endTime} ${nameOf(x?.subjectId)}${x?.completed ? ' (faite)' : ''}`),
+    },
+    alertesEnAttente: envelopes.length,
+    alertes: envelopes.slice(0, 60),
+  };
 }
 
 /** Derniers messages reçus par l'élève (titres et textes), mémorisés sur sa fiche « appareils ». */
@@ -305,6 +338,10 @@ export default async function handler(req, res) {
   const { db } = fb;
 
   try {
+    // ----- Inspection en lecture seule d'un élève -----
+    const inspectEmail = String(params.get('inspect') || '').toLowerCase().trim();
+    if (inspectEmail) return res.status(200).json(await inspectUser(db, inspectEmail, now));
+
     // ----- Mode test : vraie notification à un élève (ou message seul avec &dry=1) -----
     const testEmail = String(params.get('test') || '').toLowerCase().trim();
     if (testEmail) {
