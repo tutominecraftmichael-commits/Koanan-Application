@@ -1223,7 +1223,8 @@ export function App() {
     setIsPrivacyModalOpen(false);
     setPendingAuth(null);
 
-    // Déconnexion Firebase Auth immédiate
+    // Déconnexion Firebase Auth immédiate (ce téléphone quitte aussi ce compte pour les notifications)
+    await import('./services/webPushService').then(({ detachDeviceFromAccount }) => detachDeviceFromAccount()).catch(() => { });
     await signOutReal();
     setActiveSession(null);
 
@@ -1324,6 +1325,8 @@ export function App() {
         console.warn('Erreur de synchronisation cloud avant déconnexion:', err);
       }
     }
+    // Ce téléphone ne doit plus recevoir les notifications de ce compte
+    await import('./services/webPushService').then(({ detachDeviceFromAccount }) => detachDeviceFromAccount()).catch(() => { });
     await signOutReal();
     setActiveSession(null);
 
