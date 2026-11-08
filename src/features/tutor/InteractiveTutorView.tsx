@@ -45,8 +45,12 @@ import {
   getSubCategoryQuestion,
   getChapterSubCategory,
   getActiveSubCategoryForSession,
-  defaultSubCategoryFor
+  defaultSubCategoryFor,
+  saveResumeBookmark,
+  readResumeBookmark
 } from '../../lib/curriculum/studentProgressService';
+import type { ResumeBookmark } from '../../lib/curriculum/types';
+import { KonanMascot } from '../../components/common/KonanMascot';
 import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
 import { shuffleExerciseOptions } from '../../lib/curriculum/optionShuffle';
 import { soundFX } from '../../lib/audioEffects';
@@ -77,6 +81,7 @@ interface WarmupItem {
 }
 
 type LessonPhase =
+  | 'time_up' // Pomodoro : temps de travail écoulé → pause, puis matière suivante
   | 'warmup' // Révision du jour : questions dues (révision espacée), de mémoire, avant la leçon
   | 'recall' // Rappel actif : 3 questions de la mini-leçon, de mémoire, fiche cachée
   | 'intro' // Écran d'introduction animé de la mini-leçon (Présentation, Enjeu Bac/BEPC, Objectifs)
@@ -305,6 +310,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 }) => {
   // Rappel actif : se tester de mémoire (question avant la fiche, rappel en fin de mini-leçon)
   const isActiveRecall = pacingMethod === 'active_recall_spaced' || pacingMethod === 'active_recall' || pacingMethod === 'spaced_repetition';
+  // Pomodoro : la séance dure le temps prévu au planning (25 min de VRAI travail), puis 5 min de pause
+  const isPomodoro = pacingMethod === 'pomodoro';
+  const workLimitSec = isPomodoro ? Math.max(1, durationMinutes || 25) * 60 : null;
+  const POMODORO_PAUSE_SEC = 5 * 60;
+  // Règle des 2 minutes : on démarre tout de suite, sans écran d'accueil ; après 2 minutes, « Tu continues ? »
+  const isTwoMinutes = pacingMethod === 'two_minutes_rule';
   // 1. Sous-catégorie active calculée selon la règle d'alternance officielle ivoirienne
   // (Physique-Chimie -> Chimie ↔ Physique, Maths -> Géométrie ↔ Numérique)
   const [activeSubCategory, setActiveSubCategory] = useState<StemSubCategory>(() => {
@@ -370,6 +381,16 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // Rappel actif : étapes de la mini-leçon reposées de mémoire à la fin
   const [recallSteps, setRecallSteps] = useState<number[]>([]);
   const [recallIndex, setRecallIndex] = useState<number>(0);
+  // Pomodoro : secondes de vrai travail (le chrono s'arrête si l'élève quitte l'appli ou ne fait plus rien)
+  const [workSeconds, setWorkSeconds] = useState<number>(0);
+  const [pauseLeft, setPauseLeft] = useState<number>(POMODORO_PAUSE_SEC);
+  const [timeUpCounted, setTimeUpCounted] = useState<boolean>(true);
+  // Marque-page de reprise (séance précédente arrêtée au milieu d'une mini-leçon)
+  const resumeRef = useRef<ResumeBookmark | null>(null);
+  // Règle des 2 minutes : secondes écoulées depuis le démarrage, et question « Tu continues ? »
+  const [kickSeconds, setKickSeconds] = useState<number>(0);
+  const [showKickPrompt, setShowKickPrompt] = useState<boolean>(false);
+  const kickDoneRef = useRef<boolean>(false);
 
   /** Prépare la révision du jour (au plus 3 questions dues dans ce volet). */
   const loadWarmup = (subCat: StemSubCategory): WarmupItem[] => {
@@ -429,6 +450,21 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       setShowChapterSelector(false);
       setSessionPayload(res.payload);
       setActiveItemIndex(0);
+      // Marque-page : la séance précédente de CE volet s'était arrêtée au milieu de cette mini-leçon ?
+      const bookmark = readResumeBookmark(userId, stemSubjectId, gradeLevel, res.subCategory);
+      if (bookmark && res.payload.itemsToReview[0]?.point.id === bookmark.pointId) {
+        resumeRef.current = bookmark;
+      } else {
+        resumeRef.current = null;
+        if (bookmark) saveResumeBookmark(userId, stemSubjectId, gradeLevel, res.subCategory, null);
+      }
+      if (isTwoMinutes) {
+        // Règle des 2 minutes : on se lance tout de suite dans la leçon (la révision du jour attendra)
+        setWarmupItems([]);
+        kickDoneRef.current = false;
+        startLearningAt(0, res.payload.itemsToReview[0]?.point);
+        return;
+      }
       // Révision espacée : les questions dues passent en premier, puis la leçon du jour
       const warmup = loadWarmup(res.subCategory);
       setWarmupItems(warmup);
@@ -444,6 +480,37 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       setCatchupQueue([]);
       setCurrentCatchupQueueIndex(0);
     }
+  };
+
+  /**
+   * Lance les étapes d'une mini-leçon. Si un marque-page existe pour ce point (séance précédente coupée
+   * par la fin du temps), on reprend à l'étape exacte, avec les étapes déjà réussies conservées.
+   */
+  const startLearningAt = (fallbackIndex: number, point?: CurriculumPoint) => {
+    setSelectedOptionIndex(null);
+    setIsAnswerChecked(false);
+    setIsAnswerCorrect(false);
+    setShowExplanation(false);
+    const bm = resumeRef.current;
+    if (bm && point && point.id === bm.pointId) {
+      const total = point.exercises?.length || point.structuredSteps?.length || 0;
+      setMasteredIndices(bm.mastered);
+      setMissedIndices(bm.missed);
+      if (bm.exerciseIndex >= total) {
+        const queue = bm.missed.filter((i) => !bm.mastered.includes(i));
+        if (queue.length > 0) {
+          setCatchupQueue(queue);
+          setCurrentCatchupQueueIndex(0);
+          setPhase('catchup');
+          return;
+        }
+      }
+      setExerciseIndex(Math.min(bm.exerciseIndex, Math.max(0, total - 1)));
+      setPhase('learning');
+      return;
+    }
+    setExerciseIndex(fallbackIndex);
+    setPhase('learning');
   };
 
   useEffect(() => {
@@ -681,6 +748,16 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     try {
       soundFX.playVictoryJingle();
     } catch {}
+    recordPointDone();
+    setPhase('point_celebration');
+  };
+
+  /** Enregistre la mini-leçon en cours comme validée (progression + fin du marque-page). */
+  const recordPointDone = () => {
+    if (resumeRef.current && currentPoint && resumeRef.current.pointId === currentPoint.id) {
+      resumeRef.current = null;
+      saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, null);
+    }
     if (currentItem) {
       recordCompletedTutorSession(
         userId,
@@ -693,7 +770,24 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       );
       recordedCountsRef.current = { answered: totalExercisesAnswered, correct: totalFirstTryCorrect };
     }
-    setPhase('point_celebration');
+  };
+
+  /**
+   * Pomodoro : les mini-leçons prévues sont finies mais le temps de travail ne l'est pas.
+   * On ajoute la suite du programme (même volet), pour travailler jusqu'au bout des 25 minutes.
+   */
+  const extendSessionIfTimeLeft = (): boolean => {
+    if (!workLimitSec || workSeconds >= workLimitSec || !sessionPayload) return false;
+    try {
+      const more = buildTutorSessionPayload(userId, stemSubjectId, subjectTitle, gradeLevel, durationMinutes, activeSubCategory);
+      const known = new Set(sessionPayload.itemsToReview.map((i) => i.point.id));
+      const fresh = (more.payload?.itemsToReview || []).filter((i) => !known.has(i.point.id));
+      if (!fresh.length) return false;
+      setSessionPayload({ ...sessionPayload, itemsToReview: [...sessionPayload.itemsToReview, ...fresh] });
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   // Passer à la mini-leçon suivante ou célébrer la fin de séance
@@ -701,7 +795,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     try {
       soundFX.playClick();
     } catch {}
-    if (activeItemIndex < items.length - 1) {
+    if (activeItemIndex < items.length - 1 || extendSessionIfTimeLeft()) {
       setActiveItemIndex(prev => prev + 1);
       setPhase('intro');
       setExerciseIndex(0);
@@ -732,6 +826,112 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const handleFinishAndExit = () => {
     onSessionCompleted(studySessionId);
   };
+
+  // =========================================================================
+  // POMODORO : chrono de VRAI travail, fin de séance, pause
+  // =========================================================================
+  const timedPhase = phase === 'warmup' || phase === 'intro' || phase === 'learning' || phase === 'catchup' || phase === 'recall' || phase === 'point_celebration';
+  const { isIdle: coachIdle } = coach;
+  useEffect(() => {
+    if (!workLimitSec || !timedPhase) return;
+    const timer = setInterval(() => {
+      // Le chrono ne compte pas quand l'élève a quitté l'appli ou ne fait plus rien
+      if (document.visibilityState === 'hidden' || coachIdle) return;
+      setWorkSeconds((s) => s + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [workLimitSec, timedPhase, coachIdle]);
+
+  /** Fin des 25 minutes : marque-page si on est au milieu d'une mini-leçon, alternance, puis pause. */
+  const handleTimeUp = () => {
+    try {
+      if ((phase === 'learning' || phase === 'catchup') && currentPoint) {
+        const nextIndex = phase === 'learning' ? exerciseIndex + (isAnswerChecked ? 1 : 0) : pointExercises.length;
+        const mastered = isAnswerChecked && isAnswerCorrect && !masteredIndices.includes(activeStepIndex) ? [...masteredIndices, activeStepIndex] : masteredIndices;
+        const missed = isAnswerChecked && !isAnswerCorrect && phase === 'learning' && !missedIndices.includes(activeStepIndex) ? [...missedIndices, activeStepIndex] : missedIndices;
+        saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, {
+          pointId: currentPoint.id, exerciseIndex: nextIndex, mastered, missed, savedAt: new Date().toISOString(),
+        });
+      } else if (phase === 'recall') {
+        recordPointDone(); // toutes les étapes étaient faites : la mini-leçon compte
+      }
+      // Alternance : la prochaine séance de cette matière passera à l'autre volet
+      markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+    } catch {
+      // la fin de séance ne doit jamais bloquer
+    }
+    // Séance validée seulement si l'élève a vraiment travaillé (au moins 5 réponses)
+    setTimeUpCounted(totalExercisesAnswered >= 5);
+    setPauseLeft(POMODORO_PAUSE_SEC);
+    try { soundFX.playVictoryJingle(); } catch {}
+    setPhase('time_up');
+  };
+
+  useEffect(() => {
+    if (workLimitSec && timedPhase && workSeconds >= workLimitSec) handleTimeUp();
+  }, [workSeconds]);
+
+  // Compte à rebours de la pause
+  useEffect(() => {
+    if (phase !== 'time_up' || !timeUpCounted) return;
+    const timer = setInterval(() => setPauseLeft((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(timer);
+  }, [phase, timeUpCounted]);
+
+  // =========================================================================
+  // RÈGLE DES 2 MINUTES : après 2 minutes (ou 3 réponses), KONAN demande « Tu continues ? »
+  // =========================================================================
+  useEffect(() => {
+    if (!isTwoMinutes || kickDoneRef.current || !questionPhase) return;
+    const timer = setInterval(() => {
+      if (document.visibilityState === 'hidden') return;
+      setKickSeconds((s) => s + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isTwoMinutes, questionPhase]);
+
+  useEffect(() => {
+    if (!isTwoMinutes || kickDoneRef.current) return;
+    if (kickSeconds >= 120 || (totalExercisesAnswered >= 3 && !isAnswerChecked)) {
+      kickDoneRef.current = true;
+      setShowKickPrompt(true);
+      try { soundFX.playCheckmarkPop(); } catch {}
+    }
+  }, [kickSeconds, totalExercisesAnswered, isAnswerChecked, isTwoMinutes]);
+
+  const fmtClock = (sec: number) => `${Math.floor(Math.max(0, sec) / 60)}:${String(Math.max(0, sec) % 60).padStart(2, '0')}`;
+  const isTwoVoletLabel = (label: string) => ['Physique', 'Chimie', 'Géométrie', 'Numérique', 'Histoire', 'Géographie'].includes(label);
+
+  /** Chrono Pomodoro affiché en haut (temps de travail restant). */
+  const pomodoroPill = workLimitSec ? (
+    <span
+      className={`shrink-0 px-2.5 py-1 rounded-xl text-xs font-black font-mono tabular-nums border ${coachIdle ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500' : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300'}`}
+      title={coachIdle ? 'Chrono en pause : tu ne travailles plus' : 'Temps de travail restant (Pomodoro)'}
+    >
+      ⏱ {fmtClock(workLimitSec - workSeconds)}{coachIdle ? ' · pause' : ''}
+    </span>
+  ) : null;
+
+  /** Règle des 2 minutes : « Tu t'es lancé ! Tu continues ? » */
+  const kickPrompt = showKickPrompt ? (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/50 p-4" role="dialog" aria-modal="true">
+      <div className="w-full max-w-sm rounded-3xl bg-white dark:bg-slate-900 border-2 border-emerald-300 dark:border-emerald-700 p-5 text-center space-y-4 animate-in slide-in-from-bottom-6 duration-300">
+        <div className="flex justify-center"><KonanMascot pose="jump" size={120} /></div>
+        <div className="space-y-1">
+          <h3 className="text-lg font-black text-slate-900 dark:text-white">Bravo, tu t’es lancé !</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-300">Le plus dur, c’était de commencer. Et c’est fait. Tu continues ?</p>
+        </div>
+        <div className="grid gap-2">
+          <button type="button" onClick={() => setShowKickPrompt(false)} className="w-full py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white font-black uppercase shadow-[0_4px_0_#15803D] active:translate-y-1 cursor-pointer">
+            Je continue
+          </button>
+          <button type="button" onClick={onExit} className="w-full py-2.5 rounded-2xl text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+            J’arrête là pour l’instant
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : null;
 
   // =========================================================================
   // VUE -1 : COURS EN PRÉPARATION (aucun cours authentique pour cette classe)
@@ -1174,6 +1374,57 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // =========================================================================
   // VUE 2 : CÉLÉBRATION GLOBALE DE FIN DE SÉANCE D'EDT
   // =========================================================================
+  // =========================================================================
+  // POMODORO : TEMPS DE TRAVAIL ÉCOULÉ → PAUSE, PUIS MATIÈRE SUIVANTE
+  // =========================================================================
+  if (phase === 'time_up') {
+    const workedMin = Math.round(workSeconds / 60);
+    return (
+      <div className="max-w-md mx-auto py-10 px-4 text-center space-y-5 animate-in zoom-in-95 duration-300">
+        <div className="flex justify-center">
+          <KonanMascot pose={timeUpCounted ? 'pause' : 'sad'} size={150} />
+        </div>
+        {timeUpCounted ? (
+          <>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white">{workedMin} minute{workedMin > 1 ? 's' : ''} de vrai travail !</h2>
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Pause ! 5 minutes, bois de l’eau et repose tes yeux.
+                {(isTwoVoletLabel(subCategoryLabel)) ? ` La prochaine fois, on passera à l’autre volet ; et quand ${subCategoryLabel} reviendra, tu reprendras exactement là où tu t’es arrêté.` : ' La prochaine fois, tu reprendras exactement là où tu t’es arrêté.'}
+              </p>
+            </div>
+            <div className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-sky-50 dark:bg-sky-950/50 border-2 border-sky-200 dark:border-sky-800 text-3xl font-black font-mono text-sky-700 dark:text-sky-300 tabular-nums">
+              {fmtClock(pauseLeft)}
+            </div>
+            <button
+              type="button"
+              onClick={handleFinishAndExit}
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
+            >
+              {pauseLeft > 0 ? 'Terminer la séance' : 'Pause terminée : matière suivante'}
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="space-y-2">
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">On a à peine commencé…</h2>
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Cette séance ne compte pas, mais demain on se rattrape ensemble ? Tu reprendras là où tu t’es arrêté.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onExit}
+              className="w-full py-4 rounded-2xl bg-slate-800 dark:bg-slate-700 text-white font-black uppercase tracking-wide cursor-pointer"
+            >
+              Retour au tableau de bord
+            </button>
+          </>
+        )}
+      </div>
+    );
+  }
+
   if (phase === 'session_celebration') {
     return (
       <div className="max-w-2xl mx-auto py-6 sm:py-10 px-4 space-y-6 text-center animate-in zoom-in-95 duration-300">
@@ -1265,8 +1516,24 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">
               {subjectTitle} • {subCategoryLabel} • Leçon {activeItemIndex + 1}/{items.length}
             </span>
+            {pomodoroPill}
           </div>
         </div>
+
+        {/* Reprise : la séance précédente de ce volet s'était arrêtée au milieu de cette mini-leçon */}
+        {resumeRef.current && resumeRef.current.pointId === currentPoint.id && (
+          <div className="p-3 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 text-sm font-bold text-sky-900 dark:text-sky-100">
+            Tu reprends là où tu t’étais arrêté : étape {Math.min(resumeRef.current.exerciseIndex + 1, numQuestions)} sur {numQuestions}.
+          </div>
+        )}
+
+        {/* Pomodoro : la règle du jeu en une ligne */}
+        {isPomodoro && activeItemIndex === 0 && (
+          <div className="p-3.5 rounded-2xl bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-left text-xs sm:text-sm text-rose-900 dark:text-rose-100 font-semibold leading-relaxed">
+            <strong>Séance Pomodoro :</strong> {Math.round((workLimitSec || 1500) / 60)} minutes de vrai travail, puis 5 minutes de pause.
+            Le chrono s’arrête si tu quittes l’appli ou si tu ne fais plus rien.
+          </div>
+        )}
 
         {/* Mascotte KonanCube animée */}
         <div className="relative inline-block my-2">
@@ -1331,11 +1598,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             type="button"
             onClick={() => {
               try { soundFX.playCheckmarkPop(); } catch {}
-              setSelectedOptionIndex(null);
-              setIsAnswerChecked(false);
-              setIsAnswerCorrect(false);
-              setPhase('learning');
-              setExerciseIndex(0);
+              startLearningAt(0, currentPoint);
             }}
             className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto animate-bounce hover:animate-none"
           >
@@ -1372,6 +1635,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     <div className="max-w-3xl mx-auto py-4 sm:py-6 px-3 sm:px-6 space-y-4">
       {/* KONAN réagit (inactivité, réponses au hasard, série de bonnes réponses…) */}
       <KonanCoachBubble message={coach.message} onDismiss={coach.dismiss} onAction={coach.imHere} />
+      {kickPrompt}
       {/* 1. BARRE DE PROGRESSION STYLE DUOLINGO (TOP) */}
       <div className="flex items-center gap-3 w-full pb-1">
         {/* Barre de progression continue Style Duolingo (Couleur Bleue) */}
@@ -1389,6 +1653,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="shrink-0 px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black font-mono">
             {barDone} / {barTotal}
           </div>
+          {pomodoroPill}
         </div>
       </div>
 
