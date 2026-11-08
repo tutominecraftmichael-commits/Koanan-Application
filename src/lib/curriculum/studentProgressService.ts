@@ -3,6 +3,7 @@ import type {
   CurriculumGradeLevel,
   StemSubjectId,
   StemSubCategory,
+  ResumeBookmark,
   StudentCurriculumProgressMap,
   SubjectStudentProgress,
   SubCategoryStudentProgress,
@@ -13,6 +14,7 @@ import { END_OF_CHAPTER_MARKER, getSessionMiniLessonQuota } from './types';
 import { getCurriculumChapterById, getCurriculumChapters, normalizeGradeForLookup } from './curriculumRegistry';
 import { isChimieChapter } from './curriculumExpander';
 import { voletFromSubjectName } from './curriculumMatcher';
+import { notifyLearningChanged } from './learningEvents';
 
 const PROGRESS_STORAGE_PREFIX = 'konan_curriculum_progress_v1_';
 
@@ -30,7 +32,8 @@ export function getStudentProgressMap(userId: string): StudentCurriculumProgress
 
 export function saveStudentProgressMap(
   userId: string,
-  progressMap: StudentCurriculumProgressMap
+  progressMap: StudentCurriculumProgressMap,
+  options: { silent?: boolean } = {}
 ): void {
   try {
     localStorage.setItem(
@@ -40,6 +43,8 @@ export function saveStudentProgressMap(
   } catch {
     // Ignore
   }
+  // Copie dans le compte de l'élève (suivi sur tous ses appareils), sauf quand elle vient du compte
+  if (!options.silent) notifyLearningChanged(userId);
 }
 
 // ============================================================================
@@ -571,6 +576,52 @@ export function buildTutorSessionPayload(
       pointsToReview: itemsToReview.map(i => i.point),
     },
   };
+}
+
+/**
+ * Marque-page d'un volet (ex. Physique) : séance arrêtée au milieu d'une mini-leçon.
+ * Chaque volet a le sien : Physique et Chimie reprennent chacun là où ils s'étaient arrêtés.
+ */
+export function saveResumeBookmark(
+  userId: string,
+  subjectId: StemSubjectId,
+  gradeLevel: CurriculumGradeLevel,
+  subCategory: StemSubCategory,
+  bookmark: ResumeBookmark | null
+): void {
+  const currentMap = getStudentProgressMap(userId);
+  const prog = readSubjectProgress(currentMap, subjectId, gradeLevel);
+  const subProg = prog?.subCategories?.[subCategory];
+  if (!prog || !subProg) return;
+  const nextSub: SubCategoryStudentProgress = { ...subProg };
+  if (bookmark) nextSub.resume = bookmark;
+  else delete nextSub.resume;
+  writeSubjectProgress(currentMap, subjectId, gradeLevel, {
+    ...prog,
+    subCategories: { ...(prog.subCategories || {}), [subCategory]: nextSub },
+  });
+  saveStudentProgressMap(userId, currentMap);
+}
+
+export function readResumeBookmark(
+  userId: string,
+  subjectId: StemSubjectId,
+  gradeLevel: CurriculumGradeLevel,
+  subCategory: StemSubCategory
+): ResumeBookmark | null {
+  const prog = readSubjectProgress(getStudentProgressMap(userId), subjectId, gradeLevel);
+  return prog?.subCategories?.[subCategory]?.resume ?? null;
+}
+
+/** Points déjà maîtrisés d'un volet (pour les questions faciles de démarrage de la règle des 2 minutes). */
+export function getMasteredPointIds(
+  userId: string,
+  subjectId: StemSubjectId,
+  gradeLevel: CurriculumGradeLevel,
+  subCategory: StemSubCategory
+): string[] {
+  const prog = readSubjectProgress(getStudentProgressMap(userId), subjectId, gradeLevel);
+  return prog?.subCategories?.[subCategory]?.masteredPointIds ?? [];
 }
 
 /**

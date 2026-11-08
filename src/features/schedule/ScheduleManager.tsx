@@ -83,8 +83,8 @@ export function generateFormattedAcademicScheduleText(
   const centeredTitle = ' '.repeat(titlePadding) + title;
 
   const studentDisplay = (studentName || 'Étudiant').trim();
-  const filiereDisplay = (academicLevel || 'Enseignement Supérieur').trim();
-  const infoRow = `  Étudiant : ${studentDisplay.padEnd(18)} Filière : ${filiereDisplay}`;
+  const filiereDisplay = (academicLevel || 'non renseignée').trim();
+  const infoRow = `  Étudiant : ${studentDisplay.padEnd(18)} Classe : ${filiereDisplay}`;
 
   const lines: string[] = [];
   lines.push(line88);
@@ -432,17 +432,18 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   ? 'gold-shimmer-text font-bold'
                   : 'text-slate-700 dark:text-slate-300 font-semibold'
               }>{studentName}</span>
-              <span>•</span>
-              <span>{academicLevel}</span>
+              {academicLevel && (
+                <>
+                  <span>•</span>
+                  <span>{academicLevel}</span>
+                </>
+              )}
             </span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
             <Calendar className="w-7 h-7 sm:w-8 sm:h-8 text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>Emploi du Temps & Grille Hebdomadaire</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-2xl">
-            Visualisez vos cours scolaires fixes et vos créneaux de travail personnel organisés selon vos disponibilités.
-          </p>
         </div>
 
         {/* Action Controls - Compact Horizontal Toolbar */}

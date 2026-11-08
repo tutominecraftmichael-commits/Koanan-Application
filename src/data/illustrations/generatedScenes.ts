@@ -2979,10 +2979,17 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
       "setting": "ville",
       "characters": [
         {
-          "costume": "eleve_garcon",
-          "pose": "debout",
+          "costume": "villageois",
+          "pose": "parle",
           "mood": "content",
-          "facing": "droite"
+          "facing": "droite",
+          "vehicle": "voiture"
+        },
+        {
+          "costume": "eleve_fille",
+          "pose": "montre",
+          "mood": "surpris",
+          "facing": "gauche"
         }
       ],
       "props": [],

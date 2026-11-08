@@ -78,7 +78,7 @@ import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelecto
 import { DashboardOverview } from './features/dashboard/DashboardOverview';
 import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding'; // premier écran de tous : chargé tout de suite
 import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
-import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum } from './lib/curriculum/curriculumMatcher';
+import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
 import { clearAdminSession } from './lib/adminAuth';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
 
@@ -122,6 +122,7 @@ export function App() {
     gradeLevel: CurriculumGradeLevel;
     studySessionId?: string;
     durationMinutes?: number;
+    pacingMethod?: string;
   } | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -259,6 +260,12 @@ export function App() {
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
     ? state.userAccount.name
     : (state.studentName || 'Étudiant');
+  // Vraie classe de l'élève (choisie à l'inscription), jamais la valeur par défaut « Licence Universitaire »
+  const isDefaultLevel = /^licence universitaire$/i.test(String(state.academicLevel || '').trim());
+  const effectiveClassLabel = studentClassLabel(
+    state.userAccount?.gradeLevel || state.preferences?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel),
+    isDefaultLevel ? undefined : state.academicLevel,
+  ) || '';
 
   // Bascule automatique de semaine (rollover d'agenda) sans pop-up de bilan
   useEffect(() => {
@@ -857,7 +864,8 @@ export function App() {
     if (preferences?.chronotype) {
       userState.preferences.chronotype = preferences.chronotype;
     }
-    userState.academicLevel = profile.academicLevel || userState.academicLevel;
+    // La classe déjà enregistrée l'emporte : le profil Google n'a qu'une valeur par défaut (« Licence Universitaire »)
+    userState.academicLevel = userState.academicLevel || profile.academicLevel;
     userState.studentName = finalName;
 
     // Si l'utilisateur vient de terminer le parcours d'onboarding avec extraction d'EDT, fusionner immédiatement ses cours et matières
@@ -1770,6 +1778,8 @@ export function App() {
           gradeLevel: resolvedGrade,
           studySessionId: session.id,
           durationMinutes: session.durationMinutes || 25,
+          // Méthode de la séance (planning), ou méthode choisie par l'élève : elle change le déroulé du cours
+          pacingMethod: session.pacingMethod || state.preferences?.pacing,
         });
         setActiveView('tutor');
         soundFX.playCheckmarkPop();
@@ -2142,7 +2152,7 @@ export function App() {
             )}
             <DashboardOverview
               studentName={effectiveStudentName}
-              academicLevel={state.academicLevel}
+              academicLevel={effectiveClassLabel}
               subjects={state.subjects}
               classSlots={state.classSlots}
               studySessions={state.studySessions}
@@ -2188,7 +2198,7 @@ export function App() {
           (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
             <ScheduleManager
               studentName={effectiveStudentName}
-              academicLevel={state.academicLevel}
+              academicLevel={effectiveClassLabel}
               subjects={state.subjects}
               classSlots={state.classSlots}
               studySessions={state.studySessions}
@@ -2315,6 +2325,7 @@ export function App() {
             stemSubjectId={activeTutorSession.stemSubjectId}
             studySessionId={activeTutorSession.studySessionId}
             durationMinutes={activeTutorSession.durationMinutes}
+            pacingMethod={activeTutorSession.pacingMethod}
             onExit={() => {
               setActiveTutorSession(null);
               setActiveView('dashboard');
@@ -2574,8 +2585,8 @@ export function App() {
         </footer>
       )}
 
-      {/*  PWA Universal Mobile & Desktop Install Prompt */}
-      <PwaInstallPromptModal />
+      {/*  PWA Universal Mobile & Desktop Install Prompt (jamais pendant un cours : rien ne doit distraire l'élève) */}
+      {activeView !== 'tutor' && <PwaInstallPromptModal />}
     </div>
 
   );

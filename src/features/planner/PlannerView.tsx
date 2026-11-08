@@ -183,9 +183,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>{t('plannerTitle', lang)}</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            {t('plannerSubtitle', lang)}
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -297,30 +294,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               Reprendre dès aujourd'hui
             </button>
           )}
-        </div>
-      )}
-
-      {/* Daily Catch-up Rescheduled Banner */}
-      {studySessions.some(s => s.isRescheduledToday) && !isCycleCompletedToday && (
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-amber-50/70 dark:from-amber-950/60 dark:via-slate-900 dark:to-indigo-950/40 border border-amber-200 dark:border-amber-500/40 shadow-xs dark:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div className="flex items-start gap-2.5 min-w-0">
-            <div className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0 mt-0.5">
-              <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-            </div>
-            <div className="space-y-1.5 min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wide text-[11px]">
-                  ({studySessions.filter(s => s.isRescheduledToday && !s.completed).length}) Séance(s) à faire
-                </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-500/40">
-                  Jour même
-                </span>
-              </div>
-              <p className="text-amber-950/80 dark:text-slate-300 text-xs leading-relaxed">
-                Vos séances non effectuées plus tôt ont été replacées ce soir (fin max à minuit 00:00). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées à minuit sans impacter le programme de demain.
-              </p>
-            </div>
-          </div>
         </div>
       )}
 
@@ -456,9 +429,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         className="cursor-pointer hover:scale-105 transition-transform shrink-0"
                         title={t('clickForGuide', lang)}
                       >
-                        <Badge variant={badgeType.variant} size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
-                          {badgeType.label}
-                        </Badge>
+                        {/* Pas d'étiquette « Spaced Review » sur les séances */}
+                        {session.type !== 'spaced_review' && (
+                          <Badge variant={badgeType.variant} size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
+                            {badgeType.label}
+                          </Badge>
+                        )}
                       </button>
                       {session.isExamPrep && (
                         <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-xs ${

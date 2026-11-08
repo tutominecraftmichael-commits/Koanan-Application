@@ -12,7 +12,12 @@ import React, { useId } from 'react';
  * - done   : a fini de noter — referme son hologramme, des étoiles tournent autour de lui, pouce levé ;
  * - idle   : immobile, cligne des yeux.
  */
-export type KonanMascotPose = 'wave' | 'jump' | 'notes' | 'done' | 'idle';
+export type KonanMascotPose = 'wave' | 'jump' | 'notes' | 'done' | 'idle'
+  | 'sad'          // triste, mains jointes, soupire : « Tu es encore là ? »
+  | 'sad_watch'    // triste, regarde sa montre : « Je mets le chrono en pause… »
+  | 'whoa'         // surpris, main levée « doucement » : réponses au hasard
+  | 'encourage'    // doux sourire, pouce levé, hoche la tête : l'élève a du mal
+  | 'pause';       // s'étire, verre d'eau : pause Pomodoro
 
 interface KonanMascotProps {
   pose?: KonanMascotPose;
@@ -46,6 +51,18 @@ const CSS = `
 .km-orbit { transform-origin: 117px 112px; animation: km-orbit 7s linear infinite; }
 .km-orbit-in { animation: km-fade-in 0.5s ease-out 0.7s both; }
 .km-twinkle { animation: km-sparkle-loop 1.4s ease-in-out infinite; }
+.km-sigh { transform-origin: 117px 214px; animation: km-sigh 3.2s ease-in-out infinite; }
+.km-nod { transform-origin: 117px 214px; animation: km-nod 1.6s ease-in-out infinite; }
+.km-stretch { transform-origin: 60px 106px; animation: km-stretch 2.4s ease-in-out infinite alternate; }
+.km-shake { transform-origin: 37px 70px; animation: km-shake 0.5s ease-in-out infinite alternate; }
+.km-glint { animation: km-glint 2.6s ease-in-out infinite; }
+.km-zz { animation: km-zz 2.4s ease-in-out infinite; }
+@keyframes km-sigh { 0%,100% { transform: rotate(0deg) scale(1, 1); } 40% { transform: rotate(-3deg) scale(1.01, 0.97); } 60% { transform: rotate(-3deg) scale(1.01, 0.97); } }
+@keyframes km-nod { 0%,100% { transform: rotate(0deg); } 30% { transform: rotate(2.5deg) translateY(1px); } 60% { transform: rotate(-1deg); } }
+@keyframes km-stretch { from { transform: rotate(0deg); } to { transform: rotate(-10deg); } }
+@keyframes km-shake { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+@keyframes km-glint { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+@keyframes km-zz { 0% { opacity: 0; transform: translateY(4px); } 30%,70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-8px); } }
 @keyframes km-thumb { from { transform: rotate(28deg); } to { transform: rotate(0deg); } }
 @keyframes km-holo-close { 0% { transform: scale(1, 1); opacity: 1; } 70% { transform: scale(0.15, 0.05); opacity: 0.9; } 100% { transform: scale(0, 0); opacity: 0; } }
 @keyframes km-orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -187,16 +204,23 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
   const holo = `kmHolo${uid}`;
   const mouthClip = `kmMouth${uid}`;
 
-  // Regard : droit vers l'élève, sauf en prise de notes (vers la montre, en bas à droite)
-  const look = pose === 'notes' ? { x: 3, y: 4 } : { x: 0, y: 0 };
+  const sadPose = pose === 'sad' || pose === 'sad_watch';
+  // Regard : droit vers l'élève ; vers la montre en prise de notes ; un peu vers le bas quand il est triste
+  const look = pose === 'notes' || pose === 'sad_watch' ? { x: 3, y: 4 } : pose === 'sad' ? { x: 0, y: 2.5 } : { x: 0, y: 0 };
   const openMouth = pose === 'wave' || pose === 'jump' || pose === 'done';
+  const closedHappyEyes = pose === 'pause';
 
-  const eye = (cx: number) => (
+  const eye = (cx: number) => closedHappyEyes ? (
+    // Yeux fermés de bien-être (^ ^)
+    <path d={`M${cx - 9} 84 Q${cx} 72 ${cx + 9} 84`} fill="none" stroke={INK} strokeWidth="3.2" strokeLinecap="round" />
+  ) : (
     <g>
       <ellipse cx={cx} cy={80} rx="11.5" ry="14" fill={WHITE} stroke={INK} strokeWidth="2.8" />
-      <circle cx={cx + look.x} cy={82 + look.y} r="7" fill="#0A0F1A" />
-      <circle cx={cx + look.x - 2.4} cy={78.8 + look.y} r="2.5" fill={WHITE} />
+      <circle cx={cx + look.x} cy={82 + look.y} r={sadPose ? 8.2 : 7} fill="#0A0F1A" />
+      <circle cx={cx + look.x - 2.4} cy={78.8 + look.y} r={sadPose ? 3 : 2.5} fill={WHITE} />
       <circle cx={cx + look.x + 2.2} cy={85 + look.y} r="1" fill={WHITE} fillOpacity="0.8" />
+      {/* Yeux brillants (émus, sans larmes) */}
+      {sadPose && <path className="km-glint" d={`M${cx - 7} 88 Q${cx} 93 ${cx + 7} 88`} fill="none" stroke="#7DD3FC" strokeWidth="2.2" strokeLinecap="round" />}
     </g>
   );
 
@@ -249,6 +273,68 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
         </>
       );
     }
+    if (pose === 'sad') {
+      // Mains jointes devant lui, épaules tombantes
+      return (
+        <>
+          <Limb d="M60 108 Q70 140 104 146" />
+          <Glove x={104} y={146} rotate={120} kind="fist" />
+          <Limb d="M160 108 Q150 140 128 146" />
+          <Glove x={128} y={146} rotate={-120} kind="fist" watch />
+        </>
+      );
+    }
+    if (pose === 'sad_watch') {
+      // Regarde sa montre, l'autre bras ballant
+      return (
+        <>
+          <Limb d="M60 106 Q46 124 46 144" />
+          <Glove x={46} y={144} rotate={180} kind="fist" />
+          <Limb d="M160 108 Q194 124 172 148" />
+          <Glove x={172} y={148} rotate={-90} kind="fist" watch />
+        </>
+      );
+    }
+    if (pose === 'whoa') {
+      // Main levée, paume vers l'élève : « doucement ! »
+      return (
+        <>
+          <g className="km-shake">
+            <Limb d="M60 106 Q40 96 38 74" />
+            <Glove x={38} y={74} rotate={-4} kind="open" />
+          </g>
+          <Limb d="M160 106 Q176 122 176 142" />
+          <Glove x={176} y={142} rotate={180} kind="fist" watch />
+        </>
+      );
+    }
+    if (pose === 'encourage') {
+      return (
+        <>
+          <Limb d="M60 106 Q44 122 44 142" />
+          <Glove x={44} y={142} rotate={180} kind="fist" />
+          <Limb d="M160 106 Q190 114 186 92" />
+          <Glove x={186} y={92} rotate={4} kind="thumb" watch />
+        </>
+      );
+    }
+    if (pose === 'pause') {
+      // S'étire d'un bras, tient un verre d'eau de l'autre
+      return (
+        <>
+          <g className="km-stretch">
+            <Limb d="M60 106 Q46 80 54 52" />
+            <Glove x={54} y={52} rotate={10} kind="fist" />
+          </g>
+          <Limb d="M160 108 Q182 128 166 146" />
+          <g transform="translate(160 118)">
+            <path d="M-8 0 L8 0 L6 22 L-6 22 Z" fill="#E0F2FE" stroke={INK} strokeWidth="2" strokeLinejoin="round" />
+            <path d="M-7 8 L7 8 L6 22 L-6 22 Z" fill="#38BDF8" fillOpacity="0.8" />
+          </g>
+          <Glove x={166} y={146} rotate={-110} kind="fist" watch />
+        </>
+      );
+    }
     if (pose === 'done') {
       return (
         <>
@@ -273,7 +359,7 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
   })();
 
   const body = (
-    <g className={pose === 'jump' ? 'km-jump' : undefined}>
+    <g className={pose === 'jump' ? 'km-jump' : sadPose ? 'km-sigh' : pose === 'encourage' ? 'km-nod' : undefined}>
       {/* Jambes et baskets */}
       <Limb d="M104 130 L102 184" width={6.5} />
       <Limb d="M130 130 L132 184" width={6.5} />
@@ -293,7 +379,14 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
       {/* Visage */}
       <ellipse cx="88" cy="101" rx="6" ry="3.4" fill="#FB7185" fillOpacity="0.35" />
       <ellipse cx="146" cy="101" rx="6" ry="3.4" fill="#FB7185" fillOpacity="0.35" />
-      <path d="M91 63 Q100 56.5 109 62 M125 62 Q134 56.5 143 63" fill="none" stroke={INK} strokeWidth="3.2" strokeLinecap="round" />
+      <path
+        d={sadPose
+          ? 'M91 65 Q101 63 109 56 M125 56 Q133 63 143 65'      // sourcils inquiets (remontés au milieu)
+          : pose === 'whoa'
+          ? 'M91 57 Q100 49 109 55 M125 55 Q134 49 143 57'      // sourcils très levés (surpris)
+          : 'M91 63 Q100 56.5 109 62 M125 62 Q134 56.5 143 63'}
+        fill="none" stroke={INK} strokeWidth="3.2" strokeLinecap="round"
+      />
       <g className="km-blink">
         {eye(100)}
         {eye(134)}
@@ -321,6 +414,12 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
           </g>
           <path d="M101 102 Q117 98 133 102 Q131 121 117 122 Q103 121 101 102 Z" fill="none" stroke={INK} strokeWidth="2.6" strokeLinejoin="round" />
         </g>
+      ) : sadPose ? (
+        // Petite bouche triste
+        <path d="M106 114 Q117 105 128 114" fill="none" stroke={INK} strokeWidth="3" strokeLinecap="round" />
+      ) : pose === 'whoa' ? (
+        // Bouche en « o » (surpris)
+        <ellipse cx="117" cy="110" rx="6" ry="7.5" fill="#7F1D1D" stroke={INK} strokeWidth="2.6" />
       ) : (
         <path d="M102 103 Q117 116 132 103" fill="none" stroke={INK} strokeWidth="3" strokeLinecap="round" />
       )}

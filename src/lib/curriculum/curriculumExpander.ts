@@ -262,7 +262,8 @@ export function expandChapterTo12MiniLessons(chapter: CurriculumChapter): Curric
       if (subLessonsPerPoint > 1) {
         if (subIdx < rawExercises.length && rawExercises[subIdx]?.prompt) {
           const promptClean = rawExercises[subIdx].prompt.replace(/\?$/, '').trim();
-          subTitle = promptClean.length > 60 ? `${promptClean.slice(0, 58)}...` : promptClean;
+          // Titre complet : jamais de phrase coupée par « … »
+          subTitle = promptClean;
         } else {
           subTitle = `${point.title} (Partie ${subIdx + 1})`;
         }

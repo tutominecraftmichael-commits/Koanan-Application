@@ -30,6 +30,9 @@ export const PROPS = [
 ] as const;
 
 export const PLACES = ['gauche', 'centre', 'droite', 'fond'] as const;
+/** Véhicule dans lequel le personnage est assis (il est dessiné au volant / à la fenêtre). */
+export const VEHICLES = ['voiture', 'gbaka', 'train'] as const;
+export type VehicleId = typeof VEHICLES[number];
 
 export type SettingId = typeof SETTINGS[number];
 export type CostumeId = typeof COSTUMES[number];
@@ -51,6 +54,8 @@ export interface SceneCharacter {
   /** Mains liées (captif). */
   bound?: boolean;
   child?: boolean;
+  /** Assis dans un véhicule (voiture, gbaka, train). */
+  vehicle?: VehicleId;
 }
 
 export interface SceneProp {
@@ -102,6 +107,8 @@ export function validateSceneSpec(raw: unknown): SceneSpec | null {
       if (holding) ch.holding = holding;
       if (o.bound === true) ch.bound = true;
       if (o.child === true) ch.child = true;
+      const vehicle = pick(VEHICLES, o.vehicle);
+      if (vehicle) ch.vehicle = vehicle;
       return ch;
     })
     .filter((c): c is SceneCharacter => c !== null);

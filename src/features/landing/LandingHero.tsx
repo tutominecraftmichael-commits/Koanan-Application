@@ -269,7 +269,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                         <Badge variant="emerald" dot size="sm">Équilibré</Badge>
                       </h4>
                       <p className="text-[11px] sm:text-xs text-blue-800 dark:text-sky-200 mt-0.5">
-                        {activePreset.subjects.length} matières réparties • Alternance Spaced Review & Deep Work • {activePreset.level}
+                        {activePreset.subjects.length} matières réparties • {activePreset.level}
                       </p>
                     </div>
                   </div>
@@ -333,7 +333,6 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                             <Clock className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
                             17:30 - 18:15 (45 min)
                           </span>
-                          <span className="text-amber-600 dark:text-amber-400 font-mono text-[11px]">Spaced Review</span>
                         </div>
                         <p className="text-slate-700 dark:text-slate-200 font-medium mt-1 break-words leading-snug">
                           {activePreset.subjects[0]?.topics?.[0] || 'Points clés du cours'}
@@ -567,7 +566,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               </div>
               <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Validation & Révisions Ciblées</h3>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
-                Suivi séance par séance, alternance Spaced Review et validation de votre progression quotidienne en un clic pour une mémorisation durable.
+                Suivi séance par séance et validation de votre progression quotidienne en un clic pour une mémorisation durable.
               </p>
             </div>
 

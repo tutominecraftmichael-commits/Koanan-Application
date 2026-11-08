@@ -22,7 +22,6 @@ import {
   ArrowRight, 
   Target,
   TrendingUp,
-  AlertCircle,
   ChevronDown,
   ChevronUp,
   Moon,
@@ -211,7 +210,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <span><strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
               ) : (
                 <>
-                  Cursus <strong className="text-slate-700 dark:text-slate-200 font-semibold">{academicLevel}</strong> synchronisé.
+                  {academicLevel && (
+                    <>Classe : <strong className="text-slate-700 dark:text-slate-200 font-semibold">{academicLevel}</strong>.</>
+                  )}
                   {allTodaysStudySessions.length > 0
                     ? ` ${activeDisplaySessions.length} session(s) active(s) (${completedToday} terminée(s)).`
                     : ` Journée d'assimilation libre.`}
@@ -408,50 +409,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   </div>
                 </div>
 
-                {/* Daily Catch-up Rescheduled Banner with Clear Breakdown */}
-                {rescheduledTodaySessions.length > 0 && (
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-amber-50/70 dark:from-amber-950/70 dark:via-slate-900 dark:to-indigo-950/50 border border-amber-200 dark:border-amber-500/50 shadow-sm dark:shadow-xl space-y-3.5 text-xs">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0">
-                        <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-                      </div>
-                      <span className="font-black text-amber-900 dark:text-amber-300 text-sm tracking-wide">
-                        ({rescheduledTodaySessions.length}) Séance(s) à faire
-                      </span>
-                    </div>
-
-                    {/* DÉTAIL CLAIR ET ÉPURÉ DES SÉANCES REPORTÉES CE SOIR */}
-                    <div className="space-y-1.5 pt-2 border-t border-amber-200/60 dark:border-slate-800/80">
-                      <p className="text-[11px] font-bold text-amber-900/80 dark:text-slate-400 uppercase tracking-wider">
-                        Séances reportées ce soir :
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {rescheduledTodaySessions.map(s => {
-                          const missedSub = subjects.find(sub => sub.id === s.subjectId);
-                          if (s.subjectId && (!missedSub || !missedSub.name)) return null;
-                          return (
-                            <div
-                              key={s.id}
-                              className="p-3 rounded-xl bg-white dark:bg-slate-950/70 border border-amber-200 dark:border-amber-500/30 text-xs shadow-xs flex items-center justify-between"
-                            >
-                              <div className="min-w-0 flex-1 space-y-0.5">
-                                <p className="font-extrabold text-slate-900 dark:text-white truncate text-xs">{missedSub?.name || s.title}</p>
-                                <p className="text-[11px] text-amber-800 dark:text-amber-300 flex items-center gap-1.5 font-medium">
-                                  <span>Reportée ce soir à</span>
-                                  <span className="font-mono font-bold text-amber-900 dark:text-amber-200 bg-amber-100 dark:bg-amber-500/20 px-1.5 py-0.5 rounded border border-amber-200 dark:border-amber-500/30">
-                                    {s.startTime}
-                                  </span>
-                                  <span className="text-slate-500 dark:text-slate-400 text-[10px]">({s.durationMinutes} min)</span>
-                                </p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* SESSIONS ACTIVES & RATTRAPAGES EN ORDRE CHRONOLOGIQUE STRICT */}
                 {activeDisplaySessions.length === 0 ? (
                   <Card className="text-center py-6 sm:py-8 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 shadow-xs">
@@ -513,31 +470,25 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                 })()}
                               </span>
                             )}
-                            {isRescheduled && (
-                              <Badge variant="amber" size="sm" className="text-[10px] px-2 py-0.5 font-bold animate-pulse" title={session.rescheduledReason || "Rattrapage du jour même uniquement (aucun report au lendemain)"}>
-                                Rattrapage ce soir ({sub?.name || 'Session'})
-                              </Badge>
-                            )}
                             {session.pacingMethod && (
                               <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-cyan-300 border border-indigo-200 dark:border-indigo-500/30 font-mono">
                                 {session.pacingMethod === 'feynman' ? 'Feynman' : session.pacingMethod === 'time_blocking' ? 'Time Blocking' : session.pacingMethod === 'pomodoro' ? 'Pomodoro' : session.pacingMethod === 'two_minutes_rule' ? '2-Min' : 'Répétition'}
                               </span>
                             )}
-                            <button
+                            {session.type !== 'spaced_review' && <button
                               type="button"
                               onClick={() => setSelectedExplainerType(session.type)}
                               className="cursor-pointer hover:scale-105 transition-transform"
                               title={t('clickForGuide', lang)}
                             >
                               <Badge variant="primary" size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
-                                {session.type === 'spaced_review' ? t('spacedReviewLabel', lang) :
-                                 session.type === 'exercises' ? t('exercisesLabel', lang) :
+                                {session.type === 'exercises' ? t('exercisesLabel', lang) :
                                  session.type === 'deep_summary' ? t('deepSummaryLabel', lang) :
                                  session.type === 'flashcards' ? t('activeRecallLabel', lang) :
                                  session.type === 'exam_simulation' ? t('examSimulationLabel', lang) :
                                  t('consolidationLabel', lang)}
                               </Badge>
-                            </button>
+                            </button>}
                           </div>
 
                           <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">
