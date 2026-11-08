@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" class="dark">
+<html lang="fr" class="dark konan-splash-on">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -42,6 +42,8 @@
         touch-action: none;
       }
       #konan-splash.is-hiding { opacity: 0; pointer-events: none; }
+      /* Le téléphone colore sa barre du bas avec le fond de la page : bleu ciel tant que l'écran est là */
+      html.konan-splash-on, html.konan-splash-on body { background: #90D8F8 !important; }
       #konan-splash-word {
         font-family: 'Nunito', 'Arial Rounded MT Bold', 'Arial Black', sans-serif;
         font-weight: 900;
@@ -55,29 +57,9 @@
     </style>
   </head>
   <body class="bg-[#090D16] text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white min-h-screen overflow-x-hidden">
-    <div id="konan-splash" aria-hidden="true" oncontextmenu="return false" onselectstart="return false" ondragstart="return false"><div id="konan-splash-word">KONAN</div></div>
-    <script>
-      // L'appli retire l'écran d'ouverture dès qu'elle est prête, puis remet la couleur du thème en haut
-      (function () {
-        var MIN_MS = 450; // juste le temps de voir « KONAN », puis l'appli
-        var done = false;
-        window.__konanHideSplash = function () {
-          if (done) return;
-          done = true;
-          var wait = Math.max(0, MIN_MS - (performance.now ? performance.now() : MIN_MS));
-          setTimeout(function () {
-            var el = document.getElementById('konan-splash');
-            var m = document.querySelector('meta[name="theme-color"]');
-            if (m) m.setAttribute('content', m.getAttribute('data-app-color') || '#091427');
-            if (!el) return;
-            el.classList.add('is-hiding');
-            setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 230);
-          }, wait);
-        };
-        // Sécurité : jamais bloqué sur l'écran d'ouverture
-        setTimeout(window.__konanHideSplash, 5000);
-      })();
-    </script>
+    <div id="konan-splash" aria-hidden="true"><div id="konan-splash-word">KONAN</div></div>
+    <!-- L'appli retire l'écran d'ouverture dès qu'elle est prête (fichier séparé : la CSP bloque les scripts dans la page) -->
+    <script src="/konan-splash.js"></script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
