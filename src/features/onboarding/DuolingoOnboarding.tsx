@@ -2442,7 +2442,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   <div className="flex flex-wrap items-center gap-1.5">
                     <BarChart2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                     <span className="text-xs font-black uppercase tracking-wider text-indigo-900 dark:text-indigo-300">
-                      Recommandation IA :
+                      Recommandation de KONAN :
                     </span>
                     <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-500/20 text-indigo-900 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30">
                       {getPacingStrategy(pacingRecommendation.primaryId).title}

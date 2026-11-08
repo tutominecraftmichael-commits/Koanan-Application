@@ -22,11 +22,9 @@ import {
   ArrowRight, 
   Target,
   TrendingUp,
-  GraduationCap,
   AlertCircle,
   ChevronDown,
   ChevronUp,
-  BookOpen,
   Moon,
   Zap
 } from 'lucide-react';
@@ -83,8 +81,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onNavigate,
   onToggleSessionComplete,
   onStartFocusSession,
-  onOpenPresetModal,
-  isDemoMode = false,
   planTier = 'free',
   onViewPricing,
   onUpgradeToPro,
@@ -307,87 +303,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
           )}
         </div>
-      </div>
-
-      {/* COMPACT QUICK ACTION ROW (3 COLUMNS ON ALL SCREENS) */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3.5">
-        
-        {/* 1. Importer Emploi du Temps OU Exemples d'EDT Démo */}
-        {!isDemoMode ? (
-          <button 
-            type="button"
-            onClick={() => onNavigate('upload-schedule')}
-            className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
-          >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
-              <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors leading-tight truncate">
-                Importer EDT
-              </h3>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
-                Texte ou manuel
-              </p>
-            </div>
-          </button>
-        ) : (
-          <button 
-            type="button"
-            onClick={() => onOpenPresetModal?.()}
-            className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
-          >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
-              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors leading-tight truncate">
-                EDT Démo
-              </h3>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
-                Modèles ESATIC, etc.
-              </p>
-            </div>
-          </button>
-        )}
-
-        {/* 2. Planning d'Étude */}
-        <button 
-          type="button"
-          onClick={() => onNavigate('planner')}
-          className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
-        >
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
-            <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors leading-tight truncate">
-              Planning
-            </h3>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
-              Séances optimisées
-            </p>
-          </div>
-        </button>
-
-        {/* 3. Matières & Thèmes */}
-        <button 
-          type="button"
-          onClick={() => onNavigate('subjects')}
-          className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
-        >
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
-            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors leading-tight truncate">
-              Matières
-            </h3>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
-              Coeffs & chapitres
-            </p>
-          </div>
-        </button>
       </div>
 
       {/* 2-COLUMN COCKPIT (TODAY'S TIMELINE + ACADEMIC INSIGHTS) */}

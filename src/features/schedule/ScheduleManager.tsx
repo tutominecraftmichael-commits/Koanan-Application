@@ -27,7 +27,6 @@ import {
   Trash2, 
   Edit3, 
   Calendar, 
-  Clock, 
   FileText, 
   Check, 
   Sparkles, 
@@ -868,33 +867,6 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         </div>
       </div>
 
-      {/* FOOTER CALL TO ACTION */}
-      <div className="flex flex-col sm:flex-row items-center justify-between p-5 sm:p-6 rounded-3xl bg-indigo-50/80 dark:bg-gradient-to-r dark:from-indigo-950/50 dark:via-slate-900 dark:to-slate-950 border border-indigo-200 dark:border-indigo-500/30 gap-4 shadow-xs">
-        <div className="flex items-center gap-3.5">
-          <div className="p-3 rounded-2xl bg-indigo-600 text-white shrink-0 shadow-md">
-            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
-          <div>
-            <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Votre emploi du temps est prêt !</h4>
-            <p className="text-xs text-slate-600 dark:text-slate-400">
-              Passez au planning intelligent pour générer et démarrer vos sessions de travail personnel.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2.5 w-full sm:w-auto">
-          <Button
-            variant="glow"
-            size="sm"
-            onClick={onTriggerPlanner}
-            rightIcon={<Clock className="w-4 h-4" />}
-            className="cursor-pointer whitespace-nowrap text-xs font-bold flex-1 sm:flex-initial py-2.5 px-5 shadow-md hover:scale-105 active:scale-95 transition-all"
-          >
-            ✨ Voir mon Planning de Révision
-          </Button>
-        </div>
-      </div>
-
       {/* MODAL: ADD / EDIT CLASS SLOT */}
       <Modal
         isOpen={isAddSlotOpen}
@@ -1214,7 +1186,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <span className="font-bold text-slate-900 dark:text-white text-[11px] uppercase tracking-wide shrink-0">
-                          Recommandation KONAN :
+                          Recommandation de KONAN :
                         </span>
                         {targetPacings.map(id => (
                           <span key={id} className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-cyan-300 dark:border-indigo-500/40">
