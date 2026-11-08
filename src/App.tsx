@@ -709,10 +709,10 @@ export function App() {
     };
   }, []);
 
-  // Écran d'ouverture « KONAN » (index.html) : retiré dès qu'on sait si l'élève est connecté
+  // Écran d'ouverture « KONAN » (index.html) : retiré dès que l'accueil ou le tableau de bord est prêt
   useEffect(() => {
-    if (!authPending) (window as Window & { __konanHideSplash?: () => void }).__konanHideSplash?.();
-  }, [authPending]);
+    if (!authPending || activeView !== 'landing') (window as Window & { __konanHideSplash?: () => void }).__konanHideSplash?.();
+  }, [authPending, activeView]);
 
   const showToast = (msg: string, duration = 5000) => {
     // Purge absolue de tous les émojis pour une interface sobre, élégante et professionnelle
@@ -784,6 +784,13 @@ export function App() {
       avatar: profile.avatar,
       academicLevel: profile.academicLevel,
     });
+
+    // Élève qui revient (données déjà sur le téléphone) : son tableau de bord s'affiche tout de suite,
+    // sans attendre Internet ; la synchronisation avec le cloud se fait juste derrière.
+    if (userState.completedOnboarding && !pendingProWizardRef.current) {
+      setState(userState);
+      setActiveView('dashboard');
+    }
 
     // 1. Synchronisation Cloud PRIORITAIRE AVANT toute écriture sur Firestore :
     // Récupérer et fusionner immédiatement les matières, devoirs et sessions stockés sur Cloud Firestore
