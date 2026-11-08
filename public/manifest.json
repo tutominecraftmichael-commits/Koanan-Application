@@ -32,7 +32,7 @@
   "start_url": "/",
   "scope": "/",
   "background_color": "#90D8F8",
-  "theme_color": "#091427",
+  "theme_color": "#90D8F8",
   "display": "standalone",
   "orientation": "portrait-primary",
   "categories": ["education", "productivity"],
