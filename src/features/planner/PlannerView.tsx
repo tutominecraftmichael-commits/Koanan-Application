@@ -297,30 +297,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         </div>
       )}
 
-      {/* Daily Catch-up Rescheduled Banner */}
-      {studySessions.some(s => s.isRescheduledToday) && !isCycleCompletedToday && (
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-amber-50/70 dark:from-amber-950/60 dark:via-slate-900 dark:to-indigo-950/40 border border-amber-200 dark:border-amber-500/40 shadow-xs dark:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div className="flex items-start gap-2.5 min-w-0">
-            <div className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0 mt-0.5">
-              <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-            </div>
-            <div className="space-y-1.5 min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wide text-[11px]">
-                  ({studySessions.filter(s => s.isRescheduledToday && !s.completed).length}) Séance(s) à faire
-                </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-500/40">
-                  Jour même
-                </span>
-              </div>
-              <p className="text-amber-950/80 dark:text-slate-300 text-xs leading-relaxed">
-                Vos séances non effectuées plus tôt ont été replacées ce soir (fin max à minuit 00:00). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées à minuit sans impacter le programme de demain.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* FILTER BAR (Mobile Carousel + Subject Dropdown) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/80 dark:backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-xs">
         
