@@ -58,6 +58,7 @@ import { KonanCube } from '../../components/common/KonanCube';
 import { findReviewExercise, forgetReview, getDueReviews, recordReviewAnswer } from '../../lib/curriculum/reviewMemory';
 import { useKonanCoach, KonanCoachBubble } from './konanCoach';
 import { FeynmanChallenge } from './FeynmanChallenge';
+import { pullLearning, startLearningSync } from '../../lib/curriculum/learningCloudSync';
 import { MathRenderer, VisualSchemaRenderer, SmartKeyFormulaBox } from '../../components/common/MathRenderer';
 
 export interface InteractiveTutorViewProps {
@@ -519,9 +520,19 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     setPhase('learning');
   };
 
+  // Progression copiée dans le compte : on la récupère d'abord (autre téléphone, réinstallation…), 3,5 s au plus
+  const [cloudReady, setCloudReady] = useState<boolean>(false);
   useEffect(() => {
+    let alive = true;
+    startLearningSync();
+    pullLearning(userId).finally(() => { if (alive) setCloudReady(true); });
+    return () => { alive = false; };
+  }, [userId]);
+
+  useEffect(() => {
+    if (!cloudReady) return;
     refreshSessionPayload();
-  }, [userId, stemSubjectId, gradeLevel, subjectTitle, durationMinutes]);
+  }, [cloudReady, userId, stemSubjectId, gradeLevel, subjectTitle, durationMinutes]);
 
   // Permet à l'élève de changer d'onglet (ex: Chimie <-> Physique ou Géométrie <-> Numérique) SANS fermer le sélecteur
   const handleSwitchSubCategoryInSelector = (newSubCat: StemSubCategory) => {
@@ -912,16 +923,42 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     }
   }, [kickSeconds, totalExercisesAnswered, isAnswerChecked, isTwoMinutes]);
 
+  /** Mode concentration (Time Blocking) : plein écran tant que dure le bloc, quitté à la pause. */
+  const enterFocusMode = () => {
+    try {
+      const el = document.documentElement as HTMLElement & { webkitRequestFullscreen?: () => void };
+      if (document.fullscreenElement) return;
+      if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+      else el.webkitRequestFullscreen?.();
+    } catch {
+      // plein écran refusé (iPhone, certains navigateurs) : la séance continue normalement
+    }
+  };
+  const leaveFocusMode = () => {
+    try { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); } catch { /* rien */ }
+  };
+  useEffect(() => {
+    if (phase === 'time_up' || phase === 'session_celebration') leaveFocusMode();
+  }, [phase]);
+  useEffect(() => () => leaveFocusMode(), []);
+
   const fmtClock = (sec: number) => `${Math.floor(Math.max(0, sec) / 60)}:${String(Math.max(0, sec) % 60).padStart(2, '0')}`;
   const isTwoVoletLabel = (label: string) => ['Physique', 'Chimie', 'Géométrie', 'Numérique', 'Histoire', 'Géographie'].includes(label);
 
   /** Chrono Pomodoro affiché en haut (temps de travail restant). */
   const pomodoroPill = workLimitSec ? (
+    <span className="flex items-center gap-1.5 shrink-0">
+    {isTimeBlocking && (
+      <span className="px-2 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300" title="Une seule matière, sans distraction, jusqu'à la pause">
+        Mode concentration
+      </span>
+    )}
     <span
       className={`shrink-0 px-2.5 py-1 rounded-xl text-xs font-black font-mono tabular-nums border ${coachIdle ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500' : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300'}`}
       title={coachIdle ? 'Chrono en pause : tu ne travailles plus' : 'Temps de travail restant (Pomodoro)'}
     >
       ⏱ {fmtClock(workLimitSec - workSeconds)}{coachIdle ? ' · pause' : ''}
+    </span>
     </span>
   ) : null;
 
@@ -1643,6 +1680,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             type="button"
             onClick={() => {
               try { soundFX.playCheckmarkPop(); } catch {}
+              // Time Blocking : mode concentration, l'écran entier est consacré à la matière
+              if (isTimeBlocking && activeItemIndex === 0) enterFocusMode();
               startLearningAt(0, currentPoint);
             }}
             className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto animate-bounce hover:animate-none"

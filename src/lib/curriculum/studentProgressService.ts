@@ -14,6 +14,7 @@ import { END_OF_CHAPTER_MARKER, getSessionMiniLessonQuota } from './types';
 import { getCurriculumChapterById, getCurriculumChapters, normalizeGradeForLookup } from './curriculumRegistry';
 import { isChimieChapter } from './curriculumExpander';
 import { voletFromSubjectName } from './curriculumMatcher';
+import { notifyLearningChanged } from './learningEvents';
 
 const PROGRESS_STORAGE_PREFIX = 'konan_curriculum_progress_v1_';
 
@@ -31,7 +32,8 @@ export function getStudentProgressMap(userId: string): StudentCurriculumProgress
 
 export function saveStudentProgressMap(
   userId: string,
-  progressMap: StudentCurriculumProgressMap
+  progressMap: StudentCurriculumProgressMap,
+  options: { silent?: boolean } = {}
 ): void {
   try {
     localStorage.setItem(
@@ -41,6 +43,8 @@ export function saveStudentProgressMap(
   } catch {
     // Ignore
   }
+  // Copie dans le compte de l'élève (suivi sur tous ses appareils), sauf quand elle vient du compte
+  if (!options.silent) notifyLearningChanged(userId);
 }
 
 // ============================================================================

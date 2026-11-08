@@ -98,6 +98,18 @@ export default defineConfig(({ mode }) => {
               res.end(JSON.stringify({ success: false, error: err?.message || 'Internal Server Error' }));
             }
           });
+          // Progression des cours guidés copiée dans le compte de l'élève
+          server.middlewares.use('/api/learning-sync', async (req, res) => {
+            try {
+              // @ts-ignore
+              const { default: handler } = await import('./api/learning-sync.js');
+              await handler(req, res);
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, error: err?.message || 'Internal Server Error' }));
+            }
+          });
           // Méthode Feynman : explication orale ou écrite analysée par Gemini
           server.middlewares.use('/api/feynman', async (req, res) => {
             try {

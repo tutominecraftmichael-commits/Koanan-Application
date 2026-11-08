@@ -2578,8 +2578,8 @@ export function App() {
         </footer>
       )}
 
-      {/*  PWA Universal Mobile & Desktop Install Prompt */}
-      <PwaInstallPromptModal />
+      {/*  PWA Universal Mobile & Desktop Install Prompt (jamais pendant un cours : rien ne doit distraire l'élève) */}
+      {activeView !== 'tutor' && <PwaInstallPromptModal />}
     </div>
 
   );

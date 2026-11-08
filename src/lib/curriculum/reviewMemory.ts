@@ -11,6 +11,7 @@
  * Stockage : sur l'appareil (comme la progression du cours), une fiche par élève.
  */
 import type { CurriculumGradeLevel, InteractiveExercise, StemSubjectId, StemSubCategory } from './types';
+import { notifyLearningChanged } from './learningEvents';
 
 const STORAGE_PREFIX = 'konan_review_memory_v1_';
 /** Délai (en jours) avant le prochain rappel, selon la boîte atteinte. */
@@ -54,7 +55,17 @@ function read(userId: string): ReviewMap {
   }
 }
 
-function write(userId: string, map: ReviewMap): void {
+/** Mémoire complète (pour la synchronisation avec le compte). */
+export function getReviewMap(userId: string): ReviewMap {
+  return read(userId);
+}
+
+/** Remplace la mémoire locale par une version fusionnée venue du compte (sans renvoyer au compte). */
+export function replaceReviewMap(userId: string, map: ReviewMap): void {
+  write(userId, map, true);
+}
+
+function write(userId: string, map: ReviewMap, silent = false): void {
   try {
     const entries = Object.values(map);
     // Garde-fou de taille : on oublie d'abord les questions les mieux sues et les plus anciennes
@@ -66,6 +77,7 @@ function write(userId: string, map: ReviewMap): void {
   } catch {
     // stockage plein ou indisponible : la révision espacée reprendra plus tard
   }
+  if (!silent) notifyLearningChanged(userId);
 }
 
 export interface ReviewContext {
