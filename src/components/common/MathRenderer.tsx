@@ -4,6 +4,7 @@ import 'katex/dist/katex.min.css';
 import { StackedFraction, renderTextWithStackedFractions } from './StackedFraction';
 import { SketchFunctionPlot, SketchSignTable, SketchVariationTable } from './SketchFigure';
 import type { PointVisualSchema } from '../../lib/curriculum/types';
+import { renderScene } from '../../lib/scenes/sceneRenderer';
 export { StackedFraction, renderTextWithStackedFractions };
 
 /**
@@ -1026,13 +1027,22 @@ export interface VisualSchemaProps {
  * tableaux de signes et de variations, arbres pondérés.
  */
 export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, className = '' }) => {
+  // Scène décrite (générée à l'avance) : dessinée ici par le moteur de KONAN
+  const sceneSvg = useMemo(
+    () => (schema.sceneSpec && !schema.svgContent ? renderScene(schema.sceneSpec, { id: schema.title, label: schema.caption || schema.title }) : null),
+    [schema.sceneSpec, schema.svgContent, schema.title, schema.caption],
+  );
+  const svgContent = schema.svgContent || sceneSvg;
+  const isScene = Boolean(schema.scene || schema.sceneSpec);
   return (
     <div className={`p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-200/80 dark:border-indigo-500/30 shadow-xs space-y-2.5 my-3 ${className}`}>
       {schema.title && (
         <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
-          <span>Figure / Support Visuel : {schema.title}</span>
+          <span>{isScene ? 'Illustration' : 'Figure / Support Visuel'} : {schema.title}</span>
           <span className="text-[10px] px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-            {schema.type === 'geometry_svg'
+            {isScene
+              ? 'Dessin'
+              : schema.type === 'geometry_svg'
               ? 'Géométrie'
               : schema.type === 'variation_table'
               ? 'Tableau de variation'
@@ -1052,10 +1062,12 @@ export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, clas
       {schema.variation && <SketchVariationTable spec={schema.variation} />}
       {schema.signs && <SketchSignTable spec={schema.signs} />}
 
-      {schema.svgContent && (
+      {svgContent && (
         <div
-          className="flex items-center justify-center py-2 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200/70 dark:border-slate-800 overflow-x-auto"
-          dangerouslySetInnerHTML={{ __html: schema.svgContent }}
+          className={isScene
+            ? 'flex items-center justify-center rounded-xl overflow-hidden'
+            : 'flex items-center justify-center py-2 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200/70 dark:border-slate-800 overflow-x-auto'}
+          dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       )}
 

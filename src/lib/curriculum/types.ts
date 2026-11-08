@@ -278,6 +278,10 @@ export interface PointVisualSchema {
   variation?: VariationTableSpec;
   /** Tableau de signes structuré (type 'sign_table'). */
   signs?: SignTableSpec;
+  /** Scène illustrée (dessin d'ambiance façon livre illustré) plutôt qu'un schéma. */
+  scene?: boolean;
+  /** Description de scène dessinée par le moteur de KONAN (src/lib/scenes). */
+  sceneSpec?: import('../scenes/sceneTypes').SceneSpec;
 }
 
 /** Couleurs du code pédagogique Konan utilisables dans les figures. */
