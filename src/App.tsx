@@ -122,6 +122,7 @@ export function App() {
     gradeLevel: CurriculumGradeLevel;
     studySessionId?: string;
     durationMinutes?: number;
+    pacingMethod?: string;
   } | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -1770,6 +1771,8 @@ export function App() {
           gradeLevel: resolvedGrade,
           studySessionId: session.id,
           durationMinutes: session.durationMinutes || 25,
+          // Méthode de la séance (planning), ou méthode choisie par l'élève : elle change le déroulé du cours
+          pacingMethod: session.pacingMethod || state.preferences?.pacing,
         });
         setActiveView('tutor');
         soundFX.playCheckmarkPop();
@@ -2315,6 +2318,7 @@ export function App() {
             stemSubjectId={activeTutorSession.stemSubjectId}
             studySessionId={activeTutorSession.studySessionId}
             durationMinutes={activeTutorSession.durationMinutes}
+            pacingMethod={activeTutorSession.pacingMethod}
             onExit={() => {
               setActiveTutorSession(null);
               setActiveView('dashboard');

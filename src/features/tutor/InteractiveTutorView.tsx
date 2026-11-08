@@ -51,6 +51,8 @@ import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
 import { shuffleExerciseOptions } from '../../lib/curriculum/optionShuffle';
 import { soundFX } from '../../lib/audioEffects';
 import { KonanCube } from '../../components/common/KonanCube';
+import { findReviewExercise, forgetReview, getDueReviews, recordReviewAnswer } from '../../lib/curriculum/reviewMemory';
+import { useKonanCoach, KonanCoachBubble } from './konanCoach';
 import { MathRenderer, VisualSchemaRenderer, SmartKeyFormulaBox } from '../../components/common/MathRenderer';
 
 export interface InteractiveTutorViewProps {
@@ -60,11 +62,23 @@ export interface InteractiveTutorViewProps {
   stemSubjectId: StemSubjectId;
   studySessionId?: string;
   durationMinutes?: number;
+  /** Méthode de la séance (planning) : change le déroulé du cours (ex. Rappel actif). */
+  pacingMethod?: string;
   onExit: () => void;
   onSessionCompleted: (sessionId?: string) => void;
 }
 
+/** Questions « à revoir aujourd'hui » (révision espacée), posées au début de la séance. */
+interface WarmupItem {
+  exercise: InteractiveExercise;
+  stepIndex: number;
+  point: CurriculumPoint;
+  chapterId: string;
+}
+
 type LessonPhase =
+  | 'warmup' // Révision du jour : questions dues (révision espacée), de mémoire, avant la leçon
+  | 'recall' // Rappel actif : 3 questions de la mini-leçon, de mémoire, fiche cachée
   | 'intro' // Écran d'introduction animé de la mini-leçon (Présentation, Enjeu Bac/BEPC, Objectifs)
   | 'learning' // Défilement continu : Cours progressif + Test de compréhension immédiat
   | 'catchup' // Boucle de rattrapage (Rappel du cours ciblé + Question manquée) pour atteindre 100%
@@ -285,9 +299,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   stemSubjectId,
   studySessionId,
   durationMinutes = 25,
+  pacingMethod,
   onExit,
   onSessionCompleted,
 }) => {
+  // Rappel actif : se tester de mémoire (question avant la fiche, rappel en fin de mini-leçon)
+  const isActiveRecall = pacingMethod === 'active_recall_spaced' || pacingMethod === 'active_recall' || pacingMethod === 'spaced_repetition';
   // 1. Sous-catégorie active calculée selon la règle d'alternance officielle ivoirienne
   // (Physique-Chimie -> Chimie ↔ Physique, Maths -> Géométrie ↔ Numérique)
   const [activeSubCategory, setActiveSubCategory] = useState<StemSubCategory>(() => {
@@ -347,6 +364,31 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // Compteurs déjà enregistrés (la progression est sauvegardée après CHAQUE mini-leçon validée)
   const recordedCountsRef = useRef<{ answered: number; correct: number }>({ answered: 0, correct: 0 });
 
+  // Révision espacée : questions « à revoir aujourd'hui » posées avant la leçon
+  const [warmupItems, setWarmupItems] = useState<WarmupItem[]>([]);
+  const [warmupIndex, setWarmupIndex] = useState<number>(0);
+  // Rappel actif : étapes de la mini-leçon reposées de mémoire à la fin
+  const [recallSteps, setRecallSteps] = useState<number[]>([]);
+  const [recallIndex, setRecallIndex] = useState<number>(0);
+
+  /** Prépare la révision du jour (au plus 3 questions dues dans ce volet). */
+  const loadWarmup = (subCat: StemSubCategory): WarmupItem[] => {
+    try {
+      const due = getDueReviews(userId, stemSubjectId, gradeLevel, subCat, 3);
+      if (!due.length) return [];
+      const chapters = getCurriculumChapters(stemSubjectId, gradeLevel);
+      const out: WarmupItem[] = [];
+      for (const entry of due) {
+        const found = findReviewExercise(chapters, entry);
+        if (!found) { forgetReview(userId, entry.exerciseId); continue; }
+        out.push({ exercise: found.exercise, stepIndex: found.stepIndex, point: found.point, chapterId: found.chapter.id });
+      }
+      return out;
+    } catch {
+      return [];
+    }
+  };
+
   // Charger ou recharger le payload de session avec la sous-catégorie active
   const refreshSessionPayload = (subCatToUse?: StemSubCategory) => {
     const res = buildTutorSessionPayload(
@@ -387,7 +429,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       setShowChapterSelector(false);
       setSessionPayload(res.payload);
       setActiveItemIndex(0);
-      setPhase('intro');
+      // Révision espacée : les questions dues passent en premier, puis la leçon du jour
+      const warmup = loadWarmup(res.subCategory);
+      setWarmupItems(warmup);
+      setWarmupIndex(0);
+      setPhase(warmup.length > 0 ? 'warmup' : 'intro');
       setExerciseIndex(0);
       setSelectedOptionIndex(null);
       setIsAnswerChecked(false);
@@ -442,29 +488,61 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     return [];
   }, [currentPoint]);
 
+  const warmupItem: WarmupItem | undefined = phase === 'warmup' ? warmupItems[warmupIndex] : undefined;
+
   // Index effectif de l'étape en cours
   const activeStepIndex: number = useMemo(() => {
     if (phase === 'catchup') {
       return catchupQueue[currentCatchupQueueIndex] ?? 0;
     }
+    if (phase === 'recall') return recallSteps[recallIndex] ?? 0;
+    if (phase === 'warmup') return warmupItem?.stepIndex ?? 0;
     return exerciseIndex;
-  }, [phase, exerciseIndex, catchupQueue, currentCatchupQueueIndex]);
+  }, [phase, exerciseIndex, catchupQueue, currentCatchupQueueIndex, recallSteps, recallIndex, warmupItem]);
 
   // Exercice de compréhension associé à l'étape active
   const activeExercise: InteractiveExercise | undefined = useMemo(() => {
+    if (phase === 'warmup') {
+      return warmupItem ? shuffleExerciseOptions(warmupItem.exercise) : undefined;
+    }
+    if (phase === 'recall') {
+      // Même question, mais propositions dans un autre ordre (on ne retient pas la position, on retient la notion)
+      const exercise = pointExercises[activeStepIndex];
+      if (!exercise) return undefined;
+      return { ...shuffleExerciseOptions({ ...exercise, id: `${exercise.id}::rappel` }), id: exercise.id };
+    }
     if (phase === 'learning' || phase === 'catchup') {
       const exercise = pointExercises[activeStepIndex];
       // Ordre des propositions mélangé (la bonne réponse n'est plus toujours en A)
       return exercise ? shuffleExerciseOptions(exercise) : undefined;
     }
     return undefined;
-  }, [phase, activeStepIndex, pointExercises]);
+  }, [phase, activeStepIndex, pointExercises, warmupItem]);
 
   // Portion du cours progressif associée à l'étape active
   const activeCourseSlice: ProgressiveCourseSlice | null = useMemo(() => {
+    if (phase === 'warmup') {
+      return warmupItem ? buildProgressiveCourseSlice(warmupItem.point, warmupItem.stepIndex, activeExercise) : null;
+    }
     if (!currentPoint) return null;
     return buildProgressiveCourseSlice(currentPoint, activeStepIndex, activeExercise);
-  }, [currentPoint, activeStepIndex, activeExercise]);
+  }, [phase, warmupItem, currentPoint, activeStepIndex, activeExercise]);
+
+  /**
+   * Question posée DE MÉMOIRE (fiche cachée tant que l'élève n'a pas répondu ; montrée en cas d'erreur) :
+   * révision du jour, rappel de fin de mini-leçon, et en Rappel actif : rattrapage et mini-leçons déjà vues.
+   */
+  const retrievalMode = phase === 'warmup' || phase === 'recall'
+    || (isActiveRecall && (phase === 'catchup' || Boolean(currentItem?.isReview)));
+  const showCourseCard = !retrievalMode || (isAnswerChecked && !isAnswerCorrect);
+
+  // KONAN réagit au comportement de l'élève pendant les questions
+  const questionPhase = phase === 'learning' || phase === 'catchup' || phase === 'warmup' || phase === 'recall';
+  const coach = useKonanCoach(questionPhase);
+  const { questionShown } = coach;
+  useEffect(() => {
+    if (questionPhase && activeExercise) questionShown();
+  }, [questionPhase, activeExercise?.id, activeStepIndex, warmupIndex, recallIndex, questionShown]);
 
   const subCategoryLabel = getSubCategoryName(activeSubCategory);
 
@@ -491,6 +569,19 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     setIsAnswerChecked(true);
     setIsAnswerCorrect(isCorrect);
     setTotalExercisesAnswered(prev => prev + 1);
+    coach.answered(isCorrect);
+
+    // Révision espacée : KONAN retient le résultat pour faire revenir la question au bon moment
+    // (premier essai seulement : une réussite après correction ne prouve pas qu'on sait)
+    try {
+      if (phase === 'warmup' && warmupItem) {
+        recordReviewAnswer(userId, { subject: stemSubjectId, grade: gradeLevel, subCategory: activeSubCategory, chapterId: warmupItem.chapterId, pointId: warmupItem.point.id }, warmupItem.exercise.id, isCorrect);
+      } else if ((phase === 'learning' || phase === 'recall') && currentItem && currentPoint) {
+        recordReviewAnswer(userId, { subject: stemSubjectId, grade: gradeLevel, subCategory: activeSubCategory, chapterId: currentItem.chapterId, pointId: currentPoint.id }, activeExercise.id, isCorrect);
+      }
+    } catch {
+      // la mémoire de révision ne doit jamais bloquer la leçon
+    }
 
     if (isCorrect) {
       setMasteredIndices(prev => prev.includes(activeStepIndex) ? prev : [...prev, activeStepIndex]);
@@ -526,6 +617,17 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     setIsAnswerCorrect(false);
     setShowExplanation(false);
 
+    if (phase === 'warmup') {
+      if (warmupIndex < warmupItems.length - 1) setWarmupIndex(prev => prev + 1);
+      else setPhase('intro');
+      return;
+    }
+    if (phase === 'recall') {
+      if (recallIndex < recallSteps.length - 1) setRecallIndex(prev => prev + 1);
+      else handleMiniLessonValidated();
+      return;
+    }
+
     if (phase === 'learning') {
       if (exerciseIndex < pointExercises.length - 1) {
         setExerciseIndex(prev => prev + 1);
@@ -535,7 +637,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           setCatchupQueue([...missedIndices]);
           setCurrentCatchupQueueIndex(0);
         } else {
-          handleMiniLessonValidated();
+          finishMiniLesson();
         }
       }
     } else if (phase === 'catchup') {
@@ -543,7 +645,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         const nextQueue = catchupQueue.filter((_, i) => i !== currentCatchupQueueIndex);
         setCatchupQueue(nextQueue);
         if (nextQueue.length === 0) {
-          handleMiniLessonValidated();
+          finishMiniLesson();
         } else {
           setCurrentCatchupQueueIndex(0);
         }
@@ -551,6 +653,26 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         setCurrentCatchupQueueIndex(prev => (prev + 1) % catchupQueue.length);
       }
     }
+  };
+
+  /**
+   * Fin des étapes d'une mini-leçon. En Rappel actif, l'élève se teste d'abord de mémoire sur 3 questions
+   * de la leçon (fiche cachée), en commençant par celles qu'il avait ratées.
+   */
+  const finishMiniLesson = () => {
+    if (isActiveRecall && pointExercises.length >= 3) {
+      const missedFirst = [...missedIndices];
+      const others = pointExercises.map((_, i) => i).filter((i) => !missedFirst.includes(i));
+      // Ordre stable mais varié selon la leçon (pas toujours les 3 premières étapes)
+      const seed = (currentPoint?.id || '').split('').reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+      others.sort((a, b) => ((a * 7 + seed) % 11) - ((b * 7 + seed) % 11));
+      const steps = [...missedFirst, ...others].slice(0, 3);
+      setRecallSteps(steps);
+      setRecallIndex(0);
+      setPhase('recall');
+      return;
+    }
+    handleMiniLessonValidated();
   };
 
   // Validation d'une mini-leçon à 8/8 : sauvegarde IMMÉDIATE de la progression
@@ -1164,6 +1286,17 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </h1>
         </div>
 
+        {/* Méthode de la séance, expliquée en une ligne */}
+        {isActiveRecall && (
+          <div className="p-3.5 rounded-2xl bg-violet-50/80 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-700/60 text-left flex items-start gap-3">
+            <Brain className="w-5 h-5 text-violet-600 dark:text-violet-300 shrink-0 mt-0.5" />
+            <p className="text-xs sm:text-sm text-violet-900 dark:text-violet-100 font-semibold leading-relaxed">
+              <strong>Séance Rappel actif :</strong> quand une notion a déjà été vue, je te pose la question avant de te montrer la fiche.
+              Et à la fin de la leçon, tu te testes de mémoire sur 3 questions.
+            </p>
+          </div>
+        )}
+
         {/* Enjeu pour devoirs et examens */}
         <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 text-left space-y-2 shadow-xs">
           <div className="flex items-center gap-2 text-indigo-900 dark:text-indigo-200 font-black text-xs sm:text-sm">
@@ -1229,9 +1362,16 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   }
 
   const totalSteps = pointExercises.length || 8;
+  // Barre de progression : la révision du jour et le rappel de mémoire ont leur propre compteur
+  const answeredNow = isAnswerChecked ? 1 : 0;
+  const barDone = phase === 'warmup' ? warmupIndex + answeredNow : phase === 'recall' ? recallIndex + answeredNow : masteredIndices.length;
+  const barTotal = phase === 'warmup' ? Math.max(1, warmupItems.length) : phase === 'recall' ? Math.max(1, recallSteps.length) : totalSteps;
+  const isLastQuestionOfPhase = phase === 'warmup' ? warmupIndex >= warmupItems.length - 1 : phase === 'recall' ? recallIndex >= recallSteps.length - 1 : false;
 
   return (
     <div className="max-w-3xl mx-auto py-4 sm:py-6 px-3 sm:px-6 space-y-4">
+      {/* KONAN réagit (inactivité, réponses au hasard, série de bonnes réponses…) */}
+      <KonanCoachBubble message={coach.message} onDismiss={coach.dismiss} onAction={coach.imHere} />
       {/* 1. BARRE DE PROGRESSION STYLE DUOLINGO (TOP) */}
       <div className="flex items-center gap-3 w-full pb-1">
         {/* Barre de progression continue Style Duolingo (Couleur Bleue) */}
@@ -1239,7 +1379,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="flex-1 h-3.5 sm:h-4 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300 dark:border-slate-800/80 p-0.5 shadow-inner">
             <div
               className="h-full rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 dark:from-blue-500 dark:via-indigo-500 dark:to-cyan-400 transition-all duration-500 ease-out relative shadow-sm"
-              style={{ width: `${Math.min(100, Math.max(0, (masteredIndices.length / totalSteps) * 100))}%` }}
+              style={{ width: `${Math.min(100, Math.max(0, (barDone / barTotal) * 100))}%` }}
             >
               <div className="absolute top-0.5 left-2 right-2 h-1 bg-white/35 rounded-full" />
             </div>
@@ -1247,7 +1387,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
           {/* Badge de score X/totalSteps */}
           <div className="shrink-0 px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black font-mono">
-            {masteredIndices.length} / {totalSteps}
+            {barDone} / {barTotal}
           </div>
         </div>
       </div>
@@ -1260,11 +1400,19 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             style={{ backgroundColor: subjectMeta.color }}
           />
           <span className="font-extrabold uppercase tracking-wide text-slate-700 dark:text-slate-300 truncate">
-            {subjectTitle} • {subCategoryLabel} • Ch. {currentItem.chapterOrder} • Mini-leçon {activeItemIndex + 1} sur {items.length} de la séance
+            {phase === 'warmup'
+              ? `${subjectTitle} • ${subCategoryLabel} • Révision du jour`
+              : `${subjectTitle} • ${subCategoryLabel} • Ch. ${currentItem.chapterOrder} • Mini-leçon ${activeItemIndex + 1} sur ${items.length} de la séance`}
           </span>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
+          {(phase === 'warmup' || phase === 'recall') && (
+            <span className="px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-700 dark:text-violet-300 text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
+              <Brain className="w-3 h-3" />
+              <span>{phase === 'warmup' ? 'Révision espacée' : 'Rappel de mémoire'}</span>
+            </span>
+          )}
           {phase === 'catchup' && (
             <span className="px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 animate-pulse">
               <RotateCcw className="w-3 h-3" />
@@ -1272,19 +1420,36 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             </span>
           )}
 
-          <div className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400">
-            <Target className="w-3.5 h-3.5" />
-            <span>Étape {activeStepIndex + 1}/{totalSteps} · {totalSteps}/{totalSteps} requis</span>
-          </div>
+          {phase !== 'warmup' && phase !== 'recall' && (
+            <div className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400">
+              <Target className="w-3.5 h-3.5" />
+              <span>Étape {activeStepIndex + 1}/{totalSteps} · {totalSteps}/{totalSteps} requis</span>
+            </div>
+          )}
         </div>
       </div>
 
       {/* =================================================================== */}
       {/* MODE DUOLINGO : 1 SEUL POINT DE COURS -> 1 QCM -> SUIVANT           */}
       {/* =================================================================== */}
-      {(phase === 'learning' || phase === 'catchup') && activeExercise && activeCourseSlice && (
+      {questionPhase && activeExercise && activeCourseSlice && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
+          {/* Question DE MÉMOIRE : la fiche reste cachée tant que l'élève n'a pas répondu */}
+          {retrievalMode && !isAnswerChecked && (
+            <div className="p-3.5 rounded-2xl bg-violet-50/80 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-700/60 flex items-center gap-3">
+              <Brain className="w-5 h-5 text-violet-600 dark:text-violet-300 shrink-0" />
+              <p className="text-xs sm:text-sm font-bold text-violet-900 dark:text-violet-100 leading-snug">
+                {phase === 'warmup'
+                  ? 'Révision du jour : une question déjà vue revient. Réponds de mémoire, sans regarder le cours.'
+                  : phase === 'recall'
+                  ? 'Rappel de mémoire : sans regarder la fiche, montre ce que tu as retenu de cette leçon.'
+                  : 'De mémoire d’abord : réponds sans la fiche. Elle s’affichera si tu te trompes.'}
+              </p>
+            </div>
+          )}
+
           {/* PARTIE 1 : LA CARTE DE COURS PROGRESSIVE (1 POINT À LA FOIS OU ÉNONCÉ D'EXERCICE) */}
+          {showCourseCard && (
           <div className={`p-4 sm:p-6 rounded-2xl border-2 space-y-4 shadow-sm ${
             activeCourseSlice.stepKind
               ? STEP_KIND_STYLE[activeCourseSlice.stepKind].card
@@ -1300,12 +1465,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   <BookOpen className="w-4 h-4 shrink-0" />
                 )}
                 <span className="text-[11px] font-black uppercase tracking-wider truncate">
-                  {activeCourseSlice.stepBadge}
+                  {retrievalMode ? `Rappel du cours · ${activeCourseSlice.stepBadge}` : activeCourseSlice.stepBadge}
                 </span>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300">
-                Étape {activeStepIndex + 1} / {totalSteps}
-              </span>
+              {!retrievalMode && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300">
+                  Étape {activeStepIndex + 1} / {totalSteps}
+                </span>
+              )}
             </div>
 
             {/* Contenu structuré avec le code couleur pédagogique Bleu / Violet (Liaison 1-pour-1 avec le QCM) */}
@@ -1345,6 +1512,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               </div>
             )}
           </div>
+          )}
 
           {/* PARTIE 2 : LE TEST DE COMPRÉHENSION IMMÉDIAT (ADAPTÉ STRICTEMENT À L'ÉTAPE) */}
           <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
@@ -1352,7 +1520,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               <span className="font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
                 <Target className="w-4 h-4" />
                 <span>
-                  {activeCourseSlice.stepBadge
+                  {phase === 'warmup'
+                    ? `Révision ${warmupIndex + 1}/${warmupItems.length} · De mémoire`
+                    : phase === 'recall'
+                    ? `Rappel ${recallIndex + 1}/${recallSteps.length} · De mémoire`
+                    : activeCourseSlice.stepBadge
                     ? `${activeCourseSlice.stepBadge} · Test de compréhension`
                     : `QCM ${activeStepIndex + 1}/${totalSteps} · Compréhension`}
                 </span>
@@ -1524,7 +1696,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   }`}
                 >
                   <span>
-                    {phase === 'catchup'
+                    {phase === 'warmup' || phase === 'recall'
+                      ? (isLastQuestionOfPhase
+                        ? (phase === 'warmup' ? 'Passer à la leçon du jour' : 'Terminer la mini-leçon')
+                        : 'Question suivante')
+                      : phase === 'catchup'
                       ? (isAnswerCorrect ? "Continuer le rattrapage" : "Question suivante")
                       : isAnswerCorrect
                         ? (activeStepIndex === totalSteps - 1 ? "Terminer et valider la mini-leçon" : "Continuer vers l'étape suivante")
