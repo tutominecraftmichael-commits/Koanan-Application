@@ -20,6 +20,7 @@
       var splash = document.getElementById('konan-splash');
       var meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute('content', meta.getAttribute('data-app-color') || '#091427');
+      document.documentElement.classList.remove('konan-splash-on');
       if (!splash) return;
       splash.classList.add('is-hiding');
       setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 230);

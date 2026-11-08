@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" class="dark">
+<html lang="fr" class="dark konan-splash-on">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -42,6 +42,8 @@
         touch-action: none;
       }
       #konan-splash.is-hiding { opacity: 0; pointer-events: none; }
+      /* Le téléphone colore sa barre du bas avec le fond de la page : bleu ciel tant que l'écran est là */
+      html.konan-splash-on, html.konan-splash-on body { background: #90D8F8 !important; }
       #konan-splash-word {
         font-family: 'Nunito', 'Arial Rounded MT Bold', 'Arial Black', sans-serif;
         font-weight: 900;
