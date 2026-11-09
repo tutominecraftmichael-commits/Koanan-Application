@@ -724,6 +724,23 @@ export async function syncUserStateToCloud(uid: string, data: any): Promise<{ su
       const existing = await loadUserStateFromCloud(uid);
       if (existing && existing.subjects && existing.subjects.length > 0) {
         console.warn('Prevented accidental overwrite of cloud state by empty local state');
+        // Le planning du compte est protégé, mais un nom, une classe ou une photo modifiés plus
+        // récemment sur ce téléphone sont quand même enregistrés (jamais perdus à la reconnexion).
+        const localTime = Date.parse(sanitized.profileUpdatedAt || '') || 0;
+        const cloudTime = Date.parse(existing.profileUpdatedAt || '') || 0;
+        if (localTime > cloudTime) {
+          const profileOnly = JSON.parse(JSON.stringify({
+            studentName: sanitized.studentName,
+            academicLevel: sanitized.academicLevel,
+            profileUpdatedAt: sanitized.profileUpdatedAt,
+            userAccount: {
+              name: sanitized.userAccount?.name,
+              academicLevel: sanitized.userAccount?.academicLevel,
+              customAvatar: sanitized.userAccount?.customAvatar,
+            },
+          }));
+          await setDoc(userRef, { ...profileOnly, lastSyncedAt: new Date().toISOString() }, { merge: true });
+        }
         return { success: false, error: 'BLOCKED_OVERWRITE_PROTECTION' };
       }
     }

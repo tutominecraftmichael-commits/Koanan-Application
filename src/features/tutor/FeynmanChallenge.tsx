@@ -63,7 +63,14 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, o
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
   };
-  useEffect(() => () => { try { recorderRef.current?.stop(); } catch { /* déjà arrêté */ } stopStream(); }, []);
+  useEffect(() => () => {
+    // En quittant : micro coupé, aucun morceau d'enregistrement envoyé ni gardé
+    const rec = recorderRef.current;
+    if (rec) rec.onstop = null;
+    try { rec?.stop(); } catch { /* déjà arrêté */ }
+    chunksRef.current = [];
+    stopStream();
+  }, []);
 
   // Compte à rebours : le micro se coupe tout seul à la fin du temps
   useEffect(() => {
@@ -124,7 +131,11 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, o
         const duration = (Date.now() - startedAtRef.current) / 1000;
         if (duration < MIN_SECONDS) { setError('C’était trop court : explique pendant quelques secondes au moins.'); setMode('start'); return; }
         const blob = new Blob(chunksRef.current, { type: recorder.mimeType || mimeType || 'audio/webm' });
-        await submit({ audio: await blobToBase64(blob), mimeType: blob.type });
+        // La voix n'est gardée NULLE PART : on efface l'enregistrement de la mémoire du téléphone dès qu'il est lu
+        chunksRef.current = [];
+        const payload = { audio: await blobToBase64(blob), mimeType: blob.type };
+        await submit(payload);
+        payload.audio = '';
       };
       recorderRef.current = recorder;
       startedAtRef.current = Date.now();
