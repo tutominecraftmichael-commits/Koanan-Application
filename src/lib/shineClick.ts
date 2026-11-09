@@ -27,12 +27,19 @@ export function installShineOnTap(): void {
     'pointerdown',
     (event) => {
       const target = event.target as Element | null;
+      const flash = (el: HTMLElement, ms: number) => {
+        el.classList.remove('konan-tap');
+        void el.offsetWidth; // relance l'animation même sur deux touchers rapprochés
+        el.classList.add('konan-tap');
+        window.setTimeout(() => el.classList.remove('konan-tap'), ms);
+      };
+      // Bouton « propre »
       const btn = target?.closest?.('.konan-btn-shine') as HTMLButtonElement | null;
-      if (!btn || btn.disabled) return;
-      btn.classList.remove('konan-tap');
-      void btn.offsetWidth; // relance l'animation même sur deux touchers rapprochés
-      btn.classList.add('konan-tap');
-      window.setTimeout(() => btn.classList.remove('konan-tap'), 560);
+      if (btn && !btn.disabled) flash(btn, 560);
+      // Carte « propre » (formule payante) : la barre de lumière traverse toute la carte
+      const host = target?.closest?.('[data-shine-host]') as HTMLElement | null;
+      const layer = host?.querySelector(':scope > .konan-shine-layer') as HTMLElement | null;
+      if (layer) flash(layer, 660);
     },
     { passive: true },
   );

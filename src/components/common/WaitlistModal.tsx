@@ -35,7 +35,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
   userId = '',
 }) => {
   const isPlus = requiredTier === 'plus';
-  const priceBadge = isPlus ? '2 500 FCFA / mois • Offre Trimestre' : '1 200 FCFA / mois';
+  const priceBadge = isPlus ? '2 500 F CFA / mois • 5 000 F CFA / semestre' : '1 200 F CFA / mois • 2 350 F CFA / semestre';
 
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');

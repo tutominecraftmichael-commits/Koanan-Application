@@ -6,9 +6,7 @@ import type { StudyPacing, PlanTier } from '../types';
 export type { PlanTier };
 
 /**
- * Méthodes autorisées individuellement en version GRATUITE (Tier: 'free')
- * Toutes les méthodes individuelles sont accessibles gratuitement (1 seule méthode active à la fois).
- * Seule la COMBINAISON de méthodes simultanées (jusqu'à 3) est réservée à KONAN PRO.
+ * Méthodes de la version GRATUITE (Tier: 'free') : 1 seule active à la fois.
  */
 export const FREE_METHODS: readonly StudyPacing[] = [
   'pomodoro',
@@ -16,14 +14,13 @@ export const FREE_METHODS: readonly StudyPacing[] = [
   'active_recall',
   'spaced_repetition',
   'active_recall_spaced',
-  'feynman',
-  'time_blocking',
 ] as const;
 
 /**
- * Aucune méthode individuelle n'est verrouillée : c'est la combinaison de méthodes qui est exclusive au palier PRO
+ * Méthodes réservées à KONAN PRO : Feynman à l'oral (3 vocaux par jour) et Time Blocking (mode concentration).
+ * La combinaison de méthodes (jusqu'à 3) est aussi réservée au Pro.
  */
-export const PRO_METHODS: readonly StudyPacing[] = [] as const;
+export const PRO_METHODS: readonly StudyPacing[] = ['feynman', 'time_blocking'] as const;
 
 /**
  * Fonctionnalités exclusives à la version PLUS (Tier: 'plus')
@@ -82,7 +79,7 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
   pro: {
     id: 'pro',
     name: 'KONAN PRO',
-    tagline: '1 200 F CFA / mois • Version PRO ouverte (Lancement)',
+    tagline: '1 200 F CFA / mois • 2 350 F CFA / semestre • Offert pendant le lancement',
     priceLabel: '1 200 F',
     periodLabel: 'CFA / mois (Version PRO ouverte)',
     priceAmount: 1200,
@@ -95,7 +92,7 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
   plus: {
     id: 'plus',
     name: 'KONAN PLUS',
-    tagline: 'Disponible bientôt',
+    tagline: '2 500 F CFA / mois • 5 000 F CFA / semestre • Disponible bientôt',
     priceLabel: '2 500 F',
     periodLabel: 'CFA / mois (Disponible bientôt)',
     priceAmount: 2500,
@@ -106,6 +103,93 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
     paymentProviders: [],
   },
 };
+
+// ============================================================================
+// GRILLE AFFICHÉE AUX ÉLÈVES (inscription + page d'accueil) — source unique
+// Prix en F CFA. Les descriptions décrivent ce que l'application fait VRAIMENT aujourd'hui.
+// ============================================================================
+
+export type BillingPeriod = 'monthly' | 'semester';
+
+/** Un semestre = 6 mois. */
+export const SEMESTER_MONTHS = 6;
+
+export interface DisplayPlanFeature {
+  title: string;
+  detail?: string;
+}
+
+export interface DisplayPlan {
+  id: PlanTier;
+  name: string;
+  tagline: string;
+  /** Prix par période de paiement (F CFA). */
+  prices: Record<BillingPeriod, number>;
+  /** Palier dont celui-ci reprend tout (affiché « Tout X, plus : »). */
+  includesLabel: string;
+  features: DisplayPlanFeature[];
+  /** Note courte sous le prix (offre de lancement, disponibilité…). */
+  note?: string;
+  available: boolean;
+  recommended?: boolean;
+}
+
+export const DISPLAY_PLANS: DisplayPlan[] = [
+  {
+    id: 'free',
+    name: 'KONAN Gratuit',
+    tagline: 'Pour bien démarrer',
+    prices: { monthly: 0, semester: 0 },
+    includesLabel: 'Inclus :',
+    available: true,
+    features: [
+      { title: 'Ton emploi du temps importé', detail: 'PDF, photo ou texte : 3 imports.' },
+      { title: 'Ton planning de révision', detail: 'Créé pour ta classe, avec tes matières et coefficients.' },
+      { title: 'Cours guidés du programme officiel', detail: 'Mini-leçons et QCM, rattrapage de tes erreurs.' },
+      { title: 'KONAN retient tes erreurs', detail: 'Il te les repose au bon moment (révision espacée).' },
+      { title: 'Rappels de séance sur ton téléphone' },
+      { title: '1 méthode à la fois', detail: 'Pomodoro, Rappel actif ou Règle des 2 minutes.' },
+    ],
+  },
+  {
+    id: 'pro',
+    name: 'KONAN PRO',
+    tagline: 'Pour progresser vite',
+    prices: { monthly: 1200, semester: 2350 },
+    includesLabel: 'Tout le Gratuit, plus :',
+    note: 'Offert pendant le lancement',
+    available: true,
+    recommended: true,
+    features: [
+      { title: 'Méthode Feynman à l’oral', detail: 'Explique ta leçon à voix haute, KONAN te corrige : 3 vocaux par jour.' },
+      { title: 'Time Blocking', detail: 'De longs blocs en mode concentration, sans distraction.' },
+      { title: 'Jusqu’à 3 méthodes combinées', detail: 'Dans le même planning, selon tes matières.' },
+      { title: 'La recommandation de KONAN', detail: 'La meilleure méthode selon ton temps libre.' },
+      { title: 'Planning configuré avec KONAN, pas à pas' },
+      { title: 'Imports d’emploi du temps illimités' },
+      { title: 'Export vers Google Agenda' },
+    ],
+  },
+  {
+    id: 'plus',
+    name: 'KONAN PLUS',
+    tagline: 'Pour viser l’excellence',
+    prices: { monthly: 2500, semester: 5000 },
+    includesLabel: 'Tout le Pro, plus :',
+    note: 'Bientôt disponible',
+    available: false,
+    features: [
+      { title: 'Planning réglé sur ton objectif', detail: '12 de moyenne, une mention ou major de promo.' },
+      { title: 'Pack groupe', detail: 'Invite jusqu’à 4 camarades (5 comptes).' },
+      { title: 'Musiques de concentration', detail: 'Ondes alpha, lofi, bruit blanc.' },
+    ],
+  },
+];
+
+/** « 1 200 » : séparateur des milliers à la française. */
+export function formatFcfa(amount: number): string {
+  return amount.toLocaleString('fr-FR').replace(/ | /g, ' ');
+}
 
 /**
  * Vérifie si une méthode d'apprentissage fait partie du palier Gratuit

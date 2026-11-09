@@ -1187,3 +1187,37 @@ a, button, [role="button"], input, select, textarea, label {
   100% { transform: translateX(400%) skewX(-18deg); opacity: 1; }
 }
 /* Pas de coupure en « animations réduites » : reflets courts et doux, voulus partout (choix produit) */
+
+/* Reflet sur une CARTE entière (formules payantes) : calque posé dans la carte, teinté à sa couleur
+   (un reflet blanc serait invisible sur une carte blanche). Au toucher de la carte, une barre passe. */
+.konan-shine-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+.konan-shine-layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 35%, var(--shine-soft) 50%, transparent 65%);
+  transform: translateX(-130%);
+  animation: konan-btn-shine 4.5s ease-in-out infinite;
+}
+.konan-shine-layer::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  width: 30%;
+  background: linear-gradient(100deg, transparent 0%, var(--shine-strong) 50%, transparent 100%);
+  transform: translateX(-170%) skewX(-18deg);
+  opacity: 0;
+}
+.konan-shine-layer.konan-tap::before { animation: konan-btn-tap 0.6s ease-out; }
+.konan-shine-sky { --shine-soft: rgba(56, 189, 248, 0.16); --shine-strong: rgba(56, 189, 248, 0.38); }
+.konan-shine-violet { --shine-soft: rgba(139, 92, 246, 0.14); --shine-strong: rgba(139, 92, 246, 0.34); }
+.dark .konan-shine-sky { --shine-soft: rgba(125, 211, 252, 0.10); --shine-strong: rgba(186, 230, 253, 0.28); }
+.dark .konan-shine-violet { --shine-soft: rgba(196, 181, 253, 0.10); --shine-strong: rgba(221, 214, 254, 0.26); }
