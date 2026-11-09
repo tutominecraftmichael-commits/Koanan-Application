@@ -398,6 +398,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   // Compteurs déjà enregistrés (la progression est sauvegardée après CHAQUE mini-leçon validée)
   const recordedCountsRef = useRef<{ answered: number; correct: number }>({ answered: 0, correct: 0 });
+  // Mini-leçons déjà enregistrées comme validées pendant cette séance (jamais deux fois)
+  const recordedPointIdsRef = useRef<Set<string>>(new Set());
 
   // Révision espacée : questions « à revoir aujourd'hui » posées avant la leçon
   const [warmupItems, setWarmupItems] = useState<WarmupItem[]>([]);
@@ -805,11 +807,16 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   /** Enregistre la mini-leçon en cours comme validée (progression + fin du marque-page). */
   const recordPointDone = () => {
-    if (resumeRef.current && currentPoint && resumeRef.current.pointId === currentPoint.id) {
-      resumeRef.current = null;
-      saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, null);
+    // Le marque-page de cette mini-leçon (posé à la fin du temps ou en quittant) n'a plus lieu d'être
+    if (currentPoint) {
+      const saved = readResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      if ((resumeRef.current && resumeRef.current.pointId === currentPoint.id) || saved?.pointId === currentPoint.id) {
+        resumeRef.current = null;
+        saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, null);
+      }
     }
-    if (currentItem) {
+    if (currentItem && !recordedPointIdsRef.current.has(currentItem.point.id)) {
+      recordedPointIdsRef.current.add(currentItem.point.id);
       recordCompletedTutorSession(
         userId,
         stemSubjectId,
@@ -870,8 +877,39 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       soundFX.playGrandCheer();
     } catch {}
     markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+    alternationDoneRef.current = true;
     setPhase('session_celebration');
   };
+
+  // L'élève quitte en pleine séance (menu, bouton retour, appli fermée) : on garde sa place.
+  //  - marque-page à la question exacte (rattrapée à la prochaine séance de ce volet, puis on continue) ;
+  //  - s'il a vraiment travaillé (5 réponses ou plus), la prochaine séance passe à l'autre volet,
+  //    exactement comme à la fin du temps.
+  const alternationDoneRef = useRef<boolean>(false);
+  const leaveRef = useRef<(final: boolean) => void>(() => {});
+  leaveRef.current = (final: boolean) => {
+    try {
+      saveWhereStopped();
+      if (final && !alternationDoneRef.current && totalExercisesAnswered >= 5) {
+        alternationDoneRef.current = true;
+        markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      }
+    } catch {
+      // quitter ne doit jamais planter
+    }
+  };
+  useEffect(() => {
+    const onHide = () => { if (document.visibilityState === 'hidden') leaveRef.current(false); };
+    const onPageHide = () => leaveRef.current(false);
+    document.addEventListener('visibilitychange', onHide);
+    window.addEventListener('pagehide', onPageHide);
+    return () => {
+      document.removeEventListener('visibilitychange', onHide);
+      window.removeEventListener('pagehide', onPageHide);
+    };
+  }, []);
+  // Démontage du cours (retour au tableau de bord, autre page) = l'élève a quitté la séance
+  useEffect(() => () => leaveRef.current(true), []);
 
   // Fermeture finale et validation dans l'emploi du temps
   const handleFinishAndExit = () => {
@@ -893,22 +931,39 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     return () => clearInterval(timer);
   }, [workLimitSec, timedPhase, coachIdle, timerStarted]);
 
+  /**
+   * Mémorise l'endroit exact où l'élève s'arrête au milieu d'une mini-leçon (marque-page) :
+   * à la séance suivante de ce volet, il reprend à cette question, puis continue avec les points suivants.
+   * Si toutes les étapes étaient faites (rappel de fin de leçon), la mini-leçon compte comme validée.
+   */
+  const saveWhereStopped = () => {
+    if ((phase === 'learning' || phase === 'catchup') && currentPoint) {
+      const nextIndex = phase === 'learning' ? exerciseIndex + (isAnswerChecked ? 1 : 0) : pointExercises.length;
+      const mastered = isAnswerChecked && isAnswerCorrect && !masteredIndices.includes(activeStepIndex) ? [...masteredIndices, activeStepIndex] : masteredIndices;
+      const missed = isAnswerChecked && !isAnswerCorrect && phase === 'learning' && !missedIndices.includes(activeStepIndex) ? [...missedIndices, activeStepIndex] : missedIndices;
+      // Rien de répondu dans cette mini-leçon : pas besoin de marque-page, elle reprendra au début
+      if (nextIndex === 0 && mastered.length === 0 && missed.length === 0) return;
+      // Toutes les étapes faites et toutes les erreurs rattrapées : la mini-leçon est validée
+      if (nextIndex >= pointExercises.length && missed.every((i) => mastered.includes(i))) {
+        recordPointDone();
+        return;
+      }
+      saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, {
+        pointId: currentPoint.id, exerciseIndex: nextIndex, mastered, missed, savedAt: new Date().toISOString(),
+      });
+    } else if (phase === 'recall') {
+      recordPointDone(); // toutes les étapes étaient faites : la mini-leçon compte
+    }
+  };
+
   /** Fin des 25 minutes : marque-page si on est au milieu d'une mini-leçon, alternance, puis pause. */
   const handleTimeUp = () => {
     try {
-      if ((phase === 'learning' || phase === 'catchup') && currentPoint) {
-        const nextIndex = phase === 'learning' ? exerciseIndex + (isAnswerChecked ? 1 : 0) : pointExercises.length;
-        const mastered = isAnswerChecked && isAnswerCorrect && !masteredIndices.includes(activeStepIndex) ? [...masteredIndices, activeStepIndex] : masteredIndices;
-        const missed = isAnswerChecked && !isAnswerCorrect && phase === 'learning' && !missedIndices.includes(activeStepIndex) ? [...missedIndices, activeStepIndex] : missedIndices;
-        saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, {
-          pointId: currentPoint.id, exerciseIndex: nextIndex, mastered, missed, savedAt: new Date().toISOString(),
-        });
-      } else if (phase === 'recall') {
-        recordPointDone(); // toutes les étapes étaient faites : la mini-leçon compte
-      }
+      saveWhereStopped();
       // Alternance : la prochaine séance de cette matière passera à l'autre volet,
       // seulement si la séance compte (sinon on reste sur ce volet, comme l'écran l'annonce)
       if (totalExercisesAnswered >= 5) markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      alternationDoneRef.current = true;
     } catch {
       // la fin de séance ne doit jamais bloquer
     }
