@@ -119,7 +119,12 @@ const PlanCard: React.FC<{
   const choose = () => onSelect(plan.id, billing);
 
   return (
-    <div className={`relative flex flex-col rounded-3xl bg-white dark:bg-slate-900 border-2 border-b-[6px] ${theme.card} p-5 sm:p-6`}>
+    <div
+      data-shine-host={paid ? '' : undefined}
+      className={`relative flex flex-col rounded-3xl bg-white dark:bg-slate-900 border-2 border-b-[6px] ${theme.card} p-5 sm:p-6`}
+    >
+      {/* Reflet de la carte (formules payantes) : passe tout seul, et traverse la carte au toucher */}
+      {paid && <span aria-hidden="true" className={`konan-shine-layer ${plan.id === 'pro' ? 'konan-shine-sky' : 'konan-shine-violet'}`} />}
       {plan.recommended && (
         <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-sky-500 text-white text-[11px] font-black uppercase tracking-wider whitespace-nowrap">
           Recommandé

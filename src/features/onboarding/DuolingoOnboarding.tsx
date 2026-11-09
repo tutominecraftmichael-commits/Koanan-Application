@@ -2379,17 +2379,16 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             : 'bg-slate-100 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/50 opacity-60'
                         }`}
                       >
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-extrabold text-slate-900 dark:text-white truncate flex items-center gap-1.5">
-                            {strategy.title}
-                            {isProOnly && (
-                              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-sky-500 text-white shrink-0">PRO</span>
-                            )}
-                          </span>
-                          <span className="text-[10px] font-mono font-bold text-indigo-600 dark:text-indigo-300 shrink-0">
-                            {strategy.badge}
-                          </span>
+                        {/* Titre + PRO sur une ligne (retour à la ligne si besoin), durée en dessous : rien ne se chevauche */}
+                        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs font-extrabold text-slate-900 dark:text-white leading-snug">
+                          <span>{strategy.title}</span>
+                          {isProOnly && (
+                            <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-sky-500 text-white whitespace-nowrap">PRO</span>
+                          )}
                         </div>
+                        <p className="mt-0.5 text-[10px] font-bold text-indigo-600 dark:text-indigo-300">
+                          {strategy.badge}
+                        </p>
                         <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
                           {strategy.tagline}
                         </p>
