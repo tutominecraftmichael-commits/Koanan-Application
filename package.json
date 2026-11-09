@@ -10,7 +10,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "check:cours": "npx --yes tsx scripts/checkCourses.ts && npx --yes tsx scripts/checkDisplay.ts && npx --yes tsx scripts/checkScenes.ts",
+    "check:cours": "npx --yes tsx scripts/checkCourses.ts && npx --yes tsx scripts/checkDisplay.ts && npx --yes tsx scripts/checkScenes.ts && npx --yes tsx scripts/checkDoublons.ts",
     "preview": "vite preview",
     "reminders:daemon": "node server/studyReminderWorker.js",
     "reminders:once": "node server/studyReminderWorker.js --once"

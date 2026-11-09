@@ -418,14 +418,21 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const [showKickPrompt, setShowKickPrompt] = useState<boolean>(false);
   const kickDoneRef = useRef<boolean>(false);
 
-  /** Prépare la révision du jour (au plus 3 questions dues dans ce volet). */
-  const loadWarmup = (subCat: StemSubCategory): WarmupItem[] => {
+  /**
+   * Prépare la révision du jour : les questions dues dans ce volet (3 pour 25 min, 4 pour 45 min, 5 au-delà),
+   * les ratées d'abord. Les questions des mini-leçons de la séance du jour sont laissées de côté :
+   * l'élève va les retravailler juste après, inutile de les poser deux fois.
+   */
+  const loadWarmup = (subCat: StemSubCategory, sessionPointIds: Set<string>): WarmupItem[] => {
     try {
-      const due = getDueReviews(userId, stemSubjectId, gradeLevel, subCat, 3);
+      const limit = durationMinutes >= 60 ? 5 : durationMinutes >= 40 ? 4 : 3;
+      const due = getDueReviews(userId, stemSubjectId, gradeLevel, subCat, 50)
+        .filter((entry) => !sessionPointIds.has(entry.pointId));
       if (!due.length) return [];
       const chapters = getCurriculumChapters(stemSubjectId, gradeLevel);
       const out: WarmupItem[] = [];
       for (const entry of due) {
+        if (out.length >= limit) break;
         const found = findReviewExercise(chapters, entry);
         if (!found) { forgetReview(userId, entry.exerciseId); continue; }
         out.push({ exercise: found.exercise, stepIndex: found.stepIndex, point: found.point, chapterId: found.chapter.id });
@@ -492,7 +499,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         return;
       }
       // Révision espacée : les questions dues passent en premier, puis la leçon du jour
-      const warmup = loadWarmup(res.subCategory);
+      const warmup = loadWarmup(res.subCategory, new Set(res.payload.itemsToReview.map((i) => i.point.id)));
       setWarmupItems(warmup);
       setWarmupIndex(0);
       setPhase(warmup.length > 0 ? 'warmup' : 'intro');
@@ -823,8 +830,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const extendSessionIfTimeLeft = (): boolean => {
     if (!workLimitSec || workSeconds >= workLimitSec || !sessionPayload) return false;
     try {
-      const more = buildTutorSessionPayload(userId, stemSubjectId, subjectTitle, gradeLevel, durationMinutes, activeSubCategory);
       const known = new Set(sessionPayload.itemsToReview.map((i) => i.point.id));
+      const more = buildTutorSessionPayload(userId, stemSubjectId, subjectTitle, gradeLevel, durationMinutes, activeSubCategory, known);
       const fresh = (more.payload?.itemsToReview || []).filter((i) => !known.has(i.point.id));
       if (!fresh.length) return false;
       setSessionPayload({ ...sessionPayload, itemsToReview: [...sessionPayload.itemsToReview, ...fresh] });
@@ -899,8 +906,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       } else if (phase === 'recall') {
         recordPointDone(); // toutes les étapes étaient faites : la mini-leçon compte
       }
-      // Alternance : la prochaine séance de cette matière passera à l'autre volet
-      markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      // Alternance : la prochaine séance de cette matière passera à l'autre volet,
+      // seulement si la séance compte (sinon on reste sur ce volet, comme l'écran l'annonce)
+      if (totalExercisesAnswered >= 5) markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
     } catch {
       // la fin de séance ne doit jamais bloquer
     }
@@ -1532,7 +1540,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">
             Tu as validé avec succès l'intégralité des <strong>{items.length} mini-leçons</strong> avec le score d'excellence requis.
-            Lors de ta prochaine séance, Konan alternera automatiquement pour aborder la seconde partie de ton programme !
+            {isTwoVoletLabel(subCategoryLabel)
+              ? 'Lors de ta prochaine séance, Konan passera automatiquement à l’autre volet de ton programme !'
+              : 'Lors de ta prochaine séance, tu continueras exactement là où tu t’es arrêté !'}
           </p>
         </div>
 
@@ -1644,6 +1654,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold">
             <span>Ch. {currentItem.chapterOrder} : {currentItem.chapterTitle}</span>
           </div>
+          {currentItem.isReview && (
+            <p className="text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-300">
+              Révision : tu as déjà vu cette leçon. Je la remets pour que tu la retiennes (en priorité celles où tu as fait des erreurs).
+            </p>
+          )}
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
             {currentPoint.title}
           </h1>
