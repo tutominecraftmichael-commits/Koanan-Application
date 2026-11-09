@@ -32,6 +32,8 @@ export interface ReviewEntry {
   lastResult: 'ok' | 'ko';
   seen: number;
   updatedAt: number;
+  /** Jour de la dernière réponse (AAAA-MM-JJ, heure locale). */
+  lastDay?: string;
 }
 
 type ReviewMap = Record<string, ReviewEntry>;
@@ -92,9 +94,19 @@ export interface ReviewContext {
  * Enregistre la réponse de l'élève à une question.
  * `correct` = réussie du premier coup (une réussite après correction ne compte pas comme sue).
  */
-export function recordReviewAnswer(userId: string, ctx: ReviewContext, exerciseId: string, correct: boolean, today: string = localYmd()): ReviewEntry {
+export function recordReviewAnswer(userId: string, ctx: ReviewContext, exerciseId: string, correct: boolean, today: string = localYmd(), now: number = Date.now()): ReviewEntry {
   const map = read(userId);
   const prev = map[exerciseId];
+  // Même question déjà posée AUJOURD'HUI (rappel de fin de leçon, révision du jour…) : la réussir une
+  // deuxième fois dans la journée ne prouve pas qu'on s'en souviendra. Elle ne monte donc pas de boîte,
+  // et une erreur faite plus tôt dans la journée reste une erreur (la question revient demain).
+  const prevDay = prev ? (prev.lastDay ?? localYmd(new Date(prev.updatedAt))) : null;
+  if (prev && prevDay === today && correct) {
+    const entry: ReviewEntry = { ...prev, seen: prev.seen + 1, updatedAt: now, lastDay: today };
+    map[exerciseId] = entry;
+    write(userId, map);
+    return entry;
+  }
   const box = correct ? Math.min(BOX_INTERVAL_DAYS.length - 1, prev ? prev.box + 1 : 0) : 0;
   const entry: ReviewEntry = {
     exerciseId,
@@ -107,7 +119,8 @@ export function recordReviewAnswer(userId: string, ctx: ReviewContext, exerciseI
     due: addDays(today, correct ? BOX_INTERVAL_DAYS[box] : 1),
     lastResult: correct ? 'ok' : 'ko',
     seen: (prev?.seen ?? 0) + 1,
-    updatedAt: Date.now(),
+    updatedAt: now,
+    lastDay: today,
   };
   map[exerciseId] = entry;
   write(userId, map);

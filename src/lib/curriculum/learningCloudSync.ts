@@ -19,10 +19,14 @@ async function call(body: Record<string, unknown>): Promise<any | null> {
   if (!user) return null;
   try {
     const token = await user.getIdToken();
+    const payload = JSON.stringify(body);
     const res = await fetch('/api/learning-sync', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(body),
+      body: payload,
+      // L'envoi continue même si l'élève ferme l'application juste après
+      // (le navigateur limite ce mode à 64 Ko : au-delà, envoi normal)
+      keepalive: payload.length < 60000,
     });
     const json = await res.json().catch(() => null);
     return res.ok && json?.success ? json : null;
@@ -50,9 +54,27 @@ function schedulePush(userId: string): void {
   }, PUSH_DELAY_MS);
 }
 
+/** Envoie tout de suite ce qui attend (appli mise en arrière-plan ou fermée). */
+function flushPendingPush(): void {
+  if (!pushTimer || !pendingUser) return;
+  clearTimeout(pushTimer);
+  pushTimer = null;
+  const uid = pendingUser;
+  pendingUser = null;
+  pushNow(uid).catch(() => {});
+}
+
+let flushListenersOn = false;
+
 /** Active l'envoi automatique vers le compte à chaque changement. */
 export function startLearningSync(): void {
   setLearningChangeListener(schedulePush);
+  if (flushListenersOn || typeof document === 'undefined') return;
+  flushListenersOn = true;
+  // setTimeout 0 : laisse d'abord le cours enregistrer le marque-page, puis envoie le tout
+  const onHide = () => { if (document.visibilityState === 'hidden') setTimeout(flushPendingPush, 0); };
+  document.addEventListener('visibilitychange', onHide);
+  window.addEventListener('pagehide', () => setTimeout(flushPendingPush, 0));
 }
 
 /**

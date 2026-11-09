@@ -1159,6 +1159,31 @@ a, button, [role="button"], input, select, textarea, label {
   0%, 35% { transform: translateX(-130%); }
   75%, 100% { transform: translateX(130%); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .konan-btn-shine::after { animation: none; display: none; }
+/* Rattrapage : le reflet est orange lumineux */
+.konan-btn-shine-amber::after {
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 228, 180, 0.8) 50%, transparent 70%);
 }
+/* Au toucher : une barre de lumière nette traverse le bouton (blanche ; orange pour le rattrapage) */
+.konan-btn-shine::before {
+  content: "";
+  position: absolute;
+  top: -25%;
+  bottom: -25%;
+  left: 0;
+  width: 34%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, transparent 100%);
+  transform: translateX(-170%) skewX(-18deg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.konan-btn-shine-amber::before {
+  background: linear-gradient(100deg, transparent 0%, rgba(253, 186, 116, 0.95) 35%, rgba(255, 247, 230, 1) 50%, rgba(253, 186, 116, 0.95) 65%, transparent 100%);
+}
+.konan-btn-shine.konan-tap::before { animation: konan-btn-tap 0.5s ease-out; }
+.konan-btn-shine-amber.konan-tap { box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.45), 0 0 26px rgba(251, 146, 60, 0.85) !important; }
+@keyframes konan-btn-tap {
+  0% { transform: translateX(-170%) skewX(-18deg); opacity: 1; }
+  100% { transform: translateX(400%) skewX(-18deg); opacity: 1; }
+}
+/* Pas de coupure en « animations réduites » : reflets courts et doux, voulus partout (choix produit) */

@@ -51,6 +51,7 @@ import {
 } from '../../lib/curriculum/studentProgressService';
 import type { ResumeBookmark } from '../../lib/curriculum/types';
 import { KonanMascot } from '../../components/common/KonanMascot';
+import { afterShine } from '../../lib/shineClick';
 import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
 import { shuffleExerciseOptions } from '../../lib/curriculum/optionShuffle';
 import { soundFX } from '../../lib/audioEffects';
@@ -398,6 +399,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   // Compteurs déjà enregistrés (la progression est sauvegardée après CHAQUE mini-leçon validée)
   const recordedCountsRef = useRef<{ answered: number; correct: number }>({ answered: 0, correct: 0 });
+  // Mini-leçons déjà enregistrées comme validées pendant cette séance (jamais deux fois)
+  const recordedPointIdsRef = useRef<Set<string>>(new Set());
 
   // Révision espacée : questions « à revoir aujourd'hui » posées avant la leçon
   const [warmupItems, setWarmupItems] = useState<WarmupItem[]>([]);
@@ -418,14 +421,21 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const [showKickPrompt, setShowKickPrompt] = useState<boolean>(false);
   const kickDoneRef = useRef<boolean>(false);
 
-  /** Prépare la révision du jour (au plus 3 questions dues dans ce volet). */
-  const loadWarmup = (subCat: StemSubCategory): WarmupItem[] => {
+  /**
+   * Prépare la révision du jour : les questions dues dans ce volet (3 pour 25 min, 4 pour 45 min, 5 au-delà),
+   * les ratées d'abord. Les questions des mini-leçons de la séance du jour sont laissées de côté :
+   * l'élève va les retravailler juste après, inutile de les poser deux fois.
+   */
+  const loadWarmup = (subCat: StemSubCategory, sessionPointIds: Set<string>): WarmupItem[] => {
     try {
-      const due = getDueReviews(userId, stemSubjectId, gradeLevel, subCat, 3);
+      const limit = durationMinutes >= 60 ? 5 : durationMinutes >= 40 ? 4 : 3;
+      const due = getDueReviews(userId, stemSubjectId, gradeLevel, subCat, 50)
+        .filter((entry) => !sessionPointIds.has(entry.pointId));
       if (!due.length) return [];
       const chapters = getCurriculumChapters(stemSubjectId, gradeLevel);
       const out: WarmupItem[] = [];
       for (const entry of due) {
+        if (out.length >= limit) break;
         const found = findReviewExercise(chapters, entry);
         if (!found) { forgetReview(userId, entry.exerciseId); continue; }
         out.push({ exercise: found.exercise, stepIndex: found.stepIndex, point: found.point, chapterId: found.chapter.id });
@@ -492,7 +502,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         return;
       }
       // Révision espacée : les questions dues passent en premier, puis la leçon du jour
-      const warmup = loadWarmup(res.subCategory);
+      const warmup = loadWarmup(res.subCategory, new Set(res.payload.itemsToReview.map((i) => i.point.id)));
       setWarmupItems(warmup);
       setWarmupIndex(0);
       setPhase(warmup.length > 0 ? 'warmup' : 'intro');
@@ -798,11 +808,16 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   /** Enregistre la mini-leçon en cours comme validée (progression + fin du marque-page). */
   const recordPointDone = () => {
-    if (resumeRef.current && currentPoint && resumeRef.current.pointId === currentPoint.id) {
-      resumeRef.current = null;
-      saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, null);
+    // Le marque-page de cette mini-leçon (posé à la fin du temps ou en quittant) n'a plus lieu d'être
+    if (currentPoint) {
+      const saved = readResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      if ((resumeRef.current && resumeRef.current.pointId === currentPoint.id) || saved?.pointId === currentPoint.id) {
+        resumeRef.current = null;
+        saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, null);
+      }
     }
-    if (currentItem) {
+    if (currentItem && !recordedPointIdsRef.current.has(currentItem.point.id)) {
+      recordedPointIdsRef.current.add(currentItem.point.id);
       recordCompletedTutorSession(
         userId,
         stemSubjectId,
@@ -823,8 +838,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const extendSessionIfTimeLeft = (): boolean => {
     if (!workLimitSec || workSeconds >= workLimitSec || !sessionPayload) return false;
     try {
-      const more = buildTutorSessionPayload(userId, stemSubjectId, subjectTitle, gradeLevel, durationMinutes, activeSubCategory);
       const known = new Set(sessionPayload.itemsToReview.map((i) => i.point.id));
+      const more = buildTutorSessionPayload(userId, stemSubjectId, subjectTitle, gradeLevel, durationMinutes, activeSubCategory, known);
       const fresh = (more.payload?.itemsToReview || []).filter((i) => !known.has(i.point.id));
       if (!fresh.length) return false;
       setSessionPayload({ ...sessionPayload, itemsToReview: [...sessionPayload.itemsToReview, ...fresh] });
@@ -863,8 +878,39 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       soundFX.playGrandCheer();
     } catch {}
     markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+    alternationDoneRef.current = true;
     setPhase('session_celebration');
   };
+
+  // L'élève quitte en pleine séance (menu, bouton retour, appli fermée) : on garde sa place.
+  //  - marque-page à la question exacte (rattrapée à la prochaine séance de ce volet, puis on continue) ;
+  //  - s'il a vraiment travaillé (5 réponses ou plus), la prochaine séance passe à l'autre volet,
+  //    exactement comme à la fin du temps.
+  const alternationDoneRef = useRef<boolean>(false);
+  const leaveRef = useRef<(final: boolean) => void>(() => {});
+  leaveRef.current = (final: boolean) => {
+    try {
+      saveWhereStopped();
+      if (final && !alternationDoneRef.current && totalExercisesAnswered >= 5) {
+        alternationDoneRef.current = true;
+        markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      }
+    } catch {
+      // quitter ne doit jamais planter
+    }
+  };
+  useEffect(() => {
+    const onHide = () => { if (document.visibilityState === 'hidden') leaveRef.current(false); };
+    const onPageHide = () => leaveRef.current(false);
+    document.addEventListener('visibilitychange', onHide);
+    window.addEventListener('pagehide', onPageHide);
+    return () => {
+      document.removeEventListener('visibilitychange', onHide);
+      window.removeEventListener('pagehide', onPageHide);
+    };
+  }, []);
+  // Démontage du cours (retour au tableau de bord, autre page) = l'élève a quitté la séance
+  useEffect(() => () => leaveRef.current(true), []);
 
   // Fermeture finale et validation dans l'emploi du temps
   const handleFinishAndExit = () => {
@@ -886,21 +932,39 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     return () => clearInterval(timer);
   }, [workLimitSec, timedPhase, coachIdle, timerStarted]);
 
+  /**
+   * Mémorise l'endroit exact où l'élève s'arrête au milieu d'une mini-leçon (marque-page) :
+   * à la séance suivante de ce volet, il reprend à cette question, puis continue avec les points suivants.
+   * Si toutes les étapes étaient faites (rappel de fin de leçon), la mini-leçon compte comme validée.
+   */
+  const saveWhereStopped = () => {
+    if ((phase === 'learning' || phase === 'catchup') && currentPoint) {
+      const nextIndex = phase === 'learning' ? exerciseIndex + (isAnswerChecked ? 1 : 0) : pointExercises.length;
+      const mastered = isAnswerChecked && isAnswerCorrect && !masteredIndices.includes(activeStepIndex) ? [...masteredIndices, activeStepIndex] : masteredIndices;
+      const missed = isAnswerChecked && !isAnswerCorrect && phase === 'learning' && !missedIndices.includes(activeStepIndex) ? [...missedIndices, activeStepIndex] : missedIndices;
+      // Rien de répondu dans cette mini-leçon : pas besoin de marque-page, elle reprendra au début
+      if (nextIndex === 0 && mastered.length === 0 && missed.length === 0) return;
+      // Toutes les étapes faites et toutes les erreurs rattrapées : la mini-leçon est validée
+      if (nextIndex >= pointExercises.length && missed.every((i) => mastered.includes(i))) {
+        recordPointDone();
+        return;
+      }
+      saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, {
+        pointId: currentPoint.id, exerciseIndex: nextIndex, mastered, missed, savedAt: new Date().toISOString(),
+      });
+    } else if (phase === 'recall') {
+      recordPointDone(); // toutes les étapes étaient faites : la mini-leçon compte
+    }
+  };
+
   /** Fin des 25 minutes : marque-page si on est au milieu d'une mini-leçon, alternance, puis pause. */
   const handleTimeUp = () => {
     try {
-      if ((phase === 'learning' || phase === 'catchup') && currentPoint) {
-        const nextIndex = phase === 'learning' ? exerciseIndex + (isAnswerChecked ? 1 : 0) : pointExercises.length;
-        const mastered = isAnswerChecked && isAnswerCorrect && !masteredIndices.includes(activeStepIndex) ? [...masteredIndices, activeStepIndex] : masteredIndices;
-        const missed = isAnswerChecked && !isAnswerCorrect && phase === 'learning' && !missedIndices.includes(activeStepIndex) ? [...missedIndices, activeStepIndex] : missedIndices;
-        saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, {
-          pointId: currentPoint.id, exerciseIndex: nextIndex, mastered, missed, savedAt: new Date().toISOString(),
-        });
-      } else if (phase === 'recall') {
-        recordPointDone(); // toutes les étapes étaient faites : la mini-leçon compte
-      }
-      // Alternance : la prochaine séance de cette matière passera à l'autre volet
-      markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      saveWhereStopped();
+      // Alternance : la prochaine séance de cette matière passera à l'autre volet,
+      // seulement si la séance compte (sinon on reste sur ce volet, comme l'écran l'annonce)
+      if (totalExercisesAnswered >= 5) markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      alternationDoneRef.current = true;
     } catch {
       // la fin de séance ne doit jamais bloquer
     }
@@ -1485,8 +1549,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             </div>
             <button
               type="button"
-              onClick={handleFinishAndExit}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
+              onClick={afterShine(handleFinishAndExit)}
+              className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
             >
               {pauseLeft > 0 ? 'Terminer la séance' : 'Pause terminée : matière suivante'}
             </button>
@@ -1532,7 +1596,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">
             Tu as validé avec succès l'intégralité des <strong>{items.length} mini-leçons</strong> avec le score d'excellence requis.
-            Lors de ta prochaine séance, Konan alternera automatiquement pour aborder la seconde partie de ton programme !
+            {isTwoVoletLabel(subCategoryLabel)
+              ? 'Lors de ta prochaine séance, Konan passera automatiquement à l’autre volet de ton programme !'
+              : 'Lors de ta prochaine séance, tu continueras exactement là où tu t’es arrêté !'}
           </p>
         </div>
 
@@ -1565,8 +1631,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
         <button
           type="button"
-          onClick={handleFinishAndExit}
-          className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+          onClick={afterShine(handleFinishAndExit)}
+          className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
         >
           <span>Valider et Enregistrer dans mon planning</span>
           <ArrowRight className="w-5 h-5" />
@@ -1644,6 +1710,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold">
             <span>Ch. {currentItem.chapterOrder} : {currentItem.chapterTitle}</span>
           </div>
+          {currentItem.isReview && (
+            <p className="text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-300">
+              Révision : tu as déjà vu cette leçon. Je la remets pour que tu la retiennes (en priorité celles où tu as fait des erreurs).
+            </p>
+          )}
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
             {currentPoint.title}
           </h1>
@@ -1695,9 +1766,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             type="button"
             onClick={() => {
               try { soundFX.playCheckmarkPop(); } catch {}
-              // Time Blocking : mode concentration, l'écran entier est consacré à la matière
-              if (isTimeBlocking && activeItemIndex === 0) enterFocusMode();
-              startLearningAt(0, currentPoint);
+              // La lumière traverse le bouton, puis la leçon commence
+              afterShine(() => {
+                // Time Blocking : mode concentration, l'écran entier est consacré à la matière
+                if (isTimeBlocking && activeItemIndex === 0) enterFocusMode();
+                startLearningAt(0, currentPoint);
+              })();
             }}
             className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto relative overflow-hidden konan-btn-shine"
           >
@@ -2104,8 +2178,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="pt-2">
             <button
               type="button"
-              onClick={handleContinueToNextLesson}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+              onClick={afterShine(handleContinueToNextLesson)}
+              className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
             >
               <span className="flex items-center gap-2">
                 {activeItemIndex < items.length - 1

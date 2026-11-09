@@ -10,6 +10,7 @@ import type {
 } from '../../types';
 import { DAYS_OF_WEEK } from '../../types';
 import { Button } from '../../components/ui/Button';
+import { afterShine } from '../../lib/shineClick';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { Modal } from '../../components/ui/Modal';
@@ -518,16 +519,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         variant={session.isRescheduledToday ? 'secondary' : 'glow'}
                         size="sm"
                         leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                        onClick={() => {
+                        onClick={afterShine(() => {
                           if (_onStartFocusSession) {
                             _onStartFocusSession(session);
                           } else {
                             onToggleSessionComplete(session.id);
                           }
-                        }}
-                        className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer active:translate-y-1 ${
+                        })}
+                        className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer active:translate-y-1 ${
                           session.isRescheduledToday
-                            ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
+                            ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
                             : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                         }`}
                       >
