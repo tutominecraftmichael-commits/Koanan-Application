@@ -6,9 +6,7 @@ import type { StudyPacing, PlanTier } from '../types';
 export type { PlanTier };
 
 /**
- * Méthodes autorisées individuellement en version GRATUITE (Tier: 'free')
- * Toutes les méthodes individuelles sont accessibles gratuitement (1 seule méthode active à la fois).
- * Seule la COMBINAISON de méthodes simultanées (jusqu'à 3) est réservée à KONAN PRO.
+ * Méthodes de la version GRATUITE (Tier: 'free') : 1 seule active à la fois.
  */
 export const FREE_METHODS: readonly StudyPacing[] = [
   'pomodoro',
@@ -16,14 +14,13 @@ export const FREE_METHODS: readonly StudyPacing[] = [
   'active_recall',
   'spaced_repetition',
   'active_recall_spaced',
-  'feynman',
-  'time_blocking',
 ] as const;
 
 /**
- * Aucune méthode individuelle n'est verrouillée : c'est la combinaison de méthodes qui est exclusive au palier PRO
+ * Méthodes réservées à KONAN PRO : Feynman à l'oral (3 vocaux par jour) et Time Blocking (mode concentration).
+ * La combinaison de méthodes (jusqu'à 3) est aussi réservée au Pro.
  */
-export const PRO_METHODS: readonly StudyPacing[] = [] as const;
+export const PRO_METHODS: readonly StudyPacing[] = ['feynman', 'time_blocking'] as const;
 
 /**
  * Fonctionnalités exclusives à la version PLUS (Tier: 'plus')

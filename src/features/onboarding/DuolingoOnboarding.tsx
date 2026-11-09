@@ -41,6 +41,7 @@ import { KonanMascot } from '../../components/common/KonanMascot';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { WaitlistModal } from '../../components/common/WaitlistModal';
 import { PlanPicker } from '../../components/pricing/PlanPicker';
+import { isProMethod } from '../../lib/subscriptionPlans';
 import { soundFX } from '../../lib/audioEffects';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
 import { AdminGoogleLoginButton } from '../../components/common/AdminGoogleLoginButton';
@@ -807,11 +808,37 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           blockedSlots: [],
         };
 
+    // Formule Gratuite : Feynman et Time Blocking sont des méthodes Pro -> Pomodoro (25 min), dès maintenant
+    let finalSessions = generatedSessions;
+    if (effectiveTier === 'free') {
+      const safePacing = isProMethod(finalPrefs.pacing) ? 'pomodoro' : finalPrefs.pacing;
+      finalPrefs.pacing = safePacing;
+      finalPrefs.combinedPacings = [safePacing];
+      if (safePacing === 'pomodoro') {
+        finalPrefs.focusBlockDuration = 25;
+        finalPrefs.breakBlockDuration = 5;
+      }
+      finalSessions = generatedSessions.map((sess) => {
+        if (!isProMethod(sess.pacingMethod || '')) return sess;
+        const subName = generatedSubjects.find((s) => s.id === sess.subjectId)?.name || 'Matière';
+        const [h, m] = String(sess.startTime || '00:00').split(':').map(Number);
+        const end = (h || 0) * 60 + (m || 0) + 25;
+        return {
+          ...sess,
+          pacingMethod: 'pomodoro' as const,
+          durationMinutes: 25,
+          endTime: `${String(Math.floor(end / 60) % 24).padStart(2, '0')}:${String(end % 60).padStart(2, '0')}`,
+          title: `Pomodoro (25m) : ${subName}`,
+          description: 'Micro-session Pomodoro de 25 min à fond, coupure nette de 5 min.',
+        };
+      });
+    }
+
     const payload = {
       subjects: generatedSubjects,
       classSlots: generatedSlots,
       preferences: finalPrefs,
-      studySessions: generatedSessions,
+      studySessions: finalSessions,
       planTier: effectiveTier,
     };
 
@@ -2335,6 +2362,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   {PACING_STRATEGIES.map((strategy) => {
                     const isSelected = selectedPacings.includes(strategy.id);
                     const isAllowed = isPacingAllowedForPlan(strategy.id, 'plus');
+                    const isProOnly = strategy.planRequired === 'pro';
                     return (
                       <button
                         key={strategy.id}
@@ -2352,8 +2380,11 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-extrabold text-slate-900 dark:text-white truncate">
+                          <span className="text-xs font-extrabold text-slate-900 dark:text-white truncate flex items-center gap-1.5">
                             {strategy.title}
+                            {isProOnly && (
+                              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-sky-500 text-white shrink-0">PRO</span>
+                            )}
                           </span>
                           <span className="text-[10px] font-mono font-bold text-indigo-600 dark:text-indigo-300 shrink-0">
                             {strategy.badge}
@@ -2366,6 +2397,12 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                     );
                   })}
                 </div>
+                {selectedPacings.some((id) => isProMethod(id)) && (
+                  <p className="p-3 rounded-xl bg-sky-50 border border-sky-200 text-sky-800 dark:bg-sky-500/10 dark:border-sky-500/30 dark:text-sky-200 text-xs font-semibold leading-relaxed">
+                    Méthode <strong>KONAN PRO</strong> : choisis la formule Pro à la fin (offerte pendant le lancement).
+                    Avec la formule Gratuite, tes séances passeront en Pomodoro.
+                  </p>
+                )}
               </div>
 
               {/* 3. Chronotype */}

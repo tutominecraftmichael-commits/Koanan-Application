@@ -512,14 +512,13 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const handleSelectPacingStrategy = (pacingId: StudyPacing) => {
     const isAllowed = isPacingAllowedForPlan(pacingId, planTier);
     if (!isAllowed) {
-      // Bloqué pour le modèle Gratuit : ouverture immédiate de la Waitlist Modal
+      // Méthode Pro (Feynman, Time Blocking) sur la formule Gratuite : on explique et on propose le Pro
       const strat = PACING_STRATEGIES.find(p => p.id === pacingId);
-      setWaitlistModalState({
-        isOpen: true,
-        featureTitle: strat?.title || pacingId,
-        featureDescription: `La méthode "${strat?.title || pacingId}" fait partie des techniques d'assimilation avancées réservées à KONAN PRO (Bientôt disponible). Sur votre formule Gratuite, vous disposez d'un accès illimité à Pomodoro, Active Recall, Répétition Espacée et la Règle des 2 Minutes.`,
-        requiredTier: 'pro',
-      });
+      setProModalPacingNotice(
+        pacingId === 'feynman'
+          ? `« ${strat?.title || 'Feynman'} » est une méthode KONAN PRO : tu expliques ta leçon à voix haute et KONAN te corrige (3 vocaux par jour). KONAN PRO est offert pendant le lancement. Avec la formule Gratuite, tu gardes Pomodoro, le Rappel actif et la Règle des 2 minutes.`
+          : `« ${strat?.title || 'Time Blocking'} » est une méthode KONAN PRO : de longs blocs en mode concentration, sans distraction. KONAN PRO est offert pendant le lancement. Avec la formule Gratuite, tu gardes Pomodoro, le Rappel actif et la Règle des 2 minutes.`,
+      );
       return;
     }
 
@@ -695,27 +694,27 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
       {/* NOTICE BLOQUANTE TECHNIQUE PRO / PLUS POUR L'UTILISATEUR FREE */}
       {proModalPacingNotice && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl">
+          <div className="bg-white dark:bg-slate-900 border-2 border-sky-300 dark:border-sky-500/40 rounded-2xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-white text-slate-900 border border-slate-300">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-sky-500 text-white">
                   PRO
                 </span>
-                <h3 className="text-sm font-bold text-white">Technique Avancée KONAN PRO</h3>
+                <h3 className="text-sm font-black text-slate-900 dark:text-white">Méthode KONAN PRO</h3>
               </div>
-              <button onClick={() => setProModalPacingNotice(null)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setProModalPacingNotice(null)} className="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white" aria-label="Fermer">
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               {proModalPacingNotice}
             </p>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-2 border-t border-slate-800">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setProModalPacingNotice(null)}
-                className="text-xs text-slate-300"
+                className="text-xs text-slate-600 dark:text-slate-300"
               >
                 Garder Pomodoro (Gratuit)
               </Button>
@@ -1644,9 +1643,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                               : (planTier !== 'free' ? '+ Combiner' : 'Inclus')}
                           </span>
                         ) : (
-                          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1 shrink-0">
-                            <Lock className="w-3 h-3 text-amber-400" />
-                            ⭐ PRO
+                          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-sky-100 text-sky-700 border border-sky-300 dark:bg-sky-500/20 dark:text-sky-300 dark:border-sky-500/40 flex items-center gap-1 shrink-0">
+                            <Lock className="w-3 h-3" />
+                            PRO
                           </span>
                         )}
                       </div>
@@ -1659,8 +1658,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     <div className="mt-2.5 pt-2 border-t border-slate-200 dark:border-white/5 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
                       <span className="font-mono text-slate-700 dark:text-slate-300">{strategy.badge}</span>
                       {!isAllowed && (
-                        <span className="text-amber-400 text-[10px] font-semibold">
-                          Cliquez pour débloquer
+                        <span className="text-sky-700 dark:text-sky-300 text-[10px] font-bold">
+                          Réservé à KONAN PRO
                         </span>
                       )}
                     </div>
