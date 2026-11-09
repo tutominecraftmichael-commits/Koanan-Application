@@ -11,7 +11,9 @@
  */
 import { loadLocalEnvIfPresent } from './_env.js';
 
-const RATE_LIMIT = 20;                 // vérifications
+// Beaucoup d'élèves partagent la même adresse IP (réseau mobile de l'opérateur, Wi-Fi de l'école) :
+// la limite reste anti-abus mais ne doit pas bloquer une classe entière qui s'inscrit en même temps.
+const RATE_LIMIT = 80;                 // vérifications
 const RATE_WINDOW_MS = 10 * 60 * 1000; // par tranche de 10 minutes et par adresse IP
 const recentCalls = new Map();
 

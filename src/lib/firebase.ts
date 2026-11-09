@@ -398,18 +398,10 @@ export async function signInWithEmailReal(
 
   const cleanEmail = (email || '').trim().toLowerCase();
 
-  // 1. Le compte doit EXISTER dans KONAN (vérifié par le serveur) : jamais de création en douce
-  const account = await checkAccountExists(cleanEmail);
-  if (account.exists === false) {
-    throw authError('auth/user-not-found', "Ce compte n'existe pas dans KONAN. Crée ton compte en touchant « Commencer ».");
-  }
-  if (account.exists && account.disabled) {
-    throw authError('auth/user-disabled', 'Ce compte étudiant a été désactivé.');
-  }
-  if (account.exists && !account.providers.includes('password') && account.providers.includes('google.com')) {
-    throw authError('auth/use-google', 'Ce compte a été créé avec Google : connecte-toi avec le bouton « Se connecter avec Google ».');
-  }
-
+  // 1. On essaie D'ABORD la connexion : un email et un mot de passe justes passent toujours.
+  //    (La connexion ne crée jamais de compte : aucun risque de « création en douce ».)
+  //    La vérification « ce compte existe-t-il ? » ne sert qu'à EXPLIQUER un refus : elle ne bloque
+  //    plus une connexion valide quand le serveur de vérification est saturé ou indisponible.
   try {
     const result = await signInWithEmailAndPassword(auth, cleanEmail, password);
     const user = result.user;
@@ -423,14 +415,37 @@ export async function signInWithEmailReal(
   } catch (error: any) {
     console.error('Firebase Email Sign-In Error:', error?.code);
 
-    if (error.code === 'auth/user-not-found') {
-      throw authError('auth/user-not-found', "Ce compte n'existe pas dans KONAN. Crée ton compte en touchant « Commencer ».");
-    }
-    if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-      // Le compte existe (vérifié plus haut) : c'est donc le mot de passe qui ne correspond pas
+    if (
+      error.code === 'auth/user-not-found' ||
+      error.code === 'auth/wrong-password' ||
+      error.code === 'auth/invalid-credential' ||
+      error.code === 'auth/invalid-login-credentials'
+    ) {
+      // 2. Refus : on demande au serveur POURQUOI, pour donner le bon conseil à l'élève
+      let account: { exists: boolean | null; providers: string[]; disabled?: boolean } = { exists: null, providers: [] };
+      try {
+        account = await checkAccountExists(cleanEmail);
+      } catch {
+        // vérification saturée : message général
+      }
+      if (account.exists === false) {
+        throw authError('auth/user-not-found', "Ce compte n'existe pas dans KONAN. Crée ton compte en touchant « Commencer ».");
+      }
+      if (account.exists && account.disabled) {
+        throw authError('auth/user-disabled', 'Ce compte étudiant a été désactivé.');
+      }
+      if (account.exists && !account.providers.includes('password') && account.providers.includes('google.com')) {
+        // Firebase remplace le mot de passe par Google quand on se connecte un jour avec Google sur la même adresse
+        throw authError(
+          'auth/use-google',
+          'Ce compte se connecte avec Google (tu t’es déjà connecté avec Google sur cette adresse). Touche « Se connecter avec Google », ou reçois un lien pour créer un mot de passe.',
+        );
+      }
       throw authError(
         'auth/invalid-credential',
-        account.exists ? 'Mot de passe incorrect.' : 'Adresse email ou mot de passe incorrect.',
+        account.exists
+          ? 'Mot de passe incorrect. Vérifie les majuscules, ou reçois un lien pour en choisir un nouveau.'
+          : 'Adresse email ou mot de passe incorrect.',
       );
     }
     if (error.code === 'auth/invalid-email') {
@@ -471,8 +486,14 @@ export async function signUpWithEmailReal(
   const passwordProblem = checkNewPassword(password);
   if (passwordProblem) throw authError('auth/weak-password', passwordProblem);
 
-  // L'adresse ne doit PAS déjà avoir un compte : sinon on invite à se connecter (jamais de connexion en douce)
-  const account = await checkAccountExists(cleanEmail);
+  // L'adresse ne doit PAS déjà avoir un compte : sinon on invite à se connecter (jamais de connexion en douce).
+  // Vérification saturée : Firebase tranche (il refuse de toute façon une adresse déjà inscrite).
+  let account: { exists: boolean | null; providers: string[] } = { exists: null, providers: [] };
+  try {
+    account = await checkAccountExists(cleanEmail);
+  } catch {
+    // on laisse Firebase décider
+  }
   if (account.exists) {
     throw authError(
       'auth/email-already-in-use',

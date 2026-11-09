@@ -114,6 +114,9 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
 
 export type BillingPeriod = 'monthly' | 'semester';
 
+/** Un semestre = 6 mois. */
+export const SEMESTER_MONTHS = 6;
+
 export interface DisplayPlanFeature {
   title: string;
   detail?: string;

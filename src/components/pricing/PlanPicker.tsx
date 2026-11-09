@@ -5,7 +5,7 @@
  */
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
-import { DISPLAY_PLANS, formatFcfa, type BillingPeriod, type DisplayPlan, type PlanTier } from '../../lib/subscriptionPlans';
+import { DISPLAY_PLANS, SEMESTER_MONTHS, formatFcfa, type BillingPeriod, type DisplayPlan, type PlanTier } from '../../lib/subscriptionPlans';
 import { afterShine } from '../../lib/shineClick';
 
 export interface PlanPickerProps {
@@ -141,7 +141,12 @@ const PlanCard: React.FC<{
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-2 min-h-[24px]">
           {paid && billing === 'semester' && (
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Un seul paiement pour tout le semestre</span>
+            <span className="w-full text-xs font-bold text-slate-500 dark:text-slate-400">
+              Soit environ {formatFcfa(Math.round(price / SEMESTER_MONTHS))} F par mois, payés en une fois pour 6 mois.{' '}
+              <span className="text-emerald-600 dark:text-emerald-400">
+                Tu économises {formatFcfa(plan.prices.monthly * SEMESTER_MONTHS - price)} F.
+              </span>
+            </span>
           )}
           {plan.note && (
             <span className={`text-[11px] font-black uppercase px-2 py-0.5 rounded-lg ${

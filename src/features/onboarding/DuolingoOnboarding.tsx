@@ -67,7 +67,8 @@ import {
   signInWithGoogleReal,
   signInWithEmailReal,
   signUpWithEmailReal,
-  checkNewPassword
+  checkNewPassword,
+  resetPasswordReal
 } from '../../lib/firebase';
 import { checkAccountExists } from '../../services/accountCheck';
 import { generateKonanId } from '../../lib/konanId';
@@ -303,6 +304,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   const [authError, setAuthError] = useState<string | null>(null);
   const [accountExistsRedirect, setAccountExistsRedirect] = useState<boolean>(false);
   const [canCreateFromLogin, setCanCreateFromLogin] = useState<boolean>(false);
+  // Mot de passe refusé ou compte passé à Google : lien pour (re)créer un mot de passe
+  const [canResetFromLogin, setCanResetFromLogin] = useState<boolean>(false);
+  const [resetLinkInfo, setResetLinkInfo] = useState<string | null>(null);
   const [isSubmittingAuth, setIsSubmittingAuth] = useState<boolean>(false);
   const [registeredProfile, setRegisteredProfile] = useState<UserAccount | null>(null);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState<boolean>(false);
@@ -1034,6 +1038,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     e.preventDefault();
     setAuthError(null);
     setCanCreateFromLogin(false);
+    setCanResetFromLogin(false);
+    setResetLinkInfo(null);
 
     const emailCheck = validateStrictEmail(authEmail);
     if (!emailCheck.isValid) {
@@ -1083,6 +1089,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       const msg = err?.message || '';
       // Compte inexistant : on l'explique et on propose de CRÉER un compte (parcours des nouveaux)
       setCanCreateFromLogin(err?.code === 'auth/user-not-found');
+      setCanResetFromLogin(err?.code === 'auth/invalid-credential' || err?.code === 'auth/use-google');
       setAuthError(msg || "Ce compte n'est pas reconnu ou le mot de passe est incorrect.");
     } finally {
       setIsSubmittingAuth(false);
@@ -1413,6 +1420,28 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       <span>Je suis nouveau : créer mon compte</span>
                     </button>
                   )}
+                  {canResetFromLogin && !resetLinkInfo && (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await resetPasswordReal(authEmail.trim().toLowerCase());
+                          setResetLinkInfo(`Lien envoyé à ${authEmail.trim()}. Ouvre ta boîte mail (regarde aussi les spams), choisis ton mot de passe, puis reviens te connecter.`);
+                        } catch (resetErr: any) {
+                          setResetLinkInfo(resetErr?.message || 'Impossible d’envoyer le lien pour le moment.');
+                        }
+                      }}
+                      className="w-full mt-1 py-2 px-3 rounded-xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 text-sky-600 dark:text-sky-400 font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>Recevoir un lien pour créer mon mot de passe</span>
+                    </button>
+                  )}
+                </div>
+              )}
+              {resetLinkInfo && (
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 dark:bg-emerald-500/10 dark:border-emerald-500/30 dark:text-emerald-300 text-xs font-semibold">
+                  {resetLinkInfo}
                 </div>
               )}
 
