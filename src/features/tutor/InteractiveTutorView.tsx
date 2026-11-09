@@ -51,6 +51,7 @@ import {
 } from '../../lib/curriculum/studentProgressService';
 import type { ResumeBookmark } from '../../lib/curriculum/types';
 import { KonanMascot } from '../../components/common/KonanMascot';
+import { afterShine } from '../../lib/shineClick';
 import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
 import { shuffleExerciseOptions } from '../../lib/curriculum/optionShuffle';
 import { soundFX } from '../../lib/audioEffects';
@@ -1548,8 +1549,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             </div>
             <button
               type="button"
-              onClick={handleFinishAndExit}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
+              onClick={afterShine(handleFinishAndExit)}
+              className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
             >
               {pauseLeft > 0 ? 'Terminer la séance' : 'Pause terminée : matière suivante'}
             </button>
@@ -1630,8 +1631,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
         <button
           type="button"
-          onClick={handleFinishAndExit}
-          className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+          onClick={afterShine(handleFinishAndExit)}
+          className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
         >
           <span>Valider et Enregistrer dans mon planning</span>
           <ArrowRight className="w-5 h-5" />
@@ -1765,9 +1766,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             type="button"
             onClick={() => {
               try { soundFX.playCheckmarkPop(); } catch {}
-              // Time Blocking : mode concentration, l'écran entier est consacré à la matière
-              if (isTimeBlocking && activeItemIndex === 0) enterFocusMode();
-              startLearningAt(0, currentPoint);
+              // La lumière traverse le bouton, puis la leçon commence
+              afterShine(() => {
+                // Time Blocking : mode concentration, l'écran entier est consacré à la matière
+                if (isTimeBlocking && activeItemIndex === 0) enterFocusMode();
+                startLearningAt(0, currentPoint);
+              })();
             }}
             className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto relative overflow-hidden konan-btn-shine"
           >
@@ -2174,8 +2178,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="pt-2">
             <button
               type="button"
-              onClick={handleContinueToNextLesson}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+              onClick={afterShine(handleContinueToNextLesson)}
+              className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
             >
               <span className="flex items-center gap-2">
                 {activeItemIndex < items.length - 1
