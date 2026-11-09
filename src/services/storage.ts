@@ -45,6 +45,46 @@ export interface AppState {
   privacyPolicyAccepted?: boolean;
   privacyPolicyAcceptedAt?: string;
   pdfImportsCount?: number;
+  /** Dernière modification du profil par l'élève (nom, classe, photo) : la version la plus récente gagne. */
+  profileUpdatedAt?: string;
+}
+
+/** Valeur posée par défaut avant que l'élève n'indique sa vraie classe : ne doit jamais écraser une vraie classe. */
+const PLACEHOLDER_LEVEL = 'Licence Universitaire';
+
+const isoTime = (iso?: string): number => {
+  const t = iso ? Date.parse(iso) : NaN;
+  return Number.isFinite(t) ? t : 0;
+};
+
+/**
+ * Profil fusionné (ce téléphone ↔ compte) : nom, classe et photo.
+ * - la modification la plus récente gagne (date profileUpdatedAt) ;
+ * - sans date des deux côtés : le compte gagne, sauf valeur vide ou classe « par défaut ».
+ */
+export function mergeProfile(local: AppState, cloud: any) {
+  const localNewer = isoTime(local.profileUpdatedAt) > isoTime(cloud?.profileUpdatedAt);
+  const pick = (localVal?: string, cloudVal?: string, placeholder?: string): string | undefined => {
+    const l = (localVal || '').trim();
+    const c = (cloudVal || '').trim();
+    if (localNewer) return l || c || undefined;
+    if (placeholder && c === placeholder && l && l !== placeholder) return l;
+    return c || l || undefined;
+  };
+  const cloudAvatar: string | undefined = cloud?.userAccount?.customAvatar;
+  const localAvatar: string | undefined = local.userAccount?.customAvatar;
+  return {
+    studentName: pick(local.studentName, cloud?.studentName) || local.studentName,
+    academicLevel: pick(local.academicLevel, cloud?.academicLevel, PLACEHOLDER_LEVEL) || local.academicLevel,
+    // Photo : '' = retirée volontairement (à respecter), undefined = jamais choisie sur cet appareil
+    customAvatar: localNewer
+      ? (localAvatar ?? cloudAvatar)
+      : (cloudAvatar !== undefined ? cloudAvatar : localAvatar),
+    gradeLevel: localNewer
+      ? (local.preferences?.gradeLevel ?? cloud?.preferences?.gradeLevel)
+      : (cloud?.preferences?.gradeLevel ?? local.preferences?.gradeLevel),
+    profileUpdatedAt: localNewer ? local.profileUpdatedAt : (cloud?.profileUpdatedAt || local.profileUpdatedAt),
+  };
 }
 
 /**
@@ -377,6 +417,7 @@ export async function saveUserState(uid: string, state: AppState): Promise<void>
         lastCoachingDate: sanitizedState.lastCoachingDate,
         privacyPolicyAccepted: sanitizedState.privacyPolicyAccepted ?? sanitizedState.userAccount?.privacyPolicyAccepted,
         privacyPolicyAcceptedAt: sanitizedState.privacyPolicyAcceptedAt ?? sanitizedState.userAccount?.privacyPolicyAcceptedAt,
+        profileUpdatedAt: sanitizedState.profileUpdatedAt,
       });
     } catch (err) {
       console.warn('syncUserStateToCloud failed in saveUserState:', err);
@@ -484,15 +525,22 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
 
       const assignedKonanId = cloudData.konanId || currentState.konanId || currentState.userAccount?.konanId || generateKonanId(uid);
 
+      const profile = mergeProfile(currentState, cloudData);
       const merged: AppState = {
         ...currentState,
-        studentName: cloudData.studentName || currentState.studentName,
-        academicLevel: cloudData.academicLevel || currentState.academicLevel,
+        studentName: profile.studentName,
+        academicLevel: profile.academicLevel,
+        profileUpdatedAt: profile.profileUpdatedAt,
         planTier: resolvedMergedTier,
         completedOnboarding: cloudData.completedOnboarding ?? true,
         subjects: mergedSubjects,
         classSlots: mergedClassSlots,
-        preferences: mergedPreferences,
+        preferences: {
+          ...mergedPreferences,
+          studentName: profile.studentName,
+          academicLevel: profile.academicLevel,
+          ...(profile.gradeLevel ? { gradeLevel: profile.gradeLevel } : {}),
+        },
         studySessions: mergedStudySessions,
         logs: Array.isArray(cloudData.logs) ? cloudData.logs : currentState.logs,
         cycleCompletedDate: cloudData.cycleCompletedDate !== undefined ? cloudData.cycleCompletedDate : currentState.cycleCompletedDate,
@@ -507,8 +555,9 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
           planTier: resolvedMergedTier,
-          name: cloudData.studentName || currentState.userAccount.name,
-          customAvatar: currentState.userAccount.customAvatar ?? cloudData.userAccount?.customAvatar,
+          name: profile.studentName,
+          academicLevel: profile.academicLevel,
+          customAvatar: profile.customAvatar,
           konanId: assignedKonanId,
           invitedIds: [],
           invitedEmails: [],
@@ -542,18 +591,27 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
     // Case 3: Cloud has profile meta
     if (cloudData && (cloudData.studentName || cloudData.academicLevel || cloudData.planTier)) {
       const resolvedCloudTier: PlanTier = (cloudData.planTier === 'pro' || currentState.planTier === 'pro' || currentState.userAccount?.planTier === 'pro' || cloudData.userAccount?.planTier === 'pro') ? 'pro' : 'free';
+      const profile = mergeProfile(currentState, cloudData);
       const merged: AppState = {
         ...currentState,
-        studentName: cloudData.studentName || currentState.studentName,
-        academicLevel: cloudData.academicLevel || currentState.academicLevel,
+        studentName: profile.studentName,
+        academicLevel: profile.academicLevel,
+        profileUpdatedAt: profile.profileUpdatedAt,
+        preferences: {
+          ...currentState.preferences,
+          studentName: profile.studentName,
+          academicLevel: profile.academicLevel,
+          ...(profile.gradeLevel ? { gradeLevel: profile.gradeLevel } : {}),
+        },
         planTier: resolvedCloudTier,
         privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.privacyPolicyAccepted,
         privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.privacyPolicyAcceptedAt,
         userAccount: currentState.userAccount ? {
           ...currentState.userAccount,
           planTier: resolvedCloudTier,
-          name: cloudData.studentName || currentState.userAccount.name,
-          customAvatar: currentState.userAccount.customAvatar ?? cloudData.userAccount?.customAvatar,
+          name: profile.studentName,
+          academicLevel: profile.academicLevel,
+          customAvatar: profile.customAvatar,
           isGroupGuest: false,
           academicGoal: undefined,
           invitedIds: [],

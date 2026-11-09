@@ -1560,6 +1560,8 @@ export function App() {
         ...prev,
         studentName: safeData.name,
         academicLevel: safeData.academicLevel,
+        // Date de la modification : à la reconnexion (ou sur un autre téléphone), c'est cette version qui gagne
+        profileUpdatedAt: new Date().toISOString(),
         userAccount: nextUserAccount,
         preferences: {
           ...prev.preferences,
@@ -1586,6 +1588,7 @@ export function App() {
       if (!prev.userAccount) return prev;
       const next: AppState = {
         ...prev,
+        profileUpdatedAt: new Date().toISOString(),
         userAccount: {
           ...prev.userAccount,
           // Chaîne vide (et non undefined) : Firestore efface alors aussi l'ancienne photo sur les autres appareils

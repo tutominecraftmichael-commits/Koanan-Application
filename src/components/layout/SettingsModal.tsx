@@ -245,29 +245,28 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <h4 className={`text-sm font-bold truncate ${
-                      currentPlan === 'plus'
-                        ? 'plus-multicolor-shimmer-text font-black'
-                        : currentPlan === 'pro'
-                        ? 'gold-shimmer-text font-black'
-                        : 'text-slate-900 dark:text-white'
-                    }`}>{displayName}</h4>
-                    <span 
-                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0 border ${
-                        currentPlan === 'pro'
-                          ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40'
-                          : currentPlan === 'plus'
-                          ? 'bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-500/40'
-                          : 'bg-slate-200 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
-                      }`}
-                    >
-                      {currentPlan === 'pro' ? '⭐ PRO OUVERTE' : currentPlan === 'plus' ? '👑 PLUS' : 'GRATUIT'}
-                    </span>
-                  </div>
-                  <p className="text-xs text-indigo-600 dark:text-indigo-300 font-semibold truncate flex items-center gap-1.5 mt-0.5">
-                    <GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
-                    <span>{editFiliere || academicLevel || userAccount?.academicLevel || 'Filière non renseignée'}</span>
+                  {/* Nom en entier sur sa propre ligne (retour à la ligne si besoin), formule en dessous */}
+                  <h4 className={`text-base font-black leading-snug break-words pb-0.5 ${
+                    currentPlan === 'plus'
+                      ? 'plus-multicolor-shimmer-text'
+                      : currentPlan === 'pro'
+                      ? 'gold-shimmer-text'
+                      : 'text-slate-900 dark:text-white'
+                  }`}>{displayName}</h4>
+                  <span
+                    className={`inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${
+                      currentPlan === 'pro'
+                        ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40'
+                        : currentPlan === 'plus'
+                        ? 'bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-500/40'
+                        : 'bg-slate-200 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
+                    }`}
+                  >
+                    {currentPlan === 'pro' ? '⭐ PRO' : currentPlan === 'plus' ? '👑 PLUS' : 'GRATUIT'}
+                  </span>
+                  <p className="text-xs text-indigo-600 dark:text-indigo-300 font-semibold flex items-start gap-1.5 mt-1 break-words">
+                    <GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0 mt-px" />
+                    <span className="min-w-0">{editFiliere || academicLevel || userAccount?.academicLevel || 'Filière non renseignée'}</span>
                   </p>
                   
                   {/* Compte Google connecté */}

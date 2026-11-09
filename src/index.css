@@ -1221,3 +1221,29 @@ a, button, [role="button"], input, select, textarea, label {
 .konan-shine-violet { --shine-soft: rgba(139, 92, 246, 0.14); --shine-strong: rgba(139, 92, 246, 0.34); }
 .dark .konan-shine-sky { --shine-soft: rgba(125, 211, 252, 0.10); --shine-strong: rgba(186, 230, 253, 0.28); }
 .dark .konan-shine-violet { --shine-soft: rgba(196, 181, 253, 0.10); --shine-strong: rgba(221, 214, 254, 0.26); }
+
+/* ==========================================================================
+   AUCUN TEXTE SÉLECTIONNABLE : un appui long ou un double toucher ne surligne plus
+   les mots en bleu et n'ouvre plus « Rechercher sur Google / Définir » (comme une vraie appli).
+   Les champs où l'élève écrit (nom, email, mot de passe, explication…) restent utilisables.
+   ========================================================================== */
+html,
+body,
+body * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+img,
+svg {
+  -webkit-user-drag: none;
+}
+input,
+textarea,
+select,
+[contenteditable="true"],
+[contenteditable=""] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
