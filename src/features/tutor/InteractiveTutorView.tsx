@@ -660,6 +660,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   const subCategoryLabel = getSubCategoryName(activeSubCategory);
 
+  /**
+   * Place de la mini-leçon DANS SON CHAPITRE (ex. « Mini-leçon 6 sur 7 »), et non son rang dans la séance du jour :
+   * après une reprise, l'élève voit bien où il en est dans le programme.
+   */
+  const chapterPositionLabel = (item: TutorPointSessionItem): string =>
+    `Mini-leçon ${item.pointIndexInChapter + 1} sur ${item.totalPointsInChapter}`;
+
   // =========================================================================
   // ACTIONS PÉDAGOGIQUES
   // =========================================================================
@@ -1511,7 +1518,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       <div className="max-w-2xl mx-auto py-6 px-4 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 break-words min-w-0">
-            {subjectTitle} • {subCategoryLabel} • Mini-leçon {activeItemIndex + 1}/{items.length}
+            {subjectTitle} • {subCategoryLabel} • {currentItem ? chapterPositionLabel(currentItem) : ''}
           </span>
           {pomodoroPill}
         </div>
@@ -1667,7 +1674,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               style={{ backgroundColor: subjectMeta.color }}
             />
             <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">
-              {subjectTitle} • {subCategoryLabel} • Leçon {activeItemIndex + 1}/{items.length}
+              {subjectTitle} • {subCategoryLabel} • Ch. {currentItem.chapterOrder} • {chapterPositionLabel(currentItem)}
             </span>
           </div>
           {/* Chrono sur sa propre ligne : toujours visible en entier */}
@@ -1841,7 +1848,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <span className="font-extrabold uppercase tracking-wide text-slate-700 dark:text-slate-300 break-words min-w-0">
             {phase === 'warmup'
               ? `${subjectTitle} • ${subCategoryLabel} • Révision du jour`
-              : `${subjectTitle} • ${subCategoryLabel} • Ch. ${currentItem.chapterOrder} • Mini-leçon ${activeItemIndex + 1} sur ${items.length} de la séance`}
+              : `${subjectTitle} • ${subCategoryLabel} • Ch. ${currentItem.chapterOrder} • ${chapterPositionLabel(currentItem)}`}
           </span>
         </div>
 
@@ -2183,7 +2190,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             >
               <span className="flex items-center gap-2">
                 {activeItemIndex < items.length - 1
-                  ? `Passer à la mini-leçon suivante (${activeItemIndex + 2}/${items.length})`
+                  ? `Passer à la mini-leçon suivante (${items[activeItemIndex + 1].pointIndexInChapter + 1} sur ${items[activeItemIndex + 1].totalPointsInChapter})`
                   : 'Terminer la séance d’étude'}
                 {activeItemIndex < items.length - 1 && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
               </span>
