@@ -92,6 +92,9 @@ import { PHILO_1RE_L06_PERIODE_ANTIQUE } from '../../data/courses/premiere/philo
 import { PHILO_1RE_L07_MOYEN_AGE_RENAISSANCE } from '../../data/courses/premiere/philo_1re_moyen_age_renaissance';
 import { PHILO_1RE_L08_PERIODE_MODERNE } from '../../data/courses/premiere/philo_1re_periode_moderne';
 import { PHILO_1RE_L09_PERIODE_CONTEMPORAINE } from '../../data/courses/premiere/philo_1re_periode_contemporaine';
+import { SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES } from '../../data/courses/terminale/svt_tle_a_reactions_emotionnelles';
+import { SVT_TLE_A_L02_ACTIVITE_CEREBRALE } from '../../data/courses/terminale/svt_tle_a_activite_cerebrale';
+import { SVT_TLE_A_L03_ORIGINE_VIE } from '../../data/courses/terminale/svt_tle_a_origine_vie';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
 import { PHILO_TLE_L04_VIE_EN_SOCIETE } from '../../data/courses/terminale/philo_tle_vie_en_societe';
 import { PHILO_TLE_L05_DIEU_RELIGION } from '../../data/courses/terminale/philo_tle_dieu_religion';
@@ -91851,6 +91854,10 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   PHILO_1RE_L07_MOYEN_AGE_RENAISSANCE,
   PHILO_1RE_L08_PERIODE_MODERNE,
   PHILO_1RE_L09_PERIODE_CONTEMPORAINE,
+  // Terminale A (A1 / A2) — SVT (format v2)
+  SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES,
+  SVT_TLE_A_L02_ACTIVITE_CEREBRALE,
+  SVT_TLE_A_L03_ORIGINE_VIE,
   PHILO_TLE_L03_CONNAISSANCE_HOMME,
   PHILO_TLE_L04_VIE_EN_SOCIETE,
   PHILO_TLE_L05_DIEU_RELIGION,
