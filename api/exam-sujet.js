@@ -38,7 +38,8 @@ export function buildSujetPrompt({ template, classe, gradeId, matiere, chapitres
     '',
     'Réponds UNIQUEMENT en JSON, avec exactement un objet par exercice du format, dans l’ordre :',
     '{"titre":"Devoir de …","exercices":[{"numero":1,"points":2,"consigne":"consigne générale de l’exercice","contexte":"texte de la situation ou vide","donnees":"Données : … ou vide","tableau":{"colonnes":["N°","Énoncés","A","B","C"],"lignes":[["1","…","…","…","…"]]},"questions":[{"numero":"1","texte":"…","points":0.5}]}],',
-    '"corrige":[{"exercice":1,"question":"1","reponse":"réponse attendue et justification courte","points":0.5}]}',
+    '"corrige":[{"exercice":1,"question":"1","etapes":["étape 1 : …","étape 2 : …"],"resultat":"réponse finale en une ligne","points":0.5}]}',
+    'CORRIGÉ STRUCTURÉ : une entrée par question (même numéro que dans le sujet). « etapes » = la démarche découpée en 1 à 6 étapes courtes (une idée, un calcul ou une justification par étape, jamais un paragraphe) ; « resultat » = la réponse finale seule (valeur avec unité, lettre, mot, ou idée principale). Pour un QCM ou un Vrai/Faux : etapes = une justification courte par item, resultat = « 1-B ; 2-A ; … ». Pour une situation complexe ou une production écrite : etapes = le plan ou la démarche attendue, point par point.',
     'tableau vaut null quand il n’y a pas de tableau. Pour une situation complexe : questions = [] et la consigne finale dans « consigne ».',
     'Dans chaque exercice, la somme des points des questions est égale aux points de l’exercice, sauf pour un exercice « au choix » : chaque sujet proposé y vaut tous les points de l’exercice.',
     'Les retours à la ligne voulus (lignes d’un texte, vers d’un poème, items a), b), c)) sont écrits avec \\n dans les chaînes JSON.',
@@ -100,7 +101,13 @@ export function cleanSujet(raw, template) {
   if (exercices.some((e) => !e.questions.length && !e.tableau && !(e.consigne && e.contexte))) return null;
   const corrige = Array.isArray(raw.corrige)
     ? raw.corrige
-        .map((c) => ({ exercice: Number(c?.exercice) || 0, question: str(String(c?.question ?? ''), 12), reponse: str(c?.reponse, 1500), points: num(c?.points) }))
+        .map((c) => {
+          const etapes = Array.isArray(c?.etapes) ? c.etapes.map((x) => str(String(x ?? ''), 500)).filter(Boolean).slice(0, 8) : [];
+          const resultat = str(c?.resultat, 400);
+          // « reponse » (texte complet) reste fourni : la correction de la copie s'en sert comme barème
+          const reponse = str(c?.reponse, 1500) || [...etapes, resultat ? `Réponse : ${resultat}` : ''].filter(Boolean).join('\n');
+          return { exercice: Number(c?.exercice) || 0, question: str(String(c?.question ?? ''), 12), etapes, resultat, reponse, points: num(c?.points) };
+        })
         .filter((c) => c.exercice >= 1 && c.exercice <= exercices.length && c.reponse)
         .slice(0, 80)
     : [];

@@ -8,7 +8,7 @@
  * Les photos ne sont gardées nulle part : envoyées une fois pour la correction, puis oubliées.
  */
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, Camera, Clock, FileText, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Camera, Clock, FileText, Trash2, ChevronDown, ChevronUp, Check, X, Minus, AlertTriangle } from 'lucide-react';
 import type { StudySession } from '../../types';
 import type { CurriculumGradeLevel, StemSubjectId } from '../../lib/curriculum/types';
 import { GRADE_LEVELS } from '../../lib/curriculum/types';
@@ -51,14 +51,33 @@ interface Sujet {
   duree: string;
   source?: string;
   exercices: SujetExercice[];
-  corrige: { exercice: number; question: string; reponse: string; points: number }[];
+  corrige: { exercice: number; question: string; reponse: string; etapes?: string[]; resultat?: string; points: number }[];
+}
+type QuestionStatut = 'juste' | 'partiel' | 'faux' | 'absent';
+interface CorrectionQuestion {
+  numero: string;
+  obtenu: number;
+  sur: number | null;
+  statut: QuestionStatut;
+  copie: string;
+  attendu: string;
+  erreur: string;
 }
 interface Correction {
   lisible: boolean;
   note: number | null;
-  exercices: { numero: number; obtenu: number; sur: number; commentaire: string }[];
+  exercices: {
+    numero: number;
+    obtenu: number;
+    sur: number;
+    commentaire: string;
+    questions?: CorrectionQuestion[];
+    grille?: { critere: string; obtenu: number; sur: number }[];
+  }[];
   appreciation: string;
   conseils: string[];
+  pointsForts?: string[];
+  aRevoir?: { notion: string; pourquoi: string }[];
 }
 interface Saved {
   sujet: Sujet;
@@ -368,35 +387,10 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
             <span className="text-5xl font-black text-sky-600 dark:text-sky-400 tabular-nums">{String(correction.note).replace('.', ',')}</span>
             <span className="text-base font-bold text-slate-500 dark:text-slate-400">/ 20</span>
           </div>
+          <p className="text-sm font-black uppercase tracking-wider text-slate-600 dark:text-slate-300">{mention(correction.note)}</p>
         </div>
 
-        <p className="p-4 rounded-2xl bg-sky-50 border-2 border-sky-200 text-sky-900 dark:bg-sky-500/10 dark:border-sky-500/30 dark:text-sky-100 text-sm leading-relaxed">
-          {correction.appreciation}
-        </p>
-
-        <div className="space-y-2">
-          {correction.exercices.map((e) => (
-            <div key={e.numero} className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 space-y-1.5">
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-sm font-black text-slate-900 dark:text-white">Exercice {e.numero}</span>
-                <span className="text-sm font-black tabular-nums text-slate-700 dark:text-slate-200">{String(e.obtenu).replace('.', ',')} / {String(e.sur).replace('.', ',')}</span>
-              </div>
-              <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                <div className="h-full rounded-full bg-emerald-500" style={{ width: `${e.sur ? (e.obtenu / e.sur) * 100 : 0}%` }} />
-              </div>
-              {e.commentaire && <p className="text-[13px] text-slate-600 dark:text-slate-300">{e.commentaire}</p>}
-            </div>
-          ))}
-        </div>
-
-        {correction.conseils.length > 0 && (
-          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800">
-            <p className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Mes conseils avant le devoir</p>
-            <ul className="list-disc pl-5 space-y-1 text-sm text-slate-700 dark:text-slate-200">
-              {correction.conseils.map((c, i) => <li key={i}>{c}</li>)}
-            </ul>
-          </div>
-        )}
+        <CorrectionReport correction={correction} />
 
         <button type="button" onClick={() => setShowCorrige((v) => !v)} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-700 dark:text-slate-200 cursor-pointer">
           {showCorrige ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -560,24 +554,240 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
   );
 };
 
-/** Corrigé détaillé (après la correction), exercice par exercice. */
-const Corrige: React.FC<{ sujet: Sujet }> = ({ sujet }) => (
-  <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 space-y-4 text-sm">
-    {sujet.exercices.map((e) => (
-      <div key={e.numero} className="space-y-1.5">
-        <p className="font-black text-slate-900 dark:text-white">Exercice {e.numero} ({pts(e.points)})</p>
-        {sujet.corrige.filter((c) => c.exercice === e.numero).map((c, i) => (
-          <div key={i} className="flex gap-2 text-slate-700 dark:text-slate-200">
-            <span className="font-bold shrink-0">{numLabel(c.question)}</span>
-            <span className="min-w-0"><SujetText text={c.reponse} /> <span className="text-xs font-bold text-slate-500">({ptShort(c.points)})</span></span>
-          </div>
-        ))}
-        {e.grille && (
-          <ul className="text-xs text-slate-600 dark:text-slate-300 list-disc pl-5">
-            {e.grille.map((g) => <li key={g.critere}><strong>{g.critere}</strong> ({ptShort(g.points)}) : {g.indicateurs}</li>)}
-          </ul>
-        )}
+// ====================================================================== CORRECTION STRUCTURÉE
+const fr = (n: number) => String(n).replace('.', ',');
+
+/** Mention habituelle des bulletins ivoiriens. */
+function mention(note: number): string {
+  if (note >= 18) return 'Excellent';
+  if (note >= 16) return 'Très bien';
+  if (note >= 14) return 'Bien';
+  if (note >= 12) return 'Assez bien';
+  if (note >= 10) return 'Passable';
+  return 'Insuffisant';
+}
+
+const STATUT_STYLE: Record<QuestionStatut, { label: string; Icon: React.FC<{ className?: string }>; chip: string; edge: string }> = {
+  juste: { label: 'Juste', Icon: Check, chip: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300', edge: 'border-l-emerald-500' },
+  partiel: { label: 'En partie', Icon: AlertTriangle, chip: 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300', edge: 'border-l-amber-500' },
+  faux: { label: 'Faux', Icon: X, chip: 'bg-rose-100 text-rose-800 dark:bg-rose-500/15 dark:text-rose-300', edge: 'border-l-rose-500' },
+  absent: { label: 'Non traitée', Icon: Minus, chip: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300', edge: 'border-l-slate-300 dark:border-l-slate-600' },
+};
+
+/** Une ligne « étiquette : valeur » du détail d'une question. */
+const DetailRow: React.FC<{ label: string; text: string; tone?: 'neutral' | 'good' | 'bad' }> = ({ label, text, tone = 'neutral' }) => (
+  <div className="grid grid-cols-[88px_1fr] gap-2 text-[13px] leading-snug">
+    <span className="text-[11px] font-black uppercase tracking-wide text-slate-500 dark:text-slate-400 pt-0.5">{label}</span>
+    <span className={`min-w-0 ${tone === 'good' ? 'text-emerald-800 dark:text-emerald-200 font-semibold' : tone === 'bad' ? 'text-rose-800 dark:text-rose-200' : 'text-slate-700 dark:text-slate-200'}`}>
+      <SujetText text={text} />
+    </span>
+  </div>
+);
+
+const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <p className="text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">{children}</p>
+);
+
+/**
+ * Bulletin de correction : bilan chiffré, points forts / à revoir, puis chaque exercice question par question
+ * (statut, points, ta réponse, l'attendu, ton erreur) et la grille critère par critère, enfin les conseils numérotés.
+ * Une ancienne correction (sans détail) s'affiche avec le commentaire de l'exercice seulement.
+ */
+const CorrectionReport: React.FC<{ correction: Correction }> = ({ correction }) => {
+  const allQuestions = correction.exercices.flatMap((e) => e.questions || []);
+  const count = (s: QuestionStatut) => allQuestions.filter((q) => q.statut === s).length;
+  const pointsForts = correction.pointsForts || [];
+  const aRevoir = correction.aRevoir || [];
+  return (
+    <div className="space-y-5">
+      {/* 1. Bilan en chiffres */}
+      {allQuestions.length > 0 && (
+        <div className="grid grid-cols-4 gap-2 text-center">
+          {(['juste', 'partiel', 'faux', 'absent'] as QuestionStatut[]).map((s) => {
+            const { label, Icon, chip } = STATUT_STYLE[s];
+            return (
+              <div key={s} className={`py-2 rounded-xl ${chip}`}>
+                <Icon className="w-4 h-4 mx-auto" />
+                <p className="text-lg font-black tabular-nums leading-tight">{count(s)}</p>
+                <p className="text-[10px] font-bold uppercase leading-tight">{label}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* 2. Points forts et notions à revoir */}
+      {(pointsForts.length > 0 || aRevoir.length > 0) && (
+        <div className="grid sm:grid-cols-2 gap-3">
+          {pointsForts.length > 0 && (
+            <div className="p-3.5 rounded-2xl bg-emerald-50 border-2 border-emerald-200 dark:bg-emerald-500/10 dark:border-emerald-500/30 space-y-2">
+              <SectionTitle>Ce que tu maîtrises</SectionTitle>
+              <ul className="space-y-1.5">
+                {pointsForts.map((p, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-emerald-900 dark:text-emerald-100"><Check className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />{p}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {aRevoir.length > 0 && (
+            <div className="p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30 space-y-2">
+              <SectionTitle>À revoir</SectionTitle>
+              <ul className="space-y-2">
+                {aRevoir.map((r, i) => (
+                  <li key={i} className="text-sm">
+                    <p className="font-black text-amber-900 dark:text-amber-100">{r.notion}</p>
+                    {r.pourquoi && <p className="text-[13px] text-amber-800 dark:text-amber-200">{r.pourquoi}</p>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 3. Le mot de KONAN */}
+      <div className="flex gap-3 p-3.5 rounded-2xl bg-sky-50 border-2 border-sky-200 dark:bg-sky-500/10 dark:border-sky-500/30">
+        <KonanMascot pose="encourage" size={44} className="shrink-0" />
+        <p className="min-w-0 text-sm leading-relaxed text-sky-900 dark:text-sky-100">{correction.appreciation}</p>
       </div>
+
+      {/* 4. Détail exercice par exercice */}
+      <div className="space-y-3">
+        <SectionTitle>Détail de la correction</SectionTitle>
+        {correction.exercices.map((e) => (
+          <section key={e.numero} className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 overflow-hidden">
+            <header className="p-3.5 space-y-2 bg-slate-50 dark:bg-slate-800/60">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-sm font-black text-slate-900 dark:text-white">Exercice {e.numero}</span>
+                <span className="text-sm font-black tabular-nums text-slate-800 dark:text-slate-100">{fr(e.obtenu)} / {fr(e.sur)}</span>
+              </div>
+              <div className="h-2 rounded-full bg-white dark:bg-slate-900 overflow-hidden">
+                <div
+                  className={`h-full rounded-full ${e.obtenu >= e.sur * 0.75 ? 'bg-emerald-500' : e.obtenu >= e.sur * 0.4 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                  style={{ width: `${e.sur ? Math.min(100, (e.obtenu / e.sur) * 100) : 0}%` }}
+                />
+              </div>
+              {e.commentaire && <p className="text-[13px] text-slate-600 dark:text-slate-300">{e.commentaire}</p>}
+            </header>
+
+            {(e.questions?.length || 0) > 0 && (
+              <ol className="divide-y divide-slate-100 dark:divide-slate-800">
+                {e.questions!.map((q, i) => {
+                  const st = STATUT_STYLE[q.statut] || STATUT_STYLE.faux;
+                  return (
+                    <li key={i} className={`p-3.5 space-y-2 border-l-4 ${st.edge}`}>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-black text-slate-900 dark:text-white">Question {numLabel(q.numero).replace(/\.$/, '')}</span>
+                        <span className="flex items-center gap-2">
+                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-black ${st.chip}`}>
+                            <st.Icon className="w-3 h-3" />{st.label}
+                          </span>
+                          <span className="text-xs font-black tabular-nums text-slate-600 dark:text-slate-300">
+                            {fr(q.obtenu)}{q.sur !== null ? ` / ${fr(q.sur)}` : ''} pt
+                          </span>
+                        </span>
+                      </div>
+                      <div className="space-y-1.5">
+                        {q.copie && <DetailRow label="Ta réponse" text={q.copie} />}
+                        {q.attendu && <DetailRow label="Attendu" text={q.attendu} tone="good" />}
+                        {q.erreur && <DetailRow label="Ton erreur" text={q.erreur} tone="bad" />}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
+
+            {(e.grille?.length || 0) > 0 && (
+              <div className="p-3.5 space-y-2 border-t-2 border-slate-100 dark:border-slate-800">
+                <SectionTitle>Grille de notation</SectionTitle>
+                {e.grille!.map((g, i) => (
+                  <div key={i} className="space-y-1">
+                    <div className="flex items-center justify-between gap-3 text-[13px]">
+                      <span className="min-w-0 font-semibold text-slate-700 dark:text-slate-200">{g.critere}</span>
+                      <span className="shrink-0 font-black tabular-nums text-slate-800 dark:text-slate-100">{fr(g.obtenu)} / {fr(g.sur)}</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                      <div className="h-full rounded-full bg-sky-500" style={{ width: `${g.sur ? Math.min(100, (g.obtenu / g.sur) * 100) : 0}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        ))}
+      </div>
+
+      {/* 5. Plan d'action numéroté */}
+      {correction.conseils.length > 0 && (
+        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 space-y-2.5">
+          <SectionTitle>À faire avant le devoir</SectionTitle>
+          <ol className="space-y-2">
+            {correction.conseils.map((c, i) => (
+              <li key={i} className="flex gap-2.5 text-sm text-slate-700 dark:text-slate-200">
+                <span className="w-6 h-6 shrink-0 rounded-full bg-sky-500 text-white text-xs font-black flex items-center justify-center">{i + 1}</span>
+                <span className="min-w-0 pt-0.5">{c}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/** Corrigé type, exercice par exercice et question par question : étapes numérotées, puis la réponse finale encadrée. */
+const Corrige: React.FC<{ sujet: Sujet }> = ({ sujet }) => (
+  <div className="space-y-3">
+    {sujet.exercices.map((e) => (
+      <section key={e.numero} className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 overflow-hidden">
+        <header className="px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/60 flex items-center justify-between gap-3">
+          <span className="text-sm font-black text-slate-900 dark:text-white">Corrigé de l’exercice {e.numero}</span>
+          <span className="text-xs font-black text-slate-500 dark:text-slate-400">{pts(e.points)}</span>
+        </header>
+        <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          {sujet.corrige.filter((c) => c.exercice === e.numero).map((c, i) => {
+            const etapes = c.etapes && c.etapes.length ? c.etapes : null;
+            return (
+              <div key={i} className="p-3.5 space-y-2 text-sm">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-black text-slate-900 dark:text-white">Question {numLabel(c.question).replace(/\.$/, '')}</span>
+                  <span className="text-xs font-black text-slate-500 dark:text-slate-400 tabular-nums">{ptShort(c.points)}</span>
+                </div>
+                {etapes ? (
+                  <ol className="space-y-1.5">
+                    {etapes.map((step, j) => (
+                      <li key={j} className="flex gap-2 text-slate-700 dark:text-slate-200">
+                        <span className="w-5 h-5 shrink-0 rounded-full bg-slate-200 dark:bg-slate-700 text-[11px] font-black flex items-center justify-center text-slate-700 dark:text-slate-200">{j + 1}</span>
+                        <span className="min-w-0"><SujetText text={step.replace(/^\s*étape\s*\d+\s*[:.-]\s*/i, '')} /></span>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p className="text-slate-700 dark:text-slate-200"><SujetText text={c.reponse} /></p>
+                )}
+                {c.resultat && (
+                  <div className="px-3 py-2 rounded-xl bg-emerald-50 border-2 border-emerald-200 dark:bg-emerald-500/10 dark:border-emerald-500/30">
+                    <span className="text-[11px] font-black uppercase tracking-wide text-emerald-700 dark:text-emerald-300 mr-2">Réponse</span>
+                    <span className="font-bold text-emerald-900 dark:text-emerald-100"><SujetText text={c.resultat} /></span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        {e.grille && (
+          <div className="px-3.5 py-3 border-t-2 border-slate-100 dark:border-slate-800 space-y-1.5">
+            <SectionTitle>Grille de notation</SectionTitle>
+            {e.grille.map((g) => (
+              <div key={g.critere} className="grid grid-cols-[1fr_auto] gap-2 text-xs text-slate-600 dark:text-slate-300">
+                <span><strong className="text-slate-800 dark:text-slate-100">{g.critere}</strong> : {g.indicateurs}</span>
+                <span className="font-black tabular-nums">{ptShort(g.points)}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     ))}
   </div>
 );
