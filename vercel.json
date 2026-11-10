@@ -4,7 +4,9 @@
   "outputDirectory": "dist",
   "functions": {
     "api/cron-notifications.js": { "maxDuration": 60 },
-    "api/feynman.js": { "maxDuration": 30 }
+    "api/feynman.js": { "maxDuration": 30 },
+    "api/exam-sujet.js": { "maxDuration": 60 },
+    "api/exam-correct.js": { "maxDuration": 60 }
   },
   "rewrites": [
     {

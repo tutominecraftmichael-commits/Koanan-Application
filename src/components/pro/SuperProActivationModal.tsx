@@ -45,8 +45,8 @@ export const SuperProActivationModal: React.FC<SuperProActivationModalProps> = (
       title: "Adaptation Examens & Devoirs",
       desc: EXAM_PREP_PAUSED
         ? EXAM_PREP_PAUSED_MESSAGE
-        : "Indiquez vos dates de partiels et devoirs surveillés. L'algorithme intensifie automatiquement vos révisions à l'approche du jour J.",
-      tag: EXAM_PREP_PAUSED ? "Mise à jour" : "Priorité Intelligente",
+        : "Indique la date de ton devoir et ses chapitres : séries de 30 questions, sujets de 2 h au format officiel et correction de ta copie sur 20 (2nde A et 2nde C pour l'instant).",
+      tag: EXAM_PREP_PAUSED ? "Mise à jour" : "Nouveau",
       color: "from-sky-500/20 to-blue-500/10 border-sky-500/30 text-sky-300",
       badgeColor: "bg-sky-500/20 text-sky-300 border-sky-500/40",
     },

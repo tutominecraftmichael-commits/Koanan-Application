@@ -8,7 +8,8 @@ import type {
 } from '../types';
 import { parseTimeToMinutes, minutesToTimeString, generateId, getDaysRemaining, getDaysRemainingFrom, isNonAcademicSubject } from '../lib/utils';
 import { getPacingStrategy } from '../lib/pacingStrategies';
-import { EXAM_PREP_PAUSED, withoutPausedExamPrep } from '../lib/featureFlags';
+import { isExamPrepOpenFor, withoutPausedExamPrep } from '../lib/featureFlags';
+import { EXAM_PREP_DURATIONS, EXAM_PREP_HORIZON_DAYS, examPrepModeFor, examPrepSessionText } from '../lib/exam/examPrepRules';
 import { validateBackendPermissions } from '../lib/subscriptionGuard';
 import type { PlanTier } from '../types';
 
@@ -30,8 +31,10 @@ export function generateOptimizedStudyPlan(
   preferences: StudyPreferences,
   userOrTier?: PlanTier | { tier?: PlanTier; planTier?: PlanTier; isPro?: boolean }
 ): StudySession[] {
-  // Préparation aux devoirs/examens en pause (mise à jour) : les dates d'épreuve sont ignorées
-  subjects = withoutPausedExamPrep(subjects);
+  // Préparation aux devoirs/examens ouverte seulement pour certaines classes (2nde A, 2nde C) :
+  // ailleurs, les dates d'épreuve sont ignorées
+  const examGrade = preferences.gradeLevel || preferences.academicLevel;
+  subjects = withoutPausedExamPrep(subjects, examGrade);
 
   // RÈGLE STRICTE : Exclure systématiquement toute matière non révisable (EPS, Sport, devoirs, permanence)
   const revisableSubjects = subjects.filter(sub => !isNonAcademicSubject(sub.name));
@@ -43,8 +46,8 @@ export function generateOptimizedStudyPlan(
     : userOrTier;
   
   const resolvedTier: PlanTier = (userContext?.planTier || (userContext as any)?.tier) ?? 'free';
-  // Fonction devoirs/examens : réservée à Pro/Plus, et coupée pour tous pendant sa mise à jour
-  const isExamFeatureAllowed = (resolvedTier === 'pro' || resolvedTier === 'plus') && !EXAM_PREP_PAUSED;
+  // Fonction devoirs/examens : réservée à Pro/Plus, et ouverte seulement pour certaines classes
+  const isExamFeatureAllowed = (resolvedTier === 'pro' || resolvedTier === 'plus') && isExamPrepOpenFor(examGrade);
 
   let effectivePreferences = preferences;
   if (userContext) {
@@ -329,6 +332,14 @@ export function generateOptimizedStudyPlan(
             const aDaysToExam = getDaysRemainingFrom(a.subject.examDate, sessionDate);
             const bDaysToExam = getDaysRemainingFrom(b.subject.examDate, sessionDate);
 
+            // Préparation au devoir (J-14 à J-1) : une séance CHAQUE jour pour la matière concernée,
+            // la plus proche de son épreuve d'abord (sujets de 2 h obligatoires de J-3 à J-1)
+            const aPrep = isExamFeatureAllowed && examPrepModeFor(aDaysToExam, a.subject) !== null;
+            const bPrep = isExamFeatureAllowed && examPrepModeFor(bDaysToExam, b.subject) !== null;
+            if (aPrep && !bPrep) return -1;
+            if (!aPrep && bPrep) return 1;
+            if (aPrep && bPrep && aDaysToExam !== bDaysToExam) return aDaysToExam! - bDaysToExam!;
+
             // Priorité absolue aux épreuves imminentes (J-1 ou J-2) par rapport à CE jour
             const aIsImminent = aDaysToExam !== null && aDaysToExam >= 0 && aDaysToExam <= 2;
             const bIsImminent = bDaysToExam !== null && bDaysToExam >= 0 && bDaysToExam <= 2;
@@ -380,6 +391,10 @@ export function generateOptimizedStudyPlan(
                   }
                   return slotCurrentStart < 720;
                 }
+                // Préparation au devoir : UNE séance par jour (jamais deux sujets de 2 h le même jour)
+                if (scheduledSubjectsToday.has(item.subject.id) && examPrepModeFor(daysToExam, item.subject) !== null) {
+                  return false;
+                }
               }
               return true;
             })
@@ -400,7 +415,9 @@ export function generateOptimizedStudyPlan(
 
         const sessionType = sessionTypeCycle[bestCandidate.scheduledCount % sessionTypeCycle.length];
         const daysUntilExamOnDate = isExamFeatureAllowed ? getDaysRemainingFrom(subject.examDate, sessionDate) : null;
-        const isExamApproaching = isExamFeatureAllowed && daysUntilExamOnDate !== null && daysUntilExamOnDate >= 0 && daysUntilExamOnDate <= 14;
+        // Type de séance de préparation pour CE jour (30 questions, sujet de 2 h ou chrono 75 min), sinon null
+        const examMode = isExamFeatureAllowed ? examPrepModeFor(daysUntilExamOnDate, subject) : null;
+        const isExamApproaching = examMode !== null;
 
         // Stratégie d'espacement active pour cette session (Mono-méthode ou Combinaison Triple KONAN PRO)
         let sessionPacing = pacingStrategy;
@@ -441,25 +458,10 @@ export function generateOptimizedStudyPlan(
           sessionBreak = sessionPacing.breakBlockDuration;
         }
 
-        // 🧠 CALIBRAGE INTELLIGENT DE LA DURÉE POUR LES EXAMENS ET DEVOIRS (Règle utilisateur) :
-        // Pour les devoirs (subject.examType === 'devoir') : quel que soit le jour (même à J-1 et jour 1), l'étudiant révise TOUJOURS 45 minutes !
-        // Pour les examens généraux : 45 min à J>=2, 25 min de synthèse à J-1 (repos cérébral), 20 min flash à J-0.
-        const isDevoir = subject.examType === 'devoir' || /\b(devoir|ds)\b/i.test(subject.name);
-        if (isDevoir) {
-          // Pour les devoirs : TOUJOURS 45 minutes, STRICTEMENT, même au jour 1 (J-1 et jour J) !
-          sessionDuration = 45;
+        // Durée d'une séance de préparation : 30 questions (repère 45 min), sujet complet (2 h), chrono (75 min)
+        if (examMode) {
+          sessionDuration = EXAM_PREP_DURATIONS[examMode];
           sessionBreak = Math.max(sessionBreak, 10);
-        } else if (isExamApproaching) {
-          if (daysUntilExamOnDate >= 2) {
-            sessionDuration = 45;
-            sessionBreak = Math.max(sessionBreak, 10);
-          } else if (daysUntilExamOnDate === 1) {
-            sessionDuration = 25;
-            sessionBreak = Math.max(sessionBreak, 5);
-          } else if (daysUntilExamOnDate === 0) {
-            sessionDuration = 20;
-            sessionBreak = 5;
-          }
         }
 
         // Titres et descriptions contextualisés selon la méthode d'étude retenue
@@ -528,7 +530,7 @@ export function generateOptimizedStudyPlan(
         const examLabel = subject.examType === 'devoir' ? 'Devoir' : subject.examType === 'rattrapage' ? 'Rattrapage' : 'Examen';
 
         let priority: 'urgent' | 'high' | 'medium' | 'maintenance' = 'medium';
-        if (isExamApproaching && daysUntilExamOnDate <= 7) {
+        if (isExamApproaching && daysUntilExamOnDate !== null && daysUntilExamOnDate <= 7) {
           priority = 'urgent';
         } else if (subject.difficulty >= 4 || subject.coefficient >= 5) {
           priority = 'high';
@@ -543,75 +545,11 @@ export function generateOptimizedStudyPlan(
         let finalDesc = sessionDescription;
         let finalObjectives = sessionObjectives;
 
-        if (isExamApproaching) {
-          if (daysUntilExamOnDate === 0) {
-            finalTitle = subject.examType === 'devoir'
-              ? `Préparation Devoir (45m) : ${displaySubjectName}`
-              : `⚡ Réveil Flash Examen : ${displaySubjectName}`;
-            finalDesc = subject.examType === 'devoir'
-              ? `Jour de devoir : séance approfondie de 45 minutes sur ${displaySubjectName} avant l'épreuve.`
-              : `Dernière mise en condition avant votre ${examLabel} de ${displaySubjectName} aujourd'hui.`;
-            finalObjectives = subject.examType === 'devoir'
-              ? [
-                  `Revue approfondie des exercices types et méthodes de ${displaySubjectName}`,
-                  'Vérification finale des points clés avant de composer',
-                  'Lucidité et concentration maximale',
-                ]
-              : [
-                  `Revue éclair des formules clés de ${displaySubjectName}`,
-                  'Respiration et stabilisation mentale avant de composer',
-                  'Vérification du matériel et lucidité maximale',
-                ];
-          } else if (daysUntilExamOnDate === 1) {
-            finalTitle = subject.examType === 'devoir'
-              ? `Préparation Devoir (45m) : ${displaySubjectName}`
-              : `🔥 Ultime Révision (25m) : ${displaySubjectName}`;
-            finalDesc = subject.examType === 'devoir'
-              ? `Veille de devoir (Jour 1) : séance de révision approfondie de 45 minutes sur ${displaySubjectName}. Entraînement complet et consolidation avant l'épreuve.`
-              : `Veille d'épreuve (Jour 1) : séance de synthèse ciblée de 25 minutes sur ${displaySubjectName}. Réactivation des points clés et repos cérébral sans surchauffe.`;
-            finalObjectives = subject.examType === 'devoir'
-              ? [
-                  `Révision approfondie des cours et méthodes de ${displaySubjectName}`,
-                  'Auto-évaluation à blanc sur les exercices types du devoir',
-                  'Vérification de la maîtrise technique avant demain',
-                ]
-              : [
-                  `Révision flash des formules et concepts capitaux de ${displaySubjectName}`,
-                  'Auto-évaluation à blanc sur 2 exercices types sans notes',
-                  'Repos cérébral anticipé pour être à 100% de lucidité le jour J',
-                ];
-          } else if (daysUntilExamOnDate === 2) {
-            finalTitle = subject.examType === 'devoir'
-              ? `Préparation Devoir (45m) : ${displaySubjectName}`
-              : `⚡ Prépa Intensive ${examLabel} (45m) : ${displaySubjectName}`;
-            finalDesc = `Jour 2 avant l'épreuve : séance approfondie de 45 minutes sur ${topicName} et entraînement aux exercices types.`;
-            finalObjectives = [
-              `Focalisation sur les chapitres à fort coefficient : ${topicName}`,
-              'Simulation d\'épreuves et entraînement chronométré',
-              'Élimination des dernières hésitations méthodologiques',
-            ];
-          } else if (daysUntilExamOnDate <= 5) {
-            finalTitle = subject.examType === 'devoir'
-              ? `Préparation Devoir (45m) : ${displaySubjectName}`
-              : `⚡ Prépa Intensive ${examLabel} (45m) : ${displaySubjectName}`;
-            finalDesc = `Séance approfondie de 45 minutes sur ${topicName} et entraînement aux exercices types.`;
-            finalObjectives = [
-              `Focalisation sur les chapitres à fort coefficient : ${topicName}`,
-              'Simulation d\'épreuves et entraînement chronométré',
-              'Élimination des dernières hésitations méthodologiques',
-            ];
-          } else {
-            // J-6 à J-14
-            finalTitle = subject.examType === 'devoir'
-              ? `Révision Devoir (45m) : ${displaySubjectName}`
-              : `Révision Approfondie Examen (45m) : ${displaySubjectName}`;
-            finalDesc = `Anticipation stratégique : consolidation approfondie de 45 minutes avant l'épreuve.`;
-            finalObjectives = [
-              `Maîtrise complète du chapitre : ${topicName}`,
-              'Fiche synthèse et résolution des cas complexes',
-              'Auto-test sans antisèche pour valider l\'assimilation',
-            ];
-          }
+        if (examMode && daysUntilExamOnDate !== null) {
+          const text = examPrepSessionText(examMode, displaySubjectName, examLabel, daysUntilExamOnDate);
+          finalTitle = text.title;
+          finalDesc = text.description;
+          finalObjectives = text.objectives;
         }
 
         generatedSessions.push({
@@ -631,8 +569,10 @@ export function generateOptimizedStudyPlan(
           energyRequired: energy,
           completed: false,
           isExamPrep: isExamApproaching,
-          examDaysRemaining: isExamApproaching ? daysUntilExamOnDate : undefined,
+          examDaysRemaining: isExamApproaching ? daysUntilExamOnDate ?? undefined : undefined,
           examType: isExamFeatureAllowed ? (subject.examType || 'examen') : undefined,
+          examPrepMode: examMode ?? undefined,
+          examChapterIds: examMode && examMode !== 'chrono75' ? subject.examChapterIds : undefined,
         });
 
         // Mise à jour des compteurs
@@ -741,59 +681,59 @@ export function mergePreservingCompletedSessions(
  */
 export function synchronizeSessionsWithExamCountdowns(
   sessions: StudySession[],
-  subjects: Subject[]
+  subjects: Subject[],
+  rawGrade?: string | null
 ): StudySession[] {
   if (!sessions || sessions.length === 0) return [];
-  // Préparation aux devoirs/examens en pause (mise à jour) : aucune durée n'est recalibrée
-  if (EXAM_PREP_PAUSED) return sessions;
+  // Préparation aux devoirs ouverte seulement pour certaines classes (2nde A, 2nde C)
+  if (!isExamPrepOpenFor(rawGrade)) return sessions;
   const subjectsMap = new Map(subjects.map(s => [s.id, s]));
 
   const referenceDate = new Date();
   const currentDayIndex = (referenceDate.getDay() + 6) % 7;
+
+  // Une seule séance de préparation par jour et par matière (jamais deux sujets de 2 h le même jour)
+  const prepDays = new Set<string>();
 
   return sessions.map(session => {
     if (session.completed) return session; // Ne JAMAIS altérer une session déjà validée
 
     const subject = subjectsMap.get(session.subjectId);
     if (!subject || !subject.examDate) return session;
+    const dayKey = `${session.dayOfWeek}|${session.subjectId}`;
+    if (prepDays.has(dayKey)) return session;
 
     const daysAhead = (session.dayOfWeek - currentDayIndex + 7) % 7;
     const sessionDate = new Date(referenceDate);
     sessionDate.setDate(referenceDate.getDate() + daysAhead);
 
     const daysToExam = getDaysRemainingFrom(subject.examDate, sessionDate);
-    if (daysToExam === null || daysToExam < 0) return session;
+    const mode = examPrepModeFor(daysToExam, subject);
+    if (!mode || daysToExam === null || daysToExam > EXAM_PREP_HORIZON_DAYS) return session;
+    prepDays.add(dayKey);
 
-    // Si un examen/devoir est dans les 14 jours, calibrer la durée
-    const isExamApproaching = daysToExam <= 14;
-    let targetDuration = session.durationMinutes;
-    const isDevoir = subject.examType === 'devoir' || /\b(devoir|ds)\b/i.test(subject.name) || /\b(devoir|ds)\b/i.test(session.title);
-    if (isDevoir) {
-      // Pour les devoirs : TOUJOURS 45 min quel que soit le jour (même à J-1 et jour J)
-      targetDuration = 45;
-    } else if (isExamApproaching) {
-      if (daysToExam >= 2) {
-        targetDuration = 45;
-      } else if (daysToExam === 1) {
-        targetDuration = 25;
-      } else if (daysToExam === 0) {
-        targetDuration = 20;
-      }
-    }
+    // Même jour, même type de séance et mêmes chapitres : rien à changer
+    const sameChapters = JSON.stringify(session.examChapterIds || []) === JSON.stringify(mode === 'chrono75' ? [] : subject.examChapterIds || []);
+    if (session.examPrepMode === mode && session.examDaysRemaining === daysToExam && sameChapters) return session;
 
-    if (targetDuration !== session.durationMinutes) {
-      const startMin = parseTimeToMinutes(session.startTime);
-      const newEndMin = Math.min(1440, startMin + targetDuration);
-      return {
-        ...session,
-        durationMinutes: targetDuration,
-        endTime: minutesToTimeString(newEndMin),
-        isExamPrep: true,
-        examDaysRemaining: daysToExam,
-        examType: subject.examType || 'examen',
-      };
-    }
-
-    return session;
+    const targetDuration = EXAM_PREP_DURATIONS[mode];
+    const startMin = parseTimeToMinutes(session.startTime);
+    const newEndMin = Math.min(1410, startMin + targetDuration);
+    const examLabel = subject.examType === 'devoir' ? 'Devoir' : subject.examType === 'rattrapage' ? 'Rattrapage' : 'Examen';
+    const text = examPrepSessionText(mode, subject.name, examLabel, daysToExam);
+    return {
+      ...session,
+      durationMinutes: newEndMin - startMin,
+      endTime: minutesToTimeString(newEndMin),
+      type: 'exam_simulation',
+      title: text.title,
+      description: text.description,
+      objectives: text.objectives,
+      isExamPrep: true,
+      examDaysRemaining: daysToExam,
+      examType: subject.examType || 'examen',
+      examPrepMode: mode,
+      examChapterIds: mode === 'chrono75' ? undefined : subject.examChapterIds,
+    };
   });
 }
