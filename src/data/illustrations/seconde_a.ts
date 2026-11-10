@@ -1239,4 +1239,28 @@ export const SECONDE_A_ILLUSTRATIONS: Record<string, ExerciseIllustration> = {
       tableData: {"headers":["Classe","[1 ; 5[","[5 ; 8[","[8 ; 13[","[13 ; 14[","[14 ; 21["],"rows":[["Effectif","12","28","32","24","8"],["Amplitude","4","3","5","1","7"],["Centre","3","6,5","10,5","13,5","17,5"],["Densité","3","9,33","6,4","24","1,14"]]},
     },
   },
+  "premiere_a1_francais_ee_l02_commentaire_compose_p03_q2": {
+    course: {
+      type: 'custom_svg',
+      title: "Le tableau de préparation (CI 1 : la désillusion de Nafi)",
+      caption: "Au brouillon, chaque sous-centre reçoit ses indices, l’analyse du procédé et l’interprétation. Sur la copie, chaque ligne devient un paragraphe rédigé.",
+      tableData: {"headers":["Sous-centre","Indice textuel","Analyse","Interprétation"],"rows":[["a) La prise de conscience du leurre","« Je suis victime d’un mirage » (l. 2)","Phrase déclarative","Nafi découvre le piège dans lequel elle est tombée."],["b) La déception","« Dieu que je regrette de m’être mariée » (l. 1) ; « Tout est fade » (l. 9)","Phrases déclaratives ; champ lexical de la désillusion","Le Paris rêvé est devenu un enfer."],["c) La solitude et la tristesse","« Je suis seule, si seule, que les cadavres dans leur tombe me font envie » (l. 17)","Hyperbole ; répétition de « seule »","Nafi est isolée et pessimiste."]]},
+    },
+  },
+  "premiere_a1_francais_ee_l02_commentaire_compose_p05_q1": {
+    course: {
+      type: 'custom_svg',
+      title: "Les trois étapes de l’introduction",
+      caption: "Un seul paragraphe, un seul alinéa : on va du plus général (le thème) au plus précis (le plan du devoir).",
+      tableData: {"headers":["Étape","Ce qu’on écrit","Exemple (Nafi)"],"rows":[["1. Généralité","Une idée large liée au thème, au genre ou à l’auteur","La recherche d’un ailleurs meilleur mène souvent au désenchantement."],["2. Présentation","Titre du texte, auteur, œuvre, date, puis idée générale","« Lettres de France », Voltaïque (1962), Sembène Ousmane : les regrets de Nafi en France."],["3. Annonce du plan","Les centres d’intérêt, dans l’ordre","Nous montrerons que sa désillusion suscite sa nostalgie du pays natal."]]},
+    },
+  },
+  "premiere_a1_francais_ee_l02_commentaire_compose_p06_q1": {
+    course: {
+      type: 'custom_svg',
+      title: "Les trois éléments de la conclusion",
+      caption: "Un seul paragraphe : on fait le bilan, on donne son avis, puis on ouvre vers une autre œuvre.",
+      tableData: {"headers":["Élément","Rôle","Exemple (« Maturité »)"],"rows":[["1. Bilan","Résumer l’analyse et répondre à l’introduction","L’enfance fut une fête ; l’âge adulte, une prise de conscience des difficultés."],["2. Prise de position","Donner un avis personnel argumenté","Ces deux moments font partie de toute existence humaine."],["3. Ouverture","Rapprocher le texte d’une autre œuvre","« Nuit de Sine » de Senghor évoque aussi avec nostalgie l’enfance."]]},
+    },
+  },
 };
