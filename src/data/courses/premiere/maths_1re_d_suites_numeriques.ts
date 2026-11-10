@@ -949,7 +949,7 @@ export const MATHS_1RE_D_L12_SUITES_NUMERIQUES: CurriculumChapter = {
           "exercise": {
             "id": "premiere_d_maths_numerique_l12_suites_numeriques_p04_q6",
             "type": "mcq",
-            "prompt": "Que vaut la raison $r$ ?",
+            "prompt": "$(U_n)$ est une suite arithmétique avec $U_6=-3$ et $U_9=-6$. Que vaut sa raison $r$ ?",
             "options": [
               "$1$",
               "$-3$",
@@ -1051,7 +1051,7 @@ export const MATHS_1RE_D_L12_SUITES_NUMERIQUES: CurriculumChapter = {
         {
           "id": "premiere_d_maths_numerique_l12_suites_numeriques_p04_q6",
           "type": "mcq",
-          "prompt": "Que vaut la raison $r$ ?",
+          "prompt": "$(U_n)$ est une suite arithmétique avec $U_6=-3$ et $U_9=-6$. Que vaut sa raison $r$ ?",
           "options": [
             "$1$",
             "$-3$",

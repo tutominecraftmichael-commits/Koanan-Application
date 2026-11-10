@@ -1486,7 +1486,7 @@ export const PHILO_TLE_L09_LANGAGE_VERITE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l01_langage_verite_p07_q5",
             "type": "mcq",
-            "prompt": "Quelle est la thèse de Kant dans ce texte ?",
+            "prompt": "Dans l'introduction de la Critique de la raison pure, Kant écrit : « Si toute notre connaissance débute avec l'expérience, cela ne prouve pas qu'elle dérive toute de l'expérience. » Quelle est sa thèse ?",
             "options": [
               "La connaissance vient uniquement de l'expérience",
               "La connaissance vient uniquement de la raison",
@@ -1575,7 +1575,7 @@ export const PHILO_TLE_L09_LANGAGE_VERITE: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_connaissance_l01_langage_verite_p07_q5",
           "type": "mcq",
-          "prompt": "Quelle est la thèse de Kant dans ce texte ?",
+          "prompt": "Dans l'introduction de la Critique de la raison pure, Kant écrit : « Si toute notre connaissance débute avec l'expérience, cela ne prouve pas qu'elle dérive toute de l'expérience. » Quelle est sa thèse ?",
           "options": [
             "La connaissance vient uniquement de l'expérience",
             "La connaissance vient uniquement de la raison",

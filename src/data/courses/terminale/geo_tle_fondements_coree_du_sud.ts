@@ -1580,7 +1580,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
           "exercise": {
             "id": "terminale_hg_geographie_t2_l01_fondements_developpement_coree_du_sud_p07_q3",
             "type": "mcq",
-            "prompt": "Que montrent ensemble les documents 4 et 5 sur la population sud-coréenne ?",
+            "prompt": "Sur la population sud-coréenne, un document donne +0,2 % de croissance en 2019 et un autre, plus récent, −0,24 % par an. Que montrent ensemble ces deux documents ?",
             "options": [
               "Une croissance très faible, devenue négative",
               "Une croissance très rapide",
@@ -1706,7 +1706,7 @@ export const GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD: CurriculumChapter = {
         {
           "id": "terminale_hg_geographie_t2_l01_fondements_developpement_coree_du_sud_p07_q3",
           "type": "mcq",
-          "prompt": "Que montrent ensemble les documents 4 et 5 sur la population sud-coréenne ?",
+          "prompt": "Sur la population sud-coréenne, un document donne +0,2 % de croissance en 2019 et un autre, plus récent, −0,24 % par an. Que montrent ensemble ces deux documents ?",
           "options": [
             "Une croissance très faible, devenue négative",
             "Une croissance très rapide",

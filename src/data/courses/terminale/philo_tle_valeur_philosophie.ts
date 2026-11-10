@@ -1177,7 +1177,7 @@ export const PHILO_TLE_L07_VALEUR_PHILOSOPHIE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l02_valeur_philosophie_p06_q1",
             "type": "mcq",
-            "prompt": "Dans ce sujet, que signifie « un luxe » ?",
+            "prompt": "Dans le sujet « La philosophie est-elle un luxe ? », que signifie l'expression « un luxe » ?",
             "options": [
               "Ce qui est superflu, dont on peut se passer",
               "Ce qui coûte de l'argent",
@@ -1298,7 +1298,7 @@ export const PHILO_TLE_L07_VALEUR_PHILOSOPHIE: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_bonheur_l02_valeur_philosophie_p06_q1",
           "type": "mcq",
-          "prompt": "Dans ce sujet, que signifie « un luxe » ?",
+          "prompt": "Dans le sujet « La philosophie est-elle un luxe ? », que signifie l'expression « un luxe » ?",
           "options": [
             "Ce qui est superflu, dont on peut se passer",
             "Ce qui coûte de l'argent",

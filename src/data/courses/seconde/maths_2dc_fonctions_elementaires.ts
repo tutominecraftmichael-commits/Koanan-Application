@@ -303,7 +303,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p02_q1",
             "type": "mcq",
-            "prompt": "Quel est l'ensemble de définition de $f$ ?",
+            "prompt": "$f(x)=-x-5$ sur $]-\\infty;0]$, $f(x)=\\dfrac32x+1$ sur $]0;2[$ et $f(x)=x-5$ sur $[2;+\\infty[$. Quel est l'ensemble de définition de $f$ ?",
             "options": [
               "$]-\\infty;2[$",
               "$]0;+\\infty[$",
@@ -345,7 +345,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p02_q3",
             "type": "mcq",
-            "prompt": "Combien vaut $f(3)$ ?",
+            "prompt": "$f(x)=-x-5$ sur $]-\\infty;0]$, $f(x)=\\dfrac32x+1$ sur $]0;2[$ et $f(x)=x-5$ sur $[2;+\\infty[$. Combien vaut $f(3)$ ?",
             "options": [
               "$5{,}5$",
               "$-8$",
@@ -366,7 +366,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p02_q4",
             "type": "mcq",
-            "prompt": "Combien vaut $f(0)$ ?",
+            "prompt": "$f(x)=-x-5$ sur $]-\\infty;0]$, $f(x)=\\dfrac32x+1$ sur $]0;2[$ et $f(x)=x-5$ sur $[2;+\\infty[$. Combien vaut $f(0)$ ?",
             "options": [
               "$1$",
               "$-5$",
@@ -387,7 +387,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p02_q5",
             "type": "mcq",
-            "prompt": "Combien vaut $f(-5)$ ?",
+            "prompt": "$f(x)=-x-5$ sur $]-\\infty;0]$, $f(x)=\\dfrac32x+1$ sur $]0;2[$ et $f(x)=x-5$ sur $[2;+\\infty[$. Combien vaut $f(-5)$ ?",
             "options": [
               "$0$",
               "$-10$",
@@ -408,7 +408,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p02_q6",
             "type": "mcq",
-            "prompt": "Que conclure pour l'intervalle $]0;2[$ ?",
+            "prompt": "Sur $]0;2[$, $f(x)=\\dfrac32x+1$, et l'équation $\\dfrac32x+1=0$ donne $x=-\\dfrac23$. Que conclure pour l'équation $f(x)=0$ sur l'intervalle $]0;2[$ ?",
             "options": [
               "Pas de solution sur cet intervalle",
               "$-\\frac23$ est solution de $f(x)=0$",
@@ -445,7 +445,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p02_q1",
           "type": "mcq",
-          "prompt": "Quel est l'ensemble de définition de $f$ ?",
+          "prompt": "$f(x)=-x-5$ sur $]-\\infty;0]$, $f(x)=\\dfrac32x+1$ sur $]0;2[$ et $f(x)=x-5$ sur $[2;+\\infty[$. Quel est l'ensemble de définition de $f$ ?",
           "options": [
             "$]-\\infty;2[$",
             "$]0;+\\infty[$",
@@ -471,7 +471,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p02_q3",
           "type": "mcq",
-          "prompt": "Combien vaut $f(3)$ ?",
+          "prompt": "$f(x)=-x-5$ sur $]-\\infty;0]$, $f(x)=\\dfrac32x+1$ sur $]0;2[$ et $f(x)=x-5$ sur $[2;+\\infty[$. Combien vaut $f(3)$ ?",
           "options": [
             "$5{,}5$",
             "$-8$",
@@ -484,7 +484,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p02_q4",
           "type": "mcq",
-          "prompt": "Combien vaut $f(0)$ ?",
+          "prompt": "$f(x)=-x-5$ sur $]-\\infty;0]$, $f(x)=\\dfrac32x+1$ sur $]0;2[$ et $f(x)=x-5$ sur $[2;+\\infty[$. Combien vaut $f(0)$ ?",
           "options": [
             "$1$",
             "$-5$",
@@ -497,7 +497,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p02_q5",
           "type": "mcq",
-          "prompt": "Combien vaut $f(-5)$ ?",
+          "prompt": "$f(x)=-x-5$ sur $]-\\infty;0]$, $f(x)=\\dfrac32x+1$ sur $]0;2[$ et $f(x)=x-5$ sur $[2;+\\infty[$. Combien vaut $f(-5)$ ?",
           "options": [
             "$0$",
             "$-10$",
@@ -510,7 +510,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p02_q6",
           "type": "mcq",
-          "prompt": "Que conclure pour l'intervalle $]0;2[$ ?",
+          "prompt": "Sur $]0;2[$, $f(x)=\\dfrac32x+1$, et l'équation $\\dfrac32x+1=0$ donne $x=-\\dfrac23$. Que conclure pour l'équation $f(x)=0$ sur l'intervalle $]0;2[$ ?",
           "options": [
             "Pas de solution sur cet intervalle",
             "$-\\frac23$ est solution de $f(x)=0$",
@@ -584,7 +584,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p03_q2",
             "type": "mcq",
-            "prompt": "Combien vaut $E(7{,}8)$ ?",
+            "prompt": "$E(x)$ désigne la partie entière de $x$ (le plus grand entier inférieur ou égal à $x$). Combien vaut $E(7{,}8)$ ?",
             "options": [
               "$8$",
               "$0{,}8$",
@@ -605,7 +605,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p03_q3",
             "type": "mcq",
-            "prompt": "Combien vaut $E(-4{,}02)$ ?",
+            "prompt": "$E(x)$ désigne la partie entière de $x$ (le plus grand entier inférieur ou égal à $x$). Combien vaut $E(-4{,}02)$ ?",
             "options": [
               "$-4$",
               "$4$",
@@ -626,7 +626,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p03_q4",
             "type": "mcq",
-            "prompt": "Combien vaut $E(9)$ ?",
+            "prompt": "$E(x)$ désigne la partie entière de $x$ (le plus grand entier inférieur ou égal à $x$). Combien vaut $E(9)$ ?",
             "options": [
               "$8$",
               "$10$",
@@ -689,7 +689,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p03_q7",
             "type": "mcq",
-            "prompt": "Combien vaut $E(-0{,}5)$ ?",
+            "prompt": "$E(x)$ désigne la partie entière de $x$ (le plus grand entier inférieur ou égal à $x$). Combien vaut $E(-0{,}5)$ ?",
             "options": [
               "$0$",
               "$-1$",
@@ -718,7 +718,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p03_q2",
           "type": "mcq",
-          "prompt": "Combien vaut $E(7{,}8)$ ?",
+          "prompt": "$E(x)$ désigne la partie entière de $x$ (le plus grand entier inférieur ou égal à $x$). Combien vaut $E(7{,}8)$ ?",
           "options": [
             "$8$",
             "$0{,}8$",
@@ -731,7 +731,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p03_q3",
           "type": "mcq",
-          "prompt": "Combien vaut $E(-4{,}02)$ ?",
+          "prompt": "$E(x)$ désigne la partie entière de $x$ (le plus grand entier inférieur ou égal à $x$). Combien vaut $E(-4{,}02)$ ?",
           "options": [
             "$-4$",
             "$4$",
@@ -744,7 +744,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p03_q4",
           "type": "mcq",
-          "prompt": "Combien vaut $E(9)$ ?",
+          "prompt": "$E(x)$ désigne la partie entière de $x$ (le plus grand entier inférieur ou égal à $x$). Combien vaut $E(9)$ ?",
           "options": [
             "$8$",
             "$10$",
@@ -783,7 +783,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p03_q7",
           "type": "mcq",
-          "prompt": "Combien vaut $E(-0{,}5)$ ?",
+          "prompt": "$E(x)$ désigne la partie entière de $x$ (le plus grand entier inférieur ou égal à $x$). Combien vaut $E(-0{,}5)$ ?",
           "options": [
             "$0$",
             "$-1$",
@@ -1343,7 +1343,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p06_q1",
             "type": "mcq",
-            "prompt": "Pour la fonction à quatre morceaux, que vaut $f(-5)$ ?",
+            "prompt": "$f(x)=3x+8$ sur $[-6;-4]$ ; $f(x)=-\\dfrac87x+\\dfrac{10}{7}$ sur $]-4;3[$ ; $f(x)=-1$ sur $[3;4]$ ; $f(x)=2{,}5x-12$ sur $]4;8]$. Que vaut $f(-5)$ ?",
             "options": [
               "$-7$",
               "$23$",
@@ -1364,7 +1364,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p06_q2",
             "type": "mcq",
-            "prompt": "Combien vaut $f(7)$ ?",
+            "prompt": "$f(x)=3x+8$ sur $[-6;-4]$ ; $f(x)=-\\dfrac87x+\\dfrac{10}{7}$ sur $]-4;3[$ ; $f(x)=-1$ sur $[3;4]$ ; $f(x)=2{,}5x-12$ sur $]4;8]$. Combien vaut $f(7)$ ?",
             "options": [
               "$5{,}5$",
               "$17{,}5$",
@@ -1427,7 +1427,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p06_q5",
             "type": "mcq",
-            "prompt": "Pour la fonction à quatre morceaux, quelles sont les solutions de $f(x)=0$ ?",
+            "prompt": "$f(x)=3x+8$ sur $[-6;-4]$ ; $f(x)=-\\dfrac87x+\\dfrac{10}{7}$ sur $]-4;3[$ ; $f(x)=-1$ sur $[3;4]$ ; $f(x)=2{,}5x-12$ sur $]4;8]$. Quelles sont les solutions de $f(x)=0$ ?",
             "options": [
               "$\\left\\{-\\frac83\\,;\\frac54\\,;\\frac{24}{5}\\right\\}$",
               "$\\left\\{\\frac54\\right\\}$",
@@ -1485,7 +1485,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p06_q1",
           "type": "mcq",
-          "prompt": "Pour la fonction à quatre morceaux, que vaut $f(-5)$ ?",
+          "prompt": "$f(x)=3x+8$ sur $[-6;-4]$ ; $f(x)=-\\dfrac87x+\\dfrac{10}{7}$ sur $]-4;3[$ ; $f(x)=-1$ sur $[3;4]$ ; $f(x)=2{,}5x-12$ sur $]4;8]$. Que vaut $f(-5)$ ?",
           "options": [
             "$-7$",
             "$23$",
@@ -1498,7 +1498,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p06_q2",
           "type": "mcq",
-          "prompt": "Combien vaut $f(7)$ ?",
+          "prompt": "$f(x)=3x+8$ sur $[-6;-4]$ ; $f(x)=-\\dfrac87x+\\dfrac{10}{7}$ sur $]-4;3[$ ; $f(x)=-1$ sur $[3;4]$ ; $f(x)=2{,}5x-12$ sur $]4;8]$. Combien vaut $f(7)$ ?",
           "options": [
             "$5{,}5$",
             "$17{,}5$",
@@ -1537,7 +1537,7 @@ export const MATHS_2DC_NUM_L13_FONCTIONS_ELEMENTAIRES: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l13_fonctions_elementaires_p06_q5",
           "type": "mcq",
-          "prompt": "Pour la fonction à quatre morceaux, quelles sont les solutions de $f(x)=0$ ?",
+          "prompt": "$f(x)=3x+8$ sur $[-6;-4]$ ; $f(x)=-\\dfrac87x+\\dfrac{10}{7}$ sur $]-4;3[$ ; $f(x)=-1$ sur $[3;4]$ ; $f(x)=2{,}5x-12$ sur $]4;8]$. Quelles sont les solutions de $f(x)=0$ ?",
           "options": [
             "$\\left\\{-\\frac83\\,;\\frac54\\,;\\frac{24}{5}\\right\\}$",
             "$\\left\\{\\frac54\\right\\}$",

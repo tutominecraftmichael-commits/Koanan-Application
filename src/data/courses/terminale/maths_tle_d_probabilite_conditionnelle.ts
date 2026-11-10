@@ -625,7 +625,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p03_q3",
             "type": "mcq",
-            "prompt": "Que vaut $P(N\\cap S)$, un ordinateur de marque N et soldé ?",
+            "prompt": "Un magasin vend 64 % d'ordinateurs de marque A et 36 % de marque N ; 30 % des A et 60 % des N sont soldés. Que vaut $P(N\\cap S)$, la probabilité qu'un ordinateur soit de marque N et soldé ?",
             "options": [
               "$0,96$",
               "$0,216$",
@@ -646,7 +646,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p03_q4",
             "type": "mcq",
-            "prompt": "Barrage : 65 % sont contre, dont 70 % d'écologistes ; parmi les autres, 20 % d'écologistes. Quelle est $P(E)$ ?",
+            "prompt": "Sondage sur un barrage : 65 % des personnes sont contre ; parmi elles, 70 % sont écologistes. Parmi les 35 % qui ne sont pas contre, 20 % sont écologistes. On choisit une personne au hasard. Quelle est la probabilité $P(E)$ qu'elle soit écologiste ?",
             "options": [
               "$0,525$",
               "$0,455$",
@@ -667,7 +667,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p03_q5",
             "type": "mcq",
-            "prompt": "Quelle proportion des élèves de l'échantillon est en Terminale D ?",
+            "prompt": "Dans un échantillon d'élèves de Tle C et de Tle D, 25 % des Tle C et un tiers des Tle D aiment le jeu de damier, et 3 élèves sur 10 au total l'aiment. Quelle proportion des élèves de l'échantillon est en Terminale D ?",
             "options": [
               "$30\\,\\%$",
               "$25\\,\\%$",
@@ -751,7 +751,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p03_q3",
           "type": "mcq",
-          "prompt": "Que vaut $P(N\\cap S)$, un ordinateur de marque N et soldé ?",
+          "prompt": "Un magasin vend 64 % d'ordinateurs de marque A et 36 % de marque N ; 30 % des A et 60 % des N sont soldés. Que vaut $P(N\\cap S)$, la probabilité qu'un ordinateur soit de marque N et soldé ?",
           "options": [
             "$0,96$",
             "$0,216$",
@@ -764,7 +764,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p03_q4",
           "type": "mcq",
-          "prompt": "Barrage : 65 % sont contre, dont 70 % d'écologistes ; parmi les autres, 20 % d'écologistes. Quelle est $P(E)$ ?",
+          "prompt": "Sondage sur un barrage : 65 % des personnes sont contre ; parmi elles, 70 % sont écologistes. Parmi les 35 % qui ne sont pas contre, 20 % sont écologistes. On choisit une personne au hasard. Quelle est la probabilité $P(E)$ qu'elle soit écologiste ?",
           "options": [
             "$0,525$",
             "$0,455$",
@@ -777,7 +777,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p03_q5",
           "type": "mcq",
-          "prompt": "Quelle proportion des élèves de l'échantillon est en Terminale D ?",
+          "prompt": "Dans un échantillon d'élèves de Tle C et de Tle D, 25 % des Tle C et un tiers des Tle D aiment le jeu de damier, et 3 élèves sur 10 au total l'aiment. Quelle proportion des élèves de l'échantillon est en Terminale D ?",
           "options": [
             "$30\\,\\%$",
             "$25\\,\\%$",
@@ -865,7 +865,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p04_q2",
             "type": "mcq",
-            "prompt": "Pourquoi $X=3$ est-il impossible dans ce tirage ?",
+            "prompt": "Une urne contient 2 boules blanches et 4 rouges ; on tire simultanément 3 boules et $X$ est le nombre de boules blanches. Pourquoi $X=3$ est-il impossible ?",
             "options": [
               "Parce qu'on tire 3 boules",
               "Parce que $3$ est impair",
@@ -886,7 +886,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p04_q3",
             "type": "mcq",
-            "prompt": "Que vaut $P(X=0)$, aucune boule blanche ?",
+            "prompt": "Une urne contient 2 boules blanches et 4 rouges ; on tire simultanément 3 boules ($C_6^3=20$ tirages) et $X$ est le nombre de boules blanches. Que vaut $P(X=0)$, aucune boule blanche ?",
             "options": [
               "$\\dfrac15$",
               "$\\dfrac{3}{5}$",
@@ -928,7 +928,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p04_q5",
             "type": "mcq",
-            "prompt": "On perd 1000 F si l'on n'obtient que des Piles. Que vaut $P(X=-1000)$ ?",
+            "prompt": "On lance 3 fois une pièce équilibrée et on perd 1000 F si l'on n'obtient que des Piles. $X$ est le gain. Que vaut $P(X=-1000)$ ?",
             "options": [
               "$\\dfrac38$",
               "$\\dfrac12$",
@@ -949,7 +949,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p04_q6",
             "type": "mcq",
-            "prompt": "Avec la même loi, que vaut $P(X\\geq300)$ ?",
+            "prompt": "Le gain $X$ d'un jeu suit la loi : $P(X=-1000)=\\dfrac18$, $P(X=100)=\\dfrac38$, $P(X=300)=\\dfrac38$, $P(X=600)=\\dfrac18$. Que vaut $P(X\\geq300)$ ?",
             "options": [
               "$\\dfrac38$",
               "$\\dfrac12$",
@@ -999,7 +999,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p04_q2",
           "type": "mcq",
-          "prompt": "Pourquoi $X=3$ est-il impossible dans ce tirage ?",
+          "prompt": "Une urne contient 2 boules blanches et 4 rouges ; on tire simultanément 3 boules et $X$ est le nombre de boules blanches. Pourquoi $X=3$ est-il impossible ?",
           "options": [
             "Parce qu'on tire 3 boules",
             "Parce que $3$ est impair",
@@ -1012,7 +1012,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p04_q3",
           "type": "mcq",
-          "prompt": "Que vaut $P(X=0)$, aucune boule blanche ?",
+          "prompt": "Une urne contient 2 boules blanches et 4 rouges ; on tire simultanément 3 boules ($C_6^3=20$ tirages) et $X$ est le nombre de boules blanches. Que vaut $P(X=0)$, aucune boule blanche ?",
           "options": [
             "$\\dfrac15$",
             "$\\dfrac{3}{5}$",
@@ -1038,7 +1038,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p04_q5",
           "type": "mcq",
-          "prompt": "On perd 1000 F si l'on n'obtient que des Piles. Que vaut $P(X=-1000)$ ?",
+          "prompt": "On lance 3 fois une pièce équilibrée et on perd 1000 F si l'on n'obtient que des Piles. $X$ est le gain. Que vaut $P(X=-1000)$ ?",
           "options": [
             "$\\dfrac38$",
             "$\\dfrac12$",
@@ -1051,7 +1051,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p04_q6",
           "type": "mcq",
-          "prompt": "Avec la même loi, que vaut $P(X\\geq300)$ ?",
+          "prompt": "Le gain $X$ d'un jeu suit la loi : $P(X=-1000)=\\dfrac18$, $P(X=100)=\\dfrac38$, $P(X=300)=\\dfrac38$, $P(X=600)=\\dfrac18$. Que vaut $P(X\\geq300)$ ?",
           "options": [
             "$\\dfrac38$",
             "$\\dfrac12$",
@@ -1138,7 +1138,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p05_q2",
             "type": "mcq",
-            "prompt": "Que signifie $E(X)=100$ F pour le joueur ?",
+            "prompt": "$X$ est le gain (en F) d'un joueur à un jeu de pile ou face, et son espérance vaut $E(X)=100$ F. Que signifie ce résultat pour le joueur ?",
             "options": [
               "Il gagne 100 F à chaque partie",
               "Il ne peut pas perdre",
@@ -1272,7 +1272,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p05_q2",
           "type": "mcq",
-          "prompt": "Que signifie $E(X)=100$ F pour le joueur ?",
+          "prompt": "$X$ est le gain (en F) d'un joueur à un jeu de pile ou face, et son espérance vaut $E(X)=100$ F. Que signifie ce résultat pour le joueur ?",
           "options": [
             "Il gagne 100 F à chaque partie",
             "Il ne peut pas perdre",
@@ -1677,7 +1677,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p07_q2",
             "type": "mcq",
-            "prompt": "Avec la même loi, que vaut $F(x)$ sur $[300;600[$ ?",
+            "prompt": "Le gain $X$ suit la loi : $P(X=-1000)=\\dfrac18$, $P(X=100)=\\dfrac38$, $P(X=300)=\\dfrac38$, $P(X=600)=\\dfrac18$. $F$ est sa fonction de répartition, $F(x)=P(X\\leq x)$. Que vaut $F(x)$ sur $[300;600[$ ?",
             "options": [
               "$\\dfrac38$",
               "$\\dfrac12$",
@@ -1719,7 +1719,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p07_q4",
             "type": "mcq",
-            "prompt": "Avec la loi $-1000$ : $\\dfrac18$ ; $100$ : $\\dfrac38$ ; …, que vaut $F(-1000)$ ?",
+            "prompt": "Le gain $X$ suit la loi : $P(X=-1000)=\\dfrac18$, $P(X=100)=\\dfrac38$, $P(X=300)=\\dfrac38$, $P(X=600)=\\dfrac18$. $F(x)=P(X\\leq x)$ est sa fonction de répartition. Que vaut $F(-1000)$ ?",
             "options": [
               "$0$",
               "$\\dfrac12$",
@@ -1761,7 +1761,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p07_q6",
             "type": "mcq",
-            "prompt": "On trouve $n\\geq10,61$. Quelle est la valeur minimale de $n$ ?",
+            "prompt": "Pour que $1-0{,}42^n\\geq0{,}9999$, on trouve $n\\geq\\dfrac{\\ln0{,}0001}{\\ln0{,}42}\\approx10{,}61$. Quelle est la valeur minimale de l'entier $n$ ?",
             "options": [
               "$10$",
               "$10,61$",
@@ -1811,7 +1811,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p07_q2",
           "type": "mcq",
-          "prompt": "Avec la même loi, que vaut $F(x)$ sur $[300;600[$ ?",
+          "prompt": "Le gain $X$ suit la loi : $P(X=-1000)=\\dfrac18$, $P(X=100)=\\dfrac38$, $P(X=300)=\\dfrac38$, $P(X=600)=\\dfrac18$. $F$ est sa fonction de répartition, $F(x)=P(X\\leq x)$. Que vaut $F(x)$ sur $[300;600[$ ?",
           "options": [
             "$\\dfrac38$",
             "$\\dfrac12$",
@@ -1837,7 +1837,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p07_q4",
           "type": "mcq",
-          "prompt": "Avec la loi $-1000$ : $\\dfrac18$ ; $100$ : $\\dfrac38$ ; …, que vaut $F(-1000)$ ?",
+          "prompt": "Le gain $X$ suit la loi : $P(X=-1000)=\\dfrac18$, $P(X=100)=\\dfrac38$, $P(X=300)=\\dfrac38$, $P(X=600)=\\dfrac18$. $F(x)=P(X\\leq x)$ est sa fonction de répartition. Que vaut $F(-1000)$ ?",
           "options": [
             "$0$",
             "$\\dfrac12$",
@@ -1863,7 +1863,7 @@ export const MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l02_probabilite_conditionnelle_variable_aleatoire_p07_q6",
           "type": "mcq",
-          "prompt": "On trouve $n\\geq10,61$. Quelle est la valeur minimale de $n$ ?",
+          "prompt": "Pour que $1-0{,}42^n\\geq0{,}9999$, on trouve $n\\geq\\dfrac{\\ln0{,}0001}{\\ln0{,}42}\\approx10{,}61$. Quelle est la valeur minimale de l'entier $n$ ?",
           "options": [
             "$10$",
             "$10,61$",

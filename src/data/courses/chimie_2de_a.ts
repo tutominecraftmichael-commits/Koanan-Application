@@ -2793,7 +2793,7 @@ Exemple : Combustion complète du propane gazeux : C₃H₈ (gaz) + 5 O₂ (gaz)
         {
           id: 'seconde_a_chimie_ch6_p2_ex5',
           type: 'mcq',
-          prompt: "Quel volume d'ammoniac NH₃ gazeux produit cette réaction à partir de ces 15 L de diazote ?",
+          prompt: "Synthèse de l'ammoniac : N₂ + 3 H₂ → 2 NH₃ (gaz à même température et pression). Quel volume d'ammoniac NH₃ produit-on à partir de 15 L de diazote N₂ ?",
           options: [
             "30 L (car V(NH₃) = 2 × V(N₂))",
             "45 L",
@@ -3272,7 +3272,7 @@ Toute solution aqueuse est globalement neutre : la somme des charges positives e
         {
           id: 'seconde_a_chimie_ch7_p2_ex3',
           type: 'mcq',
-          prompt: "Sachant que M(NaCl) = 58,5 g/mol, quelle est la concentration massique Cm de cette solution à C = 0,34 mol/L ?",
+          prompt: "Une solution de chlorure de sodium NaCl a une concentration molaire C = 0,34 mol/L, et M(NaCl) = 58,5 g/mol. Quelle est sa concentration massique Cm ?",
           options: [
             "19,89 g/L (car 0,34 × 58,5 = 19,89)",
             "58,5 g/L",

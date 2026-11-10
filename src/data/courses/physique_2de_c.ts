@@ -6982,7 +6982,7 @@ export const physique2deCDipoleActifPointFonctionnementChapter: CurriculumChapte
         {
           "id": "seconde_c_physique_ch10_p2_ex3",
           "type": "mcq",
-          "prompt": "Dans le circuit précédent (E = 4 V, r = 1 Ω, R = 15 Ω, IF = 0,25 A), quelle est la tension UF aux bornes de la pile ?",
+          "prompt": "Une pile (E = 4 V, r = 1 Ω) alimente un résistor R = 15 Ω ; l'intensité au point de fonctionnement vaut IF = 0,25 A. Quelle est la tension UF aux bornes de la pile ?",
           "options": [
             "3,75 V",
             "4,0 V",

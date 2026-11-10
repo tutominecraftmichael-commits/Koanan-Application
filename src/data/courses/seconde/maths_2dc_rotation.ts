@@ -386,7 +386,7 @@ export const MATHS_2DC_GEO_L14_ROTATION: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_geometrie_l14_rotation_p02_q5",
             "type": "mcq",
-            "prompt": "Quelle est l'image de $K$ par $r$ ?",
+            "prompt": "$r$ est la rotation de centre $K$ et d'angle $\\dfrac{\\pi}{4}$. Quelle est l'image de $K$ par $r$ ?",
             "options": [
               "$K$",
               "Le point à $\\frac{\\pi}{4}$ de $K$",
@@ -496,7 +496,7 @@ export const MATHS_2DC_GEO_L14_ROTATION: CurriculumChapter = {
         {
           "id": "seconde_c_maths_geometrie_l14_rotation_p02_q5",
           "type": "mcq",
-          "prompt": "Quelle est l'image de $K$ par $r$ ?",
+          "prompt": "$r$ est la rotation de centre $K$ et d'angle $\\dfrac{\\pi}{4}$. Quelle est l'image de $K$ par $r$ ?",
           "options": [
             "$K$",
             "Le point à $\\frac{\\pi}{4}$ de $K$",
@@ -1405,7 +1405,7 @@ export const MATHS_2DC_GEO_L14_ROTATION: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_geometrie_l14_rotation_p06_q4",
             "type": "mcq",
-            "prompt": "Quel est le centre de cette rotation ?",
+            "prompt": "$ABC$ est un triangle équilatéral direct ; $I$ et $J$ sont les milieux de $[AB]$ et $[AC]$. Une rotation $r$ vérifie $r(B)=A$ et $r(I)=J$. Quel est le centre de cette rotation ?",
             "options": [
               "Le milieu de $[BC]$",
               "Le sommet $A$",
@@ -1523,7 +1523,7 @@ export const MATHS_2DC_GEO_L14_ROTATION: CurriculumChapter = {
         {
           "id": "seconde_c_maths_geometrie_l14_rotation_p06_q4",
           "type": "mcq",
-          "prompt": "Quel est le centre de cette rotation ?",
+          "prompt": "$ABC$ est un triangle équilatéral direct ; $I$ et $J$ sont les milieux de $[AB]$ et $[AC]$. Une rotation $r$ vérifie $r(B)=A$ et $r(I)=J$. Quel est le centre de cette rotation ?",
           "options": [
             "Le milieu de $[BC]$",
             "Le sommet $A$",

@@ -679,7 +679,7 @@ export const MATHS_TLE_D_L05_LOGARITHME_NEPERIEN: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l05_logarithme_neperien_p03_q5",
             "type": "mcq",
-            "prompt": "Quelles sont alors les solutions en $x$ ?",
+            "prompt": "Pour résoudre $(\\ln x)^2-3\\ln x-4=0$, on pose $X=\\ln x$ et on trouve $X=-1$ ou $X=4$. Quelles sont les solutions en $x$ ?",
             "options": [
               "$-1$ et $4$",
               "$e^{-1}$ et $e^4$",
@@ -789,7 +789,7 @@ export const MATHS_TLE_D_L05_LOGARITHME_NEPERIEN: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l05_logarithme_neperien_p03_q5",
           "type": "mcq",
-          "prompt": "Quelles sont alors les solutions en $x$ ?",
+          "prompt": "Pour résoudre $(\\ln x)^2-3\\ln x-4=0$, on pose $X=\\ln x$ et on trouve $X=-1$ ou $X=4$. Quelles sont les solutions en $x$ ?",
           "options": [
             "$-1$ et $4$",
             "$e^{-1}$ et $e^4$",
@@ -1710,7 +1710,7 @@ export const MATHS_TLE_D_L05_LOGARITHME_NEPERIEN: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l05_logarithme_neperien_p07_q3",
             "type": "mcq",
-            "prompt": "À partir de quel mois les recettes baissent-elles ?",
+            "prompt": "Les recettes mensuelles sont $r(x)=3x-x\\ln\\dfrac x2$ au $x$-ième mois ; $r'(x)>0$ avant $2e^2\\approx14{,}78$ et $r'(x)<0$ après. À partir de quel mois les recettes baissent-elles ?",
             "options": [
               "Le 15e mois",
               "Le 14e mois",
@@ -1773,7 +1773,7 @@ export const MATHS_TLE_D_L05_LOGARITHME_NEPERIEN: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l05_logarithme_neperien_p07_q6",
             "type": "mcq",
-            "prompt": "Combien d'essais faut-il au minimum ?",
+            "prompt": "Pour réussir au moins une fois avec une probabilité supérieure à $0{,}98$, il faut $n>\\dfrac{\\ln0{,}02}{\\ln0{,}325}\\approx3{,}48$ essais. Combien d'essais faut-il au minimum ?",
             "options": [
               "$3$",
               "$48$",
@@ -1794,7 +1794,7 @@ export const MATHS_TLE_D_L05_LOGARITHME_NEPERIEN: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l05_logarithme_neperien_p07_q7",
             "type": "mcq",
-            "prompt": "Un élève oublie de changer le sens et écrit $n<3{,}48$. Quelle est son erreur ?",
+            "prompt": "Pour résoudre $n\\ln0{,}325<\\ln0{,}02$, un élève divise par $\\ln0{,}325$ sans changer le sens et écrit $n<3{,}48$. Quelle est son erreur ?",
             "options": [
               "Il a divisé par un nombre négatif sans changer le sens",
               "Il a mal calculé $\\ln0{,}02$",
@@ -1836,7 +1836,7 @@ export const MATHS_TLE_D_L05_LOGARITHME_NEPERIEN: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l05_logarithme_neperien_p07_q3",
           "type": "mcq",
-          "prompt": "À partir de quel mois les recettes baissent-elles ?",
+          "prompt": "Les recettes mensuelles sont $r(x)=3x-x\\ln\\dfrac x2$ au $x$-ième mois ; $r'(x)>0$ avant $2e^2\\approx14{,}78$ et $r'(x)<0$ après. À partir de quel mois les recettes baissent-elles ?",
           "options": [
             "Le 15e mois",
             "Le 14e mois",
@@ -1875,7 +1875,7 @@ export const MATHS_TLE_D_L05_LOGARITHME_NEPERIEN: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l05_logarithme_neperien_p07_q6",
           "type": "mcq",
-          "prompt": "Combien d'essais faut-il au minimum ?",
+          "prompt": "Pour réussir au moins une fois avec une probabilité supérieure à $0{,}98$, il faut $n>\\dfrac{\\ln0{,}02}{\\ln0{,}325}\\approx3{,}48$ essais. Combien d'essais faut-il au minimum ?",
           "options": [
             "$3$",
             "$48$",
@@ -1888,7 +1888,7 @@ export const MATHS_TLE_D_L05_LOGARITHME_NEPERIEN: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l05_logarithme_neperien_p07_q7",
           "type": "mcq",
-          "prompt": "Un élève oublie de changer le sens et écrit $n<3{,}48$. Quelle est son erreur ?",
+          "prompt": "Pour résoudre $n\\ln0{,}325<\\ln0{,}02$, un élève divise par $\\ln0{,}325$ sans changer le sens et écrit $n<3{,}48$. Quelle est son erreur ?",
           "options": [
             "Il a divisé par un nombre négatif sans changer le sens",
             "Il a mal calculé $\\ln0{,}02$",

@@ -994,7 +994,7 @@ export const PHILO_TLE_L10_CONNAISSANCE_SCIENTIFIQUE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_connaissance_l02_connaissance_scientifique_p05_q3",
             "type": "mcq",
-            "prompt": "Que veut dire Russell par cette formule sur les mathématiques ?",
+            "prompt": "Russell (Mysticisme et logique) dit que les mathématiques sont « le domaine dans lequel on ne sait jamais de quoi l'on parle, ni si ce que l'on dit est vrai ». Que veut-il dire ?",
             "options": [
               "Qu'elles sont inutiles et stériles",
               "Que les mathématiciens se trompent toujours",
@@ -1099,7 +1099,7 @@ export const PHILO_TLE_L10_CONNAISSANCE_SCIENTIFIQUE: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_connaissance_l02_connaissance_scientifique_p05_q3",
           "type": "mcq",
-          "prompt": "Que veut dire Russell par cette formule sur les mathématiques ?",
+          "prompt": "Russell (Mysticisme et logique) dit que les mathématiques sont « le domaine dans lequel on ne sait jamais de quoi l'on parle, ni si ce que l'on dit est vrai ». Que veut-il dire ?",
           "options": [
             "Qu'elles sont inutiles et stériles",
             "Que les mathématiciens se trompent toujours",

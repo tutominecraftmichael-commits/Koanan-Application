@@ -965,7 +965,7 @@ export const MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           "exercise": {
             "id": "premiere_d_maths_numerique_l11_systemes_equations_lineaires_p04_q7",
             "type": "mcq",
-            "prompt": "Le triplet $(-3;-1;-\\dfrac{11}{4})$ est-il solution du système précédent ?",
+            "prompt": "Le système $\\begin{cases}2x+y-4z=4\\\\3x+2y=-5\\\\5x+8y=1\\end{cases}$ a pour solution $(-3;2;-2)$. Le triplet $(-3;-1;-\\dfrac{11}{4})$ en est-il aussi solution ?",
             "options": [
               "Oui",
               "Non : il ne vérifie pas $3x+2y=-5$",
@@ -1059,7 +1059,7 @@ export const MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
         {
           "id": "premiere_d_maths_numerique_l11_systemes_equations_lineaires_p04_q7",
           "type": "mcq",
-          "prompt": "Le triplet $(-3;-1;-\\dfrac{11}{4})$ est-il solution du système précédent ?",
+          "prompt": "Le système $\\begin{cases}2x+y-4z=4\\\\3x+2y=-5\\\\5x+8y=1\\end{cases}$ a pour solution $(-3;2;-2)$. Le triplet $(-3;-1;-\\dfrac{11}{4})$ en est-il aussi solution ?",
           "options": [
             "Oui",
             "Non : il ne vérifie pas $3x+2y=-5$",
@@ -1365,7 +1365,7 @@ export const MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           "exercise": {
             "id": "premiere_d_maths_numerique_l11_systemes_equations_lineaires_p06_q1",
             "type": "mcq",
-            "prompt": "Quelle équation traduit cette phrase ?",
+            "prompt": "Un fermier a $x$ canards (2 pattes), $y$ lapins (4 pattes) et $z$ dromadaires (1 bosse). Il compte 130 pattes de canards et de lapins et bosses de dromadaires. Quelle équation traduit cette phrase ?",
             "options": [
               "$x+y+z=130$",
               "$2x+4y+2z=130$",
@@ -1491,7 +1491,7 @@ export const MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
           "exercise": {
             "id": "premiere_d_maths_numerique_l11_systemes_equations_lineaires_p06_q7",
             "type": "mcq",
-            "prompt": "Pour le nombre de trois chiffres, on trouve $x=12$. Que faut-il en penser ?",
+            "prompt": "Pour trouver un nombre de trois chiffres ($x$ unités, $y$ dizaines, $z$ centaines), un élève trouve $x=12$. Que faut-il en penser ?",
             "options": [
               "C'est possible",
               "Il y a une erreur : un chiffre est entre $0$ et $9$",
@@ -1507,7 +1507,7 @@ export const MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
         {
           "id": "premiere_d_maths_numerique_l11_systemes_equations_lineaires_p06_q1",
           "type": "mcq",
-          "prompt": "Quelle équation traduit cette phrase ?",
+          "prompt": "Un fermier a $x$ canards (2 pattes), $y$ lapins (4 pattes) et $z$ dromadaires (1 bosse). Il compte 130 pattes de canards et de lapins et bosses de dromadaires. Quelle équation traduit cette phrase ?",
           "options": [
             "$x+y+z=130$",
             "$2x+4y+2z=130$",
@@ -1585,7 +1585,7 @@ export const MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES: CurriculumChapter = {
         {
           "id": "premiere_d_maths_numerique_l11_systemes_equations_lineaires_p06_q7",
           "type": "mcq",
-          "prompt": "Pour le nombre de trois chiffres, on trouve $x=12$. Que faut-il en penser ?",
+          "prompt": "Pour trouver un nombre de trois chiffres ($x$ unités, $y$ dizaines, $z$ centaines), un élève trouve $x=12$. Que faut-il en penser ?",
           "options": [
             "C'est possible",
             "Il y a une erreur : un chiffre est entre $0$ et $9$",

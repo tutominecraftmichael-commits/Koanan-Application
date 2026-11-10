@@ -1126,7 +1126,7 @@ export const MATHS_1RE_L03_GENERALITES_FONCTIONS: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_maths_numerique_l03_generalites_fonctions_p05_q3",
             "type": "mcq",
-            "prompt": "Pour la même fonction $(x-2)^2+1$, quelle est l'expression de $f(2-h)$ ?",
+            "prompt": "Pour $f(x)=(x-2)^2+1$, quelle est l'expression de $f(2-h)$ ?",
             "options": [
               "$h^2+1$",
               "$-h^2+1$",
@@ -1252,7 +1252,7 @@ export const MATHS_1RE_L03_GENERALITES_FONCTIONS: CurriculumChapter = {
         {
           "id": "premiere_a1_maths_numerique_l03_generalites_fonctions_p05_q3",
           "type": "mcq",
-          "prompt": "Pour la même fonction $(x-2)^2+1$, quelle est l'expression de $f(2-h)$ ?",
+          "prompt": "Pour $f(x)=(x-2)^2+1$, quelle est l'expression de $f(2-h)$ ?",
           "options": [
             "$h^2+1$",
             "$-h^2+1$",

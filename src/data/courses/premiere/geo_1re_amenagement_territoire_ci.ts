@@ -1345,7 +1345,7 @@ export const GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t3_l02_amenagement_territoire_ci_p06_q1",
             "type": "mcq",
-            "prompt": "Quelle limite le document de 1997 reproche-t-il aux interventions de l'ARSO et de l'AVB ?",
+            "prompt": "Un document de 1997 fait le bilan des sociétés de développement régional ivoiriennes, l'ARSO (Sud-Ouest) et l'AVB (vallée du Bandama). Quelle limite leur reproche-t-il ?",
             "options": [
               "Des effets ponctuels et mal répartis",
               "Des effets trop répartis",
@@ -1487,7 +1487,7 @@ export const GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t3_l02_amenagement_territoire_ci_p06_q1",
           "type": "mcq",
-          "prompt": "Quelle limite le document de 1997 reproche-t-il aux interventions de l'ARSO et de l'AVB ?",
+          "prompt": "Un document de 1997 fait le bilan des sociétés de développement régional ivoiriennes, l'ARSO (Sud-Ouest) et l'AVB (vallée du Bandama). Quelle limite leur reproche-t-il ?",
           "options": [
             "Des effets ponctuels et mal répartis",
             "Des effets trop répartis",

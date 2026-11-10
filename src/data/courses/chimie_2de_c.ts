@@ -424,7 +424,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
             {
                 "id": "seconde_c_chimie_ch1_p2_ex3",
                 "type": "mcq",
-                "prompt": "Dans cette réaction, sous quelle forme se retrouve l'élément cuivre à la fin ?",
+                "prompt": "On attaque du cuivre métal par de l'acide nitrique concentré : des vapeurs rousses de NO₂ se dégagent et la solution devient bleue. Sous quelle forme se retrouve l'élément cuivre à la fin ?",
                 "options": [
                     "À l'état combiné sous forme d'ions Cu²⁺ en solution",
                     "À l'état de corps simple solide Cu",
@@ -437,7 +437,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
             {
                 "id": "seconde_c_chimie_ch1_p2_ex4",
                 "type": "mcq",
-                "prompt": "L'élément cuivre a-t-il disparu au cours de cette réaction ?",
+                "prompt": "Lors de l'attaque du cuivre métal par l'acide nitrique concentré, le métal disparaît et la solution devient bleue (ions Cu²⁺). L'élément cuivre a-t-il disparu ?",
                 "options": [
                     "Non, il s'est conservé sous forme d'ions Cu²⁺",
                     "Oui, le cuivre métal a disparu donc l'élément cuivre est détruit",
@@ -450,7 +450,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
             {
                 "id": "seconde_c_chimie_ch1_p2_ex5",
                 "type": "mcq",
-                "prompt": "Pourquoi cette expérience doit-elle impérativement être réalisée sous une hotte aspirante ?",
+                "prompt": "L'attaque du cuivre par l'acide nitrique concentré dégage des vapeurs rousses de dioxyde d'azote NO₂. Pourquoi cette expérience doit-elle être réalisée sous une hotte aspirante ?",
                 "options": [
                     "À cause du dégagement de dioxyde d'azote NO₂, un gaz suffocant et toxique",
                     "Pour éviter que la solution bleue ne s'évapore",
@@ -578,7 +578,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
                 "exercise": {
                     "id": "seconde_c_chimie_ch1_p2_ex3",
                     "type": "mcq",
-                    "prompt": "Dans cette réaction, sous quelle forme se retrouve l'élément cuivre à la fin ?",
+                    "prompt": "On attaque du cuivre métal par de l'acide nitrique concentré : des vapeurs rousses de NO₂ se dégagent et la solution devient bleue. Sous quelle forme se retrouve l'élément cuivre à la fin ?",
                     "options": [
                         "À l'état combiné sous forme d'ions Cu²⁺ en solution",
                         "À l'état de corps simple solide Cu",
@@ -605,7 +605,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
                 "exercise": {
                     "id": "seconde_c_chimie_ch1_p2_ex4",
                     "type": "mcq",
-                    "prompt": "L'élément cuivre a-t-il disparu au cours de cette réaction ?",
+                    "prompt": "Lors de l'attaque du cuivre métal par l'acide nitrique concentré, le métal disparaît et la solution devient bleue (ions Cu²⁺). L'élément cuivre a-t-il disparu ?",
                     "options": [
                         "Non, il s'est conservé sous forme d'ions Cu²⁺",
                         "Oui, le cuivre métal a disparu donc l'élément cuivre est détruit",
@@ -632,7 +632,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
                 "exercise": {
                     "id": "seconde_c_chimie_ch1_p2_ex5",
                     "type": "mcq",
-                    "prompt": "Pourquoi cette expérience doit-elle impérativement être réalisée sous une hotte aspirante ?",
+                    "prompt": "L'attaque du cuivre par l'acide nitrique concentré dégage des vapeurs rousses de dioxyde d'azote NO₂. Pourquoi cette expérience doit-elle être réalisée sous une hotte aspirante ?",
                     "options": [
                         "À cause du dégagement de dioxyde d'azote NO₂, un gaz suffocant et toxique",
                         "Pour éviter que la solution bleue ne s'évapore",
@@ -1501,7 +1501,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
             {
                 "id": "seconde_c_chimie_ch1_p5_ex4",
                 "type": "mcq",
-                "prompt": "Sous quelle forme retrouve-t-on l'élément cuivre à la fin de cette réaction ?",
+                "prompt": "On chauffe un mélange de poudre noire d'oxyde de cuivre CuO et de poudre de carbone C : il se forme un métal rouge et du dioxyde de carbone. Sous quelle forme retrouve-t-on l'élément cuivre à la fin ?",
                 "options": [
                     "À l'état libre sous forme de métal cuivre Cu rouge",
                     "Sous forme d'ions Cu²⁺",
@@ -1514,7 +1514,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
             {
                 "id": "seconde_c_chimie_ch1_p5_ex5",
                 "type": "mcq",
-                "prompt": "Quel rôle joue le carbone C dans cette réaction d'oxydoréduction ?",
+                "prompt": "On chauffe un mélange d'oxyde de cuivre CuO et de carbone C : il se forme du cuivre métal et du dioxyde de carbone CO₂. Quel rôle joue le carbone dans cette réaction d'oxydoréduction ?",
                 "options": [
                     "Le rôle de réducteur (il s'oxyde en CO₂ en captant l'oxygène)",
                     "Le rôle d'oxydant",
@@ -1553,7 +1553,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
             {
                 "id": "seconde_c_chimie_ch1_p5_ex8",
                 "type": "mcq",
-                "prompt": "Quelle grande conclusion fondamentale sur la matière cette série d'expériences permet-elle d'établir ?",
+                "prompt": "Dans le « cycle du cuivre », le cuivre métal passe successivement par plusieurs formes (ions Cu²⁺, hydroxyde, oxyde CuO) puis redevient du cuivre métal. Quelle conclusion sur la matière ces expériences permettent-elles d'établir ?",
                 "options": [
                     "L'élément chimique est indestructible et se conserve intégralement à travers toutes les réactions",
                     "La matière peut être anéantie par la chaleur",
@@ -1669,7 +1669,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
                 "exercise": {
                     "id": "seconde_c_chimie_ch1_p5_ex4",
                     "type": "mcq",
-                    "prompt": "Sous quelle forme retrouve-t-on l'élément cuivre à la fin de cette réaction ?",
+                    "prompt": "On chauffe un mélange de poudre noire d'oxyde de cuivre CuO et de poudre de carbone C : il se forme un métal rouge et du dioxyde de carbone. Sous quelle forme retrouve-t-on l'élément cuivre à la fin ?",
                     "options": [
                         "À l'état libre sous forme de métal cuivre Cu rouge",
                         "Sous forme d'ions Cu²⁺",
@@ -1696,7 +1696,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
                 "exercise": {
                     "id": "seconde_c_chimie_ch1_p5_ex5",
                     "type": "mcq",
-                    "prompt": "Quel rôle joue le carbone C dans cette réaction d'oxydoréduction ?",
+                    "prompt": "On chauffe un mélange d'oxyde de cuivre CuO et de carbone C : il se forme du cuivre métal et du dioxyde de carbone CO₂. Quel rôle joue le carbone dans cette réaction d'oxydoréduction ?",
                     "options": [
                         "Le rôle de réducteur (il s'oxyde en CO₂ en captant l'oxygène)",
                         "Le rôle d'oxydant",
@@ -1777,7 +1777,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
                 "exercise": {
                     "id": "seconde_c_chimie_ch1_p5_ex8",
                     "type": "mcq",
-                    "prompt": "Quelle grande conclusion fondamentale sur la matière cette série d'expériences permet-elle d'établir ?",
+                    "prompt": "Dans le « cycle du cuivre », le cuivre métal passe successivement par plusieurs formes (ions Cu²⁺, hydroxyde, oxyde CuO) puis redevient du cuivre métal. Quelle conclusion sur la matière ces expériences permettent-elles d'établir ?",
                     "options": [
                         "L'élément chimique est indestructible et se conserve intégralement à travers toutes les réactions",
                         "La matière peut être anéantie par la chaleur",
@@ -1856,7 +1856,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
             {
                 "id": "seconde_c_chimie_ch1_p6_ex4",
                 "type": "mcq",
-                "prompt": "Quelle équation ionique décrit rigoureusement cette réaction de déplacement ?",
+                "prompt": "Un clou de fer (Fe) plongé dans une solution bleue de sulfate de cuivre (Cu²⁺ + SO₄²⁻) se couvre d'un dépôt rouge de cuivre, et la solution se décolore. Quelle équation ionique décrit cette réaction ?",
                 "options": [
                     "Fe + Cu²⁺ -> Fe²⁺ + Cu",
                     "Fe²⁺ + Cu -> Fe + Cu²⁺",
@@ -2024,7 +2024,7 @@ export const chimie2deCElementChimiqueChapter: CurriculumChapter = {
                 "exercise": {
                     "id": "seconde_c_chimie_ch1_p6_ex4",
                     "type": "mcq",
-                    "prompt": "Quelle équation ionique décrit rigoureusement cette réaction de déplacement ?",
+                    "prompt": "Un clou de fer (Fe) plongé dans une solution bleue de sulfate de cuivre (Cu²⁺ + SO₄²⁻) se couvre d'un dépôt rouge de cuivre, et la solution se décolore. Quelle équation ionique décrit cette réaction ?",
                     "options": [
                         "Fe + Cu²⁺ -> Fe²⁺ + Cu",
                         "Fe²⁺ + Cu -> Fe + Cu²⁺",

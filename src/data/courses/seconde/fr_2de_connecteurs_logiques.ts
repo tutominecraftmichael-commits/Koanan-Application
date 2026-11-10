@@ -627,7 +627,7 @@ export const FR_2DE_PL_L02_CONNECTEURS_LOGIQUES: CurriculumChapter = {
           "exercise": {
             "id": "seconde_a_francais_pl_l02_connecteurs_logiques_p03_q4",
             "type": "mcq",
-            "prompt": "Quel couple de connecteurs marque la concession dans cet extrait de « La télévision » ?",
+            "prompt": "« Certes, on peut lui reprocher de diffuser des spectacles médiocres, mais il appartient au spectateur de choisir ses programmes. » (G. Niquet, « La télévision »). Quel couple de connecteurs marque la concession dans cette phrase ?",
             "options": [
               "« Et d'abord... enfin »",
               "« Par ailleurs... ainsi »",
@@ -745,7 +745,7 @@ export const FR_2DE_PL_L02_CONNECTEURS_LOGIQUES: CurriculumChapter = {
         {
           "id": "seconde_a_francais_pl_l02_connecteurs_logiques_p03_q4",
           "type": "mcq",
-          "prompt": "Quel couple de connecteurs marque la concession dans cet extrait de « La télévision » ?",
+          "prompt": "« Certes, on peut lui reprocher de diffuser des spectacles médiocres, mais il appartient au spectateur de choisir ses programmes. » (G. Niquet, « La télévision »). Quel couple de connecteurs marque la concession dans cette phrase ?",
           "options": [
             "« Et d'abord... enfin »",
             "« Par ailleurs... ainsi »",

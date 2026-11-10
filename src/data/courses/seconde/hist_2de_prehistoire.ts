@@ -671,7 +671,7 @@ export const HIST_2DE_T2_L01_PREHISTOIRE: CurriculumChapter = {
           "exercise": {
             "id": "seconde_a_hg_histoire_t2_l01_prehistoire_p03_q6",
             "type": "mcq",
-            "prompt": "Que montre l'exemple du néolithique en Côte d'Ivoire ?",
+            "prompt": "Le néolithique commence vers −8 000 ans, mais en Côte d'Ivoire il dure jusque vers −1 500 ans. Que montre cet exemple ?",
             "options": [
               "Que la préhistoire n'a jamais existé en Côte d'Ivoire",
               "Que les périodes de la préhistoire ne finissent pas partout à la même date",
@@ -773,7 +773,7 @@ export const HIST_2DE_T2_L01_PREHISTOIRE: CurriculumChapter = {
         {
           "id": "seconde_a_hg_histoire_t2_l01_prehistoire_p03_q6",
           "type": "mcq",
-          "prompt": "Que montre l'exemple du néolithique en Côte d'Ivoire ?",
+          "prompt": "Le néolithique commence vers −8 000 ans, mais en Côte d'Ivoire il dure jusque vers −1 500 ans. Que montre cet exemple ?",
           "options": [
             "Que la préhistoire n'a jamais existé en Côte d'Ivoire",
             "Que les périodes de la préhistoire ne finissent pas partout à la même date",

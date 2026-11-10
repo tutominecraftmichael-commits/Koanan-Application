@@ -69,7 +69,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p01_q2",
             "type": "mcq",
-            "prompt": "Dans le libellé sur Nafi, quelle est la consigne ?",
+            "prompt": "Libellé : « Faites un commentaire composé de ce texte. Étudiez d'abord la désillusion de Nafi après son mariage puis, sa nostalgie du pays natal. » Quelle est la consigne ?",
             "options": [
               "« la nostalgie du pays natal »",
               "« la désillusion de Nafi après son mariage »",
@@ -111,7 +111,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p01_q4",
             "type": "mcq",
-            "prompt": "Pour le poème « Maturité », quel centre d'intérêt traite-t-on en premier ?",
+            "prompt": "Libellé sur le poème « Maturité » de Denise Jallais : « Étudiez d'abord les différents aspects du bonheur de l'enfance, puis les réalités de l'âge adulte. » Quel centre d'intérêt traite-t-on en premier ?",
             "options": [
               "Les réalités de l'âge adulte",
               "La vie de Denise Jallais",
@@ -132,7 +132,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p01_q5",
             "type": "mcq",
-            "prompt": "Quel rapport logique unit les deux centres d'intérêt du texte de Nafi ?",
+            "prompt": "Dans « Lettres de France » (Sembène Ousmane), Nafi, déçue par sa vie de femme mariée en France, regrette son pays natal. Le libellé demande d'étudier sa désillusion puis sa nostalgie. Quel rapport logique unit ces deux centres d'intérêt ?",
             "options": [
               "Un rapport de but",
               "Un rapport de comparaison",
@@ -153,7 +153,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p01_q6",
             "type": "mcq",
-            "prompt": "Quel rapport logique unit le bonheur de l'enfance et les réalités de l'âge adulte dans « Maturité » ?",
+            "prompt": "Dans le poème « Maturité », Denise Jallais évoque le bonheur insouciant de l'enfance puis les dures réalités de l'âge adulte. Quel rapport logique unit ces deux centres d'intérêt ?",
             "options": [
               "L'opposition",
               "La cause",
@@ -203,7 +203,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p01_q2",
           "type": "mcq",
-          "prompt": "Dans le libellé sur Nafi, quelle est la consigne ?",
+          "prompt": "Libellé : « Faites un commentaire composé de ce texte. Étudiez d'abord la désillusion de Nafi après son mariage puis, sa nostalgie du pays natal. » Quelle est la consigne ?",
           "options": [
             "« la nostalgie du pays natal »",
             "« la désillusion de Nafi après son mariage »",
@@ -229,7 +229,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p01_q4",
           "type": "mcq",
-          "prompt": "Pour le poème « Maturité », quel centre d'intérêt traite-t-on en premier ?",
+          "prompt": "Libellé sur le poème « Maturité » de Denise Jallais : « Étudiez d'abord les différents aspects du bonheur de l'enfance, puis les réalités de l'âge adulte. » Quel centre d'intérêt traite-t-on en premier ?",
           "options": [
             "Les réalités de l'âge adulte",
             "La vie de Denise Jallais",
@@ -242,7 +242,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p01_q5",
           "type": "mcq",
-          "prompt": "Quel rapport logique unit les deux centres d'intérêt du texte de Nafi ?",
+          "prompt": "Dans « Lettres de France » (Sembène Ousmane), Nafi, déçue par sa vie de femme mariée en France, regrette son pays natal. Le libellé demande d'étudier sa désillusion puis sa nostalgie. Quel rapport logique unit ces deux centres d'intérêt ?",
           "options": [
             "Un rapport de but",
             "Un rapport de comparaison",
@@ -255,7 +255,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p01_q6",
           "type": "mcq",
-          "prompt": "Quel rapport logique unit le bonheur de l'enfance et les réalités de l'âge adulte dans « Maturité » ?",
+          "prompt": "Dans le poème « Maturité », Denise Jallais évoque le bonheur insouciant de l'enfance puis les dures réalités de l'âge adulte. Quel rapport logique unit ces deux centres d'intérêt ?",
           "options": [
             "L'opposition",
             "La cause",
@@ -308,7 +308,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q1",
             "type": "mcq",
-            "prompt": "Quel est le thème du texte « Lettres de France » ?",
+            "prompt": "Dans « Lettres de France » (Sembène Ousmane), Nafi, partie en France après son mariage, est déçue par sa nouvelle vie et regrette son pays natal. Quel est le thème de ce texte ?",
             "options": [
               "La désillusion de l'ailleurs meilleur et la nostalgie du pays",
               "La beauté de Paris la nuit",
@@ -329,7 +329,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q2",
             "type": "mcq",
-            "prompt": "Quelle est la nature du texte « Maturité » de Denise Jallais ?",
+            "prompt": "« Maturité » de Denise Jallais est un texte écrit en vers, en strophes, qui évoque l'enfance et l'âge adulte. Quelle est la nature de ce texte ?",
             "options": [
               "Une lettre",
               "Un poème",
@@ -350,7 +350,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q3",
             "type": "mcq",
-            "prompt": "Quelle tonalité domine dans la lettre de Nafi ?",
+            "prompt": "Dans sa lettre (« Lettres de France »), Nafi écrit : « Je suis seule, si seule, que les cadavres dans leur tombe me font envie. » Quelle tonalité domine ?",
             "options": [
               "Comique",
               "Épique",
@@ -371,7 +371,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q4",
             "type": "mcq",
-            "prompt": "Quelle est l'idée générale de « Maturité » ?",
+            "prompt": "Dans le poème « Maturité », Denise Jallais évoque d'abord le bonheur insouciant de son enfance, puis les difficultés qu'elle découvre en devenant adulte. Quelle est l'idée générale du poème ?",
             "options": [
               "La poétesse décrit le jardin de sa grand-mère",
               "La poétesse raconte une fête de Pâques",
@@ -392,7 +392,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q5",
             "type": "mcq",
-            "prompt": "Que signifie le centre d'intérêt « la désillusion de Nafi après son mariage » ?",
+            "prompt": "Dans « Lettres de France », Nafi a épousé un homme qu'elle n'avait vu qu'en photo ; arrivée en France, elle découvre une vie qui la déçoit. Que signifie le centre d'intérêt « la désillusion de Nafi après son mariage » ?",
             "options": [
               "Nafi est heureuse d'être en France",
               "Nafi a été trompée par un mirage et découvre une réalité décevante",
@@ -413,7 +413,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q6",
             "type": "mcq",
-            "prompt": "Dans « Maturité », que désignent « les réalités de l'âge adulte » ?",
+            "prompt": "Le poème « Maturité » de Denise Jallais oppose le bonheur insouciant de l'enfance aux « réalités de l'âge adulte ». Que désignent ces réalités ?",
             "options": [
               "Les difficultés de l'existence au moment de la prise de conscience",
               "Les jeux de l'enfance",
@@ -450,7 +450,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q1",
           "type": "mcq",
-          "prompt": "Quel est le thème du texte « Lettres de France » ?",
+          "prompt": "Dans « Lettres de France » (Sembène Ousmane), Nafi, partie en France après son mariage, est déçue par sa nouvelle vie et regrette son pays natal. Quel est le thème de ce texte ?",
           "options": [
             "La désillusion de l'ailleurs meilleur et la nostalgie du pays",
             "La beauté de Paris la nuit",
@@ -463,7 +463,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q2",
           "type": "mcq",
-          "prompt": "Quelle est la nature du texte « Maturité » de Denise Jallais ?",
+          "prompt": "« Maturité » de Denise Jallais est un texte écrit en vers, en strophes, qui évoque l'enfance et l'âge adulte. Quelle est la nature de ce texte ?",
           "options": [
             "Une lettre",
             "Un poème",
@@ -476,7 +476,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q3",
           "type": "mcq",
-          "prompt": "Quelle tonalité domine dans la lettre de Nafi ?",
+          "prompt": "Dans sa lettre (« Lettres de France »), Nafi écrit : « Je suis seule, si seule, que les cadavres dans leur tombe me font envie. » Quelle tonalité domine ?",
           "options": [
             "Comique",
             "Épique",
@@ -489,7 +489,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q4",
           "type": "mcq",
-          "prompt": "Quelle est l'idée générale de « Maturité » ?",
+          "prompt": "Dans le poème « Maturité », Denise Jallais évoque d'abord le bonheur insouciant de son enfance, puis les difficultés qu'elle découvre en devenant adulte. Quelle est l'idée générale du poème ?",
           "options": [
             "La poétesse décrit le jardin de sa grand-mère",
             "La poétesse raconte une fête de Pâques",
@@ -502,7 +502,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q5",
           "type": "mcq",
-          "prompt": "Que signifie le centre d'intérêt « la désillusion de Nafi après son mariage » ?",
+          "prompt": "Dans « Lettres de France », Nafi a épousé un homme qu'elle n'avait vu qu'en photo ; arrivée en France, elle découvre une vie qui la déçoit. Que signifie le centre d'intérêt « la désillusion de Nafi après son mariage » ?",
           "options": [
             "Nafi est heureuse d'être en France",
             "Nafi a été trompée par un mirage et découvre une réalité décevante",
@@ -515,7 +515,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p02_q6",
           "type": "mcq",
-          "prompt": "Dans « Maturité », que désignent « les réalités de l'âge adulte » ?",
+          "prompt": "Le poème « Maturité » de Denise Jallais oppose le bonheur insouciant de l'enfance aux « réalités de l'âge adulte ». Que désignent ces réalités ?",
           "options": [
             "Les difficultés de l'existence au moment de la prise de conscience",
             "Les jeux de l'enfance",
@@ -590,7 +590,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p03_q2",
             "type": "mcq",
-            "prompt": "Dans quelle colonne écrit-on « hyperbole et répétition de l'adjectif seule » ?",
+            "prompt": "Le tableau de préparation d'un commentaire a quatre colonnes : sous-centres, indices textuels, analyse, interprétation. Dans quelle colonne écrit-on « hyperbole et répétition de l'adjectif seule » ?",
             "options": [
               "Interprétation",
               "Analyse",
@@ -632,7 +632,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p03_q4",
             "type": "mcq",
-            "prompt": "Quelle interprétation convient à « Je suis seule, si seule, que les cadavres dans leur tombe me font envie » ?",
+            "prompt": "Dans « Lettres de France », Nafi, loin de son pays, écrit : « Je suis seule, si seule, que les cadavres dans leur tombe me font envie. » Quelle interprétation convient ?",
             "options": [
               "Nafi aime visiter les cimetières",
               "Nafi a beaucoup d'amis à Paris",
@@ -653,7 +653,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p03_q5",
             "type": "mcq",
-            "prompt": "Quel indice illustre le mieux le sous-centre « la déception » ?",
+            "prompt": "Dans « Lettres de France », Nafi regrette son mariage et sa nouvelle vie en France. Quel indice illustre le mieux le sous-centre « la déception » ?",
             "options": [
               "« les notes de kora »",
               "« Dieu que je regrette de m'être mariée » (l. 1)",
@@ -674,7 +674,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p03_q6",
             "type": "mcq",
-            "prompt": "« Ces femmes qui vont au marché en groupes joyeux » illustre quel sous-centre ?",
+            "prompt": "Dans « Lettres de France », Nafi se souvient de son pays : le soleil, la kora, « ces femmes qui vont au marché en groupes joyeux ». Cette dernière citation illustre quel sous-centre ?",
             "options": [
               "La prise de conscience du leurre",
               "La solitude et la tristesse",
@@ -695,7 +695,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p03_q7",
             "type": "mcq",
-            "prompt": "Laquelle de ces phrases est une paraphrase, et non une analyse ?",
+            "prompt": "À propos de la lettre de Nafi (« Lettres de France »), laquelle de ces phrases est une paraphrase, et non une analyse ?",
             "options": [
               "Nafi dit qu'elle est seule et que tout est fade.",
               "L'hyperbole « les cadavres […] me font envie » traduit sa détresse.",
@@ -724,7 +724,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p03_q2",
           "type": "mcq",
-          "prompt": "Dans quelle colonne écrit-on « hyperbole et répétition de l'adjectif seule » ?",
+          "prompt": "Le tableau de préparation d'un commentaire a quatre colonnes : sous-centres, indices textuels, analyse, interprétation. Dans quelle colonne écrit-on « hyperbole et répétition de l'adjectif seule » ?",
           "options": [
             "Interprétation",
             "Analyse",
@@ -750,7 +750,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p03_q4",
           "type": "mcq",
-          "prompt": "Quelle interprétation convient à « Je suis seule, si seule, que les cadavres dans leur tombe me font envie » ?",
+          "prompt": "Dans « Lettres de France », Nafi, loin de son pays, écrit : « Je suis seule, si seule, que les cadavres dans leur tombe me font envie. » Quelle interprétation convient ?",
           "options": [
             "Nafi aime visiter les cimetières",
             "Nafi a beaucoup d'amis à Paris",
@@ -763,7 +763,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p03_q5",
           "type": "mcq",
-          "prompt": "Quel indice illustre le mieux le sous-centre « la déception » ?",
+          "prompt": "Dans « Lettres de France », Nafi regrette son mariage et sa nouvelle vie en France. Quel indice illustre le mieux le sous-centre « la déception » ?",
           "options": [
             "« les notes de kora »",
             "« Dieu que je regrette de m'être mariée » (l. 1)",
@@ -776,7 +776,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p03_q6",
           "type": "mcq",
-          "prompt": "« Ces femmes qui vont au marché en groupes joyeux » illustre quel sous-centre ?",
+          "prompt": "Dans « Lettres de France », Nafi se souvient de son pays : le soleil, la kora, « ces femmes qui vont au marché en groupes joyeux ». Cette dernière citation illustre quel sous-centre ?",
           "options": [
             "La prise de conscience du leurre",
             "La solitude et la tristesse",
@@ -789,7 +789,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p03_q7",
           "type": "mcq",
-          "prompt": "Laquelle de ces phrases est une paraphrase, et non une analyse ?",
+          "prompt": "À propos de la lettre de Nafi (« Lettres de France »), laquelle de ces phrases est une paraphrase, et non une analyse ?",
           "options": [
             "Nafi dit qu'elle est seule et que tout est fade.",
             "L'hyperbole « les cadavres […] me font envie » traduit sa détresse.",
@@ -893,7 +893,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p04_q4",
             "type": "mcq",
-            "prompt": "Dans ce paragraphe, quelle partie est l'interprétation ?",
+            "prompt": "Paragraphe de commentaire : « Par conséquent, Nafi sombre dans la solitude. L'hyperbole « Je suis seule, si seule, que les cadavres dans leur tombe me font envie » (l. 17) traduit que sa vie est devenue un enfer. » Quelle partie est l'interprétation ?",
             "options": [
               "« sa vie est devenue un enfer »",
               "« L'hyperbole »",
@@ -1011,7 +1011,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p04_q4",
           "type": "mcq",
-          "prompt": "Dans ce paragraphe, quelle partie est l'interprétation ?",
+          "prompt": "Paragraphe de commentaire : « Par conséquent, Nafi sombre dans la solitude. L'hyperbole « Je suis seule, si seule, que les cadavres dans leur tombe me font envie » (l. 17) traduit que sa vie est devenue un enfer. » Quelle partie est l'interprétation ?",
           "options": [
             "« sa vie est devenue un enfer »",
             "« L'hyperbole »",
@@ -1113,7 +1113,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p05_q2",
             "type": "mcq",
-            "prompt": "Laquelle est une bonne généralité pour le texte de Nafi ?",
+            "prompt": "« Lettres de France » (Sembène Ousmane) : Nafi, partie en France après son mariage, est déçue et regrette son pays natal. Laquelle est une bonne généralité pour introduire ce texte ?",
             "options": [
               "La recherche d'un ailleurs meilleur conduit souvent au désenchantement.",
               "Nafi est une jeune femme mariée.",
@@ -1176,7 +1176,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p05_q5",
             "type": "mcq",
-            "prompt": "Quelle phrase est une bonne annonce du plan pour « Maturité » ?",
+            "prompt": "Le poème « Maturité » de Denise Jallais a deux centres d'intérêt : le bonheur de l'enfance, puis les réalités de l'âge adulte. Quelle phrase est une bonne annonce du plan ?",
             "options": [
               "Nous montrerons comment la poétesse présente le bonheur de l'enfance, puis les réalités de l'âge adulte.",
               "I. L'enfance ; II. L'âge adulte.",
@@ -1197,7 +1197,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p05_q6",
             "type": "mcq",
-            "prompt": "Sur la copie, comment écrit-on le titre du recueil Voltaïque ?",
+            "prompt": "Le texte « Lettres de France » est extrait du recueil Voltaïque (1962) de Sembène Ousmane. Sur une copie manuscrite, comment écrit-on le titre du recueil Voltaïque ?",
             "options": [
               "Entre guillemets",
               "En majuscules seulement",
@@ -1247,7 +1247,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p05_q2",
           "type": "mcq",
-          "prompt": "Laquelle est une bonne généralité pour le texte de Nafi ?",
+          "prompt": "« Lettres de France » (Sembène Ousmane) : Nafi, partie en France après son mariage, est déçue et regrette son pays natal. Laquelle est une bonne généralité pour introduire ce texte ?",
           "options": [
             "La recherche d'un ailleurs meilleur conduit souvent au désenchantement.",
             "Nafi est une jeune femme mariée.",
@@ -1286,7 +1286,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p05_q5",
           "type": "mcq",
-          "prompt": "Quelle phrase est une bonne annonce du plan pour « Maturité » ?",
+          "prompt": "Le poème « Maturité » de Denise Jallais a deux centres d'intérêt : le bonheur de l'enfance, puis les réalités de l'âge adulte. Quelle phrase est une bonne annonce du plan ?",
           "options": [
             "Nous montrerons comment la poétesse présente le bonheur de l'enfance, puis les réalités de l'âge adulte.",
             "I. L'enfance ; II. L'âge adulte.",
@@ -1299,7 +1299,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p05_q6",
           "type": "mcq",
-          "prompt": "Sur la copie, comment écrit-on le titre du recueil Voltaïque ?",
+          "prompt": "Le texte « Lettres de France » est extrait du recueil Voltaïque (1962) de Sembène Ousmane. Sur une copie manuscrite, comment écrit-on le titre du recueil Voltaïque ?",
           "options": [
             "Entre guillemets",
             "En majuscules seulement",
@@ -1374,7 +1374,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p06_q2",
             "type": "mcq",
-            "prompt": "Quelle phrase est un bilan pour le texte de Nafi ?",
+            "prompt": "Le commentaire de « Lettres de France » a étudié la désillusion de Nafi après son mariage, puis sa nostalgie du pays natal. Quelle phrase est un bon bilan ?",
             "options": [
               "En somme, Nafi, désillusionnée après son mariage, vit un véritable enfer et regrette son pays natal.",
               "Sembène Ousmane est un écrivain sénégalais.",
@@ -1437,7 +1437,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_francais_ee_l02_commentaire_compose_p06_q5",
             "type": "mcq",
-            "prompt": "Pourquoi rapprocher « Lettres de France » de Sous le voile de la mariée ?",
+            "prompt": "Dans « Lettres de France », Nafi est déçue après son mariage ; dans Sous le voile de la mariée de Mathurin Goli Bi Irié, le héros découvre après son mariage le vrai caractère de sa femme. Pourquoi rapprocher ces deux œuvres ?",
             "options": [
               "Parce que les deux se passent à Paris",
               "Parce qu'ils ont le même auteur",
@@ -1508,7 +1508,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p06_q2",
           "type": "mcq",
-          "prompt": "Quelle phrase est un bilan pour le texte de Nafi ?",
+          "prompt": "Le commentaire de « Lettres de France » a étudié la désillusion de Nafi après son mariage, puis sa nostalgie du pays natal. Quelle phrase est un bon bilan ?",
           "options": [
             "En somme, Nafi, désillusionnée après son mariage, vit un véritable enfer et regrette son pays natal.",
             "Sembène Ousmane est un écrivain sénégalais.",
@@ -1547,7 +1547,7 @@ export const FR_1RE_EE_L02_COMMENTAIRE_COMPOSE: CurriculumChapter = {
         {
           "id": "premiere_a1_francais_ee_l02_commentaire_compose_p06_q5",
           "type": "mcq",
-          "prompt": "Pourquoi rapprocher « Lettres de France » de Sous le voile de la mariée ?",
+          "prompt": "Dans « Lettres de France », Nafi est déçue après son mariage ; dans Sous le voile de la mariée de Mathurin Goli Bi Irié, le héros découvre après son mariage le vrai caractère de sa femme. Pourquoi rapprocher ces deux œuvres ?",
           "options": [
             "Parce que les deux se passent à Paris",
             "Parce qu'ils ont le même auteur",
