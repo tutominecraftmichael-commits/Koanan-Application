@@ -1503,4 +1503,28 @@ export const SECONDE_A_ILLUSTRATIONS: Record<string, ExerciseIllustration> = {
       tableData: {"headers":["Condition","Machine A","Machine B"],"rows":[["Moyenne entre 49,7 et 50,3 kg","49,80 kg : oui","49,89 kg : oui"],["Écart type < 0,5 kg","≈ 0,39 kg : oui","≈ 0,37 kg : oui"],["Au moins 85 % des sacs dans [49,3 ; 50,5]","≈ 84,4 % : non","≈ 89,4 % : oui"]]},
     },
   },
+  "premiere_philo_methodologie_l01_methode_lecture_texte_p03_q1": {
+    course: {
+      type: 'custom_svg',
+      title: "La grille de lecture",
+      caption: "Les sept items de la problématique, avec la question qui permet de trouver chacun.",
+      tableData: {"headers":["Item","Définition","Question à se poser"],"rows":[["Thème","Ce dont parle le texte","De quoi parle le texte ?"],["Problème","La question à laquelle l’auteur répond","À quelle question répond l’auteur ?"],["Thèse","La position, la réponse de l’auteur","Quelle est la réponse de l’auteur ?"],["Antithèse","Le point de vue opposé ou différent","Quelle est la position contraire ?"],["Intention","L’objectif immédiat de l’auteur","Quel est son objectif immédiat ?"],["Enjeu","L’objectif lointain, l’intérêt du texte","Quel est l’intérêt du texte ?"],["Structure logique","Les mouvements et leurs idées principales","Quelles sont les articulations du texte ?"]]},
+    },
+  },
+  "premiere_philo_methodologie_l01_methode_lecture_texte_p02_q1": {
+    course: {
+      type: 'custom_svg',
+      title: "Les connecteurs logiques et leurs fonctions",
+      caption: "Exemples tirés du texte d’Épictète : si (supposition), comme (comparaison), donc (conséquence), car (justification), ne… que (restriction).",
+      tableData: {"headers":["Fonction","Connecteurs"],"rows":[["Addition","et, de plus, en outre, également"],["Cause, justification","car, parce que, puisque, en effet"],["Conséquence","donc, ainsi, par conséquent, c’est pourquoi"],["Opposition","mais, cependant, or, pourtant, en revanche"],["Concession","certes, bien que, même si, il est vrai que"],["Comparaison","comme, de même que, ainsi que"],["Supposition","si, à condition que, en supposant que"],["Restriction","ne… que, sauf, seulement, excepté"],["Conclusion","en somme, en définitive, bref, en résumé"]]},
+    },
+  },
+  "premiere_philo_methodologie_l03_conclusion_commentaire_p01_q2": {
+    course: {
+      type: 'custom_svg',
+      title: "Introduction ou conclusion ?",
+      caption: "L’introduction présente le texte ; la conclusion fait le bilan du débat et prend position.",
+      tableData: {"headers":["","Introduction","Conclusion"],"rows":[["Place","Première partie du devoir","Dernière partie du devoir"],["Éléments","Thème, problème, thèse (+ structure logique)","Bilan de la discussion + prise de position personnelle"],["Ouverture possible","Une généralité","« En définitive », « Au terme de notre travail », « En somme »"],["Avis personnel","Non","Oui"]]},
+    },
+  },
 };

@@ -83,6 +83,9 @@ import { FR_2DE_PL_L07_IMPLICITE } from '../../data/courses/seconde/fr_2de_impli
 import { FR_2DE_SF_L02_EXPOSE_ORAL } from '../../data/courses/seconde/fr_2de_expose_oral';
 import { PHILO_TLE_L01_DISSERTATION } from '../../data/courses/terminale/philo_tle_dissertation';
 import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/philo_tle_commentaire_texte';
+import { PHILO_1RE_L01_METHODE_LECTURE_TEXTE } from '../../data/courses/premiere/philo_1re_methode_lecture_texte';
+import { PHILO_1RE_L02_INTRODUCTION_COMMENTAIRE } from '../../data/courses/premiere/philo_1re_introduction_commentaire';
+import { PHILO_1RE_L03_CONCLUSION_COMMENTAIRE } from '../../data/courses/premiere/philo_1re_conclusion_commentaire';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
 import { PHILO_TLE_L04_VIE_EN_SOCIETE } from '../../data/courses/terminale/philo_tle_vie_en_societe';
 import { PHILO_TLE_L05_DIEU_RELIGION } from '../../data/courses/terminale/philo_tle_dieu_religion';
@@ -91832,6 +91835,10 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   HIST_TLE_T3_L02_MUTATIONS_CIVILISATION_NEGRO_AFRICAINE,
   PHILO_TLE_L01_DISSERTATION,
   PHILO_TLE_L02_COMMENTAIRE_TEXTE,
+  // Première (toutes séries) — Philosophie (format v2)
+  PHILO_1RE_L01_METHODE_LECTURE_TEXTE,
+  PHILO_1RE_L02_INTRODUCTION_COMMENTAIRE,
+  PHILO_1RE_L03_CONCLUSION_COMMENTAIRE,
   PHILO_TLE_L03_CONNAISSANCE_HOMME,
   PHILO_TLE_L04_VIE_EN_SOCIETE,
   PHILO_TLE_L05_DIEU_RELIGION,
