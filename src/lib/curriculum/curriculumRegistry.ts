@@ -6,6 +6,12 @@ import { svt2deCChapters } from '../../data/courses/svt_2de_c';
 import { francais2deAChapters } from '../../data/courses/francais_2de_a';
 import { maths2deACalculsNumeriquesChapter } from '../../data/courses/maths_2de_a';
 import { MATHS_TLE_C_L04_DIVISIBILITE } from '../../data/courses/terminale/maths_tle_c_divisibilite';
+import { MATHS_TLE_D_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_d_limites_continuite';
+import { MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_d_probabilite_conditionnelle';
+import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_d_derivabilite_etude_fonctions';
+import { MATHS_TLE_D_L04_PRIMITIVES } from '../../data/courses/terminale/maths_tle_d_primitives';
+import { MATHS_TLE_D_L05_LOGARITHME_NEPERIEN } from '../../data/courses/terminale/maths_tle_d_logarithme_neperien';
+import { MATHS_TLE_D_L06_NOMBRES_COMPLEXES } from '../../data/courses/terminale/maths_tle_d_nombres_complexes';
 import { CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE } from '../../data/courses/terminale/chimie_tle_cd_acide_fort_base_forte';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
@@ -35,6 +41,29 @@ import { HIST_2DE_T2_L04_SOUDAN_OCCIDENTAL } from '../../data/courses/seconde/hi
 import { HIST_2DE_T2_L05_TRAITES_DES_NOIRS } from '../../data/courses/seconde/hist_2de_traites_des_noirs';
 import { HIST_2DE_T3_L01_NEOLITHIQUE_CI } from '../../data/courses/seconde/hist_2de_neolithique_cote_ivoire';
 import { HIST_2DE_T3_L02_PEUPLES_CI } from '../../data/courses/seconde/hist_2de_peuples_cote_ivoire';
+import { GEO_1RE_T1_L01_DYNAMISME_DEMOGRAPHIQUE_CI } from '../../data/courses/premiere/geo_1re_dynamisme_demographique_ci';
+import { GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE } from '../../data/courses/premiere/geo_1re_croissance_demographique_mondiale';
+import { GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE } from '../../data/courses/premiere/geo_1re_urbanisation_cote_ivoire';
+import { GEO_1RE_T2_L02_URBANISATION_FRANCE } from '../../data/courses/premiere/geo_1re_urbanisation_france';
+import { GEO_1RE_T3_L01_ORGANISATION_ADMINISTRATIVE_CI } from '../../data/courses/premiere/geo_1re_organisation_administrative_ci';
+import { GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI } from '../../data/courses/premiere/geo_1re_amenagement_territoire_ci';
+import { GEO_1RE_T4_L01_FACTEURS_MONDIALISATION } from '../../data/courses/premiere/geo_1re_facteurs_mondialisation';
+import { GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION } from '../../data/courses/premiere/geo_1re_consequences_mondialisation';
+import { HIST_1RE_T1_L01_ESSOR_CAPITALISME } from '../../data/courses/premiere/hist_1re_essor_capitalisme';
+import { HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES } from '../../data/courses/premiere/hist_1re_revolutions_industrielles';
+import { HIST_1RE_T2_L01_IMPERIALISME_CONGRES_BERLIN } from '../../data/courses/premiere/hist_1re_imperialisme_congres_berlin';
+import { HIST_1RE_T2_L02_RESISTANCES_CONQUETE_CI } from '../../data/courses/premiere/hist_1re_resistances_conquete_ci';
+import { HIST_1RE_T2_L03_COLONISATION_COTE_IVOIRE } from '../../data/courses/premiere/hist_1re_colonisation_cote_ivoire';
+import { HIST_1RE_T3_L01_PREMIERE_GUERRE_MONDIALE } from '../../data/courses/premiere/hist_1re_premiere_guerre_mondiale';
+import { HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE } from '../../data/courses/premiere/hist_1re_seconde_guerre_mondiale';
+import { HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES } from '../../data/courses/premiere/hist_1re_violences_masse_genocides';
+import { MATHS_1RE_L01_EQUATIONS_INEQUATIONS } from '../../data/courses/premiere/maths_1re_equations_inequations';
+import { MATHS_1RE_L02_DENOMBREMENT } from '../../data/courses/premiere/maths_1re_denombrement';
+import { MATHS_1RE_L03_GENERALITES_FONCTIONS } from '../../data/courses/premiere/maths_1re_generalites_fonctions';
+import { MATHS_1RE_L04_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/premiere/maths_1re_derivabilite_etude_fonctions';
+import { MATHS_1RE_L06_STATISTIQUES } from '../../data/courses/premiere/maths_1re_statistiques';
+import { MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_systemes_inequations_lineaires';
+import { FR_1RE_EE_L02_COMMENTAIRE_COMPOSE } from '../../data/courses/premiere/fr_1re_commentaire_compose';
 import { FR_2DE_PL_L01_FONCTIONS_LANGAGE } from '../../data/courses/seconde/fr_2de_fonctions_langage';
 import { FR_2DE_PL_L02_CONNECTEURS_LOGIQUES } from '../../data/courses/seconde/fr_2de_connecteurs_logiques';
 import { FR_2DE_PL_L02B_EXPRESSION_OPINION } from '../../data/courses/seconde/fr_2de_expression_opinion';
@@ -91777,6 +91806,13 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
 const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   // Terminale (format v2 : mini-leçons rédigées depuis les PDF officiels)
   MATHS_TLE_C_L04_DIVISIBILITE,
+  // Terminale D — Maths (format v2)
+  MATHS_TLE_D_L01_LIMITES_CONTINUITE,
+  MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE,
+  MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS,
+  MATHS_TLE_D_L04_PRIMITIVES,
+  MATHS_TLE_D_L05_LOGARITHME_NEPERIEN,
+  MATHS_TLE_D_L06_NOMBRES_COMPLEXES,
   CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
@@ -91818,6 +91854,33 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   HIST_2DE_T2_L05_TRAITES_DES_NOIRS,
   HIST_2DE_T3_L01_NEOLITHIQUE_CI,
   HIST_2DE_T3_L02_PEUPLES_CI,
+  // Première A (A1 et A2) — Géographie
+  GEO_1RE_T1_L01_DYNAMISME_DEMOGRAPHIQUE_CI,
+  GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE,
+  GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE,
+  GEO_1RE_T2_L02_URBANISATION_FRANCE,
+  GEO_1RE_T3_L01_ORGANISATION_ADMINISTRATIVE_CI,
+  GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI,
+  GEO_1RE_T4_L01_FACTEURS_MONDIALISATION,
+  GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION,
+  // Première A (A1 et A2) — Histoire
+  HIST_1RE_T1_L01_ESSOR_CAPITALISME,
+  HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES,
+  HIST_1RE_T2_L01_IMPERIALISME_CONGRES_BERLIN,
+  HIST_1RE_T2_L02_RESISTANCES_CONQUETE_CI,
+  HIST_1RE_T2_L03_COLONISATION_COTE_IVOIRE,
+  HIST_1RE_T3_L01_PREMIERE_GUERRE_MONDIALE,
+  HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE,
+  HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES,
+  MATHS_1RE_L01_EQUATIONS_INEQUATIONS,
+  MATHS_1RE_L02_DENOMBREMENT,
+  MATHS_1RE_L03_GENERALITES_FONCTIONS,
+  MATHS_1RE_L04_DERIVABILITE_ETUDE_FONCTIONS,
+  // Leçon 5 (Suites numériques) : en attente du PDF officiel
+  MATHS_1RE_L06_STATISTIQUES,
+  MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES,
+  // Première (A1, A2, C, D) — Français, expression écrite
+  FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
   FR_2DE_PL_L02_CONNECTEURS_LOGIQUES,
   FR_2DE_PL_L02B_EXPRESSION_OPINION,

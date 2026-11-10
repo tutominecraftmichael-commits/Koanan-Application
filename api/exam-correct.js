@@ -43,30 +43,85 @@ export function buildCorrectionPrompt({ classe, matiere, sujet }) {
     '- Exercice au choix : note seulement le sujet traité ; si l’élève en a traité deux, garde la meilleure note.',
     '- Une construction (graphique, frise chronologique) se note sur la photo : titre, échelle, exactitude des données, légende, soin.',
     '- En Français et en Histoire-Géographie, juge aussi la qualité de la rédaction (phrases complètes, réponses justifiées par le texte ou le document).',
-    '- Pour chaque exercice : points obtenus (multiple de 0,25) et un commentaire court à la première personne (« J’ai vu que… », « Tu as bien… »).',
-    '- appreciation : 2 ou 3 phrases à la première personne (« Je… »), bienveillantes et concrètes, tutoiement.',
-    '- conseils : 1 à 3 conseils précis pour progresser avant le devoir.',
+    'CORRECTION STRUCTURÉE, QUESTION PAR QUESTION (jamais un simple paragraphe) :',
+    '- Pour CHAQUE question du sujet (dans l’ordre, avec son numéro exact) : obtenu (multiple de 0,25, jamais plus que ses points), statut (« juste », « partiel », « faux » ou « absent » si non traitée), copie = ce que l’élève a écrit, résumé en une ligne courte, attendu = la réponse attendue en une ligne courte, erreur = l’erreur PRÉCISE en une phrase (vide si juste).',
+    '- Exercice avec grille : remplis « grille » avec les points obtenus pour CHAQUE critère, dans l’ordre de la grille ; questions = le ou les sujets traités.',
+    '- commentaire de chaque exercice : une seule phrase à la première personne (« J’ai vu que… »).',
+    '- pointsForts : 1 à 3 savoir-faire réussis, chacun en quelques mots (« Calcul de la masse molaire »).',
+    '- aRevoir : 1 à 3 notions à retravailler : notion (quelques mots) + pourquoi (une phrase : l’erreur commise).',
+    '- appreciation : 2 phrases au plus, à la première personne (« Je… »), bienveillantes et concrètes, tutoiement.',
+    '- conseils : 1 à 3 actions précises et courtes à faire avant le devoir (verbe à l’impératif en tête).',
     '- Si les photos sont illisibles, floues, ou ne sont pas une copie de ce devoir : lisible = false.',
-    'Réponds UNIQUEMENT en JSON : {"lisible":true,"exercices":[{"numero":1,"obtenu":1.5,"commentaire":"…"}],"appreciation":"Je …","conseils":["…"]}',
+    'Réponds UNIQUEMENT en JSON :',
+    '{"lisible":true,"exercices":[{"numero":1,"commentaire":"J’ai vu que…","questions":[{"numero":"1","obtenu":0.5,"statut":"juste","copie":"…","attendu":"…","erreur":""}],"grille":[{"critere":"CM1 : Pertinence","obtenu":0.5}]}],"pointsForts":["…"],"aRevoir":[{"notion":"…","pourquoi":"…"}],"appreciation":"Je …","conseils":["…"]}',
+    '« grille » vaut [] pour un exercice sans grille.',
   ].join('\n');
 }
 
+const STATUTS = ['juste', 'partiel', 'faux', 'absent'];
+/** « 1. », « 1 », « Q1 », « Sujet 1 » → clé comparable. */
+const qKey = (v) => String(v ?? '').toLowerCase().replace(/^q(?:uestion)?\s*/, '').replace(/[\s.:)]+/g, '');
+
+/**
+ * Correction structurée : pour chaque exercice, le détail question par question (points, statut, réponse de
+ * l'élève, réponse attendue, erreur) et la grille critère par critère. Tous les points sont RECALCULÉS ici :
+ * chaque question est plafonnée à son barème, chaque exercice à ses points, la note est la somme.
+ */
 export function cleanCorrection(raw, sujet) {
   if (!raw || typeof raw !== 'object') return null;
   if (raw.lisible === false) {
-    return { lisible: false, note: null, exercices: [], appreciation: str(raw.appreciation, 600) || 'Je n’arrive pas à lire ta copie. Reprends les photos bien à plat, avec de la lumière.', conseils: [] };
+    return { lisible: false, note: null, exercices: [], appreciation: str(raw.appreciation, 600) || 'Je n’arrive pas à lire ta copie. Reprends les photos bien à plat, avec de la lumière.', conseils: [], pointsForts: [], aRevoir: [] };
   }
   if (!Array.isArray(raw.exercices)) return null;
   const exercices = sujet.exercices.map((e) => {
     const found = raw.exercices.find((x) => Number(x?.numero) === e.numero) || {};
-    const obtenu = Math.max(0, Math.min(e.points, round(num(found.obtenu))));
-    return { numero: e.numero, obtenu, sur: e.points, commentaire: str(found.commentaire, 500) };
+    const bareme = new Map((e.questions || []).map((q) => [qKey(q.numero), q.points]));
+
+    const questions = (Array.isArray(found.questions) ? found.questions : []).slice(0, 25).map((q) => {
+      const sur = bareme.get(qKey(q?.numero));
+      const cap = Number.isFinite(sur) && sur > 0 ? sur : e.points;
+      const obtenu = Math.max(0, Math.min(cap, round(num(q?.obtenu))));
+      let statut = STATUTS.includes(q?.statut) ? q.statut : obtenu >= cap ? 'juste' : obtenu > 0 ? 'partiel' : 'faux';
+      if (statut === 'juste' && obtenu < cap) statut = obtenu > 0 ? 'partiel' : 'faux'; // le statut suit les points
+      return {
+        numero: str(String(q?.numero ?? ''), 12),
+        obtenu,
+        sur: Number.isFinite(sur) && sur > 0 ? sur : null,
+        statut,
+        copie: str(q?.copie, 300),
+        attendu: str(q?.attendu, 400),
+        erreur: statut === 'juste' ? '' : str(q?.erreur, 400),
+      };
+    }).filter((q) => q.numero);
+
+    const grille = Array.isArray(e.grille) && e.grille.length
+      ? e.grille.map((g, i) => {
+          const r = Array.isArray(found.grille) ? found.grille[i] : null;
+          return { critere: g.critere, sur: g.points, obtenu: Math.max(0, Math.min(g.points, round(num(r?.obtenu)))) };
+        })
+      : [];
+    const grilleFournie = grille.length > 0 && Array.isArray(found.grille) && found.grille.length > 0;
+
+    // Points de l'exercice : la grille si elle est remplie, sinon la somme des questions, sinon le total donné
+    let total;
+    if (grilleFournie) total = grille.reduce((s, g) => s + g.obtenu, 0);
+    else if (questions.length && e.auChoix) total = Math.max(...questions.map((q) => q.obtenu));
+    else if (questions.length) total = questions.reduce((s, q) => s + q.obtenu, 0);
+    else total = num(found.obtenu);
+    const obtenu = Math.max(0, Math.min(e.points, round(total)));
+
+    return { numero: e.numero, obtenu, sur: e.points, commentaire: str(found.commentaire, 400), questions, grille: grilleFournie ? grille : [] };
   });
   const note = Math.round(exercices.reduce((s, e) => s + e.obtenu, 0) * 4) / 4;
-  const appreciation = str(raw.appreciation, 700);
+  const appreciation = str(raw.appreciation, 500);
   if (!appreciation) return null;
-  const conseils = Array.isArray(raw.conseils) ? raw.conseils.map((c) => str(c, 300)).filter(Boolean).slice(0, 3) : [];
-  return { lisible: true, note, exercices, appreciation, conseils };
+  const list = (v, n, max) => (Array.isArray(v) ? v.map((c) => str(c, max)).filter(Boolean).slice(0, n) : []);
+  const conseils = list(raw.conseils, 3, 240);
+  const pointsForts = list(raw.pointsForts, 3, 120);
+  const aRevoir = Array.isArray(raw.aRevoir)
+    ? raw.aRevoir.map((r) => ({ notion: str(r?.notion, 100), pourquoi: str(r?.pourquoi, 240) })).filter((r) => r.notion).slice(0, 3)
+    : [];
+  return { lisible: true, note, exercices, appreciation, conseils, pointsForts, aRevoir };
 }
 
 export default async function handler(req, res) {
