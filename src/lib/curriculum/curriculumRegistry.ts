@@ -102,6 +102,7 @@ import { SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES } from '../../data/courses/terminal
 import { MATHS_TLE_C_L13_COMPLEXES_GEOMETRIE } from '../../data/courses/terminale/maths_tle_c_complexes_geometrie';
 import { FR_TLE_EOI_L01_SOLEILS_INDEPENDANCES } from '../../data/courses/terminale/fr_tle_soleils_independances';
 import { FR_TLE_GT_L02_CHAKA_HEROS_EPIQUE } from '../../data/courses/terminale/fr_tle_chaka_heros_epique';
+import { FR_TLE_EE_L03_RESUME_TEXTE } from '../../data/courses/terminale/fr_tle_resume_texte';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
 import { PHILO_TLE_L04_VIE_EN_SOCIETE } from '../../data/courses/terminale/philo_tle_vie_en_societe';
 import { PHILO_TLE_L05_DIEU_RELIGION } from '../../data/courses/terminale/philo_tle_dieu_religion';
@@ -91874,6 +91875,7 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   // Terminale (A1, A2, C, D) — Français (format v2)
   FR_TLE_EOI_L01_SOLEILS_INDEPENDANCES,
   FR_TLE_GT_L02_CHAKA_HEROS_EPIQUE,
+  FR_TLE_EE_L03_RESUME_TEXTE,
   PHILO_TLE_L03_CONNAISSANCE_HOMME,
   PHILO_TLE_L04_VIE_EN_SOCIETE,
   PHILO_TLE_L05_DIEU_RELIGION,
