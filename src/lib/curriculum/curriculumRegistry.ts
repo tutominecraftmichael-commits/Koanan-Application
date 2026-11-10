@@ -12,6 +12,9 @@ import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses
 import { MATHS_TLE_D_L04_PRIMITIVES } from '../../data/courses/terminale/maths_tle_d_primitives';
 import { MATHS_TLE_D_L05_LOGARITHME_NEPERIEN } from '../../data/courses/terminale/maths_tle_d_logarithme_neperien';
 import { MATHS_TLE_D_L06_NOMBRES_COMPLEXES } from '../../data/courses/terminale/maths_tle_d_nombres_complexes';
+import { MATHS_TLE_D_L10_CALCUL_INTEGRAL } from '../../data/courses/terminale/maths_tle_d_calcul_integral';
+import { MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_d_systemes_equations_lineaires';
+import { MATHS_1RE_D_L12_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_d_suites_numeriques';
 import { CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE } from '../../data/courses/terminale/chimie_tle_cd_acide_fort_base_forte';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
@@ -91813,6 +91816,7 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_TLE_D_L04_PRIMITIVES,
   MATHS_TLE_D_L05_LOGARITHME_NEPERIEN,
   MATHS_TLE_D_L06_NOMBRES_COMPLEXES,
+  MATHS_TLE_D_L10_CALCUL_INTEGRAL,
   CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
@@ -91879,6 +91883,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   // Leçon 5 (Suites numériques) : en attente du PDF officiel
   MATHS_1RE_L06_STATISTIQUES,
   MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES,
+  // Première D — Maths (format v2)
+  MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES,
+  MATHS_1RE_D_L12_SUITES_NUMERIQUES,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
