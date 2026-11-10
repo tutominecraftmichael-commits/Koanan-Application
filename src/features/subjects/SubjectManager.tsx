@@ -20,7 +20,8 @@ import {
 } from 'lucide-react';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
-import { EXAM_PREP_PAUSED } from '../../lib/featureFlags';
+import { isExamPrepOpenFor } from '../../lib/featureFlags';
+import { ExamChapterPicker } from '../exam/ExamChapterPicker';
 
 export interface SubjectManagerProps {
   subjects: Subject[];
@@ -32,6 +33,8 @@ export interface SubjectManagerProps {
   onViewPricing?: () => void;
   onUpgradeToPro?: () => void;
   onTriggerPlanner?: () => void;
+  /** Classe de l'élève : la préparation aux devoirs n'est ouverte que pour certaines classes. */
+  gradeLevel?: string;
 }
 
 const PRESET_COLORS = [
@@ -55,7 +58,10 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   onViewPricing,
   onUpgradeToPro,
   onTriggerPlanner,
+  gradeLevel,
 }) => {
+  // Préparation aux devoirs : ouverte pour 2nde A et 2nde C (cours et QCM complets)
+  const EXAM_PREP_PAUSED = !isExamPrepOpenFor(gradeLevel);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
   const [editingSubjectId, setEditingSubjectId] = useState<string | null>(null);
@@ -70,7 +76,12 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   const [examDate, setExamDate] = useState<string>('');
   const [examType, setExamType] = useState<EvaluationType>('examen');
   const [examTime, setExamTime] = useState<string>('08:30');
-  
+  // Chapitres du devoir (matière avec cours) ; sans cours : chronomètre 75 min
+  const [examChapterIds, setExamChapterIds] = useState<string[]>([]);
+  const [examSubjectKey, setExamSubjectKey] = useState<string | undefined>(undefined);
+  const [examHasCourse, setExamHasCourse] = useState<boolean>(false);
+  const [examFormError, setExamFormError] = useState<string | null>(null);
+
   // Real-time topic / theme list management
   const [topicsList, setTopicsList] = useState<string[]>([]);
   const [newTopicInput, setNewTopicInput] = useState<string>('');
@@ -86,6 +97,9 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     setExamDate('');
     setExamType('examen');
     setExamTime('08:30');
+    setExamChapterIds([]);
+    setExamSubjectKey(undefined);
+    setExamFormError(null);
     setTopicsList(['Introduction & concepts clés', 'Exercices d’application']);
     setNewTopicInput('');
     setIsModalOpen(true);
@@ -102,6 +116,9 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     setExamDate(sub.examDate || '');
     setExamType(sub.examType || 'examen');
     setExamTime(sub.examTime || '08:30');
+    setExamChapterIds(sub.examChapterIds || []);
+    setExamSubjectKey(sub.examSubjectKey);
+    setExamFormError(null);
     setTopicsList(sub.topics && sub.topics.length > 0 ? [...sub.topics] : ['Généralités & Notions clés']);
     setNewTopicInput('');
     setIsModalOpen(true);
@@ -135,9 +152,20 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
       .map(t => t.trim())
       .filter(t => t.length > 0);
 
-    const finalTopics = cleanTopics.length > 0 
-      ? cleanTopics 
+    const finalTopics = cleanTopics.length > 0
+      ? cleanTopics
       : ['Introduction & révisions'];
+
+    // Devoir d'une matière qui a du cours : au moins un chapitre doit être coché
+    if (!EXAM_PREP_PAUSED && examDate && examHasCourse && examChapterIds.length === 0) {
+      setExamFormError('Coche au moins un chapitre de ton devoir pour que KONAN prépare tes séances.');
+      return;
+    }
+    setExamFormError(null);
+    const examFields = {
+      examChapterIds: examDate && examHasCourse ? examChapterIds : undefined,
+      examSubjectKey: examDate && examHasCourse ? examSubjectKey : undefined,
+    };
 
     if (editingSubjectId) {
       const updated = subjects.map(s => s.id === editingSubjectId ? {
@@ -151,6 +179,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         examDate: examDate || undefined,
         examType: examDate ? examType : undefined,
         examTime: examDate ? examTime : undefined,
+        ...examFields,
         topics: finalTopics,
       } : s);
       onUpdateSubjects(updated);
@@ -166,6 +195,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         examDate: examDate || undefined,
         examType: examDate ? examType : undefined,
         examTime: examDate ? examTime : undefined,
+        ...examFields,
         topics: finalTopics,
       };
       onUpdateSubjects([...subjects, newSub]);
@@ -569,8 +599,22 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                 </div>
               </div>
               <p className="text-[10px] text-amber-200/70">
-                L'algorithme réorganisera automatiquement vos créneaux libres pour intensifier vos révisions à J-14, J-7, J-3 et J-1 avant ce {examType === 'devoir' ? 'devoir' : 'examen'}.
+                KONAN prépare ce {examType === 'devoir' ? 'devoir' : 'examen'} chaque jour à partir de J-14 : séries de 30 questions et sujets complets de 2 h en alternance, puis un sujet de 2 h chaque jour de J-3 à J-1.
               </p>
+            </div>
+          )}
+
+          {/* Chapitres du devoir (dès que la date est saisie) */}
+          {!EXAM_PREP_PAUSED && examDate && (
+            <div className="p-3 rounded-xl bg-white border border-slate-200 dark:bg-slate-950/60 dark:border-slate-800 space-y-2">
+              <ExamChapterPicker
+                subjectName={name}
+                gradeRaw={gradeLevel}
+                value={examChapterIds}
+                onChange={(ids, key) => { setExamChapterIds(ids); setExamSubjectKey(key); setExamFormError(null); }}
+                onAvailability={setExamHasCourse}
+              />
+              {examFormError && <p className="text-xs font-bold text-rose-600 dark:text-rose-400">{examFormError}</p>}
             </div>
           )}
 

@@ -1,22 +1,28 @@
 /**
  * Interrupteurs de fonctionnalités.
  *
- * EXAM_PREP_PAUSED — Préparation aux devoirs et examens (date de l'épreuve + note visée,
- * puis planning automatique jusqu'au jour J, séances de 45 min pour un devoir).
- * En pause pendant sa mise à jour :
- *  - aucun écran ne permet de saisir une date, une nature ou une heure d'épreuve ;
- *  - le planificateur ignore les dates d'épreuve (aucune séance de préparation n'est créée).
- * Les dates déjà saisies par les élèves restent enregistrées : repasser à `false` réactive tout.
+ * EXAM_PREP_PAUSED — interrupteur GÉNÉRAL de la préparation aux devoirs et examens.
+ * La préparation est ouverte classe par classe (voir EXAM_PREP_GRADES dans lib/exam/examPrepRules) :
+ * aujourd'hui 2nde A et 2nde C, les seules classes qui ont des cours et des QCM complets.
+ * Pour les autres classes, rien ne change : pas de saisie de date, le planificateur ignore les dates.
+ * Les dates déjà saisies restent enregistrées.
  */
-export const EXAM_PREP_PAUSED = true;
+import { isExamPrepGrade } from './exam/examPrepRules';
+
+export const EXAM_PREP_PAUSED = false;
 
 export const EXAM_PREP_PAUSED_TITLE = 'Préparation aux devoirs et examens';
-export const EXAM_PREP_PAUSED_MESSAGE = 'Momentanément indisponible pour mise à jour. Elle revient bientôt, améliorée.';
+export const EXAM_PREP_PAUSED_MESSAGE = 'Disponible pour l’instant en 2nde A et 2nde C. Ta classe arrive bientôt.';
+
+/** La préparation aux devoirs est-elle ouverte pour cette classe ? */
+export function isExamPrepOpenFor(rawGrade?: string | null): boolean {
+  return !EXAM_PREP_PAUSED && isExamPrepGrade(rawGrade);
+}
 
 type WithExamFields = { examDate?: string; examType?: string; examTime?: string };
 
-/** Copie des matières sans leurs dates d'épreuve, pour que le planificateur les ignore pendant la pause. */
-export function withoutPausedExamPrep<T extends WithExamFields>(subjects: T[]): T[] {
-  if (!EXAM_PREP_PAUSED) return subjects;
+/** Copie des matières sans leurs dates d'épreuve quand la préparation n'est pas ouverte pour la classe. */
+export function withoutPausedExamPrep<T extends WithExamFields>(subjects: T[], rawGrade?: string | null): T[] {
+  if (isExamPrepOpenFor(rawGrade)) return subjects;
   return subjects.map((s) => ({ ...s, examDate: undefined, examType: undefined, examTime: undefined }));
 }

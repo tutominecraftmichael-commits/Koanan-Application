@@ -15,7 +15,8 @@ import { generateOptimizedStudyPlan } from '../../services/plannerAlgorithm';
 import { downloadStudyPlanICS, getGoogleCalendarImportUrl } from '../../services/googleCalendarService';
 import { getDaysRemaining, generateId } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
-import { EXAM_PREP_PAUSED } from '../../lib/featureFlags';
+import { isExamPrepOpenFor } from '../../lib/featureFlags';
+import { ExamChapterPicker } from '../exam/ExamChapterPicker';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
 import {
   ArrowLeft,
@@ -138,6 +139,9 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
 }) => {
   // Stepper : 1 = Méthodes, 2 = Devoirs/Examens, 3 = Réorganisation, 4 = Google Agenda
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
+  // Préparation aux devoirs : ouverte pour 2nde A et 2nde C (cours et QCM complets)
+  const examGradeRaw = state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel;
+  const EXAM_PREP_PAUSED = !isExamPrepOpenFor(examGradeRaw);
 
   // État Étape 2 : Matières & Devoirs / Examens (initialisé d'abord)
   const [subjectsList, setSubjectsList] = useState<Subject[]>(() => {
@@ -962,6 +966,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                           </div>
 
                           {hasExam && (
+                            <>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 animate-in fade-in duration-200">
                               <div>
                                 <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">
@@ -991,6 +996,14 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                                 />
                               </div>
                             </div>
+                            {/* Chapitres du devoir : demandés dès que la date est posée */}
+                            <ExamChapterPicker
+                              subjectName={subject.name}
+                              gradeRaw={examGradeRaw}
+                              value={subject.examChapterIds || []}
+                              onChange={(ids, key) => handleUpdateSubject(subject.id, { examChapterIds: ids, examSubjectKey: key })}
+                            />
+                            </>
                           )}
                         </div>
                         )}

@@ -695,10 +695,16 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     // Révision espacée : KONAN retient le résultat pour faire revenir la question au bon moment
     // (premier essai seulement : une réussite après correction ne prouve pas qu'on sait)
     try {
+      // Mémoire des erreurs : question, chapitre et réponse fausse choisie
+      const details = {
+        prompt: activeExercise.prompt,
+        wrongAnswer: isCorrect ? undefined : activeExercise.options?.[selectedOptionIndex],
+        source: 'cours' as const,
+      };
       if (phase === 'warmup' && warmupItem) {
-        recordReviewAnswer(userId, { subject: stemSubjectId, grade: gradeLevel, subCategory: activeSubCategory, chapterId: warmupItem.chapterId, pointId: warmupItem.point.id }, warmupItem.exercise.id, isCorrect);
+        recordReviewAnswer(userId, { subject: stemSubjectId, grade: gradeLevel, subCategory: activeSubCategory, chapterId: warmupItem.chapterId, pointId: warmupItem.point.id }, warmupItem.exercise.id, isCorrect, undefined, undefined, details);
       } else if ((phase === 'learning' || phase === 'recall') && currentItem && currentPoint) {
-        recordReviewAnswer(userId, { subject: stemSubjectId, grade: gradeLevel, subCategory: activeSubCategory, chapterId: currentItem.chapterId, pointId: currentPoint.id }, activeExercise.id, isCorrect);
+        recordReviewAnswer(userId, { subject: stemSubjectId, grade: gradeLevel, subCategory: activeSubCategory, chapterId: currentItem.chapterId, pointId: currentPoint.id }, activeExercise.id, isCorrect, undefined, undefined, details);
       }
     } catch {
       // la mémoire de révision ne doit jamais bloquer la leçon

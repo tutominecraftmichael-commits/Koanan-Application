@@ -100,6 +100,8 @@ const PresetModal = lazyView(() => import('./features/onboarding/PresetModal').t
 const ProWizardView = lazyView(() => import('./features/pro/ProWizardView').then(m => m.ProWizardView));
 const AdminDashboard = lazyView(() => import('./features/admin/AdminDashboard').then(m => m.AdminDashboard));
 const InteractiveTutorView = lazyView(() => import('./features/tutor/InteractiveTutorView').then(m => m.InteractiveTutorView));
+const ExamQcmView = lazyView(() => import('./features/exam/ExamQcmView').then(m => m.ExamQcmView));
+const ExamSujetView = lazyView(() => import('./features/exam/ExamSujetView').then(m => m.ExamSujetView));
 import type { StemSubjectId, CurriculumGradeLevel } from './lib/curriculum/types';
 
 export function App() {
@@ -123,6 +125,14 @@ export function App() {
     studySessionId?: string;
     durationMinutes?: number;
     pacingMethod?: string;
+  } | null>(null);
+  // Séance de préparation au devoir : 30 questions ou sujet complet de 2 h
+  const [activeExamSession, setActiveExamSession] = useState<{
+    mode: 'qcm30' | 'sujet2h';
+    session: StudySession;
+    subjectName: string;
+    stemSubjectId: StemSubjectId;
+    gradeLevel: CurriculumGradeLevel;
   } | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -524,10 +534,17 @@ export function App() {
           validSubjects
         );
 
-        // Auto-synchronisation des durées pour les devoirs / épreuves imminentes (ex: 45 min) sans clic utilisateur
-        const finalSessions = synchronizeSessionsWithExamCountdowns(updatedSessions, validSubjects);
+        // Préparation aux devoirs (Pro, 2nde A / 2nde C) : chaque jour, la séance prend le bon type
+        // (30 questions, sujet de 2 h, chrono 75 min) selon le nombre de jours avant l'épreuve
+        const isProTier = prev.planTier === 'pro' || prev.planTier === 'plus';
+        const finalSessions = synchronizeSessionsWithExamCountdowns(
+          updatedSessions,
+          validSubjects,
+          isProTier ? (prev.preferences?.gradeLevel || prev.preferences?.academicLevel || prev.academicLevel) : null
+        );
         const hasSessionDurationChange = finalSessions.some(
           (s, idx) => s.durationMinutes !== baseSessions[idx]?.durationMinutes || s.endTime !== baseSessions[idx]?.endTime
+            || s.examPrepMode !== baseSessions[idx]?.examPrepMode || s.title !== baseSessions[idx]?.title
         );
 
         if (rescheduledCount > 0 || restoredCount > 0 || hasSessionDurationChange || hasInvalidSubject || hasInvalidSession || hasInvalidSlots) {
@@ -1753,6 +1770,26 @@ export function App() {
     );
     const stemMatchForTutor = matchSubjectToStemCurriculum(subjectName);
 
+    // PRÉPARATION AU DEVOIR : 30 questions, sujet complet de 2 h, ou chronomètre de 75 min (matière sans cours)
+    if (session.isExamPrep && session.examPrepMode) {
+      const examSession: StudySession = {
+        ...session,
+        examChapterIds: session.examChapterIds?.length ? session.examChapterIds : sub?.examChapterIds,
+      };
+      const examKey = (sub?.examSubjectKey || stemMatchForTutor.stemSubjectId) as StemSubjectId | undefined;
+      if (session.examPrepMode === 'chrono75' || !resolvedGrade || !examKey || !examSession.examChapterIds?.length) {
+        // Révision sur le cahier, chronométrée 75 min
+        setFocusSession({ ...examSession, durationMinutes: 75 });
+        setActiveView('focus');
+        soundFX.playCheckmarkPop();
+        return;
+      }
+      setActiveExamSession({ mode: session.examPrepMode, session: examSession, subjectName, stemSubjectId: examKey, gradeLevel: resolvedGrade });
+      setActiveView('exam');
+      soundFX.playCheckmarkPop();
+      return;
+    }
+
     // Les cours guidés (≈ 7 Mo) ne sont téléchargés qu'ici, au lancement d'une séance de matière à cours
     const wantsTutor = Boolean(resolvedGrade && stemMatchForTutor.stemSubjectId && shouldLaunchInteractiveTutor(subjectName, resolvedGrade));
     let hasChapters = false;
@@ -2238,6 +2275,7 @@ export function App() {
             <SubjectManager
               subjects={state.subjects}
               isDemoMode={state.isDemoMode}
+              gradeLevel={state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel}
               planTier={effectivePlanTier}
               onUpdateSubjects={handleUpdateSubjects}
               onTriggerPlanner={() => setActiveView('planner')}
@@ -2337,6 +2375,43 @@ export function App() {
               handleCompleteTutorSession(sessionId);
             }}
           />
+        )}
+
+        {/* Préparation au devoir : série de 30 questions ou sujet complet de 2 h */}
+        {activeView === 'exam' && activeExamSession && (
+          activeExamSession.mode === 'qcm30' ? (
+            <ExamQcmView
+              userId={state.userAccount?.googleId || 'local_student'}
+              session={activeExamSession.session}
+              subjectName={activeExamSession.subjectName}
+              stemSubjectId={activeExamSession.stemSubjectId}
+              gradeLevel={activeExamSession.gradeLevel}
+              onExit={() => {
+                setActiveExamSession(null);
+                setActiveView('dashboard');
+              }}
+              onComplete={(sessionId) => {
+                setActiveExamSession(null);
+                handleCompleteTutorSession(sessionId);
+              }}
+            />
+          ) : (
+            <ExamSujetView
+              userId={state.userAccount?.googleId || 'local_student'}
+              session={activeExamSession.session}
+              subjectName={activeExamSession.subjectName}
+              stemSubjectId={activeExamSession.stemSubjectId}
+              gradeLevel={activeExamSession.gradeLevel}
+              onExit={() => {
+                setActiveExamSession(null);
+                setActiveView('dashboard');
+              }}
+              onComplete={(sessionId) => {
+                setActiveExamSession(null);
+                handleCompleteTutorSession(sessionId);
+              }}
+            />
+          )
         )}
 
         {/* Analytics: STRICTLY PROTECTED */}

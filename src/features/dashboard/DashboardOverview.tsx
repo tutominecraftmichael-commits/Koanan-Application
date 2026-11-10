@@ -13,7 +13,7 @@ import { afterShine } from '../../lib/shineClick';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { formatMinutesToHours, getDaysRemaining, getSessionExamCountdown, parseTimeToMinutes, getWeekDateRange, isDateInWeek } from '../../lib/utils';
-import { EXAM_PREP_PAUSED } from '../../lib/featureFlags';
+import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
 import { 
   Sparkles, 
@@ -96,6 +96,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   invitedBy: _invitedBy,
   userUid: _userUid,
 }) => {
+  // Préparation aux devoirs : ouverte pour 2nde A et 2nde C
+  const EXAM_PREP_PAUSED = !isExamPrepOpenFor(preferences?.gradeLevel || academicLevel);
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
   const [isGoogleCalendarOpen, setIsGoogleCalendarOpen] = useState(false);

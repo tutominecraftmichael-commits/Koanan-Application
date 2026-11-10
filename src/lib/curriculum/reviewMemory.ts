@@ -34,6 +34,20 @@ export interface ReviewEntry {
   updatedAt: number;
   /** Jour de la dernière réponse (AAAA-MM-JJ, heure locale). */
   lastDay?: string;
+  /** Mémoire des erreurs : la réponse fausse que l'élève a choisie la dernière fois qu'il s'est trompé. */
+  wrongAnswer?: string;
+  /** Énoncé de la question (pour retrouver l'erreur même si le cours change de place). */
+  prompt?: string;
+  /** Où l'erreur a été faite : cours guidé ou série de 30 questions de devoir. */
+  wrongIn?: 'cours' | 'devoir';
+  wrongAt?: number;
+}
+
+export interface AnswerDetails {
+  /** Texte de la proposition choisie quand la réponse est fausse. */
+  wrongAnswer?: string;
+  prompt?: string;
+  source?: 'cours' | 'devoir';
 }
 
 type ReviewMap = Record<string, ReviewEntry>;
@@ -94,9 +108,22 @@ export interface ReviewContext {
  * Enregistre la réponse de l'élève à une question.
  * `correct` = réussie du premier coup (une réussite après correction ne compte pas comme sue).
  */
-export function recordReviewAnswer(userId: string, ctx: ReviewContext, exerciseId: string, correct: boolean, today: string = localYmd(), now: number = Date.now()): ReviewEntry {
+export function recordReviewAnswer(
+  userId: string,
+  ctx: ReviewContext,
+  exerciseId: string,
+  correct: boolean,
+  today: string = localYmd(),
+  now: number = Date.now(),
+  details: AnswerDetails = {},
+): ReviewEntry {
   const map = read(userId);
   const prev = map[exerciseId];
+  // Mémoire des erreurs : on garde la question, le chapitre et la réponse fausse choisie
+  const errorInfo = correct
+    ? { wrongAnswer: prev?.wrongAnswer, wrongIn: prev?.wrongIn, wrongAt: prev?.wrongAt }
+    : { wrongAnswer: details.wrongAnswer?.slice(0, 300) || prev?.wrongAnswer, wrongIn: details.source || 'cours' as const, wrongAt: now };
+  const promptInfo = details.prompt ? { prompt: details.prompt.slice(0, 400) } : prev?.prompt ? { prompt: prev.prompt } : {};
   // Même question déjà posée AUJOURD'HUI (rappel de fin de leçon, révision du jour…) : la réussir une
   // deuxième fois dans la journée ne prouve pas qu'on s'en souviendra. Elle ne monte donc pas de boîte,
   // et une erreur faite plus tôt dans la journée reste une erreur (la question revient demain).
@@ -121,10 +148,28 @@ export function recordReviewAnswer(userId: string, ctx: ReviewContext, exerciseI
     seen: (prev?.seen ?? 0) + 1,
     updatedAt: now,
     lastDay: today,
+    ...promptInfo,
+    ...(errorInfo.wrongAt ? errorInfo : {}),
   };
   map[exerciseId] = entry;
   write(userId, map);
   return entry;
+}
+
+/**
+ * MÉMOIRE DES ERREURS (« wrongQuestionsMemory ») : les questions encore ratées (dernière réponse fausse),
+ * dans les chapitres demandés, les plus récentes d'abord. Une question réussie ensuite sort de la liste.
+ */
+export function getWrongQuestions(
+  userId: string,
+  subject: StemSubjectId,
+  grade: CurriculumGradeLevel,
+  chapterIds?: string[],
+): ReviewEntry[] {
+  const allowed = chapterIds && chapterIds.length ? new Set(chapterIds) : null;
+  return Object.values(read(userId))
+    .filter((e) => e.subject === subject && e.grade === grade && e.lastResult === 'ko' && (!allowed || allowed.has(e.chapterId)))
+    .sort((a, b) => (b.wrongAt || b.updatedAt) - (a.wrongAt || a.updatedAt));
 }
 
 /** Questions à revoir aujourd'hui (ou en retard) pour ce volet, les plus urgentes d'abord. */
