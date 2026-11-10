@@ -35,8 +35,20 @@ export interface Subject {
   examDate?: string; // YYYY-MM-DD
   examType?: EvaluationType; // Examen final vs Devoir Surveillé (DS) vs Rattrapage
   examTime?: string; // e.g. "08:30"
+  /** Chapitres du cours KONAN choisis pour ce devoir/examen (vide = matière sans cours : chronomètre 75 min). */
+  examChapterIds?: string[];
+  /** Matière du programme reconnue au moment du choix des chapitres (maths, physique_chimie, svt…). */
+  examSubjectKey?: string;
   topics?: string[];
 }
+
+/**
+ * Séance de préparation à un devoir/examen :
+ *  - qcm30   : 30 questions des chapitres choisis (repère de 45 min, jamais bloquant) ;
+ *  - sujet2h : sujet complet de 2 h au format officiel ivoirien, corrigé sur photo de la copie ;
+ *  - chrono75: matière sans cours dans l'appli : 75 min de révision sur le cahier, chronométrées.
+ */
+export type ExamPrepMode = 'qcm30' | 'sujet2h' | 'chrono75';
 
 export interface ClassSlot {
   id: string;
@@ -115,6 +127,8 @@ export interface StudySession {
   isExamPrep?: boolean;
   examDaysRemaining?: number;
   examType?: EvaluationType;
+  examPrepMode?: ExamPrepMode;
+  examChapterIds?: string[];
   // Adaptive daily catch-up fields (ephemeral for today only)
   isRescheduledToday?: boolean;
   originalStartTime?: string;
@@ -245,6 +259,7 @@ export type ActiveAppView =
   | 'analytics'
   | 'focus'
   | 'tutor'
+  | 'exam'
   | 'pro-wizard'
   | 'admin';
 

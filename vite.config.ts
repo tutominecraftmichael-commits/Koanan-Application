@@ -122,6 +122,27 @@ export default defineConfig(({ mode }) => {
               res.end(JSON.stringify({ success: false, error: err?.message || 'Internal Server Error' }));
             }
           });
+          // Devoirs : sujet de 2 h au format officiel, et correction de la copie photographiée.
+          // Chemins ÉCRITS EN ENTIER : un chemin calculé (`./api/${route}.js`) n'est pas suivi par Vite
+          // et serait cherché dans node_modules/.vite-temp (« Cannot find module »).
+          const examRoutes: Record<string, () => Promise<any>> = {
+            // @ts-ignore
+            'exam-sujet': () => import('./api/exam-sujet.js'),
+            // @ts-ignore
+            'exam-correct': () => import('./api/exam-correct.js'),
+          };
+          for (const [route, load] of Object.entries(examRoutes)) {
+            server.middlewares.use(`/api/${route}`, async (req, res) => {
+              try {
+                const { default: handler } = await load();
+                await handler(req, res);
+              } catch (err: any) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ success: false, error: err?.message || 'Internal Server Error' }));
+              }
+            });
+          }
           // Banc d'essai des messages de KONAN (développement uniquement)
           server.middlewares.use('/api/konan-voice', async (req, res) => {
             try {
