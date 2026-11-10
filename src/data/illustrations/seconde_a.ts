@@ -1583,4 +1583,52 @@ export const SECONDE_A_ILLUSTRATIONS: Record<string, ExerciseIllustration> = {
       tableData: {"headers":["École","Chef de file","Chemin vers le bonheur"],"rows":[["Scepticisme","Pyrrhon d’Élis","Suspendre son jugement (épochè), ne rien affirmer (aphasie)"],["Épicurisme","Épicure","Ne pas craindre la mort ; satisfaire seulement les désirs naturels et nécessaires"],["Stoïcisme","Zénon de Citium (Épictète)","Ne s’attacher qu’à ce qui dépend de nous ; suivre la raison et la nature"]]},
     },
   },
+  "premiere_philo_histoire_l07_moyen_age_renaissance_p02_q6": {
+    course: {
+      type: 'custom_svg',
+      title: "Les deux cités de saint Augustin",
+      caption: "« Deux amours ont fait deux cités » (La Cité de Dieu, XIV, 28).",
+      tableData: {"headers":["","Cité terrestre","Cité céleste"],"rows":[["Fondée sur","L’amour de soi jusqu’au mépris de Dieu","L’amour de Dieu jusqu’au mépris de soi"],["Recherche","La gloire auprès des hommes","La gloire en Dieu"],["Ses chefs","Dominés par la passion de dominer","Servent par charité"],["Sagesse","Les biens du corps et de l’âme","La piété"]]},
+    },
+  },
+  "premiere_philo_histoire_l07_moyen_age_renaissance_p05_q6": {
+    course: {
+      type: 'custom_svg',
+      title: "Moyen Âge ou Renaissance ?",
+      caption: "Période du VIe au XVe siècle (la Renaissance déborde sur le XVIe siècle).",
+      tableData: {"headers":["Auteur","Dates","Période","Idée clé"],"rows":[["Saint Augustin","354-430","Moyen Âge","Deux cités ; foi et raison complémentaires"],["Saint Thomas d’Aquin","1225-1274","Moyen Âge","Foi et raison viennent de Dieu, elles ne se contredisent pas"],["Nicolas Machiavel","1469-1527","Renaissance","Le prince doit savoir « entrer au mal »"],["Martin Luther","1483-1546","Renaissance","Réforme protestante"],["Jean Calvin","1509-1564","Renaissance","Réforme protestante"]]},
+    },
+  },
+  "premiere_philo_histoire_l08_periode_moderne_p02_q3": {
+    course: {
+      type: 'custom_svg',
+      title: "Les trois sortes d’idées selon Descartes",
+      caption: "Exemple du soleil : vu (adventice), calculé par les astronomes (factice).",
+      tableData: {"headers":["Sorte d’idée","Origine","Exemple"],"rows":[["Adventice","Vient de l’extérieur, par les sens","L’idée du soleil qu’on a en le regardant"],["Factice","Fabriquée par nous","Le soleil calculé par les astronomes"],["Innée","Propre à l’esprit, dès la naissance","Dieu, l’esprit, le triangle"]]},
+    },
+  },
+  "premiere_philo_histoire_l08_periode_moderne_p06_q2": {
+    course: {
+      type: 'custom_svg',
+      title: "D’où vient la connaissance ?",
+      caption: "Les trois réponses de la période moderne (XVIe – XVIIIe siècle).",
+      tableData: {"headers":["Doctrine","Auteur","Source de la connaissance","Formule"],"rows":[["Rationalisme","Descartes (1596-1650)","La raison seule","Idées innées ; intuition et déduction"],["Empirisme","Locke (1632-1704)","L’expérience seule","L’âme est une « table rase »"],["Criticisme","Kant (1724-1804)","L’union de la raison et de l’expérience","« Des pensées sans contenu sont vides ; des intuitions sans concepts sont aveugles »"]]},
+    },
+  },
+  "premiere_philo_histoire_l09_periode_contemporaine_p01_q3": {
+    course: {
+      type: 'custom_svg',
+      title: "Les quatre périodes de la philosophie",
+      caption: "Chaque période a ses grandes questions.",
+      tableData: {"headers":["Période","Dates","Grandes questions","Auteurs étudiés"],"rows":[["Antiquité","VIe s. av. J.-C. – Ve s. apr. J.-C.","L’Être, la vérité, le bonheur","Héraclite, Parménide, Platon, Aristote, Épicure…"],["Moyen Âge et Renaissance","VIe – XVe s.","Philosophie et religion, philosophie et politique","Augustin, Thomas d’Aquin, Machiavel"],["Période moderne","XVIe – XVIIIe s.","La source de la connaissance","Descartes, Locke, Kant"],["Période contemporaine","XIXe s. – nos jours","La connaissance scientifique, la liberté","Bachelard, Sartre"]]},
+    },
+  },
+  "premiere_philo_histoire_l09_periode_contemporaine_p05_q4": {
+    course: {
+      type: 'custom_svg',
+      title: "Essence et existence",
+      caption: "Sartre, L’existentialisme est un humanisme (1946).",
+      tableData: {"headers":["","Ordre","Exemple","Conséquence"],"rows":[["Objet fabriqué","L’essence précède l’existence","Le coupe-papier conçu par l’artisan","Son usage est fixé d’avance"],["Essentialisme","Une essence humaine précède l’existence","« Il est né comme ça »","L’homme est défini d’avance"],["Existentialisme (Sartre)","L’existence précède l’essence","L’homme surgit dans le monde, puis se définit","L’homme est libre et responsable de ce qu’il devient"]]},
+    },
+  },
 };
