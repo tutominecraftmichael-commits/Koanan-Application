@@ -9,6 +9,9 @@ import { MATHS_TLE_C_L04_DIVISIBILITE } from '../../data/courses/terminale/maths
 import { MATHS_TLE_D_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_d_limites_continuite';
 import { MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_d_probabilite_conditionnelle';
 import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_d_derivabilite_etude_fonctions';
+import { MATHS_TLE_D_L04_PRIMITIVES } from '../../data/courses/terminale/maths_tle_d_primitives';
+import { MATHS_TLE_D_L05_LOGARITHME_NEPERIEN } from '../../data/courses/terminale/maths_tle_d_logarithme_neperien';
+import { MATHS_TLE_D_L06_NOMBRES_COMPLEXES } from '../../data/courses/terminale/maths_tle_d_nombres_complexes';
 import { CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE } from '../../data/courses/terminale/chimie_tle_cd_acide_fort_base_forte';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
@@ -91807,6 +91810,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_TLE_D_L01_LIMITES_CONTINUITE,
   MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE,
   MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS,
+  MATHS_TLE_D_L04_PRIMITIVES,
+  MATHS_TLE_D_L05_LOGARITHME_NEPERIEN,
+  MATHS_TLE_D_L06_NOMBRES_COMPLEXES,
   CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
