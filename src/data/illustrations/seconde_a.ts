@@ -1527,4 +1527,60 @@ export const SECONDE_A_ILLUSTRATIONS: Record<string, ExerciseIllustration> = {
       tableData: {"headers":["","Introduction","Conclusion"],"rows":[["Place","Première partie du devoir","Dernière partie du devoir"],["Éléments","Thème, problème, thèse (+ structure logique)","Bilan de la discussion + prise de position personnelle"],["Ouverture possible","Une généralité","« En définitive », « Au terme de notre travail », « En somme »"],["Avis personnel","Non","Oui"]]},
     },
   },
+  "premiere_philo_methodologie_l04_essai_problematisation_p01_q2": {
+    course: {
+      type: 'custom_svg',
+      title: "Les trois étapes de l’essai de problématisation",
+      caption: "Exemple suivi sur le sujet « Doit-on condamner le progrès technique ? ».",
+      tableData: {"headers":["Étape","Ce qu’on fait","Exemple"],"rows":[["1. Comprendre le sujet","Étude parcellaire puis reformulation","« Faut-il blâmer les avancées de la technique ? »"],["2. Problématiser","Dégager le problème et ses aspects","Problème : la technique est-elle nuisible ?"],["3. Structurer les axes","Mettre en ordre les arguments sous chaque axe","Axe 1 : facteur de développement ; axe 2 : source d’inquiétudes"]]},
+    },
+  },
+  "premiere_philo_methodologie_l04_essai_problematisation_p04_q1": {
+    course: {
+      type: 'custom_svg',
+      title: "Axes, arguments et références",
+      caption: "Sujet : « Doit-on condamner le progrès technique ? »",
+      tableData: {"headers":["Axe","Argument","Référence ou exemple"],"rows":[["1. Facteur de développement","Pouvoir sur la nature","Mythe de Prométhée (Platon, Protagoras) ; Descartes, Discours de la méthode"],["1. Facteur de développement","Meilleures conditions de vie","Médecine, transport, communication"],["2. Source d’inquiétudes","Perversion des mœurs","Rabelais, Pantagruel ; Rousseau, Discours sur les sciences et les arts"],["2. Source d’inquiétudes","Risques des manipulations génétiques","Clonage, OGM"],["2. Source d’inquiétudes","Oubli de la dimension spirituelle","Bergson : « le corps agrandi attend un supplément d’âme »"]]},
+    },
+  },
+  "premiere_philo_methodologie_l05_introduction_dissertation_p02_q3": {
+    course: {
+      type: 'custom_svg',
+      title: "Décomposer l’introduction modèle",
+      caption: "Sujet : « Doit-on condamner le progrès technique ? »",
+      tableData: {"headers":["Élément","Phrase de l’introduction"],"rows":[["Amorce","« L’expérience quotidienne nous révèle le progrès vertigineux des sciences et techniques… Malheureusement, cette évolution s’accompagne souvent d’une réelle menace pour l’humanité entière. »"],["Problème","« Dès lors, doit-on souscrire à l’idée selon laquelle la technique est nuisible ? »"],["Aspects","« Dans quelle mesure la puissance technique constitue-t-elle une menace ? N’est-elle pas au contraire un facteur de développement ? »"]]},
+    },
+  },
+  "premiere_philo_histoire_l06_periode_antique_p01_q3": {
+    course: {
+      type: 'custom_svg',
+      title: "L’Antiquité philosophique",
+      caption: "Du VIe siècle avant J.-C. au Ve siècle après J.-C. Socrate (470-399 av. J.-C.) sert de repère.",
+      tableData: {"headers":["Sous-période","Grande question","Penseurs"],"rows":[["Présocratique","L’Être (ontologie)","Héraclite, Parménide"],["Socratique","La vérité","Sophistes (Protagoras, Gorgias), Socrate, Platon, Aristote"],["Post-socratique","Le bonheur","Pyrrhon, Épicure, Zénon de Citium, Épictète"]]},
+    },
+  },
+  "premiere_philo_histoire_l06_periode_antique_p03_q7": {
+    course: {
+      type: 'custom_svg',
+      title: "Héraclite et Parménide",
+      caption: "Bilan : l’Être est à la fois l’Un et le Multiple, la permanence et le devenir.",
+      tableData: {"headers":["","Héraclite","Parménide"],"rows":[["Dates","Vers 540 – vers 470 av. J.-C.","Vers 544 – vers 450 av. J.-C."],["L’Être est…","Changeant, en mouvement (devenir)","Incréé, impérissable, immobile, éternel"],["Formule","« On ne peut pas descendre deux fois dans le même fleuve »","« L’Être est, le Non-Être n’est pas »"],["Courant","Philosophie du devenir","Immobilisme"]]},
+    },
+  },
+  "premiere_philo_histoire_l06_periode_antique_p06_q7": {
+    course: {
+      type: 'custom_svg',
+      title: "Trois réponses sur la vérité",
+      caption: "Platon et Aristote s’opposent aux sophistes : la vérité est universelle et absolue.",
+      tableData: {"headers":["","Sophistes","Platon","Aristote"],"rows":[["La vérité est…","Relative à chacun","Dans les Idées (intelligible)","Dans l’universel, le général"],["On l’atteint par…","La rhétorique, l’art de convaincre","La dialectique, l’ascension de l’âme","L’induction (à partir des sens) et la démonstration"],["École","—","L’Académie","Le Lycée"]]},
+    },
+  },
+  "premiere_philo_histoire_l06_periode_antique_p09_q7": {
+    course: {
+      type: 'custom_svg',
+      title: "Trois chemins vers le bonheur",
+      caption: "Les écoles post-socratiques visent toutes la paix de l’âme (ataraxie).",
+      tableData: {"headers":["École","Chef de file","Chemin vers le bonheur"],"rows":[["Scepticisme","Pyrrhon d’Élis","Suspendre son jugement (épochè), ne rien affirmer (aphasie)"],["Épicurisme","Épicure","Ne pas craindre la mort ; satisfaire seulement les désirs naturels et nécessaires"],["Stoïcisme","Zénon de Citium (Épictète)","Ne s’attacher qu’à ce qui dépend de nous ; suivre la raison et la nature"]]},
+    },
+  },
 };

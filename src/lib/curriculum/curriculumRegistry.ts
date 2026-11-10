@@ -86,6 +86,9 @@ import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/ph
 import { PHILO_1RE_L01_METHODE_LECTURE_TEXTE } from '../../data/courses/premiere/philo_1re_methode_lecture_texte';
 import { PHILO_1RE_L02_INTRODUCTION_COMMENTAIRE } from '../../data/courses/premiere/philo_1re_introduction_commentaire';
 import { PHILO_1RE_L03_CONCLUSION_COMMENTAIRE } from '../../data/courses/premiere/philo_1re_conclusion_commentaire';
+import { PHILO_1RE_L04_ESSAI_PROBLEMATISATION } from '../../data/courses/premiere/philo_1re_essai_problematisation';
+import { PHILO_1RE_L05_INTRODUCTION_DISSERTATION } from '../../data/courses/premiere/philo_1re_introduction_dissertation';
+import { PHILO_1RE_L06_PERIODE_ANTIQUE } from '../../data/courses/premiere/philo_1re_periode_antique';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
 import { PHILO_TLE_L04_VIE_EN_SOCIETE } from '../../data/courses/terminale/philo_tle_vie_en_societe';
 import { PHILO_TLE_L05_DIEU_RELIGION } from '../../data/courses/terminale/philo_tle_dieu_religion';
@@ -91839,6 +91842,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   PHILO_1RE_L01_METHODE_LECTURE_TEXTE,
   PHILO_1RE_L02_INTRODUCTION_COMMENTAIRE,
   PHILO_1RE_L03_CONCLUSION_COMMENTAIRE,
+  PHILO_1RE_L04_ESSAI_PROBLEMATISATION,
+  PHILO_1RE_L05_INTRODUCTION_DISSERTATION,
+  PHILO_1RE_L06_PERIODE_ANTIQUE,
   PHILO_TLE_L03_CONNAISSANCE_HOMME,
   PHILO_TLE_L04_VIE_EN_SOCIETE,
   PHILO_TLE_L05_DIEU_RELIGION,
