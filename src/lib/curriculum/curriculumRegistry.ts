@@ -54,6 +54,9 @@ import { HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES } from '../../data/courses/pr
 import { MATHS_1RE_L01_EQUATIONS_INEQUATIONS } from '../../data/courses/premiere/maths_1re_equations_inequations';
 import { MATHS_1RE_L02_DENOMBREMENT } from '../../data/courses/premiere/maths_1re_denombrement';
 import { MATHS_1RE_L03_GENERALITES_FONCTIONS } from '../../data/courses/premiere/maths_1re_generalites_fonctions';
+import { MATHS_1RE_L04_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/premiere/maths_1re_derivabilite_etude_fonctions';
+import { MATHS_1RE_L06_STATISTIQUES } from '../../data/courses/premiere/maths_1re_statistiques';
+import { MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_systemes_inequations_lineaires';
 import { FR_2DE_PL_L01_FONCTIONS_LANGAGE } from '../../data/courses/seconde/fr_2de_fonctions_langage';
 import { FR_2DE_PL_L02_CONNECTEURS_LOGIQUES } from '../../data/courses/seconde/fr_2de_connecteurs_logiques';
 import { FR_2DE_PL_L02B_EXPRESSION_OPINION } from '../../data/courses/seconde/fr_2de_expression_opinion';
@@ -91858,6 +91861,10 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_1RE_L01_EQUATIONS_INEQUATIONS,
   MATHS_1RE_L02_DENOMBREMENT,
   MATHS_1RE_L03_GENERALITES_FONCTIONS,
+  MATHS_1RE_L04_DERIVABILITE_ETUDE_FONCTIONS,
+  // Leçon 5 (Suites numériques) : en attente du PDF officiel
+  MATHS_1RE_L06_STATISTIQUES,
+  MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
   FR_2DE_PL_L02_CONNECTEURS_LOGIQUES,
   FR_2DE_PL_L02B_EXPRESSION_OPINION,
