@@ -225,6 +225,23 @@
   background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.12) 0%, rgba(56, 189, 248, 0.03) 45%, transparent 70%);
 }
 
+/* Mascotte KONAN de la bannière d'alerte : petit balancement façon Duolingo */
+@keyframes konanWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-10deg); }
+  40% { transform: rotate(8deg); }
+  60% { transform: rotate(-5deg); }
+  80% { transform: rotate(3deg); }
+}
+
+.konan-wiggle {
+  animation: konanWiggle 0.8s ease-in-out 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .konan-wiggle { animation: none; }
+}
+
 @keyframes pulseSlow {
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50% { opacity: 0.6; transform: scale(1.05); }
@@ -896,6 +913,14 @@ html.light .bg-slate-900 .text-white {
   color: #0F172A !important;
 }
 
+/* Texte blanc posé sur un fond sombre qui devient clair en mode jour (toutes les opacités, y compris
+   les champs de saisie) : il passe en foncé. Jamais à l'intérieur d'un bouton coloré ou d'un dégradé. */
+html.light [class*="bg-slate-900"] .text-white:not(button *):not([class*="bg-"]):not([class*="from-"] *),
+html.light [class*="bg-slate-950"] .text-white:not(button *):not([class*="bg-"]):not([class*="from-"] *),
+html.light .text-white[class*="bg-slate-9"]:not([class*="dark:bg-slate-9"]) {
+  color: #0F172A !important;
+}
+
 html.light .bg-slate-800,
 html.light .bg-slate-800\/90,
 html.light .bg-slate-800\/80,
@@ -1114,4 +1139,111 @@ html.dark .active\:bg-white:not([class*="dark:active:bg-"]):active,
   }
 }
 
+/* Toucher instantané : les boutons et liens réagissent sans attendre un éventuel double-toucher
+   (aucun effet sur l'apparence ni sur les animations). */
+a, button, [role="button"], input, select, textarea, label {
+  touch-action: manipulation;
+}
 
+/* Bouton immobile avec un reflet de lumière qui le traverse (donne envie de cliquer, sans sautiller) */
+.konan-btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  transform: translateX(-130%);
+  animation: konan-btn-shine 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes konan-btn-shine {
+  0%, 35% { transform: translateX(-130%); }
+  75%, 100% { transform: translateX(130%); }
+}
+/* Rattrapage : le reflet est orange lumineux */
+.konan-btn-shine-amber::after {
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 228, 180, 0.8) 50%, transparent 70%);
+}
+/* Au toucher : une barre de lumière nette traverse le bouton (blanche ; orange pour le rattrapage) */
+.konan-btn-shine::before {
+  content: "";
+  position: absolute;
+  top: -25%;
+  bottom: -25%;
+  left: 0;
+  width: 34%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, transparent 100%);
+  transform: translateX(-170%) skewX(-18deg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.konan-btn-shine-amber::before {
+  background: linear-gradient(100deg, transparent 0%, rgba(253, 186, 116, 0.95) 35%, rgba(255, 247, 230, 1) 50%, rgba(253, 186, 116, 0.95) 65%, transparent 100%);
+}
+.konan-btn-shine.konan-tap::before { animation: konan-btn-tap 0.5s ease-out; }
+.konan-btn-shine-amber.konan-tap { box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.45), 0 0 26px rgba(251, 146, 60, 0.85) !important; }
+@keyframes konan-btn-tap {
+  0% { transform: translateX(-170%) skewX(-18deg); opacity: 1; }
+  100% { transform: translateX(400%) skewX(-18deg); opacity: 1; }
+}
+/* Pas de coupure en « animations réduites » : reflets courts et doux, voulus partout (choix produit) */
+
+/* Reflet sur une CARTE entière (formules payantes) : calque posé dans la carte, teinté à sa couleur
+   (un reflet blanc serait invisible sur une carte blanche). Au toucher de la carte, une barre passe. */
+.konan-shine-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+.konan-shine-layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 35%, var(--shine-soft) 50%, transparent 65%);
+  transform: translateX(-130%);
+  animation: konan-btn-shine 4.5s ease-in-out infinite;
+}
+.konan-shine-layer::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  width: 30%;
+  background: linear-gradient(100deg, transparent 0%, var(--shine-strong) 50%, transparent 100%);
+  transform: translateX(-170%) skewX(-18deg);
+  opacity: 0;
+}
+.konan-shine-layer.konan-tap::before { animation: konan-btn-tap 0.6s ease-out; }
+.konan-shine-sky { --shine-soft: rgba(56, 189, 248, 0.16); --shine-strong: rgba(56, 189, 248, 0.38); }
+.konan-shine-violet { --shine-soft: rgba(139, 92, 246, 0.14); --shine-strong: rgba(139, 92, 246, 0.34); }
+.dark .konan-shine-sky { --shine-soft: rgba(125, 211, 252, 0.10); --shine-strong: rgba(186, 230, 253, 0.28); }
+.dark .konan-shine-violet { --shine-soft: rgba(196, 181, 253, 0.10); --shine-strong: rgba(221, 214, 254, 0.26); }
+
+/* ==========================================================================
+   AUCUN TEXTE SÉLECTIONNABLE : un appui long ou un double toucher ne surligne plus
+   les mots en bleu et n'ouvre plus « Rechercher sur Google / Définir » (comme une vraie appli).
+   Les champs où l'élève écrit (nom, email, mot de passe, explication…) restent utilisables.
+   ========================================================================== */
+html,
+body,
+body * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+img,
+svg {
+  -webkit-user-drag: none;
+}
+input,
+textarea,
+select,
+[contenteditable="true"],
+[contenteditable=""] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+}

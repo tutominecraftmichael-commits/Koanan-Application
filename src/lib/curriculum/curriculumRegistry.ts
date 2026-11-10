@@ -91898,6 +91898,11 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   svt2deAHabitudesAlimentairesEtSanteChapter,
 ];
 
+/** Leçons telles qu'écrites (avant figures et découpage) : sert aux scripts (ex. générateur de dessins). */
+export function getAuthoredChaptersRaw(): readonly CurriculumChapter[] {
+  return AUTHORED_CHAPTERS;
+}
+
 /** Alias de filières historiques (premiere_a / terminale_a -> A1). */
 export function normalizeGradeForLookup(gradeLevel: CurriculumGradeLevel): CurriculumGradeLevel {
   if (gradeLevel === 'terminale_a') return 'terminale_a1';

@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="fr" class="dark">
+<html lang="fr" class="dark konan-splash-on">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <link rel="icon" type="image/png" href="/logo-konan.png" />
-    <link rel="apple-touch-icon" href="/logo-konan.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/logo-konan.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="/logo-konan.png" />
-    <link rel="apple-touch-icon" sizes="167x167" href="/logo-konan.png" />
-    <link rel="apple-touch-startup-image" href="/logo-konan.png" />
+    <!-- Icône de l'application (visage de KONAN) : onglet, écran d'accueil iPhone et Android -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/konan-favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/konan-favicon-16.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/icons/konan-favicon-64.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#091427" />
+    <!-- Bleu ciel pendant l'écran d'ouverture ; l'appli remet la couleur du thème ensuite -->
+    <meta name="theme-color" content="#90D8F8" data-app-color="#091427" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="KONAN" />
@@ -25,8 +26,40 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Police arrondie de l'écran d'ouverture : seulement les lettres K, O, N, A (fichier minuscule) -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&text=KONA&display=fallback" rel="stylesheet">
+    <style>
+      /* Écran d'ouverture : après le visage (écran du téléphone), « KONAN » sur le même bleu ciel */
+      #konan-splash {
+        position: fixed; inset: 0; z-index: 2147483000;
+        background: #90D8F8;
+        display: flex; align-items: center; justify-content: center;
+        transition: opacity 0.2s ease;
+        /* Ni sélection, ni copie, ni « Toucher pour rechercher », ni surbrillance au toucher */
+        -webkit-user-select: none; user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: none;
+      }
+      #konan-splash.is-hiding { opacity: 0; pointer-events: none; }
+      /* Le téléphone colore sa barre du bas avec le fond de la page : bleu ciel tant que l'écran est là */
+      html.konan-splash-on, html.konan-splash-on body { background: #90D8F8 !important; }
+      #konan-splash-word {
+        font-family: 'Nunito', 'Arial Rounded MT Bold', 'Arial Black', sans-serif;
+        font-weight: 900;
+        font-size: clamp(44px, 14vw, 84px);
+        letter-spacing: 0.04em;
+        color: #ffffff;
+        text-shadow: 0 3px 0 rgba(30, 120, 170, 0.35);
+        pointer-events: none;
+        -webkit-user-select: none; user-select: none;
+      }
+    </style>
   </head>
   <body class="bg-[#090D16] text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white min-h-screen overflow-x-hidden">
+    <div id="konan-splash" aria-hidden="true"><div id="konan-splash-word">KONAN</div></div>
+    <!-- L'appli retire l'écran d'ouverture dès qu'elle est prête (fichier séparé : la CSP bloque les scripts dans la page) -->
+    <script src="/konan-splash.js"></script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

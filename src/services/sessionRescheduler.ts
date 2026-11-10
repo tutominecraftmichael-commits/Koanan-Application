@@ -389,14 +389,25 @@ export function evaluateDailyCatchup(
         (matchingSubject && /\b(devoir|ds)\b/i.test(matchingSubject.name));
       const targetDuration = isDevoir ? 45 : session.durationMinutes;
 
-      const freeSlot = findNextFreeSlotToday(
-        todayDayOfWeek,
-        currentMinute,
-        targetDuration,
-        classes,
-        preferences,
-        otherSessions
-      );
+      // Même créneau que celui annoncé dans la notification : il est calculé au moment où la séance
+      // devient « manquée » (début + 16 min). Si l'élève ouvre l'appli plus tard et que ce créneau
+      // n'est pas encore passé, on le garde ; sinon on cherche le prochain créneau libre à partir de maintenant.
+      let freeSlot: ReturnType<typeof findNextFreeSlotToday> = null;
+      const missedAtMin = sessionStartMin + 16;
+      if (currentMinute > missedAtMin) {
+        const announced = findNextFreeSlotToday(todayDayOfWeek, missedAtMin, targetDuration, classes, preferences, otherSessions);
+        if (announced && parseTimeToMinutes(announced.startTime) > currentMinute) freeSlot = announced;
+      }
+      if (!freeSlot) {
+        freeSlot = findNextFreeSlotToday(
+          todayDayOfWeek,
+          currentMinute,
+          targetDuration,
+          classes,
+          preferences,
+          otherSessions
+        );
+      }
 
       // RÈGLE ABSOLUE : Le créneau de rattrapage doit être STRICTEMENT dans le futur (dateDebut > maintenant)
       if (freeSlot && parseTimeToMinutes(freeSlot.startTime) > currentMinute) {

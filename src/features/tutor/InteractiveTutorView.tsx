@@ -45,12 +45,21 @@ import {
   getSubCategoryQuestion,
   getChapterSubCategory,
   getActiveSubCategoryForSession,
-  defaultSubCategoryFor
+  defaultSubCategoryFor,
+  saveResumeBookmark,
+  readResumeBookmark
 } from '../../lib/curriculum/studentProgressService';
+import type { ResumeBookmark } from '../../lib/curriculum/types';
+import { KonanMascot } from '../../components/common/KonanMascot';
+import { afterShine } from '../../lib/shineClick';
 import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
 import { shuffleExerciseOptions } from '../../lib/curriculum/optionShuffle';
 import { soundFX } from '../../lib/audioEffects';
 import { KonanCube } from '../../components/common/KonanCube';
+import { findReviewExercise, forgetReview, getDueReviews, recordReviewAnswer } from '../../lib/curriculum/reviewMemory';
+import { useKonanCoach, KonanCoachBubble } from './konanCoach';
+import { FeynmanChallenge } from './FeynmanChallenge';
+import { pullLearning, startLearningSync } from '../../lib/curriculum/learningCloudSync';
 import { MathRenderer, VisualSchemaRenderer, SmartKeyFormulaBox } from '../../components/common/MathRenderer';
 
 export interface InteractiveTutorViewProps {
@@ -60,11 +69,25 @@ export interface InteractiveTutorViewProps {
   stemSubjectId: StemSubjectId;
   studySessionId?: string;
   durationMinutes?: number;
+  /** Méthode de la séance (planning) : change le déroulé du cours (ex. Rappel actif). */
+  pacingMethod?: string;
   onExit: () => void;
   onSessionCompleted: (sessionId?: string) => void;
 }
 
+/** Questions « à revoir aujourd'hui » (révision espacée), posées au début de la séance. */
+interface WarmupItem {
+  exercise: InteractiveExercise;
+  stepIndex: number;
+  point: CurriculumPoint;
+  chapterId: string;
+}
+
 type LessonPhase =
+  | 'feynman' // Feynman : « Explique-le simplement » (oral ou écrit) après la mini-leçon
+  | 'time_up' // Pomodoro : temps de travail écoulé → pause, puis matière suivante
+  | 'warmup' // Révision du jour : questions dues (révision espacée), de mémoire, avant la leçon
+  | 'recall' // Rappel actif : 3 questions de la mini-leçon, de mémoire, fiche cachée
   | 'intro' // Écran d'introduction animé de la mini-leçon (Présentation, Enjeu Bac/BEPC, Objectifs)
   | 'learning' // Défilement continu : Cours progressif + Test de compréhension immédiat
   | 'catchup' // Boucle de rattrapage (Rappel du cours ciblé + Question manquée) pour atteindre 100%
@@ -213,6 +236,20 @@ const PedagogicalParagraph: React.FC<{ text: string }> = ({ text }) => {
  * - Chaque étape i dispose de SA PROPRE fiche de cours dédiée, de sa formule/règle et de son QCM.
  * - Le bloc de cours du haut change OBLIGATOIREMENT à chaque étape (zéro paragraphe figé).
  */
+/**
+ * Titre coupé par « … » ou « ... » : on le complète avec la phrase entière de la question quand elle
+ * commence pareil, sinon on retire simplement les points de suspension. Jamais de phrase coupée à l'écran.
+ */
+function completeTruncatedTitle(title?: string, fullText?: string): string | undefined {
+  if (!title) return title;
+  const t = title.trim();
+  if (!/(\.\.\.|…)$/.test(t)) return t;
+  const base = t.replace(/\s*(\.\.\.|…)$/, '').trim();
+  const full = (fullText || '').replace(/\s+/g, ' ').trim();
+  if (full && full.toLowerCase().startsWith(base.toLowerCase().slice(0, Math.max(10, base.length - 3)))) return full;
+  return base;
+}
+
 function buildProgressiveCourseSlice(
   point: CurriculumPoint,
   stepIndex: number,
@@ -224,12 +261,14 @@ function buildProgressiveCourseSlice(
   // 1. Priorité absolue : Fiche de cours structurée dédiée à cette étape (Liaison 1-pour-1)
   if (point.structuredSteps && point.structuredSteps[stepIndex]) {
     const step = point.structuredSteps[stepIndex];
+    // Certains titres d'étape ont été enregistrés coupés (« Un automobiliste roule sur… ») : on remet la phrase entière
+    const stepTitle = completeTruncatedTitle(step.stepTitle, step.exercise?.prompt) || point.title.replace(/mini-leçon\s*\d+\/\d+\s*:\s*/i, '');
     return {
-      stepBadge: `Étape ${stepIndex + 1}/${totalSteps} · ${step.stepTitle || point.title.replace(/mini-leçon\s*\d+\/\d+\s*:\s*/i, '')}`,
+      stepBadge: `Étape ${stepIndex + 1}/${totalSteps} · ${stepTitle}`,
       stepKind: step.stepKind,
       stepIndex,
       totalSteps,
-      stepTitle: step.stepTitle || point.title,
+      stepTitle: stepTitle || point.title,
       paragraphText: step.paragraphText,
       formula: step.formula,
       keyRule: step.keyRule,
@@ -245,7 +284,8 @@ function buildProgressiveCourseSlice(
     const explanation = (exercise.explanation || '').trim();
     const cleanExplanation = explanation.replace(/^Bonne réponse\s*:\s*[^.]+\.\s*/i, '').trim();
 
-    const fallbackTitle = cleanPrompt.length > 55 ? `${cleanPrompt.slice(0, 52)}...` : cleanPrompt;
+    // Titre complet (jamais coupé par « … ») : l'affichage passe à la ligne si besoin
+    const fallbackTitle = cleanPrompt;
     const formulas = point.formulas || [];
     const dedicatedFormula = formulas[stepIndex] || (formulas.length > 0 ? formulas[stepIndex % formulas.length] : undefined);
 
@@ -285,9 +325,22 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   stemSubjectId,
   studySessionId,
   durationMinutes = 25,
+  pacingMethod,
   onExit,
   onSessionCompleted,
 }) => {
+  // Rappel actif : se tester de mémoire (question avant la fiche, rappel en fin de mini-leçon)
+  const isActiveRecall = pacingMethod === 'active_recall_spaced' || pacingMethod === 'active_recall' || pacingMethod === 'spaced_repetition';
+  // Pomodoro : la séance dure le temps prévu au planning (25 min de VRAI travail), puis 5 min de pause.
+  // Time Blocking : même principe sur un long bloc d'une seule matière (75 min), puis 15 min de pause.
+  const isPomodoro = pacingMethod === 'pomodoro';
+  const isTimeBlocking = pacingMethod === 'time_blocking' || pacingMethod === 'deep_work';
+  const workLimitSec = isPomodoro || isTimeBlocking ? Math.max(1, durationMinutes || (isTimeBlocking ? 75 : 25)) * 60 : null;
+  const POMODORO_PAUSE_SEC = (isTimeBlocking ? 15 : 5) * 60;
+  // Feynman : après chaque mini-leçon, l'élève explique la notion avec ses mots (à l'oral ou par écrit)
+  const isFeynman = pacingMethod === 'feynman';
+  // Règle des 2 minutes : on démarre tout de suite, sans écran d'accueil ; après 2 minutes, « Tu continues ? »
+  const isTwoMinutes = pacingMethod === 'two_minutes_rule';
   // 1. Sous-catégorie active calculée selon la règle d'alternance officielle ivoirienne
   // (Physique-Chimie -> Chimie ↔ Physique, Maths -> Géométrie ↔ Numérique)
   const [activeSubCategory, setActiveSubCategory] = useState<StemSubCategory>(() => {
@@ -346,6 +399,52 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   // Compteurs déjà enregistrés (la progression est sauvegardée après CHAQUE mini-leçon validée)
   const recordedCountsRef = useRef<{ answered: number; correct: number }>({ answered: 0, correct: 0 });
+  // Mini-leçons déjà enregistrées comme validées pendant cette séance (jamais deux fois)
+  const recordedPointIdsRef = useRef<Set<string>>(new Set());
+
+  // Révision espacée : questions « à revoir aujourd'hui » posées avant la leçon
+  const [warmupItems, setWarmupItems] = useState<WarmupItem[]>([]);
+  const [warmupIndex, setWarmupIndex] = useState<number>(0);
+  // Rappel actif : étapes de la mini-leçon reposées de mémoire à la fin
+  const [recallSteps, setRecallSteps] = useState<number[]>([]);
+  const [recallIndex, setRecallIndex] = useState<number>(0);
+  // Pomodoro : secondes de vrai travail (le chrono s'arrête si l'élève quitte l'appli ou ne fait plus rien)
+  const [workSeconds, setWorkSeconds] = useState<number>(0);
+  // Le compte à rebours ne démarre qu'au clic sur « Commencer la leçon » (pas pendant l'accueil ni la révision du jour)
+  const [timerStarted, setTimerStarted] = useState<boolean>(false);
+  const [pauseLeft, setPauseLeft] = useState<number>(POMODORO_PAUSE_SEC);
+  const [timeUpCounted, setTimeUpCounted] = useState<boolean>(true);
+  // Marque-page de reprise (séance précédente arrêtée au milieu d'une mini-leçon)
+  const resumeRef = useRef<ResumeBookmark | null>(null);
+  // Règle des 2 minutes : secondes écoulées depuis le démarrage, et question « Tu continues ? »
+  const [kickSeconds, setKickSeconds] = useState<number>(0);
+  const [showKickPrompt, setShowKickPrompt] = useState<boolean>(false);
+  const kickDoneRef = useRef<boolean>(false);
+
+  /**
+   * Prépare la révision du jour : les questions dues dans ce volet (3 pour 25 min, 4 pour 45 min, 5 au-delà),
+   * les ratées d'abord. Les questions des mini-leçons de la séance du jour sont laissées de côté :
+   * l'élève va les retravailler juste après, inutile de les poser deux fois.
+   */
+  const loadWarmup = (subCat: StemSubCategory, sessionPointIds: Set<string>): WarmupItem[] => {
+    try {
+      const limit = durationMinutes >= 60 ? 5 : durationMinutes >= 40 ? 4 : 3;
+      const due = getDueReviews(userId, stemSubjectId, gradeLevel, subCat, 50)
+        .filter((entry) => !sessionPointIds.has(entry.pointId));
+      if (!due.length) return [];
+      const chapters = getCurriculumChapters(stemSubjectId, gradeLevel);
+      const out: WarmupItem[] = [];
+      for (const entry of due) {
+        if (out.length >= limit) break;
+        const found = findReviewExercise(chapters, entry);
+        if (!found) { forgetReview(userId, entry.exerciseId); continue; }
+        out.push({ exercise: found.exercise, stepIndex: found.stepIndex, point: found.point, chapterId: found.chapter.id });
+      }
+      return out;
+    } catch {
+      return [];
+    }
+  };
 
   // Charger ou recharger le payload de session avec la sous-catégorie active
   const refreshSessionPayload = (subCatToUse?: StemSubCategory) => {
@@ -387,7 +486,26 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       setShowChapterSelector(false);
       setSessionPayload(res.payload);
       setActiveItemIndex(0);
-      setPhase('intro');
+      // Marque-page : la séance précédente de CE volet s'était arrêtée au milieu de cette mini-leçon ?
+      const bookmark = readResumeBookmark(userId, stemSubjectId, gradeLevel, res.subCategory);
+      if (bookmark && res.payload.itemsToReview[0]?.point.id === bookmark.pointId) {
+        resumeRef.current = bookmark;
+      } else {
+        resumeRef.current = null;
+        if (bookmark) saveResumeBookmark(userId, stemSubjectId, gradeLevel, res.subCategory, null);
+      }
+      if (isTwoMinutes) {
+        // Règle des 2 minutes : on se lance tout de suite dans la leçon (la révision du jour attendra)
+        setWarmupItems([]);
+        kickDoneRef.current = false;
+        startLearningAt(0, res.payload.itemsToReview[0]?.point);
+        return;
+      }
+      // Révision espacée : les questions dues passent en premier, puis la leçon du jour
+      const warmup = loadWarmup(res.subCategory, new Set(res.payload.itemsToReview.map((i) => i.point.id)));
+      setWarmupItems(warmup);
+      setWarmupIndex(0);
+      setPhase(warmup.length > 0 ? 'warmup' : 'intro');
       setExerciseIndex(0);
       setSelectedOptionIndex(null);
       setIsAnswerChecked(false);
@@ -400,9 +518,51 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     }
   };
 
+  /**
+   * Lance les étapes d'une mini-leçon. Si un marque-page existe pour ce point (séance précédente coupée
+   * par la fin du temps), on reprend à l'étape exacte, avec les étapes déjà réussies conservées.
+   */
+  const startLearningAt = (fallbackIndex: number, point?: CurriculumPoint) => {
+    setTimerStarted(true);
+    setSelectedOptionIndex(null);
+    setIsAnswerChecked(false);
+    setIsAnswerCorrect(false);
+    setShowExplanation(false);
+    const bm = resumeRef.current;
+    if (bm && point && point.id === bm.pointId) {
+      const total = point.exercises?.length || point.structuredSteps?.length || 0;
+      setMasteredIndices(bm.mastered);
+      setMissedIndices(bm.missed);
+      if (bm.exerciseIndex >= total) {
+        const queue = bm.missed.filter((i) => !bm.mastered.includes(i));
+        if (queue.length > 0) {
+          setCatchupQueue(queue);
+          setCurrentCatchupQueueIndex(0);
+          setPhase('catchup');
+          return;
+        }
+      }
+      setExerciseIndex(Math.min(bm.exerciseIndex, Math.max(0, total - 1)));
+      setPhase('learning');
+      return;
+    }
+    setExerciseIndex(fallbackIndex);
+    setPhase('learning');
+  };
+
+  // Progression copiée dans le compte : on la récupère d'abord (autre téléphone, réinstallation…), 3,5 s au plus
+  const [cloudReady, setCloudReady] = useState<boolean>(false);
   useEffect(() => {
+    let alive = true;
+    startLearningSync();
+    pullLearning(userId).finally(() => { if (alive) setCloudReady(true); });
+    return () => { alive = false; };
+  }, [userId]);
+
+  useEffect(() => {
+    if (!cloudReady) return;
     refreshSessionPayload();
-  }, [userId, stemSubjectId, gradeLevel, subjectTitle, durationMinutes]);
+  }, [cloudReady, userId, stemSubjectId, gradeLevel, subjectTitle, durationMinutes]);
 
   // Permet à l'élève de changer d'onglet (ex: Chimie <-> Physique ou Géométrie <-> Numérique) SANS fermer le sélecteur
   const handleSwitchSubCategoryInSelector = (newSubCat: StemSubCategory) => {
@@ -442,31 +602,70 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     return [];
   }, [currentPoint]);
 
+  const warmupItem: WarmupItem | undefined = phase === 'warmup' ? warmupItems[warmupIndex] : undefined;
+
   // Index effectif de l'étape en cours
   const activeStepIndex: number = useMemo(() => {
     if (phase === 'catchup') {
       return catchupQueue[currentCatchupQueueIndex] ?? 0;
     }
+    if (phase === 'recall') return recallSteps[recallIndex] ?? 0;
+    if (phase === 'warmup') return warmupItem?.stepIndex ?? 0;
     return exerciseIndex;
-  }, [phase, exerciseIndex, catchupQueue, currentCatchupQueueIndex]);
+  }, [phase, exerciseIndex, catchupQueue, currentCatchupQueueIndex, recallSteps, recallIndex, warmupItem]);
 
   // Exercice de compréhension associé à l'étape active
   const activeExercise: InteractiveExercise | undefined = useMemo(() => {
+    if (phase === 'warmup') {
+      return warmupItem ? shuffleExerciseOptions(warmupItem.exercise) : undefined;
+    }
+    if (phase === 'recall') {
+      // Même question, mais propositions dans un autre ordre (on ne retient pas la position, on retient la notion)
+      const exercise = pointExercises[activeStepIndex];
+      if (!exercise) return undefined;
+      return { ...shuffleExerciseOptions({ ...exercise, id: `${exercise.id}::rappel` }), id: exercise.id };
+    }
     if (phase === 'learning' || phase === 'catchup') {
       const exercise = pointExercises[activeStepIndex];
       // Ordre des propositions mélangé (la bonne réponse n'est plus toujours en A)
       return exercise ? shuffleExerciseOptions(exercise) : undefined;
     }
     return undefined;
-  }, [phase, activeStepIndex, pointExercises]);
+  }, [phase, activeStepIndex, pointExercises, warmupItem]);
 
   // Portion du cours progressif associée à l'étape active
   const activeCourseSlice: ProgressiveCourseSlice | null = useMemo(() => {
+    if (phase === 'warmup') {
+      return warmupItem ? buildProgressiveCourseSlice(warmupItem.point, warmupItem.stepIndex, activeExercise) : null;
+    }
     if (!currentPoint) return null;
     return buildProgressiveCourseSlice(currentPoint, activeStepIndex, activeExercise);
-  }, [currentPoint, activeStepIndex, activeExercise]);
+  }, [phase, warmupItem, currentPoint, activeStepIndex, activeExercise]);
+
+  /**
+   * Question posée DE MÉMOIRE (fiche cachée tant que l'élève n'a pas répondu ; montrée en cas d'erreur) :
+   * révision du jour, rappel de fin de mini-leçon, et en Rappel actif : rattrapage et mini-leçons déjà vues.
+   */
+  const retrievalMode = phase === 'warmup' || phase === 'recall'
+    || (isActiveRecall && (phase === 'catchup' || Boolean(currentItem?.isReview)));
+  const showCourseCard = !retrievalMode || (isAnswerChecked && !isAnswerCorrect);
+
+  // KONAN réagit au comportement de l'élève pendant les questions
+  const questionPhase = phase === 'learning' || phase === 'catchup' || phase === 'warmup' || phase === 'recall';
+  const coach = useKonanCoach(questionPhase);
+  const { questionShown } = coach;
+  useEffect(() => {
+    if (questionPhase && activeExercise) questionShown();
+  }, [questionPhase, activeExercise?.id, activeStepIndex, warmupIndex, recallIndex, questionShown]);
 
   const subCategoryLabel = getSubCategoryName(activeSubCategory);
+
+  /**
+   * Place de la mini-leçon DANS SON CHAPITRE (ex. « Mini-leçon 6 sur 7 »), et non son rang dans la séance du jour :
+   * après une reprise, l'élève voit bien où il en est dans le programme.
+   */
+  const chapterPositionLabel = (item: TutorPointSessionItem): string =>
+    `Mini-leçon ${item.pointIndexInChapter + 1} sur ${item.totalPointsInChapter}`;
 
   // =========================================================================
   // ACTIONS PÉDAGOGIQUES
@@ -491,6 +690,19 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     setIsAnswerChecked(true);
     setIsAnswerCorrect(isCorrect);
     setTotalExercisesAnswered(prev => prev + 1);
+    coach.answered(isCorrect);
+
+    // Révision espacée : KONAN retient le résultat pour faire revenir la question au bon moment
+    // (premier essai seulement : une réussite après correction ne prouve pas qu'on sait)
+    try {
+      if (phase === 'warmup' && warmupItem) {
+        recordReviewAnswer(userId, { subject: stemSubjectId, grade: gradeLevel, subCategory: activeSubCategory, chapterId: warmupItem.chapterId, pointId: warmupItem.point.id }, warmupItem.exercise.id, isCorrect);
+      } else if ((phase === 'learning' || phase === 'recall') && currentItem && currentPoint) {
+        recordReviewAnswer(userId, { subject: stemSubjectId, grade: gradeLevel, subCategory: activeSubCategory, chapterId: currentItem.chapterId, pointId: currentPoint.id }, activeExercise.id, isCorrect);
+      }
+    } catch {
+      // la mémoire de révision ne doit jamais bloquer la leçon
+    }
 
     if (isCorrect) {
       setMasteredIndices(prev => prev.includes(activeStepIndex) ? prev : [...prev, activeStepIndex]);
@@ -526,6 +738,17 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     setIsAnswerCorrect(false);
     setShowExplanation(false);
 
+    if (phase === 'warmup') {
+      if (warmupIndex < warmupItems.length - 1) setWarmupIndex(prev => prev + 1);
+      else setPhase('intro');
+      return;
+    }
+    if (phase === 'recall') {
+      if (recallIndex < recallSteps.length - 1) setRecallIndex(prev => prev + 1);
+      else handleMiniLessonValidated();
+      return;
+    }
+
     if (phase === 'learning') {
       if (exerciseIndex < pointExercises.length - 1) {
         setExerciseIndex(prev => prev + 1);
@@ -535,7 +758,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           setCatchupQueue([...missedIndices]);
           setCurrentCatchupQueueIndex(0);
         } else {
-          handleMiniLessonValidated();
+          finishMiniLesson();
         }
       }
     } else if (phase === 'catchup') {
@@ -543,7 +766,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         const nextQueue = catchupQueue.filter((_, i) => i !== currentCatchupQueueIndex);
         setCatchupQueue(nextQueue);
         if (nextQueue.length === 0) {
-          handleMiniLessonValidated();
+          finishMiniLesson();
         } else {
           setCurrentCatchupQueueIndex(0);
         }
@@ -553,13 +776,55 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     }
   };
 
+  /**
+   * Fin des étapes d'une mini-leçon. En Rappel actif, l'élève se teste d'abord de mémoire sur 3 questions
+   * de la leçon (fiche cachée), en commençant par celles qu'il avait ratées.
+   */
+  const finishMiniLesson = () => {
+    if (isActiveRecall && pointExercises.length >= 3) {
+      const missedFirst = [...missedIndices];
+      const others = pointExercises.map((_, i) => i).filter((i) => !missedFirst.includes(i));
+      // Ordre stable mais varié selon la leçon (pas toujours les 3 premières étapes)
+      const seed = (currentPoint?.id || '').split('').reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+      others.sort((a, b) => ((a * 7 + seed) % 11) - ((b * 7 + seed) % 11));
+      const steps = [...missedFirst, ...others].slice(0, 3);
+      setRecallSteps(steps);
+      setRecallIndex(0);
+      setPhase('recall');
+      return;
+    }
+    if (isFeynman) {
+      // La mini-leçon est acquise (enregistrée tout de suite), puis l'élève l'explique avec ses mots
+      try { soundFX.playVictoryJingle(); } catch {}
+      recordPointDone();
+      setPhase('feynman');
+      return;
+    }
+    handleMiniLessonValidated();
+  };
+
   // Validation d'une mini-leçon à 8/8 : sauvegarde IMMÉDIATE de la progression
   // (rien n'est perdu si l'élève quitte avant la fin de la séance)
   const handleMiniLessonValidated = () => {
     try {
       soundFX.playVictoryJingle();
     } catch {}
-    if (currentItem) {
+    recordPointDone();
+    setPhase('point_celebration');
+  };
+
+  /** Enregistre la mini-leçon en cours comme validée (progression + fin du marque-page). */
+  const recordPointDone = () => {
+    // Le marque-page de cette mini-leçon (posé à la fin du temps ou en quittant) n'a plus lieu d'être
+    if (currentPoint) {
+      const saved = readResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      if ((resumeRef.current && resumeRef.current.pointId === currentPoint.id) || saved?.pointId === currentPoint.id) {
+        resumeRef.current = null;
+        saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, null);
+      }
+    }
+    if (currentItem && !recordedPointIdsRef.current.has(currentItem.point.id)) {
+      recordedPointIdsRef.current.add(currentItem.point.id);
       recordCompletedTutorSession(
         userId,
         stemSubjectId,
@@ -571,7 +836,24 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       );
       recordedCountsRef.current = { answered: totalExercisesAnswered, correct: totalFirstTryCorrect };
     }
-    setPhase('point_celebration');
+  };
+
+  /**
+   * Pomodoro : les mini-leçons prévues sont finies mais le temps de travail ne l'est pas.
+   * On ajoute la suite du programme (même volet), pour travailler jusqu'au bout des 25 minutes.
+   */
+  const extendSessionIfTimeLeft = (): boolean => {
+    if (!workLimitSec || workSeconds >= workLimitSec || !sessionPayload) return false;
+    try {
+      const known = new Set(sessionPayload.itemsToReview.map((i) => i.point.id));
+      const more = buildTutorSessionPayload(userId, stemSubjectId, subjectTitle, gradeLevel, durationMinutes, activeSubCategory, known);
+      const fresh = (more.payload?.itemsToReview || []).filter((i) => !known.has(i.point.id));
+      if (!fresh.length) return false;
+      setSessionPayload({ ...sessionPayload, itemsToReview: [...sessionPayload.itemsToReview, ...fresh] });
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   // Passer à la mini-leçon suivante ou célébrer la fin de séance
@@ -579,7 +861,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     try {
       soundFX.playClick();
     } catch {}
-    if (activeItemIndex < items.length - 1) {
+    if (activeItemIndex < items.length - 1 || extendSessionIfTimeLeft()) {
       setActiveItemIndex(prev => prev + 1);
       setPhase('intro');
       setExerciseIndex(0);
@@ -603,13 +885,187 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       soundFX.playGrandCheer();
     } catch {}
     markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+    alternationDoneRef.current = true;
     setPhase('session_celebration');
   };
+
+  // L'élève quitte en pleine séance (menu, bouton retour, appli fermée) : on garde sa place.
+  //  - marque-page à la question exacte (rattrapée à la prochaine séance de ce volet, puis on continue) ;
+  //  - s'il a vraiment travaillé (5 réponses ou plus), la prochaine séance passe à l'autre volet,
+  //    exactement comme à la fin du temps.
+  const alternationDoneRef = useRef<boolean>(false);
+  const leaveRef = useRef<(final: boolean) => void>(() => {});
+  leaveRef.current = (final: boolean) => {
+    try {
+      saveWhereStopped();
+      if (final && !alternationDoneRef.current && totalExercisesAnswered >= 5) {
+        alternationDoneRef.current = true;
+        markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      }
+    } catch {
+      // quitter ne doit jamais planter
+    }
+  };
+  useEffect(() => {
+    const onHide = () => { if (document.visibilityState === 'hidden') leaveRef.current(false); };
+    const onPageHide = () => leaveRef.current(false);
+    document.addEventListener('visibilitychange', onHide);
+    window.addEventListener('pagehide', onPageHide);
+    return () => {
+      document.removeEventListener('visibilitychange', onHide);
+      window.removeEventListener('pagehide', onPageHide);
+    };
+  }, []);
+  // Démontage du cours (retour au tableau de bord, autre page) = l'élève a quitté la séance
+  useEffect(() => () => leaveRef.current(true), []);
 
   // Fermeture finale et validation dans l'emploi du temps
   const handleFinishAndExit = () => {
     onSessionCompleted(studySessionId);
   };
+
+  // =========================================================================
+  // POMODORO : chrono de VRAI travail, fin de séance, pause
+  // =========================================================================
+  const timedPhase = phase === 'warmup' || phase === 'intro' || phase === 'learning' || phase === 'catchup' || phase === 'recall' || phase === 'point_celebration' || phase === 'feynman';
+  const { isIdle: coachIdle } = coach;
+  useEffect(() => {
+    if (!workLimitSec || !timedPhase || !timerStarted) return;
+    const timer = setInterval(() => {
+      // Le chrono ne compte pas quand l'élève a quitté l'appli ou ne fait plus rien
+      if (document.visibilityState === 'hidden' || coachIdle) return;
+      setWorkSeconds((s) => s + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [workLimitSec, timedPhase, coachIdle, timerStarted]);
+
+  /**
+   * Mémorise l'endroit exact où l'élève s'arrête au milieu d'une mini-leçon (marque-page) :
+   * à la séance suivante de ce volet, il reprend à cette question, puis continue avec les points suivants.
+   * Si toutes les étapes étaient faites (rappel de fin de leçon), la mini-leçon compte comme validée.
+   */
+  const saveWhereStopped = () => {
+    if ((phase === 'learning' || phase === 'catchup') && currentPoint) {
+      const nextIndex = phase === 'learning' ? exerciseIndex + (isAnswerChecked ? 1 : 0) : pointExercises.length;
+      const mastered = isAnswerChecked && isAnswerCorrect && !masteredIndices.includes(activeStepIndex) ? [...masteredIndices, activeStepIndex] : masteredIndices;
+      const missed = isAnswerChecked && !isAnswerCorrect && phase === 'learning' && !missedIndices.includes(activeStepIndex) ? [...missedIndices, activeStepIndex] : missedIndices;
+      // Rien de répondu dans cette mini-leçon : pas besoin de marque-page, elle reprendra au début
+      if (nextIndex === 0 && mastered.length === 0 && missed.length === 0) return;
+      // Toutes les étapes faites et toutes les erreurs rattrapées : la mini-leçon est validée
+      if (nextIndex >= pointExercises.length && missed.every((i) => mastered.includes(i))) {
+        recordPointDone();
+        return;
+      }
+      saveResumeBookmark(userId, stemSubjectId, gradeLevel, activeSubCategory, {
+        pointId: currentPoint.id, exerciseIndex: nextIndex, mastered, missed, savedAt: new Date().toISOString(),
+      });
+    } else if (phase === 'recall') {
+      recordPointDone(); // toutes les étapes étaient faites : la mini-leçon compte
+    }
+  };
+
+  /** Fin des 25 minutes : marque-page si on est au milieu d'une mini-leçon, alternance, puis pause. */
+  const handleTimeUp = () => {
+    try {
+      saveWhereStopped();
+      // Alternance : la prochaine séance de cette matière passera à l'autre volet,
+      // seulement si la séance compte (sinon on reste sur ce volet, comme l'écran l'annonce)
+      if (totalExercisesAnswered >= 5) markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+      alternationDoneRef.current = true;
+    } catch {
+      // la fin de séance ne doit jamais bloquer
+    }
+    // Séance validée seulement si l'élève a vraiment travaillé (au moins 5 réponses)
+    setTimeUpCounted(totalExercisesAnswered >= 5);
+    setPauseLeft(POMODORO_PAUSE_SEC);
+    try { soundFX.playVictoryJingle(); } catch {}
+    setPhase('time_up');
+  };
+
+  useEffect(() => {
+    if (workLimitSec && timedPhase && workSeconds >= workLimitSec) handleTimeUp();
+  }, [workSeconds]);
+
+  // Compte à rebours de la pause
+  useEffect(() => {
+    if (phase !== 'time_up' || !timeUpCounted) return;
+    const timer = setInterval(() => setPauseLeft((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(timer);
+  }, [phase, timeUpCounted]);
+
+  // =========================================================================
+  // RÈGLE DES 2 MINUTES : après 2 minutes (ou 3 réponses), KONAN demande « Tu continues ? »
+  // =========================================================================
+  useEffect(() => {
+    if (!isTwoMinutes || kickDoneRef.current || !questionPhase) return;
+    const timer = setInterval(() => {
+      if (document.visibilityState === 'hidden') return;
+      setKickSeconds((s) => s + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isTwoMinutes, questionPhase]);
+
+  useEffect(() => {
+    if (!isTwoMinutes || kickDoneRef.current) return;
+    if (kickSeconds >= 120 || (totalExercisesAnswered >= 3 && !isAnswerChecked)) {
+      kickDoneRef.current = true;
+      setShowKickPrompt(true);
+      try { soundFX.playCheckmarkPop(); } catch {}
+    }
+  }, [kickSeconds, totalExercisesAnswered, isAnswerChecked, isTwoMinutes]);
+
+  /** Mode concentration (Time Blocking) : plein écran tant que dure le bloc, quitté à la pause. */
+  const enterFocusMode = () => {
+    try {
+      const el = document.documentElement as HTMLElement & { webkitRequestFullscreen?: () => void };
+      if (document.fullscreenElement) return;
+      if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+      else el.webkitRequestFullscreen?.();
+    } catch {
+      // plein écran refusé (iPhone, certains navigateurs) : la séance continue normalement
+    }
+  };
+  const leaveFocusMode = () => {
+    try { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); } catch { /* rien */ }
+  };
+  useEffect(() => {
+    if (phase === 'time_up' || phase === 'session_celebration') leaveFocusMode();
+  }, [phase]);
+  useEffect(() => () => leaveFocusMode(), []);
+
+  const fmtClock = (sec: number) => `${Math.floor(Math.max(0, sec) / 60)}:${String(Math.max(0, sec) % 60).padStart(2, '0')}`;
+  const isTwoVoletLabel = (label: string) => ['Physique', 'Chimie', 'Géométrie', 'Numérique', 'Histoire', 'Géographie'].includes(label);
+
+  /** Chrono Pomodoro affiché en haut (temps de travail restant). */
+  const pomodoroPill = workLimitSec ? (
+    <span
+      className={`shrink-0 whitespace-nowrap px-2.5 py-1 rounded-xl text-xs font-black font-mono tabular-nums border ${coachIdle ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500' : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300'}`}
+      title={!timerStarted ? 'Le chrono démarre quand tu commences la leçon' : coachIdle ? 'Chrono en pause : tu ne travailles plus' : 'Temps de travail restant'}
+    >
+      ⏱ {fmtClock(workLimitSec - workSeconds)}{coachIdle ? ' · pause' : ''}
+    </span>
+  ) : null;
+
+  /** Règle des 2 minutes : « Tu t'es lancé ! Tu continues ? » */
+  const kickPrompt = showKickPrompt ? (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/50 p-4" role="dialog" aria-modal="true">
+      <div className="w-full max-w-sm rounded-3xl bg-white dark:bg-slate-900 border-2 border-emerald-300 dark:border-emerald-700 p-5 text-center space-y-4 animate-in slide-in-from-bottom-6 duration-300">
+        <div className="flex justify-center"><KonanMascot pose="jump" size={120} /></div>
+        <div className="space-y-1">
+          <h3 className="text-lg font-black text-slate-900 dark:text-white">Bravo, tu t’es lancé !</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-300">Le plus dur, c’était de commencer. Et c’est fait. Tu continues ?</p>
+        </div>
+        <div className="grid gap-2">
+          <button type="button" onClick={() => setShowKickPrompt(false)} className="w-full py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white font-black uppercase shadow-[0_4px_0_#15803D] active:translate-y-1 cursor-pointer">
+            Je continue
+          </button>
+          <button type="button" onClick={onExit} className="w-full py-2.5 rounded-2xl text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+            J’arrête là pour l’instant
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : null;
 
   // =========================================================================
   // VUE -1 : COURS EN PRÉPARATION (aucun cours authentique pour cette classe)
@@ -860,7 +1316,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               </div>
               <div className="space-y-0.5">
                 <div className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
-                  Alternance obligatoire (Zéro négociation)
+                  Alternance obligatoire
                 </div>
                 <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white leading-snug">
                   {alternanceBannerText || `La dernière séance tu as travaillé l'autre volet, aujourd'hui place à la ${subCategoryLabel} !`}
@@ -893,7 +1349,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs sm:text-sm font-black">Chimie</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Atomes, Réactions...</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 break-words min-w-0">Atomes et réactions</div>
                       </div>
                     </button>
 
@@ -915,7 +1371,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs sm:text-sm font-black">Physique</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Mécanique, Électricité...</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 break-words min-w-0">Mécanique et électricité</div>
                       </div>
                     </button>
                   </>
@@ -939,7 +1395,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs sm:text-sm font-black">Numérique</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Calculs, Fonctions...</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 break-words min-w-0">Calculs et fonctions</div>
                       </div>
                     </button>
 
@@ -961,7 +1417,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs sm:text-sm font-black">Géométrie</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Vecteurs, Droites...</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 break-words min-w-0">Vecteurs et droites</div>
                       </div>
                     </button>
                   </>
@@ -973,7 +1429,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           {/* Indicateur de sélection en cours */}
           {selectedChapter ? (
             <div className="px-3.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-300">
-              <span className="font-bold flex items-center gap-1.5 truncate">
+              <span className="font-bold flex items-center gap-1.5 break-words min-w-0">
                 <CheckCircle2 size={15} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
                 Chapitre sélectionné : {selectedChapter.title.startsWith('Leçon') ? selectedChapter.title : `Ch. ${selectedChapter.order} — ${selectedChapter.title}`}
               </span>
@@ -1006,7 +1462,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-indigo-300 dark:hover:border-slate-600'
                   }`}
                 >
-                  <span className="text-xs sm:text-sm font-bold truncate">
+                  <span className="text-xs sm:text-sm font-bold break-words min-w-0">
                     {ch.title.startsWith('Leçon') ? ch.title : `Ch. ${ch.order} — ${ch.title}`}
                   </span>
                   <span className="text-[11px] font-mono text-slate-400 shrink-0 font-semibold">{ch.officialVolumeHours || 10}h</span>
@@ -1052,6 +1508,81 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // =========================================================================
   // VUE 2 : CÉLÉBRATION GLOBALE DE FIN DE SÉANCE D'EDT
   // =========================================================================
+  // =========================================================================
+  // FEYNMAN : « EXPLIQUE-LE SIMPLEMENT » APRÈS LA MINI-LEÇON
+  // =========================================================================
+  if (phase === 'feynman' && currentPoint) {
+    const reference = [currentPoint.summary, currentPoint.keyRule, (currentPoint as { conceptExplanation?: string }).conceptExplanation]
+      .filter(Boolean).join(' ').slice(0, 1500);
+    return (
+      <div className="max-w-2xl mx-auto py-6 px-4 space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 break-words min-w-0">
+            {subjectTitle} • {subCategoryLabel} • {currentItem ? chapterPositionLabel(currentItem) : ''}
+          </span>
+          {pomodoroPill}
+        </div>
+        <FeynmanChallenge
+          notion={currentPoint.title}
+          reference={reference}
+          classe={gradeLevel.replace(/_/g, ' ')}
+          onDone={() => setPhase('point_celebration')}
+        />
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // POMODORO : TEMPS DE TRAVAIL ÉCOULÉ → PAUSE, PUIS MATIÈRE SUIVANTE
+  // =========================================================================
+  if (phase === 'time_up') {
+    const workedMin = Math.round(workSeconds / 60);
+    return (
+      <div className="max-w-md mx-auto py-10 px-4 text-center space-y-5 animate-in zoom-in-95 duration-300">
+        <div className="flex justify-center">
+          <KonanMascot pose={timeUpCounted ? 'pause' : 'sad'} size={150} />
+        </div>
+        {timeUpCounted ? (
+          <>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white">{workedMin} minute{workedMin > 1 ? 's' : ''} de vrai travail !</h2>
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Pause ! {POMODORO_PAUSE_SEC / 60} minutes, bois de l’eau et repose tes yeux.
+                {(isTwoVoletLabel(subCategoryLabel)) ? ` La prochaine fois, on passera à l’autre volet ; et quand ${subCategoryLabel} reviendra, tu reprendras exactement là où tu t’es arrêté.` : ' La prochaine fois, tu reprendras exactement là où tu t’es arrêté.'}
+              </p>
+            </div>
+            <div className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-sky-50 dark:bg-sky-950/50 border-2 border-sky-200 dark:border-sky-800 text-3xl font-black font-mono text-sky-700 dark:text-sky-300 tabular-nums">
+              {fmtClock(pauseLeft)}
+            </div>
+            <button
+              type="button"
+              onClick={afterShine(handleFinishAndExit)}
+              className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
+            >
+              {pauseLeft > 0 ? 'Terminer la séance' : 'Pause terminée : matière suivante'}
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="space-y-2">
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">On a à peine commencé…</h2>
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Cette séance ne compte pas, mais demain on se rattrape ensemble ? Tu reprendras là où tu t’es arrêté.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onExit}
+              className="w-full py-4 rounded-2xl bg-slate-800 dark:bg-slate-700 text-white font-black uppercase tracking-wide cursor-pointer"
+            >
+              Retour au tableau de bord
+            </button>
+          </>
+        )}
+      </div>
+    );
+  }
+
   if (phase === 'session_celebration') {
     return (
       <div className="max-w-2xl mx-auto py-6 sm:py-10 px-4 space-y-6 text-center animate-in zoom-in-95 duration-300">
@@ -1072,7 +1603,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">
             Tu as validé avec succès l'intégralité des <strong>{items.length} mini-leçons</strong> avec le score d'excellence requis.
-            Lors de ta prochaine séance, Konan alternera automatiquement pour aborder la seconde partie de ton programme !
+            {isTwoVoletLabel(subCategoryLabel)
+              ? 'Lors de ta prochaine séance, Konan passera automatiquement à l’autre volet de ton programme !'
+              : 'Lors de ta prochaine séance, tu continueras exactement là où tu t’es arrêté !'}
           </p>
         </div>
 
@@ -1091,7 +1624,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
                     <Check className="w-3 h-3 stroke-[3]" />
                   </div>
-                  <span className="font-extrabold text-slate-800 dark:text-slate-200 truncate">
+                  <span className="font-extrabold text-slate-800 dark:text-slate-200 break-words min-w-0">
                     {item.point.title}
                   </span>
                 </div>
@@ -1105,8 +1638,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
         <button
           type="button"
-          onClick={handleFinishAndExit}
-          className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+          onClick={afterShine(handleFinishAndExit)}
+          className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
         >
           <span>Valider et Enregistrer dans mon planning</span>
           <ArrowRight className="w-5 h-5" />
@@ -1126,7 +1659,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         ? `Manipuler la formule officielle : ${currentPoint.formulas[0].name}`
         : `Identifier les principes d’application et la démarche rigoureuse`,
       currentPoint.keyRule
-        ? `Retenir le réflexe d'examen : ${currentPoint.keyRule.slice(0, 85)}...`
+        ? `Retenir le réflexe d'examen : ${currentPoint.keyRule}`
         : `Éviter les erreurs classiques et pièges fréquents signalés aux examens`,
       `Réussir les ${numQuestions} étapes progressives pour valider cette leçon avec un score de ${numQuestions}/${numQuestions}`
     ];
@@ -1134,17 +1667,42 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     return (
       <div className="max-w-2xl mx-auto py-6 sm:py-10 px-4 space-y-6 text-center animate-in zoom-in-95 duration-300">
         {/* Top bar avec alternance */}
-        <div className="flex items-center justify-center pb-3 border-b border-slate-200/80 dark:border-slate-800">
+        <div className="flex flex-col items-center gap-2 pb-3 border-b border-slate-200/80 dark:border-slate-800">
           <div className="flex items-center gap-2">
             <span
               className="w-2.5 h-2.5 rounded-full shrink-0"
               style={{ backgroundColor: subjectMeta.color }}
             />
             <span className="text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">
-              {subjectTitle} • {subCategoryLabel} • Leçon {activeItemIndex + 1}/{items.length}
+              {subjectTitle} • {subCategoryLabel} • Ch. {currentItem.chapterOrder} • {chapterPositionLabel(currentItem)}
             </span>
           </div>
+          {/* Chrono sur sa propre ligne : toujours visible en entier */}
+          {pomodoroPill}
         </div>
+
+        {/* Reprise : la séance précédente de ce volet s'était arrêtée au milieu de cette mini-leçon */}
+        {resumeRef.current && resumeRef.current.pointId === currentPoint.id && (
+          <div className="p-3 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 text-sm font-bold text-sky-900 dark:text-sky-100">
+            Tu reprends là où tu t’étais arrêté : étape {Math.min(resumeRef.current.exerciseIndex + 1, numQuestions)} sur {numQuestions}.
+          </div>
+        )}
+
+        {/* Pomodoro / Time Blocking : la règle du jeu en une ligne */}
+        {workLimitSec && activeItemIndex === 0 && (
+          <div className="p-3.5 rounded-2xl bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-left text-xs sm:text-sm text-rose-900 dark:text-rose-100 font-semibold leading-relaxed">
+            <strong>{isTimeBlocking ? 'Séance Time Blocking :' : 'Séance Pomodoro :'}</strong> {Math.round(workLimitSec / 60)} minutes de vrai travail
+            {isTimeBlocking ? ' sur cette seule matière, sans changer de sujet' : ''}, puis {POMODORO_PAUSE_SEC / 60} minutes de pause.
+            Le chrono démarre quand tu cliques sur « Commencer la leçon », et il s’arrête si tu quittes l’appli ou si tu ne fais plus rien.
+          </div>
+        )}
+
+        {/* Feynman : la règle du jeu en une ligne */}
+        {isFeynman && activeItemIndex === 0 && (
+          <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-left text-xs sm:text-sm text-amber-900 dark:text-amber-100 font-semibold leading-relaxed">
+            <strong>Séance Feynman :</strong> à la fin de chaque leçon, tu l’expliques avec tes mots, à l’oral ou par écrit. KONAN te dit si c’est juste, clair et simple.
+          </div>
+        )}
 
         {/* Mascotte KonanCube animée */}
         <div className="relative inline-block my-2">
@@ -1159,10 +1717,26 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold">
             <span>Ch. {currentItem.chapterOrder} : {currentItem.chapterTitle}</span>
           </div>
+          {currentItem.isReview && (
+            <p className="text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-300">
+              Révision : tu as déjà vu cette leçon. Je la remets pour que tu la retiennes (en priorité celles où tu as fait des erreurs).
+            </p>
+          )}
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
             {currentPoint.title}
           </h1>
         </div>
+
+        {/* Méthode de la séance, expliquée en une ligne */}
+        {isActiveRecall && (
+          <div className="p-3.5 rounded-2xl bg-violet-50/80 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-700/60 text-left flex items-start gap-3">
+            <Brain className="w-5 h-5 text-violet-600 dark:text-violet-300 shrink-0 mt-0.5" />
+            <p className="text-xs sm:text-sm text-violet-900 dark:text-violet-100 font-semibold leading-relaxed">
+              <strong>Séance Rappel actif :</strong> quand une notion a déjà été vue, je te pose la question avant de te montrer la fiche.
+              Et à la fin de la leçon, tu te testes de mémoire sur 3 questions.
+            </p>
+          </div>
+        )}
 
         {/* Enjeu pour devoirs et examens */}
         <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 text-left space-y-2 shadow-xs">
@@ -1186,7 +1760,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             {objectives.map((obj, i) => (
               <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-semibold">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                <span>{obj}</span>
+                {/* Phrase complète, formules dessinées (jamais de « $ » ni de « … ») */}
+                <span className="min-w-0 break-words"><MathRenderer text={obj} /></span>
               </li>
             ))}
           </ul>
@@ -1198,13 +1773,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             type="button"
             onClick={() => {
               try { soundFX.playCheckmarkPop(); } catch {}
-              setSelectedOptionIndex(null);
-              setIsAnswerChecked(false);
-              setIsAnswerCorrect(false);
-              setPhase('learning');
-              setExerciseIndex(0);
+              // La lumière traverse le bouton, puis la leçon commence
+              afterShine(() => {
+                // Time Blocking : mode concentration, l'écran entier est consacré à la matière
+                if (isTimeBlocking && activeItemIndex === 0) enterFocusMode();
+                startLearningAt(0, currentPoint);
+              })();
             }}
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto animate-bounce hover:animate-none"
+            className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto relative overflow-hidden konan-btn-shine"
           >
             <span>C'est parti ! Commencer la leçon</span>
             <ArrowRight className="w-5 h-5" />
@@ -1229,42 +1805,60 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   }
 
   const totalSteps = pointExercises.length || 8;
+  // Barre de progression : la révision du jour et le rappel de mémoire ont leur propre compteur
+  const answeredNow = isAnswerChecked ? 1 : 0;
+  const barDone = phase === 'warmup' ? warmupIndex + answeredNow : phase === 'recall' ? recallIndex + answeredNow : masteredIndices.length;
+  const barTotal = phase === 'warmup' ? Math.max(1, warmupItems.length) : phase === 'recall' ? Math.max(1, recallSteps.length) : totalSteps;
+  const isLastQuestionOfPhase = phase === 'warmup' ? warmupIndex >= warmupItems.length - 1 : phase === 'recall' ? recallIndex >= recallSteps.length - 1 : false;
 
   return (
     <div className="max-w-3xl mx-auto py-4 sm:py-6 px-3 sm:px-6 space-y-4">
-      {/* 1. BARRE DE PROGRESSION STYLE DUOLINGO (TOP) */}
-      <div className="flex items-center gap-3 w-full pb-1">
-        {/* Barre de progression continue Style Duolingo (Couleur Bleue) */}
-        <div className="flex-1 flex items-center gap-3 min-w-0">
-          <div className="flex-1 h-3.5 sm:h-4 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300 dark:border-slate-800/80 p-0.5 shadow-inner">
+      {/* KONAN réagit (inactivité, réponses au hasard, série de bonnes réponses…) */}
+      <KonanCoachBubble message={coach.message} onDismiss={coach.dismiss} onAction={coach.imHere} />
+      {kickPrompt}
+      {/* 1. BARRE DE PROGRESSION STYLE DUOLINGO (TOP) : toute la largeur, bien visible sur téléphone */}
+      <div className="space-y-2 w-full pb-1">
+        <div className="flex items-center gap-2.5 w-full">
+          {/* Barre de progression continue Style Duolingo (Couleur Bleue) */}
+          <div className="flex-1 min-w-0 h-4 sm:h-5 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300 dark:border-slate-800/80 p-0.5 shadow-inner">
             <div
               className="h-full rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 dark:from-blue-500 dark:via-indigo-500 dark:to-cyan-400 transition-all duration-500 ease-out relative shadow-sm"
-              style={{ width: `${Math.min(100, Math.max(0, (masteredIndices.length / totalSteps) * 100))}%` }}
+              style={{ width: `${Math.min(100, Math.max(0, (barDone / barTotal) * 100))}%` }}
             >
               <div className="absolute top-0.5 left-2 right-2 h-1 bg-white/35 rounded-full" />
             </div>
           </div>
 
           {/* Badge de score X/totalSteps */}
-          <div className="shrink-0 px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black font-mono">
-            {masteredIndices.length} / {totalSteps}
+          <div className="shrink-0 px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black font-mono tabular-nums">
+            {barDone} / {barTotal}
           </div>
         </div>
+        {/* Chrono (Pomodoro / Time Blocking) sur sa propre ligne : jamais caché ni coupé */}
+        {pomodoroPill && <div className="flex justify-end">{pomodoroPill}</div>}
       </div>
 
       {/* 2. FIL D'ARIANE / CONTEXTE DE LA LEÇON */}
       <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1 pb-1 border-b border-slate-100 dark:border-slate-800/60">
-        <div className="flex items-center gap-2 truncate">
+        <div className="flex items-center gap-2 break-words min-w-0">
           <span
             className="w-2.5 h-2.5 rounded-full shrink-0"
             style={{ backgroundColor: subjectMeta.color }}
           />
-          <span className="font-extrabold uppercase tracking-wide text-slate-700 dark:text-slate-300 truncate">
-            {subjectTitle} • {subCategoryLabel} • Ch. {currentItem.chapterOrder} • Mini-leçon {activeItemIndex + 1} sur {items.length} de la séance
+          <span className="font-extrabold uppercase tracking-wide text-slate-700 dark:text-slate-300 break-words min-w-0">
+            {phase === 'warmup'
+              ? `${subjectTitle} • ${subCategoryLabel} • Révision du jour`
+              : `${subjectTitle} • ${subCategoryLabel} • Ch. ${currentItem.chapterOrder} • ${chapterPositionLabel(currentItem)}`}
           </span>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
+          {(phase === 'warmup' || phase === 'recall') && (
+            <span className="px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-700 dark:text-violet-300 text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
+              <Brain className="w-3 h-3" />
+              <span>{phase === 'warmup' ? 'Révision espacée' : 'Rappel de mémoire'}</span>
+            </span>
+          )}
           {phase === 'catchup' && (
             <span className="px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 animate-pulse">
               <RotateCcw className="w-3 h-3" />
@@ -1272,19 +1866,36 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             </span>
           )}
 
-          <div className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400">
-            <Target className="w-3.5 h-3.5" />
-            <span>Étape {activeStepIndex + 1}/{totalSteps} · {totalSteps}/{totalSteps} requis</span>
-          </div>
+          {phase !== 'warmup' && phase !== 'recall' && (
+            <div className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400">
+              <Target className="w-3.5 h-3.5" />
+              <span>Étape {activeStepIndex + 1}/{totalSteps} · {totalSteps}/{totalSteps} requis</span>
+            </div>
+          )}
         </div>
       </div>
 
       {/* =================================================================== */}
       {/* MODE DUOLINGO : 1 SEUL POINT DE COURS -> 1 QCM -> SUIVANT           */}
       {/* =================================================================== */}
-      {(phase === 'learning' || phase === 'catchup') && activeExercise && activeCourseSlice && (
+      {questionPhase && activeExercise && activeCourseSlice && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
+          {/* Question DE MÉMOIRE : la fiche reste cachée tant que l'élève n'a pas répondu */}
+          {retrievalMode && !isAnswerChecked && (
+            <div className="p-3.5 rounded-2xl bg-violet-50/80 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-700/60 flex items-center gap-3">
+              <Brain className="w-5 h-5 text-violet-600 dark:text-violet-300 shrink-0" />
+              <p className="text-xs sm:text-sm font-bold text-violet-900 dark:text-violet-100 leading-snug">
+                {phase === 'warmup'
+                  ? 'Révision du jour : une question déjà vue revient. Réponds de mémoire, sans regarder le cours.'
+                  : phase === 'recall'
+                  ? 'Rappel de mémoire : sans regarder la fiche, montre ce que tu as retenu de cette leçon.'
+                  : 'De mémoire d’abord : réponds sans la fiche. Elle s’affichera si tu te trompes.'}
+              </p>
+            </div>
+          )}
+
           {/* PARTIE 1 : LA CARTE DE COURS PROGRESSIVE (1 POINT À LA FOIS OU ÉNONCÉ D'EXERCICE) */}
+          {showCourseCard && (
           <div className={`p-4 sm:p-6 rounded-2xl border-2 space-y-4 shadow-sm ${
             activeCourseSlice.stepKind
               ? STEP_KIND_STYLE[activeCourseSlice.stepKind].card
@@ -1299,13 +1910,15 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 ) : (
                   <BookOpen className="w-4 h-4 shrink-0" />
                 )}
-                <span className="text-[11px] font-black uppercase tracking-wider truncate">
-                  {activeCourseSlice.stepBadge}
+                <span className="text-[11px] font-black uppercase tracking-wider break-words min-w-0">
+                  {retrievalMode ? `Rappel du cours · ${activeCourseSlice.stepBadge}` : activeCourseSlice.stepBadge}
                 </span>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300">
-                Étape {activeStepIndex + 1} / {totalSteps}
-              </span>
+              {!retrievalMode && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300">
+                  Étape {activeStepIndex + 1} / {totalSteps}
+                </span>
+              )}
             </div>
 
             {/* Contenu structuré avec le code couleur pédagogique Bleu / Violet (Liaison 1-pour-1 avec le QCM) */}
@@ -1345,6 +1958,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               </div>
             )}
           </div>
+          )}
 
           {/* PARTIE 2 : LE TEST DE COMPRÉHENSION IMMÉDIAT (ADAPTÉ STRICTEMENT À L'ÉTAPE) */}
           <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
@@ -1352,7 +1966,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               <span className="font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
                 <Target className="w-4 h-4" />
                 <span>
-                  {activeCourseSlice.stepBadge
+                  {phase === 'warmup'
+                    ? `Révision ${warmupIndex + 1}/${warmupItems.length} · De mémoire`
+                    : phase === 'recall'
+                    ? `Rappel ${recallIndex + 1}/${recallSteps.length} · De mémoire`
+                    : activeCourseSlice.stepBadge
                     ? `${activeCourseSlice.stepBadge} · Test de compréhension`
                     : `QCM ${activeStepIndex + 1}/${totalSteps} · Compréhension`}
                 </span>
@@ -1524,7 +2142,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   }`}
                 >
                   <span>
-                    {phase === 'catchup'
+                    {phase === 'warmup' || phase === 'recall'
+                      ? (isLastQuestionOfPhase
+                        ? (phase === 'warmup' ? 'Passer à la leçon du jour' : 'Terminer la mini-leçon')
+                        : 'Question suivante')
+                      : phase === 'catchup'
                       ? (isAnswerCorrect ? "Continuer le rattrapage" : "Question suivante")
                       : isAnswerCorrect
                         ? (activeStepIndex === totalSteps - 1 ? "Terminer et valider la mini-leçon" : "Continuer vers l'étape suivante")
@@ -1563,12 +2185,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="pt-2">
             <button
               type="button"
-              onClick={handleContinueToNextLesson}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+              onClick={afterShine(handleContinueToNextLesson)}
+              className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
             >
               <span className="flex items-center gap-2">
                 {activeItemIndex < items.length - 1
-                  ? `Passer à la mini-leçon suivante (${activeItemIndex + 2}/${items.length})`
+                  ? `Passer à la mini-leçon suivante (${items[activeItemIndex + 1].pointIndexInChapter + 1} sur ${items[activeItemIndex + 1].totalPointsInChapter})`
                   : 'Terminer la séance d’étude'}
                 {activeItemIndex < items.length - 1 && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
               </span>

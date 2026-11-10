@@ -9,6 +9,7 @@ import type {
 } from '../../types';
 import { DAYS_OF_WEEK } from '../../types';
 import { Button } from '../../components/ui/Button';
+import { afterShine } from '../../lib/shineClick';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { formatMinutesToHours, getDaysRemaining, getSessionExamCountdown, parseTimeToMinutes, getWeekDateRange, isDateInWeek } from '../../lib/utils';
@@ -22,11 +23,8 @@ import {
   ArrowRight, 
   Target,
   TrendingUp,
-  GraduationCap,
-  AlertCircle,
   ChevronDown,
   ChevronUp,
-  BookOpen,
   Moon,
   Zap
 } from 'lucide-react';
@@ -34,7 +32,6 @@ import { SessionExplainerModal } from '../../components/common/SessionExplainerM
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
 import { useLanguage, t } from '../../lib/i18n';
 import type { SessionType } from '../../types';
-import { enableStudentPushNotifications } from '../../services/fcmNotificationService';
 
 export interface DashboardOverviewProps {
   studentName: string;
@@ -84,8 +81,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onNavigate,
   onToggleSessionComplete,
   onStartFocusSession,
-  onOpenPresetModal,
-  isDemoMode = false,
   planTier = 'free',
   onViewPricing,
   onUpgradeToPro,
@@ -99,7 +94,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   onOpenGoalModal: _onOpenGoalModal,
   isGroupGuest: _isGroupGuest = false,
   invitedBy: _invitedBy,
-  userUid,
+  userUid: _userUid,
 }) => {
   const [lang] = useLanguage();
   const [selectedExplainerType, setSelectedExplainerType] = useState<SessionType | null>(null);
@@ -107,26 +102,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
   const [showCompletedSessions, setShowCompletedSessions] = useState(false);
 
-  // Notifications Web Push (Firebase Cloud Messaging)
-  // Pour les membres PRO et PLUS : synchronisation automatique et silencieuse du token FCM en arrière-plan
-  // Aucun bouton manuel ni test n'est affiché sur le tableau de bord.
-  React.useEffect(() => {
-    const isProOrPlus = planTier === 'pro' || planTier === 'plus';
-    if (!isProOrPlus) return;
-
-    const effectiveUid = userUid || _konanId;
-    if (typeof window !== 'undefined' && 'Notification' in window && 'serviceWorker' in navigator) {
-      if (Notification.permission === 'granted') {
-        enableStudentPushNotifications(effectiveUid).catch(() => {});
-      } else if (Notification.permission === 'default') {
-        Notification.requestPermission().then((perm) => {
-          if (perm === 'granted') {
-            enableStudentPushNotifications(effectiveUid).catch(() => {});
-          }
-        }).catch(() => {});
-      }
-    }
-  }, [planTier, userUid, _konanId]);
+  // Notifications : gérées une seule fois pour toute l'appli (App.tsx, webPushService + pushQueueService).
 
 
   const now = new Date();
@@ -210,9 +186,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           {/* User & Curriculum Greeting */}
           <div className="space-y-1.5 sm:space-y-2 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant={isCycleCompletedToday || isDayFullyComplete ? "emerald" : "cyan"} size="sm" dot>
-                {isCycleCompletedToday ? "Cycle Validé 100%" : isDayFullyComplete ? "Journée Validée 100%" : "Anti-Burnout Actif"}
-              </Badge>
+              {(isCycleCompletedToday || isDayFullyComplete) && (
+                <Badge variant="emerald" size="sm" dot>
+                  {isCycleCompletedToday ? "Cycle Validé 100%" : "Journée Validée 100%"}
+                </Badge>
+              )}
               <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
             </div>
             
@@ -233,7 +211,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <span><strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
               ) : (
                 <>
-                  Cursus <strong className="text-slate-700 dark:text-slate-200 font-semibold">{academicLevel}</strong> synchronisé.
+                  {academicLevel && (
+                    <>Classe : <strong className="text-slate-700 dark:text-slate-200 font-semibold">{academicLevel}</strong>.</>
+                  )}
                   {allTodaysStudySessions.length > 0
                     ? ` ${activeDisplaySessions.length} session(s) active(s) (${completedToday} terminée(s)).`
                     : ` Journée d'assimilation libre.`}
@@ -309,16 +289,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
                 size="sm"
                 leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                onClick={() => {
+                onClick={afterShine(() => {
                   if (onStartFocusSession) {
                     onStartFocusSession(nextStudySession);
                   } else {
                     onToggleSessionComplete(nextStudySession.id);
                   }
-                }}
-                className={`w-full sm:w-auto cursor-pointer text-xs font-black whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-1 ${
+                })}
+                className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto cursor-pointer text-xs font-black whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-1 ${
                   nextStudySession.isRescheduledToday
-                    ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
+                    ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
                     : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                 }`}
               >
@@ -327,87 +307,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
           )}
         </div>
-      </div>
-
-      {/* COMPACT QUICK ACTION ROW (3 COLUMNS ON ALL SCREENS) */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3.5">
-        
-        {/* 1. Importer Emploi du Temps OU Exemples d'EDT Démo */}
-        {!isDemoMode ? (
-          <button 
-            type="button"
-            onClick={() => onNavigate('upload-schedule')}
-            className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
-          >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
-              <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors leading-tight truncate">
-                Importer EDT
-              </h3>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
-                Texte ou manuel
-              </p>
-            </div>
-          </button>
-        ) : (
-          <button 
-            type="button"
-            onClick={() => onOpenPresetModal?.()}
-            className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
-          >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
-              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors leading-tight truncate">
-                EDT Démo
-              </h3>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
-                Modèles ESATIC, etc.
-              </p>
-            </div>
-          </button>
-        )}
-
-        {/* 2. Planning d'Étude */}
-        <button 
-          type="button"
-          onClick={() => onNavigate('planner')}
-          className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
-        >
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
-            <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors leading-tight truncate">
-              Planning
-            </h3>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
-              Séances optimisées
-            </p>
-          </div>
-        </button>
-
-        {/* 3. Matières & Thèmes */}
-        <button 
-          type="button"
-          onClick={() => onNavigate('subjects')}
-          className="group p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 dark:bg-slate-900/70 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-3"
-        >
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500/20 group-hover:scale-105 transition-all flex items-center justify-center shrink-0">
-            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors leading-tight truncate">
-              Matières
-            </h3>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block truncate mt-0.5">
-              Coeffs & chapitres
-            </p>
-          </div>
-        </button>
       </div>
 
       {/* 2-COLUMN COCKPIT (TODAY'S TIMELINE + ACADEMIC INSIGHTS) */}
@@ -511,50 +410,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   </div>
                 </div>
 
-                {/* Daily Catch-up Rescheduled Banner with Clear Breakdown */}
-                {rescheduledTodaySessions.length > 0 && (
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-amber-50/70 dark:from-amber-950/70 dark:via-slate-900 dark:to-indigo-950/50 border border-amber-200 dark:border-amber-500/50 shadow-sm dark:shadow-xl space-y-3.5 text-xs">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0">
-                        <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-                      </div>
-                      <span className="font-black text-amber-900 dark:text-amber-300 text-sm tracking-wide">
-                        ({rescheduledTodaySessions.length}) Séance(s) à faire
-                      </span>
-                    </div>
-
-                    {/* DÉTAIL CLAIR ET ÉPURÉ DES SÉANCES REPORTÉES CE SOIR */}
-                    <div className="space-y-1.5 pt-2 border-t border-amber-200/60 dark:border-slate-800/80">
-                      <p className="text-[11px] font-bold text-amber-900/80 dark:text-slate-400 uppercase tracking-wider">
-                        Séances reportées ce soir :
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {rescheduledTodaySessions.map(s => {
-                          const missedSub = subjects.find(sub => sub.id === s.subjectId);
-                          if (s.subjectId && (!missedSub || !missedSub.name)) return null;
-                          return (
-                            <div
-                              key={s.id}
-                              className="p-3 rounded-xl bg-white dark:bg-slate-950/70 border border-amber-200 dark:border-amber-500/30 text-xs shadow-xs flex items-center justify-between"
-                            >
-                              <div className="min-w-0 flex-1 space-y-0.5">
-                                <p className="font-extrabold text-slate-900 dark:text-white truncate text-xs">{missedSub?.name || s.title}</p>
-                                <p className="text-[11px] text-amber-800 dark:text-amber-300 flex items-center gap-1.5 font-medium">
-                                  <span>Reportée ce soir à</span>
-                                  <span className="font-mono font-bold text-amber-900 dark:text-amber-200 bg-amber-100 dark:bg-amber-500/20 px-1.5 py-0.5 rounded border border-amber-200 dark:border-amber-500/30">
-                                    {s.startTime}
-                                  </span>
-                                  <span className="text-slate-500 dark:text-slate-400 text-[10px]">({s.durationMinutes} min)</span>
-                                </p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* SESSIONS ACTIVES & RATTRAPAGES EN ORDRE CHRONOLOGIQUE STRICT */}
                 {activeDisplaySessions.length === 0 ? (
                   <Card className="text-center py-6 sm:py-8 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 shadow-xs">
@@ -616,31 +471,25 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                                 })()}
                               </span>
                             )}
-                            {isRescheduled && (
-                              <Badge variant="amber" size="sm" className="text-[10px] px-2 py-0.5 font-bold animate-pulse" title={session.rescheduledReason || "Rattrapage du jour même uniquement (aucun report au lendemain)"}>
-                                Rattrapage ce soir ({sub?.name || 'Session'})
-                              </Badge>
-                            )}
                             {session.pacingMethod && (
                               <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-cyan-300 border border-indigo-200 dark:border-indigo-500/30 font-mono">
                                 {session.pacingMethod === 'feynman' ? 'Feynman' : session.pacingMethod === 'time_blocking' ? 'Time Blocking' : session.pacingMethod === 'pomodoro' ? 'Pomodoro' : session.pacingMethod === 'two_minutes_rule' ? '2-Min' : 'Répétition'}
                               </span>
                             )}
-                            <button
+                            {session.type !== 'spaced_review' && <button
                               type="button"
                               onClick={() => setSelectedExplainerType(session.type)}
                               className="cursor-pointer hover:scale-105 transition-transform"
                               title={t('clickForGuide', lang)}
                             >
                               <Badge variant="primary" size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
-                                {session.type === 'spaced_review' ? t('spacedReviewLabel', lang) :
-                                 session.type === 'exercises' ? t('exercisesLabel', lang) :
+                                {session.type === 'exercises' ? t('exercisesLabel', lang) :
                                  session.type === 'deep_summary' ? t('deepSummaryLabel', lang) :
                                  session.type === 'flashcards' ? t('activeRecallLabel', lang) :
                                  session.type === 'exam_simulation' ? t('examSimulationLabel', lang) :
                                  t('consolidationLabel', lang)}
                               </Badge>
-                            </button>
+                            </button>}
                           </div>
 
                           <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">
@@ -655,16 +504,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             variant={isRescheduled ? "secondary" : "glow"}
                             size="sm"
                             leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                            onClick={() => {
+                            onClick={afterShine(() => {
                               if (onStartFocusSession) {
                                 onStartFocusSession(session);
                               } else {
                                 onToggleSessionComplete(session.id);
                               }
-                            }}
-                            className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-1 ${
+                            })}
+                            className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-1 ${
                               isRescheduled
-                                ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
+                                ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
                                 : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                             }`}
                           >

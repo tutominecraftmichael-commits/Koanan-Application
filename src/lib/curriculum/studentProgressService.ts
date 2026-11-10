@@ -3,6 +3,7 @@ import type {
   CurriculumGradeLevel,
   StemSubjectId,
   StemSubCategory,
+  ResumeBookmark,
   StudentCurriculumProgressMap,
   SubjectStudentProgress,
   SubCategoryStudentProgress,
@@ -13,6 +14,8 @@ import { END_OF_CHAPTER_MARKER, getSessionMiniLessonQuota } from './types';
 import { getCurriculumChapterById, getCurriculumChapters, normalizeGradeForLookup } from './curriculumRegistry';
 import { isChimieChapter } from './curriculumExpander';
 import { voletFromSubjectName } from './curriculumMatcher';
+import { notifyLearningChanged } from './learningEvents';
+import { getReviewMap } from './reviewMemory';
 
 const PROGRESS_STORAGE_PREFIX = 'konan_curriculum_progress_v1_';
 
@@ -30,7 +33,8 @@ export function getStudentProgressMap(userId: string): StudentCurriculumProgress
 
 export function saveStudentProgressMap(
   userId: string,
-  progressMap: StudentCurriculumProgressMap
+  progressMap: StudentCurriculumProgressMap,
+  options: { silent?: boolean } = {}
 ): void {
   try {
     localStorage.setItem(
@@ -40,6 +44,8 @@ export function saveStudentProgressMap(
   } catch {
     // Ignore
   }
+  // Copie dans le compte de l'élève (suivi sur tous ses appareils), sauf quand elle vient du compte
+  if (!options.silent) notifyLearningChanged(userId);
 }
 
 // ============================================================================
@@ -342,6 +348,45 @@ function resolveNextPointIndex(chapter: CurriculumChapter, subProg: SubCategoryS
 }
 
 /**
+ * Mini-leçons du volet à réviser, de la plus utile à la moins utile, d'après la mémoire de KONAN :
+ *  1. celles où l'élève a encore des questions ratées (les plus nombreuses d'abord) ;
+ *  2. puis celles revues il y a le plus longtemps (jamais revues = en premier).
+ * À égalité, l'ordre du programme est conservé.
+ */
+export function rankRevisionPoints(
+  userId: string,
+  subjectId: StemSubjectId,
+  gradeLevel: CurriculumGradeLevel,
+  subChapters: CurriculumChapter[],
+  exclude: Set<string> = new Set()
+): { chapter: CurriculumChapter; index: number }[] {
+  const stats = new Map<string, { ko: number; lastSeen: number }>();
+  try {
+    const grade = normalizeGradeForLookup(gradeLevel);
+    for (const e of Object.values(getReviewMap(userId))) {
+      if (e.subject !== subjectId || normalizeGradeForLookup(e.grade) !== grade) continue;
+      const s = stats.get(e.pointId) || { ko: 0, lastSeen: 0 };
+      if (e.lastResult === 'ko') s.ko += 1;
+      s.lastSeen = Math.max(s.lastSeen, e.updatedAt || 0);
+      stats.set(e.pointId, s);
+    }
+  } catch {
+    // mémoire illisible : ordre du programme
+  }
+  const list: { chapter: CurriculumChapter; index: number; rank: number; ko: number; lastSeen: number }[] = [];
+  let rank = 0;
+  for (const chapter of subChapters) {
+    chapter.points.forEach((p, index) => {
+      if (exclude.has(p.id)) return;
+      const s = stats.get(p.id);
+      list.push({ chapter, index, rank: rank++, ko: s?.ko ?? 0, lastSeen: s?.lastSeen ?? 0 });
+    });
+  }
+  list.sort((a, b) => b.ko - a.ko || a.lastSeen - b.lastSeen || a.rank - b.rank);
+  return list.map(({ chapter, index }) => ({ chapter, index }));
+}
+
+/**
  * Prépare le contenu d'une séance selon la durée prévue et l'alternance des sous-catégories
  */
 export function buildTutorSessionPayload(
@@ -350,7 +395,9 @@ export function buildTutorSessionPayload(
   subjectName: string,
   gradeLevel: CurriculumGradeLevel,
   durationMinutes: number = 25,
-  requestedSubCategory?: StemSubCategory
+  requestedSubCategory?: StemSubCategory,
+  /** Mini-leçons déjà faites pendant cette séance (prolongation Pomodoro) : jamais reproposées. */
+  excludePointIds: Set<string> = new Set()
 ): BuildTutorSessionResult {
   // Matière inscrite « Histoire » ou « Géographie » (et non « HG ») : ce volet seul, sans alternance
   const voletImposedByName = voletFromSubjectName(subjectId, subjectName);
@@ -499,52 +546,56 @@ export function buildTutorSessionPayload(
 
   // La séance doit contenir le nombre de mini-leçons prévu pour sa durée : si le chapitre se
   // termine avant, on continue dans le chapitre suivant du même volet (dans l'ordre du programme).
-  // En révision (programme terminé), on reste dans le dernier chapitre.
   const itemsToReview: TutorPointSessionItem[] = [];
-  const seenPointIds = new Set<string>();
+  const seenPointIds = new Set<string>(excludePointIds);
   const chapterForSession = activeChapter;
-  let cursorChapter: CurriculumChapter = activeChapter;
   let totalSteps = 0;
-  // Fin du programme atteinte en cours de séance : on complète avec des mini-leçons de révision
-  // (depuis le début du volet) qui ne font pas reculer la progression de l'élève.
-  // Vaut aussi en révision : si le dernier chapitre est trop court pour le quota, on repart
-  // du début du volet (une seule fois, pour ne jamais boucler sans fin).
-  let reviewFiller = false;
-  let wrappedToStart = false;
 
-  while (itemsToReview.length < quota.max) {
-    if (ptIdx >= cursorChapter.points.length) {
-      const cursorIdx = subChapters.findIndex(c => c.id === cursorChapter.id);
-      const following = subChapters.slice(cursorIdx + 1).find(c => c.points.length > 0);
-      if (following) {
-        cursorChapter = following;
-      } else {
-        if (wrappedToStart || itemsToReview.length >= quota.min) break;
-        wrappedToStart = true;
-        reviewFiller = true;
-        cursorChapter = subChapters.find(c => c.points.length > 0) ?? cursorChapter;
+  /** Ajoute une mini-leçon si elle tient dans la séance ; renvoie false quand la séance est pleine. */
+  const tryAdd = (chapter: CurriculumChapter, index: number, isReview: boolean): boolean => {
+    if (itemsToReview.length >= quota.max) return false;
+    const point = chapter.points[index];
+    const steps = point.structuredSteps?.length || point.exercises?.length || 8;
+    // Dans la fourchette (ex. 4 à 5), on n'ajoute une mini-leçon de plus que si elle tient dans le budget d'étapes
+    if (itemsToReview.length >= quota.min && totalSteps + steps > quota.stepBudget) return false;
+    if (seenPointIds.has(point.id)) return true;
+    seenPointIds.add(point.id);
+    totalSteps += steps;
+    itemsToReview.push({
+      point,
+      chapterId: chapter.id,
+      chapterTitle: chapter.title,
+      chapterOrder: chapter.order,
+      pointIndexInChapter: index,
+      isLastPointOfChapter: index === chapter.points.length - 1,
+      totalPointsInChapter: chapter.points.length,
+      ...(isReview ? { isReview: true } : {}),
+    });
+    return true;
+  };
+
+  // 1. Nouvelles mini-leçons, dans l'ordre du programme, jusqu'à la fin du volet
+  if (!isRevision) {
+    let cursorChapter: CurriculumChapter | undefined = activeChapter;
+    let full = false;
+    while (cursorChapter && !full) {
+      for (let i = ptIdx; i < cursorChapter.points.length; i++) {
+        if (!tryAdd(cursorChapter, i, false)) { full = true; break; }
       }
+      const cursorIdx = subChapters.findIndex(c => c.id === cursorChapter!.id);
+      cursorChapter = subChapters.slice(cursorIdx + 1).find(c => c.points.length > 0);
       ptIdx = 0;
     }
-    const point = cursorChapter.points[ptIdx];
-    const steps = point.structuredSteps?.length || 8;
-    // Dans la fourchette (ex. 4 à 5), on n'ajoute une mini-leçon de plus que si elle tient dans le budget d'étapes
-    if (itemsToReview.length >= quota.min && totalSteps + steps > quota.stepBudget) break;
-    if (!seenPointIds.has(point.id)) {
-      seenPointIds.add(point.id);
-      totalSteps += steps;
-      itemsToReview.push({
-        point,
-        chapterId: cursorChapter.id,
-        chapterTitle: cursorChapter.title,
-        chapterOrder: cursorChapter.order,
-        pointIndexInChapter: ptIdx,
-        isLastPointOfChapter: ptIdx === cursorChapter.points.length - 1,
-        totalPointsInChapter: cursorChapter.points.length,
-        ...(reviewFiller ? { isReview: true } : {}),
-      });
+  }
+
+  // 2. Volet terminé (ou séance pas encore remplie) : révision de TOUT le volet, pas du dernier chapitre.
+  //    KONAN choisit d'abord les mini-leçons où l'élève a fait le plus d'erreurs, puis celles revues il y a
+  //    le plus longtemps : chaque séance de révision tourne sur des leçons différentes.
+  //    Ces mini-leçons ne font jamais reculer la progression de l'élève.
+  if (itemsToReview.length < quota.min || isRevision) {
+    for (const cand of rankRevisionPoints(userId, subjectId, gradeLevel, subChapters, seenPointIds)) {
+      if (!tryAdd(cand.chapter, cand.index, true)) break;
     }
-    ptIdx++;
   }
   const targetPointsCount = itemsToReview.length;
 
@@ -574,6 +625,55 @@ export function buildTutorSessionPayload(
 }
 
 /**
+ * Marque-page d'un volet (ex. Physique) : séance arrêtée au milieu d'une mini-leçon.
+ * Chaque volet a le sien : Physique et Chimie reprennent chacun là où ils s'étaient arrêtés.
+ */
+export function saveResumeBookmark(
+  userId: string,
+  subjectId: StemSubjectId,
+  gradeLevel: CurriculumGradeLevel,
+  subCategory: StemSubCategory,
+  bookmark: ResumeBookmark | null
+): void {
+  const currentMap = getStudentProgressMap(userId);
+  const prog = readSubjectProgress(currentMap, subjectId, gradeLevel);
+  const subProg = prog?.subCategories?.[subCategory];
+  if (!prog || !subProg) return;
+  if (!bookmark && !subProg.resume) return; // rien à effacer
+  const nowIso = new Date().toISOString();
+  const nextSub: SubCategoryStudentProgress = { ...subProg, lastSessionAt: nowIso };
+  if (bookmark) nextSub.resume = bookmark;
+  else delete nextSub.resume;
+  writeSubjectProgress(currentMap, subjectId, gradeLevel, {
+    ...prog,
+    lastSessionAt: nowIso,
+    subCategories: { ...(prog.subCategories || {}), [subCategory]: nextSub },
+  });
+  saveStudentProgressMap(userId, currentMap);
+}
+
+export function readResumeBookmark(
+  userId: string,
+  subjectId: StemSubjectId,
+  gradeLevel: CurriculumGradeLevel,
+  subCategory: StemSubCategory
+): ResumeBookmark | null {
+  const prog = readSubjectProgress(getStudentProgressMap(userId), subjectId, gradeLevel);
+  return prog?.subCategories?.[subCategory]?.resume ?? null;
+}
+
+/** Points déjà maîtrisés d'un volet (pour les questions faciles de démarrage de la règle des 2 minutes). */
+export function getMasteredPointIds(
+  userId: string,
+  subjectId: StemSubjectId,
+  gradeLevel: CurriculumGradeLevel,
+  subCategory: StemSubCategory
+): string[] {
+  const prog = readSubjectProgress(getStudentProgressMap(userId), subjectId, gradeLevel);
+  return prog?.subCategories?.[subCategory]?.masteredPointIds ?? [];
+}
+
+/**
  * Mémorise le volet travaillé à la FIN d'une séance terminée, pour que la séance suivante
  * bascule automatiquement sur l'autre volet (Chimie <-> Physique, Géométrie <-> Numérique).
  * Une séance quittée en cours de route garde donc le même volet à sa réouverture.
@@ -587,7 +687,8 @@ export function markSessionAlternation(
   const currentMap = getStudentProgressMap(userId);
   const prog = readSubjectProgress(currentMap, subjectId, gradeLevel);
   if (!prog) return;
-  writeSubjectProgress(currentMap, subjectId, gradeLevel, { ...prog, lastAlternatedSubCategory: subCategory });
+  // Date mise à jour : sur un autre téléphone, la fusion avec le compte garde bien cette alternance
+  writeSubjectProgress(currentMap, subjectId, gradeLevel, { ...prog, lastAlternatedSubCategory: subCategory, lastSessionAt: new Date().toISOString() });
   saveStudentProgressMap(userId, currentMap);
 }
 
@@ -638,12 +739,14 @@ export function recordCompletedTutorSession(
 
   // Calculer la prochaine position de l'élève dans cette sous-catégorie (par identifiant de point)
   // Les mini-leçons de révision ajoutées en fin de programme ne déplacent pas la position
+  // (la séance enregistre une mini-leçon à la fois : une révision seule laisse la position telle quelle)
   const progressItems = completedItems.filter(item => !item.isReview);
-  const lastItem = progressItems.length > 0 ? progressItems[progressItems.length - 1] : completedItems[completedItems.length - 1];
-  const lastChapter = subChapters.find(c => c.id === lastItem.chapterId);
-  let nextChapterId = lastItem.chapterId;
-  let nextPointIndex = lastItem.pointIndexInChapter + 1;
-  let nextPointId: string = END_OF_CHAPTER_MARKER;
+  const onlyReview = progressItems.length === 0;
+  const lastItem = onlyReview ? completedItems[completedItems.length - 1] : progressItems[progressItems.length - 1];
+  const lastChapter = onlyReview ? undefined : subChapters.find(c => c.id === lastItem.chapterId);
+  let nextChapterId = onlyReview ? currentSubProg.currentChapterId : lastItem.chapterId;
+  let nextPointIndex = onlyReview ? currentSubProg.currentPointIndex : lastItem.pointIndexInChapter + 1;
+  let nextPointId: string | undefined = onlyReview ? currentSubProg.currentPointId : END_OF_CHAPTER_MARKER;
 
   if (lastChapter) {
     const lastIdx = lastChapter.points.findIndex(p => p.id === lastItem.point.id);

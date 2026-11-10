@@ -278,6 +278,10 @@ export interface PointVisualSchema {
   variation?: VariationTableSpec;
   /** Tableau de signes structuré (type 'sign_table'). */
   signs?: SignTableSpec;
+  /** Scène illustrée (dessin d'ambiance façon livre illustré) plutôt qu'un schéma. */
+  scene?: boolean;
+  /** Description de scène dessinée par le moteur de KONAN (src/lib/scenes). */
+  sceneSpec?: import('../scenes/sceneTypes').SceneSpec;
 }
 
 /** Couleurs du code pédagogique Konan utilisables dans les figures. */
@@ -486,6 +490,21 @@ export interface SubCategoryStudentProgress {
   totalExercisesAnswered: number;
   correctExercisesCount: number;
   lastSessionAt?: string;
+  /**
+   * Marque-page : séance arrêtée au milieu d'une mini-leçon (fin du temps Pomodoro).
+   * La prochaine séance de CE volet reprend à cette étape exacte.
+   */
+  resume?: ResumeBookmark;
+}
+
+export interface ResumeBookmark {
+  pointId: string;
+  /** Étape où reprendre (0 = première étape). */
+  exerciseIndex: number;
+  /** Étapes déjà réussies et ratées de la mini-leçon, pour ne pas les refaire. */
+  mastered: number[];
+  missed: number[];
+  savedAt: string;
 }
 
 export const END_OF_CHAPTER_MARKER = '__fin_du_chapitre__';

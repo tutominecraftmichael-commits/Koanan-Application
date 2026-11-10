@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback, Suspense, startTransition } from 'react';
 import { GraduationCap } from 'lucide-react';
 import type { AppState } from './services/storage';
 import {
@@ -20,7 +20,6 @@ import {
   mergeInvitationsFromCloud,
   invitationBroadcastChannel
 } from './services/storage';
-import { KonanEntranceSplash } from './components/common/KonanEntranceSplash';
 
 import { generateOptimizedStudyPlan, mergePreservingCompletedSessions, synchronizeSessionsWithExamCountdowns } from './services/plannerAlgorithm';
 import { transitionUserState } from './services/tierTransitionService';
@@ -52,6 +51,8 @@ import type {
 import { generateId, isNonAcademicSubject } from './lib/utils';
 import { Sparkles, X, ShieldCheck } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
+import { KonanVoiceTestPanel } from './features/notifications/KonanReminderBanner';
+import { NotificationActivationCard } from './features/notifications/NotificationActivationCard';
 
 // Layout
 import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
@@ -71,32 +72,49 @@ import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelecto
 
 
 // Views
-import { AuthPage } from './features/auth/AuthPage';
-import { PdfUploadView } from './features/schedule/PdfUploadView';
+// Le tableau de bord est chargé tout de suite ; les autres pages se chargent à la demande
+// (l'appli démarre ainsi avec ~1 Mo au lieu de ~10 Mo de code). Les cours guidés (≈ 7 Mo)
+// ne sont téléchargés qu'à l'ouverture d'une séance.
 import { DashboardOverview } from './features/dashboard/DashboardOverview';
-import { ScheduleManager } from './features/schedule/ScheduleManager';
-import { SubjectManager } from './features/subjects/SubjectManager';
-import { PlannerView } from './features/planner/PlannerView';
-import { AnalyticsDashboard } from './features/analytics/AnalyticsDashboard';
-import { FocusMode } from './features/focus/FocusMode';
-import { PresetModal } from './features/onboarding/PresetModal';
-import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding';
-import { ProWizardView } from './features/pro/ProWizardView';
-import { AdminDashboard } from './features/admin/AdminDashboard';
-import { InteractiveTutorView } from './features/tutor/InteractiveTutorView';
-import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum } from './lib/curriculum/curriculumMatcher';
+import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding'; // premier écran de tous : chargé tout de suite
+import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
+import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
 import { clearAdminSession } from './lib/adminAuth';
-import { getCurriculumChapters } from './lib/curriculum/curriculumRegistry';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
+
+const loadAuthPage = () => import('./features/auth/AuthPage').then(m => m.AuthPage);
+const loadPdfUploadView = () => import('./features/schedule/PdfUploadView').then(m => m.PdfUploadView);
+const loadScheduleManager = () => import('./features/schedule/ScheduleManager').then(m => m.ScheduleManager);
+const loadSubjectManager = () => import('./features/subjects/SubjectManager').then(m => m.SubjectManager);
+const loadPlannerView = () => import('./features/planner/PlannerView').then(m => m.PlannerView);
+const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashboard').then(m => m.AnalyticsDashboard);
+const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
+const AuthPage = lazyView(loadAuthPage);
+const PdfUploadView = lazyView(loadPdfUploadView);
+const ScheduleManager = lazyView(loadScheduleManager);
+const SubjectManager = lazyView(loadSubjectManager);
+const PlannerView = lazyView(loadPlannerView);
+const AnalyticsDashboard = lazyView(loadAnalyticsDashboard);
+const FocusMode = lazyView(loadFocusMode);
+const PresetModal = lazyView(() => import('./features/onboarding/PresetModal').then(m => m.PresetModal));
+const ProWizardView = lazyView(() => import('./features/pro/ProWizardView').then(m => m.ProWizardView));
+const AdminDashboard = lazyView(() => import('./features/admin/AdminDashboard').then(m => m.AdminDashboard));
+const InteractiveTutorView = lazyView(() => import('./features/tutor/InteractiveTutorView').then(m => m.InteractiveTutorView));
 import type { StemSubjectId, CurriculumGradeLevel } from './lib/curriculum/types';
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
-  const pendingPrivacyModalRef = useRef<boolean>(false);
 
   // Règle absolue : L'utilisateur arrive TOUJOURS sur l'interface d'accueil (landing) en tant que visiteur non connecté.
   // Jamais de compte connecté d'office, jamais de saut instantané vers le tableau de bord.
-  const [activeView, setActiveView] = useState<ActiveAppView>('landing');
+  const [activeView, setActiveViewState] = useState<ActiveAppView>('landing');
+  // Vrai tant qu'on ne sait pas encore si l'élève est déjà connecté (Firebase restaure la session)
+  const [authPending, setAuthPending] = useState<boolean>(true);
+  // Changement de page en « transition » : la page actuelle reste affichée (avec ses animations)
+  // jusqu'à ce que la suivante soit prête, sans écran de chargement intermédiaire.
+  const setActiveView = useCallback((view: ActiveAppView) => {
+    startTransition(() => setActiveViewState(view));
+  }, []);
   const [focusSession, setFocusSession] = useState<StudySession | null>(null);
   const [activeTutorSession, setActiveTutorSession] = useState<{
     subjectTitle: string;
@@ -104,6 +122,7 @@ export function App() {
     gradeLevel: CurriculumGradeLevel;
     studySessionId?: string;
     durationMinutes?: number;
+    pacingMethod?: string;
   } | null>(null);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -241,6 +260,12 @@ export function App() {
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
     ? state.userAccount.name
     : (state.studentName || 'Étudiant');
+  // Vraie classe de l'élève (choisie à l'inscription), jamais la valeur par défaut « Licence Universitaire »
+  const isDefaultLevel = /^licence universitaire$/i.test(String(state.academicLevel || '').trim());
+  const effectiveClassLabel = studentClassLabel(
+    state.userAccount?.gradeLevel || state.preferences?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel),
+    isDefaultLevel ? undefined : state.academicLevel,
+  ) || '';
 
   // Bascule automatique de semaine (rollover d'agenda) sans pop-up de bilan
   useEffect(() => {
@@ -539,54 +564,89 @@ export function App() {
       clearInterval(interval);
       window.removeEventListener('focus', handleFocus);
     };
-  }, [state.studySessions.length, state.classSlots.length, activeView]);
+    // Relancé dès que le planning change (ex. données rechargées depuis le cloud), pas seulement toutes les 30 s
+  }, [state.studySessions, state.classSlots, activeView]);
 
   // =========================================================================
-  // ÉTAPE 1 : CONDITION SIMPLE GRATUIT VS PRO (Web Push Arrière-Plan)
-  // 1. Gratuit : ZÉRO notification, désabonnement immédiat.
-  // 2. Pro / Plus : Activation automatique des notifications Web Push.
+  // NOTIFICATIONS DE RÉVISION : pour TOUS les élèves connectés (Gratuit, Pro et Plus).
+  // Activées d'office, aucun réglage à aller chercher :
+  // 1) abonnement du téléphone (permission demandée au premier toucher si elle ne l'a jamais été) ;
+  // 2) dépôt des alertes des 7 prochains jours dans push_queue, une fois l'appareil abonné.
   // =========================================================================
   useEffect(() => {
     const effectivePlan = state.userAccount?.planTier || state.planTier || 'free';
     const uid = state.userAccount?.googleId || state.userAccount?.email;
     const email = state.userAccount?.email;
 
-    if (effectivePlan === 'free') {
-      // Utilisateur en mode Gratuit : ZÉRO notification (ni fermée, ni ouverte)
-      if (uid) {
-        import('./services/webPushService').then(({ unsubscribeFromWebPush }) => {
-          unsubscribeFromWebPush(uid).catch(() => { });
+    if (state.userAccount?.isLoggedIn && uid && !state.isDemoMode) {
+      const planInput = {
+        studySessions: state.studySessions,
+        subjects: state.subjects,
+        classSlots: state.classSlots,
+        preferences: state.preferences,
+        cycleCompletedDate: state.cycleCompletedDate,
+      };
+      const syncAlerts = () => {
+        // Identifiant Firebase réel (les règles Firestore l'exigent pour écrire dans push_queue)
+        const authUid = auth?.currentUser?.uid || (uid.includes('@') ? '' : uid);
+        if (!authUid) return;
+        import('./services/pushQueueService').then(({ syncPushPlan }) => {
+          syncPushPlan(authUid, planInput).catch(() => { });
         });
-      }
-      return;
-    }
-
-    // Utilisateur en mode Pro ou Plus : activation automatique Web Push silencieuse
-    if (effectivePlan === 'pro' || effectivePlan === 'plus') {
-      import('./services/webPushService').then(({ autoRegisterWebPushIfPro }) => {
-        autoRegisterWebPushIfPro(effectivePlan, uid, email).catch(() => { });
-      });
-
-      // Synchroniser également le token FCM si supporté
-      if (uid) {
-        import('./services/fcmNotificationService').then(({ enableStudentPushNotifications }) => {
-          enableStudentPushNotifications(uid).catch(() => { });
+      };
+      const register = () => {
+        import('./services/webPushService').then(({ autoRegisterWebPush }) => {
+          autoRegisterWebPush(effectivePlan, uid, email, syncAlerts).catch(() => { });
         });
-
-        // Synchroniser automatiquement les enveloppes du jour dans la file push_queue
-        import('./services/pushQueueService').then(({ syncTodaySessionsToPushQueue }) => {
-          syncTodaySessionsToPushQueue(uid, email || '', state.studySessions, state.subjects).catch(() => { });
-        });
-      }
+      };
+      const timer = setTimeout(register, 1500); // regroupe les changements rapprochés du planning
+      // Tant que l'appareil n'est pas enregistré, on retente au retour dans l'appli et toutes les 2 minutes
+      const retry = setInterval(register, 2 * 60 * 1000);
+      const onVisible = () => { if (document.visibilityState === 'visible') register(); };
+      document.addEventListener('visibilitychange', onVisible);
+      return () => {
+        clearTimeout(timer);
+        clearInterval(retry);
+        document.removeEventListener('visibilitychange', onVisible);
+      };
     }
   }, [
     state.userAccount?.planTier,
     state.planTier,
     state.userAccount?.googleId,
     state.userAccount?.email,
+    state.userAccount?.isLoggedIn,
+    state.isDemoMode,
     state.studySessions,
     state.subjects,
+    state.classSlots,
+    state.preferences,
+    state.cycleCompletedDate,
   ]);
+
+  // Fluidité : dès l'ouverture, on précharge en silence toutes les pages courantes (≈ 300 Ko au total),
+  // pour qu'elles s'ouvrent instantanément. Seuls les cours guidés (trop lourds) attendent la séance.
+  useEffect(() => {
+    prefetchViews([
+      loadAuthPage, loadPlannerView, loadScheduleManager,
+      loadSubjectManager, loadFocusMode, loadAnalyticsDashboard, loadPdfUploadView,
+    ]);
+  }, []);
+
+  // Dépôt immédiat des alertes de la semaine (après activation des notifications par l'élève)
+  const syncAlertsNow = useCallback(() => {
+    const authUid = auth?.currentUser?.uid;
+    if (!authUid || state.isDemoMode) return;
+    import('./services/pushQueueService').then(({ syncPushPlan }) => {
+      syncPushPlan(authUid, {
+        studySessions: state.studySessions,
+        subjects: state.subjects,
+        classSlots: state.classSlots,
+        preferences: state.preferences,
+        cycleCompletedDate: state.cycleCompletedDate,
+      }).catch(() => { });
+    }).catch(() => { });
+  }, [state.isDemoMode, state.studySessions, state.subjects, state.classSlots, state.preferences, state.cycleCompletedDate]);
 
   // Gestion d'authentification mobile et synchronisation au démarrage
   useEffect(() => {
@@ -610,8 +670,12 @@ export function App() {
           await handleLoginSuccess(profile);
           setActiveView('dashboard');
         }
-      } catch (err) {
-        console.warn('Vérification redirection Google mobile:', err);
+      } catch (err: any) {
+        console.warn('Vérification redirection Google mobile:', err?.code || err);
+        // Compte Google inexistant (connexion) ou déjà inscrit (inscription) : on l'explique à l'élève
+        if (err?.code === 'auth/user-not-found' || err?.code === 'auth/email-already-in-use') {
+          showToast(err.message, 8000);
+        }
       }
     };
 
@@ -620,6 +684,9 @@ export function App() {
     // Écoute des changements d'état d'authentification Firebase :
     const unsubscribeAuth = onFirebaseAuthStateChange(async (firebaseUser) => {
       if (!isMounted) return;
+      // Élève déjà connecté : il ira directement au tableau de bord (on garde l'accueil caché jusque-là).
+      // Une fois l'accueil affiché, on ne le cache plus jamais (sinon un nouveau perdrait son parcours).
+      setAuthPending((pending) => pending && Boolean(firebaseUser));
       if (sessionStorage.getItem('konan_onboarding_in_progress') === 'true') {
         return;
       }
@@ -637,13 +704,22 @@ export function App() {
         };
         await handleLoginSuccess(profile);
       }
+      setAuthPending(false);
     });
+    // Au plus 4 s d'attente : sans réponse de Firebase (hors ligne…), on affiche l'accueil
+    const authTimeout = setTimeout(() => setAuthPending(false), 4000);
 
     return () => {
       isMounted = false;
+      clearTimeout(authTimeout);
       unsubscribeAuth();
     };
   }, []);
+
+  // Écran d'ouverture « KONAN » (index.html) : retiré dès que l'accueil ou le tableau de bord est prêt
+  useEffect(() => {
+    if (!authPending || activeView !== 'landing') (window as Window & { __konanHideSplash?: () => void }).__konanHideSplash?.();
+  }, [authPending, activeView]);
 
   const showToast = (msg: string, duration = 5000) => {
     // Purge absolue de tous les émojis pour une interface sobre, élégante et professionnelle
@@ -716,6 +792,13 @@ export function App() {
       academicLevel: profile.academicLevel,
     });
 
+    // Élève qui revient (données déjà sur le téléphone) : son tableau de bord s'affiche tout de suite,
+    // sans attendre Internet ; la synchronisation avec le cloud se fait juste derrière.
+    if (userState.completedOnboarding && !pendingProWizardRef.current) {
+      setState(userState);
+      setActiveView('dashboard');
+    }
+
     // 1. Synchronisation Cloud PRIORITAIRE AVANT toute écriture sur Firestore :
     // Récupérer et fusionner immédiatement les matières, devoirs et sessions stockés sur Cloud Firestore
     let finalUserState = userState;
@@ -781,7 +864,8 @@ export function App() {
     if (preferences?.chronotype) {
       userState.preferences.chronotype = preferences.chronotype;
     }
-    userState.academicLevel = profile.academicLevel || userState.academicLevel;
+    // La classe déjà enregistrée l'emporte : le profil Google n'a qu'une valeur par défaut (« Licence Universitaire »)
+    userState.academicLevel = userState.academicLevel || profile.academicLevel;
     userState.studentName = finalName;
 
     // Si l'utilisateur vient de terminer le parcours d'onboarding avec extraction d'EDT, fusionner immédiatement ses cours et matières
@@ -1147,7 +1231,8 @@ export function App() {
     setIsPrivacyModalOpen(false);
     setPendingAuth(null);
 
-    // Déconnexion Firebase Auth immédiate
+    // Déconnexion Firebase Auth immédiate (ce téléphone quitte aussi ce compte pour les notifications)
+    await import('./services/webPushService').then(({ detachDeviceFromAccount }) => detachDeviceFromAccount()).catch(() => { });
     await signOutReal();
     setActiveSession(null);
 
@@ -1248,6 +1333,8 @@ export function App() {
         console.warn('Erreur de synchronisation cloud avant déconnexion:', err);
       }
     }
+    // Ce téléphone ne doit plus recevoir les notifications de ce compte
+    await import('./services/webPushService').then(({ detachDeviceFromAccount }) => detachDeviceFromAccount()).catch(() => { });
     await signOutReal();
     setActiveSession(null);
 
@@ -1473,6 +1560,8 @@ export function App() {
         ...prev,
         studentName: safeData.name,
         academicLevel: safeData.academicLevel,
+        // Date de la modification : à la reconnexion (ou sur un autre téléphone), c'est cette version qui gagne
+        profileUpdatedAt: new Date().toISOString(),
         userAccount: nextUserAccount,
         preferences: {
           ...prev.preferences,
@@ -1499,6 +1588,7 @@ export function App() {
       if (!prev.userAccount) return prev;
       const next: AppState = {
         ...prev,
+        profileUpdatedAt: new Date().toISOString(),
         userAccount: {
           ...prev.userAccount,
           // Chaîne vide (et non undefined) : Firestore efface alors aussi l'ancienne photo sur les autres appareils
@@ -1579,11 +1669,11 @@ export function App() {
     };
 
     if (willBeCompleted) {
-      // Supprimer immédiatement l'enveloppe catchup dans push_queue
-      const currentUid = state.userAccount?.googleId || auth?.currentUser?.uid;
-      if (currentUid && (effectivePlanTier === 'pro' || effectivePlanTier === 'plus')) {
-        import('./services/pushQueueService').then(({ removeSessionCatchupFromQueue }) => {
-          removeSessionCatchupFromQueue(currentUid, target.id);
+      // Séance faite : plus aucune relance pour elle aujourd'hui
+      const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
+      if (currentUid && !state.isDemoMode) {
+        import('./services/pushQueueService').then(({ cancelSessionAlerts }) => {
+          cancelSessionAlerts(currentUid, target.id).catch(() => { });
         }).catch(() => { });
       }
 
@@ -1629,7 +1719,7 @@ export function App() {
    * Directly redirects the user to the interactive focus chronometer
    * upon clicking "Valider la séance" / "Valider".
    */
-  const handleStartFocusSession = (session: StudySession) => {
+  const handleStartFocusSession = async (session: StudySession) => {
     const currentDayIndex = (new Date().getDay() + 6) % 7;
     const dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
     const currentDayName = dayNames[currentDayIndex];
@@ -1642,6 +1732,18 @@ export function App() {
       return;
     }
 
+    // L'élève ouvre sa séance : KONAN annule les relances « retard », « manquée » et « rattrapage »
+    {
+      const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
+      import('./services/pushQueueService').then(({ cancelSessionAlerts, markSessionStarted }) => {
+        if (currentUid && !state.isDemoMode) {
+          cancelSessionAlerts(currentUid, session.id).catch(() => { });
+        } else {
+          markSessionStarted(session.id);
+        }
+      }).catch(() => { });
+    }
+
     // VÉRIFICATION CORRESPONDANCE PROGRAMME OFFICIEL (MATHS, PHYSIQUE-CHIMIE, SVT)
     const sub = state.subjects.find(s => s.id === session.subjectId);
     const subjectName = sub?.name || session.title;
@@ -1651,14 +1753,24 @@ export function App() {
     );
     const stemMatchForTutor = matchSubjectToStemCurriculum(subjectName);
 
+    // Les cours guidés (≈ 7 Mo) ne sont téléchargés qu'ici, au lancement d'une séance de matière à cours
+    const wantsTutor = Boolean(resolvedGrade && stemMatchForTutor.stemSubjectId && shouldLaunchInteractiveTutor(subjectName, resolvedGrade));
+    let hasChapters = false;
+    if (wantsTutor) {
+      try {
+        const { getCurriculumChapters } = await import('./lib/curriculum/curriculumRegistry');
+        hasChapters = getCurriculumChapters(stemMatchForTutor.stemSubjectId!, resolvedGrade!).length > 0;
+      } catch {
+        showToast('Connexion trop faible pour charger le cours guidé. Séance lancée en mode chronomètre.', 6000);
+        setFocusSession(session);
+        setActiveView('focus');
+        return;
+      }
+    }
+
     if (stemMatchForTutor.isStemSubject && !resolvedGrade) {
       showToast("Indique ta classe exacte avec sa série (ex : Tle D, 1ère A1) en réimportant ton emploi du temps pour débloquer les cours guidés. Séance lancée en mode chronomètre.", 7000);
-    } else if (
-      resolvedGrade &&
-      stemMatchForTutor.stemSubjectId &&
-      shouldLaunchInteractiveTutor(subjectName, resolvedGrade) &&
-      getCurriculumChapters(stemMatchForTutor.stemSubjectId, resolvedGrade).length === 0
-    ) {
+    } else if (wantsTutor && !hasChapters) {
       showToast(`Le cours guidé de ${subjectName} pour ta classe est en préparation. Séance lancée en mode chronomètre.`, 6000);
     } else if (resolvedGrade && shouldLaunchInteractiveTutor(subjectName, resolvedGrade)) {
       const stemMatch = stemMatchForTutor;
@@ -1669,6 +1781,8 @@ export function App() {
           gradeLevel: resolvedGrade,
           studySessionId: session.id,
           durationMinutes: session.durationMinutes || 25,
+          // Méthode de la séance (planning), ou méthode choisie par l'élève : elle change le déroulé du cours
+          pacingMethod: session.pacingMethod || state.preferences?.pacing,
         });
         setActiveView('tutor');
         soundFX.playCheckmarkPop();
@@ -1923,6 +2037,8 @@ export function App() {
         ? 'max-w-full p-0'
         : 'max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8'
         }`}>
+        <ViewErrorBoundary resetKey={activeView}>
+        <Suspense fallback={<ViewLoader />}>
 
         {/* Real-time Administrator Console */}
         {activeView === 'admin' && isLocalAdminEnvironment() && (
@@ -1936,7 +2052,8 @@ export function App() {
         )}
 
         {/* Parcours d'Onboarding Immersif & Animé Style Duolingo (Page d'accueil épurée) */}
-        {activeView === 'landing' && (
+        {activeView === 'landing' && authPending && !state.userAccount?.isLoggedIn && <ViewLoader />}
+        {activeView === 'landing' && !authPending && (
           <DuolingoOnboarding
             currentUser={state.userAccount?.isLoggedIn ? state.userAccount : null}
             onOpenLogin={() => setActiveView('auth')}
@@ -2025,9 +2142,20 @@ export function App() {
         {/* Dashboard: STRICTLY PROTECTED */}
         {activeView === 'dashboard' && (
           (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
+            <>
+            {state.userAccount?.isLoggedIn && !state.isDemoMode && (
+              <div className="mb-4">
+                <NotificationActivationCard
+                  uid={state.userAccount?.googleId}
+                  email={state.userAccount?.email}
+                  planTier={effectivePlanTier}
+                  onActivated={syncAlertsNow}
+                />
+              </div>
+            )}
             <DashboardOverview
               studentName={effectiveStudentName}
-              academicLevel={state.academicLevel}
+              academicLevel={effectiveClassLabel}
               subjects={state.subjects}
               classSlots={state.classSlots}
               studySessions={state.studySessions}
@@ -2054,6 +2182,7 @@ export function App() {
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
               userUid={state.userAccount?.googleId}
             />
+            </>
           ) : (
             <div className="text-center py-16 space-y-4">
               <p className="text-lg text-white font-bold">Veuillez vous connecter pour accéder à votre tableau de bord.</p>
@@ -2072,7 +2201,7 @@ export function App() {
           (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
             <ScheduleManager
               studentName={effectiveStudentName}
-              academicLevel={state.academicLevel}
+              academicLevel={effectiveClassLabel}
               subjects={state.subjects}
               classSlots={state.classSlots}
               studySessions={state.studySessions}
@@ -2199,6 +2328,7 @@ export function App() {
             stemSubjectId={activeTutorSession.stemSubjectId}
             studySessionId={activeTutorSession.studySessionId}
             durationMinutes={activeTutorSession.durationMinutes}
+            pacingMethod={activeTutorSession.pacingMethod}
             onExit={() => {
               setActiveTutorSession(null);
               setActiveView('dashboard');
@@ -2246,16 +2376,20 @@ export function App() {
             showToast={showToast}
           />
         )}
+        </Suspense>
+        </ViewErrorBoundary>
       </main>
 
       {/* Academic Track Presets Modal (ONLY FOR DEMO MODE) */}
       {state.isDemoMode && (
-        <PresetModal
-          isOpen={isPresetModalOpen}
-          onClose={() => setIsPresetModalOpen(false)}
-          onSelectPreset={handleSelectPreset}
-          currentLevel={state.academicLevel}
-        />
+        <Suspense fallback={null}>
+          <PresetModal
+            isOpen={isPresetModalOpen}
+            onClose={() => setIsPresetModalOpen(false)}
+            onSelectPreset={handleSelectPreset}
+            currentLevel={state.academicLevel}
+          />
+        </Suspense>
       )}
 
       {/* User Settings & Profile Modal */}
@@ -2418,6 +2552,9 @@ export function App() {
         studentEmail={pendingAuth?.profile.email || state.userAccount?.email}
       />
 
+      {/* Rappels KONAN : uniquement en notification du téléphone (rien dans l'appli). Bouton de test en développement. */}
+      {import.meta.env.DEV && <KonanVoiceTestPanel appState={state} />}
+
       {/* Floating Notification Toast (Full multi-line sentence, zero truncation, crystal clear in light and dark mode) */}
       {toastMessage && (
         <div
@@ -2451,20 +2588,8 @@ export function App() {
         </footer>
       )}
 
-      {/*  Cinematic 3D Entrance Animation */}
-      <KonanEntranceSplash
-        onComplete={() => {
-          // L'animation d'entrée ne force JAMAIS la redirection vers le dashboard :
-          // L'utilisateur reste sur sa vue actuelle (notamment l'interface d'accueil 'landing').
-          if (pendingPrivacyModalRef.current) {
-            setIsPrivacyModalOpen(true);
-            pendingPrivacyModalRef.current = false;
-          }
-        }}
-      />
-
-      {/*  PWA Universal Mobile & Desktop Install Prompt */}
-      <PwaInstallPromptModal />
+      {/*  PWA Universal Mobile & Desktop Install Prompt (jamais pendant un cours : rien ne doit distraire l'élève) */}
+      {activeView !== 'tutor' && <PwaInstallPromptModal />}
     </div>
 
   );

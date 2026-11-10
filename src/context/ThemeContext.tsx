@@ -29,6 +29,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return 'dark'; // Mode sombre par défaut
   });
 
+  // Pendant l'écran d'ouverture (bleu ciel), la barre du haut reste bleu ciel :
+  // la couleur du thème est mémorisée et appliquée quand l'écran disparaît.
+  const setStatusBarColor = (color: string) => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) return;
+    meta.setAttribute('data-app-color', color);
+    if (!document.getElementById('konan-splash')) meta.setAttribute('content', color);
+  };
+
   const applyTheme = (mode: ThemeMode) => {
     const root = document.documentElement;
     if (mode === 'light') {
@@ -38,8 +47,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       document.body.classList.remove('dark');
       document.body.classList.add('light');
       document.body.setAttribute('data-theme', 'light');
-      const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', '#F9FAFB');
+      setStatusBarColor('#F9FAFB');
     } else {
       root.classList.remove('light');
       root.classList.add('dark');
@@ -47,8 +55,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       document.body.classList.remove('light');
       document.body.classList.add('dark');
       document.body.setAttribute('data-theme', 'dark');
-      const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', '#070B13');
+      setStatusBarColor('#070B13');
     }
   };
 

@@ -4,6 +4,7 @@ import 'katex/dist/katex.min.css';
 import { StackedFraction, renderTextWithStackedFractions } from './StackedFraction';
 import { SketchFunctionPlot, SketchSignTable, SketchVariationTable } from './SketchFigure';
 import type { PointVisualSchema } from '../../lib/curriculum/types';
+import { renderScene } from '../../lib/scenes/sceneRenderer';
 export { StackedFraction, renderTextWithStackedFractions };
 
 /**
@@ -113,12 +114,13 @@ export function cleanFormulasAndIndices(text: string): string {
   // Formule complète vitesse instantanée sur enregistrement : v(t_i) = M_{i-1}M_{i+1} / (t_{i+1} - t_{i-1}) = M_{i-1}M_{i+1} / (2τ)
   s = s.replace(
     /v\s*\(\s*t_?\{?i\}?\s*\)\s*=\s*M_?\{?i\s*-\s*1\}?\s*M_?\{?i\s*\+\s*1\}?\s*\/\s*\(?\s*t_?\{?i\s*\+\s*1\}?\s*-\s*t_?\{?i\s*-\s*1\}?\s*\)?\s*=\s*M_?\{?i\s*-\s*1\}?\s*M_?\{?i\s*\+\s*1\}?\s*\/\s*\(?\s*2\s*(?:\\?tau|τ)\s*\)?\.?/gi,
-    () => '$$$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{t_{i+1} - t_{i-1}} = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$$$'
+    // (fonction de remplacement : le texte renvoyé est pris tel quel, donc « $$ » et non « $$$$ »)
+    () => '$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{t_{i+1} - t_{i-1}} = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$'
   );
 
   s = s.replace(
     /v\s*\(\s*t_?\{?i\}?\s*\)\s*=\s*M_?\{?i\s*-\s*1\}?\s*M_?\{?i\s*\+\s*1\}?\s*\/\s*\(?\s*2\s*(?:\\?tau|τ)\s*\)?\.?/gi,
-    () => '$$$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$$$'
+    () => '$$v(t_i) = \\frac{M_{i-1}M_{i+1}}{2\\tau}$$'
   );
 
   s = s.replace(
@@ -466,6 +468,8 @@ export function splitFormulaLines(raw: string): string[] {
 export function isDescriptiveFormula(formula: string): boolean {
   if (!formula) return false;
   const str = String(formula).trim();
+  // Une vraie notation LaTeX (\frac, \text, \iff…) se dessine toujours avec KaTeX, même avec des mots ou un %
+  if (/\\[a-zA-Z]{2,}/.test(str)) return false;
   if (str.includes('%')) return true;
   const frenchWords = str.split(/\s+/).filter((w) => /^[a-zA-ZÀ-ÿ]{3,}$/.test(w));
   return frenchWords.length >= 3 && !/[=\+\-\*/<>]/.test(str);
@@ -540,7 +544,8 @@ export function sanitizeFormulaForKatex(raw: string): string {
 
   // 2. Réparation des sauts de page ou résidus de parsing (\x0crac -> \frac)
   s = s.replace(/\x0crac\{([^{}]+)\}\{([^{}]+)\}/g, '\\frac{$1}{$2}');
-  s = s.replace(/(?<!\\f)(?<!\\)rac\{([^{}]+)\}\{([^{}]+)\}/g, '\\frac{$1}{$2}');
+  // « rac{ » orphelin seulement : jamais à l'intérieur de \frac, \dfrac ou \tfrac (qui deviendrait \df\frac, illisible)
+  s = s.replace(/(?<!\\[dt]?f)(?<!\\)rac\{([^{}]+)\}\{([^{}]+)\}/g, '\\frac{$1}{$2}');
 
   // 3. Covariance et statistiques
   s = s.replace(/Cov\(([^)]+)\)\s*\/\s*V\(([^)]+)\)/g, '\\frac{\\text{Cov}($1)}{V($2)}');
@@ -761,20 +766,53 @@ export interface MathFormulaProps {
  * Génère un rendu KaTeX authentique (vraie barre de fraction horizontale,
  * vraies racines, vrais symboles de dérivées et de limites).
  */
-export const MathFormula: React.FC<MathFormulaProps> = ({ latex, display = false, className = '' }) => {
-  const renderedHtml = useMemo(() => {
-    if (!latex) return '';
-    const sanitized = sanitizeFormulaForKatex(latex);
+const LATEX_TEXT_SYMBOLS: Record<string, string> = {
+  forall: '∀', exists: '∃', le: '≤', leq: '≤', leqslant: '≤', ge: '≥', geq: '≥', geqslant: '≥', neq: '≠', ne: '≠',
+  iff: '⇔', Leftrightarrow: '⇔', implies: '⇒', Rightarrow: '⇒', rightarrow: '→', to: '→', mapsto: '↦', in: '∈', notin: '∉',
+  times: '×', cdot: '·', approx: '≈', infty: '∞', pm: '±', sqrt: '√', subset: '⊂', cup: '∪', cap: '∩', emptyset: '∅',
+  pi: 'π', alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', Delta: 'Δ', theta: 'θ', lambda: 'λ', mu: 'μ', sigma: 'σ',
+  Sigma: 'Σ', omega: 'ω', Omega: 'Ω', rho: 'ρ', tau: 'τ', varphi: 'φ', phi: 'φ', epsilon: 'ε', varepsilon: 'ε',
+  quad: ' ', qquad: '  ', ldots: '…', dots: '…', degree: '°', circ: '°', parallel: '∥', perp: '⊥', angle: '∠',
+};
+
+/**
+ * Commandes LaTeX écrites DANS le texte, sans $…$ (ex. « \forall x, f(x) \le M ») :
+ * on les remplace par les vrais symboles, pour ne jamais afficher de « \ » à l'élève.
+ */
+export function latexCommandsToUnicode(text: string): string {
+  if (!/\\[a-zA-Z]{2,}/.test(text)) return text;
+  return text
+    .replace(/\\mathbb\{([RNZQC])\}/g, (_, l: string) => ({ R: 'ℝ', N: 'ℕ', Z: 'ℤ', Q: 'ℚ', C: 'ℂ' } as Record<string, string>)[l])
+    .replace(/\\(?:text|textbf|mathrm|mathbf|operatorname)\{([^{}]*)\}/g, '$1')
+    .replace(/\\vec\{([^{}]+)\}/g, '$1⃗')
+    .replace(/\\[dt]?frac\{([^{}]+)\}\{([^{}]+)\}/g, '$1/$2')
+    .replace(/\\sqrt\{([^{}]+)\}/g, '√($1)')
+    .replace(/\\([a-zA-Z]+)/g, (_m, cmd: string) => LATEX_TEXT_SYMBOLS[cmd] ?? cmd)
+    .replace(/\\[,;!]/g, ' ');
+}
+
+const escapeHtml = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/**
+ * Rendu KaTeX SANS JAMAIS de texte rouge : si la formule est illisible pour KaTeX, on l'affiche en
+ * texte propre (symboles Unicode : ⇔, √, ≤…), au lieu du message d'erreur rouge de KaTeX.
+ */
+export function renderKatexSafe(latex: string, display: boolean): string {
+  const sanitized = sanitizeFormulaForKatex(latex);
+  try {
+    return katex.renderToString(sanitized, { throwOnError: true, displayMode: display, strict: false });
+  } catch {
     try {
-      return katex.renderToString(sanitized, {
-        throwOnError: false,
-        displayMode: display,
-        strict: false,
-      });
+      // Second essai : la formule d'origine telle quelle
+      return katex.renderToString(String(latex).replace(/^\$+|\$+$/g, ''), { throwOnError: true, displayMode: display, strict: false });
     } catch {
-      return latex;
+      return `<span class="math-fallback">${escapeHtml(formatMathUnicode(latex))}</span>`;
     }
-  }, [latex, display]);
+  }
+}
+
+export const MathFormula: React.FC<MathFormulaProps> = ({ latex, display = false, className = '' }) => {
+  const renderedHtml = useMemo(() => (latex ? renderKatexSafe(latex, display) : ''), [latex, display]);
 
   if (display) {
     return (
@@ -917,8 +955,8 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = ''
     const hasMathDelimiters = /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/.test(pretreated);
 
     if (!hasMathDelimiters) {
-      // Aucun délimiteur : texte pur intact
-      return pretreated;
+      // Aucun délimiteur : texte pur (seules d'éventuelles commandes LaTeX isolées deviennent des symboles)
+      return latexCommandsToUnicode(pretreated);
     }
 
     const regex = /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g;
@@ -930,7 +968,7 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = ''
       if (match.index > lastIndex) {
         parts.push({
           type: 'text',
-          content: pretreated.slice(lastIndex, match.index),
+          content: latexCommandsToUnicode(pretreated.slice(lastIndex, match.index)),
         });
       }
 
@@ -952,17 +990,7 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = ''
         display = false;
       }
 
-      const sanitized = sanitizeFormulaForKatex(mathContent);
-      let rendered = '';
-      try {
-        rendered = katex.renderToString(sanitized, {
-          throwOnError: false,
-          displayMode: display,
-          strict: false,
-        });
-      } catch {
-        rendered = raw;
-      }
+      const rendered = renderKatexSafe(mathContent, display);
 
       parts.push({
         type: 'math',
@@ -976,7 +1004,7 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = ''
     if (lastIndex < pretreated.length) {
       parts.push({
         type: 'text',
-        content: pretreated.slice(lastIndex),
+        content: latexCommandsToUnicode(pretreated.slice(lastIndex)),
       });
     }
 
@@ -1026,13 +1054,22 @@ export interface VisualSchemaProps {
  * tableaux de signes et de variations, arbres pondérés.
  */
 export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, className = '' }) => {
+  // Scène décrite (générée à l'avance) : dessinée ici par le moteur de KONAN
+  const sceneSvg = useMemo(
+    () => (schema.sceneSpec && !schema.svgContent ? renderScene(schema.sceneSpec, { id: schema.title, label: schema.caption || schema.title }) : null),
+    [schema.sceneSpec, schema.svgContent, schema.title, schema.caption],
+  );
+  const svgContent = schema.svgContent || sceneSvg;
+  const isScene = Boolean(schema.scene || schema.sceneSpec);
   return (
     <div className={`p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-200/80 dark:border-indigo-500/30 shadow-xs space-y-2.5 my-3 ${className}`}>
       {schema.title && (
         <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
-          <span>Figure / Support Visuel : {schema.title}</span>
+          <span>{isScene ? 'Illustration' : 'Figure / Support Visuel'} : {schema.title}</span>
           <span className="text-[10px] px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-            {schema.type === 'geometry_svg'
+            {isScene
+              ? 'Dessin'
+              : schema.type === 'geometry_svg'
               ? 'Géométrie'
               : schema.type === 'variation_table'
               ? 'Tableau de variation'
@@ -1052,10 +1089,12 @@ export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, clas
       {schema.variation && <SketchVariationTable spec={schema.variation} />}
       {schema.signs && <SketchSignTable spec={schema.signs} />}
 
-      {schema.svgContent && (
+      {svgContent && (
         <div
-          className="flex items-center justify-center py-2 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200/70 dark:border-slate-800 overflow-x-auto"
-          dangerouslySetInnerHTML={{ __html: schema.svgContent }}
+          className={isScene
+            ? 'flex items-center justify-center rounded-xl overflow-hidden'
+            : 'flex items-center justify-center py-2 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200/70 dark:border-slate-800 overflow-x-auto'}
+          dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       )}
 

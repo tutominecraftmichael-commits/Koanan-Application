@@ -1,9 +1,12 @@
 import React, { StrictMode, Component, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import 'katex/dist/katex.min.css'
 import App from './App.tsx'
 import { initPwaAutoUpdate } from './services/pwaUpdateService'
+import { installShineOnTap } from './lib/shineClick'
+
+// Barre de lumière au toucher des boutons « propres » (valider la séance, rattrapage…)
+installShineOnTap()
 
 interface Props {
   children: ReactNode;
@@ -26,6 +29,7 @@ class RootErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('Root ErrorBoundary caught an error:', error, errorInfo);
+    (window as Window & { __konanHideSplash?: () => void }).__konanHideSplash?.();
   }
 
   render() {

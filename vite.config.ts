@@ -74,9 +74,75 @@ export default defineConfig(({ mode }) => {
               res.end(JSON.stringify({ error: err?.message || 'Internal Server Error' }));
             }
           });
+          // Vérification « ce compte existe-t-il ? » (connexion / inscription)
+          server.middlewares.use('/api/account-exists', async (req, res) => {
+            try {
+              // @ts-ignore
+              const { default: handler } = await import('./api/account-exists.js');
+              await handler(req, res);
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: err?.message || 'Internal Server Error' }));
+            }
+          });
+          // Enregistrement des appareils et des alertes (notifications)
+          server.middlewares.use('/api/push-sync', async (req, res) => {
+            try {
+              // @ts-ignore
+              const { default: handler } = await import('./api/push-sync.js');
+              await handler(req, res);
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, error: err?.message || 'Internal Server Error' }));
+            }
+          });
+          // Progression des cours guidés copiée dans le compte de l'élève
+          server.middlewares.use('/api/learning-sync', async (req, res) => {
+            try {
+              // @ts-ignore
+              const { default: handler } = await import('./api/learning-sync.js');
+              await handler(req, res);
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, error: err?.message || 'Internal Server Error' }));
+            }
+          });
+          // Méthode Feynman : explication orale ou écrite analysée par Gemini
+          server.middlewares.use('/api/feynman', async (req, res) => {
+            try {
+              // @ts-ignore
+              const { default: handler } = await import('./api/feynman.js');
+              await handler(req, res);
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, error: err?.message || 'Internal Server Error' }));
+            }
+          });
+          // Banc d'essai des messages de KONAN (développement uniquement)
+          server.middlewares.use('/api/konan-voice', async (req, res) => {
+            try {
+              // @ts-ignore
+              const { default: handler } = await import('./api/konan-voice.js');
+              await handler(req, res);
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: err?.message || 'Internal Server Error' }));
+            }
+          });
         }
       }
     ],
+    // Bibliothèques chargées à la demande : préparées dès le démarrage du serveur de développement.
+    // Sans cela, Vite les découvre en pleine session, se « réoptimise » et peut renvoyer des 504
+    // (page blanche) jusqu'au redémarrage.
+    optimizeDeps: {
+      include: ['pdfjs-dist', '@google/genai', 'katex'],
+    },
     envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
     define: {
       '__APP_BUILD_ID__': JSON.stringify(buildTimestamp),

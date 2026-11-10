@@ -10,6 +10,7 @@ import type {
 } from '../../types';
 import { DAYS_OF_WEEK } from '../../types';
 import { Button } from '../../components/ui/Button';
+import { afterShine } from '../../lib/shineClick';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { Modal } from '../../components/ui/Modal';
@@ -22,7 +23,6 @@ import {
   CheckCircle2, 
   Check,
   RefreshCw, 
-  Flame, 
   Filter, 
   Calendar, 
   Plus,
@@ -184,9 +184,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>{t('plannerTitle', lang)}</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            {t('plannerSubtitle', lang)}
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -214,7 +211,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
       </div>
 
       {/* METRIC STRIP */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-4">
         <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 interactive-card shadow-xs">
           <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0">
             <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -245,7 +242,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
             }
             setIsStrategyModalOpen(true);
           }}
-          className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 hover:border-cyan-500/50 cursor-pointer transition-all group interactive-card shadow-xs"
+          className="col-span-2 sm:col-span-1 p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 hover:border-cyan-500/50 cursor-pointer transition-all group interactive-card shadow-xs"
           title="Cliquez pour consulter ou changer la méthode d'espacement active"
         >
           <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform shrink-0">
@@ -265,16 +262,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 ? `${preferences.combinedPacings.length} Méthodes Combinées`
                 : activePacing.title}
             </p>
-          </div>
-        </Card>
-
-        <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center gap-2.5 interactive-card shadow-xs">
-          <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
-            <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Équilibre</p>
-            <p className="text-sm sm:text-lg font-bold text-amber-600 dark:text-amber-400 font-mono">Anti-Burnout</p>
           </div>
         </Card>
       </div>
@@ -308,30 +295,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               Reprendre dès aujourd'hui
             </button>
           )}
-        </div>
-      )}
-
-      {/* Daily Catch-up Rescheduled Banner */}
-      {studySessions.some(s => s.isRescheduledToday) && !isCycleCompletedToday && (
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50/40 to-amber-50/70 dark:from-amber-950/60 dark:via-slate-900 dark:to-indigo-950/40 border border-amber-200 dark:border-amber-500/40 shadow-xs dark:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div className="flex items-start gap-2.5 min-w-0">
-            <div className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 shrink-0 mt-0.5">
-              <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-            </div>
-            <div className="space-y-1.5 min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wide text-[11px]">
-                  ({studySessions.filter(s => s.isRescheduledToday && !s.completed).length}) Séance(s) à faire
-                </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-500/40">
-                  Jour même
-                </span>
-              </div>
-              <p className="text-amber-950/80 dark:text-slate-300 text-xs leading-relaxed">
-                Vos séances non effectuées plus tôt ont été replacées ce soir (fin max à minuit 00:00). Si vous ne les effectuez pas aujourd'hui, elles sont simplement oubliées à minuit sans impacter le programme de demain.
-              </p>
-            </div>
-          </div>
         </div>
       )}
 
@@ -391,17 +354,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
       {/* SESSIONS LIST */}
       {filteredSessions.length === 0 ? (
-        <Card className="text-center p-8 sm:p-12 space-y-4 border-slate-800">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mx-auto">
-            <Sparkles className="w-6 h-6" />
-          </div>
-          <h3 className="text-base sm:text-lg font-bold text-white">Aucune session d'étude pour ce filtre</h3>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
-            Cliquez sur "Réorganiser mes révisions" ou modifiez les filtres pour afficher vos sessions de travail.
-          </p>
-          <Button variant="primary" size="sm" onClick={handleRegenerate}>
-            Générer maintenant
-          </Button>
+        <Card className="text-center p-8 sm:p-12 border-slate-200 dark:border-slate-800">
+          <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Aucune session d'étude</h3>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
@@ -476,9 +430,12 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         className="cursor-pointer hover:scale-105 transition-transform shrink-0"
                         title={t('clickForGuide', lang)}
                       >
-                        <Badge variant={badgeType.variant} size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
-                          {badgeType.label}
-                        </Badge>
+                        {/* Pas d'étiquette « Spaced Review » sur les séances */}
+                        {session.type !== 'spaced_review' && (
+                          <Badge variant={badgeType.variant} size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
+                            {badgeType.label}
+                          </Badge>
+                        )}
                       </button>
                       {session.isExamPrep && (
                         <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 whitespace-nowrap shrink-0 shadow-xs ${
@@ -562,16 +519,16 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         variant={session.isRescheduledToday ? 'secondary' : 'glow'}
                         size="sm"
                         leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                        onClick={() => {
+                        onClick={afterShine(() => {
                           if (_onStartFocusSession) {
                             _onStartFocusSession(session);
                           } else {
                             onToggleSessionComplete(session.id);
                           }
-                        }}
-                        className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer active:translate-y-1 ${
+                        })}
+                        className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer active:translate-y-1 ${
                           session.isRescheduledToday
-                            ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
+                            ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
                             : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                         }`}
                       >
@@ -728,7 +685,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <span className="font-bold text-slate-900 dark:text-white text-[11px] uppercase tracking-wide shrink-0">
-                          Recommandation KONAN :
+                          Recommandation de KONAN :
                         </span>
                         {targetPacings.map(id => (
                           <span key={id} className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/20 dark:text-cyan-300 dark:border-indigo-500/40">

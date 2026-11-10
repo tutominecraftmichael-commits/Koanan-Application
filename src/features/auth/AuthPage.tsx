@@ -21,7 +21,8 @@ import {
   signInWithEmailReal,
   signUpWithEmailReal,
   resetPasswordReal,
-  isMobileBrowser
+  isMobileBrowser,
+  checkNewPassword
 } from '../../lib/firebase';
 import { generateKonanId } from '../../lib/konanId';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
@@ -164,6 +165,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  // Mot de passe refusé ou compte passé à Google : proposer le lien pour (re)créer un mot de passe
+  const [canOfferReset, setCanOfferReset] = useState(false);
 
   // Unauthorized domain dialog state
   const [showDomainHelp, setShowDomainHelp] = useState(false);
@@ -242,7 +245,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     try {
       if (isMobile) {
         try {
-          const googleUser = await signInWithGoogleReal();
+          const googleUser = await signInWithGoogleReal(isRegistering ? 'signup' : 'login');
           const profile: UserAccount = {
             name: googleUser.displayName || 'Étudiant',
             email: googleUser.email || '',
@@ -263,12 +266,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             setIsLoading(false);
             return;
           }
-          await signInWithGoogleRedirectReal();
+          await signInWithGoogleRedirectReal(isRegistering ? 'signup' : 'login');
           return;
         }
       }
 
-      const googleUser = await signInWithGoogleReal();
+      const googleUser = await signInWithGoogleReal(isRegistering ? 'signup' : 'login');
       const profile: UserAccount = {
         name: googleUser.displayName || 'Étudiant',
         email: googleUser.email || '',
@@ -287,7 +290,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         setShowDomainHelp(true);
       } else if (err.message === 'POPUP_BLOCKED' || err.code === 'auth/popup-blocked') {
         try {
-          await signInWithGoogleRedirectReal();
+          await signInWithGoogleRedirectReal(isRegistering ? 'signup' : 'login');
           return;
         } catch {
           setErrorMessage('La fenêtre popup Google a été bloquée. Vous pouvez vous connecter via l\'onglet "Email" ci-dessous.');
@@ -309,7 +312,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     setSuccessMessage(null);
     setShowDomainHelp(false);
     try {
-      await signInWithGoogleRedirectReal();
+      await signInWithGoogleRedirectReal(isRegistering ? 'signup' : 'login');
     } catch (err: any) {
       console.error('Google Redirect Error:', err);
       setIsLoading(false);
@@ -363,8 +366,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
       return;
     }
 
-    // 2. Contrôle du mot de passe
-    if (!password || password.length < 6) {
+    // 2. Contrôle du mot de passe (nouveau compte : 8 caractères min., lettres et chiffres)
+    if (isRegistering) {
+      const passwordProblem = checkNewPassword(password);
+      if (passwordProblem) {
+        setErrorMessage(passwordProblem);
+        return;
+      }
+    } else if (!password || password.length < 6) {
       setErrorMessage('Le mot de passe doit comporter au moins 6 caractères.');
       return;
     }
@@ -398,6 +407,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
       onLoginSuccess(profile);
     } catch (err: any) {
       console.error('Email Auth Error:', err);
+      setCanOfferReset(!isRegistering && (err?.code === 'auth/invalid-credential' || err?.code === 'auth/use-google'));
       setErrorMessage(err.message || 'Erreur lors de l\'authentification par email.');
     } finally {
       setIsLoading(false);
@@ -518,6 +528,15 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               <div className="flex-1">
                 <p className="font-semibold">Vérification requise</p>
                 <p className="text-[11px] text-rose-700 dark:text-rose-300/90 mt-0.5 leading-relaxed">{errorMessage}</p>
+                {canOfferReset && !isForgotPassword && (
+                  <button
+                    type="button"
+                    onClick={() => { setIsForgotPassword(true); setErrorMessage(null); setCanOfferReset(false); }}
+                    className="mt-2 text-[11px] font-black text-sky-700 dark:text-sky-400 underline cursor-pointer"
+                  >
+                    Recevoir un lien pour créer mon mot de passe
+                  </button>
+                )}
               </div>
             </div>
           )}

@@ -5,57 +5,33 @@
   "description": "Compagnon Académique Anti-Burnout et Planning d'Étude Intelligent",
   "icons": [
     {
-      "src": "/cube-icon.png",
+      "src": "/icons/konan-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/cube-icon-512.png",
+      "src": "/icons/konan-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo-konan.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/logo-konan.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/logo-konan.png",
+      "src": "/icons/konan-icon-maskable-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/logo-konan.png",
+      "src": "/icons/konan-icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src": "/cube-badge.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/favicon.png",
-      "sizes": "64x64",
-      "type": "image/png",
-      "purpose": "any"
     }
   ],
   "start_url": "/",
   "scope": "/",
-  "background_color": "#091427",
+  "background_color": "#90D8F8",
   "theme_color": "#091427",
   "display": "standalone",
   "orientation": "portrait-primary",

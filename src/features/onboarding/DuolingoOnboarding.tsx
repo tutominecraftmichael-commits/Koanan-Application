@@ -22,7 +22,6 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
-  Crown,
   Copy,
   Download,
   Key,
@@ -36,15 +35,14 @@ import {
   Loader2,
   Volume2,
   VolumeX,
-  Layers,
-  Cpu,
   LogIn
 } from 'lucide-react';
-import { KonanCube } from '../../components/common/KonanCube';
+import { KonanMascot } from '../../components/common/KonanMascot';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { WaitlistModal } from '../../components/common/WaitlistModal';
+import { PlanPicker } from '../../components/pricing/PlanPicker';
+import { isProMethod } from '../../lib/subscriptionPlans';
 import { soundFX } from '../../lib/audioEffects';
-import { EXAM_PREP_PAUSED, EXAM_PREP_PAUSED_MESSAGE } from '../../lib/featureFlags';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
 import { AdminGoogleLoginButton } from '../../components/common/AdminGoogleLoginButton';
 import {
@@ -64,16 +62,16 @@ import {
 import { buildStateFromExtractedSchedule } from '../../services/aiAcademicAnalyzer';
 import {
   PACING_STRATEGIES,
-  getPacingStrategy,
   isPacingAllowedForPlan,
-  recommendPacingStrategies,
-  type PacingRecommendation
 } from '../../lib/pacingStrategies';
 import {
   signInWithGoogleReal,
   signInWithEmailReal,
-  signUpWithEmailReal
+  signUpWithEmailReal,
+  checkNewPassword,
+  resetPasswordReal
 } from '../../lib/firebase';
+import { checkAccountExists } from '../../services/accountCheck';
 import { generateKonanId } from '../../lib/konanId';
 import { validateStrictEmail } from '../auth/AuthPage';
 import type {
@@ -131,134 +129,6 @@ const STEP_ORDER: OnboardingStepId[] = [
   'customize',
   'account_setup',
   'pricing_models',
-];
-
-interface AccompanimentPlanSpec {
-  id: 'free' | 'pro' | 'plus';
-  name: string;
-  tagline: string;
-  priceValue: number;
-  currency: string;
-  period: string;
-  description: string;
-  badge: string | null;
-  popular: boolean;
-  comingSoon: boolean;
-  accentGradient: string;
-  ctaLabel: string;
-  features: {
-    text: string;
-    detail?: string;
-    highlight?: boolean;
-  }[];
-}
-
-const ACCOMPANIMENT_PLANS: AccompanimentPlanSpec[] = [
-  {
-    id: 'free',
-    name: 'KONAN',
-    tagline: 'Découverte • Autonomie',
-    priceValue: 0,
-    currency: 'F CFA',
-    period: '/ mois',
-    description: 'Gratuit pour toujours • Sans carte requise. Idéal pour découvrir la planification intelligente et structurer ses révisions.',
-    badge: 'Gratuit • Autonomie',
-    popular: false,
-    comingSoon: false,
-    accentGradient: 'from-slate-700 to-slate-800',
-    ctaLabel: 'Continuer avec KONAN (Gratuit)',
-    features: [
-      {
-        text: "Importation & extraction d'EDT",
-        detail: 'Import via PDF, scan photo ou fichier texte (limité à 3 générations / imports gratuits).',
-        highlight: true,
-      },
-      {
-        text: "Génération d'EDT personnalisé",
-        detail: "Planning d'étude adapté à votre filière (LMD, BTS, Lycée) pour structurer vos révisions et réduire le surmenage.",
-      },
-      {
-        text: 'Ajustement des matières & coefficients',
-        detail: "Ajout et personnalisation des cours avec recalcul instantané des créneaux d'étude.",
-      },
-      {
-        text: "Toutes les 5 Méthodes d'apprentissage incluses (1 active à la fois)",
-        detail: '• Pomodoro • Active Recall & Spaced Repetition • Technique de Feynman • Time Blocking • Règle des 2 minutes.',
-      },
-    ],
-  },
-  {
-    id: 'pro',
-    name: 'KONAN PRO',
-    tagline: 'Performance Maximale • Version Ouverte',
-    priceValue: 1200,
-    currency: 'F CFA',
-    period: '/ mois',
-    description: 'Accès complet 100% offert pendant la phase de lancement.',
-    badge: 'Recommandé • Version Ouverte',
-    popular: true,
-    comingSoon: false,
-    accentGradient: 'from-amber-400 via-amber-500 to-indigo-600',
-    ctaLabel: 'Configurer mon EDT Pro avec Konan',
-    features: [
-      {
-        text: "Imports & générations d'EDT illimités",
-        detail: "Importez autant d'emplois du temps que souhaité via PDF, scan photo ou texte (sans aucun blocage).",
-        highlight: true,
-      },
-      {
-        text: "Combinaison de méthodes Premium (Jusqu'à 3 simultanées)",
-        detail: "Activez et combinez jusqu'à 3 techniques d'espacement simultanément dans le même planning (contre 1 seule en version gratuite) pour alterner selon vos matières.",
-        highlight: true,
-      },
-      {
-        text: "Dates d'examens & Devoirs Surveillés (DS)",
-        detail: EXAM_PREP_PAUSED
-          ? EXAM_PREP_PAUSED_MESSAGE
-          : "Intégrez vos épreuves ; l'algorithme s'adapte avec compte à rebours interactif (J-X) et sur-priorisation automatique.",
-        highlight: true,
-      },
-      {
-        text: 'Synchronisation Google Calendar (.ics)',
-        detail: 'Export direct de votre planning personnalisé avec alertes automatiques et intégration nette.',
-      },
-      {
-        text: 'Recommandations algorithmiques de Konan',
-        detail: 'Recommandations intelligentes de la meilleure combinaison de techniques selon la fatigue et vos heures de cours.',
-      },
-    ],
-  },
-  {
-    id: 'plus',
-    name: 'KONAN PLUS',
-    tagline: 'Fonctionnalités Futures • Élite',
-    priceValue: 2500,
-    currency: 'F CFA',
-    period: '/ mois',
-    description: 'Tout ce qui est dans KONAN PRO, plus un écosystème collaboratif et audio complet.',
-    badge: 'Élite • Guide EDT Pro inclus',
-    popular: false,
-    comingSoon: false,
-    accentGradient: 'from-purple-500 via-violet-600 to-fuchsia-600',
-    ctaLabel: 'Configurer mon EDT Plus avec Konan',
-    features: [
-      {
-        text: 'Planning conditionné par vos 3 Objectifs Scolaires',
-        detail: "• Passer l'année avec 12 de moyenne • Passer avec mention (16/20) • Devenir major de promotion (18/20+).",
-        highlight: true,
-      },
-      {
-        text: "Pack Étudiant (Jusqu'à 5 comptes complets inclus)",
-        detail: "Invitez jusqu'à 4 camarades via leur adresse email. Chaque membre bénéficie de l'accès Pro & Plus intégral.",
-        highlight: true,
-      },
-      {
-        text: 'Lecteur Audio & Musiques de révision',
-        detail: 'Ambiances sonores intégrées dédiées au focus : Ondes Alpha concentration profonde, Lofi Chill révision, Bruit blanc.',
-        highlight: true,
-      },
-    ],
-  },
 ];
 
 const STUDY_SYSTEM_CONFIG: Record<
@@ -323,30 +193,37 @@ interface EditableSubjectItem {
 /**
  * Composant texte avec animation mot par mot (Machine à écrire vivante Konan)
  */
-const WordByWordBubble: React.FC<{ text: string; speed?: number }> = ({
+const WordByWordBubble: React.FC<{ text: string; speed?: number; delayMs?: number }> = ({
   text,
   speed = 32,
+  delayMs = 0,
 }) => {
   const words = useMemo(() => (text ? text.split(' ') : []), [text]);
-  const [visibleCount, setVisibleCount] = useState<number>(words.length);
+  const [visibleCount, setVisibleCount] = useState<number>(delayMs > 0 ? 0 : words.length);
 
   useEffect(() => {
     if (!words.length) return;
-    setVisibleCount(1);
-    let current = 1;
-    const interval = setInterval(() => {
-      current++;
-      setVisibleCount(current);
-      if (current >= words.length) {
-        clearInterval(interval);
-      }
-    }, speed);
-    return () => clearInterval(interval);
-  }, [text, speed, words.length]);
+    let interval: ReturnType<typeof setInterval> | undefined;
+    // Pendant le délai (ex. KONAN saute deux fois), la bulle attend avant de parler
+    setVisibleCount(delayMs > 0 ? 0 : 1);
+    const start = setTimeout(() => {
+      setVisibleCount(1);
+      let current = 1;
+      interval = setInterval(() => {
+        current++;
+        setVisibleCount(current);
+        if (current >= words.length && interval) clearInterval(interval);
+      }, speed);
+    }, delayMs);
+    return () => {
+      clearTimeout(start);
+      if (interval) clearInterval(interval);
+    };
+  }, [text, speed, words.length, delayMs]);
 
   return (
     <span className="text-slate-900 dark:text-white font-extrabold">
-      {(visibleCount > 0 ? words.slice(0, visibleCount) : words).join(' ')}
+      {words.slice(0, visibleCount).join(' ')}
       {visibleCount < words.length && (
         <span className="inline-block w-1.5 h-3.5 ml-1 bg-cyan-500 dark:bg-cyan-400 animate-pulse align-middle" />
       )}
@@ -362,6 +239,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   onLoginSuccess,
 }) => {
   const [step, setStep] = useState<OnboardingStepId>('welcome');
+  // Pages d'introduction des nouveaux (avant les questions) : 2 = KONAN salue, 3 = KONAN saute de joie
+  const [introPage, setIntroPage] = useState<null | 'hello' | 'questions'>(null);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [showExistingLogin, setShowExistingLogin] = useState<boolean>(false);
 
@@ -408,7 +287,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   const [extractedSlots, setExtractedSlots] = useState<ExtractedClassCandidate[]>([]);
   const [selectedPacings, setSelectedPacings] = useState<StudyPacing[]>(['pomodoro']);
   const [chronotype, setChronotype] = useState<Chronotype>('evening');
-  const [showFullDiagnostic, setShowFullDiagnostic] = useState<boolean>(false);
 
   // Étape 5 & 6 : Compte (Nouvel utilisateur) puis Modèles d'accompagnement
   const [selectedPlan, setSelectedPlan] = useState<'free' | 'pro' | 'plus'>('pro');
@@ -427,6 +305,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   const [authError, setAuthError] = useState<string | null>(null);
   const [accountExistsRedirect, setAccountExistsRedirect] = useState<boolean>(false);
   const [canCreateFromLogin, setCanCreateFromLogin] = useState<boolean>(false);
+  // Mot de passe refusé ou compte passé à Google : lien pour (re)créer un mot de passe
+  const [canResetFromLogin, setCanResetFromLogin] = useState<boolean>(false);
+  const [resetLinkInfo, setResetLinkInfo] = useState<string | null>(null);
   const [isSubmittingAuth, setIsSubmittingAuth] = useState<boolean>(false);
   const [registeredProfile, setRegisteredProfile] = useState<UserAccount | null>(null);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState<boolean>(false);
@@ -504,20 +385,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     return groups;
   }, [liveParsedPreview.slots]);
 
-  // Recommandation KONAN IA selon l'emploi du temps extrait
-  const pacingRecommendation: PacingRecommendation = useMemo(() => {
-    const activeCount = editableSubjects.filter(s => s.enabled).length || liveParsedPreview.subjects.length || 6;
-    const referenceSlots = extractedSlots.length > 0 ? extractedSlots : liveParsedPreview.slots;
-    return recommendPacingStrategies(
-      activeCount,
-      referenceSlots.map(s => ({
-        startTime: s.startTime,
-        endTime: s.endTime,
-        dayOfWeek: s.dayOfWeek,
-      }))
-    );
-  }, [editableSubjects, extractedSlots, liveParsedPreview]);
-
   const handleBack = () => {
     soundFX.playCheckmarkPop();
     if (showExistingLogin) {
@@ -525,9 +392,32 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       setAuthError(null);
       return;
     }
+    if (step === 'study_type') {
+      // Retour vers la page 3 (« Je vais te poser quelques questions »)
+      setStep('welcome');
+      setIntroPage('questions');
+      return;
+    }
     if (currentStepIndex > 0) {
       setStep(STEP_ORDER[currentStepIndex - 1]);
     }
+  };
+
+  /** Page 1 → « Commencer » : début du parcours des nouveaux */
+  const startNewcomerJourney = () => {
+    soundFX.playCheckmarkPop();
+    setAuthFullName('');
+    setAuthEmail('');
+    setAuthPassword('');
+    setAuthError(null);
+    setAccountExistsRedirect(false);
+    setRegisteredProfile(null);
+    try {
+      sessionStorage.setItem('konan_onboarding_in_progress', 'true');
+    } catch {
+      // Ignore
+    }
+    setIntroPage('hello');
   };
 
   // Changement du système d'études (LMD / BTS / Lycée) : re-catégorise et transforme immédiatement le fichier texte (.txt)
@@ -747,19 +637,6 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
     setEditableSubjects(editableList);
 
-    // Appliquer par défaut la recommandation IA
-    const rec = recommendPacingStrategies(
-      editableList.length,
-      harmonized.map(s => ({
-        startTime: s.startTime,
-        endTime: s.endTime,
-        dayOfWeek: s.dayOfWeek,
-      }))
-    );
-    if (rec?.primaryId) {
-      setSelectedPacings([rec.primaryId]);
-    }
-
     // Détection automatique intelligente de la classe et série à partir de l'EDT
     const textToScan = `${scheduleText} ${uploadedFileName}`.toLowerCase();
     let detectedGrade: CurriculumGradeLevel | null = null;
@@ -931,11 +808,37 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           blockedSlots: [],
         };
 
+    // Formule Gratuite : Feynman et Time Blocking sont des méthodes Pro -> Pomodoro (25 min), dès maintenant
+    let finalSessions = generatedSessions;
+    if (effectiveTier === 'free') {
+      const safePacing = isProMethod(finalPrefs.pacing) ? 'pomodoro' : finalPrefs.pacing;
+      finalPrefs.pacing = safePacing;
+      finalPrefs.combinedPacings = [safePacing];
+      if (safePacing === 'pomodoro') {
+        finalPrefs.focusBlockDuration = 25;
+        finalPrefs.breakBlockDuration = 5;
+      }
+      finalSessions = generatedSessions.map((sess) => {
+        if (!isProMethod(sess.pacingMethod || '')) return sess;
+        const subName = generatedSubjects.find((s) => s.id === sess.subjectId)?.name || 'Matière';
+        const [h, m] = String(sess.startTime || '00:00').split(':').map(Number);
+        const end = (h || 0) * 60 + (m || 0) + 25;
+        return {
+          ...sess,
+          pacingMethod: 'pomodoro' as const,
+          durationMinutes: 25,
+          endTime: `${String(Math.floor(end / 60) % 24).padStart(2, '0')}:${String(end % 60).padStart(2, '0')}`,
+          title: `Pomodoro (25m) : ${subName}`,
+          description: 'Micro-session Pomodoro de 25 min à fond, coupure nette de 5 min.',
+        };
+      });
+    }
+
     const payload = {
       subjects: generatedSubjects,
       classSlots: generatedSlots,
       preferences: finalPrefs,
-      studySessions: generatedSessions,
+      studySessions: finalSessions,
       planTier: effectiveTier,
     };
 
@@ -960,8 +863,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       return;
     }
 
-    if (!authPassword || authPassword.length < 6) {
-      setAuthError('Le mot de passe doit comporter au moins 6 caractères.');
+    const passwordProblem = checkNewPassword(authPassword);
+    if (passwordProblem) {
+      setAuthError(passwordProblem);
       return;
     }
 
@@ -977,7 +881,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         // Ignore
       }
 
-      // Inscription ou connexion automatique sans blocage artificiel
+      // Inscription : refusée si l'adresse a déjà un compte (l'élève est alors invité à se connecter)
       const authUser = await signUpWithEmailReal(cleanEmail, authPassword, cleanName);
 
       const profile: UserAccount = {
@@ -1029,7 +933,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         // Ignore
       }
 
-      const realUser = await signInWithGoogleReal();
+      // Inscription Google : refusée si ce compte Google est déjà inscrit sur KONAN
+      const realUser = await signInWithGoogleReal('signup');
       if (realUser) {
         const resolvedName = realUser.displayName || authFullName.trim() || 'Étudiant';
         setAuthFullName(resolvedName);
@@ -1058,7 +963,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         setStep('pricing_models');
       }
     } catch (err: any) {
-      if (err?.code === 'auth/unauthorized-domain' || err?.message === 'UNAUTHORIZED_DOMAIN') {
+      if (err?.code === 'auth/email-already-in-use') {
+        setAccountExistsRedirect(true);
+        setAuthError(err.message);
+      } else if (err?.code === 'auth/unauthorized-domain' || err?.message === 'UNAUTHORIZED_DOMAIN') {
         setAuthError('Domaine non autorisé. Ouvrez l\'application sur http://localhost:5173 (et non 127.0.0.1) ou utilisez la connexion par Email.');
       } else {
         setAuthError(err?.message || 'Inscription Google interrompue.');
@@ -1071,6 +979,11 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   // Étape 6 : Choix final du modèle d'accompagnement (Gratuit, Pro, Plus) -> Ouverture du planning ou Guide EDT Pro avec Konan
   const handleSelectAccompanimentModel = (planId: 'free' | 'pro' | 'plus') => {
     soundFX.playCheckmarkPop();
+    // KONAN PLUS n'est pas encore ouvert : liste d'attente (l'élève choisit ensuite Gratuit ou Pro)
+    if (planId === 'plus') {
+      setIsWaitlistOpen(true);
+      return;
+    }
     setSelectedPlan(planId);
 
     const effectiveName = (registeredProfile?.name || authFullName || 'Étudiant').trim();
@@ -1094,7 +1007,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     }
     onComplete({
       ...payload,
-      launchProWizard: planId === 'pro' || planId === 'plus',
+      launchProWizard: planId === 'pro',
     });
   };
 
@@ -1110,7 +1023,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         // Ignore
       }
       const hasExtractedSchedule = generatedSlots.length > 0 && generatedSubjects.length > 0;
-      const realUser = await signInWithGoogleReal();
+      // Connexion : le compte Google doit déjà exister dans KONAN
+      const realUser = await signInWithGoogleReal('login');
       if (realUser) {
         const resolvedName = realUser.displayName || authFullName.trim() || 'Étudiant';
         const pendingPayload = hasExtractedSchedule
@@ -1139,6 +1053,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
         onLoginSuccess(profile);
       }
     } catch (err: any) {
+      setCanCreateFromLogin(err?.code === 'auth/user-not-found');
       setAuthError(err?.message || 'Connexion Google interrompue.');
     } finally {
       setIsSubmittingAuth(false);
@@ -1150,6 +1065,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
     e.preventDefault();
     setAuthError(null);
     setCanCreateFromLogin(false);
+    setCanResetFromLogin(false);
+    setResetLinkInfo(null);
 
     const emailCheck = validateStrictEmail(authEmail);
     if (!emailCheck.isValid) {
@@ -1197,56 +1114,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       onLoginSuccess(profile);
     } catch (err: any) {
       const msg = err?.message || '';
-      if (err?.code === 'auth/user-not-found' || msg.includes("n'existe pas")) {
-        setCanCreateFromLogin(true);
-        setAuthError("Ce compte n'existe pas encore. Vous pouvez le créer directement en un clic ci-dessous avec ce mot de passe :");
-      } else {
-        setAuthError(msg || "Ce compte n'est pas reconnu ou le mot de passe est incorrect.");
-      }
-    } finally {
-      setIsSubmittingAuth(false);
-    }
-  };
-
-  // Création directe d'un compte à partir des identifiants saisis dans le formulaire de connexion
-  const handleCreateAccountFromExistingForm = async () => {
-    setAuthError(null);
-    setCanCreateFromLogin(false);
-    setIsSubmittingAuth(true);
-    try {
-      const emailPrefix = authEmail.split('@')[0];
-      const cleanName = emailPrefix ? emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1) : 'Étudiant';
-      const cleanEmail = authEmail.trim().toLowerCase();
-
-      const authUser = await signUpWithEmailReal(cleanEmail, authPassword, cleanName);
-      const hasExtractedSchedule = generatedSlots.length > 0 && generatedSubjects.length > 0;
-      const pendingPayload = hasExtractedSchedule
-        ? buildAndPersistFinalPayload(cleanName, selectedPlan)
-        : null;
-
-      const profile: UserAccount = {
-        name: cleanName,
-        email: authUser.email || cleanEmail,
-        avatar:
-          authUser.photoURL ||
-          `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(cleanName)}`,
-        googleId: authUser.uid,
-        konanId: generateKonanId(authUser.uid || authUser.email || undefined),
-        academicLevel: activeSystem.title || 'Licence Universitaire',
-        isLoggedIn: true,
-        isDemo: false,
-        planTier: selectedPlan,
-        lastSyncedAt: new Date().toISOString(),
-      };
-
-      soundFX.playStreakIgniteChime();
-      setShowExistingLogin(false);
-      if (pendingPayload) {
-        onComplete({ ...pendingPayload, launchProWizard: false });
-      }
-      onLoginSuccess(profile);
-    } catch (createErr: any) {
-      setAuthError(createErr?.message || 'Impossible de créer le compte.');
+      // Compte inexistant : on l'explique et on propose de CRÉER un compte (parcours des nouveaux)
+      setCanCreateFromLogin(err?.code === 'auth/user-not-found');
+      setCanResetFromLogin(err?.code === 'auth/invalid-credential' || err?.code === 'auth/use-google');
+      setAuthError(msg || "Ce compte n'est pas reconnu ou le mot de passe est incorrect.");
     } finally {
       setIsSubmittingAuth(false);
     }
@@ -1260,16 +1131,16 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       case 'welcome':
         return "Salut ! Moi c'est Konan. Prêt à organiser tes études et réussir sans t'épuiser ?";
       case 'study_type':
-        return "Choisis ton système d'études (LMD, BTS ou Lycée) : il catégorise l'extraction et structure ton fichier texte (.txt) !";
+        return "Choisis ton système d'études (LMD, BTS ou Lycée) : il catégorise l'extraction et structure ton fichier texte !";
       case 'upload':
         return isAnalyzing
           ? `Je décortique ton emploi du temps et le transforme au format ${activeSystem.title}...`
           : liveParsedPreview.slots.length > 0
           ? `Extraction réussie : ${liveParsedPreview.slots.length} créneaux classés en fichier texte ${activeSystem.title} !`
-          : `Importe ton emploi du temps (PDF ou Photo) pour l'extraire en fichier texte ${activeSystem.title}.`;
+          : `Importe ton emploi du temps (PDF ou photos) pour l'extraire en fichier texte ${activeSystem.title}.`;
       case 'grade_level':
         return studyType === 'lycee'
-          ? "Quelle est ta classe et ta série ? Cela me permet d'activer le programme officiel de Côte d'Ivoire !"
+          ? "Choisis ta classe et ta série. Cela permet d'activer le programme officiel de la CI !"
           : "Précise ta filière d'études pour ajuster ton accompagnement sur mesure.";
       case 'customize':
         return 'Vérifie tes matières extraites, ajuste leurs coefficients et choisis ta méthode de révision.';
@@ -1504,15 +1375,28 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           step === 'pricing_models' && !showExistingLogin ? 'max-w-7xl' : 'max-w-2xl'
         } mx-auto px-4 py-3 flex flex-col justify-center z-10 transition-all duration-300`}
       >
-        {/* Cube Konan + Bulle de parole en haut des étapes */}
+        {/* Mascotte KONAN qui prend des notes sur sa montre hologramme + bulle de parole */}
         {step !== 'welcome' && (
-          <div className="mb-4 flex items-center gap-3 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/90 rounded-2xl p-3 max-w-3xl mx-auto w-full shadow-sm">
-            <div className="shrink-0">
-              <KonanCube size={54} showStars={false} glow={true} />
+          <div className="mb-4 flex items-center gap-2 sm:gap-3 max-w-3xl mx-auto w-full">
+            <div className="shrink-0 -my-2">
+              {/* « Tout est prêt » : il referme son hologramme, des étoiles tournent, pouce levé.
+                  Choix de la formule : il saute de joie deux fois, puis parle. */}
+              <KonanMascot
+                key={step === 'pricing_models' ? 'pricing' : 'other'}
+                pose={step === 'account_setup' ? 'done' : step === 'pricing_models' ? 'jump' : 'notes'}
+                size={84}
+              />
             </div>
-            <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug text-left">
-              « <WordByWordBubble text={bubbleMessage} speed={25} /> »
-            </p>
+            <div className="relative flex-1 bg-white dark:bg-slate-900/90 border-2 border-slate-200 dark:border-slate-700 rounded-2xl px-3.5 py-3 shadow-sm">
+              {/* Pointe de la bulle, vers la mascotte */}
+              <span
+                aria-hidden="true"
+                className="absolute -left-[9px] top-1/2 -translate-y-1/2 w-4 h-4 rotate-45 bg-white dark:bg-slate-900 border-l-2 border-b-2 border-slate-200 dark:border-slate-700"
+              />
+              <p className="relative text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug text-left">
+                <WordByWordBubble text={bubbleMessage} speed={25} delayMs={step === 'pricing_models' ? 1750 : 0} />
+              </p>
+            </div>
           </div>
         )}
 
@@ -1551,14 +1435,40 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   {canCreateFromLogin && (
                     <button
                       type="button"
-                      onClick={handleCreateAccountFromExistingForm}
-                      disabled={isSubmittingAuth}
+                      onClick={() => {
+                        // Pas de création en douce : le nouveau passe par le parcours d'inscription
+                        setShowExistingLogin(false);
+                        setCanCreateFromLogin(false);
+                        startNewcomerJourney();
+                      }}
                       className="w-full mt-1 py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-slate-950" />
-                      <span>Créer ce compte directement avec cet email</span>
+                      <span>Je suis nouveau : créer mon compte</span>
                     </button>
                   )}
+                  {canResetFromLogin && !resetLinkInfo && (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await resetPasswordReal(authEmail.trim().toLowerCase());
+                          setResetLinkInfo(`Lien envoyé à ${authEmail.trim()}. Ouvre ta boîte mail (regarde aussi les spams), choisis ton mot de passe, puis reviens te connecter.`);
+                        } catch (resetErr: any) {
+                          setResetLinkInfo(resetErr?.message || 'Impossible d’envoyer le lien pour le moment.');
+                        }
+                      }}
+                      className="w-full mt-1 py-2 px-3 rounded-xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 text-sky-600 dark:text-sky-400 font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>Recevoir un lien pour créer mon mot de passe</span>
+                    </button>
+                  )}
+                </div>
+              )}
+              {resetLinkInfo && (
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 dark:bg-emerald-500/10 dark:border-emerald-500/30 dark:text-emerald-300 text-xs font-semibold">
+                  {resetLinkInfo}
                 </div>
               )}
 
@@ -1657,88 +1567,111 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
             </form>
           )}
 
-          {/* ÉTAPE 1 : ACCUEIL */}
-          {!showExistingLogin && step === 'welcome' && (
-            <div className="flex flex-col items-center text-center space-y-6 py-4 max-w-md mx-auto">
-              <div
-                className="relative group cursor-pointer"
-                onClick={() => soundFX.playStreakIgniteChime()}
-              >
-                <div className="absolute -inset-6 rounded-full bg-gradient-to-tr from-cyan-500/25 to-purple-500/25 blur-2xl animate-pulse" />
-                <KonanCube size={125} showStars={true} glow={true} className="animate-float" />
-              </div>
+          {/* PAGE 1 : ACCUEIL — « J'ai déjà un compte ? » / « Nouveau sur KONAN ? » */}
+          {!showExistingLogin && step === 'welcome' && introPage === null && (
+            <div className="flex flex-col items-center text-center max-w-md mx-auto w-full py-6 space-y-5 animate-in fade-in duration-300">
+              <p className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">KONAN</p>
 
-              <div className="relative bg-white dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-xl backdrop-blur-xl text-left w-full">
-                <p className="text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
-                  « <WordByWordBubble text={bubbleMessage} speed={35} /> »
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
-                  Ton frère pour tes{' '}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-500 dark:from-cyan-400 dark:to-indigo-400">
-                    révisions
-                  </span>
-                </h1>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Choisis ton système (<strong className="text-slate-900 dark:text-slate-200">LMD, BTS, Lycée</strong>), extrais ton EDT en fichier texte structuré et génère ton planning de révision sur mesure.
-                </p>
-              </div>
-
-              <div className="w-full space-y-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    soundFX.playCheckmarkPop();
-                    setAuthFullName('');
-                    setAuthEmail('');
-                    setAuthPassword('');
-                    setAuthError(null);
-                    setAccountExistsRedirect(false);
-                    setRegisteredProfile(null);
-                    try {
-                      sessionStorage.setItem('konan_onboarding_in_progress', 'true');
-                    } catch {
-                      // Ignore
-                    }
-                    setStep('study_type');
-                  }}
-                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <span>JE CRÉE MON PLANNING 🚀</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    soundFX.playCheckmarkPop();
-                    setAuthError(null);
-                    setShowExistingLogin(true);
-                  }}
-                  className="w-full py-3.5 px-6 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/90 text-slate-800 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white font-bold text-xs sm:text-sm border-2 border-slate-200 dark:border-slate-800 transition-all cursor-pointer uppercase shadow-xs"
-                >
-                  J'AI DÉJÀ UN COMPTE • ME CONNECTER
-                </button>
-
-                {/* Bouton Admin : seulement en local, jamais visible des élèves en ligne */}
-                {isLocalAdminAllowed && onOpenAdmin && (
+              <div className="w-full rounded-3xl bg-white dark:bg-slate-900/90 border-2 border-slate-200 dark:border-slate-800 shadow-xl p-6 space-y-6">
+                <div className="space-y-3">
+                  <p className="text-base font-extrabold text-slate-900 dark:text-white">J'ai déjà un compte ?</p>
                   <button
                     type="button"
                     onClick={() => {
                       soundFX.playCheckmarkPop();
-                      setShowAdminModal(true);
+                      setAuthError(null);
+                      setShowExistingLogin(true);
                     }}
-                    className="w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                    className="w-full py-3.5 px-6 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-indigo-600 dark:text-indigo-300 font-extrabold text-sm uppercase tracking-wide border-2 border-slate-200 dark:border-slate-700 shadow-[0_4px_0_0_#CBD5E1] dark:shadow-[0_4px_0_0_#1E293B] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
                   >
-                    <Lock className="w-3.5 h-3.5" />
-                    <span>Accès Administrateur KONAN</span>
+                    Se connecter
                   </button>
-                )}
+                </div>
+
+                <div className="h-px bg-slate-200 dark:bg-slate-800" />
+
+                <div className="space-y-3">
+                  <p className="text-base font-extrabold text-slate-900 dark:text-white">Nouveau sur KONAN ?</p>
+                  <button
+                    type="button"
+                    onClick={startNewcomerJourney}
+                    className="w-full py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white font-black text-sm sm:text-base uppercase tracking-wide shadow-[0_5px_0_0_#047857] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <span>Commencer</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
+
+              {/* Bouton Admin : seulement en local, jamais visible des élèves en ligne */}
+              {isLocalAdminAllowed && onOpenAdmin && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFX.playCheckmarkPop();
+                    setShowAdminModal(true);
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Accès Administrateur KONAN</span>
+                </button>
+              )}
             </div>
           )}
+
+          {/* PAGES 2 ET 3 : KONAN se présente (salut), puis annonce les questions (saut de joie) */}
+          {!showExistingLogin && step === 'welcome' && introPage !== null && (
+            <div key={introPage} className="flex flex-col items-center text-center max-w-md mx-auto w-full min-h-[70vh] py-4">
+              <div className="w-full flex items-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFX.playCheckmarkPop();
+                    setIntroPage(introPage === 'questions' ? 'hello' : null);
+                  }}
+                  className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all active:scale-95 cursor-pointer shadow-xs"
+                  aria-label="Retour"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex-1 flex flex-col items-center justify-center gap-2 w-full">
+                {/* Bulle de parole au-dessus de KONAN */}
+                <div className="relative bg-white dark:bg-slate-900/95 border-2 border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-3.5 shadow-md max-w-[19rem] animate-in fade-in zoom-in-95 duration-300">
+                  <p className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-snug">
+                    <WordByWordBubble
+                      text={introPage === 'hello' ? 'Salut, je suis Konan !' : 'Je vais te poser quelques questions pour commencer.'}
+                      speed={70}
+                    />
+                  </p>
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-1/2 -bottom-[9px] -translate-x-1/2 w-4 h-4 rotate-45 bg-white dark:bg-slate-900 border-r-2 border-b-2 border-slate-200 dark:border-slate-700"
+                  />
+                </div>
+                <KonanMascot pose={introPage === 'hello' ? 'wave' : 'jump'} size={210} />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  soundFX.playCheckmarkPop();
+                  if (introPage === 'hello') {
+                    setIntroPage('questions');
+                  } else {
+                    setIntroPage(null);
+                    setStep('study_type');
+                  }
+                }}
+                className="w-full mt-4 py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white font-black text-sm sm:text-base uppercase tracking-wide shadow-[0_5px_0_0_#047857] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
+              >
+                Continuer
+              </button>
+            </div>
+          )}
+
 
           {/* ÉTAPE 2 : CHOIX DU SYSTÈME D'ÉTUDES (CATÉGORISE L'EXTRACTION .TXT) */}
           {!showExistingLogin && step === 'study_type' && (
@@ -2416,39 +2349,20 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   <span>2. Méthode de Révision & Diagnostic KONAN</span>
                 </h2>
 
-                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-sky-50/50 to-indigo-50/90 dark:from-indigo-950/60 dark:via-slate-900/90 dark:to-slate-900 border border-indigo-200 dark:border-indigo-500/30 space-y-2">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <BarChart2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                    <span className="text-xs font-black uppercase tracking-wider text-indigo-900 dark:text-indigo-300">
-                      Recommandation IA :
-                    </span>
-                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-500/20 text-indigo-900 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30">
-                      {getPacingStrategy(pacingRecommendation.primaryId).title}
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                      {pacingRecommendation.contextTag}
-                    </span>
-                  </div>
-                  <p
-                    className={`text-xs text-slate-800 dark:text-slate-300 leading-relaxed font-medium ${
-                      showFullDiagnostic ? '' : 'line-clamp-2'
-                    }`}
-                  >
-                    {pacingRecommendation.rationale}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setShowFullDiagnostic(!showFullDiagnostic)}
-                    className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
-                  >
-                    {showFullDiagnostic ? 'Voir moins ▴' : 'Lire le diagnostic complet ▾'}
-                  </button>
+                {/* La recommandation de KONAN est réservée à KONAN PRO : pendant l'inscription
+                    (formule pas encore choisie), on l'annonce seulement. */}
+                <div className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
+                  <BarChart2 className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" />
+                  <span>
+                    Avec <strong>KONAN PRO</strong>, KONAN analyse vos créneaux libres et vous recommande la meilleure méthode.
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {PACING_STRATEGIES.map((strategy) => {
                     const isSelected = selectedPacings.includes(strategy.id);
                     const isAllowed = isPacingAllowedForPlan(strategy.id, 'plus');
+                    const isProOnly = strategy.planRequired === 'pro';
                     return (
                       <button
                         key={strategy.id}
@@ -2465,14 +2379,16 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             : 'bg-slate-100 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/50 opacity-60'
                         }`}
                       >
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-extrabold text-slate-900 dark:text-white truncate">
-                            {strategy.title}
-                          </span>
-                          <span className="text-[10px] font-mono font-bold text-indigo-600 dark:text-indigo-300 shrink-0">
-                            {strategy.badge}
-                          </span>
+                        {/* Titre + PRO sur une ligne (retour à la ligne si besoin), durée en dessous : rien ne se chevauche */}
+                        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs font-extrabold text-slate-900 dark:text-white leading-snug">
+                          <span>{strategy.title}</span>
+                          {isProOnly && (
+                            <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-sky-500 text-white whitespace-nowrap">PRO</span>
+                          )}
                         </div>
+                        <p className="mt-0.5 text-[10px] font-bold text-indigo-600 dark:text-indigo-300">
+                          {strategy.badge}
+                        </p>
                         <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
                           {strategy.tagline}
                         </p>
@@ -2480,6 +2396,12 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                     );
                   })}
                 </div>
+                {selectedPacings.some((id) => isProMethod(id)) && (
+                  <p className="p-3 rounded-xl bg-sky-50 border border-sky-200 text-sky-800 dark:bg-sky-500/10 dark:border-sky-500/30 dark:text-sky-200 text-xs font-semibold leading-relaxed">
+                    Méthode <strong>KONAN PRO</strong> : choisis la formule Pro à la fin (offerte pendant le lancement).
+                    Avec la formule Gratuite, tes séances passeront en Pomodoro.
+                  </p>
+                )}
               </div>
 
               {/* 3. Chronotype */}
@@ -2618,6 +2540,19 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         setAuthError(null);
                       }
                     }}
+                    onBlur={async () => {
+                      // Vérification immédiate : cette adresse a-t-elle déjà un compte ?
+                      if (!validateStrictEmail(authEmail).isValid) return;
+                      try {
+                        const account = await checkAccountExists(authEmail);
+                        if (account.exists) {
+                          setAccountExistsRedirect(true);
+                          setAuthError('Ce compte existe déjà. Connecte-toi avec « J’ai déjà un compte ».');
+                        }
+                      } catch {
+                        // trop de vérifications : la validation finale vérifiera de nouveau
+                      }
+                    }}
                     placeholder="Ton adresse Gmail / Email (nouveau compte)"
                     className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
                   />
@@ -2628,10 +2563,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
-                    minLength={6}
+                    minLength={8}
                     value={authPassword}
                     onChange={(e) => setAuthPassword(e.target.value)}
-                    placeholder="Choisis un mot de passe (min. 6 caractères)"
+                    placeholder="Mot de passe : 8 caractères min., lettres et chiffres"
                     className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
                   />
                   <button
@@ -2687,214 +2622,41 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           {/* ÉTAPE 6 : MODÈLES D'ACCOMPAGNEMENT (GRAND FORMAT PC, COMPOSANTS COMPLETS & ANIMATION DES NOMBRES) */}
           {!showExistingLogin && step === 'pricing_models' && (
             <div className="space-y-8 py-2 w-full">
-              {/* En-tête de présentation des modèles d'accompagnement */}
-              <div className="text-center max-w-3xl mx-auto space-y-3">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 dark:bg-indigo-500/10 dark:border-indigo-500/20 dark:text-indigo-400 text-xs font-bold uppercase tracking-widest">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Modèles d’Accompagnement Étudiant</span>
-                </div>
-                <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-                  Choisis ton modèle d’accompagnement{' '}
-                  <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-amber-500 dark:from-indigo-400 dark:via-violet-400 dark:to-amber-300 bg-clip-text text-transparent">
-                    KONAN
-                  </span>
+              {/* En-tête simple */}
+              <div className="text-center max-w-2xl mx-auto space-y-2">
+                <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                  Choisis ta formule <span className="text-sky-500">KONAN</span>
                 </h2>
                 <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
-                  Tes informations sont validées et tes{' '}
+                  Tes{' '}
                   <strong className="text-slate-900 dark:text-white">
                     <AnimatedCounter value={generatedSlots.length} duration={1200} /> cours
                   </strong>{' '}
-                  +{' '}
+                  et tes{' '}
                   <strong className="text-emerald-600 dark:text-emerald-400">
                     <AnimatedCounter value={generatedSessions.length} duration={1400} /> séances d'étude
                   </strong>{' '}
-                  sont prêts. Sélectionne la formule qui t'accompagnera ce semestre.
+                  sont prêts. Tu peux changer de formule à tout moment.
                 </p>
               </div>
 
-              {/* Grille des 3 grands modèles d'accompagnement (Gratuit, Pro, Plus) */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch w-full">
-                {ACCOMPANIMENT_PLANS.map((plan) => {
-                  const isPro = plan.id === 'pro';
-                  const isPlus = plan.id === 'plus';
+              {/* Gratuit, Pro, Plus : par mois ou par semestre */}
+              <PlanPicker
+                onSelect={(planId) => handleSelectAccompanimentModel(planId)}
+              />
 
-                  return (
-                    <div
-                      key={plan.id}
-                      className={`relative rounded-3xl flex flex-col justify-between transition-all duration-300 ${
-                        isPro
-                          ? 'bg-gradient-to-b from-white via-indigo-50 to-white border-2 border-indigo-500/60 shadow-xl shadow-indigo-500/10 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-900 dark:shadow-2xl dark:shadow-indigo-500/15 lg:-translate-y-2'
-                          : isPlus
-                          ? 'bg-gradient-to-b from-white via-amber-50 to-white border border-amber-400/70 hover:border-amber-500 shadow-xl dark:from-slate-900 dark:via-amber-950/15 dark:to-slate-900 dark:border-amber-500/30 dark:hover:border-amber-500/50'
-                          : 'bg-white border border-slate-200 hover:border-slate-300 shadow-sm dark:bg-slate-900/70 dark:border-slate-800/80 dark:hover:border-slate-700 dark:shadow-none'
-                      } p-6 sm:p-8`}
-                    >
-                      {/* Badge supérieur */}
-                      {plan.badge && (
-                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                          <span
-                            className={`inline-flex items-center gap-1.5 px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg ${
-                              isPro
-                                ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-600 text-white'
-                                : isPlus
-                                ? 'bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-slate-950'
-                                : 'bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
-                            }`}
-                          >
-                            {isPro && <Zap className="w-3.5 h-3.5 fill-current" />}
-                            {isPlus && <Clock className="w-3.5 h-3.5" />}
-                            {plan.badge}
-                          </span>
-                        </div>
-                      )}
-
-                      <div>
-                        {/* En-tête de la carte */}
-                        <div className="flex items-center justify-between gap-3 mb-3 pt-2">
-                          <div>
-                            <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                              {plan.name}
-                            </h3>
-                            <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">
-                              {plan.tagline}
-                            </p>
-                          </div>
-                          <div
-                            className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${plan.accentGradient} flex items-center justify-center text-white shadow-md shrink-0`}
-                          >
-                            {plan.id === 'free' && <Layers className="w-5 h-5" />}
-                            {plan.id === 'pro' && <Zap className="w-5 h-5" />}
-                            {plan.id === 'plus' && <Crown className="w-5 h-5" />}
-                          </div>
-                        </div>
-
-                        {/* Prix avec animation des nombres (AnimatedCounter) */}
-                        <div className="my-6 pb-6 border-b border-slate-200 dark:border-slate-800/80">
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight font-mono">
-                              <AnimatedCounter
-                                value={plan.priceValue}
-                                duration={1800}
-                                formatThousands={plan.priceValue >= 1000}
-                              />
-                            </span>
-                            <div className="flex flex-col">
-                              <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">
-                                {plan.currency}
-                              </span>
-                              <span className="text-xs text-slate-500 font-medium">
-                                {plan.period}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Bandeau de lancement gratuit pour KONAN PRO */}
-                          {isPro && (
-                            <div className="mt-3 p-2.5 rounded-xl bg-emerald-50 border border-emerald-300 dark:bg-emerald-500/10 dark:border-emerald-500/30 flex items-center gap-2">
-                              <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                              <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 leading-tight">
-                                Offre de Lancement Étudiant : Débloqué gratuitement pendant la phase pilote !
-                              </span>
-                            </div>
-                          )}
-
-                          {/* Bandeau d'annonce pour KONAN PLUS */}
-                          {isPlus && (
-                            <div className="mt-3 p-2.5 rounded-xl bg-amber-50 border border-amber-300 dark:bg-amber-500/10 dark:border-amber-500/30 flex items-center gap-2">
-                              <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-                              <span className="text-xs font-bold text-amber-800 dark:text-amber-300 leading-tight">
-                                Inclut la configuration guidée de votre EDT Pro pas à pas avec Konan !
-                              </span>
-                            </div>
-                          )}
-
-                          <p className="text-xs text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
-                            {plan.description}
-                          </p>
-                        </div>
-
-                        {/* Liste des fonctionnalités et composants */}
-                        <div className="space-y-3.5 mb-8">
-                          <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                            {plan.id === 'free'
-                              ? 'Inclus de base :'
-                              : plan.id === 'pro'
-                              ? 'Tout KONAN Gratuit inclus, plus :'
-                              : 'Tout KONAN Pro inclus, plus :'}
-                          </div>
-
-                          {plan.features.map((feat, i) => (
-                            <div key={i} className="flex items-start gap-3">
-                              <div
-                                className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                                  feat.highlight
-                                    ? isPlus
-                                      ? 'bg-amber-100 text-amber-700 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-400 dark:border-amber-500/40'
-                                      : 'bg-indigo-100 text-indigo-700 border border-indigo-300 dark:bg-indigo-500/20 dark:text-indigo-400 dark:border-indigo-500/40'
-                                    : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400'
-                                }`}
-                              >
-                                <Check className="w-3 h-3 stroke-[3]" />
-                              </div>
-                              <div className="text-xs leading-relaxed">
-                                <span
-                                  className={`font-semibold ${
-                                    feat.highlight ? 'text-slate-900 dark:text-white' : 'text-slate-800 dark:text-slate-200'
-                                  }`}
-                                >
-                                  {feat.text}
-                                </span>
-                                {feat.detail && (
-                                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 leading-snug">
-                                    {feat.detail}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Bouton d'action (Sans cloche qui saute sur Plus) */}
-                      <button
-                        type="button"
-                        onClick={() => handleSelectAccompanimentModel(plan.id)}
-                        className={`w-full py-3.5 px-5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                          isPro
-                            ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 hover:from-indigo-500 hover:via-violet-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/25'
-                            : isPlus
-                            ? 'bg-gradient-to-r from-amber-100 via-orange-100 to-rose-100 hover:from-amber-200 hover:via-orange-200 hover:to-rose-200 text-amber-900 border border-amber-400 shadow-lg shadow-amber-500/10 dark:from-amber-500/20 dark:via-orange-500/20 dark:to-rose-500/20 dark:hover:from-amber-500/30 dark:hover:via-orange-500/30 dark:hover:to-rose-500/30 dark:text-amber-300 dark:border-amber-500/40'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-100 dark:border-slate-700'
-                        }`}
-                      >
-                        <span>{plan.ctaLabel}</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Rassurance académique en bas des modèles */}
-              <div className="pt-2 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-600 dark:text-slate-400">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  <span>Sans engagement — annulable en 1 clic</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Cpu className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                  <span>Compatible Mobile Money (Wave, Orange, MTN) & Cartes</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <GraduationCap className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  <span>Tarif solidaire calibré pour les étudiants</span>
-                </div>
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-emerald-500" />Sans engagement</span>
+                <span className="flex items-center gap-1.5"><GraduationCap className="w-4 h-4 text-sky-500" />Prix pensés pour les élèves</span>
               </div>
 
               {/* Modale Liste d'attente KONAN PLUS */}
               <WaitlistModal
                 isOpen={isWaitlistOpen}
                 onClose={() => setIsWaitlistOpen(false)}
+                requiredTier="plus"
+                featureTitle="KONAN PLUS"
+                featureDescription="KONAN PLUS ouvre bientôt. Laisse ton contact : on te prévient dès l'ouverture. En attendant, KONAN PRO est offert."
                 userEmail={registeredProfile?.email || authEmail}
                 userId={registeredProfile?.googleId}
               />

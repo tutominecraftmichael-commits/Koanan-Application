@@ -3,11 +3,12 @@
  * 
  * Permet l'envoi de notifications push fiables même lorsque l'application
  * est TOTALEMENT FERMÉE et le téléphone en veille.
- * Enregistrement 100% silencieux et automatique en arrière-plan pour les abonnés Pro.
+ * Enregistrement 100% silencieux et automatique en arrière-plan pour tous les élèves connectés (Gratuit, Pro, Plus).
  */
 
 import { auth, db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import { callPushSync } from './pushApi';
 
 // Clé PUBLIQUE VAPID (publique par nature). La clé privée correspondante n'existe que côté serveur.
 // Rotation du 2026-11-03 : l'ancienne paire était exposée dans le dépôt public.
@@ -51,6 +52,63 @@ export function isWebPushSupported(): boolean {
   );
 }
 
+export type PushDeviceStatus =
+  | 'active'          // abonné : les notifications arrivent même appli fermée
+  | 'ask'             // permission jamais demandée (ou abonnement à refaire) : bouton « Activer »
+  | 'blocked'         // bloquées dans les réglages du navigateur
+  | 'ios-install'     // iPhone / iPad : il faut d'abord ajouter KONAN à l'écran d'accueil
+  | 'unsupported';    // navigateur sans notifications push
+
+// Preuve locale que le serveur a enregistré l'abonnement de cet appareil (renouvelée chaque jour)
+// v2 : force un nouvel enregistrement après la mise à jour, pour détacher ce téléphone des autres comptes
+const REGISTERED_KEY = 'konan_push_registered_v2';
+const REREGISTER_MS = 24 * 60 * 60 * 1000;
+function isRegisteredOnServer(endpoint: string): boolean {
+  try {
+    const raw = JSON.parse(localStorage.getItem(REGISTERED_KEY) || 'null');
+    return Boolean(raw && raw.key === endpointKey(endpoint) && raw.uid === auth?.currentUser?.uid && Date.now() - raw.at < REREGISTER_MS);
+  } catch {
+    return false;
+  }
+}
+function markRegisteredOnServer(endpoint: string, uid: string) {
+  try {
+    localStorage.setItem(REGISTERED_KEY, JSON.stringify({ key: endpointKey(endpoint), uid, at: Date.now() }));
+  } catch {
+    // stockage indisponible : on réenregistrera simplement à la prochaine ouverture
+  }
+}
+
+/** Attend que Firebase ait restauré la connexion de l'élève (au plus 8 s). */
+async function waitForAuth(): Promise<void> {
+  if (!auth || auth.currentUser) return;
+  await Promise.race([
+    auth.authStateReady().catch(() => {}),
+    new Promise((r) => setTimeout(r, 8000)),
+  ]);
+}
+
+/** État des notifications sur CET appareil (sans rien demander à l'élève). */
+export async function getPushDeviceStatus(): Promise<PushDeviceStatus> {
+  if (typeof window === 'undefined') return 'unsupported';
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const standalone = window.matchMedia?.('(display-mode: standalone)').matches || (navigator as any).standalone === true;
+  if (!isWebPushSupported()) return isIOS && !standalone ? 'ios-install' : 'unsupported';
+  if (Notification.permission === 'denied') return 'blocked';
+  if (Notification.permission !== 'granted') return 'ask';
+  try {
+    const reg = await navigator.serviceWorker.getRegistration('/');
+    const sub = await reg?.pushManager.getSubscription();
+    if (!sub) return 'ask';
+    if (subscriptionUsesOtherKey(sub, urlBase64ToUint8Array(VAPID_PUBLIC_KEY))) return 'ask';
+    // « Actif » seulement si le serveur a bien reçu CET abonnement (un abonnement local seul ne sert à rien)
+    return isRegisteredOnServer(sub.endpoint) ? 'active' : 'ask';
+  } catch {
+    return 'ask';
+  }
+}
+
 /**
  * Récupère le statut actuel de permission
  */
@@ -61,11 +119,21 @@ export function getWebPushPermission(): NotificationPermission {
 
 /**
  * Abonne le téléphone aux notifications Web Push en arrière-plan
- * et enregistre la souscription dans Firestore (réservé aux abonnés Pro / Plus)
+ * et enregistre la souscription dans Firestore (tous les élèves connectés)
  */
+/** Clé courte et stable d'un abonnement (sert de nom de champ dans Firestore). */
+function endpointKey(endpoint: string): string {
+  let h = 5381;
+  for (let i = 0; i < endpoint.length; i++) h = ((h * 33) ^ endpoint.charCodeAt(i)) >>> 0;
+  return `d${h.toString(36)}`;
+}
+
+type SubscribeOptions = { planTier?: string; onSubscribed?: () => void };
+
 export async function subscribeToWebPush(
   uidParam?: string,
-  emailParam?: string
+  emailParam?: string,
+  options: SubscribeOptions = {}
 ): Promise<{ success: boolean; error?: string }> {
   if (!isWebPushSupported()) {
     return { success: false, error: 'Web Push non supporté sur cet appareil' };
@@ -95,13 +163,15 @@ export async function subscribeToWebPush(
     }
 
     if (permission !== 'granted') {
-      return { success: false, error: 'Permission refusée par l\'utilisateur' };
+      return { success: false, error: permission === 'denied' ? 'Notifications bloquées dans le navigateur' : 'Autorisation pas encore donnée' };
     }
 
-    // 3. S'assurer que le Service Worker est bien enregistré
+    // 3. S'assurer que le Service Worker est bien enregistré (et à jour)
     let registration = await navigator.serviceWorker.getRegistration('/');
     if (!registration) {
       registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', { scope: '/' });
+    } else {
+      registration.update().catch(() => {});
     }
     await navigator.serviceWorker.ready;
 
@@ -127,51 +197,26 @@ export async function subscribeToWebPush(
     const subJson = subscription.toJSON();
     console.log('[KONAN WebPush] Souscription Push active pour', effectiveUid, subJson.endpoint?.slice(0, 35));
 
-    // 5. Enregistrer dans Firestore pour le compte Pro
-    if (db) {
-      const userRef = doc(db, 'users', effectiveUid);
-      const userEmail =
-        auth?.currentUser?.email ||
-        emailParam ||
-        (uidParam && uidParam.includes('@') ? uidParam : undefined);
-
-      const payload: Record<string, any> = {
-        webPushSubscription: subJson,
-        pushNotificationsEnabled: true,
-        webPushUpdatedAt: new Date().toISOString(),
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
-        timezoneOffsetMinutes: new Date().getTimezoneOffset(),
-      };
-      if (userEmail) {
-        payload.email = userEmail.toLowerCase().trim();
-      }
-
-      await setDoc(userRef, payload, { merge: true });
-      console.log(`[KONAN WebPush] Souscription sauvegardée dans Firestore pour ${effectiveUid}`);
-
-      // Enregistrer également l'appareil dans push_queue pour les tests et la distribution
-      try {
-        const deviceQueueRef = doc(db, 'push_queue', `device_${effectiveUid}`);
-        await setDoc(
-          deviceQueueRef,
-          {
-            userId: effectiveUid,
-            email: userEmail ? userEmail.toLowerCase().trim() : '',
-            subscription: subJson,
-            sendAt: 9999999999999,
-            title: 'Device Registration',
-            body: 'Abonnement push actif pour cet appareil',
-            sessionId: 'device_sub',
-            type: 'device_sub',
-            updatedAt: new Date().toISOString(),
-          },
-          { merge: true }
-        );
-      } catch (qErr) {
-        console.warn('[KONAN WebPush] Notice enregistrement queue device:', qErr);
-      }
+    // 5. Enregistrement de l'appareil PAR LE SERVEUR KONAN (/api/push-sync, après vérification du compte)
+    await waitForAuth();
+    if (!auth?.currentUser) return { success: false, error: 'Connexion au compte pas encore prête, réessaie dans quelques secondes' };
+    const userEmail =
+      auth.currentUser.email ||
+      emailParam ||
+      (uidParam && uidParam.includes('@') ? uidParam : undefined);
+    const registered = await callPushSync({
+      action: 'register',
+      subscription: subJson,
+      planTier: options.planTier || 'free',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Abidjan',
+      email: userEmail ? userEmail.toLowerCase().trim() : '',
+      device: navigator.userAgent.slice(0, 120),
+    });
+    if (!registered.success) {
+      return { success: false, error: `Enregistrement de l’appareil impossible (${registered.error})` };
     }
-
+    markRegisteredOnServer(subJson.endpoint || '', auth?.currentUser?.uid || effectiveUid);
+    options.onSubscribed?.();
     return { success: true };
   } catch (err: any) {
     console.error('[KONAN WebPush] Erreur abonnement push :', err);
@@ -181,40 +226,82 @@ export async function subscribeToWebPush(
 
 /**
  * Enregistrement silencieux et automatique du téléphone en arrière-plan
- * Dès qu'un utilisateur en mode Pro ouvre l'application.
+ * Dès qu'un élève connecté ouvre l'application.
  */
-let autoSubscribed = false;
-export async function autoRegisterWebPushIfPro(
+let firstClickArmed = false;
+let silentAttemptRunning = false;
+let lastSilentFailureAt = 0;
+/**
+ * Abonnement automatique du téléphone aux rappels de révision, pour TOUS les élèves (Gratuit, Pro, Plus).
+ */
+export async function autoRegisterWebPush(
   planTier?: string,
   uidParam?: string,
-  emailParam?: string
+  emailParam?: string,
+  onSubscribed?: () => void
 ): Promise<void> {
   if (!isWebPushSupported()) return;
 
-  const effectivePlan = String(planTier || '').toLowerCase().trim();
-  if (effectivePlan !== 'pro' && effectivePlan !== 'plus') {
-    return;
-  }
+  const effectivePlan = String(planTier || 'free').toLowerCase().trim() || 'free';
+  const options: SubscribeOptions = { planTier: effectivePlan, onSubscribed };
 
-  // Si la permission est déjà accordée, synchroniser immédiatement sans déranger l'élève
+  // Permission déjà accordée : si le serveur a déjà cet appareil (enregistré il y a moins de 24 h), on dépose
+  // juste les alertes ; sinon on (ré)enregistre l'appareil en silence. Un échec est retenté 1 minute plus tard.
   if (Notification.permission === 'granted') {
-    subscribeToWebPush(uidParam, emailParam).catch((err) => {
-      console.warn('[AutoWebPush] Erreur synchro silencieuse:', err);
-    });
+    if ((await getPushDeviceStatus()) === 'active') {
+      onSubscribed?.();
+      return;
+    }
+    if (silentAttemptRunning || Date.now() - lastSilentFailureAt < 60 * 1000) return;
+    silentAttemptRunning = true;
+    try {
+      const result = await subscribeToWebPush(uidParam, emailParam, options);
+      if (!result.success) {
+        lastSilentFailureAt = Date.now();
+        console.warn('[AutoWebPush] Enregistrement de l’appareil impossible :', result.error);
+      }
+    } finally {
+      silentAttemptRunning = false;
+    }
     return;
   }
 
-  // Si la permission est encore en 'default', demander une seule fois lors de la première interaction naturelle de l'élève
-  if (Notification.permission === 'default' && !autoSubscribed) {
-    autoSubscribed = true;
+  // Permission jamais demandée : Chrome exige un geste de l'élève. On la demande donc au tout premier
+  // toucher ou clic dans l'application (aucun menu à ouvrir, aucune étape en plus).
+  if (Notification.permission === 'default' && !firstClickArmed) {
+    firstClickArmed = true;
     const triggerSilentRequest = () => {
-      window.removeEventListener('click', triggerSilentRequest);
-      window.removeEventListener('touchstart', triggerSilentRequest);
-      subscribeToWebPush(uidParam, emailParam).catch(() => {});
+      window.removeEventListener('click', triggerSilentRequest, true);
+      window.removeEventListener('touchend', triggerSilentRequest, true);
+      subscribeToWebPush(uidParam, emailParam, options).catch(() => {});
     };
 
-    window.addEventListener('click', triggerSilentRequest, { once: true });
-    window.addEventListener('touchstart', triggerSilentRequest, { once: true });
+    window.addEventListener('click', triggerSilentRequest, { once: true, capture: true });
+    window.addEventListener('touchend', triggerSilentRequest, { once: true, capture: true });
+  }
+}
+
+/**
+ * À la DÉCONNEXION (avant de fermer la session Firebase) : ce téléphone quitte le compte, pour ne plus
+ * recevoir ses notifications. L'abonnement du navigateur est gardé : le prochain compte connecté le reprend.
+ */
+export async function detachDeviceFromAccount(): Promise<void> {
+  try {
+    localStorage.removeItem(REGISTERED_KEY);
+  } catch {
+    // stockage indisponible : sans effet
+  }
+  if (!isWebPushSupported() || !auth?.currentUser) return;
+  try {
+    const reg = await navigator.serviceWorker.getRegistration('/');
+    const sub = await reg?.pushManager.getSubscription();
+    if (!sub?.endpoint) return;
+    await Promise.race([
+      callPushSync({ action: 'unregister', endpoint: sub.endpoint }),
+      new Promise((r) => setTimeout(r, 4000)), // la déconnexion n'attend jamais plus de 4 s
+    ]);
+  } catch {
+    // hors connexion : le prochain compte connecté détachera ce téléphone de toute façon
   }
 }
 

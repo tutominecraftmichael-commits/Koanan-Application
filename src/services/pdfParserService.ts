@@ -6,21 +6,28 @@ import type {
   ExtractedPdfSchedule 
 } from '../types';
 import { generateId, parseTimeToMinutes, minutesToTimeString, isNonAcademicSubject, extractRealAcademicDiscipline } from '../lib/utils';
-import * as pdfjsLib from 'pdfjs-dist';
 import { extractDetailedTextFromImage } from './ocrService';
 
-// Configure worker for pdfjs-dist v6 in Vite / Browser environment
-if (typeof window !== 'undefined') {
-  try {
-    // Attempt to use local worker bundle via Vite asset URL
-    pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-      'pdfjs-dist/build/pdf.worker.min.mjs',
-      import.meta.url
-    ).toString();
-  } catch {
-    // Fallback to unpkg exact version CDN
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version || '6.3.289'}/build/pdf.worker.min.mjs`;
+// Lecteur PDF (≈ 750 Ko) chargé SEULEMENT au moment où l'élève importe un PDF, pas au démarrage de l'appli.
+let pdfjsPromise: Promise<typeof import('pdfjs-dist')> | null = null;
+function loadPdfJs() {
+  if (!pdfjsPromise) {
+    pdfjsPromise = import('pdfjs-dist').then((pdfjsLib) => {
+      try {
+        // Worker local empaqueté par Vite
+        pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+          'pdfjs-dist/build/pdf.worker.min.mjs',
+          import.meta.url
+        ).toString();
+      } catch {
+        // Repli : CDN unpkg à la version exacte
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version || '6.3.289'}/build/pdf.worker.min.mjs`;
+      }
+      return pdfjsLib;
+    });
+    pdfjsPromise.catch(() => { pdfjsPromise = null; });
   }
+  return pdfjsPromise;
 }
 
 export interface DemoPdfTemplate {
@@ -584,6 +591,7 @@ export async function extractDetailedPdfContent(file: File): Promise<{
   const pageTextList: string[] = [];
 
   try {
+    const pdfjsLib = await loadPdfJs();
     const loadingTask = pdfjsLib.getDocument({
       data: new Uint8Array(arrayBuffer),
       useWorkerFetch: true,
