@@ -99,6 +99,7 @@ import { SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE } from '../../data/courses/termi
 import { SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN } from '../../data/courses/terminale/svt_tle_a_heredite_sexe_groupe_sanguin';
 import { SVT_TLE_A_L06_PREVISIONS_GENETIQUES } from '../../data/courses/terminale/svt_tle_a_previsions_genetiques';
 import { SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES } from '../../data/courses/terminale/svt_tle_a_biosynthese_proteines';
+import { MATHS_TLE_C_L13_COMPLEXES_GEOMETRIE } from '../../data/courses/terminale/maths_tle_c_complexes_geometrie';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
 import { PHILO_TLE_L04_VIE_EN_SOCIETE } from '../../data/courses/terminale/philo_tle_vie_en_societe';
 import { PHILO_TLE_L05_DIEU_RELIGION } from '../../data/courses/terminale/philo_tle_dieu_religion';
@@ -91866,6 +91867,8 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN,
   SVT_TLE_A_L06_PREVISIONS_GENETIQUES,
   SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES,
+  // Terminale C — Maths (format v2)
+  MATHS_TLE_C_L13_COMPLEXES_GEOMETRIE,
   PHILO_TLE_L03_CONNAISSANCE_HOMME,
   PHILO_TLE_L04_VIE_EN_SOCIETE,
   PHILO_TLE_L05_DIEU_RELIGION,
