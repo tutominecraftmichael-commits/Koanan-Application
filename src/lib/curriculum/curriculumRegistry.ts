@@ -103,6 +103,12 @@ import { MATHS_TLE_C_L13_COMPLEXES_GEOMETRIE } from '../../data/courses/terminal
 import { FR_TLE_EOI_L01_SOLEILS_INDEPENDANCES } from '../../data/courses/terminale/fr_tle_soleils_independances';
 import { FR_TLE_GT_L02_CHAKA_HEROS_EPIQUE } from '../../data/courses/terminale/fr_tle_chaka_heros_epique';
 import { FR_TLE_EE_L03_RESUME_TEXTE } from '../../data/courses/terminale/fr_tle_resume_texte';
+import { MATHS_TLE_A_L01_LIMITES_DERIVATION } from '../../data/courses/terminale/maths_tle_a_limites_derivation';
+import { MATHS_TLE_A_L02_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_a_etude_fonctions';
+import { MATHS_TLE_A_L03_LOGARITHME_NEPERIEN } from '../../data/courses/terminale/maths_tle_a_logarithme_neperien';
+import { MATHS_TLE_A_L04_EXPONENTIELLE } from '../../data/courses/terminale/maths_tle_a_exponentielle';
+import { MATHS_TLE_A_L05_SUITES } from '../../data/courses/terminale/maths_tle_a_suites';
+import { MATHS_TLE_A_L06_PROBABILITES_STATISTIQUES } from '../../data/courses/terminale/maths_tle_a_probabilites_statistiques';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
 import { PHILO_TLE_L04_VIE_EN_SOCIETE } from '../../data/courses/terminale/philo_tle_vie_en_societe';
 import { PHILO_TLE_L05_DIEU_RELIGION } from '../../data/courses/terminale/philo_tle_dieu_religion';
@@ -91876,6 +91882,13 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   FR_TLE_EOI_L01_SOLEILS_INDEPENDANCES,
   FR_TLE_GT_L02_CHAKA_HEROS_EPIQUE,
   FR_TLE_EE_L03_RESUME_TEXTE,
+  // Terminale A (A1 / A2) — Maths (format v2, mini-leçons de 8 questions)
+  MATHS_TLE_A_L01_LIMITES_DERIVATION,
+  MATHS_TLE_A_L02_ETUDE_FONCTIONS,
+  MATHS_TLE_A_L03_LOGARITHME_NEPERIEN,
+  MATHS_TLE_A_L04_EXPONENTIELLE,
+  MATHS_TLE_A_L05_SUITES,
+  MATHS_TLE_A_L06_PROBABILITES_STATISTIQUES,
   PHILO_TLE_L03_CONNAISSANCE_HOMME,
   PHILO_TLE_L04_VIE_EN_SOCIETE,
   PHILO_TLE_L05_DIEU_RELIGION,
