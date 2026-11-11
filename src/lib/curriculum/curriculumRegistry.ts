@@ -28,6 +28,9 @@ import { CHIMIE_TLE_CD_L08_ACIDES_ALPHA_AMINES } from '../../data/courses/termin
 import { CHIMIE_TLE_CD_L09_ACIDES_FAIBLES_BASES_FAIBLES } from '../../data/courses/terminale/chimie_tle_cd_09_acides_faibles_bases_faibles';
 import { CHIMIE_TLE_CD_L10_COUPLE_ACIDE_BASE_CLASSIFICATION } from '../../data/courses/terminale/chimie_tle_cd_10_couple_acide_base_classification';
 import { CHIMIE_TLE_CD_L11_DOSAGES_SOLUTIONS_TAMPONS } from '../../data/courses/terminale/chimie_tle_cd_11_dosages_solutions_tampons';
+import { PHYSIQUE_TLE_CD_L01_CINEMATIQUE_DU_POINT } from '../../data/courses/terminale/physique_tle_cd_01_cinematique_du_point';
+import { PHYSIQUE_TLE_CD_L02_MOUVEMENT_CENTRE_INERTIE } from '../../data/courses/terminale/physique_tle_cd_02_mouvement_centre_inertie';
+import { PHYSIQUE_TLE_CD_L03_CHAMPS_UNIFORMES_G_ET_E } from '../../data/courses/terminale/physique_tle_cd_03_champs_uniformes_g_et_e';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
 import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/terminale/geo_tle_problemes_developpement_ci';
@@ -91867,6 +91870,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   CHIMIE_TLE_CD_L09_ACIDES_FAIBLES_BASES_FAIBLES,
   CHIMIE_TLE_CD_L10_COUPLE_ACIDE_BASE_CLASSIFICATION,
   CHIMIE_TLE_CD_L11_DOSAGES_SOLUTIONS_TAMPONS,
+  PHYSIQUE_TLE_CD_L01_CINEMATIQUE_DU_POINT,
+  PHYSIQUE_TLE_CD_L02_MOUVEMENT_CENTRE_INERTIE,
+  PHYSIQUE_TLE_CD_L03_CHAMPS_UNIFORMES_G_ET_E,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
   GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI,
