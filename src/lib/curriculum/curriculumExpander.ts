@@ -90,10 +90,220 @@ function normalizeForCompare(text: string): string {
   return (text || '').toLowerCase().normalize('NFD').replace(/\p{M}/gu, '').replace(/\s+/g, '');
 }
 
+function normWords(text: string): string {
+  return (text || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function stripLeadingArticle(text: string): string {
+  return (text || '').trim().replace(/^(?:l['’]|la\s+|le\s+|les\s+|un\s+|une\s+|des\s+|du\s+|de\s+la\s+)/i, '').trim();
+}
+
+/**
+ * Vérifie si un texte de cours contient littéralement la bonne réponse du QCM.
+ * Règle Masterclass : la réponse exacte du QCM ne doit JAMAIS figurer mot pour mot
+ * dans la carte de cours affichée au-dessus de la question.
+ */
+function textLeaksAnswer(text: string | undefined, correctOption: string): boolean {
+  if (!text || !correctOption) return false;
+  const textW = normWords(text);
+  for (const candidate of [correctOption, stripLeadingArticle(correctOption)]) {
+    const ansW = normWords(candidate);
+    if (ansW.length >= 3 && textW.includes(ansW)) return true;
+    const ansCompact = normalizeForCompare(candidate);
+    if (ansCompact.length >= 3 && normalizeForCompare(text).includes(ansCompact)) return true;
+  }
+  return false;
+}
+
+/**
+ * Enrichit les mots-clés de la question avec le vocabulaire mathématique/scientifique
+ * associé aux symboles opératoires (+, −, ×, ÷, √, exposants) pour cibler la bonne section du cours.
+ */
+function expandedPromptTokens(prompt: string): Set<string> {
+  const tokens = new Set(groundingTokens(prompt));
+  const p = prompt || '';
+  if (/[+]/.test(p) || /somme|addition/i.test(p)) {
+    ['addition', 'somme', 'denominateur', 'meme'].forEach((w) => tokens.add(w));
+  }
+  if (/[-−]/.test(p) || /diff[ée]rence|soustraction/i.test(p)) {
+    ['soustraction', 'difference', 'denominateur', 'meme'].forEach((w) => tokens.add(w));
+  }
+  if (/[×*]/.test(p) || /produit|multipli/i.test(p)) {
+    ['multiplication', 'produit', 'facteur', 'numerateur'].forEach((w) => tokens.add(w));
+  }
+  if (/[÷/]/.test(p) || /quotient|divis|inverse/i.test(p)) {
+    ['division', 'inverse', 'quotient', 'fraction', 'denominateur'].forEach((w) => tokens.add(w));
+  }
+  if (/[²³⁴⁵⁶⁷⁸⁹⁰⁻]|puissance|exposant/i.test(p)) {
+    ['puissance', 'exposant', 'produit', 'quotient', 'definition', 'propriete'].forEach((w) => tokens.add(w));
+  }
+  if (/√|racine|radical/i.test(p)) {
+    ['racine', 'carree', 'radical', 'propriete', 'operatoire', 'positif'].forEach((w) => tokens.add(w));
+  }
+  return tokens;
+}
+
+/**
+ * Filtre les lignes d'un bloc de cours qui contiennent littéralement la bonne réponse du QCM,
+ * tout en préservant les titres de section et les règles générales.
+ */
+function stripLeakingLines(text: string, correctOption: string): string {
+  if (!text) return '';
+  const lines = text.split('\n');
+  const kept = lines.filter((line) => !textLeaksAnswer(line, correctOption));
+  return kept.join('\n').trim();
+}
+
+/**
+ * Garantit que chaque étape respecte le standard Masterclass :
+ * 1. Zéro fuite de la réponse exacte du QCM dans paragraphText, formula et konanTip.
+ * 2. Cours complet, structuré et approfondi (>= 240 caractères) donnant toutes les clés
+ *    conceptuelles et méthodologiques pour résoudre le QCM par le raisonnement.
+ */
+function ensureMasterclassStepCard(
+  raw: { title: string; paragraphText: string; formula?: PointFormula; konanTip?: string },
+  exercise: InteractiveExercise,
+  chapter: CurriculumChapter,
+  point: CurriculumPoint,
+  stepIdx: number,
+  formulas: PointFormula[],
+): { title: string; paragraphText: string; formula?: PointFormula; konanTip?: string } {
+  const correct = String(exercise.options?.[exercise.correctAnswerIndex ?? 0] ?? '').trim();
+  const promptTokens = expandedPromptTokens(exercise.prompt || '');
+
+  // 1. Nettoyage de la formule : aucune formule ne doit donner littéralement la réponse du QCM
+  let formula = raw.formula;
+  if (formula && textLeaksAnswer(`${formula.name} ${formula.formula} ${formula.note || ''}`, correct)) {
+    formula = formulas.find(
+      (f) => !textLeaksAnswer(`${f.name} ${f.formula} ${f.note || ''}`, correct),
+    );
+  }
+  if (!formula && formulas.length > 0) {
+    const nonLeaking = formulas.filter(
+      (f) => !textLeaksAnswer(`${f.name} ${f.formula} ${f.note || ''}`, correct),
+    );
+    if (nonLeaking.length > 0) {
+      formula = nonLeaking[stepIdx % nonLeaking.length];
+    }
+  }
+
+  // 2. Nettoyage des lignes du paragraphe principal qui donneraient directement la réponse
+  let cleanParagraph = stripLeakingLines(raw.paragraphText || '', correct);
+
+  // 3. Collecte des passages riches et non-fuyants du point de cours (conceptExplanation, summary, keyRule, workedExample)
+  const candidateLines: string[] = [];
+  const excerpts = conceptExcerpts(point.conceptExplanation || '');
+  // Trier les extraits par pertinence vis-à-vis de la question (sans jamais scorer sur la réponse)
+  const scoredExcerpts = excerpts
+    .map((ex) => {
+      const cleaned = stripLeakingLines(ex, correct);
+      const t = new Set(groundingTokens(cleaned));
+      let s = 0;
+      for (const w of promptTokens) if (t.has(w)) s += 2;
+      return { cleaned, score: s + Math.min(cleaned.length, 400) / 200 };
+    })
+    .filter((item) => item.cleaned.length > 25)
+    .sort((a, b) => b.score - a.score);
+
+  for (const item of scoredExcerpts) {
+    for (const line of item.cleaned.split('\n').map((l) => l.trim()).filter(Boolean)) {
+      if (!textLeaksAnswer(line, correct) && !candidateLines.includes(line)) {
+        candidateLines.push(line);
+      }
+    }
+  }
+
+  if (point.summary && !textLeaksAnswer(point.summary, correct)) {
+    candidateLines.push(`• Synthèse de la notion : ${point.summary.trim()}`);
+  }
+  if (point.keyRule && !textLeaksAnswer(point.keyRule, correct)) {
+    candidateLines.push(`• Règle fondamentale : ${point.keyRule.trim()}`);
+  }
+  if (point.workedExample?.methodSteps) {
+    for (const ms of point.workedExample.methodSteps) {
+      if (ms && !textLeaksAnswer(ms, correct)) {
+        candidateLines.push(`• Démarche méthodique : ${ms.trim()}`);
+      }
+    }
+  }
+
+  // Si le paragraphe nettoyé est trop court (< 230 caractères), on le complète avec les lignes pertinentes du cours
+  for (const line of candidateLines) {
+    if (cleanParagraph.length >= 340) break;
+    if (!cleanParagraph.includes(line) && !textLeaksAnswer(line, correct)) {
+      cleanParagraph = cleanParagraph ? `${cleanParagraph}\n${line}` : line;
+    }
+  }
+
+  // Ajout systématique d'un bloc méthodologique Masterclass si le texte reste sous 240 caractères
+  if (cleanParagraph.length < 240) {
+    const safeTitle = !textLeaksAnswer(point.title, correct) ? ` (${point.title})` : '';
+    const methodAddons: Record<string, string[]> = {
+      maths: [
+        `• Méthode de résolution${safeTitle} : Identifier la forme algébrique ou géométrique de l'expression, appliquer la propriété de référence étape par étape en respectant les priorités opératoires et les règles des signes.`,
+        `• Contrôle de cohérence : Toujours simplifier le résultat final (fraction irréductible, radical simplifié $a\\sqrt{b}$, exposant unique) et vérifier le signe ou le domaine d'existence avant de conclure.`,
+      ],
+      physique_chimie: [
+        `• Méthode d'analyse${safeTitle} : Repérer les grandeurs physiques ou espèces chimiques de l'énoncé, vérifier leurs unités dans le Système International (SI) et appliquer la loi ou l'équation-bilan correspondante.`,
+        `• Rigueur scientifique : Toujours contrôler la conservation des éléments et des charges électriques ou l'homogénéité des unités avant de sélectionner la réponse.`,
+      ],
+      svt: [
+        `• Démarche scientifique${safeTitle} : Relier l'observation biologique ou géologique au mécanisme explicatif du programme officiel en distinguant clairement la cause, la structure impliquée et la conséquence fonctionnelle.`,
+        `• Repère d'examen : Mobiliser la terminologie scientifique précise et procéder par élimination des propositions qui contredisent les faits expérimentaux.`,
+      ],
+      francais: [
+        `• Méthode d'analyse littéraire${safeTitle} : Observer précisément les indices lexicaux, grammaticaux et stylistiques de l'énoncé afin d'identifier le procédé utilisé et l'effet de sens recherché par l'auteur.`,
+        `• Exigence d'examen : Distinguer le sens propre du sens figuré et vérifier la cohérence logique ou syntaxique de la transformation demandée.`,
+      ],
+    };
+    const addons = methodAddons[chapter.subjectId] || methodAddons.maths;
+    for (const addon of addons) {
+      if (!textLeaksAnswer(addon, correct) && !cleanParagraph.includes(addon)) {
+        cleanParagraph = cleanParagraph ? `${cleanParagraph}\n${addon}` : addon;
+      }
+    }
+  }
+
+  // Sécurité finale : si un sous-bloc résiduel fuit encore la réponse, on filtre mot à mot
+  if (textLeaksAnswer(cleanParagraph, correct)) {
+    const ansRegex = new RegExp(
+      correct.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+      'gi',
+    );
+    cleanParagraph = cleanParagraph.replace(ansRegex, 'la valeur recherchée');
+  }
+
+  if (cleanParagraph.length > 750) {
+    cleanParagraph = `${cleanParagraph.slice(0, 730).replace(/\s+\S*$/, '')}…`;
+  }
+
+  // 4. Astuce Konan : garantie sans fuite de réponse
+  let konanTip = raw.konanTip;
+  if (!konanTip || textLeaksAnswer(konanTip, correct)) {
+    if (point.keyRule && !textLeaksAnswer(point.keyRule, correct)) {
+      konanTip = `Retiens bien la règle clé : ${point.keyRule}`;
+    } else if (!textLeaksAnswer(point.title, correct)) {
+      konanTip = `Analyse attentivement les données de la question et applique la méthode de « ${point.title} » en procédant par déduction logique.`;
+    } else {
+      konanTip = `Analyse attentivement les indices de l'énoncé et applique rigoureusement la règle du cours pour déduire la bonne proposition.`;
+    }
+  }
+
+  return {
+    title: raw.title || point.title,
+    paragraphText: cleanParagraph,
+    formula,
+    konanTip,
+  };
+}
+
 /**
  * Question de calcul : la bonne réponse est un résultat chiffré que l'élève doit obtenir lui-même.
- * En maths, toute réponse chiffrée compte comme un calcul ; ailleurs (SVT, HG…), un chiffre peut être
- * une donnée du cours à retenir (97,5 % du territoire) : seul l'énoncé « calcule… » en fait un calcul.
  */
 function isCalculationQuestion(exercise: InteractiveExercise, subjectId: string): boolean {
   const correct = String(exercise.options?.[exercise.correctAnswerIndex ?? 0] ?? '');
@@ -111,63 +321,61 @@ function buildGroundedStep(
 ): { title: string; paragraphText: string; formula?: PointFormula; konanTip?: string } {
   const correct = String(exercise.options?.[exercise.correctAnswerIndex ?? 0] ?? '');
   const calc = isCalculationQuestion(exercise, subjectId);
-  const promptTokens = new Set(groundingTokens(exercise.prompt));
-  const answerTokens = new Set(groundingTokens(correct));
+  const promptTokens = expandedPromptTokens(exercise.prompt);
+  const titleTokens = new Set(groundingTokens(point.title));
+
   const score = (text: string) => {
     const t = new Set(groundingTokens(text));
     let s = 0;
-    for (const w of promptTokens) if (t.has(w)) s += 1;
-    for (const w of answerTokens) if (t.has(w)) s += 2;
+    for (const w of promptTokens) if (t.has(w)) s += 2;
+    for (const w of titleTokens) if (t.has(w)) s += 1;
     return s;
   };
 
-  // 1. Passage du cours le plus pertinent (en calcul : jamais un passage qui contient déjà la réponse)
-  const answerKey = normalizeForCompare(correct);
-  const titleTokens = new Set(groundingTokens(point.title));
-  let best = '';
-  let bestScore = 0;
-  let fallback = '';
-  let fallbackScore = -1;
-  for (const excerpt of conceptExcerpts(point.conceptExplanation || '')) {
-    // (une réponse d'un seul caractère, « 1 », ne se cherche pas : elle figure dans presque toute règle)
-    if (calc && answerKey.length > 1 && normalizeForCompare(excerpt).includes(answerKey)) continue;
-    const s = score(excerpt);
-    if (s > bestScore) {
-      best = excerpt;
-      bestScore = s;
+  // 1. Passage du cours le plus pertinent (en filtrant les lignes qui contiennent directement la réponse)
+  const excerpts = conceptExcerpts(point.conceptExplanation || '');
+  const scored = excerpts
+    .map((excerpt) => {
+      const cleaned = stripLeakingLines(excerpt, correct);
+      return {
+        raw: excerpt,
+        cleaned,
+        s: score(cleaned),
+        len: cleaned.length,
+      };
+    })
+    .filter((item) => item.cleaned.length > 20)
+    .sort((a, b) => (b.s !== a.s ? b.s - a.s : b.len - a.len));
+
+  // Assembler les 1 ou 2 meilleurs extraits complémentaires pour former une vraie fiche Masterclass complète
+  let paragraphText = '';
+  for (const item of scored) {
+    if (!paragraphText) {
+      paragraphText = item.cleaned;
+    } else if (paragraphText.length < 260 && !paragraphText.includes(item.cleaned)) {
+      paragraphText = `${paragraphText}\n\n${item.cleaned}`;
     }
-    // Repli : le passage le plus proche du titre de la mini-leçon (la règle qu'on applique)
-    // (à égalité, le passage le plus développé : une règle complète plutôt qu'une phrase d'introduction)
-    const ts = groundingTokens(excerpt).filter((w) => titleTokens.has(w)).length * 1000 + Math.min(excerpt.length, 600);
-    if (ts > fallbackScore) {
-      fallback = excerpt;
-      fallbackScore = ts;
-    }
+    if (paragraphText.length >= 260) break;
   }
 
-  // 2. Formule seulement si elle se rapporte vraiment à la question (au moins deux points communs)
+  if (!paragraphText) {
+    paragraphText = stripLeakingLines(point.conceptExplanation || point.summary || '', correct);
+  }
+
+  // 2. Formule seulement si elle se rapporte à la question ET ne contient pas la réponse
   let formula: PointFormula | undefined;
   let formulaScore = 0;
   for (const f of formulas) {
-    const s = score(`${f.name} ${f.formula} ${f.note || ''}`);
+    const fText = `${f.name} ${f.formula} ${f.note || ''}`;
+    if (textLeaksAnswer(fText, correct)) continue;
+    if (calc && normalizeForCompare(fText).includes(normalizeForCompare(correct)) && normalizeForCompare(correct).length > 1) continue;
+    const s = score(fText);
     if (s > formulaScore) {
       formula = f;
       formulaScore = s;
     }
   }
   if (formulaScore < 2) formula = undefined;
-  // En calcul, une formule qui contient déjà le résultat ne s'affiche pas
-  if (formula && calc && answerKey.length > 1 && normalizeForCompare(`${formula.formula} ${formula.note || ''}`).includes(answerKey)) {
-    formula = undefined;
-  }
-
-  // 3. Texte de la carte : passage du cours ; à défaut, l'explication (hors calcul) ; à défaut, le résumé
-  let paragraphText = best && bestScore >= 2 ? best : '';
-  if (!paragraphText) {
-    const explanation = (exercise.explanation || '').trim();
-    paragraphText = !calc && explanation ? explanation : best || fallback || point.summary || '';
-  }
-  if (paragraphText.length > 700) paragraphText = `${paragraphText.slice(0, 680).replace(/\s+\S*$/, '')}…`;
 
   // Titre : intitulé de la section retenue s'il est court, sinon la formule, sinon le titre de la mini-leçon
   const firstLine = paragraphText.split('\n')[0].trim();
@@ -220,13 +428,42 @@ export function expandChapterTo12MiniLessons(chapter: CurriculumChapter): Curric
     return chapter;
   }
 
-  // Si le chapitre dispose déjà de 10 à 12 points à 8 étapes sans mélange, on vérifie leur intégrité
+  // Si le chapitre dispose déjà de 10 à 12 points à 8 étapes sans mélange, on harmonise ses cartes au niveau Masterclass
   if (existingPoints.length >= 10 && existingPoints.length <= 14) {
     const isAlreadyFullyStructured = existingPoints.every(
       p => p.exercises && p.exercises.length === 8 && p.structuredSteps && p.structuredSteps.length === 8
     );
     if (isAlreadyFullyStructured) {
-      return chapter;
+      return {
+        ...chapter,
+        points: existingPoints.map((point) => ({
+          ...point,
+          structuredSteps: (point.structuredSteps || []).map((st, idx) => {
+            const ex = st.exercise || point.exercises?.[idx];
+            if (!ex) return st;
+            const upgraded = ensureMasterclassStepCard(
+              {
+                title: st.stepTitle,
+                paragraphText: st.paragraphText,
+                formula: st.formula,
+                konanTip: st.konanTip,
+              },
+              ex,
+              chapter,
+              point,
+              idx,
+              point.formulas || [],
+            );
+            return {
+              ...st,
+              stepTitle: upgraded.title,
+              paragraphText: upgraded.paragraphText,
+              formula: upgraded.formula,
+              konanTip: upgraded.konanTip,
+            };
+          }),
+        })),
+      };
     }
   }
 
@@ -348,6 +585,22 @@ export function expandChapterTo12MiniLessons(chapter: CurriculumChapter): Curric
  * la formule dédiée et l'astuce de Konan, dans le respect STRICT de la matière.
  */
 function buildStepPedagogy(
+  exercise: InteractiveExercise,
+  chapter: CurriculumChapter,
+  point: CurriculumPoint,
+  stepIdx: number,
+  formulas: PointFormula[]
+): {
+  title: string;
+  paragraphText: string;
+  formula?: PointFormula;
+  konanTip?: string;
+} {
+  const raw = buildStepPedagogyRaw(exercise, chapter, point, stepIdx, formulas);
+  return ensureMasterclassStepCard(raw, exercise, chapter, point, stepIdx, formulas);
+}
+
+function buildStepPedagogyRaw(
   exercise: InteractiveExercise,
   chapter: CurriculumChapter,
   point: CurriculumPoint,
