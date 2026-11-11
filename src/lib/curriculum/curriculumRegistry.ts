@@ -24,6 +24,10 @@ import { CHIMIE_TLE_CD_L04_AMINES } from '../../data/courses/terminale/chimie_tl
 import { CHIMIE_TLE_CD_L05_SAVONS } from '../../data/courses/terminale/chimie_tle_cd_05_savons';
 import { CHIMIE_TLE_CD_L06_SOLUTIONS_AQUEUSES_PH } from '../../data/courses/terminale/chimie_tle_cd_06_solutions_aqueuses_ph';
 import { CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE } from '../../data/courses/terminale/chimie_tle_cd_acide_fort_base_forte';
+import { CHIMIE_TLE_CD_L08_ACIDES_ALPHA_AMINES } from '../../data/courses/terminale/chimie_tle_cd_08_acides_alpha_amines';
+import { CHIMIE_TLE_CD_L09_ACIDES_FAIBLES_BASES_FAIBLES } from '../../data/courses/terminale/chimie_tle_cd_09_acides_faibles_bases_faibles';
+import { CHIMIE_TLE_CD_L10_COUPLE_ACIDE_BASE_CLASSIFICATION } from '../../data/courses/terminale/chimie_tle_cd_10_couple_acide_base_classification';
+import { CHIMIE_TLE_CD_L11_DOSAGES_SOLUTIONS_TAMPONS } from '../../data/courses/terminale/chimie_tle_cd_11_dosages_solutions_tampons';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
 import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/terminale/geo_tle_problemes_developpement_ci';
@@ -91859,6 +91863,10 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   CHIMIE_TLE_CD_L05_SAVONS,
   CHIMIE_TLE_CD_L06_SOLUTIONS_AQUEUSES_PH,
   CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE,
+  CHIMIE_TLE_CD_L08_ACIDES_ALPHA_AMINES,
+  CHIMIE_TLE_CD_L09_ACIDES_FAIBLES_BASES_FAIBLES,
+  CHIMIE_TLE_CD_L10_COUPLE_ACIDE_BASE_CLASSIFICATION,
+  CHIMIE_TLE_CD_L11_DOSAGES_SOLUTIONS_TAMPONS,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
   GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI,
