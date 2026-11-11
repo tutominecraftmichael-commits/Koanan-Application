@@ -45,7 +45,7 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
         const byGroup = new Map<string, Group>();
         for (const c of chapters) {
           const sub = sps.getChapterSubCategory(c);
-          const g = byGroup.get(sub) || { key: sub, label: sps.getSubCategoryName(sub), chapters: [] };
+          const g = byGroup.get(sub) || { key: sub, label: sps.getSubCategoryName(sub, grade), chapters: [] };
           g.chapters.push({ id: c.id, title: c.title, points: c.points.length });
           byGroup.set(sub, g);
         }

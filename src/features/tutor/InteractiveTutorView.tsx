@@ -574,7 +574,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       .filter((c) => getChapterSubCategory(c) === newSubCat)
       .sort((a, b) => a.order - b.order);
     setAvailableSubChapters(filtered);
-    setSubCategoryQuestionText(getSubCategoryQuestion(newSubCat));
+    setSubCategoryQuestionText(getSubCategoryQuestion(newSubCat, gradeLevel));
   };
 
   // Validation du diagnostic initial pour cette sous-catégorie
@@ -658,7 +658,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     if (questionPhase && activeExercise) questionShown();
   }, [questionPhase, activeExercise?.id, activeStepIndex, warmupIndex, recallIndex, questionShown]);
 
-  const subCategoryLabel = getSubCategoryName(activeSubCategory);
+  const subCategoryLabel = getSubCategoryName(activeSubCategory, gradeLevel);
 
   /**
    * Place de la mini-leçon DANS SON CHAPITRE (ex. « Mini-leçon 6 sur 7 »), et non son rang dans la séance du jour :
@@ -1311,7 +1311,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
             Pour synchroniser vos révisions avec votre professeur en <strong>{subCategoryLabel}</strong>, sélectionnez votre chapitre actuel.
-            Konan alternera automatiquement ensuite vos séances pour couvrir harmonieusement tout le programme.
+            {isTwoVoletLabel(subCategoryLabel)
+              ? ' Konan alternera automatiquement ensuite vos séances pour couvrir harmonieusement tout le programme.'
+              : ' Konan fera avancer automatiquement vos séances leçon après leçon dans le programme officiel.'}
           </p>
 
           {/* Bannière d'alternance obligatoire (Règle 2) */}
