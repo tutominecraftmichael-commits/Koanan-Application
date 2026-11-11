@@ -42,7 +42,8 @@ export function buildCorrectionPrompt({ classe, matiere, sujet }) {
     '- Quand un exercice a une grille (situation complexe, production écrite), note-le avec cette grille, critère par critère.',
     '- Exercice au choix : note seulement le sujet traité ; si l’élève en a traité deux, garde la meilleure note.',
     '- Une construction (graphique, frise chronologique) se note sur la photo : titre, échelle, exactitude des données, légende, soin.',
-    '- En Français et en Histoire-Géographie, juge aussi la qualité de la rédaction (phrases complètes, réponses justifiées par le texte ou le document).',
+    '- En Français, en Histoire-Géographie et en Philosophie, juge aussi la qualité de la rédaction (phrases complètes, réponses justifiées par le texte ou le document).',
+    '- Un sujet de dissertation, de commentaire ou de résumé se note avec le barème détaillé donné dans le corrigé (introduction, développement, conclusion, présentation…), critère par critère ; pour un résumé, vérifie aussi le nombre de mots demandé.',
     'CORRECTION STRUCTURÉE, QUESTION PAR QUESTION (jamais un simple paragraphe) :',
     '- Pour CHAQUE question du sujet (dans l’ordre, avec son numéro exact) : obtenu (multiple de 0,25, jamais plus que ses points), statut (« juste », « partiel », « faux » ou « absent » si non traitée), copie = ce que l’élève a écrit, résumé en une ligne courte, attendu = la réponse attendue en une ligne courte, erreur = l’erreur PRÉCISE en une phrase (vide si juste).',
     '- Exercice avec grille : remplis « grille » avec les points obtenus pour CHAQUE critère, dans l’ordre de la grille ; questions = le ou les sujets traités.',
@@ -145,10 +146,11 @@ export default async function handler(req, res) {
       consigne: str(e?.consigne, 1500),
       contexte: str(e?.contexte, 4000),
       auChoix: e?.auChoix === true,
-      questions: Array.isArray(e?.questions) ? e.questions.slice(0, 20).map((q) => ({ numero: str(String(q?.numero ?? ''), 12), texte: str(q?.texte, 1200), points: num(q?.points) })) : [],
+      // Jusqu'à 6000 caractères : un sujet au choix du format BAC contient son texte d'étude
+      questions: Array.isArray(e?.questions) ? e.questions.slice(0, 20).map((q) => ({ numero: str(String(q?.numero ?? ''), 12), texte: str(q?.texte, 6000), points: num(q?.points) })) : [],
       grille: Array.isArray(e?.grille) ? e.grille.slice(0, 6).map((g) => ({ critere: str(g?.critere, 120), indicateurs: str(g?.indicateurs, 400), points: num(g?.points) })) : undefined,
     })),
-    corrige: Array.isArray(sujet.corrige) ? sujet.corrige.slice(0, 80).map((c) => ({ exercice: Number(c?.exercice) || 0, question: str(String(c?.question ?? ''), 12), reponse: str(c?.reponse, 1200), points: num(c?.points) })) : [],
+    corrige: Array.isArray(sujet.corrige) ? sujet.corrige.slice(0, 80).map((c) => ({ exercice: Number(c?.exercice) || 0, question: str(String(c?.question ?? ''), 12), reponse: str(c?.reponse, 4000), points: num(c?.points) })) : [],
   };
   const images = Array.isArray(body.images) ? body.images.slice(0, MAX_IMAGES) : [];
   const parts = [];

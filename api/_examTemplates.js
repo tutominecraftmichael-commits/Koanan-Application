@@ -249,6 +249,228 @@ export const EXAM_TEMPLATES = {
   },
 };
 
-export function getExamTemplate(subjectKey) {
+/*
+ * ============================================================================
+ * TERMINALE A (A1, A2) — DEVOIRS DE 2 H AU FORMAT DU BACCALAURÉAT
+ * ============================================================================
+ * Modèles À PART : ils ne servent QUE pour terminale_a1 / terminale_a2 (voir getExamTemplate).
+ * Les modèles de Seconde ci-dessus ne changent pas.
+ * Sources (vérifiées le 2026-11-10) :
+ *  - Maths : DPFC, « Format du Bac série A1 » (3 h, coef. 3) et « série A2 » (2 h, coef. 2) : 5 exercices,
+ *    tests objectifs 4 pts, renforcement/approfondissement 11 pts, situation complexe 5 pts (exemple officiel 2+2+4+7+5).
+ *  - Français : sujet officiel du BAC 2023 et son corrigé-barème national (4 h) : « Le candidat traitera l'un des
+ *    trois sujets » — 1) Questions (4) - Résumé (8) - Production écrite (8) ; 2) Commentaire composé ;
+ *    3) Dissertation littéraire (introduction 3, développement 12, conclusion 3, présentation 2).
+ *  - Philosophie : sujet officiel du BAC 2025 séries A1-A2 et son « barème chiffré » (4 h, coef. 5) : première partie
+ *    4 pts (2 exercices obligatoires), deuxième partie 16 pts (dissertation OU commentaire de texte).
+ *  - Histoire-Géographie : corrigé-barème du BAC blanc 2026 (DRENA Abidjan 2, 3 h 30) au format du BAC : première partie
+ *    6 pts (Histoire 3 + Géographie 3), deuxième partie 14 pts (dissertation obligatoire 7 + un sujet au choix 7).
+ *  - SVT : aucun format publié pour la série A : format DPFC SVT (6 + 6 + 8), adapté au programme de Terminale A.
+ * Le devoir dure 2 h dans KONAN (chronomètre de l'appli) : la structure et les barèmes sont ceux du BAC.
+ */
+const TERMINALE_A_GRADES = ['terminale_a1', 'terminale_a2', 'terminale_a'];
+
+const NO_REAL_AUTHOR_RULES = [
+  "Tout texte d'étude est INÉDIT, écrit par toi pour ce devoir : n'attribue jamais un texte ni une citation à un auteur réel (pas de fausse citation). Termine chaque texte par la référence « Texte inédit écrit pour KONAN ».",
+  "Dans le corrigé, tu peux citer des auteurs et des œuvres réels comme références de culture, mais seulement pour des idées connues et sûres, sans inventer de citation mot pour mot.",
+  'Pas de LaTeX ni de signe $ : texte simple.',
+];
+
+export const TERMINALE_A_TEMPLATES = {
+  maths: {
+    matiere: 'Mathématiques',
+    duree: '2 h',
+    source: 'DPFC – Format de l’épreuve de Mathématiques au Baccalauréat, séries A1 et A2 (5 exercices : tests objectifs 4 pts, renforcement et approfondissement 11 pts, situation complexe 5 pts)',
+    exercices: [
+      {
+        numero: 1,
+        points: 2,
+        nature: 'Test objectif (niveau taxonomique 1 ou 2)',
+        consignes: "4 affirmations à juger, présentées dans le champ tableau (colonnes « N° » et « Affirmations »). Consigne officielle : « Dans cet exercice aucune justification n'est demandée. Écris sur ta copie le numéro de l'affirmation suivi de VRAI lorsque l'affirmation est vraie ou de FAUX lorsque l'affirmation est fausse. Exemple : 1. VRAI » 0,5 point par affirmation.",
+      },
+      {
+        numero: 2,
+        points: 2,
+        nature: 'Test objectif (niveau taxonomique 1, 2 ou 3)',
+        consignes: "Tableau de 4 lignes (colonnes « N° », « Énoncés », « A », « B », « C », « D ») : pour chaque ligne quatre réponses dont une seule est juste. Consigne officielle : « Pour chaque ligne du tableau ci-dessous quatre réponses A, B, C et D sont proposées dont une seule est juste. Écris sur ta feuille de copie le numéro de la ligne suivi de la lettre correspondant à la réponse juste. Exemple : 1. C » 0,5 point par ligne. Les tests objectifs portent sur des leçons non prises en compte par les exercices 3, 4 et 5.",
+      },
+      {
+        numero: 3,
+        points: 4,
+        nature: 'Exercice de renforcement en test subjectif — NON contextualisé',
+        consignes: "Plusieurs habiletés d'une même leçon, questions guidées et progressives (1., 2., 3.a., …), avec « Justifie que… », « Démontre que… », « Détermine… ».",
+      },
+      {
+        numero: 4,
+        points: 7,
+        nature: "Exercice de renforcement ou d'approfondissement en test subjectif — NON contextualisé",
+        consignes: "Souvent l'étude d'une fonction (limites, asymptotes, dérivée et variations, tableau de variation, tangente, tableau de valeurs) ou d'une suite, ou une statistique à deux variables ; questions guidées et progressives (1.a., 1.b., 2., …). Porte sur une autre leçon que l'exercice 3.",
+      },
+      {
+        numero: 5,
+        points: 5,
+        nature: 'Situation complexe (niveau « Traiter une situation »)',
+        consignes: "Un texte de situation ivoirienne concrète (kermesse, coopérative, épargne, commerce, élèves…) qui pose UN problème, SANS questions intermédiaires, terminé par la consigne officielle : « À l'aide d'une production argumentée basée sur tes connaissances mathématiques, … » (par exemple « donne ton avis sur l'affirmation de ces élèves »). Notée avec la grille CM1/CM2/CM3/CP (0,75 + 2,5 + 1,25 + 0,5).",
+        grille: SITUATION_COMPLEXE_GRID,
+      },
+    ],
+    notesClasse: {
+      terminale_a1: "Terminale A1 : deux compétences — calculs algébriques et fonctions (limites, dérivation, étude de fonctions, logarithme népérien, exponentielle, suites arithmétiques et géométriques) ; modélisation de phénomènes aléatoires et traitement des données (probabilités, statistiques à deux variables : point moyen, droite de Mayer, moindres carrés). Pas de géométrie.",
+      terminale_a2: "Terminale A2 : même programme que la A1, avec des calculs plus simples et plus guidés (au BAC, l'épreuve de la série A2 dure 2 h). Pas de géométrie.",
+      terminale_a: "Terminale A : calculs algébriques et fonctions ; probabilités et statistiques. Pas de géométrie.",
+    },
+    exemples: [],
+  },
+
+  svt: {
+    ...EXAM_TEMPLATES.svt,
+    source: 'DPFC – Format SVT (exercices 1 et 2 : tests objectifs, 6 pts chacun ; exercice 3 : situation d’évaluation, 8 pts), adapté au programme de Terminale A (aucun format propre à la série A n’est publié)',
+    notesClasse: {
+      terminale_a1: 'Terminale A : réactions émotionnelles (stress, système nerveux et hormonal), activité cérébrale, origine de la vie, évolution de la lignée humaine, hérédité du sexe et des groupes sanguins, prévisions génétiques (échiquier, arbre généalogique), biosynthèse des protéines (code génétique).',
+      terminale_a2: 'Terminale A : réactions émotionnelles (stress, système nerveux et hormonal), activité cérébrale, origine de la vie, évolution de la lignée humaine, hérédité du sexe et des groupes sanguins, prévisions génétiques (échiquier, arbre généalogique), biosynthèse des protéines (code génétique).',
+      terminale_a: 'Terminale A : programme de SVT de la série littéraire (comportements, génétique humaine, évolution).',
+    },
+  },
+
+  francais: {
+    matiere: 'Français',
+    duree: '2 h',
+    source: 'Format du BAC (sujet et corrigé-barème national de la session 2023) : le candidat traite l’un des trois sujets — questions, résumé et production écrite ; commentaire composé ; dissertation littéraire',
+    reglesMatiere: [
+      ...NO_REAL_AUTHOR_RULES,
+      'Mets le texte d’étude de chaque sujet DANS le texte de sa question (« Sujet 1 », « Sujet 2 »), avant les consignes, avec un retour à la ligne entre les paragraphes (et un vers par ligne pour un poème).',
+      'Les thèmes sont proches des élèves ivoiriens et des œuvres du programme de Terminale (indépendances, tradition et modernité, condition de la femme, paix, solidarité, ville et village, école…).',
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 20,
+        nature: 'Un sujet au choix parmi les trois sujets du BAC',
+        auChoix: true,
+        questionMax: 6000,
+        consignes: [
+          "Consigne officielle : « Le candidat traitera l'un des trois sujets. ». Trois questions, chacune notée sur 20 points : numero « Sujet 1 », « Sujet 2 », « Sujet 3 ».",
+          "Sujet 1 = PREMIER SUJET : QUESTIONS - RÉSUMÉ - PRODUCTION ÉCRITE. Un texte argumentatif inédit de 300 à 400 mots, avec un titre, découpé en paragraphes, suivi de son nombre exact de mots (« 352 mots »). Puis : « I. QUESTIONS (04 points) 1. Identifiez la thèse de l'auteur. (02 points) 2. Expliquez en contexte l'expression : « … ». (02 points) » ; « II. RÉSUMÉ (08 points) Résumez ce texte de N mots au quart (¼) de son volume initial. Une marge de plus ou moins 10 % est tolérée. » ; « III. PRODUCTION ÉCRITE (08 points) Étayez (ou Réfutez, ou Discutez) cette affirmation : « … » » (une phrase tirée du texte).",
+          "Sujet 2 = DEUXIÈME SUJET : COMMENTAIRE COMPOSÉ. Un poème inédit (16 à 28 vers courts, un vers par ligne, strophes séparées par une ligne vide) ou un extrait de prose inédit de 150 à 220 mots, puis le libellé officiel : « Faites un commentaire composé de ce texte. Étudiez d'une part …, et d'autre part … » (deux centres d'intérêt).",
+          "Sujet 3 = TROISIÈME SUJET : DISSERTATION LITTÉRAIRE. Une affirmation sur la littérature ou l'écrivain, présentée comme l'opinion d'« un critique » (jamais une fausse citation d'un auteur réel), puis : « Expliquez et discutez cette affirmation à la lumière des œuvres littéraires lues ou étudiées. »",
+          "CORRIGÉ : une entrée par sujet (question « Sujet 1 », « Sujet 2 », « Sujet 3 »), points 20, avec le barème national détaillé dans les étapes. Sujet 1 : thèse (2), explication de l'expression (2), résumé (8 : nombre de mots attendu avec la marge de 10 %, idées essentielles dans l'ordre, enchaînement logique, reformulation), production écrite (8 : introduction 2, développement 4, conclusion 2) ; donne les idées essentielles du texte et un plan possible. Sujets 2 et 3 : introduction 3 (amorce 1, présentation 1, annonce du plan 1), développement 12 (pertinence des idées ou des indices textuels et de leur interprétation 6, cohérence et enchaînement 3, qualité de l'expression 3), conclusion 3 (bilan 2, ouverture ou opinion 1), présentation et soin 2 ; donne les centres d'intérêt ou le plan attendu avec des exemples d'œuvres.",
+        ].join(' '),
+      },
+    ],
+    notesClasse: {
+      terminale_a1: 'Terminale A1 (littéraire) : niveau du BAC, exigence élevée sur l’analyse et la rédaction.',
+      terminale_a2: 'Terminale A2 (littéraire) : niveau du BAC, exigence élevée sur l’analyse et la rédaction.',
+      terminale_a: 'Terminale A (littéraire) : niveau du BAC.',
+    },
+    exemples: [],
+  },
+
+  philosophie: {
+    matiere: 'Philosophie',
+    duree: '2 h',
+    source: 'Format du BAC séries A1-A2 (sujet et barème chiffré nationaux de la session 2025) : première partie 4 pts (deux exercices obligatoires), deuxième partie 16 pts (dissertation ou commentaire de texte au choix)',
+    reglesMatiere: [
+      ...NO_REAL_AUTHOR_RULES,
+      "Les questions portent sur les notions des chapitres fournis (conscience et inconscient, liberté, histoire, religion, langage, vérité, science, progrès, bonheur, vie en société, État…).",
+    ],
+    exercices: [
+      {
+        numero: 1,
+        points: 2,
+        nature: 'Première partie (obligatoire) : test objectif',
+        consignes: "Consigne officielle : « Écris, sur ta feuille de copie, les lettres qui correspondent aux réponses justes. » Un énoncé (ex. « L'homme est objet de l'histoire signifie que : ») suivi de 4 propositions a), b), c), d), dont DEUX sont justes : 1 point par bonne lettre. Mets l'énoncé et les propositions dans « consigne » ou dans une question unique de 2 points.",
+      },
+      {
+        numero: 2,
+        points: 2,
+        nature: 'Première partie (obligatoire) : test objectif',
+        consignes: "Consigne officielle : « Écris, sur ta feuille de copie, V devant les chiffres des propositions vraies et F devant les chiffres des propositions fausses. » Un énoncé (ex. « Le droit positif est : ») suivi de 4 propositions numérotées 1- à 4- : 0,5 point par proposition (4 questions de 0,5 point).",
+      },
+      {
+        numero: 3,
+        points: 16,
+        nature: 'Deuxième partie : un sujet au choix (dissertation ou commentaire de texte)',
+        auChoix: true,
+        questionMax: 5000,
+        consignes: [
+          "Consigne officielle : « Le candidat traitera l'un des deux (02) sujets au choix. ». Deux questions, chacune notée sur 16 points : numero « Sujet 1 » et « Sujet 2 ».",
+          "Sujet 1 = DISSERTATION, présentée comme une situation : « À l'issue d'une discussion … ton camarade de classe … demande ton avis sur l'objet de leur débat qui est l'interrogation suivante : … ? » puis « Résous le problème que pose ce sujet dans une production argumentée. »",
+          "Sujet 2 = COMMENTAIRE DE TEXTE : « L'un de tes camarades de classe découvre, au cours d'une de ses lectures, le texte ci-dessous qu'il a du mal à comprendre. Il te sollicite afin de l'aider à surmonter sa difficulté. » puis un texte philosophique inédit de 150 à 220 mots (une thèse claire, un raisonnement en deux mouvements), puis « Fais l'étude ordonnée de ce texte et dégage son intérêt philosophique. »",
+          "CORRIGÉ : une entrée par sujet (« Sujet 1 », « Sujet 2 »), points 16, avec le barème chiffré officiel dans les étapes. Dissertation : définition des mots essentiels, problème à analyser, deux axes avec arguments et références ; barème introduction 3 (démarche conduisant au problème 1, problème pertinent et bien posé 2), développement 9 (pertinence des axes 1, pertinence et cohérence des arguments 3, culture philosophique 4, transition 1), conclusion 2 (bilan et pertinence de la réponse), style de l'ensemble 2. Commentaire : thème, problème, thèse, structure logique du texte (mouvements avec leurs lignes), intérêt philosophique (critique interne, critique externe avec deux axes) ; barème introduction 3 (thème 1, problème 1, thèse 1), étude ordonnée 5 (structure logique et technique d'explication 2, fidélité à la pensée de l'auteur 3), intérêt philosophique 5 (critique interne 1, critique externe 4), conclusion 1 (point de vue clairement exprimé), style 2.",
+        ].join(' '),
+      },
+    ],
+    notesClasse: {
+      terminale_a1: 'Terminale A1 (coefficient 5 au BAC) : exigence élevée sur la problématisation et la culture philosophique.',
+      terminale_a2: 'Terminale A2 (coefficient 5 au BAC) : exigence élevée sur la problématisation et la culture philosophique.',
+      terminale_a: 'Terminale A : niveau du BAC.',
+    },
+    exemples: [],
+  },
+
+  histoire_geo: {
+    matiere: 'Histoire-Géographie',
+    duree: '2 h',
+    reglesMatiere: [
+      ...EXAM_TEMPLATES.histoire_geo.reglesMatiere,
+      "Les documents d'étude sont des textes INÉDITS « rédigés pour KONAN d'après le cours » (jamais attribués à un auteur, un homme politique ou un journal réels), ou des tableaux statistiques plausibles.",
+      "Si les chapitres fournis ne couvrent qu'une des deux disciplines, tout le devoir porte sur celle-là (la mention « en Histoire » ou « en Géographie » suit les chapitres).",
+    ],
+    source: 'Format du BAC (corrigé-barème du BAC blanc 2026, DRENA Abidjan 2) : première partie 6 pts (Histoire 3 + Géographie 3, obligatoires), deuxième partie 14 pts (dissertation obligatoire 7 + un sujet au choix 7)',
+    exercices: [
+      {
+        numero: 1,
+        points: 3,
+        nature: 'Première partie (obligatoire) : Histoire, test objectif',
+        consignes: "6 affirmations à 0,5 point, dans le champ tableau (colonnes « N° », « Affirmations », « Vrai », « Faux ») avec la consigne officielle : « Indique par une croix dans la case si l'affirmation est vraie ou fausse. » — ou un appariement (« Associe le numéro de chaque événement de la colonne A à la lettre de sa date dans la colonne B »).",
+      },
+      {
+        numero: 2,
+        points: 3,
+        nature: 'Première partie (obligatoire) : Géographie, test objectif ou construction',
+        consignes: "Soit 6 items à 0,5 point (vrai ou faux, appariement), soit une construction faisable sur la copie : courbes d'évolution ou diagramme en bâtons à partir d'un tableau statistique donné dans « tableau », avec l'échelle imposée dans « donnees » (ex. « 2 cm pour 1 année ; 1 cm pour 150 000 t »), notée sur le titre, l'échelle, l'exactitude, la légende et le soin.",
+      },
+      {
+        numero: 3,
+        points: 7,
+        nature: 'Deuxième partie : dissertation (obligatoire)',
+        consignes: "Consigne officielle : « Le candidat traitera obligatoirement le sujet de dissertation proposé en Histoire » (ou « en Géographie »). Une seule question (numero « 1 », 7 points) : le sujet, sous forme de question (« La Côte d'Ivoire peut-elle s'industrialiser ? ») ou d'affirmation à analyser. Le corrigé donne : introduction (généralité, problématique, annonce d'un plan en deux parties), le contenu attendu de chaque partie, la conclusion.",
+        grille: [
+          { critere: 'Rédaction correcte de l’introduction', indicateurs: 'Généralité, problématique, annonce du plan.', points: 1 },
+          { critere: 'Première partie', indicateurs: 'Idées organisées autour d’un plan pertinent, connaissances exactes et précises.', points: 2.5 },
+          { critere: 'Deuxième partie', indicateurs: 'Idées organisées autour d’un plan pertinent, connaissances exactes et précises.', points: 2.5 },
+          { critere: 'Rédaction correcte de la conclusion', indicateurs: 'Bilan qui répond à la problématique, ouverture.', points: 0.5 },
+          { critere: 'Bonne rédaction et transitions', indicateurs: 'Peu de fautes, syntaxe correcte, bonnes transitions entre les parties.', points: 0.5 },
+        ],
+      },
+      {
+        numero: 4,
+        points: 7,
+        nature: 'Deuxième partie : un sujet au choix parmi deux (dans l’autre discipline que la dissertation)',
+        auChoix: true,
+        questionMax: 5000,
+        consignes: [
+          "Consigne officielle : « Le candidat traitera un (01) sujet parmi les (02) sujets proposés en Géographie » (ou « en Histoire »). Deux questions, chacune notée sur 7 points : numero « Sujet 1 » et « Sujet 2 ». Chaque sujet contient DEUX documents courts (textes inédits de 60 à 110 mots, ou un texte et un tableau écrit en lignes), puis ses consignes avec leurs points.",
+          "Sujet 1 = Situation d'évaluation : un contexte (« Lors d'un exposé… », « Ton camarade affirme… »), les deux documents, puis : dégage l'idée commune aux deux documents (2 pts) ; explique les propos « … » (3 pts) ; analyse … à travers les deux documents (2 pts).",
+          "Sujet 2 = Commentaire de document : les deux documents, puis : précise l'idée commune aux deux documents (1 pt) ; explique le passage « … » (3 pts) ; apprécie l'affirmation « … » (3 pts).",
+          "CORRIGÉ : une entrée par sujet (« Sujet 1 », « Sujet 2 »), points 7, qui reprend chaque consigne avec ses points et la réponse attendue (« toute réponse allant dans ce sens est acceptée »).",
+        ].join(' '),
+      },
+    ],
+    notesClasse: {
+      terminale_a1: 'Terminale (programme commun A, C, D) : Histoire — le monde depuis 1945 (guerre froide, décolonisation, Côte d’Ivoire indépendante, Union africaine…) ; Géographie — économie de la Côte d’Ivoire, intégration régionale (CEDEAO, UEMOA), relations Nord-Sud, puissances économiques. Au BAC, la série A a un coefficient 3.',
+      terminale_a2: 'Terminale (programme commun A, C, D) : Histoire — le monde depuis 1945 (guerre froide, décolonisation, Côte d’Ivoire indépendante, Union africaine…) ; Géographie — économie de la Côte d’Ivoire, intégration régionale (CEDEAO, UEMOA), relations Nord-Sud, puissances économiques. Au BAC, la série A a un coefficient 3.',
+      terminale_a: 'Terminale : programme d’Histoire-Géographie du BAC.',
+    },
+    exemples: [],
+  },
+};
+
+/**
+ * Modèle de sujet pour une matière ET une classe : les Terminales A ont leurs modèles au format du BAC ;
+ * toutes les autres classes (Seconde…) gardent les modèles ci-dessus, inchangés.
+ */
+export function getExamTemplate(subjectKey, gradeId) {
+  if (TERMINALE_A_GRADES.includes(gradeId) && TERMINALE_A_TEMPLATES[subjectKey]) return TERMINALE_A_TEMPLATES[subjectKey];
   return EXAM_TEMPLATES[subjectKey] || null;
 }

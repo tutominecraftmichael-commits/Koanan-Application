@@ -1,5 +1,5 @@
 /**
- * RÈGLES DE PRÉPARATION AUX DEVOIRS ET EXAMENS (2nde A et 2nde C pour l'instant)
+ * RÈGLES DE PRÉPARATION AUX DEVOIRS ET EXAMENS (2nde A, 2nde C, Tle A1 et Tle A2 pour l'instant)
  *
  * Pour chaque jour avant l'épreuve (J-n), KONAN choisit le type de séance :
  *  - J-3, J-2, J-1 : sujet complet de 2 h, OBLIGATOIRE chaque jour ;
@@ -13,14 +13,20 @@
 import type { ExamPrepMode, Subject } from '../../types';
 import { tryResolveGradeLevel } from '../curriculum/curriculumMatcher';
 
-/** Classes où la préparation aux devoirs est ouverte (il y a des cours et des QCM). */
-export const EXAM_PREP_GRADES = ['seconde_a', 'seconde_c'] as const;
+/**
+ * Classes où la préparation aux devoirs est ouverte (il y a des cours et des QCM).
+ * Terminale A1 / A2 : sujets au format du BAC (modèles TERMINALE_A_TEMPLATES dans api/_examTemplates.js).
+ */
+export const EXAM_PREP_GRADES = ['seconde_a', 'seconde_c', 'terminale_a1', 'terminale_a2'] as const;
 
-/** Matières qui ont un modèle de sujet de 2 h (api/_examTemplates.js). */
-export const SUJET_TEMPLATE_SUBJECTS = ['maths', 'physique_chimie', 'svt', 'histoire_geo', 'francais'] as const;
+/**
+ * Matières qui ont un modèle de sujet de 2 h (api/_examTemplates.js).
+ * La Philosophie n'a de modèle qu'en Terminale A (seule classe à avoir des cours de Philosophie ouverts aux devoirs).
+ */
+export const SUJET_TEMPLATE_SUBJECTS = ['maths', 'physique_chimie', 'svt', 'histoire_geo', 'francais', 'philosophie'] as const;
 
 /** Matières littéraires : le sujet s'affiche en texte simple (sans moteur de formules), lignes numérotées. */
-export const LITERARY_EXAM_SUBJECTS = ['francais', 'histoire_geo'] as const;
+export const LITERARY_EXAM_SUBJECTS = ['francais', 'histoire_geo', 'philosophie'] as const;
 
 /** Fenêtre de préparation : KONAN prépare l'épreuve à partir de J-14. */
 export const EXAM_PREP_HORIZON_DAYS = 14;

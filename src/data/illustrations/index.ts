@@ -15,6 +15,16 @@ export interface ExerciseIllustration {
   question?: PointVisualSchema;
 }
 
+/**
+ * Matières qui reçoivent des scènes dessinées (personnages, décors) : UNIQUEMENT l'Histoire-Géographie
+ * et la Philosophie (règle fixée par le fondateur le 2026-11-10). Les sciences et le Français gardent
+ * seulement les figures tracées par le code (courbes, schémas, tableaux).
+ */
+export const SCENE_SUBJECTS: readonly string[] = ['histoire_geo', 'philosophie'];
+
+const isSceneIllustration = (ill: ExerciseIllustration) =>
+  Boolean(ill.course?.scene || ill.course?.sceneSpec || ill.question?.scene || ill.question?.sceneSpec);
+
 /** Scènes générées (Gemini choisit, le moteur de KONAN dessine), au même format que les autres figures. */
 const GENERATED_ILLUSTRATIONS: Record<string, ExerciseIllustration> = Object.fromEntries(
   Object.entries(GENERATED_SCENES).map(([id, s]) => [
@@ -41,9 +51,10 @@ export const HANDMADE_ILLUSTRATION_IDS: ReadonlySet<string> = new Set([
   ...Object.keys(SECONDE_A_ILLUSTRATIONS),
 ]);
 
-function withIllustration(exercise: InteractiveExercise): InteractiveExercise {
+function withIllustration(exercise: InteractiveExercise, scenesAllowed: boolean): InteractiveExercise {
   const ill = ALL_ILLUSTRATIONS[exercise.id];
   if (!ill) return exercise;
+  if (!scenesAllowed && isSceneIllustration(ill)) return exercise;
   return {
     ...exercise,
     courseVisualSchema: ill.course ?? exercise.courseVisualSchema,
@@ -58,14 +69,15 @@ function withIllustration(exercise: InteractiveExercise): InteractiveExercise {
  */
 export function applyIllustrations(chapter: CurriculumChapter): CurriculumChapter {
   let touched = false;
+  const scenesAllowed = SCENE_SUBJECTS.includes(chapter.subjectId);
   const points = chapter.points.map((point) => {
     const exercises = point.exercises?.map((ex) => {
-      const next = withIllustration(ex);
+      const next = withIllustration(ex, scenesAllowed);
       if (next !== ex) touched = true;
       return next;
     });
     const structuredSteps = point.structuredSteps?.map((step) => {
-      const ex = withIllustration(step.exercise);
+      const ex = withIllustration(step.exercise, scenesAllowed);
       if (ex === step.exercise) return step;
       touched = true;
       return { ...step, exercise: ex };
