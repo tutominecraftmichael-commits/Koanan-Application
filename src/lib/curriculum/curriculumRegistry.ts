@@ -34,6 +34,9 @@ import { PHYSIQUE_TLE_CD_L03_CHAMPS_UNIFORMES_G_ET_E } from '../../data/courses/
 import { PHYSIQUE_TLE_CD_L04_OSCILLATIONS_MECANIQUES } from '../../data/courses/terminale/physique_tle_cd_04_oscillations_mecaniques';
 import { PHYSIQUE_TLE_CD_L05_CHAMP_MAGNETIQUE } from '../../data/courses/terminale/physique_tle_cd_05_champ_magnetique';
 import { PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE } from '../../data/courses/terminale/physique_tle_cd_06_loi_de_laplace';
+import { PHYSIQUE_TLE_CD_L07_INDUCTION_ELECTROMAGNETIQUE } from '../../data/courses/terminale/physique_tle_cd_07_induction_electromagnetique';
+import { PHYSIQUE_TLE_CD_L08_AUTO_INDUCTION } from '../../data/courses/terminale/physique_tle_cd_08_auto_induction';
+import { PHYSIQUE_TLE_CD_L09_MONTAGES_DERINATEUR_INTEGRATEUR } from '../../data/courses/terminale/physique_tle_cd_09_montages_derinateur_integrateur';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
 import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/terminale/geo_tle_problemes_developpement_ci';
@@ -91879,6 +91882,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   PHYSIQUE_TLE_CD_L04_OSCILLATIONS_MECANIQUES,
   PHYSIQUE_TLE_CD_L05_CHAMP_MAGNETIQUE,
   PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE,
+  PHYSIQUE_TLE_CD_L07_INDUCTION_ELECTROMAGNETIQUE,
+  PHYSIQUE_TLE_CD_L08_AUTO_INDUCTION,
+  PHYSIQUE_TLE_CD_L09_MONTAGES_DERINATEUR_INTEGRATEUR,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
   GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI,
