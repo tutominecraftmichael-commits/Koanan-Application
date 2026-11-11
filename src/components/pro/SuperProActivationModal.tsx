@@ -45,7 +45,7 @@ export const SuperProActivationModal: React.FC<SuperProActivationModalProps> = (
       title: "Adaptation Examens & Devoirs",
       desc: EXAM_PREP_PAUSED
         ? EXAM_PREP_PAUSED_MESSAGE
-        : "Indique la date de ton devoir et ses chapitres : séries de 30 questions, sujets de 2 h au format officiel et correction de ta copie sur 20 (2nde A et 2nde C pour l'instant).",
+        : "Indique la date de ton devoir et ses chapitres : séries de 30 questions, sujets de 2 h au format officiel et correction de ta copie sur 20 (2nde A, 2nde C et Tle A pour l'instant).",
       tag: EXAM_PREP_PAUSED ? "Mise à jour" : "Nouveau",
       color: "from-sky-500/20 to-blue-500/10 border-sky-500/30 text-sky-300",
       badgeColor: "bg-sky-500/20 text-sky-300 border-sky-500/40",
@@ -167,7 +167,7 @@ export const SuperProActivationModal: React.FC<SuperProActivationModalProps> = (
               rightIcon={<ArrowRight className="w-5 h-5" />}
               className="w-full text-sm sm:text-base font-black py-4 !bg-gradient-to-r !from-amber-500 !via-yellow-400 !to-amber-500 !text-slate-950 !border-amber-300 shadow-2xl shadow-amber-500/50 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer"
             >
-              Découvrir mon Espace KONAN PRO 🚀
+              Découvrir mon Espace KONAN PRO
             </Button>
             <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-3">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />

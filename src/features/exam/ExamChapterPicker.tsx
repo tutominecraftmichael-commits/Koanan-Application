@@ -6,6 +6,7 @@
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import { BookOpen, Clock } from 'lucide-react';
+import { ChaptersInProgressNote } from '../../components/common/ChaptersInProgressNote';
 import { matchSubjectToStemCurriculum, tryResolveGradeLevel } from '../../lib/curriculum/curriculumMatcher';
 
 export interface ExamChapterPickerProps {
@@ -122,6 +123,7 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
           </div>
         );
       })}
+      <ChaptersInProgressNote />
     </div>
   );
 };

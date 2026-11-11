@@ -567,7 +567,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
             <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-                  ⚡ Adaptation ciblée de l'emploi du temps
+                  Adaptation ciblée de l'emploi du temps
                 </span>
                 <span className="text-[10px] font-semibold text-amber-300/80 uppercase">KONAN PRO</span>
               </div>

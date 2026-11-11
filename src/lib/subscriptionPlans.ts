@@ -165,7 +165,7 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
       { title: 'Time Blocking', detail: 'De longs blocs en mode concentration, sans distraction.' },
       { title: 'Jusqu’à 3 méthodes combinées', detail: 'Dans le même planning, selon tes matières.' },
       { title: 'La recommandation de KONAN', detail: 'La meilleure méthode selon ton temps libre.' },
-      { title: 'Préparation aux devoirs (2nde A et 2nde C)', detail: 'Séries de 30 questions, sujets de 2 h au format officiel, copie corrigée sur 20.' },
+      { title: 'Préparation aux devoirs (2nde A, 2nde C et Tle A)', detail: 'Séries de 30 questions, sujets de 2 h au format officiel (format du BAC en Tle A), copie corrigée sur 20.' },
       { title: 'Planning configuré avec KONAN, pas à pas' },
       { title: 'Imports d’emploi du temps illimités' },
       { title: 'Export vers Google Agenda' },

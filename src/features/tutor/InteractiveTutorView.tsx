@@ -56,6 +56,8 @@ import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
 import { shuffleExerciseOptions } from '../../lib/curriculum/optionShuffle';
 import { soundFX } from '../../lib/audioEffects';
 import { KonanCube } from '../../components/common/KonanCube';
+import { ChaptersInProgressNote } from '../../components/common/ChaptersInProgressNote';
+import { EMPTY_SUBJECT_KONAN_MESSAGE } from '../../lib/contentNotices';
 import { findReviewExercise, forgetReview, getDueReviews, recordReviewAnswer } from '../../lib/curriculum/reviewMemory';
 import { useKonanCoach, KonanCoachBubble } from './konanCoach';
 import { FeynmanChallenge } from './FeynmanChallenge';
@@ -1088,11 +1090,10 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             {subjectTitle}
           </span>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight">
-            Cours en préparation
+            Tes fiches arrivent bientôt
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-            Le cours guidé officiel de <strong>{subjectTitle}</strong> pour ta classe arrive très bientôt.
-            En attendant, révise cette séance avec tes notes de cours.
+            {EMPTY_SUBJECT_KONAN_MESSAGE}
           </p>
         </div>
         <button
@@ -1459,7 +1460,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 Chargement des chapitres officiels de {subCategoryLabel}...
               </div>
             ) : (
-              availableSubChapters.map((ch) => (
+              <>
+              {availableSubChapters.map((ch) => (
                 <button
                   key={ch.id}
                   type="button"
@@ -1475,7 +1477,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   </span>
                   <span className="text-[11px] font-mono text-slate-400 shrink-0 font-semibold">{ch.officialVolumeHours || 10}h</span>
                 </button>
-              ))
+              ))}
+              <ChaptersInProgressNote className="mt-1" />
+              </>
             )}
           </div>
 

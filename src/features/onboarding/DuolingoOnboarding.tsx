@@ -73,7 +73,7 @@ import {
 } from '../../lib/firebase';
 import { checkAccountExists } from '../../services/accountCheck';
 import { generateKonanId } from '../../lib/konanId';
-import { validateStrictEmail } from '../auth/AuthPage';
+import { validateStrictEmail } from '../../lib/emailValidation';
 import type {
   Subject,
   ClassSlot,
