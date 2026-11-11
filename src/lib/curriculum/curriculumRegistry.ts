@@ -17,6 +17,12 @@ import { MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses
 import { MATHS_1RE_D_L12_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_d_suites_numeriques';
 import { MATHS_1RE_D_L13_ORTHOGONALITE_ESPACE } from '../../data/courses/premiere/maths_1re_d_orthogonalite_espace';
 import { MATHS_1RE_D_L15_STATISTIQUES } from '../../data/courses/premiere/maths_1re_d_statistiques';
+import { CHIMIE_TLE_CD_L01_ALCOOLS } from '../../data/courses/terminale/chimie_tle_cd_01_alcools';
+import { CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES } from '../../data/courses/terminale/chimie_tle_cd_02_composes_carbonyles';
+import { CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES } from '../../data/courses/terminale/chimie_tle_cd_03_acides_carboxyliques_et_derives';
+import { CHIMIE_TLE_CD_L04_AMINES } from '../../data/courses/terminale/chimie_tle_cd_04_amines';
+import { CHIMIE_TLE_CD_L05_SAVONS } from '../../data/courses/terminale/chimie_tle_cd_05_savons';
+import { CHIMIE_TLE_CD_L06_SOLUTIONS_AQUEUSES_PH } from '../../data/courses/terminale/chimie_tle_cd_06_solutions_aqueuses_ph';
 import { CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE } from '../../data/courses/terminale/chimie_tle_cd_acide_fort_base_forte';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
@@ -91845,6 +91851,13 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_TLE_D_L05_LOGARITHME_NEPERIEN,
   MATHS_TLE_D_L06_NOMBRES_COMPLEXES,
   MATHS_TLE_D_L10_CALCUL_INTEGRAL,
+  // Terminale C & D — Chimie (format v2 Masterclass)
+  CHIMIE_TLE_CD_L01_ALCOOLS,
+  CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES,
+  CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES,
+  CHIMIE_TLE_CD_L04_AMINES,
+  CHIMIE_TLE_CD_L05_SAVONS,
+  CHIMIE_TLE_CD_L06_SOLUTIONS_AQUEUSES_PH,
   CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
