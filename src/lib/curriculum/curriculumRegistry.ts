@@ -31,6 +31,9 @@ import { CHIMIE_TLE_CD_L11_DOSAGES_SOLUTIONS_TAMPONS } from '../../data/courses/
 import { PHYSIQUE_TLE_CD_L01_CINEMATIQUE_DU_POINT } from '../../data/courses/terminale/physique_tle_cd_01_cinematique_du_point';
 import { PHYSIQUE_TLE_CD_L02_MOUVEMENT_CENTRE_INERTIE } from '../../data/courses/terminale/physique_tle_cd_02_mouvement_centre_inertie';
 import { PHYSIQUE_TLE_CD_L03_CHAMPS_UNIFORMES_G_ET_E } from '../../data/courses/terminale/physique_tle_cd_03_champs_uniformes_g_et_e';
+import { PHYSIQUE_TLE_CD_L04_OSCILLATIONS_MECANIQUES } from '../../data/courses/terminale/physique_tle_cd_04_oscillations_mecaniques';
+import { PHYSIQUE_TLE_CD_L05_CHAMP_MAGNETIQUE } from '../../data/courses/terminale/physique_tle_cd_05_champ_magnetique';
+import { PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE } from '../../data/courses/terminale/physique_tle_cd_06_loi_de_laplace';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
 import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/terminale/geo_tle_problemes_developpement_ci';
@@ -91873,6 +91876,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   PHYSIQUE_TLE_CD_L01_CINEMATIQUE_DU_POINT,
   PHYSIQUE_TLE_CD_L02_MOUVEMENT_CENTRE_INERTIE,
   PHYSIQUE_TLE_CD_L03_CHAMPS_UNIFORMES_G_ET_E,
+  PHYSIQUE_TLE_CD_L04_OSCILLATIONS_MECANIQUES,
+  PHYSIQUE_TLE_CD_L05_CHAMP_MAGNETIQUE,
+  PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
   GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI,
