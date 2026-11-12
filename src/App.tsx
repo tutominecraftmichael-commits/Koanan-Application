@@ -1636,7 +1636,7 @@ export function App() {
     showToast('Votre planning d’étude a été réorganisé avec succès !');
   };
 
-  const handleToggleSessionComplete = (sessionId: string) => {
+  const handleToggleSessionComplete = (sessionId: string, bypassDayCheck: boolean = false) => {
     const target = state.studySessions.find(s => s.id === sessionId);
     if (!target) return;
 
@@ -1645,8 +1645,8 @@ export function App() {
     const currentDayName = dayNames[currentDayIndex];
     const targetDayName = dayNames[target.dayOfWeek] || 'ce jour';
 
-    // Anti-cheat verification: Only allow validating today's study sessions
-    if (target.dayOfWeek !== currentDayIndex) {
+    // Anti-cheat verification: Only allow validating today's study sessions or rescheduled sessions
+    if (!bypassDayCheck && !target.isRescheduledToday && target.dayOfWeek !== currentDayIndex) {
       soundFX.playNotificationPing();
       showToast(`Anti-triche : Vous pouvez uniquement valider les révisions prévues pour aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
       return;
@@ -1738,8 +1738,8 @@ export function App() {
     const currentDayName = dayNames[currentDayIndex];
     const targetDayName = dayNames[session.dayOfWeek] || 'ce jour';
 
-    // Anti-cheat verification: Only allow launching today's study sessions
-    if (session.dayOfWeek !== currentDayIndex) {
+    // Anti-cheat verification: Only allow launching today's study sessions (or rescheduled sessions)
+    if (!session.isRescheduledToday && session.dayOfWeek !== currentDayIndex) {
       soundFX.playNotificationPing();
       showToast(`Anti-triche : Vous pouvez uniquement lancer le chronomètre pour les révisions d'aujourd'hui (${currentDayName}). Cette séance est prévue pour ${targetDayName}.`, 5000);
       return;
@@ -1784,13 +1784,13 @@ export function App() {
       return;
     }
 
-    // Les cours guidés (≈ 7 Mo) ne sont téléchargés qu'ici, au lancement d'une séance de matière à cours
+    // Les cours guidés ne sont chargés qu'ici, au lancement d'une séance de matière à cours
     const wantsTutor = Boolean(resolvedGrade && stemMatchForTutor.stemSubjectId && shouldLaunchInteractiveTutor(subjectName, resolvedGrade));
     let hasChapters = false;
     if (wantsTutor) {
       try {
-        const { getCurriculumChapters } = await import('./lib/curriculum/curriculumRegistry');
-        hasChapters = getCurriculumChapters(stemMatchForTutor.stemSubjectId!, resolvedGrade!).length > 0;
+        const { hasCurriculumChapters } = await import('./lib/curriculum/curriculumRegistry');
+        hasChapters = hasCurriculumChapters(stemMatchForTutor.stemSubjectId!, resolvedGrade!);
       } catch {
         showToast('Connexion trop faible pour charger le cours guidé. Séance lancée en mode chronomètre.', 6000);
         setFocusSession(session);
@@ -1832,7 +1832,7 @@ export function App() {
    */
   const handleCompleteTutorSession = (studySessionId?: string) => {
     if (studySessionId) {
-      handleToggleSessionComplete(studySessionId);
+      handleToggleSessionComplete(studySessionId, true);
     }
     setActiveTutorSession(null);
     setActiveView('dashboard');
