@@ -106,6 +106,7 @@ const InteractiveTutorView = lazyView(() => import('./features/tutor/Interactive
 const ExamQcmView = lazyView(() => import('./features/exam/ExamQcmView').then(m => m.ExamQcmView));
 const ExamSujetView = lazyView(() => import('./features/exam/ExamSujetView').then(m => m.ExamSujetView));
 import type { StemSubjectId, CurriculumGradeLevel } from './lib/curriculum/types';
+import { formatExactDurationFrench } from './lib/exam/examPrepRules';
 
 export function App() {
   const [state, setState] = useState<AppState>(() => loadAppState());
@@ -1827,16 +1828,17 @@ export function App() {
   };
 
   /**
-   * Callback de complétion du Tuteur Interactif Duolingo :
-   * Valide la séance, incrémente les statistiques et affiche la célébration.
+   * Callback de complétion du Tuteur Interactif Duolingo / Séries de préparation examen :
+   * Valide la séance, incrémente les statistiques et affiche la célébration avec le temps exact réalisé.
    */
-  const handleCompleteTutorSession = (studySessionId?: string) => {
+  const handleCompleteTutorSession = (studySessionId?: string, durationSec?: number) => {
     if (studySessionId) {
       handleToggleSessionComplete(studySessionId, true);
     }
     setActiveTutorSession(null);
     setActiveView('dashboard');
-    showToast('Félicitations ! Séance validée avec succès dans ton tuteur interactif KONAN !', 6000);
+    const timeInfo = durationSec ? ` en exactement ${formatExactDurationFrench(durationSec)}` : '';
+    showToast(`Félicitations ! Séance validée avec succès${timeInfo} dans ton tuteur interactif KONAN !`, 7000);
   };
 
   /**
@@ -2384,9 +2386,9 @@ export function App() {
                 setActiveExamSession(null);
                 setActiveView('dashboard');
               }}
-              onComplete={(sessionId) => {
+              onComplete={(sessionId, durationSec) => {
                 setActiveExamSession(null);
-                handleCompleteTutorSession(sessionId);
+                handleCompleteTutorSession(sessionId, durationSec);
               }}
             />
           ) : (
@@ -2400,7 +2402,7 @@ export function App() {
                 setActiveExamSession(null);
                 setActiveView('dashboard');
               }}
-              onComplete={(sessionId) => {
+              onComplete={(sessionId: string) => {
                 setActiveExamSession(null);
                 handleCompleteTutorSession(sessionId);
               }}

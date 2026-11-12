@@ -126,3 +126,39 @@ export function examPrepSessionText(
     ],
   };
 }
+
+/**
+ * Formate une durée exacte en secondes en français naturel et soigné.
+ * Exemples :
+ * - 45 -> "45 secondes"
+ * - 60 -> "1 minute"
+ * - 72 -> "1 minute et 12 secondes"
+ * - 1475 -> "24 minutes et 35 secondes"
+ * - 3600 -> "1 heure"
+ * - 3665 -> "1 heure, 1 minute et 5 secondes"
+ */
+export function formatExactDurationFrench(totalSeconds: number): string {
+  const sec = Math.max(0, Math.round(totalSeconds));
+  if (sec === 0) return '0 seconde';
+
+  const hours = Math.floor(sec / 3600);
+  const minutes = Math.floor((sec % 3600) / 60);
+  const seconds = sec % 60;
+
+  const parts: string[] = [];
+  if (hours > 0) {
+    parts.push(`${hours} heure${hours > 1 ? 's' : ''}`);
+  }
+  if (minutes > 0) {
+    parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+  }
+  if (seconds > 0 || parts.length === 0) {
+    parts.push(`${seconds} seconde${seconds > 1 ? 's' : ''}`);
+  }
+
+  if (parts.length === 0) return '0 seconde';
+  if (parts.length === 1) return parts[0];
+  if (parts.length === 2) return `${parts[0]} et ${parts[1]}`;
+  return `${parts[0]}, ${parts[1]} et ${parts[2]}`;
+}
+
