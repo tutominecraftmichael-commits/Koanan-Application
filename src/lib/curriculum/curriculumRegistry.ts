@@ -55,6 +55,9 @@ import { SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR } from '../../data/co
 import { SVT_TLE_D_L07_ORGANES_SEXUELS_HOMME } from '../../data/courses/terminale/svt_tle_d_07_organes_sexuels_homme';
 import { SVT_TLE_D_L08_DEVENIR_CELLULES_SEXUELLES } from '../../data/courses/terminale/svt_tle_d_08_devenir_cellules_sexuelles';
 import { SVT_TLE_D_L09_INFECTION_VIH_SIDA } from '../../data/courses/terminale/svt_tle_d_09_infection_vih_sida';
+import { SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES } from '../../data/courses/terminale/svt_tle_d_10_reproduction_chez_les_spermaphytes';
+import { SVT_TLE_D_L11_TRANSMISSION_UN_CARACTERE_HOMME } from '../../data/courses/terminale/svt_tle_d_11_transmission_un_caractere_homme';
+import { SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS } from '../../data/courses/terminale/svt_tle_d_12_transmission_deux_caracteres_etres_vivants';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
 import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/terminale/geo_tle_problemes_developpement_ci';
@@ -79594,6 +79597,9 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
   SVT_TLE_D_L07_ORGANES_SEXUELS_HOMME,
   SVT_TLE_D_L08_DEVENIR_CELLULES_SEXUELLES,
   SVT_TLE_D_L09_INFECTION_VIH_SIDA,
+  SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES,
+  SVT_TLE_D_L11_TRANSMISSION_UN_CARACTERE_HOMME,
+  SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS,
   {
     "id": "terminale_d_svt_ch8_geodynamique_interne_et_tectonique_des_plaques",
     "subjectId": "svt",
@@ -91065,6 +91071,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   SVT_TLE_D_L07_ORGANES_SEXUELS_HOMME,
   SVT_TLE_D_L08_DEVENIR_CELLULES_SEXUELLES,
   SVT_TLE_D_L09_INFECTION_VIH_SIDA,
+  SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES,
+  SVT_TLE_D_L11_TRANSMISSION_UN_CARACTERE_HOMME,
+  SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
   GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI,
