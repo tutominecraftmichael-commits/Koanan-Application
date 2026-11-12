@@ -522,3 +522,4 @@ export const MATHS_TLE_D_L11_STATISTIQUE_DEUX_VARIABLES: CurriculumChapter = {
     }
   ]
 };
+
