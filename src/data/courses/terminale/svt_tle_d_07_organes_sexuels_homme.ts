@@ -489,3 +489,4 @@ export const SVT_TLE_D_L07_ORGANES_SEXUELS_HOMME: CurriculumChapter = {
     }
   ]
 };
+
