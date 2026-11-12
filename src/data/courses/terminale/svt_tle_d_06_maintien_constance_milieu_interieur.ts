@@ -498,3 +498,4 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
     }
   ]
 };
+
