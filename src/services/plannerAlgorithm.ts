@@ -85,7 +85,8 @@ export function generateOptimizedStudyPlan(
   const subjectScores = revisableSubjects.map(sub => {
     let examUrgencyFactor = 1.0;
     // L'adaptation et la sur-pondération aux examens/devoirs est EXCLUSIVE aux modèles PRO & PLUS
-    if (isExamFeatureAllowed) {
+    // et conditionnée à la présence explicite d'une date ET d'un type d'évaluation saisis par l'élève
+    if (isExamFeatureAllowed && sub.examDate && sub.examType) {
       const daysUntilExam = getDaysRemaining(sub.examDate);
       if (daysUntilExam !== null) {
         if (daysUntilExam < 0) {
@@ -253,7 +254,7 @@ export function generateOptimizedStudyPlan(
     'exercises',
     'deep_summary',
     'flashcards',
-    'exam_simulation',
+    'exercises',
     'consolidation'
   ];
 
@@ -333,9 +334,12 @@ export function generateOptimizedStudyPlan(
             const bDaysToExam = getDaysRemainingFrom(b.subject.examDate, sessionDate);
 
             // Préparation au devoir (J-14 à J-1) : une séance CHAQUE jour pour la matière concernée,
-            // la plus proche de son épreuve d'abord (sujets de 2 h obligatoires de J-3 à J-1)
-            const aPrep = isExamFeatureAllowed && examPrepModeFor(aDaysToExam, a.subject) !== null;
-            const bPrep = isExamFeatureAllowed && examPrepModeFor(bDaysToExam, b.subject) !== null;
+            // la plus proche de son épreuve d'abord (sujets de 2 h obligatoires de J-3 à J-1),
+            // uniquement si la date ET le type d'évaluation ont été explicitement renseignés.
+            const aHasExam = Boolean(a.subject.examDate && a.subject.examType);
+            const bHasExam = Boolean(b.subject.examDate && b.subject.examType);
+            const aPrep = isExamFeatureAllowed && aHasExam && examPrepModeFor(aDaysToExam, a.subject) !== null;
+            const bPrep = isExamFeatureAllowed && bHasExam && examPrepModeFor(bDaysToExam, b.subject) !== null;
             if (aPrep && !bPrep) return -1;
             if (!aPrep && bPrep) return 1;
             if (aPrep && bPrep && aDaysToExam !== bDaysToExam) return aDaysToExam! - bDaysToExam!;
@@ -392,7 +396,9 @@ export function generateOptimizedStudyPlan(
                   return slotCurrentStart < 720;
                 }
                 // Préparation au devoir : UNE séance par jour (jamais deux sujets de 2 h le même jour)
-                if (scheduledSubjectsToday.has(item.subject.id) && examPrepModeFor(daysToExam, item.subject) !== null) {
+                // Uniquement si une date ET un type d'évaluation sont saisis
+                const hasExam = Boolean(item.subject.examDate && item.subject.examType);
+                if (hasExam && scheduledSubjectsToday.has(item.subject.id) && examPrepModeFor(daysToExam, item.subject) !== null) {
                   return false;
                 }
               }
@@ -414,9 +420,15 @@ export function generateOptimizedStudyPlan(
           : 'Chapitre clé & Fondamentaux';
 
         const sessionType = sessionTypeCycle[bestCandidate.scheduledCount % sessionTypeCycle.length];
-        const daysUntilExamOnDate = isExamFeatureAllowed ? getDaysRemainingFrom(subject.examDate, sessionDate) : null;
+        // Évaluation active uniquement si la date ET le type d'évaluation ont été explicitement saisis
+        const hasExamScheduled = Boolean(subject.examDate && subject.examType);
+        const daysUntilExamOnDate = (isExamFeatureAllowed && hasExamScheduled)
+          ? getDaysRemainingFrom(subject.examDate, sessionDate)
+          : null;
         // Type de séance de préparation pour CE jour (30 questions, sujet de 2 h ou chrono 75 min), sinon null
-        const examMode = isExamFeatureAllowed ? examPrepModeFor(daysUntilExamOnDate, subject) : null;
+        const examMode = (isExamFeatureAllowed && hasExamScheduled)
+          ? examPrepModeFor(daysUntilExamOnDate, subject)
+          : null;
         const isExamApproaching = examMode !== null;
 
         // Stratégie d'espacement active pour cette session (Mono-méthode ou Combinaison Triple KONAN PRO)
@@ -699,7 +711,7 @@ export function synchronizeSessionsWithExamCountdowns(
     if (session.completed) return session; // Ne JAMAIS altérer une session déjà validée
 
     const subject = subjectsMap.get(session.subjectId);
-    if (!subject || !subject.examDate) return session;
+    if (!subject || !subject.examDate || !subject.examType) return session;
     const dayKey = `${session.dayOfWeek}|${session.subjectId}`;
     if (prepDays.has(dayKey)) return session;
 

@@ -744,10 +744,17 @@ export function recordCompletedTutorSession(
   const updatedMastered = Array.from(new Set([...currentSubProg.masteredPointIds, ...completedItems.map(item => item.point.id)]));
   const updatedCompletedChapters = [...currentSubProg.completedChapterIds];
 
-  // Marquer les chapitres dont le dernier point a été complété
+  // Marquer un chapitre comme terminé UNIQUEMENT lorsque TOUTES ses mini-leçons sont maîtrisées.
+  // La fin d'un chapitre ne doit JAMAIS être décrétée sur une seule mini-leçon isolée :
+  // l'élève doit avoir validé l'ensemble des points clés du chapitre (ex: 3, 4, 5 ou 7 mini-leçons).
   for (const item of completedItems) {
-    if (item.isLastPointOfChapter && !updatedCompletedChapters.includes(item.chapterId)) {
-      updatedCompletedChapters.push(item.chapterId);
+    const chapterObj = subChapters.find(c => c.id === item.chapterId) || allChapters.find(c => c.id === item.chapterId);
+    if (chapterObj && !updatedCompletedChapters.includes(item.chapterId)) {
+      const allPointsMastered = chapterObj.points.length > 0 &&
+        chapterObj.points.every(p => updatedMastered.includes(p.id));
+      if (allPointsMastered) {
+        updatedCompletedChapters.push(item.chapterId);
+      }
     }
   }
 

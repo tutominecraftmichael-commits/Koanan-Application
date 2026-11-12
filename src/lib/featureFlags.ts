@@ -12,7 +12,7 @@ import { isExamPrepGrade } from './exam/examPrepRules';
 export const EXAM_PREP_PAUSED = false;
 
 export const EXAM_PREP_PAUSED_TITLE = 'Préparation aux devoirs et examens';
-export const EXAM_PREP_PAUSED_MESSAGE = 'Disponible pour l’instant en 2nde A, 2nde C et Tle A. Ta classe arrive bientôt.';
+export const EXAM_PREP_PAUSED_MESSAGE = 'Disponible pour l’instant en 2nde A, 2nde C, Tle A et Tle D. Ta classe arrive bientôt.';
 
 /** La préparation aux devoirs est-elle ouverte pour cette classe ? */
 export function isExamPrepOpenFor(rawGrade?: string | null): boolean {

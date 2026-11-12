@@ -15,9 +15,17 @@ import { tryResolveGradeLevel } from '../curriculum/curriculumMatcher';
 
 /**
  * Classes où la préparation aux devoirs est ouverte (il y a des cours et des QCM).
- * Terminale A1 / A2 : sujets au format du BAC (modèles TERMINALE_A_TEMPLATES dans api/_examTemplates.js).
+ * Terminale A / A1 / A2 : sujets au format du BAC (modèles TERMINALE_A_TEMPLATES dans api/_examTemplates.js).
+ * Terminale D : sujets et séries de 30 questions selon le programme officiel complet.
  */
-export const EXAM_PREP_GRADES = ['seconde_a', 'seconde_c', 'terminale_a1', 'terminale_a2'] as const;
+export const EXAM_PREP_GRADES = [
+  'seconde_a',
+  'seconde_c',
+  'terminale_a1',
+  'terminale_a2',
+  'terminale_a',
+  'terminale_d',
+] as const;
 
 /**
  * Matières qui ont un modèle de sujet de 2 h (api/_examTemplates.js).
