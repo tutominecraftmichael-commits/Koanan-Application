@@ -42,6 +42,75 @@ export const SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS: CurriculumChapt
       visualSchema: {
         type: "custom_svg",
         title: "Échiquier de croisement F1 x F1 en dihybridisme à gènes indépendants (16 cases)",
+        caption: "La 3e loi de Mendel (ségrégation indépendante) produit en F2 les 16 combinaisons et les célèbres proportions : 9/16, 3/16, 3/16, 1/16.",
+        svgContent: `<svg viewBox="0 0 620 310" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Échiquier 16 cases de Mendel">
+  <rect x="10" y="10" width="600" height="290" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Légende des 4 phénotypes F2 -->
+  <rect x="30" y="25" width="12" height="12" rx="3" fill="#F59E0B" />
+  <text x="48" y="35" font-size="9" font-weight="bold" fill="#B45309">9/16 [R, J] (Rond Jaune)</text>
+
+  <rect x="180" y="25" width="12" height="12" rx="3" fill="#3B82F6" />
+  <text x="198" y="35" font-size="9" font-weight="bold" fill="#1D4ED8">3/16 [R, j] (Rond vert)</text>
+
+  <rect x="320" y="25" width="12" height="12" rx="3" fill="#10B981" />
+  <text x="338" y="35" font-size="9" font-weight="bold" fill="#047857">3/16 [r, J] (ridé Jaune)</text>
+
+  <rect x="460" y="25" width="12" height="12" rx="3" fill="#EC4899" />
+  <text x="478" y="35" font-size="9" font-weight="bold" fill="#BE185D">1/16 [r, j] (ridé vert)</text>
+
+  <!-- Grille 4x4 (cases de 80x50) -->
+  <!-- Ligne d'en-tête gamètes ♀ -->
+  <text x="100" y="65" font-size="9" font-weight="bold" fill="#475569">♂ \\ ♀</text>
+  <text x="190" y="65" font-size="9" font-weight="bold" fill="#475569" text-anchor="middle">1/4 (R, J)</text>
+  <text x="280" y="65" font-size="9" font-weight="bold" fill="#475569" text-anchor="middle">1/4 (R, j)</text>
+  <text x="370" y="65" font-size="9" font-weight="bold" fill="#475569" text-anchor="middle">1/4 (r, J)</text>
+  <text x="460" y="65" font-size="9" font-weight="bold" fill="#475569" text-anchor="middle">1/4 (r, j)</text>
+
+  <!-- Ligne 1 : Gamète ♂ 1/4 (R, J) -->
+  <text x="100" y="105" font-size="9" font-weight="bold" fill="#475569">1/4 (R,J)</text>
+  <rect x="150" y="80" width="80" height="45" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+  <text x="190" y="105" font-size="9" font-weight="bold" fill="#B45309" text-anchor="middle">[R, J]</text>
+  <rect x="240" y="80" width="80" height="45" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+  <text x="280" y="105" font-size="9" font-weight="bold" fill="#B45309" text-anchor="middle">[R, J]</text>
+  <rect x="330" y="80" width="80" height="45" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+  <text x="370" y="105" font-size="9" font-weight="bold" fill="#B45309" text-anchor="middle">[R, J]</text>
+  <rect x="420" y="80" width="80" height="45" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+  <text x="460" y="105" font-size="9" font-weight="bold" fill="#B45309" text-anchor="middle">[R, J]</text>
+
+  <!-- Ligne 2 : Gamète ♂ 1/4 (R, j) -->
+  <text x="100" y="155" font-size="9" font-weight="bold" fill="#475569">1/4 (R,j)</text>
+  <rect x="150" y="130" width="80" height="45" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+  <text x="190" y="155" font-size="9" font-weight="bold" fill="#B45309" text-anchor="middle">[R, J]</text>
+  <rect x="240" y="130" width="80" height="45" rx="4" fill="#DBEAFE" stroke="#3B82F6" />
+  <text x="280" y="155" font-size="9" font-weight="bold" fill="#1D4ED8" text-anchor="middle">[R, j]</text>
+  <rect x="330" y="130" width="80" height="45" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+  <text x="370" y="155" font-size="9" font-weight="bold" fill="#B45309" text-anchor="middle">[R, J]</text>
+  <rect x="420" y="130" width="80" height="45" rx="4" fill="#DBEAFE" stroke="#3B82F6" />
+  <text x="460" y="155" font-size="9" font-weight="bold" fill="#1D4ED8" text-anchor="middle">[R, j]</text>
+
+  <!-- Ligne 3 : Gamète ♂ 1/4 (r, J) -->
+  <text x="100" y="205" font-size="9" font-weight="bold" fill="#475569">1/4 (r,J)</text>
+  <rect x="150" y="180" width="80" height="45" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+  <text x="190" y="205" font-size="9" font-weight="bold" fill="#B45309" text-anchor="middle">[R, J]</text>
+  <rect x="240" y="180" width="80" height="45" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+  <text x="280" y="205" font-size="9" font-weight="bold" fill="#B45309" text-anchor="middle">[R, J]</text>
+  <rect x="330" y="180" width="80" height="45" rx="4" fill="#D1FAE5" stroke="#10B981" />
+  <text x="370" y="205" font-size="9" font-weight="bold" fill="#047857" text-anchor="middle">[r, J]</text>
+  <rect x="420" y="180" width="80" height="45" rx="4" fill="#D1FAE5" stroke="#10B981" />
+  <text x="460" y="205" font-size="9" font-weight="bold" fill="#047857" text-anchor="middle">[r, J]</text>
+
+  <!-- Ligne 4 : Gamète ♂ 1/4 (r, j) -->
+  <text x="100" y="255" font-size="9" font-weight="bold" fill="#475569">1/4 (r,j)</text>
+  <rect x="150" y="230" width="80" height="45" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+  <text x="190" y="255" font-size="9" font-weight="bold" fill="#B45309" text-anchor="middle">[R, J]</text>
+  <rect x="240" y="230" width="80" height="45" rx="4" fill="#DBEAFE" stroke="#3B82F6" />
+  <text x="280" y="255" font-size="9" font-weight="bold" fill="#1D4ED8" text-anchor="middle">[R, j]</text>
+  <rect x="330" y="230" width="80" height="45" rx="4" fill="#D1FAE5" stroke="#10B981" />
+  <text x="370" y="255" font-size="9" font-weight="bold" fill="#047857" text-anchor="middle">[r, J]</text>
+  <rect x="420" y="230" width="80" height="45" rx="4" fill="#FCE7F3" stroke="#EC4899" />
+  <text x="460" y="255" font-size="9" font-weight="bold" fill="#BE185D" text-anchor="middle">[r, j]</text>
+</svg>`,
         tableData: {
           headers: ["Gamètes ♂ \\ ♀", "1/4 (R, J)", "1/4 (R, j)", "1/4 (r, J)", "1/4 (r, j)"],
           rows: [
@@ -280,6 +349,62 @@ export const SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS: CurriculumChapt
       visualSchema: {
         type: "custom_svg",
         title: "Comparaison Linkage Absolu (Mâle) vs Linkage Partiel (Femelle) chez la Drosophile",
+        caption: "Mécanisme cytologique du Crossing-over en prophase I de méiose : formation du chiasma et échange réciproque de segments entre chromatides non-sœurs.",
+        svgContent: `<svg viewBox="0 0 620 280" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Crossing-Over en prophase I">
+  <rect x="10" y="10" width="600" height="260" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Étape 1 : Appariement des chromosomes homologues -->
+  <g transform="translate(30, 30)">
+    <rect x="0" y="0" width="160" height="200" rx="8" fill="#F8FAFC" stroke="#E2E8F0" />
+    <text x="80" y="25" font-size="9" font-weight="bold" fill="#334155" text-anchor="middle">1. Homologues dupliqués</text>
+    <!-- Chromosome 1 (Bleu) -->
+    <line x1="50" y1="50" x2="50" y2="180" stroke="#3B82F6" stroke-width="6" stroke-linecap="round" />
+    <line x1="65" y1="50" x2="65" y2="180" stroke="#3B82F6" stroke-width="6" stroke-linecap="round" />
+    <text x="45" y="75" font-size="8" font-weight="bold" fill="#1D4ED8">A</text>
+    <text x="45" y="155" font-size="8" font-weight="bold" fill="#1D4ED8">B</text>
+    <!-- Chromosome 2 (Rouge) -->
+    <line x1="95" y1="50" x2="95" y2="180" stroke="#EF4444" stroke-width="6" stroke-linecap="round" />
+    <line x1="110" y1="50" x2="110" y2="180" stroke="#EF4444" stroke-width="6" stroke-linecap="round" />
+    <text x="115" y="75" font-size="8" font-weight="bold" fill="#B91C1C">a</text>
+    <text x="115" y="155" font-size="8" font-weight="bold" fill="#B91C1C">b</text>
+  </g>
+
+  <!-- Étape 2 : Chiasma en Prophase I -->
+  <g transform="translate(225, 30)">
+    <rect x="0" y="0" width="165" height="200" rx="8" fill="#FEF3C7" stroke="#F59E0B" />
+    <text x="82" y="25" font-size="9" font-weight="bold" fill="#B45309" text-anchor="middle">2. Chiasma (Enjambement)</text>
+    <!-- Chromatides externes intactes -->
+    <line x1="45" y1="50" x2="45" y2="180" stroke="#3B82F6" stroke-width="5" stroke-linecap="round" />
+    <line x1="120" y1="50" x2="120" y2="180" stroke="#EF4444" stroke-width="5" stroke-linecap="round" />
+    <!-- Chromatides internes qui se croisent -->
+    <path d="M 65 50 L 65 105 L 100 135 L 100 180" stroke="#3B82F6" stroke-width="5" fill="none" stroke-linecap="round" />
+    <path d="M 100 50 L 100 105 L 65 135 L 65 180" stroke="#EF4444" stroke-width="5" fill="none" stroke-linecap="round" />
+    <circle cx="82" cy="120" r="10" fill="none" stroke="#D97706" stroke-width="2" stroke-dasharray="2 2" />
+    <text x="82" y="145" font-size="8" font-weight="bold" fill="#92400E" text-anchor="middle">Chiasma</text>
+  </g>
+
+  <!-- Étape 3 : 4 Gamètes résultants -->
+  <g transform="translate(425, 30)">
+    <rect x="0" y="0" width="165" height="200" rx="8" fill="#ECFDF5" stroke="#10B981" />
+    <text x="82" y="25" font-size="9" font-weight="bold" fill="#047857" text-anchor="middle">3. 4 types de gamètes</text>
+    <!-- Gamète 1 : Parental A B (Bleu) -->
+    <line x1="30" y1="50" x2="30" y2="160" stroke="#3B82F6" stroke-width="5" stroke-linecap="round" />
+    <text x="30" y="175" font-size="8" font-weight="bold" fill="#1D4ED8" text-anchor="middle">[A B]</text>
+    <!-- Gamète 2 : Recombiné A b (Bleu + Rouge) -->
+    <line x1="65" y1="50" x2="65" y2="110" stroke="#3B82F6" stroke-width="5" stroke-linecap="round" />
+    <line x1="65" y1="110" x2="65" y2="160" stroke="#EF4444" stroke-width="5" stroke-linecap="round" />
+    <text x="65" y="175" font-size="8" font-weight="bold" fill="#7C3AED" text-anchor="middle">[A b]*</text>
+    <!-- Gamète 3 : Recombiné a B (Rouge + Bleu) -->
+    <line x1="100" y1="50" x2="100" y2="110" stroke="#EF4444" stroke-width="5" stroke-linecap="round" />
+    <line x1="100" y1="110" x2="100" y2="160" stroke="#3B82F6" stroke-width="5" stroke-linecap="round" />
+    <text x="100" y="175" font-size="8" font-weight="bold" fill="#7C3AED" text-anchor="middle">[a B]*</text>
+    <!-- Gamète 4 : Parental a b (Rouge) -->
+    <line x1="135" y1="50" x2="135" y2="160" stroke="#EF4444" stroke-width="5" stroke-linecap="round" />
+    <text x="135" y="175" font-size="8" font-weight="bold" fill="#B91C1C" text-anchor="middle">[a b]</text>
+
+    <text x="82" y="192" font-size="7" fill="#065F46" text-anchor="middle">* Recombinés minoritaires</text>
+  </g>
+</svg>`,
         tableData: {
           headers: ["Paramètre", "Test-cross avec Mâle F1", "Test-cross avec Femelle F1"],
           rows: [

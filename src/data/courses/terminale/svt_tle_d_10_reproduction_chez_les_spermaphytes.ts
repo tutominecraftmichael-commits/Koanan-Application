@@ -160,6 +160,51 @@ export const SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Anatomie de l'ovule anatrope et composition du sac embryonnaire",
+        caption: "Coupe d'un ovule anatrope montrant le sac embryonnaire à maturité : 7 cellules et 8 noyaux répartis entre les deux pôles.",
+        svgContent: `<svg viewBox="0 0 620 330" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Ovule anatrope et sac embryonnaire">
+  <rect x="10" y="10" width="600" height="310" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Téguments et nucelle ovule -->
+  <path d="M 220 50 C 130 50, 100 130, 100 200 C 100 270, 160 290, 240 290 C 260 290, 275 270, 275 250" fill="none" stroke="#64748B" stroke-width="4" />
+  <path d="M 220 70 C 150 70, 125 135, 125 195 C 125 255, 175 270, 235 270" fill="none" stroke="#94A3B8" stroke-width="3" />
+  <text x="70" y="90" font-size="9" fill="#64748B">Téguments (Primine &amp; Secondine)</text>
+  <line x1="120" y1="95" x2="160" y2="120" stroke="#64748B" stroke-width="1" />
+
+  <!-- Micropyle (ouverture inférieure) -->
+  <text x="250" y="305" font-size="9" font-weight="bold" fill="#D97706">Micropyle (entrée tube pollinique)</text>
+
+  <!-- Chalaze (pôle opposé supérieur) -->
+  <text x="220" y="40" font-size="9" font-weight="bold" fill="#475569" text-anchor="middle">Pôle Chalazien (Chalaze)</text>
+
+  <!-- Sac embryonnaire (ovale central) -->
+  <ellipse cx="220" cy="170" rx="65" ry="90" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2" />
+  <text x="320" y="140" font-size="10" font-weight="bold" fill="#B45309">SAC EMBRYONNAIRE</text>
+  <text x="320" y="155" font-size="8" fill="#78350F">(Gamétophyte femelle : 7 cellules / 8 noyaux)</text>
+
+  <!-- 3 Antipodes (Pôle chalazien, en haut) -->
+  <circle cx="200" cy="105" r="9" fill="#E2E8F0" stroke="#64748B" />
+  <circle cx="220" cy="100" r="9" fill="#E2E8F0" stroke="#64748B" />
+  <circle cx="240" cy="105" r="9" fill="#E2E8F0" stroke="#64748B" />
+  <line x1="250" y1="105" x2="330" y2="105" stroke="#64748B" stroke-width="1" />
+  <text x="335" y="108" font-size="9" font-weight="bold" fill="#475569">3 Antipodes (n)</text>
+
+  <!-- 2 Noyaux du sac (Noyaux polaires, au centre) -->
+  <circle cx="213" cy="168" r="8" fill="#FDE68A" stroke="#D97706" />
+  <circle cx="227" cy="168" r="8" fill="#FDE68A" stroke="#D97706" />
+  <line x1="240" y1="170" x2="330" y2="170" stroke="#D97706" stroke-width="1" />
+  <text x="335" y="173" font-size="9" font-weight="bold" fill="#B45309">2 Noyaux polaires centraux (n + n)</text>
+  <text x="335" y="185" font-size="8" fill="#78350F">Futur albumen triploïde (3n)</text>
+
+  <!-- Oosphère et 2 Synergides (Pôle micropylaire, en bas) -->
+  <circle cx="220" cy="235" r="13" fill="#FCE7F3" stroke="#EC4899" stroke-width="1.5" />
+  <circle cx="198" cy="242" r="9" fill="#E0E7FF" stroke="#6366F1" />
+  <circle cx="242" cy="242" r="9" fill="#E0E7FF" stroke="#6366F1" />
+  <line x1="240" y1="235" x2="330" y2="225" stroke="#EC4899" stroke-width="1" />
+  <text x="335" y="228" font-size="9" font-weight="bold" fill="#BE185D">Oosphère (n) [Gamète femelle]</text>
+  <text x="335" y="240" font-size="8" fill="#9D174D">Futur embryon diploïde (2n)</text>
+  <line x1="255" y1="250" x2="330" y2="258" stroke="#6366F1" stroke-width="1" />
+  <text x="335" y="261" font-size="9" font-weight="bold" fill="#4338CA">2 Synergides (n)</text>
+</svg>`,
         tableData: {
           headers: ["Pôle / Région", "Cellules composantes", "Nombre de noyaux", "Fonction biologique majeure"],
           rows: [
@@ -399,6 +444,37 @@ export const SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Bilan des transformations de la fleur après la double fécondation",
+        caption: "La double fécondation exclusive aux Angiospermes : formation simultanée du zygote principal (embryon 2n) et du zygote accessoire (albumen 3n).",
+        svgContent: `<svg viewBox="0 0 620 280" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Double fécondation chez les Angiospermes">
+  <rect x="10" y="10" width="600" height="260" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Tube pollinique arrivant avec 2 anthérozoïdes -->
+  <path d="M 30 140 L 150 140" stroke="#10B981" stroke-width="8" stroke-linecap="round" />
+  <circle cx="110" cy="140" r="6" fill="#047857" />
+  <text x="110" y="125" font-size="8" font-weight="bold" fill="#047857" text-anchor="middle">Anthérozoïde 1 (n)</text>
+  <circle cx="140" cy="140" r="6" fill="#047857" />
+  <text x="140" y="160" font-size="8" font-weight="bold" fill="#047857" text-anchor="middle">Anthérozoïde 2 (n)</text>
+  <text x="70" y="120" font-size="9" font-weight="bold" fill="#059669">Tube pollinique</text>
+
+  <!-- Bifurcation vers les deux fécondations -->
+  <path d="M 160 135 C 190 100, 220 80, 260 80" fill="none" stroke="#6366F1" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 160 145 C 190 180, 220 200, 260 200" fill="none" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Fécondation 1 : Principale -->
+  <rect x="270" y="55" width="320" height="60" rx="8" fill="#EEF2FF" stroke="#6366F1" stroke-width="1.5" />
+  <text x="285" y="75" font-size="10" font-weight="bold" fill="#4338CA">1ʳᵉ FÉCONDATION (Principale)</text>
+  <text x="285" y="92" font-size="9" fill="#1E1B4B">Anthérozoïde (n) + Oosphère (n)</text>
+  <text x="285" y="106" font-size="9" font-weight="bold" fill="#4F46E5">→ Zygote principal / Embryon (2n)</text>
+
+  <!-- Fécondation 2 : Accessoire -->
+  <rect x="270" y="165" width="320" height="65" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="285" y="185" font-size="10" font-weight="bold" fill="#B45309">2ᵉ FÉCONDATION (Accessoire)</text>
+  <text x="285" y="202" font-size="9" fill="#78350F">Anthérozoïde (n) + 2 Noyaux centraux (n + n)</text>
+  <text x="285" y="218" font-size="9" font-weight="bold" fill="#D97706">→ Zygote accessoire / Albumen triploïde (3n)</text>
+
+  <!-- Flèche résultat final -->
+  <text x="430" y="250" font-size="10" font-weight="bold" fill="#059669" text-anchor="middle">Ovule fécondé → GRAINE  |  Paroi ovaire → FRUIT</text>
+</svg>`,
         tableData: {
           headers: ["Structure florale initiale", "Événement de fécondation", "Structure finale obtenue", "Ploïdie nucléaire"],
           rows: [
