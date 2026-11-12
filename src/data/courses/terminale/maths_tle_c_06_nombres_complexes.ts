@@ -1177,7 +1177,7 @@ const p07Steps: StructuredLessonStep[] = [
         '$e^{i2\\pi}$',
       ],
       correctAnswerIndex: 1,
-      explanation: 'L’indice $k$ parcourt exactement $\{0, 1, 2, 3, 4\}$ (soit $n = 5$ racines, jusqu’à $n - 1 = 4$) : la somme des $5$ racines cinquièmes de l’unité vaut $0$.',
+      explanation: 'L’indice $k$ parcourt exactement $\\{0, 1, 2, 3, 4\\}$ (soit $n = 5$ racines, jusqu’à $n - 1 = 4$) : la somme des $5$ racines cinquièmes de l’unité vaut $0$.',
     },
   },
   {

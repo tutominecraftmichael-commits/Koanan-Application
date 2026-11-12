@@ -355,7 +355,7 @@ const p03Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Limites de $\\ln$ en $+\\infty$ et en $0^+$ (asymptote verticale)',
     paragraphText:
-      'La fonction $\\ln$ n’est pas majorée sur $]0 ; +\\infty[$ car pour tout entier $n \\geqslant 1$, $\\ln(2^n) = n\\ln 2 \\xrightarrow[n\\to+\\infty]{} +\\infty$ ($\ln 2 > 0$). Comme $\\ln$ est croissante, $\\lim_{x \\to +\\infty} \\ln x = +\\infty$. En posant $x = \\frac{1}{t}$ avec $t \\to +\\infty$, on obtient $\\lim_{x \\to 0^+} \\ln x = \\lim_{t \\to +\\infty} (-\\ln t) = -\\infty$ : la droite d’équation $x = 0$ (l’axe des ordonnées) est asymptote verticale à $\\mathcal{C}_{\\ln}$.',
+      'La fonction $\\ln$ n’est pas majorée sur $]0 ; +\\infty[$ car pour tout entier $n \\geqslant 1$, $\\ln(2^n) = n\\ln 2 \\xrightarrow[n\\to+\\infty]{} +\\infty$ ($\\ln 2 > 0$). Comme $\\ln$ est croissante, $\\lim_{x \\to +\\infty} \\ln x = +\\infty$. En posant $x = \\frac{1}{t}$ avec $t \\to +\\infty$, on obtient $\\lim_{x \\to 0^+} \\ln x = \\lim_{t \\to +\\infty} (-\\ln t) = -\\infty$ : la droite d’équation $x = 0$ (l’axe des ordonnées) est asymptote verticale à $\\mathcal{C}_{\\ln}$.',
     formula: {
       name: 'Limites fondamentales de ln',
       formula: '\\lim_{x \\to +\\infty} \\ln x = +\\infty \\quad ; \\quad \\lim_{x \\to 0^+} \\ln x = -\\infty',
@@ -806,7 +806,7 @@ const p05Steps: StructuredLessonStep[] = [
     stepTheme: 'blue',
     stepTitle: 'Le logarithme décimal $\\log(x) = \\log_{10}(x)$',
     paragraphText:
-      'On appelle fonction logarithme décimal, notée $\\log$ (sans indice), le logarithme de base $10$ : $\\log(x) = \\frac{\\ln x}{\\ln 10}$ pour tout $x > 0$. Très utilisé en chimie ($\mathrm{pH} = -\\log[\\mathrm{H_3O^+}]$), acoustique (décibels) et sismologie (échelle de Richter), il vérifie $\\log(1) = 0$, $\\log(10) = 1$ et $\\log(10^n) = n$ pour tout $n \\in \\mathbb{Z}$.',
+      'On appelle fonction logarithme décimal, notée $\\log$ (sans indice), le logarithme de base $10$ : $\\log(x) = \\frac{\\ln x}{\\ln 10}$ pour tout $x > 0$. Très utilisé en chimie ($\\mathrm{pH} = -\\log[\\mathrm{H_3O^+}]$), acoustique (décibels) et sismologie (échelle de Richter), il vérifie $\\log(1) = 0$, $\\log(10) = 1$ et $\\log(10^n) = n$ pour tout $n \\in \\mathbb{Z}$.',
     formula: {
       name: 'Logarithme décimal',
       formula: '\\log(x) = \\frac{\\ln x}{\\ln 10} \\quad ; \\quad \\forall n \\in \\mathbb{Z},\\; \\log(10^n) = n',
