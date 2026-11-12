@@ -466,11 +466,165 @@ export const TERMINALE_A_TEMPLATES = {
   },
 };
 
+/*
+ * ============================================================================
+ * TERMINALE D — DEVOIRS DE 2 H AU FORMAT DU BACCALAURÉAT SÉRIE D (APC)
+ * ============================================================================
+ * Modèles dédiés à la Terminale D (Sciences de la Nature).
+ * Sources officielles DPFC (Direction de la Pédagogie et de la Formation Continue) :
+ *  - SVT : Format officiel de l'épreuve de SVT au Baccalauréat série D (coef. 4) :
+ *    Exercice 1 : tests objectifs (6 pts) ; Exercice 2 : exploitation de documents et raisonnement scientifique (6 pts) ;
+ *    Exercice 3 : situation d'évaluation contextualisée (8 pts).
+ *  - Mathématiques : Format du Bac série D (CPN du 27/11/2019, coef. 4) :
+ *    5 exercices : tests objectifs (4 pts), renforcement/approfondissement (11 pts), situation complexe (5 pts).
+ *  - Physique-Chimie : Format du Bac série D (coef. 4) :
+ *    Exercice 1 : tests objectifs (8 pts) ; Exercice 2 : situation d'évaluation en Physique (7 pts) ;
+ *    Exercice 3 : situation d'évaluation en Chimie (5 pts).
+ *  - Français, Histoire-Géographie, Philosophie : Format national commun du Baccalauréat.
+ */
+const TERMINALE_D_GRADES = ['terminale_d'];
+
+export const TERMINALE_D_TEMPLATES = {
+  svt: {
+    matiere: 'Sciences de la Vie et de la Terre',
+    duree: '2 h',
+    source: 'DPFC – Format officiel de l’épreuve de SVT au Baccalauréat Série D (Exercice 1 : tests objectifs 6 pts ; Exercice 2 : exploitation de documents et raisonnement scientifique 6 pts ; Exercice 3 : situation d’évaluation 8 pts)',
+    exercices: [
+      {
+        numero: 1,
+        points: 6,
+        nature: 'Tests objectifs et questions à réponses courtes (niveau connaissances et compréhension)',
+        consignes: "Items variés portant sur les notions non abordées dans les exercices 2 et 3 : QCM avec justification succincte, appariement termes/définitions en lettres et chiffres (ex. « 1-b ; 2-c… »), Vrai/Faux avec consigne officielle sans justification, réarrangement chronologique de séquences biologiques (méiose, fécondation, cycle cardiaque, cycle de réplication du VIH), texte lacunaire à compléter avec une banque de mots scientifiques précis. 0,5 à 1 point par item.",
+      },
+      {
+        numero: 2,
+        points: 6,
+        nature: 'Exploitation de documents et raisonnement scientifique (test subjectif)',
+        consignes: "Un ensemble de 1 à 2 documents scientifiques inédits (graphique d'évolution cinétique ou bioélectrique, tracé d'un électrocardiogramme ou cardiogramme mécanique, dosages hormonaux au cours du cycle sexuel, résultats d'expériences de section/stimulation nerveuse, arbre généalogique ou électrophorèse d'ADN, profil pédologique ou données de sondage géologique). Des questions progressives et guidées : 1. Analyse ou compare le(s) document(s) ; 2. Interprète les résultats à la lumière de tes connaissances biologiques/géologiques ; 3. Tire la conclusion qui résout le problème scientifique posé.",
+      },
+      {
+        numero: 3,
+        points: 8,
+        nature: "Situation d'évaluation (résolution d'un problème biologique ou géologique contextualisé)",
+        consignes: "Un contexte ivoirien concret (campagne de santé au CHU d'Abidjan, cas clinique d'anomalie cardiaque ou rénale, consultation de conseil génétique pour l'albinisme ou la drépanocytose, projet agronomique d'amendement des sols acides de Côte d'Ivoire, ou exploitation minière responsable d'un gisement d'or/manganèse). Des circonstances posant un problème scientifique précis à l'élève, suivies de consignes claires et ordonnées selon la gradation taxonomique (identifie, explique le mécanisme cellulaire/moléculaire/physiologique, propose et justifie des démarches de solution).",
+      },
+    ],
+    notesClasse: {
+      terminale_d: "Terminale D (Sciences de la Nature, coef. 4 au BAC) : Programme officiel en 14 leçons de la DPFC — Fonctionnement du tissu nerveux (potentiel de repos, potentiel d'action, transmission synaptique), muscle strié squelettique (secousse musculaire, tétanos, mécanisme du glissement des myofilaments), réflexe conditionnel (Pavlov, conditionnement opérant, arc réflexe), fonctionnement du cœur (automatisme nodal, régulation nerveuse et pressionnelle sino-carotidienne), système de défense immunitaire (immunité innée, adaptative cellulaire LT8/LTC et humorale LB/anticorps, phagocytose), maintien de la constance du milieu intérieur (rein, filtration glomérulaire, réabsorption tubulaire, régulation de la volémie et osmolarité par l'ADH, régulation de la glycémie), fonctionnement des organes sexuels (axe hypothalamo-hypophysaire, cycles ovarien et utérin, spermatogenèse, rétrocontrôles), devenir des cellules sexuelles et fécondation (réaction acrosomique, corticale, caryogamie), infection par le VIH (cellules cibles LT4, cycle de réplication, stades cliniques, trithérapie), reproduction des spermaphytes (grain de pollen, sac embryonnaire à 8 noyaux, double fécondation, formation de la graine et du fruit), transmission d'un caractère chez l'Homme (hérédité autosomique dominante/récessive, hérédité liée à l'hétérochromosome X, arbres généalogiques, groupes sanguins ABO et rhésus), transmission de deux caractères (dihybridisme mendélien à gènes indépendants 9/16-3/16-3/16-1/16, linkage absolu et partiel chez la Drosophile, crossing-over en prophase I, calcul de distances génétiques en UR/cM, carte factorielle), amélioration et protection des sols (complexe argilo-humique, ponts calciques, fertilisation NPK, lutte contre l'érosion), exploitation des gisements miniers (prospection directe et indirecte géophysique, mine à ciel ouvert en gradins vs mine souterraine avec puits et galeries, impacts environnementaux et réhabilitation des sites miniers).",
+    },
+    exemples: [],
+  },
+
+  maths: {
+    matiere: 'Mathématiques',
+    duree: '2 h',
+    source: 'DPFC – Format de l’épreuve de Mathématiques au Baccalauréat Série D (CPN du 27/11/2019 : 5 exercices — tests objectifs 4 pts, renforcement et approfondissement 11 pts, situation complexe 5 pts)',
+    exercices: [
+      {
+        numero: 1,
+        points: 2,
+        nature: 'Test objectif (niveau taxonomique 1 ou 2)',
+        consignes: "4 affirmations à juger sous forme de tableau (colonnes « N° » et « Affirmations »). Consigne officielle : « Dans cet exercice aucune justification n'est demandée. Écris sur ta copie le numéro de l'affirmation suivi de VRAI lorsque l'affirmation est vraie ou de FAUX lorsque l'affirmation est fausse. Exemple : 1. VRAI » 0,5 point par affirmation.",
+      },
+      {
+        numero: 2,
+        points: 2,
+        nature: 'Test objectif (niveau taxonomique 1, 2 ou 3)',
+        consignes: "Tableau de 4 lignes (colonnes « N° », « Énoncés », « A », « B », « C », « D ») : pour chaque ligne quatre réponses proposées dont une seule est juste. Consigne officielle : « Pour chaque ligne du tableau ci-dessous quatre réponses A, B, C et D sont proposées dont une seule est juste. Écris sur ta feuille de copie le numéro de la ligne suivi de la lettre correspondant à la réponse juste. Exemple : 1. C » 0,5 point par ligne. Porte sur des notions non reprises dans les exercices 3, 4 et 5.",
+      },
+      {
+        numero: 3,
+        points: 4,
+        nature: 'Exercice de renforcement en test subjectif — NON contextualisé',
+        consignes: "Plusieurs habiletés d'une même leçon au niveau Terminale D (Nombres complexes : forme algébrique, trigonométrique, exponentielle, équations dans C ; ou Suites numériques : convergence, récurrence ; ou Probabilités : variable aléatoire, loi binomiale). Questions guidées et progressives (1., 2.a., 2.b., …) avec « Démontre que… », « Justifie que… », « Détermine… ».",
+      },
+      {
+        numero: 4,
+        points: 7,
+        nature: "Exercice de renforcement ou d'approfondissement (Analyse) — NON contextualisé",
+        consignes: "Problème d'analyse centré sur l'étude d'une fonction avec logarithme népérien (ln) ou exponentielle (exp), éventuellement avec une fonction auxiliaire g : calcul des limites aux bornes, asymptotes et branches infinies, calcul de dérivée f', signe et tableau de variation complet, équation de la tangente au point d'abscisse donnée, tracé de la courbe représentative, calcul d'aire délimitée par calcul intégral. Questions ordonnées et progressives.",
+      },
+      {
+        numero: 5,
+        points: 5,
+        nature: 'Situation complexe (niveau « Traiter une situation »)',
+        consignes: "Un texte de situation ivoirienne concrète (gestion d'une plantation de cacao/hévéa, coopérative agricole, pharmacie, épidémiologie, optimisation d'un coût de transport ou de construction) qui pose UN problème mathématique concret, SANS questions intermédiaires, conclu par la consigne officielle : « À l'aide d'une production argumentée basée sur tes connaissances mathématiques, … ». Notée avec la grille officielle CM1/CM2/CM3/CP (0,75 + 2,5 + 1,25 + 0,5).",
+        grille: SITUATION_COMPLEXE_GRID,
+      },
+    ],
+    notesClasse: {
+      terminale_d: "Terminale D (coefficient 4 au BAC) : Calculs algébriques et nombres complexes (forme trigonométrique, module, argument, équations du 2nd degré dans C) ; Fonctions numériques d'une variable réelle (limites, continuité, dérivabilité, bijection, primitives, fonctions logarithme népérien et exponentielle) ; Suites numériques ; Équations différentielles linéaires y' + ay = b et y'' + omega^2 y = 0 ; Calcul intégral ; Dénombrement et probabilités (variables aléatoires, loi binomiale) ; Statistiques à deux variables (ajustement linéaire par la méthode de Mayer et des moindres carrés).",
+    },
+    exemples: [],
+  },
+
+  physique_chimie: {
+    matiere: 'Physique-Chimie',
+    duree: '2 h',
+    source: 'DPFC – Format de l’épreuve de Physique-Chimie au Baccalauréat Série D (Exercice 1 : tests objectifs 8 pts ; Exercice 2 : situation d’évaluation en Physique 7 pts ; Exercice 3 : situation d’évaluation en Chimie 5 pts)',
+    exercices: [
+      {
+        numero: 1,
+        points: 8,
+        nature: 'Tests objectifs et questions à réponses courtes (connaissances et compréhension)',
+        consignes: "Items variés sur les notions non reprises dans les exercices 2 et 3 : Partie Physique (5 pts) et Partie Chimie (3 pts). Formats officiels : QCM (« Recopie la lettre de la bonne réponse »), Vrai/Faux sans justification, appariement grandeurs/unités et lois physiques, texte lacunaire à compléter avec des termes scientifiques précis.",
+      },
+      {
+        numero: 2,
+        points: 7,
+        nature: "Situation d'évaluation en Physique (réponses élaborées)",
+        consignes: "Contexte ivoirien concret (séance de TP au laboratoire du lycée, lancement d'un ballon au stade Félix Houphouët-Boigny, trajectoire d'une particule dans un spectrographe de masse, oscillateur mécanique ou circuit RLC). Données numériques complètes, schéma décrit en mots si nécessaire, suivi de 3 à 5 consignes numérotées respectant la gradation taxonomique (1. Énonce le théorème ou la loi ; 2. Établis l'équation différentielle ou horaire ; 3. Calcule la grandeur demandée ; 4. Déduis-en la conclusion ou valide l'hypothèse).",
+      },
+      {
+        numero: 3,
+        points: 5,
+        nature: "Situation d'évaluation en Chimie (réponses élaborées)",
+        consignes: "Contexte concret (analyse d'un vinaigre local, d'une solution de nettoyage, préparation d'un ester à saveur fruitée en parfumerie ou saponification d'huile de palme). Données numériques sous « Données : », équations-bilans, suivi de 3 à 4 consignes numérotées progressives (1. Identifie les espèces chimiques présentes ; 2. Écris l'équation de la réaction ; 3. Détermine la concentration ou le volume équivalent ; 4. Conclue sur la conformité du produit).",
+      },
+    ],
+    notesClasse: {
+      terminale_d: "Terminale D (coefficient 4 au BAC) : Physique — Cinématique (vecteurs position, vitesse, accélération) ; Dynamique newtonienne (2e loi de Newton, mouvement d'un projectile dans le champ de pesanteur, mouvement de particules chargées dans un champ électrostatique et magnétique uniforme) ; Mouvement des satellites et planètes (lois de Kepler) ; Systèmes oscillants mécaniques (pendule élastique) et électriques (dipôles RC, RL, circuit RLC en régime libre et forcé, résonance) ; Chimie — Acides et bases en solution aqueuse (pH, autoprotolyse de l'eau, constante d'acidité Ka et pKa, dosage pH-métrique acide fort/base forte et acide faible/base forte, solution tampon) ; Cinétique chimique (vitesse de réaction, facteurs cinétiques, catalyse) ; Chimie organique (alcools, aldéhydes et cétones, acides carboxyliques et dérivés, réactions d'estérification-hydrolyse, savons).",
+    },
+    exemples: [],
+  },
+
+  histoire_geo: {
+    ...TERMINALE_A_TEMPLATES.histoire_geo,
+    source: 'DPFC – Format de l’épreuve d’Histoire-Géographie au Baccalauréat Série D (Première partie : 6 pts ; Deuxième partie : 14 pts, dissertation obligatoire 7 pts et sujet au choix 7 pts)',
+    notesClasse: {
+      terminale_d: 'Terminale D (programme national commun d’Histoire-Géographie du BAC, coef. 2) : Histoire — Les relations internationales depuis 1945 (guerre froide, décolonisation en Asie et en Afrique, la Côte d’Ivoire de 1960 à nos jours, l’Union Africaine) ; Géographie — L’économie de la Côte d’Ivoire (agriculture, industrie, commerce), l’intégration sous-régionale (CEDEAO, UEMOA), les puissances économiques mondiales (USA, Union Européenne, Chine).',
+    },
+  },
+
+  francais: {
+    ...TERMINALE_A_TEMPLATES.francais,
+    source: 'Format du BAC Série D (sujet officiel ivoirien) : le candidat traite l’un des trois sujets au choix (Résumé du texte et production écrite ; Commentaire composé ; Dissertation littéraire)',
+    notesClasse: {
+      terminale_d: 'Terminale D (Français, coef. 2 au BAC) : maîtrise des méthodologies officielles de l’épreuve écrite du Baccalauréat (Résumé + Production écrite, Commentaire composé, Dissertation littéraire).',
+    },
+  },
+
+  philosophie: {
+    ...TERMINALE_A_TEMPLATES.philosophie,
+    source: 'Format du BAC Série D (sujet officiel et barème national) : Première partie 4 pts (2 exercices obligatoires de maîtrise conceptuelle), Deuxième partie 16 pts (Dissertation philosophique OU Commentaire de texte au choix)',
+    notesClasse: {
+      terminale_d: 'Terminale D (Philosophie, coef. 2 au BAC) : Programme officiel du second cycle — Les grandes notions : la conscience et l’inconscient, la liberté, la vérité, la science et la technique, l’art, l’État et la société, autrui et la morale.',
+    },
+  },
+};
+
 /**
- * Modèle de sujet pour une matière ET une classe : les Terminales A ont leurs modèles au format du BAC ;
- * toutes les autres classes (Seconde…) gardent les modèles ci-dessus, inchangés.
+ * Modèle de sujet pour une matière ET une classe :
+ * - Terminale D : modèles dédiés au format officiel du BAC Série D ;
+ * - Terminales A : modèles dédiés au format du BAC Série A ;
+ * - Autres classes (Seconde A, Seconde C...) : modèles de cycle standard.
  */
 export function getExamTemplate(subjectKey, gradeId) {
-  if (TERMINALE_A_GRADES.includes(gradeId) && TERMINALE_A_TEMPLATES[subjectKey]) return TERMINALE_A_TEMPLATES[subjectKey];
+  if (TERMINALE_D_GRADES.includes(gradeId) && TERMINALE_D_TEMPLATES[subjectKey]) {
+    return TERMINALE_D_TEMPLATES[subjectKey];
+  }
+  if (TERMINALE_A_GRADES.includes(gradeId) && TERMINALE_A_TEMPLATES[subjectKey]) {
+    return TERMINALE_A_TEMPLATES[subjectKey];
+  }
   return EXAM_TEMPLATES[subjectKey] || null;
 }
