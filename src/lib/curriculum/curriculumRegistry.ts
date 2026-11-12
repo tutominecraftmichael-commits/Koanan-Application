@@ -58,6 +58,8 @@ import { SVT_TLE_D_L09_INFECTION_VIH_SIDA } from '../../data/courses/terminale/s
 import { SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES } from '../../data/courses/terminale/svt_tle_d_10_reproduction_chez_les_spermaphytes';
 import { SVT_TLE_D_L11_TRANSMISSION_UN_CARACTERE_HOMME } from '../../data/courses/terminale/svt_tle_d_11_transmission_un_caractere_homme';
 import { SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS } from '../../data/courses/terminale/svt_tle_d_12_transmission_deux_caracteres_etres_vivants';
+import { SVT_TLE_D_L13_AMELIORATION_PROTECTION_DES_SOLS } from '../../data/courses/terminale/svt_tle_d_13_amelioration_protection_des_sols';
+import { SVT_TLE_D_L14_EXPLOITATION_GISEMENTS_MINIERS } from '../../data/courses/terminale/svt_tle_d_14_exploitation_gisements_miniers';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
 import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/terminale/geo_tle_problemes_developpement_ci';
@@ -79600,6 +79602,8 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
   SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES,
   SVT_TLE_D_L11_TRANSMISSION_UN_CARACTERE_HOMME,
   SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS,
+  SVT_TLE_D_L13_AMELIORATION_PROTECTION_DES_SOLS,
+  SVT_TLE_D_L14_EXPLOITATION_GISEMENTS_MINIERS,
   {
     "id": "terminale_d_svt_ch8_geodynamique_interne_et_tectonique_des_plaques",
     "subjectId": "svt",
@@ -91074,6 +91078,8 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES,
   SVT_TLE_D_L11_TRANSMISSION_UN_CARACTERE_HOMME,
   SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS,
+  SVT_TLE_D_L13_AMELIORATION_PROTECTION_DES_SOLS,
+  SVT_TLE_D_L14_EXPLOITATION_GISEMENTS_MINIERS,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
   GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI,
