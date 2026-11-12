@@ -5,6 +5,9 @@ import { physique2deCChapters } from '../../data/courses/physique_2de_c';
 import { svt2deCChapters } from '../../data/courses/svt_2de_c';
 import { francais2deAChapters } from '../../data/courses/francais_2de_a';
 import { maths2deACalculsNumeriquesChapter } from '../../data/courses/maths_2de_a';
+import { MATHS_TLE_C_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_c_01_limites_continuite';
+import { MATHS_TLE_C_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_c_03_derivabilite_etude_fonctions';
+import { MATHS_TLE_C_L04_DIVISIBILITE_DANS_Z } from '../../data/courses/terminale/maths_tle_c_04_divisibilite_dans_z';
 import { MATHS_TLE_D_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_d_limites_continuite';
 import { MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_d_probabilite_conditionnelle';
 import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_d_derivabilite_etude_fonctions';
@@ -91012,6 +91015,10 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
 // jamais affichés : l'élève voit « Cours en préparation » à la place.
 // ============================================================================
 const AUTHORED_CHAPTERS: CurriculumChapter[] = [
+  // Terminale C — Maths (format v2)
+  MATHS_TLE_C_L01_LIMITES_CONTINUITE,
+  MATHS_TLE_C_L03_DERIVABILITE_ETUDE_FONCTIONS,
+  MATHS_TLE_C_L04_DIVISIBILITE_DANS_Z,
   // Terminale D — Maths (format v2)
   MATHS_TLE_D_L01_LIMITES_CONTINUITE,
   MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE,
