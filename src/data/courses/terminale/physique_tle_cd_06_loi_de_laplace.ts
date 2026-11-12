@@ -1453,7 +1453,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
           "stepBadge": "Effet Joule destructeur",
           "paragraphText": "Si l'on applique une tension continue à un haut-parleur, la force de Laplace maintient la bobine décalée d'un côté de manière statique sans émettre de son (aucun va-et-vient). L'absence de mouvement entraîne une dissipation purement thermique par effet Joule qui peut brûler la fine bobine mobile en quelques secondes !",
           "exercise": {
-            "id": "terminale_d_physique_l06_loi_de_laplace_p06_q6",
+            "id": "terminale_d_physique_l06_loi_de_laplace_p05_q6",
             "type": "mcq",
             "prompt": "Que se produit-il si l'on branche une pile de 9 V continue directement sur les bornes d'un haut-parleur de 4 ohms ?",
             "options": [
@@ -1555,7 +1555,7 @@ export const PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE: CurriculumChapter = {
           "explanation": "Comme F = B L i, la force de Laplace est rigoureusement proportionnelle au premier degré à l'intensité du courant : doubler i double exactement F."
         },
         {
-          "id": "terminale_d_physique_l06_loi_de_laplace_p06_q6",
+          "id": "terminale_d_physique_l06_loi_de_laplace_p05_q6",
           "type": "mcq",
           "prompt": "Que se produit-il si l'on branche une pile de 9 V continue directement sur les bornes d'un haut-parleur de 4 ohms ?",
           "options": [

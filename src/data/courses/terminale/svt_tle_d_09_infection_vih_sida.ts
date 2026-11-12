@@ -5,7 +5,7 @@ export const SVT_TLE_D_L09_INFECTION_VIH_SIDA: CurriculumChapter = {
   subjectId: "svt",
   gradeLevel: "terminale_d",
   alsoForGrades: ["terminale_c"],
-  order: 15,
+  order: 7,
   title: "L'infection de l'organisme par le VIH (Structure du rétrovirus, cycle de réplication, évolution clinique et SIDA)",
   summary: "Étude complète et approfondie de l'infection par le Virus de l'Immunodéficience Humaine (VIH) selon le programme officiel de SVT Terminale D de Côte d'Ivoire : organisation ultrastructurale d'un rétrovirus enveloppé (ARN, gp120, gp41, capside p24, transcriptase inverse, intégrase, protéase), cycle réplicatif complet dans le lymphocyte T4 (CD4) de l'adsorption au bourgeonnement lytique, dynamique biologique et clinique des trois phases (primo-infection et séroconversion, phase asymptomatique de latence, phase symptomatique du SIDA avéré), effondrement de la coopération immunitaire, genèse des maladies opportunistes (tuberculose, sarcome de Kaposi) et stratégies médicales de prévention (PTME, préservatifs, trithérapies ARV).",
   officialVolumeHours: 10,

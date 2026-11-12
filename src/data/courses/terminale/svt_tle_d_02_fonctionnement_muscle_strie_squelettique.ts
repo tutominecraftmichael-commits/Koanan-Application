@@ -5,7 +5,7 @@ export const SVT_TLE_D_L02_FONCTIONNEMENT_MUSCLE_STRIE_SQUELETTIQUE: CurriculumC
   subjectId: "svt",
   gradeLevel: "terminale_d",
   alsoForGrades: ["terminale_c"],
-  order: 3,
+  order: 2,
   title: "Le fonctionnement du muscle strié squelettique (Ultrastructure, contraction et énergétique)",
   summary: "Étude complète et approfondie de la motricité squelettique : organisation anatomique du muscle et ultrastructure du sarcomère, mécanisme moléculaire du glissement des myofilaments sous l'action du calcium et de l'ATP, analyse graphique des phénomènes électriques et mécaniques (myogramme, sommation, tétanos imparfait et parfait, fatigue musculaire), et biochimie métabolique des voies de régénération rapide et lente de l'ATP.",
   officialVolumeHours: 8,
