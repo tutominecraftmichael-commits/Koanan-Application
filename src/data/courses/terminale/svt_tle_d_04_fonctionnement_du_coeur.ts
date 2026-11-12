@@ -488,3 +488,4 @@ export const SVT_TLE_D_L04_FONCTIONNEMENT_DU_COEUR: CurriculumChapter = {
     }
   ]
 };
+
