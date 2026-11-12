@@ -6,14 +6,17 @@ import { svt2deCChapters } from '../../data/courses/svt_2de_c';
 import { francais2deAChapters } from '../../data/courses/francais_2de_a';
 import { maths2deACalculsNumeriquesChapter } from '../../data/courses/maths_2de_a';
 import { MATHS_TLE_C_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_c_01_limites_continuite';
+import { MATHS_TLE_C_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_c_02_probabilite_conditionnelle';
 import { MATHS_TLE_C_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_c_03_derivabilite_etude_fonctions';
 import { MATHS_TLE_C_L04_DIVISIBILITE_DANS_Z } from '../../data/courses/terminale/maths_tle_c_04_divisibilite_dans_z';
 import { MATHS_TLE_C_L04_PRIMITIVES } from '../../data/courses/terminale/maths_tle_c_04_primitives';
 import { MATHS_TLE_C_L05_LOGARITHME_NEPERIEN } from '../../data/courses/terminale/maths_tle_c_05_logarithme_neperien';
 import { MATHS_TLE_C_L06_NOMBRES_COMPLEXES } from '../../data/courses/terminale/maths_tle_c_06_nombres_complexes';
 import { MATHS_TLE_C_L07_EXPONENTIELLES_PUISSANCES } from '../../data/courses/terminale/maths_tle_c_07_exponentielles_puissances';
+import { MATHS_TLE_C_L10_CALCUL_INTEGRAL } from '../../data/courses/terminale/maths_tle_c_10_calcul_integral';
 import { MATHS_TLE_C_L11_PPCM_PGCD } from '../../data/courses/terminale/maths_tle_c_11_ppcm_pgcd';
 import { MATHS_TLE_C_L12_SUITES_NUMERIQUES } from '../../data/courses/terminale/maths_tle_c_12_suites_numeriques';
+import { MATHS_TLE_C_L12_EQUATIONS_DIFFERENTIELLES } from '../../data/courses/terminale/maths_tle_c_12_equations_differentielles';
 import { MATHS_TLE_D_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_d_limites_continuite';
 import { MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_d_probabilite_conditionnelle';
 import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_d_derivabilite_etude_fonctions';
@@ -91023,14 +91026,17 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
 const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   // Terminale C — Maths (format v2)
   MATHS_TLE_C_L01_LIMITES_CONTINUITE,
+  MATHS_TLE_C_L02_PROBABILITE_CONDITIONNELLE,
   MATHS_TLE_C_L03_DERIVABILITE_ETUDE_FONCTIONS,
   MATHS_TLE_C_L04_DIVISIBILITE_DANS_Z,
   MATHS_TLE_C_L04_PRIMITIVES,
   MATHS_TLE_C_L05_LOGARITHME_NEPERIEN,
   MATHS_TLE_C_L06_NOMBRES_COMPLEXES,
   MATHS_TLE_C_L07_EXPONENTIELLES_PUISSANCES,
+  MATHS_TLE_C_L10_CALCUL_INTEGRAL,
   MATHS_TLE_C_L11_PPCM_PGCD,
   MATHS_TLE_C_L12_SUITES_NUMERIQUES,
+  MATHS_TLE_C_L12_EQUATIONS_DIFFERENTIELLES,
   // Terminale D — Maths (format v2)
   MATHS_TLE_D_L01_LIMITES_CONTINUITE,
   MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE,
