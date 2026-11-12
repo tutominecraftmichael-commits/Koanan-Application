@@ -43,6 +43,7 @@ import { PHYSIQUE_TLE_CD_L12_PUISSANCE_REGIME_SINUSOIDAL } from '../../data/cour
 import { PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES } from '../../data/courses/terminale/physique_tle_cd_13_reactions_nucleaires_spontanees';
 import { PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE } from '../../data/courses/terminale/physique_tle_cd_14_modele_corpusculaire_lumiere';
 import { PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE } from '../../data/courses/terminale/physique_tle_cd_15_modele_ondulatoire_lumiere';
+import { PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES } from '../../data/courses/terminale/physique_tle_cd_16_reactions_nucleaires_provoquees';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
 import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/terminale/geo_tle_problemes_developpement_ci';
@@ -91897,6 +91898,7 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES,
   PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE,
   PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE,
+  PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
   GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI,
