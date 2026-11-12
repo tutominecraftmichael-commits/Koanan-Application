@@ -285,6 +285,57 @@ export const SVT_TLE_D_L13_AMELIORATION_PROTECTION_DES_SOLS: CurriculumChapter =
       visualSchema: {
         type: "custom_svg",
         title: "Mécanisme de formation du Complexe Argilo-Humique (CAH) par le calcium",
+        caption: "Le Complexe Argilo-Humique (CAH) : les ponts calciques bivalents Ca²⁺ relient les colloïdes électronégatifs d'argile et d'humus, conférant au sol sa structure grumeleuse fertile.",
+        svgContent: `<svg viewBox="0 0 620 280" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Complexe Argilo-Humique">
+  <rect x="10" y="10" width="600" height="260" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Feuillets d'argile (gauche) -->
+  <rect x="50" y="60" width="160" height="150" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="2" />
+  <text x="130" y="95" font-size="12" font-weight="bold" fill="#B45309" text-anchor="middle">ARGILE</text>
+  <text x="130" y="115" font-size="9" fill="#78350F" text-anchor="middle">Colloïde minéral (-)</text>
+  <!-- Charges négatives de surface -->
+  <circle cx="195" cy="80" r="10" fill="#EF4444" /><text x="195" y="84" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle">-</text>
+  <circle cx="195" cy="135" r="10" fill="#EF4444" /><text x="195" y="139" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle">-</text>
+  <circle cx="195" cy="190" r="10" fill="#EF4444" /><text x="195" y="194" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle">-</text>
+
+  <!-- Ponts Calciques Ca2+ et Ferriques Fe3+ au centre -->
+  <!-- Pont 1 Ca2+ -->
+  <line x1="205" y1="80" x2="265" y2="80" stroke="#3B82F6" stroke-width="2" stroke-dasharray="3 3" />
+  <circle cx="280" cy="80" r="15" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2" />
+  <text x="280" y="84" font-size="10" font-weight="bold" fill="#1D4ED8" text-anchor="middle">Ca²⁺</text>
+  <line x1="295" y1="80" x2="355" y2="80" stroke="#3B82F6" stroke-width="2" stroke-dasharray="3 3" />
+
+  <!-- Pont 2 Ca2+ -->
+  <line x1="205" y1="135" x2="265" y2="135" stroke="#3B82F6" stroke-width="2" stroke-dasharray="3 3" />
+  <circle cx="280" cy="135" r="15" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2" />
+  <text x="280" y="139" font-size="10" font-weight="bold" fill="#1D4ED8" text-anchor="middle">Ca²⁺</text>
+  <line x1="295" y1="135" x2="355" y2="135" stroke="#3B82F6" stroke-width="2" stroke-dasharray="3 3" />
+
+  <!-- Pont 3 Fe3+ -->
+  <line x1="205" y1="190" x2="265" y2="190" stroke="#10B981" stroke-width="2" stroke-dasharray="3 3" />
+  <circle cx="280" cy="190" r="15" fill="#D1FAE5" stroke="#10B981" stroke-width="2" />
+  <text x="280" y="194" font-size="10" font-weight="bold" fill="#047857" text-anchor="middle">Fe³⁺</text>
+  <line x1="295" y1="190" x2="355" y2="190" stroke="#10B981" stroke-width="2" stroke-dasharray="3 3" />
+
+  <text x="280" y="45" font-size="9" font-weight="bold" fill="#2563EB" text-anchor="middle">PONTS CATIONIQUES</text>
+
+  <!-- Particules d'humus (droite) -->
+  <rect x="365" y="60" width="160" height="150" rx="10" fill="#E2E8F0" stroke="#475569" stroke-width="2" />
+  <text x="445" y="95" font-size="12" font-weight="bold" fill="#1E293B" text-anchor="middle">HUMUS</text>
+  <text x="445" y="115" font-size="9" fill="#475569" text-anchor="middle">Colloïde organique (-)</text>
+  <!-- Charges négatives de surface -->
+  <circle cx="365" cy="80" r="10" fill="#EF4444" /><text x="365" y="84" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle">-</text>
+  <circle cx="365" cy="135" r="10" fill="#EF4444" /><text x="365" y="139" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle">-</text>
+  <circle cx="365" cy="190" r="10" fill="#EF4444" /><text x="365" y="194" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle">-</text>
+
+  <!-- Cations nutritifs fixés échangeables -->
+  <circle cx="505" cy="100" r="10" fill="#FEF08A" stroke="#CA8A04" /><text x="505" y="104" font-size="8" font-weight="bold" fill="#854D0E" text-anchor="middle">K⁺</text>
+  <circle cx="505" cy="160" r="10" fill="#FED7AA" stroke="#EA580C" /><text x="505" y="164" font-size="8" font-weight="bold" fill="#9A3412" text-anchor="middle">Mg²⁺</text>
+  <text x="540" y="135" font-size="8" fill="#64748B">Cations échangeables</text>
+
+  <!-- Résultat agronomique -->
+  <text x="310" y="240" font-size="10" font-weight="bold" fill="#059669" text-anchor="middle">→ FLOCULATION DU SOL : Structure grumeleuse, aérée, résistante au lessivage et fertile</text>
+</svg>`,
         tableData: {
           headers: ["Composant du sol", "Charge électrique superficielle", "État en absence de Ca2+ (sol acide)", "État en présence de Ca2+ (amendement calcaire)"],
           rows: [

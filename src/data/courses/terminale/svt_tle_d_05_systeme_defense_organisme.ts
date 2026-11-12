@@ -40,6 +40,49 @@ export const SVT_TLE_D_L05_SYSTEME_DEFENSE_ORGANISME: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Les acteurs et mécanismes de l'immunité innée non spécifique",
+        caption: "La phagocytose se déroule en 4 étapes séquentielles : adhésion du phagocyte, ingestion par pseudopodes, digestion enzymatique dans le phagolysosome et rejet des déchets.",
+        svgContent: `<svg viewBox="0 0 620 220" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Les 4 étapes de la phagocytose">
+  <rect x="5" y="5" width="610" height="210" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  <g transform="translate(15, 15)">
+    <rect x="0" y="0" width="135" height="180" rx="10" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.2" />
+    <text x="67" y="22" font-size="11" font-weight="900" text-anchor="middle" fill="#15803D">1. ADHÉSION</text>
+    <path d="M 10 145 Q 40 95 70 115 Q 100 135 125 145 L 125 170 L 10 170 Z" fill="#BBF7D0" stroke="#16A34A" stroke-width="1.5" />
+    <ellipse cx="68" cy="100" rx="14" ry="8" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5" transform="rotate(-15, 68, 100)" />
+    <text x="67" y="165" font-size="9.5" text-anchor="middle" fill="#166534">Reconnaissance</text>
+  </g>
+  <path d="M 155 105 L 168 105" stroke="#16A34A" stroke-width="2.5" />
+  <g transform="translate(170, 15)">
+    <rect x="0" y="0" width="135" height="180" rx="10" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.2" />
+    <text x="67" y="22" font-size="11" font-weight="900" text-anchor="middle" fill="#15803D">2. INGESTION</text>
+    <path d="M 10 145 C 25 75, 50 55, 55 80 C 60 105, 75 105, 80 80 C 85 55, 110 75, 125 145 Z" fill="#BBF7D0" stroke="#16A34A" stroke-width="1.5" />
+    <ellipse cx="67" cy="87" rx="13" ry="7" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5" />
+    <text x="67" y="165" font-size="9.5" text-anchor="middle" fill="#166534">Pseudopodes</text>
+  </g>
+  <path d="M 310 105 L 323 105" stroke="#16A34A" stroke-width="2.5" />
+  <g transform="translate(325, 15)">
+    <rect x="0" y="0" width="135" height="180" rx="10" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.2" />
+    <text x="67" y="22" font-size="11" font-weight="900" text-anchor="middle" fill="#15803D">3. DIGESTION</text>
+    <ellipse cx="67" cy="110" rx="55" ry="42" fill="#BBF7D0" stroke="#16A34A" stroke-width="1.5" />
+    <circle cx="67" cy="110" r="22" fill="#DCFCE7" stroke="#15803D" stroke-width="1.5" stroke-dasharray="2,2" />
+    <circle cx="62" cy="107" r="3.5" fill="#EF4444" />
+    <circle cx="72" cy="111" r="3" fill="#EF4444" />
+    <circle cx="66" cy="117" r="2.5" fill="#EF4444" />
+    <circle cx="50" cy="93" r="4.5" fill="#F59E0B" />
+    <circle cx="84" cy="93" r="4.5" fill="#F59E0B" />
+    <text x="67" y="165" font-size="9.5" text-anchor="middle" fill="#166534">Phagolysosome</text>
+  </g>
+  <path d="M 465 105 L 478 105" stroke="#16A34A" stroke-width="2.5" />
+  <g transform="translate(480, 15)">
+    <rect x="0" y="0" width="125" height="180" rx="10" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.2" />
+    <text x="62" y="22" font-size="11" font-weight="900" text-anchor="middle" fill="#15803D">4. REJET</text>
+    <path d="M 10 145 Q 30 105 50 110 C 60 113, 65 113, 75 110 Q 95 105, 115 145 Z" fill="#BBF7D0" stroke="#16A34A" stroke-width="1.5" />
+    <circle cx="62" cy="80" r="3" fill="#94A3B8" />
+    <circle cx="56" cy="69" r="2.5" fill="#94A3B8" />
+    <circle cx="68" cy="65" r="2" fill="#94A3B8" />
+    <path d="M 62 100 L 62 73" stroke="#16A34A" stroke-width="1.5" stroke-dasharray="2,2" />
+    <text x="62" y="165" font-size="9.5" text-anchor="middle" fill="#166534">Exocytose</text>
+  </g>
+</svg>`,
         tableData: {
           headers: ["Ligne de défense", "Éléments constitutifs", "Mécanisme d'action", "Finalité physiologique"],
           rows: [
@@ -278,7 +321,48 @@ export const SVT_TLE_D_L05_SYSTEME_DEFENSE_ORGANISME: CurriculumChapter = {
       },
       visualSchema: {
         type: "custom_svg",
-        title: "Comparaison des 5 classes d'immunoglobulines humaines",
+        title: "Structure moléculaire d'un anticorps (IgG) et complexe immun",
+        caption: "L'anticorps possède une forme en Y constituée de 2 chaînes lourdes (H) et 2 chaînes légères (L) reliées par des ponts disulfures. Les 2 paratopes variables fixent spécifiquement les épitopes antigéniques.",
+        svgContent: `<svg viewBox="0 0 620 280" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Structure moléculaire de l'anticorps">
+  <rect x="10" y="10" width="600" height="260" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  <path d="M 280 220 L 280 140 L 220 80" stroke="#7C3AED" stroke-width="7" stroke-linecap="round" fill="none" />
+  <path d="M 300 220 L 300 140 L 360 80" stroke="#7C3AED" stroke-width="7" stroke-linecap="round" fill="none" />
+  <line x1="280" y1="150" x2="300" y2="150" stroke="#D97706" stroke-width="3" />
+  <line x1="280" y1="160" x2="300" y2="160" stroke="#D97706" stroke-width="3" />
+  <text x="315" y="158" font-size="9" font-weight="700" fill="#D97706">Ponts -S-S-</text>
+  <path d="M 200 125 L 245 80" stroke="#2563EB" stroke-width="6" stroke-linecap="round" fill="none" />
+  <path d="M 380 125 L 335 80" stroke="#2563EB" stroke-width="6" stroke-linecap="round" fill="none" />
+  <line x1="210" y1="115" x2="228" y2="97" stroke="#D97706" stroke-width="2.5" />
+  <line x1="370" y1="115" x2="352" y2="97" stroke="#D97706" stroke-width="2.5" />
+  <circle cx="232" cy="80" r="9" fill="#F43F5E" fill-opacity="0.3" stroke="#E11D48" stroke-width="2" stroke-dasharray="2,2" />
+  <text x="180" y="65" font-size="11" font-weight="900" fill="#E11D48">PARATOPE 1</text>
+  <path d="M 215 68 L 225 75" stroke="#E11D48" stroke-width="1.5" />
+  <circle cx="348" cy="80" r="9" fill="#F43F5E" fill-opacity="0.3" stroke="#E11D48" stroke-width="2" stroke-dasharray="2,2" />
+  <text x="400" y="65" font-size="11" font-weight="900" fill="#E11D48">PARATOPE 2</text>
+  <path d="M 360 68 L 352 75" stroke="#E11D48" stroke-width="1.5" />
+  <polygon points="232,45 224,65 240,65" fill="#10B981" stroke="#047857" stroke-width="1.5" />
+  <text x="232" y="38" font-size="10" font-weight="700" text-anchor="middle" fill="#047857">Épitope Ag</text>
+  <g transform="translate(25, 75)">
+    <rect x="0" y="0" width="135" height="120" rx="8" fill="currentColor" fill-opacity="0.04" stroke="#CBD5E1" stroke-width="1.2" />
+    <text x="10" y="20" font-size="10" font-weight="800" fill="currentColor">STRUCTURE :</text>
+    <rect x="10" y="32" width="14" height="6" fill="#7C3AED" rx="2" />
+    <text x="30" y="39" font-size="9.5" font-weight="600" fill="currentColor">Chaîne lourde (H)</text>
+    <rect x="10" y="52" width="14" height="6" fill="#2563EB" rx="2" />
+    <text x="30" y="59" font-size="9.5" font-weight="600" fill="currentColor">Chaîne légère (L)</text>
+    <rect x="10" y="72" width="14" height="6" fill="#F43F5E" rx="2" />
+    <text x="30" y="79" font-size="9.5" font-weight="600" fill="currentColor">Site variable (V)</text>
+    <text x="10" y="103" font-size="8.5" font-weight="600" fill="#64748B">2 paratopes identiques</text>
+  </g>
+  <g transform="translate(455, 90)">
+    <rect x="0" y="0" width="140" height="95" rx="8" fill="currentColor" fill-opacity="0.04" stroke="#CBD5E1" stroke-width="1.2" />
+    <text x="10" y="20" font-size="10.5" font-weight="800" fill="#0284C7">FRAGMENTS :</text>
+    <text x="10" y="40" font-size="10" font-weight="700" fill="#0284C7">1. Fab (x 2) :</text>
+    <text x="10" y="54" font-size="9" fill="#64748B">Fixation de l'antigène</text>
+    <text x="10" y="72" font-size="10" font-weight="700" fill="#7C3AED">2. Fc (tige constante) :</text>
+    <text x="10" y="86" font-size="9" fill="#64748B">Fixation aux phagocytes</text>
+  </g>
+  <text x="290" y="248" font-size="11" font-weight="700" text-anchor="middle" fill="currentColor">Monomère bivalent (2 sites de liaison) : Complexe immun = Neutralisation + Opsonisation</text>
+</svg>`,
         tableData: {
           headers: ["Classe d'Ig", "Structure spatiale", "Pourcentage sérique", "Propriétés et fonctions majeures"],
           rows: [

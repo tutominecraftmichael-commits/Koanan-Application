@@ -39,6 +39,52 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
       visualSchema: {
         type: "custom_svg",
         title: "Organisation structurale du néphron et vascularisation rénale",
+        caption: "Le néphron est l'unité fonctionnelle du rein : les 3 étapes (filtration glomérulaire, réabsorption tubulaire, sécrétion) assurent l'épuration du sang et l'élaboration de l'urine.",
+        svgContent: `<svg viewBox="0 0 620 330" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Organisation du néphron">
+  <rect x="10" y="10" width="600" height="310" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Zone corticale / médullaire limite -->
+  <line x1="20" y1="160" x2="600" y2="160" stroke="#94A3B8" stroke-dasharray="4 4" stroke-width="1.5" />
+  <text x="25" y="150" font-size="10" font-weight="bold" fill="#64748B">CORTEX RÉNAL</text>
+  <text x="25" y="180" font-size="10" font-weight="bold" fill="#64748B">MÉDULLA (Pyramides)</text>
+
+  <!-- Capsule de Bowman + Glomérule -->
+  <circle cx="100" cy="80" r="32" fill="#FEE2E2" stroke="#EF4444" stroke-width="2" />
+  <circle cx="100" cy="80" r="18" fill="#DC2626" fill-opacity="0.8" />
+  <text x="100" y="84" font-size="9" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Glomérule</text>
+  <text x="100" y="40" font-size="10" font-weight="bold" fill="#B91C1C" text-anchor="middle">1. FILTRATION</text>
+  <text x="100" y="52" font-size="8" fill="#64748B" text-anchor="middle">Capsule de Bowman</text>
+
+  <!-- Tube Contourné Proximal (TCP) -->
+  <path d="M 132 80 C 160 60, 180 110, 210 85 C 230 65, 250 100, 270 120" fill="none" stroke="#F59E0B" stroke-width="6" stroke-linecap="round" />
+  <text x="190" y="50" font-size="9" font-weight="bold" fill="#D97706" text-anchor="middle">TCP (Bordure en brosse)</text>
+  <!-- Flèche réabsorption TCP -->
+  <path d="M 200 95 L 200 130" stroke="#10B981" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="200" y="142" font-size="8" font-weight="bold" fill="#059669" text-anchor="middle">Glucose 100%, Eau 70%</text>
+
+  <!-- Anse de Henlé (plonge dans la médulla) -->
+  <path d="M 270 120 L 270 250 C 270 280, 330 280, 330 250 L 330 120" fill="none" stroke="#3B82F6" stroke-width="5" stroke-linecap="round" />
+  <text x="240" y="220" font-size="9" fill="#1D4ED8" text-anchor="end">Branche descendante (Eau)</text>
+  <text x="360" y="220" font-size="9" fill="#1D4ED8" text-anchor="start">Branche ascendante (NaCl)</text>
+  <rect x="260" y="275" width="80" height="20" rx="4" fill="#DBEAFE" stroke="#3B82F6" />
+  <text x="300" y="289" font-size="9" font-weight="bold" fill="#1E40AF" text-anchor="middle">Anse de Henlé</text>
+
+  <!-- Tube Contourné Distal (TCD) -->
+  <path d="M 330 120 C 350 90, 380 130, 410 80" fill="none" stroke="#8B5CF6" stroke-width="5" stroke-linecap="round" />
+  <text x="375" y="70" font-size="9" font-weight="bold" fill="#7C3AED" text-anchor="middle">TCD (Sécrétion / Aldostérone)</text>
+
+  <!-- Tube Collecteur de Bellini -->
+  <line x1="450" y1="40" x2="450" y2="290" stroke="#0D9488" stroke-width="8" stroke-linecap="round" />
+  <text x="525" y="100" font-size="10" font-weight="bold" fill="#0F766E">Tube de Bellini</text>
+  <text x="525" y="115" font-size="8" fill="#64748B">(Contrôlé par l'ADH)</text>
+  <!-- Flèche eau réabsorbée par ADH -->
+  <path d="M 454 180 L 485 180" stroke="#0284C7" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="515" y="184" font-size="8" font-weight="bold" fill="#0284C7">Réabsorption H₂O</text>
+
+  <!-- Urine définitive sortant -->
+  <path d="M 450 290 L 450 315" stroke="#EAB308" stroke-width="5" marker-end="url(#arrow)" />
+  <text x="450" y="325" font-size="9" font-weight="bold" fill="#CA8A04" text-anchor="middle">Urine définitive vers uretère</text>
+</svg>`,
         tableData: {
           headers: ["Segment du néphron", "Localisation dans le rein", "Structure cytologique", "Fonction physiologique majeure"],
           rows: [
@@ -279,6 +325,54 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
       visualSchema: {
         type: "custom_svg",
         title: "Régulation neuro-endocrine comparée de la teneur en eau de l'organisme",
+        caption: "Boucle de rétrocontrôle de l'osmorégulation : la posthypophyse libère l'ADH en réponse à une hyperosmolalité pour stimuler la réabsorption d'eau.",
+        svgContent: `<svg viewBox="0 0 620 280" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Régulation neuro-endocrine par l'ADH">
+  <rect x="10" y="10" width="600" height="260" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Stimulus : Déshydratation / Hyperosmolalité -->
+  <rect x="30" y="30" width="160" height="50" rx="8" fill="#FEE2E2" stroke="#EF4444" stroke-width="1.5" />
+  <text x="110" y="50" font-size="10" font-weight="bold" fill="#B91C1C" text-anchor="middle">STIMULUS INITIAL</text>
+  <text x="110" y="66" font-size="9" fill="#7F1D1D" text-anchor="middle">▲ Pression Osmotique (Perte d'eau)</text>
+
+  <!-- Détecteur : Osmorécepteurs Hypothalamus -->
+  <rect x="230" y="30" width="160" height="50" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="310" y="50" font-size="10" font-weight="bold" fill="#B45309" text-anchor="middle">CENTRE INTÉGRATEUR</text>
+  <text x="310" y="66" font-size="9" fill="#78350F" text-anchor="middle">Osmorécepteurs Hypothalamiques</text>
+
+  <!-- Flèche 1 -> 2 -->
+  <path d="M 190 55 L 225 55" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Effecteur endocrine : Post-hypophyse & ADH -->
+  <rect x="430" y="30" width="160" height="50" rx="8" fill="#E0E7FF" stroke="#6366F1" stroke-width="1.5" />
+  <text x="510" y="50" font-size="10" font-weight="bold" fill="#4338CA" text-anchor="middle">POSTHYPOPHYSE</text>
+  <text x="510" y="66" font-size="9" fill="#312E81" text-anchor="middle">Libération massive d'ADH</text>
+
+  <!-- Flèche 2 -> 3 -->
+  <path d="M 390 55 L 425 55" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Descente vers les reins -->
+  <path d="M 510 80 L 510 145" stroke="#6366F1" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="518" y="115" font-size="9" font-weight="bold" fill="#4338CA">ADH sanguine</text>
+
+  <!-- Organe cible : Rein / Tubes collecteurs -->
+  <rect x="360" y="150" width="230" height="55" rx="8" fill="#ECFDF5" stroke="#10B981" stroke-width="1.5" />
+  <text x="475" y="170" font-size="10" font-weight="bold" fill="#047857" text-anchor="middle">ORGANE CIBLE : TUBE DE BELLINI</text>
+  <text x="475" y="185" font-size="9" fill="#065F46" text-anchor="middle">Insertion d'aquaporines AQP2</text>
+  <text x="475" y="198" font-size="8" fill="#047857" text-anchor="middle">▲ Réabsorption passive d'eau</text>
+
+  <!-- Résultat physiologique -->
+  <rect x="90" y="150" width="220" height="55" rx="8" fill="#F0F9FF" stroke="#0284C7" stroke-width="1.5" />
+  <text x="200" y="170" font-size="10" font-weight="bold" fill="#0369A1" text-anchor="middle">RÉPONSE PHYSIOLOGIQUE</text>
+  <text x="200" y="185" font-size="9" fill="#0C4A6E" text-anchor="middle">Urine concentrée (Oligurie)</text>
+  <text x="200" y="198" font-size="9" fill="#0369A1" text-anchor="middle">▼ Baisse de l'osmolalité plasmatique</text>
+
+  <!-- Flèche Organe cible -> Résultat -->
+  <path d="M 360 177 L 315 177" stroke="#10B981" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Rétrocontrôle négatif (Feedback négatif) -->
+  <path d="M 90 177 C 40 177, 40 100, 225 68" fill="none" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow)" />
+  <text x="45" y="125" font-size="9" font-weight="bold" fill="#DC2626">Rétrocontrôle (-)</text>
+</svg>`,
         tableData: {
           headers: ["Situation physiologique", "Pression osmotique plasmatique", "Sécrétion d'ADH posthypophysaire", "Perméabilité des tubes collecteurs", "Volume et aspect de l'urine émise"],
           rows: [

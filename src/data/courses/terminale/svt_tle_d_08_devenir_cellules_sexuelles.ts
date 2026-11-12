@@ -39,6 +39,55 @@ export const SVT_TLE_D_L08_DEVENIR_CELLULES_SEXUELLES: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Trajet et sélection des gamètes dans l'appareil génital féminin",
+        caption: "Sur 300 millions de spermatozoïdes émis, moins de 1 000 atteignent l'ampoule tubaire grâce à une sélection draconienne (glaire cervicale, acidité, capacitation utérine).",
+        svgContent: `<svg viewBox="0 0 620 320" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Trajet et sélection des gamètes">
+  <rect x="10" y="10" width="600" height="300" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Silhouette utérus et trompes -->
+  <path d="M 280 280 L 280 200 C 270 170, 240 140, 200 130 C 120 120, 80 80, 95 60 C 110 40, 140 60, 160 85 C 190 120, 230 140, 280 150 L 340 150 C 390 140, 430 120, 460 85 C 480 60, 510 40, 525 60 C 540 80, 500 120, 420 130 C 380 140, 350 170, 340 200 L 340 280 Z" fill="#FDF2F8" stroke="#F43F5E" stroke-width="2" />
+  
+  <!-- Vagin et Col utérin (filtration) -->
+  <rect x="290" y="225" width="40" height="30" rx="3" fill="#FECDD3" stroke="#E11D48" stroke-width="1.5" />
+  <text x="310" y="243" font-size="9" font-weight="800" text-anchor="middle" fill="#9F1239">Glaire</text>
+  <path d="M 310 290 L 310 260" stroke="#2563EB" stroke-width="3" />
+  <circle cx="310" cy="275" r="4" fill="#2563EB" />
+  
+  <!-- Encadré dépôt vaginal -->
+  <rect x="140" y="260" width="130" height="38" rx="6" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.2" />
+  <text x="205" y="275" font-size="9.5" font-weight="800" text-anchor="middle" fill="#1D4ED8">1. Dépôt vaginal</text>
+  <text x="205" y="288" font-size="8.5" text-anchor="middle" fill="#2563EB">200-400 millions spz</text>
+
+  <!-- Encadré filtre col utérin -->
+  <rect x="360" y="220" width="150" height="38" rx="6" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.2" />
+  <text x="435" y="235" font-size="9.5" font-weight="800" text-anchor="middle" fill="#B91C1C">2. Filtre cervical</text>
+  <text x="435" y="248" font-size="8.5" text-anchor="middle" fill="#DC2626">&gt; 99% éliminés (acidité/glaire)</text>
+
+  <!-- Cavité utérine (capacitation) -->
+  <ellipse cx="310" cy="180" rx="20" ry="12" fill="#FCE7F3" stroke="#DB2777" stroke-width="1" />
+  <rect x="235" y="165" width="150" height="26" rx="5" fill="#FDF4FF" stroke="#A855F7" stroke-width="1" />
+  <text x="310" y="182" font-size="9.5" font-weight="800" text-anchor="middle" fill="#7E22CE">3. Capacitation utérine</text>
+
+  <!-- Ovaire gauche avec ovulation -->
+  <ellipse cx="120" cy="95" rx="18" ry="12" fill="#FBCFE8" stroke="#DB2777" stroke-width="1.5" />
+  <text x="120" y="98" font-size="8" font-weight="700" text-anchor="middle" fill="#9D174D">Ovaire</text>
+  <!-- Ovocyte expulsé -->
+  <circle cx="108" cy="72" r="5" fill="#F43F5E" />
+  <text x="108" y="62" font-size="8" font-weight="800" text-anchor="middle" fill="#BE123C">Ovocyte II</text>
+
+  <!-- Lieu de fécondation : Ampoule tubaire droite (tiers supérieur) -->
+  <ellipse cx="485" cy="85" rx="28" ry="18" fill="#FEF08A" fill-opacity="0.5" stroke="#CA8A04" stroke-width="2" stroke-dasharray="3,2" />
+  <circle cx="485" cy="85" r="6" fill="#F43F5E" />
+  <!-- Spz arrivant à l'ampoule -->
+  <circle cx="475" cy="88" r="2.5" fill="#2563EB" />
+  <circle cx="495" cy="82" r="2.5" fill="#2563EB" />
+  
+  <rect x="420" y="25" width="180" height="42" rx="6" fill="#FEFCE8" stroke="#EAB308" stroke-width="1.5" />
+  <text x="510" y="42" font-size="10.5" font-weight="900" text-anchor="middle" fill="#854D0E">4. AMPOULE TUBAIRE</text>
+  <text x="510" y="56" font-size="9" text-anchor="middle" fill="#A16207">Lieu exclusif de la fécondation (~300 spz)</text>
+
+  <!-- Bilan inférieur -->
+  <text x="310" y="305" font-size="10.5" font-weight="700" text-anchor="middle" fill="currentColor">Rendement extrême de sélection : 1 spermatozoïde sur un million atteint l'ampoule tubaire</text>
+</svg>`,
         tableData: {
           headers: ["Étape anatomique", "Gamète concerné", "Événement physiologique", "Conséquence biologique"],
           rows: [
@@ -157,6 +206,60 @@ export const SVT_TLE_D_L08_DEVENIR_CELLULES_SEXUELLES: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Chronologie cytologique de la fécondation",
+        caption: "La fécondation réunit 4 étapes clés : réaction acrosomique, réaction corticale anti-polyspermie, reprise de méiose avec émission du 2e globule polaire, puis caryogamie donnant le zygote 2n.",
+        svgContent: `<svg viewBox="0 0 620 220" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Étapes cytologiques de la fécondation">
+  <rect x="5" y="5" width="610" height="210" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- 1. Réaction acrosomique -->
+  <g transform="translate(15, 15)">
+    <rect x="0" y="0" width="135" height="180" rx="10" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1.2" />
+    <text x="67" y="20" font-size="10.5" font-weight="900" text-anchor="middle" fill="#BE123C">1. ACROSOME</text>
+    <circle cx="67" cy="110" r="42" fill="#FFE4E6" stroke="#F43F5E" stroke-width="2" />
+    <!-- Spz avec acrosome libérant enzymes -->
+    <path d="M 12 110 L 35 110" stroke="#2563EB" stroke-width="3" />
+    <circle cx="35" cy="110" r="4" fill="#1D4ED8" />
+    <circle cx="43" cy="110" r="2.5" fill="#F59E0B" />
+    <text x="67" y="165" font-size="9" text-anchor="middle" fill="#9F1239">Traversée ZP3</text>
+  </g>
+
+  <!-- 2. Réaction corticale -->
+  <g transform="translate(165, 15)">
+    <rect x="0" y="0" width="135" height="180" rx="10" fill="#FEFCE8" stroke="#FDE047" stroke-width="1.2" />
+    <text x="67" y="20" font-size="10.5" font-weight="900" text-anchor="middle" fill="#854D0E">2. ANTI-POLYSPERMIE</text>
+    <circle cx="67" cy="110" r="42" fill="#FEF9C3" stroke="#EAB308" stroke-width="3" stroke-dasharray="3,2" />
+    <!-- Granules corticaux exocytés -->
+    <circle cx="38" cy="85" r="2.5" fill="#D97706" />
+    <circle cx="45" cy="130" r="2.5" fill="#D97706" />
+    <circle cx="95" cy="85" r="2.5" fill="#D97706" />
+    <text x="67" y="165" font-size="9" text-anchor="middle" fill="#854D0E">Réaction corticale</text>
+  </g>
+
+  <!-- 3. Achèvement méiose II -->
+  <g transform="translate(315, 15)">
+    <rect x="0" y="0" width="135" height="180" rx="10" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.2" />
+    <text x="67" y="20" font-size="10.5" font-weight="900" text-anchor="middle" fill="#15803D">3. MÉIOSE II</text>
+    <circle cx="67" cy="110" r="42" fill="#DCFCE7" stroke="#22C55E" stroke-width="2" />
+    <!-- 1er GP et 2e GP émis -->
+    <circle cx="32" cy="78" r="6" fill="#86EFAC" stroke="#16A34A" stroke-width="1.2" />
+    <text x="32" y="81" font-size="7" font-weight="700" text-anchor="middle" fill="#14532D">1er GP</text>
+    <circle cx="45" cy="65" r="6" fill="#86EFAC" stroke="#16A34A" stroke-width="1.2" />
+    <text x="45" y="68" font-size="7" font-weight="700" text-anchor="middle" fill="#14532D">2e GP</text>
+    <text x="67" y="165" font-size="9" text-anchor="middle" fill="#166534">Émission 2e GP</text>
+  </g>
+
+  <!-- 4. Caryogamie / Zygote -->
+  <g transform="translate(465, 15)">
+    <rect x="0" y="0" width="135" height="180" rx="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.2" />
+    <text x="67" y="20" font-size="10.5" font-weight="900" text-anchor="middle" fill="#1D4ED8">4. CARYOGAMIE</text>
+    <circle cx="67" cy="110" r="42" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2.5" />
+    <!-- 2 pronucléus qui fusionnent -->
+    <ellipse cx="58" cy="110" rx="12" ry="10" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.5" />
+    <text x="58" y="113" font-size="8" font-weight="800" text-anchor="middle" fill="#1E40AF">♂ (n)</text>
+    <ellipse cx="76" cy="110" rx="12" ry="10" fill="#FBCFE8" stroke="#DB2777" stroke-width="1.5" />
+    <text x="76" y="113" font-size="8" font-weight="800" text-anchor="middle" fill="#9D174D">♀ (n)</text>
+    <text x="67" y="165" font-size="9" text-anchor="middle" fill="#1E40AF">Zygote (2n)</text>
+  </g>
+</svg>`,
         tableData: {
           headers: ["Phase", "Acteurs cellulaires", "Mécanisme clé", "Conséquence immédiate"],
           rows: [

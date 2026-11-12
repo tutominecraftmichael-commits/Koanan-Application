@@ -160,6 +160,47 @@ export const SVT_TLE_D_L07_ORGANES_SEXUELS_HOMME: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Régulation neuro-endocrine de la fonction ovarienne et boucles de rétrocontrôle",
+        caption: "L'axe gonadotrope féminin : rétrocontrôle négatif permanent alternant avec un rétrocontrôle positif déclencheur du pic de LH au 14e jour.",
+        svgContent: `<svg viewBox="0 0 620 310" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Axe hypothalamo-hypophyso-ovarien">
+  <rect x="10" y="10" width="600" height="290" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Hypothalamus -->
+  <rect x="230" y="25" width="160" height="42" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="310" y="42" font-size="10" font-weight="bold" fill="#B45309" text-anchor="middle">HYPOTHALAMUS</text>
+  <text x="310" y="56" font-size="9" fill="#78350F" text-anchor="middle">GnRH pulsatile</text>
+
+  <!-- Flèche GnRH -->
+  <path d="M 310 67 L 310 95" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Antéhypophyse -->
+  <rect x="220" y="100" width="180" height="45" rx="8" fill="#E0E7FF" stroke="#6366F1" stroke-width="1.5" />
+  <text x="310" y="118" font-size="10" font-weight="bold" fill="#4338CA" text-anchor="middle">ANTÉHYPOPHYSE</text>
+  <text x="310" y="133" font-size="9" fill="#312E81" text-anchor="middle">FSH (croissance) &amp; LH (ovulation)</text>
+
+  <!-- Flèches FSH et LH vers ovaire -->
+  <path d="M 270 145 L 270 190" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="250" y="170" font-size="9" font-weight="bold" fill="#2563EB">FSH</text>
+  <path d="M 350 145 L 350 190" stroke="#8B5CF6" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="370" y="170" font-size="9" font-weight="bold" fill="#7C3AED">LH</text>
+
+  <!-- Ovaires -->
+  <rect x="210" y="195" width="200" height="50" rx="8" fill="#FCE7F3" stroke="#EC4899" stroke-width="1.5" />
+  <text x="310" y="214" font-size="10" font-weight="bold" fill="#BE185D" text-anchor="middle">OVAIRES (Follicule &amp; Corps jaune)</text>
+  <text x="310" y="231" font-size="9" fill="#9D174D" text-anchor="middle">Œstrogènes &amp; Progestérone</text>
+
+  <!-- Rétrocontrôle négatif (gauche, rouge) -->
+  <path d="M 210 220 C 100 220, 100 80, 225 45" fill="none" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow)" />
+  <rect x="65" y="125" width="105" height="34" rx="6" fill="#FEE2E2" stroke="#EF4444" />
+  <text x="117" y="139" font-size="8" font-weight="bold" fill="#B91C1C" text-anchor="middle">Rétrocontrôle (-)</text>
+  <text x="117" y="151" font-size="7" fill="#7F1D1D" text-anchor="middle">Phase folliculaire précoce</text>
+
+  <!-- Rétrocontrôle positif (droite, vert) -->
+  <path d="M 410 220 C 520 220, 520 80, 395 45" fill="none" stroke="#10B981" stroke-width="2.5" marker-end="url(#arrow)" />
+  <rect x="450" y="125" width="120" height="38" rx="6" fill="#ECFDF5" stroke="#10B981" />
+  <text x="510" y="139" font-size="8" font-weight="bold" fill="#047857" text-anchor="middle">Rétrocontrôle (+)</text>
+  <text x="510" y="150" font-size="7" fill="#065F46" text-anchor="middle">Seuil œstrogènes dépassé</text>
+  <text x="510" y="159" font-size="7" font-weight="bold" fill="#047857" text-anchor="middle">→ PIC DE LH (Ovulation)</text>
+</svg>`,
         tableData: {
           headers: ["Période du cycle", "Hormones ovariennes émises", "Type de rétrocontrôle", "Conséquence sur l'axe gonadotrope"],
           rows: [
@@ -279,6 +320,55 @@ export const SVT_TLE_D_L07_ORGANES_SEXUELS_HOMME: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Compartiments testiculaires et régulation endocrine chez l'homme",
+        caption: "Axe hypothalamo-hypophyso-testiculaire : régulation à double compartiment (cellules de Leydig productrices de testostérone et cellules de Sertoli régulatrices de la spermatogenèse).",
+        svgContent: `<svg viewBox="0 0 620 310" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Axe gonadotrope masculin">
+  <rect x="10" y="10" width="600" height="290" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Hypothalamus -->
+  <rect x="230" y="25" width="160" height="40" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="310" y="42" font-size="10" font-weight="bold" fill="#B45309" text-anchor="middle">HYPOTHALAMUS</text>
+  <text x="310" y="55" font-size="9" fill="#78350F" text-anchor="middle">GnRH pulsatile</text>
+
+  <!-- Flèche GnRH -->
+  <path d="M 310 65 L 310 95" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Antéhypophyse -->
+  <rect x="220" y="95" width="180" height="42" rx="8" fill="#E0E7FF" stroke="#6366F1" stroke-width="1.5" />
+  <text x="310" y="112" font-size="10" font-weight="bold" fill="#4338CA" text-anchor="middle">ANTÉHYPOPHYSE</text>
+  <text x="310" y="127" font-size="9" fill="#312E81" text-anchor="middle">Sécrétion de LH et FSH</text>
+
+  <!-- Voie LH (gauche) -->
+  <path d="M 260 137 L 170 185" stroke="#EF4444" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="195" y="155" font-size="9" font-weight="bold" fill="#DC2626">LH</text>
+
+  <!-- Voie FSH (droite) -->
+  <path d="M 360 137 L 450 185" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="425" y="155" font-size="9" font-weight="bold" fill="#2563EB">FSH</text>
+
+  <!-- Compartiment Leydig (gauche) -->
+  <rect x="70" y="190" width="200" height="52" rx="8" fill="#FEE2E2" stroke="#EF4444" stroke-width="1.5" />
+  <text x="170" y="208" font-size="10" font-weight="bold" fill="#B91C1C" text-anchor="middle">CELLULES DE LEYDIG</text>
+  <text x="170" y="222" font-size="8" fill="#7F1D1D" text-anchor="middle">(Tissu interstitiel)</text>
+  <text x="170" y="234" font-size="9" font-weight="bold" fill="#DC2626" text-anchor="middle">→ Sécrétion de Testostérone</text>
+
+  <!-- Compartiment Sertoli (droite) -->
+  <rect x="350" y="190" width="200" height="52" rx="8" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1.5" />
+  <text x="450" y="208" font-size="10" font-weight="bold" fill="#1D4ED8" text-anchor="middle">CELLULES DE SERTOLI</text>
+  <text x="450" y="222" font-size="8" fill="#1E3A8A" text-anchor="middle">(Tubes séminifères)</text>
+  <text x="450" y="234" font-size="9" font-weight="bold" fill="#2563EB" text-anchor="middle">→ Spermatogenèse + Inhibine</text>
+
+  <!-- Synergie testostérone vers Sertoli -->
+  <path d="M 270 216 L 345 216" stroke="#059669" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="307" y="210" font-size="7" font-weight="bold" fill="#059669" text-anchor="middle">Synergie locale</text>
+
+  <!-- Rétrocontrôle testostérone sur Hypothalamus/Hypophyse -->
+  <path d="M 120 190 C 40 160, 40 60, 225 40" fill="none" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow)" />
+  <text x="55" y="100" font-size="8" font-weight="bold" fill="#DC2626">RC (-) Testostérone</text>
+
+  <!-- Rétrocontrôle Inhibine sur FSH hypophyse -->
+  <path d="M 500 190 C 580 160, 580 115, 405 115" fill="none" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow)" />
+  <text x="560" y="145" font-size="8" font-weight="bold" fill="#2563EB">RC (-) Inhibine</text>
+</svg>`,
         tableData: {
           headers: ["Compartiment testiculaire", "Types cellulaires majeurs", "Hormone hypophysaire stimulante", "Produit / Hormone sécrété", "Rôle physiologique et rétrocontrôle"],
           rows: [
