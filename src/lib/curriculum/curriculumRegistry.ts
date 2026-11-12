@@ -44,6 +44,9 @@ import { PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES } from '../../data/
 import { PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE } from '../../data/courses/terminale/physique_tle_cd_14_modele_corpusculaire_lumiere';
 import { PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE } from '../../data/courses/terminale/physique_tle_cd_15_modele_ondulatoire_lumiere';
 import { PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES } from '../../data/courses/terminale/physique_tle_cd_16_reactions_nucleaires_provoquees';
+import { SVT_TLE_D_L01_FONCTIONNEMENT_TISSU_NERVEUX } from '../../data/courses/terminale/svt_tle_d_01_fonctionnement_tissu_nerveux';
+import { SVT_TLE_D_L02_FONCTIONNEMENT_MUSCLE_STRIE_SQUELETTIQUE } from '../../data/courses/terminale/svt_tle_d_02_fonctionnement_muscle_strie_squelettique';
+import { SVT_TLE_D_L03_REFLEXE_CONDITIONNEL } from '../../data/courses/terminale/svt_tle_d_03_reflexe_conditionnel';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
 import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/terminale/geo_tle_problemes_developpement_ci';
@@ -91899,6 +91902,10 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE,
   PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE,
   PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES,
+  // Terminale C & D — SVT (format v2 Masterclass)
+  SVT_TLE_D_L01_FONCTIONNEMENT_TISSU_NERVEUX,
+  SVT_TLE_D_L02_FONCTIONNEMENT_MUSCLE_STRIE_SQUELETTIQUE,
+  SVT_TLE_D_L03_REFLEXE_CONDITIONNEL,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
   GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI,
