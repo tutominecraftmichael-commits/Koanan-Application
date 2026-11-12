@@ -886,10 +886,15 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   //  - s'il a vraiment travaillé (5 réponses ou plus), la prochaine séance passe à l'autre volet,
   //    exactement comme à la fin du temps.
   const alternationDoneRef = useRef<boolean>(false);
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
   const leaveRef = useRef<(final: boolean) => void>(() => {});
   leaveRef.current = (final: boolean) => {
     try {
       saveWhereStopped();
+      if (final && phaseRef.current === 'session_celebration' && studySessionId) {
+        onSessionCompleted(studySessionId);
+      }
       if (final && !alternationDoneRef.current && totalExercisesAnswered >= 5) {
         alternationDoneRef.current = true;
         markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);

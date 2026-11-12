@@ -1,20 +1,33 @@
 /**
  * Boutons « propres » (classe .konan-btn-shine) : une barre de lumière traverse le bouton quand on le touche.
  *  - installShineOnTap() : lance la barre de lumière au toucher, pour tous ces boutons de l'application ;
- *  - afterShine(action) : laisse la lumière passer (≈ 0,3 s) avant de changer d'écran,
- *    et ignore un deuxième toucher pendant ce temps (pas de séance validée puis dévalidée).
+ *  - afterShine(action) : exécute l'action de façon instantanée et réactive,
+ *    tout en ignorant les doubles clics accidentels ultra-rapides (< 300 ms).
  */
-const SHINE_DELAY_MS = 340;
-let pending = false;
+let lastClickTimestamp = 0;
 
-export function afterShine<A extends unknown[]>(action: (...args: A) => void): (...args: A) => void {
+export function afterShine<A extends unknown[]>(action: (...args: A) => void, delayMs = 0): (...args: A) => void {
   return (...args: A) => {
-    if (pending) return;
-    pending = true;
-    setTimeout(() => {
-      pending = false;
-      action(...args);
-    }, SHINE_DELAY_MS);
+    const now = Date.now();
+    // Anti-double-clic : ignore les clics rapprochés involontaires (< 300ms)
+    if (now - lastClickTimestamp < 300) return;
+    lastClickTimestamp = now;
+
+    if (delayMs <= 0) {
+      try {
+        action(...args);
+      } catch (err) {
+        console.error('Erreur lors du clic bouton:', err);
+      }
+    } else {
+      window.setTimeout(() => {
+        try {
+          action(...args);
+        } catch (err) {
+          console.error('Erreur lors du clic bouton différé:', err);
+        }
+      }, delayMs);
+    }
   };
 }
 

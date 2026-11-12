@@ -30,7 +30,8 @@ import {
   Brain,
   Moon,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Play
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { ProFeatureModal } from '../../components/common/ProFeatureModal';
@@ -515,25 +516,34 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         <span>Session validée</span>
                       </span>
                     ) : isToday ? (
-                      <Button
-                        variant={session.isRescheduledToday ? 'secondary' : 'glow'}
-                        size="sm"
-                        leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                        onClick={afterShine(() => {
-                          if (_onStartFocusSession) {
-                            _onStartFocusSession(session);
-                          } else {
-                            onToggleSessionComplete(session.id);
-                          }
-                        })}
-                        className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer active:translate-y-1 ${
-                          session.isRescheduledToday
-                            ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
-                            : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
-                        }`}
-                      >
-                        {session.isRescheduledToday ? 'Démarrer la séance' : 'Valider la session'}
-                      </Button>
+                      <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto justify-end">
+                        {_onStartFocusSession && (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<Play className="w-3.5 h-3.5 fill-current text-cyan-600 dark:text-cyan-400" />}
+                            onClick={afterShine(() => _onStartFocusSession(session))}
+                            className="text-xs font-bold px-3 py-2 rounded-xl transition-all cursor-pointer border border-cyan-400/40 bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-950/40 dark:hover:bg-cyan-900/60 text-cyan-900 dark:text-cyan-200"
+                            title="Démarrer le cours guidé ou le chronomètre d'étude"
+                          >
+                            Démarrer
+                          </Button>
+                        )}
+                        <Button
+                          variant={session.isRescheduledToday ? 'secondary' : 'glow'}
+                          size="sm"
+                          leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
+                          onClick={afterShine(() => onToggleSessionComplete(session.id))}
+                          className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer active:translate-y-1 ${
+                            session.isRescheduledToday
+                              ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
+                              : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
+                          }`}
+                          title="Valider et enregistrer cette séance"
+                        >
+                          Valider la session
+                        </Button>
+                      </div>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 select-none">
                         <Clock className="w-3.5 h-3.5 text-slate-400" />

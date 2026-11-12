@@ -92074,6 +92074,19 @@ function getExpandedChapter(chapter: CurriculumChapter): CurriculumChapter {
 }
 
 /**
+ * Vérifie instantanément (en microsecondes, sans étendre les chapitres en mémoire)
+ * si des cours existent pour cette matière et cette classe.
+ */
+export function hasCurriculumChapters(
+  subjectId: StemSubjectId,
+  gradeLevel: CurriculumGradeLevel
+): boolean {
+  return AUTHORED_CHAPTERS.some(
+    (c) => c.subjectId === subjectId && chapterServesGrade(c, gradeLevel)
+  );
+}
+
+/**
  * Récupère les chapitres officiels pour une matière et une classe données.
  * RÈGLE STRICTE : uniquement la classe exacte de l'élève. Aucune bascule vers
  * une autre classe ou une autre matière. Renvoie un tableau vide si le cours
