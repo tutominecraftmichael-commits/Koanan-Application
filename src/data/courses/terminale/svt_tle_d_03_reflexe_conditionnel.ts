@@ -1,4 +1,4 @@
-﻿import type { CurriculumChapter } from '../../../lib/curriculum/types';
+import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
 export const SVT_TLE_D_L03_REFLEXE_CONDITIONNEL: CurriculumChapter = {
   id: "terminale_d_svt_ch04_le_reflexe_conditionnel",

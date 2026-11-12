@@ -744,3 +744,4 @@ export const SVT_TLE_D_L02_FONCTIONNEMENT_MUSCLE_STRIE_SQUELETTIQUE: CurriculumC
     }
   ]
 };
+
