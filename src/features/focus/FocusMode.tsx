@@ -16,7 +16,8 @@ import {
   VolumeX, 
   ArrowLeft, 
   Star, 
-  FileText
+  FileText,
+  BookOpen
 } from 'lucide-react';
 
 export interface FocusModeProps {
@@ -47,6 +48,17 @@ export const FocusMode: React.FC<FocusModeProps> = ({
   const [satisfactionRating, setSatisfactionRating] = useState<1 | 2 | 3 | 4 | 5>(5);
   const [completedObjectives, setCompletedObjectives] = useState<number[]>([]);
   const [isFinished, setIsFinished] = useState(false);
+  const [chapterName, setChapterName] = useState<string>(() => {
+    if (!session?.title) return '';
+    const clean = session.title.trim();
+    if (clean.toLowerCase().startsWith('session') || clean.toLowerCase().startsWith('révision')) return '';
+    return clean;
+  });
+  const [isEditingChapter, setIsEditingChapter] = useState<boolean>(() => {
+    if (!session?.title) return true;
+    const clean = session.title.trim().toLowerCase();
+    return clean.startsWith('session') || clean.startsWith('révision') || clean.length === 0;
+  });
 
   const playCompletionChime = () => {
     if (!soundEnabled) return;
@@ -124,6 +136,12 @@ export const FocusMode: React.FC<FocusModeProps> = ({
     // Un élève ne valide pas une matière en 1 min : valider une séance lui crédite sa vraie durée d'étude prévue
     const effectiveDuration = isFinished ? plannedMins : Math.max(plannedMins, elapsedMinutes);
 
+    const cleanChapter = chapterName.trim();
+    const topicSummary = cleanChapter || session?.title || currentSubject?.name || 'Matière';
+    const finalSummary = reflectionNotes
+      ? `${reflectionNotes}${cleanChapter ? ` (Chapitre : ${cleanChapter})` : ''}`
+      : `Session validée sur le chapitre : ${topicSummary}`;
+
     const newLog: StudyLog = {
       id: generateId(),
       sessionId: session?.id,
@@ -131,7 +149,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
       date: new Date().toISOString().split('T')[0],
       durationMinutes: effectiveDuration,
       satisfactionRating,
-      summary: reflectionNotes || `Session terminée sur ${session?.title || currentSubject?.name}`,
+      summary: finalSummary,
       createdAt: new Date().toISOString(),
     };
 
@@ -236,6 +254,64 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                   </p>
                 </div>
               )}
+
+              {/* DEMANDE DU CHAPITRE ÉTUDIÉ SUR LE CAHIER */}
+              <div className="p-3 sm:p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-left max-w-lg mx-auto space-y-2 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <BookOpen className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
+                    Chapitre en cours d'étude
+                  </span>
+                  {chapterName && !isEditingChapter && (
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingChapter(true)}
+                      className="text-[11px] font-bold text-cyan-600 dark:text-cyan-400 hover:underline cursor-pointer"
+                    >
+                      Modifier
+                    </button>
+                  )}
+                </div>
+
+                {isEditingChapter ? (
+                  <div className="space-y-2">
+                    <p className="text-xs text-slate-600 dark:text-slate-400">
+                      Sur quel chapitre travailles-tu dans ton cahier ?
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={chapterName}
+                        onChange={(e) => setChapterName(e.target.value)}
+                        placeholder="Ex : Nombres Complexes, Loi de Laplace, Tissu nerveux..."
+                        className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        autoFocus={!chapterName}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && chapterName.trim()) {
+                            setIsEditingChapter(false);
+                          }
+                        }}
+                      />
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        onClick={() => {
+                          if (chapterName.trim()) setIsEditingChapter(false);
+                        }}
+                        disabled={!chapterName.trim()}
+                        className="text-xs font-bold px-3 py-2 rounded-xl"
+                      >
+                        OK
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-2.5 rounded-xl bg-cyan-50/80 dark:bg-cyan-950/50 border border-cyan-200 dark:border-cyan-800/40 text-xs font-bold text-cyan-900 dark:text-cyan-200 flex items-center justify-between">
+                    <span className="truncate">📖 {chapterName}</span>
+                    <span className="text-[10px] text-cyan-700 dark:text-cyan-400 font-normal ml-2">Enregistré</span>
+                  </div>
+                )}
+              </div>
 
               {/* GIANT COUNTDOWN TIMER (Responsive for all phones) */}
               <div className="py-2 sm:py-6">

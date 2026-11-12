@@ -1715,9 +1715,15 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
         {/* Titres */}
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold">
+          <button
+            type="button"
+            onClick={() => setShowChapterSelector(true)}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/60 dark:hover:bg-indigo-900/70 border border-indigo-200/80 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold cursor-pointer transition-colors"
+            title="Changer de chapitre"
+          >
             <span>Ch. {currentItem.chapterOrder} : {currentItem.chapterTitle}</span>
-          </div>
+            <span className="text-[10px] text-indigo-500 font-normal underline">Changer ▾</span>
+          </button>
           {currentItem.isReview && (
             <p className="text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-300">
               Révision : tu as déjà vu cette leçon. Je la remets pour que tu la retiennes (en priorité celles où tu as fait des erreurs).

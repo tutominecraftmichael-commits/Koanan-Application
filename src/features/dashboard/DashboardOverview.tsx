@@ -26,8 +26,7 @@ import {
   ChevronDown,
   ChevronUp,
   Moon,
-  Zap,
-  Play
+  Zap
 } from 'lucide-react';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
@@ -288,34 +287,26 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   )}
                 </div>
               </div>
-              <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto shrink-0">
-                {onStartFocusSession && (
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<Play className="w-4 h-4 fill-current text-cyan-600 dark:text-cyan-400" />}
-                    onClick={afterShine(() => onStartFocusSession(nextStudySession))}
-                    className="w-full sm:w-auto cursor-pointer text-xs font-black whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-0.5 border border-cyan-400/40 bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-950/40 dark:hover:bg-cyan-900/60 text-cyan-900 dark:text-cyan-200"
-                    title="Démarrer le cours guidé ou le chronomètre d'étude"
-                  >
-                    Démarrer la séance
-                  </Button>
-                )}
-                <Button
-                  variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
-                  size="sm"
-                  leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                  onClick={afterShine(() => onToggleSessionComplete(nextStudySession.id))}
-                  className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto cursor-pointer text-xs font-black whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-1 ${
-                    nextStudySession.isRescheduledToday
-                      ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
-                      : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
-                  }`}
-                  title="Valider directement cette séance et marquer comme terminée"
-                >
-                  Valider la session
-                </Button>
-              </div>
+              <Button
+                variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
+                size="sm"
+                leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
+                onClick={afterShine(() => {
+                  if (onStartFocusSession) {
+                    onStartFocusSession(nextStudySession);
+                  } else {
+                    onToggleSessionComplete(nextStudySession.id);
+                  }
+                })}
+                className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto cursor-pointer text-xs font-black whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-1 ${
+                  nextStudySession.isRescheduledToday
+                    ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
+                    : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
+                }`}
+                title="Lancer le cours guidé ou le chronomètre d'étude pour cette séance"
+              >
+                {nextStudySession.isRescheduledToday ? 'Valider le rattrapage' : 'Valider la séance'}
+              </Button>
             </div>
           )}
         </div>
@@ -510,32 +501,26 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                           <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 break-words leading-snug">{sub?.name}</p>
                         </div>
 
-                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 self-stretch sm:self-center justify-end shrink-0 pt-2 sm:pt-0 border-t border-slate-100 dark:border-slate-800/60 sm:border-t-0">
-                          {onStartFocusSession && (
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<Play className="w-3.5 h-3.5 fill-current text-cyan-600 dark:text-cyan-400" />}
-                              onClick={afterShine(() => onStartFocusSession(session))}
-                              className="text-xs font-bold px-3 py-2 rounded-xl transition-all cursor-pointer border border-cyan-400/40 bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-950/40 dark:hover:bg-cyan-900/60 text-cyan-900 dark:text-cyan-200"
-                              title="Démarrer le cours guidé ou le chronomètre d'étude"
-                            >
-                              Démarrer
-                            </Button>
-                          )}
+                        <div className="flex items-center gap-2 self-stretch sm:self-center justify-end shrink-0 pt-2 sm:pt-0 border-t border-slate-100 dark:border-slate-800/60 sm:border-t-0">
                           <Button
                             variant={isRescheduled ? "secondary" : "glow"}
                             size="sm"
                             leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                            onClick={afterShine(() => onToggleSessionComplete(session.id))}
+                            onClick={afterShine(() => {
+                              if (onStartFocusSession) {
+                                onStartFocusSession(session);
+                              } else {
+                                onToggleSessionComplete(session.id);
+                              }
+                            })}
                             className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-1 ${
                               isRescheduled
                                 ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
                                 : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                             }`}
-                            title="Valider et enregistrer cette séance"
+                            title="Lancer le cours guidé ou le chronomètre d'étude pour cette séance"
                           >
-                            <span>Valider la session</span>
+                            <span>{isRescheduled ? 'Valider le rattrapage' : 'Valider la séance'}</span>
                           </Button>
                         </div>
                       </div>
