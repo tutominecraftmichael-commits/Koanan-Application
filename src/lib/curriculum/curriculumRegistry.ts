@@ -5,7 +5,6 @@ import { physique2deCChapters } from '../../data/courses/physique_2de_c';
 import { svt2deCChapters } from '../../data/courses/svt_2de_c';
 import { francais2deAChapters } from '../../data/courses/francais_2de_a';
 import { maths2deACalculsNumeriquesChapter } from '../../data/courses/maths_2de_a';
-import { MATHS_TLE_C_L04_DIVISIBILITE } from '../../data/courses/terminale/maths_tle_c_divisibilite';
 import { MATHS_TLE_D_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_d_limites_continuite';
 import { MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_d_probabilite_conditionnelle';
 import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_d_derivabilite_etude_fonctions';
@@ -141,7 +140,6 @@ import { SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE } from '../../data/courses/termi
 import { SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN } from '../../data/courses/terminale/svt_tle_a_heredite_sexe_groupe_sanguin';
 import { SVT_TLE_A_L06_PREVISIONS_GENETIQUES } from '../../data/courses/terminale/svt_tle_a_previsions_genetiques';
 import { SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES } from '../../data/courses/terminale/svt_tle_a_biosynthese_proteines';
-import { MATHS_TLE_C_L13_COMPLEXES_GEOMETRIE } from '../../data/courses/terminale/maths_tle_c_complexes_geometrie';
 import { FR_TLE_EOI_L01_SOLEILS_INDEPENDANCES } from '../../data/courses/terminale/fr_tle_soleils_independances';
 import { FR_TLE_GT_L02_CHAKA_HEROS_EPIQUE } from '../../data/courses/terminale/fr_tle_chaka_heros_epique';
 import { FR_TLE_EE_L03_RESUME_TEXTE } from '../../data/courses/terminale/fr_tle_resume_texte';
@@ -91014,8 +91012,6 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
 // jamais affichés : l'élève voit « Cours en préparation » à la place.
 // ============================================================================
 const AUTHORED_CHAPTERS: CurriculumChapter[] = [
-  // Terminale (format v2 : mini-leçons rédigées depuis les PDF officiels)
-  MATHS_TLE_C_L04_DIVISIBILITE,
   // Terminale D — Maths (format v2)
   MATHS_TLE_D_L01_LIMITES_CONTINUITE,
   MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE,
@@ -91099,8 +91095,6 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN,
   SVT_TLE_A_L06_PREVISIONS_GENETIQUES,
   SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES,
-  // Terminale C — Maths (format v2)
-  MATHS_TLE_C_L13_COMPLEXES_GEOMETRIE,
   // Terminale (A1, A2, C, D) — Français (format v2)
   FR_TLE_EOI_L01_SOLEILS_INDEPENDANCES,
   FR_TLE_GT_L02_CHAKA_HEROS_EPIQUE,

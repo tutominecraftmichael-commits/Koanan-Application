@@ -4,7 +4,7 @@ export const MATHS_TLE_D_L11_STATISTIQUE_DEUX_VARIABLES: CurriculumChapter = {
   id: "terminale_d_maths_ch11_statistique_a_deux_variables",
   subjectId: "maths",
   gradeLevel: "terminale_d",
-  alsoForGrades: ["terminale_c"],
+  alsoForGrades: [],
   order: 11,
   title: "Statistique à deux variables (Nuage de points, Droite de régression des moindres carrés et Méthode de Mayer)",
   summary: "Étude complète et approfondie des séries statistiques doubles : tableaux de contingence, séries et fréquences marginales, nuage de points, coordonnées du point moyen G, calcul de covariance, coefficient de corrélation linéaire de Bravais-Pearson, droites de régression par la méthode des moindres carrés, droite de Mayer et prévisions de situations réelles au Baccalauréat.",
