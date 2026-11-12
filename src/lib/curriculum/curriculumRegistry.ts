@@ -8,6 +8,9 @@ import { maths2deACalculsNumeriquesChapter } from '../../data/courses/maths_2de_
 import { MATHS_TLE_C_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_c_01_limites_continuite';
 import { MATHS_TLE_C_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_c_03_derivabilite_etude_fonctions';
 import { MATHS_TLE_C_L04_DIVISIBILITE_DANS_Z } from '../../data/courses/terminale/maths_tle_c_04_divisibilite_dans_z';
+import { MATHS_TLE_C_L04_PRIMITIVES } from '../../data/courses/terminale/maths_tle_c_04_primitives';
+import { MATHS_TLE_C_L05_LOGARITHME_NEPERIEN } from '../../data/courses/terminale/maths_tle_c_05_logarithme_neperien';
+import { MATHS_TLE_C_L06_NOMBRES_COMPLEXES } from '../../data/courses/terminale/maths_tle_c_06_nombres_complexes';
 import { MATHS_TLE_D_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_d_limites_continuite';
 import { MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_d_probabilite_conditionnelle';
 import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_d_derivabilite_etude_fonctions';
@@ -91019,6 +91022,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_TLE_C_L01_LIMITES_CONTINUITE,
   MATHS_TLE_C_L03_DERIVABILITE_ETUDE_FONCTIONS,
   MATHS_TLE_C_L04_DIVISIBILITE_DANS_Z,
+  MATHS_TLE_C_L04_PRIMITIVES,
+  MATHS_TLE_C_L05_LOGARITHME_NEPERIEN,
+  MATHS_TLE_C_L06_NOMBRES_COMPLEXES,
   // Terminale D — Maths (format v2)
   MATHS_TLE_D_L01_LIMITES_CONTINUITE,
   MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE,
