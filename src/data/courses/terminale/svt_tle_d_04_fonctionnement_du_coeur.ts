@@ -40,6 +40,52 @@ export const SVT_TLE_D_L04_FONCTIONNEMENT_DU_COEUR: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Hiérarchie anatomique et fonctionnelle du tissu nodal cardiaque",
+        caption: "Le nœud sinusal (Keith & Flack) génère l'onde d'excitation transmise au nœud septal, au faisceau de His et au réseau de Purkinje.",
+        svgContent: `<svg viewBox="0 0 620 350" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Tissu nodal et automatisme cardiaque">
+  <rect x="10" y="10" width="600" height="330" rx="16" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  <path d="M 230 85 C 230 45, 160 45, 150 85 C 130 145, 220 225, 310 295 C 400 225, 490 145, 470 85 C 460 45, 390 45, 390 85 C 390 135, 310 175, 230 85 Z" fill="#EF4444" fill-opacity="0.12" stroke="#DC2626" stroke-width="2.5" />
+  <path d="M 310 105 L 310 290" stroke="#991B1B" stroke-width="8" stroke-linecap="round" />
+  <ellipse cx="230" cy="110" rx="35" ry="25" fill="#3B82F6" fill-opacity="0.25" stroke="#2563EB" stroke-width="1.5" />
+  <text x="230" y="107" font-size="11" font-weight="800" text-anchor="middle" fill="#1D4ED8">Oreillette Droite</text>
+  <text x="230" y="120" font-size="9" text-anchor="middle" fill="#1E40AF">(Sang désoxygéné)</text>
+  <ellipse cx="390" cy="110" rx="35" ry="25" fill="#EF4444" fill-opacity="0.25" stroke="#DC2626" stroke-width="1.5" />
+  <text x="390" y="107" font-size="11" font-weight="800" text-anchor="middle" fill="#B91C1C">Oreillette Gauche</text>
+  <text x="390" y="120" font-size="9" text-anchor="middle" fill="#991B1B">(Sang oxygéné)</text>
+  <path d="M 205 155 Q 230 235 300 265 Q 295 155 205 155 Z" fill="#3B82F6" fill-opacity="0.18" stroke="#2563EB" stroke-width="1.5" />
+  <text x="250" y="205" font-size="12" font-weight="800" text-anchor="middle" fill="#1D4ED8">Ventricule Droit</text>
+  <path d="M 415 155 Q 390 235 320 265 Q 325 155 415 155 Z" fill="#EF4444" fill-opacity="0.2" stroke="#DC2626" stroke-width="2" />
+  <text x="370" y="205" font-size="12" font-weight="800" text-anchor="middle" fill="#B91C1C">Ventricule Gauche</text>
+  <text x="370" y="219" font-size="9" text-anchor="middle" fill="#991B1B">(Paroi épaisse)</text>
+  <circle cx="215" cy="95" r="9" fill="#F59E0B" stroke="#B45309" stroke-width="2" />
+  <circle cx="215" cy="95" r="4" fill="#FEF3C7" />
+  <path d="M 205 92 L 155 65" stroke="#D97706" stroke-width="1.8" />
+  <rect x="25" y="42" width="135" height="38" rx="8" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="92" y="57" font-size="11" font-weight="800" text-anchor="middle" fill="#B45309">1. NŒUD SINUSAL</text>
+  <text x="92" y="71" font-size="9.5" text-anchor="middle" fill="#92400E">Pacemaker (70-80/min)</text>
+  <path d="M 220 102 Q 260 115 290 130" stroke="#F59E0B" stroke-width="2.5" stroke-dasharray="3,3" fill="none" />
+  <circle cx="295" cy="135" r="8" fill="#F59E0B" stroke="#B45309" stroke-width="2" />
+  <circle cx="295" cy="135" r="3.5" fill="#FEF3C7" />
+  <path d="M 285 135 L 155 135" stroke="#D97706" stroke-width="1.8" />
+  <rect x="25" y="117" width="135" height="38" rx="8" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="92" y="132" font-size="11" font-weight="800" text-anchor="middle" fill="#B45309">2. NŒUD SEPTAL</text>
+  <text x="92" y="146" font-size="9.5" text-anchor="middle" fill="#92400E">Relais AV (40-50/min)</text>
+  <path d="M 302 140 L 310 175" stroke="#F59E0B" stroke-width="4.5" fill="none" />
+  <path d="M 310 175 L 295 235" stroke="#F59E0B" stroke-width="3" fill="none" />
+  <path d="M 310 175 L 325 235" stroke="#F59E0B" stroke-width="3" fill="none" />
+  <path d="M 312 180 L 465 180" stroke="#D97706" stroke-width="1.8" />
+  <rect x="460" y="162" width="140" height="38" rx="8" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="530" y="177" font-size="11" font-weight="800" text-anchor="middle" fill="#B45309">3. FAISCEAU DE HIS</text>
+  <text x="530" y="191" font-size="9.5" text-anchor="middle" fill="#92400E">Tronc &amp; branches (35/min)</text>
+  <path d="M 295 235 Q 255 250 235 215" stroke="#F59E0B" stroke-width="2" fill="none" />
+  <path d="M 295 235 Q 275 260 255 240" stroke="#F59E0B" stroke-width="1.8" fill="none" />
+  <path d="M 325 235 Q 365 250 385 215" stroke="#F59E0B" stroke-width="2" fill="none" />
+  <path d="M 325 235 Q 345 260 365 240" stroke="#F59E0B" stroke-width="1.8" fill="none" />
+  <path d="M 380 230 L 465 245" stroke="#D97706" stroke-width="1.8" />
+  <rect x="460" y="230" width="140" height="38" rx="8" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="530" y="245" font-size="11" font-weight="800" text-anchor="middle" fill="#B45309">4. PURKINJE</text>
+  <text x="530" y="259" font-size="9.5" text-anchor="middle" fill="#92400E">Myocarde ventriculaire</text>
+  <text x="310" y="325" font-size="11" font-weight="700" text-anchor="middle" fill="currentColor">Trajet de l'excitation : Nœud Sinusal → Nœud Septal → Faisceau de His → Réseau de Purkinje</text>
+</svg>`,
         tableData: {
           headers: ["Structure nodale", "Localisation anatomique", "Fréquence spontanée", "Rôle physiologique"],
           rows: [
@@ -158,6 +204,43 @@ export const SVT_TLE_D_L04_FONCTIONNEMENT_DU_COEUR: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Correspondance temporelle entre l'Électrocardiogramme (ECG) et le Cardiogramme mécanique",
+        caption: "L'onde P précède la systole auriculaire (0,10 s), le complexe QRS précède la systole ventriculaire (0,30 s), et l'onde T annonce la diastole générale (0,40 s).",
+        svgContent: `<svg viewBox="0 0 620 300" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="ECG et cycle cardiaque">
+  <rect x="10" y="10" width="600" height="280" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  <text x="30" y="34" font-size="11" font-weight="800" fill="#0284C7">1. ÉLECTROCARDIOGRAMME (Phénomènes bioélectriques)</text>
+  <line x1="40" y1="85" x2="580" y2="85" stroke="#94A3B8" stroke-width="1" stroke-dasharray="2,2" />
+  <path d="M 40 85 L 90 85" stroke="#0284C7" stroke-width="2.5" fill="none" />
+  <path d="M 90 85 Q 115 60 140 85" stroke="#0284C7" stroke-width="2.5" fill="none" />
+  <text x="115" y="55" font-size="12" font-weight="900" text-anchor="middle" fill="#0284C7">P</text>
+  <path d="M 140 85 L 175 85" stroke="#0284C7" stroke-width="2.5" fill="none" />
+  <path d="M 175 85 L 185 97" stroke="#0284C7" stroke-width="2.5" fill="none" />
+  <text x="183" y="110" font-size="11" font-weight="800" text-anchor="middle" fill="#0284C7">Q</text>
+  <path d="M 185 97 L 205 24" stroke="#0284C7" stroke-width="2.8" fill="none" />
+  <text x="205" y="20" font-size="13" font-weight="900" text-anchor="middle" fill="#0284C7">R</text>
+  <path d="M 205 24 L 225 105" stroke="#0284C7" stroke-width="2.8" fill="none" />
+  <text x="227" y="117" font-size="11" font-weight="800" text-anchor="middle" fill="#0284C7">S</text>
+  <path d="M 225 105 L 235 85 L 275 85" stroke="#0284C7" stroke-width="2.5" fill="none" />
+  <path d="M 275 85 Q 315 50 355 85" stroke="#0284C7" stroke-width="2.5" fill="none" />
+  <text x="315" y="45" font-size="12" font-weight="900" text-anchor="middle" fill="#0284C7">T</text>
+  <path d="M 355 85 L 580 85" stroke="#0284C7" stroke-width="2.5" fill="none" />
+  <line x1="30" y1="135" x2="590" y2="135" stroke="#E2E8F0" stroke-width="1.5" />
+  <text x="30" y="155" font-size="11" font-weight="800" fill="#059669">2. RÉVOLUTION CARDIAQUE MÉCANIQUE (Cycle complet T = 0,80 s)</text>
+  <rect x="80" y="170" width="80" height="40" rx="6" fill="#3B82F6" fill-opacity="0.25" stroke="#2563EB" stroke-width="1.8" />
+  <text x="120" y="187" font-size="11" font-weight="800" text-anchor="middle" fill="#1D4ED8">Phase AB</text>
+  <text x="120" y="201" font-size="9" text-anchor="middle" fill="#1E40AF">Systole auric. (0,1s)</text>
+  <line x1="115" y1="90" x2="115" y2="165" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="3,3" />
+  <rect x="165" y="170" width="180" height="40" rx="6" fill="#EF4444" fill-opacity="0.22" stroke="#DC2626" stroke-width="1.8" />
+  <text x="255" y="187" font-size="11" font-weight="800" text-anchor="middle" fill="#B91C1C">Phase CD (Systole ventriculaire)</text>
+  <text x="255" y="201" font-size="9" text-anchor="middle" fill="#991B1B">Contraction ventriculaire (0,30 s)</text>
+  <line x1="205" y1="110" x2="205" y2="165" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="3,3" />
+  <rect x="350" y="170" width="220" height="40" rx="6" fill="#10B981" fill-opacity="0.22" stroke="#059669" stroke-width="1.8" />
+  <text x="460" y="187" font-size="11" font-weight="800" text-anchor="middle" fill="#047857">Phase DE (Diastole générale)</text>
+  <text x="460" y="201" font-size="9" text-anchor="middle" fill="#065F46">Relâchement général du cœur (0,40 s)</text>
+  <line x1="355" y1="90" x2="355" y2="165" stroke="#059669" stroke-width="1.5" stroke-dasharray="3,3" />
+  <rect x="80" y="222" width="490" height="45" rx="8" fill="currentColor" fill-opacity="0.04" stroke="#CBD5E1" stroke-width="1" />
+  <text x="325" y="239" font-size="11" font-weight="700" text-anchor="middle" fill="currentColor">Bilan temporel : 1 cycle = 0,10 s + 0,30 s + 0,40 s = 0,80 s</text>
+  <text x="325" y="255" font-size="10" font-weight="600" text-anchor="middle" fill="#64748B">Fréquence cardiaque normale au repos = 60 / 0,80 = 75 bpm</text>
+</svg>`,
         tableData: {
           headers: ["Onde ECG", "Signification bioélectrique", "Phase mécanique correspondante", "Durée physiologique"],
           rows: [

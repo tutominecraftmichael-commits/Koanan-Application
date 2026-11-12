@@ -39,6 +39,78 @@ export const SVT_TLE_D_L09_INFECTION_VIH_SIDA: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Organisation ultrastructurale et moléculaire du virion VIH",
+        caption: "Le virion associe une enveloppe lipidique à spicules gp120/gp41, une capside conique p24 protégeant 2 molécules d'ARN viral et les enzymes clés (transcriptase inverse, intégrase, protéase).",
+        svgContent: `<svg viewBox="0 0 620 320" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Ultrastructure du VIH">
+  <rect x="10" y="10" width="600" height="300" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Virion sphère centrale (centre x=240, y=160) -->
+  <!-- Enveloppe bicouche lipidique -->
+  <circle cx="240" cy="160" r="105" fill="#FEF2F2" stroke="#EF4444" stroke-width="3" />
+  <circle cx="240" cy="160" r="97" fill="#FFF1F2" stroke="#F87171" stroke-width="1.5" stroke-dasharray="3,2" />
+
+  <!-- Matrice protéique p17 -->
+  <circle cx="240" cy="160" r="88" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.5" />
+
+  <!-- Capside conique p24 -->
+  <polygon points="215,90 265,90 252,215 228,215" fill="#FEF3C7" stroke="#D97706" stroke-width="2.5" />
+  <text x="240" y="112" font-size="10" font-weight="900" text-anchor="middle" fill="#B45309">Capside p24</text>
+
+  <!-- ARN viral (2 brins rouges en filaments ondulés) -->
+  <path d="M 233 130 Q 230 150 236 170 Q 232 185 235 200" stroke="#DC2626" stroke-width="2.5" fill="none" />
+  <path d="M 245 130 Q 248 150 242 170 Q 246 185 244 200" stroke="#DC2626" stroke-width="2.5" fill="none" />
+
+  <!-- Enzymes virales (complexes) -->
+  <circle cx="233" cy="145" r="4.5" fill="#EAB308" stroke="#854D0E" stroke-width="1.2" />
+  <circle cx="247" cy="145" r="4.5" fill="#EAB308" stroke="#854D0E" stroke-width="1.2" />
+  <rect x="231" y="165" width="7" height="7" rx="1.5" fill="#10B981" stroke="#065F46" stroke-width="1" />
+  <rect x="243" y="165" width="7" height="7" rx="1.5" fill="#10B981" stroke="#065F46" stroke-width="1" />
+
+  <!-- Spicules gp120 / gp41 sur le pourtour -->
+  <!-- Haut (0°) -->
+  <line x1="240" y1="55" x2="240" y2="35" stroke="#DC2626" stroke-width="3" />
+  <circle cx="240" cy="30" r="7" fill="#B91C1C" />
+  <!-- Bas (180°) -->
+  <line x1="240" y1="265" x2="240" y2="285" stroke="#DC2626" stroke-width="3" />
+  <circle cx="240" cy="290" r="7" fill="#B91C1C" />
+  <!-- Gauche (270°) -->
+  <line x1="135" y1="160" x2="115" y2="160" stroke="#DC2626" stroke-width="3" />
+  <circle cx="110" cy="160" r="7" fill="#B91C1C" />
+  <!-- Droite (90°) -->
+  <line x1="345" y1="160" x2="365" y2="160" stroke="#DC2626" stroke-width="3" />
+  <circle cx="370" cy="160" r="7" fill="#B91C1C" />
+  <!-- Obliques 45°, 135°, 225°, 315° -->
+  <line x1="315" y1="85" x2="330" y2="70" stroke="#DC2626" stroke-width="3" />
+  <circle cx="335" cy="65" r="6.5" fill="#B91C1C" />
+  <line x1="315" y1="235" x2="330" y2="250" stroke="#DC2626" stroke-width="3" />
+  <circle cx="335" cy="255" r="6.5" fill="#B91C1C" />
+  <line x1="165" y1="85" x2="150" y2="70" stroke="#DC2626" stroke-width="3" />
+  <circle cx="145" cy="65" r="6.5" fill="#B91C1C" />
+  <line x1="165" y1="235" x2="150" y2="250" stroke="#DC2626" stroke-width="3" />
+  <circle cx="145" cy="255" r="6.5" fill="#B91C1C" />
+
+  <!-- Pointeurs et légendes -->
+  <!-- gp120 et gp41 -->
+  <path d="M 370 155 L 435 75" stroke="#B91C1C" stroke-width="1.5" />
+  <rect x="420" y="55" width="180" height="42" rx="6" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.2" />
+  <text x="430" y="72" font-size="10.5" font-weight="800" fill="#B91C1C">SPICULE DE SURFACE :</text>
+  <text x="430" y="86" font-size="9" fill="#7F1D1D">• Tête gp120 + Pied gp41</text>
+
+  <!-- Enveloppe & Matrice -->
+  <path d="M 330 185 L 435 135" stroke="#94A3B8" stroke-width="1.5" />
+  <rect x="420" y="115" width="180" height="42" rx="6" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.2" />
+  <text x="430" y="132" font-size="10.5" font-weight="800" fill="#334155">ENVELOPPE &amp; MATRICE :</text>
+  <text x="430" y="146" font-size="9" fill="#475569">• Bicouche lipidique + Matrice p17</text>
+
+  <!-- ARN viral et enzymes -->
+  <path d="M 265 170 L 435 210" stroke="#D97706" stroke-width="1.5" />
+  <rect x="420" y="180" width="180" height="58" rx="6" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.2" />
+  <text x="430" y="198" font-size="10.5" font-weight="800" fill="#B45309">GÉNOME &amp; ENZYMES :</text>
+  <text x="430" y="212" font-size="9" fill="#92400E">• 2 brins d'ARN simple brin</text>
+  <text x="430" y="226" font-size="9" fill="#92400E">• Transcriptase inverse, intégrase, protéase</text>
+
+  <!-- Note de bas -->
+  <text x="240" y="295" font-size="10" font-weight="600" text-anchor="middle" fill="#64748B">Rétrovirus à ARN enveloppé (~100-120 nm)</text>
+</svg>`,
         tableData: {
           headers: ["Composant structural", "Nature biochimique", "Masse moléculaire / Marqueur", "Fonction biologique majeure"],
           rows: [
@@ -161,6 +233,62 @@ export const SVT_TLE_D_L09_INFECTION_VIH_SIDA: CurriculumChapter = {
       visualSchema: {
         type: "custom_svg",
         title: "Étapes du cycle de réplication du VIH dans le lymphocyte T4",
+        caption: "Le cycle comprend 8 étapes : fixation CD4, fusion gp41, décapsidation, rétrotranscription (ARN en ADN proviral), intégration nucléaire, transcription/traduction, maturation par la protéase et bourgeonnement.",
+        svgContent: `<svg viewBox="0 0 620 340" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Cycle de réplication du VIH">
+  <rect x="10" y="10" width="600" height="320" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  <path d="M 40 100 C 40 40, 580 40, 580 100 L 580 300 C 580 320, 40 320, 40 300 Z" fill="#F0FDF4" stroke="#16A34A" stroke-width="2.5" />
+  <text x="70" y="70" font-size="12" font-weight="900" fill="#15803D">LYMPHOCYTE T4 (Cellule cible)</text>
+  <ellipse cx="310" cy="210" rx="140" ry="75" fill="#FEF3C7" stroke="#D97706" stroke-width="2" stroke-dasharray="4,2" />
+  <text x="310" y="180" font-size="11" font-weight="800" text-anchor="middle" fill="#B45309">NOYAU CELLULAIRE DU LT4</text>
+  <path d="M 230 220 Q 310 195 390 220" stroke="#7C3AED" stroke-width="3" fill="none" />
+  <text x="310" y="240" font-size="10" font-weight="700" text-anchor="middle" fill="#6D28D9">Chromosome hôte</text>
+  <g transform="translate(60, 15)">
+    <circle cx="15" cy="15" r="14" fill="#FEF2F2" stroke="#DC2626" stroke-width="2" />
+    <circle cx="15" cy="15" r="4" fill="#B91C1C" />
+    <rect x="-3" y="32" width="36" height="18" rx="4" fill="#FEF2F2" stroke="#EF4444" stroke-width="1" />
+    <text x="15" y="44" font-size="9" font-weight="800" text-anchor="middle" fill="#B91C1C">1. Fixation</text>
+  </g>
+  <path d="M 80 45 L 125 55" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="2,2" />
+  <g transform="translate(130, 40)">
+    <rect x="0" y="0" width="40" height="18" rx="4" fill="#FEF2F2" stroke="#EF4444" stroke-width="1" />
+    <text x="20" y="12" font-size="9" font-weight="800" text-anchor="middle" fill="#B91C1C">2. Fusion</text>
+  </g>
+  <path d="M 170 50 L 195 90" stroke="#D97706" stroke-width="1.8" />
+  <g transform="translate(170, 95)">
+    <rect x="0" y="0" width="70" height="20" rx="4" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.2" />
+    <text x="35" y="14" font-size="9" font-weight="800" text-anchor="middle" fill="#B45309">3. Décapsidation</text>
+  </g>
+  <path d="M 205 120 L 205 160" stroke="#D97706" stroke-width="2" />
+  <g transform="translate(145, 165)">
+    <rect x="0" y="0" width="105" height="28" rx="5" fill="#FFFBEB" stroke="#D97706" stroke-width="1.5" />
+    <text x="52" y="13" font-size="9.5" font-weight="800" text-anchor="middle" fill="#92400E">4. Rétrotranscription</text>
+    <text x="52" y="24" font-size="8" text-anchor="middle" fill="#B45309">ARN → ADN proviral</text>
+  </g>
+  <path d="M 235 190 L 260 210" stroke="#7C3AED" stroke-width="2" />
+  <g transform="translate(260, 200)">
+    <rect x="0" y="0" width="80" height="20" rx="4" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.2" />
+    <text x="40" y="13" font-size="8.5" font-weight="800" text-anchor="middle" fill="#6D28D9">5. Intégration</text>
+  </g>
+  <path d="M 345 205 L 395 180" stroke="#2563EB" stroke-width="2" />
+  <g transform="translate(370, 165)">
+    <rect x="0" y="0" width="95" height="28" rx="5" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5" />
+    <text x="47" y="13" font-size="9" font-weight="800" text-anchor="middle" fill="#1D4ED8">6. Transcription</text>
+    <text x="47" y="24" font-size="8" text-anchor="middle" fill="#2563EB">&amp; Traduction</text>
+  </g>
+  <path d="M 465 170 L 490 120" stroke="#D97706" stroke-width="2" />
+  <g transform="translate(460, 95)">
+    <rect x="0" y="0" width="85" height="22" rx="4" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.2" />
+    <text x="42" y="14" font-size="9" font-weight="800" text-anchor="middle" fill="#B45309">7. Assemblage</text>
+  </g>
+  <path d="M 525 90 L 535 55" stroke="#DC2626" stroke-width="2" />
+  <g transform="translate(500, 20)">
+    <circle cx="20" cy="15" r="13" fill="#FEF2F2" stroke="#DC2626" stroke-width="2" />
+    <circle cx="20" cy="15" r="4" fill="#B91C1C" />
+    <rect x="-10" y="32" width="75" height="18" rx="4" fill="#FEF2F2" stroke="#EF4444" stroke-width="1" />
+    <text x="27" y="44" font-size="8.5" font-weight="800" text-anchor="middle" fill="#B91C1C">8. Bourgeonnement</text>
+  </g>
+  <text x="310" y="315" font-size="10.5" font-weight="700" text-anchor="middle" fill="currentColor">Cycle lytique complet : détournement de la machinerie cellulaire aboutissant à la mort du LT4</text>
+</svg>`,
         tableData: {
           headers: ["Numéro d'étape", "Nom de l'étape", "Compartiment cellulaire", "Acteurs moléculaires / Enzymes"],
           rows: [

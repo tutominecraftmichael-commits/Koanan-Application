@@ -46,7 +46,76 @@ export const SVT_TLE_D_L11_TRANSMISSION_UN_CARACTERE_HOMME: CurriculumChapter = 
       },
       visualSchema: {
         type: "custom_svg",
-        title: "Tableau récapitulatif des critères d'identification d'une transmission autosomique récessive",
+        title: "Arbre généalogique officiel (Pedigree) d'une transmission autosomique récessive",
+        caption: "Critères de lecture : Deux parents sains (I-1 et I-2) ayant des enfants atteints (II-2 et II-4) prouvent la récessivité de l'allèle. La fille malade II-2 ayant un père sain I-1 élimine la liaison au chromosome X.",
+        svgContent: `<svg viewBox="0 0 620 280" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Pedigree maladie récessive">
+  <rect x="10" y="10" width="600" height="260" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Légende symboles en haut à droite -->
+  <g transform="translate(420, 25)">
+    <rect x="0" y="0" width="175" height="75" rx="6" fill="currentColor" fill-opacity="0.04" stroke="#CBD5E1" stroke-width="1" />
+    <rect x="12" y="10" width="14" height="14" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.5" />
+    <text x="32" y="22" font-size="9" fill="currentColor">Homme sain</text>
+    <circle cx="100" cy="17" r="7" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.5" />
+    <text x="114" y="21" font-size="9" fill="currentColor">Femme saine</text>
+    <rect x="12" y="42" width="14" height="14" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5" />
+    <text x="32" y="54" font-size="9" font-weight="700" fill="#B91C1C">Homme atteint</text>
+    <circle cx="100" cy="49" r="7" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5" />
+    <text x="114" y="53" font-size="9" font-weight="700" fill="#B91C1C">Femme atteinte</text>
+  </g>
+
+  <!-- Génération I -->
+  <text x="25" y="65" font-size="14" font-weight="900" fill="#0284C7">I</text>
+  <!-- I-1 Homme sain -->
+  <rect x="150" y="45" width="28" height="28" rx="2" fill="#FFFFFF" stroke="#0F172A" stroke-width="2" />
+  <text x="164" y="88" font-size="10" font-weight="800" text-anchor="middle" fill="currentColor">I-1 (Aa)</text>
+  <!-- Ligne de mariage -->
+  <line x1="178" y1="59" x2="262" y2="59" stroke="#0F172A" stroke-width="2" />
+  <!-- I-2 Femme saine -->
+  <circle cx="276" cy="59" r="14" fill="#FFFFFF" stroke="#0F172A" stroke-width="2" />
+  <text x="276" y="88" font-size="10" font-weight="800" text-anchor="middle" fill="currentColor">I-2 (Aa)</text>
+
+  <!-- Descente commune vers génération II -->
+  <line x1="220" y1="59" x2="220" y2="120" stroke="#0F172A" stroke-width="2" />
+  <!-- Barre de fratrie -->
+  <line x1="85" y1="120" x2="355" y2="120" stroke="#0F172A" stroke-width="2" />
+
+  <!-- Génération II -->
+  <text x="25" y="165" font-size="14" font-weight="900" fill="#0284C7">II</text>
+  <!-- II-1 Garçon sain -->
+  <line x1="85" y1="120" x2="85" y2="145" stroke="#0F172A" stroke-width="2" />
+  <rect x="71" y="145" width="28" height="28" rx="2" fill="#FFFFFF" stroke="#0F172A" stroke-width="2" />
+  <text x="85" y="188" font-size="9.5" text-anchor="middle" fill="currentColor">II-1 [A]</text>
+
+  <!-- II-2 Fille atteinte (albinos) -->
+  <line x1="175" y1="120" x2="175" y2="145" stroke="#0F172A" stroke-width="2" />
+  <circle cx="175" cy="159" r="14" fill="#EF4444" stroke="#B91C1C" stroke-width="2" />
+  <text x="175" y="188" font-size="9.5" font-weight="800" text-anchor="middle" fill="#B91C1C">II-2 (aa)</text>
+
+  <!-- II-3 Fille saine -->
+  <line x1="265" y1="120" x2="265" y2="145" stroke="#0F172A" stroke-width="2" />
+  <circle cx="265" cy="159" r="14" fill="#FFFFFF" stroke="#0F172A" stroke-width="2" />
+  <text x="265" y="188" font-size="9.5" text-anchor="middle" fill="currentColor">II-3 [A]</text>
+
+  <!-- II-4 Garçon atteint (albinos) -->
+  <line x1="355" y1="120" x2="355" y2="145" stroke="#0F172A" stroke-width="2" />
+  <rect x="341" y="145" width="28" height="28" rx="2" fill="#EF4444" stroke="#B91C1C" stroke-width="2" />
+  <text x="355" y="188" font-size="9.5" font-weight="800" text-anchor="middle" fill="#B91C1C">II-4 (aa)</text>
+
+  <!-- Règles de déduction baccalauréat à droite -->
+  <g transform="translate(420, 115)">
+    <rect x="0" y="0" width="175" height="110" rx="8" fill="#F0FDF4" stroke="#16A34A" stroke-width="1.2" />
+    <text x="10" y="18" font-size="10" font-weight="900" fill="#15803D">DÉDUCTIONS CLÉS :</text>
+    <text x="10" y="36" font-size="8.5" font-weight="700" fill="#166534">1. Parents sains → Enfants atteints</text>
+    <text x="18" y="48" font-size="8" fill="#14532D">⇒ Allèle albinos est RÉCESSIF</text>
+    <text x="10" y="66" font-size="8.5" font-weight="700" fill="#166534">2. Fille malade II-2 &amp; père sain I-1</text>
+    <text x="18" y="78" font-size="8" fill="#14532D">⇒ Élimine liaison à X (sinon XA)</text>
+    <text x="18" y="90" font-size="8.5" font-weight="800" fill="#047857">⇒ Gène AUTOSOMIQUE</text>
+  </g>
+
+  <!-- Bilan inférieur -->
+  <text x="220" y="235" font-size="10.5" font-weight="700" text-anchor="middle" fill="currentColor">Saut de génération caractéristique : Les parents sains sont obligatoirement hétérozygotes (A//a)</text>
+</svg>`,
         tableData: {
           headers: ["Critère d'analyse", "Observation dans le pedigree", "Déduction génétique rigoureuse"],
           rows: [
@@ -291,7 +360,37 @@ export const SVT_TLE_D_L11_TRANSMISSION_UN_CARACTERE_HOMME: CurriculumChapter = 
       },
       visualSchema: {
         type: "custom_svg",
-        title: "Matrice des groupes sanguins ABO : Génotypes, antigènes, anticorps et compatibilités",
+        title: "Cercle transfusionnel des groupes sanguins ABO (Règle de Landsteiner)",
+        caption: "Le groupe O est donneur universel d'hématies (aucun agglutinogène). Le groupe AB est receveur universel (aucune agglutinine dans son plasma). Les anticorps du receveur ne doivent jamais agglutiner les hématies injectées.",
+        svgContent: `<svg viewBox="0 0 620 270" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Cercle transfusionnel ABO">
+  <rect x="10" y="10" width="600" height="250" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
+  <circle cx="310" cy="55" r="30" fill="#FEF2F2" stroke="#EF4444" stroke-width="2.5" />
+  <text x="310" y="58" font-size="18" font-weight="900" text-anchor="middle" fill="#DC2626">O</text>
+  <text x="310" y="73" font-size="8.5" font-weight="700" text-anchor="middle" fill="#991B1B">Donneur Univ.</text>
+  <circle cx="160" cy="135" r="30" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2.5" />
+  <text x="160" y="141" font-size="18" font-weight="900" text-anchor="middle" fill="#2563EB">A</text>
+  <circle cx="460" cy="135" r="30" fill="#F0FDF4" stroke="#16A34A" stroke-width="2.5" />
+  <text x="460" y="141" font-size="18" font-weight="900" text-anchor="middle" fill="#15803D">B</text>
+  <circle cx="310" cy="210" r="30" fill="#FAF5FF" stroke="#A855F7" stroke-width="2.5" />
+  <text x="310" y="214" font-size="18" font-weight="900" text-anchor="middle" fill="#9333EA">AB</text>
+  <text x="310" y="228" font-size="8.5" font-weight="700" text-anchor="middle" fill="#6B21A8">Receveur Univ.</text>
+  <path d="M 284 72 L 190 115" stroke="#DC2626" stroke-width="2.5" />
+  <path d="M 336 72 L 430 115" stroke="#DC2626" stroke-width="2.5" />
+  <line x1="310" y1="86" x2="310" y2="178" stroke="#DC2626" stroke-width="2.5" stroke-dasharray="4,2" />
+  <path d="M 188 152 L 282 195" stroke="#2563EB" stroke-width="2.5" />
+  <path d="M 432 152 L 338 195" stroke="#16A34A" stroke-width="2.5" />
+  <path d="M 288 32 C 275 12, 345 12, 332 32" stroke="#DC2626" stroke-width="1.8" fill="none" />
+  <path d="M 132 125 C 105 115, 105 155, 132 145" stroke="#2563EB" stroke-width="1.8" fill="none" />
+  <path d="M 488 125 C 515 115, 515 155, 488 145" stroke="#16A34A" stroke-width="1.8" fill="none" />
+  <path d="M 288 233 C 275 253, 345 253, 332 233" stroke="#9333EA" stroke-width="1.8" fill="none" />
+  <g transform="translate(18, 18)">
+    <rect x="0" y="0" width="125" height="58" rx="6" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.2" />
+    <text x="8" y="16" font-size="9" font-weight="800" fill="#B45309">RÈGLE D'OR :</text>
+    <text x="8" y="29" font-size="8" fill="#78350F">Plasma receveur</text>
+    <text x="8" y="40" font-size="8" fill="#78350F">n'agglutine JAMAIS</text>
+    <text x="8" y="51" font-size="8" font-weight="700" fill="#B45309">hématies donneur</text>
+  </g>
+</svg>`,
         tableData: {
           headers: ["Phénotype", "Génotype(s)", "Agglutinogène (sur hématie)", "Agglutinine (dans le plasma)", "Donne à (hématies)", "Reçoit de (hématies)"],
           rows: [
