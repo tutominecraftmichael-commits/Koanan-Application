@@ -34,6 +34,7 @@ import {
   auth
 } from './lib/firebase';
 import { generateKonanId } from './lib/konanId';
+import { EMPTY_SUBJECT_KONAN_MESSAGE } from './lib/contentNotices';
 import { evaluateDailyCatchup } from './services/sessionRescheduler';
 import type {
   ActiveAppView,
@@ -53,6 +54,8 @@ import { Sparkles, X, ShieldCheck } from 'lucide-react';
 import { soundFX } from './lib/audioEffects';
 import { KonanVoiceTestPanel } from './features/notifications/KonanReminderBanner';
 import { NotificationActivationCard } from './features/notifications/NotificationActivationCard';
+import { syncPushPlan, cancelSessionAlerts, markSessionStarted } from './services/pushQueueService';
+import { autoRegisterWebPush, detachDeviceFromAccount } from './services/webPushService';
 
 // Layout
 import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
@@ -607,14 +610,10 @@ export function App() {
         // Identifiant Firebase réel (les règles Firestore l'exigent pour écrire dans push_queue)
         const authUid = auth?.currentUser?.uid || (uid.includes('@') ? '' : uid);
         if (!authUid) return;
-        import('./services/pushQueueService').then(({ syncPushPlan }) => {
-          syncPushPlan(authUid, planInput).catch(() => { });
-        });
+        syncPushPlan(authUid, planInput).catch(() => { });
       };
       const register = () => {
-        import('./services/webPushService').then(({ autoRegisterWebPush }) => {
-          autoRegisterWebPush(effectivePlan, uid, email, syncAlerts).catch(() => { });
-        });
+        autoRegisterWebPush(effectivePlan, uid, email, syncAlerts).catch(() => { });
       };
       const timer = setTimeout(register, 1500); // regroupe les changements rapprochés du planning
       // Tant que l'appareil n'est pas enregistré, on retente au retour dans l'appli et toutes les 2 minutes
@@ -654,14 +653,12 @@ export function App() {
   const syncAlertsNow = useCallback(() => {
     const authUid = auth?.currentUser?.uid;
     if (!authUid || state.isDemoMode) return;
-    import('./services/pushQueueService').then(({ syncPushPlan }) => {
-      syncPushPlan(authUid, {
-        studySessions: state.studySessions,
-        subjects: state.subjects,
-        classSlots: state.classSlots,
-        preferences: state.preferences,
-        cycleCompletedDate: state.cycleCompletedDate,
-      }).catch(() => { });
+    syncPushPlan(authUid, {
+      studySessions: state.studySessions,
+      subjects: state.subjects,
+      classSlots: state.classSlots,
+      preferences: state.preferences,
+      cycleCompletedDate: state.cycleCompletedDate,
     }).catch(() => { });
   }, [state.isDemoMode, state.studySessions, state.subjects, state.classSlots, state.preferences, state.cycleCompletedDate]);
 
@@ -705,6 +702,7 @@ export function App() {
       // Une fois l'accueil affiché, on ne le cache plus jamais (sinon un nouveau perdrait son parcours).
       setAuthPending((pending) => pending && Boolean(firebaseUser));
       if (sessionStorage.getItem('konan_onboarding_in_progress') === 'true') {
+        setAuthPending(false);
         return;
       }
       if (firebaseUser && (!state.userAccount?.isLoggedIn || state.isDemoMode)) {
@@ -1249,7 +1247,7 @@ export function App() {
     setPendingAuth(null);
 
     // Déconnexion Firebase Auth immédiate (ce téléphone quitte aussi ce compte pour les notifications)
-    await import('./services/webPushService').then(({ detachDeviceFromAccount }) => detachDeviceFromAccount()).catch(() => { });
+    await detachDeviceFromAccount().catch(() => { });
     await signOutReal();
     setActiveSession(null);
 
@@ -1351,7 +1349,7 @@ export function App() {
       }
     }
     // Ce téléphone ne doit plus recevoir les notifications de ce compte
-    await import('./services/webPushService').then(({ detachDeviceFromAccount }) => detachDeviceFromAccount()).catch(() => { });
+    await detachDeviceFromAccount().catch(() => { });
     await signOutReal();
     setActiveSession(null);
 
@@ -1689,9 +1687,7 @@ export function App() {
       // Séance faite : plus aucune relance pour elle aujourd'hui
       const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
       if (currentUid && !state.isDemoMode) {
-        import('./services/pushQueueService').then(({ cancelSessionAlerts }) => {
-          cancelSessionAlerts(currentUid, target.id).catch(() => { });
-        }).catch(() => { });
+        cancelSessionAlerts(currentUid, target.id).catch(() => { });
       }
 
       const daySessions = updatedSessions.filter(s => s.dayOfWeek === target.dayOfWeek);
@@ -1752,13 +1748,11 @@ export function App() {
     // L'élève ouvre sa séance : KONAN annule les relances « retard », « manquée » et « rattrapage »
     {
       const currentUid = auth?.currentUser?.uid || state.userAccount?.googleId;
-      import('./services/pushQueueService').then(({ cancelSessionAlerts, markSessionStarted }) => {
-        if (currentUid && !state.isDemoMode) {
-          cancelSessionAlerts(currentUid, session.id).catch(() => { });
-        } else {
-          markSessionStarted(session.id);
-        }
-      }).catch(() => { });
+      if (currentUid && !state.isDemoMode) {
+        cancelSessionAlerts(currentUid, session.id).catch(() => { });
+      } else {
+        markSessionStarted(session.id);
+      }
     }
 
     // VÉRIFICATION CORRESPONDANCE PROGRAMME OFFICIEL (MATHS, PHYSIQUE-CHIMIE, SVT)
@@ -1808,7 +1802,7 @@ export function App() {
     if (stemMatchForTutor.isStemSubject && !resolvedGrade) {
       showToast("Indique ta classe exacte avec sa série (ex : Tle D, 1ère A1) en réimportant ton emploi du temps pour débloquer les cours guidés. Séance lancée en mode chronomètre.", 7000);
     } else if (wantsTutor && !hasChapters) {
-      showToast(`Le cours guidé de ${subjectName} pour ta classe est en préparation. Séance lancée en mode chronomètre.`, 6000);
+      showToast(`${subjectName} : ${EMPTY_SUBJECT_KONAN_MESSAGE}`, 7000);
     } else if (resolvedGrade && shouldLaunchInteractiveTutor(subjectName, resolvedGrade)) {
       const stemMatch = stemMatchForTutor;
       if (stemMatch.isStemSubject && stemMatch.stemSubjectId) {

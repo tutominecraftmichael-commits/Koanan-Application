@@ -1177,7 +1177,7 @@ export const PHILO_TLE_L06_HISTOIRE_HUMANITE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l01_histoire_humanite_p06_q1",
             "type": "mcq",
-            "prompt": "Quelle est la thèse de Sartre dans ce texte ?",
+            "prompt": "Dans L'existentialisme est un humanisme, Sartre se demande si l'homme a une emprise sur son devenir. Quelle est sa thèse ?",
             "options": [
               "L'homme est entièrement responsable de son devenir",
               "L'homme est soumis au destin",
@@ -1277,7 +1277,7 @@ export const PHILO_TLE_L06_HISTOIRE_HUMANITE: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_bonheur_l01_histoire_humanite_p06_q1",
           "type": "mcq",
-          "prompt": "Quelle est la thèse de Sartre dans ce texte ?",
+          "prompt": "Dans L'existentialisme est un humanisme, Sartre se demande si l'homme a une emprise sur son devenir. Quelle est sa thèse ?",
           "options": [
             "L'homme est entièrement responsable de son devenir",
             "L'homme est soumis au destin",

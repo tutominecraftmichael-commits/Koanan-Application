@@ -1045,7 +1045,7 @@ export const MATHS_TLE_C_L04_DIVISIBILITE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_c_maths_numerique_l04_divisibilite_dans_z_p04_q8",
             "type": "mcq",
-            "prompt": "Lequel de ces jours, comptés après J0, est une apparition simultanée ?",
+            "prompt": "Le corps A apparaît les jours J0 $+\\,d$ avec $d\\equiv0\\;[105]$ ; le corps B, les jours J0 $+\\,d$ avec $d\\equiv6\\;[81]$. Lequel de ces jours, comptés après J0, est une apparition simultanée ?",
             "options": [
               "630",
               "729",
@@ -1152,7 +1152,7 @@ export const MATHS_TLE_C_L04_DIVISIBILITE: CurriculumChapter = {
         {
           "id": "terminale_c_maths_numerique_l04_divisibilite_dans_z_p04_q8",
           "type": "mcq",
-          "prompt": "Lequel de ces jours, comptés après J0, est une apparition simultanée ?",
+          "prompt": "Le corps A apparaît les jours J0 $+\\,d$ avec $d\\equiv0\\;[105]$ ; le corps B, les jours J0 $+\\,d$ avec $d\\equiv6\\;[81]$. Lequel de ces jours, comptés après J0, est une apparition simultanée ?",
           "options": [
             "630",
             "729",
@@ -2759,7 +2759,7 @@ export const MATHS_TLE_C_L04_DIVISIBILITE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_c_maths_numerique_l04_divisibilite_dans_z_p10_q5",
             "type": "mcq",
-            "prompt": "Combien de bâtonnets le premier joueur doit-il prendre au premier tour ?",
+            "prompt": "Jeu des 20 bâtonnets : à tour de rôle, chaque joueur en prend 1, 2 ou 3, et celui qui prend le dernier perd. Pour gagner, on laisse toujours à l'adversaire un nombre congru à 1 modulo 4. Combien de bâtonnets le premier joueur doit-il prendre au premier tour ?",
             "options": [
               "1",
               "2",
@@ -2890,7 +2890,7 @@ export const MATHS_TLE_C_L04_DIVISIBILITE: CurriculumChapter = {
         {
           "id": "terminale_c_maths_numerique_l04_divisibilite_dans_z_p10_q5",
           "type": "mcq",
-          "prompt": "Combien de bâtonnets le premier joueur doit-il prendre au premier tour ?",
+          "prompt": "Jeu des 20 bâtonnets : à tour de rôle, chaque joueur en prend 1, 2 ou 3, et celui qui prend le dernier perd. Pour gagner, on laisse toujours à l'adversaire un nombre congru à 1 modulo 4. Combien de bâtonnets le premier joueur doit-il prendre au premier tour ?",
           "options": [
             "1",
             "2",

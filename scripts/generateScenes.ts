@@ -2,7 +2,7 @@
  * GÉNÉRATEUR DE SCÈNES ILLUSTRÉES — à lancer à la main, une fois par nouvelle leçon :
  *     npx tsx scripts/generateScenes.ts [--only=<morceau d'id de leçon>] [--limit=<n leçons>] [--redo] [--dry]
  *
- * Pour chaque leçon (sauf les maths), Gemini lit la matière, la classe, le cours, les questions et leurs
+ * Pour chaque leçon d'Histoire-Géo ou de Philosophie (SEULES matières à scènes, voir SCENE_SUBJECTS), Gemini lit la matière, la classe, le cours, les questions et leurs
  * bonnes réponses, puis choisit 2 à 4 étapes où un dessin aide vraiment à comprendre. Pour chacune il
  * décrit une scène avec le vocabulaire du moteur de dessin de KONAN (décor, personnages et costumes adaptés
  * au contexte, objets, bulle de parole). Tout est validé (vocabulaire connu, longueurs, étape existante) puis
@@ -28,7 +28,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'src', 'data', 'illustrations', 'generatedScenes.ts');
 
 const { getAuthoredChaptersRaw } = await import('../src/lib/curriculum/curriculumRegistry');
-const { HANDMADE_ILLUSTRATION_IDS } = await import('../src/data/illustrations/index');
+const { HANDMADE_ILLUSTRATION_IDS, SCENE_SUBJECTS } = await import('../src/data/illustrations/index');
 const { GENERATED_SCENES } = await import('../src/data/illustrations/generatedScenes');
 const types = await import('../src/lib/scenes/sceneTypes');
 const { GoogleGenAI } = await import('@google/genai');
@@ -148,8 +148,30 @@ const mod = await import('../src/data/illustrations/generatedScenes');
 const doneChapters: string[] = [...((mod as any).GENERATED_CHAPTERS || [])];
 const all: Record<string, any> = { ...GENERATED_SCENES };
 
-const chapters = getAuthoredChaptersRaw()
-  .filter((c: any) => c.subjectId !== 'maths')
+// Règle : scènes UNIQUEMENT en Histoire-Géo et Philosophie. On retire d'abord celles des autres matières.
+const authored = getAuthoredChaptersRaw() as any[];
+const subjectOfExercise = new Map<string, string>();
+const subjectOfChapter = new Map<string, string>();
+for (const ch of authored) {
+  subjectOfChapter.set(ch.id, ch.subjectId);
+  for (const p of ch.points || []) for (const st of p.structuredSteps || []) if (st.exercise?.id) subjectOfExercise.set(st.exercise.id, ch.subjectId);
+}
+let pruned = 0;
+for (const id of Object.keys(all)) {
+  const s = subjectOfExercise.get(id);
+  if (s && !SCENE_SUBJECTS.includes(s)) { delete all[id]; pruned++; }
+}
+for (let i = doneChapters.length - 1; i >= 0; i--) {
+  const s = subjectOfChapter.get(doneChapters[i]);
+  if (s && !SCENE_SUBJECTS.includes(s)) doneChapters.splice(i, 1);
+}
+if (pruned) {
+  console.log(`${pruned} scène(s) retirée(s) : hors Histoire-Géo et Philosophie.`);
+  if (!args.dry) writeOut(all, doneChapters);
+}
+
+const chapters = authored
+  .filter((c: any) => SCENE_SUBJECTS.includes(c.subjectId))
   .filter((c: any) => !args.only || c.id.includes(args.only))
   .filter((c: any) => args.redo || !doneChapters.includes(c.id));
 const todo = args.limit ? chapters.slice(0, Number(args.limit)) : chapters;

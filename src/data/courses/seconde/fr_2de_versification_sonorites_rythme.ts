@@ -1149,7 +1149,7 @@ export const FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME: CurriculumChapter = 
           "exercise": {
             "id": "seconde_a_francais_pl_l06b_versification_sonorites_rythme_p05_q4",
             "type": "mcq",
-            "prompt": "Dans l'extrait de Hugo, quel mot forme le rejet ?",
+            "prompt": "« Soufflant dans des clairons et frappant des tambours, / Cria : « Je saurai bien construire une barrière. » » (Hugo). Dans ces vers, quel mot forme le rejet ?",
             "options": [
               "« tambours »",
               "« barrière »",
@@ -1191,7 +1191,7 @@ export const FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME: CurriculumChapter = 
           "exercise": {
             "id": "seconde_a_francais_pl_l06b_versification_sonorites_rythme_p05_q6",
             "type": "mcq",
-            "prompt": "Dans l'extrait de Hugo, quel mot forme le contre-rejet ?",
+            "prompt": "« Un nuage tombé par terre, horrible, accru / Par des vomissements immenses de fumées » (Hugo). Dans ces vers, quel mot forme le contre-rejet ?",
             "options": [
               "« nuage »",
               "« fumées »",
@@ -1267,7 +1267,7 @@ export const FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME: CurriculumChapter = 
         {
           "id": "seconde_a_francais_pl_l06b_versification_sonorites_rythme_p05_q4",
           "type": "mcq",
-          "prompt": "Dans l'extrait de Hugo, quel mot forme le rejet ?",
+          "prompt": "« Soufflant dans des clairons et frappant des tambours, / Cria : « Je saurai bien construire une barrière. » » (Hugo). Dans ces vers, quel mot forme le rejet ?",
           "options": [
             "« tambours »",
             "« barrière »",
@@ -1293,7 +1293,7 @@ export const FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME: CurriculumChapter = 
         {
           "id": "seconde_a_francais_pl_l06b_versification_sonorites_rythme_p05_q6",
           "type": "mcq",
-          "prompt": "Dans l'extrait de Hugo, quel mot forme le contre-rejet ?",
+          "prompt": "« Un nuage tombé par terre, horrible, accru / Par des vomissements immenses de fumées » (Hugo). Dans ces vers, quel mot forme le contre-rejet ?",
           "options": [
             "« nuage »",
             "« fumées »",

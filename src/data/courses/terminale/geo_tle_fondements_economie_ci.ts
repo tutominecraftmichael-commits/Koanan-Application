@@ -1216,7 +1216,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
           "exercise": {
             "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p05_q2",
             "type": "mcq",
-            "prompt": "D'après la carte des densités de 2014, quel district est le plus densément peuplé ?",
+            "prompt": "D'après la carte des densités de population de la Côte d'Ivoire (recensement de 2014), quel district est le plus densément peuplé ?",
             "options": [
               "Le district d'Abidjan",
               "Le district des Savanes",
@@ -1374,7 +1374,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
         {
           "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p05_q2",
           "type": "mcq",
-          "prompt": "D'après la carte des densités de 2014, quel district est le plus densément peuplé ?",
+          "prompt": "D'après la carte des densités de population de la Côte d'Ivoire (recensement de 2014), quel district est le plus densément peuplé ?",
           "options": [
             "Le district d'Abidjan",
             "Le district des Savanes",
@@ -2134,7 +2134,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
           "exercise": {
             "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p08_q6",
             "type": "mcq",
-            "prompt": "En 2020, la population est estimée à 26 453 542 habitants. Quelle hauteur faut-il tracer ?",
+            "prompt": "Pour un graphique de la population ivoirienne, l'échelle est de 1 cm pour 2 000 000 d'habitants. En 2020, la population est estimée à 26 453 542 habitants. Quelle hauteur faut-il tracer ?",
             "options": [
               "Environ 26,5 cm",
               "Environ 13,2 cm",
@@ -2258,7 +2258,7 @@ export const GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI: CurriculumChapter = {
         {
           "id": "terminale_hg_geographie_l01_fondements_developpement_economique_p08_q6",
           "type": "mcq",
-          "prompt": "En 2020, la population est estimée à 26 453 542 habitants. Quelle hauteur faut-il tracer ?",
+          "prompt": "Pour un graphique de la population ivoirienne, l'échelle est de 1 cm pour 2 000 000 d'habitants. En 2020, la population est estimée à 26 453 542 habitants. Quelle hauteur faut-il tracer ?",
           "options": [
             "Environ 26,5 cm",
             "Environ 13,2 cm",

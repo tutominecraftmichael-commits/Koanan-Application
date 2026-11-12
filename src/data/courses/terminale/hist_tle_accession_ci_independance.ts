@@ -1442,7 +1442,7 @@ export const HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_hg_histoire_t2_l02_accession_ci_independance_p07_q1",
             "type": "mcq",
-            "prompt": "Quel est le problème posé par cette situation ?",
+            "prompt": "Un journaliste affirme que l'indépendance de la Côte d'Ivoire « a connu des résistances, mais a été le point de départ de plusieurs réformes ». Quel est le problème posé par cette affirmation ?",
             "options": [
               "La création de l'Union africaine",
               "Le processus d'accession de la Côte d'Ivoire à l'indépendance",
@@ -1563,7 +1563,7 @@ export const HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE: CurriculumChapter = {
         {
           "id": "terminale_hg_histoire_t2_l02_accession_ci_independance_p07_q1",
           "type": "mcq",
-          "prompt": "Quel est le problème posé par cette situation ?",
+          "prompt": "Un journaliste affirme que l'indépendance de la Côte d'Ivoire « a connu des résistances, mais a été le point de départ de plusieurs réformes ». Quel est le problème posé par cette affirmation ?",
           "options": [
             "La création de l'Union africaine",
             "Le processus d'accession de la Côte d'Ivoire à l'indépendance",

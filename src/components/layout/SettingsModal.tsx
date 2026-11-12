@@ -262,7 +262,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         : 'bg-slate-200 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
                     }`}
                   >
-                    {currentPlan === 'pro' ? '⭐ PRO' : currentPlan === 'plus' ? '👑 PLUS' : 'GRATUIT'}
+                    {currentPlan === 'pro' ? 'PRO' : currentPlan === 'plus' ? 'PLUS' : 'GRATUIT'}
                   </span>
                   <p className="text-xs text-indigo-600 dark:text-indigo-300 font-semibold flex items-start gap-1.5 mt-1 break-words">
                     <GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0 mt-px" />

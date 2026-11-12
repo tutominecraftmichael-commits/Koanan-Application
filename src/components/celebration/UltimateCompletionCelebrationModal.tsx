@@ -161,7 +161,7 @@ export const UltimateCompletionCelebrationModal: React.FC<UltimateCompletionCele
           </div>
           <div className="min-w-0 flex-1">
             <span className="text-[11px] font-black uppercase tracking-wider text-amber-400">
-              ⚡ OBJECTIF DE LA SEMAINE ATTEINT !
+              OBJECTIF DE LA SEMAINE ATTEINT !
             </span>
             <h4 className="text-xs sm:text-sm font-bold text-white truncate">
               Toutes vos sessions de révision sont validées
@@ -172,7 +172,7 @@ export const UltimateCompletionCelebrationModal: React.FC<UltimateCompletionCele
         {/* CONGRATULATIONS HEADLINE & MESSAGE */}
         <div className="space-y-1.5 px-1">
           <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-            Félicitations, <span className="text-gradient-primary">{studentName}</span> ! 🌟
+            Félicitations, <span className="text-gradient-primary">{studentName}</span> !
           </h2>
 
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md mx-auto">

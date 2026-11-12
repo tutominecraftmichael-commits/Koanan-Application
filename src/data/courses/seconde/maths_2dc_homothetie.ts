@@ -147,7 +147,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_geometrie_l12_homothetie_p01_q6",
             "type": "mcq",
-            "prompt": "Quel est le rapport de $h$ ?",
+            "prompt": "L'homothétie $h$ de centre $A$ transforme $B$ en $C$, et $4\\overrightarrow{CA}+3\\overrightarrow{AB}=\\vec0$. Quel est le rapport de $h$ ?",
             "options": [
               "$\\dfrac43$",
               "$-\\dfrac34$",
@@ -249,7 +249,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
         {
           "id": "seconde_c_maths_geometrie_l12_homothetie_p01_q6",
           "type": "mcq",
-          "prompt": "Quel est le rapport de $h$ ?",
+          "prompt": "L'homothétie $h$ de centre $A$ transforme $B$ en $C$, et $4\\overrightarrow{CA}+3\\overrightarrow{AB}=\\vec0$. Quel est le rapport de $h$ ?",
           "options": [
             "$\\dfrac43$",
             "$-\\dfrac34$",
@@ -583,7 +583,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_geometrie_l12_homothetie_p03_q2",
             "type": "mcq",
-            "prompt": "Avec $h(E)=F$ et $h(S)=T$, quelle égalité de vecteurs est vraie ?",
+            "prompt": "Une homothétie $h$ de rapport $-2$ vérifie $h(E)=F$ et $h(S)=T$. Quelle égalité de vecteurs est vraie ?",
             "options": [
               "$\\overrightarrow{ES}=-2\\overrightarrow{FT}$",
               "$\\overrightarrow{\\Omega E}=-2\\overrightarrow{\\Omega S}$",
@@ -604,7 +604,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_geometrie_l12_homothetie_p03_q3",
             "type": "mcq",
-            "prompt": "Avec la même homothétie, $\\overrightarrow{TF}$ est égal à :",
+            "prompt": "Une homothétie de rapport $-2$ vérifie $h(E)=F$ et $h(S)=T$, donc $\\overrightarrow{FT}=-2\\overrightarrow{ES}$. À quoi est égal $\\overrightarrow{TF}$ ?",
             "options": [
               "$2\\overrightarrow{SE}$",
               "$-2\\overrightarrow{ES}$",
@@ -646,7 +646,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_geometrie_l12_homothetie_p03_q5",
             "type": "mcq",
-            "prompt": "Combien vaut $B'C'$ ?",
+            "prompt": "Une homothétie $h$ de rapport $2$ transforme le triangle $ABC$ en $A'B'C'$, avec $AB=6$, $AC=5$ et $BC=7$. Combien vaut $B'C'$ ?",
             "options": [
               "$14$",
               "$7$",
@@ -717,7 +717,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
         {
           "id": "seconde_c_maths_geometrie_l12_homothetie_p03_q2",
           "type": "mcq",
-          "prompt": "Avec $h(E)=F$ et $h(S)=T$, quelle égalité de vecteurs est vraie ?",
+          "prompt": "Une homothétie $h$ de rapport $-2$ vérifie $h(E)=F$ et $h(S)=T$. Quelle égalité de vecteurs est vraie ?",
           "options": [
             "$\\overrightarrow{ES}=-2\\overrightarrow{FT}$",
             "$\\overrightarrow{\\Omega E}=-2\\overrightarrow{\\Omega S}$",
@@ -730,7 +730,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
         {
           "id": "seconde_c_maths_geometrie_l12_homothetie_p03_q3",
           "type": "mcq",
-          "prompt": "Avec la même homothétie, $\\overrightarrow{TF}$ est égal à :",
+          "prompt": "Une homothétie de rapport $-2$ vérifie $h(E)=F$ et $h(S)=T$, donc $\\overrightarrow{FT}=-2\\overrightarrow{ES}$. À quoi est égal $\\overrightarrow{TF}$ ?",
           "options": [
             "$2\\overrightarrow{SE}$",
             "$-2\\overrightarrow{ES}$",
@@ -756,7 +756,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
         {
           "id": "seconde_c_maths_geometrie_l12_homothetie_p03_q5",
           "type": "mcq",
-          "prompt": "Combien vaut $B'C'$ ?",
+          "prompt": "Une homothétie $h$ de rapport $2$ transforme le triangle $ABC$ en $A'B'C'$, avec $AB=6$, $AC=5$ et $BC=7$. Combien vaut $B'C'$ ?",
           "options": [
             "$14$",
             "$7$",
@@ -906,7 +906,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_geometrie_l12_homothetie_p04_q5",
             "type": "mcq",
-            "prompt": "Quel est le rayon du cercle image ?",
+            "prompt": "Un cercle de rayon $r=4$ cm a pour image, par une homothétie de rapport $k=-\\dfrac54$, un cercle de rayon $|k|\\times r$. Quel est le rayon du cercle image ?",
             "options": [
               "$5$ cm",
               "$-5$ cm",
@@ -1016,7 +1016,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
         {
           "id": "seconde_c_maths_geometrie_l12_homothetie_p04_q5",
           "type": "mcq",
-          "prompt": "Quel est le rayon du cercle image ?",
+          "prompt": "Un cercle de rayon $r=4$ cm a pour image, par une homothétie de rapport $k=-\\dfrac54$, un cercle de rayon $|k|\\times r$. Quel est le rayon du cercle image ?",
           "options": [
             "$5$ cm",
             "$-5$ cm",
@@ -1468,7 +1468,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_geometrie_l12_homothetie_p06_q7",
             "type": "mcq",
-            "prompt": "Quelle est la longueur des côtés des triangles reproduits ?",
+            "prompt": "Sékou reproduit, avec une homothétie de rapport $\\dfrac{\\sqrt3}{3}$, une étoile formée de deux triangles équilatéraux de côté $6$ cm. Quelle est la longueur des côtés des triangles reproduits ?",
             "options": [
               "$6\\sqrt3$ cm",
               "$2$ cm",
@@ -1562,7 +1562,7 @@ export const MATHS_2DC_GEO_L12_HOMOTHETIE: CurriculumChapter = {
         {
           "id": "seconde_c_maths_geometrie_l12_homothetie_p06_q7",
           "type": "mcq",
-          "prompt": "Quelle est la longueur des côtés des triangles reproduits ?",
+          "prompt": "Sékou reproduit, avec une homothétie de rapport $\\dfrac{\\sqrt3}{3}$, une étoile formée de deux triangles équilatéraux de côté $6$ cm. Quelle est la longueur des côtés des triangles reproduits ?",
           "options": [
             "$6\\sqrt3$ cm",
             "$2$ cm",

@@ -153,7 +153,7 @@ export const PHILO_TLE_L01_DISSERTATION: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_methodologie_l01_dissertation_p01_q6",
             "type": "mcq",
-            "prompt": "Que signifie « plaindre » dans ce sujet ?",
+            "prompt": "Dans le sujet « Il faut plaindre celui qui vit en société », que signifie le mot « plaindre » ?",
             "options": [
               "Accuser quelqu'un devant un tribunal",
               "Admirer quelqu'un",
@@ -234,7 +234,7 @@ export const PHILO_TLE_L01_DISSERTATION: CurriculumChapter = {
         {
           "id": "terminale_philo_methodologie_l01_dissertation_p01_q6",
           "type": "mcq",
-          "prompt": "Que signifie « plaindre » dans ce sujet ?",
+          "prompt": "Dans le sujet « Il faut plaindre celui qui vit en société », que signifie le mot « plaindre » ?",
           "options": [
             "Accuser quelqu'un devant un tribunal",
             "Admirer quelqu'un",

@@ -6,31 +6,30 @@ export interface GeneratedScene { title: string; caption: string; spec: SceneSpe
 
 /** Leçons déjà traitées par le générateur. */
 export const GENERATED_CHAPTERS: string[] = [
-  "seconde_a_chimie_ch1_element_chimique",
-  "seconde_a_chimie_ch2_structure_de_l_atome",
-  "seconde_a_chimie_ch3_classification_periodique",
-  "seconde_a_chimie_ch4_ions_et_molecules",
-  "seconde_a_chimie_ch5_mole_et_grandeurs_molaires",
-  "seconde_a_chimie_ch6_equation_bilan",
-  "seconde_a_chimie_ch7_solutions_aqueuses_ioniques",
-  "seconde_a_chimie_ch8_tests_identification_ions",
-  "seconde_a_francais_ch1_production_ecrite_analyse_sujet",
-  "seconde_a_francais_ch2_commentaire_compose_analyse_libelle",
-  "seconde_a_francais_ch3_commentaire_compose_organisation_plan",
-  "seconde_a_francais_ch4_commentaire_compose_redaction_centre_interet",
-  "seconde_a_francais_ch5_commentaire_compose_redaction_introduction",
-  "seconde_a_francais_pl_l01_fonctions_langage",
-  "seconde_a_francais_pl_l02_connecteurs_logiques",
-  "seconde_a_francais_pl_l02b_expression_opinion",
-  "seconde_a_francais_pl_l03_semantique",
-  "seconde_a_francais_pl_l04_enonciation",
-  "seconde_a_francais_pl_l05_figures_analogie_substitution",
-  "seconde_a_francais_pl_l05b_figures_amplification_attenuation",
-  "seconde_a_francais_pl_l05c_figures_opposition_construction",
-  "seconde_a_francais_pl_l06_versification_vers_strophes",
-  "seconde_a_francais_pl_l06b_versification_sonorites_rythme",
-  "seconde_a_francais_pl_l07_implicite",
-  "seconde_a_francais_sf_l02_expose_oral",
+  "premiere_a1_hg_geographie_t1_l01_dynamisme_demographique_ci",
+  "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale",
+  "premiere_a1_hg_geographie_t2_l01_urbanisation_cote_ivoire",
+  "premiere_a1_hg_geographie_t2_l02_urbanisation_france",
+  "premiere_a1_hg_geographie_t3_l01_organisation_administrative_ci",
+  "premiere_a1_hg_geographie_t3_l02_amenagement_territoire_ci",
+  "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation",
+  "premiere_a1_hg_geographie_t4_l02_consequences_mondialisation",
+  "premiere_a1_hg_histoire_t1_l01_essor_capitalisme",
+  "premiere_a1_hg_histoire_t1_l02_revolutions_industrielles",
+  "premiere_a1_hg_histoire_t2_l01_imperialisme_congres_berlin",
+  "premiere_a1_hg_histoire_t2_l02_resistances_conquete_ci",
+  "premiere_a1_hg_histoire_t3_l01_premiere_guerre_mondiale",
+  "premiere_a1_hg_histoire_t3_l02_seconde_guerre_mondiale",
+  "premiere_a1_hg_histoire_t3_l03_violences_masse_genocides",
+  "premiere_philo_histoire_l06_periode_antique",
+  "premiere_philo_histoire_l07_moyen_age_renaissance",
+  "premiere_philo_histoire_l08_periode_moderne",
+  "premiere_philo_histoire_l09_periode_contemporaine",
+  "premiere_philo_methodologie_l01_methode_lecture_texte",
+  "premiere_philo_methodologie_l02_introduction_commentaire",
+  "premiere_philo_methodologie_l03_conclusion_commentaire",
+  "premiere_philo_methodologie_l04_essai_problematisation",
+  "premiere_philo_methodologie_l05_introduction_dissertation",
   "seconde_a_hg_geographie_l01_objet_interet_demarche",
   "seconde_a_hg_geographie_l02_planete_terre",
   "seconde_a_hg_geographie_l03_techniques_representation_terre",
@@ -49,53 +48,6 @@ export const GENERATED_CHAPTERS: string[] = [
   "seconde_a_hg_histoire_t2_l05_traites_des_noirs",
   "seconde_a_hg_histoire_t3_l01_neolithique_ci",
   "seconde_a_hg_histoire_t3_l02_peuples_ci",
-  "seconde_a_physique_ch1_le_mouvement",
-  "seconde_a_physique_ch2_equilibre_solide_deux_forces",
-  "seconde_a_svt_ch1_transmission_message_nerveux",
-  "seconde_a_svt_ch2_transmission_message_hormonal",
-  "seconde_a_svt_ch3_grands_ensembles_environnementaux",
-  "seconde_a_svt_ch4_production_matiere_organique",
-  "seconde_a_svt_ch5_changement_climatique",
-  "seconde_a_svt_ch6_structure_cellule_animale",
-  "seconde_a_svt_ch7_reproduction_conforme_mitose",
-  "seconde_a_svt_ch8_diversite_comportements_alimentaires",
-  "seconde_a_svt_ch9_habitudes_alimentaires_et_sante",
-  "seconde_c_chimie_ch10_solutions_acides_basiques_ph",
-  "seconde_c_chimie_ch11_reaction_acido_basique_dosage",
-  "seconde_c_chimie_ch1_element_chimique",
-  "seconde_c_chimie_ch2_structure_de_l_atome",
-  "seconde_c_chimie_ch3_classification_periodique",
-  "seconde_c_chimie_ch4_ions_et_molecules",
-  "seconde_c_chimie_ch5_mole_et_grandeurs_molaires",
-  "seconde_c_chimie_ch6_equation_bilan",
-  "seconde_c_chimie_ch7_chlorure_de_sodium",
-  "seconde_c_chimie_ch8_solutions_aqueuses_ioniques",
-  "seconde_c_chimie_ch9_tests_identification_ions",
-  "seconde_c_physique_ch10_dipole_actif_point_fonctionnement",
-  "seconde_c_physique_ch1_le_mouvement",
-  "seconde_c_physique_ch2_actions_mecaniques_forces",
-  "seconde_c_physique_ch3_equilibre_solide_deux_trois_forces",
-  "seconde_c_physique_ch4_principe_inertie",
-  "seconde_c_physique_ch5_equilibre_solide_axe_fixe",
-  "seconde_c_physique_ch6_quantite_de_mouvement",
-  "seconde_c_physique_ch7_intensite_courant_continu",
-  "seconde_c_physique_ch8_tension_electrique",
-  "seconde_c_physique_ch9_dipoles_passifs",
-  "seconde_c_svt_ch10_evolution_equipement_chromosomique_adn",
-  "seconde_c_svt_ch11_absorption_eau_plante",
-  "seconde_c_svt_ch12_influence_sels_mineraux_croissance",
-  "seconde_c_svt_ch13_absorption_sels_mineraux_plante",
-  "seconde_c_svt_ch14_devenir_substances_absorbees_plante",
-  "seconde_c_svt_ch1_structure_geologique_cote_ivoire",
-  "seconde_c_svt_ch2_alteration_chimique_roches_magmatiques",
-  "seconde_c_svt_ch3_formation_roches_sedimentaires",
-  "seconde_c_svt_ch4_formation_roches_metamorphiques",
-  "seconde_c_svt_ch5_devenir_roches_metamorphiques",
-  "seconde_c_svt_ch6_relations_etres_vivants_ecosysteme",
-  "seconde_c_svt_ch7_changement_climatique",
-  "seconde_c_svt_ch8_organisation_cellule",
-  "seconde_c_svt_ch9_division_cellulaire_mitose",
-  "terminale_c_chimie_l07_acide_fort_base_forte",
   "terminale_hg_geographie_l01_fondements_developpement_economique",
   "terminale_hg_geographie_l02_secteurs_activites_economiques",
   "terminale_hg_geographie_l03_problemes_developpement_economique",
@@ -119,41 +71,17 @@ export const GENERATED_CHAPTERS: string[] = [
 ];
 
 export const GENERATED_SCENES: Record<string, GeneratedScene> = {
-  "seconde_a_francais_pl_l01_fonctions_langage_p01_q5": {
-    "title": "Le canal téléphonique",
-    "caption": "Le canal ou contact est le moyen physique par lequel passe le message, comme le téléphone.",
+  "premiere_a1_hg_geographie_t1_l01_dynamisme_demographique_ci_p01_q3": {
+    "title": "Une croissance lente de la population",
+    "caption": "De 1920 à 1960, la population passe de 2 millions à 3,78 millions d'habitants avec une pente de croissance faible.",
     "spec": {
       "setting": "salle_classe",
       "characters": [
         {
           "costume": "eleve_garcon",
-          "pose": "parle",
-          "mood": "content",
+          "pose": "reflechit",
+          "mood": "neutre",
           "skin": "fonce",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "sign": "Canal"
-    }
-  },
-  "seconde_a_francais_pl_l01_fonctions_langage_p02_q2": {
-    "title": "La fonction expressive",
-    "caption": "La fonction expressive exprime les sentiments et les émotions de l'émetteur.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "eleve_fille",
-          "pose": "triste",
-          "mood": "triste",
-          "skin": "brun",
           "facing": "gauche"
         }
       ],
@@ -164,373 +92,276 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
         }
       ],
       "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Hélas ! Comme je suis triste !"
-      },
-      "sign": "Émotion"
+      "sign": "1920-1960"
     }
   },
-  "seconde_a_francais_pl_l01_fonctions_langage_p03_q2": {
-    "title": "La fonction phatique",
-    "caption": "La fonction phatique sert à établir, maintenir ou vérifier le contact, comme dire allô.",
-    "spec": {
-      "setting": "bureau",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "parle",
-          "mood": "neutre",
-          "skin": "fonce",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "ordinateur",
-          "place": "droite"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Allô ? Tu m'entends bien ?"
-      },
-      "sign": "Contact"
-    }
-  },
-  "seconde_a_francais_pl_l01_fonctions_langage_p04_q6": {
-    "title": "La fonction métalinguistique",
-    "caption": "La fonction métalinguistique explique le sens d'un mot ou d'un code.",
+  "premiere_a1_hg_geographie_t1_l01_dynamisme_demographique_ci_p03_q2": {
+    "title": "La pyramide des âges ivoirienne",
+    "caption": "La pyramide des âges de la Côte d'Ivoire présente une forme triangulaire avec une base très large.",
     "spec": {
       "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "montre",
-          "mood": "content",
-          "skin": "moyen",
-          "facing": "gauche",
-          "holding": "baton"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        },
-        {
-          "kind": "livre_ouvert",
-          "place": "droite"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Le mot signifie animal épais."
-      },
-      "sign": "Définition"
-    }
-  },
-  "seconde_a_francais_pl_l02_connecteurs_logiques_p01_q2": {
-    "title": "Conjonctions de coordination",
-    "caption": "Les conjonctions de coordination comme car relient des idées en marquant leur rapport logique.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "montre",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite",
-          "holding": "livre"
-        },
-        {
-          "costume": "eleve_garcon",
-          "pose": "ecrit",
-          "mood": "neutre",
-          "skin": "moyen",
-          "facing": "gauche",
-          "holding": "plume"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        },
-        {
-          "kind": "livre_ouvert",
-          "place": "centre"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Mais où est donc Ornicar ?"
-      },
-      "sign": "Coordination"
-    }
-  },
-  "seconde_a_francais_pl_l02_connecteurs_logiques_p02_q3": {
-    "title": "Cause positive et négative",
-    "caption": "Grâce à introduit une cause positive, tandis qu'à cause de introduit une cause négative.",
-    "spec": {
-      "setting": "bureau",
       "characters": [
         {
           "costume": "eleve_fille",
-          "pose": "joie",
+          "pose": "montre",
           "mood": "content",
-          "skin": "brun",
-          "facing": "droite",
-          "holding": "livre"
-        }
-      ],
-      "props": [
-        {
-          "kind": "plante",
-          "place": "gauche"
-        },
-        {
-          "kind": "ordinateur",
-          "place": "droite"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "J'ai réussi grâce à mon travail !"
-      },
-      "sign": "Grâce à"
-    }
-  },
-  "seconde_a_francais_pl_l02_connecteurs_logiques_p06_q3": {
-    "title": "Lien implicite",
-    "caption": "Les deux-points peuvent exprimer une cause ou une conséquence sans connecteur explicite.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "eleve_garcon",
-          "pose": "triste",
-          "mood": "triste",
           "skin": "fonce",
           "facing": "droite"
         }
       ],
       "props": [
         {
-          "kind": "tableau",
+          "kind": "graphique",
           "place": "fond"
-        },
-        {
-          "kind": "livre_ouvert",
-          "place": "centre"
         }
       ],
       "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Il est absent : il est malade."
-      },
-      "sign": "Implicite"
+      "sign": "Base large"
     }
   },
-  "seconde_a_francais_pl_l02b_expression_opinion_p01_q3": {
-    "title": "La thèse de l'auteur",
-    "caption": "L'auteur affirme clairement son opinion : la télévision est une invention bénéfique.",
+  "premiere_a1_hg_geographie_t1_l01_dynamisme_demographique_ci_p06_q1": {
+    "title": "Améliorer la qualité de la vie",
+    "caption": "Le planning familial permet d'espacer les naissances pour mieux maîtriser la croissance démographique.",
     "spec": {
-      "setting": "salle_classe",
+      "setting": "bureau",
       "characters": [
         {
-          "costume": "eleve_garcon",
+          "costume": "medecin",
           "pose": "parle",
           "mood": "content",
           "skin": "fonce",
-          "facing": "droite"
+          "facing": "gauche"
         }
       ],
       "props": [
         {
-          "kind": "livre_ouvert",
+          "kind": "fiole",
           "place": "gauche"
         }
       ],
       "time": "jour",
       "bubble": {
         "from": 0,
-        "text": "La télévision est bénéfique !"
+        "text": "Espacer les naissances !"
       },
-      "sign": "La thèse"
+      "sign": "Planning"
     }
   },
-  "seconde_a_francais_pl_l02b_expression_opinion_p03_q2": {
-    "title": "Un mot mélioratif",
-    "caption": "Le mot bénéfique est un adjectif mélioratif qui valorise la télévision de façon positive.",
+  "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p01_q1": {
+    "title": "Le premier milliard",
+    "caption": "La population mondiale atteint un milliard d'habitants vers 1800, marquant le début de la croissance.",
     "spec": {
-      "setting": "bureau",
+      "setting": "salle_classe",
       "characters": [
         {
-          "costume": "eleve_fille",
+          "costume": "enseignant",
+          "pose": "montre",
+          "mood": "neutre",
+          "skin": "fonce",
+          "facing": "droite",
+          "holding": "livre"
+        },
+        {
+          "costume": "eleve_garcon",
           "pose": "reflechit",
           "mood": "content",
-          "skin": "brun",
-          "facing": "gauche",
-          "holding": "plume"
-        }
-      ],
-      "props": [
-        {
-          "kind": "livre_ouvert",
-          "place": "droite"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Bénéfique est mélioratif"
-      },
-      "sign": "Mélioratif"
-    }
-  },
-  "seconde_a_francais_pl_l02b_expression_opinion_p06_q3": {
-    "title": "Illustrer par un exemple",
-    "caption": "L'argumentation s'appuie toujours sur un exemple précis pour convaincre le lecteur.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "montre",
-          "mood": "determine",
           "skin": "fonce",
-          "facing": "droite"
+          "facing": "gauche"
         }
       ],
       "props": [
         {
           "kind": "tableau",
           "place": "fond"
+        },
+        {
+          "kind": "livre_ouvert",
+          "place": "centre"
         }
       ],
       "time": "jour",
       "bubble": {
         "from": 0,
-        "text": "Voici un exemple précis !"
+        "text": "1 milliard vers 1800 !"
       },
-      "sign": "Exemple"
+      "sign": "1800 : 1 Milliard"
     }
   },
-  "seconde_a_francais_pl_l03_semantique_p03_q3": {
-    "title": "Le maître et le chien",
-    "caption": "Le mot maître prend un sens différent selon qu'il désigne l'enseignant ou le propriétaire de l'animal.",
+  "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p02_q2": {
+    "title": "Pays développés",
+    "caption": "Dans les pays développés, la transition démographique est achevée et la croissance est lente.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "femme_politique",
+          "pose": "parle",
+          "mood": "neutre",
+          "skin": "tres_clair",
+          "facing": "gauche"
+        }
+      ],
+      "props": [
+        {
+          "kind": "graphique",
+          "place": "fond"
+        },
+        {
+          "kind": "ordinateur",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "La croissance est lente ici."
+      },
+      "sign": "Croissance lente"
+    }
+  },
+  "premiere_a1_hg_geographie_t1_l02_croissance_demographique_mondiale_p04_q2": {
+    "title": "Premier foyer",
+    "caption": "L'Asie de l'Est constitue le premier foyer de peuplement de la planète.",
+    "spec": {
+      "setting": "ville",
+      "characters": [
+        {
+          "costume": "eleve_fille",
+          "pose": "montre",
+          "mood": "content",
+          "skin": "moyen",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "carte",
+          "place": "fond"
+        },
+        {
+          "kind": "globe",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "L'Asie de l'Est est un grand foyer."
+      },
+      "sign": "Asie de l'Est"
+    }
+  },
+  "premiere_a1_hg_geographie_t2_l01_urbanisation_cote_ivoire_p03_q5": {
+    "title": "Abidjan, une mégalopole",
+    "caption": "Abidjan est une très grande ville par sa taille, son étendue et sa population, illustrant la mégalopole ivoirienne.",
     "spec": {
       "setting": "ville",
       "characters": [
         {
           "costume": "eleve_garcon",
-          "pose": "marche",
+          "pose": "montre",
           "mood": "content",
           "skin": "fonce",
-          "facing": "droite",
-          "holding": "livre"
-        }
-      ],
-      "props": [
-        {
-          "kind": "vache",
-          "place": "fond"
-        },
-        {
-          "kind": "panier",
-          "place": "gauche"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Le chien obéit à son maître"
-      },
-      "sign": "Sens contextuel"
-    }
-  },
-  "seconde_a_francais_pl_l03_semantique_p04_q3": {
-    "title": "Une montagne de devoirs",
-    "caption": "La montagne représente ici une grande quantité de devoirs, illustrant le sens figuré.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "eleve_garcon",
-          "pose": "triste",
-          "mood": "triste",
-          "skin": "fonce",
-          "facing": "gauche",
-          "holding": "livre"
-        },
-        {
-          "costume": "enseignant",
-          "pose": "montre",
-          "mood": "neutre",
-          "skin": "brun",
           "facing": "droite"
         }
       ],
       "props": [
         {
-          "kind": "montagne",
+          "kind": "carte",
           "place": "fond"
-        },
-        {
-          "kind": "livre_ouvert",
-          "place": "gauche"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 1,
-        "text": "Une montagne de devoirs !"
-      },
-      "sign": "Sens figuré"
-    }
-  },
-  "seconde_a_francais_pl_l03_semantique_p05_q4": {
-    "title": "La colombe de la paix",
-    "caption": "Dans notre culture, la colombe connote la paix, au-delà de sa réalité d'oiseau.",
-    "spec": {
-      "setting": "village",
-      "characters": [
-        {
-          "costume": "villageois",
-          "pose": "joie",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "arbre",
-          "place": "droite"
-        },
-        {
-          "kind": "plante",
-          "place": "gauche"
         }
       ],
       "time": "jour",
       "bubble": {
         "from": 0,
-        "text": "La colombe symbolise la paix"
-      },
-      "sign": "Connotation"
+        "text": "Abidjan est une grande métropole !"
+      }
     }
   },
-  "seconde_a_francais_pl_l03_semantique_p06_q3": {
-    "title": "Le vieux baobab",
-    "caption": "Le baobab veille sur le village : l'arbre est employé au sens figuré pour suggérer la protection.",
+  "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p01_q6": {
+    "title": "Le tournant de 1931",
+    "caption": "En 1931, les citadins deviennent plus nombreux que les ruraux en France.",
+    "spec": {
+      "setting": "ville",
+      "characters": [
+        {
+          "costume": "eleve_garcon",
+          "pose": "montre",
+          "mood": "content",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "graphique",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Plus de citadins en 1931 !"
+      },
+      "sign": "1931"
+    }
+  },
+  "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p03_q2": {
+    "title": "La ville de Paris",
+    "caption": "La ville de Paris compte vingt arrondissements et environ 2,1 millions d'habitants.",
+    "spec": {
+      "setting": "ville",
+      "characters": [
+        {
+          "costume": "eleve_fille",
+          "pose": "reflechit",
+          "mood": "neutre",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "carte",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Paris compte 20 arrondissements."
+      },
+      "sign": "2,1 millions"
+    }
+  },
+  "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p06_q5": {
+    "title": "Contre les embouteillages",
+    "caption": "Pour lutter contre les embouteillages, on renforce les transports en commun comme le métro.",
+    "spec": {
+      "setting": "ville",
+      "characters": [
+        {
+          "costume": "eleve_garcon",
+          "pose": "debout",
+          "mood": "content",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "ordinateur",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Il faut renforcer les métros !"
+      },
+      "sign": "Transport"
+    }
+  },
+  "premiere_a1_hg_geographie_t3_l01_organisation_administrative_ci_p02_q6": {
+    "title": "Le village, base administrative",
+    "caption": "Le village est la circonscription administrative de base en Côte d'Ivoire.",
     "spec": {
       "setting": "village",
       "characters": [
@@ -542,47 +373,42 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
           "facing": "droite"
         },
         {
-          "costume": "enfant",
-          "pose": "debout",
-          "mood": "content",
+          "costume": "eleve_garcon",
+          "pose": "ecrit",
+          "mood": "neutre",
           "skin": "fonce",
-          "facing": "gauche",
-          "child": true
+          "facing": "gauche"
         }
       ],
       "props": [
         {
-          "kind": "palmier",
+          "kind": "case",
           "place": "fond"
         },
         {
-          "kind": "case",
-          "place": "gauche"
+          "kind": "palmier",
+          "place": "droite"
         }
       ],
       "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Le vieux baobab veille sur nous"
-      },
-      "sign": "Sens figuré"
+      "sign": "Village"
     }
   },
-  "seconde_a_francais_pl_l04_enonciation_p01_q3": {
-    "title": "La situation d'enonciation",
-    "caption": "La situation d'énonciation répond à quatre questions fondamentales : qui parle, à qui, où et quand ?",
+  "premiere_a1_hg_geographie_t3_l01_organisation_administrative_ci_p05_q2": {
+    "title": "L'élection du maire",
+    "caption": "Le maire est élu par les conseillers municipaux qui représentent les citoyens.",
     "spec": {
-      "setting": "salle_classe",
+      "setting": "bureau",
       "characters": [
         {
-          "costume": "enseignant",
+          "costume": "homme_politique",
           "pose": "parle",
           "mood": "content",
           "skin": "fonce",
           "facing": "droite"
         },
         {
-          "costume": "eleve_garcon",
+          "costume": "citoyen_grec",
           "pose": "reflechit",
           "mood": "neutre",
           "skin": "fonce",
@@ -591,130 +417,608 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
       ],
       "props": [
         {
-          "kind": "tableau",
-          "place": "fond"
+          "kind": "pieces",
+          "place": "centre"
         },
         {
-          "kind": "livre_ouvert",
+          "kind": "drapeau_ci",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Le maire est élu par le conseil municipal."
+      },
+      "sign": "Mairie"
+    }
+  },
+  "premiere_a1_hg_geographie_t3_l02_amenagement_territoire_ci_p02_q2": {
+    "title": "Plantations géantes",
+    "caption": "Les sociétés d'État créent de grandes plantations de palmier à huile et d'hévéa dans la zone forestière.",
+    "spec": {
+      "setting": "foret",
+      "characters": [
+        {
+          "costume": "paysan",
+          "pose": "montre",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "droite",
+          "holding": "houe"
+        }
+      ],
+      "props": [
+        {
+          "kind": "palmier",
+          "place": "droite"
+        },
+        {
+          "kind": "plante",
           "place": "gauche"
         }
       ],
       "time": "jour",
       "bubble": {
         "from": 0,
-        "text": "Où et quand l'énoncé est-il produit ?"
-      },
-      "sign": "Qui ? Où ? Quand ?"
+        "text": "Voici nos plantations de palmier à huile !"
+      }
     }
   },
-  "seconde_a_francais_pl_l04_enonciation_p02_q7": {
-    "title": "Classer les indices",
-    "caption": "Dans la phrase « Hier, je t'ai attendu ici », le mot « ici » est un indice précis de lieu.",
+  "premiere_a1_hg_geographie_t3_l02_amenagement_territoire_ci_p03_q4": {
+    "title": "Le port de San-Pédro",
+    "caption": "Le port de San-Pédro a été créé dans le cadre de l'aménagement de la région du Sud-Ouest.",
+    "spec": {
+      "setting": "cote_mer",
+      "characters": [
+        {
+          "costume": "ouvrier",
+          "pose": "debout",
+          "mood": "determine",
+          "skin": "fonce",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "navire",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Le port de San-Pédro dynamise la région !"
+      },
+      "sign": "PORT DE SAN-PEDRO"
+    }
+  },
+  "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p01_q3": {
+    "title": "Le paysan ivoirien et le marché mondial",
+    "caption": "Le paysan ivoirien subit dans son champ les variations du cours du café fixé sur les marchés boursiers étrangers.",
+    "spec": {
+      "setting": "champ",
+      "characters": [
+        {
+          "costume": "paysan",
+          "pose": "reflechit",
+          "mood": "triste",
+          "skin": "fonce",
+          "facing": "gauche"
+        }
+      ],
+      "props": [
+        {
+          "kind": "cacao",
+          "place": "droite"
+        }
+      ],
+      "time": "jour"
+    }
+  },
+  "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p04_q5": {
+    "title": "La révolution informatique",
+    "caption": "Ordinateurs, fax, satellites et Internet relient partout dans le monde les décideurs et les entrepreneurs.",
     "spec": {
       "setting": "bureau",
       "characters": [
         {
-          "costume": "eleve_fille",
+          "costume": "eleve_garcon",
           "pose": "ecrit",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "ordinateur",
+          "place": "centre"
+        },
+        {
+          "kind": "telephone",
+          "place": "droite"
+        }
+      ],
+      "time": "jour"
+    }
+  },
+  "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p06_q6": {
+    "title": "Le poids des firmes multinationales",
+    "caption": "Les firmes multinationales réalisent par leurs ventes environ la moitié des échanges extérieurs de la planète.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "montre",
           "mood": "determine",
-          "skin": "brun",
+          "skin": "clair",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "globe",
+          "place": "gauche"
+        },
+        {
+          "kind": "graphique",
+          "place": "droite"
+        }
+      ],
+      "time": "jour"
+    }
+  },
+  "premiere_a1_hg_geographie_t4_l02_consequences_mondialisation_p01_q1": {
+    "title": "La Triade mondiale",
+    "caption": "La Triade regroupe les trois grands pôles développés : les États-Unis, l'Union européenne et le Japon.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "eleve_garcon",
+          "pose": "montre",
+          "mood": "content",
+          "skin": "moyen",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "globe",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "La Triade domine les échanges mondiaux !"
+      }
+    }
+  },
+  "premiere_a1_hg_geographie_t4_l02_consequences_mondialisation_p04_q5": {
+    "title": "Des produits moins chers",
+    "caption": "Les produits fabriqués à bas coût, comme les téléphones venus de Chine, sont moins chers pour les consommateurs.",
+    "spec": {
+      "setting": "marche",
+      "characters": [
+        {
+          "costume": "commercante",
+          "pose": "parle",
+          "mood": "content",
+          "skin": "fonce",
           "facing": "gauche"
+        },
+        {
+          "costume": "eleve_fille",
+          "pose": "joie",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "telephone",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 1,
+        "text": "Les téléphones sont plus abordables !"
+      }
+    }
+  },
+  "premiere_a1_hg_geographie_t4_l02_consequences_mondialisation_p05_q3": {
+    "title": "La dépendance au cacao",
+    "caption": "Beaucoup de pays en développement dépendent d'un ou deux produits primaires, comme le cacao ou le pétrole.",
+    "spec": {
+      "setting": "plantation",
+      "characters": [
+        {
+          "costume": "paysan",
+          "pose": "reflechit",
+          "mood": "triste",
+          "skin": "fonce",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "cacao",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Nos revenus dépendent trop du cacao."
+      }
+    }
+  },
+  "premiere_a1_hg_histoire_t1_l01_essor_capitalisme_p04_q5": {
+    "title": "La taylorisation",
+    "caption": "La taylorisation divise le travail en tâches simples et complémentaires pour augmenter le rendement dans les usines.",
+    "spec": {
+      "setting": "usine",
+      "characters": [
+        {
+          "costume": "ouvrier",
+          "pose": "debout",
+          "mood": "neutre",
+          "skin": "fonce",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "usine",
+          "place": "fond"
+        }
+      ],
+      "time": "jour"
+    }
+  },
+  "premiere_a1_hg_histoire_t1_l02_revolutions_industrielles_p03_q5": {
+    "title": "Louis Pasteur et la science",
+    "caption": "Louis Pasteur dans son laboratoire avec une fiole, symbolisant les découvertes scientifiques du XIXe siècle.",
+    "spec": {
+      "setting": "laboratoire",
+      "characters": [
+        {
+          "costume": "savant",
+          "pose": "debout",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "microscope",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "sign": "1885"
+    }
+  },
+  "premiere_a1_hg_histoire_t1_l02_revolutions_industrielles_p04_q6": {
+    "title": "L'exode rural",
+    "caption": "Un paysan quitte les travaux des champs pour se diriger vers les usines des villes industrielles.",
+    "spec": {
+      "setting": "champ",
+      "characters": [
+        {
+          "costume": "paysan",
+          "pose": "marche",
+          "mood": "neutre",
+          "skin": "tres_clair",
+          "facing": "droite",
+          "holding": "houe"
+        }
+      ],
+      "props": [
+        {
+          "kind": "usine",
+          "place": "droite"
+        }
+      ],
+      "time": "jour"
+    }
+  },
+  "premiere_a1_hg_histoire_t1_l02_revolutions_industrielles_p05_q3": {
+    "title": "L'invention du téléphone",
+    "caption": "Graham Bell avec le téléphone, l'une des inventions majeures de la seconde révolution industrielle en 1876.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "savant",
+          "pose": "parle",
+          "mood": "content",
+          "skin": "tres_clair",
+          "facing": "gauche"
+        }
+      ],
+      "props": [
+        {
+          "kind": "telephone",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "sign": "1876"
+    }
+  },
+  "premiere_a1_hg_histoire_t2_l01_imperialisme_congres_berlin_p04_q6": {
+    "title": "Le partage de l'Afrique",
+    "caption": "Une caricature montre Bismarck découpant un gâteau représentant l'Afrique devant des diplomates européens réunis au congrès de Berlin.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "parle",
+          "mood": "neutre",
+          "skin": "tres_clair",
+          "facing": "droite"
         }
       ],
       "props": [
         {
           "kind": "carte",
-          "place": "droite"
-        },
-        {
-          "kind": "livre_ouvert",
-          "place": "centre"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Ici est un indice de lieu !"
-      },
-      "sign": "Indices de lieu"
-    }
-  },
-  "seconde_a_francais_pl_l04_enonciation_p04_q6": {
-    "title": "Vocabulaire evaluatif",
-    "caption": "Une même réalité prend une valeur différente : neutre, méliorative avec une demeure, ou péjorative avec un taudis.",
-    "spec": {
-      "setting": "village",
-      "characters": [
-        {
-          "costume": "villageois",
-          "pose": "montre",
-          "mood": "neutre",
-          "skin": "fonce",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "case",
-          "place": "centre"
-        },
-        {
-          "kind": "palmier",
-          "place": "gauche"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Logement, demeure ou taudis ?"
-      }
-    }
-  },
-  "seconde_a_francais_pl_l05_figures_analogie_substitution_p02_q3": {
-    "title": "La métaphore",
-    "caption": "La métaphore rapproche deux éléments sans outil de comparaison, comme dans « un gros serpent de fumée noire ».",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "parle",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite",
-          "holding": "livre"
-        },
-        {
-          "costume": "eleve_garcon",
-          "pose": "reflechit",
-          "mood": "neutre",
-          "skin": "brun",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
           "place": "fond"
         }
       ],
       "time": "jour",
       "bubble": {
         "from": 0,
-        "text": "Pas d'outil de comparaison !"
+        "text": "Le gâteau Afrique est partagé !"
       },
-      "sign": "Métaphore"
+      "sign": "1884-1885"
     }
   },
-  "seconde_a_francais_pl_l05_figures_analogie_substitution_p03_q6": {
-    "title": "La Justice",
-    "caption": "Une femme aux yeux bandés tenant une balance représente l'allégorie de la Justice de façon concrète.",
+  "premiere_a1_hg_histoire_t2_l02_resistances_conquete_ci_p02_q6": {
+    "title": "Attaque du fort de Dabou",
+    "caption": "En 1891, les Adjoukrou et les Bouboury résistent en attaquant le fort de Dabou.",
+    "spec": {
+      "setting": "cote_mer",
+      "characters": [
+        {
+          "costume": "villageois",
+          "pose": "montre",
+          "mood": "determine",
+          "skin": "fonce",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "fort",
+          "place": "gauche"
+        }
+      ],
+      "time": "jour",
+      "sign": "1891"
+    }
+  },
+  "premiere_a1_hg_histoire_t2_l02_resistances_conquete_ci_p03_q2": {
+    "title": "Arrestation de Samory Touré",
+    "caption": "En 1898 à Guélémou, le chef résistant Samory Touré est capturé.",
+    "spec": {
+      "setting": "village",
+      "characters": [
+        {
+          "costume": "chef_traditionnel",
+          "pose": "triste",
+          "mood": "triste",
+          "skin": "fonce",
+          "facing": "droite"
+        },
+        {
+          "costume": "soldat_colonial",
+          "pose": "debout",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "facing": "gauche"
+        }
+      ],
+      "props": [
+        {
+          "kind": "case",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "sign": "1898"
+    }
+  },
+  "premiere_a1_hg_histoire_t2_l02_resistances_conquete_ci_p04_q4": {
+    "title": "Binger à Kong",
+    "caption": "L'explorateur Binger propose un traité de protectorat au roi de Kong.",
+    "spec": {
+      "setting": "village",
+      "characters": [
+        {
+          "costume": "explorateur",
+          "pose": "montre",
+          "mood": "neutre",
+          "skin": "tres_clair",
+          "facing": "droite",
+          "holding": "parchemin"
+        },
+        {
+          "costume": "roi_africain",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "fonce",
+          "facing": "gauche"
+        }
+      ],
+      "props": [
+        {
+          "kind": "case",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Voici le traité de protectorat."
+      }
+    }
+  },
+  "premiere_a1_hg_histoire_t3_l01_premiere_guerre_mondiale_p04_q5": {
+    "title": "Les tirailleurs africains",
+    "caption": "Des milliers de soldats africains ont combattu en Europe durant la Première Guerre mondiale.",
+    "spec": {
+      "setting": "ville",
+      "characters": [
+        {
+          "costume": "soldat_colonial",
+          "pose": "debout",
+          "mood": "determine",
+          "skin": "fonce",
+          "facing": "droite"
+        },
+        {
+          "costume": "soldat_colonial",
+          "pose": "marche",
+          "mood": "determine",
+          "skin": "brun",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "fort",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "sign": "1914-1918"
+    }
+  },
+  "premiere_a1_hg_histoire_t3_l01_premiere_guerre_mondiale_p06_q5": {
+    "title": "Le Diktat de Versailles",
+    "caption": "Le traité de Versailles est considéré par l'Allemagne comme une paix imposée et humiliante.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "lit",
+          "mood": "triste",
+          "skin": "tres_clair",
+          "facing": "droite",
+          "holding": "parchemin"
+        },
+        {
+          "costume": "homme_politique",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "facing": "gauche"
+        }
+      ],
+      "props": [],
+      "time": "jour",
+      "bubble": {
+        "from": 1,
+        "text": "C'est un Diktat imposé !"
+      },
+      "sign": "1919"
+    }
+  },
+  "premiere_a1_hg_histoire_t3_l01_premiere_guerre_mondiale_p06_q6": {
+    "title": "La création de la SDN",
+    "caption": "La Société des Nations est créée après la guerre pour maintenir la paix dans le monde.",
+    "spec": {
+      "setting": "tribunal",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "globe",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Maintenons la paix entre les nations !"
+      },
+      "sign": "SDN"
+    }
+  },
+  "premiere_a1_hg_histoire_t3_l03_violences_masse_genocides_p02_q1": {
+    "title": "Création du mot génocide",
+    "caption": "En 1944, le juriste Raphaël Lemkin crée le mot génocide pour qualifier les crimes de masse.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "savant",
+          "pose": "ecrit",
+          "mood": "neutre",
+          "skin": "tres_clair",
+          "facing": "gauche",
+          "holding": "plume"
+        }
+      ],
+      "props": [
+        {
+          "kind": "livre_ouvert",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "sign": "1944"
+    }
+  },
+  "premiere_a1_hg_histoire_t3_l03_violences_masse_genocides_p05_q3": {
+    "title": "Le camp d'Auschwitz",
+    "caption": "Auschwitz-Birkenau, en Pologne occupée, est le plus grand camp d'extermination nazi.",
+    "spec": {
+      "setting": "usine",
+      "characters": [
+        {
+          "costume": "soldat_colonial",
+          "pose": "debout",
+          "mood": "neutre",
+          "skin": "tres_clair",
+          "facing": "gauche"
+        }
+      ],
+      "props": [
+        {
+          "kind": "fort",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "sign": "AUSCHWITZ"
+    }
+  },
+  "premiere_a1_hg_histoire_t3_l03_violences_masse_genocides_p06_q3": {
+    "title": "La Cour pénale internationale",
+    "caption": "La Cour pénale internationale, qui siège à La Haye, juge les génocides et les crimes contre l'humanité.",
     "spec": {
       "setting": "tribunal",
       "characters": [
         {
           "costume": "juge",
-          "pose": "debout",
+          "pose": "parle",
           "mood": "determine",
           "skin": "clair",
           "facing": "droite"
@@ -724,7 +1028,61 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
         {
           "kind": "balance",
           "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "sign": "CPI"
+    }
+  },
+  "premiere_philo_histoire_l06_periode_antique_p02_q1": {
+    "title": "L'image du fleuve d'Héraclite",
+    "caption": "Héraclite illustre le mouvement et le changement perpétuel par l'eau du fleuve qui coule sans cesse.",
+    "spec": {
+      "setting": "fleuve",
+      "characters": [
+        {
+          "costume": "philosophe_antique",
+          "pose": "marche",
+          "mood": "neutre",
+          "skin": "clair",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "arbre",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Le fleuve coule, tout change sans cesse."
+      }
+    }
+  },
+  "premiere_philo_histoire_l06_periode_antique_p05_q1": {
+    "title": "La précepte de Socrate",
+    "caption": "Socrate invite chaque individu à rechercher la sagesse en commençant par la connaissance de soi-même.",
+    "spec": {
+      "setting": "agora",
+      "characters": [
+        {
+          "costume": "philosophe_antique",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "clair",
+          "facing": "droite"
         },
+        {
+          "costume": "citoyen_grec",
+          "pose": "reflechit",
+          "mood": "neutre",
+          "skin": "clair",
+          "facing": "gauche"
+        }
+      ],
+      "props": [
         {
           "kind": "colonnes",
           "place": "fond"
@@ -733,367 +1091,132 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
       "time": "jour",
       "bubble": {
         "from": 0,
-        "text": "L'idée abstraite devient concrète"
-      },
-      "sign": "Allégorie"
-    }
-  },
-  "seconde_a_francais_pl_l05_figures_analogie_substitution_p05_q2": {
-    "title": "Cent voiles",
-    "caption": "La synecdoque utilise la partie pour le tout : « cent voiles » désigne ici cent navires sur l'eau.",
-    "spec": {
-      "setting": "cote_mer",
-      "characters": [
-        {
-          "costume": "pecheur",
-          "pose": "montre",
-          "mood": "surpris",
-          "skin": "fonce",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "navire",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "La voile désigne le navire !"
-      },
-      "sign": "Synecdoque"
-    }
-  },
-  "seconde_a_francais_pl_l05_figures_analogie_substitution_p05_q6": {
-    "title": "Le Bélier de Yamoussoukro",
-    "caption": "La périphrase remplace un nom par une expression explicative, comme le Bélier de Yamoussoukro.",
-    "spec": {
-      "setting": "ville",
-      "characters": [
-        {
-          "costume": "eleve_fille",
-          "pose": "parle",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite",
-          "holding": "livre"
-        }
-      ],
-      "props": [
-        {
-          "kind": "palmier",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Une expression qui caractérise"
-      },
-      "sign": "Périphrase"
-    }
-  },
-  "seconde_a_francais_pl_l05b_figures_amplification_attenuation_p02_q1": {
-    "title": "L'hyperbole",
-    "caption": "L'hyperbole exagère la réalité pour exprimer une idée avec force.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "eleve_garcon",
-          "pose": "parle",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Je t'ai appelé mille fois !"
+        "text": "Connais-toi toi-même."
       }
     }
   },
-  "seconde_a_francais_pl_l05b_figures_amplification_attenuation_p03_q2": {
-    "title": "La gradation ascendante",
-    "caption": "La gradation présente des termes rangés selon une progression croissante d'intensité.",
+  "premiere_philo_histoire_l06_periode_antique_p09_q3": {
+    "title": "La distinction stoïcienne d'Épictète",
+    "caption": "Épictète explique que la liberté et la paix de l'âme dépendent du contrôle de nos propres jugements.",
     "spec": {
-      "setting": "salle_classe",
+      "setting": "agora",
       "characters": [
         {
-          "costume": "eleve_fille",
-          "pose": "montre",
-          "mood": "surpris",
-          "skin": "brun",
-          "facing": "gauche"
+          "costume": "philosophe_antique",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "clair",
+          "facing": "droite"
         },
         {
-          "costume": "enseignant",
-          "pose": "parle",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite"
+          "costume": "citoyen_grec",
+          "pose": "lit",
+          "mood": "neutre",
+          "skin": "clair",
+          "facing": "gauche",
+          "holding": "parchemin"
         }
       ],
       "props": [
         {
-          "kind": "livre_ouvert",
-          "place": "centre"
+          "kind": "colonnes",
+          "place": "fond"
         }
       ],
       "time": "jour",
       "bubble": {
-        "from": 1,
-        "text": "Je suis perdu, assassiné !"
+        "from": 0,
+        "text": "Nos jugements dépendent de nous."
       }
     }
   },
-  "seconde_a_francais_pl_l05b_figures_amplification_attenuation_p05_q2": {
-    "title": "La litote",
-    "caption": "La litote consiste à dire moins pour faire entendre plus.",
+  "premiere_philo_histoire_l07_moyen_age_renaissance_p01_q3": {
+    "title": "Saint Augustin né en Algérie",
+    "caption": "Saint Augustin est né à Thagaste, en Algérie actuelle, au cours d'une période qui relie l'Antiquité tardive et le Moyen Âge.",
     "spec": {
-      "setting": "salle_classe",
+      "setting": "palais",
       "characters": [
         {
-          "costume": "eleve_garcon",
-          "pose": "reflechit",
-          "mood": "neutre",
+          "costume": "religieux",
+          "pose": "ecrit",
+          "mood": "determine",
           "skin": "fonce",
-          "facing": "gauche"
+          "holding": "plume"
         }
       ],
       "props": [],
       "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Je ne te hais point..."
-      }
+      "sign": "354-430"
     }
   },
-  "seconde_a_francais_pl_l05b_figures_amplification_attenuation_p06_q2": {
-    "title": "L'euphémisme",
-    "caption": "L'euphémisme adoucit l'expression d'une réalité pénible ou triste.",
+  "premiere_philo_histoire_l07_moyen_age_renaissance_p03_q2": {
+    "title": "Foi et raison chez Thomas d'Aquin",
+    "caption": "Pour les penseurs médiévaux comme saint Thomas d'Aquin, la lumière de la foi et celle de la raison sont complémentaires et viennent toutes deux de Dieu.",
     "spec": {
-      "setting": "village",
+      "setting": "salle_classe",
       "characters": [
         {
-          "costume": "villageoise",
-          "pose": "triste",
-          "mood": "triste",
-          "skin": "fonce",
-          "facing": "gauche"
+          "costume": "religieux",
+          "pose": "montre",
+          "mood": "content",
+          "skin": "tres_clair",
+          "holding": "livre"
+        },
+        {
+          "costume": "eleve_garcon",
+          "pose": "reflechit",
+          "mood": "neutre",
+          "skin": "fonce"
         }
       ],
       "props": [
         {
-          "kind": "case",
-          "place": "fond"
+          "kind": "livre_ouvert",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Foi et raison sont complémentaires !"
+      }
+    }
+  },
+  "premiere_philo_histoire_l07_moyen_age_renaissance_p04_q1": {
+    "title": "Machiavel et Le Prince",
+    "caption": "Nicolas Machiavel, penseur florentin de la Renaissance, analyse les conditions de l'exercice et de la conservation du pouvoir politique.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "reflechit",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "holding": "plume"
+        }
+      ],
+      "props": [
+        {
+          "kind": "livre_ouvert",
+          "place": "centre"
         }
       ],
       "time": "soir",
-      "bubble": {
-        "from": 0,
-        "text": "Il nous a quittés hier."
-      }
+      "sign": "1513"
     }
   },
-  "seconde_a_francais_pl_l05c_figures_opposition_construction_p01_q3": {
-    "title": "L'oxymore",
-    "caption": "L'oxymore associe deux termes de sens contraire dans une même expression, comme dans cette obscure clarté.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "parle",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite",
-          "holding": "livre"
-        },
-        {
-          "costume": "eleve_garcon",
-          "pose": "reflechit",
-          "mood": "neutre",
-          "skin": "fonce",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Une obscure clarté..."
-      }
-    }
-  },
-  "seconde_a_francais_pl_l05c_figures_opposition_construction_p02_q3": {
-    "title": "L'antithèse",
-    "caption": "L'antithèse rapproche deux idées fortement opposées, comme beaucoup et peu dans des parties distinctes.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "montre",
-          "mood": "determine",
-          "skin": "brun",
-          "facing": "droite"
-        },
-        {
-          "costume": "eleve_fille",
-          "pose": "debout",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "gauche",
-          "holding": "livre"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        },
-        {
-          "kind": "livre_ouvert",
-          "place": "centre"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Beaucoup hier, peu aujourd'hui !"
-      },
-      "sign": "Antithèse"
-    }
-  },
-  "seconde_a_francais_pl_l05c_figures_opposition_construction_p03_q2": {
-    "title": "L'ironie",
-    "caption": "L'ironie consiste à dire le contraire de ce que l'on pense réellement pour exprimer un reproche moqueur.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "parle",
-          "mood": "surpris",
-          "skin": "fonce",
-          "facing": "droite"
-        },
-        {
-          "costume": "eleve_garcon",
-          "pose": "triste",
-          "mood": "triste",
-          "skin": "fonce",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Bravo pour ton zéro !"
-      },
-      "sign": "Ironie"
-    }
-  },
-  "seconde_a_francais_pl_l05c_figures_opposition_construction_p05_q2": {
-    "title": "L'inversion",
-    "caption": "L'inversion change l'ordre habituel des mots pour mettre un élément en relief, comme un adjectif en tête.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "montre",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite"
-        },
-        {
-          "costume": "eleve_fille",
-          "pose": "debout",
-          "mood": "content",
-          "skin": "brun",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Sage est Eunice !"
-      },
-      "sign": "Inversion"
-    }
-  },
-  "seconde_a_francais_pl_l06_versification_vers_strophes_p01_q3": {
-    "title": "L'octosyllabe",
-    "caption": "Un élève étudie la versification et découvre l'octosyllabe, un vers de huit syllabes très usité.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "eleve_garcon",
-          "pose": "lit",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite",
-          "holding": "livre"
-        }
-      ],
-      "props": [
-        {
-          "kind": "livre_ouvert",
-          "place": "centre"
-        },
-        {
-          "kind": "tableau",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Un octosyllabe compte huit syllabes !"
-      },
-      "sign": "8 syllabes"
-    }
-  },
-  "seconde_a_francais_pl_l06_versification_vers_strophes_p04_q4": {
-    "title": "Senghor et le verset",
-    "caption": "Le poète Léopold Sédar Senghor utilise souvent le verset, un vers long aux accents amples.",
+  "premiere_philo_histoire_l08_periode_moderne_p02_q7": {
+    "title": "Le rationalisme de Descartes",
+    "caption": "René Descartes, philosophe rationaliste, affirme que seule la raison permet à l'homme d'accéder à la vraie connaissance.",
     "spec": {
       "setting": "bureau",
       "characters": [
         {
-          "costume": "ecrivain",
-          "pose": "ecrit",
+          "costume": "philosophe_antique",
+          "pose": "reflechit",
           "mood": "determine",
-          "skin": "fonce",
+          "skin": "tres_clair",
           "facing": "gauche",
           "holding": "plume"
         }
@@ -1102,201 +1225,27 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
         {
           "kind": "livre_ouvert",
           "place": "centre"
-        },
-        {
-          "kind": "plante",
-          "place": "droite"
         }
       ],
       "time": "jour",
       "bubble": {
         "from": 0,
-        "text": "Femme nue, femme noire..."
+        "text": "La raison seule donne la connaissance."
       },
-      "sign": "Verset"
+      "sign": "Rationalisme"
     }
   },
-  "seconde_a_francais_pl_l06_versification_vers_strophes_p06_q2": {
-    "title": "Le sonnet de quatorze vers",
-    "caption": "Le sonnet est un poème à forme fixe rigoureuse qui se compose exactement de quatorze vers.",
+  "premiere_philo_histoire_l08_periode_moderne_p03_q1": {
+    "title": "John Locke et la table rase",
+    "caption": "John Locke soutient qu'à la naissance l'esprit est une table rase, vide de toute idée avant l'expérience.",
     "spec": {
       "setting": "salle_classe",
       "characters": [
         {
-          "costume": "eleve_fille",
-          "pose": "reflechit",
-          "mood": "neutre",
-          "skin": "moyen",
-          "facing": "droite",
-          "holding": "plume"
-        }
-      ],
-      "props": [
-        {
-          "kind": "livre_ouvert",
-          "place": "centre"
-        },
-        {
-          "kind": "feu",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Deux quatrains et deux tercets : 14 vers !"
-      },
-      "sign": "14 vers"
-    }
-  },
-  "seconde_a_francais_pl_l07_implicite_p01_q5": {
-    "title": "Pour une fois",
-    "caption": "La remarque de l'enseignant laisse entendre de manière implicite que la classe n'est pas sage d'habitude.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
+          "costume": "philosophe_lumieres",
           "pose": "parle",
           "mood": "neutre",
-          "skin": "fonce",
-          "facing": "droite"
-        },
-        {
-          "costume": "eleve_garcon",
-          "pose": "debout",
-          "mood": "surpris",
-          "skin": "fonce",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Pour une fois, vous êtes sages au cours."
-      }
-    }
-  },
-  "seconde_a_francais_pl_l07_implicite_p03_q2": {
-    "title": "Il fait chaud ici",
-    "caption": "Dire « Il fait chaud ici » sous-entend de façon polie une demande d'action comme ouvrir la fenêtre.",
-    "spec": {
-      "setting": "bureau",
-      "characters": [
-        {
-          "costume": "eleve_fille",
-          "pose": "parle",
-          "mood": "neutre",
-          "skin": "fonce",
-          "facing": "droite"
-        },
-        {
-          "costume": "eleve_garcon",
-          "pose": "reflechit",
-          "mood": "surpris",
-          "skin": "fonce",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "plante",
-          "place": "droite"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Il fait chaud ici !"
-      }
-    }
-  },
-  "seconde_a_francais_pl_l07_implicite_p03_q3": {
-    "title": "Il est huit heures",
-    "caption": "L'énoncé « Il est huit heures » prend un sous-entendu d'avertissement ou de retard selon la situation.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "montre",
-          "mood": "neutre",
-          "skin": "fonce",
-          "facing": "droite"
-        },
-        {
-          "costume": "eleve_garcon",
-          "pose": "triste",
-          "mood": "triste",
-          "skin": "fonce",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "horloge",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Il est huit heures !"
-      }
-    }
-  },
-  "seconde_a_francais_sf_l02_expose_oral_p03_q6": {
-    "title": "Afficher le plan au tableau",
-    "caption": "Écrire le plan au tableau aide le public à suivre l'exposé et structure clairement les différentes parties de la présentation.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "montre",
-          "mood": "content",
-          "skin": "moyen",
-          "facing": "gauche"
-        },
-        {
-          "costume": "eleve_garcon",
-          "pose": "reflechit",
-          "mood": "neutre",
-          "skin": "fonce",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Voici le plan de notre exposé."
-      },
-      "sign": "Plan"
-    }
-  },
-  "seconde_a_francais_sf_l02_expose_oral_p04_q2": {
-    "title": "Parler sans lire ses notes",
-    "caption": "Pour garder l'attention du public, l'exposant utilise des mots-clés sur ses fiches sans lire tout son texte en entier.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "eleve_fille",
-          "pose": "parle",
-          "mood": "determine",
-          "skin": "fonce",
+          "skin": "tres_clair",
           "facing": "droite",
           "holding": "livre"
         }
@@ -1310,30 +1259,152 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
       "time": "jour",
       "bubble": {
         "from": 0,
-        "text": "Regardons le public."
+        "text": "L'âme est une table rase."
       },
-      "sign": "Exposé"
+      "sign": "Table rase"
     }
   },
-  "seconde_a_francais_sf_l02_expose_oral_p05_q1": {
-    "title": "Se tenir droit devant le public",
-    "caption": "L'exposant se tient bien droit, face à ses camarades, avec une attitude soignée et professionnelle.",
+  "premiere_philo_histoire_l08_periode_moderne_p06_q3": {
+    "title": "Le criticisme de Kant",
+    "caption": "Emmanuel Kant montre que la connaissance exige l'union des pensées et des intuitions sensibles.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "philosophe_lumieres",
+          "pose": "montre",
+          "mood": "content",
+          "skin": "tres_clair",
+          "facing": "gauche",
+          "holding": "plume"
+        }
+      ],
+      "props": [
+        {
+          "kind": "cerveau",
+          "place": "centre"
+        }
+      ],
+      "time": "soir",
+      "bubble": {
+        "from": 0,
+        "text": "Pensées et intuitions unies !"
+      },
+      "sign": "Criticisme"
+    }
+  },
+  "premiere_philo_histoire_l09_periode_contemporaine_p01_q4": {
+    "title": "Gaston Bachelard, savant et philosophe",
+    "caption": "Gaston Bachelard, philosophe et épistémologue français, étudie la science et l'esprit.",
+    "spec": {
+      "setting": "laboratoire",
+      "characters": [
+        {
+          "costume": "savant",
+          "pose": "reflechit",
+          "mood": "neutre",
+          "skin": "tres_clair",
+          "facing": "gauche",
+          "holding": "loupe"
+        }
+      ],
+      "props": [
+        {
+          "kind": "microscope",
+          "place": "gauche"
+        },
+        {
+          "kind": "livre_ouvert",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Rien n'est donné, tout est construit."
+      },
+      "sign": "Bachelard"
+    }
+  },
+  "premiere_philo_histoire_l09_periode_contemporaine_p02_q1": {
+    "title": "Science contre opinion",
+    "caption": "Bachelard montre que la science s'oppose à l'opinion, qui a toujours tort.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "savant",
+          "pose": "montre",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "facing": "droite",
+          "holding": "plume"
+        }
+      ],
+      "props": [
+        {
+          "kind": "livre_ouvert",
+          "place": "gauche"
+        },
+        {
+          "kind": "ampoule",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "L'opinion a toujours tort."
+      },
+      "sign": "Obstacle"
+    }
+  },
+  "premiere_philo_histoire_l09_periode_contemporaine_p04_q4": {
+    "title": "L'existence précède l'essence",
+    "caption": "Jean-Paul Sartre enseigne que chez l'homme, l'existence précède l'essence.",
+    "spec": {
+      "setting": "salle_classe",
+      "characters": [
+        {
+          "costume": "philosophe_lumieres",
+          "pose": "parle",
+          "mood": "content",
+          "skin": "tres_clair",
+          "facing": "droite",
+          "holding": "livre"
+        },
+        {
+          "costume": "eleve_garcon",
+          "pose": "ecrit",
+          "mood": "neutre",
+          "skin": "fonce",
+          "facing": "gauche",
+          "holding": "plume"
+        }
+      ],
+      "props": [
+        {
+          "kind": "tableau",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "sign": "Sartre"
+    }
+  },
+  "premiere_philo_methodologie_l02_introduction_commentaire_p01_q2": {
+    "title": "Éléments de l'introduction",
+    "caption": "L'introduction du commentaire philosophique réunit le thème, le problème, la thèse et la structure logique.",
     "spec": {
       "setting": "salle_classe",
       "characters": [
         {
           "costume": "eleve_garcon",
-          "pose": "debout",
-          "mood": "content",
-          "skin": "moyen",
-          "facing": "gauche"
-        },
-        {
-          "costume": "eleve_fille",
-          "pose": "debout",
+          "pose": "reflechit",
           "mood": "neutre",
           "skin": "fonce",
-          "facing": "droite"
+          "facing": "droite",
+          "holding": "livre"
         }
       ],
       "props": [
@@ -1345,9 +1416,157 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
       "time": "jour",
       "bubble": {
         "from": 0,
-        "text": "Bonjour à tous."
+        "text": "Thème, problème, thèse et structure."
       },
-      "sign": "Présentation"
+      "sign": "Introduction"
+    }
+  },
+  "premiere_philo_methodologie_l03_conclusion_commentaire_p02_q2": {
+    "title": "La conclusion en un seul paragraphe",
+    "caption": "La conclusion d'un commentaire de texte se rédige en un seul paragraphe, enchaînant le bilan de la discussion puis la position personnelle.",
+    "spec": {
+      "setting": "salle_classe",
+      "characters": [
+        {
+          "costume": "eleve_garcon",
+          "pose": "ecrit",
+          "mood": "neutre",
+          "skin": "fonce",
+          "facing": "gauche",
+          "holding": "plume"
+        }
+      ],
+      "props": [
+        {
+          "kind": "livre_ouvert",
+          "place": "gauche"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Bilan puis position !"
+      }
+    }
+  },
+  "premiere_philo_methodologie_l03_conclusion_commentaire_p03_q2": {
+    "title": "La prise de position personnelle",
+    "caption": "La position personnelle exprime la réflexion de l'élève sur le problème posé, comme sur la propreté du corps et de l'esprit.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "eleve_fille",
+          "pose": "reflechit",
+          "mood": "determine",
+          "skin": "moyen",
+          "facing": "droite",
+          "holding": "livre"
+        }
+      ],
+      "props": [
+        {
+          "kind": "livre_ouvert",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "À notre sens..."
+      }
+    }
+  },
+  "premiere_philo_methodologie_l05_introduction_dissertation_p01_q6": {
+    "title": "Les trois étapes de l'introduction",
+    "caption": "L'introduction se compose de trois moments clés : l'amorce, le problème et enfin les aspects.",
+    "spec": {
+      "setting": "salle_classe",
+      "characters": [
+        {
+          "costume": "eleve_garcon",
+          "pose": "reflechit",
+          "mood": "determine",
+          "skin": "fonce",
+          "facing": "droite",
+          "holding": "livre"
+        }
+      ],
+      "props": [
+        {
+          "kind": "tableau",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Amorce, problème et aspects !"
+      }
+    }
+  },
+  "premiere_philo_methodologie_l05_introduction_dissertation_p02_q1": {
+    "title": "L'amorce sur le progrès technique",
+    "caption": "L'amorce pose le constat du progrès vertigineux des sciences et techniques dans la vie quotidienne.",
+    "spec": {
+      "setting": "laboratoire",
+      "characters": [
+        {
+          "costume": "savant",
+          "pose": "montre",
+          "mood": "content",
+          "skin": "moyen",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "fiole",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Le progrès des sciences est vertigineux."
+      },
+      "sign": "Le progrès"
+    }
+  },
+  "premiere_philo_methodologie_l05_introduction_dissertation_p03_q4": {
+    "title": "Amorce sur autrui et les conflits",
+    "caption": "L'amorce du sujet sur autrui montre que l'autre peut menacer mais aussi partager l'entraide.",
+    "spec": {
+      "setting": "agora",
+      "characters": [
+        {
+          "costume": "eleve_garcon",
+          "pose": "parle",
+          "mood": "neutre",
+          "skin": "fonce",
+          "facing": "gauche",
+          "holding": "livre"
+        },
+        {
+          "costume": "eleve_fille",
+          "pose": "ecrit",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "droite",
+          "holding": "plume"
+        }
+      ],
+      "props": [
+        {
+          "kind": "livre_ouvert",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "L'autre est-il mon ennemi ?"
+      }
     }
   },
   "seconde_a_hg_geographie_l01_objet_interet_demarche_p01_q3": {
@@ -2849,466 +3068,6 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
         "text": "Toukpê : entre nous, que la paix règne !"
       },
       "sign": "Paix"
-    }
-  },
-  "seconde_c_chimie_ch1_p1_ex3": {
-    "title": "L'element cuivre a l'etat libre",
-    "caption": "Le metal cuivre Cu se trouve sous forme de corps pur simple a l'etat libre.",
-    "spec": {
-      "setting": "laboratoire",
-      "characters": [
-        {
-          "costume": "savant",
-          "pose": "montre",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "fiole",
-          "place": "centre"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Voici le cuivre pur!"
-      },
-      "sign": "Cu(s)"
-    }
-  },
-  "seconde_c_chimie_ch1_p2_ex5": {
-    "title": "Attaque du cuivre par l'acide",
-    "caption": "L'experience avec l'acide nitrique degage un gaz roux toxique.",
-    "spec": {
-      "setting": "laboratoire",
-      "characters": [
-        {
-          "costume": "eleve_garcon",
-          "pose": "reflechit",
-          "mood": "surpris",
-          "skin": "fonce",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "fiole",
-          "place": "centre"
-        },
-        {
-          "kind": "feu",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Attention au gaz roux!"
-      },
-      "sign": "NO2"
-    }
-  },
-  "seconde_c_chimie_ch1_p3_ex3": {
-    "title": "Caracterisation des ions Cu2+",
-    "caption": "La soude permet d'identifier les ions cuivre par un precipite bleu.",
-    "spec": {
-      "setting": "laboratoire",
-      "characters": [
-        {
-          "costume": "eleve_fille",
-          "pose": "parle",
-          "mood": "content",
-          "skin": "moyen",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "fiole",
-          "place": "centre"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Le precipite est bleu."
-      },
-      "sign": "Cu(OH)2"
-    }
-  },
-  "seconde_c_chimie_ch1_p5_ex1": {
-    "title": "Reduction par le carbone",
-    "caption": "Le carbone permet de reduire l'oxyde de cuivre pour obtenir du cuivre.",
-    "spec": {
-      "setting": "laboratoire",
-      "characters": [
-        {
-          "costume": "savant",
-          "pose": "ecrit",
-          "mood": "determine",
-          "skin": "brun",
-          "facing": "gauche",
-          "holding": "plume"
-        }
-      ],
-      "props": [
-        {
-          "kind": "feu",
-          "place": "centre"
-        },
-        {
-          "kind": "fiole",
-          "place": "droite"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "On chauffe avec le carbone."
-      },
-      "sign": "C + CuO"
-    }
-  },
-  "seconde_c_physique_ch1_p1_ex2": {
-    "title": "Automobiliste en mouvement",
-    "caption": "L'automobiliste est immobile par rapport à sa voiture mais en mouvement par rapport à la route.",
-    "spec": {
-      "setting": "ville",
-      "characters": [
-        {
-          "costume": "villageois",
-          "pose": "parle",
-          "mood": "content",
-          "facing": "droite",
-          "vehicle": "voiture"
-        },
-        {
-          "costume": "eleve_fille",
-          "pose": "montre",
-          "mood": "surpris",
-          "facing": "gauche"
-        }
-      ],
-      "props": [],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Je suis au repos dans ma voiture !"
-      },
-      "sign": "Référentiel"
-    }
-  },
-  "seconde_c_physique_ch1_p12_ex7": {
-    "title": "Fréquence en hertz",
-    "caption": "La fréquence d'un mouvement circulaire uniforme correspond au nombre de tours par seconde.",
-    "spec": {
-      "setting": "laboratoire",
-      "characters": [
-        {
-          "costume": "savant",
-          "pose": "reflechit",
-          "mood": "content",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "horloge",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "N = 1 / T en Hertz"
-      },
-      "sign": "300 tr/min"
-    }
-  },
-  "seconde_c_physique_ch1_p2_ex1": {
-    "title": "Le référentiel terrestre",
-    "caption": "Pour étudier le mouvement d'un cycliste en ville, on utilise le référentiel terrestre.",
-    "spec": {
-      "setting": "ville",
-      "characters": [
-        {
-          "costume": "eleve_garcon",
-          "pose": "marche",
-          "mood": "content",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "arbre",
-          "place": "droite"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Référentiel terrestre !"
-      },
-      "sign": "Sol"
-    }
-  },
-  "seconde_c_physique_ch1_p5_ex3": {
-    "title": "Calcul de vitesse moyenne",
-    "caption": "La vitesse moyenne se calcule en divisant la distance parcourue par la durée du trajet.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "montre",
-          "mood": "neutre",
-          "facing": "droite"
-        },
-        {
-          "costume": "eleve_fille",
-          "pose": "ecrit",
-          "mood": "neutre",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Vm = d / Δt"
-      },
-      "sign": "Vitesse"
-    }
-  },
-  "seconde_c_svt_ch1_p1_grands_ensembles_socle_bassin_ex1": {
-    "title": "Proportion du socle cristallin",
-    "caption": "Le socle cristallin précambrien recouvre 97,5 % de la superficie de la Côte d'Ivoire.",
-    "spec": {
-      "setting": "salle_classe",
-      "characters": [
-        {
-          "costume": "enseignant",
-          "pose": "montre",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite",
-          "holding": "livre"
-        },
-        {
-          "costume": "eleve_garcon",
-          "pose": "reflechit",
-          "mood": "neutre",
-          "skin": "fonce",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "tableau",
-          "place": "fond"
-        },
-        {
-          "kind": "carte",
-          "place": "gauche"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "97,5 % du territoire est un socle !"
-      },
-      "sign": "97,5 %"
-    }
-  },
-  "seconde_c_svt_ch1_p12_discordances_ivoiriennes_histoire_geologique_ex6": {
-    "title": "Synthèse métallogénique",
-    "caption": "L'Archéen recèle le fer et le Birrimien l'or, base de l'économie minière ivoirienne.",
-    "spec": {
-      "setting": "laboratoire",
-      "characters": [
-        {
-          "costume": "savant",
-          "pose": "montre",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite",
-          "holding": "loupe"
-        }
-      ],
-      "props": [
-        {
-          "kind": "pieces",
-          "place": "droite"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Fer, or et pétrole pour notre pays !"
-      },
-      "sign": "Minéraux"
-    }
-  },
-  "seconde_c_svt_ch1_p2_domaine_archen_keniema_man_ex4": {
-    "title": "Relief montagneux de Man",
-    "caption": "La région des dix-huit montagnes de Man présente un relief montagneux très accidenté.",
-    "spec": {
-      "setting": "montagne",
-      "characters": [
-        {
-          "costume": "eleve_garcon",
-          "pose": "marche",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "arbre",
-          "place": "gauche"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Quels hauts sommets à Man !"
-      },
-      "sign": "Man"
-    }
-  },
-  "seconde_c_svt_ch1_p7_bassin_sedimentaire_cotier_ouverture_atlantique_ex6": {
-    "title": "Abidjan sur le bassin sédimentaire",
-    "caption": "Abidjan et son réseau de lagunes reposent sur le bassin sédimentaire côtier.",
-    "spec": {
-      "setting": "cote_mer",
-      "characters": [
-        {
-          "costume": "eleve_fille",
-          "pose": "parle",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "palmier",
-          "place": "droite"
-        },
-        {
-          "kind": "navire",
-          "place": "fond"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Abidjan est sur le bassin côtier."
-      },
-      "sign": "Abidjan"
-    }
-  },
-  "terminale_c_chimie_l07_acide_fort_base_forte_p01_q4": {
-    "title": "Conductivité d'un acide fort",
-    "caption": "La lampe qui s'allume confirme la présence d'ions conduisant le courant dans la solution d'acide chlorhydrique.",
-    "spec": {
-      "setting": "laboratoire",
-      "characters": [
-        {
-          "costume": "eleve_garcon",
-          "pose": "montre",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "droite"
-        },
-        {
-          "costume": "savant",
-          "pose": "parle",
-          "mood": "content",
-          "skin": "fonce",
-          "facing": "gauche"
-        }
-      ],
-      "props": [
-        {
-          "kind": "ampoule",
-          "place": "droite"
-        },
-        {
-          "kind": "fiole",
-          "place": "centre"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "La lampe s'allume : la solution conduit !"
-      }
-    }
-  },
-  "terminale_c_chimie_l07_acide_fort_base_forte_p04_q1": {
-    "title": "Aspect de l'hydroxyde de sodium",
-    "caption": "L'hydroxyde de sodium NaOH pur est un solide blanc très soluble dans l'eau.",
-    "spec": {
-      "setting": "laboratoire",
-      "characters": [
-        {
-          "costume": "eleve_fille",
-          "pose": "reflechit",
-          "mood": "surpris",
-          "skin": "fonce",
-          "facing": "droite"
-        }
-      ],
-      "props": [
-        {
-          "kind": "fiole",
-          "place": "centre"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "La soude pure est un solide blanc !"
-      },
-      "sign": "NaOH"
-    }
-  },
-  "terminale_c_chimie_l07_acide_fort_base_forte_p07_q8": {
-    "title": "Consignes de sécurité",
-    "caption": "Pour manipuler un acide fort en toute sécurité, le port d'équipements de protection est obligatoire.",
-    "spec": {
-      "setting": "laboratoire",
-      "characters": [
-        {
-          "costume": "eleve_garcon",
-          "pose": "debout",
-          "mood": "determine",
-          "skin": "fonce",
-          "facing": "droite",
-          "holding": "eprouvette"
-        }
-      ],
-      "props": [
-        {
-          "kind": "fiole",
-          "place": "gauche"
-        }
-      ],
-      "time": "jour",
-      "bubble": {
-        "from": 0,
-        "text": "Gants et lunettes sont indispensables !"
-      }
     }
   },
   "terminale_hg_geographie_l01_fondements_developpement_economique_p02_q3": {

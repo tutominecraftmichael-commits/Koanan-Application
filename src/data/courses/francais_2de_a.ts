@@ -280,7 +280,7 @@ Dans le sujet « La tradition orale n'est pas un frein à l'éclosion d'une soci
         {
           id: 'seconde_a_francais_ch1_p2_ex6',
           type: 'mcq',
-          prompt: 'Dans le sujet de Francis Bebey, quel sens prend le mot « frein » ?',
+          prompt: "Dans le sujet « La tradition orale n'est pas un frein à l'éclosion d'une société » (Francis Bebey), quel sens prend le mot « frein » ?",
           options: [
             'Un obstacle, une entrave, un blocage ou un ralentissement',
             'La pédale métallique d\'un véhicule automobile',
@@ -1064,7 +1064,7 @@ Pour éviter la paraphrase et fluidifier l'analyse, employer des formules dynami
         {
           id: 'seconde_a_francais_ch4_p1_ex4',
           type: 'mcq',
-          prompt: 'Dans l\'exemple rédigé sur « Le dormeur du Val », quelle figure syntaxique est analysée dans « C\'est un trou de verdure » ; « c\'est un petit val qui mousse de rayons » ?',
+          prompt: "Dans « Le dormeur du Val » (Rimbaud), on lit : « C'est un trou de verdure » ; « c'est un petit val qui mousse de rayons ». Quel procédé est employé dans ces deux passages ?",
           options: [
             'L\'emploi de présentatifs mettant vigoureusement en relief le décor naturel',
             'Une anaphore qui exprime l\'angoisse croissante du poète',

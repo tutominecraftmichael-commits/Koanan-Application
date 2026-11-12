@@ -12,7 +12,41 @@ import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses
 import { MATHS_TLE_D_L04_PRIMITIVES } from '../../data/courses/terminale/maths_tle_d_primitives';
 import { MATHS_TLE_D_L05_LOGARITHME_NEPERIEN } from '../../data/courses/terminale/maths_tle_d_logarithme_neperien';
 import { MATHS_TLE_D_L06_NOMBRES_COMPLEXES } from '../../data/courses/terminale/maths_tle_d_nombres_complexes';
+import { MATHS_TLE_D_L10_CALCUL_INTEGRAL } from '../../data/courses/terminale/maths_tle_d_calcul_integral';
+import { MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_d_systemes_equations_lineaires';
+import { MATHS_1RE_D_L12_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_d_suites_numeriques';
+import { MATHS_1RE_D_L13_ORTHOGONALITE_ESPACE } from '../../data/courses/premiere/maths_1re_d_orthogonalite_espace';
+import { MATHS_1RE_D_L15_STATISTIQUES } from '../../data/courses/premiere/maths_1re_d_statistiques';
+import { CHIMIE_TLE_CD_L01_ALCOOLS } from '../../data/courses/terminale/chimie_tle_cd_01_alcools';
+import { CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES } from '../../data/courses/terminale/chimie_tle_cd_02_composes_carbonyles';
+import { CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES } from '../../data/courses/terminale/chimie_tle_cd_03_acides_carboxyliques_et_derives';
+import { CHIMIE_TLE_CD_L04_AMINES } from '../../data/courses/terminale/chimie_tle_cd_04_amines';
+import { CHIMIE_TLE_CD_L05_SAVONS } from '../../data/courses/terminale/chimie_tle_cd_05_savons';
+import { CHIMIE_TLE_CD_L06_SOLUTIONS_AQUEUSES_PH } from '../../data/courses/terminale/chimie_tle_cd_06_solutions_aqueuses_ph';
 import { CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE } from '../../data/courses/terminale/chimie_tle_cd_acide_fort_base_forte';
+import { CHIMIE_TLE_CD_L08_ACIDES_ALPHA_AMINES } from '../../data/courses/terminale/chimie_tle_cd_08_acides_alpha_amines';
+import { CHIMIE_TLE_CD_L09_ACIDES_FAIBLES_BASES_FAIBLES } from '../../data/courses/terminale/chimie_tle_cd_09_acides_faibles_bases_faibles';
+import { CHIMIE_TLE_CD_L10_COUPLE_ACIDE_BASE_CLASSIFICATION } from '../../data/courses/terminale/chimie_tle_cd_10_couple_acide_base_classification';
+import { CHIMIE_TLE_CD_L11_DOSAGES_SOLUTIONS_TAMPONS } from '../../data/courses/terminale/chimie_tle_cd_11_dosages_solutions_tampons';
+import { PHYSIQUE_TLE_CD_L01_CINEMATIQUE_DU_POINT } from '../../data/courses/terminale/physique_tle_cd_01_cinematique_du_point';
+import { PHYSIQUE_TLE_CD_L02_MOUVEMENT_CENTRE_INERTIE } from '../../data/courses/terminale/physique_tle_cd_02_mouvement_centre_inertie';
+import { PHYSIQUE_TLE_CD_L03_CHAMPS_UNIFORMES_G_ET_E } from '../../data/courses/terminale/physique_tle_cd_03_champs_uniformes_g_et_e';
+import { PHYSIQUE_TLE_CD_L04_OSCILLATIONS_MECANIQUES } from '../../data/courses/terminale/physique_tle_cd_04_oscillations_mecaniques';
+import { PHYSIQUE_TLE_CD_L05_CHAMP_MAGNETIQUE } from '../../data/courses/terminale/physique_tle_cd_05_champ_magnetique';
+import { PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE } from '../../data/courses/terminale/physique_tle_cd_06_loi_de_laplace';
+import { PHYSIQUE_TLE_CD_L07_INDUCTION_ELECTROMAGNETIQUE } from '../../data/courses/terminale/physique_tle_cd_07_induction_electromagnetique';
+import { PHYSIQUE_TLE_CD_L08_AUTO_INDUCTION } from '../../data/courses/terminale/physique_tle_cd_08_auto_induction';
+import { PHYSIQUE_TLE_CD_L09_MONTAGES_DERINATEUR_INTEGRATEUR } from '../../data/courses/terminale/physique_tle_cd_09_montages_derinateur_integrateur';
+import { PHYSIQUE_TLE_CD_L10_CIRCUIT_RLC_FORCE } from '../../data/courses/terminale/physique_tle_cd_10_circuit_rlc_force';
+import { PHYSIQUE_TLE_CD_L11_RESONANCE_INTENSITE } from '../../data/courses/terminale/physique_tle_cd_11_resonance_intensite';
+import { PHYSIQUE_TLE_CD_L12_PUISSANCE_REGIME_SINUSOIDAL } from '../../data/courses/terminale/physique_tle_cd_12_puissance_regime_sinusoidal';
+import { PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES } from '../../data/courses/terminale/physique_tle_cd_13_reactions_nucleaires_spontanees';
+import { PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE } from '../../data/courses/terminale/physique_tle_cd_14_modele_corpusculaire_lumiere';
+import { PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE } from '../../data/courses/terminale/physique_tle_cd_15_modele_ondulatoire_lumiere';
+import { PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES } from '../../data/courses/terminale/physique_tle_cd_16_reactions_nucleaires_provoquees';
+import { SVT_TLE_D_L01_FONCTIONNEMENT_TISSU_NERVEUX } from '../../data/courses/terminale/svt_tle_d_01_fonctionnement_tissu_nerveux';
+import { SVT_TLE_D_L02_FONCTIONNEMENT_MUSCLE_STRIE_SQUELETTIQUE } from '../../data/courses/terminale/svt_tle_d_02_fonctionnement_muscle_strie_squelettique';
+import { SVT_TLE_D_L03_REFLEXE_CONDITIONNEL } from '../../data/courses/terminale/svt_tle_d_03_reflexe_conditionnel';
 import { GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI } from '../../data/courses/terminale/geo_tle_fondements_economie_ci';
 import { GEO_TLE_L02_SECTEURS_ACTIVITES_CI } from '../../data/courses/terminale/geo_tle_secteurs_activites_ci';
 import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/terminale/geo_tle_problemes_developpement_ci';
@@ -78,6 +112,32 @@ import { FR_2DE_PL_L07_IMPLICITE } from '../../data/courses/seconde/fr_2de_impli
 import { FR_2DE_SF_L02_EXPOSE_ORAL } from '../../data/courses/seconde/fr_2de_expose_oral';
 import { PHILO_TLE_L01_DISSERTATION } from '../../data/courses/terminale/philo_tle_dissertation';
 import { PHILO_TLE_L02_COMMENTAIRE_TEXTE } from '../../data/courses/terminale/philo_tle_commentaire_texte';
+import { PHILO_1RE_L01_METHODE_LECTURE_TEXTE } from '../../data/courses/premiere/philo_1re_methode_lecture_texte';
+import { PHILO_1RE_L02_INTRODUCTION_COMMENTAIRE } from '../../data/courses/premiere/philo_1re_introduction_commentaire';
+import { PHILO_1RE_L03_CONCLUSION_COMMENTAIRE } from '../../data/courses/premiere/philo_1re_conclusion_commentaire';
+import { PHILO_1RE_L04_ESSAI_PROBLEMATISATION } from '../../data/courses/premiere/philo_1re_essai_problematisation';
+import { PHILO_1RE_L05_INTRODUCTION_DISSERTATION } from '../../data/courses/premiere/philo_1re_introduction_dissertation';
+import { PHILO_1RE_L06_PERIODE_ANTIQUE } from '../../data/courses/premiere/philo_1re_periode_antique';
+import { PHILO_1RE_L07_MOYEN_AGE_RENAISSANCE } from '../../data/courses/premiere/philo_1re_moyen_age_renaissance';
+import { PHILO_1RE_L08_PERIODE_MODERNE } from '../../data/courses/premiere/philo_1re_periode_moderne';
+import { PHILO_1RE_L09_PERIODE_CONTEMPORAINE } from '../../data/courses/premiere/philo_1re_periode_contemporaine';
+import { SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES } from '../../data/courses/terminale/svt_tle_a_reactions_emotionnelles';
+import { SVT_TLE_A_L02_ACTIVITE_CEREBRALE } from '../../data/courses/terminale/svt_tle_a_activite_cerebrale';
+import { SVT_TLE_A_L03_ORIGINE_VIE } from '../../data/courses/terminale/svt_tle_a_origine_vie';
+import { SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE } from '../../data/courses/terminale/svt_tle_a_evolution_lignee_humaine';
+import { SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN } from '../../data/courses/terminale/svt_tle_a_heredite_sexe_groupe_sanguin';
+import { SVT_TLE_A_L06_PREVISIONS_GENETIQUES } from '../../data/courses/terminale/svt_tle_a_previsions_genetiques';
+import { SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES } from '../../data/courses/terminale/svt_tle_a_biosynthese_proteines';
+import { MATHS_TLE_C_L13_COMPLEXES_GEOMETRIE } from '../../data/courses/terminale/maths_tle_c_complexes_geometrie';
+import { FR_TLE_EOI_L01_SOLEILS_INDEPENDANCES } from '../../data/courses/terminale/fr_tle_soleils_independances';
+import { FR_TLE_GT_L02_CHAKA_HEROS_EPIQUE } from '../../data/courses/terminale/fr_tle_chaka_heros_epique';
+import { FR_TLE_EE_L03_RESUME_TEXTE } from '../../data/courses/terminale/fr_tle_resume_texte';
+import { MATHS_TLE_A_L01_LIMITES_DERIVATION } from '../../data/courses/terminale/maths_tle_a_limites_derivation';
+import { MATHS_TLE_A_L02_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_a_etude_fonctions';
+import { MATHS_TLE_A_L03_LOGARITHME_NEPERIEN } from '../../data/courses/terminale/maths_tle_a_logarithme_neperien';
+import { MATHS_TLE_A_L04_EXPONENTIELLE } from '../../data/courses/terminale/maths_tle_a_exponentielle';
+import { MATHS_TLE_A_L05_SUITES } from '../../data/courses/terminale/maths_tle_a_suites';
+import { MATHS_TLE_A_L06_PROBABILITES_STATISTIQUES } from '../../data/courses/terminale/maths_tle_a_probabilites_statistiques';
 import { PHILO_TLE_L03_CONNAISSANCE_HOMME } from '../../data/courses/terminale/philo_tle_connaissance_homme';
 import { PHILO_TLE_L04_VIE_EN_SOCIETE } from '../../data/courses/terminale/philo_tle_vie_en_societe';
 import { PHILO_TLE_L05_DIEU_RELIGION } from '../../data/courses/terminale/philo_tle_dieu_religion';
@@ -91813,7 +91873,39 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_TLE_D_L04_PRIMITIVES,
   MATHS_TLE_D_L05_LOGARITHME_NEPERIEN,
   MATHS_TLE_D_L06_NOMBRES_COMPLEXES,
+  MATHS_TLE_D_L10_CALCUL_INTEGRAL,
+  // Terminale C & D — Chimie (format v2 Masterclass)
+  CHIMIE_TLE_CD_L01_ALCOOLS,
+  CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES,
+  CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES,
+  CHIMIE_TLE_CD_L04_AMINES,
+  CHIMIE_TLE_CD_L05_SAVONS,
+  CHIMIE_TLE_CD_L06_SOLUTIONS_AQUEUSES_PH,
   CHIMIE_TLE_CD_L07_ACIDE_FORT_BASE_FORTE,
+  CHIMIE_TLE_CD_L08_ACIDES_ALPHA_AMINES,
+  CHIMIE_TLE_CD_L09_ACIDES_FAIBLES_BASES_FAIBLES,
+  CHIMIE_TLE_CD_L10_COUPLE_ACIDE_BASE_CLASSIFICATION,
+  CHIMIE_TLE_CD_L11_DOSAGES_SOLUTIONS_TAMPONS,
+  PHYSIQUE_TLE_CD_L01_CINEMATIQUE_DU_POINT,
+  PHYSIQUE_TLE_CD_L02_MOUVEMENT_CENTRE_INERTIE,
+  PHYSIQUE_TLE_CD_L03_CHAMPS_UNIFORMES_G_ET_E,
+  PHYSIQUE_TLE_CD_L04_OSCILLATIONS_MECANIQUES,
+  PHYSIQUE_TLE_CD_L05_CHAMP_MAGNETIQUE,
+  PHYSIQUE_TLE_CD_L06_LOI_DE_LAPLACE,
+  PHYSIQUE_TLE_CD_L07_INDUCTION_ELECTROMAGNETIQUE,
+  PHYSIQUE_TLE_CD_L08_AUTO_INDUCTION,
+  PHYSIQUE_TLE_CD_L09_MONTAGES_DERINATEUR_INTEGRATEUR,
+  PHYSIQUE_TLE_CD_L10_CIRCUIT_RLC_FORCE,
+  PHYSIQUE_TLE_CD_L11_RESONANCE_INTENSITE,
+  PHYSIQUE_TLE_CD_L12_PUISSANCE_REGIME_SINUSOIDAL,
+  PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES,
+  PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE,
+  PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE,
+  PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES,
+  // Terminale C & D — SVT (format v2 Masterclass)
+  SVT_TLE_D_L01_FONCTIONNEMENT_TISSU_NERVEUX,
+  SVT_TLE_D_L02_FONCTIONNEMENT_MUSCLE_STRIE_SQUELETTIQUE,
+  SVT_TLE_D_L03_REFLEXE_CONDITIONNEL,
   GEO_TLE_L01_FONDEMENTS_ECONOMIE_CI,
   GEO_TLE_L02_SECTEURS_ACTIVITES_CI,
   GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI,
@@ -91826,6 +91918,37 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   HIST_TLE_T3_L02_MUTATIONS_CIVILISATION_NEGRO_AFRICAINE,
   PHILO_TLE_L01_DISSERTATION,
   PHILO_TLE_L02_COMMENTAIRE_TEXTE,
+  // Première (toutes séries) — Philosophie (format v2)
+  PHILO_1RE_L01_METHODE_LECTURE_TEXTE,
+  PHILO_1RE_L02_INTRODUCTION_COMMENTAIRE,
+  PHILO_1RE_L03_CONCLUSION_COMMENTAIRE,
+  PHILO_1RE_L04_ESSAI_PROBLEMATISATION,
+  PHILO_1RE_L05_INTRODUCTION_DISSERTATION,
+  PHILO_1RE_L06_PERIODE_ANTIQUE,
+  PHILO_1RE_L07_MOYEN_AGE_RENAISSANCE,
+  PHILO_1RE_L08_PERIODE_MODERNE,
+  PHILO_1RE_L09_PERIODE_CONTEMPORAINE,
+  // Terminale A (A1 / A2) — SVT (format v2)
+  SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES,
+  SVT_TLE_A_L02_ACTIVITE_CEREBRALE,
+  SVT_TLE_A_L03_ORIGINE_VIE,
+  SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE,
+  SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN,
+  SVT_TLE_A_L06_PREVISIONS_GENETIQUES,
+  SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES,
+  // Terminale C — Maths (format v2)
+  MATHS_TLE_C_L13_COMPLEXES_GEOMETRIE,
+  // Terminale (A1, A2, C, D) — Français (format v2)
+  FR_TLE_EOI_L01_SOLEILS_INDEPENDANCES,
+  FR_TLE_GT_L02_CHAKA_HEROS_EPIQUE,
+  FR_TLE_EE_L03_RESUME_TEXTE,
+  // Terminale A (A1 / A2) — Maths (format v2, mini-leçons de 8 questions)
+  MATHS_TLE_A_L01_LIMITES_DERIVATION,
+  MATHS_TLE_A_L02_ETUDE_FONCTIONS,
+  MATHS_TLE_A_L03_LOGARITHME_NEPERIEN,
+  MATHS_TLE_A_L04_EXPONENTIELLE,
+  MATHS_TLE_A_L05_SUITES,
+  MATHS_TLE_A_L06_PROBABILITES_STATISTIQUES,
   PHILO_TLE_L03_CONNAISSANCE_HOMME,
   PHILO_TLE_L04_VIE_EN_SOCIETE,
   PHILO_TLE_L05_DIEU_RELIGION,
@@ -91879,6 +92002,11 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   // Leçon 5 (Suites numériques) : en attente du PDF officiel
   MATHS_1RE_L06_STATISTIQUES,
   MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES,
+  // Première D — Maths (format v2)
+  MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES,
+  MATHS_1RE_D_L12_SUITES_NUMERIQUES,
+  MATHS_1RE_D_L13_ORTHOGONALITE_ESPACE,
+  MATHS_1RE_D_L15_STATISTIQUES,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,

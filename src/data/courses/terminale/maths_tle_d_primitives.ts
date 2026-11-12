@@ -1129,7 +1129,7 @@ export const MATHS_TLE_D_L04_PRIMITIVES: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l04_primitives_p05_q2",
             "type": "mcq",
-            "prompt": "Si le car consommait 30 litres à 60 km/h, que vaudrait $k$ ?",
+            "prompt": "La consommation d'un car est $C(v)=\\dfrac{300}{v}+\\dfrac v3+k$ (litres pour 100 km, $v$ en km/h). Si le car consommait 30 litres à 60 km/h, que vaudrait $k$ ?",
             "options": [
               "$0$",
               "$25$",
@@ -1213,7 +1213,7 @@ export const MATHS_TLE_D_L04_PRIMITIVES: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l04_primitives_p05_q6",
             "type": "mcq",
-            "prompt": "Quel est le coût minimal du voyage, environ ?",
+            "prompt": "Le coût d'un voyage à la vitesse $v$ est $P(v)=\\dfrac{4\\,050\\,000}{v}+3000v$ (en F), minimal pour $v=\\sqrt{1350}\\approx36{,}7$ km/h. Quel est le coût minimal du voyage, environ ?",
             "options": [
               "$110\\,000$ F",
               "$37$ F",
@@ -1263,7 +1263,7 @@ export const MATHS_TLE_D_L04_PRIMITIVES: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l04_primitives_p05_q2",
           "type": "mcq",
-          "prompt": "Si le car consommait 30 litres à 60 km/h, que vaudrait $k$ ?",
+          "prompt": "La consommation d'un car est $C(v)=\\dfrac{300}{v}+\\dfrac v3+k$ (litres pour 100 km, $v$ en km/h). Si le car consommait 30 litres à 60 km/h, que vaudrait $k$ ?",
           "options": [
             "$0$",
             "$25$",
@@ -1315,7 +1315,7 @@ export const MATHS_TLE_D_L04_PRIMITIVES: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l04_primitives_p05_q6",
           "type": "mcq",
-          "prompt": "Quel est le coût minimal du voyage, environ ?",
+          "prompt": "Le coût d'un voyage à la vitesse $v$ est $P(v)=\\dfrac{4\\,050\\,000}{v}+3000v$ (en F), minimal pour $v=\\sqrt{1350}\\approx36{,}7$ km/h. Quel est le coût minimal du voyage, environ ?",
           "options": [
             "$110\\,000$ F",
             "$37$ F",

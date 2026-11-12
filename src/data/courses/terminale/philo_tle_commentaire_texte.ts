@@ -110,7 +110,7 @@ export const PHILO_TLE_L02_COMMENTAIRE_TEXTE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_methodologie_l02_commentaire_texte_p01_q4",
             "type": "mcq",
-            "prompt": "Quelle est la thèse d'Épictète dans ce texte ?",
+            "prompt": "Dans son texte sur la tenue du philosophe, Épictète critique le philosophe « malpropre, négligé » qui débite de belles maximes. Quelle est sa thèse ?",
             "options": [
               "Le philosophe doit négliger son corps",
               "Le philosophe et son disciple doivent prendre soin de leur corps et de leur âme",
@@ -207,7 +207,7 @@ export const PHILO_TLE_L02_COMMENTAIRE_TEXTE: CurriculumChapter = {
         {
           "id": "terminale_philo_methodologie_l02_commentaire_texte_p01_q4",
           "type": "mcq",
-          "prompt": "Quelle est la thèse d'Épictète dans ce texte ?",
+          "prompt": "Dans son texte sur la tenue du philosophe, Épictète critique le philosophe « malpropre, négligé » qui débite de belles maximes. Quelle est sa thèse ?",
           "options": [
             "Le philosophe doit négliger son corps",
             "Le philosophe et son disciple doivent prendre soin de leur corps et de leur âme",
@@ -999,7 +999,7 @@ export const PHILO_TLE_L02_COMMENTAIRE_TEXTE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_methodologie_l02_commentaire_texte_p05_q3",
             "type": "mcq",
-            "prompt": "Quelle est la thèse du texte de Hume ?",
+            "prompt": "Dans un texte sur le rôle de la religion dans la vie de l'homme, Hume se demande à quoi sert la religion. Quelle est sa thèse ?",
             "options": [
               "La religion est une pure illusion",
               "La religion n'a aucun rôle",
@@ -1104,7 +1104,7 @@ export const PHILO_TLE_L02_COMMENTAIRE_TEXTE: CurriculumChapter = {
         {
           "id": "terminale_philo_methodologie_l02_commentaire_texte_p05_q3",
           "type": "mcq",
-          "prompt": "Quelle est la thèse du texte de Hume ?",
+          "prompt": "Dans un texte sur le rôle de la religion dans la vie de l'homme, Hume se demande à quoi sert la religion. Quelle est sa thèse ?",
           "options": [
             "La religion est une pure illusion",
             "La religion n'a aucun rôle",

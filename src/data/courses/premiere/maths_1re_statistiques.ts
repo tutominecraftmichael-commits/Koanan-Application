@@ -1154,7 +1154,7 @@ export const MATHS_1RE_L06_STATISTIQUES: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_maths_numerique_l06_statistiques_p05_q3",
             "type": "mcq",
-            "prompt": "Avec ces densités, quelle classe a le rectangle le plus haut ?",
+            "prompt": "Une série a 5 classes : $[2;3[$, $[3;4{,}5[$, $[4{,}5;5{,}5[$, $[5{,}5;6[$ et $[6;8[$, de densités respectives $0{,}15$ ; $0{,}23$ ; $0{,}25$ ; $0{,}2$ ; $0{,}075$. Quelle classe a le rectangle le plus haut dans l'histogramme ?",
             "options": [
               "$[4{,}5\\,;5{,}5[$",
               "$[3\\,;4{,}5[$",
@@ -1280,7 +1280,7 @@ export const MATHS_1RE_L06_STATISTIQUES: CurriculumChapter = {
         {
           "id": "premiere_a1_maths_numerique_l06_statistiques_p05_q3",
           "type": "mcq",
-          "prompt": "Avec ces densités, quelle classe a le rectangle le plus haut ?",
+          "prompt": "Une série a 5 classes : $[2;3[$, $[3;4{,}5[$, $[4{,}5;5{,}5[$, $[5{,}5;6[$ et $[6;8[$, de densités respectives $0{,}15$ ; $0{,}23$ ; $0{,}25$ ; $0{,}2$ ; $0{,}075$. Quelle classe a le rectangle le plus haut dans l'histogramme ?",
           "options": [
             "$[4{,}5\\,;5{,}5[$",
             "$[3\\,;4{,}5[$",

@@ -648,7 +648,7 @@ export const MATHS_1RE_L02_DENOMBREMENT: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_maths_numerique_l02_denombrement_p03_q5",
             "type": "mcq",
-            "prompt": "Combien de tirages (3 boules avec remise) donnent trois boules de la même couleur ?",
+            "prompt": "Une urne contient $3$ boules noires, $2$ blanches et $5$ rouges. On tire $3$ boules avec remise. Combien de tirages donnent trois boules de la même couleur ?",
             "options": [
               "$160$",
               "$1\\,000$",
@@ -758,7 +758,7 @@ export const MATHS_1RE_L02_DENOMBREMENT: CurriculumChapter = {
         {
           "id": "premiere_a1_maths_numerique_l02_denombrement_p03_q5",
           "type": "mcq",
-          "prompt": "Combien de tirages (3 boules avec remise) donnent trois boules de la même couleur ?",
+          "prompt": "Une urne contient $3$ boules noires, $2$ blanches et $5$ rouges. On tire $3$ boules avec remise. Combien de tirages donnent trois boules de la même couleur ?",
           "options": [
             "$160$",
             "$1\\,000$",
@@ -929,7 +929,7 @@ export const MATHS_1RE_L02_DENOMBREMENT: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_maths_numerique_l02_denombrement_p04_q6",
             "type": "mcq",
-            "prompt": "Combien de tels mots commencent par C et finissent par Y ?",
+            "prompt": "Avec les 7 lettres distinctes du mot CHANSLY, combien de mots de 4 lettres distinctes commencent par C et finissent par Y ?",
             "options": [
               "$10$",
               "$25$",
@@ -1031,7 +1031,7 @@ export const MATHS_1RE_L02_DENOMBREMENT: CurriculumChapter = {
         {
           "id": "premiere_a1_maths_numerique_l02_denombrement_p04_q6",
           "type": "mcq",
-          "prompt": "Combien de tels mots commencent par C et finissent par Y ?",
+          "prompt": "Avec les 7 lettres distinctes du mot CHANSLY, combien de mots de 4 lettres distinctes commencent par C et finissent par Y ?",
           "options": [
             "$10$",
             "$25$",

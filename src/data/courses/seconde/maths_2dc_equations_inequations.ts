@@ -1427,7 +1427,7 @@ export const MATHS_2DC_NUM_L11_EQUATIONS_INEQUATIONS: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l11_equations_inequations_p06_q5",
             "type": "mcq",
-            "prompt": "Quelle somme le père a-t-il placée en banque ?",
+            "prompt": "Un père partage la somme $S$ qu'il a placée en banque : 15 % pour Claude, $\\dfrac25$ pour Martial, $\\dfrac14$ pour Léa, et le reste, soit $600\\,000$ F, pour Dieudonné. Quelle somme $S$ a-t-il placée ?",
             "options": [
               "$750\\,000$ F",
               "$2\\,400\\,000$ F",
@@ -1448,7 +1448,7 @@ export const MATHS_2DC_NUM_L11_EQUATIONS_INEQUATIONS: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l11_equations_inequations_p06_q6",
             "type": "mcq",
-            "prompt": "Combien de manuels faut-il imprimer au minimum par jour ?",
+            "prompt": "Une imprimerie loue sa machine $100\\,000$ F par jour et dépense $300$ F de papier par manuel. Le prix de revient d'un manuel, $\\dfrac{100\\,000+300n}{n}$ pour $n$ manuels, doit être inférieur à $750$ F. Combien de manuels faut-il imprimer au minimum par jour ?",
             "options": [
               "$222$",
               "$134$",
@@ -1469,7 +1469,7 @@ export const MATHS_2DC_NUM_L11_EQUATIONS_INEQUATIONS: CurriculumChapter = {
           "exercise": {
             "id": "seconde_c_maths_numerique_l11_equations_inequations_p06_q7",
             "type": "mcq",
-            "prompt": "Quelle épargne minimale permet au cadet de recevoir au moins $2\\,000\\,000$ F ?",
+            "prompt": "Une épargne $S$ est partagée entre trois enfants : chacun reçoit à son tour le tiers de ce qui reste, moins $270\\,000$ F. En remontant depuis le cadet (au moins $2\\,000\\,000$ F), les restes successifs sont $6\\,810\\,000$ F, $9\\,810\\,000$ F et $14\\,310\\,000$ F, avec $S=\\dfrac32\\times(14\\,310\\,000-270\\,000)$. Quelle épargne minimale faut-il ?",
             "options": [
               "$8\\,000\\,000$ F",
               "$14\\,310\\,000$ F",
@@ -1537,7 +1537,7 @@ export const MATHS_2DC_NUM_L11_EQUATIONS_INEQUATIONS: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l11_equations_inequations_p06_q5",
           "type": "mcq",
-          "prompt": "Quelle somme le père a-t-il placée en banque ?",
+          "prompt": "Un père partage la somme $S$ qu'il a placée en banque : 15 % pour Claude, $\\dfrac25$ pour Martial, $\\dfrac14$ pour Léa, et le reste, soit $600\\,000$ F, pour Dieudonné. Quelle somme $S$ a-t-il placée ?",
           "options": [
             "$750\\,000$ F",
             "$2\\,400\\,000$ F",
@@ -1550,7 +1550,7 @@ export const MATHS_2DC_NUM_L11_EQUATIONS_INEQUATIONS: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l11_equations_inequations_p06_q6",
           "type": "mcq",
-          "prompt": "Combien de manuels faut-il imprimer au minimum par jour ?",
+          "prompt": "Une imprimerie loue sa machine $100\\,000$ F par jour et dépense $300$ F de papier par manuel. Le prix de revient d'un manuel, $\\dfrac{100\\,000+300n}{n}$ pour $n$ manuels, doit être inférieur à $750$ F. Combien de manuels faut-il imprimer au minimum par jour ?",
           "options": [
             "$222$",
             "$134$",
@@ -1563,7 +1563,7 @@ export const MATHS_2DC_NUM_L11_EQUATIONS_INEQUATIONS: CurriculumChapter = {
         {
           "id": "seconde_c_maths_numerique_l11_equations_inequations_p06_q7",
           "type": "mcq",
-          "prompt": "Quelle épargne minimale permet au cadet de recevoir au moins $2\\,000\\,000$ F ?",
+          "prompt": "Une épargne $S$ est partagée entre trois enfants : chacun reçoit à son tour le tiers de ce qui reste, moins $270\\,000$ F. En remontant depuis le cadet (au moins $2\\,000\\,000$ F), les restes successifs sont $6\\,810\\,000$ F, $9\\,810\\,000$ F et $14\\,310\\,000$ F, avec $S=\\dfrac32\\times(14\\,310\\,000-270\\,000)$. Quelle épargne minimale faut-il ?",
           "options": [
             "$8\\,000\\,000$ F",
             "$14\\,310\\,000$ F",

@@ -226,7 +226,7 @@ export const WeeklyEvolutionChart: React.FC<WeeklyEvolutionChartProps> = ({
           </span>
           <span className="text-xs sm:text-sm font-extrabold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 mt-1">
             <TrendingUp className="w-3.5 h-3.5" />
-            {totalCompletedThisWeek > 0 ? 'Croissante 🚀' : 'En attente'}
+            {totalCompletedThisWeek > 0 ? 'Croissante' : 'En attente'}
           </span>
         </div>
 

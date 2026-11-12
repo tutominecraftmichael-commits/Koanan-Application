@@ -6,6 +6,7 @@
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import { BookOpen, Clock } from 'lucide-react';
+import { ChaptersInProgressNote } from '../../components/common/ChaptersInProgressNote';
 import { matchSubjectToStemCurriculum, tryResolveGradeLevel } from '../../lib/curriculum/curriculumMatcher';
 
 export interface ExamChapterPickerProps {
@@ -45,7 +46,7 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
         const byGroup = new Map<string, Group>();
         for (const c of chapters) {
           const sub = sps.getChapterSubCategory(c);
-          const g = byGroup.get(sub) || { key: sub, label: sps.getSubCategoryName(sub), chapters: [] };
+          const g = byGroup.get(sub) || { key: sub, label: sps.getSubCategoryName(sub, grade), chapters: [] };
           g.chapters.push({ id: c.id, title: c.title, points: c.points.length });
           byGroup.set(sub, g);
         }
@@ -122,6 +123,7 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
           </div>
         );
       })}
+      <ChaptersInProgressNote />
     </div>
   );
 };

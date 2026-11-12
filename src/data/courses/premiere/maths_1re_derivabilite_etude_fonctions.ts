@@ -1479,7 +1479,7 @@ export const MATHS_1RE_L04_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_maths_numerique_l04_derivabilite_etude_fonctions_p06_q6",
             "type": "mcq",
-            "prompt": "Quel est le bénéfice maximal $B(15)$, en millions de FCFA ?",
+            "prompt": "Le bénéfice d'une entreprise est $B(x)=-2x^2+60x-400$ (en millions de FCFA), et $B$ est maximal pour $x=15$. Quel est le bénéfice maximal $B(15)$ ?",
             "options": [
               "$15$",
               "$50$",
@@ -1581,7 +1581,7 @@ export const MATHS_1RE_L04_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
         {
           "id": "premiere_a1_maths_numerique_l04_derivabilite_etude_fonctions_p06_q6",
           "type": "mcq",
-          "prompt": "Quel est le bénéfice maximal $B(15)$, en millions de FCFA ?",
+          "prompt": "Le bénéfice d'une entreprise est $B(x)=-2x^2+60x-400$ (en millions de FCFA), et $B$ est maximal pour $x=15$. Quel est le bénéfice maximal $B(15)$ ?",
           "options": [
             "$15$",
             "$50$",

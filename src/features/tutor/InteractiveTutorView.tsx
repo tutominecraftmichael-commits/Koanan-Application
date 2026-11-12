@@ -56,6 +56,8 @@ import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
 import { shuffleExerciseOptions } from '../../lib/curriculum/optionShuffle';
 import { soundFX } from '../../lib/audioEffects';
 import { KonanCube } from '../../components/common/KonanCube';
+import { ChaptersInProgressNote } from '../../components/common/ChaptersInProgressNote';
+import { EMPTY_SUBJECT_KONAN_MESSAGE } from '../../lib/contentNotices';
 import { findReviewExercise, forgetReview, getDueReviews, recordReviewAnswer } from '../../lib/curriculum/reviewMemory';
 import { useKonanCoach, KonanCoachBubble } from './konanCoach';
 import { FeynmanChallenge } from './FeynmanChallenge';
@@ -574,7 +576,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       .filter((c) => getChapterSubCategory(c) === newSubCat)
       .sort((a, b) => a.order - b.order);
     setAvailableSubChapters(filtered);
-    setSubCategoryQuestionText(getSubCategoryQuestion(newSubCat));
+    setSubCategoryQuestionText(getSubCategoryQuestion(newSubCat, gradeLevel));
   };
 
   // Validation du diagnostic initial pour cette sous-catégorie
@@ -658,7 +660,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     if (questionPhase && activeExercise) questionShown();
   }, [questionPhase, activeExercise?.id, activeStepIndex, warmupIndex, recallIndex, questionShown]);
 
-  const subCategoryLabel = getSubCategoryName(activeSubCategory);
+  const subCategoryLabel = getSubCategoryName(activeSubCategory, gradeLevel);
 
   /**
    * Place de la mini-leçon DANS SON CHAPITRE (ex. « Mini-leçon 6 sur 7 »), et non son rang dans la séance du jour :
@@ -844,30 +846,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     }
   };
 
-  /**
-   * Pomodoro : les mini-leçons prévues sont finies mais le temps de travail ne l'est pas.
-   * On ajoute la suite du programme (même volet), pour travailler jusqu'au bout des 25 minutes.
-   */
-  const extendSessionIfTimeLeft = (): boolean => {
-    if (!workLimitSec || workSeconds >= workLimitSec || !sessionPayload) return false;
-    try {
-      const known = new Set(sessionPayload.itemsToReview.map((i) => i.point.id));
-      const more = buildTutorSessionPayload(userId, stemSubjectId, subjectTitle, gradeLevel, durationMinutes, activeSubCategory, known);
-      const fresh = (more.payload?.itemsToReview || []).filter((i) => !known.has(i.point.id));
-      if (!fresh.length) return false;
-      setSessionPayload({ ...sessionPayload, itemsToReview: [...sessionPayload.itemsToReview, ...fresh] });
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  // Passer à la mini-leçon suivante ou célébrer la fin de séance
+  // Passer à la mini-leçon suivante ou célébrer la fin de séance.
+  // RÈGLE STRICTE : Dès que l'élève a réalisé ses 3, 4 ou 7 mini-leçons prévues dans la séance,
+  // la session est validée et c'est terminé. On ne le pousse jamais à continuer.
   const handleContinueToNextLesson = () => {
     try {
       soundFX.playClick();
     } catch {}
-    if (activeItemIndex < items.length - 1 || extendSessionIfTimeLeft()) {
+    if (activeItemIndex < items.length - 1) {
       setActiveItemIndex(prev => prev + 1);
       setPhase('intro');
       setExerciseIndex(0);
@@ -1088,11 +1074,10 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             {subjectTitle}
           </span>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight">
-            Cours en préparation
+            Tes fiches arrivent bientôt
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-            Le cours guidé officiel de <strong>{subjectTitle}</strong> pour ta classe arrive très bientôt.
-            En attendant, révise cette séance avec tes notes de cours.
+            {EMPTY_SUBJECT_KONAN_MESSAGE}
           </p>
         </div>
         <button
@@ -1311,7 +1296,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
             Pour synchroniser vos révisions avec votre professeur en <strong>{subCategoryLabel}</strong>, sélectionnez votre chapitre actuel.
-            Konan alternera automatiquement ensuite vos séances pour couvrir harmonieusement tout le programme.
+            {isTwoVoletLabel(subCategoryLabel)
+              ? ' Konan alternera automatiquement ensuite vos séances pour couvrir harmonieusement tout le programme.'
+              : ' Konan fera avancer automatiquement vos séances leçon après leçon dans le programme officiel.'}
           </p>
 
           {/* Bannière d'alternance obligatoire (Règle 2) */}
@@ -1457,7 +1444,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 Chargement des chapitres officiels de {subCategoryLabel}...
               </div>
             ) : (
-              availableSubChapters.map((ch) => (
+              <>
+              {availableSubChapters.map((ch) => (
                 <button
                   key={ch.id}
                   type="button"
@@ -1473,7 +1461,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   </span>
                   <span className="text-[11px] font-mono text-slate-400 shrink-0 font-semibold">{ch.officialVolumeHours || 10}h</span>
                 </button>
-              ))
+              ))}
+              <ChaptersInProgressNote className="mt-1" />
+              </>
             )}
           </div>
 
@@ -2167,9 +2157,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       )}
 
       {/* =================================================================== */}
-      {/* CÉLÉBRATION D'UNE MINI-LEÇON VALIDÉE À 8/8                          */}
+      {/* CÉLÉBRATION D'UNE MINI-LEÇON VALIDÉE                                */}
       {/* =================================================================== */}
-      {phase === 'point_celebration' && (
+      {phase === 'point_celebration' && currentItem && (
         <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border-2 border-emerald-400 dark:border-emerald-500/40 text-center space-y-5 animate-in zoom-in-95 duration-200 shadow-xl">
           <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10">
             <CheckCircle2 className="w-9 h-9 stroke-[2.5]" />
@@ -2178,13 +2168,19 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-xs font-black uppercase">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Leçon validée avec succès</span>
+              <span>
+                {currentItem.isLastPointOfChapter
+                  ? `Dernière mini-leçon du chapitre (${currentItem.pointIndexInChapter + 1}/${currentItem.totalPointsInChapter})`
+                  : `Mini-leçon validée (${currentItem.pointIndexInChapter + 1}/${currentItem.totalPointsInChapter})`}
+              </span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
               {currentPoint?.title}
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto">
-              Parfait ! Tu as validé l'ensemble des exercices de cette notion clé. Tes connaissances sont solides et prêtes pour les devoirs et interrogations de classe.
+              {currentItem.isLastPointOfChapter
+                ? `Félicitations ! Tu as validé l'ensemble des ${currentItem.totalPointsInChapter} mini-leçons du chapitre « ${currentItem.chapterTitle} ». Chapitre maîtrisé !`
+                : `Excellente maîtrise ! Tu as validé cette notion clé. Il te reste encore ${currentItem.totalPointsInChapter - (currentItem.pointIndexInChapter + 1)} mini-leçon(s) pour terminer complètement le chapitre « ${currentItem.chapterTitle} ».`}
             </p>
           </div>
 
@@ -2196,8 +2192,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             >
               <span className="flex items-center gap-2">
                 {activeItemIndex < items.length - 1
-                  ? `Passer à la mini-leçon suivante (${items[activeItemIndex + 1].pointIndexInChapter + 1} sur ${items[activeItemIndex + 1].totalPointsInChapter})`
-                  : 'Terminer la séance d’étude'}
+                  ? `Passer à la mini-leçon suivante (${activeItemIndex + 2}/${items.length} de la séance)`
+                  : `Valider et terminer la séance (${items.length} mini-leçon${items.length > 1 ? 's' : ''} terminée${items.length > 1 ? 's' : ''})`}
                 {activeItemIndex < items.length - 1 && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
               </span>
             </button>

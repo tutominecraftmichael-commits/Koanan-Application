@@ -109,7 +109,7 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
           }
         }
         if (!alive) return;
-        setSubCategoryName(() => (id: string) => sps.getSubCategoryName(id as never));
+        setSubCategoryName(() => (id: string) => sps.getSubCategoryName(id as never, gradeLevel));
         setSeries(built);
         if (savedRef.current) {
           setIndex(Math.min(savedRef.current.index, built.length));

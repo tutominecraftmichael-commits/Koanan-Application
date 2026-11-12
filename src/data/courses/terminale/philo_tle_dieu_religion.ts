@@ -952,7 +952,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p05_q1",
             "type": "mcq",
-            "prompt": "Que signifie « redouter » dans le sujet ?",
+            "prompt": "Dans le sujet « Doit-on redouter la croyance religieuse ? », que signifie le verbe « redouter » ?",
             "options": [
               "Aimer profondément",
               "Ignorer",
@@ -1036,7 +1036,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p05_q5",
             "type": "mcq",
-            "prompt": "Que reproche Rousseau à la religion de l'Évangile dans ce texte ?",
+            "prompt": "Dans Du contrat social (livre IV, chapitre 8, « De la religion civile »), Rousseau juge la religion de l'Évangile « sainte, sublime, véritable ». Que lui reproche-t-il pourtant ?",
             "options": [
               "Elle est fausse et méchante",
               "Elle détache les citoyens de l'État, elle est contraire à l'esprit social",
@@ -1073,7 +1073,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p05_q1",
           "type": "mcq",
-          "prompt": "Que signifie « redouter » dans le sujet ?",
+          "prompt": "Dans le sujet « Doit-on redouter la croyance religieuse ? », que signifie le verbe « redouter » ?",
           "options": [
             "Aimer profondément",
             "Ignorer",
@@ -1125,7 +1125,7 @@ export const PHILO_TLE_L05_DIEU_RELIGION: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_liberte_l03_dieu_religion_p05_q5",
           "type": "mcq",
-          "prompt": "Que reproche Rousseau à la religion de l'Évangile dans ce texte ?",
+          "prompt": "Dans Du contrat social (livre IV, chapitre 8, « De la religion civile »), Rousseau juge la religion de l'Évangile « sainte, sublime, véritable ». Que lui reproche-t-il pourtant ?",
           "options": [
             "Elle est fausse et méchante",
             "Elle détache les citoyens de l'État, elle est contraire à l'esprit social",

@@ -73,7 +73,8 @@ export function cleanSujet(raw, template) {
     const e = raw.exercices[i] || {};
     const questions = Array.isArray(e.questions)
       ? e.questions
-          .map((q) => ({ numero: str(String(q?.numero ?? ''), 12), texte: str(q?.texte, 1500), points: num(q?.points) }))
+          // Un sujet « au choix » du format BAC contient son texte d'étude : longueur autorisée plus grande (questionMax)
+          .map((q) => ({ numero: str(String(q?.numero ?? ''), 12), texte: str(q?.texte, model.questionMax || 1500), points: num(q?.points) }))
           .filter((q) => q.texte)
           .slice(0, 20)
       : [];
@@ -126,10 +127,11 @@ export default async function handler(req, res) {
     return send(res, e?.code === 413 ? 413 : 400, { success: false, error: 'BAD_BODY' });
   }
 
-  const template = getExamTemplate(str(body.subjectKey, 40));
+  const gradeId = str(body.gradeId, 40);
+  // Le modèle dépend de la classe : format du BAC pour les Terminales A, modèles de Seconde sinon
+  const template = getExamTemplate(str(body.subjectKey, 40), gradeId);
   if (!template) return send(res, 400, { success: false, error: 'NO_TEMPLATE' });
   const classe = str(body.classe, 40) || 'Seconde';
-  const gradeId = str(body.gradeId, 40);
   const matiere = str(body.matiere, 80) || template.matiere;
   const chapitres = Array.isArray(body.chapitres)
     ? body.chapitres

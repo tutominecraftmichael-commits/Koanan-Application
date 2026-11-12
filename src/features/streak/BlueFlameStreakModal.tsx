@@ -247,7 +247,7 @@ export const BlueFlameStreakModal: React.FC<BlueFlameStreakModalProps> = ({
           </div>
 
           <p className="text-[11px] text-slate-400 leading-relaxed">
-            💡 <strong className="text-slate-200">Règle anti-perte :</strong> Si tu manques un jour, un gel protège ta flamme automatiquement. Chaque gel utilisé se recharge après <strong className="text-cyan-300">72h</strong>. Si tu épuises les 3 gels et ne révises pas au 4e jour consécutif, la série retombe à 0.
+            <strong className="text-slate-200">Règle anti-perte :</strong> Si tu manques un jour, un gel protège ta flamme automatiquement. Chaque gel utilisé se recharge après <strong className="text-cyan-300">72h</strong>. Si tu épuises les 3 gels et ne révises pas au 4e jour consécutif, la série retombe à 0.
           </p>
         </div>
 
@@ -263,7 +263,7 @@ export const BlueFlameStreakModal: React.FC<BlueFlameStreakModalProps> = ({
             onClick={onClose}
             className="w-full py-3 sm:py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-500 to-blue-600 hover:from-blue-500 hover:to-sky-400 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-sky-500/30 hover:shadow-sky-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-2"
           >
-            <span>Continuer sur ma lancée ⚡</span>
+            <span>Continuer sur ma lancée</span>
           </button>
         </div>
 

@@ -93,13 +93,20 @@ function writeSubjectProgress(
  * - Mathématiques -> 'geometrie' vs 'numerique'
  * - SVT -> 'svt'
  */
+/** En Terminale A (A1 et A2), le programme de Mathématiques est à volet unique (uniquement numérique, sans géométrie). */
+export function isTerminaleAGrade(gradeLevel?: CurriculumGradeLevel): boolean {
+  return gradeLevel === 'terminale_a' || gradeLevel === 'terminale_a1' || gradeLevel === 'terminale_a2';
+}
+
 /** Matières à un seul volet (pas d'alternance Chimie/Physique ou Géométrie/Numérique). */
-export function isSingleVoletSubject(subjectId: StemSubjectId): boolean {
+export function isSingleVoletSubject(subjectId: StemSubjectId, gradeLevel?: CurriculumGradeLevel): boolean {
+  if (subjectId === 'maths' && isTerminaleAGrade(gradeLevel)) return true;
   return subjectId === 'svt' || subjectId === 'francais' || subjectId === 'philosophie';
 }
 
 /** Matières à deux volets alternés : Physique ↔ Chimie, Géométrie ↔ Numérique, Histoire ↔ Géographie. */
-export function isTwoVoletSubject(subjectId: StemSubjectId): boolean {
+export function isTwoVoletSubject(subjectId: StemSubjectId, gradeLevel?: CurriculumGradeLevel): boolean {
+  if (subjectId === 'maths' && isTerminaleAGrade(gradeLevel)) return false;
   return subjectId === 'physique_chimie' || subjectId === 'maths' || subjectId === 'histoire_geo';
 }
 
@@ -144,7 +151,10 @@ export function getChapterSubCategory(chapter: CurriculumChapter): StemSubCatego
   return 'svt';
 }
 
-export function getSubCategoryName(subCategory: StemSubCategory): string {
+export function getSubCategoryName(subCategory: StemSubCategory, gradeLevel?: CurriculumGradeLevel): string {
+  if ((subCategory === 'numerique' || subCategory === 'geometrie') && isTerminaleAGrade(gradeLevel)) {
+    return 'Mathématiques';
+  }
   switch (subCategory) {
     case 'chimie': return 'Chimie';
     case 'physique': return 'Physique';
@@ -159,7 +169,10 @@ export function getSubCategoryName(subCategory: StemSubCategory): string {
   }
 }
 
-export function getSubCategoryQuestion(subCategory: StemSubCategory): string {
+export function getSubCategoryQuestion(subCategory: StemSubCategory, gradeLevel?: CurriculumGradeLevel): string {
+  if ((subCategory === 'numerique' || subCategory === 'geometrie') && isTerminaleAGrade(gradeLevel)) {
+    return 'À quelle leçon êtes-vous arrivés en Mathématiques ?';
+  }
   switch (subCategory) {
     case 'chimie': return 'À quel chapitre êtes-vous arrivés en Chimie ?';
     case 'physique': return 'À quel chapitre êtes-vous arrivés en Physique ?';
@@ -204,7 +217,7 @@ export function getActiveSubCategoryForSession(
   subjectId: StemSubjectId,
   gradeLevel: CurriculumGradeLevel
 ): StemSubCategory | null {
-  if (isSingleVoletSubject(subjectId)) return defaultSubCategoryFor(subjectId);
+  if (isSingleVoletSubject(subjectId, gradeLevel)) return defaultSubCategoryFor(subjectId);
 
   const prog = readSubjectProgress(getStudentProgressMap(userId), subjectId, gradeLevel);
 
@@ -317,10 +330,11 @@ export interface BuildTutorSessionResult {
 function chaptersOfSubCategory(
   allChapters: CurriculumChapter[],
   subjectId: StemSubjectId,
-  subCategory: StemSubCategory
+  subCategory: StemSubCategory,
+  gradeLevel?: CurriculumGradeLevel
 ): CurriculumChapter[] {
   let subChapters = allChapters.filter(c => getChapterSubCategory(c) === subCategory);
-  if (subChapters.length === 0 && isSingleVoletSubject(subjectId)) {
+  if (subChapters.length === 0 && isSingleVoletSubject(subjectId, gradeLevel)) {
     subChapters = [...allChapters];
   }
   return subChapters.sort((a, b) => a.order - b.order);
@@ -416,8 +430,8 @@ export function buildTutorSessionPayload(
       isSecondSessionAlternance: false,
       availableChapters: [],
       subCategory: sub,
-      subCategoryName: getSubCategoryName(sub),
-      subCategoryQuestion: getSubCategoryQuestion(sub),
+      subCategoryName: getSubCategoryName(sub, gradeLevel),
+      subCategoryQuestion: getSubCategoryQuestion(sub, gradeLevel),
     };
   }
 
@@ -427,9 +441,9 @@ export function buildTutorSessionPayload(
   const firstVolet = defaultSubCategoryFor(subjectId);
   const secondVolet = SIBLING_SUBCATEGORY[firstVolet];
   const bothVoletsHaveContent = Boolean(secondVolet)
-    && chaptersOfSubCategory(allChapters, subjectId, firstVolet).length > 0
-    && chaptersOfSubCategory(allChapters, subjectId, secondVolet!).length > 0;
-  const needsVoletChoice = !requestedSubCategory && computedSubCategory === null && bothVoletsHaveContent && isTwoVoletSubject(subjectId);
+    && chaptersOfSubCategory(allChapters, subjectId, firstVolet, gradeLevel).length > 0
+    && chaptersOfSubCategory(allChapters, subjectId, secondVolet!, gradeLevel).length > 0;
+  const needsVoletChoice = !requestedSubCategory && computedSubCategory === null && bothVoletsHaveContent && isTwoVoletSubject(subjectId, gradeLevel);
 
   if (needsVoletChoice) {
     const defaultSub = defaultSubCategoryFor(subjectId);
@@ -440,7 +454,7 @@ export function buildTutorSessionPayload(
       isSecondSessionAlternance: false,
       availableChapters: [],
       subCategory: defaultSub,
-      subCategoryName: getSubCategoryName(defaultSub),
+      subCategoryName: getSubCategoryName(defaultSub, gradeLevel),
       subCategoryQuestion: subjectId === 'maths'
         ? 'Par quel domaine souhaites-tu commencer aujourd’hui ?'
         : 'Par quel volet souhaites-tu commencer aujourd’hui ?',
@@ -448,21 +462,21 @@ export function buildTutorSessionPayload(
   }
 
   let activeSubCategory: StemSubCategory = requestedSubCategory || computedSubCategory || defaultSubCategoryFor(subjectId);
-  let subChapters = chaptersOfSubCategory(allChapters, subjectId, activeSubCategory);
+  let subChapters = chaptersOfSubCategory(allChapters, subjectId, activeSubCategory, gradeLevel);
 
   // Si ce volet n'a pas encore de cours pour cette classe, basculer sur le volet jumeau qui en a
   // (jamais pour une matière nommée « Histoire » ou « Géographie » : pas d'Histoire dans un créneau de Géographie)
   if (subChapters.length === 0 && !voletImposedByName) {
     const sibling = SIBLING_SUBCATEGORY[activeSubCategory];
-    const siblingChapters = sibling ? chaptersOfSubCategory(allChapters, subjectId, sibling) : [];
+    const siblingChapters = sibling ? chaptersOfSubCategory(allChapters, subjectId, sibling, gradeLevel) : [];
     if (sibling && siblingChapters.length > 0) {
       activeSubCategory = sibling;
       subChapters = siblingChapters;
     }
   }
 
-  const subCategoryName = getSubCategoryName(activeSubCategory);
-  const subCategoryQuestion = getSubCategoryQuestion(activeSubCategory);
+  const subCategoryName = getSubCategoryName(activeSubCategory, gradeLevel);
+  const subCategoryQuestion = getSubCategoryQuestion(activeSubCategory, gradeLevel);
 
   if (subChapters.length === 0) {
     return {
@@ -489,7 +503,7 @@ export function buildTutorSessionPayload(
   // Pas de bannière d'alternance si l'on retombe sur le même volet (l'autre volet n'a pas encore de cours)
   const isSecondSessionAlternance = hasPreviousSession && !isPositioned && !voletImposedByName
     && activeSubCategory !== subjectProgress?.lastAlternatedSubCategory
-    && isTwoVoletSubject(subjectId);
+    && isTwoVoletSubject(subjectId, gradeLevel);
   let alternanceBannerText: string | undefined = undefined;
 
   if (isSecondSessionAlternance) {
@@ -712,7 +726,7 @@ export function recordCompletedTutorSession(
   if (!prog) return;
 
   const allChapters = getCurriculumChapters(subjectId, gradeLevel);
-  const subChapters = chaptersOfSubCategory(allChapters, subjectId, subCategory);
+  const subChapters = chaptersOfSubCategory(allChapters, subjectId, subCategory, gradeLevel);
 
   const existingSubCategories = prog.subCategories || {};
   const currentSubProg: SubCategoryStudentProgress = existingSubCategories[subCategory] || {
@@ -730,10 +744,17 @@ export function recordCompletedTutorSession(
   const updatedMastered = Array.from(new Set([...currentSubProg.masteredPointIds, ...completedItems.map(item => item.point.id)]));
   const updatedCompletedChapters = [...currentSubProg.completedChapterIds];
 
-  // Marquer les chapitres dont le dernier point a été complété
+  // Marquer un chapitre comme terminé UNIQUEMENT lorsque TOUTES ses mini-leçons sont maîtrisées.
+  // La fin d'un chapitre ne doit JAMAIS être décrétée sur une seule mini-leçon isolée :
+  // l'élève doit avoir validé l'ensemble des points clés du chapitre (ex: 3, 4, 5 ou 7 mini-leçons).
   for (const item of completedItems) {
-    if (item.isLastPointOfChapter && !updatedCompletedChapters.includes(item.chapterId)) {
-      updatedCompletedChapters.push(item.chapterId);
+    const chapterObj = subChapters.find(c => c.id === item.chapterId) || allChapters.find(c => c.id === item.chapterId);
+    if (chapterObj && !updatedCompletedChapters.includes(item.chapterId)) {
+      const allPointsMastered = chapterObj.points.length > 0 &&
+        chapterObj.points.every(p => updatedMastered.includes(p.id));
+      if (allPointsMastered) {
+        updatedCompletedChapters.push(item.chapterId);
+      }
     }
   }
 

@@ -1453,7 +1453,7 @@ export const MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_maths_numerique_l07_systemes_inequations_lineaires_p06_q6",
             "type": "mcq",
-            "prompt": "Lequel est une possibilité d'achat pour Karim ?",
+            "prompt": "Les achats $(x;y)$ de Karim pour son cocktail doivent vérifier $\\begin{cases}3x+2y\\leq30\\\\x+y\\geq10\\end{cases}$. Lequel de ces couples est une possibilité d'achat ?",
             "options": [
               "$(1\\,;11)$",
               "$(2\\,;7)$",
@@ -1555,7 +1555,7 @@ export const MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES: CurriculumChapter = {
         {
           "id": "premiere_a1_maths_numerique_l07_systemes_inequations_lineaires_p06_q6",
           "type": "mcq",
-          "prompt": "Lequel est une possibilité d'achat pour Karim ?",
+          "prompt": "Les achats $(x;y)$ de Karim pour son cocktail doivent vérifier $\\begin{cases}3x+2y\\leq30\\\\x+y\\geq10\\end{cases}$. Lequel de ces couples est une possibilité d'achat ?",
           "options": [
             "$(1\\,;11)$",
             "$(2\\,;7)$",

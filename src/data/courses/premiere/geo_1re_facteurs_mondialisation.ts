@@ -86,7 +86,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p01_q3",
             "type": "mcq",
-            "prompt": "Quel caractère de la mondialisation montre l'exemple du paysan et du cours du café ?",
+            "prompt": "Le paysan ivoirien subit dans son champ les variations du cours du café, fixé sur des marchés boursiers étrangers. Quel caractère de la mondialisation cet exemple montre-t-il ?",
             "options": [
               "L'isolement des campagnes africaines",
               "La fixation des prix par le village",
@@ -212,7 +212,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p01_q3",
           "type": "mcq",
-          "prompt": "Quel caractère de la mondialisation montre l'exemple du paysan et du cours du café ?",
+          "prompt": "Le paysan ivoirien subit dans son champ les variations du cours du café, fixé sur des marchés boursiers étrangers. Quel caractère de la mondialisation cet exemple montre-t-il ?",
           "options": [
             "L'isolement des campagnes africaines",
             "La fixation des prix par le village",
@@ -430,7 +430,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p02_q7",
             "type": "mcq",
-            "prompt": "Laquelle de ces propositions définit la mondialisation selon l'activité du cours ?",
+            "prompt": "Laquelle de ces propositions définit la mondialisation ?",
             "options": [
               "La division du monde en deux blocs",
               "L'extension de l'économie de marché à tout le monde",
@@ -524,7 +524,7 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t4_l01_facteurs_mondialisation_p02_q7",
           "type": "mcq",
-          "prompt": "Laquelle de ces propositions définit la mondialisation selon l'activité du cours ?",
+          "prompt": "Laquelle de ces propositions définit la mondialisation ?",
           "options": [
             "La division du monde en deux blocs",
             "L'extension de l'économie de marché à tout le monde",

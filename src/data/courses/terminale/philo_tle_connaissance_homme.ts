@@ -1407,7 +1407,7 @@ export const PHILO_TLE_L03_CONNAISSANCE_HOMME: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l01_connaissance_homme_p07_q1",
             "type": "mcq",
-            "prompt": "Que signifie « abolir » dans le sujet ?",
+            "prompt": "Dans le sujet « L'inconscient abolit-il la responsabilité humaine ? », que signifie le verbe « abolir » ?",
             "options": [
               "Supprimer, rendre illusoire",
               "Renforcer",
@@ -1507,7 +1507,7 @@ export const PHILO_TLE_L03_CONNAISSANCE_HOMME: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_liberte_l01_connaissance_homme_p07_q1",
           "type": "mcq",
-          "prompt": "Que signifie « abolir » dans le sujet ?",
+          "prompt": "Dans le sujet « L'inconscient abolit-il la responsabilité humaine ? », que signifie le verbe « abolir » ?",
           "options": [
             "Supprimer, rendre illusoire",
             "Renforcer",

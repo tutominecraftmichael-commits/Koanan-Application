@@ -346,7 +346,7 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p02_q3",
             "type": "mcq",
-            "prompt": "Combien de Français d'Algérie sont rapatriés en 1962 selon le document du cours ?",
+            "prompt": "En 1962, à la fin de la guerre d'Algérie, des Français d'Algérie sont rapatriés en France et s'installent surtout dans les villes. Combien sont-ils environ ?",
             "options": [
               "Environ 2 000",
               "Environ 20 millions",
@@ -472,7 +472,7 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t2_l02_urbanisation_france_p02_q3",
           "type": "mcq",
-          "prompt": "Combien de Français d'Algérie sont rapatriés en 1962 selon le document du cours ?",
+          "prompt": "En 1962, à la fin de la guerre d'Algérie, des Français d'Algérie sont rapatriés en France et s'installent surtout dans les villes. Combien sont-ils environ ?",
           "options": [
             "Environ 2 000",
             "Environ 20 millions",

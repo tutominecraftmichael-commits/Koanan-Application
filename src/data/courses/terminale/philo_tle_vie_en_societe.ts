@@ -1263,7 +1263,7 @@ export const PHILO_TLE_L04_VIE_EN_SOCIETE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_liberte_l02_vie_en_societe_p06_q5",
             "type": "mcq",
-            "prompt": "Quelle est la thèse du texte de Hegel sur l'état de nature ?",
+            "prompt": "Dans la Propédeutique philosophique, Hegel décrit l'état de nature comme un état « de rudesse, de violence et d'injustice ». Quelle est sa thèse ?",
             "options": [
               "L'état de nature est l'âge d'or de l'humanité",
               "Il faut sortir de l'état de nature pour instituer l'État",
@@ -1352,7 +1352,7 @@ export const PHILO_TLE_L04_VIE_EN_SOCIETE: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_liberte_l02_vie_en_societe_p06_q5",
           "type": "mcq",
-          "prompt": "Quelle est la thèse du texte de Hegel sur l'état de nature ?",
+          "prompt": "Dans la Propédeutique philosophique, Hegel décrit l'état de nature comme un état « de rudesse, de violence et d'injustice ». Quelle est sa thèse ?",
           "options": [
             "L'état de nature est l'âge d'or de l'humanité",
             "Il faut sortir de l'état de nature pour instituer l'État",

@@ -433,7 +433,7 @@ export const MATHS_TLE_D_L01_LIMITES_CONTINUITE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l01_limites_continuite_p02_q7",
             "type": "mcq",
-            "prompt": "Vers quelle température l'objet se stabilise-t-il ?",
+            "prompt": "Un objet a pour température $f(t)=\\dfrac{200}{t}+10$ (en °C, $t$ en minutes). Vers quelle température se stabilise-t-il après très longtemps ?",
             "options": [
               "$210\\,°C$",
               "$0\\,°C$",
@@ -527,7 +527,7 @@ export const MATHS_TLE_D_L01_LIMITES_CONTINUITE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l01_limites_continuite_p02_q7",
           "type": "mcq",
-          "prompt": "Vers quelle température l'objet se stabilise-t-il ?",
+          "prompt": "Un objet a pour température $f(t)=\\dfrac{200}{t}+10$ (en °C, $t$ en minutes). Vers quelle température se stabilise-t-il après très longtemps ?",
           "options": [
             "$210\\,°C$",
             "$0\\,°C$",
@@ -1152,7 +1152,7 @@ export const MATHS_TLE_D_L01_LIMITES_CONTINUITE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l01_limites_continuite_p05_q4",
             "type": "mcq",
-            "prompt": "Avec ce tableau, combien de solutions a l'équation $f(x)=13$ sur $[-1;+\\infty[$ ?",
+            "prompt": "$f$ est continue et strictement décroissante sur $[-1;+\\infty[$, avec $f(-1)=5$ et $\\lim\\limits_{x\\to+\\infty}f(x)=-\\infty$. Combien de solutions a l'équation $f(x)=13$ sur $[-1;+\\infty[$ ?",
             "options": [
               "Une seule",
               "Deux",
@@ -1270,7 +1270,7 @@ export const MATHS_TLE_D_L01_LIMITES_CONTINUITE: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l01_limites_continuite_p05_q4",
           "type": "mcq",
-          "prompt": "Avec ce tableau, combien de solutions a l'équation $f(x)=13$ sur $[-1;+\\infty[$ ?",
+          "prompt": "$f$ est continue et strictement décroissante sur $[-1;+\\infty[$, avec $f(-1)=5$ et $\\lim\\limits_{x\\to+\\infty}f(x)=-\\infty$. Combien de solutions a l'équation $f(x)=13$ sur $[-1;+\\infty[$ ?",
           "options": [
             "Une seule",
             "Deux",

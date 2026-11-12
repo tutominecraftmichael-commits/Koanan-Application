@@ -405,7 +405,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
       });
 
       onUpdateClassSlots(harmonizeAndDeduplicateSlots([...classSlots, ...newParsedSlots]));
-      setImportSuccess(`✨ ${newParsedSlots.length} cours certifiés importés dans la Source de Vérité !`);
+      setImportSuccess(`${newParsedSlots.length} cours certifiés importés dans la Source de Vérité !`);
       setTimeout(() => {
         setIsImportModalOpen(false);
         setImportSuccess(null);
@@ -527,7 +527,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
-            ✨ Vue Complète
+            Vue Complète
           </button>
 
           <button
@@ -538,7 +538,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
-            📚 Cours Scolaires ({classSlots.length})
+            Cours Scolaires ({classSlots.length})
           </button>
 
           <button
@@ -790,7 +790,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
 
                               {(slot.room || slot.professor) && (
                                 <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 truncate">
-                                  {slot.room ? `📍 ${slot.room}` : ''} {slot.professor ? `• 👤 ${slot.professor}` : ''}
+                                  {slot.room ? `Salle ${slot.room}` : ''} {slot.professor ? `• Prof. ${slot.professor}` : ''}
                                 </p>
                               )}
 
@@ -1020,7 +1020,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           setIsSourceTruthModalOpen(false);
           setIsEditingTruthDirect(false);
         }}
-        title="🔒 Source de Vérité des Cours Fixes"
+        title="Source de Vérité des Cours Fixes"
         description="Structure canonique des cours. Aucun cours n'est inventé ou déplacé."
         maxWidth="lg"
       >

@@ -128,7 +128,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               className="w-full sm:w-auto py-3.5 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-[#334155] hover:text-slate-900 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] dark:text-slate-200 dark:hover:text-white dark:border-white/10 backdrop-blur-md font-semibold text-xs xs:text-sm sm:text-base shadow-sm dark:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
             >
               <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
-              <span>🎓 Tester en Mode Démo</span>
+              <span>Tester en Mode Démo</span>
             </button>
           </div>
 
@@ -210,7 +210,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     : 'text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-300 hover:bg-rose-100/50 dark:hover:bg-rose-950/20'
                 }`}
               >
-                <span>🔴 Sans KONAN</span>
+                <span>Sans KONAN</span>
               </button>
               <button
                 type="button"
@@ -222,7 +222,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5 text-sky-200" />
-                <span>✨ Voir la solution KONAN</span>
+                <span>Voir la solution KONAN</span>
               </button>
             </div>
           </div>
@@ -450,13 +450,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xl">😫</span>
+                      <span className="text-xs font-bold text-rose-500">Fatigue</span>
                       <AlertTriangle className="w-4 h-4 text-rose-500 dark:text-rose-400" />
                     </div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white mt-1.5">Nuit blanche à 3h</p>
                     <p className={`text-[11px] mt-1 ${activeProblemId === 1 ? 'text-rose-700 dark:text-rose-300 font-medium' : 'text-slate-600 dark:text-slate-400'}`}>
                       {activeProblemId === 1 
-                        ? '⚠️ Perte de 45% de la mémoire le lendemain au réveil.' 
+                        ? 'Perte de 45% de la mémoire le lendemain au réveil.' 
                         : 'Toucher pour voir l\'impact'}
                     </p>
                   </div>
@@ -471,13 +471,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xl">⚡</span>
+                      <span className="text-xs font-bold text-amber-500">Alerte</span>
                       <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                     </div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white mt-1.5">Impasse coef 4</p>
                     <p className={`text-[11px] mt-1 ${activeProblemId === 2 ? 'text-amber-700 dark:text-amber-300 font-medium' : 'text-slate-600 dark:text-slate-400'}`}>
                       {activeProblemId === 2 
-                        ? '⚠️ Risque d\'élimination et rattrapages assurés.' 
+                        ? 'Risque d\'élimination et rattrapages assurés.' 
                         : 'Toucher pour voir l\'impact'}
                     </p>
                   </div>
@@ -492,13 +492,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xl">📚</span>
+                      <span className="text-xs font-bold text-sky-500">Surcharge</span>
                       <AlertTriangle className="w-4 h-4 text-sky-500 dark:text-sky-400" />
                     </div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white mt-1.5">Planning rigide</p>
                     <p className={`text-[11px] mt-1 ${activeProblemId === 3 ? 'text-sky-700 dark:text-sky-300 font-medium' : 'text-slate-600 dark:text-slate-400'}`}>
                       {activeProblemId === 3 
-                        ? '⚠️ Abandon après 4 jours et culpabilité mentale.' 
+                        ? 'Abandon après 4 jours et culpabilité mentale.' 
                         : 'Toucher pour voir l\'impact'}
                     </p>
                   </div>
@@ -513,7 +513,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     className="w-full sm:w-auto py-4 px-8 text-sm sm:text-base font-extrabold rounded-2xl cursor-pointer bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white shadow-[0_10px_35px_-5px_rgba(99,102,241,0.5)] border border-indigo-400/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 mx-auto"
                   >
                     <Sparkles className="w-5 h-5 text-sky-200" />
-                    <span>✨ Voir la solution KONAN</span>
+                    <span>Voir la solution KONAN</span>
                   </button>
                 </div>
 

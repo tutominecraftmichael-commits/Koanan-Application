@@ -1,5 +1,6 @@
 import React, { StrictMode, Component, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { GraduationCap } from 'lucide-react'
 import './index.css'
 import App from './App.tsx'
 import { initPwaAutoUpdate } from './services/pwaUpdateService'
@@ -37,8 +38,8 @@ class RootErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen bg-[#090D16] text-slate-100 flex flex-col items-center justify-center p-6 text-center">
           <div className="max-w-md w-full p-8 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto text-2xl font-bold">
-              🎓
+            <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto">
+              <GraduationCap className="w-7 h-7 text-indigo-400" />
             </div>
             <h1 className="text-xl font-bold text-white">KONAN — Actualisation Requise</h1>
             <p className="text-xs text-slate-400 leading-relaxed">

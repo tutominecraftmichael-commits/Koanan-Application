@@ -1462,7 +1462,7 @@ export const MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l03_derivabilite_etude_fonctions_p06_q5",
             "type": "mcq",
-            "prompt": "Quel est le maximum relatif de $f$ ?",
+            "prompt": "$f(x)=x^2+x$ si $x<0$ et $f(x)=\\sqrt x-x$ si $x\\geq0$. $f$ décroît sur $\\left]-\\infty;-\\dfrac12\\right]$, croît sur $\\left[-\\dfrac12;\\dfrac14\\right]$, puis décroît. Quel est le maximum relatif de $f$ ?",
             "options": [
               "$0$, atteint en $0$",
               "$\\dfrac14$, atteint en $\\dfrac14$",
@@ -1572,7 +1572,7 @@ export const MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l03_derivabilite_etude_fonctions_p06_q5",
           "type": "mcq",
-          "prompt": "Quel est le maximum relatif de $f$ ?",
+          "prompt": "$f(x)=x^2+x$ si $x<0$ et $f(x)=\\sqrt x-x$ si $x\\geq0$. $f$ décroît sur $\\left]-\\infty;-\\dfrac12\\right]$, croît sur $\\left[-\\dfrac12;\\dfrac14\\right]$, puis décroît. Quel est le maximum relatif de $f$ ?",
           "options": [
             "$0$, atteint en $0$",
             "$\\dfrac14$, atteint en $\\dfrac14$",
@@ -1702,7 +1702,7 @@ export const MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l03_derivabilite_etude_fonctions_p07_q4",
             "type": "mcq",
-            "prompt": "Que vaut $B(3)$ ?",
+            "prompt": "Le bénéfice d'une usine de cacao est $B(x)=-\\dfrac13x^3+9x+2$ (en millions de FCFA, $x$ en milliers de sachets). Que vaut $B(3)$ ?",
             "options": [
               "$29$",
               "$20$",
@@ -1723,7 +1723,7 @@ export const MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l03_derivabilite_etude_fonctions_p07_q5",
             "type": "mcq",
-            "prompt": "Combien de sachets l'usine doit-elle produire par jour ?",
+            "prompt": "Le bénéfice $B(x)$ d'une usine de cacao est maximal pour $x=3$, où $x$ est en milliers de sachets par jour. Combien de sachets l'usine doit-elle produire par jour ?",
             "options": [
               "3 sachets",
               "20 000 sachets",
@@ -1744,7 +1744,7 @@ export const MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
           "exercise": {
             "id": "terminale_d_maths_numerique_l03_derivabilite_etude_fonctions_p07_q6",
             "type": "mcq",
-            "prompt": "Pourquoi le tableau de variation suffit-il à affirmer que $B(3)$ est le maximum sur $[1;5]$ ?",
+            "prompt": "Le bénéfice $B$ croît sur $[1;3]$ puis décroît sur $[3;5]$. Pourquoi ce tableau de variation suffit-il à affirmer que $B(3)$ est le maximum sur $[1;5]$ ?",
             "options": [
               "Parce que $B$ croît jusqu'à $3$ puis décroît",
               "Parce que $3$ est au milieu de $[1;5]$",
@@ -1820,7 +1820,7 @@ export const MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l03_derivabilite_etude_fonctions_p07_q4",
           "type": "mcq",
-          "prompt": "Que vaut $B(3)$ ?",
+          "prompt": "Le bénéfice d'une usine de cacao est $B(x)=-\\dfrac13x^3+9x+2$ (en millions de FCFA, $x$ en milliers de sachets). Que vaut $B(3)$ ?",
           "options": [
             "$29$",
             "$20$",
@@ -1833,7 +1833,7 @@ export const MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l03_derivabilite_etude_fonctions_p07_q5",
           "type": "mcq",
-          "prompt": "Combien de sachets l'usine doit-elle produire par jour ?",
+          "prompt": "Le bénéfice $B(x)$ d'une usine de cacao est maximal pour $x=3$, où $x$ est en milliers de sachets par jour. Combien de sachets l'usine doit-elle produire par jour ?",
           "options": [
             "3 sachets",
             "20 000 sachets",
@@ -1846,7 +1846,7 @@ export const MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS: CurriculumChapter = {
         {
           "id": "terminale_d_maths_numerique_l03_derivabilite_etude_fonctions_p07_q6",
           "type": "mcq",
-          "prompt": "Pourquoi le tableau de variation suffit-il à affirmer que $B(3)$ est le maximum sur $[1;5]$ ?",
+          "prompt": "Le bénéfice $B$ croît sur $[1;3]$ puis décroît sur $[3;5]$. Pourquoi ce tableau de variation suffit-il à affirmer que $B(3)$ est le maximum sur $[1;5]$ ?",
           "options": [
             "Parce que $B$ croît jusqu'à $3$ puis décroît",
             "Parce que $3$ est au milieu de $[1;5]$",

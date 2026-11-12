@@ -973,7 +973,7 @@ export const PHILO_TLE_L08_PROGRES_BONHEUR: CurriculumChapter = {
           "exercise": {
             "id": "terminale_philo_conditions_bonheur_l03_progres_bonheur_p05_q2",
             "type": "mcq",
-            "prompt": "Quelle est la conclusion exacte de Freud dans ce texte ?",
+            "prompt": "Dans Malaise dans la civilisation (1930), Freud constate que les hommes, fiers de dominer la nature, ne se sentent pas plus heureux. Quelle est sa conclusion exacte ?",
             "options": [
               "La maîtrise de la nature n'est pas la seule condition du bonheur, mais elle a de la valeur",
               "La technique n'a aucune valeur pour le bonheur",
@@ -1086,7 +1086,7 @@ export const PHILO_TLE_L08_PROGRES_BONHEUR: CurriculumChapter = {
         {
           "id": "terminale_philo_conditions_bonheur_l03_progres_bonheur_p05_q2",
           "type": "mcq",
-          "prompt": "Quelle est la conclusion exacte de Freud dans ce texte ?",
+          "prompt": "Dans Malaise dans la civilisation (1930), Freud constate que les hommes, fiers de dominer la nature, ne se sentent pas plus heureux. Quelle est sa conclusion exacte ?",
           "options": [
             "La maîtrise de la nature n'est pas la seule condition du bonheur, mais elle a de la valeur",
             "La technique n'a aucune valeur pour le bonheur",
