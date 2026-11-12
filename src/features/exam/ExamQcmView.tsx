@@ -16,7 +16,7 @@ import { shuffleExerciseOptions } from '../../lib/curriculum/optionShuffle';
 import { buildExamQcmSeries, type ExamQcmItem } from '../../lib/exam/examQcmSeries';
 import { getReviewMap } from '../../lib/curriculum/reviewMemory';
 import { getWrongQuestions, recordAnswer, RETRY_NOTE } from '../../lib/curriculum/wrongQuestionsMemory';
-import { EXAM_PREP_DURATIONS } from '../../lib/exam/examPrepRules';
+import { EXAM_PREP_DURATIONS, formatExactDurationFrench } from '../../lib/exam/examPrepRules';
 import { afterShine } from '../../lib/shineClick';
 import { soundFX } from '../../lib/audioEffects';
 
@@ -27,7 +27,7 @@ export interface ExamQcmViewProps {
   stemSubjectId: StemSubjectId;
   gradeLevel: CurriculumGradeLevel;
   onExit: () => void;
-  onComplete: (sessionId: string) => void;
+  onComplete: (sessionId: string, durationSec?: number) => void;
 }
 
 interface SavedProgress {
@@ -35,6 +35,8 @@ interface SavedProgress {
   index: number;
   answers: Record<string, boolean>;
   startedAt: number;
+  completedAt?: number;
+  finalDurationSec?: number;
 }
 
 const storageKey = (sessionId: string) => `konan_exam_qcm_v1_${sessionId}`;
@@ -67,6 +69,8 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
   const [checked, setChecked] = useState(false);
   const [startedAt, setStartedAt] = useState<number>(() => Date.now());
   const [now, setNow] = useState<number>(() => Date.now());
+  const [completedAt, setCompletedAt] = useState<number | null>(null);
+  const [finalDurationSec, setFinalDurationSec] = useState<number | null>(null);
   const [subCategoryName, setSubCategoryName] = useState<(id: string) => string>(() => () => '');
   const savedRef = useRef<SavedProgress | null>(null);
 
@@ -115,6 +119,10 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
           setIndex(Math.min(savedRef.current.index, built.length));
           setAnswers(savedRef.current.answers || {});
           setStartedAt(savedRef.current.startedAt || Date.now());
+          if (savedRef.current.completedAt) setCompletedAt(savedRef.current.completedAt);
+          if (typeof savedRef.current.finalDurationSec === 'number') {
+            setFinalDurationSec(savedRef.current.finalDurationSec);
+          }
         } else {
           const start = Date.now();
           setStartedAt(start);
@@ -127,17 +135,24 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
     return () => { alive = false; };
   }, [userId, session.id, session.date, stemSubjectId, gradeLevel]);
 
-  // Chronomètre repère (jamais bloquant)
-  useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(t);
-  }, []);
-
   const total = series?.length || 0;
   const finished = series !== null && index >= total;
   const item = series && index < total ? series[index] : null;
   const exercise = useMemo(() => (item ? shuffleExerciseOptions(item.exercise) : null), [item]);
-  const elapsed = Math.max(0, Math.floor((now - startedAt) / 1000));
+
+  // Chronomètre repère : actif UNIQUEMENT pendant la série.
+  // Dès que l'élève valide la 30e question (finished === true), le compte à rebours s'arrête net.
+  useEffect(() => {
+    if (finished) return;
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [finished]);
+
+  // Si la série est terminée, le chronomètre est figé définitivement sur la durée exacte
+  const activeElapsed = Math.max(0, Math.floor(((completedAt || now) - startedAt) / 1000));
+  const elapsed = (finalDurationSec !== null && finalDurationSec !== undefined)
+    ? finalDurationSec
+    : (finished ? activeElapsed : activeElapsed);
   const overtime = elapsed > TARGET_SEC;
   const correctCount = Object.values(answers).filter(Boolean).length;
 
@@ -161,7 +176,14 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
     }
     const nextAnswers = { ...answers, [item.exercise.id]: correct };
     setAnswers(nextAnswers);
-    writeSaved(session.id, { ids: series!.map((s) => s.exercise.id), index, answers: nextAnswers, startedAt });
+    writeSaved(session.id, {
+      ids: series!.map((s) => s.exercise.id),
+      index,
+      answers: nextAnswers,
+      startedAt,
+      completedAt: completedAt ?? undefined,
+      finalDurationSec: finalDurationSec ?? undefined,
+    });
   };
 
   const next = () => {
@@ -169,10 +191,29 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
     setIndex(nextIndex);
     setSelected(null);
     setChecked(false);
-    writeSaved(session.id, { ids: series!.map((s) => s.exercise.id), index: nextIndex, answers, startedAt });
-    if (nextIndex >= total) {
+
+    let nextCompletedAt = completedAt;
+    let nextFinalDuration = finalDurationSec;
+
+    // Figer définitivement le temps et couper le compte à rebours dès que la dernière question est validée
+    if (nextIndex >= total && (nextFinalDuration === null || nextFinalDuration === undefined)) {
+      const finishTimestamp = Date.now();
+      const calculatedDuration = Math.max(1, Math.floor((finishTimestamp - startedAt) / 1000));
+      nextCompletedAt = finishTimestamp;
+      nextFinalDuration = calculatedDuration;
+      setCompletedAt(finishTimestamp);
+      setFinalDurationSec(calculatedDuration);
       try { soundFX.playVictoryJingle(); } catch { /* son facultatif */ }
     }
+
+    writeSaved(session.id, {
+      ids: series!.map((s) => s.exercise.id),
+      index: nextIndex,
+      answers,
+      startedAt,
+      completedAt: nextCompletedAt ?? undefined,
+      finalDurationSec: nextFinalDuration ?? undefined,
+    });
   };
 
   const daysLabel = typeof session.examDaysRemaining === 'number'
@@ -206,19 +247,51 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
     const wrongItems = series.filter((s) => answers[s.exercise.id] === false);
     const retriedOk = series.filter((s) => s.isRetry && answers[s.exercise.id] === true).length;
     const chaptersToReview = [...new Set(wrongItems.map((w) => w.chapterTitle))];
+    const exactDurationLabel = formatExactDurationFrench(elapsed);
+
     return (
       <div className="max-w-xl mx-auto py-8 px-4 space-y-5 text-center animate-in zoom-in-95 duration-300">
         <div className="flex justify-center"><KonanMascot pose={note >= 10 ? 'jump' : 'encourage'} size={130} /></div>
         <div className="space-y-1">
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white">Série terminée !</h1>
-          <p className="text-sm text-slate-600 dark:text-slate-300">
-            {correctCount} bonne{correctCount > 1 ? 's' : ''} réponse{correctCount > 1 ? 's' : ''} sur {total} · en {fmt(elapsed)}
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">Série terminée !</h1>
+          <p className="text-sm font-bold text-slate-600 dark:text-slate-300">
+            {correctCount} bonne{correctCount > 1 ? 's' : ''} réponse{correctCount > 1 ? 's' : ''} sur {total}
           </p>
         </div>
-        <div className="inline-flex items-baseline gap-1 px-6 py-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-b-[6px] border-sky-300 dark:border-sky-600">
+        <div className="inline-flex items-baseline gap-1 px-6 py-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-b-[6px] border-sky-300 dark:border-sky-600 shadow-sm">
           <span className="text-4xl font-black text-sky-600 dark:text-sky-400 tabular-nums">{String(note).replace('.', ',')}</span>
           <span className="text-sm font-bold text-slate-500 dark:text-slate-400">/ 20</span>
         </div>
+
+        {/* Temps exact et chronomètre figé */}
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-sky-50 via-cyan-50/50 to-emerald-50 dark:from-slate-900 dark:via-sky-950/30 dark:to-emerald-950/20 border-2 border-sky-200 dark:border-sky-800 text-left space-y-2.5 shadow-sm">
+          <div className="flex items-center justify-between gap-2 border-b border-sky-200/70 dark:border-sky-800/60 pb-2">
+            <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-sky-800 dark:text-sky-300">
+              <Clock className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+              Temps de ta séance
+            </span>
+            <span className="text-xs font-mono font-black px-2.5 py-0.5 rounded-lg bg-sky-200/70 dark:bg-sky-800/70 text-sky-900 dark:text-sky-100">
+              Chronomètre figé · {fmt(elapsed)}
+            </span>
+          </div>
+          <p className="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 leading-snug">
+            🎯 Tu as fini tes {total} questions en <span className="text-sky-600 dark:text-sky-400 underline decoration-sky-400 decoration-2 underline-offset-2">exactement {exactDurationLabel}</span>.
+          </p>
+          {elapsed < TARGET_SEC ? (
+            <p className="text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-300">
+              ⚡ Cadence remarquable : tu finis avec {formatExactDurationFrench(TARGET_SEC - elapsed)} d&apos;avance sur le temps repère officiel de 45 minutes !
+            </p>
+          ) : elapsed === TARGET_SEC ? (
+            <p className="text-xs sm:text-sm font-bold text-sky-700 dark:text-sky-300">
+              ⏱️ Timing parfait : tu as utilisé exactement les 45 minutes allouées à cette préparation !
+            </p>
+          ) : (
+            <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">
+              👏 Tu as pris le temps de réfléchir et de tout traiter jusqu&apos;à la dernière question. Bravo pour ta concentration !
+            </p>
+          )}
+        </div>
+
         <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 text-left text-sm space-y-2">
           {retriedOk > 0 && (
             <p className="text-emerald-700 dark:text-emerald-300 font-bold">
@@ -242,7 +315,7 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
           type="button"
           onClick={afterShine(() => {
             try { localStorage.removeItem(storageKey(session.id)); } catch { /* rien */ }
-            onComplete(session.id);
+            onComplete(session.id, elapsed);
           })}
           className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
         >
