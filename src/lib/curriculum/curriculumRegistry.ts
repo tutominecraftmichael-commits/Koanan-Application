@@ -41,6 +41,9 @@ import { MATHS_1RE_C_L07_EXTENSION_LIMITE } from '../../data/courses/premiere/ma
 import { MATHS_1RE_C_L09_DERIVATION } from '../../data/courses/premiere/maths_1re_c_09_derivation';
 import { MATHS_1RE_C_L10_PROBABILITE } from '../../data/courses/premiere/maths_1re_c_10_probabilite';
 import { MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION } from '../../data/courses/premiere/maths_1re_c_11_etude_representation_fonction';
+import { MATHS_1RE_C_L02_BARYCENTRE } from '../../data/courses/premiere/maths_1re_c_02_barycentre';
+import { MATHS_1RE_C_L06_ANGLES_ORIENTES_TRIGONOMETRIE } from '../../data/courses/premiere/maths_1re_c_06_angles_orientes_trigonometrie';
+import { MATHS_1RE_C_L08_COMPOSEES_TRANSFORMATIONS } from '../../data/courses/premiere/maths_1re_c_08_composees_transformations';
 import { MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_c_13_systemes_equations_lineaires';
 import { MATHS_1RE_C_L15_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_c_15_suites_numeriques';
 import { MATHS_1RE_C_L17_STATISTIQUES } from '../../data/courses/premiere/maths_1re_c_17_statistiques';
@@ -91234,6 +91237,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_1RE_C_L09_DERIVATION,
   MATHS_1RE_C_L10_PROBABILITE,
   MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION,
+  MATHS_1RE_C_L02_BARYCENTRE,
+  MATHS_1RE_C_L06_ANGLES_ORIENTES_TRIGONOMETRIE,
+  MATHS_1RE_C_L08_COMPOSEES_TRANSFORMATIONS,
   MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES,
   MATHS_1RE_C_L15_SUITES_NUMERIQUES,
   MATHS_1RE_C_L17_STATISTIQUES,
