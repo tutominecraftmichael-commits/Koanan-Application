@@ -7,7 +7,8 @@ export const HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c"
   ],
   "order": 2,
   "title": "Thème 1, leçon 2 : Les révolutions industrielles",

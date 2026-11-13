@@ -7,7 +7,8 @@ export const HIST_1RE_T2_L01_IMPERIALISME_CONGRES_BERLIN: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c"
   ],
   "order": 3,
   "title": "Thème 2, leçon 1 : Le mouvement impérialiste et le congrès de Berlin",

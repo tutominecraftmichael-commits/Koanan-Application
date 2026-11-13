@@ -7,7 +7,8 @@ export const HIST_1RE_T1_L01_ESSOR_CAPITALISME: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c"
   ],
   "order": 1,
   "title": "Thème 1, leçon 1 : L'essor du capitalisme et ses conséquences",
