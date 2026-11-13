@@ -1135,4 +1135,3 @@ export const MATHS_TLE_C_L07_CONIQUES: CurriculumChapter = {
     },
   ],
 };
-

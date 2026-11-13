@@ -1031,4 +1031,3 @@ export const MATHS_TLE_C_L06_GEOMETRIE_ANALYTIQUE_ESPACE: CurriculumChapter = {
     },
   ],
 };
-

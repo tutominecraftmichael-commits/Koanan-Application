@@ -21,6 +21,9 @@ import { MATHS_TLE_C_L11_STATISTIQUE_DEUX_VARIABLES } from '../../data/courses/t
 import { MATHS_TLE_C_L02_BARYCENTRE_LIGNES_NIVEAUX } from '../../data/courses/terminale/maths_tle_c_02_barycentre_lignes_niveaux';
 import { MATHS_TLE_C_L06_GEOMETRIE_ANALYTIQUE_ESPACE } from '../../data/courses/terminale/maths_tle_c_06_geometrie_analytique_espace';
 import { MATHS_TLE_C_L07_CONIQUES } from '../../data/courses/terminale/maths_tle_c_07_coniques';
+import { MATHS_TLE_C_L08_NOMBRES_COMPLEXES_GEOMETRIE } from '../../data/courses/terminale/maths_tle_c_08_nombres_complexes_geometrie';
+import { MATHS_TLE_C_L15_ISOMETRIES_PLAN } from '../../data/courses/terminale/maths_tle_c_15_isometries_plan';
+import { MATHS_TLE_C_L16_SIMILITUDES_DIRECTES_PLAN } from '../../data/courses/terminale/maths_tle_c_16_similitudes_directes_plan';
 import { MATHS_TLE_D_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_d_limites_continuite';
 import { MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_d_probabilite_conditionnelle';
 import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_d_derivabilite_etude_fonctions';
@@ -91046,6 +91049,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_TLE_C_L02_BARYCENTRE_LIGNES_NIVEAUX,
   MATHS_TLE_C_L06_GEOMETRIE_ANALYTIQUE_ESPACE,
   MATHS_TLE_C_L07_CONIQUES,
+  MATHS_TLE_C_L08_NOMBRES_COMPLEXES_GEOMETRIE,
+  MATHS_TLE_C_L15_ISOMETRIES_PLAN,
+  MATHS_TLE_C_L16_SIMILITUDES_DIRECTES_PLAN,
   // Terminale D — Maths (format v2)
   MATHS_TLE_D_L01_LIMITES_CONTINUITE,
   MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE,
