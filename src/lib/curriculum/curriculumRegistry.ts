@@ -36,6 +36,12 @@ import { MATHS_TLE_D_L12_EQUATIONS_DIFFERENTIELLES } from '../../data/courses/te
 import { MATHS_1RE_C_L01_EQUATIONS_INEQUATIONS } from '../../data/courses/premiere/maths_1re_c_01_equations_inequations';
 import { MATHS_1RE_C_L03_GENERALITES_FONCTIONS } from '../../data/courses/premiere/maths_1re_c_03_generalites_fonctions';
 import { MATHS_1RE_C_L04_DENOMBREMENT } from '../../data/courses/premiere/maths_1re_c_04_denombrement';
+import { MATHS_1RE_C_L05_LIMITES_CONTINUITE } from '../../data/courses/premiere/maths_1re_c_05_limites_continuite';
+import { MATHS_1RE_C_L07_EXTENSION_LIMITE } from '../../data/courses/premiere/maths_1re_c_07_extension_limite';
+import { MATHS_1RE_C_L09_DERIVATION } from '../../data/courses/premiere/maths_1re_c_09_derivation';
+import { MATHS_1RE_C_L10_PROBABILITE } from '../../data/courses/premiere/maths_1re_c_10_probabilite';
+import { MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION } from '../../data/courses/premiere/maths_1re_c_11_etude_representation_fonction';
+import { MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_c_13_systemes_equations_lineaires';
 import { MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_d_systemes_equations_lineaires';
 import { MATHS_1RE_D_L12_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_d_suites_numeriques';
 import { MATHS_1RE_D_L13_ORTHOGONALITE_ESPACE } from '../../data/courses/premiere/maths_1re_d_orthogonalite_espace';
@@ -91221,6 +91227,12 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_1RE_C_L01_EQUATIONS_INEQUATIONS,
   MATHS_1RE_C_L03_GENERALITES_FONCTIONS,
   MATHS_1RE_C_L04_DENOMBREMENT,
+  MATHS_1RE_C_L05_LIMITES_CONTINUITE,
+  MATHS_1RE_C_L07_EXTENSION_LIMITE,
+  MATHS_1RE_C_L09_DERIVATION,
+  MATHS_1RE_C_L10_PROBABILITE,
+  MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION,
+  MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
