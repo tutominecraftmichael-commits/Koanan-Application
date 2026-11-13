@@ -87,7 +87,9 @@ import { GEO_TLE_T3_L02_RELATIONS_UE_ACP } from '../../data/courses/terminale/ge
 import { HIST_TLE_T1_L01_ONU } from '../../data/courses/terminale/hist_tle_onu';
 import { HIST_TLE_T1_L02_ERE_BIPOLARISATION } from '../../data/courses/terminale/hist_tle_bipolarisation';
 import { HIST_TLE_T1_L03_MONDE_MULTIPOLAIRE } from '../../data/courses/terminale/hist_tle_monde_multipolaire';
+import { HIST_TLE_T2_L01_MONTEE_NATIONALISMES_AFRIQUE } from '../../data/courses/terminale/hist_tle_montee_nationalismes_afrique';
 import { HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE } from '../../data/courses/terminale/hist_tle_accession_ci_independance';
+import { HIST_TLE_T2_L03_ACCESSION_ALGERIE_INDEPENDANCE } from '../../data/courses/terminale/hist_tle_accession_algerie_independance';
 import { HIST_TLE_T2_L04_UNION_AFRICAINE } from '../../data/courses/terminale/hist_tle_union_africaine';
 import { HIST_TLE_T3_L01_MONDE_OCCIDENTAL } from '../../data/courses/terminale/hist_tle_monde_occidental';
 import { HIST_TLE_T3_L02_MUTATIONS_CIVILISATION_NEGRO_AFRICAINE } from '../../data/courses/terminale/hist_tle_mutations_civilisation_negro_africaine';
@@ -91117,7 +91119,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   HIST_TLE_T1_L01_ONU,
   HIST_TLE_T1_L02_ERE_BIPOLARISATION,
   HIST_TLE_T1_L03_MONDE_MULTIPOLAIRE,
+  HIST_TLE_T2_L01_MONTEE_NATIONALISMES_AFRIQUE,
   HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE,
+  HIST_TLE_T2_L03_ACCESSION_ALGERIE_INDEPENDANCE,
   HIST_TLE_T2_L04_UNION_AFRICAINE,
   HIST_TLE_T3_L01_MONDE_OCCIDENTAL,
   HIST_TLE_T3_L02_MUTATIONS_CIVILISATION_NEGRO_AFRICAINE,
