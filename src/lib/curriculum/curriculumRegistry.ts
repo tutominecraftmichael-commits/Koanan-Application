@@ -53,6 +53,9 @@ import { MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses
 import { MATHS_1RE_D_L12_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_d_suites_numeriques';
 import { MATHS_1RE_D_L13_ORTHOGONALITE_ESPACE } from '../../data/courses/premiere/maths_1re_d_orthogonalite_espace';
 import { MATHS_1RE_D_L15_STATISTIQUES } from '../../data/courses/premiere/maths_1re_d_statistiques';
+import { CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS } from '../../data/courses/premiere/chimie_1re_cd_01_petrole_gaz_naturels';
+import { CHIMIE_1RE_CD_L02_ALCANES } from '../../data/courses/premiere/chimie_1re_cd_02_alcanes';
+import { CHIMIE_1RE_CD_L03_ALCENES_ALCYNES } from '../../data/courses/premiere/chimie_1re_cd_03_alcenes_alcynes';
 import { CHIMIE_TLE_CD_L01_ALCOOLS } from '../../data/courses/terminale/chimie_tle_cd_01_alcools';
 import { CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES } from '../../data/courses/terminale/chimie_tle_cd_02_composes_carbonyles';
 import { CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES } from '../../data/courses/terminale/chimie_tle_cd_03_acides_carboxyliques_et_derives';
@@ -91247,6 +91250,10 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_1RE_C_L15_SUITES_NUMERIQUES,
   MATHS_1RE_C_L16_VECTEURS_ESPACE,
   MATHS_1RE_C_L17_STATISTIQUES,
+  // Première (C & D) — Physique-Chimie : Chimie Organique
+  CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS,
+  CHIMIE_1RE_CD_L02_ALCANES,
+  CHIMIE_1RE_CD_L03_ALCENES_ALCYNES,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
