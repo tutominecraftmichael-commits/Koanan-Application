@@ -7,7 +7,8 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c"
   ],
   "order": 3,
   "title": "Thème 2, leçon 1 : L'urbanisation dans les pays en développement, l'exemple de la Côte d'Ivoire",
