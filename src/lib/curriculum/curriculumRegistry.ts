@@ -84,6 +84,9 @@ import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/termi
 import { GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD } from '../../data/courses/terminale/geo_tle_fondements_coree_du_sud';
 import { GEO_TLE_T3_L01_CEDEAO } from '../../data/courses/terminale/geo_tle_cedeao';
 import { GEO_TLE_T3_L02_RELATIONS_UE_ACP } from '../../data/courses/terminale/geo_tle_relations_ue_acp';
+import { HIST_TLE_T1_L01_ONU } from '../../data/courses/terminale/hist_tle_onu';
+import { HIST_TLE_T1_L02_ERE_BIPOLARISATION } from '../../data/courses/terminale/hist_tle_bipolarisation';
+import { HIST_TLE_T1_L03_MONDE_MULTIPOLAIRE } from '../../data/courses/terminale/hist_tle_monde_multipolaire';
 import { HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE } from '../../data/courses/terminale/hist_tle_accession_ci_independance';
 import { HIST_TLE_T2_L04_UNION_AFRICAINE } from '../../data/courses/terminale/hist_tle_union_africaine';
 import { HIST_TLE_T3_L01_MONDE_OCCIDENTAL } from '../../data/courses/terminale/hist_tle_monde_occidental';
@@ -91111,6 +91114,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD,
   GEO_TLE_T3_L01_CEDEAO,
   GEO_TLE_T3_L02_RELATIONS_UE_ACP,
+  HIST_TLE_T1_L01_ONU,
+  HIST_TLE_T1_L02_ERE_BIPOLARISATION,
+  HIST_TLE_T1_L03_MONDE_MULTIPOLAIRE,
   HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE,
   HIST_TLE_T2_L04_UNION_AFRICAINE,
   HIST_TLE_T3_L01_MONDE_OCCIDENTAL,
