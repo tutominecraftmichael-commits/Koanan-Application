@@ -130,8 +130,11 @@ export function getChapterSubCategory(chapter: CurriculumChapter): StemSubCatego
     const title = (chapter.title || '').toLowerCase();
     const text = ((chapter.title || '') + ' ' + (chapter.summary || '')).toLowerCase();
 
+    // Éviter qu'une leçon de statistique (« Droite de régression », « Droite de Mayer ») soit classée en géométrie.
+    const titleForGeo = title.replace(/droites?\s+(?:de\s+(?:r[eé]gression|mayer)|d['’]ajustement)/gi, '');
+
     // 1. Mots-clés stricts de Géométrie dans le titre
-    const isGeometrie = /(?:g[eé]om[eé]trie|vecteur|droite|segment|angle|triangle|cercle|disque|quadrilat[eè]re|parall[eé]logramme|rectangle|losange|\bcarr[eé]\b|trap[eè]ze|pyramide|c[oô]ne|pav[eé]|cube|prisme|sph[eè]re|solide|thal[eè]s|pythagore|trigonom[eé]trie|barycentre|produit scalaire|espace|transformation|homoth[eé]tie|rotation|translation|sym[eé]trie|similitude|projection|rep[eè]re|rep[eé]rage|perspective)/i.test(title);
+    const isGeometrie = /(?:g[eé]om[eé]trie|vecteur|droite|segment|angle|triangle|cercle|disque|quadrilat[eè]re|parall[eé]logramme|rectangle|losange|\bcarr[eé]\b|trap[eè]ze|pyramide|c[oô]ne|pav[eé]|cube|prisme|sph[eè]re|solide|thal[eè]s|pythagore|trigonom[eé]trie|barycentre|produit scalaire|espace|transformation|homoth[eé]tie|rotation|translation|sym[eé]trie|similitude|projection|rep[eè]re|rep[eé]rage|perspective)/i.test(titleForGeo);
 
     // 2. Mots-clés stricts de Numérique / Algèbre dans le titre
     const isNumerique = /(?:num[eé]rique|calcul|nombre|fraction|d[eé]cimal|puissance|racine|fonction|polyn[oô]me|[eé]quation|in[eé]quation|syst[eè]me|suite|limite|d[eé]riv|int[eé]gral|primitive|logarithm|exponentielle|statistique|probabilit|d[eé]nombrement|proportionnalit[eé])/i.test(title);
@@ -140,7 +143,7 @@ export function getChapterSubCategory(chapter: CurriculumChapter): StemSubCatego
     if (isNumerique && !isGeometrie) return 'numerique';
 
     // Priorité géométrique sur les titres ambigus (ex: "Équations de droites")
-    if (/(?:droite|vecteur|triangle|cercle|plan|espace|sym[eé]trie|translation|angle)/i.test(title)) return 'geometrie';
+    if (/(?:droite|vecteur|triangle|cercle|plan|espace|sym[eé]trie|translation|angle)/i.test(titleForGeo)) return 'geometrie';
 
     // Vérification contextuelle globale
     if (/(?:g[eé]om[eé]trie|vecteur|thal[eè]s|pythagore|trigonom[eé]trie|barycentre|produit scalaire|homoth[eé]tie|rotation)/i.test(text)) return 'geometrie';
