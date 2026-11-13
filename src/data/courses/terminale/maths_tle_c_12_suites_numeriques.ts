@@ -1356,4 +1356,3 @@ export const MATHS_TLE_C_L12_SUITES_NUMERIQUES: CurriculumChapter = {
     },
   ],
 };
-

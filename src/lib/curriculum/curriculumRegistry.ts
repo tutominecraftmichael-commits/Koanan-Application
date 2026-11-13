@@ -17,6 +17,7 @@ import { MATHS_TLE_C_L10_CALCUL_INTEGRAL } from '../../data/courses/terminale/ma
 import { MATHS_TLE_C_L11_PPCM_PGCD } from '../../data/courses/terminale/maths_tle_c_11_ppcm_pgcd';
 import { MATHS_TLE_C_L12_SUITES_NUMERIQUES } from '../../data/courses/terminale/maths_tle_c_12_suites_numeriques';
 import { MATHS_TLE_C_L12_EQUATIONS_DIFFERENTIELLES } from '../../data/courses/terminale/maths_tle_c_12_equations_differentielles';
+import { MATHS_TLE_C_L11_STATISTIQUE_DEUX_VARIABLES } from '../../data/courses/terminale/maths_tle_c_11_statistique_deux_variables';
 import { MATHS_TLE_D_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_d_limites_continuite';
 import { MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_d_probabilite_conditionnelle';
 import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_d_derivabilite_etude_fonctions';
@@ -91037,6 +91038,7 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_TLE_C_L11_PPCM_PGCD,
   MATHS_TLE_C_L12_SUITES_NUMERIQUES,
   MATHS_TLE_C_L12_EQUATIONS_DIFFERENTIELLES,
+  MATHS_TLE_C_L11_STATISTIQUE_DEUX_VARIABLES,
   // Terminale D — Maths (format v2)
   MATHS_TLE_D_L01_LIMITES_CONTINUITE,
   MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE,
