@@ -56,6 +56,9 @@ import { MATHS_1RE_D_L15_STATISTIQUES } from '../../data/courses/premiere/maths_
 import { CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS } from '../../data/courses/premiere/chimie_1re_cd_01_petrole_gaz_naturels';
 import { CHIMIE_1RE_CD_L02_ALCANES } from '../../data/courses/premiere/chimie_1re_cd_02_alcanes';
 import { CHIMIE_1RE_CD_L03_ALCENES_ALCYNES } from '../../data/courses/premiere/chimie_1re_cd_03_alcenes_alcynes';
+import { CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES } from '../../data/courses/premiere/chimie_1re_cd_04_composes_oxygenes';
+import { CHIMIE_1RE_CD_L05_ETHANOL } from '../../data/courses/premiere/chimie_1re_cd_05_ethanol';
+import { CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE } from '../../data/courses/premiere/chimie_1re_cd_06_esterification_hydrolyse';
 import { CHIMIE_TLE_CD_L01_ALCOOLS } from '../../data/courses/terminale/chimie_tle_cd_01_alcools';
 import { CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES } from '../../data/courses/terminale/chimie_tle_cd_02_composes_carbonyles';
 import { CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES } from '../../data/courses/terminale/chimie_tle_cd_03_acides_carboxyliques_et_derives';
@@ -91254,6 +91257,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS,
   CHIMIE_1RE_CD_L02_ALCANES,
   CHIMIE_1RE_CD_L03_ALCENES_ALCYNES,
+  CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES,
+  CHIMIE_1RE_CD_L05_ETHANOL,
+  CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
