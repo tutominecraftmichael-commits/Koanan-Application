@@ -44,8 +44,10 @@ import { MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION } from '../../data/course
 import { MATHS_1RE_C_L02_BARYCENTRE } from '../../data/courses/premiere/maths_1re_c_02_barycentre';
 import { MATHS_1RE_C_L06_ANGLES_ORIENTES_TRIGONOMETRIE } from '../../data/courses/premiere/maths_1re_c_06_angles_orientes_trigonometrie';
 import { MATHS_1RE_C_L08_COMPOSEES_TRANSFORMATIONS } from '../../data/courses/premiere/maths_1re_c_08_composees_transformations';
+import { MATHS_1RE_C_L12_ORTHOGONALITE_ESPACE } from '../../data/courses/premiere/maths_1re_c_12_orthogonalite_espace';
 import { MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_c_13_systemes_equations_lineaires';
 import { MATHS_1RE_C_L15_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_c_15_suites_numeriques';
+import { MATHS_1RE_C_L16_VECTEURS_ESPACE } from '../../data/courses/premiere/maths_1re_c_16_vecteurs_espace';
 import { MATHS_1RE_C_L17_STATISTIQUES } from '../../data/courses/premiere/maths_1re_c_17_statistiques';
 import { MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_d_systemes_equations_lineaires';
 import { MATHS_1RE_D_L12_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_d_suites_numeriques';
@@ -91240,8 +91242,10 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_1RE_C_L02_BARYCENTRE,
   MATHS_1RE_C_L06_ANGLES_ORIENTES_TRIGONOMETRIE,
   MATHS_1RE_C_L08_COMPOSEES_TRANSFORMATIONS,
+  MATHS_1RE_C_L12_ORTHOGONALITE_ESPACE,
   MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES,
   MATHS_1RE_C_L15_SUITES_NUMERIQUES,
+  MATHS_1RE_C_L16_VECTEURS_ESPACE,
   MATHS_1RE_C_L17_STATISTIQUES,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
