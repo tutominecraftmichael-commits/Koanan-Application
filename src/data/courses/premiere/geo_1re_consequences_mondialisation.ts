@@ -7,7 +7,8 @@ export const GEO_1RE_T4_L02_CONSEQUENCES_MONDIALISATION: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c"
   ],
   "order": 8,
   "title": "Thème 4, leçon 2 : Les conséquences de la mondialisation",
