@@ -33,6 +33,9 @@ import { MATHS_TLE_D_L06_NOMBRES_COMPLEXES } from '../../data/courses/terminale/
 import { MATHS_TLE_D_L10_CALCUL_INTEGRAL } from '../../data/courses/terminale/maths_tle_d_calcul_integral';
 import { MATHS_TLE_D_L11_STATISTIQUE_DEUX_VARIABLES } from '../../data/courses/terminale/maths_tle_d_11_statistique_deux_variables';
 import { MATHS_TLE_D_L12_EQUATIONS_DIFFERENTIELLES } from '../../data/courses/terminale/maths_tle_d_12_equations_differentielles';
+import { MATHS_1RE_C_L01_EQUATIONS_INEQUATIONS } from '../../data/courses/premiere/maths_1re_c_01_equations_inequations';
+import { MATHS_1RE_C_L03_GENERALITES_FONCTIONS } from '../../data/courses/premiere/maths_1re_c_03_generalites_fonctions';
+import { MATHS_1RE_C_L04_DENOMBREMENT } from '../../data/courses/premiere/maths_1re_c_04_denombrement';
 import { MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_d_systemes_equations_lineaires';
 import { MATHS_1RE_D_L12_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_d_suites_numeriques';
 import { MATHS_1RE_D_L13_ORTHOGONALITE_ESPACE } from '../../data/courses/premiere/maths_1re_d_orthogonalite_espace';
@@ -91214,6 +91217,10 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_1RE_D_L12_SUITES_NUMERIQUES,
   MATHS_1RE_D_L13_ORTHOGONALITE_ESPACE,
   MATHS_1RE_D_L15_STATISTIQUES,
+  // Première C — Maths Numérique (format v2)
+  MATHS_1RE_C_L01_EQUATIONS_INEQUATIONS,
+  MATHS_1RE_C_L03_GENERALITES_FONCTIONS,
+  MATHS_1RE_C_L04_DENOMBREMENT,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
