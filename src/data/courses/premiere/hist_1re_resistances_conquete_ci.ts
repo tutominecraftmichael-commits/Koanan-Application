@@ -7,7 +7,8 @@ export const HIST_1RE_T2_L02_RESISTANCES_CONQUETE_CI: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c"
   ],
   "order": 4,
   "title": "Thème 2, leçon 2 : Les résistances aux conquêtes territoriales en Afrique, l'exemple de la Côte d'Ivoire",
