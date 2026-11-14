@@ -1,6 +1,6 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir des PDF officiels « 1ere_EE_Prdtion-écrite » séances 1 à 4 et 6 à 10 (résumé de texte argumentatif). Toutes les Premières.
+// Leçon rédigée à partir des PDF officiels « 1ere_EE_Prdtion-écrite » séances 1 à 10 (résumé de texte argumentatif). Toutes les Premières.
 // Fichier généré (scratchpad build_1re_fr_resume_pe.mjs) : modifier le générateur plutôt que ce fichier.
 export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
   "id": "premiere_a1_francais_ee_resume_production_ecrite",
@@ -13,10 +13,10 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
   ],
   "order": 1,
   "title": "Expression écrite : le résumé de texte argumentatif",
-  "summary": "Répondre aux questions, identifier la situation d’argumentation, sélectionner et reformuler les idées essentielles, puis la production écrite : analyser le sujet (étayer, réfuter), rechercher les idées, rédiger les paragraphes, l’introduction et la conclusion (séances 1 à 4 et 6 à 10).",
-  "officialVolumeHours": 9,
+  "summary": "Répondre aux questions, identifier la situation d’argumentation, sélectionner et reformuler les idées essentielles, rédiger le résumé, puis la production écrite : analyser le sujet (étayer, réfuter), rechercher les idées, rédiger les paragraphes, l’introduction et la conclusion (séances 1 à 10).",
+  "officialVolumeHours": 10,
   "contentVersion": 2,
-  "source": "1ere_EE_Résumé_Texte_Argu S1 à S4 ; 1ere_EE_Prdtion-écrite S6-8, S9, S10 (École numérique)",
+  "source": "1ere_EE_Résumé_Texte_Argu S1 à S5 ; 1ere_EE_Prdtion-écrite S6-8, S9, S10 (École numérique)",
   "points": [
     {
       "id": "premiere_a1_francais_ee_resume_production_ecrite_p01",
@@ -1146,6 +1146,267 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
     {
       "id": "premiere_a1_francais_ee_resume_production_ecrite_p05",
       "order": 5,
+      "title": "Rédiger le résumé",
+      "summary": "Calculer le nombre de mots exigé, enchaîner les idées reformulées avec des connecteurs justes et vérifier la longueur et la fidélité.",
+      "conceptExplanation": "- Avant de rédiger, on calcule la longueur : texte de 730 mots ÷ 4 ≈ 183 mots ; marge de 10 % ≈ 18 mots ; le résumé doit compter entre 165 et 201 mots. Texte de 610 mots ÷ 4 ≈ 153 mots ; marge ≈ 15 mots ; entre 137 et 168 mots.\n- On rédige un texte suivi, dans l’ordre des idées de l’auteur, de son point de vue, avec ses propres mots, sans citation, sans exemple et sans avis personnel.\n- Les connecteurs logiques (par ailleurs, malgré, cependant, de plus, ainsi, donc…) rendent visibles les liens entre les idées ; ils doivent correspondre au vrai rapport logique.\n- À la fin, on indique le nombre de mots du résumé.\n- Début du résumé modèle du texte 1 (172 mots en tout, dans la norme) : « Des footballeurs noirs sont humiliés dans les stades d’Europe du simple fait de la couleur de leur peau. Par ailleurs, l’ampleur de ce racisme va à l’encontre de l’esprit de fraternité prôné dans le football. Les instances du football restent impassibles devant cette situation qui vise surtout les vedettes africaines. Malgré la faiblesse de ses infrastructures et de ses moyens, l’Afrique produit de grands talents… »\n- Corrections du document : dans le résumé du texte 1, « Pourtant, cette situation serait préjudiciable… » emploie un connecteur d’opposition là où il faut une conséquence (« Ainsi » ou « Dès lors ») ; le résumé corrigé du texte 2 ne compte que 116 mots, hors de la norme de 137 à 168 mots, et ajoute un jugement absent du texte (« contenu léger »).",
+      "keyRule": "Calculer d’abord la longueur (un quart, plus ou moins 10 %), puis rédiger dans l’ordre de l’auteur avec des connecteurs justes, et indiquer le nombre de mots à la fin.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Calcul de la longueur du résumé du texte 1",
+        "statement": "Le texte « Foot africain : danger ! » compte 730 mots. Il faut le résumer au quart de son volume, avec une marge de plus ou moins 10 %.",
+        "methodSteps": [
+          "730 ÷ 4 = 182,5, soit environ 183 mots.",
+          "10 % de 183 ≈ 18 mots.",
+          "Le résumé doit compter entre 183 − 18 = 165 et 183 + 18 = 201 mots."
+        ],
+        "conclusion": "Le résumé modèle de 172 mots respecte cette norme."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "methode",
+          "stepBadge": "Longueur",
+          "stepTheme": "Texte 1",
+          "stepTitle": "Calculer le nombre de mots du résumé",
+          "paragraphText": "On divise le nombre de mots du texte par 4, puis on calcule la marge de 10 % : pour 730 mots, 730 ÷ 4 ≈ 183 ; 10 % ≈ 18 ; le résumé compte **entre 165 et 201 mots**.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q1",
+            "type": "mcq",
+            "prompt": "Un texte de 730 mots doit être résumé au quart de son volume, avec une marge de plus ou moins 10 %. Entre combien de mots le résumé doit-il se situer ?",
+            "options": [
+              "Entre 165 et 201 mots",
+              "Entre 100 et 120 mots",
+              "Exactement 730 mots",
+              "Entre 300 et 400 mots"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "730 ÷ 4 ≈ 183 ; 183 − 18 = 165 et 183 + 18 = 201."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "exemple",
+          "stepBadge": "Longueur",
+          "stepTheme": "Texte 2",
+          "stepTitle": "La longueur du résumé du texte de Michel Tournier",
+          "paragraphText": "Pour le texte de Michel Tournier (610 mots) : 610 ÷ 4 ≈ 153 mots ; 10 % ≈ 15 mots ; le résumé doit compter **entre 137 et 168 mots**.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q2",
+            "type": "mcq",
+            "prompt": "Le texte de Michel Tournier compte 610 mots. Il faut le résumer au quart de son volume, avec une marge de plus ou moins 10 %. Quelle longueur est acceptable ?",
+            "options": [
+              "Entre 137 et 168 mots",
+              "Entre 100 et 120 mots",
+              "Entre 165 et 201 mots",
+              "Exactement 610 mots"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "610 ÷ 4 ≈ 153 ; 153 − 15 ≈ 137 et 153 + 15 = 168."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "piege",
+          "stepBadge": "Hors norme",
+          "stepTheme": "Correction",
+          "stepTitle": "Le résumé corrigé du texte 2 est trop court",
+          "paragraphText": "Le document propose pour le texte de Michel Tournier un résumé de **116 mots** : il est **hors norme** (il en faut entre 137 et 168). Un résumé trop court ou trop long est sanctionné.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q3",
+            "type": "mcq",
+            "prompt": "Un élève propose un résumé de 116 mots pour un texte de 610 mots à résumer au quart de son volume, avec une marge de plus ou moins 10 %. Que faut-il en penser ?",
+            "options": [
+              "Il est trop court : il doit compter entre 137 et 168 mots",
+              "Il est parfait, car plus un résumé est court, mieux c’est",
+              "Il est trop long",
+              "La longueur n’a aucune importance"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le corrigé du document lui-même ne respecte pas la norme : il faut le compléter."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "definition",
+          "stepBadge": "Les règles",
+          "stepTheme": "Rédiger",
+          "stepTitle": "Les règles de rédaction du résumé",
+          "paragraphText": "Le résumé est un **texte suivi** qui respecte l’**ordre** des idées de l’auteur et son **point de vue**, avec des **connecteurs logiques**, sans citation, sans exemple, sans avis personnel. On indique le **nombre de mots** à la fin.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q4",
+            "type": "mcq",
+            "prompt": "Que faut-il écrire à la fin d’un résumé de texte argumentatif ?",
+            "options": [
+              "Le nombre de mots du résumé",
+              "Son avis sur le texte",
+              "La biographie de l’auteur",
+              "La liste des exemples supprimés"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le correcteur vérifie ainsi que la longueur est respectée."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepBadge": "Connecteur juste",
+          "stepTheme": "Correction",
+          "stepTitle": "Choisir le bon connecteur",
+          "paragraphText": "Le résumé modèle écrit : « …l’incapacité à honorer les revendications des clubs européens. **Pourtant**, cette situation serait préjudiciable aux équipes africaines. » Il ne s’agit pas d’une opposition mais d’une **conséquence** : il faut « **Ainsi** » ou « **Dès lors** ».",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q5",
+            "type": "mcq",
+            "prompt": "Dans un résumé, une phrase dit que les pays africains ne pourraient pas payer pour libérer leurs joueurs ; la suivante dit que cette situation affaiblirait leurs équipes nationales. Quel connecteur convient entre les deux ?",
+            "options": [
+              "Ainsi",
+              "Pourtant",
+              "Au contraire",
+              "Bien que"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L’affaiblissement des équipes est la conséquence : « ainsi » ; « pourtant » marquerait une opposition."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "piege",
+          "stepBadge": "Fidélité",
+          "stepTheme": "Pas de jugement",
+          "stepTitle": "Ne rien ajouter au texte",
+          "paragraphText": "Le résumé corrigé du texte 2 parle du « **contenu léger** » de certains livres : ce jugement **n’est pas dans le texte**. Michel Tournier dit seulement qu’un lecteur a été déçu. Le résumé ne doit rien ajouter.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q6",
+            "type": "mcq",
+            "prompt": "Dans « Le livre est fait pour être publié » (Michel Tournier, Le Vol du vampire, 1981), l’auteur constate que certains écrivains écrivent pour eux seuls, « comme ils respirent », sans penser au lecteur ; puis il affirme que lui écrit pour être publié et lu, car un livre non lu n’a qu’une « demi-existence » : le lecteur est l’indispensable collaborateur de l’écrivain. Le texte raconte aussi qu’un lecteur déçu a renvoyé un roman à Michel Tournier. Quelle phrase de résumé reste fidèle au texte ?",
+            "options": [
+              "Le lecteur est parfois déçu par le livre qu’il a acheté",
+              "Les livres de Michel Tournier ont un contenu léger",
+              "Tous les lecteurs détestent les romans",
+              "Michel Tournier refuse de rembourser ses lecteurs"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le texte ne juge pas le contenu des livres : le résumé ne doit rien ajouter."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepKind": "exemple",
+          "stepBadge": "Ouverture du résumé",
+          "stepTheme": "Texte 1",
+          "stepTitle": "Bien commencer le résumé du texte 1",
+          "paragraphText": "Le résumé commence directement par la **première idée essentielle**, reformulée, sans phrase d’introduction ni « l’auteur dit que » : « Des footballeurs noirs sont humiliés dans les stades d’Europe du simple fait de la couleur de leur peau. »",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q7",
+            "type": "mcq",
+            "prompt": "Dans le texte « Foot africain : danger ! » (Alphonse Boolamou de Ligouri, Stades d’Afrique n° 31, 5 avril 2006), l’auteur dénonce les cris racistes contre les joueurs africains dans les stades européens, rappelle que l’Afrique regorge de talents recherchés par les grands clubs, puis montre que les exigences financières du G14 (14 grands clubs européens) menacent les sélections nationales africaines et le football mondial, sacrifié au profit. Quelle phrase convient pour commencer le résumé de ce texte ?",
+            "options": [
+              "« Des footballeurs noirs sont humiliés dans les stades d’Europe du simple fait de la couleur de leur peau. »",
+              "« Dans ce texte, l’auteur Alphonse Boolamou de Ligouri parle du football. »",
+              "« Samuel Eto’o, Ronaldinho, Thierry Henry et Didier Drogba ont été insultés. »",
+              "« Je vais résumer ce texte en 183 mots. »"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Pas de présentation du texte, pas d’exemples, pas de « je » : on entre directement dans les idées."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q1",
+          "type": "mcq",
+          "prompt": "Un texte de 730 mots doit être résumé au quart de son volume, avec une marge de plus ou moins 10 %. Entre combien de mots le résumé doit-il se situer ?",
+          "options": [
+            "Entre 165 et 201 mots",
+            "Entre 100 et 120 mots",
+            "Exactement 730 mots",
+            "Entre 300 et 400 mots"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "730 ÷ 4 ≈ 183 ; 183 − 18 = 165 et 183 + 18 = 201."
+        },
+        {
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q2",
+          "type": "mcq",
+          "prompt": "Le texte de Michel Tournier compte 610 mots. Il faut le résumer au quart de son volume, avec une marge de plus ou moins 10 %. Quelle longueur est acceptable ?",
+          "options": [
+            "Entre 137 et 168 mots",
+            "Entre 100 et 120 mots",
+            "Entre 165 et 201 mots",
+            "Exactement 610 mots"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "610 ÷ 4 ≈ 153 ; 153 − 15 ≈ 137 et 153 + 15 = 168."
+        },
+        {
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q3",
+          "type": "mcq",
+          "prompt": "Un élève propose un résumé de 116 mots pour un texte de 610 mots à résumer au quart de son volume, avec une marge de plus ou moins 10 %. Que faut-il en penser ?",
+          "options": [
+            "Il est trop court : il doit compter entre 137 et 168 mots",
+            "Il est parfait, car plus un résumé est court, mieux c’est",
+            "Il est trop long",
+            "La longueur n’a aucune importance"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le corrigé du document lui-même ne respecte pas la norme : il faut le compléter."
+        },
+        {
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q4",
+          "type": "mcq",
+          "prompt": "Que faut-il écrire à la fin d’un résumé de texte argumentatif ?",
+          "options": [
+            "Le nombre de mots du résumé",
+            "Son avis sur le texte",
+            "La biographie de l’auteur",
+            "La liste des exemples supprimés"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le correcteur vérifie ainsi que la longueur est respectée."
+        },
+        {
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q5",
+          "type": "mcq",
+          "prompt": "Dans un résumé, une phrase dit que les pays africains ne pourraient pas payer pour libérer leurs joueurs ; la suivante dit que cette situation affaiblirait leurs équipes nationales. Quel connecteur convient entre les deux ?",
+          "options": [
+            "Ainsi",
+            "Pourtant",
+            "Au contraire",
+            "Bien que"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L’affaiblissement des équipes est la conséquence : « ainsi » ; « pourtant » marquerait une opposition."
+        },
+        {
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q6",
+          "type": "mcq",
+          "prompt": "Dans « Le livre est fait pour être publié » (Michel Tournier, Le Vol du vampire, 1981), l’auteur constate que certains écrivains écrivent pour eux seuls, « comme ils respirent », sans penser au lecteur ; puis il affirme que lui écrit pour être publié et lu, car un livre non lu n’a qu’une « demi-existence » : le lecteur est l’indispensable collaborateur de l’écrivain. Le texte raconte aussi qu’un lecteur déçu a renvoyé un roman à Michel Tournier. Quelle phrase de résumé reste fidèle au texte ?",
+          "options": [
+            "Le lecteur est parfois déçu par le livre qu’il a acheté",
+            "Les livres de Michel Tournier ont un contenu léger",
+            "Tous les lecteurs détestent les romans",
+            "Michel Tournier refuse de rembourser ses lecteurs"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le texte ne juge pas le contenu des livres : le résumé ne doit rien ajouter."
+        },
+        {
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q7",
+          "type": "mcq",
+          "prompt": "Dans le texte « Foot africain : danger ! » (Alphonse Boolamou de Ligouri, Stades d’Afrique n° 31, 5 avril 2006), l’auteur dénonce les cris racistes contre les joueurs africains dans les stades européens, rappelle que l’Afrique regorge de talents recherchés par les grands clubs, puis montre que les exigences financières du G14 (14 grands clubs européens) menacent les sélections nationales africaines et le football mondial, sacrifié au profit. Quelle phrase convient pour commencer le résumé de ce texte ?",
+          "options": [
+            "« Des footballeurs noirs sont humiliés dans les stades d’Europe du simple fait de la couleur de leur peau. »",
+            "« Dans ce texte, l’auteur Alphonse Boolamou de Ligouri parle du football. »",
+            "« Samuel Eto’o, Ronaldinho, Thierry Henry et Didier Drogba ont été insultés. »",
+            "« Je vais résumer ce texte en 183 mots. »"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Pas de présentation du texte, pas d’exemples, pas de « je » : on entre directement dans les idées."
+        }
+      ]
+    },
+    {
+      "id": "premiere_a1_francais_ee_resume_production_ecrite_p06",
+      "order": 6,
       "title": "Analyser le sujet de la production écrite",
       "summary": "Repérer l’opinion et la consigne, comprendre « étayez » et « réfutez », expliquer les mots-clés et reformuler l’opinion.",
       "conceptExplanation": "- La production écrite suit le résumé du texte argumentatif : on y discute une opinion, en un développement de quelques paragraphes argumentatifs.\n- Composition du sujet : l’opinion de l’auteur, donnée dans une phrase affirmative, et la consigne.\n- Sujet A : « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri.\n- Sujet B : Réfutez la pensée de Michel Tournier selon laquelle, pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit.\n- Étayer : soutenir, justifier l’opinion par des arguments et des exemples.\n- Réfuter : rejeter l’opinion en montrant, par des arguments contraires, qu’elle est fausse.\n- Mots-clés : « réduire l’écart de son retard » = rattraper, égaler, atteindre, se développer ; « livre » = tout document écrit, tout ouvrage ; « destinataire obligé » = public cible, catégorie de lecteurs.\n- Reformulation : sujet A, il faut justifier que l’Afrique a rattrapé l’Europe dans le domaine du football ; sujet B, il faut montrer que tout livre publié vise une certaine catégorie de lecteurs, un public cible.",
@@ -1171,7 +1432,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Les deux parties du sujet de production écrite",
           "paragraphText": "Le sujet de la production écrite comporte deux parties : l’**opinion de l’auteur**, donnée dans une phrase affirmative, et la **consigne**, qui dit ce qu’il faut faire.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q1",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q1",
             "type": "mcq",
             "prompt": "Voici un sujet : « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri. Quelle est la consigne ?",
             "options": [
@@ -1192,7 +1453,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Que demande la consigne « étayez » ?",
           "paragraphText": "**Étayer** une opinion, c’est la **soutenir** : la justifier par des arguments expliqués et des exemples précis.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q2",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q2",
             "type": "mcq",
             "prompt": "Que demande la consigne « Étayez cette assertion » ?",
             "options": [
@@ -1213,7 +1474,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Que demande la consigne « réfutez » ?",
           "paragraphText": "**Réfuter** une opinion, c’est la **rejeter** en montrant, par des arguments contraires et des exemples, qu’elle est **fausse**.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q3",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q3",
             "type": "mcq",
             "prompt": "Voici un sujet : Réfutez la pensée de Michel Tournier selon laquelle, pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit. Que demande la consigne ?",
             "options": [
@@ -1234,7 +1495,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Le sens de « réduire l’écart de son retard »",
           "paragraphText": "Dans le sujet A, « réduire l’écart de son retard » signifie **rattraper, égaler, atteindre** le niveau des autres continents, se développer.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q4",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q4",
             "type": "mcq",
             "prompt": "Dans la phrase « l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents », que signifie « réduire l’écart de son retard » ?",
             "options": [
@@ -1255,7 +1516,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Reformuler l’opinion du sujet A",
           "paragraphText": "La **reformulation** dit avec ses propres mots ce qu’il faut démontrer : pour le sujet A, il faut **justifier que l’Afrique a rattrapé l’Europe dans le football**.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q5",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q5",
             "type": "mcq",
             "prompt": "Voici un sujet : « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri. Quelle reformulation convient ?",
             "options": [
@@ -1276,7 +1537,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Le sens de « destinataire obligé »",
           "paragraphText": "Dans le sujet B, le « **destinataire obligé** » d’un écrit est son **public cible**, la **catégorie de lecteurs** à qui il s’adresse ; le « livre » désigne tout document écrit.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q6",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q6",
             "type": "mcq",
             "prompt": "Dans la pensée de Michel Tournier, « le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit », que signifie « destinataire obligé » ?",
             "options": [
@@ -1297,7 +1558,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Ce qu’il faut démontrer dans le sujet B",
           "paragraphText": "Michel Tournier dit que certains écrivains n’écrivent pour aucun lecteur précis. **Réfuter**, c’est donc montrer le contraire : **tout livre publié vise une certaine catégorie de lecteurs**. Approuver Michel Tournier serait un contresens.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q7",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q7",
             "type": "mcq",
             "prompt": "Voici un sujet : Réfutez la pensée de Michel Tournier selon laquelle, pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit. Quelle idée générale faut-il démontrer ?",
             "options": [
@@ -1313,7 +1574,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
       ],
       "exercises": [
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q1",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q1",
           "type": "mcq",
           "prompt": "Voici un sujet : « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri. Quelle est la consigne ?",
           "options": [
@@ -1326,7 +1587,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "La consigne est le verbe à l’impératif ; le reste est l’opinion de l’auteur."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q2",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q2",
           "type": "mcq",
           "prompt": "Que demande la consigne « Étayez cette assertion » ?",
           "options": [
@@ -1339,7 +1600,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Étayer = soutenir, justifier ; c’est le contraire de réfuter."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q3",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q3",
           "type": "mcq",
           "prompt": "Voici un sujet : Réfutez la pensée de Michel Tournier selon laquelle, pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit. Que demande la consigne ?",
           "options": [
@@ -1352,7 +1613,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Réfuter = démontrer que l’opinion est fausse."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q4",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q4",
           "type": "mcq",
           "prompt": "Dans la phrase « l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents », que signifie « réduire l’écart de son retard » ?",
           "options": [
@@ -1365,7 +1626,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Réduire l’écart, c’est se rapprocher du niveau des autres, les rattraper."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q5",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q5",
           "type": "mcq",
           "prompt": "Voici un sujet : « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri. Quelle reformulation convient ?",
           "options": [
@@ -1378,7 +1639,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "La reformulation reprend l’opinion (l’Afrique a rattrapé l’Europe) dans le seul domaine du football."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q6",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q6",
           "type": "mcq",
           "prompt": "Dans la pensée de Michel Tournier, « le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit », que signifie « destinataire obligé » ?",
           "options": [
@@ -1391,7 +1652,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Le destinataire obligé = le public auquel l’écrit est destiné."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p05_q7",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q7",
           "type": "mcq",
           "prompt": "Voici un sujet : Réfutez la pensée de Michel Tournier selon laquelle, pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit. Quelle idée générale faut-il démontrer ?",
           "options": [
@@ -1406,8 +1667,8 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
       ]
     },
     {
-      "id": "premiere_a1_francais_ee_resume_production_ecrite_p06",
-      "order": 6,
+      "id": "premiere_a1_francais_ee_resume_production_ecrite_p07",
+      "order": 7,
       "title": "Rechercher et organiser les idées",
       "summary": "Varier les domaines de recherche, trouver des arguments expliqués et des exemples exacts, et les organiser.",
       "conceptExplanation": "- Pour trouver des idées, on varie les domaines de recherche. Pour le sujet A : le rayonnement des pays grâce à leurs vedettes, la valeur et le talent des joueurs, les infrastructures, la compétitivité des équipes.\n- Chaque idée est un argument, accompagné de son explication et d’un exemple précis.\n- Sujet A : Didier Drogba a fait connaître la Côte d’Ivoire dans le monde ; Samuel Eto’o a été meilleur buteur du championnat d’Espagne en 2005-2006 ; l’Afrique du Sud a organisé la Coupe du monde 2010 (19e édition, du 11 juin au 11 juillet 2010) ; les équipes de Côte d’Ivoire, du Cameroun ou du Maroc rivalisent avec les grandes nations (le Maroc a atteint les demi-finales de la Coupe du monde 2022).\n- Sujet B : certains écrits visent les érudits (thèses, revue En-Quête de l’Université Félix Houphouët-Boigny) ; d’autres informent le grand public (journaux sportifs et politiques, magazines) ; d’autres s’adressent à la jeunesse (Alice au pays des merveilles de Lewis Carroll).\n- Corrections du document : Samuel Eto’o n’a pas été « meilleur buteur de tous les championnats européens », mais meilleur buteur du championnat d’Espagne en 2005-2006 ; la Coupe du monde africaine est celle de 2010, en Afrique du Sud (le document ne donne ni l’année ni le pays) ; Lewis Carroll s’écrit avec deux r ; Science et Vie est un magazine de vulgarisation destiné au grand public, et non une revue réservée aux chercheurs.",
@@ -1432,7 +1693,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Comment trouver des idées pour le sujet A ?",
           "paragraphText": "Pour trouver des idées, on **varie les domaines de recherche** : pour le football africain, le rayonnement des pays grâce aux vedettes, le talent des joueurs, les infrastructures, la compétitivité des équipes.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q1",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q1",
             "type": "mcq",
             "prompt": "Pour le sujet « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri., lequel de ces domaines de recherche est hors sujet ?",
             "options": [
@@ -1453,7 +1714,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Quel argument illustre Didier Drogba ?",
           "paragraphText": "Les vedettes du football africain sont de **vrais ambassadeurs** : le talent de **Didier Drogba** a fait connaître la Côte d’Ivoire dans le monde entier.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q2",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q2",
             "type": "mcq",
             "prompt": "Pour le sujet « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri., quel argument illustre l’exemple de Didier Drogba, qui a fait connaître la Côte d’Ivoire dans le monde entier ?",
             "options": [
@@ -1474,7 +1735,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Quel argument illustre la Coupe du monde 2010 ?",
           "paragraphText": "L’Afrique a des stades capables d’accueillir les plus grandes compétitions : l’**Afrique du Sud** a organisé la **Coupe du monde 2010** (19e édition, du 11 juin au 11 juillet 2010). Le document oublie de préciser l’année et le pays.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q3",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q3",
             "type": "mcq",
             "prompt": "Pour le sujet « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri., quel argument illustre l’organisation de la Coupe du monde 2010 par l’Afrique du Sud ?",
             "options": [
@@ -1495,7 +1756,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Vérifier un exemple : Samuel Eto’o",
           "paragraphText": "Le document affirme qu’Eto’o a été « meilleur buteur de tous les championnats européens » : c’est exagéré. **Samuel Eto’o** a été **meilleur buteur du championnat d’Espagne en 2005-2006**. Un exemple faux affaiblit tout l’argument.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q4",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q4",
             "type": "mcq",
             "prompt": "Quel titre de buteur Samuel Eto’o, attaquant camerounais du FC Barcelone, a-t-il réellement obtenu ?",
             "options": [
@@ -1516,7 +1777,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Quel argument illustre le parcours du Maroc en 2022 ?",
           "paragraphText": "Les équipes africaines rivalisent avec les grandes nations : en 2022, le **Maroc** est devenu la première équipe africaine demi-finaliste d’une Coupe du monde.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q5",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q5",
             "type": "mcq",
             "prompt": "Pour le sujet « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri., quel argument illustre le parcours du Maroc, demi-finaliste de la Coupe du monde 2022 ?",
             "options": [
@@ -1571,7 +1832,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Un écrit destiné à la jeunesse",
           "paragraphText": "Certains textes, écrits dans un style simple, sont adaptés au niveau et aux attentes des **jeunes** : c’est le cas d’**Alice au pays des merveilles** de **Lewis Carroll** (le document écrit « Carol »).",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q6",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q6",
             "type": "mcq",
             "prompt": "Pour réfuter la pensée de Michel Tournier (« pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit »), quel argument illustre Alice au pays des merveilles de Lewis Carroll ?",
             "options": [
@@ -1621,7 +1882,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Science et Vie n’est pas réservé aux chercheurs",
           "paragraphText": "Le document présente **Science et Vie** comme une revue « exclusivement » pour les chercheurs : c’est faux. C’est un magazine de **vulgarisation scientifique** destiné au **grand public**. Pour les érudits, on citera plutôt des thèses ou une revue universitaire comme En-Quête.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q7",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q7",
             "type": "mcq",
             "prompt": "Pour illustrer l’argument « certains écrits sont destinés essentiellement aux érudits et aux chercheurs », quel exemple est le plus juste ?",
             "options": [
@@ -1637,7 +1898,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
       ],
       "exercises": [
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q1",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q1",
           "type": "mcq",
           "prompt": "Pour le sujet « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri., lequel de ces domaines de recherche est hors sujet ?",
           "options": [
@@ -1650,7 +1911,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Les trois autres domaines montrent que l’Afrique a rattrapé l’Europe dans le football."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q2",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q2",
           "type": "mcq",
           "prompt": "Pour le sujet « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri., quel argument illustre l’exemple de Didier Drogba, qui a fait connaître la Côte d’Ivoire dans le monde entier ?",
           "options": [
@@ -1663,7 +1924,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Drogba illustre le rayonnement des pays grâce à leurs vedettes."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q3",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q3",
           "type": "mcq",
           "prompt": "Pour le sujet « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri., quel argument illustre l’organisation de la Coupe du monde 2010 par l’Afrique du Sud ?",
           "options": [
@@ -1676,7 +1937,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Accueillir une Coupe du monde prouve que les stades sont au niveau international."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q4",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q4",
           "type": "mcq",
           "prompt": "Quel titre de buteur Samuel Eto’o, attaquant camerounais du FC Barcelone, a-t-il réellement obtenu ?",
           "options": [
@@ -1689,7 +1950,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Il fut le meilleur buteur de la Liga en 2005-2006 ; le document exagère."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q5",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q5",
           "type": "mcq",
           "prompt": "Pour le sujet « S’il y a un domaine dans lequel l’Afrique a vite réduit l’écart de son retard par rapport aux autres continents, notamment l’Europe, c’est bien dans celui du football. » Étayez cette assertion d’Alphonse Boolamou de Ligouri., quel argument illustre le parcours du Maroc, demi-finaliste de la Coupe du monde 2022 ?",
           "options": [
@@ -1702,7 +1963,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Atteindre les demi-finales prouve que l’Afrique rivalise avec les meilleures équipes."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q6",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q6",
           "type": "mcq",
           "prompt": "Pour réfuter la pensée de Michel Tournier (« pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit »), quel argument illustre Alice au pays des merveilles de Lewis Carroll ?",
           "options": [
@@ -1715,7 +1976,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Ce roman s’adresse d’abord aux enfants : il a bien un public cible."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p06_q7",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q7",
           "type": "mcq",
           "prompt": "Pour illustrer l’argument « certains écrits sont destinés essentiellement aux érudits et aux chercheurs », quel exemple est le plus juste ?",
           "options": [
@@ -1730,8 +1991,8 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
       ]
     },
     {
-      "id": "premiere_a1_francais_ee_resume_production_ecrite_p07",
-      "order": 7,
+      "id": "premiere_a1_francais_ee_resume_production_ecrite_p08",
+      "order": 8,
       "title": "Rédiger un paragraphe argumentatif",
       "summary": "Construire les paragraphes du développement : exposition de l’argument, explication, exemple ; phrase d’introduction et conclusions partielles.",
       "conceptExplanation": "- Le développement de la production écrite compte au moins trois paragraphes argumentatifs.\n- Un paragraphe argumentatif comprend : l’exposition de l’argument, son explication, l’exemple d’illustration.\n- Le premier paragraphe est précédé d’une phrase d’introduction. Chaque paragraphe se termine par une conclusion partielle, qui fait le bilan partiel et annonce le paragraphe suivant.\n- Paragraphe rédigé (sujet A) : « Les vedettes du football africain sont des catalyseurs du rayonnement de leur pays. En effet, des pays africains sont honorés et connus sur l’échiquier mondial grâce aux vedettes qui en sont originaires : elles en sont de vrais ambassadeurs. C’est le cas de Didier Drogba, dont le talent a fait connaître la Côte d’Ivoire à travers le monde. »\n- Paragraphe rédigé (sujet B) : « Certains livres sont destinés essentiellement à un public érudit, notamment aux savants et aux chercheurs. Cette catégorie de production se caractérise par un niveau de langue soutenu et un contenu réservé à des spécialistes. Nous en voulons pour preuve les thèses et les revues universitaires comme En-Quête, de l’Université Félix Houphouët-Boigny de Cocody-Abidjan. »",
@@ -1756,7 +2017,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Combien de paragraphes dans le développement ?",
           "paragraphText": "Le développement de la production écrite est constitué de **paragraphes argumentatifs**, **au moins trois**.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q1",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q1",
             "type": "mcq",
             "prompt": "Selon le cours, combien de paragraphes argumentatifs le développement de la production écrite doit-il compter au minimum ?",
             "options": [
@@ -1777,7 +2038,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Les trois éléments d’un paragraphe argumentatif",
           "paragraphText": "Un paragraphe argumentatif est composé de l’**exposition de l’argument**, de son **explication** et de l’**exemple d’illustration**.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q2",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q2",
             "type": "mcq",
             "prompt": "De quels éléments un paragraphe argumentatif de production écrite est-il composé ?",
             "options": [
@@ -1798,7 +2059,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "L’exposition de l’argument",
           "paragraphText": "Dans le paragraphe sur le football, la première phrase **expose l’argument** : « Les vedettes du football africain sont des catalyseurs du rayonnement de leur pays. »",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q3",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q3",
             "type": "mcq",
             "prompt": "Dans le paragraphe « Les vedettes du football africain sont des catalyseurs du rayonnement de leur pays. En effet, des pays africains sont honorés et connus sur l’échiquier mondial… C’est le cas de Didier Drogba… », quel rôle joue la première phrase ?",
             "options": [
@@ -1819,7 +2080,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "L’exemple d’illustration",
           "paragraphText": "La phrase « **C’est le cas de** Didier Drogba, dont le talent a fait connaître la Côte d’Ivoire à travers le monde » est l’**exemple** : elle rend l’argument concret.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q4",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q4",
             "type": "mcq",
             "prompt": "Dans un paragraphe sur le football africain, quel rôle joue la phrase « C’est le cas de Didier Drogba, dont le talent a fait connaître la Côte d’Ivoire à travers le monde » ?",
             "options": [
@@ -1840,7 +2101,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Comment se termine chaque paragraphe ?",
           "paragraphText": "Chaque paragraphe se termine par une **conclusion partielle**, qui fait le **bilan partiel** et **annonce le paragraphe suivant**.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q5",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q5",
             "type": "mcq",
             "prompt": "Comment se termine chaque paragraphe argumentatif du développement ?",
             "options": [
@@ -1861,7 +2122,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Ce qui précède le premier paragraphe",
           "paragraphText": "Le **premier paragraphe** argumentatif du développement est précédé d’une **phrase d’introduction**, qui annonce l’idée générale à démontrer.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q6",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q6",
             "type": "mcq",
             "prompt": "Dans le développement de la production écrite, qu’est-ce qui précède le premier paragraphe argumentatif ?",
             "options": [
@@ -1882,7 +2143,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "L’argument du paragraphe rédigé du sujet B",
           "paragraphText": "Le corrigé du sujet B commence par : « Certains livres sont destinés essentiellement à un public **érudit**, notamment aux savants et aux chercheurs » ; il explique ensuite (niveau de langue soutenu, contenu réservé aux spécialistes), puis donne des exemples (thèses, revue En-Quête).",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q7",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q7",
             "type": "mcq",
             "prompt": "Pour réfuter la pensée de Michel Tournier (« pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit »), quel argument expose le paragraphe qui commence par « Certains livres sont destinés essentiellement à un public érudit » ?",
             "options": [
@@ -1898,7 +2159,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
       ],
       "exercises": [
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q1",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q1",
           "type": "mcq",
           "prompt": "Selon le cours, combien de paragraphes argumentatifs le développement de la production écrite doit-il compter au minimum ?",
           "options": [
@@ -1911,7 +2172,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Au moins trois paragraphes argumentatifs."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q2",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q2",
           "type": "mcq",
           "prompt": "De quels éléments un paragraphe argumentatif de production écrite est-il composé ?",
           "options": [
@@ -1924,7 +2185,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Argument + explication + exemple."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q3",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q3",
           "type": "mcq",
           "prompt": "Dans le paragraphe « Les vedettes du football africain sont des catalyseurs du rayonnement de leur pays. En effet, des pays africains sont honorés et connus sur l’échiquier mondial… C’est le cas de Didier Drogba… », quel rôle joue la première phrase ?",
           "options": [
@@ -1937,7 +2198,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "La première phrase pose l’idée que le reste du paragraphe va expliquer et illustrer."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q4",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q4",
           "type": "mcq",
           "prompt": "Dans un paragraphe sur le football africain, quel rôle joue la phrase « C’est le cas de Didier Drogba, dont le talent a fait connaître la Côte d’Ivoire à travers le monde » ?",
           "options": [
@@ -1950,7 +2211,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "« C’est le cas de… » introduit un exemple."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q5",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q5",
           "type": "mcq",
           "prompt": "Comment se termine chaque paragraphe argumentatif du développement ?",
           "options": [
@@ -1963,7 +2224,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "La conclusion partielle assure la transition entre les paragraphes."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q6",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q6",
           "type": "mcq",
           "prompt": "Dans le développement de la production écrite, qu’est-ce qui précède le premier paragraphe argumentatif ?",
           "options": [
@@ -1976,7 +2237,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Une phrase d’introduction ouvre le développement."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p07_q7",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q7",
           "type": "mcq",
           "prompt": "Pour réfuter la pensée de Michel Tournier (« pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit »), quel argument expose le paragraphe qui commence par « Certains livres sont destinés essentiellement à un public érudit » ?",
           "options": [
@@ -1991,8 +2252,8 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
       ]
     },
     {
-      "id": "premiere_a1_francais_ee_resume_production_ecrite_p08",
-      "order": 8,
+      "id": "premiere_a1_francais_ee_resume_production_ecrite_p09",
+      "order": 9,
       "title": "Rédiger l’introduction et la conclusion de la production écrite",
       "summary": "Construire l’introduction (phrase d’accrochage, prise de position et plan) et la conclusion (bilan, ouverture) de la production écrite.",
       "conceptExplanation": "- La production écrite comporte trois articulations : l’introduction, le développement, la conclusion.\n- L’introduction, « porte d’entrée du devoir », comporte deux éléments : une phrase d’accrochage, qui présente l’auteur, la source (titre du texte ou de l’article, de l’ouvrage ou de la revue, date de publication, éditeur) et la citation ; puis une phrase qui annonce la prise de position (selon la consigne : étayer ou réfuter) et le plan (les axes du développement).\n- Exemple (sujet A) : « Alphonse Boolamou de Ligouri, dans son texte extrait de Stades d’Afrique n° 31 du mercredi 5 avril 2006, soutient l’idée selon laquelle l’Afrique avoisine le développement de l’Occident en matière footballistique. Dans un développement illustré d’exemples, nous étayerons cette affirmation sur les plans de la valeur et de la compétitivité des joueurs, des infrastructures et du rayonnement des pays. »\n- La conclusion fait le bilan de l’argumentation, puis une ouverture (autres orientations du thème ou limites de la thèse), si possible.\n- Correction du document : dans l’introduction corrigée du sujet de Michel Tournier, le document écrit « nous étayerons cette affirmation », alors que la consigne demande de la réfuter. Il faut écrire : « nous réfuterons cette affirmation en montrant que toute production écrite vise une catégorie de lecteurs ».",
@@ -2016,7 +2277,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Les deux éléments de l’introduction",
           "paragraphText": "L’introduction de la production écrite comporte une **phrase d’accrochage** (auteur, source, citation) et une phrase qui **annonce la prise de position et le plan**.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q1",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q1",
             "type": "mcq",
             "prompt": "De quels éléments se compose l’introduction de la production écrite ?",
             "options": [
@@ -2037,7 +2298,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Ce que contient la phrase d’accrochage",
           "paragraphText": "La **phrase d’accrochage** présente l’**identité de l’auteur**, la **source** (titre du texte ou de l’article, de l’ouvrage ou de la revue, date, éditeur) et la **citation** (ou sa reformulation).",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q2",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q2",
             "type": "mcq",
             "prompt": "Que doit présenter la phrase d’accrochage de l’introduction d’une production écrite ?",
             "options": [
@@ -2058,7 +2319,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Repérer l’annonce de la prise de position et du plan",
           "paragraphText": "Dans l’introduction du sujet A, la phrase « Dans un développement illustré d’exemples, **nous étayerons** cette affirmation **sur les plans** de la valeur et de la compétitivité des joueurs, des infrastructures… » annonce la **position** et le **plan**.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q3",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q3",
             "type": "mcq",
             "prompt": "Dans l’introduction « Alphonse Boolamou de Ligouri, dans Stades d’Afrique n° 31 du 5 avril 2006, soutient que l’Afrique avoisine le développement de l’Occident en matière footballistique. Dans un développement illustré d’exemples, nous étayerons cette affirmation sur les plans des joueurs, des infrastructures et du rayonnement des pays », quel rôle joue la seconde phrase ?",
             "options": [
@@ -2079,7 +2340,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "La position annoncée doit suivre la consigne",
           "paragraphText": "La position annoncée doit respecter la **consigne**. Pour « Réfutez la pensée de Michel Tournier… », le document écrit à tort « nous étayerons » : il faut annoncer « **nous réfuterons** cette affirmation ».",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q4",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q4",
             "type": "mcq",
             "prompt": "Voici un sujet : Réfutez la pensée de Michel Tournier selon laquelle, pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit. Quelle phrase convient pour annoncer la prise de position dans l’introduction ?",
             "options": [
@@ -2100,7 +2361,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Les éléments de la conclusion",
           "paragraphText": "La **conclusion** fait le **bilan** de l’argumentation menée dans le développement, puis, si possible, une **ouverture** (autres orientations du thème, limites de la thèse).",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q5",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q5",
             "type": "mcq",
             "prompt": "De quoi se compose la conclusion de la production écrite ?",
             "options": [
@@ -2121,7 +2382,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Reconnaître l’ouverture",
           "paragraphText": "L’**ouverture** élargit la réflexion : « Si tel est le cas, n’est-il pas indispensable de faciliter la publication des ouvrages afin de faire la promotion de la lecture ? »",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q6",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q6",
             "type": "mcq",
             "prompt": "Dans la conclusion « Au total, la publication de tout écrit vise un public cible. Ainsi, pour sa survie, l’écrit doit être publié afin d’atteindre le lecteur. Si tel est le cas, n’est-il pas indispensable de faciliter la publication des ouvrages afin de faire la promotion de la lecture ? », quel rôle joue la dernière phrase ?",
             "options": [
@@ -2142,7 +2403,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "stepTitle": "Par quoi commence l’introduction de la production écrite ?",
           "paragraphText": "Contrairement à la dissertation, qui commence par une amorce générale, l’introduction de la production écrite commence par une **phrase d’accrochage au texte-support** : l’auteur, la source et l’opinion à discuter.",
           "exercise": {
-            "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q7",
+            "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q7",
             "type": "mcq",
             "prompt": "Par quoi commence l’introduction d’une production écrite, après un résumé de texte argumentatif ?",
             "options": [
@@ -2158,7 +2419,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
       ],
       "exercises": [
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q1",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q1",
           "type": "mcq",
           "prompt": "De quels éléments se compose l’introduction de la production écrite ?",
           "options": [
@@ -2171,7 +2432,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Accrocher le texte-support, puis annoncer sa position et ses axes."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q2",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q2",
           "type": "mcq",
           "prompt": "Que doit présenter la phrase d’accrochage de l’introduction d’une production écrite ?",
           "options": [
@@ -2184,7 +2445,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Elle situe l’opinion : qui l’a dite, où, et ce qu’elle dit."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q3",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q3",
           "type": "mcq",
           "prompt": "Dans l’introduction « Alphonse Boolamou de Ligouri, dans Stades d’Afrique n° 31 du 5 avril 2006, soutient que l’Afrique avoisine le développement de l’Occident en matière footballistique. Dans un développement illustré d’exemples, nous étayerons cette affirmation sur les plans des joueurs, des infrastructures et du rayonnement des pays », quel rôle joue la seconde phrase ?",
           "options": [
@@ -2197,7 +2458,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "« Nous étayerons… sur les plans… » : position (étayer) et axes du développement."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q4",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q4",
           "type": "mcq",
           "prompt": "Voici un sujet : Réfutez la pensée de Michel Tournier selon laquelle, pour certains écrivains, le lecteur n’apparaît nullement comme le destinataire obligé de leur écrit. Quelle phrase convient pour annoncer la prise de position dans l’introduction ?",
           "options": [
@@ -2210,7 +2471,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "La consigne demande de réfuter : annoncer « étayer » serait un contresens."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q5",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q5",
           "type": "mcq",
           "prompt": "De quoi se compose la conclusion de la production écrite ?",
           "options": [
@@ -2223,7 +2484,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Bilan d’abord, ouverture ensuite."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q6",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q6",
           "type": "mcq",
           "prompt": "Dans la conclusion « Au total, la publication de tout écrit vise un public cible. Ainsi, pour sa survie, l’écrit doit être publié afin d’atteindre le lecteur. Si tel est le cas, n’est-il pas indispensable de faciliter la publication des ouvrages afin de faire la promotion de la lecture ? », quel rôle joue la dernière phrase ?",
           "options": [
@@ -2236,7 +2497,7 @@ export const FR_1RE_EE_RESUME_PRODUCTION_ECRITE: CurriculumChapter = {
           "explanation": "Elle pose une question nouvelle qui prolonge le débat."
         },
         {
-          "id": "premiere_a1_francais_ee_resume_production_ecrite_p08_q7",
+          "id": "premiere_a1_francais_ee_resume_production_ecrite_p09_q7",
           "type": "mcq",
           "prompt": "Par quoi commence l’introduction d’une production écrite, après un résumé de texte argumentatif ?",
           "options": [
