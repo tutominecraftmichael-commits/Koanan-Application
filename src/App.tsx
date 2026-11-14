@@ -706,6 +706,7 @@ export function App() {
   // Ligue (étape 3) : les gains d'XP sont envoyés au serveur, qui les vérifie et renvoie le classement
   const [leagueBoard, setLeagueBoard] = useState<LeagueBoard | null>(null);
   const [leagueOffline, setLeagueOffline] = useState(false);
+  const [leagueError, setLeagueError] = useState('');
   const [leagueResultSeen, setLeagueResultSeen] = useState<string>(() => {
     try { return localStorage.getItem('konan_league_result_seen') || ''; } catch { return ''; }
   });
@@ -724,6 +725,7 @@ export function App() {
         classLabel: effectiveClassLabel,
       });
       setLeagueOffline(!r.success);
+      setLeagueError(r.success ? '' : String(r.error || ''));
       if (!r.success) return;
       if (r.board) setLeagueBoard(r.board);
       const done = [...(r.accepted || []), ...(r.rejected || []).map((x) => x.id)];
@@ -2553,6 +2555,7 @@ export function App() {
             board={leagueBoard}
             localReputation={gamificationOf(state.gamification).reputation}
             offline={leagueOffline}
+            errorText={leagueError}
             resultSeen={leagueResultSeen}
             onDismissResult={(id) => {
               setLeagueResultSeen(id);

@@ -130,6 +130,9 @@ export default defineConfig(({ mode }) => {
             'exam-sujet': () => import('./api/exam-sujet.js'),
             // @ts-ignore
             'exam-correct': () => import('./api/exam-correct.js'),
+            // Ligue : classement de la semaine et XP vérifiés par le serveur
+            // @ts-ignore
+            'league': () => import('./api/league.js'),
           };
           for (const [route, load] of Object.entries(examRoutes)) {
             server.middlewares.use(`/api/${route}`, async (req, res) => {

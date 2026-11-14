@@ -39,7 +39,16 @@ function zoneOf(board: LeagueBoard, rank: number, size: number): 'up' | 'keep' |
   return null;
 }
 
-export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: number; offline: boolean; onOpen: () => void }> = ({ board, localReputation, offline, onOpen }) => {
+/** Raison lisible d'un échec de chargement de la ligue. */
+function leagueErrorLabel(error: string): string {
+  if (!error || /connexion Internet|fetch|network/i.test(error)) return 'Ligue : pas de connexion Internet, je réessaie dès que possible.';
+  if (/HTTP 404/.test(error)) return 'Ligue pas encore disponible sur ce serveur (mise en ligne à faire).';
+  if (/UNAUTHORIZED|TOKEN/i.test(error)) return 'Ligue : reconnecte-toi à ton compte pour voir ton classement.';
+  if (/MISSING_SERVICE_ACCOUNT_KEY/.test(error)) return 'Ligue : serveur mal configuré (clé Firebase manquante).';
+  return `Ligue momentanément indisponible (${error}). Je réessaie dans 2 minutes.`;
+}
+
+export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: number; offline: boolean; errorText?: string; onOpen: () => void }> = ({ board, localReputation, offline, errorText = '', onOpen }) => {
   const reputation = board?.reputation ?? localReputation;
   const eligible = board ? board.eligible : reputation > 80;
   if (!eligible) {
@@ -56,7 +65,7 @@ export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: 
   if (!board) {
     return (
       <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-900/70 p-3.5 sm:p-4 text-sm font-bold text-slate-600 dark:text-slate-300">
-        {offline ? 'Ligue : pas de connexion, je réessaie dès que possible.' : 'Je charge ta ligue…'}
+        {offline ? leagueErrorLabel(errorText) : 'Je charge ta ligue…'}
       </div>
     );
   }
@@ -111,17 +120,18 @@ export const LeaguePage: React.FC<{
   board: LeagueBoard | null;
   localReputation: number;
   offline: boolean;
+  errorText?: string;
   resultSeen: string;
   onDismissResult: (weekId: string) => void;
   onRefresh: () => void;
-}> = ({ board, localReputation, offline, resultSeen, onDismissResult, onRefresh }) => {
+}> = ({ board, localReputation, offline, errorText, resultSeen, onDismissResult, onRefresh }) => {
   React.useEffect(() => { onRefresh(); }, [onRefresh]);
   return (
     <div className="space-y-3 pb-24">
       {board?.lastResult && board.lastResult.weekId !== resultSeen && (
         <LeagueResultBanner board={board} onClose={() => onDismissResult(board.lastResult?.weekId || '')} />
       )}
-      {board?.eligible ? <LeagueView board={board} /> : <LeagueCard board={board} localReputation={localReputation} offline={offline} onOpen={onRefresh} />}
+      {board?.eligible ? <LeagueView board={board} /> : <LeagueCard board={board} localReputation={localReputation} offline={offline} errorText={errorText} onOpen={onRefresh} />}
     </div>
   );
 };
