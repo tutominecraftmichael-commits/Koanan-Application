@@ -8,7 +8,7 @@
  *
  * Le serveur recompte et borne chaque gain d'XP (api/_leagueRules.js) : c'est LUI qui fait foi pour le
  * classement. Les collections league_* ne sont lisibles et modifiables que par le serveur.
- * Classement : nom de l'élève (profil), classe, XP ; les abonnés Pro et Plus ont un nom multicolore.
+ * Classement : nom de l'élève (profil, vérifié), classe, XP ; nom jaune pour Pro, multicolore pour Plus.
  */
 import { getDb, send, readBody, isAllowedOrigin, str } from './_examCommon.js';
 import { loadLocalEnvIfPresent } from './_env.js';
@@ -69,10 +69,10 @@ async function buildBoard(db, player, nowMs) {
     .filter((s) => s.exists && s.get('weekId') === weekId && isEligible(s.get('reputation')))
     .map((s) => ({
       uid: s.id, weekXp: Number(s.get('weekXp')) || 0, xpReachedAt: Number(s.get('xpReachedAt')) || 0,
-      name: s.get('displayName'), classLabel: s.get('classLabel'), premium: ['pro', 'plus'].includes(s.get('planTier')),
+      name: s.get('displayName'), classLabel: s.get('classLabel'), tier: ['pro', 'plus'].includes(s.get('planTier')) ? s.get('planTier') : 'free',
     }));
   base.rows = rankPlayers(players).map((p, i) => ({
-    rank: i + 1, name: p.name || 'Élève KONAN', classLabel: p.classLabel || '', xp: p.weekXp, me: p.uid === player.uid, premium: p.premium,
+    rank: i + 1, name: p.name || 'Élève KONAN', classLabel: p.classLabel || '', xp: p.weekXp, me: p.uid === player.uid, tier: p.tier,
   }));
   return base;
 }

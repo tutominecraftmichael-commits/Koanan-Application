@@ -172,8 +172,12 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
                   {row.name.slice(0, 1).toUpperCase()}
                 </span>
                 <span className="min-w-0 flex-1">
-                  {/* Abonnés Pro et Plus : nom multicolore (sans mention « Pro ») */}
-                  <span className={`block truncate text-sm ${row.premium ? 'plus-multicolor-shimmer-text font-black' : row.me ? 'font-black text-sky-800 dark:text-sky-200' : 'font-bold text-slate-900 dark:text-white'}`}>{row.name}{row.me ? ' (toi)' : ''}</span>
+                  {/* Nom jaune pour les abonnés Pro, multicolore pour Plus (sans mention de la formule) */}
+                  <span className={`block truncate text-sm ${
+                    row.tier === 'plus' ? 'plus-multicolor-shimmer-text font-black'
+                      : row.tier === 'pro' ? 'gold-shimmer-text font-black'
+                        : row.me ? 'font-black text-sky-800 dark:text-sky-200' : 'font-bold text-slate-900 dark:text-white'
+                  }`}>{row.name}{row.me ? ' (toi)' : ''}</span>
                   {row.classLabel && <span className="block text-[11px] text-slate-500 dark:text-slate-400">{row.classLabel}</span>}
                 </span>
                 {zone === 'up' && <ArrowUp className="w-4 h-4 text-emerald-500" aria-label="zone de montée" />}

@@ -13,6 +13,8 @@
  * d'une série, énergie des comptes Gratuit, plafonds par jour). Un gain impossible est refusé.
  */
 
+import { checkStudentName } from './_nameRules.js';
+
 export const DIVISIONS = [
   { id: 1, name: 'Bronze', color: '#92400E' },
   { id: 2, name: 'Argent', color: '#64748B' },
@@ -222,9 +224,9 @@ export function computeMovements(players, division) {
 
 /**
  * Nom affiché dans le classement : le nom de l'élève tel qu'il l'a écrit dans son profil (choix du
- * fondateur, 2026-11-14). Jamais l'e-mail. Espaces nettoyés, 40 caractères au maximum.
+ * fondateur, 2026-11-14), s'il est correct ; sinon (insulte, numéro, lien…) « Élève KONAN ». Jamais l'e-mail.
  */
 export function publicName(name) {
-  const clean = String(name || '').replace(/\s+/g, ' ').trim().slice(0, 40);
-  return clean || 'Élève KONAN';
+  const check = checkStudentName(name);
+  return check.ok ? check.name : 'Élève KONAN';
 }
