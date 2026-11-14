@@ -1601,4 +1601,3 @@ export const CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES: CurriculumCh
     },
   ],
 };
-

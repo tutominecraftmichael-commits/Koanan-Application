@@ -62,6 +62,8 @@ import { CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE } from '../../data/courses/p
 import { CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE } from '../../data/courses/premiere/chimie_1re_cd_07_oxydoreduction_voie_seche';
 import { CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE } from '../../data/courses/premiere/chimie_1re_cd_08_couples_redox_dosage';
 import { CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES } from '../../data/courses/premiere/chimie_1re_cd_09_classification_quantitative_couples';
+import { CHIMIE_1RE_CD_L10_ELECTROLYSE } from '../../data/courses/premiere/chimie_1re_cd_10_electrolyse';
+import { CHIMIE_1RE_CD_L11_CORROSION_PROTECTION_METAUX } from '../../data/courses/premiere/chimie_1re_cd_11_corrosion_protection_metaux';
 import { CHIMIE_TLE_CD_L01_ALCOOLS } from '../../data/courses/terminale/chimie_tle_cd_01_alcools';
 import { CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES } from '../../data/courses/terminale/chimie_tle_cd_02_composes_carbonyles';
 import { CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES } from '../../data/courses/terminale/chimie_tle_cd_03_acides_carboxyliques_et_derives';
@@ -91266,6 +91268,8 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE,
   CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE,
   CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES,
+  CHIMIE_1RE_CD_L10_ELECTROLYSE,
+  CHIMIE_1RE_CD_L11_CORROSION_PROTECTION_METAUX,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,

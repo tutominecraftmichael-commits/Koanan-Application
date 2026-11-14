@@ -1606,4 +1606,3 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
     },
   ],
 };
-

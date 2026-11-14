@@ -1609,4 +1609,3 @@ export const CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE: CurriculumChapter = {
     },
   ],
 };
-
