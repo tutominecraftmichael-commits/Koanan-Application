@@ -238,6 +238,25 @@ export interface PlusInvitationNotification {
   updatedAt?: string;
 }
 
+/**
+ * XP et réputation (gamification, étape 1). Voir src/lib/gamification/gamification.ts pour les règles.
+ */
+export interface GamificationEvent {
+  at: string;          // ISO
+  kind: 'xp' | 'reputation';
+  amount: number;      // + ou −
+  reason: string;      // texte court affiché à l'élève
+}
+export interface GamificationState {
+  xp: number;
+  reputation: number;                // 0 à 100 (%)
+  reputationCheckedDate?: string;    // dernier jour déjà compté (YYYY-MM-DD)
+  reputationUpdatedAt?: string;      // ISO : dernier vrai calcul (un appareil neuf ne remplace pas la vraie réputation)
+  awardedKeys: string[];             // séances déjà récompensées (« idSéance_AAAA-MM-JJ »)
+  history: GamificationEvent[];      // derniers gains et pertes (les plus récents d'abord)
+  updatedAt?: string;                // ISO : la version la plus récente gagne entre deux appareils
+}
+
 export interface UserStreak {
   currentStreak: number;
   bestStreak: number;

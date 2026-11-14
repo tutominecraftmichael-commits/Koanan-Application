@@ -68,6 +68,9 @@ import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
+import { awardCompletedSessions, settleReputation } from './lib/gamification/gamification';
+import { XpReputationCard } from './features/gamification/XpReputationCard';
+import { XpBurst } from './features/gamification/XpBurst';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
 import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
@@ -283,7 +286,10 @@ export function App() {
 
   // Bascule automatique de semaine (rollover d'agenda) sans pop-up de bilan
   useEffect(() => {
-    const rollover = checkAndPerformWeeklyRollover(state);
+    // La réputation des jours passés est comptée AVANT que la nouvelle semaine ne remplace les séances
+    const settled = settleReputation(state.gamification, state.studySessions, new Date(), state.cycleCompletedDate);
+    const base = settled.changed ? { ...state, gamification: settled.gamification } : state;
+    const rollover = checkAndPerformWeeklyRollover(base);
     if (rollover.hasRollover) {
       const cleanNextState = { ...rollover.nextState, pendingWeeklyRecap: null };
       setState(cleanNextState);
@@ -640,6 +646,48 @@ export function App() {
     state.preferences,
     state.cycleCompletedDate,
   ]);
+
+  // =========================================================================
+  // GAMIFICATION (étape 1) : XP à chaque séance terminée, réputation comptée chaque jour
+  // =========================================================================
+  const [xpBurst, setXpBurst] = useState<{ amount: number; id: number } | null>(null);
+  const closeXpBurst = useCallback(() => setXpBurst(null), []);
+  const gamificationEnabled = Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode);
+
+  // Séance terminée (tuteur, chronomètre, devoir ou validation) : XP gagnés, une seule fois par séance
+  useEffect(() => {
+    if (!gamificationEnabled) return;
+    const preview = awardCompletedSessions(state.gamification, state.studySessions);
+    if (!preview.gained) return;
+    setState((prev) => {
+      const r = awardCompletedSessions(prev.gamification, prev.studySessions);
+      if (!r.gained) return prev;
+      const next = { ...prev, gamification: r.gamification };
+      if (next.userAccount?.googleId) saveUserState(next.userAccount.googleId, next);
+      return next;
+    });
+    setXpBurst({ amount: preview.gained, id: Date.now() });
+  }, [state.studySessions, gamificationEnabled]);
+
+  // Réputation : jours terminés comptés à l'ouverture, au retour dans l'appli et toutes les 10 minutes
+  useEffect(() => {
+    if (!gamificationEnabled) return;
+    const settle = () => setState((prev) => {
+      const r = settleReputation(prev.gamification, prev.studySessions, new Date(), prev.cycleCompletedDate);
+      if (!r.changed) return prev;
+      const next = { ...prev, gamification: r.gamification };
+      if (next.userAccount?.googleId) saveUserState(next.userAccount.googleId, next);
+      return next;
+    });
+    settle();
+    const timer = setInterval(settle, 10 * 60 * 1000);
+    const onVisible = () => { if (document.visibilityState === 'visible') settle(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [gamificationEnabled]);
 
   // Fluidité : dès l'ouverture, on précharge en silence toutes les pages courantes (≈ 300 Ko au total),
   // pour qu'elles s'ouvrent instantanément. Seuls les cours guidés (trop lourds) attendent la séance.
@@ -2186,6 +2234,11 @@ export function App() {
                 />
               </div>
             )}
+            {gamificationEnabled && (
+              <div className="mb-4">
+                <XpReputationCard gamification={state.gamification} />
+              </div>
+            )}
             <DashboardOverview
               studentName={effectiveStudentName}
               academicLevel={effectiveClassLabel}
@@ -2625,6 +2678,9 @@ export function App() {
 
       {/* Rappels KONAN : uniquement en notification du téléphone (rien dans l'appli). Bouton de test en développement. */}
       {import.meta.env.DEV && <KonanVoiceTestPanel appState={state} />}
+
+      {/* Célébration des XP gagnés à la fin d'une séance */}
+      {xpBurst && <XpBurst amount={xpBurst.amount} burstId={xpBurst.id} onDone={closeXpBurst} />}
 
       {/* Floating Notification Toast (Full multi-line sentence, zero truncation, crystal clear in light and dark mode) */}
       {toastMessage && (

@@ -1,4 +1,5 @@
-import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier, AcademicGoal, PlusInvitationNotification, WeeklySummary } from '../types';
+import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier, AcademicGoal, PlusInvitationNotification, WeeklySummary, GamificationState } from '../types';
+import { mergeGamification } from '../lib/gamification/gamification';
 import { ACADEMIC_PRESETS, DEFAULT_PREFERENCES } from '../lib/presets';
 import { generateId, isNonAcademicSubject } from '../lib/utils';
 import { generateOptimizedStudyPlan } from './plannerAlgorithm';
@@ -23,6 +24,8 @@ export interface AppState {
   completedOnboarding: boolean;
   isDemoMode?: boolean;
   streak?: UserStreak;
+  /** XP et réputation (gamification) */
+  gamification?: GamificationState;
   planTier?: PlanTier;
   cycleCompletedDate?: string; // YYYY-MM-DD
   // Weekly Recap & Archiving fields
@@ -418,6 +421,7 @@ export async function saveUserState(uid: string, state: AppState): Promise<void>
         privacyPolicyAccepted: sanitizedState.privacyPolicyAccepted ?? sanitizedState.userAccount?.privacyPolicyAccepted,
         privacyPolicyAcceptedAt: sanitizedState.privacyPolicyAcceptedAt ?? sanitizedState.userAccount?.privacyPolicyAcceptedAt,
         profileUpdatedAt: sanitizedState.profileUpdatedAt,
+        ...(sanitizedState.gamification ? { gamification: sanitizedState.gamification } : {}),
       });
     } catch (err) {
       console.warn('syncUserStateToCloud failed in saveUserState:', err);
@@ -544,6 +548,7 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
         studySessions: mergedStudySessions,
         logs: Array.isArray(cloudData.logs) ? cloudData.logs : currentState.logs,
         cycleCompletedDate: cloudData.cycleCompletedDate !== undefined ? cloudData.cycleCompletedDate : currentState.cycleCompletedDate,
+        gamification: mergeGamification(currentState.gamification, cloudData.gamification),
         konanId: assignedKonanId,
         invitedIds: [],
         invitedEmails: [],
@@ -604,6 +609,7 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
           ...(profile.gradeLevel ? { gradeLevel: profile.gradeLevel } : {}),
         },
         planTier: resolvedCloudTier,
+        gamification: mergeGamification(currentState.gamification, cloudData.gamification),
         privacyPolicyAccepted: cloudData.privacyPolicyAccepted !== undefined ? cloudData.privacyPolicyAccepted : currentState.privacyPolicyAccepted,
         privacyPolicyAcceptedAt: cloudData.privacyPolicyAcceptedAt || currentState.privacyPolicyAcceptedAt,
         userAccount: currentState.userAccount ? {
