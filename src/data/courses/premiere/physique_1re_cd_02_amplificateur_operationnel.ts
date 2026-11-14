@@ -13,8 +13,9 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
   subjectId: 'physique_chimie',
   gradeLevel: 'premiere_c',
   alsoForGrades: ['premiere_d'],
-  order: 2,
-  title: 'Leçon 2 : L’amplificateur opérationnel',
+  // Source « PC 1ère C - P10 » : 10e leçon du programme de 1re C
+  order: 10,
+  title: 'Leçon 10 : L’amplificateur opérationnel',
   summary:
     'Description du boîtier DIL-8 et symbole de l’AO, caractéristique U_s = f(U_d) (régime linéaire et régime saturé), propriétés de l’AO idéal, montages suiveur, inverseur, non inverseur, sommateur et comparateur.',
   officialVolumeHours: 4,

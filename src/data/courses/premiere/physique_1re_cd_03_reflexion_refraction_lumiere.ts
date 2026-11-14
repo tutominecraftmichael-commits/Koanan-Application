@@ -13,8 +13,9 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
   subjectId: 'physique_chimie',
   gradeLevel: 'premiere_c',
   alsoForGrades: ['premiere_d'],
-  order: 3,
-  title: 'Leçon 3 : Réflexion et réfraction de la lumière blanche',
+  // Source « PC 1ère C - P12 » : 12e leçon du programme de 1re C
+  order: 12,
+  title: 'Leçon 12 : Réflexion et réfraction de la lumière blanche',
   summary:
     'Lois de Descartes pour la réflexion et lois de Descartes-Snell pour la réfraction, angle limite, réflexion totale, traversée d’une cuve à eau ou d’un prisme, dispersion et fibre optique.',
   officialVolumeHours: 4,

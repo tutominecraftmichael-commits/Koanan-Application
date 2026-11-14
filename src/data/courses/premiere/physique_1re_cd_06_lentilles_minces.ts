@@ -13,8 +13,9 @@ export const PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES: CurriculumChapter = {
   subjectId: 'physique_chimie',
   gradeLevel: 'premiere_c',
   alsoForGrades: ['premiere_d'],
-  order: 6,
-  title: 'Leçon 6 : Les lentilles minces',
+  // Numéro officiel inconnu (PDF sans « P n ») : placée après la réflexion-réfraction (P12)
+  order: 13,
+  title: 'Les lentilles minces',
   summary:
     'Lentilles convergentes et divergentes, centre optique, foyers principaux et secondaires, distance focale et vergence, théorème des vergences, construction graphique des images, formules de conjugaison et de grandissement, hygiène des lentilles de contact.',
   officialVolumeHours: 4,

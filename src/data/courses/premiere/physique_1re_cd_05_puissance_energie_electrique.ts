@@ -13,8 +13,9 @@ export const PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE: CurriculumChapter
   subjectId: 'physique_chimie',
   gradeLevel: 'premiere_c',
   alsoForGrades: ['premiere_d'],
-  order: 5,
-  title: 'Leçon 5 : Puissance et énergie électrique',
+  // Numéro officiel inconnu (PDF sans « P n ») : placée après le champ électrostatique, avant l’AO (P10)
+  order: 8,
+  title: 'Puissance et énergie électrique',
   summary:
     'Effet Joule dans un conducteur ohmique, bilans d’énergie et de puissance d’un générateur et d’un récepteur actif (électrolyseur, moteur), loi de Pouillet, rendements et transport de l’énergie électrique.',
   officialVolumeHours: 4,

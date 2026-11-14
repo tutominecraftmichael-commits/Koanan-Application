@@ -13,8 +13,9 @@ export const PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE: CurriculumChapter = {
   subjectId: 'physique_chimie',
   gradeLevel: 'premiere_c',
   alsoForGrades: ['premiere_d'],
-  order: 4,
-  title: 'Leçon 4 : Énergie cinétique',
+  // Programme 1re C : P1 travail (translation), P2 travail (rotation), P3 énergie cinétique, P4 Ep, P5 Em, P6 champ
+  order: 3,
+  title: 'Leçon 3 : Énergie cinétique',
   summary:
     'Énergie cinétique de translation (½mv²) et de rotation (½J_Δω², 1ère C), moments d’inertie usuels, théorème de l’énergie cinétique (ΔEc = ∑W_ext) et applications avec frottements ou ressort.',
   officialVolumeHours: 4,
