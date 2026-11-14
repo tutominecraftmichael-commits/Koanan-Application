@@ -37,7 +37,7 @@ import {
   AnimatedScheduleIcon,
   AnimatedPlannerIcon
 } from '../common/AnimatedNavIcons';
-import { ThemeToggle } from '../common/ThemeToggle';
+import { BarChart3, BookOpen, Infinity as InfinityIcon, List, Trophy, Zap } from 'lucide-react';
 
 export interface OwnerNotificationItem {
   id: string;
@@ -72,7 +72,24 @@ export interface NavbarProps {
   ownerNotifications?: OwnerNotificationItem[];
   onAcceptInvitation?: (invitation: PlusInvitationNotification) => void;
   onDeclineInvitation?: (invitation: PlusInvitationNotification) => void;
+  /** Énergie ⚡ affichée en haut à droite (null : pas d'icône d'exercices pour cet élève) */
+  energy?: { value: number; unlimited: boolean } | null;
+  onOpenExercises?: () => void;
 }
+
+/** Icône KONAN (le cube) pour l'onglet Accueil de la barre du bas. */
+const KonanTabIcon: React.FC<{ isActive?: boolean; className?: string }> = ({ isActive }) => (
+  <span className={`inline-flex transition-transform ${isActive ? 'scale-110' : 'opacity-80'}`}>
+    <KonanCube size={22} showStars={false} glow={false} />
+  </span>
+);
+const lucideTab = (Icon: React.FC<{ className?: string; strokeWidth?: number }>) =>
+  ({ className }: { isActive?: boolean; className?: string }) => <Icon className={className} strokeWidth={2.2} />;
+const PlanningTabIcon = lucideTab(List);
+const SubjectsTabIcon = lucideTab(BookOpen);
+const StatsTabIcon = lucideTab(BarChart3);
+const LeagueTabIcon = lucideTab(Trophy);
+const ScheduleTabIcon = lucideTab(Clock);
 
 const SEEN_NOTIFICATIONS_KEY = 'konan_seen_notification_ids';
 
@@ -101,6 +118,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   ownerNotifications,
   onAcceptInvitation,
   onDeclineInvitation,
+  energy = null,
+  onOpenExercises,
 }) => {
   const [lang] = useLanguage();
   const [isToolsOpen, setIsToolsOpen] = useState(false);
@@ -214,7 +233,19 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'subjects' as ActiveAppView, label: lang === 'fr' ? 'Matières' : 'Subjects', component: AnimatedSubjectsIcon, icon: AnimatedSubjectsIcon },
     { id: 'planner' as ActiveAppView, label: lang === 'fr' ? 'Planning' : 'Study Plan', component: AnimatedPlannerIcon, icon: AnimatedPlannerIcon },
     { id: 'analytics' as ActiveAppView, label: t('navAnalytics', lang), component: AnimatedAnalyticsIcon, icon: AnimatedAnalyticsIcon },
+    { id: 'league' as ActiveAppView, label: 'Ligue', component: LeagueTabIcon, icon: LeagueTabIcon },
   ];
+
+  // Barre du bas (téléphone), dans l'ordre du croquis : Planning, KONAN (accueil), Matières, Stats, Ligue, Emploi du temps
+  const mobileItems: Array<{ id: ActiveAppView; label: string; icon: React.FC<{ isActive?: boolean; className?: string }> }> = [
+    { id: 'planner', label: 'Planning', icon: PlanningTabIcon },
+    { id: 'dashboard', label: 'Accueil', icon: KonanTabIcon },
+    { id: 'subjects', label: 'Matières', icon: SubjectsTabIcon },
+    { id: 'analytics', label: 'Stats', icon: StatsTabIcon },
+    { id: 'league', label: 'Ligue', icon: LeagueTabIcon },
+    { id: 'schedule', label: 'EDT', icon: ScheduleTabIcon },
+  ];
+  const isAppView = activeView !== 'landing' && activeView !== 'auth' && activeView !== 'pro-wizard';
 
   const displayName = userAccount?.isLoggedIn ? userAccount.name : studentName;
 
@@ -230,8 +261,26 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Main Navbar Top Row */}
         <div className="flex items-center justify-between h-14 sm:h-[68px] gap-1.5 sm:gap-4">
           
-          {/* Logo & Brand */}
-          <div className="flex items-center shrink-0 min-w-0">
+          {/* Téléphone, dans l'appli : photo de profil en haut à gauche (ouvre le profil et les paramètres) */}
+          {isAppView && userAccount?.isLoggedIn && (
+            <button
+              type="button"
+              onClick={() => { soundFX.playCheckmarkPop(); onOpenSettings?.(); }}
+              aria-label="Mon profil et mes paramètres"
+              className="lg:hidden shrink-0 rounded-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            >
+              {getDisplayAvatar(userAccount) ? (
+                <img src={getDisplayAvatar(userAccount)} alt="Profil" className="w-9 h-9 rounded-full object-cover ring-2 ring-indigo-500/60 dark:ring-indigo-400/70 shadow-sm" />
+              ) : (
+                <span className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 ring-2 ring-indigo-500/40 flex items-center justify-center text-sm font-bold text-white shadow-sm">
+                  {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
+                </span>
+              )}
+            </button>
+          )}
+
+          {/* Logo & Brand (sur téléphone, remplacé par la photo de profil une fois dans l'appli) */}
+          <div className={`items-center shrink-0 min-w-0 ${isAppView && userAccount?.isLoggedIn ? 'hidden lg:flex' : 'flex'}`}>
             <button
               onClick={() => onNavigate('landing')}
               className="flex items-center gap-2 sm:gap-3 group text-left cursor-pointer focus:outline-none shrink-0"
@@ -302,8 +351,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Controls */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-            {/* Bouton animé de changement de thème (Mode Clair / Mode Sombre) */}
-            <ThemeToggle />
+            {/* Énergie ⚡ des exercices (le mode jour / nuit est désormais dans les Paramètres) */}
+            {isAppView && energy && (
+              <button
+                type="button"
+                onClick={() => onOpenExercises?.()}
+                aria-label={`Énergie : ${energy.unlimited ? 'illimitée' : `${energy.value} sur 25`}. Ouvrir les exercices`}
+                className="flex items-center gap-0.5 px-2.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 dark:bg-amber-500/10 dark:border-amber-400/30 dark:text-amber-300 text-sm font-black tabular-nums cursor-pointer active:scale-95"
+              >
+                <Zap className="w-4 h-4 fill-current" />
+                {energy.unlimited ? <InfinityIcon className="w-4 h-4" strokeWidth={2.6} /> : energy.value}
+              </button>
+            )}
 
             {activeView !== 'landing' && activeView !== 'auth' ? (
               <>
@@ -901,14 +960,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#0B0F19]/95 backdrop-blur-md border-t border-slate-200/90 dark:border-white/10 px-2 pt-1.5 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_25px_rgba(0,0,0,0.6)]"
       >
         <div className="grid grid-cols-6 items-center justify-items-center max-w-md mx-auto">
-          {navItems.map((item) => {
+          {mobileItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
-            const shortLabel = item.id === 'dashboard' ? 'Accueil' :
-                               item.id === 'schedule' ? 'EDT' :
-                               item.id === 'subjects' ? 'Matières' :
-                               item.id === 'planner' ? 'Planning' :
-                               'Stats';
+            const shortLabel = item.label;
             return (
               <button
                 key={`bottom-${item.id}`}
@@ -947,35 +1002,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             );
           })}
 
-          {/* Onglet Profil Mobile dédié */}
-          <button
-            type="button"
-            onClick={() => {
-              soundFX.playCheckmarkPop();
-              if (onOpenSettings) {
-                onOpenSettings();
-              } else if (!userAccount?.isLoggedIn && !isDemoMode) {
-                onNavigate('auth');
-              }
-            }}
-            className="flex flex-col items-center justify-center py-1 px-1 w-full rounded-xl transition-all cursor-pointer relative text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
-          >
-            {/* Photo plus grande que les autres icônes : on la reconnaît d'un coup d'œil */}
-            {getDisplayAvatar(userAccount) ? (
-              <img
-                src={getDisplayAvatar(userAccount)}
-                alt="Profil"
-                className="w-7 h-7 -mt-1.5 rounded-full object-cover ring-2 ring-indigo-500/60 dark:ring-indigo-400/70 shadow-sm"
-              />
-            ) : (
-              <div className="w-7 h-7 -mt-1.5 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 ring-2 ring-indigo-500/40 dark:ring-indigo-400/50 flex items-center justify-center text-xs font-bold text-white shadow-sm">
-                {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
-              </div>
-            )}
-            <span className="text-[10px] font-medium tracking-tight truncate max-w-full">
-              Profil
-            </span>
-          </button>
+          {/* La photo de profil est maintenant en haut à gauche (plus d'onglet Profil en bas) */}
         </div>
       </nav>
     )}

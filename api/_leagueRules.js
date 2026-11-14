@@ -220,10 +220,11 @@ export function computeMovements(players, division) {
   return out;
 }
 
-/** Prénom + initiale du nom (jamais le nom complet ni l'e-mail dans un classement public). */
+/**
+ * Nom affiché dans le classement : le nom de l'élève tel qu'il l'a écrit dans son profil (choix du
+ * fondateur, 2026-11-14). Jamais l'e-mail. Espaces nettoyés, 40 caractères au maximum.
+ */
 export function publicName(name) {
-  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
-  if (!parts.length) return 'Élève KONAN';
-  const first = parts[0].slice(0, 20);
-  return parts.length > 1 ? `${first} ${parts[parts.length - 1][0].toUpperCase()}.` : first;
+  const clean = String(name || '').replace(/\s+/g, ' ').trim().slice(0, 40);
+  return clean || 'Élève KONAN';
 }

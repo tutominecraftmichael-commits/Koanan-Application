@@ -299,6 +299,7 @@ export type ActiveAppView =
   | 'focus'
   | 'tutor'
   | 'exam'
+  | 'league'
   | 'pro-wizard'
   | 'admin';
 

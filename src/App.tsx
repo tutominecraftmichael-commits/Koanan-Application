@@ -68,9 +68,9 @@ import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
-import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf } from './lib/gamification/gamification';
+import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
-import { LeagueCard, LeagueResultBanner, LeagueView } from './features/gamification/LeagueView';
+import { LeaguePage } from './features/gamification/LeagueView';
 import { XpReputationCard } from './features/gamification/XpReputationCard';
 import { XpBurst } from './features/gamification/XpBurst';
 import { ExerciseFab } from './features/gamification/ExerciseFab';
@@ -706,7 +706,6 @@ export function App() {
   // Ligue (étape 3) : les gains d'XP sont envoyés au serveur, qui les vérifie et renvoie le classement
   const [leagueBoard, setLeagueBoard] = useState<LeagueBoard | null>(null);
   const [leagueOffline, setLeagueOffline] = useState(false);
-  const [isLeagueOpen, setIsLeagueOpen] = useState(false);
   const [leagueResultSeen, setLeagueResultSeen] = useState<string>(() => {
     try { return localStorage.getItem('konan_league_result_seen') || ''; } catch { return ''; }
   });
@@ -2175,6 +2174,11 @@ export function App() {
           onResetData={handleResetData}
           onLogout={handleLogout}
           onOpenSettings={() => setIsSettingsOpen(true)}
+          energy={gamificationEnabled ? {
+            value: energyNow(state.gamification).energy,
+            unlimited: hasUnlimitedEnergy(exercisePlan),
+          } : null}
+          onOpenExercises={() => setIsExerciseOpen(true)}
           totalStudySessions={state.studySessions?.length || 0}
           completedSessions={state.studySessions ? state.studySessions.filter(s => s.completed).length : 0}
           pendingInvitations={pendingInvitations}
@@ -2317,24 +2321,8 @@ export function App() {
               </div>
             )}
             {gamificationEnabled && (
-              <div className="mb-4 space-y-3">
+              <div className="mb-4">
                 <XpReputationCard gamification={state.gamification} />
-                {leagueBoard?.lastResult && leagueBoard.lastResult.weekId !== leagueResultSeen && (
-                  <LeagueResultBanner
-                    board={leagueBoard}
-                    onClose={() => {
-                      const id = leagueBoard.lastResult?.weekId || '';
-                      setLeagueResultSeen(id);
-                      try { localStorage.setItem('konan_league_result_seen', id); } catch { /* sans effet */ }
-                    }}
-                  />
-                )}
-                <LeagueCard
-                  board={leagueBoard}
-                  localReputation={gamificationOf(state.gamification).reputation}
-                  offline={leagueOffline}
-                  onOpen={() => { setIsLeagueOpen(true); syncLeague(); }}
-                />
               </div>
             )}
             <DashboardOverview
@@ -2559,6 +2547,21 @@ export function App() {
           )
         )}
 
+        {/* Ligue (onglet trophée) */}
+        {activeView === 'league' && gamificationEnabled && (
+          <LeaguePage
+            board={leagueBoard}
+            localReputation={gamificationOf(state.gamification).reputation}
+            offline={leagueOffline}
+            resultSeen={leagueResultSeen}
+            onDismissResult={(id) => {
+              setLeagueResultSeen(id);
+              try { localStorage.setItem('konan_league_result_seen', id); } catch { /* sans effet */ }
+            }}
+            onRefresh={syncLeague}
+          />
+        )}
+
         {/* Analytics: STRICTLY PROTECTED */}
         {activeView === 'analytics' && (
           (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
@@ -2600,13 +2603,8 @@ export function App() {
         </ViewErrorBoundary>
       </main>
 
-      {/* Classement de la ligue */}
-      {isLeagueOpen && leagueBoard?.eligible && (
-        <LeagueView board={leagueBoard} onClose={() => setIsLeagueOpen(false)} />
-      )}
-
       {/* Icône ronde d'exercices (10 QCM au hasard, énergie ⚡) */}
-      {gamificationEnabled && !isExerciseOpen && !isLeagueOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics'].includes(activeView) && (
+      {gamificationEnabled && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
       )}
       {isExerciseOpen && (

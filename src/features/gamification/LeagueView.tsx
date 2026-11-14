@@ -103,16 +103,36 @@ export const LeagueResultBanner: React.FC<{ board: LeagueBoard; onClose: () => v
   );
 };
 
-export const LeagueView: React.FC<{ board: LeagueBoard; onClose: () => void }> = ({ board, onClose }) => {
+/**
+ * Page Ligue (onglet trophée de la barre du bas) : résultat de la semaine passée, puis classement,
+ * ou « Ligue verrouillée » sous 80 % de réputation. Actualisée à chaque ouverture.
+ */
+export const LeaguePage: React.FC<{
+  board: LeagueBoard | null;
+  localReputation: number;
+  offline: boolean;
+  resultSeen: string;
+  onDismissResult: (weekId: string) => void;
+  onRefresh: () => void;
+}> = ({ board, localReputation, offline, resultSeen, onDismissResult, onRefresh }) => {
+  React.useEffect(() => { onRefresh(); }, [onRefresh]);
+  return (
+    <div className="space-y-3 pb-24">
+      {board?.lastResult && board.lastResult.weekId !== resultSeen && (
+        <LeagueResultBanner board={board} onClose={() => onDismissResult(board.lastResult?.weekId || '')} />
+      )}
+      {board?.eligible ? <LeagueView board={board} /> : <LeagueCard board={board} localReputation={localReputation} offline={offline} onOpen={onRefresh} />}
+    </div>
+  );
+};
+
+export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
   const size = board.rows.length;
   return (
-    <div className="fixed inset-0 z-[80] bg-slate-50 dark:bg-[#070B13] overflow-y-auto overscroll-contain">
-      <div className="max-w-xl mx-auto px-4 py-4 sm:py-6 space-y-4">
+    <div>
+      <div className="max-w-xl mx-auto space-y-4">
         <div className="flex items-center gap-3">
-          <button type="button" onClick={onClose} aria-label="Fermer" className="p-2 -ml-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-200 dark:hover:text-white dark:hover:bg-slate-800 cursor-pointer">
-            <X className="w-6 h-6" />
-          </button>
-          <p className="flex-1 text-base font-black text-slate-900 dark:text-white">Ligue de la semaine</p>
+          <p className="flex-1 text-lg font-black text-slate-900 dark:text-white">Ligue de la semaine</p>
           <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Fin dans {timeLeftLabel(board.endsAt)}</span>
         </div>
 
@@ -142,7 +162,8 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onClose: () => void }> =
                   {row.name.slice(0, 1).toUpperCase()}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className={`block truncate text-sm ${row.me ? 'font-black text-sky-800 dark:text-sky-200' : 'font-bold text-slate-900 dark:text-white'}`}>{row.me ? `${row.name} (toi)` : row.name}</span>
+                  {/* Abonnés Pro et Plus : nom multicolore (sans mention « Pro ») */}
+                  <span className={`block truncate text-sm ${row.premium ? 'plus-multicolor-shimmer-text font-black' : row.me ? 'font-black text-sky-800 dark:text-sky-200' : 'font-bold text-slate-900 dark:text-white'}`}>{row.name}{row.me ? ' (toi)' : ''}</span>
                   {row.classLabel && <span className="block text-[11px] text-slate-500 dark:text-slate-400">{row.classLabel}</span>}
                 </span>
                 {zone === 'up' && <ArrowUp className="w-4 h-4 text-emerald-500" aria-label="zone de montée" />}

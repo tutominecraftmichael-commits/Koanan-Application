@@ -5,7 +5,7 @@
 import { auth } from '../lib/firebase';
 import type { LeagueEvent } from '../types';
 
-export interface LeagueRow { rank: number; name: string; classLabel: string; xp: number; me: boolean }
+export interface LeagueRow { rank: number; name: string; classLabel: string; xp: number; me: boolean; premium?: boolean }
 export interface LeagueBoard {
   eligible: boolean;
   reputation: number;
