@@ -41,8 +41,8 @@ export interface DashboardOverviewProps {
   studySessions: StudySession[];
   preferences: StudyPreferences;
   onNavigate: (view: ActiveAppView) => void;
-  onToggleSessionComplete: (sessionId: string) => void;
-  onStartFocusSession?: (session: StudySession) => void;
+  /** Seule façon de valider une séance : la faire (cours guidé, devoir ou chronomètre jusqu'au bout) */
+  onStartFocusSession: (session: StudySession) => void;
   onOpenPresetModal?: () => void;
   isDemoMode?: boolean;
   planTier?: 'free' | 'pro' | 'plus';
@@ -79,7 +79,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   studySessions,
   preferences,
   onNavigate,
-  onToggleSessionComplete,
   onStartFocusSession,
   planTier = 'free',
   onViewPricing,
@@ -291,13 +290,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
                 size="sm"
                 leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                onClick={afterShine(() => {
-                  if (onStartFocusSession) {
-                    onStartFocusSession(nextStudySession);
-                  } else {
-                    onToggleSessionComplete(nextStudySession.id);
-                  }
-                })}
+                onClick={afterShine(() => onStartFocusSession(nextStudySession))}
                 className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto cursor-pointer text-xs font-black whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-1 ${
                   nextStudySession.isRescheduledToday
                     ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
@@ -305,7 +298,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 }`}
                 title="Lancer le cours guidé ou le chronomètre d'étude pour cette séance"
               >
-                {nextStudySession.isRescheduledToday ? 'Valider le rattrapage' : 'Valider la séance'}
+                {nextStudySession.isRescheduledToday ? 'Faire le rattrapage' : 'Commencer la séance'}
               </Button>
             </div>
           )}
@@ -506,13 +499,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             variant={isRescheduled ? "secondary" : "glow"}
                             size="sm"
                             leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                            onClick={afterShine(() => {
-                              if (onStartFocusSession) {
-                                onStartFocusSession(session);
-                              } else {
-                                onToggleSessionComplete(session.id);
-                              }
-                            })}
+                            onClick={afterShine(() => onStartFocusSession(session))}
                             className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-1 ${
                               isRescheduled
                                 ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
@@ -520,7 +507,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                             }`}
                             title="Lancer le cours guidé ou le chronomètre d'étude pour cette séance"
                           >
-                            <span>{isRescheduled ? 'Valider le rattrapage' : 'Valider la séance'}</span>
+                            <span>{isRescheduled ? 'Faire le rattrapage' : 'Commencer la séance'}</span>
                           </Button>
                         </div>
                       </div>

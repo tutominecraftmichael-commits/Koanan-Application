@@ -2251,7 +2251,6 @@ export function App() {
               onNavigate={handleNavigate}
               onViewPricing={handleViewPricing}
               onUpgradeToPro={() => handleSelectPlan('pro')}
-              onToggleSessionComplete={handleToggleSessionComplete}
               onStartFocusSession={handleStartFocusSession}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
@@ -2357,7 +2356,6 @@ export function App() {
               preferences={state.preferences}
               planTier={effectivePlanTier}
               onRegeneratePlan={handleRegeneratePlan}
-              onToggleSessionComplete={handleToggleSessionComplete}
               onStartFocusSession={handleStartFocusSession}
               onAddCustomSession={handleAddCustomSession}
               onUpdatePreferences={handleUpdatePreferences}

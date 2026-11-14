@@ -46,8 +46,8 @@ export interface PlannerViewProps {
   studySessions: StudySession[];
   preferences: StudyPreferences;
   onRegeneratePlan: () => void;
-  onToggleSessionComplete: (sessionId: string) => void;
-  onStartFocusSession?: (session: StudySession) => void;
+  /** Seule façon de valider une séance : la faire (cours guidé, devoir ou chronomètre jusqu'au bout) */
+  onStartFocusSession: (session: StudySession) => void;
   onAddCustomSession: (session: StudySession) => void;
   onUpdatePreferences?: (preferences: StudyPreferences) => void;
   planTier?: 'free' | 'pro' | 'plus';
@@ -64,7 +64,6 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
   studySessions,
   preferences,
   onRegeneratePlan,
-  onToggleSessionComplete,
   onStartFocusSession: _onStartFocusSession,
   onAddCustomSession,
   onUpdatePreferences,
@@ -519,13 +518,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         variant={session.isRescheduledToday ? 'secondary' : 'glow'}
                         size="sm"
                         leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                        onClick={afterShine(() => {
-                          if (_onStartFocusSession) {
-                            _onStartFocusSession(session);
-                          } else {
-                            onToggleSessionComplete(session.id);
-                          }
-                        })}
+                        onClick={afterShine(() => _onStartFocusSession(session))}
                         className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer active:translate-y-1 ${
                           session.isRescheduledToday
                             ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
@@ -533,7 +526,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                         }`}
                         title="Lancer le cours guidé ou le chronomètre d'étude pour cette séance"
                       >
-                        {session.isRescheduledToday ? 'Valider le rattrapage' : 'Valider la séance'}
+                        {session.isRescheduledToday ? 'Faire le rattrapage' : 'Commencer la séance'}
                       </Button>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 select-none">
