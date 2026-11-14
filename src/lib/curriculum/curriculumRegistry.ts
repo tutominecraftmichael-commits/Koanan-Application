@@ -59,6 +59,9 @@ import { CHIMIE_1RE_CD_L03_ALCENES_ALCYNES } from '../../data/courses/premiere/c
 import { CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES } from '../../data/courses/premiere/chimie_1re_cd_04_composes_oxygenes';
 import { CHIMIE_1RE_CD_L05_ETHANOL } from '../../data/courses/premiere/chimie_1re_cd_05_ethanol';
 import { CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE } from '../../data/courses/premiere/chimie_1re_cd_06_esterification_hydrolyse';
+import { CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE } from '../../data/courses/premiere/chimie_1re_cd_07_oxydoreduction_voie_seche';
+import { CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE } from '../../data/courses/premiere/chimie_1re_cd_08_couples_redox_dosage';
+import { CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES } from '../../data/courses/premiere/chimie_1re_cd_09_classification_quantitative_couples';
 import { CHIMIE_TLE_CD_L01_ALCOOLS } from '../../data/courses/terminale/chimie_tle_cd_01_alcools';
 import { CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES } from '../../data/courses/terminale/chimie_tle_cd_02_composes_carbonyles';
 import { CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES } from '../../data/courses/terminale/chimie_tle_cd_03_acides_carboxyliques_et_derives';
@@ -91253,13 +91256,16 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_1RE_C_L15_SUITES_NUMERIQUES,
   MATHS_1RE_C_L16_VECTEURS_ESPACE,
   MATHS_1RE_C_L17_STATISTIQUES,
-  // Première (C & D) — Physique-Chimie : Chimie Organique
+  // Première (C & D) — Physique-Chimie : Chimie Organique & Oxydoréduction
   CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS,
   CHIMIE_1RE_CD_L02_ALCANES,
   CHIMIE_1RE_CD_L03_ALCENES_ALCYNES,
   CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES,
   CHIMIE_1RE_CD_L05_ETHANOL,
   CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE,
+  CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE,
+  CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE,
+  CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
