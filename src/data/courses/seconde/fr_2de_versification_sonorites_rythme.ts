@@ -802,15 +802,15 @@ export const FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME: CurriculumChapter = 
       "order": 4,
       "title": "Le rythme : accents et coupes",
       "summary": "Comment le vers respire.",
-      "conceptExplanation": "Le rythme du vers français repose sur les accents et les pauses.\n\n1. L'accent tonique tombe sur la dernière syllabe prononcée (non muette) d'un mot ou d'un groupe de mots : « dans Pa-RIS », « un si-len-ce de NEI-ge ».\n\n2. La coupe est une pause placée après chaque syllabe accentuée. Elle découpe le vers en mesures.\nExemple : « Il se fit / dans Paris // un silence / de neige » (Aragon).\n\n3. La césure est la coupe principale. Dans l'alexandrin classique, elle sépare deux hémistiches de 6 syllabes :\n« Heureux ceux qui sont morts // pour la terre charnelle, / Mais pourvu que ce fût // dans une juste guerre » (Péguy).\n\n4. Les types de rythme :\n- rythme binaire : le vers est coupé en deux parties égales (6/6) ; il donne équilibre et régularité ;\n- rythme ternaire : le vers est coupé en trois parties égales (4/4/4) : « Toujours aimer, / toujours souffrir, / toujours mourir ! » (Corneille). La répétition de « toujours » sur trois mesures égales insiste sur une souffrance sans fin ;\n- rythme accumulatif ou irrégulier : les mesures sont inégales, pour traduire l'agitation ou l'émotion.",
-      "keyRule": "Accent tonique : dernière syllabe prononcée du groupe. Coupe : pause après chaque accent. Rythme binaire (6/6) ou ternaire (4/4/4).",
+      "conceptExplanation": "Le rythme du vers français repose sur les accents et les pauses.\n\n1. L'accent tonique tombe sur la dernière syllabe prononcée (non muette) d'un mot ou d'un groupe de mots : « dans Pa-RIS », « un si-len-ce de NEI-ge ».\n\n2. La coupe est une pause placée après chaque syllabe accentuée. Elle découpe le vers en mesures.\nExemple : « Il se fit / dans Paris // un silence / de neige » (Aragon).\n\n3. La césure est la coupe principale. Dans l'alexandrin classique, elle sépare deux hémistiches de 6 syllabes :\n« Heureux ceux qui sont morts // pour la terre charnelle, / Mais pourvu que ce fût // dans une juste guerre » (Péguy).\n\n4. Les types de rythme :\n- rythme binaire : le vers est coupé en deux parties égales (6 + 6) ; il donne équilibre et régularité ;\n- rythme ternaire : le vers est coupé en trois parties égales (4 + 4 + 4) : « Toujours aimer, / toujours souffrir, / toujours mourir ! » (Corneille). La répétition de « toujours » sur trois mesures égales insiste sur une souffrance sans fin ;\n- rythme accumulatif ou irrégulier : les mesures sont inégales, pour traduire l'agitation ou l'émotion.",
+      "keyRule": "Accent tonique : dernière syllabe prononcée du groupe. Coupe : pause après chaque accent. Rythme binaire (6 + 6) ou ternaire (4 + 4 + 4).",
       "formulas": [],
       "workedExample": {
         "title": "Analyser un rythme",
         "statement": "« Toujours aimer, toujours souffrir, toujours mourir ! » (Corneille). Analyse le rythme.",
         "methodSteps": [
           "Trois groupes : tou-jours-ai-mer (4), tou-jours-souf-frir (4), tou-jours-mou-rir (4).",
-          "Trois mesures égales : rythme ternaire 4/4/4.",
+          "Trois mesures égales : rythme ternaire 4 + 4 + 4.",
           "La reprise de « toujours » souligne une souffrance qui ne finit pas."
         ],
         "conclusion": "Rythme ternaire régulier qui martèle la fatalité de l'amour malheureux."
@@ -885,11 +885,11 @@ export const FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME: CurriculumChapter = 
           "stepTitle": "Le rythme binaire",
           "stepTheme": "Le rythme binaire",
           "stepBadge": "Le rythme binaire",
-          "paragraphText": "Le rythme binaire coupe le vers en deux parties égales (6/6). Il donne une impression d'équilibre.",
+          "paragraphText": "Le rythme binaire coupe le vers en deux parties égales (6 + 6). Il donne une impression d'équilibre.",
           "exercise": {
             "id": "seconde_a_francais_pl_l06b_versification_sonorites_rythme_p04_q4",
             "type": "mcq",
-            "prompt": "Quel effet donne un alexandrin au rythme binaire 6/6 ?",
+            "prompt": "Quel effet donne un alexandrin au rythme binaire 6 + 6 ?",
             "options": [
               "L'agitation et le désordre",
               "La surprise brutale",
@@ -912,8 +912,8 @@ export const FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME: CurriculumChapter = 
             "type": "mcq",
             "prompt": "Quel est le rythme de « Toujours aimer, toujours souffrir, toujours mourir ! » ?",
             "options": [
-              "Ternaire (4/4/4)",
-              "Binaire (6/6)",
+              "Ternaire (4 + 4 + 4)",
+              "Binaire (6 + 6)",
               "Irrégulier",
               "Sans rythme"
             ],
@@ -1007,7 +1007,7 @@ export const FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME: CurriculumChapter = 
         {
           "id": "seconde_a_francais_pl_l06b_versification_sonorites_rythme_p04_q4",
           "type": "mcq",
-          "prompt": "Quel effet donne un alexandrin au rythme binaire 6/6 ?",
+          "prompt": "Quel effet donne un alexandrin au rythme binaire 6 + 6 ?",
           "options": [
             "L'agitation et le désordre",
             "La surprise brutale",
@@ -1022,8 +1022,8 @@ export const FR_2DE_PL_L06B_VERSIFICATION_SONORITES_RYTHME: CurriculumChapter = 
           "type": "mcq",
           "prompt": "Quel est le rythme de « Toujours aimer, toujours souffrir, toujours mourir ! » ?",
           "options": [
-            "Ternaire (4/4/4)",
-            "Binaire (6/6)",
+            "Ternaire (4 + 4 + 4)",
+            "Binaire (6 + 6)",
             "Irrégulier",
             "Sans rythme"
           ],

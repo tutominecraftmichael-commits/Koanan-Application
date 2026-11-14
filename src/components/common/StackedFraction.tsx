@@ -161,11 +161,24 @@ export function renderTextWithStackedFractions(text: string): React.ReactNode {
     const MATH_WORDS = /^(?:alpha|beta|gamma|delta|lambda|omega|theta|sigma|rho|tau|phi|psi|pi|mu|nu|sin|cos|tan|cotan|ln|log|exp|lim|max|min)$/i;
     const isProseWord = (w: string) =>
       !MATH_WORDS.test(w) &&
-      (/^[A-Za-z][a-z]{2,}$/.test(w) ? /[aeiouy]/.test(w.slice(1)) : /^[a-z][aeiouy]$/.test(w));
+      (/^[A-Za-z][a-z]{2,}$/.test(w)
+        ? /[aeiouy]/i.test(w)
+        : /^[a-z][aeiouy]$/.test(w) ||
+          /^(?:un|le|la|de|du|et|en|au|aux|je|tu|il|on|ne|se|ce|sa|ma|ta|ou|si|ni|vu|me|te|ses|mes|tes|les|des)$/i.test(w));
+    const after = cleaned.slice(matchIndex + fullMatch.length, matchIndex + fullMatch.length + 2);
+    // Élision française (« autres / j’ai », « haillons / D’argent ») ; jamais un prime (1/f', U / R'tot).
+    const elided = /^(?:[cdjlmnstCDJLMNST]|[qQ]u)$/.test(match[3].trim()) && /^['’][A-Za-zÀ-ÖØ-öø-ÿ]/.test(after);
+
+    // Scansion : « res / t(e) », rimes notées « repose (A) / odeur (B) ».
+    const scansion =
+      /^\(e\)/.test(cleaned.slice(matchIndex + fullMatch.length, matchIndex + fullMatch.length + 3)) ||
+      (/^\([A-Z]\)$/.test(match[2].trim()) && isProseWord(match[3].trim()));
 
     if (
       /[À-ÖØ-öø-ÿ'’]/.test(cleaned[numStart - 1] ?? '') ||
-      /[À-ÖØ-öø-ÿ]/.test(cleaned[matchIndex + fullMatch.length] ?? '') ||
+      /^[À-ÖØ-öø-ÿ]/.test(after) ||
+      elided ||
+      scansion ||
       (isProseWord(match[2].trim()) && isProseWord(match[3].trim()))
     ) {
       continue;

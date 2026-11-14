@@ -215,7 +215,7 @@ export const FR_1RE_PL_L03_RYTHME: CurriculumChapter = {
               "3 + 3 // 2 + 4"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Ô rage (2) / ô désespoir (4) // ô vieillesse (3) / ennemie (3)."
+            "explanation": "Ô rage : 2 syllabes ; ô désespoir : 4 ; ô vieillesse : 3 ; ennemie : 3."
           }
         }
       ],
@@ -309,7 +309,7 @@ export const FR_1RE_PL_L03_RYTHME: CurriculumChapter = {
             "3 + 3 // 2 + 4"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Ô rage (2) / ô désespoir (4) // ô vieillesse (3) / ennemie (3)."
+          "explanation": "Ô rage : 2 syllabes ; ô désespoir : 4 ; ô vieillesse : 3 ; ennemie : 3."
         }
       ]
     },
