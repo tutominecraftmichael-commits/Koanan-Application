@@ -8,7 +8,8 @@ export const GEO_1RE_T3_L02_AMENAGEMENT_TERRITOIRE_CI: CurriculumChapter = {
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
     "premiere_a2",
-    "premiere_c"
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 6,
   "title": "Thème 3, leçon 2 : L'aménagement du territoire ivoirien",

@@ -8,7 +8,8 @@ export const GEO_1RE_T1_L01_DYNAMISME_DEMOGRAPHIQUE_CI: CurriculumChapter = {
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
     "premiere_a2",
-    "premiere_c"
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 1,
   "title": "Thème 1, leçon 1 : Dynamisme démographique et qualité de vie en Côte d'Ivoire",

@@ -8,7 +8,8 @@ export const GEO_1RE_T1_L02_CROISSANCE_DEMOGRAPHIQUE_MONDIALE: CurriculumChapter
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
     "premiere_a2",
-    "premiere_c"
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 2,
   "title": "Thème 1, leçon 2 : La croissance démographique dans le monde et ses problèmes",

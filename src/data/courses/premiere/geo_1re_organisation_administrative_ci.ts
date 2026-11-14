@@ -8,7 +8,8 @@ export const GEO_1RE_T3_L01_ORGANISATION_ADMINISTRATIVE_CI: CurriculumChapter = 
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
     "premiere_a2",
-    "premiere_c"
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 5,
   "title": "Thème 3, leçon 1 : L'organisation administrative de la Côte d'Ivoire",

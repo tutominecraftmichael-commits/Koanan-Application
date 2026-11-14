@@ -8,7 +8,8 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
     "premiere_a2",
-    "premiere_c"
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 3,
   "title": "Thème 2, leçon 1 : L'urbanisation dans les pays en développement, l'exemple de la Côte d'Ivoire",
@@ -542,7 +543,7 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
       "order": 3,
       "title": "Abidjan, une ville géante",
       "summary": "Taille, étendue et population de la métropole ivoirienne.",
-      "conceptExplanation": "Abidjan se distingue par sa taille, son étendue et sa population :\n- environ 6 millions d'habitants aujourd'hui (environ 3 millions au début des années 2000) ;\n- la ville la plus peuplée de la sous-région après Lagos (Nigéria) ;\n- une mégalopole cinq fois plus étendue que Paris ;\n- un district de 2 119 km², formé de 10 communes et de 3 sous-préfectures (Bingerville, Anyama, Songon).\n\nSa population augmente sous l'effet des migrations internes (exode rural) et de l'immigration. Le district d'Abidjan est urbanisé à 97,5 % (2014).",
+      "conceptExplanation": "Abidjan se distingue par sa taille, son étendue et sa population :\n- environ 6 millions d'habitants aujourd'hui (environ 3 millions au début des années 2000) ;\n- la ville la plus peuplée de la sous-région après Lagos (Nigéria) ;\n- une mégalopole : la ville (ses 10 communes) est environ cinq fois plus étendue que Paris intra-muros (105 km²) ;\n- un district encore bien plus vaste, de 2 119 km² (une vingtaine de fois Paris), formé de 10 communes et de 3 sous-préfectures (Bingerville, Anyama, Songon).\n\nSa population augmente sous l'effet des migrations internes (exode rural) et de l'immigration. Le district d'Abidjan est urbanisé à 97,5 % (2014).",
       "keyRule": "Abidjan : environ 6 millions d'habitants, district de 2 119 km² (10 communes + Bingerville, Anyama, Songon), 2e ville de la sous-région après Lagos.",
       "formulas": [],
       "workedExample": {
@@ -550,7 +551,7 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
         "statement": "Pourquoi dit-on qu'Abidjan est une ville géante ?",
         "methodSteps": [
           "Par sa population : environ 6 millions d'habitants.",
-          "Par son étendue : un district de 2 119 km², cinq fois plus vaste que Paris."
+          "Par son étendue : la ville est environ cinq fois plus vaste que Paris intra-muros (105 km²), et le district couvre 2 119 km²."
         ],
         "conclusion": "Sa taille et sa population en font une mégalopole."
       },
@@ -645,7 +646,7 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
           "stepTitle": "Une mégalopole",
           "stepTheme": "Une mégalopole",
           "stepBadge": "Une mégalopole",
-          "paragraphText": "Abidjan est une mégalopole : une très grande ville par sa taille, son étendue et sa population, cinq fois plus vaste que Paris.",
+          "paragraphText": "Abidjan est une mégalopole : une très grande ville par sa taille, son étendue et sa population : la ville est environ cinq fois plus vaste que Paris intra-muros.",
           "exercise": {
             "id": "premiere_a1_hg_geographie_t2_l01_urbanisation_cote_ivoire_p03_q5",
             "type": "mcq",
@@ -657,7 +658,7 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
               "Une ville uniquement administrative"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Elle est cinq fois plus étendue que Paris."
+            "explanation": "Elle est immense par sa population (environ 6 millions d'habitants) et par son étendue : environ cinq fois Paris intra-muros."
           }
         },
         {
@@ -767,7 +768,7 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
             "Une ville uniquement administrative"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Elle est cinq fois plus étendue que Paris."
+          "explanation": "Elle est immense par sa population (environ 6 millions d'habitants) et par son étendue : environ cinq fois Paris intra-muros."
         },
         {
           "id": "premiere_a1_hg_geographie_t2_l01_urbanisation_cote_ivoire_p03_q6",
