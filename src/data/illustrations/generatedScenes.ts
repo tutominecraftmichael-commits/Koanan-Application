@@ -18,6 +18,7 @@ export const GENERATED_CHAPTERS: string[] = [
   "premiere_a1_hg_histoire_t1_l02_revolutions_industrielles",
   "premiere_a1_hg_histoire_t2_l01_imperialisme_congres_berlin",
   "premiere_a1_hg_histoire_t2_l02_resistances_conquete_ci",
+  "premiere_a1_hg_histoire_t2_l03_colonisation_cote_ivoire",
   "premiere_a1_hg_histoire_t3_l01_premiere_guerre_mondiale",
   "premiere_a1_hg_histoire_t3_l02_seconde_guerre_mondiale",
   "premiere_a1_hg_histoire_t3_l03_violences_masse_genocides",
@@ -54,7 +55,12 @@ export const GENERATED_CHAPTERS: string[] = [
   "terminale_hg_geographie_t2_l01_fondements_developpement_coree_du_sud",
   "terminale_hg_geographie_t3_l01_cedeao",
   "terminale_hg_geographie_t3_l02_relations_ue_acp",
+  "terminale_hg_histoire_t1_l01_onu",
+  "terminale_hg_histoire_t1_l02_ere_bipolarisation",
+  "terminale_hg_histoire_t1_l03_monde_multipolaire",
+  "terminale_hg_histoire_t2_l01_montee_nationalismes_afrique",
   "terminale_hg_histoire_t2_l02_accession_ci_independance",
+  "terminale_hg_histoire_t2_l03_accession_algerie_independance",
   "terminale_hg_histoire_t2_l04_union_africaine",
   "terminale_hg_histoire_t3_l01_croyances_valeurs_monde_occidental",
   "terminale_hg_histoire_t3_l02_mutations_civilisation_negro_africaine",
@@ -869,6 +875,99 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
         "from": 0,
         "text": "Voici le traité de protectorat."
       }
+    }
+  },
+  "premiere_a1_hg_histoire_t2_l03_colonisation_cote_ivoire_p03_q1": {
+    "title": "Le wharf colonial",
+    "caption": "Le wharf permettait de charger et décharger les navires sur le littoral ivoirien.",
+    "spec": {
+      "setting": "cote_mer",
+      "characters": [
+        {
+          "costume": "colon_europeen",
+          "pose": "montre",
+          "mood": "neutre",
+          "skin": "tres_clair",
+          "facing": "droite"
+        },
+        {
+          "costume": "ouvrier",
+          "pose": "marche",
+          "mood": "neutre",
+          "skin": "fonce",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "navire",
+          "place": "fond"
+        },
+        {
+          "kind": "palmier",
+          "place": "gauche"
+        }
+      ],
+      "time": "jour"
+    }
+  },
+  "premiere_a1_hg_histoire_t2_l03_colonisation_cote_ivoire_p03_q5": {
+    "title": "Le travail forcé",
+    "caption": "Le travail forcé exigeait des prestations gratuites et obligatoires de la population.",
+    "spec": {
+      "setting": "champ",
+      "characters": [
+        {
+          "costume": "soldat_colonial",
+          "pose": "montre",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "facing": "droite"
+        },
+        {
+          "costume": "paysan",
+          "pose": "triste",
+          "mood": "triste",
+          "skin": "fonce",
+          "facing": "gauche",
+          "holding": "houe"
+        }
+      ],
+      "props": [
+        {
+          "kind": "plante",
+          "place": "droite"
+        }
+      ],
+      "time": "jour"
+    }
+  },
+  "premiere_a1_hg_histoire_t2_l03_colonisation_cote_ivoire_p04_q2": {
+    "title": "Introduction du café et du cacao",
+    "caption": "Le café est introduit en Côte d'Ivoire en 1881, marquant le début des cultures d'exportation.",
+    "spec": {
+      "setting": "plantation",
+      "characters": [
+        {
+          "costume": "paysan",
+          "pose": "debout",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "cacao",
+          "place": "centre"
+        },
+        {
+          "kind": "arbre",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "sign": "1881"
     }
   },
   "premiere_a1_hg_histoire_t3_l01_premiere_guerre_mondiale_p04_q5": {
@@ -3797,6 +3896,391 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
       "sign": "Asymétrie"
     }
   },
+  "terminale_hg_histoire_t1_l01_onu_p01_q3": {
+    "title": "Signature de la Charte de l'ONU",
+    "caption": "Le 26 juin 1945 à San Francisco, 50 États dont 4 pays africains signent la Charte fondatrice de l'ONU.",
+    "spec": {
+      "setting": "palais",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "ecrit",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "facing": "gauche",
+          "holding": "plume"
+        },
+        {
+          "costume": "homme_politique",
+          "pose": "debout",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "livre_ouvert",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "sign": "26 JUIN 1945"
+    }
+  },
+  "terminale_hg_histoire_t1_l01_onu_p03_q3": {
+    "title": "Kofi Annan, Secrétaire général",
+    "caption": "Kofi Annan (Ghana) est le premier Africain subsaharien à devenir Secrétaire général de l'ONU (1997-2006).",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "fonce",
+          "holding": "micro"
+        }
+      ],
+      "props": [
+        {
+          "kind": "globe",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Au service de la paix et des nations !"
+      },
+      "sign": "1997-2006"
+    }
+  },
+  "terminale_hg_histoire_t1_l01_onu_p04_q5": {
+    "title": "L'action des agences de l'ONU à l'école",
+    "caption": "En Côte d'Ivoire, les agences de l'ONU comme le PAM et l'UNICEF soutiennent les cantines et la scolarisation.",
+    "spec": {
+      "setting": "salle_classe",
+      "characters": [
+        {
+          "costume": "eleve_fille",
+          "pose": "joie",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "droite"
+        },
+        {
+          "costume": "eleve_garcon",
+          "pose": "lit",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "gauche",
+          "holding": "livre"
+        }
+      ],
+      "props": [
+        {
+          "kind": "drapeau_ci",
+          "place": "fond"
+        },
+        {
+          "kind": "panier",
+          "place": "gauche"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Merci pour la cantine et nos livres !"
+      },
+      "sign": "PAM - UNICEF"
+    }
+  },
+  "terminale_hg_histoire_t1_l02_ere_bipolarisation_p01_q2": {
+    "title": "Le discours du « rideau de fer »",
+    "caption": "En 1946 à Fulton, Winston Churchill dénonce la division de l'Europe par un rideau de fer soviétique.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "facing": "droite",
+          "holding": "parchemin"
+        }
+      ],
+      "props": [
+        {
+          "kind": "carte",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Un rideau de fer s'est abattu en Europe."
+      },
+      "sign": "5 mars 1946"
+    }
+  },
+  "terminale_hg_histoire_t1_l02_ere_bipolarisation_p04_q4": {
+    "title": "Création du « téléphone rouge »",
+    "caption": "Après la crise des fusées de Cuba, une ligne directe est établie en 1963 entre Washington et Moscou.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "facing": "droite"
+        }
+      ],
+      "props": [
+        {
+          "kind": "telephone",
+          "place": "centre"
+        },
+        {
+          "kind": "globe",
+          "place": "gauche"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Une ligne directe pour éviter la guerre !"
+      },
+      "sign": "Juin 1963"
+    }
+  },
+  "terminale_hg_histoire_t1_l02_ere_bipolarisation_p07_q3": {
+    "title": "La chute du Mur de Berlin",
+    "caption": "Le 9 novembre 1989, la chute du Mur de Berlin symbolise la fin de la division de l'Europe et l'effondrement du bloc de l'Est.",
+    "spec": {
+      "setting": "ville",
+      "characters": [
+        {
+          "costume": "ouvrier",
+          "pose": "joie",
+          "mood": "content",
+          "skin": "tres_clair",
+          "facing": "droite"
+        },
+        {
+          "costume": "enseignant",
+          "pose": "joie",
+          "mood": "content",
+          "skin": "tres_clair",
+          "facing": "gauche"
+        }
+      ],
+      "props": [
+        {
+          "kind": "chaines_brisees",
+          "place": "centre"
+        }
+      ],
+      "time": "nuit",
+      "bubble": {
+        "from": 0,
+        "text": "Le Mur de Berlin tombe enfin !"
+      },
+      "sign": "9 novembre 1989"
+    }
+  },
+  "terminale_hg_histoire_t1_l03_monde_multipolaire_p01_q6": {
+    "title": "L'annonce du nouvel ordre mondial",
+    "caption": "George H. W. Bush proclame en 1990-1991 un nouvel ordre mondial fondé sur la démocratie et le droit international.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "facing": "droite",
+          "holding": "micro"
+        }
+      ],
+      "props": [
+        {
+          "kind": "globe",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Nous bâtissons un nouvel ordre mondial !"
+      },
+      "sign": "1991"
+    }
+  },
+  "terminale_hg_histoire_t1_l03_monde_multipolaire_p05_q1": {
+    "title": "Les trois âges depuis 1945",
+    "caption": "L'enseignant récapitule la transition de la bipolarité vers l'unipolarité puis vers la multipolarité.",
+    "spec": {
+      "setting": "salle_classe",
+      "characters": [
+        {
+          "costume": "enseignant",
+          "pose": "montre",
+          "mood": "neutre",
+          "skin": "fonce",
+          "facing": "droite"
+        },
+        {
+          "costume": "eleve_garcon",
+          "pose": "lit",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "gauche"
+        },
+        {
+          "costume": "eleve_fille",
+          "pose": "reflechit",
+          "mood": "content",
+          "skin": "brun",
+          "facing": "gauche"
+        }
+      ],
+      "props": [
+        {
+          "kind": "tableau",
+          "place": "gauche"
+        },
+        {
+          "kind": "globe",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Depuis 2001, le monde est multipolaire."
+      },
+      "sign": "POST-1991"
+    }
+  },
+  "terminale_hg_histoire_t2_l01_montee_nationalismes_afrique_p03_q3": {
+    "title": "Création du SAA en 1944",
+    "caption": "Félix Houphouët-Boigny crée le Syndicat agricole africain pour défendre les planteurs africains contre le travail forcé.",
+    "spec": {
+      "setting": "plantation",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "fonce",
+          "facing": "droite",
+          "holding": "parchemin"
+        },
+        {
+          "costume": "paysan",
+          "pose": "lit",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "gauche",
+          "holding": "houe"
+        }
+      ],
+      "props": [
+        {
+          "kind": "cacao",
+          "place": "centre"
+        },
+        {
+          "kind": "plante",
+          "place": "droite"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Défendons les planteurs et nos terres !"
+      },
+      "sign": "SAA 1944"
+    }
+  },
+  "terminale_hg_histoire_t2_l01_montee_nationalismes_afrique_p04_q3": {
+    "title": "Le mouvement de la Négritude",
+    "caption": "Des intellectuels comme Senghor et Césaire affirment la dignité et la valeur des cultures noires contre le mépris colonial.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "ecrivain",
+          "pose": "ecrit",
+          "mood": "determine",
+          "skin": "fonce",
+          "facing": "droite",
+          "holding": "plume"
+        },
+        {
+          "costume": "ecrivain",
+          "pose": "lit",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "gauche",
+          "holding": "livre"
+        }
+      ],
+      "props": [
+        {
+          "kind": "livre_ouvert",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Affirmons la dignité de notre culture !"
+      },
+      "sign": "Négritude"
+    }
+  },
+  "terminale_hg_histoire_t2_l01_montee_nationalismes_afrique_p05_q1": {
+    "title": "Abolition du travail forcé en 1946",
+    "caption": "La loi Houphouët-Boigny d'avril 1946 abolit le travail forcé dans toutes les colonies françaises, libérant les populations.",
+    "spec": {
+      "setting": "champ",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "montre",
+          "mood": "neutre",
+          "skin": "fonce",
+          "facing": "droite",
+          "holding": "parchemin"
+        },
+        {
+          "costume": "paysan",
+          "pose": "joie",
+          "mood": "content",
+          "skin": "fonce",
+          "facing": "gauche"
+        }
+      ],
+      "props": [
+        {
+          "kind": "chaines_brisees",
+          "place": "centre"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Le travail forcé est enfin supprimé !"
+      },
+      "sign": "11 avril 1946"
+    }
+  },
   "terminale_hg_histoire_t2_l02_accession_ci_independance_p01_q3": {
     "title": "La conférence de Brazzaville",
     "caption": "En 1944, de Gaulle réunit la conférence de Brazzaville pour garder les colonies en améliorant la vie des colonisés.",
@@ -3911,6 +4395,86 @@ export const GENERATED_SCENES: Record<string, GeneratedScene> = {
         "text": "Vive la Côte d'Ivoire !"
       },
       "sign": "7 août 1960"
+    }
+  },
+  "terminale_hg_histoire_t2_l03_accession_algerie_independance_p01_q5": {
+    "title": "Enjeu énergétique au Sahara",
+    "caption": "La découverte de gisements de pétrole et de gaz au Sahara renforce la volonté de la France de conserver l'Algérie.",
+    "spec": {
+      "setting": "desert",
+      "characters": [
+        {
+          "costume": "ouvrier",
+          "pose": "montre",
+          "mood": "surpris",
+          "skin": "tres_clair"
+        }
+      ],
+      "props": [
+        {
+          "kind": "usine",
+          "place": "fond"
+        }
+      ],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Des gisements de pétrole et de gaz !"
+      },
+      "sign": "SAHARA"
+    }
+  },
+  "terminale_hg_histoire_t2_l03_accession_algerie_independance_p04_q1": {
+    "title": "Discours de De Gaulle à Alger",
+    "caption": "Le 4 juin 1958, de Gaulle prononce sa célèbre formule ambiguë devant la foule à Alger.",
+    "spec": {
+      "setting": "ville",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "parle",
+          "mood": "determine",
+          "skin": "tres_clair",
+          "holding": "micro"
+        }
+      ],
+      "props": [],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Je vous ai compris !"
+      },
+      "sign": "4 JUIN 1958"
+    }
+  },
+  "terminale_hg_histoire_t2_l03_accession_algerie_independance_p05_q1": {
+    "title": "Signature des accords d'Évian",
+    "caption": "Le 18 mars 1962, les négociations d'Évian aboutissent au cessez-le-feu et ouvrent la voie à l'indépendance.",
+    "spec": {
+      "setting": "bureau",
+      "characters": [
+        {
+          "costume": "homme_politique",
+          "pose": "ecrit",
+          "mood": "determine",
+          "skin": "clair",
+          "holding": "plume"
+        },
+        {
+          "costume": "homme_politique",
+          "pose": "lit",
+          "mood": "neutre",
+          "skin": "tres_clair",
+          "holding": "parchemin"
+        }
+      ],
+      "props": [],
+      "time": "jour",
+      "bubble": {
+        "from": 0,
+        "text": "Les accords d'Évian sont signés !"
+      },
+      "sign": "18 MARS 1962"
     }
   },
   "terminale_hg_histoire_t2_l04_union_africaine_p02_q4": {

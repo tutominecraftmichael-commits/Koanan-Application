@@ -554,7 +554,7 @@ const p04Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Continuité sur un intervalle et opérations algébriques',
     paragraphText:
-      'Une fonction est continue sur un intervalle $I$ si elle est continue en tout point de $I$ (à droite aux bornes fermées à gauche, à gauche aux bornes fermées à droite). Les fonctions polynômes, rationnelles (sur leur ensemble de définition), trigonométriques ($\sin, \cos$ sur $\mathbb{R}$) et $\sqrt{\\cdot}$ sur $[0 ; +\\infty[$ sont continues. Si $f$ et $g$ sont continues sur $I$, alors $f+g$, $kf$, $fg$, $f^n$ ($n \\in \\mathbb{N}^*$), $|f|$, $\\frac{f}{g}$ (si $g \\ne 0$) et $\\sqrt{f}$ (si $f \\geqslant 0$) sont continues sur $I$.',
+      'Une fonction est continue sur un intervalle $I$ si elle est continue en tout point de $I$ (à droite aux bornes fermées à gauche, à gauche aux bornes fermées à droite). Les fonctions polynômes, rationnelles (sur leur ensemble de définition), trigonométriques ($\\sin, \\cos$ sur $\\mathbb{R}$) et $\\sqrt{\\cdot}$ sur $[0 ; +\\infty[$ sont continues. Si $f$ et $g$ sont continues sur $I$, alors $f+g$, $kf$, $fg$, $f^n$ ($n \\in \\mathbb{N}^*$), $|f|$, $\\frac{f}{g}$ (si $g \\ne 0$) et $\\sqrt{f}$ (si $f \\geqslant 0$) sont continues sur $I$.',
     keyRule: 'Une fonction dérivable sur $I$ est toujours continue sur $I$ (la réciproque est fausse, ex. $|x|$ en $0$).',
     exercise: {
       id: 'tc_m_num_l01_p04_q02',

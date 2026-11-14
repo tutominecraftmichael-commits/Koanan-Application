@@ -1093,7 +1093,9 @@ export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, clas
         <div
           className={isScene
             ? 'flex items-center justify-center rounded-xl overflow-hidden'
-            : 'flex items-center justify-center py-2 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200/70 dark:border-slate-800 overflow-x-auto'}
+            // Schémas SVG : toujours sur une « feuille » claire (même en mode nuit), car leurs traits et
+            // textes sont dessinés en couleurs foncées fixes ; currentColor devient un gris très foncé.
+            : 'flex items-center justify-center py-2 bg-white text-slate-800 dark:bg-slate-100 rounded-xl border border-slate-200/70 dark:border-slate-700 overflow-x-auto'}
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       )}
