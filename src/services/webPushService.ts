@@ -53,16 +53,41 @@ export function isWebPushSupported(): boolean {
 }
 
 export type PushDeviceStatus =
-  | 'active'          // abonné : les notifications arrivent même appli fermée
-  | 'ask'             // permission jamais demandée (ou abonnement à refaire) : bouton « Activer »
+  | 'active'          // autorisées et abonné : KONAN se réinscrit seul auprès du serveur, en silence
+  | 'repair'          // autorisées, mais l'abonnement est à refaire : KONAN le refait seul, sans bouton
+  | 'ask'             // permission jamais demandée : bouton « Activer » (Chrome exige un toucher)
   | 'blocked'         // bloquées dans les réglages du navigateur
   | 'ios-install'     // iPhone / iPad : il faut d'abord ajouter KONAN à l'écran d'accueil
   | 'unsupported';    // navigateur sans notifications push
 
-// Preuve locale que le serveur a enregistré l'abonnement de cet appareil (renouvelée chaque jour)
+// Preuve locale que le serveur a enregistré l'abonnement de cet appareil.
+// Réinscription silencieuse toutes les 6 h : si le serveur a perdu l'appareil (abonnement expiré,
+// autre compte connecté sur ce téléphone…), il le retrouve à la prochaine ouverture de KONAN.
 // v2 : force un nouvel enregistrement après la mise à jour, pour détacher ce téléphone des autres comptes
 const REGISTERED_KEY = 'konan_push_registered_v2';
-const REREGISTER_MS = 24 * 60 * 60 * 1000;
+const REREGISTER_MS = 6 * 60 * 60 * 1000;
+// Dernier échec de la réinscription silencieuse (affiché seulement s'il dure)
+const LAST_ERROR_KEY = 'konan_push_last_error';
+export function readPushRegistrationError(): { message: string; since: number; count: number } | null {
+  try {
+    const raw = JSON.parse(localStorage.getItem(LAST_ERROR_KEY) || 'null');
+    return raw && typeof raw.message === 'string' ? raw : null;
+  } catch {
+    return null;
+  }
+}
+function rememberRegistrationResult(error?: string) {
+  try {
+    if (!error) {
+      localStorage.removeItem(LAST_ERROR_KEY);
+      return;
+    }
+    const prev = readPushRegistrationError();
+    localStorage.setItem(LAST_ERROR_KEY, JSON.stringify({ message: error, since: prev?.since || Date.now(), count: (prev?.count || 0) + 1 }));
+  } catch {
+    // stockage indisponible : sans effet
+  }
+}
 function isRegisteredOnServer(endpoint: string): boolean {
   try {
     const raw = JSON.parse(localStorage.getItem(REGISTERED_KEY) || 'null');
@@ -97,15 +122,26 @@ export async function getPushDeviceStatus(): Promise<PushDeviceStatus> {
   if (!isWebPushSupported()) return isIOS && !standalone ? 'ios-install' : 'unsupported';
   if (Notification.permission === 'denied') return 'blocked';
   if (Notification.permission !== 'granted') return 'ask';
+  // Autorisation déjà donnée : l'élève n'a plus JAMAIS rien à toucher. L'inscription auprès du serveur
+  // est refaite en silence par autoRegisterWebPush (à chaque ouverture, toutes les 6 h au plus).
   try {
     const reg = await navigator.serviceWorker.getRegistration('/');
     const sub = await reg?.pushManager.getSubscription();
-    if (!sub) return 'ask';
-    if (subscriptionUsesOtherKey(sub, urlBase64ToUint8Array(VAPID_PUBLIC_KEY))) return 'ask';
-    // « Actif » seulement si le serveur a bien reçu CET abonnement (un abonnement local seul ne sert à rien)
-    return isRegisteredOnServer(sub.endpoint) ? 'active' : 'ask';
+    if (!sub || subscriptionUsesOtherKey(sub, urlBase64ToUint8Array(VAPID_PUBLIC_KEY))) return 'repair';
+    return 'active';
   } catch {
-    return 'ask';
+    return 'repair';
+  }
+}
+
+/** Le serveur a-t-il reçu CET abonnement récemment (moins de 6 h) ? */
+async function serverHasThisDevice(): Promise<boolean> {
+  try {
+    const reg = await navigator.serviceWorker.getRegistration('/');
+    const sub = await reg?.pushManager.getSubscription();
+    return Boolean(sub && !subscriptionUsesOtherKey(sub, urlBase64ToUint8Array(VAPID_PUBLIC_KEY)) && isRegisteredOnServer(sub.endpoint));
+  } catch {
+    return false;
   }
 }
 
@@ -213,14 +249,19 @@ export async function subscribeToWebPush(
       device: navigator.userAgent.slice(0, 120),
     });
     if (!registered.success) {
-      return { success: false, error: `Enregistrement de l’appareil impossible (${registered.error})` };
+      const error = `Enregistrement de l’appareil impossible (${registered.error})`;
+      rememberRegistrationResult(error);
+      return { success: false, error };
     }
     markRegisteredOnServer(subJson.endpoint || '', auth?.currentUser?.uid || effectiveUid);
+    rememberRegistrationResult();
     options.onSubscribed?.();
     return { success: true };
   } catch (err: any) {
     console.error('[KONAN WebPush] Erreur abonnement push :', err);
-    return { success: false, error: err?.message || 'Erreur lors de l\'abonnement push' };
+    const error = err?.message || 'Erreur lors de l\'abonnement push';
+    if (Notification.permission === 'granted') rememberRegistrationResult(error);
+    return { success: false, error };
   }
 }
 
@@ -245,10 +286,10 @@ export async function autoRegisterWebPush(
   const effectivePlan = String(planTier || 'free').toLowerCase().trim() || 'free';
   const options: SubscribeOptions = { planTier: effectivePlan, onSubscribed };
 
-  // Permission déjà accordée : si le serveur a déjà cet appareil (enregistré il y a moins de 24 h), on dépose
+  // Permission déjà accordée : si le serveur a déjà cet appareil (enregistré il y a moins de 6 h), on dépose
   // juste les alertes ; sinon on (ré)enregistre l'appareil en silence. Un échec est retenté 1 minute plus tard.
   if (Notification.permission === 'granted') {
-    if ((await getPushDeviceStatus()) === 'active') {
+    if (await serverHasThisDevice()) {
       onSubscribed?.();
       return;
     }
@@ -259,6 +300,8 @@ export async function autoRegisterWebPush(
       if (!result.success) {
         lastSilentFailureAt = Date.now();
         console.warn('[AutoWebPush] Enregistrement de l’appareil impossible :', result.error);
+        // Le serveur connaît peut-être encore l'appareil : on met quand même les alertes à jour
+        onSubscribed?.();
       }
     } finally {
       silentAttemptRunning = false;
