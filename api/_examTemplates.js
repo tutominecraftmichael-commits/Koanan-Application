@@ -613,15 +613,130 @@ export const TERMINALE_D_TEMPLATES = {
   },
 };
 
+/*
+ * ============================================================================
+ * TERMINALE C — DEVOIRS DE 2 H AU FORMAT DU BACCALAURÉAT SÉRIE C (APC)
+ * ============================================================================
+ * Mêmes formats DPFC du second cycle scientifique que la série D (Maths : 5 exercices 2+2+4+7+5 ;
+ * Physique-Chimie : 8+7+5 ; SVT : 6+6+8) ; Français, Histoire-Géographie, Philosophie : format national commun.
+ * Seules changent les notes de niveau (programme de Terminale C) et, en Maths, les exercices 3 et 4
+ * (arithmétique, géométrie, similitudes et coniques font partie du programme de la série C).
+ */
+const TERMINALE_C_GRADES = ['terminale_c'];
+const serieC = (tpl, source, note, extra = {}) => ({ ...tpl, ...extra, source, notesClasse: { terminale_c: note } });
+
+export const TERMINALE_C_TEMPLATES = {
+  maths: serieC(
+    TERMINALE_D_TEMPLATES.maths,
+    'DPFC – Format des épreuves de Mathématiques au second cycle scientifique, appliqué au Baccalauréat Série C (5 exercices — tests objectifs 4 pts, renforcement et approfondissement 11 pts, situation complexe 5 pts)',
+    "Terminale C (série mathématique) : limites, continuité, dérivabilité et étude de fonctions ; primitives, logarithme népérien, exponentielles et fonctions puissances ; calcul intégral ; équations différentielles ; suites numériques ; nombres complexes et géométrie du plan ; isométries et similitudes directes du plan ; coniques ; barycentre et lignes de niveaux ; géométrie analytique de l'espace ; divisibilité dans Z, PGCD et PPCM ; probabilité conditionnelle et variable aléatoire ; statistique à deux variables. Exigence de démonstration plus élevée qu'en série D.",
+    {
+      exercices: TERMINALE_D_TEMPLATES.maths.exercices.map((e) => {
+        if (e.numero === 3) {
+          return { ...e, consignes: "Plusieurs habiletés d'une même leçon parmi les chapitres choisis, au niveau Terminale C (arithmétique : divisibilité, congruences, PGCD, PPCM ; nombres complexes et géométrie ; isométries et similitudes ; coniques ; suites ; probabilités). Questions guidées et progressives (1., 2.a., 2.b., …) avec « Démontre que… », « Justifie que… », « Détermine… »." };
+        }
+        if (e.numero === 4) {
+          return { ...e, nature: "Exercice de renforcement ou d'approfondissement (problème) — NON contextualisé", consignes: "Problème sur une autre leçon que l'exercice 3, parmi les chapitres choisis : étude d'une fonction (logarithme, exponentielle ou puissance : limites, branches infinies, dérivée, tableau de variation, tangente, tracé, aire par calcul intégral, équation différentielle) OU problème de géométrie (similitude directe : rapport, angle, centre ; coniques : foyer, directrice, excentricité ; géométrie de l'espace). Questions ordonnées et progressives." };
+        }
+        return e;
+      }),
+    },
+  ),
+  physique_chimie: serieC(
+    TERMINALE_D_TEMPLATES.physique_chimie,
+    'DPFC – Format de l’épreuve de Physique-Chimie au Baccalauréat, appliqué à la Série C (Exercice 1 : tests objectifs 8 pts ; Exercice 2 : situation d’évaluation en Physique 7 pts ; Exercice 3 : situation d’évaluation en Chimie 5 pts)',
+    "Terminale C : Physique — cinématique, mouvement du centre d'inertie, mouvements dans les champs g et E uniformes, champ magnétique, loi de Laplace, induction et auto-induction, oscillations mécaniques libres, montages dérivateur et intégrateur, circuit RLC en régime sinusoïdal forcé, résonance, puissance et transport d'énergie, radioactivité, réactions nucléaires provoquées, photons, diffraction et interférences. Chimie — alcools, aldéhydes et cétones, acides carboxyliques et dérivés, amines, acides α-aminés, saponification, pH, acides et bases forts et faibles, couples acide/base, dosages et solutions tampons.",
+  ),
+  svt: serieC(
+    TERMINALE_D_TEMPLATES.svt,
+    'DPFC – Format de l’épreuve de SVT au Baccalauréat, appliqué à la Série C (Exercice 1 : tests objectifs 6 pts ; Exercice 2 : exploitation de documents 6 pts ; Exercice 3 : situation d’évaluation 8 pts)',
+    "Terminale C : tissu nerveux, muscle strié squelettique, réflexe conditionnel, fonctionnement du cœur, constance du milieu intérieur, système de défense de l'organisme, infection par le VIH, fonctionnement des organes sexuels, devenir des cellules sexuelles, reproduction des spermaphytes, transmission d'un et de deux caractères héréditaires, gisements miniers, amélioration et protection des sols.",
+  ),
+  histoire_geo: serieC(
+    TERMINALE_D_TEMPLATES.histoire_geo,
+    'Format du BAC, appliqué à la Série C (Première partie : 6 pts ; Deuxième partie : 14 pts, dissertation obligatoire 7 pts et sujet au choix 7 pts)',
+    TERMINALE_A_TEMPLATES.histoire_geo.notesClasse.terminale_a1.replace(' Au BAC, la série A a un coefficient 3.', ''),
+  ),
+  francais: serieC(
+    TERMINALE_D_TEMPLATES.francais,
+    'Format du BAC, appliqué à la Série C (sujet officiel ivoirien) : le candidat traite l’un des trois sujets au choix (Résumé du texte et production écrite ; Commentaire composé ; Dissertation littéraire)',
+    'Terminale C : maîtrise des méthodologies officielles de l’épreuve écrite du Baccalauréat (Résumé + Production écrite, Commentaire composé, Dissertation littéraire).',
+  ),
+  philosophie: serieC(
+    TERMINALE_D_TEMPLATES.philosophie,
+    'Format du BAC, appliqué à la Série C (sujet et barème nationaux) : Première partie 4 pts (2 exercices obligatoires), Deuxième partie 16 pts (Dissertation philosophique OU Commentaire de texte au choix)',
+    'Terminale C : programme officiel du second cycle — conscience et inconscient, liberté, vérité, science et technique, art, État et société, autrui et morale.',
+  ),
+};
+
+/*
+ * ============================================================================
+ * PREMIÈRE (A1, A2, C, D) — DEVOIRS DE 2 H
+ * ============================================================================
+ * Maths, Physique-Chimie, SVT, Histoire-Géographie : formats DPFC du second cycle (mêmes structures qu'en Seconde),
+ * avec le programme de Première. Français et Philosophie : format des épreuves du BAC, que la Première prépare
+ * (résumé, commentaire composé, dissertation ; commentaire de texte et dissertation philosophiques), à un niveau d'initiation.
+ */
+const PREMIERE_GRADES = ['premiere_a1', 'premiere_a2', 'premiere_c', 'premiere_d'];
+const allPremieres = (note) => Object.fromEntries(PREMIERE_GRADES.map((g) => [g, note]));
+const MATHS_1RE_A = "Première A (littéraire) : équations et inéquations du second degré, systèmes d'inéquations linéaires, généralités sur les fonctions, dérivabilité et étude de fonctions, dénombrement, statistiques. Calculs simples et guidés, pas de géométrie vectorielle.";
+const MATHS_1RE_C = "Première C (scientifique) : second degré, systèmes linéaires dans R² et R³, généralités sur les fonctions, limites et continuité, dérivation, étude de fonctions, suites numériques, dénombrement, probabilité, statistiques, barycentre, angles orientés et trigonométrie, composées de transformations, vecteurs et orthogonalité dans l'espace.";
+const MATHS_1RE_D = "Première D (scientifique) : second degré, systèmes linéaires dans R² et R³, fonctions, limites, dérivation, suites numériques, dénombrement, probabilité, statistiques, géométrie dans l'espace. Calculs un peu plus guidés qu'en Première C.";
+const PC_1RE = "Première C et D : Physique — travail et puissance d'une force, énergie cinétique, potentielle et mécanique, champ électrostatique, puissance et énergie électriques, amplificateur opérationnel, optique géométrique (réflexion, réfraction, lentilles minces). Chimie — pétrole et gaz naturel, alcanes, alcènes et alcynes, composés oxygénés, éthanol, estérification et hydrolyse, oxydoréduction (voie sèche, couples en solution, classification, dosage), électrolyse, corrosion et protection des métaux.";
+
+export const PREMIERE_TEMPLATES = {
+  maths: {
+    ...EXAM_TEMPLATES.maths,
+    notesClasse: { premiere_a1: MATHS_1RE_A, premiere_a2: MATHS_1RE_A, premiere_c: MATHS_1RE_C, premiere_d: MATHS_1RE_D },
+  },
+  physique_chimie: {
+    ...EXAM_TEMPLATES.physique_chimie,
+    source: 'DPFC – Format Physique-Chimie (exercice 1 : 8 pts de tests objectifs ; exercice 2 : 7 pts ; exercice 3 : 5 pts), appliqué au programme de Première',
+    notesClasse: { premiere_c: PC_1RE, premiere_d: PC_1RE },
+  },
+  svt: {
+    ...EXAM_TEMPLATES.svt,
+    source: 'DPFC – Format SVT (exercices 1 et 2 : tests objectifs, 6 pts chacun ; exercice 3 : situation d’évaluation, 8 pts), appliqué au programme de Première',
+    notesClasse: {},
+  },
+  histoire_geo: {
+    ...EXAM_TEMPLATES.histoire_geo,
+    source: 'DPFC – Format Hist-Géo (exercice 1 : tests objectifs, 4 pts ; exercice 2 : commentaire de document, 10 pts ; exercice 3 : activité de construction, 6 pts), appliqué au programme de Première',
+    notesClasse: allPremieres("Première (programme commun A, C, D) : Histoire — essor du capitalisme, révolutions industrielles, impérialisme et congrès de Berlin, résistances et colonisation en Côte d'Ivoire, Première et Seconde Guerres mondiales, violences de masse et génocides du XXe siècle. Géographie — dynamisme démographique en Côte d'Ivoire et dans le monde, urbanisation (Côte d'Ivoire, France), organisation administrative et aménagement du territoire ivoirien, facteurs et conséquences de la mondialisation."),
+  },
+  francais: {
+    ...TERMINALE_A_TEMPLATES.francais,
+    source: 'Format des épreuves écrites de Français du BAC (le candidat traite l’un des trois sujets : questions, résumé et production écrite ; commentaire composé ; dissertation littéraire), appliqué à la Première',
+    reglesMatiere: [
+      ...TERMINALE_A_TEMPLATES.francais.reglesMatiere.filter((r) => !r.startsWith('Les thèmes sont proches')),
+      'Les thèmes sont proches des élèves ivoiriens (école, famille, ville et village, tradition et modernité, solidarité, travail…) ; textes un peu plus courts et plus accessibles qu’au BAC.',
+    ],
+    notesClasse: allPremieres('Première (toutes séries) : préparation aux trois épreuves du BAC étudiées en classe (résumé de texte argumentatif et production écrite, commentaire composé, dissertation littéraire) ; consignes claires, niveau de Première.'),
+  },
+  philosophie: {
+    ...TERMINALE_A_TEMPLATES.philosophie,
+    source: 'Format des épreuves de Philosophie du BAC (première partie 4 pts : deux exercices obligatoires ; deuxième partie 16 pts : dissertation ou commentaire de texte au choix), appliqué à la Première, année d’initiation',
+    notesClasse: allPremieres("Première (initiation à la philosophie) : méthode de lecture de texte, introduction et conclusion du commentaire de texte, problématisation, introduction de la dissertation, histoire de la philosophie (Antiquité, Moyen Âge et Renaissance, période moderne, période contemporaine). Textes courts et clairs, sujets très guidés, références aux philosophes étudiés en Première."),
+  },
+};
+
 /**
  * Modèle de sujet pour une matière ET une classe :
  * - Terminale D : modèles dédiés au format officiel du BAC Série D ;
+ * - Terminale C : formats du BAC appliqués à la Série C ;
+ * - Premières : formats DPFC du second cycle (Français et Philosophie : format du BAC) ;
  * - Terminales A : modèles dédiés au format du BAC Série A ;
  * - Autres classes (Seconde A, Seconde C...) : modèles de cycle standard.
  */
 export function getExamTemplate(subjectKey, gradeId) {
   if (TERMINALE_D_GRADES.includes(gradeId) && TERMINALE_D_TEMPLATES[subjectKey]) {
     return TERMINALE_D_TEMPLATES[subjectKey];
+  }
+  if (TERMINALE_C_GRADES.includes(gradeId) && TERMINALE_C_TEMPLATES[subjectKey]) {
+    return TERMINALE_C_TEMPLATES[subjectKey];
+  }
+  if (PREMIERE_GRADES.includes(gradeId) && PREMIERE_TEMPLATES[subjectKey]) {
+    return PREMIERE_TEMPLATES[subjectKey];
   }
   if (TERMINALE_A_GRADES.includes(gradeId) && TERMINALE_A_TEMPLATES[subjectKey]) {
     return TERMINALE_A_TEMPLATES[subjectKey];

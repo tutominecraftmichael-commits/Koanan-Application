@@ -18,19 +18,25 @@ import { tryResolveGradeLevel } from '../curriculum/curriculumMatcher';
  * Classes où la préparation aux devoirs est ouverte (il y a des cours et des QCM).
  * Terminale A / A1 / A2 : sujets au format du BAC (modèles TERMINALE_A_TEMPLATES dans api/_examTemplates.js).
  * Terminale D : sujets et séries de 30 questions selon le programme officiel complet.
+ * Terminale C (formats du BAC série C) et Premières A1, A2, C, D (ouvertes le 2026-11-14).
  */
 export const EXAM_PREP_GRADES = [
   'seconde_a',
   'seconde_c',
+  'premiere_a1',
+  'premiere_a2',
+  'premiere_c',
+  'premiere_d',
   'terminale_a1',
   'terminale_a2',
   'terminale_a',
+  'terminale_c',
   'terminale_d',
 ] as const;
 
 /**
  * Matières qui ont un modèle de sujet de 2 h (api/_examTemplates.js).
- * La Philosophie n'a de modèle qu'en Terminale A (seule classe à avoir des cours de Philosophie ouverts aux devoirs).
+ * La Philosophie a un modèle en Première et en Terminale (pas en Seconde, où elle n'est pas enseignée).
  */
 export const SUJET_TEMPLATE_SUBJECTS = ['maths', 'physique_chimie', 'svt', 'histoire_geo', 'francais', 'philosophie'] as const;
 
