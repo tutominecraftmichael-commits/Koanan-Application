@@ -128,7 +128,15 @@ export function loseSeries(g0: GamificationState | undefined, reason: string, no
   };
 }
 
-/** Fin d'une série : XP = base − 1 par faute (jamais sous 0). */
+/**
+ * Pénalité par faute : elle double avec le niveau, comme les XP (1, 2, 4 puis 8 XP par faute),
+ * pour qu'une faute coûte autant au niveau 4 qu'au niveau 1, en proportion.
+ */
+export function mistakePenalty(chainIndex: number): number {
+  return seriesLevelFor(chainIndex).xp / SERIES_LEVELS[0].xp;
+}
+
+/** Fin d'une série : XP = base − pénalité par faute (jamais sous 0). */
 export function finishSeries(
   g0: GamificationState | undefined,
   mistakes: number,
@@ -138,7 +146,7 @@ export function finishSeries(
 ): { gamification: GamificationState; gained: number; base: number } {
   const g = gamificationOf(g0);
   const { base, chainIndex } = nextSeriesBaseXp(g, startedAt);
-  const gained = Math.max(0, base - Math.max(0, Math.round(mistakes)));
+  const gained = Math.max(0, base - Math.max(0, Math.round(mistakes)) * mistakePenalty(chainIndex));
   const event: GamificationEvent = {
     at: now.toISOString(), kind: 'xp', amount: gained,
     reason: `Série niveau ${seriesLevelFor(chainIndex).level} (${Math.max(0, total - mistakes)}/${total})`,

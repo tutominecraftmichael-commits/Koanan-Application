@@ -15,12 +15,15 @@ import type {
   CurriculumChapter, CurriculumGradeLevel, InteractiveExercise, StemSubjectId, StepKind, StudentCurriculumProgressMap,
 } from '../curriculum/types';
 import { STEM_SUBJECTS } from '../curriculum/types';
+import { cleanSeriesPrompt, needsLessonContext } from './exerciseContext';
 
 export interface SeriesQuestion {
   key: string;
   subjectId: StemSubjectId;
   subjectName: string;
   chapterTitle: string;
+  /** Mini-leçon d'où vient la question : donne le sujet précis à l'élève */
+  pointTitle: string;
   difficulty: 1 | 2 | 3;
   exercise: InteractiveExercise;
 }
@@ -54,6 +57,16 @@ const isUsableQcm = (e?: InteractiveExercise): e is InteractiveExercise =>
     && (e.correctAnswerIndex as number) >= 0 && (e.correctAnswerIndex as number) < e.options.length);
 
 const DIFFICULTY: Record<StepKind, 1 | 2 | 3> = { definition: 1, propriete: 1, methode: 2, exemple: 2, piege: 3 };
+
+/** Matières déverrouillées (au moins une mini-leçon terminée) : les seules dont on charge les cours. */
+export function unlockedSubjects(map: StudentCurriculumProgressMap, gradeKey: string): StemSubjectId[] {
+  return (Object.keys(STEM_SUBJECTS) as StemSubjectId[]).filter((subjectId) => {
+    const prog = map[`${gradeKey}::${subjectId}`];
+    if (!prog) return false;
+    if ((prog.masteredPointIds || []).length) return true;
+    return Object.values(prog.subCategories || {}).some((sub) => (sub?.masteredPointIds || []).length > 0);
+  });
+}
 
 /**
  * Chapitres à interroger pour chaque matière (verrou : au moins une mini-leçon terminée dans la matière).
@@ -124,9 +137,14 @@ export function buildExerciseSeries(
         for (const { ex, kind } of [...fromSteps, ...plain]) {
           if (!isUsableQcm(ex) || seen.has(ex.prompt)) continue;
           seen.add(ex.prompt);
+          // Hors de sa mini-leçon, la question doit se suffire à elle-même
+          const visual = ex.visualSchema || ex.courseVisualSchema;
+          if (needsLessonContext({ prompt: ex.prompt, visualSchema: visual })) continue;
           pool.push({
             key: `${subjectId}:${ex.id || pool.length}`, subjectId, subjectName, chapterTitle: chapter.title,
-            difficulty: kind ? DIFFICULTY[kind] : 2, exercise: ex,
+            pointTitle: point.title,
+            difficulty: kind ? DIFFICULTY[kind] : 2,
+            exercise: { ...ex, prompt: cleanSeriesPrompt(ex.prompt), visualSchema: visual },
           });
         }
       }

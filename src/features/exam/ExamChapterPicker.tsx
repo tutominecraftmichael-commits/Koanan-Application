@@ -38,10 +38,11 @@ export const ExamChapterPicker: React.FC<ExamChapterPickerProps> = ({ subjectNam
     }
     (async () => {
       try {
-        const [{ getCurriculumChapters }, sps] = await Promise.all([
+        const [{ getCurriculumChapters, loadCurriculumFor }, sps] = await Promise.all([
           import('../../lib/curriculum/curriculumRegistry'),
           import('../../lib/curriculum/studentProgressService'),
         ]);
+        await loadCurriculumFor(grade, [subjectKey]);
         const chapters = getCurriculumChapters(subjectKey, grade);
         const byGroup = new Map<string, Group>();
         for (const c of chapters) {

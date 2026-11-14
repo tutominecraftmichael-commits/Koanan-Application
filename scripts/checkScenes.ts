@@ -14,7 +14,8 @@ registerHooks({
 const { GENERATED_SCENES } = await import('../src/data/illustrations/generatedScenes');
 const { SCENE_ILLUSTRATIONS } = await import('../src/data/illustrations/scenes');
 const { SCENE_SUBJECTS } = await import('../src/data/illustrations/index');
-const { getAuthoredChaptersRaw } = await import('../src/lib/curriculum/curriculumRegistry');
+const { getAuthoredChaptersRaw, loadAllCurriculum } = await import('../src/lib/curriculum/curriculumRegistry');
+await loadAllCurriculum();
 
 // Matière de chaque question, pour vérifier la règle : scènes UNIQUEMENT en Histoire-Géo et Philosophie
 const subjectOfExercise = new Map<string, string>();

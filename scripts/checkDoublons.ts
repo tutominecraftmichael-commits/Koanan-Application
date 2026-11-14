@@ -18,7 +18,8 @@ registerHooks({
 });
 (globalThis as any).localStorage ??= { getItem: () => null, setItem() {}, removeItem() {} };
 
-const { getCurriculumChapters } = await import('../src/lib/curriculum/curriculumRegistry');
+const { getCurriculumChapters, loadAllCurriculum } = await import('../src/lib/curriculum/curriculumRegistry');
+await loadAllCurriculum();
 const { getChapterSubCategory } = await import('../src/lib/curriculum/studentProgressService');
 
 const GRADES = ['6eme', '5eme', '4eme', '3eme', 'seconde_a', 'seconde_c', 'premiere_a1', 'premiere_a2', 'premiere_c', 'premiere_d', 'terminale_a1', 'terminale_a2', 'terminale_c', 'terminale_d'] as const;

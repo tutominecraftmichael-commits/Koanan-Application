@@ -72,6 +72,7 @@ import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, lo
 import { XpReputationCard } from './features/gamification/XpReputationCard';
 import { XpBurst } from './features/gamification/XpBurst';
 import { ExerciseFab } from './features/gamification/ExerciseFab';
+import { SeriesErrorBoundary } from './features/gamification/SeriesErrorBoundary';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
 import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
@@ -96,7 +97,8 @@ const loadSubjectManager = () => import('./features/subjects/SubjectManager').th
 const loadPlannerView = () => import('./features/planner/PlannerView').then(m => m.PlannerView);
 const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashboard').then(m => m.AnalyticsDashboard);
 const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
-const ExerciseSeriesView = lazyView(() => import('./features/gamification/ExerciseSeriesView').then((m) => m.ExerciseSeriesView));
+const loadExerciseSeriesView = () => import('./features/gamification/ExerciseSeriesView').then((m) => m.ExerciseSeriesView);
+const ExerciseSeriesView = lazyView(loadExerciseSeriesView);
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
 const ScheduleManager = lazyView(loadScheduleManager);
@@ -1868,7 +1870,8 @@ export function App() {
     let hasChapters = false;
     if (wantsTutor) {
       try {
-        const { hasCurriculumChapters } = await import('./lib/curriculum/curriculumRegistry');
+        const { hasCurriculumChapters, loadCurriculumFor } = await import('./lib/curriculum/curriculumRegistry');
+        await loadCurriculumFor(resolvedGrade, [stemMatchForTutor.stemSubjectId!]); // seulement cette matière, à ce niveau
         hasChapters = hasCurriculumChapters(stemMatchForTutor.stemSubjectId!, resolvedGrade!);
       } catch {
         showToast('Connexion trop faible pour charger le cours guidé. Séance lancée en mode chronomètre.', 6000);
@@ -2537,7 +2540,8 @@ export function App() {
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
       )}
       {isExerciseOpen && (
-        <Suspense fallback={null}>
+        <SeriesErrorBoundary onClose={() => setIsExerciseOpen(false)}>
+        <Suspense fallback={<div className="fixed inset-0 z-[80] bg-slate-50 dark:bg-[#070B13] flex items-center justify-center"><ViewLoader /></div>}>
           <ExerciseSeriesView
             userId={state.userAccount?.googleId || 'local_student'}
             gradeLevel={tryResolveGradeLevel(state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel)}
@@ -2550,6 +2554,7 @@ export function App() {
             onUpgrade={() => { setIsExerciseOpen(false); handleViewPricing(); }}
           />
         </Suspense>
+        </SeriesErrorBoundary>
       )}
 
       {/* Academic Track Presets Modal (ONLY FOR DEMO MODE) */}

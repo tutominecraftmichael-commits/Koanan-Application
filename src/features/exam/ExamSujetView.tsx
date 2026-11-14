@@ -258,7 +258,8 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
     setError(null);
     setBusy('sujet');
     try {
-      const [{ getCurriculumChapters }] = await Promise.all([import('../../lib/curriculum/curriculumRegistry')]);
+      const [{ getCurriculumChapters, loadCurriculumFor }] = await Promise.all([import('../../lib/curriculum/curriculumRegistry')]);
+      await loadCurriculumFor(gradeLevel, [stemSubjectId]);
       const wanted = new Set(session.examChapterIds || []);
       const chapters = getCurriculumChapters(stemSubjectId, gradeLevel).filter((c) => wanted.has(c.id));
       if (!chapters.length) throw Object.assign(new Error('NO_CHAPTERS'), { code: 'NO_CHAPTERS' });

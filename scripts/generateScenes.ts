@@ -27,7 +27,8 @@ registerHooks({
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'src', 'data', 'illustrations', 'generatedScenes.ts');
 
-const { getAuthoredChaptersRaw } = await import('../src/lib/curriculum/curriculumRegistry');
+const { getAuthoredChaptersRaw, loadAllCurriculum } = await import('../src/lib/curriculum/curriculumRegistry');
+await loadAllCurriculum();
 const { HANDMADE_ILLUSTRATION_IDS, SCENE_SUBJECTS } = await import('../src/data/illustrations/index');
 const { GENERATED_SCENES } = await import('../src/data/illustrations/generatedScenes');
 const types = await import('../src/lib/scenes/sceneTypes');

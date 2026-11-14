@@ -52,7 +52,7 @@ import {
 import type { ResumeBookmark } from '../../lib/curriculum/types';
 import { KonanMascot } from '../../components/common/KonanMascot';
 import { afterShine } from '../../lib/shineClick';
-import { getCurriculumChapters } from '../../lib/curriculum/curriculumRegistry';
+import { getCurriculumChapters, loadCurriculumFor } from '../../lib/curriculum/curriculumRegistry';
 import { shuffleExerciseOptions } from '../../lib/curriculum/optionShuffle';
 import { soundFX } from '../../lib/audioEffects';
 import { KonanCube } from '../../components/common/KonanCube';
@@ -565,13 +565,17 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   };
 
   // Progression copiée dans le compte : on la récupère d'abord (autre téléphone, réinstallation…), 3,5 s au plus
+  // + cours du niveau de l'élève chargés (paquet Seconde, Première ou Terminale, une seule fois)
   const [cloudReady, setCloudReady] = useState<boolean>(false);
   useEffect(() => {
     let alive = true;
     startLearningSync();
-    pullLearning(userId).finally(() => { if (alive) setCloudReady(true); });
+    Promise.all([
+      pullLearning(userId).catch(() => {}),
+      loadCurriculumFor(gradeLevel, [stemSubjectId]).catch(() => {}),
+    ]).finally(() => { if (alive) setCloudReady(true); });
     return () => { alive = false; };
-  }, [userId]);
+  }, [userId, gradeLevel, stemSubjectId]);
 
   useEffect(() => {
     if (!cloudReady) return;
