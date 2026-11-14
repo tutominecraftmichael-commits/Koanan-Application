@@ -5,7 +5,7 @@ export const SVT_TLE_D_L04_FONCTIONNEMENT_DU_COEUR: CurriculumChapter = {
   subjectId: "svt",
   gradeLevel: "terminale_d",
   alsoForGrades: ["terminale_c"],
-  order: 5,
+  order: 4,
   title: "Le fonctionnement du cœur (Automatisme cardiaque, révolution cardiaque, régulation nerveuse et chimique)",
   summary: "Étude complète et approfondie de la physiologie cardiaque selon le programme officiel de Côte d'Ivoire : automatisme cardiaque et ultrastructure du tissu nodal (pacemaker sinusal, potentiels d'action et pré-potentiel entraîneur), phénomènes mécaniques (cardiogramme, systoles et diastoles de la révolution cardiaque) et électriques (électrocardiogramme ECG, ondes PQRST), régulation nerveuse autonome réflexe (centres bulbaire et médullaire, nerfs vagues X, nerfs orthosympathiques, baroréflexe sino-aortique des nerfs de Hering et Cyon), et régulation chimique humorale (expérience princeps d'Otto Loewi, acétylcholine, adrénaline, atropine, ergotoxine et acétylcholinestérase).",
   officialVolumeHours: 10,

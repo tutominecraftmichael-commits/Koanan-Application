@@ -5,7 +5,7 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
   subjectId: "svt",
   gradeLevel: "terminale_d",
   alsoForGrades: ["terminale_c"],
-  order: 8,
+  order: 5,
   title: "Le maintien de la constance du milieu intérieur (Régulation rénale, équilibre hydrominéral, volémie, ADH et aldostérone)",
   summary: "Étude complète et approfondie du rôle des reins dans l'homéostasie du milieu intérieur selon le programme officiel de Côte d'Ivoire (Leçon 8 SVT Tle D) : ultrastructure du rein et du néphron (corpuscule de Malpighi, capsule de Bowman, glomérule, tubules urinaires), analyse comparative et mécanismes de formation de l'urine (filtration glomérulaire sélective, réabsorption tubulaire totale ou partielle, sécrétion active et excrétion), régulation neuro-hormonale de la teneur en eau et de la volémie par l'ADH (osmorécepteurs, tensiorécepteurs, polyurie et oligurie), régulation de la natrémie et de la pression artérielle par le système rénine-angiotensine-aldostérone (SRAA), et régulation couplée de l'équilibre acido-basique (tampon bicarbonate, poumons et reins).",
   officialVolumeHours: 10,
@@ -41,6 +41,11 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
         title: "Organisation structurale du néphron et vascularisation rénale",
         caption: "Le néphron est l'unité fonctionnelle du rein : les 3 étapes (filtration glomérulaire, réabsorption tubulaire, sécrétion) assurent l'épuration du sang et l'élaboration de l'urine.",
         svgContent: `<svg viewBox="0 0 620 330" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Organisation du néphron">
+  <defs>
+    <marker id="arrow-nephron" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+    </marker>
+  </defs>
   <rect x="10" y="10" width="600" height="310" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
   
   <!-- Zone corticale / médullaire limite -->
@@ -59,7 +64,7 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
   <path d="M 132 80 C 160 60, 180 110, 210 85 C 230 65, 250 100, 270 120" fill="none" stroke="#F59E0B" stroke-width="6" stroke-linecap="round" />
   <text x="190" y="50" font-size="9" font-weight="bold" fill="#D97706" text-anchor="middle">TCP (Bordure en brosse)</text>
   <!-- Flèche réabsorption TCP -->
-  <path d="M 200 95 L 200 130" stroke="#10B981" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 200 95 L 200 128" stroke="#10B981" stroke-width="2" marker-end="url(#arrow-nephron)" />
   <text x="200" y="142" font-size="8" font-weight="bold" fill="#059669" text-anchor="middle">Glucose 100%, Eau 70%</text>
 
   <!-- Anse de Henlé (plonge dans la médulla) -->
@@ -74,16 +79,16 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
   <text x="375" y="70" font-size="9" font-weight="bold" fill="#7C3AED" text-anchor="middle">TCD (Sécrétion / Aldostérone)</text>
 
   <!-- Tube Collecteur de Bellini -->
-  <line x1="450" y1="40" x2="450" y2="290" stroke="#0D9488" stroke-width="8" stroke-linecap="round" />
+  <line x1="450" y1="40" x2="450" y2="285" stroke="#0D9488" stroke-width="8" stroke-linecap="round" />
   <text x="525" y="100" font-size="10" font-weight="bold" fill="#0F766E">Tube de Bellini</text>
   <text x="525" y="115" font-size="8" fill="#64748B">(Contrôlé par l'ADH)</text>
   <!-- Flèche eau réabsorbée par ADH -->
-  <path d="M 454 180 L 485 180" stroke="#0284C7" stroke-width="2" marker-end="url(#arrow)" />
-  <text x="515" y="184" font-size="8" font-weight="bold" fill="#0284C7">Réabsorption H₂O</text>
+  <path d="M 454 180 L 485 180" stroke="#0284C7" stroke-width="2" marker-end="url(#arrow-nephron)" />
+  <text x="492" y="184" font-size="8" font-weight="bold" fill="#0284C7">Réabsorption H₂O</text>
 
   <!-- Urine définitive sortant -->
-  <path d="M 450 290 L 450 315" stroke="#EAB308" stroke-width="5" marker-end="url(#arrow)" />
-  <text x="450" y="325" font-size="9" font-weight="bold" fill="#CA8A04" text-anchor="middle">Urine définitive vers uretère</text>
+  <path d="M 450 285 L 450 302" stroke="#EAB308" stroke-width="4" marker-end="url(#arrow-nephron)" />
+  <text x="450" y="314" font-size="9" font-weight="bold" fill="#CA8A04" text-anchor="middle">Urine définitive vers uretère</text>
 </svg>`,
         tableData: {
           headers: ["Segment du néphron", "Localisation dans le rein", "Structure cytologique", "Fonction physiologique majeure"],
@@ -327,6 +332,11 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
         title: "Régulation neuro-endocrine comparée de la teneur en eau de l'organisme",
         caption: "Boucle de rétrocontrôle de l'osmorégulation : la posthypophyse libère l'ADH en réponse à une hyperosmolalité pour stimuler la réabsorption d'eau.",
         svgContent: `<svg viewBox="0 0 620 280" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Régulation neuro-endocrine par l'ADH">
+  <defs>
+    <marker id="arrow-adh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+    </marker>
+  </defs>
   <rect x="10" y="10" width="600" height="260" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
   
   <!-- Stimulus : Déshydratation / Hyperosmolalité -->
@@ -340,7 +350,7 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
   <text x="310" y="66" font-size="9" fill="#78350F" text-anchor="middle">Osmorécepteurs Hypothalamiques</text>
 
   <!-- Flèche 1 -> 2 -->
-  <path d="M 190 55 L 225 55" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 190 55 L 225 55" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow-adh)" />
 
   <!-- Effecteur endocrine : Post-hypophyse & ADH -->
   <rect x="430" y="30" width="160" height="50" rx="8" fill="#E0E7FF" stroke="#6366F1" stroke-width="1.5" />
@@ -348,10 +358,10 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
   <text x="510" y="66" font-size="9" fill="#312E81" text-anchor="middle">Libération massive d'ADH</text>
 
   <!-- Flèche 2 -> 3 -->
-  <path d="M 390 55 L 425 55" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 390 55 L 425 55" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow-adh)" />
 
   <!-- Descente vers les reins -->
-  <path d="M 510 80 L 510 145" stroke="#6366F1" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 510 80 L 510 145" stroke="#6366F1" stroke-width="2" marker-end="url(#arrow-adh)" />
   <text x="518" y="115" font-size="9" font-weight="bold" fill="#4338CA">ADH sanguine</text>
 
   <!-- Organe cible : Rein / Tubes collecteurs -->
@@ -367,11 +377,11 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
   <text x="200" y="198" font-size="9" fill="#0369A1" text-anchor="middle">▼ Baisse de l'osmolalité plasmatique</text>
 
   <!-- Flèche Organe cible -> Résultat -->
-  <path d="M 360 177 L 315 177" stroke="#10B981" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 360 177 L 315 177" stroke="#10B981" stroke-width="2" marker-end="url(#arrow-adh)" />
 
   <!-- Rétrocontrôle négatif (Feedback négatif) -->
-  <path d="M 90 177 C 40 177, 40 100, 225 68" fill="none" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow)" />
-  <text x="45" y="125" font-size="9" font-weight="bold" fill="#DC2626">Rétrocontrôle (-)</text>
+  <path d="M 90 177 C 40 177, 40 100, 225 68" fill="none" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow-adh)" />
+  <text x="115" y="122" font-size="9" font-weight="bold" fill="#DC2626">Rétrocontrôle (-)</text>
 </svg>`,
         tableData: {
           headers: ["Situation physiologique", "Pression osmotique plasmatique", "Sécrétion d'ADH posthypophysaire", "Perméabilité des tubes collecteurs", "Volume et aspect de l'urine émise"],

@@ -7,7 +7,9 @@ export const HIST_1RE_T3_L03_VIOLENCES_MASSE_GENOCIDES: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 8,
   "title": "Thème 3, leçon 3 : Les violences de masse, les génocides du XXe siècle à nos jours",

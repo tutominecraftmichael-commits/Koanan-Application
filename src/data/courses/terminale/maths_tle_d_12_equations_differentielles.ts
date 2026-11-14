@@ -4,7 +4,7 @@ export const MATHS_TLE_D_L12_EQUATIONS_DIFFERENTIELLES: CurriculumChapter = {
   id: "terminale_d_maths_ch12_equations_differentielles",
   subjectId: "maths",
   gradeLevel: "terminale_d",
-  alsoForGrades: ["terminale_c"],
+  alsoForGrades: [],
   order: 12,
   title: "Équations différentielles (Premier et second ordre linéaires à coefficients constants)",
   summary: "Étude théorique et appliquée des équations différentielles : équations linéaires du premier ordre homogènes y' + ay = 0 et avec second membre y' + ay = b ou g(x), équations linéaires du second ordre y'' + my = 0 (selon le signe de m : m = 0, m < 0 et m > 0), conditions initiales et modélisations interdisciplinaires (loi de refroidissement de Newton, dynamique des populations et oscillateurs harmoniques).",

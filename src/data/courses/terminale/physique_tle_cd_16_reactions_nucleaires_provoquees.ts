@@ -123,7 +123,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Définition",
           "paragraphText": "Lorsqu'on compare la masse réelle m_X d'un noyau mesurée au spectromètre de masse avec la somme des masses de ses nucléons individuels (Z protons et A-Z neutrons), on observe invariablement que m_X < Z.m_p + (A-Z).m_n. Le défaut de masse Delta m est la quantité positive définie par : Delta m = [Z.m_p + (A-Z).m_n] - m_X. Ce phénomène est universel pour tous les noyaux liés de l'univers : les nucléons 'perdent' de la masse lorsqu'ils se lient pour former un édifice nucléaire stable.",
           "exercise": {
-            "id": "p1_s1_qcm",
+            "id": "phys_tle_cd_16_p1_s1_qcm",
             "type": "mcq",
             "prompt": "On considère un noyau d'azote 14 (^{14}_7N) de masse m = 13,9992 u. Sachant que m_p = 1,0073 u et m_n = 1,0087 u, quelle est la valeur du défaut de masse Delta m ?",
             "options": [
@@ -144,7 +144,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Principe fondamental",
           "paragraphText": "Le postulat fondamental d'Albert Einstein énonce que toute masse au repos m possède une énergie propre équivalente E₀ = m.c². Réciproquement, toute variation d'énergie ΔE d'un système au repos s'accompagne obligatoirement d'une variation de masse Δm telle que ΔE = Δm.c². Lorsque des nucléons isolés se rassemblent pour former un noyau, ils libèrent une énergie colossale vers le milieu extérieur : leur énergie totale diminue de ΔE, ce qui se traduit par une perte équivalente de masse au repos Δm = ΔE / c².",
           "exercise": {
-            "id": "p1_s2_qcm",
+            "id": "phys_tle_cd_16_p1_s2_qcm",
             "type": "mcq",
             "prompt": "Si un système matériel au repos libère une énergie de 9,0.10¹³ Joules sous forme de chaleur et de rayonnement, quelle est la perte de masse subie par ce système ? (c = 3,00.10⁸ m/s)",
             "options": [
@@ -165,7 +165,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Méthode de calcul",
           "paragraphText": "En physique nucléaire, les calculs de masse et d'énergie s'effectuent par deux méthodes équivalentes : 1. En unités du Système International : convertir les masses en kg (1 u = 1,66054.10⁻²⁷ kg), appliquer E = Δm.c² (avec c = 3,00.10⁸ m/s) pour obtenir l'énergie en Joules, puis convertir en MeV en divisant par 1,602.10⁻¹³ J/MeV. 2. Par la constante d'équivalence directe : sachant que 1 u équivaut directement à 931,5 MeV/c², l'énergie en MeV s'obtient instantanément par la multiplication : E(MeV) = Δm(u) * 931,5 MeV/u. Cette seconde méthode évite les erreurs de puissances de 10.",
           "exercise": {
-            "id": "p1_s3_qcm",
+            "id": "phys_tle_cd_16_p1_s3_qcm",
             "type": "mcq",
             "prompt": "Un défaut de masse mesuré vaut Delta m = 0,200 u. Quelle est l'énergie libérée en mégaélectronvolts (MeV) ?",
             "options": [
@@ -186,7 +186,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "Les tables périodiques fournissent la masse des ATOMES NEUTRES (incluant le cortège des Z électrons périphériques) et non la masse du noyau nu seul : m(atome) = m(noyau) + Z.m_e - E_liaison_électronique/c². Pour un calcul rigoureux de défaut de masse avec les masses atomiques : Delta m = Z.m(^1_1H) + (A-Z).m_n - m(atome ^A_ZX). La masse des électrons se compense alors exactement avec celle présente dans l'atome d'hydrogène ^1_1H !",
           "exercise": {
-            "id": "p1_s4_qcm",
+            "id": "phys_tle_cd_16_p1_s4_qcm",
             "type": "mcq",
             "prompt": "Pourquoi peut-on utiliser la masse de l'atome d'hydrogène neutre m(^1_1H) à la place de la masse du proton nu m_p dans le calcul du défaut de masse à partir des masses atomiques neutres ?",
             "options": [
@@ -207,7 +207,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Ordre de grandeur",
           "paragraphText": "Lors d'une réaction chimique de combustion (ex. combustion du carbone C + O₂ -> CO₂), le réarrangement des liaisons électroniques libère environ 4 eV par molécule, ce qui correspond à une variation relative de masse Delta m / m de l'ordre de 10⁻¹⁰ (totalement indétectable sur une balance ordinaire). En revanche, lors d'une réaction nucléaire, le réarrangement des nucléons libère environ 200 MeV par événement, soit 50 millions de fois plus d'énergie par atome ! La perte de masse relative atteint alors près de 0,1 % (10⁻³), ce qui est parfaitement mesurable.",
           "exercise": {
-            "id": "p1_s5_qcm",
+            "id": "phys_tle_cd_16_p1_s5_qcm",
             "type": "mcq",
             "prompt": "Quel est approximativement le rapport entre l'énergie libérée par la fission d'un noyau d'uranium (~200 MeV) et l'énergie chimique libérée par la combustion d'un atome de carbone (~4 eV) ?",
             "options": [
@@ -228,7 +228,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Application numérique",
           "paragraphText": "Reprenons les données officielles de l'École Numérique : m(^235_92U) = 235,0439 u, m_p = 1,0073 u, m_n = 1,0087 u. Pour l'uranium 235 : Z = 92 et N = 235 - 92 = 143. Masse des nucléons séparés = 92 * 1,0073 + 143 * 1,0087 = 92,6716 + 144,2441 = 236,9157 u. Le défaut de masse vaut : Delta m = 236,9157 - 235,0439 = 1,8718 u.",
           "exercise": {
-            "id": "p1_s6_qcm",
+            "id": "phys_tle_cd_16_p1_s6_qcm",
             "type": "mcq",
             "prompt": "À partir de la valeur Delta m = 1,8718 u trouvée pour l'uranium 235, quelle est la masse manquante exprimée en kilogrammes ? (1 u = 1,6605.10⁻²⁷ kg)",
             "options": [
@@ -249,7 +249,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Interaction forte",
           "paragraphText": "À l'intérieur du noyau de rayon ~ 10⁻¹⁵ m, les protons chargés positivement subissent une répulsion électrostatique coulombienne gigantesque (F_e ~ 230 N entre deux protons contigus). Pour que le noyau soit stable, il doit exister une force attractive encore plus puissante : l'interaction nucléaire forte. Cette force fondamentale est attractive, indépendante de la charge électrique (elle s'exerce avec la même intensité entre p-p, n-n ou p-n), mais possède une portée extrêmement courte limitée à environ 2 femtomètres (2.10⁻¹⁵ m). Le défaut de masse est la signature énergétique de ce puits de potentiel attractif intense.",
           "exercise": {
-            "id": "p1_s7_qcm",
+            "id": "phys_tle_cd_16_p1_s7_qcm",
             "type": "mcq",
             "prompt": "Parmi les caractéristiques suivantes, laquelle s'applique à l'interaction nucléaire forte responsable de la cohésion des nucléons ?",
             "options": [
@@ -265,7 +265,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p1_s1_qcm",
+          "id": "phys_tle_cd_16_p1_s1_qcm",
           "type": "mcq",
           "prompt": "On considère un noyau d'azote 14 (^{14}_7N) de masse m = 13,9992 u. Sachant que m_p = 1,0073 u et m_n = 1,0087 u, quelle est la valeur du défaut de masse Delta m ?",
           "options": [
@@ -278,7 +278,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Z = 7 protons et N = 14 - 7 = 7 neutrons. Masse des nucléons isolés : 7 * 1,0073 + 7 * 1,0087 = 7,0511 + 7,0609 = 14,1120 u. Le défaut de masse vaut Delta m = 14,1120 u - 13,9992 u = 0,1128 u."
         },
         {
-          "id": "p1_s2_qcm",
+          "id": "phys_tle_cd_16_p1_s2_qcm",
           "type": "mcq",
           "prompt": "Si un système matériel au repos libère une énergie de 9,0.10¹³ Joules sous forme de chaleur et de rayonnement, quelle est la perte de masse subie par ce système ? (c = 3,00.10⁸ m/s)",
           "options": [
@@ -291,7 +291,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Δm = ΔE / c² = 9,0.10¹³ J / (3,00.10⁸ m/s)² = 9,0.10¹³ / 9,0.10¹⁶ = 1,0.10⁻³ kg = 1,0 gramme."
         },
         {
-          "id": "p1_s3_qcm",
+          "id": "phys_tle_cd_16_p1_s3_qcm",
           "type": "mcq",
           "prompt": "Un défaut de masse mesuré vaut Delta m = 0,200 u. Quelle est l'énergie libérée en mégaélectronvolts (MeV) ?",
           "options": [
@@ -304,7 +304,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "E = Delta m * 931,5 MeV/u = 0,200 * 931,5 = 186,30 MeV."
         },
         {
-          "id": "p1_s4_qcm",
+          "id": "phys_tle_cd_16_p1_s4_qcm",
           "type": "mcq",
           "prompt": "Pourquoi peut-on utiliser la masse de l'atome d'hydrogène neutre m(^1_1H) à la place de la masse du proton nu m_p dans le calcul du défaut de masse à partir des masses atomiques neutres ?",
           "options": [
@@ -317,7 +317,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Dans l'expression [Z.m(^1_1H) + (A-Z).m_n] - m(atome), le terme Z.m(^1_1H) apporte Z protons et Z électrons, qui annulent exactement les Z électrons compris dans la masse atomique m(atome)."
         },
         {
-          "id": "p1_s5_qcm",
+          "id": "phys_tle_cd_16_p1_s5_qcm",
           "type": "mcq",
           "prompt": "Quel est approximativement le rapport entre l'énergie libérée par la fission d'un noyau d'uranium (~200 MeV) et l'énergie chimique libérée par la combustion d'un atome de carbone (~4 eV) ?",
           "options": [
@@ -330,7 +330,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Rapport = 200 MeV / 4 eV = 200.10⁶ eV / 4 eV = 50.10⁶ = 5.10⁷ (50 millions de fois plus d'énergie par unité de matière)."
         },
         {
-          "id": "p1_s6_qcm",
+          "id": "phys_tle_cd_16_p1_s6_qcm",
           "type": "mcq",
           "prompt": "À partir de la valeur Delta m = 1,8718 u trouvée pour l'uranium 235, quelle est la masse manquante exprimée en kilogrammes ? (1 u = 1,6605.10⁻²⁷ kg)",
           "options": [
@@ -343,7 +343,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Delta m = 1,8718 * 1,66054.10⁻²⁷ kg ≈ 3,108.10⁻²⁷ kg ≈ 3,11.10⁻²⁷ kg."
         },
         {
-          "id": "p1_s7_qcm",
+          "id": "phys_tle_cd_16_p1_s7_qcm",
           "type": "mcq",
           "prompt": "Parmi les caractéristiques suivantes, laquelle s'applique à l'interaction nucléaire forte responsable de la cohésion des nucléons ?",
           "options": [
@@ -445,7 +445,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Définition",
           "paragraphText": "L'énergie de liaison E_L d'un noyau est l'énergie qu'il faut fournir au noyau pour le dissocier en ses nucléons constitutifs au repos. C'est l'opposé de l'énergie de formation du noyau à partir de ses nucléons libres : E_formation = -E_L < 0. Puisque le noyau lié est plus stable que les nucléons isolés, E_L est une grandeur strictement positive : E_L = Delta m * c² > 0.",
           "exercise": {
-            "id": "p2_s1_qcm",
+            "id": "phys_tle_cd_16_p2_s1_qcm",
             "type": "mcq",
             "prompt": "On fournit une énergie de 28,3 MeV à un noyau d'hélium 4 au repos. Quel est l'état final du système ?",
             "options": [
@@ -466,7 +466,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Critère E_L / A",
           "paragraphText": "L'énergie de liaison globale E_L ne permet pas de comparer la stabilité de deux noyaux car elle croît naturellement avec le nombre de nucléons A. Le critère physique déterminant la stabilité intrinsèque est l'énergie moyenne de liaison par nucléon : E_0 = E_L / A. Elle représente l'énergie qu'il faut dépenser en moyenne pour arracher un nucléon quelconque au noyau. Plus E_L / A est élevée, plus le noyau est difficile à démanteler et plus il est stable.",
           "exercise": {
-            "id": "p2_s2_qcm",
+            "id": "phys_tle_cd_16_p2_s2_qcm",
             "type": "mcq",
             "prompt": "Le noyau X a E_L = 120 MeV pour A = 16 (E_L/A = 7,5 MeV/nucl). Le noyau Y a E_L = 400 MeV pour A = 50 (E_L/A = 8,0 MeV/nucl). Quel noyau est le plus stable ?",
             "options": [
@@ -487,7 +487,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Courbe d'Aston",
           "paragraphText": "Tracée par Francis Aston (inventeur du spectromètre de masse), la courbe d'Aston représente E_L / A en fonction de A. Elle met en lumière trois régions clés : 1. Pour A < 20 : E_L/A augmente très brutalement de 1,1 MeV/nucléon (deutérium) à ~7,5 MeV/nucléon, avec un pic remarquable à A = 4 (^4He). 2. Pour 40 < A < 100 : un large plateau de stabilité maximale culmine autour de A = 56 à 62 avec E_L/A ≈ 8,8 MeV/nucléon (le fer 56 et le nickel 62). 3. Pour A > 100 : E_L/A décroît lentement jusqu'à environ 7,4 MeV/nucléon pour l'uranium 238, en raison de la répulsion électrostatique cumulative entre les nombreux protons.",
           "exercise": {
-            "id": "p2_s3_qcm",
+            "id": "phys_tle_cd_16_p2_s3_qcm",
             "type": "mcq",
             "prompt": "Quel nucléide correspond au sommet absolu de stabilité de la courbe d'Aston ?",
             "options": [
@@ -508,7 +508,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Principe d'évolution",
           "paragraphText": "Tout système physique évolue spontanément vers l'état d'énergie minimale et de stabilité maximale (c'est-à-dire vers le sommet de la courbe d'Aston où E_L/A est maximal) : 1. Deux noyaux légers (situés à gauche du fer, ex. deutérium et tritium) peuvent fusionner pour donner un noyau plus lourd plus proche du fer : leur E_L/A augmente, la réaction libère de l'énergie. 2. Un noyau très lourd (situé à droite du fer, ex. uranium 235) peut se scinder en deux noyaux de masse moyenne plus proches du fer : leur E_L/A augmente également, libérant aussi une quantité considérable d'énergie !",
           "exercise": {
-            "id": "p2_s4_qcm",
+            "id": "phys_tle_cd_16_p2_s4_qcm",
             "type": "mcq",
             "prompt": "D'après la courbe d'Aston, pourquoi une réaction de fusion entre deux noyaux de plomb 206 pour former un noyau lourd n'est-elle pas spontanément exoénergétique ?",
             "options": [
@@ -529,7 +529,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "Dans certains manuels historiques ou sujets de concours, la courbe d'Aston est tracée en représentant -E_L/A (opposé de l'énergie de liaison par nucléon) en fonction de A. La courbe a alors la forme d'une cuvette ou d'un puits de potentiel, dont le minimum correspond aux noyaux les plus stables (le fer 56 est au fond du puits). Dans les programmes actuels, on trace généralement +E_L/A en fonction de A : la courbe présente alors une forme de colline dont le sommet correspond à la stabilité maximale.",
           "exercise": {
-            "id": "p2_s5_qcm",
+            "id": "phys_tle_cd_16_p2_s5_qcm",
             "type": "mcq",
             "prompt": "Si un graphique présente la courbe d'Aston sous la forme y = -E_L/A en fonction de A, où se situent les noyaux les plus stables ?",
             "options": [
@@ -550,7 +550,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Calcul type",
           "paragraphText": "Dans le sujet officiel de l'École Numérique, on donne pour le zirconium 91 (^{91}_{40}Zr) une énergie de liaison par nucléon E_L / A = 8,70 MeV/nucléon. L'énergie de liaison totale de ce noyau vaut donc : E_L = A * (E_L / A) = 91 * 8,70 MeV = 791,70 MeV. Ce chiffre élevé confirme que le zirconium 91, produit de fission de l'uranium, est un noyau remarquablement stable situé tout près du plateau du fer 56.",
           "exercise": {
-            "id": "p2_s6_qcm",
+            "id": "phys_tle_cd_16_p2_s6_qcm",
             "type": "mcq",
             "prompt": "Pour le cérium 142 (^{142}_{58}Ce), l'énergie de liaison par nucléon vaut E_L/A = 8,37 MeV/nucléon. Quelle est l'énergie de liaison totale de ce noyau ?",
             "options": [
@@ -571,7 +571,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Formule semi-empirique",
           "paragraphText": "En 1935, Carl Friedrich von Weizsäcker modélise le noyau atomique comme une goutte de liquide incompressible de densité constante. L'énergie de liaison totale s'exprime comme la somme de cinq termes : 1. Énergie de volume (+a_v.A). 2. Énergie de surface (-a_s.A^(2/3), effet de tension superficielle). 3. Énergie de répulsion coulombienne (-a_c.Z²/A^(1/3)). 4. Énergie d'asymétrie (-a_a.(A-2Z)²/A). 5. Terme d'appariement. Ce modèle explique parfaitement la forme de la courbe d'Aston et prédit avec une grande précision le phénomène d'instabilité par fission des noyaux très volumineux.",
           "exercise": {
-            "id": "p2_s7_qcm",
+            "id": "phys_tle_cd_16_p2_s7_qcm",
             "type": "mcq",
             "prompt": "Dans le modèle de la goutte liquide, quel terme énergétique est responsable de la baisse de stabilité des noyaux très lourds (A > 100) vers la droite de la courbe d'Aston ?",
             "options": [
@@ -587,7 +587,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p2_s1_qcm",
+          "id": "phys_tle_cd_16_p2_s1_qcm",
           "type": "mcq",
           "prompt": "On fournit une énergie de 28,3 MeV à un noyau d'hélium 4 au repos. Quel est l'état final du système ?",
           "options": [
@@ -600,7 +600,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Par définition même de l'énergie de liaison E_L = 28,3 MeV, cet apport énergétique permet de rompre toutes les liaisons nucléaires et de séparer les 2 protons et 2 neutrons sans leur conférer d'énergie cinétique."
         },
         {
-          "id": "p2_s2_qcm",
+          "id": "phys_tle_cd_16_p2_s2_qcm",
           "type": "mcq",
           "prompt": "Le noyau X a E_L = 120 MeV pour A = 16 (E_L/A = 7,5 MeV/nucl). Le noyau Y a E_L = 400 MeV pour A = 50 (E_L/A = 8,0 MeV/nucl). Quel noyau est le plus stable ?",
           "options": [
@@ -613,7 +613,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "La stabilité est régie exclusivement par le rapport E_L / A : comme 8,0 MeV/nucléon > 7,5 MeV/nucléon, les nucléons du noyau Y sont plus fortement liés que ceux du noyau X."
         },
         {
-          "id": "p2_s3_qcm",
+          "id": "phys_tle_cd_16_p2_s3_qcm",
           "type": "mcq",
           "prompt": "Quel nucléide correspond au sommet absolu de stabilité de la courbe d'Aston ?",
           "options": [
@@ -626,7 +626,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Le fer 56 (ainsi que le nickel 62) possède l'énergie de liaison par nucléon la plus élevée de tous les éléments chimiques (~8,8 MeV/nucléon), ce qui en fait le noyau le plus stable de l'univers."
         },
         {
-          "id": "p2_s4_qcm",
+          "id": "phys_tle_cd_16_p2_s4_qcm",
           "type": "mcq",
           "prompt": "D'après la courbe d'Aston, pourquoi une réaction de fusion entre deux noyaux de plomb 206 pour former un noyau lourd n'est-elle pas spontanément exoénergétique ?",
           "options": [
@@ -639,7 +639,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "À droite du fer 56, la courbe d'Aston est descendante : l'augmentation du nombre de nucléons diminue E_L/A. La fusion de noyaux lourds est donc endoénergétique (elle absorbe de l'énergie au lieu d'en libérer)."
         },
         {
-          "id": "p2_s5_qcm",
+          "id": "phys_tle_cd_16_p2_s5_qcm",
           "type": "mcq",
           "prompt": "Si un graphique présente la courbe d'Aston sous la forme y = -E_L/A en fonction de A, où se situent les noyaux les plus stables ?",
           "options": [
@@ -652,7 +652,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Si l'axe vertical porte -E_L/A, la valeur la plus négative (-8,8 MeV/nucléon) correspond à la valeur maximale de E_L/A (+8,8 MeV/nucléon), c'est-à-dire au fond du puits de potentiel le plus stable."
         },
         {
-          "id": "p2_s6_qcm",
+          "id": "phys_tle_cd_16_p2_s6_qcm",
           "type": "mcq",
           "prompt": "Pour le cérium 142 (^{142}_{58}Ce), l'énergie de liaison par nucléon vaut E_L/A = 8,37 MeV/nucléon. Quelle est l'énergie de liaison totale de ce noyau ?",
           "options": [
@@ -665,7 +665,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "E_L = A * (E_L / A) = 142 * 8,37 MeV = 1 188,54 MeV."
         },
         {
-          "id": "p2_s7_qcm",
+          "id": "phys_tle_cd_16_p2_s7_qcm",
           "type": "mcq",
           "prompt": "Dans le modèle de la goutte liquide, quel terme énergétique est responsable de la baisse de stabilité des noyaux très lourds (A > 100) vers la droite de la courbe d'Aston ?",
           "options": [
@@ -767,7 +767,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Définition",
           "paragraphText": "La fission nucléaire provoquée est la rupture d'un noyau lourd lourdement chargé (nombre de masse A > 230) en deux fragments de masses comparables sous l'impact d'un projectile neutre : un neutron. Cette réaction s'accompagne de l'émission simultanée de plusieurs neutrons secondaires et d'un dégagement d'énergie thermique considérable.",
           "exercise": {
-            "id": "p3_s1_qcm",
+            "id": "phys_tle_cd_16_p3_s1_qcm",
             "type": "mcq",
             "prompt": "Pourquoi utilise-t-on un neutron plutôt qu'un proton ou une particule alpha comme projectile pour provoquer la fission d'un noyau lourd ?",
             "options": [
@@ -788,7 +788,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Neutrons thermiques",
           "paragraphText": "Les neutrons libérés directement par la fission sont émis avec une vitesse phénoménale d'environ 20 000 km/s (énergie cinétique de l'ordre de 2 MeV) : ce sont des neutrons rapides. Or, la probabilité que l'uranium 235 capture un neutron rapide est très faible. Pour induire efficacement de nouvelles fissions, ces neutrons doivent être ralentis jusqu'à une vitesse d'environ 2 km/s (énergie thermique de 0,025 eV, équivalente à l'agitation thermique du milieu). Ce ralentissement s'opère par chocs élastiques successifs contre les noyaux légers d'un matériau modérateur (l'hydrogène de l'eau ordinaire, le deutérium de l'eau lourde ou le carbone du graphite).",
           "exercise": {
-            "id": "p3_s2_qcm",
+            "id": "phys_tle_cd_16_p3_s2_qcm",
             "type": "mcq",
             "prompt": "Quel est le rôle physique indispensable du modérateur (comme l'eau) dans un réacteur nucléaire à uranium 235 ?",
             "options": [
@@ -809,7 +809,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Transmutation",
           "paragraphText": "On appelle noyau fissile un nucléide capable de subir la fission sous l'action de neutrons thermiques lents (ex. ^235_92U et ^239_94Pu). On appelle noyau fertile un nucléide qui n'est pas fissile par neutrons lents mais qui peut, par capture d'un neutron, se transmuter en un noyau fissile. C'est le cas remarquable de l'uranium 238 (^238_92U), qui constitue 99,3 % de l'uranium naturel : en captant un neutron, il forme de l'uranium 239, qui subit deux désintégrations bêta moins consécutives pour engendrer du plutonium 239 fissile : ^238_92U + ^1_0n -> ^239_92U -> ^239_93Np + e⁻ -> ^239_94Pu + e⁻. C'est le principe des réacteurs surgénérateurs (ou réacteurs à neutrons rapides type Phénix).",
           "exercise": {
-            "id": "p3_s3_qcm",
+            "id": "phys_tle_cd_16_p3_s3_qcm",
             "type": "mcq",
             "prompt": "Pourquoi qualifie-t-on l'uranium 238 de nucléide 'fertile' ?",
             "options": [
@@ -830,7 +830,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Méthode d'examen",
           "paragraphText": "Lors de toute réaction de fission, le système initial est constitué du noyau cible lourd bombardé et d'un neutron incident (^1_0n) : A_initial = A_cible + 1 et Z_initial = Z_cible. Le système final comprend deux fragments de fission (^A1_Z1 X et ^A2_Z2 Y), un certain nombre k de neutrons libérés (k * ^1_0n) et éventuellement des électrons d'émission bêta. Les lois de Soddy imposent : A_cible + 1 = A1 + A2 + k et Z_cible = Z1 + Z2 (avec Z_neutron = 0).",
           "exercise": {
-            "id": "p3_s4_qcm",
+            "id": "phys_tle_cd_16_p3_s4_qcm",
             "type": "mcq",
             "prompt": "Soit la réaction de fission : ^{235}_{92}U + ^1_0n -> ^{139}_{53}I + ^b_{39}Y + k ^1_0n. Sachant qu'il est libéré k = 3 neutrons, quelle est la valeur du nombre de masse b du noyau d'yttrium ?",
             "options": [
@@ -851,7 +851,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Facteur k",
           "paragraphText": "Le facteur effectif de multiplication k_eff est le rapport entre le nombre de neutrons provoquant une fission à une génération donnée et le nombre de neutrons ayant provoqué la génération précédente. Trois régimes sont possibles : 1. k_eff < 1 (sous-critique) : le nombre de fissions diminue rapidement, la réaction s'éteint. 2. k_eff = 1 (critique) : le flux de neutrons et la puissance thermique sont rigoureusement constants dans le temps (régime de fonctionnement normal d'un réacteur nucléaire de centrale électrique). 3. k_eff > 1 (sur-critique) : le nombre de fissions croît de manière géométrique divergente. La masse critique est la masse minimale de matière fissible nécessaire pour que les pertes de neutrons par les parois extérieures soient suffisamment faibles pour maintenir k_eff >= 1 (environ 50 kg pour l'uranium 235 pur et 10 kg pour le plutonium 239).",
           "exercise": {
-            "id": "p3_s5_qcm",
+            "id": "phys_tle_cd_16_p3_s5_qcm",
             "type": "mcq",
             "prompt": "Dans une centrale nucléaire fonctionnant à puissance constante (par exemple 1 300 MW électriques), quelle est la valeur rigoureuse du facteur de multiplication neutronique k_eff ?",
             "options": [
@@ -872,7 +872,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "Il est physiquement rigoureusement impossible qu'un réacteur nucléaire civil explose comme une bombe atomique nucléaire. Dans une bombe atomique A, le combustible est constitué d'uranium 235 ou de plutonium 239 enrichi à plus de 90 % assemblé sous une géométrie ultra-compacte sans modérateur par des explosifs conventionnels pour une divergence instantanée. Dans un réacteur civil, l'uranium n'est enrichi qu'à 3 à 5 % en isotope 235 (le reste étant du ^238U absorbant), et le réacteur a un coefficient de réactivité thermique négatif : si la température monte, l'eau modératrice se vaporise, ce qui stoppe le ralentissement des neutrons et étouffe la réaction en chaîne. Les accidents nucléaires (Tchernobyl, Fukushima) sont des explosions thermochimiques de vapeur d'eau ou d'hydrogène suivies de feux de graphite, et JAMAIS des explosions nucléaires de type bombe !",
           "exercise": {
-            "id": "p3_s6_qcm",
+            "id": "phys_tle_cd_16_p3_s6_qcm",
             "type": "mcq",
             "prompt": "Pourquoi un réacteur nucléaire civil à eau pressurisée ne peut-il en aucun cas produire une explosion nucléaire de type bombe atomique ?",
             "options": [
@@ -893,7 +893,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Calcul d'énergie",
           "paragraphText": "Sachant qu'une mole d'uranium 235 a une masse de 235 g et contient N_A = 6,022.10²³ atomes, 1 kg d'uranium 235 contient N = (1000 / 235) * 6,022.10²³ ≈ 2,56.10²⁴ noyaux. Chaque fission libérant en moyenne 200 MeV (soit 3,20.10⁻¹¹ J), l'énergie totale libérée par 1 kg d'uranium 235 est : E = 2,56.10²⁴ * 3,20.10⁻¹¹ J ≈ 8,20.10¹³ Joules = 82 000 GJ. Cela équivaut au pouvoir calorifique de la combustion de 2 800 tonnes de charbon ou de 2 000 tonnes de pétrole lourd !",
           "exercise": {
-            "id": "p3_s7_qcm",
+            "id": "phys_tle_cd_16_p3_s7_qcm",
             "type": "mcq",
             "prompt": "Combien de tonnes de charbon (pouvoir calorifique ~ 30 MJ/kg) faudrait-il brûler pour produire la même quantité d'énergie thermique que la fission complète d'un seul kilogramme d'uranium 235 (8,2.10¹³ J) ?",
             "options": [
@@ -909,7 +909,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p3_s1_qcm",
+          "id": "phys_tle_cd_16_p3_s1_qcm",
           "type": "mcq",
           "prompt": "Pourquoi utilise-t-on un neutron plutôt qu'un proton ou une particule alpha comme projectile pour provoquer la fission d'un noyau lourd ?",
           "options": [
@@ -922,7 +922,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Le noyau d'uranium possède 92 protons : sa barrière coulombienne de répulsion est gigantesque. Un proton ou une particule alpha positive serait violemment repoussé. Le neutron, de charge nulle, pénètre librement dans le noyau même à vitesse thermique ambiante."
         },
         {
-          "id": "p3_s2_qcm",
+          "id": "phys_tle_cd_16_p3_s2_qcm",
           "type": "mcq",
           "prompt": "Quel est le rôle physique indispensable du modérateur (comme l'eau) dans un réacteur nucléaire à uranium 235 ?",
           "options": [
@@ -935,7 +935,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "La section efficace de fission de l'uranium 235 est environ 500 fois plus élevée pour des neutrons lents (thermiques à 0,025 eV) que pour des neutrons rapides (2 MeV). Le modérateur ralentit les neutrons sans les absorber."
         },
         {
-          "id": "p3_s3_qcm",
+          "id": "phys_tle_cd_16_p3_s3_qcm",
           "type": "mcq",
           "prompt": "Pourquoi qualifie-t-on l'uranium 238 de nucléide 'fertile' ?",
           "options": [
@@ -948,7 +948,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "L'uranium 238 n'est pas fissile par neutrons thermiques, mais sa capture neutronique engendre du plutonium 239 fissible, permettant de 'régénérer' du combustible nucléaire à partir de matière fertile abondante."
         },
         {
-          "id": "p3_s4_qcm",
+          "id": "phys_tle_cd_16_p3_s4_qcm",
           "type": "mcq",
           "prompt": "Soit la réaction de fission : ^{235}_{92}U + ^1_0n -> ^{139}_{53}I + ^b_{39}Y + k ^1_0n. Sachant qu'il est libéré k = 3 neutrons, quelle est la valeur du nombre de masse b du noyau d'yttrium ?",
           "options": [
@@ -961,7 +961,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Conservation des nucléons : 235 + 1 = 139 + b + 3 * 1 => 236 = 142 + b => b = 236 - 142 = 94. Le noyau produit est l'yttrium 94 (^{94}_{39}Y). Vérification de la charge : 53 + 39 = 92."
         },
         {
-          "id": "p3_s5_qcm",
+          "id": "phys_tle_cd_16_p3_s5_qcm",
           "type": "mcq",
           "prompt": "Dans une centrale nucléaire fonctionnant à puissance constante (par exemple 1 300 MW électriques), quelle est la valeur rigoureuse du facteur de multiplication neutronique k_eff ?",
           "options": [
@@ -974,7 +974,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Pour que la puissance thermique dégagée par le réacteur reste parfaitement stationnaire, chaque fission doit induire en moyenne exactement UNE nouvelle fission : le réacteur est maintenu à l'état strictement critique k_eff = 1."
         },
         {
-          "id": "p3_s6_qcm",
+          "id": "phys_tle_cd_16_p3_s6_qcm",
           "type": "mcq",
           "prompt": "Pourquoi un réacteur nucléaire civil à eau pressurisée ne peut-il en aucun cas produire une explosion nucléaire de type bombe atomique ?",
           "options": [
@@ -987,7 +987,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Le faible taux d'enrichissement (3 à 5 %) et la présence massive d'uranium 238 empêchent toute divergence surcritique prompte. Sans modérateur liquide pour thermaliser les neutrons, les fissions en chaîne s'arrêtent d'elles-mêmes."
         },
         {
-          "id": "p3_s7_qcm",
+          "id": "phys_tle_cd_16_p3_s7_qcm",
           "type": "mcq",
           "prompt": "Combien de tonnes de charbon (pouvoir calorifique ~ 30 MJ/kg) faudrait-il brûler pour produire la même quantité d'énergie thermique que la fission complète d'un seul kilogramme d'uranium 235 (8,2.10¹³ J) ?",
           "options": [
@@ -1090,7 +1090,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Définition",
           "paragraphText": "La fusion nucléaire est une transformation au cours de laquelle deux noyaux atomiques légers s'associent pour constituer un noyau plus lourd, en émettant une particule et en libérant une quantité massive d'énergie. Ces réactions sont dites 'thermonucléaires' car elles ne peuvent s'amorcer qu'à des températures phénoménales (de l'ordre de 10⁸ K), conférant aux noyaux une énergie cinétique suffisante pour vaincre leur répulsion électrostatique mutuelle.",
           "exercise": {
-            "id": "p4_s1_qcm",
+            "id": "phys_tle_cd_16_p4_s1_qcm",
             "type": "mcq",
             "prompt": "Pourquoi deux noyaux de deutérium (^2_1H) ne fusionnent-ils pas spontanément à température ambiante (20 °C) dans un verre d'eau lourde ?",
             "options": [
@@ -1111,7 +1111,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Astrophysique",
           "paragraphText": "Au cœur du Soleil, à une température centrale d'environ 15 millions de kelvins et sous une pression gravitationnelle colossale de 250 milliards d'atmosphères, l'hydrogène fusionne en hélium selon la chaîne proton-proton découverte par Hans Bethe : 4 ^1_1H -> ^4_2He + 2 ^0_1e + 2 ν + 26,7 MeV. Chaque seconde, le Soleil convertit environ 600 millions de tonnes d'hydrogène en 596 millions de tonnes d'hélium : la différence de masse (4 millions de tonnes par seconde) est intégralement rayonnée dans l'espace sous forme de lumière et de chaleur selon E = Δm.c².",
           "exercise": {
-            "id": "p4_s2_qcm",
+            "id": "phys_tle_cd_16_p4_s2_qcm",
             "type": "mcq",
             "prompt": "Chaque seconde, le Soleil perd environ 4,0.10⁹ kg (4 millions de tonnes) de matière par fusion nucléaire. Quelle est la puissance totale rayonnée par le Soleil ? (c = 3,00.10⁸ m/s)",
             "options": [
@@ -1132,7 +1132,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Projet ITER",
           "paragraphText": "Pour reproduire la fusion sur Terre sans la pression gravitationnelle gigantesque du Soleil, la réaction la plus accessible est la fusion Deutérium-Tritium : ^2_1H + ^3_1H -> ^4_2He + ^1_0n + 17,6 MeV. Elle nécessite une température d'environ 150 millions de degrés. À cette température, la matière forme un plasma chaud qui ne peut toucher aucune paroi matérielle sans fondre instantanément. Le projet mondial ITER (construit à Cadarache en France) utilise une chambre toroïdale sous vide équipée de puissants champs magnétiques supraconducteurs pour confiner et isoler le plasma : c'est le principe du Tokamak (confinement magnétique).",
           "exercise": {
-            "id": "p4_s3_qcm",
+            "id": "phys_tle_cd_16_p4_s3_qcm",
             "type": "mcq",
             "prompt": "Dans un réacteur de fusion de type Tokamak comme ITER, comment maintient-on le plasma à 150 millions de degrés sans qu'il ne fasse fondre les parois métalliques de la chambre ?",
             "options": [
@@ -1153,7 +1153,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Sécurité absolue",
           "paragraphText": "Contrairement à un réacteur de fission qui contient dans sa cuve plusieurs tonnes de combustible capable de fondre en cas de panne de refroidissement (accident de fusion du cœur), un réacteur de fusion ne contient dans sa chambre à plasma que quelques grammes de combustible à tout instant (moins de 5 grammes de D-T). En cas d'incident technique, de brèche ou de panne électrique, le plasma se refroidit spontanément en quelques fractions de seconde au contact de la moindre impureté, et la réaction de fusion s'éteint automatiquement et instantanément. Tout accident de type Tchernobyl ou Fukushima est physiquement impossible dans un réacteur de fusion.",
           "exercise": {
-            "id": "p4_s4_qcm",
+            "id": "phys_tle_cd_16_p4_s4_qcm",
             "type": "mcq",
             "prompt": "Que se passe-t-il dans un réacteur de fusion thermonucléaire si le système de confinement magnétique subit une panne électrique totale ?",
             "options": [
@@ -1174,7 +1174,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "Affirmer que la fusion thermonucléaire est 'totalement dépourvue de radioactivité' est inexact : 1. Le tritium (^3_1H) est un gaz radioactif émetteur bêta moins de demi-vie 12,3 ans, qui doit être manipulé avec précaution dans des circuits étanches. 2. Les neutrons très énergétiques (14,1 MeV) émis par la réaction D-T bombardent les parois métalliques de la chambre à vide et créent une activation neutronique de l'acier. Toutefois, ces déchets radioactifs de structure ont des demi-vies courtes à moyennes (< 50 à 100 ans) et ne posent pas le problème millénaire des déchets HAVL de la fission.",
           "exercise": {
-            "id": "p4_s5_qcm",
+            "id": "phys_tle_cd_16_p4_s5_qcm",
             "type": "mcq",
             "prompt": "Parmi les assertions suivantes concernant la gestion environnementale de la fusion D-T, laquelle est exacte ?",
             "options": [
@@ -1195,7 +1195,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Bombe H",
           "paragraphText": "La seule application de la fusion actuellement opérationnelle à grande échelle est malheureusement militaire : la bombe thermonucléaire ou bombe H (conçue par Edward Teller et Stanislaw Ulam). Pour atteindre les 100 millions de degrés indispensables pour déclencher la fusion explosive du deutériure de lithium, la bombe H utilise comme détonateur une véritable bombe à fission A miniaturisée ! Le rayonnement X issu de la fission compresse et chauffe le combustible de fusion, libérant une énergie destructrice équivalente à plusieurs mégatonnes de TNT.",
           "exercise": {
-            "id": "p4_s6_qcm",
+            "id": "phys_tle_cd_16_p4_s6_qcm",
             "type": "mcq",
             "prompt": "Quel dispositif physique fournit la température et la pression extrêmes indispensables à l'allumage thermonucléaire d'une bombe H ?",
             "options": [
@@ -1216,7 +1216,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Couverture tritigène",
           "paragraphText": "Le tritium n'existant qu'à l'état de traces infinitésimales dans la nature, les réacteurs à fusion comme ITER doivent produire leur propre tritium. Pour cela, la paroi intérieure du réacteur est tapissée d'une couverture contenant du lithium (^6_3Li). Les neutrons émis par la fusion D-T frappent le lithium selon la réaction : ^6_3Li + ^1_0n -> ^4_2He + ^3_1H + 4,8 MeV. Le réacteur fabrique ainsi son propre combustible en continu à partir de lithium, un métal abondant dans les roches et l'eau de mer !",
           "exercise": {
-            "id": "p4_s7_qcm",
+            "id": "phys_tle_cd_16_p4_s7_qcm",
             "type": "mcq",
             "prompt": "Comment les futurs réacteurs de fusion produiront-ils le tritium nécessaire à leur fonctionnement continu ?",
             "options": [
@@ -1232,7 +1232,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p4_s1_qcm",
+          "id": "phys_tle_cd_16_p4_s1_qcm",
           "type": "mcq",
           "prompt": "Pourquoi deux noyaux de deutérium (^2_1H) ne fusionnent-ils pas spontanément à température ambiante (20 °C) dans un verre d'eau lourde ?",
           "options": [
@@ -1245,7 +1245,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Tous les noyaux sont positifs et se repoussent violemment selon la loi de Coulomb en 1/r². Pour que les forces nucléaires attractives à très courte portée (interaction forte) interviennent, il faut projeter les noyaux l'un contre l'autre à des vitesses thermiques extrêmes."
         },
         {
-          "id": "p4_s2_qcm",
+          "id": "phys_tle_cd_16_p4_s2_qcm",
           "type": "mcq",
           "prompt": "Chaque seconde, le Soleil perd environ 4,0.10⁹ kg (4 millions de tonnes) de matière par fusion nucléaire. Quelle est la puissance totale rayonnée par le Soleil ? (c = 3,00.10⁸ m/s)",
           "options": [
@@ -1258,7 +1258,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "P = ΔE / Δt = (Δm / Δt) * c² = 4,0.10⁹ kg/s * (3,00.10⁸ m/s)² = 4,0.10⁹ * 9,0.10¹⁶ = 3,6.10²⁶ Watts. C'est la luminosité totale du Soleil."
         },
         {
-          "id": "p4_s3_qcm",
+          "id": "phys_tle_cd_16_p4_s3_qcm",
           "type": "mcq",
           "prompt": "Dans un réacteur de fusion de type Tokamak comme ITER, comment maintient-on le plasma à 150 millions de degrés sans qu'il ne fasse fondre les parois métalliques de la chambre ?",
           "options": [
@@ -1271,7 +1271,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Le plasma étant constitué d'ions et d'électrons libres chargés, les forces de Lorentz exercées par les champs magnétiques hélicoïdaux courbent leurs trajectoires et les emprisonnent au centre de la chambre toroïdale, évitant tout contact thermique direct avec les parois."
         },
         {
-          "id": "p4_s4_qcm",
+          "id": "phys_tle_cd_16_p4_s4_qcm",
           "type": "mcq",
           "prompt": "Que se passe-t-il dans un réacteur de fusion thermonucléaire si le système de confinement magnétique subit une panne électrique totale ?",
           "options": [
@@ -1284,7 +1284,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "La fusion exige des conditions de température et de densité ultra-précises et extrêmes. Toute perte de confinement rompt immédiatement ces conditions et étouffe la réaction en moins d'une milliseconde."
         },
         {
-          "id": "p4_s5_qcm",
+          "id": "phys_tle_cd_16_p4_s5_qcm",
           "type": "mcq",
           "prompt": "Parmi les assertions suivantes concernant la gestion environnementale de la fusion D-T, laquelle est exacte ?",
           "options": [
@@ -1297,7 +1297,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Le sous-produit immédiat est l'hélium 4, non toxique et inoffensif. L'unique radioactivité résiduelle provient de l'activation des parois du réacteur par le flux de neutrons, nécessitant un stockage de quelques dizaines d'années seulement."
         },
         {
-          "id": "p4_s6_qcm",
+          "id": "phys_tle_cd_16_p4_s6_qcm",
           "type": "mcq",
           "prompt": "Quel dispositif physique fournit la température et la pression extrêmes indispensables à l'allumage thermonucléaire d'une bombe H ?",
           "options": [
@@ -1310,7 +1310,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Seule une bombe à fission A au plutonium ou à l'uranium est capable de générer instantanément l'onde de choc thermique et radiative (> 10⁸ K) requise pour amorcer la fusion de la bombe H."
         },
         {
-          "id": "p4_s7_qcm",
+          "id": "phys_tle_cd_16_p4_s7_qcm",
           "type": "mcq",
           "prompt": "Comment les futurs réacteurs de fusion produiront-ils le tritium nécessaire à leur fonctionnement continu ?",
           "options": [
@@ -1402,7 +1402,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Principe fondamental",
           "paragraphText": "Dans toute réaction nucléaire où de l'énergie thermique ou radiative est cédée vers l'extérieur (réaction exoénergétique, comme la fission et la fusion), la somme des masses au repos des produits est rigoureusement INFÉRIEURE à la somme des masses au repos des réactifs : Σ m_produits < Σ m_réactifs. Cette masse manquante n'a pas été 'anéantie' : elle a été convertie en énergie cinétique portée par les particules émises et en énergie radiative transportée par les photons gamma.",
           "exercise": {
-            "id": "p5_s1_qcm",
+            "id": "phys_tle_cd_16_p5_s1_qcm",
             "type": "mcq",
             "prompt": "Dans une réaction nucléaire où la variation de masse vaut Delta m = Σ m_produits - Σ m_réactifs = -0,150 u, que peut-on affirmer ?",
             "options": [
@@ -1423,7 +1423,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Méthode",
           "paragraphText": "La méthode de calcul par les masses comporte 4 étapes méthodiques : 1. Calculer la somme des masses des réactifs M_R = Σ m_réactifs. 2. Calculer la somme des masses des produits M_P = Σ m_produits. 3. Calculer la perte de masse positive : |Δm| = M_R - M_P (en u). 4. Multiplier directement par 931,5 MeV/u pour obtenir l'énergie libérée en MeV. Pour convertir en Joules, multiplier par 1,602.10⁻¹³ J/MeV.",
           "exercise": {
-            "id": "p5_s2_qcm",
+            "id": "phys_tle_cd_16_p5_s2_qcm",
             "type": "mcq",
             "prompt": "On considère une réaction où M_R = 236,0526 u et M_P = 235,8636 u. Quelle est l'énergie libérée en MeV ?",
             "options": [
@@ -1444,7 +1444,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Théorème énergétique",
           "paragraphText": "Rappelons que pour tout noyau X de composition (Z, A) : m_X = Z.m_p + (A-Z).m_n - E_L(X)/c². En insérant cette expression dans la formule de l'énergie libérée E_lib = (Σ m_réactifs - Σ m_produits).c², les masses des protons individuels et des neutrons individuels s'annulent rigoureusement deux à deux grâce aux lois de conservation de Soddy (conservation du nombre de protons Z et du nombre de neutrons N). Il reste alors la relation fondamentale : E_libérée = Σ E_L(produits) - Σ E_L(réactifs).",
           "exercise": {
-            "id": "p5_s3_qcm",
+            "id": "phys_tle_cd_16_p5_s3_qcm",
             "type": "mcq",
             "prompt": "Pourquoi la formule de l'énergie libérée s'écrit-elle E_lib = Σ E_L(produits) - Σ E_L(réactifs) avec les PRODUITS EN PREMIER, alors que la formule des masses s'écrit avec les RÉACTIFS EN PREMIER ?",
             "options": [
@@ -1465,7 +1465,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "Dans le calcul E_lib = Σ E_L(produits) - Σ E_L(réactifs), les neutrons libres isolés (^1_0n) ou protons libres (^1_1p) apparaissant comme réactifs ou produits n'ont AUCUNE liaison nucléaire : leur énergie de liaison est STRICTEMENT NULLE : E_L(^1_0n) = 0 MeV et E_L(^1_1p) = 0 MeV ! De même, les électrons ou positons ont une énergie de liaison nucléaire nulle. Il ne faut donc sommer que les énergies de liaison des vrais noyaux formés de deux nucléons ou plus.",
           "exercise": {
-            "id": "p5_s4_qcm",
+            "id": "phys_tle_cd_16_p5_s4_qcm",
             "type": "mcq",
             "prompt": "Dans la réaction de fusion ^2_1H + ^3_1H -> ^4_2He + ^1_0n, quelle est l'expression correcte de l'énergie libérée en fonction des énergies de liaison ?",
             "options": [
@@ -1486,7 +1486,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Partage cinétique",
           "paragraphText": "En vertu de la conservation de la quantité de mouvement totale dans le référentiel du centre de masse (Σ p = 0), l'énergie cinétique libérée lors d'une réaction à deux corps se partage de manière inversement proportionnelle à la masse des fragments : la particule la plus légère emporte la plus grande part de l'énergie cinétique ! Par exemple, dans la fusion D-T produisant un noyau d'hélium 4 (masse 4 u) et un neutron (masse 1 u), le neutron, 4 fois plus léger, emporte 4/5 de l'énergie totale (soit 14,1 MeV sur les 17,6 MeV) tandis que l'hélium 4 n'emporte que 1/5 (soit 3,5 MeV).",
           "exercise": {
-            "id": "p5_s5_qcm",
+            "id": "phys_tle_cd_16_p5_s5_qcm",
             "type": "mcq",
             "prompt": "Dans la fusion D-T libérant 17,6 MeV, quelle fraction et quelle valeur d'énergie cinétique emporte le neutron de masse 1 u par rapport au noyau d'hélium de masse 4 u ?",
             "options": [
@@ -1507,7 +1507,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Problème d'ingénierie",
           "paragraphText": "Une tranche de centrale nucléaire moderne délivre une puissance électrique P_élec = 1 000 MW = 1,0.10⁹ W avec un rendement thermodynamique r = P_élec / P_thermique ≈ 33 % = 0,33. La puissance thermique requise est donc P_th = 1000 / 0,33 ≈ 3 030 MW = 3,03.10⁹ J/s. En 24 heures (86 400 s), l'énergie thermique totale produite est E_th = 3,03.10⁹ * 86 400 ≈ 2,62.10¹⁴ J. Sachant que 1 kg d'uranium 235 fissionné libère 8,2.10¹³ J, la masse d'uranium 235 consommée par jour n'est que de m = 2,62.10¹⁴ / 8,2.10¹³ ≈ 3,2 kg d'uranium 235 par jour seulement !",
           "exercise": {
-            "id": "p5_s6_qcm",
+            "id": "phys_tle_cd_16_p5_s6_qcm",
             "type": "mcq",
             "prompt": "Combien de kilogrammes d'uranium 235 pur une centrale de 1 000 MW électriques (rendement 33 %) consomme-t-elle approximativement en une journée complète de fonctionnement ?",
             "options": [
@@ -1528,7 +1528,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Bilan global",
           "paragraphText": "En résumé, qu'il s'agisse de réactions spontanées (radioactivité) ou provoquées (fission, fusion) : 1. Les lois de Soddy garantissent la conservation absolue de la charge électrique totale Z et du nombre de nucléons A. 2. Toute libération d'énergie s'accompagne d'un défaut de masse positif |Δm| = M_réactifs - M_produits > 0. 3. L'énergie libérée se calcule sans ambiguïté soit par E = |Δm|.c², soit par E = Σ E_L(produits) - Σ E_L(réactifs).",
           "exercise": {
-            "id": "p5_s7_qcm",
+            "id": "phys_tle_cd_16_p5_s7_qcm",
             "type": "mcq",
             "prompt": "Si une réaction nucléaire hypothétique présentait une masse de produits supérieure à la masse des réactifs (Σ m_produits > Σ m_réactifs), comment se qualifierait cette réaction ?",
             "options": [
@@ -1544,7 +1544,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p5_s1_qcm",
+          "id": "phys_tle_cd_16_p5_s1_qcm",
           "type": "mcq",
           "prompt": "Dans une réaction nucléaire où la variation de masse vaut Delta m = Σ m_produits - Σ m_réactifs = -0,150 u, que peut-on affirmer ?",
           "options": [
@@ -1557,7 +1557,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Comme Delta m < 0, il y a perte de masse au repos : la réaction est exoénergétique et libère vers l'extérieur une énergie E_libérée = |Delta m| * c² = 0,150 * 931,5 MeV ≈ 139,7 MeV."
         },
         {
-          "id": "p5_s2_qcm",
+          "id": "phys_tle_cd_16_p5_s2_qcm",
           "type": "mcq",
           "prompt": "On considère une réaction où M_R = 236,0526 u et M_P = 235,8636 u. Quelle est l'énergie libérée en MeV ?",
           "options": [
@@ -1570,7 +1570,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "|Δm| = 236,0526 - 235,8636 = 0,1890 u. E_libérée = 0,1890 * 931,5 MeV/u ≈ 176,05 MeV."
         },
         {
-          "id": "p5_s3_qcm",
+          "id": "phys_tle_cd_16_p5_s3_qcm",
           "type": "mcq",
           "prompt": "Pourquoi la formule de l'énergie libérée s'écrit-elle E_lib = Σ E_L(produits) - Σ E_L(réactifs) avec les PRODUITS EN PREMIER, alors que la formule des masses s'écrit avec les RÉACTIFS EN PREMIER ?",
           "options": [
@@ -1583,7 +1583,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Comme m_noyau = m_constituants - E_L/c², la masse varie en sens inverse de l'énergie de liaison. Une augmentation de l'énergie de liaison globale (Σ E_L(produits) > Σ E_L(réactifs)) correspond à une diminution de la masse totale au repos, libérant de l'énergie."
         },
         {
-          "id": "p5_s4_qcm",
+          "id": "phys_tle_cd_16_p5_s4_qcm",
           "type": "mcq",
           "prompt": "Dans la réaction de fusion ^2_1H + ^3_1H -> ^4_2He + ^1_0n, quelle est l'expression correcte de l'énergie libérée en fonction des énergies de liaison ?",
           "options": [
@@ -1596,7 +1596,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Le neutron libre produit n'est pas un noyau lié : E_L(^1_0n) = 0. Le bilan s'écrit donc simplement E_lib = E_L(^4He) - [E_L(^2H) + E_L(^3H)]."
         },
         {
-          "id": "p5_s5_qcm",
+          "id": "phys_tle_cd_16_p5_s5_qcm",
           "type": "mcq",
           "prompt": "Dans la fusion D-T libérant 17,6 MeV, quelle fraction et quelle valeur d'énergie cinétique emporte le neutron de masse 1 u par rapport au noyau d'hélium de masse 4 u ?",
           "options": [
@@ -1609,7 +1609,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "E_{c,neutron} / E_{c,He} = m_{He} / m_{neutron} = 4 / 1. Le neutron emporte donc 4 parts sur 5 de l'énergie cinétique totale : E_n = (4/5) * 17,6 MeV = 14,08 MeV ≈ 14,1 MeV."
         },
         {
-          "id": "p5_s6_qcm",
+          "id": "phys_tle_cd_16_p5_s6_qcm",
           "type": "mcq",
           "prompt": "Combien de kilogrammes d'uranium 235 pur une centrale de 1 000 MW électriques (rendement 33 %) consomme-t-elle approximativement en une journée complète de fonctionnement ?",
           "options": [
@@ -1622,7 +1622,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "La consommation journalière est de seulement 3,2 kg d'uranium 235 fissionné, à comparer aux 10 000 tonnes de charbon qu'engloutirait chaque jour une centrale thermique conventionnelle équivalente."
         },
         {
-          "id": "p5_s7_qcm",
+          "id": "phys_tle_cd_16_p5_s7_qcm",
           "type": "mcq",
           "prompt": "Si une réaction nucléaire hypothétique présentait une masse de produits supérieure à la masse des réactifs (Σ m_produits > Σ m_réactifs), comment se qualifierait cette réaction ?",
           "options": [
@@ -1719,7 +1719,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Concept clé de sécurité",
           "paragraphText": "Lorsqu'un réacteur nucléaire est arrêté d'urgence par insertion des barres absorbantes, la réaction de fission s'arrête instantanément. Cependant, le cœur continue de dégager une quantité gigantesque de chaleur : la puissance résiduelle de désintégration. Elle provient de la radioactivité spontanée intense (désintégrations bêta et gamma) des milliards de produits de fission accumulés dans le combustible. Cette puissance représente environ 7 % de la puissance nominale à l'instant de l'arrêt, 1 % après 24 heures et encore plusieurs mégawatts après un mois.",
           "exercise": {
-            "id": "p6_s1_qcm",
+            "id": "phys_tle_cd_16_p6_s1_qcm",
             "type": "mcq",
             "prompt": "Dans la catastrophe de Fukushima, quelle a été la cause physique directe de la fusion du combustible nucléaire ?",
             "options": [
@@ -1740,7 +1740,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Explosion d'hydrogène",
           "paragraphText": "Les pastilles d'uranium sont empilées dans des tubes métalliques étanches appelés gaines, fabriquées en alliage de zirconium (zircaloy). Lorsque le niveau d'eau baisse dans la cuve et que la température dépasse 1 000 °C à 1 200 °C, le zirconium réagit violemment avec la vapeur d'eau par une réaction d'oxydation hautement exothermique : Zr + 2 H₂O -> ZrO₂ + 2 H₂. L'hydrogène gazeux formé s'accumule sous pression dans le bâtiment réacteur. Au contact de l'air atmosphérique, le mélange hydrogène-oxygène déflagre spontanément, soufflant les superstructures des bâtiments.",
           "exercise": {
-            "id": "p6_s2_qcm",
+            "id": "phys_tle_cd_16_p6_s2_qcm",
             "type": "mcq",
             "prompt": "D'où provenait l'hydrogène responsable des spectaculaires explosions des bâtiments réacteurs à Fukushima les 12 et 14 mars 2011 ?",
             "options": [
@@ -1761,7 +1761,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Produits de fission",
           "paragraphText": "Lors d'un accident avec perte d'intégrité du confinement, deux radioéléments volatils constituent le danger biologique principal : 1. L'iode 131 (^{131}I, période T = 8,0 jours) : émetteur bêta et gamma, il est inhalé ou ingéré (lait, légumes) et se fixe sélectivement dans la glande thyroïde, provoquant des cancers thyroïdiens. La parade médicale d'urgence consiste à ingérer des pastilles d'iode stable (iodure de potassium ^127I) pour saturer la thyroïde avant l'arrivée du panache. 2. Le césium 137 (^{137}Cs, période T = 30,1 ans) : analogue chimique du potassium, il contamine durablement les sols, les champignons et la chaîne alimentaire pendant des décennies.",
           "exercise": {
-            "id": "p6_s3_qcm",
+            "id": "phys_tle_cd_16_p6_s3_qcm",
             "type": "mcq",
             "prompt": "Pourquoi distribue-t-on des comprimés d'iode stable (iodure de potassium non radioactif) aux populations riveraines en cas d'accident nucléaire ?",
             "options": [
@@ -1782,7 +1782,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Vitrification",
           "paragraphText": "Les combustibles usés retirés des réacteurs sont traités pour récupérer l'uranium et le plutonium réutilisables (procédé PUREX). Les résidus ultimes, formés des produits de fission hautement radioactifs et d'actinides mineurs (américium, curium), sont incorporés à 1 100 °C dans une pâte de verre borosilicaté en fusion liquide, puis coulés dans des conteneurs étanches en acier inoxydable : c'est le procédé de vitrification. Le verre borosilicaté emprisonne les atomes radioactifs dans son réseau amorphe sans altération pendant plus de 100 000 ans, prêt pour le stockage géologique profond réversible en couche d'argile stable (projet Cigéo).",
           "exercise": {
-            "id": "p6_s4_qcm",
+            "id": "phys_tle_cd_16_p6_s4_qcm",
             "type": "mcq",
             "prompt": "Quel est l'objectif fondamental du procédé de vitrification appliqué aux déchets nucléaires de haute activité (HAVL) ?",
             "options": [
@@ -1803,7 +1803,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Principe ALARA",
           "paragraphText": "La Commission Internationale de Protection Radiologique (CIPR) a défini le principe ALARA ('As Low As Reasonably Achievable' : aussi bas que raisonnablement possible). Il repose sur trois piliers indissociables : 1. La justification : aucune pratique impliquant des rayonnements ionisants ne doit être adoptée si elle ne procure un bénéfice net positif pour la société. 2. L'optimisation : toutes les expositions individuelles et collectives doivent être maintenues au niveau le plus bas possible compte tenu des facteurs économiques et sociétaux. 3. La limitation des doses : des limites réglementaires strictes de dose efficace annuelle sont imposées (20 mSv/an pour les travailleurs du nucléaire, 1 mSv/an pour le public).",
           "exercise": {
-            "id": "p6_s5_qcm",
+            "id": "phys_tle_cd_16_p6_s5_qcm",
             "type": "mcq",
             "prompt": "Que signifie le sigle ALARA universellement appliqué dans la gestion des installations nucléaires et médicales ?",
             "options": [
@@ -1824,7 +1824,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "Il est primordial de ne pas confondre : 1. Le Gray (Gy) : unité de dose absorbée mesurant l'énergie physique déposée par le rayonnement par unité de masse de matière (1 Gy = 1 J/kg). 2. Le Sievert (Sv) : unité de dose équivalente et efficace qui pondère la dose absorbée en Grays par des facteurs biologiques reflétant la dangerosité relative du type de rayonnement (W_R = 1 pour gamma et bêta, mais W_R = 20 pour les particules alpha !) et la sensibilité des tissus touchés (W_T). Une dose de 1 Gy d'alpha est biologiquement 20 fois plus destructrice qu'une dose de 1 Gy de gamma !",
           "exercise": {
-            "id": "p6_s6_qcm",
+            "id": "phys_tle_cd_16_p6_s6_qcm",
             "type": "mcq",
             "prompt": "Un tissu biologique reçoit une dose absorbée D = 0,05 Gy de rayonnement alpha (facteur de pondération radiologique W_R = 20). Quelle est la dose équivalente H en Sieverts ?",
             "options": [
@@ -1845,7 +1845,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "stepBadge": "Récapitulatif final",
           "paragraphText": "En conclusion de cette étude des réactions nucléaires provoquées : 1. La fission et la fusion exploitent l'énergie de liaison nucléaire en convertissant une fraction de la masse au repos en énergie utile (E = |Δm|.c²). 2. La fission de noyaux lourds est la technologie industrielle mature d'aujourd'hui, exigeant une maîtrise absolue du refroidissement permanent. 3. La fusion thermonucléaire de noyaux légers est l'énergie propre et inépuisable de demain, exempte de risques d'emballement et de déchets à vie longue. 4. Le physicien responsable maîtrise à la fois les équations mathématiques de Soddy, les calculs de bilans thermiques et les impératifs éthiques de radioprotection de la société.",
           "exercise": {
-            "id": "p6_s7_qcm",
+            "id": "phys_tle_cd_16_p6_s7_qcm",
             "type": "mcq",
             "prompt": "Quelle caractéristique fondamentale confère à la fusion thermonucléaire D-T son statut d'énergie idéale d'avenir par rapport à la fission de l'uranium ?",
             "options": [
@@ -1861,7 +1861,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p6_s1_qcm",
+          "id": "phys_tle_cd_16_p6_s1_qcm",
           "type": "mcq",
           "prompt": "Dans la catastrophe de Fukushima, quelle a été la cause physique directe de la fusion du combustible nucléaire ?",
           "options": [
@@ -1874,7 +1874,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "Les fissions en chaîne étaient parfaitement arrêtées dès les premières secondes du séisme. C'est l'impossibilité de refroidir le combustible après la submersion des diesels par le tsunami qui a provoqué l'échauffement thermique et la fusion du cœur (perte de la source froide)."
         },
         {
-          "id": "p6_s2_qcm",
+          "id": "phys_tle_cd_16_p6_s2_qcm",
           "type": "mcq",
           "prompt": "D'où provenait l'hydrogène responsable des spectaculaires explosions des bâtiments réacteurs à Fukushima les 12 et 14 mars 2011 ?",
           "options": [
@@ -1887,7 +1887,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "À très haute température (>1000 °C), le zirconium réagit avec l'eau en arrachant l'oxygène pour former de la zircone (ZrO₂), libérant des tonnes de dihydrogène gazeux hautement explosif."
         },
         {
-          "id": "p6_s3_qcm",
+          "id": "phys_tle_cd_16_p6_s3_qcm",
           "type": "mcq",
           "prompt": "Pourquoi distribue-t-on des comprimés d'iode stable (iodure de potassium non radioactif) aux populations riveraines en cas d'accident nucléaire ?",
           "options": [
@@ -1900,7 +1900,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "La thyroïde fixe avidement l'iode pour fabriquer ses hormones. En la saturant à 100 % avec de l'iode 127 stable, tout iode 131 radioactif inhalé ultérieurement est immédiatement éliminé par les reins sans être fixé dans l'organisme."
         },
         {
-          "id": "p6_s4_qcm",
+          "id": "phys_tle_cd_16_p6_s4_qcm",
           "type": "mcq",
           "prompt": "Quel est l'objectif fondamental du procédé de vitrification appliqué aux déchets nucléaires de haute activité (HAVL) ?",
           "options": [
@@ -1913,7 +1913,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "La matrice vitreuse borosilicatée confine les radionucléides au niveau moléculaire avec un taux de lixiviation par l'eau quasi nul, garantissant leur immobilisation même en cas de contact avec des nappes phréatiques profondes sur des échelles de temps géologiques."
         },
         {
-          "id": "p6_s5_qcm",
+          "id": "phys_tle_cd_16_p6_s5_qcm",
           "type": "mcq",
           "prompt": "Que signifie le sigle ALARA universellement appliqué dans la gestion des installations nucléaires et médicales ?",
           "options": [
@@ -1926,7 +1926,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "ALARA ('As Low As Reasonably Achievable') est le principe directeur mondial de la radioprotection opérationnelle pour réduire au strict minimum toute dose reçue par les soignants, ouvriers et citoyens."
         },
         {
-          "id": "p6_s6_qcm",
+          "id": "phys_tle_cd_16_p6_s6_qcm",
           "type": "mcq",
           "prompt": "Un tissu biologique reçoit une dose absorbée D = 0,05 Gy de rayonnement alpha (facteur de pondération radiologique W_R = 20). Quelle est la dose équivalente H en Sieverts ?",
           "options": [
@@ -1939,7 +1939,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
           "explanation": "H = D * W_R = 0,05 Gy * 20 = 1,00 Sievert (Sv). Les particules alpha déposent leur énergie de façon très dense sur une distance microscopique, causant des dégâts biologiques considérables."
         },
         {
-          "id": "p6_s7_qcm",
+          "id": "phys_tle_cd_16_p6_s7_qcm",
           "type": "mcq",
           "prompt": "Quelle caractéristique fondamentale confère à la fusion thermonucléaire D-T son statut d'énergie idéale d'avenir par rapport à la fission de l'uranium ?",
           "options": [

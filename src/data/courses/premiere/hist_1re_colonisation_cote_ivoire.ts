@@ -7,7 +7,9 @@ export const HIST_1RE_T2_L03_COLONISATION_COTE_IVOIRE: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 5,
   "title": "Thème 2, leçon 3 : La colonisation et les résistances en Côte d'Ivoire",

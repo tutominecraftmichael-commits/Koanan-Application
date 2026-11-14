@@ -7,7 +7,9 @@ export const GEO_1RE_T4_L01_FACTEURS_MONDIALISATION: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 7,
   "title": "Thème 4, leçon 1 : Les facteurs de la mondialisation",

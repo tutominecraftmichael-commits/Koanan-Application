@@ -5,7 +5,7 @@ export const SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS: CurriculumChapt
   subjectId: "svt",
   gradeLevel: "terminale_d",
   alsoForGrades: ["terminale_c"],
-  order: 13,
+  order: 12,
   title: "La transmission de deux caractères héréditaires chez les êtres vivants (Dihybridisme, indépendance, linkage et carte factorielle)",
   summary: "Étude complète et approfondie du dihybridisme selon le programme officiel de SVT Terminale D de Côte d'Ivoire : dihybridisme à gènes indépendants (croisement F1 x F1 avec ségrégation mendélienne 9/16, 3/16, 3/16, 1/16 et brassage interchromosomique en anaphase I), test-cross à 4 phénotypes équiprobables (1/4 chacun), liaison génétique (linkage) et crossing-over chez la drosophile (linkage absolu chez le mâle, linkage partiel chez la femelle, positions cis et trans), calcul rigoureux de la distance génétique (dg en UR ou cM), analyse du croisement F1 x F1 lié et construction de la carte factorielle.",
   officialVolumeHours: 15,
@@ -284,10 +284,10 @@ export const SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS: CurriculumChapt
           type: "mcq",
           prompt: "Si un croisement F1 x double récessif donne 498 [AB], 502 [Ab], 499 [aB] et 501 [ab], quel est le génotype de l'hybride F1 testé ?",
           options: [
-            "A//A ; B//B",
+            "Homozygote dominant (A//A ; B//B)",
             "(A//a ; B//b)",
-            "(A B // a b) lié en position trans",
-            "a//a ; b//b"
+            "(A b // a B) lié en position trans",
+            "Homozygote récessif (a//a ; b//b)"
           ],
           correctAnswerIndex: 1,
           explanation: "Les 4 phénotypes étant équiprobables à environ 500 individus chacun, les deux gènes sont indépendants et l'hybride testé est double hétérozygote de génotype (A//a ; B//b)."

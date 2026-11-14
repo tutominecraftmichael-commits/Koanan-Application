@@ -5,7 +5,7 @@ export const SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES: CurriculumChapter = {
   subjectId: "svt",
   gradeLevel: "terminale_d",
   alsoForGrades: ["terminale_c"],
-  order: 11,
+  order: 10,
   title: "La reproduction chez les spermaphytes (Anthère, ovule, pollinisation et double fécondation)",
   summary: "Étude complète et approfondie de la reproduction sexuée chez les plantes à fleurs (Spermaphytes / Angiospermes) selon le programme officiel de SVT Terminale D de Côte d'Ivoire : structure microscopique de l'anthère et microsporogenèse (formation du grain de pollen bicellulaire), anatomie de l'ovaire, ovule anatrope et mégasporogenèse (formation du sac embryonnaire à 7 cellules et 8 noyaux), pollinisation et germination chimiotropique du tube pollinique avec division du noyau reproducteur en 2 anthérozoïdes, double fécondation exclusive (zygote principal diploïde 2n donnant l'embryon, zygote accessoire triploïde 3n donnant l'albumen), et transformation finale de l'ovule en graine et de l'ovaire en fruit.",
   officialVolumeHours: 10,
@@ -446,6 +446,11 @@ export const SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES: CurriculumChapter = {
         title: "Bilan des transformations de la fleur après la double fécondation",
         caption: "La double fécondation exclusive aux Angiospermes : formation simultanée du zygote principal (embryon 2n) et du zygote accessoire (albumen 3n).",
         svgContent: `<svg viewBox="0 0 620 280" width="100%" style="max-width:620px;height:auto" class="text-slate-700 dark:text-slate-200" role="img" aria-label="Double fécondation chez les Angiospermes">
+  <defs>
+    <marker id="arrow-df" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#475569" />
+    </marker>
+  </defs>
   <rect x="10" y="10" width="600" height="260" rx="14" fill="currentColor" fill-opacity="0.02" stroke="#CBD5E1" stroke-width="1.5" />
   
   <!-- Tube pollinique arrivant avec 2 anthérozoïdes -->
@@ -457,8 +462,8 @@ export const SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES: CurriculumChapter = {
   <text x="70" y="120" font-size="9" font-weight="bold" fill="#059669">Tube pollinique</text>
 
   <!-- Bifurcation vers les deux fécondations -->
-  <path d="M 160 135 C 190 100, 220 80, 260 80" fill="none" stroke="#6366F1" stroke-width="2" marker-end="url(#arrow)" />
-  <path d="M 160 145 C 190 180, 220 200, 260 200" fill="none" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 160 135 C 190 100, 220 80, 260 80" fill="none" stroke="#6366F1" stroke-width="2" marker-end="url(#arrow-df)" />
+  <path d="M 160 145 C 190 180, 220 200, 260 200" fill="none" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow-df)" />
 
   <!-- Fécondation 1 : Principale -->
   <rect x="270" y="55" width="320" height="60" rx="8" fill="#EEF2FF" stroke="#6366F1" stroke-width="1.5" />

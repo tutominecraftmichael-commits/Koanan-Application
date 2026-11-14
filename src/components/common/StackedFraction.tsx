@@ -154,6 +154,35 @@ export function renderTextWithStackedFractions(text: string): React.ReactNode {
     // ou une unité physique usuelle (km/h, m/s, mol/L, g/L, N/kg, etc.)
     const prefix = cleaned.slice(Math.max(0, matchIndex - 15), matchIndex);
     const suffix = cleaned.slice(matchIndex + fullMatch.length, matchIndex + fullMatch.length + 5);
+    // Texte français, pas une fraction : « ville / au », « misère / Qu’un », « L’automne / Faisait »,
+    // « et/ou ». Le numérateur suit une lettre accentuée ou une apostrophe (élision), le dénominateur est
+    // suivi d'une lettre accentuée, ou les deux termes sont des mots (jamais Ka/Ke, delta/lambda, 1/f').
+    const numStart = matchIndex + fullMatch.indexOf(match[2]);
+    const MATH_WORDS = /^(?:alpha|beta|gamma|delta|lambda|omega|theta|sigma|rho|tau|phi|psi|pi|mu|nu|sin|cos|tan|cotan|ln|log|exp|lim|max|min)$/i;
+    const isProseWord = (w: string) =>
+      !MATH_WORDS.test(w) &&
+      (/^[A-Za-z][a-z]{2,}$/.test(w)
+        ? /[aeiouy]/i.test(w)
+        : /^[a-z][aeiouy]$/.test(w) ||
+          /^(?:un|le|la|de|du|et|en|au|aux|je|tu|il|on|ne|se|ce|sa|ma|ta|ou|si|ni|vu|me|te|ses|mes|tes|les|des)$/i.test(w));
+    const after = cleaned.slice(matchIndex + fullMatch.length, matchIndex + fullMatch.length + 2);
+    // Élision française (« autres / j’ai », « haillons / D’argent ») ; jamais un prime (1/f', U / R'tot).
+    const elided = /^(?:[cdjlmnstCDJLMNST]|[qQ]u)$/.test(match[3].trim()) && /^['’][A-Za-zÀ-ÖØ-öø-ÿ]/.test(after);
+
+    // Scansion : « res / t(e) », rimes notées « repose (A) / odeur (B) ».
+    const scansion =
+      /^\(e\)/.test(cleaned.slice(matchIndex + fullMatch.length, matchIndex + fullMatch.length + 3)) ||
+      (/^\([A-Z]\)$/.test(match[2].trim()) && isProseWord(match[3].trim()));
+
+    if (
+      /[À-ÖØ-öø-ÿ'’]/.test(cleaned[numStart - 1] ?? '') ||
+      /^[À-ÖØ-öø-ÿ]/.test(after) ||
+      elided ||
+      scansion ||
+      (isProseWord(match[2].trim()) && isProseWord(match[3].trim()))
+    ) {
+      continue;
+    }
 
     if (
       /Étape\s*$|Question\s*$|Leçon\s*$|Partie\s*$/i.test(prefix) ||

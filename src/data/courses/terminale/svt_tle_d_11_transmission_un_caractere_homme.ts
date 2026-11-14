@@ -5,7 +5,7 @@ export const SVT_TLE_D_L11_TRANSMISSION_UN_CARACTERE_HOMME: CurriculumChapter = 
   subjectId: "svt",
   gradeLevel: "terminale_d",
   alsoForGrades: ["terminale_c"],
-  order: 12,
+  order: 11,
   title: "La transmission d'un caractère héréditaire chez l'Homme (Génétique humaine et pedigrees)",
   summary: "Étude rigoureuse et approfondie de la génétique humaine selon le programme officiel de SVT Terminale D de Côte d'Ivoire : méthodologie d'analyse des arbres généalogiques (pedigrees), transmission autosomique récessive (cas de l'albinisme et de la drépanocytose), transmission autosomique dominante (cas de la brachydactylie et de la chorée de Huntington), polyallélisme et codominance (système des groupes sanguins ABO et compatibilités transfusionnelles), et transmission récessive liée au chromosome sexuel X (cas du daltonisme et de l'hémophilie).",
   officialVolumeHours: 10,

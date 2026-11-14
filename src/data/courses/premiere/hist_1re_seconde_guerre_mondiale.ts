@@ -7,7 +7,9 @@ export const HIST_1RE_T3_L02_SECONDE_GUERRE_MONDIALE: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 7,
   "title": "Thème 3, leçon 2 : La Seconde Guerre mondiale, causes et conséquences",

@@ -18,7 +18,7 @@ const katex = (await import('katex')).default;
 const GRADES = ['6eme', '5eme', '4eme', '3eme', 'seconde_a', 'seconde_c', 'premiere_a1', 'premiere_a2', 'premiere_c', 'premiere_d', 'terminale_a1', 'terminale_a2', 'terminale_c', 'terminale_d'] as const;
 const SUBJECTS = ['maths', 'physique_chimie', 'svt', 'francais', 'histoire_geo', 'philosophie'] as const;
 const MATH_RE = /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g;
-const issues: Record<string, string[]> = { 'formule illisible': [], 'commande LaTeX visible': [], '« $ » visible': [], '« # » visible': [], 'titre coupé par « … »': [] };
+const issues: Record<string, string[]> = { 'formule illisible': [], 'commande LaTeX visible': [], '« $ » visible': [], '« # » visible': [], 'titre coupé par « … »': [], 'figure SVG cassée': [] };
 const cut = (t?: string) => Boolean(t && /(\.\.\.|…)\s*$/.test(t.trim()));
 const seen = new Set<string>();
 const add = (k: string, s: string) => { if (issues[k].length < 400) issues[k].push(s.slice(0, 170)); };
@@ -54,6 +54,25 @@ function checkFormulaBox(where: string, formula?: string) {
   }
 }
 
+/** Figure (tableau, schéma SVG, courbe) : titre, légende, cellules et textes du dessin doivent s'afficher proprement. */
+function checkVisual(where: string, v?: { title?: string; caption?: string; svgContent?: string; scene?: boolean; tableData?: { headers: unknown[]; rows: unknown[][] } }) {
+  if (!v) return;
+  checkText(`${where} titre de figure`, v.title);
+  checkText(`${where} légende de figure`, v.caption);
+  if (v.tableData) {
+    for (const h of v.tableData.headers || []) checkText(`${where} tableau`, String(h));
+    for (const r of v.tableData.rows || []) for (const c of r || []) checkText(`${where} tableau`, String(c));
+  }
+  if (v.svgContent && !v.scene) {
+    const svg = v.svgContent.trim();
+    if (!/^<svg[\s>]/.test(svg) || !/<\/svg>\s*$/.test(svg)) add('figure SVG cassée', `${where} :: ${v.title} (début ou fin de <svg> manquant)`);
+    for (const m of svg.matchAll(/<text\b[^>]*>([\s\S]*?)<\/text>/g)) {
+      const t = m[1].replace(/<[^>]+>/g, '');
+      if (/\\[a-zA-Z]{2,}|\$/.test(t)) add('figure SVG cassée', `${where} :: ${v.title} — texte « ${t.slice(0, 60)} » (LaTeX non dessiné dans un SVG)`);
+    }
+  }
+}
+
 let lessons = 0;
 const doneChapters = new Set<string>();
 for (const g of GRADES) for (const s of SUBJECTS) {
@@ -66,8 +85,13 @@ for (const g of GRADES) for (const s of SUBJECTS) {
       if (cut(p.title)) add('titre coupé par « … »', `${w} :: ${p.title}`);
       checkText(`${w} titre`, p.title); checkText(`${w} résumé`, p.summary); checkText(`${w} règle`, p.keyRule);
       for (const f of p.formulas || []) { checkText(`${w} nom de formule`, f.name); checkFormulaBox(w, f.formula); checkText(`${w} note de formule`, f.note); }
-      for (const st of p.structuredSteps || []) { checkText(`${w} fiche`, st.paragraphText); checkText(`${w} astuce`, (st as { konanTip?: string }).konanTip); }
+      checkVisual(w, p.visualSchema);
+      for (const st of p.structuredSteps || []) {
+        checkText(`${w} fiche`, st.paragraphText); checkText(`${w} astuce`, (st as { konanTip?: string }).konanTip);
+        checkVisual(w, st.visualSchema); checkVisual(w, st.exercise?.courseVisualSchema); checkVisual(w, st.exercise?.visualSchema);
+      }
       for (const ex of p.exercises || []) {
+        checkVisual(w, ex.courseVisualSchema); checkVisual(w, ex.visualSchema);
         checkText(`${w} question`, ex.prompt); checkText(`${w} explication`, ex.explanation);
         for (const o of ex.options || []) checkText(`${w} proposition`, o);
       }

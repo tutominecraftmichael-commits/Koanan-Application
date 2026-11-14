@@ -252,6 +252,17 @@ function completeTruncatedTitle(title?: string, fullText?: string): string | und
   return base;
 }
 
+/**
+ * Figure écrite au niveau de la mini-leçon (point.visualSchema) : affichée une seule fois, sur la 2e carte
+ * (1re s'il n'y en a qu'une), et seulement si aucune étape n'a déjà sa propre figure.
+ */
+function pointLevelVisual(point: CurriculumPoint, stepIndex: number): PointVisualSchema | undefined {
+  if (!point.visualSchema) return undefined;
+  const steps = point.structuredSteps || [];
+  if (steps.some((s) => s.visualSchema || s.exercise?.courseVisualSchema)) return undefined;
+  return stepIndex === Math.min(1, steps.length - 1) ? point.visualSchema : undefined;
+}
+
 function buildProgressiveCourseSlice(
   point: CurriculumPoint,
   stepIndex: number,
@@ -275,8 +286,9 @@ function buildProgressiveCourseSlice(
       formula: step.formula,
       keyRule: step.keyRule,
       konanTip: step.konanTip,
-      // Figure dédiée à la question de cette étape en priorité, sinon celle de l'étape
-      visualSchema: exercise?.courseVisualSchema ?? step.visualSchema,
+      // Figure dédiée à la question de cette étape en priorité, sinon celle de l'étape,
+      // sinon la figure de la mini-leçon (tableau, schéma) sur la 2e carte si aucune étape n'a la sienne
+      visualSchema: exercise?.courseVisualSchema ?? step.visualSchema ?? pointLevelVisual(point, stepIndex),
     };
   }
 

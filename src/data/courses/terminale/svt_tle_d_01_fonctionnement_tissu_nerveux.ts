@@ -5,7 +5,7 @@ export const SVT_TLE_D_L01_FONCTIONNEMENT_TISSU_NERVEUX: CurriculumChapter = {
   subjectId: "svt",
   gradeLevel: "terminale_d",
   alsoForGrades: ["terminale_c"],
-  order: 2,
+  order: 1,
   title: "Le fonctionnement du tissu nerveux (Nature, propriétés et transmission synaptique)",
   summary: "Étude approfondie de l'organisation anatomique et fonctionnelle du système nerveux : ultrastructure du neurone et du nerf, nature électrique et biochimique du potentiel de repos et du potentiel d'action, propriétés physiologiques fondamentales (excitabilité, rhéobase, chronaxie, lois de réponse et périodes réfractaires), mécanismes et vitesse de conduction de l'influx nerveux, et fonctionnement détaillé de la transmission synaptique neuro-neuronique et neuro-musculaire.",
   officialVolumeHours: 10,

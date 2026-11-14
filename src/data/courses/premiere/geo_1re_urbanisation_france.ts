@@ -7,7 +7,9 @@ export const GEO_1RE_T2_L02_URBANISATION_FRANCE: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 4,
   "title": "Thème 2, leçon 2 : L'urbanisation dans les pays développés, l'exemple de la France",

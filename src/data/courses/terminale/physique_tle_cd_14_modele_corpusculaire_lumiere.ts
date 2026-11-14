@@ -88,7 +88,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Définition",
           "paragraphText": "L'effet photoélectrique désigne l'émission d'électrons par un matériau (conducteur métallique ou semi-conducteur) lorsqu'il est exposé à un rayonnement électromagnétique de fréquence convenable. Les électrons éjectés de la surface métallique sont appelés 'photoélectrons'. Le dispositif expérimental type comporte une ampoule sous vide munie d'une photocathode métallique réceptrice et d'une anode collectrice reliées à un générateur de tension réglable et à un ampèremètre ultra-sensible.",
           "exercise": {
-            "id": "p1_s1_qcm",
+            "id": "phys_tle_cd_14_p1_s1_qcm",
             "type": "mcq",
             "prompt": "Dans une cellule photoélectrique sous vide, qu'appelle-t-on le 'courant de saturation' I_sat ?",
             "options": [
@@ -109,7 +109,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Propriété fondamentale",
           "paragraphText": "Pour un métal donné, les électrons sont retenus dans le réseau cristallin par des forces électrostatiques de liaison. L'énergie minimale indispensable pour extraire un électron situé au niveau de Fermi du métal sans lui conférer de vitesse résiduelle est le travail d'extraction (noté W₀ ou E_s). Il est caractéristique de la nature chimique du métal. La fréquence seuil nu_0 est la fréquence minimale du photon capable de fournir cette énergie : W₀ = h.nu_0. La longueur d'onde seuil correspondante dans le vide est lambda_0 = c / nu_0 = h.c / W₀.",
           "exercise": {
-            "id": "p1_s2_qcm",
+            "id": "phys_tle_cd_14_p1_s2_qcm",
             "type": "mcq",
             "prompt": "Le platine possède un travail d'extraction très élevé W₀ = 6,35 eV. Dans quel domaine du spectre électromagnétique se situe sa longueur d'onde seuil lambda_0 ? (h.c ≈ 1240 eV.nm)",
             "options": [
@@ -130,7 +130,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Méthode expérimentale",
           "paragraphText": "Pour déterminer l'énergie cinétique maximale E_{c,max} des photoélectrons, on applique entre l'anode et la cathode une tension négative U = V_A - V_C < 0, créant un champ électrique retardateur qui freine les électrons. Lorsque la tension atteint une valeur seuil -U_0 (où U_0 > 0 est le potentiel d'arrêt), même les électrons les plus rapides sont stoppés juste avant d'atteindre l'anode, et le courant s'annule : I = 0. D'après le théorème de l'énergie cinétique : ΔE_c = W(F_e) => 0 - E_{c,max} = -e.U_0, d'où E_{c,max} = e.U_0.",
           "exercise": {
-            "id": "p1_s3_qcm",
+            "id": "phys_tle_cd_14_p1_s3_qcm",
             "type": "mcq",
             "prompt": "Pour une cellule photoélectrique éclairée par une lumière monochromatique, on mesure un potentiel d'arrêt U_0 = 1,45 V. Quelle est l'énergie cinétique maximale des électrons émis à la surface du métal ?",
             "options": [
@@ -151,7 +151,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Preuve décisive",
           "paragraphText": "Si l'on multiplie par 10 ou par 100 l'intensité d'une source lumineuse monochromatique de fréquence nu donnée (en rapprochant la lampe de la photocathode), on constate expérimentalement que : 1. Le courant de saturation I_sat est multiplié par 10 ou 100 (davantage d'électrons sont émis par seconde). 2. En revanche, la tension d'arrêt U_0 reste rigoureusement identique ! Ce résultat a constitué un choc majeur pour la physique classique : l'énergie individuelle des électrons émis ne dépend que de la couleur (la fréquence nu) de la lumière, et non de sa brillance.",
           "exercise": {
-            "id": "p1_s4_qcm",
+            "id": "phys_tle_cd_14_p1_s4_qcm",
             "type": "mcq",
             "prompt": "On éclaire une photocathode avec un laser de 5 mW produisant des électrons d'énergie cinétique maximale 1,2 eV. Si l'on remplace ce laser par un laser de même longueur d'onde mais d'une puissance de 50 mW, que devient l'énergie cinétique maximale des électrons ?",
             "options": [
@@ -172,7 +172,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Attention piège",
           "paragraphText": "Une confusion majeure réside dans la distinction entre la puissance globale d'un rayonnement P (en Watts) et l'énergie d'un photon individuel E = h.nu (en Joules ou eV). La puissance est le produit du nombre N_p de photons émis par seconde par l'énergie unitaire de chacun : P = (N_p / Δt) * h.nu = n_flux * h.nu. Un faisceau infrarouge très puissant (100 W) transporte des milliards de photons de faible énergie individuelle (1 eV) incapables de franchir un seuil W₀ = 2 eV. Inversement, un faisceau ultraviolet de seulement 1 µW transporte des photons de 5 eV qui déclenchent immédiatement l'effet photoélectrique.",
           "exercise": {
-            "id": "p1_s5_qcm",
+            "id": "phys_tle_cd_14_p1_s5_qcm",
             "type": "mcq",
             "prompt": "Un faisceau laser rouge (lambda = 650 nm) délivre une puissance lumineuse de 10 mW. Combien de photons émet-il par seconde ? (h.c ≈ 3,06.10⁻¹⁹ J.m / 650.10⁻⁹ m ≈ 3,06.10⁻¹⁹ J par photon)",
             "options": [
@@ -193,7 +193,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Constante universelle",
           "paragraphText": "En portant sur un graphique le potentiel d'arrêt U_0 en fonction de la fréquence nu pour divers métaux, Robert Millikan a confirmé en 1916 l'équation théorique d'Einstein : e.U_0 = h.nu - W₀ <=> U_0 = (h / e).nu - (W₀ / e). On obtient une droite de pente positive a = h / e. Cette pente est rigoureusement identique pour TOUS les métaux de la création ! La mesure de la pente a permet une mesure directe de la constante de Planck : h = e * a.",
           "exercise": {
-            "id": "p1_s6_qcm",
+            "id": "phys_tle_cd_14_p1_s6_qcm",
             "type": "mcq",
             "prompt": "La droite expérimentale U_0 = f(nu) possède une pente mesurée a = 4,14.10⁻¹⁵ V.s. Quelle est la valeur déduite de la constante de Planck h en J.s ? (e = 1,602.10⁻¹⁹ C)",
             "options": [
@@ -214,7 +214,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Applications modernes",
           "paragraphText": "L'effet photoélectrique est au cœur de multiples technologies contemporaines : 1. Les cellules photovoltaïques solaires : l'absorption des photons solaires libère des paires électron-trou à la jonction p-n d'un semi-conducteur (silicium), générant une tension électrique continue. 2. Les capteurs d'images CCD et CMOS des appareils photo et smartphones : chaque pixel transforme les photons incidents en charges électriques proportionnelles à la luminosité. 3. Les photomultiplicateurs utilisés en physique des particules et imagerie médicale (scintigraphie, TEP), capables de détecter un photon unique par émission secondaire en cascade.",
           "exercise": {
-            "id": "p1_s7_qcm",
+            "id": "phys_tle_cd_14_p1_s7_qcm",
             "type": "mcq",
             "prompt": "Dans un capteur de caméra numérique CCD à base de silicium, que produit concrètement chaque photon de lumière visible absorbé par un pixel ?",
             "options": [
@@ -230,7 +230,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
       ],
       "exercises": [
         {
-          "id": "p1_s1_qcm",
+          "id": "phys_tle_cd_14_p1_s1_qcm",
           "type": "mcq",
           "prompt": "Dans une cellule photoélectrique sous vide, qu'appelle-t-on le 'courant de saturation' I_sat ?",
           "options": [
@@ -243,7 +243,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Lorsque le potentiel de l'anode est suffisamment positif par rapport à la cathode, l'intégralité des électrons arrachés par le flux lumineux est collectée : le courant atteint une valeur plafond constante appelée courant de saturation I_sat, directement proportionnel à l'intensité lumineuse."
         },
         {
-          "id": "p1_s2_qcm",
+          "id": "phys_tle_cd_14_p1_s2_qcm",
           "type": "mcq",
           "prompt": "Le platine possède un travail d'extraction très élevé W₀ = 6,35 eV. Dans quel domaine du spectre électromagnétique se situe sa longueur d'onde seuil lambda_0 ? (h.c ≈ 1240 eV.nm)",
           "options": [
@@ -256,7 +256,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "lambda_0 = h.c / W₀ ≈ 1240 eV.nm / 6,35 eV ≈ 195,3 nm. Cette longueur d'onde inférieure à 400 nm se situe nettement dans le domaine des ultraviolets (UV-C). Le platine n'émet aucun électron sous de la lumière visible."
         },
         {
-          "id": "p1_s3_qcm",
+          "id": "phys_tle_cd_14_p1_s3_qcm",
           "type": "mcq",
           "prompt": "Pour une cellule photoélectrique éclairée par une lumière monochromatique, on mesure un potentiel d'arrêt U_0 = 1,45 V. Quelle est l'énergie cinétique maximale des électrons émis à la surface du métal ?",
           "options": [
@@ -269,7 +269,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "E_{c,max} = e * U_0 = 1 e * 1,45 V = 1,45 eV. En convertissant en Joules : 1,45 * 1,602.10⁻¹⁹ J ≈ 2,32.10⁻¹⁹ J."
         },
         {
-          "id": "p1_s4_qcm",
+          "id": "phys_tle_cd_14_p1_s4_qcm",
           "type": "mcq",
           "prompt": "On éclaire une photocathode avec un laser de 5 mW produisant des électrons d'énergie cinétique maximale 1,2 eV. Si l'on remplace ce laser par un laser de même longueur d'onde mais d'une puissance de 50 mW, que devient l'énergie cinétique maximale des électrons ?",
           "options": [
@@ -282,7 +282,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "L'énergie cinétique maximale dépend uniquement de l'énergie d'un photon individuel E = h.nu et du travail d'extraction W₀ (E_{c,max} = h.nu - W₀). Comme la longueur d'onde n'a pas varié, l'énergie de chaque photon est identique : E_{c,max} reste strictement égale à 1,2 eV. Seul le nombre d'électrons émis par seconde est multiplié par 10."
         },
         {
-          "id": "p1_s5_qcm",
+          "id": "phys_tle_cd_14_p1_s5_qcm",
           "type": "mcq",
           "prompt": "Un faisceau laser rouge (lambda = 650 nm) délivre une puissance lumineuse de 10 mW. Combien de photons émet-il par seconde ? (h.c ≈ 3,06.10⁻¹⁹ J.m / 650.10⁻⁹ m ≈ 3,06.10⁻¹⁹ J par photon)",
           "options": [
@@ -295,7 +295,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "L'énergie d'un photon est E_p = h.c / lambda = (6,63.10⁻³⁴ * 3,00.10⁸) / (650.10⁻⁹) ≈ 3,06.10⁻¹⁹ J. Le nombre de photons émis par seconde est N = P / E_p = 10.10⁻³ W / 3,06.10⁻¹⁹ J ≈ 3,27.10¹⁶ photons par seconde."
         },
         {
-          "id": "p1_s6_qcm",
+          "id": "phys_tle_cd_14_p1_s6_qcm",
           "type": "mcq",
           "prompt": "La droite expérimentale U_0 = f(nu) possède une pente mesurée a = 4,14.10⁻¹⁵ V.s. Quelle est la valeur déduite de la constante de Planck h en J.s ? (e = 1,602.10⁻¹⁹ C)",
           "options": [
@@ -308,7 +308,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "h = e * a = 1,602.10⁻¹⁹ C * 4,14.10⁻¹⁵ V.s ≈ 6,63.10⁻³⁴ J.s."
         },
         {
-          "id": "p1_s7_qcm",
+          "id": "phys_tle_cd_14_p1_s7_qcm",
           "type": "mcq",
           "prompt": "Dans un capteur de caméra numérique CCD à base de silicium, que produit concrètement chaque photon de lumière visible absorbé par un pixel ?",
           "options": [
@@ -428,7 +428,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Constante fondamentale",
           "paragraphText": "En 1900, Max Planck démontre qu'un oscillateur microscopique ne peut échanger de l'énergie avec le champ de rayonnement que par multiples entiers d'une quantité minimale indivisible, le quantum d'énergie : ΔE = h.nu. La constante de proportionnalité h est la constante de Planck, l'une des constantes universelles fondamentales de la physique : h ≈ 6,62607.10⁻³⁴ J.s. Cette quantification brise le paradigme de la physique continue classique.",
           "exercise": {
-            "id": "p2_s1_qcm",
+            "id": "phys_tle_cd_14_p2_s1_qcm",
             "type": "mcq",
             "prompt": "Quelle est la dimension physique exacte de la constante de Planck h dans le Système International d'unités ?",
             "options": [
@@ -449,7 +449,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Particule de lumière",
           "paragraphText": "Le photon est le boson médiateur de l'interaction électromagnétique. Ses propriétés fondamentales sont : 1. Masse au repos rigoureusement nulle : m_0 = 0. 2. Charge électrique nulle : q = 0. 3. Vitesse de propagation invariable dans le vide, égale à la constante c ≈ 3,00.10⁸ m/s dans tous les référentiels galiléens. 4. Spin entier s = 1 (boson). 5. Énergie strictement proportionnelle à sa fréquence : E = h.nu = h.c / lambda.",
           "exercise": {
-            "id": "p2_s2_qcm",
+            "id": "phys_tle_cd_14_p2_s2_qcm",
             "type": "mcq",
             "prompt": "Lorsqu'un faisceau de lumière monochromatique passe du vide dans un bloc de verre d'indice de réfraction n = 1,5, qu'advient-il de l'énergie E = h.nu d'un photon individuel ?",
             "options": [
@@ -470,7 +470,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Formule pratique",
           "paragraphText": "En calculs d'examen, le produit h.c exprimé en eV.nm est un raccourci précieux : h.c = (6,626.10⁻³⁴ J.s * 2,998.10⁸ m/s) / (1,602.10⁻¹⁹ J/eV) ≈ 1,2398.10⁻⁶ eV.m ≈ 1240 eV.nm. Par conséquent, pour toute radiation de longueur d'onde lambda exprimée en nanomètres (nm), l'énergie du photon en électronvolts (eV) s'obtient instantanément par la formule : E(eV) ≈ 1240 / lambda(nm). Réciproquement, lambda(nm) ≈ 1240 / E(eV).",
           "exercise": {
-            "id": "p2_s3_qcm",
+            "id": "phys_tle_cd_14_p2_s3_qcm",
             "type": "mcq",
             "prompt": "Quelle est la longueur d'onde approximative d'un photon dont l'énergie vaut E = 3,10 eV ?",
             "options": [
@@ -491,7 +491,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Relativité",
           "paragraphText": "D'après la relation relativiste générale d'Einstein liant l'énergie, la masse et la quantité de mouvement : E² = p².c² + m_0².c⁴. Pour un photon dont la masse au repos est nulle (m_0 = 0), cette relation se simplifie en E = p.c. On en déduit que le photon, bien que dépourvu de masse matérielle, possède une quantité de mouvement (impulsion) réelle non nulle : p = E / c = h.nu / c = h / lambda. Lorsqu'un faisceau de photons frappe une surface et est réfléchi ou absorbé, il lui transfère de l'impulsion et exerce une force mécanique macroscopique appelée pression de radiation (principe des voiles solaires spatiales).",
           "exercise": {
-            "id": "p2_s4_qcm",
+            "id": "phys_tle_cd_14_p2_s4_qcm",
             "type": "mcq",
             "prompt": "Un photon de longueur d'onde lambda est réfléchi perpendiculairement à 180° par un miroir parfait. Quelle est la quantité de mouvement totale cédée au miroir par ce photon ?",
             "options": [
@@ -512,7 +512,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Attention piège",
           "paragraphText": "Il ne faut jamais considérer le photon comme une 'petite bille matérielle classique' se déplaçant en ligne droite avec une trajectoire définie. La lumière présente une double nature, formulée par Louis de Broglie : le modèle ondulatoire est indispensable pour décrire la propagation de la lumière dans l'espace (phénomènes continus d'interférences et de diffraction), tandis que le modèle corpusculaire du photon est obligatoire pour expliquer l'émission, l'absorption et les échanges localisés d'énergie avec la matière (effet photoélectrique, effet Compton). Les deux modèles sont complémentaires et non contradictoires.",
           "exercise": {
-            "id": "p2_s5_qcm",
+            "id": "phys_tle_cd_14_p2_s5_qcm",
             "type": "mcq",
             "prompt": "Parmi les phénomènes suivants, lequel nécessite EXCLUSIVEMENT le modèle corpusculaire du photon pour être expliqué ?",
             "options": [
@@ -533,7 +533,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Preuve corpusculaire",
           "paragraphText": "En 1923, Arthur Compton bombarde une cible de graphite avec des rayons X de haute énergie et observe que les rayons diffusés ont une longueur d'onde lambda' supérieure à celle du faisceau incident lambda : lambda' > lambda. Ce phénomène s'interprète comme un choc élastique relativiste entre un photon incident (de quantité de mouvement p = h/lambda) et un électron au repos. Le photon cède une partie de son énergie cinétique à l'électron : son énergie diminue (E' < E), donc sa fréquence diminue (nu' < nu) et sa longueur d'onde augmente selon la formule de Compton : lambda' - lambda = (h / (m_e.c)) * (1 - cos theta).",
           "exercise": {
-            "id": "p2_s6_qcm",
+            "id": "phys_tle_cd_14_p2_s6_qcm",
             "type": "mcq",
             "prompt": "Dans l'effet Compton, que représente la grandeur constante lambda_C = h / (m_e.c) ≈ 2,43.10⁻¹² m ?",
             "options": [
@@ -554,7 +554,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Équation d'Einstein",
           "paragraphText": "Lorsqu'un photon d'énergie E = h.nu supérieur à W₀ frappe un métal, il disparaît en transmettant l'intégralité de son énergie à un électron unique. Une part égale à W₀ est consommée pour vaincre l'attraction du réseau métallique (travail d'extraction), et le surplus résiduel est intégralement converti en énergie cinétique de translation de l'électron : h.nu = W₀ + E_c <=> E_c = h.nu - W₀ = h.c/lambda - W₀. Si l'électron provient des couches plus profondes, il subit des chocs supplémentaires et sort avec une énergie cinétique inférieure : E_c <= E_{c,max}.",
           "exercise": {
-            "id": "p2_s7_qcm",
+            "id": "phys_tle_cd_14_p2_s7_qcm",
             "type": "mcq",
             "prompt": "Un photon d'énergie 4,50 eV heurte un électron superficiel d'une plaque de zinc dont le travail d'extraction est W₀ = 3,60 eV. Quelle est la vitesse maximale de sortie de l'électron éjecté ? (m_e = 9,11.10⁻³¹ kg ; 1 eV = 1,60.10⁻¹⁹ J)",
             "options": [
@@ -570,7 +570,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
       ],
       "exercises": [
         {
-          "id": "p2_s1_qcm",
+          "id": "phys_tle_cd_14_p2_s1_qcm",
           "type": "mcq",
           "prompt": "Quelle est la dimension physique exacte de la constante de Planck h dans le Système International d'unités ?",
           "options": [
@@ -583,7 +583,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "L'unité de h est le Joule-seconde (J.s). Sachant que 1 J = 1 kg.m².s⁻², on a [h] = kg.m².s⁻¹, ce qui correspond dimensionnellement à une 'action' en mécanique analytique (ou à un moment cinétique angulaire)."
         },
         {
-          "id": "p2_s2_qcm",
+          "id": "phys_tle_cd_14_p2_s2_qcm",
           "type": "mcq",
           "prompt": "Lorsqu'un faisceau de lumière monochromatique passe du vide dans un bloc de verre d'indice de réfraction n = 1,5, qu'advient-il de l'énergie E = h.nu d'un photon individuel ?",
           "options": [
@@ -596,7 +596,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Lors de la réfraction dans un milieu transparent, la vitesse diminue (v = c/n) et la longueur d'onde diminue (lambda' = lambda/n), mais la fréquence nu temporelle reste rigoureusement invariante ! Par conséquent, l'énergie du photon E = h.nu demeure rigoureusement constante."
         },
         {
-          "id": "p2_s3_qcm",
+          "id": "phys_tle_cd_14_p2_s3_qcm",
           "type": "mcq",
           "prompt": "Quelle est la longueur d'onde approximative d'un photon dont l'énergie vaut E = 3,10 eV ?",
           "options": [
@@ -609,7 +609,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "lambda(nm) ≈ 1240 / E(eV) = 1240 / 3,10 = 400 nm. Cela correspond à la limite violette du spectre visible."
         },
         {
-          "id": "p2_s4_qcm",
+          "id": "phys_tle_cd_14_p2_s4_qcm",
           "type": "mcq",
           "prompt": "Un photon de longueur d'onde lambda est réfléchi perpendiculairement à 180° par un miroir parfait. Quelle est la quantité de mouvement totale cédée au miroir par ce photon ?",
           "options": [
@@ -622,7 +622,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "L'impulsion initiale du photon est p_i = +h/lambda, et son impulsion finale après réflexion élastique à 180° est p_f = -h/lambda. La variation d'impulsion du photon est Δp = p_f - p_i = -2.h/lambda. Par conservation de la quantité de mouvement totale, le miroir reçoit une impulsion opposée égale à +2.h/lambda."
         },
         {
-          "id": "p2_s5_qcm",
+          "id": "phys_tle_cd_14_p2_s5_qcm",
           "type": "mcq",
           "prompt": "Parmi les phénomènes suivants, lequel nécessite EXCLUSIVEMENT le modèle corpusculaire du photon pour être expliqué ?",
           "options": [
@@ -635,7 +635,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "La diffraction, les interférences et la dispersion s'expliquent parfaitement par la théorie ondulatoire de Maxwell. En revanche, l'effet photoélectrique et les spectres discontinus de raies d'émission/absorption exigent formellement le modèle quantique du photon transportant un quantum d'énergie h.nu."
         },
         {
-          "id": "p2_s6_qcm",
+          "id": "phys_tle_cd_14_p2_s6_qcm",
           "type": "mcq",
           "prompt": "Dans l'effet Compton, que représente la grandeur constante lambda_C = h / (m_e.c) ≈ 2,43.10⁻¹² m ?",
           "options": [
@@ -648,7 +648,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "lambda_C = h / (m_e.c) est appelée la longueur d'onde de Compton de l'électron. Elle fixe l'échelle des variations de longueur d'onde lors d'une diffusion inélastique photon-électron."
         },
         {
-          "id": "p2_s7_qcm",
+          "id": "phys_tle_cd_14_p2_s7_qcm",
           "type": "mcq",
           "prompt": "Un photon d'énergie 4,50 eV heurte un électron superficiel d'une plaque de zinc dont le travail d'extraction est W₀ = 3,60 eV. Quelle est la vitesse maximale de sortie de l'électron éjecté ? (m_e = 9,11.10⁻³¹ kg ; 1 eV = 1,60.10⁻¹⁹ J)",
           "options": [
@@ -740,7 +740,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Définition",
           "paragraphText": "Lorsqu'on excite un gaz atomique raréfié (sous basse pression) par une décharge électrique, la lumière émise et décomposée par un prisme ou un réseau de diffraction présente un spectre de raies d'émission : une série de raies fines colorées sur fond noir. Si l'on fait traverser ce même gaz froid par de la lumière blanche continue, le spectre obtenu est un spectre de raies d'absorption : un fond continu traversé par des raies noires. Les raies noires d'absorption occupent rigoureusement les mêmes positions spectrales que les raies d'émission du même gaz : un gaz ne peut absorber que les radiations qu'il est capable d'émettre (loi de Kirchhoff).",
           "exercise": {
-            "id": "p3_s1_qcm",
+            "id": "phys_tle_cd_14_p3_s1_qcm",
             "type": "mcq",
             "prompt": "Pourquoi le spectre émis par un filament incandescent d'ampoule est-il continu alors que celui d'un tube à vapeur de néon est un spectre de raies discontinu ?",
             "options": [
@@ -761,7 +761,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Postulats de Bohr",
           "paragraphText": "Pour surmonter l'instabilité de l'atome de Rutherford (où un électron classique rayonnant perdrait son énergie en une fraction de microseconde et s'écraserait sur le noyau), Niels Bohr pose deux postulats fondamentaux : 1. Postulat des orbites stationnaires : l'électron ne peut circuler que sur certaines orbites privilégiées non rayonnantes pour lesquelles le moment cinétique orbital est quantifié : L = n.(h / 2pi), avec n entier naturel non nul (n = 1, 2, 3...). 2. Postulat des transitions radiatives : l'atome n'émet ou n'absorbe de l'énergie lumineuse que lors du passage discontinu de l'électron d'une orbite à une autre, avec |Delta E| = h.nu.",
           "exercise": {
-            "id": "p3_s2_qcm",
+            "id": "phys_tle_cd_14_p3_s2_qcm",
             "type": "mcq",
             "prompt": "Dans le modèle de Bohr, quel paramètre quantique est contraint d'être un multiple entier de la constante de Dirac hbar = h / (2pi) ?",
             "options": [
@@ -782,7 +782,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Condition de Bohr",
           "paragraphText": "La conservation de l'énergie lors d'un saut quantique s'exprime rigoureusement par : E_initial = E_final + E_photon. Si l'atome passe d'un niveau excité supérieur E_p à un niveau inférieur E_n : E_p = E_n + h.nu => h.nu = E_p - E_n. Si l'atome est initialement dans le niveau E_n et absorbe un photon d'énergie h.nu : E_n + h.nu = E_p => E_p - E_n = h.nu. La fréquence du rayonnement est donc strictement proportionnelle à la différence entre les deux niveaux quantiques concernés : nu = |E_p - E_n| / h.",
           "exercise": {
-            "id": "p3_s3_qcm",
+            "id": "phys_tle_cd_14_p3_s3_qcm",
             "type": "mcq",
             "prompt": "Un atome possède trois niveaux d'énergie : E₁ = -10,0 eV (fondamental), E₂ = -6,0 eV et E₃ = -2,0 eV. Combien de raies d'émission distinctes cet atome peut-il émettre lors de sa désexcitation ?",
             "options": [
@@ -803,7 +803,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Attention piège",
           "paragraphText": "Par convention internationale universelle en physique quantique, l'énergie d'un électron infiniment éloigné du noyau et au repos (état ionisé) est choisie comme référence nulle : E_infini = 0 eV. Comme il faut fournir de l'énergie à l'atome pour en extraire un électron lié, tous les états liés d'un atome (état fondamental et états excités) possèdent des énergies strictement NÉGATIVES : E_n < 0. L'état le plus stable (fondamental) possède l'énergie la plus basse (la valeur la plus négative).",
           "exercise": {
-            "id": "p3_s4_qcm",
+            "id": "phys_tle_cd_14_p3_s4_qcm",
             "type": "mcq",
             "prompt": "Pour un atome donné, on a E₁ = -13,6 eV et E₂ = -3,4 eV. Quel niveau d'énergie est le plus élevé sur l'échelle énergétique ?",
             "options": [
@@ -824,7 +824,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Méthode graphique",
           "paragraphText": "Un diagramme de niveaux d'énergie représente sur un axe vertical orienté vers le haut les valeurs des énergies permises E_n en eV. L'état fondamental n = 1 est tracé tout en bas. Les états excités n = 2, 3... sont des traits horizontaux horizontaux parallèles qui se resserrent au fur et à mesure que n augmente, jusqu'à la limite de continuum E = 0 (état ionisé). Une flèche verticale vers le bas symbolise une émission spontanée d'un photon, tandis qu'une flèche verticale vers le haut symbolise une absorption stimulée.",
           "exercise": {
-            "id": "p3_s5_qcm",
+            "id": "phys_tle_cd_14_p3_s5_qcm",
             "type": "mcq",
             "prompt": "Sur un diagramme d'énergie, une transition représentée par une flèche orientée de n = 4 vers n = 2 correspond à :",
             "options": [
@@ -845,7 +845,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Application astrophysique",
           "paragraphText": "Les raies spectrales constituent une véritable 'carte d'identité' atomique. En analysant la lumière issue des étoiles à travers un spectrographe, les astrophysiciens observent des raies d'absorption sombres (raies de Fraunhofer pour le Soleil). En identifiant les longueurs d'onde de ces raies, on détermine avec une précision absolue la composition chimique de l'atmosphère stellaire (hydrogène, hélium, métaux) sans jamais avoir à s'y déplacer. C'est d'ailleurs ainsi que l'hélium a été découvert dans le Soleil en 1868 avant d'être identifié sur Terre.",
           "exercise": {
-            "id": "p3_s6_qcm",
+            "id": "phys_tle_cd_14_p3_s6_qcm",
             "type": "mcq",
             "prompt": "Dans le spectre de la lumière solaire reçu sur Terre, pourquoi observe-t-on de fines raies noires superposées au spectre continu ?",
             "options": [
@@ -866,7 +866,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Éclairage public",
           "paragraphText": "Les lampes à vapeur de sodium qui éclairent les autoroutes et ponts routiers émettent une lumière jaune très caractéristique dominée par deux raies extrêmement proches situées à 589,0 nm et 589,6 nm. Cette lumière monochromatique offre une pénétration remarquable dans le brouillard et correspond à la sensibilité maximale de l'œil humain, réduisant la consommation électrique pour un flux lumineux perçu maximal.",
           "exercise": {
-            "id": "p3_s7_qcm",
+            "id": "phys_tle_cd_14_p3_s7_qcm",
             "type": "mcq",
             "prompt": "Quel est l'écart énergétique Δ(ΔE) entre les deux transitions électroniques produisant le doublet du sodium à 589,0 nm et 589,6 nm ? (h.c ≈ 1240 eV.nm)",
             "options": [
@@ -882,7 +882,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
       ],
       "exercises": [
         {
-          "id": "p3_s1_qcm",
+          "id": "phys_tle_cd_14_p3_s1_qcm",
           "type": "mcq",
           "prompt": "Pourquoi le spectre émis par un filament incandescent d'ampoule est-il continu alors que celui d'un tube à vapeur de néon est un spectre de raies discontinu ?",
           "options": [
@@ -895,7 +895,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Dans un gaz atomique à basse pression, les atomes sont indépendants : les transitions s'opèrent entre niveaux d'énergie discrets et bien isolés, créant des raies nettes. Dans un solide chaud condensé, le couplage entre milliards d'atomes contigus transforme les niveaux d'énergie discrets en bandes d'énergie quasi-continues, produisant un spectre d'émission thermique continu."
         },
         {
-          "id": "p3_s2_qcm",
+          "id": "phys_tle_cd_14_p3_s2_qcm",
           "type": "mcq",
           "prompt": "Dans le modèle de Bohr, quel paramètre quantique est contraint d'être un multiple entier de la constante de Dirac hbar = h / (2pi) ?",
           "options": [
@@ -908,7 +908,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Le premier postulat de Bohr stipule la quantification du moment cinétique orbital de l'électron : L = m_e * v * r = n * (h / 2pi) = n * hbar, où n est le nombre quantique principal (n in N*)."
         },
         {
-          "id": "p3_s3_qcm",
+          "id": "phys_tle_cd_14_p3_s3_qcm",
           "type": "mcq",
           "prompt": "Un atome possède trois niveaux d'énergie : E₁ = -10,0 eV (fondamental), E₂ = -6,0 eV et E₃ = -2,0 eV. Combien de raies d'émission distinctes cet atome peut-il émettre lors de sa désexcitation ?",
           "options": [
@@ -921,7 +921,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Les transitions possibles vers un niveau d'énergie plus bas sont : de E₃ vers E₂ (ΔE = -2,0 - (-6,0) = 4,0 eV) ; de E₂ vers E₁ (ΔE = -6,0 - (-10,0) = 4,0 eV) ; et de E₃ vers E₁ (ΔE = -2,0 - (-10,0) = 8,0 eV). Deux transitions ont la même énergie (4,0 eV), ce qui donne 2 valeurs d'énergies différentes (4,0 eV et 8,0 eV), correspondant à 2 raies spectrales observables distinctes. (S'il n'y avait pas de dégénérescence d'écart, le nombre théorique de paires de niveaux parmi 3 serait C(3,2) = 3 raies)."
         },
         {
-          "id": "p3_s4_qcm",
+          "id": "phys_tle_cd_14_p3_s4_qcm",
           "type": "mcq",
           "prompt": "Pour un atome donné, on a E₁ = -13,6 eV et E₂ = -3,4 eV. Quel niveau d'énergie est le plus élevé sur l'échelle énergétique ?",
           "options": [
@@ -934,7 +934,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Sur l'axe des réels orienté vers le haut, -3,4 eV est supérieur à -13,6 eV (-3,4 > -13,6). Le niveau E₂ est donc un niveau excité situé plus haut en énergie que l'état fondamental E₁."
         },
         {
-          "id": "p3_s5_qcm",
+          "id": "phys_tle_cd_14_p3_s5_qcm",
           "type": "mcq",
           "prompt": "Sur un diagramme d'énergie, une transition représentée par une flèche orientée de n = 4 vers n = 2 correspond à :",
           "options": [
@@ -947,7 +947,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "La flèche pointant vers le bas indique que l'atome descend d'un niveau d'énergie plus élevé (n = 4) vers un niveau plus bas (n = 2). La différence d'énergie perdue par l'atome est libérée sous forme d'un photon émis : c'est une désexcitation radiative."
         },
         {
-          "id": "p3_s6_qcm",
+          "id": "phys_tle_cd_14_p3_s6_qcm",
           "type": "mcq",
           "prompt": "Dans le spectre de la lumière solaire reçu sur Terre, pourquoi observe-t-on de fines raies noires superposées au spectre continu ?",
           "options": [
@@ -960,7 +960,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Le cœur du Soleil émet un spectre thermique continu. En traversant les couches gazeuses externes plus froides du Soleil (et l'atmosphère terrestre), les atomes de ces gaz absorbent spécifiquement les longueurs d'onde correspondant à leurs sauts quantiques, creusant les raies noires d'absorption de Fraunhofer."
         },
         {
-          "id": "p3_s7_qcm",
+          "id": "phys_tle_cd_14_p3_s7_qcm",
           "type": "mcq",
           "prompt": "Quel est l'écart énergétique Δ(ΔE) entre les deux transitions électroniques produisant le doublet du sodium à 589,0 nm et 589,6 nm ? (h.c ≈ 1240 eV.nm)",
           "options": [
@@ -1080,7 +1080,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Formule clé",
           "paragraphText": "En combinant les lois de la mécanique newtonienne, la force électrostatique d'attraction coulombienne et la quantification du moment cinétique, Niels Bohr établit que le rayon de l'orbite de l'électron de l'hydrogène est r_n = n² * r_0 (avec r_0 = 0,053 nm = 0,53 Å, rayon de Bohr) et que son énergie totale est E_n = -E_0 / n² avec E_0 = (m_e * e⁴) / (8 * epsilon_0² * h²) ≈ 13,6 eV. Pour tout n entier supérieur ou égal à 1 : E_n = -13,6 / n² eV.",
           "exercise": {
-            "id": "p4_s1_qcm",
+            "id": "phys_tle_cd_14_p4_s1_qcm",
             "type": "mcq",
             "prompt": "Quelle est l'énergie E₄ du quatrième niveau quantique (n = 4) de l'atome d'hydrogène ?",
             "options": [
@@ -1101,7 +1101,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Propriété",
           "paragraphText": "Lorsque le nombre quantique n augmente, les niveaux d'énergie se rapprochent de plus en plus vite les uns des autres : la différence entre deux niveaux consécutifs E_{n+1} - E_n = 13,6 * [1/n² - 1/(n+1)²] tend rapidement vers 0 quand n augmente. Par exemple, E₂ - E₁ = 10,2 eV (écart immense représentant 75 % de toute la profondeur du puits de potentiel), tandis que E₆ - E₅ = -0,38 - (-0,54) = 0,16 eV seulement. Au voisinage de n -> oo, les niveaux forment un quasi-continuum qui rejoint la zone d'ionisation.",
           "exercise": {
-            "id": "p4_s2_qcm",
+            "id": "phys_tle_cd_14_p4_s2_qcm",
             "type": "mcq",
             "prompt": "Quelle fraction de l'énergie totale d'ionisation (13,6 eV) représente le saut du niveau fondamental n = 1 au tout premier niveau excité n = 2 ?",
             "options": [
@@ -1122,7 +1122,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Définition",
           "paragraphText": "L'énergie de première ionisation E_i d'un atome est l'énergie minimale nécessaire qu'il faut apporter à cet atome pris dans son état fondamental (n = 1) et au repos pour lui arracher son électron et le porter à l'infini (n = oo) avec une énergie cinétique résiduelle nulle : H -> H⁺ + e⁻. Pour l'atome d'hydrogène : E_i = E_infini - E₁ = 0 - (-13,6 eV) = +13,6 eV. En unités du Système International : E_i = 13,6 * 1,602.10⁻¹⁹ J ≈ 2,18.10⁻¹⁸ J.",
           "exercise": {
-            "id": "p4_s3_qcm",
+            "id": "phys_tle_cd_14_p4_s3_qcm",
             "type": "mcq",
             "prompt": "Quelle est l'énergie d'ionisation molaire de l'hydrogène atomique (en kJ/mol) ? (N_A = 6,022.10²³ mol⁻¹ ; 1 eV = 1,602.10⁻¹⁹ J)",
             "options": [
@@ -1143,7 +1143,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Méthode",
           "paragraphText": "La longueur d'onde seuil de photo-ionisation lambda_limite est la longueur d'onde maximale du photon capable d'ioniser l'atome depuis son état fondamental : E_photon = E_i <=> h.c / lambda_limite = E_i => lambda_limite = h.c / E_i. Pour l'hydrogène à l'état fondamental : lambda_limite = 1240 eV.nm / 13,6 eV ≈ 91,2 nm. Tout photon dont la longueur d'onde lambda <= 91,2 nm ionisera instantanément l'atome d'hydrogène.",
           "exercise": {
-            "id": "p4_s4_qcm",
+            "id": "phys_tle_cd_14_p4_s4_qcm",
             "type": "mcq",
             "prompt": "Un photon de longueur d'onde lambda = 80,0 nm frappe un atome d'hydrogène dans son état fondamental. Que se produit-il ?",
             "options": [
@@ -1164,7 +1164,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Extension",
           "paragraphText": "Un ion hydrogénoïde est un ion qui ne possède, comme l'atome d'hydrogène, qu'un seul électron unique gravitant autour d'un noyau de numéro atomique Z (par exemple l'ion hélium He⁺ avec Z = 2, ou l'ion lithium Li²⁺ avec Z = 3). Le modèle de Bohr s'applique rigoureusement en multipliant l'attraction coulombienne par Z : les niveaux d'énergie deviennent E_n = -13,6 * (Z² / n²) eV. L'énergie d'ionisation est ainsi multipliée par Z².",
           "exercise": {
-            "id": "p4_s5_qcm",
+            "id": "phys_tle_cd_14_p4_s5_qcm",
             "type": "mcq",
             "prompt": "Quelle est l'énergie d'ionisation de l'ion hydrogénoïde d'hélium He⁺ (Z = 2) depuis son état fondamental n = 1 ?",
             "options": [
@@ -1185,7 +1185,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Attention piège",
           "paragraphText": "La formule E_n = -13,6 / n² eV n'est rigoureusement exacte QUE pour l'atome d'hydrogène neutre (et avec le facteur Z² pour les ions à un seul électron). Pour tous les autres atomes neutres comportant plusieurs électrons (hélium neutre à 2 électrons, sodium à 11 électrons, etc.), la répulsion électrostatique mutuelle entre électrons perturbe les niveaux quantiques. Les énergies des états de ces atomes ne suivent plus la formule en -13,6 / n² et doivent être déterminées expérimentalement à partir de leurs diagrammes énergétiques spécifiques.",
           "exercise": {
-            "id": "p4_s6_qcm",
+            "id": "phys_tle_cd_14_p4_s6_qcm",
             "type": "mcq",
             "prompt": "Pourquoi ne peut-on pas utiliser la formule E_n = -13,6 / n² eV pour calculer les niveaux d'énergie de l'atome neutre d'hélium (^4_2He) ?",
             "options": [
@@ -1206,7 +1206,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Données expérimentales",
           "paragraphText": "Sur les diagrammes d'énergie fournis aux examens : Pour le Lithium (Li, Z = 3), l'état fondamental est à E₁ = -5,39 eV, d'où une énergie d'ionisation E_i = 5,39 eV. Pour le Sodium (Na, Z = 11), l'état fondamental se situe à E₁ = -5,14 eV, d'où E_i = 5,14 eV. Ces énergies d'ionisation beaucoup plus faibles que celle de l'hydrogène (13,6 eV) s'expliquent par l'écrantage des couches électroniques internes, qui rend l'électron de valence superficiel très facile à arracher.",
           "exercise": {
-            "id": "p4_s7_qcm",
+            "id": "phys_tle_cd_14_p4_s7_qcm",
             "type": "mcq",
             "prompt": "Un atome inconnu X à l'état fondamental absorbe un photon d'énergie 5,14 eV et s'ionise avec une vitesse d'éjection nulle. Quel est cet atome parmi les données suivantes : Hydrogène (E_i = 13,6 eV), Lithium (E_i = 5,39 eV), Sodium (E_i = 5,14 eV) ?",
             "options": [
@@ -1222,7 +1222,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
       ],
       "exercises": [
         {
-          "id": "p4_s1_qcm",
+          "id": "phys_tle_cd_14_p4_s1_qcm",
           "type": "mcq",
           "prompt": "Quelle est l'énergie E₄ du quatrième niveau quantique (n = 4) de l'atome d'hydrogène ?",
           "options": [
@@ -1235,7 +1235,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "E₄ = -13,6 / 4² = -13,6 / 16 = -0,85 eV."
         },
         {
-          "id": "p4_s2_qcm",
+          "id": "phys_tle_cd_14_p4_s2_qcm",
           "type": "mcq",
           "prompt": "Quelle fraction de l'énergie totale d'ionisation (13,6 eV) représente le saut du niveau fondamental n = 1 au tout premier niveau excité n = 2 ?",
           "options": [
@@ -1248,7 +1248,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "ΔE = E₂ - E₁ = -3,40 - (-13,60) = 10,20 eV. Le rapport ΔE / E_i = 10,20 / 13,60 = 0,75 = 75 % (soit exactement 1 - 1/4 = 3/4)."
         },
         {
-          "id": "p4_s3_qcm",
+          "id": "phys_tle_cd_14_p4_s3_qcm",
           "type": "mcq",
           "prompt": "Quelle est l'énergie d'ionisation molaire de l'hydrogène atomique (en kJ/mol) ? (N_A = 6,022.10²³ mol⁻¹ ; 1 eV = 1,602.10⁻¹⁹ J)",
           "options": [
@@ -1261,7 +1261,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "E_{i,mol} = E_i * N_A = (2,179.10⁻¹⁸ J) * (6,022.10²³ mol⁻¹) ≈ 1,312.10⁶ J/mol = 1312 kJ/mol. C'est l'enthalpie d'ionisation standard de l'hydrogène figurant dans les tables de chimie."
         },
         {
-          "id": "p4_s4_qcm",
+          "id": "phys_tle_cd_14_p4_s4_qcm",
           "type": "mcq",
           "prompt": "Un photon de longueur d'onde lambda = 80,0 nm frappe un atome d'hydrogène dans son état fondamental. Que se produit-il ?",
           "options": [
@@ -1274,7 +1274,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "L'énergie du photon incident est E = 1240 / 80,0 = 15,50 eV. Puisque 15,50 eV > 13,60 eV (E > E_i), le photon est absorbé en provoquant l'ionisation. L'excédent d'énergie est emporté par l'électron sous forme d'énergie cinétique : E_c = E - E_i = 15,50 - 13,60 = 1,90 eV."
         },
         {
-          "id": "p4_s5_qcm",
+          "id": "phys_tle_cd_14_p4_s5_qcm",
           "type": "mcq",
           "prompt": "Quelle est l'énergie d'ionisation de l'ion hydrogénoïde d'hélium He⁺ (Z = 2) depuis son état fondamental n = 1 ?",
           "options": [
@@ -1287,7 +1287,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "E_i(He⁺) = 13,6 * Z² / 1² = 13,6 * 2² = 13,6 * 4 = 54,4 eV."
         },
         {
-          "id": "p4_s6_qcm",
+          "id": "phys_tle_cd_14_p4_s6_qcm",
           "type": "mcq",
           "prompt": "Pourquoi ne peut-on pas utiliser la formule E_n = -13,6 / n² eV pour calculer les niveaux d'énergie de l'atome neutre d'hélium (^4_2He) ?",
           "options": [
@@ -1300,7 +1300,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Le modèle de Bohr élémentaire ne prend en compte que l'attraction centrale entre un électron unique et le noyau. Dès qu'il y a 2 électrons ou plus, les répulsions coulombiennes interélectroniques et les effets quantiques d'écran modifient complètement la structure énergétique."
         },
         {
-          "id": "p4_s7_qcm",
+          "id": "phys_tle_cd_14_p4_s7_qcm",
           "type": "mcq",
           "prompt": "Un atome inconnu X à l'état fondamental absorbe un photon d'énergie 5,14 eV et s'ionise avec une vitesse d'éjection nulle. Quel est cet atome parmi les données suivantes : Hydrogène (E_i = 13,6 eV), Lithium (E_i = 5,39 eV), Sodium (E_i = 5,14 eV) ?",
           "options": [
@@ -1414,7 +1414,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Définition",
           "paragraphText": "En spectroscopie atomique, une série spectrale est l'ensemble de toutes les raies émises (ou absorbées) par un atome lorsque l'électron transite entre divers niveaux excités p et un niveau d'arrivée n fixé. Pour l'atome d'hydrogène, chaque série porte le nom du physicien qui l'a découverte : Lyman pour n = 1, Balmer pour n = 2, Paschen pour n = 3, Brackett pour n = 4, Pfund pour n = 5.",
           "exercise": {
-            "id": "p5_s1_qcm",
+            "id": "phys_tle_cd_14_p5_s1_qcm",
             "type": "mcq",
             "prompt": "À quelle série spectrale de l'hydrogène appartient une raie émise lors de la transition d'un électron du niveau n = 5 au niveau n = 1 ?",
             "options": [
@@ -1435,7 +1435,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Formule de Rydberg",
           "paragraphText": "Avant même le modèle de Bohr, le physicien suédois Johannes Rydberg avait découvert que l'inverse de la longueur d'onde suit la loi empirique 1 / lambda = R_H * (1/n² - 1/p²). Niels Bohr a fourni la démonstration théorique exacte de cette formule en montrant que la constante de Rydberg s'exprime uniquement à partir des constantes fondamentales de la physique : R_H = E_0 / (h.c) = 13,6 eV / (1240 eV.nm) ≈ 1,097.10⁷ m⁻¹.",
           "exercise": {
-            "id": "p5_s2_qcm",
+            "id": "phys_tle_cd_14_p5_s2_qcm",
             "type": "mcq",
             "prompt": "En utilisant la formule de Rydberg 1 / lambda = R_H * (1/n² - 1/p²), quelle est l'expression de la longueur d'onde de la première raie de Lyman (n = 1, p = 2) ?",
             "options": [
@@ -1456,7 +1456,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Spectre visible",
           "paragraphText": "La série de Balmer (transitions vers n = 2) est historiquement la première découverte (1885) car ses quatre premières raies (H_alpha, H_beta, H_gamma, H_delta) sont les seules de tout l'atome d'hydrogène à être situées dans le spectre visible de l'œil humain (entre 400 nm et 700 nm). Toutes les raies de Lyman sont dans l'ultraviolet (lambda < 400 nm), tandis que toutes celles de Paschen, Brackett et Pfund sont dans l'infrarouge (lambda > 700 nm).",
           "exercise": {
-            "id": "p5_s3_qcm",
+            "id": "phys_tle_cd_14_p5_s3_qcm",
             "type": "mcq",
             "prompt": "Quelle est la longueur d'onde de la raie H_bêta de la série de Balmer correspondant à la transition p = 4 -> n = 2 ? (E₂ = -3,40 eV ; E₄ = -0,85 eV ; h.c = 1240 eV.nm)",
             "options": [
@@ -1477,7 +1477,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Méthode",
           "paragraphText": "Dans chaque série spectrale, la raie de plus courte longueur d'onde (donc de plus haute fréquence et de plus haute énergie) est obtenue lorsque le niveau de départ est à l'infini (p -> oo). Elle est appelée la limite de la série (lambda_lim). En posant 1/p² -> 0 dans la formule de Rydberg : 1 / lambda_lim = R_H * (1/n² - 0) = R_H / n², d'où : lambda_lim = n² / R_H. Au-delà de cette limite vers les courtes longueurs d'onde, le spectre devient continu car il correspond à la capture d'un électron libre.",
           "exercise": {
-            "id": "p5_s4_qcm",
+            "id": "phys_tle_cd_14_p5_s4_qcm",
             "type": "mcq",
             "prompt": "Quelle est la longueur d'onde de la limite de la série de Balmer (n = 2, p -> oo) ? (R_H = 1,097.10⁷ m⁻¹)",
             "options": [
@@ -1498,7 +1498,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Attention piège",
           "paragraphText": "Comme l'énergie est inversement proportionnelle à la longueur d'onde (E = h.c / lambda), la transition qui libère la PLUS GRANDE énergie possède la PLUS COURTE longueur d'onde, et inversement, la transition de plus faible énergie possède la plus grande longueur d'onde. Dans la série de Balmer : la transition p = 3 -> 2 libère le moins d'énergie (1,89 eV) et correspond à la plus grande longueur d'onde (656 nm, rouge) ; la transition p = 6 -> 2 libère 3,02 eV et correspond à la plus petite longueur d'onde (410 nm, violet).",
           "exercise": {
-            "id": "p5_s5_qcm",
+            "id": "phys_tle_cd_14_p5_s5_qcm",
             "type": "mcq",
             "prompt": "Parmi les raies de la série de Balmer suivantes, laquelle transporte l'énergie la plus élevée par photon ?",
             "options": [
@@ -1519,7 +1519,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Infrarouge",
           "paragraphText": "La série de Paschen correspond aux retours d'électrons excités vers le niveau n = 3 (depuis p = 4, 5, 6...). L'énergie maximale de cette série est de 1,51 eV (p -> oo), et la première transition p = 4 -> 3 ne libère que ΔE = -0,85 - (-1,51) = 0,66 eV. Ces énergies très faibles correspondent à des longueurs d'onde comprises entre 820 nm et 1875 nm, situées exclusivement dans le domaine infrarouge, invisibles pour l'œil humain mais détectables par des caméras thermiques infrarouges.",
           "exercise": {
-            "id": "p5_s6_qcm",
+            "id": "phys_tle_cd_14_p5_s6_qcm",
             "type": "mcq",
             "prompt": "Quelle est la longueur d'onde approximative de la première raie de Paschen (p = 4 -> n = 3) sachant que ΔE = 0,66 eV ? (h.c ≈ 1240 eV.nm)",
             "options": [
@@ -1540,7 +1540,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Température et population",
           "paragraphText": "À température ambiante ordinaire (T ≈ 300 K), l'agitation thermique (k_B.T ≈ 0,025 eV) est infiniment trop faible pour exciter les atomes d'hydrogène au niveau n = 2 (qui requiert 10,2 eV). Par conséquent, 100 % des atomes d'hydrogène d'un gaz froid sont dans leur état fondamental n = 1. Si l'on éclaire ce gaz par de la lumière blanche, il ne peut absorber que des photons partant de n = 1 (série de Lyman, dans l'ultraviolet). L'hydrogène gazeux froid est donc TOTALEMENT TRANSPARENT à la lumière visible : le spectre visible ne montre aucune raie d'absorption de Balmer !",
           "exercise": {
-            "id": "p5_s7_qcm",
+            "id": "phys_tle_cd_14_p5_s7_qcm",
             "type": "mcq",
             "prompt": "Pourquoi les raies d'absorption de la série de Balmer ne sont-elles observables dans les étoiles que si la température de surface est très élevée (de l'ordre de 10 000 K) ?",
             "options": [
@@ -1556,7 +1556,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
       ],
       "exercises": [
         {
-          "id": "p5_s1_qcm",
+          "id": "phys_tle_cd_14_p5_s1_qcm",
           "type": "mcq",
           "prompt": "À quelle série spectrale de l'hydrogène appartient une raie émise lors de la transition d'un électron du niveau n = 5 au niveau n = 1 ?",
           "options": [
@@ -1569,7 +1569,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Le niveau d'arrivée de la transition est n = 1 (niveau fondamental). Toute transition dont le niveau final est n = 1 appartient par définition à la série de Lyman (située dans le domaine ultraviolet)."
         },
         {
-          "id": "p5_s2_qcm",
+          "id": "phys_tle_cd_14_p5_s2_qcm",
           "type": "mcq",
           "prompt": "En utilisant la formule de Rydberg 1 / lambda = R_H * (1/n² - 1/p²), quelle est l'expression de la longueur d'onde de la première raie de Lyman (n = 1, p = 2) ?",
           "options": [
@@ -1582,7 +1582,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Pour n = 1 et p = 2 : 1 / lambda = R_H * (1/1² - 1/2²) = R_H * (1 - 1/4) = (3/4) * R_H. En inversant : lambda = 4 / (3 * R_H) ≈ 4 / (3 * 1,097.10⁷) ≈ 1,215.10⁻⁷ m = 121,5 nm."
         },
         {
-          "id": "p5_s3_qcm",
+          "id": "phys_tle_cd_14_p5_s3_qcm",
           "type": "mcq",
           "prompt": "Quelle est la longueur d'onde de la raie H_bêta de la série de Balmer correspondant à la transition p = 4 -> n = 2 ? (E₂ = -3,40 eV ; E₄ = -0,85 eV ; h.c = 1240 eV.nm)",
           "options": [
@@ -1595,7 +1595,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "ΔE = E₄ - E₂ = -0,85 - (-3,40) = 2,55 eV. lambda = h.c / ΔE = 1240 / 2,55 ≈ 486,3 nm ≈ 486 nm. C'est la raie cyan H-bêta."
         },
         {
-          "id": "p5_s4_qcm",
+          "id": "phys_tle_cd_14_p5_s4_qcm",
           "type": "mcq",
           "prompt": "Quelle est la longueur d'onde de la limite de la série de Balmer (n = 2, p -> oo) ? (R_H = 1,097.10⁷ m⁻¹)",
           "options": [
@@ -1608,7 +1608,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "lambda_lim(Balmer) = n² / R_H = 2² / R_H = 4 / (1,097.10⁷ m⁻¹) ≈ 3,646.10⁻⁷ m = 364,6 nm. Aucune raie de la série de Balmer ne peut avoir une longueur d'onde inférieure à 364,6 nm."
         },
         {
-          "id": "p5_s5_qcm",
+          "id": "phys_tle_cd_14_p5_s5_qcm",
           "type": "mcq",
           "prompt": "Parmi les raies de la série de Balmer suivantes, laquelle transporte l'énergie la plus élevée par photon ?",
           "options": [
@@ -1621,7 +1621,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "L'énergie du photon étant E = h.c / lambda, plus la longueur d'onde lambda est courte, plus l'énergie est élevée. La raie violette H_delta (410 nm) possède la longueur d'onde la plus petite parmi les quatre, elle transporte donc l'énergie photonique la plus élevée (3,02 eV)."
         },
         {
-          "id": "p5_s6_qcm",
+          "id": "phys_tle_cd_14_p5_s6_qcm",
           "type": "mcq",
           "prompt": "Quelle est la longueur d'onde approximative de la première raie de Paschen (p = 4 -> n = 3) sachant que ΔE = 0,66 eV ? (h.c ≈ 1240 eV.nm)",
           "options": [
@@ -1634,7 +1634,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "lambda = h.c / ΔE = 1240 / 0,66 ≈ 1878,8 nm ≈ 1879 nm (domaine infrarouge)."
         },
         {
-          "id": "p5_s7_qcm",
+          "id": "phys_tle_cd_14_p5_s7_qcm",
           "type": "mcq",
           "prompt": "Pourquoi les raies d'absorption de la série de Balmer ne sont-elles observables dans les étoiles que si la température de surface est très élevée (de l'ordre de 10 000 K) ?",
           "options": [
@@ -1724,7 +1724,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Règle de sélection",
           "paragraphText": "Lorsqu'un photon interagit avec un atome sans posséder l'énergie d'ionisation (E < E_i), la transition vers un état lié excité exige une égalité mathématique rigoureuse : E_photon = E_p - E_n. L'atome ne peut pas absorber 'une partie' de l'énergie d'un photon pour laisser repartir un photon affaibli : le photon est un quantum insécable, il est soit absorbé en totalité, soit ignoré. Si l'énergie du photon ne correspond à aucun écart entre niveaux permis, l'atome est rigoureusement transparent à cette radiation.",
           "exercise": {
-            "id": "p6_s1_qcm",
+            "id": "phys_tle_cd_14_p6_s1_qcm",
             "type": "mcq",
             "prompt": "On éclaire des atomes d'hydrogène dans leur état fondamental (E₁ = -13,6 eV) avec un faisceau lumineux monochromatique composé de photons d'énergie E = 11,0 eV. Sachant que les niveaux excités sont E₂ = -3,4 eV (ΔE = 10,2 eV) et E₃ = -1,51 eV (ΔE = 12,09 eV), que se passe-t-il ?",
             "options": [
@@ -1745,7 +1745,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Continuum",
           "paragraphText": "Dès que l'énergie du photon incident est supérieure ou égale à l'énergie d'ionisation (E_photon >= E_i), la condition de résonance stricte cesse de s'appliquer. En effet, l'électron éjecté devient une particule libre non confinée dans le puits de potentiel électrostatique du noyau. Son énergie cinétique E_c = (1/2).m_e.v² n'est plus quantifiée : elle peut prendre N'IMPORTE QUELLE valeur continue positive. Par conséquent, TOUT photon dont l'énergie E >= E_i est absorbé par l'atome, sans restriction discrète.",
           "exercise": {
-            "id": "p6_s2_qcm",
+            "id": "phys_tle_cd_14_p6_s2_qcm",
             "type": "mcq",
             "prompt": "Pourquoi un photon d'énergie 17,3 eV peut-il être absorbé par un atome d'hydrogène dans son état fondamental (E_i = 13,6 eV), alors qu'un photon de 11,5 eV ne le peut pas ?",
             "options": [
@@ -1766,7 +1766,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Méthode de calcul",
           "paragraphText": "Pour déterminer la vitesse d'éjection v d'un photoélectron lors de l'ionisation d'un atome par un photon d'énergie E_ph > E_i : 1. Calculer l'énergie cinétique en électronvolts : E_c(eV) = E_ph(eV) - E_i(eV). 2. Convertir E_c en Joules en multipliant par 1,602.10⁻¹⁹ J/eV. 3. Utiliser la relation classique de l'énergie cinétique : E_c = (1/2).m_e.v² (valide tant que E_c << 511 keV, limite non-relativiste). 4. En déduire la vitesse : v = sqrt(2 * E_c / m_e).",
           "exercise": {
-            "id": "p6_s3_qcm",
+            "id": "phys_tle_cd_14_p6_s3_qcm",
             "type": "mcq",
             "prompt": "Un photon d'énergie E_ph = 14,6 eV ionise un atome d'hydrogène fondamental (E_i = 13,6 eV). Quelle est la vitesse de l'électron éjecté ? (m_e = 9,11.10⁻³¹ kg ; 1 eV = 1,602.10⁻¹⁹ J)",
             "options": [
@@ -1787,7 +1787,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Attention piège",
           "paragraphText": "Il existe une différence capitale entre l'interaction d'un atome avec un photon et sa collision avec une particule matérielle chargée (électron incident, expérience de Franck et Hertz) : Un photon doit obligatoirement être absorbé en totalité ou pas du tout (E_photon = ΔE). En revanche, un électron incident accéléré d'énergie cinétique E_{c,inc} peut entrer en collision inélastique avec l'atome, lui céder la quantité exacte ΔE nécessaire à l'excitation, et repartir avec l'énergie résiduelle E_{c,reste} = E_{c,inc} - ΔE. Une collision avec un électron ne requiert donc pas que E_{c,inc} soit exactement égale à ΔE, il suffit simplement que E_{c,inc} >= ΔE !",
           "exercise": {
-            "id": "p6_s4_qcm",
+            "id": "phys_tle_cd_14_p6_s4_qcm",
             "type": "mcq",
             "prompt": "Un électron d'énergie cinétique 11,0 eV bombarde un atome d'hydrogène dans son état fondamental (premier niveau excité à 10,2 eV). Que se passe-t-il lors du choc inélastique ?",
             "options": [
@@ -1808,7 +1808,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Désexcitation",
           "paragraphText": "Lorsqu'un atome est porté dans un état hautement excité (par exemple n = 4), il ne redescend pas nécessairement en une seule étape vers le fondamental. Il peut effectuer une transition directe n = 4 -> 1 en émettant un photon très énergétique UV (Lyman gamma), ou se désexciter en cascade par étapes successives : par exemple n = 4 -> 2 (émission d'un photon visible H_beta de 486 nm) suivi de n = 2 -> 1 (émission d'un photon UV Lyman alpha de 122 nm). C'est le principe de la fluorescence et des tubes fluorescents, où l'absorption d'ultraviolets invisibles est réémise sous forme de lumière visible.",
           "exercise": {
-            "id": "p6_s5_qcm",
+            "id": "phys_tle_cd_14_p6_s5_qcm",
             "type": "mcq",
             "prompt": "Un atome d'hydrogène excité au niveau n = 3 se désexcite en passant par le niveau intermédiaire n = 2 avant de rejoindre le fondamental n = 1. Quels photons sont émis successivement ?",
             "options": [
@@ -1829,7 +1829,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Technologie quantique",
           "paragraphText": "En 1917, Albert Einstein postule l'existence d'un troisième mécanisme d'interaction en plus de l'absorption et de l'émission spontanée : l'émission stimulée. Lorsqu'un atome excité sur un niveau E₂ est heurté par un photon incident dont l'énergie est exactement h.nu = E₂ - E₁, ce photon ne se fait pas absorber mais force l'atome à se désexciter immédiatement. Il émerge alors deux photons strictement identiques : même fréquence, même direction de propagation, même polarisation et rigoureusement en phase. C'est le fondement du LASER (Light Amplification by Stimulated Emission of Radiation).",
           "exercise": {
-            "id": "p6_s6_qcm",
+            "id": "phys_tle_cd_14_p6_s6_qcm",
             "type": "mcq",
             "prompt": "Quelles sont les caractéristiques remarquables des deux photons résultant d'une émission stimulée dans un milieu amplificateur laser ?",
             "options": [
@@ -1850,7 +1850,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "stepBadge": "Récapitulatif",
           "paragraphText": "En résumé, le modèle quantique corpusculaire de la lumière et la structure quantifiée des atomes forment un édifice parfaitement cohérent : l'échange d'énergie s'effectue par paquets insécables (photons h.nu), la conservation de l'énergie gouverne chaque saut quantique entre états discrets (|ΔE| = h.nu), et l'effet photoélectrique ainsi que l'ionisation révèlent la transition continue entre états liés et continuum d'électrons libres.",
           "exercise": {
-            "id": "p6_s7_qcm",
+            "id": "phys_tle_cd_14_p6_s7_qcm",
             "type": "mcq",
             "prompt": "Quelle expérience historique a prouvé pour la première fois que la lumière échangeait son énergie avec les électrons sous forme de corpuscules individuels et non d'ondes continues ?",
             "options": [
@@ -1866,7 +1866,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
       ],
       "exercises": [
         {
-          "id": "p6_s1_qcm",
+          "id": "phys_tle_cd_14_p6_s1_qcm",
           "type": "mcq",
           "prompt": "On éclaire des atomes d'hydrogène dans leur état fondamental (E₁ = -13,6 eV) avec un faisceau lumineux monochromatique composé de photons d'énergie E = 11,0 eV. Sachant que les niveaux excités sont E₂ = -3,4 eV (ΔE = 10,2 eV) et E₃ = -1,51 eV (ΔE = 12,09 eV), que se passe-t-il ?",
           "options": [
@@ -1879,7 +1879,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Le quantum d'énergie du photon est indivisible. Comme 11,0 eV ne correspond à aucun écart d'énergie entre le fondamental et un état lié (10,2 eV ou 12,09 eV), l'absorption est rigoureusement impossible : le gaz est transparent."
         },
         {
-          "id": "p6_s2_qcm",
+          "id": "phys_tle_cd_14_p6_s2_qcm",
           "type": "mcq",
           "prompt": "Pourquoi un photon d'énergie 17,3 eV peut-il être absorbé par un atome d'hydrogène dans son état fondamental (E_i = 13,6 eV), alors qu'un photon de 11,5 eV ne le peut pas ?",
           "options": [
@@ -1892,7 +1892,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Au-delà de l'énergie d'ionisation (13,6 eV), l'état final est un électron libre dont l'énergie cinétique n'est pas quantifiée et peut varier continûment : E_c = 17,3 - 13,6 = 3,7 eV. L'absorption est donc permise pour toute valeur E >= 13,6 eV."
         },
         {
-          "id": "p6_s3_qcm",
+          "id": "phys_tle_cd_14_p6_s3_qcm",
           "type": "mcq",
           "prompt": "Un photon d'énergie E_ph = 14,6 eV ionise un atome d'hydrogène fondamental (E_i = 13,6 eV). Quelle est la vitesse de l'électron éjecté ? (m_e = 9,11.10⁻³¹ kg ; 1 eV = 1,602.10⁻¹⁹ J)",
           "options": [
@@ -1905,7 +1905,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "E_c = 14,6 - 13,6 = 1,00 eV = 1,602.10⁻¹⁹ J. v = sqrt(2 * E_c / m_e) = sqrt(2 * 1,602.10⁻¹⁹ / 9,11.10⁻³¹) = sqrt(3,517.10¹¹) ≈ 5,93.10⁵ m/s."
         },
         {
-          "id": "p6_s4_qcm",
+          "id": "phys_tle_cd_14_p6_s4_qcm",
           "type": "mcq",
           "prompt": "Un électron d'énergie cinétique 11,0 eV bombarde un atome d'hydrogène dans son état fondamental (premier niveau excité à 10,2 eV). Que se passe-t-il lors du choc inélastique ?",
           "options": [
@@ -1918,7 +1918,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "Lors d'une collision particulaire inélastique (expérience de Franck-Hertz), la particule matérielle n'a pas besoin de disparaître : elle peut transférer une part de son énergie (ici 10,2 eV pour exciter l'atome) et conserver le reste sous forme d'énergie cinétique (11,0 - 10,2 = 0,8 eV). C'est impossible pour un photon."
         },
         {
-          "id": "p6_s5_qcm",
+          "id": "phys_tle_cd_14_p6_s5_qcm",
           "type": "mcq",
           "prompt": "Un atome d'hydrogène excité au niveau n = 3 se désexcite en passant par le niveau intermédiaire n = 2 avant de rejoindre le fondamental n = 1. Quels photons sont émis successivement ?",
           "options": [
@@ -1931,7 +1931,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "La première étape n = 3 -> 2 libère 1,89 eV, ce qui correspond à la raie rouge H_alpha de Balmer à 656 nm. La seconde étape n = 2 -> 1 libère 10,2 eV, correspondant à la raie Lyman alpha à 122 nm dans l'ultraviolet."
         },
         {
-          "id": "p6_s6_qcm",
+          "id": "phys_tle_cd_14_p6_s6_qcm",
           "type": "mcq",
           "prompt": "Quelles sont les caractéristiques remarquables des deux photons résultant d'une émission stimulée dans un milieu amplificateur laser ?",
           "options": [
@@ -1944,7 +1944,7 @@ export const PHYSIQUE_TLE_CD_L14_MODELE_CORPUSCULAIRE_LUMIERE: CurriculumChapter
           "explanation": "L'émission stimulée produit un clone parfait du photon incident : cohérence temporelle et spatiale absolue, monochromatisme parfait et directivité extrême, propriétés fondamentales de la lumière laser."
         },
         {
-          "id": "p6_s7_qcm",
+          "id": "phys_tle_cd_14_p6_s7_qcm",
           "type": "mcq",
           "prompt": "Quelle expérience historique a prouvé pour la première fois que la lumière échangeait son énergie avec les électrons sous forme de corpuscules individuels et non d'ondes continues ?",
           "options": [

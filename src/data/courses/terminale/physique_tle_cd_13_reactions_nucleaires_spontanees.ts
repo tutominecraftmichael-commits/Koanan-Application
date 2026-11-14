@@ -97,7 +97,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Fondement",
           "paragraphText": "L'expérience historique menée par Ernest Rutherford en 1909 consiste à bombarder une feuille d'or ultramince (épaisseur ~ 0,1 µm) avec des particules alpha (^4_2He). La quasi-totalité des particules traverse sans subir de déviation notable, tandis qu'une infime proportion (environ 1 sur 10 000) subit de fortes déviations ou rebrousse chemin. Cette observation prouve que la matière atomique est essentiellement vide : l'atome possède une structure lacunaire. La quasi-totalité de la masse et l'intégralité de la charge positive sont concentrées dans un volume minuscule au centre : le noyau atomique, de rayon de l'ordre de 10⁻¹⁵ m (le femtomètre ou fermi), soit 100 000 fois plus petit que l'atome lui-même (10⁻¹⁰ m).",
           "exercise": {
-            "id": "p1_s1_qcm",
+            "id": "phys_tle_cd_13_p1_s1_qcm",
             "type": "mcq",
             "prompt": "Sachant que le rayon typique d'un atome est de 10⁻¹⁰ m et celui de son noyau de 10⁻¹⁵ m, quel est l'ordre de grandeur du rapport entre le volume de l'atome et le volume de son noyau ?",
             "options": [
@@ -118,7 +118,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Propriété",
           "paragraphText": "Le noyau est un édifice constitué de nucléons, nom générique regroupant les protons et les neutrons. Le proton possède une charge élémentaire positive q_p = +e = +1,602.10⁻¹⁹ C et une masse au repos m_p = 1,6726.10⁻²⁷ kg. Le neutron est électriquement neutre (q_n = 0 C) et possède une masse légèrement supérieure à celle du proton : m_n = 1,6749.10⁻²⁷ kg. Le nombre de protons Z, appelé numéro atomique ou nombre de charge, définit l'élément chimique et détermine le nombre d'électrons du cortège électronique de l'atome neutre. Le nombre de neutrons est N, et le nombre total de nucléons est A = Z + N.",
           "exercise": {
-            "id": "p1_s2_qcm",
+            "id": "phys_tle_cd_13_p1_s2_qcm",
             "type": "mcq",
             "prompt": "Un noyau inconnu contient 82 protons et 126 neutrons. Quelle est la notation symbolique standard de ce nucléide sachant que Z=82 correspond au plomb (Pb) ?",
             "options": [
@@ -139,7 +139,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Définition",
           "paragraphText": "Un élément chimique est l'ensemble de tous les atomes et ions possédant le même numéro atomique Z (même nombre de protons). Deux nucléides isotopes appartiennent au même élément chimique : ils ont le même Z mais un nombre de masse A différent (donc un nombre de neutrons N différent). Partageant la même structure électronique périphérique, les isotopes possèdent des propriétés chimiques strictement identiques. En revanche, leurs propriétés nucléaires (stabilité, modes de désintégration, masse) peuvent être radicalement divergentes. À titre d'exemple, le carbone naturel comprend le carbone 12 stable (6 protons, 6 neutrons), le carbone 13 stable (6 protons, 7 neutrons) et le carbone 14 radioactif (6 protons, 8 neutrons).",
           "exercise": {
-            "id": "p1_s3_qcm",
+            "id": "phys_tle_cd_13_p1_s3_qcm",
             "type": "mcq",
             "prompt": "Parmi les paires de nucléides suivantes, laquelle est constituée de deux isotopes ?",
             "options": [
@@ -160,7 +160,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Standard",
           "paragraphText": "En physique nucléaire, le kilogramme est une unité inadaptée en raison des ordres de grandeur infinitésimaux en jeu (10⁻²⁷ kg). La communauté scientifique utilise l'unité de masse atomique unifiée (symbole u), définie conventionnellement comme exactement 1/12 de la masse au repos d'un atome neutre de carbone 12 (^12_6 C). Sachant qu'une mole d'atomes de carbone 12 a une masse molaire de 12 g = 0,012 kg et contient N_A = 6,022.10²³ atomes, on déduit : 1 u = 0,012 / (12 * 6,02214.10²³) = 1 / (1000 * N_A) ≈ 1,66054.10⁻²⁷ kg.",
           "exercise": {
-            "id": "p1_s4_qcm",
+            "id": "phys_tle_cd_13_p1_s4_qcm",
             "type": "mcq",
             "prompt": "Sachant qu'un échantillon pur d'hélium 4 (^4_2He) a une masse mesurée de 2,000 g et que la masse d'un atome d'hélium 4 vaut m_He = 4,0026 u, combien de noyaux d'hélium contient approximativement cet échantillon ? (1 u = 1,6605.10⁻²⁷ kg)",
             "options": [
@@ -181,7 +181,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Formule clé",
           "paragraphText": "Albert Einstein a établi en 1905 que toute particule au repos de masse m possède une énergie intrinsèque E_0 = m.c², où c est la vitesse de la lumière dans le vide (c ≈ 2,99792.10⁸ m/s). En physique des particules, l'énergie s'exprime en électronvolts (1 eV = 1,602.10⁻¹⁹ J) ou mégaélectronvolts (1 MeV = 1,602.10⁻¹³ J). L'équivalence énergétique d'une unité de masse atomique est obtenue par : E(1 u) = 1,66054.10⁻²⁷ kg * (2,99792.10⁸ m/s)² ≈ 1,4924.10⁻¹⁰ J. En convertissant en MeV : E(1 u) = 1,4924.10⁻¹⁰ / 1,60218.10⁻¹³ ≈ 931,5 MeV. On peut donc exprimer directement les masses en MeV/c² : 1 u = 931,5 MeV/c².",
           "exercise": {
-            "id": "p1_s5_qcm",
+            "id": "phys_tle_cd_13_p1_s5_qcm",
             "type": "mcq",
             "prompt": "Un positon et un électron, chacun de masse m = 0,000549 u, s'annihilent mutuellement au repos pour former deux photons gamma identiques. Quelle est l'énergie de chacun des photons émis ?",
             "options": [
@@ -202,7 +202,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "Il ne faut jamais confondre le nombre de masse A et la masse réelle m d'un noyau. Le nombre de masse A est strictement un entier sans unité comptabilisant les nucléons. La masse réelle d'un noyau mesurée en u n'est jamais rigoureusement égale à A (sauf par définition pour le carbone 12 qui vaut exactement 12 u). Cette infime différence de masse, appelée défaut de masse, provient de l'énergie de liaison qui maintient les nucléons soudés au sein du noyau par l'interaction forte. De plus, la masse atomique d'un élément chimique figurant dans le tableau périodique est une moyenne pondérée par l'abondance isotopique naturelle des différents isotopes de cet élément.",
           "exercise": {
-            "id": "p1_s6_qcm",
+            "id": "phys_tle_cd_13_p1_s6_qcm",
             "type": "mcq",
             "prompt": "Le chlore naturel est constitué de deux isotopes stables : le chlore 35 (masse 34,97 u, abondance 75,77 %) et le chlore 37 (masse 36,97 u, abondance 24,23 %). Quelle est la masse atomique moyenne du chlore ?",
             "options": [
@@ -223,7 +223,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Calcul d'échelle",
           "paragraphText": "Le rayon d'un noyau atomique suit approximativement la loi empirique R = R_0 * A^(1/3), avec R_0 ≈ 1,2.10⁻¹⁵ m (1,2 fm). Le volume du noyau vaut donc V = (4/3)*pi*R³ = (4/3)*pi*R_0³ * A. On remarque que le volume est rigoureusement proportionnel au nombre de nucléons A. Par conséquent, la masse volumique de la matière nucléaire rho = m_noyau / V ≈ (A * u) / ((4/3)*pi*R_0³ * A) = u / ((4/3)*pi*R_0³) est constante pour tous les noyaux de l'univers ! Cette masse volumique vaut environ 2,3.10¹⁷ kg/m³, soit 230 millions de tonnes par centimètre cube.",
           "exercise": {
-            "id": "p1_s7_qcm",
+            "id": "phys_tle_cd_13_p1_s7_qcm",
             "type": "mcq",
             "prompt": "Si l'on comprimait une masse équivalente à celle d'un être humain (70 kg) jusqu'à atteindre la masse volumique de la matière nucléaire (rho = 2,3.10¹⁷ kg/m³), quel serait approximativement le volume occupé ?",
             "options": [
@@ -239,7 +239,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p1_s1_qcm",
+          "id": "phys_tle_cd_13_p1_s1_qcm",
           "type": "mcq",
           "prompt": "Sachant que le rayon typique d'un atome est de 10⁻¹⁰ m et celui de son noyau de 10⁻¹⁵ m, quel est l'ordre de grandeur du rapport entre le volume de l'atome et le volume de son noyau ?",
           "options": [
@@ -252,7 +252,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Le volume d'une sphère étant proportionnel au cube de son rayon (V ~ r³), le rapport des volumes vaut (r_atome / r_noyau)³ = (10⁻¹⁰ / 10⁻¹⁵)³ = (10⁵)³ = 10¹⁵. Le volume de l'atome est donc environ 10¹⁵ fois supérieur à celui du noyau, ce qui illustre le caractère lacunaire de la matière."
         },
         {
-          "id": "p1_s2_qcm",
+          "id": "phys_tle_cd_13_p1_s2_qcm",
           "type": "mcq",
           "prompt": "Un noyau inconnu contient 82 protons et 126 neutrons. Quelle est la notation symbolique standard de ce nucléide sachant que Z=82 correspond au plomb (Pb) ?",
           "options": [
@@ -265,7 +265,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Le nombre de masse A est la somme des protons et des neutrons : A = Z + N = 82 + 126 = 208. La notation conventionnelle est ^A_Z X, soit ici ^{208}_{82}Pb."
         },
         {
-          "id": "p1_s3_qcm",
+          "id": "phys_tle_cd_13_p1_s3_qcm",
           "type": "mcq",
           "prompt": "Parmi les paires de nucléides suivantes, laquelle est constituée de deux isotopes ?",
           "options": [
@@ -278,7 +278,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Des isotopes doivent obligatoirement posséder le même numéro atomique Z et des nombres de masse A distincts. Pour ^{235}_{92}U et ^{238}_{92}U, Z = 92 pour les deux alors que A vaut 235 et 238 : ce sont deux isotopes de l'uranium. Les autres paires sont des isobares (même A, Z différent)."
         },
         {
-          "id": "p1_s4_qcm",
+          "id": "phys_tle_cd_13_p1_s4_qcm",
           "type": "mcq",
           "prompt": "Sachant qu'un échantillon pur d'hélium 4 (^4_2He) a une masse mesurée de 2,000 g et que la masse d'un atome d'hélium 4 vaut m_He = 4,0026 u, combien de noyaux d'hélium contient approximativement cet échantillon ? (1 u = 1,6605.10⁻²⁷ kg)",
           "options": [
@@ -291,7 +291,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "La masse d'un atome en kg est m_atome = 4,0026 * 1,6605.10⁻²⁷ kg ≈ 6,646.10⁻²⁷ kg. Pour une masse totale m = 2,000 g = 2,000.10⁻³ kg, le nombre de noyaux est N = m / m_atome = 2,000.10⁻³ / 6,646.10⁻²⁷ ≈ 3,01.10²³ noyaux."
         },
         {
-          "id": "p1_s5_qcm",
+          "id": "phys_tle_cd_13_p1_s5_qcm",
           "type": "mcq",
           "prompt": "Un positon et un électron, chacun de masse m = 0,000549 u, s'annihilent mutuellement au repos pour former deux photons gamma identiques. Quelle est l'énergie de chacun des photons émis ?",
           "options": [
@@ -304,7 +304,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "L'énergie de masse totale des deux particules au repos est E_tot = 2 * m * c² = 2 * (0,000549 u * 931,5 MeV/u) ≈ 1,0228 MeV. Cette énergie est partagée à parts égales entre les deux photons émis à 180° : E_photon = E_tot / 2 ≈ 0,511 MeV."
         },
         {
-          "id": "p1_s6_qcm",
+          "id": "phys_tle_cd_13_p1_s6_qcm",
           "type": "mcq",
           "prompt": "Le chlore naturel est constitué de deux isotopes stables : le chlore 35 (masse 34,97 u, abondance 75,77 %) et le chlore 37 (masse 36,97 u, abondance 24,23 %). Quelle est la masse atomique moyenne du chlore ?",
           "options": [
@@ -317,7 +317,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "M = 0,7577 * 34,97 + 0,2423 * 36,97 = 26,4967 + 8,9578 = 35,45 u. Cela explique pourquoi la masse molaire atomique inscrite dans le tableau périodique vaut 35,5 g/mol."
         },
         {
-          "id": "p1_s7_qcm",
+          "id": "phys_tle_cd_13_p1_s7_qcm",
           "type": "mcq",
           "prompt": "Si l'on comprimait une masse équivalente à celle d'un être humain (70 kg) jusqu'à atteindre la masse volumique de la matière nucléaire (rho = 2,3.10¹⁷ kg/m³), quel serait approximativement le volume occupé ?",
           "options": [
@@ -423,7 +423,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Définition",
           "paragraphText": "La radioactivité a été découverte en 1896 par Henri Becquerel sur des sels d'uranium, puis étudiée de manière pionnière par Pierre et Marie Curie. Il s'agit d'un phénomène nucléaire purement spontané : il ne dépend ni de la température, ni de la pression, ni de l'état physique (solide, liquide, gaz), ni des liaisons chimiques dans lesquelles l'atome est engagé. Un noyau radioactif instable finit inéluctablement par se désintégrer sans qu'aucun facteur extérieur ne puisse accélérer ou freiner le processus.",
           "exercise": {
-            "id": "p2_s1_qcm",
+            "id": "phys_tle_cd_13_p2_s1_qcm",
             "type": "mcq",
             "prompt": "Un composé contenant du radium 226 est chauffé de 20 °C à 1500 °C sous une pression de 200 bars. Comment évolue la probabilité de désintégration par seconde d'un noyau de radium ?",
             "options": [
@@ -444,7 +444,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Principe fondamental",
           "paragraphText": "Énoncées en 1913 par le chimiste britannique Frederick Soddy, les lois de conservation régissent l'intégralité des transformations nucléaires : 1. Conservation de la charge : la somme algébrique des numéros atomiques Z des réactifs est égale à celle des produits. 2. Conservation du nombre de nucléons : la somme algébrique des nombres de masse A des réactifs est égale à celle des produits. Remarque essentielle : la masse au repos globale n'est pas rigoureusement conservée (il y a libération d'énergie cinétique et radiative selon E = Δm.c²), mais le nombre total de nucléons A est strictement conservé.",
           "exercise": {
-            "id": "p2_s2_qcm",
+            "id": "phys_tle_cd_13_p2_s2_qcm",
             "type": "mcq",
             "prompt": "Le thorium 234 (^{234}_{90}Th) subit deux désintégrations consécutives : d'abord une émission β⁻, puis le noyau intermédiaire subit à son tour une émission β⁻. Quel est le noyau final obtenu ?",
             "options": [
@@ -465,7 +465,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Particule α",
           "paragraphText": "La radioactivité alpha concerne quasi exclusivement les noyaux lourds dont le nombre de masse A > 200 et le numéro atomique Z > 82. Pour ces noyaux volumineux, la répulsion coulombienne entre protons l'emporte sur l'attraction nucléaire à courte portée. Le noyau éjecte un bloc particulièrement stable formé de 2 protons et 2 neutrons : une particule alpha, qui n'est autre qu'un noyau d'hélium 4 (^4_2He). L'équation générale s'écrit : ^A_Z X -> ^{A-4}_{Z-2} Y + ^4_2He. Du fait de leur masse élevée et de leur double charge positive (+2e), les particules alpha sont très ionisantes mais ont un parcours très court dans l'air (quelques centimètres) et sont stoppées par une simple feuille de papier.",
           "exercise": {
-            "id": "p2_s3_qcm",
+            "id": "phys_tle_cd_13_p2_s3_qcm",
             "type": "mcq",
             "prompt": "Un noyau d'Uranium 238 (^{238}_{92}U) se désintègre en un noyau de Plomb 206 (^{206}_{82}Pb) par une succession de désintégrations alpha (α) et bêta moins (β⁻). Combien de particules alpha ont été émises au cours de cette chaîne ?",
             "options": [
@@ -486,7 +486,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Particule β⁻",
           "paragraphText": "La radioactivité bêta moins se produit chez les noyaux situés au-dessus de la vallée de stabilité, c'est-à-dire qui possèdent un excès de neutrons par rapport aux nucléides stables correspondants. Au sein du noyau, un neutron se transforme spontanément en un proton avec éjection simultanée d'un électron rapide (particule β⁻, notée ^0_{-1}e) et d'un antineutrino électronique ν̄ (particule sans charge et de masse quasi nulle) : ^1_0n -> ^1_1p + ^0_{-1}e + ν̄. Le noyau fils possède le même nombre de masse A mais son numéro atomique augmente d'une unité : ^A_Z X -> ^A_{Z+1} Y + ^0_{-1}e + ν̄.",
           "exercise": {
-            "id": "p2_s4_qcm",
+            "id": "phys_tle_cd_13_p2_s4_qcm",
             "type": "mcq",
             "prompt": "Le carbone 14 (^{14}_6 C) est radioactif β⁻. Quel noyau fils résulte directement de sa désintégration ?",
             "options": [
@@ -507,7 +507,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Particule β⁺",
           "paragraphText": "La radioactivité bêta plus s'observe chez les noyaux artificiels instables situés au-dessous de la vallée de stabilité, caractérisés par un excès de protons. Dans le noyau, un proton se convertit en neutron en émettant un positon (ou positron, antiparticule de l'électron, noté ^0_1e) et un neutrino électronique ν : ^1_1p -> ^1_0n + ^0_1e + ν. L'équation de désintégration est : ^A_Z X -> ^A_{Z-1} Y + ^0_1e + ν. Le noyau fils conserve le même nombre de masse A mais son numéro atomique Z diminue d'une unité.",
           "exercise": {
-            "id": "p2_s5_qcm",
+            "id": "phys_tle_cd_13_p2_s5_qcm",
             "type": "mcq",
             "prompt": "L'azote 12 (^{12}_7 N) est un émetteur β⁺ utilisé en tomographie par émission de positons. Quel est le noyau fils obtenu ?",
             "options": [
@@ -528,7 +528,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Photon γ",
           "paragraphText": "À l'issue d'une désintégration alpha ou bêta, le noyau fils n'est généralement pas créé dans son état d'énergie fondamental mais dans un état quantique excité instable, noté Y*. Ce noyau se désexcite quasi instantanément (durée de vie typique < 10⁻¹² s) en effectuant une transition vers un état de plus basse énergie ou vers l'état fondamental. L'énergie libérée est évacuée sous forme d'un photon électromagnétique de très haute énergie (rayonnement gamma, ^0_0γ), dont la fréquence dépasse 10²⁰ Hz (longueur d'onde λ < 10⁻¹² m). L'équation s'écrit : ^A_Z Y* -> ^A_Z Y + ^0_0γ.",
           "exercise": {
-            "id": "p2_s6_qcm",
+            "id": "phys_tle_cd_13_p2_s6_qcm",
             "type": "mcq",
             "prompt": "Lors de la désexcitation d'un noyau de nickel 60 (^{60}_{28}Ni*), un photon gamma d'énergie E_γ = 1,33 MeV est émis. Quelle est la variation de masse correspondante subie par le noyau en unités de masse atomique u ? (1 u = 931,5 MeV/c²)",
             "options": [
@@ -549,7 +549,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Méthode d'examen",
           "paragraphText": "Face à une réaction nucléaire où une particule ou un nucléide est inconnu, la démarche méthodique consiste à : 1. Noter l'inconnu sous la forme symbolique ^A_Z X. 2. Écrire le système de deux équations indépendantes issu des lois de Soddy : Σ A_initial = Σ A_final et Σ Z_initial = Σ Z_final. 3. Résoudre ce système arithmétique pour déterminer A et Z. 4. Identifier la particule si A et Z correspondent aux particules standard (^4_2He pour α, ^0_{-1}e pour β⁻, ^0_1e pour β⁺, ^1_0n pour neutron, ^1_1p pour proton), ou identifier l'élément chimique dans la classification périodique grâce à la valeur de Z.",
           "exercise": {
-            "id": "p2_s7_qcm",
+            "id": "phys_tle_cd_13_p2_s7_qcm",
             "type": "mcq",
             "prompt": "Dans la haute atmosphère terrestre, un neutron cosmique frappe un noyau d'azote 14 selon la réaction : ^{14}_7 N + ^1_0 n -> ^{14}_6 C + ^A_Z X. Quelle est la nature de la particule émise ^A_Z X ?",
             "options": [
@@ -565,7 +565,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p2_s1_qcm",
+          "id": "phys_tle_cd_13_p2_s1_qcm",
           "type": "mcq",
           "prompt": "Un composé contenant du radium 226 est chauffé de 20 °C à 1500 °C sous une pression de 200 bars. Comment évolue la probabilité de désintégration par seconde d'un noyau de radium ?",
           "options": [
@@ -578,7 +578,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "La radioactivité est une propriété intrinsèque du noyau atomique gouvernée par l'interaction forte et l'interaction faible, dont les énergies de liaison (plusieurs MeV) sont des millions de fois supérieures aux énergies thermiques ou chimiques (quelques eV). La température et la pression n'ont aucun effet mesurable sur la constante de désintégration."
         },
         {
-          "id": "p2_s2_qcm",
+          "id": "phys_tle_cd_13_p2_s2_qcm",
           "type": "mcq",
           "prompt": "Le thorium 234 (^{234}_{90}Th) subit deux désintégrations consécutives : d'abord une émission β⁻, puis le noyau intermédiaire subit à son tour une émission β⁻. Quel est le noyau final obtenu ?",
           "options": [
@@ -591,7 +591,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "À chaque émission β⁻, A reste inchangé et Z augmente de 1 : ^{234}_{90}Th -> ^{234}_{91}Pa + ^0_{-1}e ; puis ^{234}_{91}Pa -> ^{234}_{92}U + ^0_{-1}e. Le noyau final possède A = 234 et Z = 92, ce qui correspond à l'isotope d'uranium 234."
         },
         {
-          "id": "p2_s3_qcm",
+          "id": "phys_tle_cd_13_p2_s3_qcm",
           "type": "mcq",
           "prompt": "Un noyau d'Uranium 238 (^{238}_{92}U) se désintègre en un noyau de Plomb 206 (^{206}_{82}Pb) par une succession de désintégrations alpha (α) et bêta moins (β⁻). Combien de particules alpha ont été émises au cours de cette chaîne ?",
           "options": [
@@ -604,7 +604,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Seules les particules alpha modifient le nombre de masse A (chaque émission α diminue A de 4, tandis que β⁻ laisse A inchangé). La variation totale de A est ΔA = 238 - 206 = 32. Le nombre de désintégrations alpha est donc n_α = 32 / 4 = 8 particules alpha. (Pour information, pour équilibrer la charge : 92 - 8*2 = 76 ; pour atteindre Z = 82, il y a également 82 - 76 = 6 émissions β⁻)."
         },
         {
-          "id": "p2_s4_qcm",
+          "id": "phys_tle_cd_13_p2_s4_qcm",
           "type": "mcq",
           "prompt": "Le carbone 14 (^{14}_6 C) est radioactif β⁻. Quel noyau fils résulte directement de sa désintégration ?",
           "options": [
@@ -617,7 +617,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "En appliquant les lois de Soddy : A = 14 reste inchangé ; Z = 6 + 1 = 7. Le numéro atomique 7 correspond à l'azote N. Le noyau fils est donc l'azote 14 : ^{14}_7 N."
         },
         {
-          "id": "p2_s5_qcm",
+          "id": "phys_tle_cd_13_p2_s5_qcm",
           "type": "mcq",
           "prompt": "L'azote 12 (^{12}_7 N) est un émetteur β⁺ utilisé en tomographie par émission de positons. Quel est le noyau fils obtenu ?",
           "options": [
@@ -630,7 +630,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "D'après les lois de Soddy pour l'émission β⁺ : A = 12 reste constant, et Z_fils = 7 - 1 = 6. L'élément de numéro atomique 6 est le carbone. On obtient le carbone 12 : ^{12}_6 C."
         },
         {
-          "id": "p2_s6_qcm",
+          "id": "phys_tle_cd_13_p2_s6_qcm",
           "type": "mcq",
           "prompt": "Lors de la désexcitation d'un noyau de nickel 60 (^{60}_{28}Ni*), un photon gamma d'énergie E_γ = 1,33 MeV est émis. Quelle est la variation de masse correspondante subie par le noyau en unités de masse atomique u ? (1 u = 931,5 MeV/c²)",
           "options": [
@@ -643,7 +643,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "D'après la relation d'Einstein ΔE = Δm.c², la perte de masse associée à l'énergie rayonnée est Δm = E_γ / (931,5 MeV/u) = 1,33 / 931,5 ≈ 0,001428 u ≈ 1,43.10⁻³ u."
         },
         {
-          "id": "p2_s7_qcm",
+          "id": "phys_tle_cd_13_p2_s7_qcm",
           "type": "mcq",
           "prompt": "Dans la haute atmosphère terrestre, un neutron cosmique frappe un noyau d'azote 14 selon la réaction : ^{14}_7 N + ^1_0 n -> ^{14}_6 C + ^A_Z X. Quelle est la nature de la particule émise ^A_Z X ?",
           "options": [
@@ -763,7 +763,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Définition",
           "paragraphText": "La probabilité qu'un noyau radioactif donné se désintègre entre les dates t et t + dt ne dépend aucunement de l'âge de ce noyau (le noyau ne 'vieillit' pas). Cette probabilité élémentaire s'écrit dP = λ.dt, où λ est la constante radioactive du radionucléide. Elle s'exprime dans le Système International en seconde inverse (s⁻¹), mais peut également être formulée en jour⁻¹ (j⁻¹) ou en an⁻¹. Pour un échantillon contenant N noyaux à l'instant t, le nombre de désintégrations survenant pendant dt est dN_désintégrés = λ.N.dt. Comme le stock de noyaux N diminue, la variation algébrique est négative : dN = -λ.N.dt.",
           "exercise": {
-            "id": "p3_s1_qcm",
+            "id": "phys_tle_cd_13_p3_s1_qcm",
             "type": "mcq",
             "prompt": "Un radionucléide A possède une constante radioactive λ_A = 2,0.10⁻⁴ s⁻¹ et un radionucléide B possède λ_B = 1,0.10⁻⁶ s⁻¹. Que peut-on affirmer avec certitude ?",
             "options": [
@@ -784,7 +784,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Méthode",
           "paragraphText": "L'équation différentielle gouvernant l'évolution de la population de noyaux est : dN / dt + λ.N = 0. En séparant les variables : dN / N = -λ.dt. En intégrant les deux membres entre l'instant initial t = 0 (où le nombre de noyaux vaut N₀) et une date quelconque t (où le nombre de noyaux est N(t)) : ∫(dN/N) de N₀ à N = -λ ∫dt de 0 à t, ce qui donne ln(N) - ln(N₀) = -λ.t, soit ln(N / N₀) = -λ.t. En prenant l'exponentielle des deux membres, on établit la loi exponentielle de décroissance : N(t) = N₀.e^(-λt).",
           "exercise": {
-            "id": "p3_s2_qcm",
+            "id": "phys_tle_cd_13_p3_s2_qcm",
             "type": "mcq",
             "prompt": "Si l'on trace la fonction y = ln(N(t)) en fonction du temps t, quelle est la nature de la courbe obtenue et que représente sa pente ?",
             "options": [
@@ -805,7 +805,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Définition clé",
           "paragraphText": "La période radioactive (ou demi-vie, notée T ou t_{1/2}) est la durée au bout de laquelle la moitié des noyaux radioactifs initialement présents dans l'échantillon se sont désintégrés. Par définition : à t = T, N(T) = N₀ / 2. En injectant dans la loi de décroissance : N₀ / 2 = N₀.e^(-λ.T) => 1/2 = e^(-λ.T) => ln(1/2) = -λ.T => -ln(2) = -λ.T => T = ln(2) / λ ≈ 0,693 / λ. La demi-vie est une constante intrinsèque qui ne dépend ni de la quantité initiale de matière N₀, ni de l'environnement physique.",
           "exercise": {
-            "id": "p3_s3_qcm",
+            "id": "phys_tle_cd_13_p3_s3_qcm",
             "type": "mcq",
             "prompt": "Le césium 137 a une constante radioactive λ = 7,33.10⁻¹⁰ s⁻¹. Quelle est sa demi-vie en années ? (1 an = 365,25 jours = 3,156.10⁷ s)",
             "options": [
@@ -826,7 +826,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Astuce calcul",
           "paragraphText": "Après une période t = T, il reste N = N₀ / 2. Après deux périodes t = 2T, il reste N = (N₀ / 2) / 2 = N₀ / 4 = N₀ / 2². Par récurrence immédiate, au bout d'un temps égal à n périodes radioactives (t = n.T, avec n réel positif) : N(n.T) = N₀ / 2^n = N₀ * 2^(-t/T). Cette formulation en base 2 est rigoureusement équivalente à l'exponentielle N₀.e^(-λt) car e^(-λt) = e^(-(ln2/T).t) = (e^ln2)^(-t/T) = 2^(-t/T). Elle permet des calculs mentaux instantanés pour les multiples entiers de T.",
           "exercise": {
-            "id": "p3_s4_qcm",
+            "id": "phys_tle_cd_13_p3_s4_qcm",
             "type": "mcq",
             "prompt": "Un échantillon radioactif a une demi-vie T = 6 heures. Au bout de combien de temps ne subsistera-t-il plus que 1/16 du nombre initial de noyaux ?",
             "options": [
@@ -847,7 +847,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "Une erreur très fréquente aux épreuves du Baccalauréat consiste à confondre le nombre de noyaux radioactifs encore présents N(t) avec le nombre de noyaux qui ont déjà disparu par désintégration N_d(t). Par conservation de la matière : N₀ = N(t) + N_d(t), ce qui impose N_d(t) = N₀ - N(t) = N₀.(1 - e^(-λt)). Si un énoncé demande 'la durée au bout de laquelle 80 % des noyaux se sont désintégrés', cela signifie que N_d(t) = 0,80.N₀ et qu'il ne reste que N(t) = 0,20.N₀ !",
           "exercise": {
-            "id": "p3_s5_qcm",
+            "id": "phys_tle_cd_13_p3_s5_qcm",
             "type": "mcq",
             "prompt": "Un échantillon contient un nucléide de période T = 10 jours. Combien de temps faut-il pour que 75 % des noyaux initiaux soient désintégrés ?",
             "options": [
@@ -868,7 +868,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Propriété",
           "paragraphText": "En analogie avec la constante de temps d'un circuit RC (tau = RC), la durée de vie moyenne tau d'un noyau radioactif est définie par l'inverse de la constante radioactive : tau = 1 / λ. La loi de décroissance s'écrit alors N(t) = N₀.e^(-t/tau). La relation liant la durée de vie moyenne et la demi-vie est : tau = T / ln(2) ≈ 1,443 * T. Graphiquement, la tangente à la courbe de décroissance N(t) à l'instant t = 0 coupe l'axe des abscisses exactement à la date t = tau. À la date t = tau, le nombre de noyaux restants vaut N(tau) = N₀ / e ≈ 0,368.N₀ (il reste 36,8 % des noyaux).",
           "exercise": {
-            "id": "p3_s6_qcm",
+            "id": "phys_tle_cd_13_p3_s6_qcm",
             "type": "mcq",
             "prompt": "Un radionucléide possède une demi-vie T = 138 jours. Quelle est sa durée de vie moyenne tau ?",
             "options": [
@@ -889,7 +889,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Règle de radioprotection",
           "paragraphText": "En radioprotection et en médecine nucléaire hospitalière, on considère couramment qu'un déchet radioactif à vie courte devient inoffensif au bout de 10 périodes radioactives. Vérifions cette règle : au bout de t = 10.T, la proportion résiduelle de noyaux radioactifs est 1 / 2¹⁰ = 1 / 1024 ≈ 9,77.10⁻⁴ ≈ 0,098 %, soit moins d'un millième (0,1 %) de la quantité initiale. Plus de 99,9 % de la radioactivité a disparu.",
           "exercise": {
-            "id": "p3_s7_qcm",
+            "id": "phys_tle_cd_13_p3_s7_qcm",
             "type": "mcq",
             "prompt": "Le technétium 99m (^{99m}_{43}Tc) utilisé en scintigraphie a une période T = 6,0 heures. Au bout de quelle durée son activité résiduelle devient-elle inférieure à 0,1 % de sa valeur initiale ?",
             "options": [
@@ -905,7 +905,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p3_s1_qcm",
+          "id": "phys_tle_cd_13_p3_s1_qcm",
           "type": "mcq",
           "prompt": "Un radionucléide A possède une constante radioactive λ_A = 2,0.10⁻⁴ s⁻¹ et un radionucléide B possède λ_B = 1,0.10⁻⁶ s⁻¹. Que peut-on affirmer avec certitude ?",
           "options": [
@@ -918,7 +918,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "La constante radioactive représente la probabilité de désintégration par unité de temps : dP/dt = λ. Le rapport λ_A / λ_B = 2,0.10⁻⁴ / 1,0.10⁻⁶ = 200 indique qu'à chaque seconde, un noyau A a 200 fois plus de chances de se désintégrer qu'un noyau B. Sa demi-vie est d'ailleurs 200 fois plus courte (T = ln2 / λ)."
         },
         {
-          "id": "p3_s2_qcm",
+          "id": "phys_tle_cd_13_p3_s2_qcm",
           "type": "mcq",
           "prompt": "Si l'on trace la fonction y = ln(N(t)) en fonction du temps t, quelle est la nature de la courbe obtenue et que représente sa pente ?",
           "options": [
@@ -931,7 +931,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Puisque ln(N(t)) = ln(N₀) - λ.t, il s'agit de l'équation d'une fonction affine y = a.x + b avec x = t, une ordonnée à l'origine b = ln(N₀) et une pente (coefficient directeur) a = -λ."
         },
         {
-          "id": "p3_s3_qcm",
+          "id": "phys_tle_cd_13_p3_s3_qcm",
           "type": "mcq",
           "prompt": "Le césium 137 a une constante radioactive λ = 7,33.10⁻¹⁰ s⁻¹. Quelle est sa demi-vie en années ? (1 an = 365,25 jours = 3,156.10⁷ s)",
           "options": [
@@ -944,7 +944,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "T = ln(2) / λ = 0,69315 / (7,33.10⁻¹⁰ s⁻¹) ≈ 9,456.10⁸ s. En convertissant en années : T = 9,456.10⁸ / 3,156.10⁷ ≈ 30,0 années."
         },
         {
-          "id": "p3_s4_qcm",
+          "id": "phys_tle_cd_13_p3_s4_qcm",
           "type": "mcq",
           "prompt": "Un échantillon radioactif a une demi-vie T = 6 heures. Au bout de combien de temps ne subsistera-t-il plus que 1/16 du nombre initial de noyaux ?",
           "options": [
@@ -957,7 +957,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "On cherche n tel que 1/2^n = 1/16 = 1/2⁴, d'où n = 4 périodes. Le temps nécessaire est donc t = 4 * T = 4 * 6 heures = 24 heures."
         },
         {
-          "id": "p3_s5_qcm",
+          "id": "phys_tle_cd_13_p3_s5_qcm",
           "type": "mcq",
           "prompt": "Un échantillon contient un nucléide de période T = 10 jours. Combien de temps faut-il pour que 75 % des noyaux initiaux soient désintégrés ?",
           "options": [
@@ -970,7 +970,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Si 75 % des noyaux sont désintégrés, il reste 100 % - 75 % = 25 % = 1/4 des noyaux initiaux. Or N(t) = N₀ / 4 correspond à 2 demi-vies (1/2² = 1/4). Le temps requis est donc t = 2 * T = 2 * 10 jours = 20 jours."
         },
         {
-          "id": "p3_s6_qcm",
+          "id": "phys_tle_cd_13_p3_s6_qcm",
           "type": "mcq",
           "prompt": "Un radionucléide possède une demi-vie T = 138 jours. Quelle est sa durée de vie moyenne tau ?",
           "options": [
@@ -983,7 +983,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "tau = T / ln(2) = 138 / 0,69315 ≈ 199,1 jours ≈ 199 jours."
         },
         {
-          "id": "p3_s7_qcm",
+          "id": "phys_tle_cd_13_p3_s7_qcm",
           "type": "mcq",
           "prompt": "Le technétium 99m (^{99m}_{43}Tc) utilisé en scintigraphie a une période T = 6,0 heures. Au bout de quelle durée son activité résiduelle devient-elle inférieure à 0,1 % de sa valeur initiale ?",
           "options": [
@@ -1097,7 +1097,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Becquerel (Bq)",
           "paragraphText": "L'activité A d'un échantillon radioactif représente le nombre effectif de noyaux se désintégrant par seconde au sein de cet échantillon. Son unité internationale est le Becquerel (symbole Bq). Un Becquerel correspond à exactement une désintégration par seconde (1 Bq = 1 s⁻¹). Comme 1 Bq est une unité extrêmement petite à l'échelle des applications médicales et industrielles, on utilise couramment les préfixes du SI : le kilobecquerel (1 kBq = 10³ Bq), le mégabecquerel (1 MBq = 10⁶ Bq) et le gigabecquerel (1 GBq = 10⁹ Bq).",
           "exercise": {
-            "id": "p4_s1_qcm",
+            "id": "phys_tle_cd_13_p4_s1_qcm",
             "type": "mcq",
             "prompt": "Un compteur Geiger enregistre 18 000 impulsions en 5 minutes avec un rendement de détection de 10 % (le détecteur capte 1 désintégration sur 10). Quelle est l'activité réelle de la source radioactive ?",
             "options": [
@@ -1118,7 +1118,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Formule maîtresse",
           "paragraphText": "Puisque N(t) = N₀.e^(-λt), la vitesse instantanée de disparition des noyaux vaut -dN/dt = λ.N₀.e^(-λt) = λ.N(t). On en déduit la relation fondamentale liant l'activité au nombre de noyaux présents à cet instant : A(t) = λ.N(t). L'activité décroît donc au cours du temps exactement selon la même loi exponentielle que le nombre de noyaux : A(t) = A₀.e^(-λt), avec une demi-vie rigoureusement identique T = ln(2) / λ.",
           "exercise": {
-            "id": "p4_s2_qcm",
+            "id": "phys_tle_cd_13_p4_s2_qcm",
             "type": "mcq",
             "prompt": "Deux échantillons radioactifs 1 et 2 contiennent exactement le même nombre de noyaux radioactifs à t = 0 (N_{01} = N_{02}). La demi-vie du nucléide 1 est T₁ = 1 heure et celle du nucléide 2 est T₂ = 10 jours. Quel est le rapport entre leurs activités initiales A_{01} / A_{02} ?",
             "options": [
@@ -1139,7 +1139,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Méthode expérimentale",
           "paragraphText": "Sur un graphe expérimental représentant A en fonction du temps t : 1. La valeur à l'origine (t = 0) donne directement l'activité initiale A₀. 2. Pour déterminer la demi-vie T, on repère l'ordonnée A₀ / 2 et on lit l'abscisse correspondante sur la courbe. 3. On peut vérifier la cohérence en repérant l'abscisse de A₀ / 4 qui doit valoir exactement 2.T, puis celle de A₀ / 8 qui vaut 3.T. 4. La constante radioactive se déduit ensuite par le calcul λ = ln(2) / T.",
           "exercise": {
-            "id": "p4_s3_qcm",
+            "id": "phys_tle_cd_13_p4_s3_qcm",
             "type": "mcq",
             "prompt": "Sur la courbe de décroissance d'un radioélément, l'activité mesurée passe de 800 Bq à 100 Bq en une durée de 45 jours. Quelle est la demi-vie T de ce nucléide ?",
             "options": [
@@ -1160,7 +1160,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Analyse de données",
           "paragraphText": "En prenant le logarithme népérien de la relation A(t) = A₀.e^(-λt), on obtient : ln(A(t)) = ln(A₀) - λ.t ou de façon équivalente ln(A₀ / A(t)) = λ.t. En traçant la droite expérimentale y = ln(A₀ / A(t)) en fonction de t, on obtient une droite passant par l'origine. Le coefficient directeur (la pente) de cette droite donne directement la constante radioactive λ. Si t est exprimé en jours, la pente donne λ en jour⁻¹ ; pour l'obtenir en s⁻¹, il faut diviser par 86 400 s/jour.",
           "exercise": {
-            "id": "p4_s4_qcm",
+            "id": "phys_tle_cd_13_p4_s4_qcm",
             "type": "mcq",
             "prompt": "On trace la droite ln(N₀ / N) = f(t) pour un échantillon de Polonium 210 avec t en jours. La pente de la droite vaut a = 5,02.10⁻³ j⁻¹. Quelle est la valeur de la demi-vie T en jours ?",
             "options": [
@@ -1181,7 +1181,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Grandeur clé",
           "paragraphText": "L'activité spécifique (ou massique) a_m est l'activité d'un échantillon par unité de masse : a_m = A / m = (λ.N) / m. Sachant que N = (m / M) * N_A, on obtient l'expression remarquable : a_m = (λ * N_A) / M = (ln(2) * N_A) / (T * M). L'activité massique d'un radionucléide pur ne dépend que de sa masse molaire M et de sa demi-vie T : plus la demi-vie est courte, plus l'activité massique est colossale.",
           "exercise": {
-            "id": "p4_s5_qcm",
+            "id": "phys_tle_cd_13_p4_s5_qcm",
             "type": "mcq",
             "prompt": "Le radium 226 (^{226}_{88}Ra, M = 226 g/mol) a une demi-vie T = 1600 ans (5,05.10¹⁰ s). Quelle est l'activité massique de 1,00 gramme de radium 226 pur ? (N_A = 6,022.10²³ mol⁻¹)",
             "options": [
@@ -1202,7 +1202,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "La formule A = λ.N n'est valide avec A en Becquerels (Bq) que si et seulement si la constante radioactive λ est exprimée en secondes inverses (s⁻¹). Si la demi-vie T est fournie en années, en jours ou en heures, il est rigoureusement obligatoire de la convertir en secondes (1 an ≈ 3,156.10⁷ s ; 1 jour = 86 400 s ; 1 h = 3 600 s) avant de calculer λ = ln(2) / T. Utiliser un λ en an⁻¹ donnerait un résultat erroné d'un facteur 31,5 millions !",
           "exercise": {
-            "id": "p4_s6_qcm",
+            "id": "phys_tle_cd_13_p4_s6_qcm",
             "type": "mcq",
             "prompt": "Un échantillon contient N = 1,00.10¹⁵ noyaux de tritium (^3H) dont la demi-vie est T = 12,3 ans. Quelle est son activité en Bq ? (1 an = 3,156.10⁷ s)",
             "options": [
@@ -1223,7 +1223,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Équilibre séculaire",
           "paragraphText": "Dans une chaîne radioactive où un noyau père à vie très longue (par exemple l'Uranium 238 avec T = 4,5.10⁹ ans) se désintègre en un noyau fils radioactif à vie beaucoup plus courte, il s'établit au bout de quelques demi-vies du fils un régime stationnaire appelé équilibre séculaire. À cet équilibre, la vitesse de formation du fils est rigoureusement égale à sa vitesse de désintégration. Par conséquent, les activités du père et du fils deviennent rigoureusement égales : A_père = A_fils <=> λ_père * N_père = λ_fils * N_fils.",
           "exercise": {
-            "id": "p4_s7_qcm",
+            "id": "phys_tle_cd_13_p4_s7_qcm",
             "type": "mcq",
             "prompt": "Dans un minerai d'uranium à l'équilibre séculaire, pour chaque noyau de radium 226 (T_Ra = 1600 ans), combien y a-t-il environ de noyaux d'uranium 238 (T_U = 4,5.10⁹ ans) ?",
             "options": [
@@ -1239,7 +1239,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p4_s1_qcm",
+          "id": "phys_tle_cd_13_p4_s1_qcm",
           "type": "mcq",
           "prompt": "Un compteur Geiger enregistre 18 000 impulsions en 5 minutes avec un rendement de détection de 10 % (le détecteur capte 1 désintégration sur 10). Quelle est l'activité réelle de la source radioactive ?",
           "options": [
@@ -1252,7 +1252,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Le nombre de coups par minute est 18 000 / 5 = 3 600 cpm, soit par seconde : n_mesuré = 3 600 / 60 = 60 impulsions par seconde. Comme le rendement est de 10 % (r = 0,10), l'activité réelle de la source est A = n_mesuré / r = 60 / 0,10 = 600 Bq."
         },
         {
-          "id": "p4_s2_qcm",
+          "id": "phys_tle_cd_13_p4_s2_qcm",
           "type": "mcq",
           "prompt": "Deux échantillons radioactifs 1 et 2 contiennent exactement le même nombre de noyaux radioactifs à t = 0 (N_{01} = N_{02}). La demi-vie du nucléide 1 est T₁ = 1 heure et celle du nucléide 2 est T₂ = 10 jours. Quel est le rapport entre leurs activités initiales A_{01} / A_{02} ?",
           "options": [
@@ -1265,7 +1265,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "A₀ = λ.N₀ = (ln2 / T).N₀. Le rapport des activités est inversement proportionnel au rapport des périodes : A_{01} / A_{02} = T₂ / T₁. Or T₂ = 10 jours = 10 * 24 heures = 240 heures. Donc A_{01} / A_{02} = 240 / 1 = 240. Le nucléide à vie courte a une activité 240 fois plus intense."
         },
         {
-          "id": "p4_s3_qcm",
+          "id": "phys_tle_cd_13_p4_s3_qcm",
           "type": "mcq",
           "prompt": "Sur la courbe de décroissance d'un radioélément, l'activité mesurée passe de 800 Bq à 100 Bq en une durée de 45 jours. Quelle est la demi-vie T de ce nucléide ?",
           "options": [
@@ -1278,7 +1278,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Le rapport A(t) / A₀ = 100 / 800 = 1/8 = 1/2³. L'échantillon a donc subi 3 demi-vies (n = 3) pendant la durée Δt = 45 jours. On en déduit : 3 * T = 45 jours => T = 45 / 3 = 15,0 jours."
         },
         {
-          "id": "p4_s4_qcm",
+          "id": "phys_tle_cd_13_p4_s4_qcm",
           "type": "mcq",
           "prompt": "On trace la droite ln(N₀ / N) = f(t) pour un échantillon de Polonium 210 avec t en jours. La pente de la droite vaut a = 5,02.10⁻³ j⁻¹. Quelle est la valeur de la demi-vie T en jours ?",
           "options": [
@@ -1291,7 +1291,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Puisque ln(N₀ / N) = λ.t, la pente a est égale à la constante radioactive λ = 5,02.10⁻³ j⁻¹. La demi-vie vaut T = ln(2) / λ = 0,69315 / (5,02.10⁻³ j⁻¹) ≈ 138,07 jours ≈ 138 jours."
         },
         {
-          "id": "p4_s5_qcm",
+          "id": "phys_tle_cd_13_p4_s5_qcm",
           "type": "mcq",
           "prompt": "Le radium 226 (^{226}_{88}Ra, M = 226 g/mol) a une demi-vie T = 1600 ans (5,05.10¹⁰ s). Quelle est l'activité massique de 1,00 gramme de radium 226 pur ? (N_A = 6,022.10²³ mol⁻¹)",
           "options": [
@@ -1304,7 +1304,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "N = (1,00 g / 226 g/mol) * 6,022.10²³ ≈ 2,665.10²¹ noyaux. λ = ln(2) / (5,05.10¹⁰ s) ≈ 1,372.10⁻¹¹ s⁻¹. L'activité vaut A = λ * N = 1,372.10⁻¹¹ * 2,665.10²¹ ≈ 3,66.10¹⁰ Bq ≈ 3,7.10¹⁰ Bq. C'est précisément la définition historique du Curie (1 Ci = 3,7.10¹⁰ Bq)."
         },
         {
-          "id": "p4_s6_qcm",
+          "id": "phys_tle_cd_13_p4_s6_qcm",
           "type": "mcq",
           "prompt": "Un échantillon contient N = 1,00.10¹⁵ noyaux de tritium (^3H) dont la demi-vie est T = 12,3 ans. Quelle est son activité en Bq ? (1 an = 3,156.10⁷ s)",
           "options": [
@@ -1317,7 +1317,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "T = 12,3 * 3,156.10⁷ s ≈ 3,882.10⁸ s. λ = ln(2) / T = 0,69315 / 3,882.10⁸ s ≈ 1,786.10⁻⁹ s⁻¹. L'activité vaut alors A = λ * N = 1,786.10⁻⁹ s⁻¹ * 1,00.10¹⁵ = 1,79.10⁶ Bq (1,79 MBq)."
         },
         {
-          "id": "p4_s7_qcm",
+          "id": "phys_tle_cd_13_p4_s7_qcm",
           "type": "mcq",
           "prompt": "Dans un minerai d'uranium à l'équilibre séculaire, pour chaque noyau de radium 226 (T_Ra = 1600 ans), combien y a-t-il environ de noyaux d'uranium 238 (T_U = 4,5.10⁹ ans) ?",
           "options": [
@@ -1420,7 +1420,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Fondement",
           "paragraphText": "Le carbone 14 est continuellement produit dans la haute atmosphère sous l'action des neutrons issus du rayonnement cosmique qui bombardent l'azote 14 selon : ^{14}_7 N + ^1_0 n -> ^{14}_6 C + ^1_1 p. Les atomes de carbone 14 s'oxydent rapidement en dioxyde de carbone (^14CO_2) et se mélangent de façon homogène au ^12CO_2 dans toute la biosphère. Les végétaux assimilent ce dioxyde de carbone par photosynthèse, puis les herbivores et carnivores l'intègrent dans leur organisme. Tant qu'un être est vivant, le taux de renouvellement compense exactement la désintégration : le rapport ^14C / ^12C reste constant.",
           "exercise": {
-            "id": "p5_s1_qcm",
+            "id": "phys_tle_cd_13_p5_s1_qcm",
             "type": "mcq",
             "prompt": "Pourquoi la datation au carbone 14 ne peut-elle pas être utilisée pour déterminer l'âge d'un silex taillé préhistorique ou d'un outil en cuivre ?",
             "options": [
@@ -1441,7 +1441,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Hypothèse clé",
           "paragraphText": "À l'instant de la mort d'un organisme, tout métabolisme et tout échange avec l'environnement cessent instantanément : le système biologique devient un système fermé. La quantité de carbone 12 stable reste inchangée, tandis que les atomes de carbone 14 ne sont plus renouvelés et disparaissent selon la loi de décroissance N(t) = N₀.e^(-λt). La mesure de l'activité résiduelle actuelle permet de remonter avec précision à la date de la mort de l'organisme.",
           "exercise": {
-            "id": "p5_s2_qcm",
+            "id": "phys_tle_cd_13_p5_s2_qcm",
             "type": "mcq",
             "prompt": "Un ossement ancien retrouvé lors d'une fouille contient 25 % de la teneur en carbone 14 mesurée sur un ossement actuel de même masse. Sachant que T = 5590 ans, quel est l'âge de l'ossement ?",
             "options": [
@@ -1462,7 +1462,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Formule d'examen",
           "paragraphText": "Pour déterminer l'âge t, la démarche analytique universelle est : 1. Partir de A(t) = A₀.e^(-λt). 2. Prendre le logarithme népérien des deux membres : ln(A(t)/A₀) = -λ.t <=> ln(A₀/A(t)) = λ.t. 3. Isoler t : t = (1/λ)*ln(A₀/A(t)). 4. Remplacer λ par ln(2)/T : t = (T / ln(2)) * ln(A₀ / A(t)). Cette même formule s'applique rigoureusement aux nombres de noyaux : t = (T / ln(2)) * ln(N₀ / N(t)).",
           "exercise": {
-            "id": "p5_s3_qcm",
+            "id": "phys_tle_cd_13_p5_s3_qcm",
             "type": "mcq",
             "prompt": "Un morceau de parchemin ancien présente une activité en carbone 14 égale à 60 % de l'activité d'un parchemin moderne équivalent. Quel est l'âge du manuscrit ? (T = 5590 ans, ln(2) = 0,693, ln(1/0,60) = 0,511)",
             "options": [
@@ -1483,7 +1483,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "Au-delà d'environ 50 000 ans (environ 9 à 10 périodes du carbone 14), la proportion restante de carbone 14 devient inférieure à 1/1000 de sa valeur initiale. Le signal radiatif devient alors indistinguable du bruit de fond ambiant des détecteurs. De plus, la moindre contamination moderne par des poussières ou moisissures (contenant du carbone 14 actuel à 100 %) fausse dramatiquement les résultats. Pour des fossiles plus anciens (hominidés, dinosaures), la méthode au carbone 14 est totalement inapplicable : on utilise alors la méthode Potassium-Argon ou Uranium-Plomb.",
           "exercise": {
-            "id": "p5_s4_qcm",
+            "id": "phys_tle_cd_13_p5_s4_qcm",
             "type": "mcq",
             "prompt": "Un paléontologue affirme avoir daté un fossile de dinosaure (stégosaure disparu il y a 150 millions d'années) grâce à la méthode du carbone 14 (T = 5590 ans). Quelle critique scientifique fondamentale doit-on immédiatement lui opposer ?",
             "options": [
@@ -1504,7 +1504,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Datation des roches",
           "paragraphText": "Pour dater les roches volcaniques, on utilise souvent le couple Potassium 40 / Argon 40. Le potassium 40 (^{40}K) se désintègre par capture électronique en Argon 40 (^{40}Ar, gaz rare) avec une période T = 1,25 milliard d'années. Lorsque la lave est en fusion liquide à plus de 1000 °C, tout l'argon gazeux s'échappe dans l'atmosphère. À l'instant de la solidification de la roche (t = 0), N_{Ar}(0) = 0. Au fur et à mesure des millions d'années, l'argon 40 produit reste emprisonné dans le réseau cristallin solide : N_{Ar}(t) = N_K(0) - N_K(t) = N_K(t).(e^(λt) - 1). En mesurant le rapport N_{Ar}/N_K, on déduit l'âge de la roche : t = (1/λ)*ln(1 + N_{Ar}/N_K).",
           "exercise": {
-            "id": "p5_s5_qcm",
+            "id": "phys_tle_cd_13_p5_s5_qcm",
             "type": "mcq",
             "prompt": "Dans une roche basaltique ancienne, l'analyse spectrométrique montre qu'il y a 3 fois plus de noyaux d'argon 40 piégés que de noyaux de potassium 40 résiduels (N_{Ar} / N_K = 3). Quel est l'âge de la coulée de lave ? (T = 1,25 milliard d'années)",
             "options": [
@@ -1525,7 +1525,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Haute précision",
           "paragraphText": "En raison des variations du champ magnétique terrestre, des cycles solaires et des essais nucléaires atmosphériques du XXe siècle, le taux de production du carbone 14 n'a pas été parfaitement constant dans l'histoire. Les scientifiques étalonnent l'échelle radiocarbone grâce à la dendrochronologie (comptage et analyse des cernes annuels de croissance des arbres millénaires tels que les pins de Bristlecone). De plus, l'utilisation de la spectrométrie de masse par accélérateur (AMS) permet aujourd'hui de compter directement les atomes de carbone 14 un par un au lieu d'attendre leurs désintégrations, réduisant la taille des échantillons nécessaires à quelques milligrammes.",
           "exercise": {
-            "id": "p5_s6_qcm",
+            "id": "phys_tle_cd_13_p5_s6_qcm",
             "type": "mcq",
             "prompt": "Quel est le principal avantage de la spectrométrie de masse par accélérateur (AMS) par rapport au comptage classique de l'activité radioactive par scintillateur ?",
             "options": [
@@ -1546,7 +1546,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Problème type",
           "paragraphText": "Un échantillon de 100 mg de papyrus égyptien fournit une activité mesurée A = 0,85 Bq. Un échantillon de même masse prélevé sur une plante de papyrus fraîche actuelle présente une activité A₀ = 1,53 Bq. Calculons l'âge du document (avec T = 5590 ans) : t = (5590 / ln 2) * ln(1,53 / 0,85) = 8064,6 * ln(1,80) = 8064,6 * 0,5878 ≈ 4 740 ans. Le papyrus a donc été fabriqué vers 2720 avant J.-C., sous l'Ancien Empire égyptien (époque des grandes pyramides).",
           "exercise": {
-            "id": "p5_s7_qcm",
+            "id": "phys_tle_cd_13_p5_s7_qcm",
             "type": "mcq",
             "prompt": "Dans l'exemple ci-dessus, quel pourcentage de l'activité initiale subsiste dans le papyrus égyptien ?",
             "options": [
@@ -1562,7 +1562,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p5_s1_qcm",
+          "id": "phys_tle_cd_13_p5_s1_qcm",
           "type": "mcq",
           "prompt": "Pourquoi la datation au carbone 14 ne peut-elle pas être utilisée pour déterminer l'âge d'un silex taillé préhistorique ou d'un outil en cuivre ?",
           "options": [
@@ -1575,7 +1575,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "La méthode au carbone 14 repose sur l'assimilation biologique du dioxyde de carbone atmosphérique au cours du métabolisme vivant. Les roches siliceuses ou les minerais métalliques sont inorganiques et ne participent pas au cycle du carbone."
         },
         {
-          "id": "p5_s2_qcm",
+          "id": "phys_tle_cd_13_p5_s2_qcm",
           "type": "mcq",
           "prompt": "Un ossement ancien retrouvé lors d'une fouille contient 25 % de la teneur en carbone 14 mesurée sur un ossement actuel de même masse. Sachant que T = 5590 ans, quel est l'âge de l'ossement ?",
           "options": [
@@ -1588,7 +1588,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Une proportion résiduelle de 25 % correspond à 1/4 = 1/2² de la valeur initiale, soit exactement 2 demi-vies (n = 2). L'âge vaut t = 2 * T = 2 * 5590 ans = 11 180 ans."
         },
         {
-          "id": "p5_s3_qcm",
+          "id": "phys_tle_cd_13_p5_s3_qcm",
           "type": "mcq",
           "prompt": "Un morceau de parchemin ancien présente une activité en carbone 14 égale à 60 % de l'activité d'un parchemin moderne équivalent. Quel est l'âge du manuscrit ? (T = 5590 ans, ln(2) = 0,693, ln(1/0,60) = 0,511)",
           "options": [
@@ -1601,7 +1601,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "t = (T / ln 2) * ln(A₀ / A) = (5590 / 0,693) * ln(1 / 0,60) = 8066 * 0,5108 ≈ 4120 ans."
         },
         {
-          "id": "p5_s4_qcm",
+          "id": "phys_tle_cd_13_p5_s4_qcm",
           "type": "mcq",
           "prompt": "Un paléontologue affirme avoir daté un fossile de dinosaure (stégosaure disparu il y a 150 millions d'années) grâce à la méthode du carbone 14 (T = 5590 ans). Quelle critique scientifique fondamentale doit-on immédiatement lui opposer ?",
           "options": [
@@ -1614,7 +1614,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Au bout de 150 millions d'années, le nombre de périodes écoulées est n = 1,5.10⁸ / 5590 ≈ 26 800 demi-vies ! La fraction résiduelle théorique (1/2)^26800 est infiniment plus petite que l'inverse du nombre d'atomes dans l'univers observable : il n'y a plus aucun atome de ^14C originel."
         },
         {
-          "id": "p5_s5_qcm",
+          "id": "phys_tle_cd_13_p5_s5_qcm",
           "type": "mcq",
           "prompt": "Dans une roche basaltique ancienne, l'analyse spectrométrique montre qu'il y a 3 fois plus de noyaux d'argon 40 piégés que de noyaux de potassium 40 résiduels (N_{Ar} / N_K = 3). Quel est l'âge de la coulée de lave ? (T = 1,25 milliard d'années)",
           "options": [
@@ -1627,7 +1627,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Le nombre de noyaux pères initiaux était N_0 = N_K + N_{Ar} = N_K + 3.N_K = 4.N_K. Le rapport restant est donc N_K / N_0 = 1/4 = 1/2², ce qui correspond à exactement 2 demi-vies (n = 2). L'âge vaut t = 2 * T = 2 * 1,25 = 2,50 milliards d'années."
         },
         {
-          "id": "p5_s6_qcm",
+          "id": "phys_tle_cd_13_p5_s6_qcm",
           "type": "mcq",
           "prompt": "Quel est le principal avantage de la spectrométrie de masse par accélérateur (AMS) par rapport au comptage classique de l'activité radioactive par scintillateur ?",
           "options": [
@@ -1640,7 +1640,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Puisque la demi-vie du ^14C est longue (5590 ans), seul un atome de ^14C sur des millions se désintègre chaque jour. L'AMS compte directement les atomes de ^14C par tri de masse, sans attendre leur désintégration, ce qui autorise des prélèvements quasi invisibles sur des œuvres d'art précieuses."
         },
         {
-          "id": "p5_s7_qcm",
+          "id": "phys_tle_cd_13_p5_s7_qcm",
           "type": "mcq",
           "prompt": "Dans l'exemple ci-dessus, quel pourcentage de l'activité initiale subsiste dans le papyrus égyptien ?",
           "options": [
@@ -1731,7 +1731,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Définition",
           "paragraphText": "Un rayonnement est qualifié d'ionisant lorsque l'énergie transportée par chaque particule ou quantum dépasse l'énergie de liaison des électrons de la matière (typiquement > 13,6 eV). En traversant les tissus vivants, ces rayonnements arrachent des électrons aux atomes des molécules constituantes (eau, protéines, lipides, ADN). L'ionisation des molécules d'eau intracellulaires engendre par radiolyse des radicaux libres hautement réactifs (OH•, H•) qui agressent chimiquement la double hélice d'ADN.",
           "exercise": {
-            "id": "p6_s1_qcm",
+            "id": "phys_tle_cd_13_p6_s1_qcm",
             "type": "mcq",
             "prompt": "Quel est le mécanisme principal par lequel les rayonnements gamma provoquent des lésions dans les cellules biologiques ?",
             "options": [
@@ -1752,7 +1752,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Biologie médicale",
           "paragraphText": "On distingue en médecine deux grandes catégories d'effets biologiques des rayonnements : 1. Les effets déterministes (à court terme) : ils apparaissent avec certitude au-delà d'un seuil de dose (brûlures radiologiques, stérilité temporaire, nausées, destruction des cellules sanguines de la moelle osseuse). Leur gravité augmente avec la dose reçue. 2. Les effets stochastiques ou aléatoires (à long terme) : ils peuvent survenir des années après sans seuil de dose certain (cancers, leucémies, mutations génétiques héréditaires). C'est la probabilité d'apparition qui croît avec la dose, et non la sévérité du cancer une fois déclenché.",
           "exercise": {
-            "id": "p6_s2_qcm",
+            "id": "phys_tle_cd_13_p6_s2_qcm",
             "type": "mcq",
             "prompt": "Parmi les propositions suivantes, laquelle décrit un effet stochastique (aléatoire) de l'exposition aux rayonnements ionisants ?",
             "options": [
@@ -1773,7 +1773,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Sécurité",
           "paragraphText": "Pour protéger les manipulateurs, techniciens et médecins contre l'exposition aux rayonnements, la radioprotection applique trois règles universelles : 1. Le temps : réduire au strict minimum la durée de présence à proximité de la source. 2. La distance : s'éloigner au maximum de la source car en champ libre, le débit de dose diminue avec le carré de la distance (Dose ~ 1 / d²). Doubler la distance divise l'exposition par 4. 3. Les écrans : interposer des blindages adaptés à la nature du rayonnement.",
           "exercise": {
-            "id": "p6_s3_qcm",
+            "id": "phys_tle_cd_13_p6_s3_qcm",
             "type": "mcq",
             "prompt": "Un opérateur se trouve à une distance d₁ = 1,0 m d'une source radioactive ponctuelle non blindée et subit un débit de dose D₁ = 400 µSv/h. S'il recule à une distance d₂ = 4,0 m, quel sera le nouveau débit de dose subi ?",
             "options": [
@@ -1794,7 +1794,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Imagerie médicale",
           "paragraphText": "En imagerie médicale fonctionnelle, on injecte au patient une molécule marquée par un radionucléide émetteur gamma à vie courte (comme le Technétium 99m, T = 6 h). Le radiotraceur se fixe sélectivement sur l'organe cible (os, thyroïde, cœur). Une gamma-caméra détecte les photons gamma émis de l'intérieur du corps et reconstitue une carte fonctionnelle de l'organe (scintigraphie). En Tomographie par Émission de Positons (TEP-scan), on utilise un émetteur β⁺ (le Fluor 18 incorporé dans le glucose). Le positon émis s'annihile avec un électron tissulaire en émettant deux photons gamma à 180°, détectés en coïncidence pour localiser les tumeurs cancéreuses hypermétaboliques.",
           "exercise": {
-            "id": "p6_s4_qcm",
+            "id": "phys_tle_cd_13_p6_s4_qcm",
             "type": "mcq",
             "prompt": "Pourquoi privilégie-t-on impérativement des radionucléides de courte demi-vie (quelques heures) pour les examens d'imagerie diagnostique in vivo ?",
             "options": [
@@ -1815,7 +1815,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Applications industrielles",
           "paragraphText": "Dans le secteur industriel : 1. La gammagraphie : des sources scellées de cobalt 60 (^60Co) ou d'iridium 192 (^192Ir) émettent des rayons gamma hautement pénétrants permettant de radiographier des tuyauteries épaisses, des ailes d'avions ou des soudures métalliques sur des chantiers navals pour détecter d'éventuelles fissures microscopiques. 2. Les jauges de niveau et d'épaisseur : l'atténuation d'un rayonnement à travers une tôle d'acier ou du papier mesure l'épaisseur au micromètre près en continu sans contact physique. 3. Les traceurs : détection de fuites dans des pipelines souterrains ou étude de l'érosion des côtes.",
           "exercise": {
-            "id": "p6_s5_qcm",
+            "id": "phys_tle_cd_13_p6_s5_qcm",
             "type": "mcq",
             "prompt": "Dans une usine papetière, pour contrôler en temps réel l'épaisseur d'une feuille de papier en défilement rapide sans la toucher, quel type de source radioactive est le plus approprié ?",
             "options": [
@@ -1836,7 +1836,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Attention piège",
           "paragraphText": "Il est primordial de distinguer nettement : 1. L'irradiation : un individu est exposé à distance à un rayonnement ionisant issu d'une source extérieure (comme lorsqu'on effectue une radiographie dentaire). Dès que l'individu s'éloigne ou que la source est retirée, l'exposition cesse instantanément. La personne irradiée NE DEVIENT PAS radioactive et ne présente aucun danger pour son entourage. 2. La contamination : des substances radioactives (poussières, aérosols, liquides) se déposent sur la peau ou les vêtements (contamination externe), ou pénètrent à l'intérieur du corps par inhalation ou ingestion (contamination interne). Dans ce cas, la personne transporte la source et continue d'être irradiée en permanence tant que la matière n'est pas décontaminée ou éliminée biologiquement.",
           "exercise": {
-            "id": "p6_s6_qcm",
+            "id": "phys_tle_cd_13_p6_s6_qcm",
             "type": "mcq",
             "prompt": "Un patient subit une radiographie pulmonaire aux rayons X. Une fois rentré chez lui, ses proches courent-ils le moindre risque d'être irradiés à son contact ?",
             "options": [
@@ -1857,7 +1857,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "stepBadge": "Environnement",
           "paragraphText": "Les déchets radioactifs sont rigoureusement classés selon leur niveau d'activité (très faible, faible, moyenne, haute activité) et leur période radioactive : 1. Déchets à vie très courte (VTC, T < 100 jours) : principalement issus des hôpitaux, ils sont stockés sur place quelques mois dans des locaux blindés pour décroissance radioactive, puis traités comme des déchets hospitaliers ordinaires une fois inactifs. 2. Déchets à vie courte (T <= 31 ans, ex. césium 137, strontium 90) : stockés en surface ou faible profondeur pendant 300 ans. 3. Déchets de haute activité et à vie longue (HAVL, T > 31 ans, actinides mineurs, uranium, plutonium) : vitrifiés dans des matrices d'acier et destinés au stockage géologique profond en couche géologique stable (argile, granite) à plusieurs centaines de mètres sous terre.",
           "exercise": {
-            "id": "p6_s7_qcm",
+            "id": "phys_tle_cd_13_p6_s7_qcm",
             "type": "mcq",
             "prompt": "Un laboratoire médical utilise de l'iode 131 (^{131}I) dont la période radioactive est T = 8,0 jours pour traiter la thyroïde. Au bout de combien de temps les compresses et seringues utilisées peuvent-elles être évacuées dans les filières classiques de déchets sans aucun risque radiologique ? (règle des 10 périodes)",
             "options": [
@@ -1873,7 +1873,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
       ],
       "exercises": [
         {
-          "id": "p6_s1_qcm",
+          "id": "phys_tle_cd_13_p6_s1_qcm",
           "type": "mcq",
           "prompt": "Quel est le mécanisme principal par lequel les rayonnements gamma provoquent des lésions dans les cellules biologiques ?",
           "options": [
@@ -1886,7 +1886,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Les cellules étant composées à plus de 70 % d'eau, les rayonnements ionisants interagissent majoritairement avec les molécules d'eau (radiolyse de l'eau : H₂O -> H₂O⁺ + e⁻ -> H⁺ + OH•), libérant des radicaux hydroxyles très agressifs qui rompent les brins de l'ADN."
         },
         {
-          "id": "p6_s2_qcm",
+          "id": "phys_tle_cd_13_p6_s2_qcm",
           "type": "mcq",
           "prompt": "Parmi les propositions suivantes, laquelle décrit un effet stochastique (aléatoire) de l'exposition aux rayonnements ionisants ?",
           "options": [
@@ -1899,7 +1899,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Les effets stochastiques sont probabilistes et tardifs (cancers, leucémies) : ils n'ont pas de seuil d'apparition avéré, et l'augmentation de la dose accroît la probabilité que la maladie apparaisse, mais ne modifie pas sa gravité."
         },
         {
-          "id": "p6_s3_qcm",
+          "id": "phys_tle_cd_13_p6_s3_qcm",
           "type": "mcq",
           "prompt": "Un opérateur se trouve à une distance d₁ = 1,0 m d'une source radioactive ponctuelle non blindée et subit un débit de dose D₁ = 400 µSv/h. S'il recule à une distance d₂ = 4,0 m, quel sera le nouveau débit de dose subi ?",
           "options": [
@@ -1912,7 +1912,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Le débit de dose varie selon l'inverse du carré de la distance : D₂ / D₁ = (d₁ / d₂)² = (1,0 / 4,0)² = 1 / 16. Le nouveau débit de dose est donc D₂ = 400 / 16 = 25 µSv/h. S'éloigner est une mesure de protection extrêmement efficace."
         },
         {
-          "id": "p6_s4_qcm",
+          "id": "phys_tle_cd_13_p6_s4_qcm",
           "type": "mcq",
           "prompt": "Pourquoi privilégie-t-on impérativement des radionucléides de courte demi-vie (quelques heures) pour les examens d'imagerie diagnostique in vivo ?",
           "options": [
@@ -1925,7 +1925,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Une demi-vie courte (ex. 6 h pour le Tc-99m) garantit qu'en quelques jours (10 demi-vies), la totalité de la radioactivité a disparu du corps du patient, ce qui limite considérablement l'irradiation cumulée sans altérer la qualité des images."
         },
         {
-          "id": "p6_s5_qcm",
+          "id": "phys_tle_cd_13_p6_s5_qcm",
           "type": "mcq",
           "prompt": "Dans une usine papetière, pour contrôler en temps réel l'épaisseur d'une feuille de papier en défilement rapide sans la toucher, quel type de source radioactive est le plus approprié ?",
           "options": [
@@ -1938,7 +1938,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "Les rayons alpha seraient totalement arrêtés dès la moindre feuille de papier, et les rayons gamma la traverseraient sans subir d'atténuation mesurable. Le rayonnement bêta (absorbé modérément par quelques millimètres de matière) est parfaitement adapté pour mesurer l'épaisseur d'une feuille avec une très haute sensibilité."
         },
         {
-          "id": "p6_s6_qcm",
+          "id": "phys_tle_cd_13_p6_s6_qcm",
           "type": "mcq",
           "prompt": "Un patient subit une radiographie pulmonaire aux rayons X. Une fois rentré chez lui, ses proches courent-ils le moindre risque d'être irradiés à son contact ?",
           "options": [
@@ -1951,7 +1951,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
           "explanation": "L'irradiation n'est qu'un flux d'ondes ou de particules qui traverse la matière sans y laisser de radionucléides. La personne irradiée ne devient jamais radioactive, contrairement à une contamination où de la matière radioactive est absorbée."
         },
         {
-          "id": "p6_s7_qcm",
+          "id": "phys_tle_cd_13_p6_s7_qcm",
           "type": "mcq",
           "prompt": "Un laboratoire médical utilise de l'iode 131 (^{131}I) dont la période radioactive est T = 8,0 jours pour traiter la thyroïde. Au bout de combien de temps les compresses et seringues utilisées peuvent-elles être évacuées dans les filières classiques de déchets sans aucun risque radiologique ? (règle des 10 périodes)",
           "options": [

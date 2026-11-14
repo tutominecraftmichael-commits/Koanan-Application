@@ -5,7 +5,25 @@ import { physique2deCChapters } from '../../data/courses/physique_2de_c';
 import { svt2deCChapters } from '../../data/courses/svt_2de_c';
 import { francais2deAChapters } from '../../data/courses/francais_2de_a';
 import { maths2deACalculsNumeriquesChapter } from '../../data/courses/maths_2de_a';
-import { MATHS_TLE_C_L04_DIVISIBILITE } from '../../data/courses/terminale/maths_tle_c_divisibilite';
+import { MATHS_TLE_C_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_c_01_limites_continuite';
+import { MATHS_TLE_C_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_c_02_probabilite_conditionnelle';
+import { MATHS_TLE_C_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_c_03_derivabilite_etude_fonctions';
+import { MATHS_TLE_C_L04_DIVISIBILITE_DANS_Z } from '../../data/courses/terminale/maths_tle_c_04_divisibilite_dans_z';
+import { MATHS_TLE_C_L04_PRIMITIVES } from '../../data/courses/terminale/maths_tle_c_04_primitives';
+import { MATHS_TLE_C_L05_LOGARITHME_NEPERIEN } from '../../data/courses/terminale/maths_tle_c_05_logarithme_neperien';
+import { MATHS_TLE_C_L06_NOMBRES_COMPLEXES } from '../../data/courses/terminale/maths_tle_c_06_nombres_complexes';
+import { MATHS_TLE_C_L07_EXPONENTIELLES_PUISSANCES } from '../../data/courses/terminale/maths_tle_c_07_exponentielles_puissances';
+import { MATHS_TLE_C_L10_CALCUL_INTEGRAL } from '../../data/courses/terminale/maths_tle_c_10_calcul_integral';
+import { MATHS_TLE_C_L11_PPCM_PGCD } from '../../data/courses/terminale/maths_tle_c_11_ppcm_pgcd';
+import { MATHS_TLE_C_L12_SUITES_NUMERIQUES } from '../../data/courses/terminale/maths_tle_c_12_suites_numeriques';
+import { MATHS_TLE_C_L12_EQUATIONS_DIFFERENTIELLES } from '../../data/courses/terminale/maths_tle_c_12_equations_differentielles';
+import { MATHS_TLE_C_L11_STATISTIQUE_DEUX_VARIABLES } from '../../data/courses/terminale/maths_tle_c_11_statistique_deux_variables';
+import { MATHS_TLE_C_L02_BARYCENTRE_LIGNES_NIVEAUX } from '../../data/courses/terminale/maths_tle_c_02_barycentre_lignes_niveaux';
+import { MATHS_TLE_C_L06_GEOMETRIE_ANALYTIQUE_ESPACE } from '../../data/courses/terminale/maths_tle_c_06_geometrie_analytique_espace';
+import { MATHS_TLE_C_L07_CONIQUES } from '../../data/courses/terminale/maths_tle_c_07_coniques';
+import { MATHS_TLE_C_L08_NOMBRES_COMPLEXES_GEOMETRIE } from '../../data/courses/terminale/maths_tle_c_08_nombres_complexes_geometrie';
+import { MATHS_TLE_C_L15_ISOMETRIES_PLAN } from '../../data/courses/terminale/maths_tle_c_15_isometries_plan';
+import { MATHS_TLE_C_L16_SIMILITUDES_DIRECTES_PLAN } from '../../data/courses/terminale/maths_tle_c_16_similitudes_directes_plan';
 import { MATHS_TLE_D_L01_LIMITES_CONTINUITE } from '../../data/courses/terminale/maths_tle_d_limites_continuite';
 import { MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE } from '../../data/courses/terminale/maths_tle_d_probabilite_conditionnelle';
 import { MATHS_TLE_D_L03_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/terminale/maths_tle_d_derivabilite_etude_fonctions';
@@ -15,10 +33,47 @@ import { MATHS_TLE_D_L06_NOMBRES_COMPLEXES } from '../../data/courses/terminale/
 import { MATHS_TLE_D_L10_CALCUL_INTEGRAL } from '../../data/courses/terminale/maths_tle_d_calcul_integral';
 import { MATHS_TLE_D_L11_STATISTIQUE_DEUX_VARIABLES } from '../../data/courses/terminale/maths_tle_d_11_statistique_deux_variables';
 import { MATHS_TLE_D_L12_EQUATIONS_DIFFERENTIELLES } from '../../data/courses/terminale/maths_tle_d_12_equations_differentielles';
+import { MATHS_1RE_C_L01_EQUATIONS_INEQUATIONS } from '../../data/courses/premiere/maths_1re_c_01_equations_inequations';
+import { MATHS_1RE_C_L03_GENERALITES_FONCTIONS } from '../../data/courses/premiere/maths_1re_c_03_generalites_fonctions';
+import { MATHS_1RE_C_L04_DENOMBREMENT } from '../../data/courses/premiere/maths_1re_c_04_denombrement';
+import { MATHS_1RE_C_L05_LIMITES_CONTINUITE } from '../../data/courses/premiere/maths_1re_c_05_limites_continuite';
+import { MATHS_1RE_C_L07_EXTENSION_LIMITE } from '../../data/courses/premiere/maths_1re_c_07_extension_limite';
+import { MATHS_1RE_C_L09_DERIVATION } from '../../data/courses/premiere/maths_1re_c_09_derivation';
+import { MATHS_1RE_C_L10_PROBABILITE } from '../../data/courses/premiere/maths_1re_c_10_probabilite';
+import { MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION } from '../../data/courses/premiere/maths_1re_c_11_etude_representation_fonction';
+import { MATHS_1RE_C_L02_BARYCENTRE } from '../../data/courses/premiere/maths_1re_c_02_barycentre';
+import { MATHS_1RE_C_L06_ANGLES_ORIENTES_TRIGONOMETRIE } from '../../data/courses/premiere/maths_1re_c_06_angles_orientes_trigonometrie';
+import { MATHS_1RE_C_L08_COMPOSEES_TRANSFORMATIONS } from '../../data/courses/premiere/maths_1re_c_08_composees_transformations';
+import { MATHS_1RE_C_L12_ORTHOGONALITE_ESPACE } from '../../data/courses/premiere/maths_1re_c_12_orthogonalite_espace';
+import { MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_c_13_systemes_equations_lineaires';
+import { MATHS_1RE_C_L15_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_c_15_suites_numeriques';
+import { MATHS_1RE_C_L16_VECTEURS_ESPACE } from '../../data/courses/premiere/maths_1re_c_16_vecteurs_espace';
+import { MATHS_1RE_C_L17_STATISTIQUES } from '../../data/courses/premiere/maths_1re_c_17_statistiques';
 import { MATHS_1RE_D_L11_SYSTEMES_EQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_d_systemes_equations_lineaires';
 import { MATHS_1RE_D_L12_SUITES_NUMERIQUES } from '../../data/courses/premiere/maths_1re_d_suites_numeriques';
 import { MATHS_1RE_D_L13_ORTHOGONALITE_ESPACE } from '../../data/courses/premiere/maths_1re_d_orthogonalite_espace';
 import { MATHS_1RE_D_L15_STATISTIQUES } from '../../data/courses/premiere/maths_1re_d_statistiques';
+import { CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS } from '../../data/courses/premiere/chimie_1re_cd_01_petrole_gaz_naturels';
+import { CHIMIE_1RE_CD_L02_ALCANES } from '../../data/courses/premiere/chimie_1re_cd_02_alcanes';
+import { CHIMIE_1RE_CD_L03_ALCENES_ALCYNES } from '../../data/courses/premiere/chimie_1re_cd_03_alcenes_alcynes';
+import { CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES } from '../../data/courses/premiere/chimie_1re_cd_04_composes_oxygenes';
+import { CHIMIE_1RE_CD_L05_ETHANOL } from '../../data/courses/premiere/chimie_1re_cd_05_ethanol';
+import { CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE } from '../../data/courses/premiere/chimie_1re_cd_06_esterification_hydrolyse';
+import { CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE } from '../../data/courses/premiere/chimie_1re_cd_07_oxydoreduction_voie_seche';
+import { CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE } from '../../data/courses/premiere/chimie_1re_cd_08_couples_redox_dosage';
+import { CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES } from '../../data/courses/premiere/chimie_1re_cd_09_classification_quantitative_couples';
+import { CHIMIE_1RE_CD_L10_ELECTROLYSE } from '../../data/courses/premiere/chimie_1re_cd_10_electrolyse';
+import { CHIMIE_1RE_CD_L11_CORROSION_PROTECTION_METAUX } from '../../data/courses/premiere/chimie_1re_cd_11_corrosion_protection_metaux';
+import { PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE } from '../../data/courses/premiere/physique_1re_cd_01_travail_puissance';
+import { PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL } from '../../data/courses/premiere/physique_1re_cd_02_amplificateur_operationnel';
+import { PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE } from '../../data/courses/premiere/physique_1re_cd_03_reflexion_refraction_lumiere';
+import { PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE } from '../../data/courses/premiere/physique_1re_cd_04_energie_cinetique';
+import { PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE } from '../../data/courses/premiere/physique_1re_cd_05_puissance_energie_electrique';
+import { PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES } from '../../data/courses/premiere/physique_1re_cd_06_lentilles_minces';
+import { PHYSIQUE_1RE_CD_P4_ENERGIE_POTENTIELLE } from '../../data/courses/premiere/physique_1re_cd_p4_energie_potentielle';
+import { PHYSIQUE_1RE_CD_P5_ENERGIE_MECANIQUE } from '../../data/courses/premiere/physique_1re_cd_p5_energie_mecanique';
+import { PHYSIQUE_1RE_CD_P6_CHAMP_ELECTROSTATIQUE } from '../../data/courses/premiere/physique_1re_cd_p6_champ_electrostatique';
+import { PHYSIQUE_1RE_CD_P11_INTRODUCTION_OPTIQUE_GEOMETRIQUE } from '../../data/courses/premiere/physique_1re_cd_p11_introduction_optique_geometrique';
 import { CHIMIE_TLE_CD_L01_ALCOOLS } from '../../data/courses/terminale/chimie_tle_cd_01_alcools';
 import { CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES } from '../../data/courses/terminale/chimie_tle_cd_02_composes_carbonyles';
 import { CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES } from '../../data/courses/terminale/chimie_tle_cd_03_acides_carboxyliques_et_derives';
@@ -66,7 +121,12 @@ import { GEO_TLE_L03_PROBLEMES_DEVELOPPEMENT_CI } from '../../data/courses/termi
 import { GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD } from '../../data/courses/terminale/geo_tle_fondements_coree_du_sud';
 import { GEO_TLE_T3_L01_CEDEAO } from '../../data/courses/terminale/geo_tle_cedeao';
 import { GEO_TLE_T3_L02_RELATIONS_UE_ACP } from '../../data/courses/terminale/geo_tle_relations_ue_acp';
+import { HIST_TLE_T1_L01_ONU } from '../../data/courses/terminale/hist_tle_onu';
+import { HIST_TLE_T1_L02_ERE_BIPOLARISATION } from '../../data/courses/terminale/hist_tle_bipolarisation';
+import { HIST_TLE_T1_L03_MONDE_MULTIPOLAIRE } from '../../data/courses/terminale/hist_tle_monde_multipolaire';
+import { HIST_TLE_T2_L01_MONTEE_NATIONALISMES_AFRIQUE } from '../../data/courses/terminale/hist_tle_montee_nationalismes_afrique';
 import { HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE } from '../../data/courses/terminale/hist_tle_accession_ci_independance';
+import { HIST_TLE_T2_L03_ACCESSION_ALGERIE_INDEPENDANCE } from '../../data/courses/terminale/hist_tle_accession_algerie_independance';
 import { HIST_TLE_T2_L04_UNION_AFRICAINE } from '../../data/courses/terminale/hist_tle_union_africaine';
 import { HIST_TLE_T3_L01_MONDE_OCCIDENTAL } from '../../data/courses/terminale/hist_tle_monde_occidental';
 import { HIST_TLE_T3_L02_MUTATIONS_CIVILISATION_NEGRO_AFRICAINE } from '../../data/courses/terminale/hist_tle_mutations_civilisation_negro_africaine';
@@ -111,6 +171,10 @@ import { MATHS_1RE_L04_DERIVABILITE_ETUDE_FONCTIONS } from '../../data/courses/p
 import { MATHS_1RE_L06_STATISTIQUES } from '../../data/courses/premiere/maths_1re_statistiques';
 import { MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_systemes_inequations_lineaires';
 import { FR_1RE_EE_L02_COMMENTAIRE_COMPOSE } from '../../data/courses/premiere/fr_1re_commentaire_compose';
+import { FR_1RE_EE_L03_DISSERTATION_LITTERAIRE } from '../../data/courses/premiere/fr_1re_dissertation_litteraire';
+import { FR_1RE_EE_RESUME_PRODUCTION_ECRITE } from '../../data/courses/premiere/fr_1re_resume_production_ecrite';
+import { FR_1RE_PL_L02_TONALITES } from '../../data/courses/premiere/fr_1re_tonalites';
+import { FR_1RE_PL_L03_RYTHME } from '../../data/courses/premiere/fr_1re_rythme';
 import { FR_2DE_PL_L01_FONCTIONS_LANGAGE } from '../../data/courses/seconde/fr_2de_fonctions_langage';
 import { FR_2DE_PL_L02_CONNECTEURS_LOGIQUES } from '../../data/courses/seconde/fr_2de_connecteurs_logiques';
 import { FR_2DE_PL_L02B_EXPRESSION_OPINION } from '../../data/courses/seconde/fr_2de_expression_opinion';
@@ -141,7 +205,6 @@ import { SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE } from '../../data/courses/termi
 import { SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN } from '../../data/courses/terminale/svt_tle_a_heredite_sexe_groupe_sanguin';
 import { SVT_TLE_A_L06_PREVISIONS_GENETIQUES } from '../../data/courses/terminale/svt_tle_a_previsions_genetiques';
 import { SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES } from '../../data/courses/terminale/svt_tle_a_biosynthese_proteines';
-import { MATHS_TLE_C_L13_COMPLEXES_GEOMETRIE } from '../../data/courses/terminale/maths_tle_c_complexes_geometrie';
 import { FR_TLE_EOI_L01_SOLEILS_INDEPENDANCES } from '../../data/courses/terminale/fr_tle_soleils_independances';
 import { FR_TLE_GT_L02_CHAKA_HEROS_EPIQUE } from '../../data/courses/terminale/fr_tle_chaka_heros_epique';
 import { FR_TLE_EE_L03_RESUME_TEXTE } from '../../data/courses/terminale/fr_tle_resume_texte';
@@ -79593,17 +79656,6 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
       }
     ]
   },
-  SVT_TLE_D_L04_FONCTIONNEMENT_DU_COEUR,
-  SVT_TLE_D_L05_SYSTEME_DEFENSE_ORGANISME,
-  SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR,
-  SVT_TLE_D_L07_ORGANES_SEXUELS_HOMME,
-  SVT_TLE_D_L08_DEVENIR_CELLULES_SEXUELLES,
-  SVT_TLE_D_L09_INFECTION_VIH_SIDA,
-  SVT_TLE_D_L10_REPRODUCTION_SPERMAPHYTES,
-  SVT_TLE_D_L11_TRANSMISSION_UN_CARACTERE_HOMME,
-  SVT_TLE_D_L12_TRANSMISSION_DEUX_CARACTERES_VIVANTS,
-  SVT_TLE_D_L13_AMELIORATION_PROTECTION_DES_SOLS,
-  SVT_TLE_D_L14_EXPLOITATION_GISEMENTS_MINIERS,
   {
     "id": "terminale_d_svt_ch8_geodynamique_interne_et_tectonique_des_plaques",
     "subjectId": "svt",
@@ -91025,8 +91077,27 @@ export const CURRICULUM_REGISTRY: CurriculumChapter[] = [
 // jamais affichés : l'élève voit « Cours en préparation » à la place.
 // ============================================================================
 const AUTHORED_CHAPTERS: CurriculumChapter[] = [
-  // Terminale (format v2 : mini-leçons rédigées depuis les PDF officiels)
-  MATHS_TLE_C_L04_DIVISIBILITE,
+  // Terminale C — Maths (format v2)
+  MATHS_TLE_C_L01_LIMITES_CONTINUITE,
+  MATHS_TLE_C_L02_PROBABILITE_CONDITIONNELLE,
+  MATHS_TLE_C_L03_DERIVABILITE_ETUDE_FONCTIONS,
+  MATHS_TLE_C_L04_DIVISIBILITE_DANS_Z,
+  MATHS_TLE_C_L04_PRIMITIVES,
+  MATHS_TLE_C_L05_LOGARITHME_NEPERIEN,
+  MATHS_TLE_C_L06_NOMBRES_COMPLEXES,
+  MATHS_TLE_C_L07_EXPONENTIELLES_PUISSANCES,
+  MATHS_TLE_C_L10_CALCUL_INTEGRAL,
+  MATHS_TLE_C_L11_PPCM_PGCD,
+  MATHS_TLE_C_L12_SUITES_NUMERIQUES,
+  MATHS_TLE_C_L12_EQUATIONS_DIFFERENTIELLES,
+  MATHS_TLE_C_L11_STATISTIQUE_DEUX_VARIABLES,
+  // Terminale C — Maths Géométrie (format v2)
+  MATHS_TLE_C_L02_BARYCENTRE_LIGNES_NIVEAUX,
+  MATHS_TLE_C_L06_GEOMETRIE_ANALYTIQUE_ESPACE,
+  MATHS_TLE_C_L07_CONIQUES,
+  MATHS_TLE_C_L08_NOMBRES_COMPLEXES_GEOMETRIE,
+  MATHS_TLE_C_L15_ISOMETRIES_PLAN,
+  MATHS_TLE_C_L16_SIMILITUDES_DIRECTES_PLAN,
   // Terminale D — Maths (format v2)
   MATHS_TLE_D_L01_LIMITES_CONTINUITE,
   MATHS_TLE_D_L02_PROBABILITE_CONDITIONNELLE,
@@ -91086,7 +91157,12 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   GEO_TLE_T2_L01_FONDEMENTS_COREE_DU_SUD,
   GEO_TLE_T3_L01_CEDEAO,
   GEO_TLE_T3_L02_RELATIONS_UE_ACP,
+  HIST_TLE_T1_L01_ONU,
+  HIST_TLE_T1_L02_ERE_BIPOLARISATION,
+  HIST_TLE_T1_L03_MONDE_MULTIPOLAIRE,
+  HIST_TLE_T2_L01_MONTEE_NATIONALISMES_AFRIQUE,
   HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE,
+  HIST_TLE_T2_L03_ACCESSION_ALGERIE_INDEPENDANCE,
   HIST_TLE_T2_L04_UNION_AFRICAINE,
   HIST_TLE_T3_L01_MONDE_OCCIDENTAL,
   HIST_TLE_T3_L02_MUTATIONS_CIVILISATION_NEGRO_AFRICAINE,
@@ -91110,8 +91186,6 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   SVT_TLE_A_L05_HEREDITE_SEXE_GROUPE_SANGUIN,
   SVT_TLE_A_L06_PREVISIONS_GENETIQUES,
   SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES,
-  // Terminale C — Maths (format v2)
-  MATHS_TLE_C_L13_COMPLEXES_GEOMETRIE,
   // Terminale (A1, A2, C, D) — Français (format v2)
   FR_TLE_EOI_L01_SOLEILS_INDEPENDANCES,
   FR_TLE_GT_L02_CHAKA_HEROS_EPIQUE,
@@ -91181,8 +91255,52 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   MATHS_1RE_D_L12_SUITES_NUMERIQUES,
   MATHS_1RE_D_L13_ORTHOGONALITE_ESPACE,
   MATHS_1RE_D_L15_STATISTIQUES,
+  // Première C — Maths Numérique (format v2)
+  MATHS_1RE_C_L01_EQUATIONS_INEQUATIONS,
+  MATHS_1RE_C_L03_GENERALITES_FONCTIONS,
+  MATHS_1RE_C_L04_DENOMBREMENT,
+  MATHS_1RE_C_L05_LIMITES_CONTINUITE,
+  MATHS_1RE_C_L07_EXTENSION_LIMITE,
+  MATHS_1RE_C_L09_DERIVATION,
+  MATHS_1RE_C_L10_PROBABILITE,
+  MATHS_1RE_C_L11_ETUDE_REPRESENTATION_FONCTION,
+  MATHS_1RE_C_L02_BARYCENTRE,
+  MATHS_1RE_C_L06_ANGLES_ORIENTES_TRIGONOMETRIE,
+  MATHS_1RE_C_L08_COMPOSEES_TRANSFORMATIONS,
+  MATHS_1RE_C_L12_ORTHOGONALITE_ESPACE,
+  MATHS_1RE_C_L13_SYSTEMES_EQUATIONS_LINEAIRES,
+  MATHS_1RE_C_L15_SUITES_NUMERIQUES,
+  MATHS_1RE_C_L16_VECTEURS_ESPACE,
+  MATHS_1RE_C_L17_STATISTIQUES,
+  // Première (C & D) — Physique-Chimie : Chimie Organique & Oxydoréduction
+  CHIMIE_1RE_CD_L01_PETROLE_GAZ_NATURELS,
+  CHIMIE_1RE_CD_L02_ALCANES,
+  CHIMIE_1RE_CD_L03_ALCENES_ALCYNES,
+  CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES,
+  CHIMIE_1RE_CD_L05_ETHANOL,
+  CHIMIE_1RE_CD_L06_ESTERIFICATION_HYDROLYSE,
+  CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE,
+  CHIMIE_1RE_CD_L08_COUPLES_REDOX_DOSAGE,
+  CHIMIE_1RE_CD_L09_CLASSIFICATION_QUANTITATIVE_COUPLES,
+  CHIMIE_1RE_CD_L10_ELECTROLYSE,
+  CHIMIE_1RE_CD_L11_CORROSION_PROTECTION_METAUX,
+  // Première (C, D) — Physique (Thèmes 1, 2, 3)
+  PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE,
+  PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL,
+  PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE,
+  PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE,
+  PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE,
+  PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES,
+  PHYSIQUE_1RE_CD_P4_ENERGIE_POTENTIELLE,
+  PHYSIQUE_1RE_CD_P5_ENERGIE_MECANIQUE,
+  PHYSIQUE_1RE_CD_P6_CHAMP_ELECTROSTATIQUE,
+  PHYSIQUE_1RE_CD_P11_INTRODUCTION_OPTIQUE_GEOMETRIQUE,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
+  FR_1RE_EE_L03_DISSERTATION_LITTERAIRE,
+  FR_1RE_EE_RESUME_PRODUCTION_ECRITE,
+  FR_1RE_PL_L02_TONALITES,
+  FR_1RE_PL_L03_RYTHME,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
   FR_2DE_PL_L02_CONNECTEURS_LOGIQUES,
   FR_2DE_PL_L02B_EXPRESSION_OPINION,

@@ -5,7 +5,7 @@ export const SVT_TLE_D_L08_DEVENIR_CELLULES_SEXUELLES: CurriculumChapter = {
   subjectId: "svt",
   gradeLevel: "terminale_d",
   alsoForGrades: ["terminale_c"],
-  order: 10,
+  order: 8,
   title: "Le devenir des cellules sexuelles chez les mammifères (Fécondation, segmentation, migration et nidation)",
   summary: "Étude complète du devenir des gamètes chez les mammifères selon le programme officiel de Côte d'Ivoire : migration et sélection tubaire des gamètes, capacitation épididymaire et utérine des spermatozoïdes, réaction acrosomique, pénétration monospérmique et réaction corticale anti-polyspermie, reprise de la méiose II et émission du 2e globule polaire, caryogamie (amphimixie), segmentation de la cellule-œuf (morula, blastocyste), migration tubaire, nidation trophoblastique dans la dentelle utérine et sécrétion précoce de l'HCG.",
   officialVolumeHours: 10,

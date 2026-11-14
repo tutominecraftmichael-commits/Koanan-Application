@@ -7,7 +7,9 @@ export const HIST_1RE_T3_L01_PREMIERE_GUERRE_MONDIALE: CurriculumChapter = {
   "subjectId": "histoire_geo",
   "gradeLevel": "premiere_a1",
   "alsoForGrades": [
-    "premiere_a2"
+    "premiere_a2",
+    "premiere_c",
+    "premiere_d"
   ],
   "order": 6,
   "title": "Thème 3, leçon 1 : La Première Guerre mondiale, causes et conséquences",

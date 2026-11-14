@@ -83,7 +83,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Définition",
           "paragraphText": "Lorsqu'on éclaire une fente verticale très fine (largeur a de quelques centièmes de millimètre) à l'aide d'un faisceau laser monochromatique, on observe sur un écran situé à quelques mètres une figure de diffraction horizontale : une tache centrale très lumineuse et large, entourée de part et d'autre de taches secondaires alternées de plus en plus faibles, séparées par des extinctions sombres. L'étalement de la lumière s'effectue perpendiculairement à la direction de la fente. Ce comportement est la signature incontestable de la nature ondulatoire de la lumière.",
           "exercise": {
-            "id": "p1_s1_qcm",
+            "id": "phys_tle_cd_15_p1_s1_qcm",
             "type": "mcq",
             "prompt": "On éclaire une fente verticale étroite avec un laser rouge. Dans quelle direction la figure de diffraction s'étale-t-elle principalement sur l'écran ?",
             "options": [
@@ -104,7 +104,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Principe fondamental",
           "paragraphText": "Selon le principe de Huygens-Fresnel, chaque point d'une ouverture atteint par une onde incidente se comporte comme une source ponctuelle secondaire émettant des ondelettes sphériques de même fréquence et en phase. Au-delà de l'ouverture, l'onde résultante en tout point de l'espace est la superposition cohérente de toutes ces ondelettes secondaires. Cette interférence continue entre ondelettes issues de la fente engendre l'alternance de zones d'extinction et de renforcement lumineux.",
           "exercise": {
-            "id": "p1_s2_qcm",
+            "id": "phys_tle_cd_15_p1_s2_qcm",
             "type": "mcq",
             "prompt": "D'après le principe de Huygens-Fresnel, que devient le front d'onde plan d'une onde lumineuse lorsqu'il atteint les bords d'un petit orifice ?",
             "options": [
@@ -125,7 +125,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Propriété clé",
           "paragraphText": "Une propriété spectaculaire de la diffraction est sa relation de réciprocité spatiale : plus l'ouverture est petite, plus l'étalement angulaire du faisceau diffracté est grand. Si l'on réduit progressivement la largeur 'a' d'une fente, on voit la tache centrale sur l'écran s'élargir au lieu de rétrécir ! Inversement, si la fente devient très large devant la longueur d'onde (a >> lambda), l'angle de diffraction devient infinitésimal, et l'on retrouve l'ombre géométrique nette de l'optique classique.",
           "exercise": {
-            "id": "p1_s3_qcm",
+            "id": "phys_tle_cd_15_p1_s3_qcm",
             "type": "mcq",
             "prompt": "On remplace une fente de diffraction de largeur a₁ = 0,20 mm par une fente plus étroite de largeur a₂ = 0,05 mm. Comment évolue la largeur de la tache centrale sur l'écran ?",
             "options": [
@@ -146,7 +146,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepTheme": "Géométrie des figures",
           "paragraphText": "Il convient de ne pas confondre les figures obtenues selon la géométrie de l'ouverture : 1. Pour une fente rectiligne de largeur a, la figure est unidimensionnelle : c'est une succession de taches rectangulaires alignées le long d'un axe perpendiculaire à la fente. 2. Pour un trou circulaire de diamètre a, la figure de diffraction présente une symétrie de révolution : elle est formée d'un disque central circulaire très brillant (le disque d'Airy) entouré d'anneaux concentriques alternativement sombres et brillants.",
           "exercise": {
-            "id": "p1_s4_qcm",
+            "id": "phys_tle_cd_15_p1_s4_qcm",
             "type": "mcq",
             "prompt": "Quelle figure de diffraction observe-t-on sur un écran placé derrière un diaphragme circulaire à trou d'aiguille éclairé par un laser ?",
             "options": [
@@ -167,7 +167,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Méthode",
           "paragraphText": "Pour déterminer si la diffraction doit être prise en compte dans un problème physique : 1. Calculer le rapport lambda / a en exprimant lambda et a dans la même unité (ex. en mètres). 2. Si lambda / a >= 0,001 (10⁻³), l'écart angulaire theta >= 1 mrad est tout à fait mesurable à l'échelle d'un laboratoire (D = 1 à 2 m), la diffraction est incontournable. 3. Si lambda / a < 10⁻⁵ (objets macroscopiques centimétriques), la diffraction est négligeable et l'optique géométrique s'applique rigoureusement.",
           "exercise": {
-            "id": "p1_s5_qcm",
+            "id": "phys_tle_cd_15_p1_s5_qcm",
             "type": "mcq",
             "prompt": "Pour un faisceau laser vert (lambda = 532 nm), parmi les obstacles suivants, lequel produira la diffraction angulaire la plus importante ?",
             "options": [
@@ -188,7 +188,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Théorème optique",
           "paragraphText": "Le théorème de Babinet stipule que la figure de diffraction produite par un obstacle opaque (par exemple un cheveu ou un fil calibré de diamètre d) est rigoureusement identique en dimensions et en espacement à celle produite par une fente de même largeur a = d (à l'exception du point central géométrique). Cette propriété remarquable permet de mesurer le diamètre d'un cheveu ou d'une fibre textile avec une précision micrométrique sans microscope, simplement en mesurant la largeur de sa tache de diffraction centrale !",
           "exercise": {
-            "id": "p1_s6_qcm",
+            "id": "phys_tle_cd_15_p1_s6_qcm",
             "type": "mcq",
             "prompt": "Un cheveu tendu sur le trajet d'un laser produit une tache centrale de diffraction de largeur L = 3,2 cm sur un écran situé à D = 2,0 m (laser rouge lambda = 640 nm). Quelle est l'épaisseur d de ce cheveu ?",
             "options": [
@@ -209,7 +209,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Application optique",
           "paragraphText": "La diffraction par la pupille circulaire d'entrée d'un objectif de télescope, microscope ou appareil photo impose une limite physique absolue infranchissable à la netteté des images : deux points sources distincts ne peuvent être résolus et séparés que si le centre de la tache d'Airy de l'un tombe au-delà du premier anneau sombre de l'autre (critère de Rayleigh). L'angle limite de résolution est theta_lim = 1,22 * lambda / D_ouverture. Plus le diamètre D de l'objectif est grand, plus la limite angulaire est faible et plus l'image est détaillée.",
           "exercise": {
-            "id": "p1_s7_qcm",
+            "id": "phys_tle_cd_15_p1_s7_qcm",
             "type": "mcq",
             "prompt": "Pourquoi les astronomes construisent-ils des télescopes avec des miroirs primaires géants de 10 à 39 mètres de diamètre ?",
             "options": [
@@ -225,7 +225,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
       ],
       "exercises": [
         {
-          "id": "p1_s1_qcm",
+          "id": "phys_tle_cd_15_p1_s1_qcm",
           "type": "mcq",
           "prompt": "On éclaire une fente verticale étroite avec un laser rouge. Dans quelle direction la figure de diffraction s'étale-t-elle principalement sur l'écran ?",
           "options": [
@@ -238,7 +238,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "L'étalement par diffraction s'effectue toujours dans la direction où la dimension de l'obstacle est la plus petite. Pour une fente verticale étroite (largeur a petite selon l'axe horizontal, hauteur grande selon l'axe vertical), la diffraction a lieu horizontalement."
         },
         {
-          "id": "p1_s2_qcm",
+          "id": "phys_tle_cd_15_p1_s2_qcm",
           "type": "mcq",
           "prompt": "D'après le principe de Huygens-Fresnel, que devient le front d'onde plan d'une onde lumineuse lorsqu'il atteint les bords d'un petit orifice ?",
           "options": [
@@ -251,7 +251,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "C'est l'énoncé fondamental du principe de Huygens-Fresnel : chaque point de l'ouverture se comporte comme un émetteur secondaire d'ondes sphériques synchrones, dont la superposition crée la figure de diffraction observée."
         },
         {
-          "id": "p1_s3_qcm",
+          "id": "phys_tle_cd_15_p1_s3_qcm",
           "type": "mcq",
           "prompt": "On remplace une fente de diffraction de largeur a₁ = 0,20 mm par une fente plus étroite de largeur a₂ = 0,05 mm. Comment évolue la largeur de la tache centrale sur l'écran ?",
           "options": [
@@ -264,7 +264,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "La largeur de la tache centrale L est inversement proportionnelle à la largeur de la fente a (L = 2*lambda*D / a). En divisant a par 4 (0,20 / 0,05 = 4), la largeur L de la tache centrale est multipliée par 4."
         },
         {
-          "id": "p1_s4_qcm",
+          "id": "phys_tle_cd_15_p1_s4_qcm",
           "type": "mcq",
           "prompt": "Quelle figure de diffraction observe-t-on sur un écran placé derrière un diaphragme circulaire à trou d'aiguille éclairé par un laser ?",
           "options": [
@@ -277,7 +277,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "La symétrie axiale du trou circulaire produit une figure de diffraction à symétrie circulaire : la tache d'Airy centrale entourée d'anneaux concentriques d'intensités décroissantes."
         },
         {
-          "id": "p1_s5_qcm",
+          "id": "phys_tle_cd_15_p1_s5_qcm",
           "type": "mcq",
           "prompt": "Pour un faisceau laser vert (lambda = 532 nm), parmi les obstacles suivants, lequel produira la diffraction angulaire la plus importante ?",
           "options": [
@@ -290,7 +290,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "L'écart angulaire de diffraction theta = lambda / a est d'autant plus grand que la dimension de l'obstacle a est petite. Avec d = 5 µm = 5.10⁻⁶ m, on a le plus petit obstacle, d'où l'étalement angulaire maximal : theta = 532.10⁻⁹ / 5.10⁻⁶ ≈ 0,106 rad ≈ 6°."
         },
         {
-          "id": "p1_s6_qcm",
+          "id": "phys_tle_cd_15_p1_s6_qcm",
           "type": "mcq",
           "prompt": "Un cheveu tendu sur le trajet d'un laser produit une tache centrale de diffraction de largeur L = 3,2 cm sur un écran situé à D = 2,0 m (laser rouge lambda = 640 nm). Quelle est l'épaisseur d de ce cheveu ?",
           "options": [
@@ -303,7 +303,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "D'après la formule de la fente (théorème de Babinet d = a) : L = 2*lambda*D / d => d = 2*lambda*D / L = (2 * 640.10⁻⁹ m * 2,0 m) / (3,2.10⁻² m) = 2,56.10⁻⁶ / 3,2.10⁻² = 8,0.10⁻⁵ m = 80 µm."
         },
         {
-          "id": "p1_s7_qcm",
+          "id": "phys_tle_cd_15_p1_s7_qcm",
           "type": "mcq",
           "prompt": "Pourquoi les astronomes construisent-ils des télescopes avec des miroirs primaires géants de 10 à 39 mètres de diamètre ?",
           "options": [
@@ -400,7 +400,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Angle en radians",
           "paragraphText": "Le demi-écart angulaire de diffraction (noté theta) est l'angle sous lequel on voit, depuis la fente, le segment joignant le centre de la tache centrale au milieu de la première extinction sombre. Dans le Système International, theta s'exprime obligatoirement en radians (rad). La théorie montre que pour une fente de largeur a éclairée sous onde plane de longueur d'onde lambda, la première extinction survient pour theta = lambda / a.",
           "exercise": {
-            "id": "p2_s1_qcm",
+            "id": "phys_tle_cd_15_p2_s1_qcm",
             "type": "mcq",
             "prompt": "Une fente de largeur a = 0,25 mm est éclairée par une lumière de longueur d'onde lambda = 500 nm. Quelle est la valeur de l'écart angulaire theta en radians et en degrés ?",
             "options": [
@@ -421,7 +421,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Approximation tan(theta) = theta",
           "paragraphText": "Considérons le triangle rectangle formé par la fente, le centre de l'écran et la première extinction sombre. La distance fente-écran est D, et la distance du centre à la première extinction est y_1 = L / 2. Par trigonométrie : tan(theta) = y_1 / D = L / (2D). Comme l'écart angulaire theta est couramment de l'ordre de 10⁻³ rad (quelques milliradians), on a rigoureusement tan(theta) ≈ theta (avec une erreur relative inférieure à 0,01 %). Par conséquent, theta = L / (2D), ce qui relie directement l'angle microscopique à la dimension macroscopique L mesurable à la règle.",
           "exercise": {
-            "id": "p2_s2_qcm",
+            "id": "phys_tle_cd_15_p2_s2_qcm",
             "type": "mcq",
             "prompt": "Pour un angle theta = 0,050 rad, quelle est l'erreur commise en assimilant tan(theta) à theta ?",
             "options": [
@@ -442,7 +442,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Formule d'examen",
           "paragraphText": "En égalant les deux expressions de theta : lambda / a = L / (2D), on obtient la formule fondamentale : L = (2 * lambda * D) / a. La largeur totale de la tache centrale L est donc : 1. Proportionnelle à la longueur d'onde lambda (la lumière rouge s'étale plus que la bleue). 2. Proportionnelle à la distance fente-écran D (plus l'écran est éloigné, plus la figure est grande). 3. Inversement proportionnelle à la largeur de la fente a. Remarque : les taches secondaires latérales ont chacune une largeur égale à L / 2 = lambda.D / a (la tache centrale est deux fois plus large qu'une tache secondaire).",
           "exercise": {
-            "id": "p2_s3_qcm",
+            "id": "phys_tle_cd_15_p2_s3_qcm",
             "type": "mcq",
             "prompt": "Une fente produit une tache centrale de 2,0 cm pour un laser vert (500 nm). Si l'on remplace le laser vert par un laser rouge (750 nm) sans rien modifier d'autre au montage, que devient la largeur de la tache centrale ?",
             "options": [
@@ -463,7 +463,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Méthode expérimentale",
           "paragraphText": "Dans les protocoles de TP et sujets de Baccalauréat, on fait varier la largeur a de la fente à l'aide d'un micromètre et on mesure L. En traçant le graphe L en fonction de (1/a), on obtient une droite passant par l'origine d'équation L = k * (1/a). Le coefficient directeur de cette droite vaut k = 2 * lambda * D. En mesurant la pente expérimentale k et connaissant D, on détermine avec une grande précision la longueur d'onde du laser : lambda = k / (2D).",
           "exercise": {
-            "id": "p2_s4_qcm",
+            "id": "phys_tle_cd_15_p2_s4_qcm",
             "type": "mcq",
             "prompt": "Sur le graphe L = f(1/a), la pente de la droite vaut k = 2,52.10⁻⁶ m² pour un écran situé à D = 2,0 m. Quelle est la longueur d'onde du faisceau lumineux utilisé ?",
             "options": [
@@ -484,7 +484,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Attention piège",
           "paragraphText": "Il est capital de ne jamais confondre : 'a' dans la diffraction (qui représente la largeur d'une fente unique ou le diamètre d'un trou/fil) avec 'a' dans les interférences d'Young (qui représente l'écartement entre les centres de deux fentes distinctes). Dans un dispositif réel à deux fentes d'Young, chaque fente individuelle produit de la diffraction (enveloppe globale de largeur L = 2.lambda.D/a), à l'intérieur de laquelle se dessinent les franges d'interférences serrées d'interfrange i = lambda.D/d !",
           "exercise": {
-            "id": "p2_s5_qcm",
+            "id": "phys_tle_cd_15_p2_s5_qcm",
             "type": "mcq",
             "prompt": "Dans une expérience d'optique, on observe une large tache lumineuse contenant 11 franges d'interférences fines et serrées. Quelle interprétation physique relie ces deux motifs ?",
             "options": [
@@ -505,7 +505,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Irisation",
           "paragraphText": "Lorsqu'on éclaire une fente fine avec de la lumière blanche polychromatique, chaque composante monochromatique diffracte selon son propre angle theta(lambda) = lambda / a. Comme le rouge a une longueur d'onde plus grande que le violet (lambda_rouge ~ 750 nm > lambda_violet ~ 400 nm), le rouge est plus étalé que le violet. Au centre, toutes les couleurs se superposent en phase : la tache centrale est bordée de blanc au milieu, frangée de rouge à l'extérieur et de violet-bleuâtre vers l'intérieur. C'est l'origine des reflets irisés colorés observés sur la surface d'un disque CD ou d'une bulle de savon.",
           "exercise": {
-            "id": "p2_s6_qcm",
+            "id": "phys_tle_cd_15_p2_s6_qcm",
             "type": "mcq",
             "prompt": "Si une fente étroite est éclairée en lumière blanche, quelle couleur apparaît sur le bord extérieur le plus éloigné de la tache centrale de diffraction ?",
             "options": [
@@ -526,7 +526,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Incertitude expérimentale",
           "paragraphText": "En travaux pratiques, la mesure de la largeur L est entachée d'une incertitude ΔL due au flou sur la position de l'extinction sombre. Pour minimiser l'incertitude relative ΔL / L, il est hautement recommandé d'augmenter la distance D fente-écran (D >= 2 m) afin d'obtenir une tache centrale L bien étalée (L >= 2 cm), rendant la mesure au double-décimètre très précise.",
           "exercise": {
-            "id": "p2_s7_qcm",
+            "id": "phys_tle_cd_15_p2_s7_qcm",
             "type": "mcq",
             "prompt": "On mesure L = 25,0 mm ± 0,5 mm sur un écran à D = 2,00 m ± 0,01 m pour une fente a = 0,100 mm ± 0,002 mm. Quelle est l'incertitude relative sur la mesure de L ?",
             "options": [
@@ -542,7 +542,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
       ],
       "exercises": [
         {
-          "id": "p2_s1_qcm",
+          "id": "phys_tle_cd_15_p2_s1_qcm",
           "type": "mcq",
           "prompt": "Une fente de largeur a = 0,25 mm est éclairée par une lumière de longueur d'onde lambda = 500 nm. Quelle est la valeur de l'écart angulaire theta en radians et en degrés ?",
           "options": [
@@ -555,7 +555,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "theta = lambda / a = (500.10⁻⁹ m) / (0,25.10⁻³ m) = 2,0.10⁻³ rad. En degrés : theta(deg) = 2,0.10⁻³ * (180 / pi) ≈ 0,115°."
         },
         {
-          "id": "p2_s2_qcm",
+          "id": "phys_tle_cd_15_p2_s2_qcm",
           "type": "mcq",
           "prompt": "Pour un angle theta = 0,050 rad, quelle est l'erreur commise en assimilant tan(theta) à theta ?",
           "options": [
@@ -568,7 +568,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "tan(0,050 rad) = 0,0500417 rad. L'écart relatif est (0,0500417 - 0,050) / 0,050 ≈ 0,08 %, soit largement inférieur à 0,1 %. L'approximation tan(theta) ≈ theta est donc remarquablement précise."
         },
         {
-          "id": "p2_s3_qcm",
+          "id": "phys_tle_cd_15_p2_s3_qcm",
           "type": "mcq",
           "prompt": "Une fente produit une tache centrale de 2,0 cm pour un laser vert (500 nm). Si l'on remplace le laser vert par un laser rouge (750 nm) sans rien modifier d'autre au montage, que devient la largeur de la tache centrale ?",
           "options": [
@@ -581,7 +581,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "L est proportionnelle à lambda : L₂ / L₁ = lambda₂ / lambda₁ = 750 / 500 = 1,5. La nouvelle largeur est L₂ = 1,5 * L₁ = 1,5 * 2,0 cm = 3,0 cm."
         },
         {
-          "id": "p2_s4_qcm",
+          "id": "phys_tle_cd_15_p2_s4_qcm",
           "type": "mcq",
           "prompt": "Sur le graphe L = f(1/a), la pente de la droite vaut k = 2,52.10⁻⁶ m² pour un écran situé à D = 2,0 m. Quelle est la longueur d'onde du faisceau lumineux utilisé ?",
           "options": [
@@ -594,7 +594,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "k = 2 * lambda * D => lambda = k / (2D) = 2,52.10⁻⁶ m² / (2 * 2,0 m) = 2,52.10⁻⁶ / 4,0 = 6,30.10⁻⁷ m = 630 nm."
         },
         {
-          "id": "p2_s5_qcm",
+          "id": "phys_tle_cd_15_p2_s5_qcm",
           "type": "mcq",
           "prompt": "Dans une expérience d'optique, on observe une large tache lumineuse contenant 11 franges d'interférences fines et serrées. Quelle interprétation physique relie ces deux motifs ?",
           "options": [
@@ -607,7 +607,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "La diffraction par chaque fente individuelle modèle le profil d'intensité global (l'enveloppe de diffraction), tandis que l'interférence à deux ondes module cette intensité par de fines franges régulières."
         },
         {
-          "id": "p2_s6_qcm",
+          "id": "phys_tle_cd_15_p2_s6_qcm",
           "type": "mcq",
           "prompt": "Si une fente étroite est éclairée en lumière blanche, quelle couleur apparaît sur le bord extérieur le plus éloigné de la tache centrale de diffraction ?",
           "options": [
@@ -620,7 +620,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Puisque theta = lambda / a et que lambda_rouge > lambda_bleu, la lumière rouge est diffractée sous un angle plus grand que toutes les autres couleurs du spectre visible : elle borde donc la partie extérieure de la tache."
         },
         {
-          "id": "p2_s7_qcm",
+          "id": "phys_tle_cd_15_p2_s7_qcm",
           "type": "mcq",
           "prompt": "On mesure L = 25,0 mm ± 0,5 mm sur un écran à D = 2,00 m ± 0,01 m pour une fente a = 0,100 mm ± 0,002 mm. Quelle est l'incertitude relative sur la mesure de L ?",
           "options": [
@@ -709,7 +709,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Expérience historique",
           "paragraphText": "En 1801, le médecin et physicien anglais Thomas Young réalise l'expérience fondatrice prouvant la nature ondulatoire de la lumière. Une source monochromatique ponctuelle S éclaire deux fentes très fines et parallèles S₁ et S₂, séparées d'une distance 'a' (de l'ordre du dixième de millimètre). Par diffraction, chaque fente se comporte comme une source lumineuse secondaire. Les deux faisceaux diffractés s'élargissent et se recouvrent sur un écran placé à distance D (D >> a). Dans cette zone de superposition, on observe un réseau régulier de franges d'interférences rectilignes alternativement sombres et brillantes.",
           "exercise": {
-            "id": "p3_s1_qcm",
+            "id": "phys_tle_cd_15_p3_s1_qcm",
             "type": "mcq",
             "prompt": "Pourquoi est-il rigoureusement impossible d'observer des interférences stables en utilisant deux ampoules à incandescence distinctes placées côte à côte ?",
             "options": [
@@ -730,7 +730,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Propriété de cohérence",
           "paragraphText": "En utilisant une fente source primaire unique S pour alimenter simultanément S₁ et S₂, tout saut de phase ou train d'onde issu de S atteint S₁ et S₂ au même instant (ou avec un retard fixe parfaitement constant). Les deux sources secondaires S₁ et S₂ sont alors dites cohérentes : leurs déphasages restent verrouillés l'un à l'autre au cours du temps, ce qui permet l'observation d'un système de franges stationnaires parfaitement nettes.",
           "exercise": {
-            "id": "p3_s2_qcm",
+            "id": "phys_tle_cd_15_p3_s2_qcm",
             "type": "mcq",
             "prompt": "Comment qualifie-t-on la méthode utilisée dans les fentes d'Young pour produire deux sources cohérentes à partir d'une seule onde incidente ?",
             "options": [
@@ -751,7 +751,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Frange centrale brillante",
           "paragraphText": "Au centre géométrique de l'écran (point O situé sur le plan médiateur de [S₁S₂]), la distance S₁O est rigoureusement égale à S₂O. La différence de chemin parcouru est nulle, donc les deux ondes arrivent en phase parfaite et s'additionnent constructivement. La frange centrale (d'ordre k = 0) est donc TOUJOURS une frange brillante d'intensité maximale.",
           "exercise": {
-            "id": "p3_s3_qcm",
+            "id": "phys_tle_cd_15_p3_s3_qcm",
             "type": "mcq",
             "prompt": "Que se trouve-t-il exactement au centre géométrique O d'un écran d'Young classique symétrique ?",
             "options": [
@@ -772,7 +772,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Lumière blanche",
           "paragraphText": "Si l'on éclaire les fentes d'Young en lumière blanche : 1. Au centre O (delta = 0), la différence de marche est nulle pour TOUTES les longueurs d'onde : toutes les couleurs interfèrent constructivement, donnant une frange centrale d'un BLANC éclatant. 2. De part et d'autre, l'interfrange i = lambda.D/a dépend de la longueur d'onde : les franges violettes (plus serrées) et rouges (plus écartées) se décalent, créant de magnifiques bandes irisées (blanc supérieur, franges irisées bordées de bleu à l'intérieur et de rouge à l'extérieur). 3. À grande distance du centre, le chevauchement d'une multitude d'ordres différents reconstitue un 'blanc d'ordre supérieur'.",
           "exercise": {
-            "id": "p3_s4_qcm",
+            "id": "phys_tle_cd_15_p3_s4_qcm",
             "type": "mcq",
             "prompt": "Lorsqu'on réalise l'expérience des fentes d'Young en lumière blanche, quelle est la couleur de la frange centrale d'ordre k = 0 ?",
             "options": [
@@ -793,7 +793,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Attention piège",
           "paragraphText": "Si la fente source primaire S n'est pas rigoureusement équidistante des deux fentes secondaires S₁ et S₂ (S déplacée transversalement d'une distance s), la différence de marche initiale n'est plus nulle. Toute la figure d'interférences sur l'écran subit une translation latérale sans être déformée. Pour maintenir la frange centrale au centre de l'écran, la source S doit se trouver sur le plan médiateur de [S₁S₂].",
           "exercise": {
-            "id": "p3_s5_qcm",
+            "id": "phys_tle_cd_15_p3_s5_qcm",
             "type": "mcq",
             "prompt": "Si l'on déplace la source primaire S vers le haut parallèlement au plan des fentes, dans quel sens se déplace l'ensemble des franges sur l'écran d'observation ?",
             "options": [
@@ -814,7 +814,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Loi de conservation",
           "paragraphText": "Les interférences lumineuses ne créent ni ne détruisent d'énergie lumineuse : elles ne font que REDISTRIBUER spatialement l'énergie. L'énergie qui a 'disparu' des franges sombres (où l'intensité est nulle) se retrouve intégralement concentrée dans les franges brillantes (où l'intensité vaut 4.I₀ au lieu de 2.I₀). L'intensité moyenne calculée sur une période spatiale est rigoureusement égale à 2.I₀, c'est-à-dire la somme des intensités fournies par les deux fentes séparées.",
           "exercise": {
-            "id": "p3_s6_qcm",
+            "id": "phys_tle_cd_15_p3_s6_qcm",
             "type": "mcq",
             "prompt": "Que devient l'énergie lumineuse qui semble 'manquer' dans les franges sombres d'interférences ?",
             "options": [
@@ -835,7 +835,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Interférence quantique",
           "paragraphText": "Si l'on atténue le faisceau laser au point qu'un seul photon à la fois traverse le dispositif des fentes d'Young, chaque photon individuel heurte l'écran en un point précis sous forme d'un impact localisé (comportement corpusculaire). Cependant, au fur et à mesure que les impacts de milliers de photons individuels s'accumulent au cours du temps, la distribution statistique des impacts dessine parfaitement les franges d'interférences ondulatoires ! Chaque photon individuel interfère 'avec lui-même' à travers les deux fentes.",
           "exercise": {
-            "id": "p3_s7_qcm",
+            "id": "phys_tle_cd_15_p3_s7_qcm",
             "type": "mcq",
             "prompt": "Dans une expérience de fentes d'Young réalisée en envoyant les photons un par un à intervalles de temps espacés, qu'observe-t-on sur la plaque détectrice après l'enregistrement de 100 000 photons ?",
             "options": [
@@ -851,7 +851,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
       ],
       "exercises": [
         {
-          "id": "p3_s1_qcm",
+          "id": "phys_tle_cd_15_p3_s1_qcm",
           "type": "mcq",
           "prompt": "Pourquoi est-il rigoureusement impossible d'observer des interférences stables en utilisant deux ampoules à incandescence distinctes placées côte à côte ?",
           "options": [
@@ -864,7 +864,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Deux sources lumineuses distinctes sont mutuellement incohérentes : chaque atome de chaque filament émet des trains d'ondes indépendants d'une durée de vie de 10⁻¹⁰ s avec une phase aléatoire. L'œil ou les capteurs n'enregistrent qu'une moyenne temporelle uniforme sans aucun contraste de franges."
         },
         {
-          "id": "p3_s2_qcm",
+          "id": "phys_tle_cd_15_p3_s2_qcm",
           "type": "mcq",
           "prompt": "Comment qualifie-t-on la méthode utilisée dans les fentes d'Young pour produire deux sources cohérentes à partir d'une seule onde incidente ?",
           "options": [
@@ -877,7 +877,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Les fentes d'Young découpent deux portions distinctes du même front d'onde spatial incident : c'est un système interférentiel par 'division du front d'onde' (par opposition aux interféromètres de Michelson qui procèdent par division d'amplitude avec une lame semi-réfléchissante)."
         },
         {
-          "id": "p3_s3_qcm",
+          "id": "phys_tle_cd_15_p3_s3_qcm",
           "type": "mcq",
           "prompt": "Que se trouve-t-il exactement au centre géométrique O d'un écran d'Young classique symétrique ?",
           "options": [
@@ -890,7 +890,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Sur le plan médiateur des deux fentes, la différence de marche est nulle (delta = 0) : les deux ondes vibrent en phase, formant le centre de la frange brillante d'ordre zéro."
         },
         {
-          "id": "p3_s4_qcm",
+          "id": "phys_tle_cd_15_p3_s4_qcm",
           "type": "mcq",
           "prompt": "Lorsqu'on réalise l'expérience des fentes d'Young en lumière blanche, quelle est la couleur de la frange centrale d'ordre k = 0 ?",
           "options": [
@@ -903,7 +903,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Au centre O, delta = 0 pour toutes les longueurs d'onde du spectre visible : toutes les couleurs ont simultanément leur maximum d'intensité, ce qui recompose une frange d'un blanc pur."
         },
         {
-          "id": "p3_s5_qcm",
+          "id": "phys_tle_cd_15_p3_s5_qcm",
           "type": "mcq",
           "prompt": "Si l'on déplace la source primaire S vers le haut parallèlement au plan des fentes, dans quel sens se déplace l'ensemble des franges sur l'écran d'observation ?",
           "options": [
@@ -916,7 +916,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Déplacer la source vers le haut allonge le trajet SS₁ et raccourcit SS₂. Pour compenser ce décalage et rétablir delta = 0, le point d'observation sur l'écran doit se déplacer vers le bas : les franges se déplacent en sens inverse de la source."
         },
         {
-          "id": "p3_s6_qcm",
+          "id": "phys_tle_cd_15_p3_s6_qcm",
           "type": "mcq",
           "prompt": "Que devient l'énergie lumineuse qui semble 'manquer' dans les franges sombres d'interférences ?",
           "options": [
@@ -929,7 +929,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "L'énergie est strictement conservée : les zones sombres résultent d'interférences destructives locales qui transfèrent la puissance lumineuse vers les zones brillantes, portant l'intensité maximale à 4.I₀ pour une moyenne de 2.I₀."
         },
         {
-          "id": "p3_s7_qcm",
+          "id": "phys_tle_cd_15_p3_s7_qcm",
           "type": "mcq",
           "prompt": "Dans une expérience de fentes d'Young réalisée en envoyant les photons un par un à intervalles de temps espacés, qu'observe-t-on sur la plaque détectrice après l'enregistrement de 100 000 photons ?",
           "options": [
@@ -1038,7 +1038,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Définition géométrique",
           "paragraphText": "La différence de marche géométrique (notée delta) entre deux ondes synchrones issues de sources S₁ et S₂ et se rencontrant en un point P est la différence des distances parcourues dans le vide (ou dans l'air d'indice n ≈ 1) : delta = S₂P - S₁P. Elle s'exprime en mètres. Elle mesure le retard spatial de l'une des ondes sur l'autre lors de leur propagation.",
           "exercise": {
-            "id": "p4_s1_qcm",
+            "id": "phys_tle_cd_15_p4_s1_qcm",
             "type": "mcq",
             "prompt": "Si en un point P de l'écran, le trajet S₁P mesure 1,500000 m et le trajet S₂P mesure 1,500900 m, quelle est la différence de marche delta en nanomètres ?",
             "options": [
@@ -1059,7 +1059,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Démonstration classique",
           "paragraphText": "En repère cartésien avec l'axe (Oy) sur l'écran et (Ox) orthogonal au plan des fentes : S₁ a pour coordonnées (0, +a/2) et S₂ (0, -a/2). Le point P est en (D, y). D'après le théorème de Pythagore : S₁P² = D² + (y - a/2)² et S₂P² = D² + (y + a/2)². On en déduit : S₂P² - S₁P² = (S₂P - S₁P)(S₂P + S₁P) = [D² + (y + a/2)²] - [D² + (y - a/2)²] = 2.a.y. Comme a << D et y << D, on a S₂P + S₁P ≈ 2D. Par conséquent : S₂P - S₁P = delta = (2.a.y) / (2D) = a.y / D.",
           "exercise": {
-            "id": "p4_s2_qcm",
+            "id": "phys_tle_cd_15_p4_s2_qcm",
             "type": "mcq",
             "prompt": "Dans la démonstration de delta = a.y / D, quelle hypothèse géométrique justifie l'approximation S₂P + S₁P ≈ 2D ?",
             "options": [
@@ -1080,7 +1080,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Franges brillantes",
           "paragraphText": "Deux ondes sinusoïdales interfèrent de manière rigoureusement constructive lorsque leurs ébranlements oscillent en phase parfaite : leur déphasage est un multiple entier de 2.pi (Δphi = 2.k.pi). Sachant que Δphi = (2.pi / lambda) * delta, la condition s'écrit : (2.pi / lambda) * delta = 2.k.pi <=> delta = k * lambda (avec k in Z). En remplaçant delta par a.y/D : a.y/D = k.lambda => y_b = k * (lambda.D / a).",
           "exercise": {
-            "id": "p4_s3_qcm",
+            "id": "phys_tle_cd_15_p4_s3_qcm",
             "type": "mcq",
             "prompt": "Pour une lumière de longueur d'onde lambda = 500 nm, quelle valeur de la différence de marche delta produit la 3ème frange brillante située au-dessus de la frange centrale ?",
             "options": [
@@ -1101,7 +1101,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Franges sombres",
           "paragraphText": "Deux ondes interfèrent de manière totalement destructive lorsque leurs ébranlements oscillent en opposition de phase : leur déphasage est un multiple impair de pi : Δphi = (2k + 1).pi. La différence de marche correspondante est un multiple demi-entier de la longueur d'onde : delta = (2k + 1) * (lambda / 2) = (k + 1/2) * lambda (avec k in Z). La position des franges sombres sur l'écran est donc : y_s = (k + 1/2) * (lambda.D / a). La première frange sombre (k = 0) se situe à y = 0,5 * (lambda.D / a).",
           "exercise": {
-            "id": "p4_s4_qcm",
+            "id": "phys_tle_cd_15_p4_s4_qcm",
             "type": "mcq",
             "prompt": "Quelle est la différence de marche delta au centre de la 1ère frange sombre supérieure pour lambda = 600 nm ?",
             "options": [
@@ -1122,7 +1122,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Attention piège",
           "paragraphText": "Attention au piège classique de numérotation ! Pour les franges brillantes, l'indice k correspond directement au nom de la frange : k = 1 est la 1ère frange brillante, k = 2 est la 2ème frange brillante. En revanche, pour les franges sombres d'équation y = (k + 1/2).i : la 1ère frange sombre supérieure correspond à k = 0 (y = 0,5.i), la 2ème frange sombre correspond à k = 1 (y = 1,5.i), et la 3ème frange sombre correspond à k = 2 (y = 2,5.i) ! La n-ième frange sombre a donc pour coordonnée y = (n - 0,5).i.",
           "exercise": {
-            "id": "p4_s5_qcm",
+            "id": "phys_tle_cd_15_p4_s5_qcm",
             "type": "mcq",
             "prompt": "À quelle distance du centre O se trouve la 4ème frange sombre si l'interfrange vaut i = 2,0 mm ?",
             "options": [
@@ -1143,7 +1143,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Grandeur scalaire",
           "paragraphText": "En un point quelconque P de l'écran (qui n'est pas forcément sur le centre d'une frange), on définit l'ordre d'interférence p (ou k) comme le rapport réel p = delta / lambda = a.y / (lambda.D). Si p est un entier (p in Z), P est le centre d'une frange brillante. Si p est un demi-entier (p = k + 0,5 avec k in Z), P est le centre d'une frange sombre. Si p est une valeur intermédiaire quelconque (ex. p = 1,23), P est situé dans une zone d'éclairement intermédiaire entre clair et sombre.",
           "exercise": {
-            "id": "p4_s6_qcm",
+            "id": "phys_tle_cd_15_p4_s6_qcm",
             "type": "mcq",
             "prompt": "Au point P d'un écran d'Young, la différence de marche vaut delta = 1,75.10⁻⁶ m pour une longueur d'onde lambda = 500 nm. Quel est l'ordre d'interférence p et l'état d'éclairement au point P ?",
             "options": [
@@ -1164,7 +1164,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Calcul global",
           "paragraphText": "Sur un écran de largeur totale W = 6,0 cm centré sur l'axe optique (s'étendant de y = -3,0 cm à y = +3,0 cm) avec un interfrange i = 2,5 mm : le nombre total d'interfranges contenus dans la demi-largeur est y_max / i = 30 mm / 2,5 mm = 12 interfranges. Il y a donc la frange centrale k = 0, plus 12 franges brillantes vers le haut et 12 vers le bas, soit au total N_b = 2 * 12 + 1 = 25 franges brillantes visibles.",
           "exercise": {
-            "id": "p4_s7_qcm",
+            "id": "phys_tle_cd_15_p4_s7_qcm",
             "type": "mcq",
             "prompt": "Combien de franges brillantes au total peut-on observer sur une zone d'écran de largeur 40 mm centrée en O si l'interfrange vaut i = 3,0 mm ?",
             "options": [
@@ -1180,7 +1180,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
       ],
       "exercises": [
         {
-          "id": "p4_s1_qcm",
+          "id": "phys_tle_cd_15_p4_s1_qcm",
           "type": "mcq",
           "prompt": "Si en un point P de l'écran, le trajet S₁P mesure 1,500000 m et le trajet S₂P mesure 1,500900 m, quelle est la différence de marche delta en nanomètres ?",
           "options": [
@@ -1193,7 +1193,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "delta = S₂P - S₁P = 1,500900 m - 1,500000 m = 0,000900 m = 9,00.10⁻⁴ m = 900 nm."
         },
         {
-          "id": "p4_s2_qcm",
+          "id": "phys_tle_cd_15_p4_s2_qcm",
           "type": "mcq",
           "prompt": "Dans la démonstration de delta = a.y / D, quelle hypothèse géométrique justifie l'approximation S₂P + S₁P ≈ 2D ?",
           "options": [
@@ -1206,7 +1206,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Puisque D vaut typiquement 1 à 2 mètres alors que a et y sont de l'ordre du millimètre, S₁P et S₂P diffèrent de D de moins de quelques parties par million : S₁P + S₂P ≈ D + D = 2D."
         },
         {
-          "id": "p4_s3_qcm",
+          "id": "phys_tle_cd_15_p4_s3_qcm",
           "type": "mcq",
           "prompt": "Pour une lumière de longueur d'onde lambda = 500 nm, quelle valeur de la différence de marche delta produit la 3ème frange brillante située au-dessus de la frange centrale ?",
           "options": [
@@ -1219,7 +1219,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Pour la 3ème frange brillante, k = 3. La différence de marche vaut delta = k * lambda = 3 * 500 nm = 1 500 nm."
         },
         {
-          "id": "p4_s4_qcm",
+          "id": "phys_tle_cd_15_p4_s4_qcm",
           "type": "mcq",
           "prompt": "Quelle est la différence de marche delta au centre de la 1ère frange sombre supérieure pour lambda = 600 nm ?",
           "options": [
@@ -1232,7 +1232,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Pour la 1ère frange sombre (k = 0), la différence de marche vaut delta = (0 + 1/2) * lambda = lambda / 2 = 600 / 2 = 300 nm."
         },
         {
-          "id": "p4_s5_qcm",
+          "id": "phys_tle_cd_15_p4_s5_qcm",
           "type": "mcq",
           "prompt": "À quelle distance du centre O se trouve la 4ème frange sombre si l'interfrange vaut i = 2,0 mm ?",
           "options": [
@@ -1245,7 +1245,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "La 1ère sombre est à 0,5*i ; la 2ème à 1,5*i ; la 3ème à 2,5*i ; et la 4ème frange sombre se trouve à y = 3,5 * i = 3,5 * 2,0 mm = 7,0 mm."
         },
         {
-          "id": "p4_s6_qcm",
+          "id": "phys_tle_cd_15_p4_s6_qcm",
           "type": "mcq",
           "prompt": "Au point P d'un écran d'Young, la différence de marche vaut delta = 1,75.10⁻⁶ m pour une longueur d'onde lambda = 500 nm. Quel est l'ordre d'interférence p et l'état d'éclairement au point P ?",
           "options": [
@@ -1258,7 +1258,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "p = delta / lambda = 1750 nm / 500 nm = 3,5 = 3 + 1/2. Comme p est un demi-entier, c'est une extinction sombre : il s'agit de la 4ème frange sombre supérieure (k = 3)."
         },
         {
-          "id": "p4_s7_qcm",
+          "id": "phys_tle_cd_15_p4_s7_qcm",
           "type": "mcq",
           "prompt": "Combien de franges brillantes au total peut-on observer sur une zone d'écran de largeur 40 mm centrée en O si l'interfrange vaut i = 3,0 mm ?",
           "options": [
@@ -1355,7 +1355,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Définition",
           "paragraphText": "L'interfrange (noté i) est la distance séparant deux franges brillantes consécutives ou deux franges sombres consécutives. C'est la période spatiale de la figure d'interférences sur l'écran d'observation. Elle s'exprime dans le Système International en mètres (m), mais est couramment mesurée en millimètres (mm). La formule théorique est : i = (lambda * D) / a.",
           "exercise": {
-            "id": "p5_s1_qcm",
+            "id": "phys_tle_cd_15_p5_s1_qcm",
             "type": "mcq",
             "prompt": "On utilise deux fentes distantes de a = 0,20 mm avec un laser rouge (lambda = 640 nm) et un écran à D = 1,50 m. Quelle est la valeur numérique de l'interfrange i ?",
             "options": [
@@ -1376,7 +1376,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Méthode expérimentale",
           "paragraphText": "Pour limiter l'erreur de parallaxe et l'incertitude liée à l'épaisseur de la pointe de repérage, on ne mesure jamais un seul interfrange. Le protocole rigoureux consiste à : 1. Repérer le milieu de la frange brillante d'ordre k₁. 2. Compter n intervalles d'interfranges pour atteindre la frange d'ordre k₂ = k₁ + n (ex. 5 à 10 franges). 3. Mesurer la distance totale L entre ces deux repères. 4. Calculer l'interfrange moyen : i = L / n. L'incertitude absolue sur i est ainsi divisée par n : Δi = ΔL / n.",
           "exercise": {
-            "id": "p5_s2_qcm",
+            "id": "phys_tle_cd_15_p5_s2_qcm",
             "type": "mcq",
             "prompt": "Un élève repère 11 franges brillantes consécutives sur son écran et mesure une distance totale L = 22,0 mm entre la première et la onzième frange. Quel est le nombre d'interfranges n et la valeur de i ?",
             "options": [
@@ -1397,7 +1397,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Propriété spectrale",
           "paragraphText": "Puisque l'interfrange est directement proportionnel à lambda (i ~ lambda) : pour un même montage à fentes d'Young, le passage d'une diode laser violette (lambda₁ = 405 nm) à une diode laser rouge (lambda₂ = 810 nm, proche IR) double exactement la valeur de l'interfrange : i₂ = 2 * i₁. Si l'on superpose deux faisceaux monochromatiques bleu et rouge, on observe des coïncidences périodiques de franges brillantes tous les N interfranges.",
           "exercise": {
-            "id": "p5_s3_qcm",
+            "id": "phys_tle_cd_15_p5_s3_qcm",
             "type": "mcq",
             "prompt": "On éclaire simultanément les fentes d'Young par deux radiations monochromatiques : une bleue (lambda_B = 480 nm) et une jaune (lambda_J = 600 nm). À quelle position la frange brillante jaune d'ordre k_J coïncide-t-elle avec une frange brillante bleue d'ordre k_B pour la première fois en dehors du centre O ?",
             "options": [
@@ -1418,7 +1418,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Attention piège",
           "paragraphText": "Lors du calcul de lambda = (a * i) / D : l'écartement 'a' et l'interfrange 'i' sont généralement fournis en millimètres (mm) ou micromètres (µm), tandis que D est en mètres (m). Il est impératif de tout convertir en mètres avant d'effectuer les opérations : a(m) = a(mm) * 10⁻³, i(m) = i(mm) * 10⁻³. Oublier une seule conversion conduit à des longueurs d'onde aberrantes décalées de plusieurs ordres de grandeur.",
           "exercise": {
-            "id": "p5_s4_qcm",
+            "id": "phys_tle_cd_15_p5_s4_qcm",
             "type": "mcq",
             "prompt": "On donne a = 0,30 mm, i = 3,5 mm et D = 2,1 m. Quelle est la valeur correcte de la longueur d'onde lambda en nanomètres ?",
             "options": [
@@ -1439,7 +1439,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Milieu matériel",
           "paragraphText": "Si l'on immerge l'ensemble du dispositif des fentes d'Young dans un milieu transparent d'indice de réfraction n (par exemple dans l'eau où n = 1,33), la fréquence nu reste inchangée mais la vitesse de la lumière diminue (v = c/n) et la longueur d'onde dans le milieu devient lambda_n = lambda / n. L'interfrange devient alors : i_n = (lambda_n * D) / a = i / n. Dans l'eau, les franges sont donc 1,33 fois plus serrées que dans l'air !",
           "exercise": {
-            "id": "p5_s5_qcm",
+            "id": "phys_tle_cd_15_p5_s5_qcm",
             "type": "mcq",
             "prompt": "L'interfrange dans l'air vaut i = 4,0 mm. Si l'on remplit l'espace entre les fentes et l'écran avec un liquide d'indice de réfraction n = 1,60, que devient la valeur de l'interfrange ?",
             "options": [
@@ -1460,7 +1460,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Application métrologique",
           "paragraphText": "Si l'on interpose sur le trajet du faisceau passant par S₁ une lame mince transparente d'épaisseur e et d'indice de réfraction n > 1, le trajet optique à travers la lame est augmenté de (n - 1)*e. Toute la figure d'interférences se décale alors latéralement d'un nombre de franges N tel que : (n - 1)*e = N * lambda. En comptant le nombre N de franges ayant défilé, on peut mesurer l'épaisseur e d'une membrane biologique ou d'un film plastique avec une précision nanométrique !",
           "exercise": {
-            "id": "p5_s6_qcm",
+            "id": "phys_tle_cd_15_p5_s6_qcm",
             "type": "mcq",
             "prompt": "L'interposition d'une fine feuille de verre d'indice n = 1,50 devant l'une des fentes provoque le défilement de N = 10 franges d'interférences sous un laser de lambda = 600 nm. Quelle est l'épaisseur e de cette lame de verre ?",
             "options": [
@@ -1481,7 +1481,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Haute résolution",
           "paragraphText": "En multipliant le nombre de fentes parallèles équidistantes (N = plusieurs centaines à milliers de fentes par millimètre), on obtient un réseau de diffraction. Les interférences à N ondes rendent les raies d'interférences infiniment fines, intenses et séparées par de larges zones sombres. Les réseaux constituent le composant dispersif essentiel des spectromètres modernes pour analyser les gaz polluants et la lumière des étoiles.",
           "exercise": {
-            "id": "p5_s7_qcm",
+            "id": "phys_tle_cd_15_p5_s7_qcm",
             "type": "mcq",
             "prompt": "Un réseau de diffraction comporte n = 500 traits par millimètre. Quel est le pas du réseau 'a' (distance entre deux fentes consécutives) ?",
             "options": [
@@ -1497,7 +1497,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
       ],
       "exercises": [
         {
-          "id": "p5_s1_qcm",
+          "id": "phys_tle_cd_15_p5_s1_qcm",
           "type": "mcq",
           "prompt": "On utilise deux fentes distantes de a = 0,20 mm avec un laser rouge (lambda = 640 nm) et un écran à D = 1,50 m. Quelle est la valeur numérique de l'interfrange i ?",
           "options": [
@@ -1510,7 +1510,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "i = (lambda * D) / a = (640.10⁻⁹ m * 1,50 m) / (0,20.10⁻³ m) = 9,60.10⁻⁷ / 2,0.10⁻⁴ = 4,80.10⁻³ m = 4,80 mm."
         },
         {
-          "id": "p5_s2_qcm",
+          "id": "phys_tle_cd_15_p5_s2_qcm",
           "type": "mcq",
           "prompt": "Un élève repère 11 franges brillantes consécutives sur son écran et mesure une distance totale L = 22,0 mm entre la première et la onzième frange. Quel est le nombre d'interfranges n et la valeur de i ?",
           "options": [
@@ -1523,7 +1523,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Entre 11 poteaux consécutifs, il y a 10 intervalles (n = 11 - 1 = 10). L'interfrange vaut donc i = L / n = 22,0 mm / 10 = 2,20 mm. C'est le piège classique des piquets et des intervalles !"
         },
         {
-          "id": "p5_s3_qcm",
+          "id": "phys_tle_cd_15_p5_s3_qcm",
           "type": "mcq",
           "prompt": "On éclaire simultanément les fentes d'Young par deux radiations monochromatiques : une bleue (lambda_B = 480 nm) et une jaune (lambda_J = 600 nm). À quelle position la frange brillante jaune d'ordre k_J coïncide-t-elle avec une frange brillante bleue d'ordre k_B pour la première fois en dehors du centre O ?",
           "options": [
@@ -1536,7 +1536,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Pour qu'il y ait coïncidence en un point y : y = k_B * i_B = k_J * i_J => k_B * lambda_B = k_J * lambda_J => k_B / k_J = lambda_J / lambda_B = 600 / 480 = 5 / 4. La première coïncidence non nulle a lieu pour k_B = 5 et k_J = 4."
         },
         {
-          "id": "p5_s4_qcm",
+          "id": "phys_tle_cd_15_p5_s4_qcm",
           "type": "mcq",
           "prompt": "On donne a = 0,30 mm, i = 3,5 mm et D = 2,1 m. Quelle est la valeur correcte de la longueur d'onde lambda en nanomètres ?",
           "options": [
@@ -1549,7 +1549,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "lambda = (a * i) / D = (0,30.10⁻³ m * 3,5.10⁻³ m) / 2,1 m = 1,05.10⁻⁶ / 2,1 = 5,00.10⁻⁷ m = 500 nm."
         },
         {
-          "id": "p5_s5_qcm",
+          "id": "phys_tle_cd_15_p5_s5_qcm",
           "type": "mcq",
           "prompt": "L'interfrange dans l'air vaut i = 4,0 mm. Si l'on remplit l'espace entre les fentes et l'écran avec un liquide d'indice de réfraction n = 1,60, que devient la valeur de l'interfrange ?",
           "options": [
@@ -1562,7 +1562,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "i_liquide = i_air / n = 4,0 mm / 1,60 = 2,5 mm."
         },
         {
-          "id": "p5_s6_qcm",
+          "id": "phys_tle_cd_15_p5_s6_qcm",
           "type": "mcq",
           "prompt": "L'interposition d'une fine feuille de verre d'indice n = 1,50 devant l'une des fentes provoque le défilement de N = 10 franges d'interférences sous un laser de lambda = 600 nm. Quelle est l'épaisseur e de cette lame de verre ?",
           "options": [
@@ -1575,7 +1575,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "La variation de chemin optique est Δdelta = (n - 1)*e = N * lambda => e = (N * lambda) / (n - 1) = (10 * 600.10⁻⁹ m) / (1,50 - 1) = 6,00.10⁻⁶ / 0,50 = 1,20.10⁻⁵ m = 12 µm."
         },
         {
-          "id": "p5_s7_qcm",
+          "id": "phys_tle_cd_15_p5_s7_qcm",
           "type": "mcq",
           "prompt": "Un réseau de diffraction comporte n = 500 traits par millimètre. Quel est le pas du réseau 'a' (distance entre deux fentes consécutives) ?",
           "options": [
@@ -1700,7 +1700,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Définition vectorielle",
           "paragraphText": "Une onde électromagnétique est la propagation spatio-temporelle d'un champ électrique E et d'un champ magnétique B couplés par les équations de Maxwell. Dans une onde progressive plane se propageant dans le vide selon l'axe Oz : le champ électrique E et le champ magnétique B oscillent en phase, sont perpendiculaires entre eux (E orthogonal à B) et perpendiculaires à la direction de propagation Oz. Le trièdre (E, B, v) est un trièdre direct. Le rapport des amplitudes dans le vide est invariant : E_m / B_m = c.",
           "exercise": {
-            "id": "p6_s1_qcm",
+            "id": "phys_tle_cd_15_p6_s1_qcm",
             "type": "mcq",
             "prompt": "Dans une onde électromagnétique se propageant dans le vide, quelle relation lie l'amplitude du champ électrique E_m à celle du champ magnétique B_m ?",
             "options": [
@@ -1721,7 +1721,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Constante universelle",
           "paragraphText": "Contrairement aux ondes mécaniques (son, vagues) qui requièrent obligatoirement un milieu matériel support (air, eau, solide) pour osciller et se propager, les ondes électromagnétiques se propagent parfaitement dans le vide absolu. Leur vitesse dans le vide est une constante fondamentale universelle : c = 1 / sqrt(mu_0 * epsilon_0) ≈ 299 792 458 m/s, fixée conventionnellement à c = 3,00.10⁸ m/s. Dans l'air, la vitesse est quasiment identique (v_air ≈ c / 1,0003 ≈ c).",
           "exercise": {
-            "id": "p6_s2_qcm",
+            "id": "phys_tle_cd_15_p6_s2_qcm",
             "type": "mcq",
             "prompt": "Combien de temps met un signal radioélectrique émis depuis la Terre pour atteindre un robot explorateur situé sur Mars à une distance d = 1,5.10⁸ km ?",
             "options": [
@@ -1742,7 +1742,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Formule universelle",
           "paragraphText": "Une onde électromagnétique sinusoïdale présente une double périodicité : 1. Une périodicité temporelle définie par sa période T (en secondes) et sa fréquence nu = 1/T (en Hertz, Hz). 2. Une périodicité spatiale définie par sa longueur d'onde lambda (en mètres), distance parcourue par l'onde pendant une période temporelle T : lambda = c * T = c / nu. La fréquence nu est invariante quel que soit le milieu traversé, tandis que la longueur d'onde diminue dans un milieu d'indice n : lambda_milieu = lambda_vide / n.",
           "exercise": {
-            "id": "p6_s3_qcm",
+            "id": "phys_tle_cd_15_p6_s3_qcm",
             "type": "mcq",
             "prompt": "Une station radio émet sur la bande FM à la fréquence nu = 98,5 MHz. Quelle est la longueur d'onde lambda de cette onde dans l'air ?",
             "options": [
@@ -1763,7 +1763,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Attention piège",
           "paragraphText": "Une confusion fréquente est d'assimiler les ondes sonores et les ondes radio. Une onde sonore est une onde MÉCANIQUE longitudinale de pression : elle ne peut pas se propager dans le vide spatial et sa vitesse dans l'air n'est que de 340 m/s. Une onde radio est une onde ÉLECTROMAGNÉTIQUE transversale : elle se propage dans le vide à 300 000 km/s ! Lorsqu'un astronaute parle sur la Lune, sa voix est convertie par un microphone en onde radioélectrique pour franchir le vide spatial et atteindre la Terre.",
           "exercise": {
-            "id": "p6_s4_qcm",
+            "id": "phys_tle_cd_15_p6_s4_qcm",
             "type": "mcq",
             "prompt": "Dans le vide spatial interstellaire, laquelle de ces deux ondes peut se propager ?",
             "options": [
@@ -1784,7 +1784,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Frontière biologique",
           "paragraphText": "Le spectre électromagnétique est séparé en deux catégories biologiques majeures selon l'énergie de leurs photons individuels E = h.nu : 1. Les rayonnements non-ionisants (ondes radio, micro-ondes, infrarouges, lumière visible, UV proches) : E < 10 eV. Leurs photons ne possèdent pas l'énergie suffisante pour arracher des électrons aux atomes des molécules vivantes ; leurs effets sont purement thermiques (échauffement macroscopique). 2. Les rayonnements ionisants (UV lointains, rayons X, rayons gamma) : E > 10 eV à plusieurs MeV. Leurs photons arrachent des électrons et brisent les molécules d'ADN, exigeant une radioprotection stricte.",
           "exercise": {
-            "id": "p6_s5_qcm",
+            "id": "phys_tle_cd_15_p6_s5_qcm",
             "type": "mcq",
             "prompt": "Pourquoi les ondes Wi-Fi (2,4 GHz) et la lumière d'une lampe de salon ne peuvent-elles en aucun cas provoquer de mutations génétiques radio-induites dans les cellules vivantes ?",
             "options": [
@@ -1805,7 +1805,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Grande unification",
           "paragraphText": "En 1924, le physicien français Louis de Broglie généralise la dualité onde-corpuscule en postulant que toute particule matérielle en mouvement (comme un électron ou un neutron) possède également une onde de matière associée dont la longueur d'onde est donnée par la relation : lambda_{dB} = h / p = h / (m.v). De la même manière que la lumière ondule lors de sa propagation (diffraction) et corpuscule lors de ses échanges (effet photoélectrique), des faisceaux d'électrons accélérés produisent des figures de diffraction à travers des réseaux cristallins (microscope électronique).",
           "exercise": {
-            "id": "p6_s6_qcm",
+            "id": "phys_tle_cd_15_p6_s6_qcm",
             "type": "mcq",
             "prompt": "Quelle est la longueur d'onde de de Broglie associée à un électron accéléré à la vitesse v = 1,0.10⁶ m/s ? (m_e = 9,11.10⁻³¹ kg ; h = 6,63.10⁻³⁴ J.s)",
             "options": [
@@ -1826,7 +1826,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepBadge": "Récapitulatif de fin de leçon",
           "paragraphText": "La diffraction et les interférences démontrent sans équivoque la nature ondulatoire de la lumière. L'écart angulaire de diffraction theta = lambda / a et l'interfrange d'Young i = lambda.D / a fournissent des outils métrologiques d'une précision inégalée pour mesurer des longueurs d'onde nanométriques ou des structures micrométriques. Conjugué au modèle corpusculaire du photon, le modèle ondulatoire de Maxwell forme la vision moderne complète de la lumière, pierre angulaire de toutes les télécommunications et technologies optoélectroniques.",
           "exercise": {
-            "id": "p6_s7_qcm",
+            "id": "phys_tle_cd_15_p6_s7_qcm",
             "type": "mcq",
             "prompt": "Quel ensemble de phénomènes optiques suffit à prouver de manière irréfutable que la lumière se comporte comme une onde lors de sa propagation spatiale ?",
             "options": [
@@ -1842,7 +1842,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
       ],
       "exercises": [
         {
-          "id": "p6_s1_qcm",
+          "id": "phys_tle_cd_15_p6_s1_qcm",
           "type": "mcq",
           "prompt": "Dans une onde électromagnétique se propageant dans le vide, quelle relation lie l'amplitude du champ électrique E_m à celle du champ magnétique B_m ?",
           "options": [
@@ -1855,7 +1855,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "D'après les équations de Maxwell dans le vide, les amplitudes sont reliées par la célérité c de la lumière : E_m = c * B_m (avec E en V/m, B en Tesla et c en m/s)."
         },
         {
-          "id": "p6_s2_qcm",
+          "id": "phys_tle_cd_15_p6_s2_qcm",
           "type": "mcq",
           "prompt": "Combien de temps met un signal radioélectrique émis depuis la Terre pour atteindre un robot explorateur situé sur Mars à une distance d = 1,5.10⁸ km ?",
           "options": [
@@ -1868,7 +1868,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "d = 1,5.10⁸ km = 1,5.10¹¹ m. Le temps de parcours à la vitesse de la lumière est t = d / c = 1,5.10¹¹ m / (3,00.10⁸ m/s) = 500 secondes, soit 8 minutes et 20 secondes."
         },
         {
-          "id": "p6_s3_qcm",
+          "id": "phys_tle_cd_15_p6_s3_qcm",
           "type": "mcq",
           "prompt": "Une station radio émet sur la bande FM à la fréquence nu = 98,5 MHz. Quelle est la longueur d'onde lambda de cette onde dans l'air ?",
           "options": [
@@ -1881,7 +1881,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "lambda = c / nu = (3,00.10⁸ m/s) / (98,5.10⁶ s⁻¹) ≈ 3,046 m ≈ 3,05 m."
         },
         {
-          "id": "p6_s4_qcm",
+          "id": "phys_tle_cd_15_p6_s4_qcm",
           "type": "mcq",
           "prompt": "Dans le vide spatial interstellaire, laquelle de ces deux ondes peut se propager ?",
           "options": [
@@ -1894,7 +1894,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "Le son étant une onde mécanique nécessitant un support matériel élastique (molécules d'air), il ne se propage absolument pas dans le vide. La lumière et les ondes radio sont électromagnétiques et se propagent librement dans le vide à la vitesse c."
         },
         {
-          "id": "p6_s5_qcm",
+          "id": "phys_tle_cd_15_p6_s5_qcm",
           "type": "mcq",
           "prompt": "Pourquoi les ondes Wi-Fi (2,4 GHz) et la lumière d'une lampe de salon ne peuvent-elles en aucun cas provoquer de mutations génétiques radio-induites dans les cellules vivantes ?",
           "options": [
@@ -1907,7 +1907,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "L'effet mutagène ou ionisant dépend exclusivement de l'énergie d'un photon individuel E = h.nu. Pour le Wi-Fi (E ~ 10 µeV) ou le visible (E ~ 2 à 3 eV), les photons sont incapables d'ioniser un atome ou de casser une liaison covalente de l'ADN."
         },
         {
-          "id": "p6_s6_qcm",
+          "id": "phys_tle_cd_15_p6_s6_qcm",
           "type": "mcq",
           "prompt": "Quelle est la longueur d'onde de de Broglie associée à un électron accéléré à la vitesse v = 1,0.10⁶ m/s ? (m_e = 9,11.10⁻³¹ kg ; h = 6,63.10⁻³⁴ J.s)",
           "options": [
@@ -1920,7 +1920,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "explanation": "lambda = h / (m_e * v) = 6,63.10⁻³⁴ / (9,11.10⁻³¹ * 1,0.10⁶) = 6,63.10⁻³⁴ / 9,11.10⁻²⁵ ≈ 7,28.10⁻¹⁰ m = 0,728 nm. Cette longueur d'onde est du même ordre que la distance interatomique dans un cristal, ce qui permet la diffraction électronique."
         },
         {
-          "id": "p6_s7_qcm",
+          "id": "phys_tle_cd_15_p6_s7_qcm",
           "type": "mcq",
           "prompt": "Quel ensemble de phénomènes optiques suffit à prouver de manière irréfutable que la lumière se comporte comme une onde lors de sa propagation spatiale ?",
           "options": [

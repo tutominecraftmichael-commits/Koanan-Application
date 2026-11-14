@@ -1014,14 +1014,19 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = ''
   if (!segments) return null;
 
   if (typeof segments === 'string') {
-    return <span className={className}>{renderTextWithStackedFractions(segments)}</span>;
+    if (!segments.includes('**')) {
+      return <span className={className}>{renderTextWithStackedFractions(segments)}</span>;
+    }
+    return <span className={className}>{renderBoldText(segments, { bold: false }, 't')}</span>;
   }
 
+  // « **mot** » (gras de cours) : l'état gras traverse texte et formules (ex. « **$E_c$ en joules** »)
+  const state = { bold: false };
   return (
     <span className={`math-rendered-text leading-relaxed ${className}`}>
       {segments.map((segment, idx) => {
         if (segment.type === 'text') {
-          return <React.Fragment key={idx}>{renderTextWithStackedFractions(segment.content)}</React.Fragment>;
+          return <React.Fragment key={idx}>{renderBoldText(segment.content, state, String(idx))}</React.Fragment>;
         }
         if (segment.display) {
           return (
@@ -1035,7 +1040,7 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = ''
         return (
           <span
             key={idx}
-            className="inline-math align-middle mx-0.5"
+            className={`inline-math align-middle mx-0.5${state.bold ? ' font-extrabold' : ''}`}
             dangerouslySetInnerHTML={{ __html: segment.html }}
           />
         );
@@ -1043,6 +1048,27 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ text, className = ''
     </span>
   );
 };
+
+/**
+ * Texte avec marqueurs de gras « ** » : les astérisques ne sont jamais affichés, le texte entre deux
+ * marqueurs passe en gras. `state.bold` est partagé entre les morceaux d'une même phrase.
+ */
+function renderBoldText(text: string, state: { bold: boolean }, keyPrefix: string): React.ReactNode {
+  if (!text.includes('**')) {
+    const node = renderTextWithStackedFractions(text);
+    return state.bold ? <strong className="font-extrabold text-slate-900 dark:text-white">{node}</strong> : node;
+  }
+  return text.split('**').map((piece, i) => {
+    if (i > 0) state.bold = !state.bold;
+    if (!piece) return null;
+    const node = renderTextWithStackedFractions(piece);
+    return state.bold ? (
+      <strong key={`${keyPrefix}-${i}`} className="font-extrabold text-slate-900 dark:text-white">{node}</strong>
+    ) : (
+      <React.Fragment key={`${keyPrefix}-${i}`}>{node}</React.Fragment>
+    );
+  });
+}
 
 export interface VisualSchemaProps {
   schema: PointVisualSchema;
@@ -1093,7 +1119,9 @@ export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, clas
         <div
           className={isScene
             ? 'flex items-center justify-center rounded-xl overflow-hidden'
-            : 'flex items-center justify-center py-2 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200/70 dark:border-slate-800 overflow-x-auto'}
+            // Schémas SVG : toujours sur une « feuille » claire (même en mode nuit), car leurs traits et
+            // textes sont dessinés en couleurs foncées fixes ; currentColor devient un gris très foncé.
+            : 'flex items-center justify-center py-2 bg-white text-slate-800 dark:bg-slate-100 rounded-xl border border-slate-200/70 dark:border-slate-700 overflow-x-auto'}
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       )}
