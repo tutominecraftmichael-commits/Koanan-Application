@@ -9,7 +9,21 @@
  *   La ligue (étape 3) sera réservée aux élèves au-dessus de 80 %.
  * Tout est pur (aucun accès au stockage) : App.tsx applique le résultat à l'état de l'élève.
  */
-import type { GamificationEvent, GamificationState, StudySession } from '../../types';
+import type { GamificationEvent, GamificationState, LeagueEvent, StudySession } from '../../types';
+
+const MAX_PENDING = 200;
+/** Ajoute des gains à envoyer au serveur de la ligue (sans doublon). */
+function withPending(g: GamificationState, events: LeagueEvent[]): LeagueEvent[] {
+  const byId = new Map((g.pendingEvents || []).map((e) => [e.id, e]));
+  for (const e of events) byId.set(e.id, e);
+  return [...byId.values()].sort((a, b) => a.at - b.at).slice(-MAX_PENDING);
+}
+/** Retire les gains que le serveur a traités (acceptés ou refusés). */
+export function clearPendingEvents(g0: GamificationState | undefined, ids: string[]): GamificationState {
+  const g = gamificationOf(g0);
+  const done = new Set(ids);
+  return { ...g, pendingEvents: (g.pendingEvents || []).filter((e) => !done.has(e.id)) };
+}
 
 export const REPUTATION_START = 100;
 export const REPUTATION_MISSED = -5;
@@ -38,6 +52,7 @@ export function gamificationOf(g?: Partial<GamificationState> | null): Gamificat
     energy: Number.isFinite(g.energy) ? Math.max(0, Math.min(ENERGY_MAX, Number(g.energy))) : undefined,
     energyAt: g.energyAt,
     seriesChain: g.seriesChain && Number.isFinite(g.seriesChain.count) ? g.seriesChain : undefined,
+    pendingEvents: Array.isArray(g.pendingEvents) ? g.pendingEvents.filter((e) => e && e.id && Number.isFinite(e.at)) : [],
   };
 }
 
@@ -151,10 +166,17 @@ export function finishSeries(
     at: now.toISOString(), kind: 'xp', amount: gained,
     reason: `Série niveau ${seriesLevelFor(chainIndex).level} (${Math.max(0, total - mistakes)}/${total})`,
   };
+  const leagueEvent: LeagueEvent = {
+    id: `S_${now.getTime().toString(36)}_${Math.random().toString(36).slice(2, 8)}`,
+    kind: 'series', amount: gained, at: now.getTime(),
+    level: seriesLevelFor(chainIndex).level, questions: total, mistakes: Math.max(0, Math.round(mistakes)),
+    seconds: Math.max(0, Math.round((now.getTime() - startedAt.getTime()) / 1000)),
+  };
   return {
     gamification: {
       ...g,
       xp: g.xp + gained,
+      pendingEvents: withPending(g, [leagueEvent]),
       seriesChain: { count: Math.min(chainIndex, SERIES_LEVELS.length - 1), lastEndAt: now.toISOString() },
       history: pushEvents(g.history, [event]),
       updatedAt: now.toISOString(),
@@ -206,6 +228,7 @@ export function awardCompletedSessions(
   const done = new Set(g.awardedKeys);
   const rewarded: StudySession[] = [];
   const events: GamificationEvent[] = [];
+  const league: LeagueEvent[] = [];
   let gained = 0;
   for (const s of sessions || []) {
     if (!s?.completed || !s.completedAt) continue;
@@ -218,6 +241,7 @@ export function awardCompletedSessions(
     gained += xp;
     rewarded.push(s);
     events.push({ at: now.toISOString(), kind: 'xp', amount: xp, reason: `Séance terminée (${s.durationMinutes} min)` });
+    league.push({ id: `L_${key}`, kind: 'lesson', amount: xp, at, durationMinutes: s.durationMinutes });
   }
   if (!gained) return { gamification: g, gained: 0, sessions: [] };
   return {
@@ -226,6 +250,7 @@ export function awardCompletedSessions(
       xp: g.xp + gained,
       awardedKeys: [...done].slice(-MAX_KEYS),
       history: pushEvents(g.history, events),
+      pendingEvents: withPending(g, league),
       updatedAt: now.toISOString(),
     },
     gained,
@@ -349,6 +374,8 @@ export function mergeGamification(local?: Partial<GamificationState> | null, clo
       ? (a.energyAt ? { energy: a.energy, energyAt: a.energyAt } : {})
       : { energy: b.energy, energyAt: b.energyAt }),
     seriesChain: time(a.seriesChain?.lastEndAt) >= time(b.seriesChain?.lastEndAt) ? a.seriesChain : b.seriesChain,
+    // Gains pas encore confirmés par la ligue : réunis (le serveur ignore ceux qu'il a déjà comptés)
+    pendingEvents: withPending(a, b.pendingEvents || []),
   };
 }
 

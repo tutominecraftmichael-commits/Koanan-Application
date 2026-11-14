@@ -260,6 +260,21 @@ export interface GamificationState {
   energyAt?: string;
   /** Séries d'exercices enchaînées : la prochaine rapporte le double (15 → 30 → 60 → 120 XP) */
   seriesChain?: { count: number; lastEndAt: string };
+  /** Gains d'XP pas encore confirmés par le serveur de la ligue (envoyés dès que possible) */
+  pendingEvents?: LeagueEvent[];
+}
+
+/** Gain d'XP envoyé au serveur de la ligue, qui le vérifie et le recompte. */
+export interface LeagueEvent {
+  id: string;
+  kind: 'lesson' | 'series';
+  amount: number;
+  at: number; // ms
+  durationMinutes?: number;
+  level?: number;
+  questions?: number;
+  mistakes?: number;
+  seconds?: number;
 }
 
 export interface UserStreak {

@@ -68,7 +68,9 @@ import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
-import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries } from './lib/gamification/gamification';
+import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf } from './lib/gamification/gamification';
+import { callLeague, type LeagueBoard } from './services/leagueApi';
+import { LeagueCard, LeagueResultBanner, LeagueView } from './features/gamification/LeagueView';
 import { XpReputationCard } from './features/gamification/XpReputationCard';
 import { XpBurst } from './features/gamification/XpBurst';
 import { ExerciseFab } from './features/gamification/ExerciseFab';
@@ -700,6 +702,53 @@ export function App() {
     updateGamification((prev) => loseSeries(prev.gamification, reason));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Ligue (étape 3) : les gains d'XP sont envoyés au serveur, qui les vérifie et renvoie le classement
+  const [leagueBoard, setLeagueBoard] = useState<LeagueBoard | null>(null);
+  const [leagueOffline, setLeagueOffline] = useState(false);
+  const [isLeagueOpen, setIsLeagueOpen] = useState(false);
+  const [leagueResultSeen, setLeagueResultSeen] = useState<string>(() => {
+    try { return localStorage.getItem('konan_league_result_seen') || ''; } catch { return ''; }
+  });
+  const gamificationRef = useRef(state.gamification);
+  gamificationRef.current = state.gamification;
+  const leagueBusy = useRef(false);
+  const syncLeague = useCallback(async () => {
+    if (!gamificationEnabled || leagueBusy.current || !auth?.currentUser) return;
+    leagueBusy.current = true;
+    try {
+      const g = gamificationOf(gamificationRef.current);
+      const r = await callLeague({
+        events: g.pendingEvents || [],
+        reputation: g.reputationUpdatedAt ? g.reputation : undefined,
+        displayName: effectiveStudentName,
+        classLabel: effectiveClassLabel,
+      });
+      setLeagueOffline(!r.success);
+      if (!r.success) return;
+      if (r.board) setLeagueBoard(r.board);
+      const done = [...(r.accepted || []), ...(r.rejected || []).map((x) => x.id)];
+      if (done.length) updateGamification((prev) => clearPendingEvents(prev.gamification, done));
+    } finally {
+      leagueBusy.current = false;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gamificationEnabled, effectiveStudentName, effectiveClassLabel]);
+
+  // À l'ouverture, au retour dans l'appli, toutes les 2 minutes et après chaque nouveau gain d'XP
+  const pendingCount = state.gamification?.pendingEvents?.length || 0;
+  useEffect(() => {
+    if (!gamificationEnabled) return;
+    const first = setTimeout(syncLeague, pendingCount ? 1500 : 3000);
+    const every = setInterval(syncLeague, 2 * 60 * 1000);
+    const onVisible = () => { if (document.visibilityState === 'visible') syncLeague(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearTimeout(first);
+      clearInterval(every);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [gamificationEnabled, syncLeague, pendingCount]);
 
   // Réputation : jours terminés comptés à l'ouverture, au retour dans l'appli et toutes les 10 minutes
   useEffect(() => {
@@ -2268,8 +2317,24 @@ export function App() {
               </div>
             )}
             {gamificationEnabled && (
-              <div className="mb-4">
+              <div className="mb-4 space-y-3">
                 <XpReputationCard gamification={state.gamification} />
+                {leagueBoard?.lastResult && leagueBoard.lastResult.weekId !== leagueResultSeen && (
+                  <LeagueResultBanner
+                    board={leagueBoard}
+                    onClose={() => {
+                      const id = leagueBoard.lastResult?.weekId || '';
+                      setLeagueResultSeen(id);
+                      try { localStorage.setItem('konan_league_result_seen', id); } catch { /* sans effet */ }
+                    }}
+                  />
+                )}
+                <LeagueCard
+                  board={leagueBoard}
+                  localReputation={gamificationOf(state.gamification).reputation}
+                  offline={leagueOffline}
+                  onOpen={() => { setIsLeagueOpen(true); syncLeague(); }}
+                />
               </div>
             )}
             <DashboardOverview
@@ -2535,8 +2600,13 @@ export function App() {
         </ViewErrorBoundary>
       </main>
 
+      {/* Classement de la ligue */}
+      {isLeagueOpen && leagueBoard?.eligible && (
+        <LeagueView board={leagueBoard} onClose={() => setIsLeagueOpen(false)} />
+      )}
+
       {/* Icône ronde d'exercices (10 QCM au hasard, énergie ⚡) */}
-      {gamificationEnabled && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics'].includes(activeView) && (
+      {gamificationEnabled && !isExerciseOpen && !isLeagueOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics'].includes(activeView) && (
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
       )}
       {isExerciseOpen && (
