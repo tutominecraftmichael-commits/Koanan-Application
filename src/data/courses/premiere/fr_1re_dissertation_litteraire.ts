@@ -1,6 +1,6 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « 1ere_EE_Dissert_littér_S1_Analyser_sujet » (séance 1). Toutes les Premières.
+// Leçon rédigée à partir du PDF officiel « 1ere_EE_Dissert_littér » séances 1 à 4. Toutes les Premières.
 // Fichier généré (scratchpad build_1re_fr_l03.mjs) : modifier le générateur plutôt que ce fichier.
 export const FR_1RE_EE_L03_DISSERTATION_LITTERAIRE: CurriculumChapter = {
   "id": "premiere_a1_francais_ee_l03_dissertation_litteraire",
@@ -13,10 +13,10 @@ export const FR_1RE_EE_L03_DISSERTATION_LITTERAIRE: CurriculumChapter = {
   ],
   "order": 3,
   "title": "Expression écrite, leçon 3 : La dissertation littéraire",
-  "summary": "Séance 1 : analyser un sujet de dissertation littéraire (types de sujets, information et consigne, mots-clés et reformulation, thème, thèse, problématique).",
-  "officialVolumeHours": 2,
+  "summary": "Séances 1 à 4 : analyser le sujet (thème, thèse, problématique), rechercher les idées, élaborer le plan détaillé et rédiger une partie du développement, sur les sujets de Roger Caillois et de Romain Rolland.",
+  "officialVolumeHours": 8,
   "contentVersion": 2,
-  "source": "1ere_EE_Dissert_littér_S1_Analyser_sujet.pdf",
+  "source": "1ere_EE_Dissert_littér_S1_Analyser_sujet, S2_Rechercher_idées, S3_Elaborer_plan, S4_Rédiger_partie_dvpment (École numérique)",
   "points": [
     {
       "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p01",
@@ -1402,6 +1402,1164 @@ export const FR_1RE_EE_L03_DISSERTATION_LITTERAIRE: CurriculumChapter = {
           ],
           "correctAnswerIndex": 0,
           "explanation": "« Est-elle la seule… ? » invite à nuancer : c’est la partie « discutez »."
+        }
+      ]
+    },
+    {
+      "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06",
+      "order": 6,
+      "title": "Rechercher les idées",
+      "summary": "Chercher des idées précises et pertinentes (du côté de l’auteur, de l’œuvre, du lecteur) et les illustrer par des exemples précis.",
+      "conceptExplanation": "- Où chercher : dans les différents domaines de la littérature, l’auteur, l’œuvre, le lecteur, en fonction du thème du sujet.\n- Qualités d’une idée : précise, pertinente, en relation étroite avec le sujet et sa problématique. D’anciens sujets de dissertation peuvent aussi fournir des idées.\n- Exemples : chaque idée doit être illustrée par des exemples précis (une œuvre, son auteur, un personnage ou un passage) pour être valable et convaincante.\n- Sujet 1, posé en question : « La littérature n’est-elle pas le reflet de la société ? » Première partie : en quoi la littérature est-elle le reflet de la société ? Sur le plan politique, elle dénonce les dictatures, les rivalités et la démagogie ; sur le plan culturel, elle dénonce des coutumes rétrogrades et l’acculturation, et valorise des cultures méconnues. Seconde partie : quels sont ses autres aspects ? L’expression des sentiments personnels, la recherche du beau, la fiction et l’évasion.\n- Sujet 2 : première partie, en quoi la lecture permet-elle la découverte et la formation de soi ? Seconde partie, est-ce son seul bénéfice ? On découvre aussi les autres, on acquiert des connaissances, on se divertit.",
+      "keyRule": "Une idée vaut si elle est précise, pertinente, liée à la problématique… et illustrée par un exemple précis (œuvre, auteur, passage).",
+      "formulas": [],
+      "workedExample": {
+        "title": "Classer des idées pour le sujet 1",
+        "statement": "Classer ces exemples dans le plan du sujet 1 : Les Soleils des indépendances (Kourouma) ; Rebelle (Fatou Keïta) ; « Demain dès l’aube » (Hugo) ; La Planète des singes (Pierre Boulle).",
+        "methodSteps": [
+          "Les Soleils des indépendances dénonce la dictature du parti unique : première partie, plan politique.",
+          "Rebelle dénonce le mariage forcé et l’excision : première partie, plan culturel (coutumes rétrogrades).",
+          "« Demain dès l’aube » exprime la douleur du poète après la mort de sa fille : seconde partie, sentiments personnels.",
+          "La Planète des singes raconte un monde imaginaire dirigé par des singes : seconde partie, fiction et évasion."
+        ],
+        "conclusion": "Chaque exemple trouve sa place dans une partie et sous un argument précis."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepBadge": "Où chercher",
+          "stepTheme": "Auteur, œuvre, lecteur",
+          "stepTitle": "Où chercher les idées d’une dissertation ?",
+          "paragraphText": "On cherche les idées dans les **différents domaines de la littérature** : **l’auteur**, **l’œuvre**, **le lecteur**, en fonction du thème du sujet. D’anciens sujets de dissertation peuvent aussi aider.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q1",
+            "type": "mcq",
+            "prompt": "Dans quels domaines faut-il rechercher les idées d’une dissertation littéraire ?",
+            "options": [
+              "L’auteur, l’œuvre et le lecteur, selon le thème du sujet",
+              "Uniquement dans la biographie de l’auteur cité",
+              "Uniquement dans le dictionnaire",
+              "Dans des faits divers sans rapport avec la littérature"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les trois pôles de la littérature (auteur, œuvre, lecteur) fournissent les idées."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "propriete",
+          "stepBadge": "Bonnes idées",
+          "stepTheme": "Précises et pertinentes",
+          "stepTitle": "Les qualités d’une bonne idée",
+          "paragraphText": "Pour avoir de la valeur, une idée doit être **précise**, **pertinente** et en **relation étroite avec le sujet et sa problématique**.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q2",
+            "type": "mcq",
+            "prompt": "Quelles qualités doit avoir une idée pour être utile dans une dissertation ?",
+            "options": [
+              "Être précise, pertinente et liée étroitement au sujet",
+              "Être longue et générale",
+              "Être originale même si elle sort du sujet",
+              "Être recopiée d’un résumé du texte"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Une idée hors sujet ne compte pas, même si elle est juste."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "piege",
+          "stepBadge": "Sans exemple",
+          "stepTheme": "Illustrer toujours",
+          "stepTitle": "Une idée sans exemple ne convainc pas",
+          "paragraphText": "Une idée doit être **illustrée par des exemples précis** (titre de l’œuvre, auteur, personnage ou passage). Sans exemple, l’argument reste théorique et peu convaincant.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q3",
+            "type": "mcq",
+            "prompt": "Un élève écrit : « La littérature dénonce les dictatures. » puis passe à une autre idée. Que manque-t-il à son paragraphe ?",
+            "options": [
+              "Un exemple précis, comme Les Soleils des indépendances d’Ahmadou Kourouma",
+              "Une deuxième citation de Roger Caillois",
+              "La date de naissance de l’auteur du sujet",
+              "Rien : une idée suffit"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L’exemple rend l’idée concrète et convaincante."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "exemple",
+          "stepBadge": "Plan politique",
+          "stepTheme": "Sujet 1",
+          "stepTitle": "Classer Les Soleils des indépendances",
+          "paragraphText": "Dans Les Soleils des indépendances, Ahmadou Kourouma fustige la dictature du parti unique installée après les indépendances : c’est la littérature comme reflet de la vie **politique**.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q4",
+            "type": "mcq",
+            "prompt": "Pour le sujet « La littérature n’est-elle pas le reflet de la société ? », où placer l’exemple : « Les Soleils des indépendances d’Ahmadou Kourouma fustige la dictature du parti unique » ?",
+            "options": [
+              "Première partie, plan politique : la littérature dénonce les dictatures",
+              "Seconde partie : la littérature exprime le beau",
+              "Seconde partie : la littérature évoque la fiction",
+              "Dans la conclusion, comme ouverture"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La dénonciation d’une dictature montre que la littérature reflète la société, sur le plan politique."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "exemple",
+          "stepBadge": "Plan culturel",
+          "stepTheme": "Sujet 1",
+          "stepTitle": "Classer Rebelle de Fatou Keïta",
+          "paragraphText": "Dans Rebelle, Fatou Keïta dénonce l’excision et le mariage forcé (Malimouna s’enfuit pendant sa nuit de noces) : la littérature reflète la société sur le plan **culturel** en dénonçant des coutumes rétrogrades.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q5",
+            "type": "mcq",
+            "prompt": "Pour le sujet « La littérature n’est-elle pas le reflet de la société ? », quel argument illustre le roman Rebelle de Fatou Keïta, qui dénonce l’excision et le mariage forcé ?",
+            "options": [
+              "La littérature dénonce certaines coutumes jugées rétrogrades",
+              "La littérature exprime les sentiments personnels du poète",
+              "La littérature recherche le beau par la forme du poème",
+              "La littérature raconte des aventures imaginaires"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Rebelle met en cause des pratiques culturelles : plan culturel de la première partie."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepBadge": "Autres aspects",
+          "stepTheme": "Sujet 1",
+          "stepTitle": "Classer « Demain dès l’aube » de Victor Hugo",
+          "paragraphText": "Dans « Demain dès l’aube » (Les Contemplations), Victor Hugo exprime sa douleur après la mort de sa fille : la littérature est aussi l’**expression de sentiments personnels**, ce qui nuance la thèse de Roger Caillois.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q6",
+            "type": "mcq",
+            "prompt": "Pour le sujet « La littérature n’est-elle pas le reflet de la société ? », à quoi sert l’exemple de « Demain dès l’aube », où Victor Hugo exprime sa douleur après la mort de sa fille ?",
+            "options": [
+              "À montrer, dans la seconde partie, que la littérature exprime aussi des sentiments personnels",
+              "À montrer que la littérature dénonce les dictatures",
+              "À montrer que la littérature dénonce l’acculturation",
+              "Il ne peut servir à rien dans ce sujet"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Ce poème intime montre un autre aspect de la littérature : c’est l’antithèse."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepKind": "exemple",
+          "stepBadge": "Sujet 2",
+          "stepTheme": "Se divertir",
+          "stepTitle": "Classer un roman d’aventure pour le sujet 2",
+          "paragraphText": "Pour le sujet de Romain Rolland, la seconde partie montre que la lecture apporte d’autres bénéfices que la connaissance de soi : par exemple le **divertissement**, avec Le Lion de Joseph Kessel ou Témoin à charge d’Agatha Christie.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q7",
+            "type": "mcq",
+            "prompt": "Pour le sujet « On ne lit jamais un livre ; on se lit à travers les livres, soit pour se découvrir, soit pour se contrôler » (Romain Rolland), quelle idée illustrent Le Lion de Joseph Kessel et Témoin à charge d’Agatha Christie ?",
+            "options": [
+              "Le lecteur se divertit en lisant (seconde partie)",
+              "Le lecteur découvre ses propres défauts et les corrige",
+              "Le lecteur s’identifie à un personnage ambitieux",
+              "Le lecteur apprend l’histoire de l’empire zoulou"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le roman d’aventure et le roman policier divertissent : un bénéfice qui dépasse la découverte de soi."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q1",
+          "type": "mcq",
+          "prompt": "Dans quels domaines faut-il rechercher les idées d’une dissertation littéraire ?",
+          "options": [
+            "L’auteur, l’œuvre et le lecteur, selon le thème du sujet",
+            "Uniquement dans la biographie de l’auteur cité",
+            "Uniquement dans le dictionnaire",
+            "Dans des faits divers sans rapport avec la littérature"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les trois pôles de la littérature (auteur, œuvre, lecteur) fournissent les idées."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q2",
+          "type": "mcq",
+          "prompt": "Quelles qualités doit avoir une idée pour être utile dans une dissertation ?",
+          "options": [
+            "Être précise, pertinente et liée étroitement au sujet",
+            "Être longue et générale",
+            "Être originale même si elle sort du sujet",
+            "Être recopiée d’un résumé du texte"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une idée hors sujet ne compte pas, même si elle est juste."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q3",
+          "type": "mcq",
+          "prompt": "Un élève écrit : « La littérature dénonce les dictatures. » puis passe à une autre idée. Que manque-t-il à son paragraphe ?",
+          "options": [
+            "Un exemple précis, comme Les Soleils des indépendances d’Ahmadou Kourouma",
+            "Une deuxième citation de Roger Caillois",
+            "La date de naissance de l’auteur du sujet",
+            "Rien : une idée suffit"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L’exemple rend l’idée concrète et convaincante."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q4",
+          "type": "mcq",
+          "prompt": "Pour le sujet « La littérature n’est-elle pas le reflet de la société ? », où placer l’exemple : « Les Soleils des indépendances d’Ahmadou Kourouma fustige la dictature du parti unique » ?",
+          "options": [
+            "Première partie, plan politique : la littérature dénonce les dictatures",
+            "Seconde partie : la littérature exprime le beau",
+            "Seconde partie : la littérature évoque la fiction",
+            "Dans la conclusion, comme ouverture"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La dénonciation d’une dictature montre que la littérature reflète la société, sur le plan politique."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q5",
+          "type": "mcq",
+          "prompt": "Pour le sujet « La littérature n’est-elle pas le reflet de la société ? », quel argument illustre le roman Rebelle de Fatou Keïta, qui dénonce l’excision et le mariage forcé ?",
+          "options": [
+            "La littérature dénonce certaines coutumes jugées rétrogrades",
+            "La littérature exprime les sentiments personnels du poète",
+            "La littérature recherche le beau par la forme du poème",
+            "La littérature raconte des aventures imaginaires"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Rebelle met en cause des pratiques culturelles : plan culturel de la première partie."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q6",
+          "type": "mcq",
+          "prompt": "Pour le sujet « La littérature n’est-elle pas le reflet de la société ? », à quoi sert l’exemple de « Demain dès l’aube », où Victor Hugo exprime sa douleur après la mort de sa fille ?",
+          "options": [
+            "À montrer, dans la seconde partie, que la littérature exprime aussi des sentiments personnels",
+            "À montrer que la littérature dénonce les dictatures",
+            "À montrer que la littérature dénonce l’acculturation",
+            "Il ne peut servir à rien dans ce sujet"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Ce poème intime montre un autre aspect de la littérature : c’est l’antithèse."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p06_q7",
+          "type": "mcq",
+          "prompt": "Pour le sujet « On ne lit jamais un livre ; on se lit à travers les livres, soit pour se découvrir, soit pour se contrôler » (Romain Rolland), quelle idée illustrent Le Lion de Joseph Kessel et Témoin à charge d’Agatha Christie ?",
+          "options": [
+            "Le lecteur se divertit en lisant (seconde partie)",
+            "Le lecteur découvre ses propres défauts et les corrige",
+            "Le lecteur s’identifie à un personnage ambitieux",
+            "Le lecteur apprend l’histoire de l’empire zoulou"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le roman d’aventure et le roman policier divertissent : un bénéfice qui dépasse la découverte de soi."
+        }
+      ]
+    },
+    {
+      "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07",
+      "order": 7,
+      "title": "Élaborer le plan détaillé",
+      "summary": "Construire un plan adapté à la problématique, ordonner les parties et classer idées, arguments et exemples précis.",
+      "conceptExplanation": "- Le plan doit être adapté à la problématique du sujet : il permet, pas à pas, d’y répondre.\n- Le plan détaillé classe les idées directrices, les arguments et les exemples. Pour chaque exemple, on note l’œuvre, l’auteur et l’élément précis du texte qui illustre l’idée.\n- Ordre des parties : du plus évident au moins évident, du moins important au plus important. Cet ordre peut varier selon ce que l’auteur du devoir juge le plus important.\n- Plan dialectique (ou antithétique) : première partie, la thèse ; seconde partie, l’antithèse. Il convient aux sujets « expliquez et discutez ».\n- Sujet 1 : thèse, la littérature est le reflet de la société ; antithèse, la littérature a d’autres aspects.\n- Sujet 2 : première partie, la lecture permet la découverte et la formation de soi ; seconde partie, la lecture ouvre à d’autres découvertes en dehors de soi (les autres, les connaissances, le divertissement).\n- Remarque : dans les séances 3 et 4, le document n’écrit plus que « expliquez » pour le sujet 2, mais garde un plan en deux parties. La consigne complète est bien « expliquez et discutez ».",
+      "keyRule": "Plan dialectique : thèse puis antithèse. Plan détaillé : pour chaque partie, des arguments et des exemples précis (œuvre, auteur, élément du texte).",
+      "formulas": [],
+      "workedExample": {
+        "title": "Évaluation corrigée : le plan détaillé du sujet 2",
+        "statement": "En vous appuyant sur votre expérience personnelle de lecteur d’œuvres littéraires, expliquez et discutez le propos de Romain Rolland selon lequel on ne lit jamais un livre ; on se lit à travers les livres, soit pour se découvrir, soit pour se contrôler.",
+        "methodSteps": [
+          "Première partie : en quoi la lecture permet-elle la découverte et la formation de soi ? Le livre est un miroir : on s’identifie aux personnages, à leurs joies et à leurs peines ; on découvre ses travers et on les corrige.",
+          "Seconde partie : est-ce son seul bénéfice ? On découvre les autres (cultures, sentiments), on acquiert des connaissances, on se divertit.",
+          "Exemples : Le Père Goriot, Phèdre, Les Soleils des indépendances, L’Avare… puis Le monde s’effondre, Une si longue lettre, Germinal, Le Lion…"
+        ],
+        "conclusion": "Le plan suit la problématique : une partie pour expliquer, une partie pour discuter."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "propriete",
+          "stepBadge": "Plan adapté",
+          "stepTheme": "Répondre à la problématique",
+          "stepTitle": "À quoi doit répondre le plan ?",
+          "paragraphText": "Le plan doit être **adapté à la problématique** du sujet : dans son cheminement, il permet de **trouver une réponse** à la question posée.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q1",
+            "type": "mcq",
+            "prompt": "À quoi le plan d’une dissertation doit-il être adapté ?",
+            "options": [
+              "À la problématique du sujet, pour y répondre pas à pas",
+              "Au nombre de livres que l’élève a lus",
+              "À la longueur de la citation",
+              "À l’ordre alphabétique des auteurs"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le plan est le chemin qui mène à la réponse à la problématique."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "definition",
+          "stepBadge": "Plan détaillé",
+          "stepTheme": "Idées, arguments, exemples",
+          "stepTitle": "Ce que contient un plan détaillé",
+          "paragraphText": "Le **plan détaillé** classe les **idées directrices**, les **arguments** et les **exemples**. Pour un exemple, il ne suffit pas de citer l’œuvre et l’auteur : on relève aussi **l’élément du texte** qui illustre le propos.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q2",
+            "type": "mcq",
+            "prompt": "Que doit contenir un plan détaillé de dissertation ?",
+            "options": [
+              "Les idées directrices, les arguments et des exemples précis tirés des œuvres",
+              "Seulement les titres des deux parties",
+              "Seulement la liste des auteurs",
+              "L’introduction et la conclusion rédigées"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le plan détaillé prépare chaque paragraphe : idée, arguments, exemples."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "definition",
+          "stepBadge": "Plan dialectique",
+          "stepTheme": "Thèse puis antithèse",
+          "stepTitle": "Qu’est-ce qu’un plan dialectique ?",
+          "paragraphText": "Le **plan dialectique** (ou antithétique) présente d’abord la **thèse** (on explique le point de vue de l’auteur), puis l’**antithèse** (on en montre les limites). Il convient aux sujets « expliquez et discutez ».",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q3",
+            "type": "mcq",
+            "prompt": "Comment s’organise un plan dialectique ?",
+            "options": [
+              "Première partie la thèse, seconde partie l’antithèse",
+              "Première partie l’antithèse, seconde partie la conclusion",
+              "Une seule partie qui résume la citation",
+              "Trois parties sur trois auteurs différents"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Thèse puis antithèse : on explique, puis on discute."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "exemple",
+          "stepBadge": "Sujet 1",
+          "stepTheme": "Les deux parties",
+          "stepTitle": "Le plan du sujet de Roger Caillois",
+          "paragraphText": "Pour le sujet de Roger Caillois, la thèse est que **la littérature est le reflet de la société** ; l’antithèse, que **la littérature a d’autres aspects** (sentiments personnels, beauté, fiction).",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q4",
+            "type": "mcq",
+            "prompt": "Voici un sujet : « Toute littérature participe d’une civilisation, aucun livre ne sort des battements d’un cœur. Une littérature existe dans une société et en reçoit l’empreinte. » Expliquez et discutez ce point de vue de Roger Caillois en vous appuyant sur les œuvres que vous avez lues ou étudiées. Quel plan convient ?",
+            "options": [
+              "1. La littérature est le reflet de la société ; 2. La littérature a d’autres aspects",
+              "1. La vie de Roger Caillois ; 2. Ses œuvres",
+              "1. Le roman ; 2. Le théâtre ; 3. La poésie",
+              "1. Résumé de la citation ; 2. Recopie de la consigne"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Plan dialectique : thèse (reflet de la société) puis antithèse (autres aspects)."
+          },
+          "visualSchema": {
+            "type": "custom_svg",
+            "title": "Plan détaillé du sujet 1 (plan dialectique)",
+            "caption": "Thèse puis antithèse ; chaque argument est illustré par des œuvres précises.",
+            "tableData": {
+              "headers": [
+                "Partie",
+                "Arguments",
+                "Exemples"
+              ],
+              "rows": [
+                [
+                  "1re partie (thèse) : la littérature est le reflet de la société",
+                  "Plan politique : elle dénonce les dictatures, les rivalités et la démagogie",
+                  "Les Soleils des indépendances (Kourouma) ; Les Voix dans le vent (Dadié) ; On se chamaille pour un siège (Kacou)"
+                ],
+                [
+                  "",
+                  "Plan culturel : elle dénonce des coutumes et l’acculturation, valorise des cultures",
+                  "Rebelle (Fatou Keïta) ; L’Appel des arènes (Aminata Sow Fall) ; « Prière aux masques » (Senghor)"
+                ],
+                [
+                  "2e partie (antithèse) : la littérature a d’autres aspects",
+                  "L’expression des sentiments personnels",
+                  "Les Contemplations (Hugo) ; « Le Lac » (Lamartine) ; Climbié (Dadié)"
+                ],
+                [
+                  "",
+                  "La recherche du beau, de l’esthétique",
+                  "Calligrammes (Apollinaire) ; Le Capitaine Fracasse (Gautier)"
+                ],
+                [
+                  "",
+                  "La fiction et l’évasion",
+                  "La Planète des singes (Boulle) ; Vingt mille lieues sous les mers (Verne)"
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "propriete",
+          "stepBadge": "Ordre des parties",
+          "stepTheme": "Du moins au plus",
+          "stepTitle": "Dans quel ordre ranger les parties ?",
+          "paragraphText": "Les grandes parties vont **du plus évident au moins évident**, **du moins important au plus important**. Cet ordre peut varier selon ce que l’auteur du devoir juge le plus important.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q5",
+            "type": "mcq",
+            "prompt": "Selon le cours, dans quel ordre présenter les grandes parties d’un plan ?",
+            "options": [
+              "Du plus évident au moins évident, du moins important au plus important",
+              "Du plus important au moins important, toujours",
+              "Dans l’ordre où les idées sont venues",
+              "Dans l’ordre chronologique de publication des œuvres"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "On garde l’argument le plus fort pour la fin."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "exemple",
+          "stepBadge": "Sujet 2",
+          "stepTheme": "Seconde partie",
+          "stepTitle": "La seconde partie du plan du sujet 2",
+          "paragraphText": "Pour le sujet de Romain Rolland, la seconde partie répond à « Est-ce son seul bénéfice ? » : la lecture **ouvre à d’autres découvertes en dehors de soi** (les cultures et les sentiments des autres, les connaissances, le divertissement).",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q6",
+            "type": "mcq",
+            "prompt": "Voici un sujet : En vous appuyant sur votre expérience personnelle de lecteur d’œuvres littéraires, expliquez et discutez le propos de Romain Rolland selon lequel on ne lit jamais un livre ; on se lit à travers les livres, soit pour se découvrir, soit pour se contrôler. Quelle idée directrice convient pour la seconde partie du plan ?",
+            "options": [
+              "La lecture ouvre à d’autres découvertes en dehors de soi",
+              "La lecture permet la découverte et la formation de soi",
+              "Le livre est un miroir qui renvoie au lecteur son image",
+              "La lecture fait découvrir ses travers et les corriger"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les trois autres propositions appartiennent à la première partie (l’explication)."
+          },
+          "visualSchema": {
+            "type": "custom_svg",
+            "title": "Plan détaillé du sujet 2 (évaluation corrigée)",
+            "caption": "Première partie : la découverte de soi ; seconde partie : les autres bénéfices de la lecture.",
+            "tableData": {
+              "headers": [
+                "Partie",
+                "Arguments",
+                "Exemples"
+              ],
+              "rows": [
+                [
+                  "1re partie : la lecture permet la découverte et la formation de soi",
+                  "Le livre est un miroir : on s’identifie aux personnages, à leurs joies et à leurs peines",
+                  "Le Père Goriot (Balzac) ; Phèdre (Racine) ; Les Soleils des indépendances (Kourouma) ; Soundjata (Niane)"
+                ],
+                [
+                  "",
+                  "On découvre ses travers et on les corrige",
+                  "L’Avare (Molière) ; « La Cigale et la Fourmi » (La Fontaine) ; Monsieur Thôgô-Gnini (Dadié)"
+                ],
+                [
+                  "2e partie : la lecture ouvre à d’autres découvertes en dehors de soi",
+                  "On découvre les cultures et les sentiments des autres",
+                  "Le monde s’effondre (Achebe) ; Une si longue lettre (Mariama Bâ) ; Une vie (Maupassant)"
+                ],
+                [
+                  "",
+                  "On acquiert des connaissances",
+                  "Chaka (Thomas Mofolo) ; L’Enfant noir (Camara Laye) ; Germinal (Zola)"
+                ],
+                [
+                  "",
+                  "On se divertit",
+                  "Le Lion (Kessel) ; Témoin à charge (Agatha Christie)"
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepKind": "piege",
+          "stepBadge": "Exemple précis",
+          "stepTheme": "Œuvre, auteur, élément",
+          "stepTitle": "Un exemple doit citer un élément du texte",
+          "paragraphText": "Un bon exemple donne l’**œuvre**, l’**auteur** et l’**élément précis** du texte : « Rebelle de Fatou Keïta : la fuite de Malimouna pendant sa nuit de noces dénonce le mariage forcé. »",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q7",
+            "type": "mcq",
+            "prompt": "Laquelle de ces notes de plan est un exemple bien rédigé pour l’idée « la littérature dénonce le mariage forcé » ?",
+            "options": [
+              "Rebelle de Fatou Keïta : la fuite de Malimouna pendant sa nuit de noces dénonce le mariage forcé",
+              "Fatou Keïta a écrit des livres",
+              "Il existe des romans sur le mariage",
+              "Le mariage forcé est un problème"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Seul le premier donne l’œuvre, l’auteur et l’élément précis du texte."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q1",
+          "type": "mcq",
+          "prompt": "À quoi le plan d’une dissertation doit-il être adapté ?",
+          "options": [
+            "À la problématique du sujet, pour y répondre pas à pas",
+            "Au nombre de livres que l’élève a lus",
+            "À la longueur de la citation",
+            "À l’ordre alphabétique des auteurs"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le plan est le chemin qui mène à la réponse à la problématique."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q2",
+          "type": "mcq",
+          "prompt": "Que doit contenir un plan détaillé de dissertation ?",
+          "options": [
+            "Les idées directrices, les arguments et des exemples précis tirés des œuvres",
+            "Seulement les titres des deux parties",
+            "Seulement la liste des auteurs",
+            "L’introduction et la conclusion rédigées"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le plan détaillé prépare chaque paragraphe : idée, arguments, exemples."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q3",
+          "type": "mcq",
+          "prompt": "Comment s’organise un plan dialectique ?",
+          "options": [
+            "Première partie la thèse, seconde partie l’antithèse",
+            "Première partie l’antithèse, seconde partie la conclusion",
+            "Une seule partie qui résume la citation",
+            "Trois parties sur trois auteurs différents"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Thèse puis antithèse : on explique, puis on discute."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q4",
+          "type": "mcq",
+          "prompt": "Voici un sujet : « Toute littérature participe d’une civilisation, aucun livre ne sort des battements d’un cœur. Une littérature existe dans une société et en reçoit l’empreinte. » Expliquez et discutez ce point de vue de Roger Caillois en vous appuyant sur les œuvres que vous avez lues ou étudiées. Quel plan convient ?",
+          "options": [
+            "1. La littérature est le reflet de la société ; 2. La littérature a d’autres aspects",
+            "1. La vie de Roger Caillois ; 2. Ses œuvres",
+            "1. Le roman ; 2. Le théâtre ; 3. La poésie",
+            "1. Résumé de la citation ; 2. Recopie de la consigne"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Plan dialectique : thèse (reflet de la société) puis antithèse (autres aspects)."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q5",
+          "type": "mcq",
+          "prompt": "Selon le cours, dans quel ordre présenter les grandes parties d’un plan ?",
+          "options": [
+            "Du plus évident au moins évident, du moins important au plus important",
+            "Du plus important au moins important, toujours",
+            "Dans l’ordre où les idées sont venues",
+            "Dans l’ordre chronologique de publication des œuvres"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "On garde l’argument le plus fort pour la fin."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q6",
+          "type": "mcq",
+          "prompt": "Voici un sujet : En vous appuyant sur votre expérience personnelle de lecteur d’œuvres littéraires, expliquez et discutez le propos de Romain Rolland selon lequel on ne lit jamais un livre ; on se lit à travers les livres, soit pour se découvrir, soit pour se contrôler. Quelle idée directrice convient pour la seconde partie du plan ?",
+          "options": [
+            "La lecture ouvre à d’autres découvertes en dehors de soi",
+            "La lecture permet la découverte et la formation de soi",
+            "Le livre est un miroir qui renvoie au lecteur son image",
+            "La lecture fait découvrir ses travers et les corriger"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les trois autres propositions appartiennent à la première partie (l’explication)."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p07_q7",
+          "type": "mcq",
+          "prompt": "Laquelle de ces notes de plan est un exemple bien rédigé pour l’idée « la littérature dénonce le mariage forcé » ?",
+          "options": [
+            "Rebelle de Fatou Keïta : la fuite de Malimouna pendant sa nuit de noces dénonce le mariage forcé",
+            "Fatou Keïta a écrit des livres",
+            "Il existe des romans sur le mariage",
+            "Le mariage forcé est un problème"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Seul le premier donne l’œuvre, l’auteur et l’élément précis du texte."
+        }
+      ]
+    },
+    {
+      "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08",
+      "order": 8,
+      "title": "Rédiger un paragraphe argumentatif",
+      "summary": "Construire les paragraphes du développement (idée directrice, arguments, exemples), choisir un raisonnement et insérer les exemples.",
+      "conceptExplanation": "- La dissertation compte trois grandes articulations : l’introduction, le développement, la conclusion. Le développement a deux parties, les deux axes du plan.\n- Chaque partie est une succession de paragraphes argumentatifs. Un paragraphe argumentatif développe une seule idée et se signale par la mise en page (un alinéa).\n- Il contient : une phrase qui présente l’idée directrice ; des arguments qui la justifient, reliés par des connecteurs logiques (d’abord, aussi, ensuite, en outre, par ailleurs, enfin) ; des exemples qui illustrent les arguments et les rendent concrets.\n- Si l’on passe à une autre idée directrice, on change de paragraphe.\n- Raisonnement déductif : idée directrice, puis arguments, puis exemples. Raisonnement inductif : exemples, puis arguments, puis idée directrice. Raisonnement par analogie ou par confrontation : mise en parallèle par comparaison ou par opposition.\n- Formules pour introduire un exemple : « Ainsi… », « C’est ainsi que… », « L’exemple de … montre bien cela », « Qu’il suffise de rappeler… », « Ce fait est illustré par… », « Prenons le cas de… », « On peut songer à… ».\n- Une phrase de transition clôt la partie et annonce la suivante, par exemple : « Bien que la littérature soit le reflet de la société, elle regorge d’autres aspects. »",
+      "keyRule": "Un paragraphe = une idée directrice + des arguments reliés par des connecteurs + des exemples introduits par une formule (« Prenons le cas de… »).",
+      "formulas": [],
+      "workedExample": {
+        "title": "Analyser un paragraphe rédigé (sujet 1, première partie)",
+        "statement": "« La littérature reflète différents aspects de la vie sociale. D’abord, elle dénonce les régimes dictatoriaux. En effet, les gouvernants usent souvent de violences et de pratiques antidémocratiques. C’est le cas de l’œuvre romanesque Les Soleils des indépendances d’Ahmadou Kourouma, où celui-ci fustige la dictature du parti unique. »",
+        "methodSteps": [
+          "Idée directrice : « La littérature reflète différents aspects de la vie sociale. »",
+          "Argument introduit par un connecteur : « D’abord, elle dénonce les régimes dictatoriaux », expliqué par « En effet… ».",
+          "Exemple introduit par une formule : « C’est le cas de… Les Soleils des indépendances ».",
+          "Ordre idée, argument, exemple : raisonnement déductif."
+        ],
+        "conclusion": "Le paragraphe suit le schéma déductif et insère son exemple avec une formule adaptée."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepBadge": "Paragraphe",
+          "stepTheme": "Une idée",
+          "stepTitle": "Qu’est-ce qu’un paragraphe argumentatif ?",
+          "paragraphText": "Le développement est une **succession de paragraphes argumentatifs**. Un paragraphe argumentatif développe **une idée** et se signale par la **mise en page** (un alinéa).",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q1",
+            "type": "mcq",
+            "prompt": "Qu’est-ce qu’un paragraphe argumentatif dans le développement d’une dissertation ?",
+            "options": [
+              "Une sous-partie qui développe une idée, signalée par un alinéa",
+              "Une liste de titres d’œuvres",
+              "Une citation recopiée sans commentaire",
+              "Le résumé de toute la dissertation"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Une idée par paragraphe, signalée par la mise en page."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "definition",
+          "stepBadge": "Composantes",
+          "stepTheme": "Idée, arguments, exemples",
+          "stepTitle": "Les trois éléments d’un paragraphe",
+          "paragraphText": "Chaque paragraphe comporte : une **phrase qui présente l’idée directrice**, des **arguments** qui la justifient, et des **exemples** qui illustrent les arguments.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q2",
+            "type": "mcq",
+            "prompt": "Quels sont les trois éléments d’un paragraphe argumentatif ?",
+            "options": [
+              "L’idée directrice, les arguments et les exemples",
+              "Le titre, le sous-titre et la date",
+              "La citation, la consigne et la problématique",
+              "L’introduction, la transition et la conclusion"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Idée directrice + arguments + exemples."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "piege",
+          "stepBadge": "Changer de paragraphe",
+          "stepTheme": "Une idée par paragraphe",
+          "stepTitle": "Quand faut-il changer de paragraphe ?",
+          "paragraphText": "Si l’on passe à **une autre idée directrice**, il faut **changer de paragraphe**. Mélanger deux idées dans le même paragraphe rend le devoir confus.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q3",
+            "type": "mcq",
+            "prompt": "Dans un même paragraphe, un élève parle de la dénonciation des dictatures puis de la valorisation des masques africains. Que doit-il faire ?",
+            "options": [
+              "Changer de paragraphe, car il passe à une autre idée directrice",
+              "Rien : un paragraphe peut contenir toutes les idées",
+              "Supprimer les exemples",
+              "Mettre les deux idées dans la conclusion"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Deux idées directrices différentes = deux paragraphes."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "definition",
+          "stepBadge": "Déductif",
+          "stepTheme": "Idée d’abord",
+          "stepTitle": "Le raisonnement déductif",
+          "paragraphText": "Dans le **raisonnement déductif**, on part de l’**idée directrice**, on la justifie par des **arguments**, puis on l’illustre par des **exemples**.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q4",
+            "type": "mcq",
+            "prompt": "Dans quel ordre se construit un paragraphe au raisonnement déductif ?",
+            "options": [
+              "Idée directrice, puis arguments, puis exemples",
+              "Exemples, puis arguments, puis idée directrice",
+              "Exemples seulement",
+              "Conclusion, puis idée directrice"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Déductif : de l’idée générale vers les exemples."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "definition",
+          "stepBadge": "Inductif",
+          "stepTheme": "Exemples d’abord",
+          "stepTitle": "Le raisonnement inductif",
+          "paragraphText": "Dans le **raisonnement inductif**, on part des **exemples**, on en tire des **arguments**, et on aboutit à l’**idée directrice**.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q5",
+            "type": "mcq",
+            "prompt": "Un paragraphe commence par trois exemples d’œuvres et se termine par l’idée qu’ils démontrent. Quel raisonnement suit-il ?",
+            "options": [
+              "Le raisonnement inductif",
+              "Le raisonnement déductif",
+              "Le raisonnement par analogie",
+              "Aucun raisonnement"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Inductif : des exemples vers l’idée générale."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "methode",
+          "stepBadge": "Insérer un exemple",
+          "stepTheme": "Formules",
+          "stepTitle": "Comment introduire un exemple ?",
+          "paragraphText": "Pour bien insérer un exemple, on utilise des formules : « Ainsi… », « C’est ainsi que… », « L’exemple de … montre bien cela », « Ce fait est illustré par… », « **Prenons le cas de…** », « On peut songer à… ».",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q6",
+            "type": "mcq",
+            "prompt": "Laquelle de ces formules sert à introduire un exemple dans un paragraphe ?",
+            "options": [
+              "« Prenons le cas de… »",
+              "« En conclusion… »",
+              "« Premièrement, la problématique est… »",
+              "« Pour résumer le sujet… »"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "« Prenons le cas de… » annonce un exemple ; les autres formules annoncent autre chose."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepKind": "methode",
+          "stepBadge": "Connecteurs",
+          "stepTheme": "Ajouter un argument",
+          "stepTitle": "Relier les arguments entre eux",
+          "paragraphText": "Les arguments sont reliés à l’idée directrice par des **connecteurs logiques** : d’abord, aussi, ensuite, **en outre**, par ailleurs, enfin.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q7",
+            "type": "mcq",
+            "prompt": "Quel connecteur logique permet d’ajouter un nouvel argument dans un paragraphe ?",
+            "options": [
+              "En outre",
+              "Pourtant",
+              "Donc",
+              "Bien que"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "« En outre » ajoute un argument ; « pourtant » et « bien que » opposent, « donc » conclut."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepKind": "exemple",
+          "stepBadge": "Transition",
+          "stepTheme": "Vers l’antithèse",
+          "stepTitle": "La phrase de transition entre les deux parties",
+          "paragraphText": "À la fin de la première partie, une **phrase de transition** résume ce qui précède et annonce la suite : « Bien que la littérature soit le reflet de la société, elle regorge d’autres aspects. »",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q8",
+            "type": "mcq",
+            "prompt": "À quoi sert la phrase « Bien que la littérature soit le reflet de la société, elle regorge d’autres aspects », placée à la fin de la première partie du sujet de Roger Caillois ?",
+            "options": [
+              "À faire la transition : elle résume la thèse et annonce l’antithèse",
+              "À conclure toute la dissertation",
+              "À introduire un exemple",
+              "À poser la problématique"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "« Bien que… » rappelle la thèse ; « elle regorge d’autres aspects » annonce la seconde partie."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q1",
+          "type": "mcq",
+          "prompt": "Qu’est-ce qu’un paragraphe argumentatif dans le développement d’une dissertation ?",
+          "options": [
+            "Une sous-partie qui développe une idée, signalée par un alinéa",
+            "Une liste de titres d’œuvres",
+            "Une citation recopiée sans commentaire",
+            "Le résumé de toute la dissertation"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une idée par paragraphe, signalée par la mise en page."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q2",
+          "type": "mcq",
+          "prompt": "Quels sont les trois éléments d’un paragraphe argumentatif ?",
+          "options": [
+            "L’idée directrice, les arguments et les exemples",
+            "Le titre, le sous-titre et la date",
+            "La citation, la consigne et la problématique",
+            "L’introduction, la transition et la conclusion"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Idée directrice + arguments + exemples."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q3",
+          "type": "mcq",
+          "prompt": "Dans un même paragraphe, un élève parle de la dénonciation des dictatures puis de la valorisation des masques africains. Que doit-il faire ?",
+          "options": [
+            "Changer de paragraphe, car il passe à une autre idée directrice",
+            "Rien : un paragraphe peut contenir toutes les idées",
+            "Supprimer les exemples",
+            "Mettre les deux idées dans la conclusion"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Deux idées directrices différentes = deux paragraphes."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q4",
+          "type": "mcq",
+          "prompt": "Dans quel ordre se construit un paragraphe au raisonnement déductif ?",
+          "options": [
+            "Idée directrice, puis arguments, puis exemples",
+            "Exemples, puis arguments, puis idée directrice",
+            "Exemples seulement",
+            "Conclusion, puis idée directrice"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Déductif : de l’idée générale vers les exemples."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q5",
+          "type": "mcq",
+          "prompt": "Un paragraphe commence par trois exemples d’œuvres et se termine par l’idée qu’ils démontrent. Quel raisonnement suit-il ?",
+          "options": [
+            "Le raisonnement inductif",
+            "Le raisonnement déductif",
+            "Le raisonnement par analogie",
+            "Aucun raisonnement"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Inductif : des exemples vers l’idée générale."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q6",
+          "type": "mcq",
+          "prompt": "Laquelle de ces formules sert à introduire un exemple dans un paragraphe ?",
+          "options": [
+            "« Prenons le cas de… »",
+            "« En conclusion… »",
+            "« Premièrement, la problématique est… »",
+            "« Pour résumer le sujet… »"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "« Prenons le cas de… » annonce un exemple ; les autres formules annoncent autre chose."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q7",
+          "type": "mcq",
+          "prompt": "Quel connecteur logique permet d’ajouter un nouvel argument dans un paragraphe ?",
+          "options": [
+            "En outre",
+            "Pourtant",
+            "Donc",
+            "Bien que"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "« En outre » ajoute un argument ; « pourtant » et « bien que » opposent, « donc » conclut."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p08_q8",
+          "type": "mcq",
+          "prompt": "À quoi sert la phrase « Bien que la littérature soit le reflet de la société, elle regorge d’autres aspects », placée à la fin de la première partie du sujet de Roger Caillois ?",
+          "options": [
+            "À faire la transition : elle résume la thèse et annonce l’antithèse",
+            "À conclure toute la dissertation",
+            "À introduire un exemple",
+            "À poser la problématique"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "« Bien que… » rappelle la thèse ; « elle regorge d’autres aspects » annonce la seconde partie."
+        }
+      ]
+    },
+    {
+      "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09",
+      "order": 9,
+      "title": "Une partie rédigée : analyse et corrections du document",
+      "summary": "Étudier les parties rédigées des sujets 1 et 2, repérer leur construction et corriger les erreurs du document.",
+      "conceptExplanation": "- Sujet 1, première partie rédigée : la littérature reflète la vie sociale. Elle dénonce les dictatures (Les Soleils des indépendances d’Ahmadou Kourouma ; Les Voix dans le vent de Bernard Dadié, satire du dictateur Nahoubou), les rivalités et la démagogie politiques (On se chamaille pour un siège de Hyacinthe Kacou ; Tribaliques d’Henri Lopes), des coutumes (Rebelle de Fatou Keïta), l’acculturation (L’Appel des arènes d’Aminata Sow Fall) ; elle valorise des cultures (« Prière aux masques » de Senghor).\n- Sujet 2, première partie rédigée : le lecteur s’identifie aux personnages (Rastignac dans Le Père Goriot de Balzac ; Phèdre de Racine), partage leurs joies et leurs peines (Fama dans Les Soleils des indépendances ; Chaka de Senghor ; Soundjata ; L’Ordonnance de Soro Guéfala), découvre ses travers et les corrige (L’Avare de Molière ; « La Cigale et la Fourmi » de La Fontaine ; Monsieur Thôgô-Gnini de Dadié ; « La fuite de la main habile » dans Tribaliques).\n- Corrections du document : Rastignac est un jeune étudiant en droit, pas un « médecin » ; Balzac (et non « Balsac ») ; Hippolyte (et non « Hyppolite »), fils de Thésée, dans Phèdre de Racine ; Jules Verne (et non « Vernes »), et le « monstre » de Vingt mille lieues sous les mers est en réalité le sous-marin Nautilus du capitaine Nemo ; Cheikh Hamidou Kane (et non « Cheick Amidou »), auteur de L’Aventure ambiguë ; Une vie de Maupassant (1883) se déroule dans la première moitié du XIXe siècle, pas à la fin ; L’Enfant noir de Camara Laye raconte une enfance guinéenne des années 1930, donc à l’époque coloniale et non « avant la colonisation » ; Climbié mène son héros jusqu’à Gorée (et non « Goré »), au Sénégal.",
+      "keyRule": "Dans un exemple, l’œuvre, l’auteur et le détail cité doivent être exacts : une erreur de personnage ou de date affaiblit l’argument.",
+      "formulas": [],
+      "workedExample": {
+        "title": "Évaluation corrigée : un paragraphe du sujet 2",
+        "statement": "« Ensuite, en s’identifiant aux personnages, le lecteur partage leurs peines et leurs joies. Ainsi, la détresse et la frustration de Fama, personnage principal des Soleils des indépendances d’Ahmadou Kourouma, étreignent le cœur dès l’entame de l’œuvre. »",
+        "methodSteps": [
+          "Connecteur : « Ensuite » ajoute une nouvelle idée.",
+          "Idée directrice : le lecteur partage les peines et les joies des personnages.",
+          "Formule d’insertion : « Ainsi » introduit l’exemple de Fama."
+        ],
+        "conclusion": "Paragraphe déductif : idée, puis exemple précis (personnage, œuvre, auteur)."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "exemple",
+          "stepBadge": "Identifier le raisonnement",
+          "stepTheme": "Sujet 1",
+          "stepTitle": "Le raisonnement du premier paragraphe",
+          "paragraphText": "Le paragraphe commence par l’idée « La littérature reflète différents aspects de la vie sociale », la justifie (« D’abord, elle dénonce les régimes dictatoriaux… En effet… »), puis donne l’exemple des Soleils des indépendances.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q1",
+            "type": "mcq",
+            "prompt": "Un paragraphe commence par « La littérature reflète différents aspects de la vie sociale », continue par « D’abord, elle dénonce les régimes dictatoriaux. En effet, les gouvernants usent de violences… » et finit par « C’est le cas des Soleils des indépendances d’Ahmadou Kourouma ». Quel raisonnement suit-il ?",
+            "options": [
+              "Le raisonnement déductif : idée, arguments, exemple",
+              "Le raisonnement inductif : exemples, puis idée",
+              "Le raisonnement par analogie",
+              "Il n’a pas de raisonnement"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Il part de l’idée générale et finit par l’exemple : c’est déductif."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "exemple",
+          "stepBadge": "Les Voix dans le vent",
+          "stepTheme": "Sujet 1",
+          "stepTitle": "Quel argument illustre Les Voix dans le vent ?",
+          "paragraphText": "Dans la pièce Les Voix dans le vent, Bernard Dadié fait la **satire du dictateur Nahoubou** : l’exemple illustre la dénonciation des régimes dictatoriaux.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q2",
+            "type": "mcq",
+            "prompt": "Dans la partie rédigée du sujet de Roger Caillois, quel argument illustre la pièce Les Voix dans le vent de Bernard Dadié, où l’auteur fait la satire du dictateur Nahoubou ?",
+            "options": [
+              "La littérature dénonce les régimes dictatoriaux",
+              "La littérature exprime le beau par la typographie",
+              "La littérature valorise le culte des masques",
+              "La littérature fait voyager sous les mers"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Une satire de dictateur sert l’argument politique de la première partie."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "piege",
+          "stepBadge": "Rastignac",
+          "stepTheme": "Correction",
+          "stepTitle": "Rastignac n’est pas médecin",
+          "paragraphText": "Le corrigé présente Eugène de Rastignac comme un « jeune médecin ambitieux » venu « étudier le droit » : c’est contradictoire. Dans Le Père Goriot de **Balzac**, Rastignac est un **étudiant en droit** ambitieux ; l’étudiant en médecine est son ami Bianchon.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q3",
+            "type": "mcq",
+            "prompt": "Dans Le Père Goriot de Balzac, qui est Eugène de Rastignac ?",
+            "options": [
+              "Un jeune étudiant en droit ambitieux, venu d’Angoulême à Paris",
+              "Un vieux médecin parisien",
+              "Le père de Goriot",
+              "Un capitaine de navire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Rastignac étudie le droit ; le corrigé se trompe en l’appelant « médecin »."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "exemple",
+          "stepBadge": "Fama",
+          "stepTheme": "Sujet 2",
+          "stepTitle": "À quoi sert l’exemple de Fama ?",
+          "paragraphText": "Dans la partie rédigée du sujet 2, la détresse de **Fama**, héros des Soleils des indépendances, montre que le lecteur **partage les peines et les joies** des personnages auxquels il s’identifie.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q4",
+            "type": "mcq",
+            "prompt": "Dans le développement du sujet « on se lit à travers les livres » (Romain Rolland), quelle idée illustre la détresse de Fama, personnage principal des Soleils des indépendances d’Ahmadou Kourouma ?",
+            "options": [
+              "Le lecteur partage les peines et les joies des personnages",
+              "Le lecteur se divertit avec un roman policier",
+              "Le lecteur découvre la culture ibo",
+              "Le lecteur apprend à écrire des calligrammes"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "En s’identifiant à Fama, le lecteur ressent sa détresse."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "exemple",
+          "stepBadge": "Se corriger",
+          "stepTheme": "Sujet 2",
+          "stepTitle": "L’Avare et « La Cigale et la Fourmi »",
+          "paragraphText": "La satire fait découvrir au lecteur **ses propres travers** et l’invite à les **corriger** : L’Avare de Molière ridiculise l’avarice, « La Cigale et la Fourmi » de La Fontaine dénonce la paresse.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q5",
+            "type": "mcq",
+            "prompt": "Dans le développement du sujet de Romain Rolland (« on se lit… pour se contrôler »), quelle idée illustrent L’Avare de Molière et « La Cigale et la Fourmi » de La Fontaine ?",
+            "options": [
+              "La lecture fait découvrir ses travers et pousse à les corriger",
+              "La lecture fait découvrir des cultures lointaines",
+              "La lecture apporte des connaissances historiques",
+              "La lecture sert seulement à se distraire"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "La satire de l’avarice et de la paresse invite le lecteur à se corriger."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "piege",
+          "stepBadge": "Une vie",
+          "stepTheme": "Correction",
+          "stepTitle": "Quand se déroule Une vie de Maupassant ?",
+          "paragraphText": "Le document dit qu’Une vie fait découvrir la noblesse « à la fin du XIXe siècle ». Le roman a été publié en **1883**, mais son histoire se déroule dans la **première moitié du XIXe siècle** (à partir de 1819).",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q6",
+            "type": "mcq",
+            "prompt": "Le roman Une vie de Guy de Maupassant, publié en 1883, raconte la vie de Jeanne, une jeune noble normande. À quelle époque se déroule son histoire ?",
+            "options": [
+              "Dans la première moitié du XIXe siècle",
+              "À la fin du XXe siècle",
+              "Au Moyen Âge",
+              "Pendant la Seconde Guerre mondiale"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "L’action commence en 1819 : c’est la première moitié du XIXe siècle."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepKind": "piege",
+          "stepBadge": "Jules Verne",
+          "stepTheme": "Correction",
+          "stepTitle": "Le « monstre » de Vingt mille lieues sous les mers",
+          "paragraphText": "Le document écrit « Jules VERNES » et parle d’« une bête monstrueuse » en 1866. L’auteur est **Jules Verne**, et le prétendu monstre marin est en réalité le **sous-marin Nautilus** du capitaine Nemo.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q7",
+            "type": "mcq",
+            "prompt": "Dans Vingt mille lieues sous les mers de Jules Verne, qu’est en réalité le « monstre » qui inquiète les marins en 1866 ?",
+            "options": [
+              "Le sous-marin Nautilus du capitaine Nemo",
+              "Une baleine blanche géante",
+              "Un dragon des mers",
+              "Un navire négrier"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Le « monstre » est le Nautilus : le roman reste une fiction d’anticipation."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q1",
+          "type": "mcq",
+          "prompt": "Un paragraphe commence par « La littérature reflète différents aspects de la vie sociale », continue par « D’abord, elle dénonce les régimes dictatoriaux. En effet, les gouvernants usent de violences… » et finit par « C’est le cas des Soleils des indépendances d’Ahmadou Kourouma ». Quel raisonnement suit-il ?",
+          "options": [
+            "Le raisonnement déductif : idée, arguments, exemple",
+            "Le raisonnement inductif : exemples, puis idée",
+            "Le raisonnement par analogie",
+            "Il n’a pas de raisonnement"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Il part de l’idée générale et finit par l’exemple : c’est déductif."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q2",
+          "type": "mcq",
+          "prompt": "Dans la partie rédigée du sujet de Roger Caillois, quel argument illustre la pièce Les Voix dans le vent de Bernard Dadié, où l’auteur fait la satire du dictateur Nahoubou ?",
+          "options": [
+            "La littérature dénonce les régimes dictatoriaux",
+            "La littérature exprime le beau par la typographie",
+            "La littérature valorise le culte des masques",
+            "La littérature fait voyager sous les mers"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Une satire de dictateur sert l’argument politique de la première partie."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q3",
+          "type": "mcq",
+          "prompt": "Dans Le Père Goriot de Balzac, qui est Eugène de Rastignac ?",
+          "options": [
+            "Un jeune étudiant en droit ambitieux, venu d’Angoulême à Paris",
+            "Un vieux médecin parisien",
+            "Le père de Goriot",
+            "Un capitaine de navire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Rastignac étudie le droit ; le corrigé se trompe en l’appelant « médecin »."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q4",
+          "type": "mcq",
+          "prompt": "Dans le développement du sujet « on se lit à travers les livres » (Romain Rolland), quelle idée illustre la détresse de Fama, personnage principal des Soleils des indépendances d’Ahmadou Kourouma ?",
+          "options": [
+            "Le lecteur partage les peines et les joies des personnages",
+            "Le lecteur se divertit avec un roman policier",
+            "Le lecteur découvre la culture ibo",
+            "Le lecteur apprend à écrire des calligrammes"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "En s’identifiant à Fama, le lecteur ressent sa détresse."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q5",
+          "type": "mcq",
+          "prompt": "Dans le développement du sujet de Romain Rolland (« on se lit… pour se contrôler »), quelle idée illustrent L’Avare de Molière et « La Cigale et la Fourmi » de La Fontaine ?",
+          "options": [
+            "La lecture fait découvrir ses travers et pousse à les corriger",
+            "La lecture fait découvrir des cultures lointaines",
+            "La lecture apporte des connaissances historiques",
+            "La lecture sert seulement à se distraire"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "La satire de l’avarice et de la paresse invite le lecteur à se corriger."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q6",
+          "type": "mcq",
+          "prompt": "Le roman Une vie de Guy de Maupassant, publié en 1883, raconte la vie de Jeanne, une jeune noble normande. À quelle époque se déroule son histoire ?",
+          "options": [
+            "Dans la première moitié du XIXe siècle",
+            "À la fin du XXe siècle",
+            "Au Moyen Âge",
+            "Pendant la Seconde Guerre mondiale"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "L’action commence en 1819 : c’est la première moitié du XIXe siècle."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p09_q7",
+          "type": "mcq",
+          "prompt": "Dans Vingt mille lieues sous les mers de Jules Verne, qu’est en réalité le « monstre » qui inquiète les marins en 1866 ?",
+          "options": [
+            "Le sous-marin Nautilus du capitaine Nemo",
+            "Une baleine blanche géante",
+            "Un dragon des mers",
+            "Un navire négrier"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Le « monstre » est le Nautilus : le roman reste une fiction d’anticipation."
         }
       ]
     }
