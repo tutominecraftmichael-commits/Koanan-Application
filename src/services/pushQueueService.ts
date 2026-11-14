@@ -53,6 +53,8 @@ function alertDocId(uid: string, sessionId: string, ymd: string, kind: KonanAler
   return `${uid}_${safe}_${ymd.replace(/-/g, '')}_${kind}`;
 }
 const PLAN_CACHE_PREFIX = 'konan_push_plan_v3_';
+/** Alertes déposées à l'avance : 14 jours (le serveur prolonge ensuite seul si l'appli n'est pas rouverte). */
+const PLAN_DAYS = 14;
 /** Dernier planning complet envoyé au serveur par CET appareil (empreinte + heure). */
 const ACTIVE_PLAN_PREFIX = 'konan_push_active_v3_';
 /** Un appareil ouvert reprend la main sur les alertes au moins toutes les 30 minutes. */
@@ -141,8 +143,18 @@ export function planAlerts(
     if (input.cycleCompletedDate === ymd) continue; // programme du jour terminé : on laisse l'élève tranquille
     const started = d === 0 ? getStartedSessionIds(ymd) : new Set<string>();
 
-    for (const s of input.studySessions || []) {
-      if (!s || s.dayOfWeek !== dow || s.completed || s.isExpired) continue;
+    for (const raw of input.studySessions || []) {
+      if (!raw || raw.dayOfWeek !== dow || raw.isExpired) continue;
+      // Le planning est hebdomadaire : une séance datée d'un autre jour (semaine en cours déjà passée, ou
+      // au-delà de 7 jours) sert de modèle pour ce jour-ci. « Faite » ou « replacée » ne valent que pour
+      // SON jour : la même séance de la semaine suivante est rappelée normalement.
+      const recurring = d >= 7 || Boolean(raw.date && raw.date !== ymd);
+      const s = recurring
+        ? { ...raw, completed: false, isRescheduledToday: false, rescheduledDate: undefined,
+            startTime: raw.isRescheduledToday ? (raw.originalStartTime || raw.startTime) : raw.startTime,
+            endTime: raw.isRescheduledToday ? (raw.originalEndTime || raw.endTime) : raw.endTime }
+        : raw;
+      if (s.completed) continue;
       const subjectName = subjects.find((x) => x.id === s.subjectId)?.name || s.title || 'Révision';
       const rescheduledThatDay = Boolean(s.isRescheduledToday && s.rescheduledDate === ymd);
       const originalStart = s.isRescheduledToday ? (s.originalStartTime || s.startTime) : s.startTime;
@@ -265,7 +277,7 @@ export async function syncPushPlan(uid: string, input: AlertPlanInput, now: Date
   }
   syncRunning = true;
   try {
-    const alerts = planAlerts(input, uid, now, { days: 7, minSendAt: now.getTime() + 30 * 1000 });
+    const alerts = planAlerts(input, uid, now, { days: PLAN_DAYS, minSendAt: now.getTime() + 30 * 1000 });
     const cache = readCache(uid);
     const nextDocs: PlanCache['docs'] = {};
     const toWrite: Array<{ id: string; data: ReturnType<typeof envelopeOf> }> = [];

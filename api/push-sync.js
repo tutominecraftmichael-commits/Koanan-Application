@@ -89,7 +89,8 @@ const isOwnId = (id, uid) => typeof id === 'string' && id.length <= 220 && /^[A-
 export function cleanEnvelope(data, uid, nowMs = Date.now()) {
   if (!data || typeof data !== 'object') return null;
   const sendAt = Number(data.sendAt);
-  if (!Number.isFinite(sendAt) || sendAt < nowMs - DAY_MS || sendAt > nowMs + 8 * DAY_MS) return null;
+  // L'application dépose les alertes des 14 prochains jours
+  if (!Number.isFinite(sendAt) || sendAt < nowMs - DAY_MS || sendAt > nowMs + 15 * DAY_MS) return null;
   if (!KINDS.has(data.kind) || !SITUATIONS.has(data.situation)) return null;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(data.date || ''))) return null;
   const hhmm = (v) => (typeof v === 'string' && /^\d{1,2}:\d{2}$/.test(v) ? v : null);
@@ -132,6 +133,29 @@ export async function detachFromOtherAccounts(db, uid, endpoint, fieldValue = Fi
   return updates.length;
 }
 
+/**
+ * Remplace un abonnement renouvelé par le navigateur (événement « pushsubscriptionchange ») dans la
+ * fiche « appareils » qui le contient. Renvoie le nombre de fiches mises à jour (0 si inconnu).
+ */
+export async function replaceSubscription(db, oldEndpoint, subscription, fieldValue = FieldValue) {
+  if (!/^https:\/\//.test(oldEndpoint) || !subscription || subscription.endpoint === oldEndpoint) return 0;
+  const oldKey = endpointKey(oldEndpoint);
+  const snap = await db.collection('push_queue').where(`subscriptions.${oldKey}.subscription.endpoint`, '==', oldEndpoint).get();
+  const now = new Date().toISOString();
+  let count = 0;
+  for (const doc of snap.docs) {
+    if (!doc.id.startsWith('device_')) continue;
+    const previous = doc.get(`subscriptions.${oldKey}`) || {};
+    await doc.ref.update({
+      [`subscriptions.${oldKey}`]: fieldValue.delete(),
+      [`subscriptions.${endpointKey(subscription.endpoint)}`]: { subscription, updatedAt: now, device: previous.device || '', renewedBy: 'service-worker' },
+      updatedAt: now,
+    });
+    count += 1;
+  }
+  return count;
+}
+
 export function cleanSubscription(sub) {
   const endpoint = str(sub?.endpoint, 1000);
   const p256dh = str(sub?.keys?.p256dh, 200);
@@ -148,6 +172,23 @@ export default async function handler(req, res) {
   if (!isAllowedOrigin(req)) return send(res, 403, { success: false, error: 'FORBIDDEN_ORIGIN' });
   loadLocalEnvIfPresent();
 
+  // 0. Relais du Service Worker : le navigateur a renouvelé l'abonnement, application fermée (pas de jeton).
+  //    L'ancienne adresse d'abonnement est secrète : seul l'appareil qui la détenait peut la remplacer.
+  let early;
+  try {
+    early = await readBody(req);
+  } catch (e) {
+    return send(res, e?.code === 413 ? 413 : 400, { success: false, error: 'BAD_BODY' });
+  }
+  if (early?.action === 'resubscribe') {
+    try {
+      const replaced = await replaceSubscription(await getDb(), str(early.oldEndpoint, 1000), cleanSubscription(early.subscription));
+      return send(res, replaced ? 200 : 404, { success: replaced > 0, replaced });
+    } catch (err) {
+      return send(res, 500, { success: false, error: String(err?.message || 'SERVER_ERROR').slice(0, 120) });
+    }
+  }
+
   // 1. Identité de l'élève (jeton Firebase signé par Google)
   const authHeader = String(req.headers.authorization || '');
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
@@ -158,12 +199,7 @@ export default async function handler(req, res) {
     return send(res, 401, { success: false, error: e?.message === 'TOKEN_EXPIRED' ? 'TOKEN_EXPIRED' : 'UNAUTHORIZED' });
   }
 
-  let body;
-  try {
-    body = await readBody(req);
-  } catch (e) {
-    return send(res, e?.code === 413 ? 413 : 400, { success: false, error: 'BAD_BODY' });
-  }
+  const body = early || {};
 
   try {
     const db = await getDb();
@@ -256,6 +292,12 @@ export default async function handler(req, res) {
           else batch.delete(ref);
         }
         await batch.commit();
+      }
+      // Date du dernier planning reçu : tant qu'il est récent, le serveur ne prolonge pas les alertes lui-même
+      if (body.action === 'plan' && body.replaceFuture === true) {
+        await db.collection('push_queue').doc(`device_${uid}`).set({
+          userId: uid, type: 'device_sub', sessionId: 'device_sub', sendAt: 9999999999999, lastPlanAt: now.getTime(),
+        }, { merge: true }).catch(() => {});
       }
       return send(res, 200, { success: true, written: ops.filter((o) => o.type === 'set').length, deleted: deleteIds.length, replaced, rejected });
     }

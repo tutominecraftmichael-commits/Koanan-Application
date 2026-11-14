@@ -6,7 +6,34 @@
 // et pouvait faire échouer l'installation du Service Worker hors connexion. Le nom du fichier est
 // conservé pour que les téléphones déjà inscrits reçoivent cette version automatiquement.
 
-const SW_VERSION = 'v-2026-11-08-03';
+const SW_VERSION = 'v-2026-11-14-01';
+// Même clé publique que l'application (src/services/webPushService.ts)
+const VAPID_PUBLIC_KEY = 'BFMUUoknQ9de4CCl1wew4j3SGHtMDBRpk9DhE1vAH3OewLXF8m43FhO26yq1X5eeOZ97jNvbScN_41u10gxy4PY';
+
+function vapidKeyBytes() {
+  const padding = '='.repeat((4 - (VAPID_PUBLIC_KEY.length % 4)) % 4);
+  const raw = atob((VAPID_PUBLIC_KEY + padding).replace(/-/g, '+').replace(/_/g, '/'));
+  return Uint8Array.from(raw, (c) => c.charCodeAt(0));
+}
+
+// Le navigateur renouvelle parfois l'abonnement push de lui-même (expiration, mise à jour de Chrome).
+// Sans ce relais, l'ancien abonnement meurt côté serveur et les notifications s'arrêtent jusqu'à la
+// prochaine ouverture de KONAN. Ici, le nouvel abonnement est transmis au serveur aussitôt, appli fermée.
+self.addEventListener('pushsubscriptionchange', (event) => {
+  event.waitUntil((async () => {
+    const oldEndpoint = event.oldSubscription?.endpoint;
+    if (!oldEndpoint) return; // sans l'ancien abonnement, l'application se réinscrira à sa prochaine ouverture
+    let sub = event.newSubscription;
+    if (!sub) {
+      sub = await self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: vapidKeyBytes() });
+    }
+    await fetch('/api/push-sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'resubscribe', oldEndpoint, subscription: sub.toJSON() }),
+    });
+  })().catch(() => {}));
+});
 
 self.addEventListener('install', () => {
   self.skipWaiting();

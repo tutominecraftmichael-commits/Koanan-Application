@@ -4,7 +4,9 @@
  *
  * Comment ça marche :
  * 1. L'application de l'élève dépose à l'avance, dans la collection `push_queue`, une « enveloppe »
- *    par alerte prévue sur les 7 prochains jours (sans texte : juste la séance, l'heure et la situation).
+ *    par alerte prévue sur les 14 prochains jours (sans texte : juste la séance, l'heure et la situation).
+ *    Si l'élève ne rouvre pas KONAN pendant 6 jours, chaque alerte traitée est reprogrammée la semaine
+ *    suivante (jusqu'à 8 semaines) : les rappels continuent sans l'application.
  * 2. Ce travailleur lit UNIQUEMENT les enveloppes arrivées à échéance (sendAt <= maintenant).
  * 3. Pour chacune, il relit la fiche de l'élève (users/{uid}) : séance pas déjà faite, pas déplacée ?
  *    (Notifications pour TOUS les élèves : Gratuit, Pro et Plus.) Puis il construit le contexte de l'élève et demande à Gemini d'écrire le message
@@ -154,8 +156,42 @@ function checkEnvelope(env, userData) {
   if (userData?.cycleCompletedDate === env.date) return { ok: false, reason: 'programme du jour terminé' };
   const sessions = Array.isArray(userData?.studySessions) ? userData.studySessions : [];
   const s = sessions.find((x) => x && x.id === env.sessionId);
-  if (s?.completed && s.subjectId === env.subjectId) return { ok: false, reason: 'séance déjà faite' };
+  // « Faite » ne vaut que pour SON jour : la même séance de la semaine suivante doit encore être rappelée
+  const sameDay = !s?.date || s.date === env.date;
+  if (s?.completed && sameDay && s.subjectId === env.subjectId) return { ok: false, reason: 'séance déjà faite' };
   return { ok: true, alert: env };
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+/** Au-delà de 6 jours sans planning envoyé par l'application, le serveur prolonge lui-même les alertes. */
+const AUTONOMY_AFTER_MS = 6 * DAY_MS;
+/** Nombre maximal de semaines prolongées sans que l'élève rouvre KONAN. */
+const MAX_AUTO_WEEKS = 8;
+
+function addDaysYmd(ymd, days) {
+  const [y, m, d] = String(ymd).split('-').map(Number);
+  const t = new Date(Date.UTC(y, m - 1, d) + days * DAY_MS);
+  return `${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
+}
+
+/**
+ * Même alerte, une semaine plus tard (même jour de la semaine, même heure) : les notifications continuent
+ * même si l'élève n'ouvre plus l'application. Dès qu'il la rouvre, son planning remplace ces alertes.
+ * Null si l'application a envoyé un planning récent, ou après MAX_AUTO_WEEKS semaines.
+ */
+export function nextWeekEnvelope(id, env, deviceData, nowMs) {
+  if (Number(env?.v) !== 3 || !ALERT_KINDS[env.kind] || !/^\d{4}-\d{2}-\d{2}$/.test(String(env.date || ''))) return null;
+  const lastPlanAt = Number(deviceData?.lastPlanAt) || 0;
+  if (nowMs - lastPlanAt < AUTONOMY_AFTER_MS) return null;
+  const gen = Number(env.gen) || 0;
+  if (gen >= MAX_AUTO_WEEKS) return null;
+  const suffix = `_${env.date.replace(/-/g, '')}_${env.kind}`;
+  if (!String(id).endsWith(suffix)) return null;
+  const date = addDaysYmd(env.date, 7);
+  return {
+    id: `${String(id).slice(0, -suffix.length)}_${date.replace(/-/g, '')}_${env.kind}`,
+    data: { ...env, date, sendAt: Number(env.sendAt) + 7 * DAY_MS, gen: gen + 1 },
+  };
 }
 
 /**
@@ -282,7 +318,7 @@ async function removeDeadSubscriptions(db, userId, deadKeys) {
 }
 
 /** Fonctions internes exposées pour les tests à blanc (aucun accès réseau). */
-export const __test = { checkEnvelope, subscriptionsOf, planTierOf };
+export const __test = { checkEnvelope, subscriptionsOf, planTierOf, nextWeekEnvelope };
 
 // ---------------------------------------------------------------------------
 // Route
@@ -319,10 +355,23 @@ export default async function handler(req, res) {
   if (params.get('diagnostic')) {
     const fb = getDb();
     let dueCount = null;
+    let devices = null;
     let firestoreError = fb.error || null;
     if (fb.db) {
       try {
         dueCount = (await fb.db.collection('push_queue').where('sendAt', '<=', nowMs).limit(500).get()).size;
+        // Appareils inscrits (sans aucune donnée personnelle) : combien, et la dernière inscription
+        const docs = (await fb.db.collection('push_queue').where('type', '==', 'device_sub').get()).docs;
+        let withDevice = 0;
+        let lastRegistration = '';
+        for (const d of docs) {
+          const subs = subscriptionsOf(d.data());
+          if (subs.length) withDevice += 1;
+          for (const entry of Object.values(d.get('subscriptions') || {})) {
+            if (entry?.updatedAt && entry.updatedAt > lastRegistration) lastRegistration = entry.updatedAt;
+          }
+        }
+        devices = { comptes: docs.length, comptesAvecAppareil: withDevice, derniereInscription: lastRegistration || null };
       } catch (e) { firestoreError = String(e?.message || e).slice(0, 120); }
     }
     return res.status(200).json({
@@ -334,6 +383,7 @@ export default async function handler(req, res) {
       geminiKeyPresent: Boolean(String(process.env.GEMINI_API_KEY || '').trim()),
       firestore: firestoreError ? `ERREUR : ${firestoreError}` : 'OK',
       envelopesDueNow: dueCount,
+      devices,
     });
   }
 
@@ -412,12 +462,22 @@ export default async function handler(req, res) {
     await Promise.all([...sentByUser.entries()].map(([userId, msgs]) =>
       rememberMessages(db, userId, recentOf(people.get(userId)?.device), msgs)));
 
-    // Chaque enveloppe traitée (envoyée ou écartée) quitte la file
-    for (let i = 0; i < envelopes.length; i += 400) {
+    // Chaque enveloppe traitée (envoyée ou écartée) quitte la file ; si l'élève n'a pas rouvert KONAN
+    // depuis 6 jours, la même alerte est reprogrammée la semaine suivante (notifications autonomes)
+    let requeued = 0;
+    for (let i = 0; i < envelopes.length; i += 200) {
       const batch = db.batch();
-      envelopes.slice(i, i + 400).forEach((e) => batch.delete(e.ref));
+      for (const e of envelopes.slice(i, i + 200)) {
+        batch.delete(e.ref);
+        const next = nextWeekEnvelope(e.id, e.data, people.get(e.data.userId)?.device, nowMs);
+        if (next) {
+          batch.set(db.collection('push_queue').doc(next.id), next.data);
+          requeued += 1;
+        }
+      }
       await batch.commit();
     }
+    stats.requeued = requeued;
 
     return res.status(200).json({ success: true, durationMs: Date.now() - nowMs, stats, timestamp: now.toISOString() });
   } catch (err) {
