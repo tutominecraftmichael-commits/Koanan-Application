@@ -173,6 +173,7 @@ import { MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES } from '../../data/courses
 import { FR_1RE_EE_L02_COMMENTAIRE_COMPOSE } from '../../data/courses/premiere/fr_1re_commentaire_compose';
 import { FR_1RE_EE_L03_DISSERTATION_LITTERAIRE } from '../../data/courses/premiere/fr_1re_dissertation_litteraire';
 import { FR_1RE_EE_RESUME_PRODUCTION_ECRITE } from '../../data/courses/premiere/fr_1re_resume_production_ecrite';
+import { FR_1RE_PL_L02_TONALITES } from '../../data/courses/premiere/fr_1re_tonalites';
 import { FR_1RE_PL_L03_RYTHME } from '../../data/courses/premiere/fr_1re_rythme';
 import { FR_2DE_PL_L01_FONCTIONS_LANGAGE } from '../../data/courses/seconde/fr_2de_fonctions_langage';
 import { FR_2DE_PL_L02_CONNECTEURS_LOGIQUES } from '../../data/courses/seconde/fr_2de_connecteurs_logiques';
@@ -91298,6 +91299,7 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_1RE_EE_L03_DISSERTATION_LITTERAIRE,
   FR_1RE_EE_RESUME_PRODUCTION_ECRITE,
+  FR_1RE_PL_L02_TONALITES,
   FR_1RE_PL_L03_RYTHME,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
   FR_2DE_PL_L02_CONNECTEURS_LOGIQUES,
