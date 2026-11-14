@@ -172,6 +172,7 @@ import { MATHS_1RE_L06_STATISTIQUES } from '../../data/courses/premiere/maths_1r
 import { MATHS_1RE_L07_SYSTEMES_INEQUATIONS_LINEAIRES } from '../../data/courses/premiere/maths_1re_systemes_inequations_lineaires';
 import { FR_1RE_EE_L02_COMMENTAIRE_COMPOSE } from '../../data/courses/premiere/fr_1re_commentaire_compose';
 import { FR_1RE_EE_L03_DISSERTATION_LITTERAIRE } from '../../data/courses/premiere/fr_1re_dissertation_litteraire';
+import { FR_1RE_EE_RESUME_PRODUCTION_ECRITE } from '../../data/courses/premiere/fr_1re_resume_production_ecrite';
 import { FR_2DE_PL_L01_FONCTIONS_LANGAGE } from '../../data/courses/seconde/fr_2de_fonctions_langage';
 import { FR_2DE_PL_L02_CONNECTEURS_LOGIQUES } from '../../data/courses/seconde/fr_2de_connecteurs_logiques';
 import { FR_2DE_PL_L02B_EXPRESSION_OPINION } from '../../data/courses/seconde/fr_2de_expression_opinion';
@@ -91295,6 +91296,7 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_1RE_EE_L03_DISSERTATION_LITTERAIRE,
+  FR_1RE_EE_RESUME_PRODUCTION_ECRITE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
   FR_2DE_PL_L02_CONNECTEURS_LOGIQUES,
   FR_2DE_PL_L02B_EXPRESSION_OPINION,

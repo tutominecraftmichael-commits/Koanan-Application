@@ -1,6 +1,6 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « 1ere_EE_Dissert_littér » séances 1 à 4. Toutes les Premières.
+// Leçon rédigée à partir du PDF officiel « 1ere_EE_Dissert_littér » séances 1 à 5. Toutes les Premières.
 // Fichier généré (scratchpad build_1re_fr_l03.mjs) : modifier le générateur plutôt que ce fichier.
 export const FR_1RE_EE_L03_DISSERTATION_LITTERAIRE: CurriculumChapter = {
   "id": "premiere_a1_francais_ee_l03_dissertation_litteraire",
@@ -13,10 +13,10 @@ export const FR_1RE_EE_L03_DISSERTATION_LITTERAIRE: CurriculumChapter = {
   ],
   "order": 3,
   "title": "Expression écrite, leçon 3 : La dissertation littéraire",
-  "summary": "Séances 1 à 4 : analyser le sujet (thème, thèse, problématique), rechercher les idées, élaborer le plan détaillé et rédiger une partie du développement, sur les sujets de Roger Caillois et de Romain Rolland.",
-  "officialVolumeHours": 8,
+  "summary": "Séances 1 à 5 : analyser le sujet (thème, thèse, problématique), rechercher les idées, élaborer le plan détaillé, rédiger une partie du développement, l’introduction et la conclusion, sur les sujets de Roger Caillois et de Romain Rolland.",
+  "officialVolumeHours": 10,
   "contentVersion": 2,
-  "source": "1ere_EE_Dissert_littér_S1_Analyser_sujet, S2_Rechercher_idées, S3_Elaborer_plan, S4_Rédiger_partie_dvpment (École numérique)",
+  "source": "1ere_EE_Dissert_littér_S1_Analyser_sujet, S2_Rechercher_idées, S3_Elaborer_plan, S4_Rédiger_partie_dvpment, S5_Rédiger_Intro_Conclusion (École numérique)",
   "points": [
     {
       "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p01",
@@ -2560,6 +2560,301 @@ export const FR_1RE_EE_L03_DISSERTATION_LITTERAIRE: CurriculumChapter = {
           ],
           "correctAnswerIndex": 0,
           "explanation": "Le « monstre » est le Nautilus : le roman reste une fiction d’anticipation."
+        }
+      ]
+    },
+    {
+      "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010",
+      "order": 10,
+      "title": "Rédiger l’introduction et la conclusion",
+      "summary": "Construire l’introduction (amorce, présentation du sujet, annonce du plan) et la conclusion (bilan, prise de position, ouverture).",
+      "conceptExplanation": "- L’introduction présente, en un seul paragraphe, le sujet et l’organisation du devoir. Elle a trois moments.\n- L’amorce : elle indique le thème général, en partant d’une réflexion sur le genre, l’histoire littéraire, le contexte historique ou culturel, ou d’un fait paradoxal.\n- La présentation du sujet : on cite intégralement l’opinion de l’auteur si elle est courte, on la reformule si elle est longue. On ne se contente jamais d’y faire allusion comme si le correcteur la connaissait déjà.\n- L’annonce du plan : elle fait apparaître la problématique et indique l’orientation des grandes parties, sans dévoiler la réponse finale.\n- La conclusion présente, en un seul paragraphe, le bilan de la réflexion et répond clairement à la problématique. Elle a trois moments.\n- Le bilan : il résume la démonstration en rappelant, sans les recopier, les conclusions partielles des grandes parties.\n- La prise de position : on choisit une thèse, on dit le point de vue que l’on retient ; il faut éviter de dire son impuissance à conclure.\n- L’ouverture (facultative) : elle montre que la réponse n’épuise pas le problème, par une perspective historique, une question nouvelle ou une citation forte.\n- Correction du document : il nomme deux fois « la prise de position » ; le troisième moment, facultatif, est l’ouverture (ou élargissement).",
+      "keyRule": "Introduction : amorce, présentation du sujet, annonce du plan. Conclusion : bilan, prise de position, ouverture (facultative).",
+      "formulas": [],
+      "workedExample": {
+        "title": "Exercice corrigé : l’introduction du sujet 2",
+        "statement": "En vous appuyant sur votre expérience personnelle de lecteur d’œuvres littéraires, expliquez et discutez le propos de Romain Rolland selon lequel on ne lit jamais un livre ; on se lit à travers les livres, soit pour se découvrir, soit pour se contrôler.",
+        "methodSteps": [
+          "Amorce : « L’œuvre littéraire est délaissée depuis quelque temps au profit de la télévision et des nouveaux moyens de communication. Cependant, les écrivains ne cessent d’encourager la lecture. »",
+          "Présentation du sujet : « C’est sans doute pour en donner les raisons que Romain Rolland a affirmé ceci : « On ne lit jamais un livre ; on se lit à travers les livres, soit pour se découvrir, soit pour se contrôler ». »",
+          "Annonce du plan : « En quoi l’œuvre littéraire nous révèle-t-elle notre propre personne et nous aide-t-elle à nous rectifier ? N’a-t-elle que cette fonction dans la vie du lecteur ? »"
+        ],
+        "conclusion": "Les deux questions annoncent les deux parties du plan dialectique."
+      },
+      "structuredSteps": [
+        {
+          "stepNumber": 1,
+          "stepKind": "definition",
+          "stepBadge": "L’introduction",
+          "stepTheme": "Trois moments",
+          "stepTitle": "Les trois moments de l’introduction",
+          "paragraphText": "L’**introduction** présente, en **un seul paragraphe**, le sujet et l’organisation du devoir. Elle a trois moments : l’**amorce**, la **présentation du sujet**, l’**annonce du plan**.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q1",
+            "type": "mcq",
+            "prompt": "Quels sont, dans l’ordre, les trois moments de l’introduction d’une dissertation ?",
+            "options": [
+              "L’amorce, la présentation du sujet, l’annonce du plan",
+              "Le bilan, la prise de position, l’ouverture",
+              "L’idée directrice, les arguments, les exemples",
+              "La thèse, l’antithèse, la synthèse"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Bilan, prise de position et ouverture sont les moments de la conclusion."
+          }
+        },
+        {
+          "stepNumber": 2,
+          "stepKind": "definition",
+          "stepBadge": "L’amorce",
+          "stepTheme": "Le thème général",
+          "stepTitle": "Reconnaître l’amorce",
+          "paragraphText": "L’**amorce** indique le **thème général** : on part d’une réflexion sur le genre, l’histoire littéraire, le contexte historique ou culturel, ou d’un fait paradoxal.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q2",
+            "type": "mcq",
+            "prompt": "Dans l’introduction du sujet de Roger Caillois, quel moment représente la phrase : « Les critiques ne cessent de réfléchir sur le rôle de l’œuvre littéraire » ?",
+            "options": [
+              "L’amorce",
+              "La présentation du sujet",
+              "L’annonce du plan",
+              "La prise de position"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Elle pose le thème général (le rôle de l’œuvre littéraire) avant de citer le sujet."
+          }
+        },
+        {
+          "stepNumber": 3,
+          "stepKind": "methode",
+          "stepBadge": "Présenter le sujet",
+          "stepTheme": "Citer ou reformuler",
+          "stepTitle": "Comment présenter l’opinion de l’auteur ?",
+          "paragraphText": "On **cite intégralement** l’opinion si elle est **courte**, on la **reformule** si elle est **longue**. Il ne faut jamais se contenter d’**y faire allusion**, comme si le correcteur la connaissait déjà.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q3",
+            "type": "mcq",
+            "prompt": "Dans l’introduction, que faut-il faire de l’opinion de l’auteur lorsqu’elle est courte ?",
+            "options": [
+              "La citer intégralement",
+              "Y faire seulement allusion",
+              "La passer sous silence",
+              "La réfuter immédiatement"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Courte : on la cite en entier ; longue : on la reformule."
+          }
+        },
+        {
+          "stepNumber": 4,
+          "stepKind": "definition",
+          "stepBadge": "Annonce du plan",
+          "stepTheme": "La problématique",
+          "stepTitle": "Reconnaître l’annonce du plan",
+          "paragraphText": "L’**annonce du plan** fait apparaître la **problématique** et indique l’orientation des grandes parties, souvent sous forme de questions.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q4",
+            "type": "mcq",
+            "prompt": "Dans l’introduction du sujet de Roger Caillois, quel moment représente la phrase : « Cette opinion suscite des réflexions sur les questions suivantes : En quoi l’œuvre littéraire est-elle le reflet de la société ? Quels en sont les autres aspects ? » ?",
+            "options": [
+              "L’annonce du plan",
+              "L’amorce",
+              "La présentation du sujet",
+              "L’ouverture"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Les deux questions annoncent les deux parties du développement."
+          }
+        },
+        {
+          "stepNumber": 5,
+          "stepKind": "piege",
+          "stepBadge": "Ne rien dévoiler",
+          "stepTheme": "Sans anticiper",
+          "stepTitle": "L’annonce du plan ne donne pas la réponse",
+          "paragraphText": "L’annonce du plan indique les orientations des parties **sans anticiper sur l’aboutissement** de l’argumentation : la réponse finale est réservée à la conclusion.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q5",
+            "type": "mcq",
+            "prompt": "Pour le sujet de Roger Caillois, laquelle de ces phrases ne convient pas dans une annonce de plan ?",
+            "options": [
+              "« Nous prouverons que Roger Caillois a entièrement tort. »",
+              "« En quoi l’œuvre littéraire est-elle le reflet de la société ? »",
+              "« Quels en sont les autres aspects ? »",
+              "« Nous verrons d’abord…, puis nous nous demanderons… »"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Elle dévoile la conclusion dès l’introduction (et oublie la partie « expliquez »)."
+          }
+        },
+        {
+          "stepNumber": 6,
+          "stepKind": "definition",
+          "stepBadge": "La conclusion",
+          "stepTheme": "Trois moments",
+          "stepTitle": "Les trois moments de la conclusion",
+          "paragraphText": "La **conclusion** présente, en un seul paragraphe, le **bilan**, la **prise de position** et, facultativement, l’**ouverture**. Le document nomme deux fois « la prise de position » : le troisième moment est bien l’ouverture.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q6",
+            "type": "mcq",
+            "prompt": "Quels sont les trois moments de la conclusion d’une dissertation ?",
+            "options": [
+              "Le bilan, la prise de position, l’ouverture (facultative)",
+              "L’amorce, la présentation du sujet, l’annonce du plan",
+              "La citation, la consigne, la problématique",
+              "Le résumé du sujet, la biographie de l’auteur, la date"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Bilan + prise de position + ouverture facultative."
+          }
+        },
+        {
+          "stepNumber": 7,
+          "stepKind": "piege",
+          "stepBadge": "Prendre position",
+          "stepTheme": "Conclure vraiment",
+          "stepTitle": "Ne jamais dire qu’on ne peut pas conclure",
+          "paragraphText": "Le but d’une argumentation est de **convaincre** : il faut faire un choix et dire le point de vue retenu. Il faut **éviter de dire son impuissance à conclure**.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q7",
+            "type": "mcq",
+            "prompt": "Laquelle de ces phrases est à éviter dans la conclusion d’une dissertation ?",
+            "options": [
+              "« Il est impossible de trancher cette question. »",
+              "« En somme, la littérature reflète effectivement la société. »",
+              "« Il ne serait donc pas juste de la réduire à un seul aspect. »",
+              "« Ce caractère multidimensionnel constitue l’essence de l’œuvre littéraire. »"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Avouer qu’on ne peut pas conclure annule tout le travail de démonstration."
+          }
+        },
+        {
+          "stepNumber": 8,
+          "stepKind": "exemple",
+          "stepBadge": "L’ouverture",
+          "stepTheme": "Élargir",
+          "stepTitle": "Reconnaître l’ouverture",
+          "paragraphText": "L’**ouverture** élargit la réflexion par une question nouvelle, une perspective historique ou une citation. Elle montre que la réponse n’épuise pas le problème.",
+          "exercise": {
+            "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q8",
+            "type": "mcq",
+            "prompt": "Dans la conclusion du sujet de Roger Caillois, quel moment représente la phrase : « Mais pour mieux saisir le rôle de la littérature, ne serait-il pas judicieux de s’interroger sur l’attente du lecteur ? » ?",
+            "options": [
+              "L’ouverture",
+              "Le bilan",
+              "L’amorce",
+              "La présentation du sujet"
+            ],
+            "correctAnswerIndex": 0,
+            "explanation": "Cette question nouvelle élargit la réflexion après la prise de position."
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q1",
+          "type": "mcq",
+          "prompt": "Quels sont, dans l’ordre, les trois moments de l’introduction d’une dissertation ?",
+          "options": [
+            "L’amorce, la présentation du sujet, l’annonce du plan",
+            "Le bilan, la prise de position, l’ouverture",
+            "L’idée directrice, les arguments, les exemples",
+            "La thèse, l’antithèse, la synthèse"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Bilan, prise de position et ouverture sont les moments de la conclusion."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q2",
+          "type": "mcq",
+          "prompt": "Dans l’introduction du sujet de Roger Caillois, quel moment représente la phrase : « Les critiques ne cessent de réfléchir sur le rôle de l’œuvre littéraire » ?",
+          "options": [
+            "L’amorce",
+            "La présentation du sujet",
+            "L’annonce du plan",
+            "La prise de position"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Elle pose le thème général (le rôle de l’œuvre littéraire) avant de citer le sujet."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q3",
+          "type": "mcq",
+          "prompt": "Dans l’introduction, que faut-il faire de l’opinion de l’auteur lorsqu’elle est courte ?",
+          "options": [
+            "La citer intégralement",
+            "Y faire seulement allusion",
+            "La passer sous silence",
+            "La réfuter immédiatement"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Courte : on la cite en entier ; longue : on la reformule."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q4",
+          "type": "mcq",
+          "prompt": "Dans l’introduction du sujet de Roger Caillois, quel moment représente la phrase : « Cette opinion suscite des réflexions sur les questions suivantes : En quoi l’œuvre littéraire est-elle le reflet de la société ? Quels en sont les autres aspects ? » ?",
+          "options": [
+            "L’annonce du plan",
+            "L’amorce",
+            "La présentation du sujet",
+            "L’ouverture"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Les deux questions annoncent les deux parties du développement."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q5",
+          "type": "mcq",
+          "prompt": "Pour le sujet de Roger Caillois, laquelle de ces phrases ne convient pas dans une annonce de plan ?",
+          "options": [
+            "« Nous prouverons que Roger Caillois a entièrement tort. »",
+            "« En quoi l’œuvre littéraire est-elle le reflet de la société ? »",
+            "« Quels en sont les autres aspects ? »",
+            "« Nous verrons d’abord…, puis nous nous demanderons… »"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Elle dévoile la conclusion dès l’introduction (et oublie la partie « expliquez »)."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q6",
+          "type": "mcq",
+          "prompt": "Quels sont les trois moments de la conclusion d’une dissertation ?",
+          "options": [
+            "Le bilan, la prise de position, l’ouverture (facultative)",
+            "L’amorce, la présentation du sujet, l’annonce du plan",
+            "La citation, la consigne, la problématique",
+            "Le résumé du sujet, la biographie de l’auteur, la date"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Bilan + prise de position + ouverture facultative."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q7",
+          "type": "mcq",
+          "prompt": "Laquelle de ces phrases est à éviter dans la conclusion d’une dissertation ?",
+          "options": [
+            "« Il est impossible de trancher cette question. »",
+            "« En somme, la littérature reflète effectivement la société. »",
+            "« Il ne serait donc pas juste de la réduire à un seul aspect. »",
+            "« Ce caractère multidimensionnel constitue l’essence de l’œuvre littéraire. »"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Avouer qu’on ne peut pas conclure annule tout le travail de démonstration."
+        },
+        {
+          "id": "premiere_a1_francais_ee_l03_dissertation_litteraire_p010_q8",
+          "type": "mcq",
+          "prompt": "Dans la conclusion du sujet de Roger Caillois, quel moment représente la phrase : « Mais pour mieux saisir le rôle de la littérature, ne serait-il pas judicieux de s’interroger sur l’attente du lecteur ? » ?",
+          "options": [
+            "L’ouverture",
+            "Le bilan",
+            "L’amorce",
+            "La présentation du sujet"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Cette question nouvelle élargit la réflexion après la prise de position."
         }
       ]
     }
