@@ -88,17 +88,44 @@ export function spendEnergy(g0: GamificationState | undefined, planTier: string 
   return { ...g, energy: energy - ENERGY_COST, energyAt: new Date(energyAt).toISOString(), updatedAt: now.toISOString() };
 }
 
-/** XP de base de la prochaine série (selon l'enchaînement en cours). */
-export function nextSeriesBaseXp(g0: GamificationState | undefined, startedAt: Date = new Date()): { base: number; chainIndex: number } {
+/**
+ * Niveaux des séries enchaînées : plus d'XP, plus de questions, plus difficiles, moins de temps par question.
+ * Le temps écoulé avant la fin = série perdue (rien de gagné, retour au niveau 1).
+ */
+export const SERIES_LEVELS = [
+  { level: 1, xp: 15, questions: 10, seconds: 5 * 60 },
+  { level: 2, xp: 30, questions: 15, seconds: 7 * 60 },
+  { level: 3, xp: 60, questions: 20, seconds: 8 * 60 + 30 },
+  { level: 4, xp: 120, questions: 30, seconds: 10 * 60 },
+] as const;
+export type SeriesLevel = (typeof SERIES_LEVELS)[number];
+export function seriesLevelFor(chainIndex: number): SeriesLevel {
+  return SERIES_LEVELS[Math.max(0, Math.min(SERIES_LEVELS.length - 1, chainIndex))];
+}
+
+/** XP de base et niveau de la prochaine série (selon l'enchaînement en cours). */
+export function nextSeriesBaseXp(g0: GamificationState | undefined, startedAt: Date = new Date()): { base: number; chainIndex: number; level: SeriesLevel } {
   const g = gamificationOf(g0);
   const chain = g.seriesChain;
   let chainIndex = 0;
-  if (chain?.lastEndAt) {
+  if (chain?.lastEndAt && chain.count >= 0) {
     const last = new Date(chain.lastEndAt);
     const sameDay = ymdLocal(last) === ymdLocal(startedAt);
     if (sameDay && startedAt.getTime() - last.getTime() <= SERIES_CHAIN_GAP_MS) chainIndex = chain.count + 1;
   }
-  return { base: Math.min(SERIES_MAX_XP, SERIES_BASE_XP * 2 ** Math.min(chainIndex, 10)), chainIndex };
+  const level = seriesLevelFor(chainIndex);
+  return { base: level.xp, chainIndex, level };
+}
+
+/** Série perdue (temps écoulé ou abandon) : rien de gagné, l'enchaînement repart au niveau 1. */
+export function loseSeries(g0: GamificationState | undefined, reason: string, now: Date = new Date()): GamificationState {
+  const g = gamificationOf(g0);
+  return {
+    ...g,
+    seriesChain: { count: -1, lastEndAt: now.toISOString() },
+    history: pushEvents(g.history, [{ at: now.toISOString(), kind: 'xp', amount: 0, reason }]),
+    updatedAt: now.toISOString(),
+  };
 }
 
 /** Fin d'une série : XP = base − 1 par faute (jamais sous 0). */
@@ -114,13 +141,13 @@ export function finishSeries(
   const gained = Math.max(0, base - Math.max(0, Math.round(mistakes)));
   const event: GamificationEvent = {
     at: now.toISOString(), kind: 'xp', amount: gained,
-    reason: `Série d'exercices (${Math.max(0, total - mistakes)}/${total})${chainIndex ? ` · enchaînée ×${2 ** Math.min(chainIndex, 3)}` : ''}`,
+    reason: `Série niveau ${seriesLevelFor(chainIndex).level} (${Math.max(0, total - mistakes)}/${total})`,
   };
   return {
     gamification: {
       ...g,
       xp: g.xp + gained,
-      seriesChain: { count: chainIndex, lastEndAt: now.toISOString() },
+      seriesChain: { count: Math.min(chainIndex, SERIES_LEVELS.length - 1), lastEndAt: now.toISOString() },
       history: pushEvents(g.history, [event]),
       updatedAt: now.toISOString(),
     },

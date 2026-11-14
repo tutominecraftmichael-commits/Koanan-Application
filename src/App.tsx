@@ -68,7 +68,7 @@ import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
-import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries } from './lib/gamification/gamification';
+import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries } from './lib/gamification/gamification';
 import { XpReputationCard } from './features/gamification/XpReputationCard';
 import { XpBurst } from './features/gamification/XpBurst';
 import { ExerciseFab } from './features/gamification/ExerciseFab';
@@ -694,6 +694,10 @@ export function App() {
     updateGamification((prev) => finishSeries(prev.gamification, mistakes, startedAt, now, total).gamification);
     return preview.gained;
   };
+  const handleLoseSeries = useCallback((reason: string) => {
+    updateGamification((prev) => loseSeries(prev.gamification, reason));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Réputation : jours terminés comptés à l'ouverture, au retour dans l'appli et toutes les 10 minutes
   useEffect(() => {
@@ -2541,6 +2545,7 @@ export function App() {
             planTier={exercisePlan}
             onSpend={handleSpendEnergy}
             onFinish={handleFinishSeries}
+            onLose={handleLoseSeries}
             onClose={() => setIsExerciseOpen(false)}
             onUpgrade={() => { setIsExerciseOpen(false); handleViewPricing(); }}
           />
