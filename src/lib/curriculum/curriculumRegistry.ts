@@ -67,6 +67,9 @@ import { CHIMIE_1RE_CD_L11_CORROSION_PROTECTION_METAUX } from '../../data/course
 import { PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE } from '../../data/courses/premiere/physique_1re_cd_01_travail_puissance';
 import { PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL } from '../../data/courses/premiere/physique_1re_cd_02_amplificateur_operationnel';
 import { PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE } from '../../data/courses/premiere/physique_1re_cd_03_reflexion_refraction_lumiere';
+import { PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE } from '../../data/courses/premiere/physique_1re_cd_04_energie_cinetique';
+import { PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE } from '../../data/courses/premiere/physique_1re_cd_05_puissance_energie_electrique';
+import { PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES } from '../../data/courses/premiere/physique_1re_cd_06_lentilles_minces';
 import { CHIMIE_TLE_CD_L01_ALCOOLS } from '../../data/courses/terminale/chimie_tle_cd_01_alcools';
 import { CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES } from '../../data/courses/terminale/chimie_tle_cd_02_composes_carbonyles';
 import { CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES } from '../../data/courses/terminale/chimie_tle_cd_03_acides_carboxyliques_et_derives';
@@ -91277,6 +91280,9 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   PHYSIQUE_1RE_CD_L01_TRAVAIL_PUISSANCE,
   PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL,
   PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE,
+  PHYSIQUE_1RE_CD_L04_ENERGIE_CINETIQUE,
+  PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE,
+  PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
