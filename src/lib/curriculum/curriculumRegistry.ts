@@ -73,6 +73,7 @@ import { PHYSIQUE_1RE_CD_L06_LENTILLES_MINCES } from '../../data/courses/premier
 import { PHYSIQUE_1RE_CD_P4_ENERGIE_POTENTIELLE } from '../../data/courses/premiere/physique_1re_cd_p4_energie_potentielle';
 import { PHYSIQUE_1RE_CD_P5_ENERGIE_MECANIQUE } from '../../data/courses/premiere/physique_1re_cd_p5_energie_mecanique';
 import { PHYSIQUE_1RE_CD_P6_CHAMP_ELECTROSTATIQUE } from '../../data/courses/premiere/physique_1re_cd_p6_champ_electrostatique';
+import { PHYSIQUE_1RE_CD_P11_INTRODUCTION_OPTIQUE_GEOMETRIQUE } from '../../data/courses/premiere/physique_1re_cd_p11_introduction_optique_geometrique';
 import { CHIMIE_TLE_CD_L01_ALCOOLS } from '../../data/courses/terminale/chimie_tle_cd_01_alcools';
 import { CHIMIE_TLE_CD_L02_COMPOSES_CARBONYLES } from '../../data/courses/terminale/chimie_tle_cd_02_composes_carbonyles';
 import { CHIMIE_TLE_CD_L03_ACIDES_CARBOXYLIQUES_ET_DERIVES } from '../../data/courses/terminale/chimie_tle_cd_03_acides_carboxyliques_et_derives';
@@ -91289,6 +91290,7 @@ const AUTHORED_CHAPTERS: CurriculumChapter[] = [
   PHYSIQUE_1RE_CD_P4_ENERGIE_POTENTIELLE,
   PHYSIQUE_1RE_CD_P5_ENERGIE_MECANIQUE,
   PHYSIQUE_1RE_CD_P6_CHAMP_ELECTROSTATIQUE,
+  PHYSIQUE_1RE_CD_P11_INTRODUCTION_OPTIQUE_GEOMETRIQUE,
   // Première (A1, A2, C, D) — Français, expression écrite
   FR_1RE_EE_L02_COMMENTAIRE_COMPOSE,
   FR_2DE_PL_L01_FONCTIONS_LANGAGE,
