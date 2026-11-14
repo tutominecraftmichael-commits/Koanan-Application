@@ -598,8 +598,8 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                   />
                 </div>
               </div>
-              <p className="text-[10px] text-amber-200/70">
-                KONAN prépare ce {examType === 'devoir' ? 'devoir' : 'examen'} chaque jour à partir de J-14 : séries de 30 questions et sujets complets de 2 h en alternance, puis un sujet de 2 h chaque jour de J-3 à J-1.
+              <p className="text-[10px] text-amber-700 dark:text-amber-200/70">
+                KONAN prépare ce {examType === 'devoir' ? 'devoir' : 'examen'} chaque jour à partir de J-14 : 2 jours de séries de 30 questions, puis 1 jour de sujet complet de 2 h, et ainsi de suite (par exemple J-7 et J-6 : questions, J-5 : sujet).
               </p>
             </div>
           )}

@@ -334,7 +334,7 @@ export function generateOptimizedStudyPlan(
             const bDaysToExam = getDaysRemainingFrom(b.subject.examDate, sessionDate);
 
             // Préparation au devoir (J-14 à J-1) : une séance CHAQUE jour pour la matière concernée,
-            // la plus proche de son épreuve d'abord (sujets de 2 h obligatoires de J-3 à J-1),
+            // la plus proche de son épreuve d'abord (cycle 2 jours de QCM puis 1 jour de sujet de 2 h),
             // uniquement si la date ET le type d'évaluation ont été explicitement renseignés.
             const aHasExam = Boolean(a.subject.examDate && a.subject.examType);
             const bHasExam = Boolean(b.subject.examDate && b.subject.examType);

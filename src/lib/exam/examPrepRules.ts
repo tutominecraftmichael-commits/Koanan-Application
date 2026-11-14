@@ -2,9 +2,10 @@
  * RÈGLES DE PRÉPARATION AUX DEVOIRS ET EXAMENS (2nde A, 2nde C, Tle A1 et Tle A2 pour l'instant)
  *
  * Pour chaque jour avant l'épreuve (J-n), KONAN choisit le type de séance :
- *  - J-3, J-2, J-1 : sujet complet de 2 h, OBLIGATOIRE chaque jour ;
- *  - avant (J-4 et plus) : alternance par blocs de 3 jours, en remontant le temps :
- *      J-4 à J-6 : séries de 30 questions ; J-7 à J-9 : sujets de 2 h ; J-10 à J-12 : 30 questions ; J-13, J-14 : sujets ;
+ *  - cycle de 3 jours : 2 jours de séries de 30 questions, puis 1 jour de sujet complet de 2 h.
+ *      J-7, J-6 : QCM ; J-5 : sujet ; J-4, J-3 : QCM ; J-2 : sujet ; J-1 : QCM.
+ *      Plus tôt : J-14 sujet ; J-13, J-12 QCM ; J-11 sujet ; J-10, J-9 QCM ; J-8 sujet.
+ *      (sujet les jours J-14, J-11, J-8, J-5, J-2 ; QCM tous les autres jours) ;
  *  - jour J : pas de séance de préparation (l'élève compose) ;
  *  - matière sans cours dans l'appli : « chronomètre classique » de 75 min tous les jours (révision sur le cahier) ;
  *  - matière avec cours mais sans modèle de sujet (ex. Philosophie) : séries de 30 questions.
@@ -74,10 +75,8 @@ export function examPrepModeFor(
   if (!subjectHasExamCourse(subject)) return 'chrono75';
   const canSujet = hasSujetTemplate(subject.examSubjectKey);
   if (!canSujet) return 'qcm30';
-  if (daysToExam <= 3) return 'sujet2h';
-  // Blocs de 3 jours en remontant à partir de J-4 : QCM, sujets, QCM, sujets…
-  const block = Math.floor((daysToExam - 4) / 3);
-  return block % 2 === 0 ? 'qcm30' : 'sujet2h';
+  // Cycle QCM, QCM, sujet : J-7 et J-6 QCM, J-5 sujet, J-4 et J-3 QCM, J-2 sujet, J-1 QCM
+  return daysToExam % 3 === 2 ? 'sujet2h' : 'qcm30';
 }
 
 export function examPrepLabel(mode: ExamPrepMode): string {
