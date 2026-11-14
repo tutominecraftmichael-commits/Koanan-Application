@@ -35,6 +35,97 @@ export function gamificationOf(g?: Partial<GamificationState> | null): Gamificat
     awardedKeys: Array.isArray(g.awardedKeys) ? g.awardedKeys.map(String) : [],
     history: Array.isArray(g.history) ? g.history.filter((e) => e && typeof e.amount === 'number') : [],
     updatedAt: g.updatedAt,
+    energy: Number.isFinite(g.energy) ? Math.max(0, Math.min(ENERGY_MAX, Number(g.energy))) : undefined,
+    energyAt: g.energyAt,
+    seriesChain: g.seriesChain && Number.isFinite(g.seriesChain.count) ? g.seriesChain : undefined,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// ÉTAPE 2 : ÉNERGIE ⚡ ET SÉRIES D'EXERCICES (icône ronde)
+// ---------------------------------------------------------------------------
+/** 25 ⚡ au départ ; une série coûte 5 ⚡ en Gratuit ; Pro et Plus : illimité. */
+export const ENERGY_MAX = 25;
+export const ENERGY_COST = 5;
+/** Recharge progressive : 1 ⚡ toutes les 55 min 12 s, donc 5 ⚡ (une série) toutes les 4 h 36 et le plein en 23 h. */
+export const ENERGY_FULL_MS = 23 * 60 * 60 * 1000;
+export const ENERGY_UNIT_MS = ENERGY_FULL_MS / ENERGY_MAX;
+/** XP d'une série de 10 QCM : 15, puis le double à chaque série enchaînée, plafonné à 120. */
+export const SERIES_BASE_XP = 15;
+export const SERIES_MAX_XP = 120;
+/** Au-delà de 30 minutes de pause (ou le lendemain), le doublement repart à 15 XP. */
+export const SERIES_CHAIN_GAP_MS = 30 * 60 * 1000;
+export const SERIES_LENGTH = 10;
+
+export function hasUnlimitedEnergy(planTier?: string): boolean {
+  return planTier === 'pro' || planTier === 'plus';
+}
+
+/** Énergie disponible maintenant, et heure du prochain ⚡ et du plein (null si déjà plein). */
+export function energyNow(g0: GamificationState | undefined, now: Date = new Date()): { energy: number; nextUnitAt: number | null; fullAt: number | null } {
+  const g = gamificationOf(g0);
+  if (g.energy === undefined || !g.energyAt) return { energy: ENERGY_MAX, nextUnitAt: null, fullAt: null };
+  const at = Date.parse(g.energyAt) || now.getTime();
+  const units = Math.max(0, Math.floor((now.getTime() - at) / ENERGY_UNIT_MS));
+  const energy = Math.min(ENERGY_MAX, g.energy + units);
+  if (energy >= ENERGY_MAX) return { energy, nextUnitAt: null, fullAt: null };
+  const nextUnitAt = at + (units + 1) * ENERGY_UNIT_MS;
+  return { energy, nextUnitAt, fullAt: nextUnitAt + (ENERGY_MAX - energy - 1) * ENERGY_UNIT_MS };
+}
+
+/** Dépense l'énergie d'une série (au lancement). Null si pas assez d'énergie. */
+export function spendEnergy(g0: GamificationState | undefined, planTier: string | undefined, now: Date = new Date()): GamificationState | null {
+  const g = gamificationOf(g0);
+  if (hasUnlimitedEnergy(planTier)) return g;
+  const { energy } = energyNow(g, now);
+  if (energy < ENERGY_COST) return null;
+  // On garde la recharge déjà entamée : l'heure de référence avance d'un nombre entier de ⚡
+  let energyAt = now.getTime();
+  if (g.energy !== undefined && g.energyAt && energy < ENERGY_MAX) {
+    const at = Date.parse(g.energyAt) || now.getTime();
+    energyAt = at + Math.floor((now.getTime() - at) / ENERGY_UNIT_MS) * ENERGY_UNIT_MS;
+  }
+  return { ...g, energy: energy - ENERGY_COST, energyAt: new Date(energyAt).toISOString(), updatedAt: now.toISOString() };
+}
+
+/** XP de base de la prochaine série (selon l'enchaînement en cours). */
+export function nextSeriesBaseXp(g0: GamificationState | undefined, startedAt: Date = new Date()): { base: number; chainIndex: number } {
+  const g = gamificationOf(g0);
+  const chain = g.seriesChain;
+  let chainIndex = 0;
+  if (chain?.lastEndAt) {
+    const last = new Date(chain.lastEndAt);
+    const sameDay = ymdLocal(last) === ymdLocal(startedAt);
+    if (sameDay && startedAt.getTime() - last.getTime() <= SERIES_CHAIN_GAP_MS) chainIndex = chain.count + 1;
+  }
+  return { base: Math.min(SERIES_MAX_XP, SERIES_BASE_XP * 2 ** Math.min(chainIndex, 10)), chainIndex };
+}
+
+/** Fin d'une série : XP = base − 1 par faute (jamais sous 0). */
+export function finishSeries(
+  g0: GamificationState | undefined,
+  mistakes: number,
+  startedAt: Date,
+  now: Date = new Date(),
+  total: number = SERIES_LENGTH,
+): { gamification: GamificationState; gained: number; base: number } {
+  const g = gamificationOf(g0);
+  const { base, chainIndex } = nextSeriesBaseXp(g, startedAt);
+  const gained = Math.max(0, base - Math.max(0, Math.round(mistakes)));
+  const event: GamificationEvent = {
+    at: now.toISOString(), kind: 'xp', amount: gained,
+    reason: `Série d'exercices (${Math.max(0, total - mistakes)}/${total})${chainIndex ? ` · enchaînée ×${2 ** Math.min(chainIndex, 3)}` : ''}`,
+  };
+  return {
+    gamification: {
+      ...g,
+      xp: g.xp + gained,
+      seriesChain: { count: chainIndex, lastEndAt: now.toISOString() },
+      history: pushEvents(g.history, [event]),
+      updatedAt: now.toISOString(),
+    },
+    gained,
+    base,
   };
 }
 
@@ -218,6 +309,11 @@ export function mergeGamification(local?: Partial<GamificationState> | null, clo
     awardedKeys: [...new Set([...b.awardedKeys, ...a.awardedKeys])].slice(-MAX_KEYS),
     history,
     updatedAt: time(a.updatedAt) >= time(b.updatedAt) ? a.updatedAt : b.updatedAt,
+    // Énergie : la dernière dépense fait foi (jamais de recharge gratuite en changeant d'appareil)
+    ...(time(a.energyAt) >= time(b.energyAt)
+      ? (a.energyAt ? { energy: a.energy, energyAt: a.energyAt } : {})
+      : { energy: b.energy, energyAt: b.energyAt }),
+    seriesChain: time(a.seriesChain?.lastEndAt) >= time(b.seriesChain?.lastEndAt) ? a.seriesChain : b.seriesChain,
   };
 }
 

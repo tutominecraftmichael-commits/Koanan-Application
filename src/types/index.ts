@@ -255,6 +255,11 @@ export interface GamificationState {
   awardedKeys: string[];             // séances déjà récompensées (« idSéance_AAAA-MM-JJ »)
   history: GamificationEvent[];      // derniers gains et pertes (les plus récents d'abord)
   updatedAt?: string;                // ISO : la version la plus récente gagne entre deux appareils
+  /** Énergie ⚡ de l'icône d'exercices (Gratuit) : valeur au moment energyAt, recharge progressive ensuite */
+  energy?: number;
+  energyAt?: string;
+  /** Séries d'exercices enchaînées : la prochaine rapporte le double (15 → 30 → 60 → 120 XP) */
+  seriesChain?: { count: number; lastEndAt: string };
 }
 
 export interface UserStreak {

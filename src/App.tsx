@@ -68,9 +68,10 @@ import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
-import { awardCompletedSessions, settleReputation } from './lib/gamification/gamification';
+import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries } from './lib/gamification/gamification';
 import { XpReputationCard } from './features/gamification/XpReputationCard';
 import { XpBurst } from './features/gamification/XpBurst';
+import { ExerciseFab } from './features/gamification/ExerciseFab';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
 import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
@@ -95,6 +96,7 @@ const loadSubjectManager = () => import('./features/subjects/SubjectManager').th
 const loadPlannerView = () => import('./features/planner/PlannerView').then(m => m.PlannerView);
 const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashboard').then(m => m.AnalyticsDashboard);
 const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
+const ExerciseSeriesView = lazyView(() => import('./features/gamification/ExerciseSeriesView').then((m) => m.ExerciseSeriesView));
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
 const ScheduleManager = lazyView(loadScheduleManager);
@@ -668,6 +670,30 @@ export function App() {
     });
     setXpBurst({ amount: preview.gained, id: Date.now() });
   }, [state.studySessions, gamificationEnabled]);
+
+  // Icône d'exercices (étape 2) : séries de 10 QCM, énergie ⚡ pour les comptes Gratuit
+  const [isExerciseOpen, setIsExerciseOpen] = useState(false);
+  const exercisePlan = state.userAccount?.planTier || state.planTier || 'free';
+  const updateGamification = (compute: (prev: AppState) => AppState['gamification'] | null) => {
+    setState((prev) => {
+      const g = compute(prev);
+      if (!g) return prev;
+      const next = { ...prev, gamification: g };
+      if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
+      return next;
+    });
+  };
+  const handleSpendEnergy = (): boolean => {
+    if (!spendEnergy(state.gamification, exercisePlan)) return false;
+    updateGamification((prev) => spendEnergy(prev.gamification, exercisePlan));
+    return true;
+  };
+  const handleFinishSeries = (mistakes: number, startedAt: Date, total: number): number => {
+    const now = new Date();
+    const preview = finishSeries(state.gamification, mistakes, startedAt, now, total);
+    updateGamification((prev) => finishSeries(prev.gamification, mistakes, startedAt, now, total).gamification);
+    return preview.gained;
+  };
 
   // Réputation : jours terminés comptés à l'ouverture, au retour dans l'appli et toutes les 10 minutes
   useEffect(() => {
@@ -2501,6 +2527,25 @@ export function App() {
         </Suspense>
         </ViewErrorBoundary>
       </main>
+
+      {/* Icône ronde d'exercices (10 QCM au hasard, énergie ⚡) */}
+      {gamificationEnabled && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics'].includes(activeView) && (
+        <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
+      )}
+      {isExerciseOpen && (
+        <Suspense fallback={null}>
+          <ExerciseSeriesView
+            userId={state.userAccount?.googleId || 'local_student'}
+            gradeLevel={tryResolveGradeLevel(state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel)}
+            gamification={state.gamification}
+            planTier={exercisePlan}
+            onSpend={handleSpendEnergy}
+            onFinish={handleFinishSeries}
+            onClose={() => setIsExerciseOpen(false)}
+            onUpgrade={() => { setIsExerciseOpen(false); handleViewPricing(); }}
+          />
+        </Suspense>
+      )}
 
       {/* Academic Track Presets Modal (ONLY FOR DEMO MODE) */}
       {state.isDemoMode && (
