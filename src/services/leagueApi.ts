@@ -5,9 +5,11 @@
 import { auth } from '../lib/firebase';
 import type { LeagueEvent } from '../types';
 
-export interface LeagueRow { rank: number; name: string; classLabel: string; xp: number; me: boolean; tier?: 'free' | 'pro' | 'plus' }
+export interface LeagueRow { rank: number; name: string; classLabel: string; avatar?: string; xp: number; me: boolean; tier?: 'free' | 'pro' | 'plus' }
 export interface LeagueBoard {
   eligible: boolean;
+  /** Pourquoi l'élève n'est pas dans la ligue : réputation trop basse ou classe sans cours (LMD, BTS…) */
+  reason?: 'reputation' | 'no_courses' | null;
   reputation: number;
   division: number;
   divisionName: string;
@@ -28,7 +30,7 @@ export interface LeagueSyncResult {
   board?: LeagueBoard;
 }
 
-export async function callLeague(body: { events: LeagueEvent[]; reputation?: number; displayName?: string; classLabel?: string }): Promise<LeagueSyncResult> {
+export async function callLeague(body: { events: LeagueEvent[]; reputation?: number; displayName?: string; classLabel?: string; gradeLevel?: string; avatar?: string }): Promise<LeagueSyncResult> {
   const user = auth?.currentUser;
   if (!user) return { success: false, error: 'connexion au compte pas encore prête' };
   const attempt = async (forceRefresh: boolean) => {

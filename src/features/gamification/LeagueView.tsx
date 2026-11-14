@@ -48,8 +48,20 @@ function leagueErrorLabel(error: string): string {
   return `Ligue momentanément indisponible (${error}). Je réessaie dans 2 minutes.`;
 }
 
-export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: number; offline: boolean; errorText?: string; onOpen: () => void }> = ({ board, localReputation, offline, errorText = '', onOpen }) => {
+export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: number; hasCourses?: boolean; offline: boolean; errorText?: string; onOpen: () => void }> = ({ board, localReputation, hasCourses = true, offline, errorText = '', onOpen }) => {
   const reputation = board?.reputation ?? localReputation;
+  // Classes sans cours dans KONAN (LMD, BTS…) : pas de ligue
+  if (!hasCourses || board?.reason === 'no_courses') {
+    return (
+      <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-900/70 p-3.5 sm:p-4 flex items-center gap-3">
+        <span className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center shrink-0"><Lock className="w-5 h-5 text-slate-500" /></span>
+        <div className="min-w-0">
+          <p className="text-sm font-black text-slate-900 dark:text-white">Ligue pas encore ouverte pour ta classe</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300">La ligue est réservée aux classes qui ont leurs cours dans KONAN (Seconde, Première, Terminale). Elle ouvrira pour ta filière dès que ses cours seront prêts.</p>
+        </div>
+      </div>
+    );
+  }
   const eligible = board ? board.eligible : reputation > 80;
   if (!eligible) {
     return (
@@ -119,19 +131,20 @@ export const LeagueResultBanner: React.FC<{ board: LeagueBoard; onClose: () => v
 export const LeaguePage: React.FC<{
   board: LeagueBoard | null;
   localReputation: number;
+  hasCourses?: boolean;
   offline: boolean;
   errorText?: string;
   resultSeen: string;
   onDismissResult: (weekId: string) => void;
   onRefresh: () => void;
-}> = ({ board, localReputation, offline, errorText, resultSeen, onDismissResult, onRefresh }) => {
+}> = ({ board, localReputation, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh }) => {
   React.useEffect(() => { onRefresh(); }, [onRefresh]);
   return (
     <div className="space-y-3 pb-24">
       {board?.lastResult && board.lastResult.weekId !== resultSeen && (
         <LeagueResultBanner board={board} onClose={() => onDismissResult(board.lastResult?.weekId || '')} />
       )}
-      {board?.eligible ? <LeagueView board={board} /> : <LeagueCard board={board} localReputation={localReputation} offline={offline} errorText={errorText} onOpen={onRefresh} />}
+      {board?.eligible && hasCourses ? <LeagueView board={board} /> : <LeagueCard board={board} localReputation={localReputation} hasCourses={hasCourses} offline={offline} errorText={errorText} onOpen={onRefresh} />}
     </div>
   );
 };
@@ -168,9 +181,13 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
             return (
               <li key={`${row.rank}-${row.name}`} className={`flex items-center gap-3 px-3 py-2.5 ${row.me ? 'bg-sky-50 dark:bg-sky-500/10' : ''}`}>
                 <span className={`w-7 text-center text-sm font-black tabular-nums ${zone === 'up' || zone === 'keep' ? 'text-emerald-600 dark:text-emerald-400' : zone === 'down' ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500'}`}>{row.rank}</span>
-                <span className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-black text-slate-700 dark:text-slate-200 shrink-0">
-                  {row.name.slice(0, 1).toUpperCase()}
-                </span>
+                {row.avatar ? (
+                  <img src={row.avatar} alt="" loading="lazy" referrerPolicy="no-referrer" className="w-9 h-9 rounded-full object-cover shrink-0 ring-2 ring-slate-200 dark:ring-slate-700" />
+                ) : (
+                  <span className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-black text-slate-700 dark:text-slate-200 shrink-0">
+                    {row.name.slice(0, 1).toUpperCase()}
+                  </span>
+                )}
                 <span className="min-w-0 flex-1">
                   {/* Nom jaune pour les abonnés Pro, multicolore pour Plus (sans mention de la formule) */}
                   <span className={`block truncate text-sm ${

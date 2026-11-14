@@ -20,6 +20,18 @@ const BANNED = new Set([
   'fuck', 'fucker', 'fucking', 'shit', 'bitch', 'pussy', 'asshole', 'cunt', 'whore', 'slut', 'nigger', 'nigga', 'bastard',
 ]);
 
+/** Après un changement de nom, l'élève doit attendre 3 mois avant le suivant (choix du fondateur, 2026-11-14). */
+export const NAME_CHANGE_COOLDOWN_DAYS = 90;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Date (ms) à partir de laquelle l'élève pourra de nouveau changer son nom, ou null s'il le peut déjà. */
+export function nextNameChangeAt(lastChangeIso, nowMs = Date.now()) {
+  const last = Date.parse(lastChangeIso || '');
+  if (!Number.isFinite(last)) return null;
+  const next = last + NAME_CHANGE_COOLDOWN_DAYS * DAY_MS;
+  return next > nowMs ? next : null;
+}
+
 const strip = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 /** @returns {{ ok: true, name: string } | { ok: false, reason: string }} */

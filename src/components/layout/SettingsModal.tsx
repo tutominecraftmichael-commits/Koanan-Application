@@ -20,7 +20,7 @@ import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
 import { soundFX } from '../../lib/audioEffects';
 import { useTheme } from '../../context/ThemeContext';
-import { checkStudentName } from '../../../api/_nameRules.js';
+import { checkStudentName, nextNameChangeAt } from '../../../api/_nameRules.js';
 
 
 const COMMON_FILIERES = [
@@ -62,6 +62,8 @@ interface SettingsModalProps {
   onOpenGroupModal?: () => void;
   onOpenGoalModal?: () => void;
   onOpenPrivacyModal?: () => void;
+  /** Dernier changement de nom (le suivant n'est possible que 3 mois après) */
+  nameChangedAt?: string;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -85,8 +87,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onOpenGroupModal: _onOpenGroupModal,
   onOpenGoalModal: _onOpenGoalModal,
   onOpenPrivacyModal,
+  nameChangedAt,
 }) => {
   const [lang] = useLanguage();
+  const lockedUntil = nextNameChangeAt(nameChangedAt);
   const { toggleTheme, isLight } = useTheme();
 
   // Local form state for editable profile fields only (name, filiere)
@@ -135,8 +139,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     e.preventDefault();
     if (onUpdateProfile) {
       // Le nom est vu par d'autres élèves (ligue) : il doit être correct
-      const check = checkStudentName(editName.trim() || studentName || userAccount?.name || '');
-      if (!check.ok) {
+      const currentName = (studentName || userAccount?.name || '').trim();
+      const wanted = editName.trim() || currentName;
+      // Un seul changement de nom tous les 3 mois
+      if (wanted !== currentName && lockedUntil) {
+        setNameError(`Tu as déjà changé ton nom récemment. Prochain changement possible le ${new Date(lockedUntil).toLocaleDateString('fr-FR')}.`);
+        soundFX.playNotificationPing();
+        return;
+      }
+      const check = checkStudentName(wanted);
+      if ('reason' in check) {
         setNameError(check.reason);
         soundFX.playNotificationPing();
         return;
@@ -328,6 +340,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         type="text"
                         value={editName}
                         onChange={(e) => { setEditName(e.target.value); if (nameError) setNameError(''); }}
+                        readOnly={Boolean(lockedUntil)}
                         placeholder="Ex : Aya Kouassi"
                         maxLength={40}
                         aria-invalid={Boolean(nameError)}
@@ -338,8 +351,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     </div>
                     {nameError ? (
                       <p className="mt-1 text-[11px] font-bold text-rose-700 dark:text-rose-300" role="alert">{nameError}</p>
+                    ) : lockedUntil ? (
+                      <p className="mt-1 text-[11px] font-semibold text-amber-700 dark:text-amber-300">Nom modifié récemment : prochain changement possible le {new Date(lockedUntil).toLocaleDateString('fr-FR')}.</p>
                     ) : (
-                      <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Ton vrai nom : il apparaît dans le classement de la ligue.</p>
+                      <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Ton vrai nom : il apparaît dans le classement de la ligue. Après un changement, il faut attendre 3 mois pour en refaire un.</p>
                     )}
                   </div>
 

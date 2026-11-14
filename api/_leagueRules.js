@@ -68,6 +68,29 @@ const dayKeyOf = (ms) => new Date(ms).toISOString().slice(0, 10);
 export function isEligible(reputation) {
   return Number(reputation) > MIN_REPUTATION;
 }
+
+/** Classes qui ont des cours dans KONAN (Seconde, Première, Terminale) : seules elles ont la ligue. LMD, BTS… : non. */
+export function gradeHasCourses(gradeLevel) {
+  return /^(seconde|premiere|terminale)_/.test(String(gradeLevel || ''));
+}
+
+/** L'élève participe-t-il au classement (réputation de plus de 80 % ET classe avec cours) ? */
+export function isParticipant(player) {
+  return Boolean(player) && isEligible(player.reputation) && player.hasCourses !== false;
+}
+
+/** Collections de la ligue (préfixe réservé aux tests sur la vraie base : LEAGUE_COLLECTION_PREFIX). */
+export function leagueCol(db, name) {
+  return db.collection(`${process.env.LEAGUE_COLLECTION_PREFIX || ''}${name}`);
+}
+
+/** Photo de profil acceptée dans le classement : lien https, ou petite image (≤ 16 Ko). */
+export function cleanAvatar(src) {
+  const s = String(src || '');
+  if (/^https:\/\/[^\s"'<>]{1,600}$/.test(s)) return s;
+  if (/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(s) && s.length <= 16_000) return s;
+  return '';
+}
 export function clampDivision(d) {
   return Math.max(1, Math.min(DIVISIONS.length, Math.round(Number(d) || 1)));
 }

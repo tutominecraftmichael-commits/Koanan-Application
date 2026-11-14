@@ -71,6 +71,9 @@ import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
 import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
 import { LeaguePage } from './features/gamification/LeagueView';
+import { nextNameChangeAt } from '../api/_nameRules.js';
+import { leagueAvatarOf } from './lib/gamification/leagueAvatar';
+import { getDisplayAvatar } from './lib/avatar';
 import { XpReputationCard } from './features/gamification/XpReputationCard';
 import { XpBurst } from './features/gamification/XpBurst';
 import { ExerciseFab } from './features/gamification/ExerciseFab';
@@ -713,6 +716,8 @@ export function App() {
   const gamificationRef = useRef(state.gamification);
   gamificationRef.current = state.gamification;
   const leagueBusy = useRef(false);
+  const leagueGrade = tryResolveGradeLevel(state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel);
+  const leagueAvatarSrc = getDisplayAvatar(state.userAccount);
   const syncLeague = useCallback(async () => {
     if (!gamificationEnabled || leagueBusy.current || !auth?.currentUser) return;
     leagueBusy.current = true;
@@ -723,6 +728,9 @@ export function App() {
         reputation: g.reputationUpdatedAt ? g.reputation : undefined,
         displayName: effectiveStudentName,
         classLabel: effectiveClassLabel,
+        // Classe reconnue (seconde_c, terminale_d…) : sans cours (LMD, BTS), pas de ligue
+        gradeLevel: leagueGrade || '',
+        avatar: await leagueAvatarOf(leagueAvatarSrc),
       });
       setLeagueOffline(!r.success);
       setLeagueError(r.success ? '' : String(r.error || ''));
@@ -734,7 +742,7 @@ export function App() {
       leagueBusy.current = false;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gamificationEnabled, effectiveStudentName, effectiveClassLabel]);
+  }, [gamificationEnabled, effectiveStudentName, effectiveClassLabel, leagueGrade, leagueAvatarSrc]);
 
   // À l'ouverture, au retour dans l'appli, toutes les 2 minutes et après chaque nouveau gain d'XP
   const pendingCount = state.gamification?.pendingEvents?.length || 0;
@@ -1684,6 +1692,15 @@ export function App() {
     // Sécurité backend : assainit formellement le payload et empêche la modification frauduleuse de tier/isPro
     const safeData = sanitizeUserProfileUpdate(updated as any);
 
+    // Changement de nom : un seul tous les 3 mois (le classement de la ligue reste stable)
+    const currentName = (state.userAccount?.name || state.studentName || '').trim();
+    const nameChanged = Boolean(currentName) && safeData.name.trim() !== currentName;
+    const blockedUntil = nameChanged ? nextNameChangeAt(state.nameChangedAt) : null;
+    if (blockedUntil) {
+      safeData.name = currentName;
+      showToast(`Tu as déjà changé ton nom récemment. Prochain changement possible le ${new Date(blockedUntil).toLocaleDateString('fr-FR')}.`, 6000);
+    }
+
     setState(prev => {
       const nextUserAccount: UserAccount = prev.userAccount ? {
         ...prev.userAccount,
@@ -1708,6 +1725,7 @@ export function App() {
         academicLevel: safeData.academicLevel,
         // Date de la modification : à la reconnexion (ou sur un autre téléphone), c'est cette version qui gagne
         profileUpdatedAt: new Date().toISOString(),
+        nameChangedAt: nameChanged && !blockedUntil ? new Date().toISOString() : prev.nameChangedAt,
         userAccount: nextUserAccount,
         preferences: {
           ...prev.preferences,
@@ -1725,7 +1743,7 @@ export function App() {
       return next;
     });
 
-    showToast(`Nom et filière enregistrés : ${updated.name} (${updated.academicLevel})`);
+    if (!blockedUntil) showToast(`Nom et filière enregistrés : ${safeData.name} (${updated.academicLevel})`);
   };
 
   /** Photo de profil choisie dans les réglages (null = revenir à la photo du compte Google). */
@@ -2554,6 +2572,7 @@ export function App() {
           <LeaguePage
             board={leagueBoard}
             localReputation={gamificationOf(state.gamification).reputation}
+            hasCourses={/^(seconde|premiere|terminale)_/.test(leagueGrade || '')}
             offline={leagueOffline}
             errorText={leagueError}
             resultSeen={leagueResultSeen}
@@ -2652,6 +2671,7 @@ export function App() {
         onLogout={handleLogout}
 
         onUpdateProfile={handleUpdateProfile}
+        nameChangedAt={state.nameChangedAt}
         onUpdateAvatar={state.userAccount ? handleUpdateAvatar : undefined}
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}

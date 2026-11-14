@@ -4,13 +4,13 @@
  * descentes de division, résultat mémorisé pour l'élève. Les élèves sous 80 % de réputation ne sont pas
  * classés : leur division reste gelée. Reprise sûre : un groupe déjà traité est marqué « closed ».
  */
-import { computeMovements, isEligible, weekIdOf } from './_leagueRules.js';
+import { computeMovements, isParticipant, leagueCol, weekIdOf } from './_leagueRules.js';
 
 const MAX_GROUPS_PER_RUN = 150;
 
 export async function rolloverLeague(db, nowMs = Date.now()) {
   const current = weekIdOf(nowMs);
-  const metaRef = db.collection('league_meta').doc('state');
+  const metaRef = leagueCol(db, 'league_meta').doc('state');
 
   // 1. Une nouvelle semaine ? (une seule fois, même si deux passages du cron se croisent)
   const closingWeeks = await db.runTransaction(async (tx) => {
@@ -34,22 +34,22 @@ export async function rolloverLeague(db, nowMs = Date.now()) {
   let groupsDone = 0;
   const stats = { groups: 0, up: 0, down: 0, stay: 0 };
   for (const week of closingWeeks) {
-    const groups = (await db.collection('league_groups').where('weekId', '==', week).get()).docs
+    const groups = (await leagueCol(db, 'league_groups').where('weekId', '==', week).get()).docs
       .filter((g) => !g.get('closed'));
     for (const g of groups) {
       if (groupsDone >= MAX_GROUPS_PER_RUN) return { ...stats, unfinished: true };
       const division = Number(g.get('division')) || 1;
       const members = (g.get('members') || []).slice(0, 60);
-      const snaps = members.length ? await db.getAll(...members.map((uid) => db.collection('league_players').doc(uid))) : [];
+      const snaps = members.length ? await db.getAll(...members.map((uid) => leagueCol(db, 'league_players').doc(uid))) : [];
       const participants = snaps
-        .filter((s) => s.exists && s.get('weekId') === week && isEligible(s.get('reputation')))
+        .filter((s) => s.exists && s.get('weekId') === week && isParticipant(s.data()))
         .map((s) => ({ uid: s.id, weekXp: Number(s.get('weekXp')) || 0, xpReachedAt: Number(s.get('xpReachedAt')) || 0 }));
       const moves = computeMovements(participants, division);
       const batch = db.batch();
       for (const p of participants) {
         const m = moves.get(p.uid);
         stats[m.movement] += 1;
-        batch.update(db.collection('league_players').doc(p.uid), {
+        batch.update(leagueCol(db, 'league_players').doc(p.uid), {
           division: m.toDivision,
           groupId: null,
           lastResult: { weekId: week, rank: m.rank, size: participants.length, movement: m.movement, fromDivision: division, toDivision: m.toDivision, weekXp: p.weekXp },
