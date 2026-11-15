@@ -1,14 +1,11 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L3_les échanges dions au niveau du sol.pdf (Mon école à la maison) ». Première C et D (programme de SVT commun).
+// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L3_les échanges dions au niveau du sol.pdf (Mon école à la maison) ». Première C (la 1re D a sa propre leçon sur ce sujet).
 // Fichier généré (scratchpad build_1re_c_svt.mjs) : modifier le générateur plutôt que ce fichier.
 export const SVT_1RE_C_L03_ECHANGES_IONS_SOL: CurriculumChapter = {
   "id": "premiere_c_svt_l03_echanges_ions_sol",
   "subjectId": "svt",
   "gradeLevel": "premiere_c",
-  "alsoForGrades": [
-    "premiere_d"
-  ],
   "order": 3,
   "title": "Leçon 3 : Les échanges d’ions au niveau du sol",
   "summary": "Formation du complexe argilo-humique (argile, humus, ponts calciques), pouvoir absorbant et charges négatives, échanges de cations avec la solution du sol, engrais, lessivage et expérience de Way.",

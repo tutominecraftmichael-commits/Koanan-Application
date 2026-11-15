@@ -18,6 +18,20 @@ import { SVT_1RE_C_L04_GAMETOGENESE_MAMMIFERES } from '../courses/premiere/svt_1
 import { SVT_1RE_C_L05_FECONDATION_MAMMIFERES } from '../courses/premiere/svt_1re_c_fecondation';
 import { SVT_1RE_C_L06_SYNTHESE_PROTEINES } from '../courses/premiere/svt_1re_c_synthese_proteines';
 import { SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE } from '../courses/premiere/svt_1re_c_transmission_caractere';
+import { SVT_1RE_C_L08_PHOTOSYNTHESE } from '../courses/premiere/svt_1re_c_photosynthese';
+import { SVT_1RE_C_L09_ECOSYSTEME_NATUREL_AGROSYSTEME } from '../courses/premiere/svt_1re_c_ecosystemes';
+import { SVT_1RE_D_L01_REFLEXE_INNE } from '../courses/premiere/svt_1re_d_reflexe_inne';
+import { SVT_1RE_D_L02_FONCTIONS_GONADES } from '../courses/premiere/svt_1re_d_fonctions_gonades';
+import { SVT_1RE_D_L03_GAMETOGENESE } from '../courses/premiere/svt_1re_d_gametogenese';
+import { SVT_1RE_D_L04_TRANSMISSION_CARACTERE } from '../courses/premiere/svt_1re_d_transmission_caractere';
+import { SVT_1RE_D_L05_SYNTHESE_PROTEINES } from '../courses/premiere/svt_1re_d_synthese_proteines';
+import { SVT_1RE_D_L06_ACTIVITES_INTERNES_GLOBE } from '../courses/premiere/svt_1re_d_activites_internes_globe';
+import { SVT_1RE_D_L07_MOUVEMENTS_PLAQUES } from '../courses/premiere/svt_1re_d_mouvements_plaques';
+import { SVT_1RE_D_L08_ECHANGES_IONS_SOL } from '../courses/premiere/svt_1re_d_echanges_ions_sol';
+import { SVT_1RE_D_L09_EVOLUTION_SOLS_TROPICAUX } from '../courses/premiere/svt_1re_d_evolution_sols_tropicaux';
+import { SVT_1RE_D_L10_PRODUCTION_MATIERE_ORGANIQUE } from '../courses/premiere/svt_1re_d_production_matiere_organique';
+import { SVT_1RE_D_L11_DIGESTION_ALIMENTS } from '../courses/premiere/svt_1re_d_digestion_aliments';
+import { SVT_1RE_D_L12_ABSORPTION_NUTRIMENTS } from '../courses/premiere/svt_1re_d_absorption_nutriments';
 
 export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L01_REFLEXE_CONDITIONNEL,
@@ -34,4 +48,18 @@ export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_C_L05_FECONDATION_MAMMIFERES,
   SVT_1RE_C_L06_SYNTHESE_PROTEINES,
   SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE,
+  SVT_1RE_C_L08_PHOTOSYNTHESE,
+  SVT_1RE_C_L09_ECOSYSTEME_NATUREL_AGROSYSTEME,
+  SVT_1RE_D_L01_REFLEXE_INNE,
+  SVT_1RE_D_L02_FONCTIONS_GONADES,
+  SVT_1RE_D_L03_GAMETOGENESE,
+  SVT_1RE_D_L04_TRANSMISSION_CARACTERE,
+  SVT_1RE_D_L05_SYNTHESE_PROTEINES,
+  SVT_1RE_D_L06_ACTIVITES_INTERNES_GLOBE,
+  SVT_1RE_D_L07_MOUVEMENTS_PLAQUES,
+  SVT_1RE_D_L08_ECHANGES_IONS_SOL,
+  SVT_1RE_D_L09_EVOLUTION_SOLS_TROPICAUX,
+  SVT_1RE_D_L10_PRODUCTION_MATIERE_ORGANIQUE,
+  SVT_1RE_D_L11_DIGESTION_ALIMENTS,
+  SVT_1RE_D_L12_ABSORPTION_NUTRIMENTS,
 ];

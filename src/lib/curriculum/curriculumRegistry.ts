@@ -141,8 +141,19 @@ export function getCurriculumChapters(
 ): CurriculumChapter[] {
   return AUTHORED_CHAPTERS
     .filter((c) => c.subjectId === subjectId && chapterServesGrade(c, gradeLevel))
+    .map((c) => ({ chapter: c, order: chapterOrderForGrade(c, gradeLevel) }))
     .sort((a, b) => a.order - b.order)
-    .map(getExpandedChapter);
+    .map(({ chapter, order }) => {
+      const expanded = getExpandedChapter(chapter);
+      // Ordre propre à la classe (orderForGrades) : copie légère, l'objet en cache garde son ordre d'origine.
+      return order === expanded.order ? expanded : { ...expanded, order };
+    });
+}
+
+/** Numéro d'ordre de la leçon dans cette classe (orderForGrades en priorité, sinon order). */
+function chapterOrderForGrade(chapter: CurriculumChapter, gradeLevel: CurriculumGradeLevel): number {
+  const perGrade = chapter.orderForGrades;
+  return perGrade?.[gradeLevel] ?? perGrade?.[normalizeGradeForLookup(gradeLevel)] ?? chapter.order;
 }
 
 /** Le chapitre est-il au programme de cette classe (classe principale ou classes partageant la même leçon) ? */

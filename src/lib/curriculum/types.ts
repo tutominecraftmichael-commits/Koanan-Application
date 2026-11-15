@@ -425,6 +425,12 @@ export interface CurriculumChapter {
   contentVersion?: 2;
   /** Autres classes qui suivent exactement la même leçon (ex: chimie « TCDE » : Tle C, D et E). */
   alsoForGrades?: CurriculumGradeLevel[];
+  /**
+   * Ordre propre à une classe partageant la leçon, quand sa numérotation officielle diffère
+   * (ex : leçon de 1re C aussi suivie en 1re D, qui a ses propres leçons 1, 2, 3...).
+   * Sans entrée pour la classe, `order` s'applique.
+   */
+  orderForGrades?: Partial<Record<CurriculumGradeLevel, number>>;
   /** PDF officiel d'origine (traçabilité). */
   source?: string;
 }
