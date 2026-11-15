@@ -35,7 +35,8 @@ const ERRORS: Record<string, string> = {
   UNAUTHORIZED: 'Connecte-toi à ton compte pour utiliser l’explication orale.',
   TOKEN_EXPIRED: 'Ta connexion a expiré, réessaie.',
   AUDIO_TOO_LONG: 'L’enregistrement est trop long. Essaie en moins d’une minute.',
-  TOO_SHORT: 'Ton explication est trop courte : écris au moins une phrase.',
+  PRO_REQUIRED: 'Expliquer à KONAN fait partie de KONAN Pro.',
+  TOO_SHORT:'Ton explication est trop courte : écris au moins une phrase.',
 };
 
 async function blobToBase64(blob: Blob): Promise<string> {

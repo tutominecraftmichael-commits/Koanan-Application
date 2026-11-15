@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { ArrowUpRight, Check, Clock, Crown, Gem, Lock, ShieldCheck, Smartphone, X, Zap } from 'lucide-react';
-import { DISPLAY_PLANS, SEMESTER_MONTHS, formatFcfa, type BillingPeriod } from '../../lib/subscriptionPlans';
+import { DISPLAY_PLANS, PLUS_VISIBLE, SEMESTER_MONTHS, formatFcfa, type BillingPeriod } from '../../lib/subscriptionPlans';
 
 /**
- * Fiche des formules (ouverte depuis les Paramètres) : KONAN Pro et KONAN Plus.
+ * Fiche des formules (ouverte depuis les Paramètres) : KONAN Pro (et KONAN Plus quand PLUS_VISIBLE sera vrai).
  * Style sobre et haut de gamme : neutres profonds, or discret, beaucoup d'air, pas de couleurs criardes.
  * - Élève Gratuit : Pro (à souscrire) et Plus (bientôt).
  * - Élève Pro     : son abonnement en cours, « Prolonger », et Plus présenté comme le niveau supérieur.
@@ -42,6 +42,8 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
   const [billing, setBilling] = useState<BillingPeriod>('semester');
   const isPro = currentTier === 'pro';
   const isPlus = currentTier === 'plus';
+  // KONAN Plus pas encore officiel : on ne montre que KONAN Pro (PLUS_VISIBLE)
+  const showPlus = PLUS_VISIBLE;
   const period: 'mois' | 'semestre' = billing === 'monthly' ? 'mois' : 'semestre';
   const price = (plan: typeof PRO) => plan.prices[billing];
   const perMonth = (plan: typeof PRO) => Math.round(plan.prices.semester / SEMESTER_MONTHS);
@@ -49,7 +51,7 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
 
   return (
     <div className="fixed inset-0 z-[95] bg-slate-950/60 backdrop-blur-sm flex items-end sm:items-center justify-center sm:p-4" role="dialog" aria-modal="true" aria-label="Les formules KONAN">
-      <div className="w-full sm:max-w-3xl max-h-[95vh] overflow-y-auto rounded-t-[28px] sm:rounded-[28px] bg-white dark:bg-[#0B0F17] border border-slate-200 dark:border-white/10 shadow-2xl">
+      <div className={`w-full ${showPlus ? 'sm:max-w-3xl' : 'sm:max-w-xl'} max-h-[95vh] overflow-y-auto rounded-t-[28px] sm:rounded-[28px] bg-white dark:bg-[#0B0F17] border border-slate-200 dark:border-white/10 shadow-2xl`}>
         {/* En-tête */}
         <div className="relative px-5 sm:px-8 pt-6 sm:pt-8 pb-5 text-center">
           <button onClick={onClose} className="absolute right-3 top-3 p-2 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5" aria-label="Fermer">
@@ -60,11 +62,11 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
           </div>
           <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.28em] text-amber-700 dark:text-amber-300/90">KONAN Premium</p>
           <h2 className="mt-1.5 text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-            {isPro ? 'Va encore plus loin.' : isPlus ? 'Tu as le meilleur de KONAN.' : 'Révise comme les meilleurs.'}
+            {isPro ? (showPlus ? 'Va encore plus loin.' : 'Merci d’être KONAN Pro.') : isPlus ? 'Tu as le meilleur de KONAN.' : 'Révise comme les meilleurs.'}
           </h2>
           <p className="mt-1.5 text-[13px] text-slate-600 dark:text-slate-400 max-w-md mx-auto">
             {isPro
-              ? 'Merci de faire partie de KONAN Pro. Voici ton abonnement, et ce qui t’attend avec KONAN Plus.'
+              ? (showPlus ? 'Merci de faire partie de KONAN Pro. Voici ton abonnement, et ce qui t’attend avec KONAN Plus.' : 'Voici ton abonnement. Prolonge-le quand tu veux : les jours restants sont conservés.')
               : 'Les devoirs au format officiel, une énergie sans limite et les méthodes qui font la différence.'}
           </p>
           <div className="mx-auto mt-5 h-px w-24 bg-gradient-to-r from-transparent via-amber-400/70 to-transparent" />
@@ -101,7 +103,7 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className={`grid grid-cols-1 gap-4 ${showPlus ? 'md:grid-cols-2' : ''}`}>
             {/* KONAN PRO */}
             <div className={`relative rounded-3xl p-5 sm:p-6 flex flex-col border ${isPro ? 'border-amber-400/70 dark:border-amber-400/40' : 'border-slate-200 dark:border-white/10'} bg-white dark:bg-white/[0.02]`}>
               <div className="flex items-center justify-between">
@@ -129,7 +131,8 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
               )}
             </div>
 
-            {/* KONAN PLUS */}
+            {/* KONAN PLUS (masqué tant qu'il n'est pas officiel) */}
+            {showPlus && (
             <div className={`relative rounded-3xl p-5 sm:p-6 flex flex-col border overflow-hidden ${isPro ? 'border-slate-900/80 dark:border-white/25' : 'border-slate-200 dark:border-white/10'} bg-gradient-to-b from-slate-50 to-white dark:from-white/[0.05] dark:to-white/[0.01]`}>
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center gap-1.5 text-[13px] font-black tracking-wide text-slate-900 dark:text-white"><Gem className="w-4 h-4 text-slate-700 dark:text-slate-200" /> KONAN Plus</span>
@@ -160,6 +163,7 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
                 </>
               )}
             </div>
+            )}
           </div>
 
           {/* Garanties */}

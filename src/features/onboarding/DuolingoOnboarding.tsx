@@ -1147,7 +1147,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       case 'account_setup':
         return `Tout est prêt ! Renseigne tes informations de connexion avec une adresse Gmail/Email pour sauvegarder ton planning.`;
       case 'pricing_models':
-        return `Parfait ! Choisis maintenant ton modèle d'accompagnement KONAN (Gratuit, Pro ou Plus) pour ouvrir ton planning.`;
+        return `Parfait ! Choisis maintenant ton modèle d'accompagnement KONAN (Gratuit ou Pro) pour ouvrir ton planning.`;
     }
   }, [
     step,

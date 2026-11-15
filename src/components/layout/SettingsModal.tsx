@@ -482,10 +482,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               <p className="text-[12px] text-slate-600 dark:text-slate-400 leading-relaxed">
                 {currentPlan === 'free'
-                  ? 'Devoirs au format officiel, énergie illimitée, méthodes Feynman et Time Blocking : découvre KONAN Pro et KONAN Plus.'
-                  : currentPlan === 'pro'
-                    ? 'Prolonge ton abonnement, ou découvre KONAN Plus, le niveau supérieur.'
-                    : 'Tu profites de tout ce que KONAN propose.'}
+                  ? 'Devoirs au format officiel, énergie illimitée, méthodes Feynman et Time Blocking : découvre KONAN Pro.'
+                  : 'Retrouve ton abonnement et prolonge-le quand tu veux : les jours restants sont conservés.'}
               </p>
               <button
                 type="button"
@@ -497,7 +495,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 className="w-full py-3 rounded-xl text-[13px] font-black tracking-wide bg-slate-900 text-white hover:bg-slate-800 dark:bg-amber-300 dark:text-slate-950 dark:hover:bg-amber-200 transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>{currentPlan === 'free' ? 'Voir les formules KONAN' : currentPlan === 'pro' ? 'Mon abonnement et KONAN Plus' : 'Voir les formules'}</span>
+                <span>{currentPlan === 'free' ? 'Découvrir KONAN Pro' : 'Mon abonnement KONAN Pro'}</span>
               </button>
               {currentPlan !== 'free' && (
                 <button

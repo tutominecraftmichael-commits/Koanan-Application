@@ -2695,6 +2695,8 @@ export function App() {
             onSessionCompleted={(sessionId, stats) => {
               handleCompleteTutorSession(sessionId, undefined, stats?.mistakes);
             }}
+            // KONAN Pro : « Explique à KONAN » (Feynman) après chaque mini-leçon ; il faut un compte connecté (serveur)
+            canExplain={(effectivePlanTier === 'pro' || effectivePlanTier === 'plus') && Boolean(state.userAccount?.isLoggedIn) && !state.isDemoMode}
           />
         )}
 

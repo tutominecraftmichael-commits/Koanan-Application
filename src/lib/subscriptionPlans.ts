@@ -188,6 +188,15 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
   },
 ];
 
+/**
+ * KONAN Plus n'est pas encore officiel (fonctionnalités pas terminées) : on ne le montre PAS aux élèves.
+ * Passer à true pour le réafficher (fiche des tarifs, fiche des formules, Paramètres).
+ */
+export const PLUS_VISIBLE = false;
+
+/** Formules affichées aux élèves. */
+export const VISIBLE_DISPLAY_PLANS: DisplayPlan[] = DISPLAY_PLANS.filter((p) => p.id !== 'plus' || PLUS_VISIBLE);
+
 /** « 1 200 » : séparateur des milliers à la française. */
 export function formatFcfa(amount: number): string {
   return amount.toLocaleString('fr-FR').replace(/ | /g, ' ');

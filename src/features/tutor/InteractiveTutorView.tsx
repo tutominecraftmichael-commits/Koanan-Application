@@ -20,7 +20,8 @@ import {
   Calculator,
   Shapes,
   Landmark,
-  Globe
+  Globe,
+  Mic
 } from 'lucide-react';
 import type {
   CurriculumChapter,
@@ -77,6 +78,8 @@ export interface InteractiveTutorViewProps {
   onExit: () => void;
   /** `mistakes` : toutes les réponses fausses de la séance (rattrapage compris) ; chacune retire 1 XP. */
   onSessionCompleted: (sessionId?: string, stats?: { mistakes: number }) => void;
+  /** KONAN Pro : bouton « Explique à KONAN » (méthode Feynman) à la fin de chaque mini-leçon. */
+  canExplain?: boolean;
 }
 
 /** Questions « à revoir aujourd'hui » (révision espacée), posées au début de la séance. */
@@ -344,7 +347,10 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   pacingMethod,
   onExit,
   onSessionCompleted,
+  canExplain = false,
 }) => {
+  // Feynman à la demande (Pro) : mini-leçons déjà expliquées à KONAN pendant cette séance
+  const [explainedPointIds, setExplainedPointIds] = useState<Set<string>>(() => new Set());
   // Rappel actif : se tester de mémoire (question avant la fiche, rappel en fin de mini-leçon)
   const isActiveRecall = pacingMethod === 'active_recall_spaced' || pacingMethod === 'active_recall' || pacingMethod === 'spaced_repetition';
   // Pomodoro : la séance dure le temps prévu au planning (25 min de VRAI travail), puis 5 min de pause.
@@ -1586,7 +1592,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           notion={currentPoint.title}
           reference={reference}
           classe={gradeLevel.replace(/_/g, ' ')}
-          onDone={() => setPhase('point_celebration')}
+          onDone={() => {
+            const id = currentPoint.id;
+            setExplainedPointIds((prev) => new Set(prev).add(id));
+            setPhase('point_celebration');
+          }}
         />
       </div>
     );
@@ -2306,6 +2316,25 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               </p>
             )}
           </div>
+
+          {/* KONAN Pro : méthode Feynman à la demande, après chaque mini-leçon */}
+          {canExplain && !isFeynman && currentPoint && !explainedPointIds.has(currentPoint.id) && (
+            <div className="mx-auto max-w-md rounded-2xl border border-amber-300 dark:border-amber-400/30 bg-amber-50 dark:bg-amber-400/[0.06] p-4 text-left space-y-2.5">
+              <p className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <Mic className="w-4 h-4 text-amber-700 dark:text-amber-300" /> Explique à KONAN
+              </p>
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                Explique cette notion avec tes mots, à l’oral ou par écrit. KONAN te dit en quelques secondes si c’est juste, clair et simple. C’est la meilleure façon de retenir.
+              </p>
+              <button
+                type="button"
+                onClick={() => setPhase('feynman')}
+                className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-amber-300 dark:hover:bg-amber-200 dark:text-slate-950 text-xs font-black flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              >
+                <Mic className="w-4 h-4" /> J’explique (environ 1 minute)
+              </button>
+            </div>
+          )}
 
           <div className="pt-2">
             <button
