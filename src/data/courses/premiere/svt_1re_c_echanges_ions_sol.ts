@@ -9,6 +9,9 @@ export const SVT_1RE_C_L03_ECHANGES_IONS_SOL: CurriculumChapter = {
   "alsoForGrades": [
     "premiere_d"
   ],
+  "orderForGrades": {
+    "premiere_d": 11
+  },
   "order": 3,
   "title": "Leçon 3 : Les échanges d’ions au niveau du sol",
   "summary": "Formation du complexe argilo-humique (argile, humus, ponts calciques), pouvoir absorbant et charges négatives, échanges de cations avec la solution du sol, engrais, lessivage et expérience de Way.",

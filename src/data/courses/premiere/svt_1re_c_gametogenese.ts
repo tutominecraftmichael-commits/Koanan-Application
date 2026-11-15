@@ -1,14 +1,11 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L4_La gamétogénèse chez les mammifères.pdf (Mon école à la maison ; le document l’intitule « Leçon 5 ») ». Première C et D (programme de SVT commun).
+// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L4_La gamétogénèse chez les mammifères.pdf (Mon école à la maison ; le document l’intitule « Leçon 5 ») ». Première C (la 1re D a sa propre leçon de gamétogenèse).
 // Fichier généré (scratchpad build_1re_c_svt.mjs) : modifier le générateur plutôt que ce fichier.
 export const SVT_1RE_C_L04_GAMETOGENESE_MAMMIFERES: CurriculumChapter = {
   "id": "premiere_c_svt_l04_gametogenese_mammiferes",
   "subjectId": "svt",
   "gradeLevel": "premiere_c",
-  "alsoForGrades": [
-    "premiere_d"
-  ],
   "order": 4,
   "title": "Leçon 4 : La gamétogenèse chez les mammifères",
   "summary": "Rôle des gonades, spermatogenèse et spermatozoïde, ovogenèse, follicules et ovocyte II, méiose, brassages génétiques, comparaison des deux gamétogenèses et évolution du stock d’ovocytes.",

@@ -9,6 +9,9 @@ export const SVT_1RE_C_L01_STRUCTURE_INTERNE_GLOBE: CurriculumChapter = {
   "alsoForGrades": [
     "premiere_d"
   ],
+  "orderForGrades": {
+    "premiere_d": 10
+  },
   "order": 1,
   "title": "Leçon 1 : La structure interne du globe terrestre",
   "summary": "Séismes et volcans, foyer et épicentre, magnitude et intensité, ondes P, S et L, hodographes, vitesse des ondes en profondeur, croûte, manteau, noyau et discontinuités.",

@@ -20,6 +20,9 @@ import { SVT_1RE_C_L06_SYNTHESE_PROTEINES } from '../courses/premiere/svt_1re_c_
 import { SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE } from '../courses/premiere/svt_1re_c_transmission_caractere';
 import { SVT_1RE_C_L08_PHOTOSYNTHESE } from '../courses/premiere/svt_1re_c_photosynthese';
 import { SVT_1RE_C_L09_ECOSYSTEME_NATUREL_AGROSYSTEME } from '../courses/premiere/svt_1re_c_ecosystemes';
+import { SVT_1RE_D_L01_REFLEXE_INNE } from '../courses/premiere/svt_1re_d_reflexe_inne';
+import { SVT_1RE_D_L02_FONCTIONS_GONADES } from '../courses/premiere/svt_1re_d_fonctions_gonades';
+import { SVT_1RE_D_L03_GAMETOGENESE } from '../courses/premiere/svt_1re_d_gametogenese';
 
 export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L01_REFLEXE_CONDITIONNEL,
@@ -38,4 +41,7 @@ export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE,
   SVT_1RE_C_L08_PHOTOSYNTHESE,
   SVT_1RE_C_L09_ECOSYSTEME_NATUREL_AGROSYSTEME,
+  SVT_1RE_D_L01_REFLEXE_INNE,
+  SVT_1RE_D_L02_FONCTIONS_GONADES,
+  SVT_1RE_D_L03_GAMETOGENESE,
 ];
