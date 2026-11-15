@@ -863,7 +863,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   };
 
   // Passer à la mini-leçon suivante ou célébrer la fin de séance.
-  // RÈGLE STRICTE : Dès que l'élève a réalisé ses 3, 4 ou 7 mini-leçons prévues dans la séance,
+  // RÈGLE STRICTE : Dès que l'élève a réalisé les mini-leçons prévues pour la durée de la séance
+  // (25-35 min : 3 ; 36-60 min : 4 à 5 ; plus de 60 min : 6 à 7, voir getSessionMiniLessonQuota),
   // la session est validée et c'est terminé. On ne le pousse jamais à continuer.
   const handleContinueToNextLesson = () => {
     try {
