@@ -10,7 +10,7 @@ export const SVT_1RE_C_L09_ECOSYSTEME_NATUREL_AGROSYSTEME: CurriculumChapter = {
     "premiere_d"
   ],
   "orderForGrades": {
-    "premiere_d": 12
+    "premiere_d": 14
   },
   "order": 9,
   "title": "Leçon 9 : L’écosystème naturel et l’agrosystème",

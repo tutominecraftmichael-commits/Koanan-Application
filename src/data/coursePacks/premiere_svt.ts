@@ -29,6 +29,9 @@ import { SVT_1RE_D_L06_ACTIVITES_INTERNES_GLOBE } from '../courses/premiere/svt_
 import { SVT_1RE_D_L07_MOUVEMENTS_PLAQUES } from '../courses/premiere/svt_1re_d_mouvements_plaques';
 import { SVT_1RE_D_L08_ECHANGES_IONS_SOL } from '../courses/premiere/svt_1re_d_echanges_ions_sol';
 import { SVT_1RE_D_L09_EVOLUTION_SOLS_TROPICAUX } from '../courses/premiere/svt_1re_d_evolution_sols_tropicaux';
+import { SVT_1RE_D_L10_PRODUCTION_MATIERE_ORGANIQUE } from '../courses/premiere/svt_1re_d_production_matiere_organique';
+import { SVT_1RE_D_L11_DIGESTION_ALIMENTS } from '../courses/premiere/svt_1re_d_digestion_aliments';
+import { SVT_1RE_D_L12_ABSORPTION_NUTRIMENTS } from '../courses/premiere/svt_1re_d_absorption_nutriments';
 
 export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L01_REFLEXE_CONDITIONNEL,
@@ -56,4 +59,7 @@ export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_D_L07_MOUVEMENTS_PLAQUES,
   SVT_1RE_D_L08_ECHANGES_IONS_SOL,
   SVT_1RE_D_L09_EVOLUTION_SOLS_TROPICAUX,
+  SVT_1RE_D_L10_PRODUCTION_MATIERE_ORGANIQUE,
+  SVT_1RE_D_L11_DIGESTION_ALIMENTS,
+  SVT_1RE_D_L12_ABSORPTION_NUTRIMENTS,
 ];

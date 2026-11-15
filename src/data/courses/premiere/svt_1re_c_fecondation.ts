@@ -10,7 +10,7 @@ export const SVT_1RE_C_L05_FECONDATION_MAMMIFERES: CurriculumChapter = {
     "premiere_d"
   ],
   "orderForGrades": {
-    "premiere_d": 10
+    "premiere_d": 13
   },
   "order": 5,
   "title": "Leçon 5 : La fécondation chez les mammifères",

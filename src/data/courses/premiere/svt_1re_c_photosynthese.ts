@@ -1,17 +1,11 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L8_La photosynthèse.pdf (Mon école à la maison ; le document l’intitule « Leçon 9 ») ». Première C et D (programme de SVT commun).
+// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L8_La photosynthèse.pdf (Mon école à la maison ; le document l’intitule « Leçon 9 ») ». Première C (la 1re D a sa propre leçon sur ce sujet).
 // Fichier généré (scratchpad build_1re_c_svt_c.mjs) : modifier le générateur plutôt que ce fichier.
 export const SVT_1RE_C_L08_PHOTOSYNTHESE: CurriculumChapter = {
   "id": "premiere_c_svt_l08_photosynthese",
   "subjectId": "svt",
   "gradeLevel": "premiere_c",
-  "alsoForGrades": [
-    "premiere_d"
-  ],
-  "orderForGrades": {
-    "premiere_d": 11
-  },
   "order": 8,
   "title": "Leçon 8 : La photosynthèse",
   "summary": "Facteurs de la photosynthèse (lumière, CO₂, température), chlorophylle et chloroplaste, pigments, phase lumineuse (photolyse de l’eau, ATP, TH,H⁺) et phase sombre (cycle de Calvin), équation bilan et importance pour la biosphère.",
