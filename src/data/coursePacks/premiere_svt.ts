@@ -10,6 +10,8 @@ import { SVT_1RE_A_L03_ANOMALIES_CHROMOSOMIQUES } from '../courses/premiere/svt_
 import { SVT_1RE_A_L04_CYCLES_SEXUELS_FEMME } from '../courses/premiere/svt_1re_a_cycles_sexuels';
 import { SVT_1RE_A_L05_REGULATION_NAISSANCES } from '../courses/premiere/svt_1re_a_regulation_naissances';
 import { SVT_1RE_A_L06_TRANSMISSION_CARACTERE_AUTOSOMES } from '../courses/premiere/svt_1re_a_transmission_autosomes';
+import { SVT_1RE_A_L08_PRODUCTION_ENERGIE_CELLULE } from '../courses/premiere/svt_1re_a_production_energie';
+import { SVT_1RE_A_L09_MISE_EN_RESERVE_NUTRIMENTS } from '../courses/premiere/svt_1re_a_mise_en_reserve_nutriments';
 
 export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L01_REFLEXE_CONDITIONNEL,
@@ -18,4 +20,6 @@ export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L04_CYCLES_SEXUELS_FEMME,
   SVT_1RE_A_L05_REGULATION_NAISSANCES,
   SVT_1RE_A_L06_TRANSMISSION_CARACTERE_AUTOSOMES,
+  SVT_1RE_A_L08_PRODUCTION_ENERGIE_CELLULE,
+  SVT_1RE_A_L09_MISE_EN_RESERVE_NUTRIMENTS,
 ];
