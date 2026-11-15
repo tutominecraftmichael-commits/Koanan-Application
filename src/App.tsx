@@ -74,7 +74,6 @@ import { LeaguePage } from './features/gamification/LeagueView';
 import { nextNameChangeAt } from '../api/_nameRules.js';
 import { leagueAvatarOf } from './lib/gamification/leagueAvatar';
 import { getDisplayAvatar } from './lib/avatar';
-import { XpReputationCard } from './features/gamification/XpReputationCard';
 import { XpBurst } from './features/gamification/XpBurst';
 import { ExerciseFab } from './features/gamification/ExerciseFab';
 import { SeriesErrorBoundary } from './features/gamification/SeriesErrorBoundary';
@@ -2565,7 +2564,6 @@ export function App() {
         {/* Ligue (onglet trophée) */}
         {activeView === 'league' && gamificationEnabled && (
           <LeaguePage
-            statsBar={<XpReputationCard gamification={state.gamification} weekXp={leagueBoard?.eligible ? leagueBoard.weekXp : undefined} />}
             board={leagueBoard}
             localReputation={gamificationOf(state.gamification).reputation}
             hasCourses={/^(seconde|premiere|terminale)_/.test(leagueGrade || '')}
