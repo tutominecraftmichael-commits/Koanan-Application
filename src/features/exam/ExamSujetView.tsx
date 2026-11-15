@@ -12,6 +12,7 @@ import { ArrowLeft, Camera, Clock, FileText, Trash2, ChevronDown, ChevronUp, Che
 import type { StudySession } from '../../types';
 import type { CurriculumGradeLevel, StemSubjectId } from '../../lib/curriculum/types';
 import { GRADE_LEVELS } from '../../lib/curriculum/types';
+import { canonicalGradeLevel, studentClassLabel } from '../../lib/curriculum/curriculumMatcher';
 import { MathRenderer } from '../../components/common/MathRenderer';
 import { KonanMascot } from '../../components/common/KonanMascot';
 import { auth } from '../../lib/firebase';
@@ -251,7 +252,10 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
   const [showCorrige, setShowCorrige] = useState(false);
   const [now, setNow] = useState(Date.now());
   const fileRef = useRef<HTMLInputElement>(null);
-  const gradeLabel = GRADE_LEVELS.find((g) => g.id === gradeLevel)?.badge || 'Seconde';
+  // Nom de la classe sur le sujet (et pour KONAN qui le rédige). Avant : « Seconde » par défaut, donc un élève
+  // de Tle A (ancien identifiant sans numéro) recevait un sujet « pour la classe de Seconde ».
+  const canonical = canonicalGradeLevel(gradeLevel);
+  const gradeLabel = GRADE_LEVELS.find((g) => g.id === canonical)?.badge || studentClassLabel(gradeLevel) || '';
 
   // 1. Le sujet : repris s'il existe déjà pour cette séance, sinon rédigé par KONAN
   const generate = async () => {
@@ -265,7 +269,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
       if (!chapters.length) throw Object.assign(new Error('NO_CHAPTERS'), { code: 'NO_CHAPTERS' });
       const json = await callApi('/api/exam-sujet', {
         subjectKey: stemSubjectId,
-        gradeId: gradeLevel,
+        gradeId: canonical, // forme officielle : le serveur choisit le bon modèle (1re A1, Tle A1…)
         classe: gradeLabel,
         matiere: subjectName,
         chapitres: chapters.map((c) => ({ titre: c.title, notions: c.points.map((p) => p.title) })),

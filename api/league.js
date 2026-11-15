@@ -16,7 +16,7 @@ import { loadLocalEnvIfPresent } from './_env.js';
 import { verifyFirebaseIdToken } from './_firebaseToken.js';
 import { nextNameChangeAt } from './_nameRules.js';
 import {
-  DIVISIONS, GROUP_SIZE, PROMOTE_COUNT, DEMOTE_COUNT, applyXpEvents, clampDivision, cleanAvatar, gradeHasCourses,
+  DIVISIONS, GROUP_SIZE, PROMOTE_COUNT, DEMOTE_COUNT, applyXpEvents, clampDivision, cleanAvatar, gradeInLeague,
   guardReputation, isEligible, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
 } from './_leagueRules.js';
 
@@ -137,7 +137,7 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now()) {
       avatar,
       classLabel: str(body.classLabel, 20),
       gradeLevel: grade,
-      hasCourses: gradeHasCourses(grade),
+      hasCourses: gradeInLeague(grade), // « admis dans la ligue » (LMD et BTS compris)
       planTier,
       updatedAt: new Date(nowMs).toISOString(),
     };

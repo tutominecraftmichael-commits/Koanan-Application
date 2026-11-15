@@ -9,7 +9,7 @@
  * Le nombre d'exercices et leurs points sont IMPOSÉS par le modèle (jamais laissés à l'IA).
  * Limite : 4 sujets par jour et par élève.
  */
-import { getExamTemplate, COMMON_STYLE_RULES } from './_examTemplates.js';
+import { getExamTemplate, canonicalExamGrade, COMMON_STYLE_RULES } from './_examTemplates.js';
 import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson } from './_examCommon.js';
 
 export const DAILY_SUJETS = 4;
@@ -127,7 +127,7 @@ export default async function handler(req, res) {
     return send(res, e?.code === 413 ? 413 : 400, { success: false, error: 'BAD_BODY' });
   }
 
-  const gradeId = str(body.gradeId, 40);
+  const gradeId = canonicalExamGrade(str(body.gradeId, 40)); // « premiere_a » → série A1 (bonnes notes de classe)
   // Le modèle dépend de la classe : format du BAC pour les Terminales A, modèles de Seconde sinon
   const template = getExamTemplate(str(body.subjectKey, 40), gradeId);
   if (!template) return send(res, 400, { success: false, error: 'NO_TEMPLATE' });

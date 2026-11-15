@@ -68,7 +68,7 @@ import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
-import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy } from './lib/gamification/gamification';
+import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy, lessonXp } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
 import { LeaguePage } from './features/gamification/LeagueView';
 import { nextNameChangeAt } from '../api/_nameRules.js';
@@ -90,7 +90,8 @@ import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelecto
 import { DashboardOverview } from './features/dashboard/DashboardOverview';
 import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding'; // premier écran de tous : chargé tout de suite
 import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
-import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
+import { tryResolveGradeLevel, canonicalGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
+import { gradeHasCourses, gradeInLeague } from './lib/gamification/leagueGrades';
 import { clearAdminSession } from './lib/adminAuth';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
 
@@ -287,10 +288,25 @@ export function App() {
     : (state.studentName || 'Étudiant');
   // Vraie classe de l'élève (choisie à l'inscription), jamais la valeur par défaut « Licence Universitaire »
   const isDefaultLevel = /^licence universitaire$/i.test(String(state.academicLevel || '').trim());
+  // UNE seule source pour la classe, partout (planning, cours, devoirs, ligue) : la classe des préférences
+  // est celle qui suit les changements (import d'emploi du temps, autre appareil) ; le compte en garde une
+  // copie qui peut être ancienne. Avant, certains écrans lisaient l'une et d'autres l'autre.
+  const studentGradeRaw = state.preferences?.gradeLevel || state.userAccount?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel);
   const effectiveClassLabel = studentClassLabel(
-    state.userAccount?.gradeLevel || state.preferences?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel),
+    studentGradeRaw,
     isDefaultLevel ? undefined : state.academicLevel,
   ) || '';
+  // Ancien compte dont seule la fiche du compte connaît la classe : on la recopie dans les préférences,
+  // que lit le planificateur (sinon il ne voyait pas la classe et ne préparait aucun devoir)
+  useEffect(() => {
+    if (state.preferences?.gradeLevel || !state.userAccount?.gradeLevel) return;
+    setState((prev) => {
+      if (prev.preferences?.gradeLevel || !prev.userAccount?.gradeLevel) return prev;
+      const next = { ...prev, preferences: { ...prev.preferences, gradeLevel: prev.userAccount.gradeLevel } };
+      if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
+      return next;
+    });
+  }, [state.preferences?.gradeLevel, state.userAccount?.gradeLevel]);
 
   // Bascule automatique de semaine (rollover d'agenda) sans pop-up de bilan
   useEffect(() => {
@@ -666,15 +682,16 @@ export function App() {
   useEffect(() => {
     if (!gamificationEnabled) return;
     const preview = awardCompletedSessions(state.gamification, state.studySessions);
-    if (!preview.gained) return;
+    // Séance comptée même à 0 XP (trop d'erreurs) : on l'enregistre pour la ligue, sans animation
+    if (!preview.sessions.length) return;
     setState((prev) => {
       const r = awardCompletedSessions(prev.gamification, prev.studySessions);
-      if (!r.gained) return prev;
+      if (!r.sessions.length) return prev;
       const next = { ...prev, gamification: r.gamification };
       if (next.userAccount?.googleId) saveUserState(next.userAccount.googleId, next);
       return next;
     });
-    setXpBurst({ amount: preview.gained, id: Date.now() });
+    if (preview.gained > 0) setXpBurst({ amount: preview.gained, id: Date.now() });
   }, [state.studySessions, gamificationEnabled]);
 
   // Icône d'exercices (étape 2) : séries de 10 QCM, énergie ⚡ pour les comptes Gratuit
@@ -715,7 +732,10 @@ export function App() {
   const gamificationRef = useRef(state.gamification);
   gamificationRef.current = state.gamification;
   const leagueBusy = useRef(false);
-  const leagueGrade = tryResolveGradeLevel(state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel);
+  const leagueGrade = tryResolveGradeLevel(studentGradeRaw);
+  // Cours guidés et entraînement : Seconde à Terminale ; ligue : ces classes plus LMD et BTS (au chronomètre)
+  const gradeHasGuidedCourses = gradeHasCourses(leagueGrade);
+  const gradeIsInLeague = gradeInLeague(leagueGrade);
   const leagueAvatarSrc = getDisplayAvatar(state.userAccount);
   const syncLeague = useCallback(async () => {
     if (!gamificationEnabled || leagueBusy.current || !auth?.currentUser) return;
@@ -1784,7 +1804,7 @@ export function App() {
     showToast('Votre planning d’étude a été réorganisé avec succès !');
   };
 
-  const handleToggleSessionComplete = (sessionId: string, bypassDayCheck: boolean = false) => {
+  const handleToggleSessionComplete = (sessionId: string, bypassDayCheck: boolean = false, mistakes?: number) => {
     const target = state.studySessions.find(s => s.id === sessionId);
     if (!target) return;
 
@@ -1816,6 +1836,8 @@ export function App() {
           completed: willBeCompleted,
           completedAt: willBeCompleted ? new Date().toISOString() : undefined,
           actualDurationMinutes: willBeCompleted ? (s.actualDurationMinutes || s.durationMinutes) : undefined,
+          // Erreurs de la séance (cours guidé, 30 questions) : chacune retire 1 XP
+          ...(mistakes !== undefined ? { mistakes: Math.max(0, Math.round(mistakes)) } : {}),
         }
         : s
     );
@@ -1906,28 +1928,39 @@ export function App() {
     // VÉRIFICATION CORRESPONDANCE PROGRAMME OFFICIEL (MATHS, PHYSIQUE-CHIMIE, SVT)
     const sub = state.subjects.find(s => s.id === session.subjectId);
     const subjectName = sub?.name || session.title;
-    // Classe STRICTE : jamais de classe devinée (ex: Terminale D par défaut)
-    const resolvedGrade = tryResolveGradeLevel(
-      state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel
-    );
+    // Classe STRICTE (jamais devinée), ramenée à sa forme officielle (« 1ère A » → 1re A1, « Tle A » → Tle A1)
+    const resolvedGrade = canonicalGradeLevel(tryResolveGradeLevel(studentGradeRaw));
     const stemMatchForTutor = matchSubjectToStemCurriculum(subjectName);
 
     // PRÉPARATION AU DEVOIR : 30 questions, sujet complet de 2 h, ou chronomètre de 75 min (matière sans cours)
     if (session.isExamPrep && session.examPrepMode) {
-      const examSession: StudySession = {
-        ...session,
-        examChapterIds: session.examChapterIds?.length ? session.examChapterIds : sub?.examChapterIds,
-      };
+      // Les chapitres de la matière (choix le plus récent de l'élève) passent avant ceux recopiés dans la séance
+      const chapterIds = sub?.examChapterIds?.length ? sub.examChapterIds : session.examChapterIds;
+      const examSession: StudySession = { ...session, examChapterIds: chapterIds };
       const examKey = (sub?.examSubjectKey || stemMatchForTutor.stemSubjectId) as StemSubjectId | undefined;
-      if (session.examPrepMode === 'chrono75' || !resolvedGrade || !examKey || !examSession.examChapterIds?.length) {
-        // Révision sur le cahier, chronométrée 75 min
-        setFocusSession({ ...examSession, durationMinutes: 75 });
-        setActiveView('focus');
+      const examMode = session.examPrepMode;
+      const wantsCourse = examMode !== 'chrono75';
+      if (examMode !== 'chrono75' && resolvedGrade && examKey && chapterIds?.length) {
+        setActiveExamSession({ mode: examMode, session: examSession, subjectName, stemSubjectId: examKey, gradeLevel: resolvedGrade });
+        setActiveView('exam');
         soundFX.playCheckmarkPop();
         return;
       }
-      setActiveExamSession({ mode: session.examPrepMode, session: examSession, subjectName, stemSubjectId: examKey, gradeLevel: resolvedGrade });
-      setActiveView('exam');
+      if (wantsCourse) {
+        // Avant : bascule SILENCIEUSE sur le chronomètre, l'élève ne comprenait pas pourquoi il n'avait pas son sujet
+        const examLabel = sub?.examType === 'devoir' ? 'devoir' : 'examen';
+        if (resolvedGrade && examKey && !chapterIds?.length) {
+          showToast(`Choisis les chapitres de ton ${examLabel} de ${subjectName} (bouton « Modifier » de la matière) : KONAN pourra alors préparer ton sujet et tes questions.`, 9000);
+          setActiveView('subjects');
+          return;
+        }
+        showToast(!resolvedGrade
+          ? 'Indique ta classe exacte avec sa série (ex : 1ère D) en réimportant ton emploi du temps pour recevoir tes sujets de devoir. En attendant : révision chronométrée.'
+          : `KONAN ne reconnaît pas la matière « ${subjectName} » parmi ses cours. En attendant : révision chronométrée.`, 9000);
+      }
+      // Révision sur le cahier, chronométrée 75 min
+      setFocusSession({ ...examSession, durationMinutes: 75 });
+      setActiveView('focus');
       soundFX.playCheckmarkPop();
       return;
     }
@@ -1979,9 +2012,9 @@ export function App() {
    * Callback de complétion du Tuteur Interactif Duolingo / Séries de préparation examen :
    * Valide la séance, incrémente les statistiques et affiche la célébration avec le temps exact réalisé.
    */
-  const handleCompleteTutorSession = (studySessionId?: string, durationSec?: number) => {
+  const handleCompleteTutorSession = (studySessionId?: string, durationSec?: number, mistakes?: number) => {
     if (studySessionId) {
-      handleToggleSessionComplete(studySessionId, true);
+      handleToggleSessionComplete(studySessionId, true, mistakes);
     }
     setActiveTutorSession(null);
     setActiveView('dashboard');
@@ -2193,7 +2226,8 @@ export function App() {
           onResetData={handleResetData}
           onLogout={handleLogout}
           onOpenSettings={() => setIsSettingsOpen(true)}
-          energy={gamificationEnabled ? {
+          // LMD, BTS : pas de cours, donc pas d'entraînement ni d'énergie (ils gagnent leurs XP au chronomètre)
+          energy={gamificationEnabled && gradeHasGuidedCourses ? {
             value: energyNow(state.gamification).energy,
             unlimited: hasUnlimitedEnergy(exercisePlan),
           } : null}
@@ -2423,7 +2457,7 @@ export function App() {
             <SubjectManager
               subjects={state.subjects}
               isDemoMode={state.isDemoMode}
-              gradeLevel={state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel}
+              gradeLevel={studentGradeRaw}
               planTier={effectivePlanTier}
               onUpdateSubjects={handleUpdateSubjects}
               onTriggerPlanner={() => setActiveView('planner')}
@@ -2490,6 +2524,8 @@ export function App() {
                 setActiveView('dashboard');
               }}
               backLabel="Retour au tableau de bord"
+              // XP affichés à la fin du chronomètre (LMD et BTS gagnent ainsi leurs XP de ligue)
+              xpReward={gamificationEnabled && focusSession ? lessonXp(focusSession.durationMinutes) : undefined}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
@@ -2518,8 +2554,8 @@ export function App() {
               setActiveTutorSession(null);
               setActiveView('dashboard');
             }}
-            onSessionCompleted={(sessionId) => {
-              handleCompleteTutorSession(sessionId);
+            onSessionCompleted={(sessionId, stats) => {
+              handleCompleteTutorSession(sessionId, undefined, stats?.mistakes);
             }}
           />
         )}
@@ -2537,9 +2573,9 @@ export function App() {
                 setActiveExamSession(null);
                 setActiveView('dashboard');
               }}
-              onComplete={(sessionId, durationSec) => {
+              onComplete={(sessionId, durationSec, mistakes) => {
                 setActiveExamSession(null);
-                handleCompleteTutorSession(sessionId, durationSec);
+                handleCompleteTutorSession(sessionId, durationSec, mistakes);
               }}
             />
           ) : (
@@ -2566,7 +2602,7 @@ export function App() {
           <LeaguePage
             board={leagueBoard}
             localReputation={gamificationOf(state.gamification).reputation}
-            hasCourses={/^(seconde|premiere|terminale)_/.test(leagueGrade || '')}
+            hasCourses={gradeIsInLeague}
             offline={leagueOffline}
             errorText={leagueError}
             resultSeen={leagueResultSeen}
@@ -2620,7 +2656,7 @@ export function App() {
       </main>
 
       {/* Icône ronde d'exercices (10 QCM au hasard, énergie ⚡) */}
-      {gamificationEnabled && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
+      {gamificationEnabled && gradeHasGuidedCourses && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
       )}
       {isExerciseOpen && (
@@ -2628,7 +2664,7 @@ export function App() {
         <Suspense fallback={<div className="fixed inset-0 z-[80] bg-slate-50 dark:bg-[#070B13] flex items-center justify-center"><ViewLoader /></div>}>
           <ExerciseSeriesView
             userId={state.userAccount?.googleId || 'local_student'}
-            gradeLevel={tryResolveGradeLevel(state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel)}
+            gradeLevel={canonicalGradeLevel(tryResolveGradeLevel(studentGradeRaw))}
             gamification={state.gamification}
             planTier={exercisePlan}
             onSpend={handleSpendEnergy}

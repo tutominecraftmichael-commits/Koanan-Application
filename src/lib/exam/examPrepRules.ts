@@ -12,7 +12,7 @@
  * Fichier sans dépendance lourde : utilisé par le planificateur (paquet principal).
  */
 import type { ExamPrepMode, Subject } from '../../types';
-import { tryResolveGradeLevel } from '../curriculum/curriculumMatcher';
+import { matchSubjectToStemCurriculum, tryResolveGradeLevel } from '../curriculum/curriculumMatcher';
 
 /**
  * Classes où la préparation aux devoirs est ouverte (il y a des cours et des QCM).
@@ -23,6 +23,7 @@ import { tryResolveGradeLevel } from '../curriculum/curriculumMatcher';
 export const EXAM_PREP_GRADES = [
   'seconde_a',
   'seconde_c',
+  'premiere_a', // ancien identifiant « 1ère A » sans numéro (= 1re A1) : ces élèves n'avaient pas de devoirs
   'premiere_a1',
   'premiere_a2',
   'premiere_c',
@@ -73,13 +74,23 @@ export function subjectHasExamCourse(subject: Pick<Subject, 'examChapterIds'>): 
  * Type de séance pour un jour donné, ou null si aucune préparation ce jour-là
  * (épreuve passée, jour J, ou trop loin).
  */
+/**
+ * Matière du programme d'un devoir : celle enregistrée avec les chapitres, sinon celle reconnue d'après le nom
+ * de la matière. (Sans ce repli, une matière enregistrée sans sa clé n'avait jamais de sujet de 2 h.)
+ */
+export function examSubjectKeyOf(subject: Pick<Subject, 'examSubjectKey'> & { name?: string }): string | undefined {
+  if (subject.examSubjectKey) return subject.examSubjectKey;
+  const match = subject.name ? matchSubjectToStemCurriculum(subject.name) : null;
+  return match?.isStemSubject ? match.stemSubjectId : undefined;
+}
+
 export function examPrepModeFor(
   daysToExam: number | null,
-  subject: Pick<Subject, 'examChapterIds' | 'examSubjectKey'>,
+  subject: Pick<Subject, 'examChapterIds' | 'examSubjectKey'> & { name?: string },
 ): ExamPrepMode | null {
   if (daysToExam === null || daysToExam < 1 || daysToExam > EXAM_PREP_HORIZON_DAYS) return null;
   if (!subjectHasExamCourse(subject)) return 'chrono75';
-  const canSujet = hasSujetTemplate(subject.examSubjectKey);
+  const canSujet = hasSujetTemplate(examSubjectKeyOf(subject));
   if (!canSujet) return 'qcm30';
   // Cycle QCM, QCM, sujet : J-7 et J-6 QCM, J-5 sujet, J-4 et J-3 QCM, J-2 sujet, J-1 QCM
   return daysToExam % 3 === 2 ? 'sujet2h' : 'qcm30';

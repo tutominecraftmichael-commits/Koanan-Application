@@ -682,6 +682,7 @@ const allPremieres = (note) => Object.fromEntries(PREMIERE_GRADES.map((g) => [g,
 const MATHS_1RE_A = "Première A (littéraire) : équations et inéquations du second degré, systèmes d'inéquations linéaires, généralités sur les fonctions, dérivabilité et étude de fonctions, dénombrement, statistiques. Calculs simples et guidés, pas de géométrie vectorielle.";
 const MATHS_1RE_C = "Première C (scientifique) : second degré, systèmes linéaires dans R² et R³, généralités sur les fonctions, limites et continuité, dérivation, étude de fonctions, suites numériques, dénombrement, probabilité, statistiques, barycentre, angles orientés et trigonométrie, composées de transformations, vecteurs et orthogonalité dans l'espace.";
 const MATHS_1RE_D = "Première D (scientifique) : second degré, systèmes linéaires dans R² et R³, fonctions, limites, dérivation, suites numériques, dénombrement, probabilité, statistiques, géométrie dans l'espace. Calculs un peu plus guidés qu'en Première C.";
+const SVT_1RE_A = "Première A (littéraire) : réflexe conditionnel, effets des drogues sur le comportement, anomalies chromosomiques, cycles sexuels chez la femme, régulation des naissances, transmission d'un caractère lié aux autosomes (arbres généalogiques), production d'énergie par la cellule (respiration, fermentation), mise en réserve des nutriments (glycémie). Questions simples et guidées, sans calcul complexe.";
 const PC_1RE = "Première C et D : Physique — travail et puissance d'une force, énergie cinétique, potentielle et mécanique, champ électrostatique, puissance et énergie électriques, amplificateur opérationnel, optique géométrique (réflexion, réfraction, lentilles minces). Chimie — pétrole et gaz naturel, alcanes, alcènes et alcynes, composés oxygénés, éthanol, estérification et hydrolyse, oxydoréduction (voie sèche, couples en solution, classification, dosage), électrolyse, corrosion et protection des métaux.";
 
 export const PREMIERE_TEMPLATES = {
@@ -697,7 +698,13 @@ export const PREMIERE_TEMPLATES = {
   svt: {
     ...EXAM_TEMPLATES.svt,
     source: 'DPFC – Format SVT (exercices 1 et 2 : tests objectifs, 6 pts chacun ; exercice 3 : situation d’évaluation, 8 pts), appliqué au programme de Première',
-    notesClasse: {},
+    // Programmes de SVT de Première (leçons de KONAN, novembre 2026) : sans ces notes, le sujet ignorait la classe
+    notesClasse: {
+      premiere_a1: SVT_1RE_A,
+      premiere_a2: SVT_1RE_A,
+      premiere_c: "Première C : structure interne du globe terrestre (ondes sismiques, discontinuités), échanges d'ions au niveau du sol (complexe argilo-humique), gamétogenèse et méiose, fécondation chez les mammifères, synthèse des protéines (transcription, traduction, code génétique), transmission d'un caractère héréditaire (monohybridisme, dominance, codominance), photosynthèse (facteurs, chloroplaste, phases lumineuse et sombre), écosystème naturel et agrosystème (biomasse, productivité, rendements).",
+      premiere_d: "Première D : réflexe inné et arc réflexe, fonctions des gonades (testicules, ovaires, hormones), gamétogenèse et méiose (brassages, anomalies chromosomiques), transmission d'un caractère héréditaire (dominance, croisement-test, absence de dominance, hérédité liée au sexe), synthèse des protéines, activités internes du globe (séismes, ondes P, S et L, structure du globe), mouvements des plaques lithosphériques, échanges d'ions au niveau du sol, évolution des sols tropicaux, production de la matière organique (photosynthèse), digestion des aliments (enzymes, pH, température), absorption des nutriments.",
+    },
   },
   histoire_geo: {
     ...EXAM_TEMPLATES.histoire_geo,
@@ -728,7 +735,16 @@ export const PREMIERE_TEMPLATES = {
  * - Terminales A : modèles dédiés au format du BAC Série A ;
  * - Autres classes (Seconde A, Seconde C...) : modèles de cycle standard.
  */
-export function getExamTemplate(subjectKey, gradeId) {
+/** Forme officielle d'une classe : « premiere_a » / « terminale_a » (anciens identifiants sans numéro) = série A1. */
+export function canonicalExamGrade(gradeId) {
+  const g = String(gradeId || '');
+  if (g === 'premiere_a') return 'premiere_a1';
+  if (g === 'terminale_a') return 'terminale_a1';
+  return g;
+}
+
+export function getExamTemplate(subjectKey, gradeId0) {
+  const gradeId = canonicalExamGrade(gradeId0);
   if (TERMINALE_D_GRADES.includes(gradeId) && TERMINALE_D_TEMPLATES[subjectKey]) {
     return TERMINALE_D_TEMPLATES[subjectKey];
   }

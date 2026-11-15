@@ -140,7 +140,8 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   // Stepper : 1 = Méthodes, 2 = Devoirs/Examens, 3 = Réorganisation, 4 = Google Agenda
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C (cours et QCM complets)
-  const examGradeRaw = state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel;
+  // Même source de classe que le reste de l'appli : les préférences d'abord (synchronisées), puis le compte
+  const examGradeRaw = state.preferences?.gradeLevel || state.userAccount?.gradeLevel || state.academicLevel;
   const EXAM_PREP_PAUSED = !isExamPrepOpenFor(examGradeRaw);
 
   // État Étape 2 : Matières & Devoirs / Examens (initialisé d'abord)

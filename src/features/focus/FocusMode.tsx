@@ -26,6 +26,8 @@ export interface FocusModeProps {
   onCompleteSession: (sessionId: string, log: StudyLog) => void;
   onExit: () => void;
   backLabel?: string;
+  /** XP gagnés en validant la séance à la fin du chronomètre (affichés sur l'écran de fin). */
+  xpReward?: number;
 }
 
 export const FocusMode: React.FC<FocusModeProps> = ({
@@ -34,6 +36,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
   onCompleteSession,
   onExit,
   backLabel,
+  xpReward,
 }) => {
   const currentSubject = session 
     ? subjects.find(s => s.id === session.subjectId)
@@ -420,6 +423,13 @@ export const FocusMode: React.FC<FocusModeProps> = ({
             </p>
           </div>
 
+          {/* XP de la séance : gagnés en validant (c'est ainsi que LMD et BTS avancent dans la ligue) */}
+          {xpReward !== undefined && (
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-50 border-2 border-amber-200 text-amber-800 dark:bg-amber-500/10 dark:border-amber-500/30 dark:text-amber-200 font-black">
+              <Sparkles className="w-4 h-4" /> Valide ta séance pour gagner +{xpReward} XP
+            </div>
+          )}
+
           {/* Star Rating Feedback */}
           <div className="space-y-2 max-w-sm mx-auto">
             <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
@@ -454,7 +464,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
               onClick={handleSaveAndExit}
               className="cursor-pointer px-6 sm:px-8 text-xs sm:text-sm font-bold w-full sm:w-auto"
             >
-              Enregistrer et Revenir au Tableau de Bord
+              {xpReward !== undefined ? `Valider ma séance (+${xpReward} XP)` : 'Valider ma séance'}
             </Button>
           </div>
         </div>

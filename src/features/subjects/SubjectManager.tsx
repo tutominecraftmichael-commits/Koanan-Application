@@ -22,6 +22,7 @@ import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
 import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { ExamChapterPicker } from '../exam/ExamChapterPicker';
+import { matchSubjectToStemCurriculum } from '../../lib/curriculum/curriculumMatcher';
 
 export interface SubjectManagerProps {
   subjects: Subject[];
@@ -79,7 +80,8 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   // Chapitres du devoir (matière avec cours) ; sans cours : chronomètre 75 min
   const [examChapterIds, setExamChapterIds] = useState<string[]>([]);
   const [examSubjectKey, setExamSubjectKey] = useState<string | undefined>(undefined);
-  const [examHasCourse, setExamHasCourse] = useState<boolean>(false);
+  // null = liste des chapitres encore en chargement (on ne sait pas encore si la matière a du cours)
+  const [examHasCourse, setExamHasCourse] = useState<boolean | null>(null);
   const [examFormError, setExamFormError] = useState<string | null>(null);
 
   // Real-time topic / theme list management
@@ -99,6 +101,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     setExamTime('08:30');
     setExamChapterIds([]);
     setExamSubjectKey(undefined);
+    setExamHasCourse(null);
     setExamFormError(null);
     setTopicsList(['Introduction & concepts clés', 'Exercices d’application']);
     setNewTopicInput('');
@@ -118,6 +121,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     setExamTime(sub.examTime || '08:30');
     setExamChapterIds(sub.examChapterIds || []);
     setExamSubjectKey(sub.examSubjectKey);
+    setExamHasCourse(null);
     setExamFormError(null);
     setTopicsList(sub.topics && sub.topics.length > 0 ? [...sub.topics] : ['Généralités & Notions clés']);
     setNewTopicInput('');
@@ -156,15 +160,24 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
       ? cleanTopics
       : ['Introduction & révisions'];
 
+    // Liste des chapitres pas encore chargée : on attend (avant, enregistrer trop tôt effaçait les chapitres
+    // choisis, et le devoir devenait une simple révision chronométrée au lieu du sujet)
+    if (!EXAM_PREP_PAUSED && examDate && examHasCourse === null) {
+      setExamFormError('Un instant : KONAN charge les chapitres de ta matière. Réessaie dans quelques secondes.');
+      return;
+    }
     // Devoir d'une matière qui a du cours : au moins un chapitre doit être coché
     if (!EXAM_PREP_PAUSED && examDate && examHasCourse && examChapterIds.length === 0) {
       setExamFormError('Coche au moins un chapitre de ton devoir pour que KONAN prépare tes séances.');
       return;
     }
     setExamFormError(null);
+    // Matière du programme : celle du choix des chapitres, sinon reconnue d'après le nom
+    const subjectMatch = matchSubjectToStemCurriculum(name.trim());
+    const keepChapters = Boolean(examDate) && examHasCourse !== false && examChapterIds.length > 0;
     const examFields = {
-      examChapterIds: examDate && examHasCourse ? examChapterIds : undefined,
-      examSubjectKey: examDate && examHasCourse ? examSubjectKey : undefined,
+      examChapterIds: keepChapters ? examChapterIds : undefined,
+      examSubjectKey: keepChapters ? (examSubjectKey || (subjectMatch.isStemSubject ? subjectMatch.stemSubjectId : undefined)) : undefined,
     };
 
     if (editingSubjectId) {

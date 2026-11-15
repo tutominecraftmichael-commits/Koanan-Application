@@ -29,6 +29,7 @@ export const MIN_REPUTATION = 80; // il faut STRICTEMENT plus de 80 %
 
 // Mêmes valeurs que src/lib/gamification/gamification.ts
 export const LESSON_XP = [35, 50, 90, 140];
+export const LESSON_MISTAKE_PENALTY = 1;
 export const SERIES_LEVELS = [
   { level: 1, xp: 15, questions: 10, seconds: 300 },
   { level: 2, xp: 30, questions: 15, seconds: 420 },
@@ -69,12 +70,22 @@ export function isEligible(reputation) {
   return Number(reputation) > MIN_REPUTATION;
 }
 
-/** Classes qui ont des cours dans KONAN (Seconde, Première, Terminale) : seules elles ont la ligue. LMD, BTS… : non. */
+/** Classes qui ont des cours dans KONAN (Seconde, Première, Terminale). */
 export function gradeHasCourses(gradeLevel) {
   return /^(seconde|premiere|terminale)_/.test(String(gradeLevel || ''));
 }
 
-/** L'élève participe-t-il au classement (réputation de plus de 80 % ET classe avec cours) ? */
+/**
+ * Classes admises dans la ligue : celles qui ont des cours, et aussi LMD et BTS (choix du fondateur,
+ * 2026-11-15). Sans cours, ces élèves gagnent leurs XP avec le chronomètre de leurs séances
+ * (pas d'icône d'entraînement). Collège ou classe inconnue : pas de ligue.
+ * Le champ enregistré s'appelle toujours `hasCourses` (anciennes fiches) : il veut dire « admis dans la ligue ».
+ */
+export function gradeInLeague(gradeLevel) {
+  return gradeHasCourses(gradeLevel) || /^superieur_(lmd|bts)$/.test(String(gradeLevel || ''));
+}
+
+/** L'élève participe-t-il au classement (réputation de plus de 80 % ET classe admise dans la ligue) ? */
 export function isParticipant(player) {
   return Boolean(player) && isEligible(player.reputation) && player.hasCourses !== false;
 }
@@ -152,7 +163,10 @@ export function applyXpEvents(player0, events, { nowMs, planTier }) {
 
     let xp = 0;
     if (e.kind === 'lesson') {
-      const expected = lessonTierXp(e.durationMinutes);
+      // Chaque erreur de la séance retire 1 XP (jamais sous 0) ; séance au chronomètre : 0 erreur
+      const mistakes = e.mistakes === undefined ? 0 : Math.round(Number(e.mistakes));
+      if (!Number.isFinite(mistakes) || mistakes < 0 || mistakes > 500) { reject('fautes invalides'); continue; }
+      const expected = Math.max(0, lessonTierXp(e.durationMinutes) - mistakes * LESSON_MISTAKE_PENALTY);
       if (Number(e.amount) !== expected) { reject('XP de séance incorrects'); continue; }
       if (player.dayLessons >= MAX_LESSONS_PER_DAY) { reject('trop de séances dans la journée'); continue; }
       player.dayLessons += 1;

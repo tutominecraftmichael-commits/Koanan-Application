@@ -55,6 +55,7 @@ import { afterShine } from '../../lib/shineClick';
 import { getCurriculumChapters, loadCurriculumFor } from '../../lib/curriculum/curriculumRegistry';
 import { shuffleExerciseOptions } from '../../lib/curriculum/optionShuffle';
 import { soundFX } from '../../lib/audioEffects';
+import { lessonXp, lessonXpAfterMistakes } from '../../lib/gamification/gamification';
 import { KonanCube } from '../../components/common/KonanCube';
 import { ChaptersInProgressNote } from '../../components/common/ChaptersInProgressNote';
 import { EMPTY_SUBJECT_KONAN_MESSAGE } from '../../lib/contentNotices';
@@ -74,7 +75,8 @@ export interface InteractiveTutorViewProps {
   /** Méthode de la séance (planning) : change le déroulé du cours (ex. Rappel actif). */
   pacingMethod?: string;
   onExit: () => void;
-  onSessionCompleted: (sessionId?: string) => void;
+  /** `mistakes` : toutes les réponses fausses de la séance (rattrapage compris) ; chacune retire 1 XP. */
+  onSessionCompleted: (sessionId?: string, stats?: { mistakes: number }) => void;
 }
 
 /** Questions « à revoir aujourd'hui » (révision espacée), posées au début de la séance. */
@@ -410,6 +412,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // Statistiques globales de la séance
   const [totalFirstTryCorrect, setTotalFirstTryCorrect] = useState<number>(0);
   const [totalExercisesAnswered, setTotalExercisesAnswered] = useState<number>(0);
+  // Erreurs de la séance : TOUTES les réponses fausses (révision, leçon, rattrapage, rappel). Chacune retire 1 XP.
+  // Avant, la fin de séance affichait 100 % même après des erreurs rattrapées.
+  const [mistakeCount, setMistakeCount] = useState<number>(0);
+  const mistakeCountRef = useRef<number>(0);
+  mistakeCountRef.current = mistakeCount;
+  // Score réel de chaque mini-leçon : bonnes réponses du premier coup sur le nombre d'étapes
+  const [pointScores, setPointScores] = useState<Record<string, { firstTry: number; total: number }>>({});
 
   // Compteurs déjà enregistrés (la progression est sauvegardée après CHAQUE mini-leçon validée)
   const recordedCountsRef = useRef<{ answered: number; correct: number }>({ answered: 0, correct: 0 });
@@ -742,6 +751,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         // Safe fail
       }
     } else {
+      setMistakeCount(prev => prev + 1);
       // Petit son « raté » (doux, descendant) pour que l'élève sache tout de suite que ce n'est pas la bonne réponse
       try {
         soundFX.playWrong();
@@ -852,6 +862,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     }
     if (currentItem && !recordedPointIdsRef.current.has(currentItem.point.id)) {
       recordedPointIdsRef.current.add(currentItem.point.id);
+      // Score réel de la mini-leçon : étapes réussies du premier coup (les ratées restent comptées comme ratées,
+      // même après le rattrapage)
+      const total = pointExercises.length;
+      if (total > 0) {
+        const firstTry = Math.max(0, total - new Set(missedIndices).size);
+        setPointScores(prev => ({ ...prev, [currentItem.point.id]: { firstTry, total } }));
+      }
       recordCompletedTutorSession(
         userId,
         stemSubjectId,
@@ -913,7 +930,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     try {
       saveWhereStopped();
       if (final && phaseRef.current === 'session_celebration' && studySessionId) {
-        onSessionCompleted(studySessionId);
+        onSessionCompleted(studySessionId, { mistakes: mistakeCountRef.current });
       }
       if (final && !alternationDoneRef.current && totalExercisesAnswered >= 5) {
         alternationDoneRef.current = true;
@@ -938,8 +955,16 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
   // Fermeture finale et validation dans l'emploi du temps
   const handleFinishAndExit = () => {
-    onSessionCompleted(studySessionId);
+    onSessionCompleted(studySessionId, { mistakes: mistakeCount });
   };
+
+  // Bilan honnête de la séance (affiché à la fin) : score réel et XP après erreurs
+  const scoredPoints = Object.values(pointScores);
+  const sessionFirstTry = scoredPoints.reduce((n, s) => n + s.firstTry, 0);
+  const sessionSteps = scoredPoints.reduce((n, s) => n + s.total, 0);
+  const sessionScorePct = sessionSteps ? Math.round((sessionFirstTry / sessionSteps) * 100) : null;
+  const sessionBaseXp = lessonXp(durationMinutes);
+  const sessionXp = lessonXpAfterMistakes(durationMinutes, mistakeCount);
 
   // =========================================================================
   // POMODORO : chrono de VRAI travail, fin de séance, pause
@@ -1587,6 +1612,10 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 Pause ! {POMODORO_PAUSE_SEC / 60} minutes, bois de l’eau et repose tes yeux.
                 {(isTwoVoletLabel(subCategoryLabel)) ? ` La prochaine fois, on passera à l’autre volet ; et quand ${subCategoryLabel} reviendra, tu reprendras exactement là où tu t’es arrêté.` : ' La prochaine fois, tu reprendras exactement là où tu t’es arrêté.'}
               </p>
+              <p className="text-sm font-black text-amber-700 dark:text-amber-300">
+                {sessionScorePct !== null ? `Score du premier coup : ${sessionScorePct} % · ` : ''}
+                {mistakeCount} erreur{mistakeCount > 1 ? 's' : ''} · +{sessionXp} XP
+              </p>
             </div>
             <div className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-sky-50 dark:bg-sky-950/50 border-2 border-sky-200 dark:border-sky-800 text-3xl font-black font-mono text-sky-700 dark:text-sky-300 tabular-nums">
               {fmtClock(pauseLeft)}
@@ -1644,43 +1673,72 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         <div className="space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30 text-xs font-black uppercase tracking-wider">
             <Check className="w-4 h-4 stroke-[3]" />
-            <span>Quota 100% validé • {subCategoryLabel}</span>
+            <span>Séance validée • {subCategoryLabel}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-            Séance de {subCategoryLabel} Maîtrisée !
+            {mistakeCount === 0 ? 'Sans aucune erreur !' : 'Séance terminée'}
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">
-            Tu as validé avec succès l'intégralité des <strong>{items.length} mini-leçons</strong> avec le score d'excellence requis.
+            Tu as fait tes <strong>{items.length} mini-leçon{items.length > 1 ? 's' : ''}</strong>.{' '}
             {isTwoVoletLabel(subCategoryLabel)
               ? 'Lors de ta prochaine séance, Konan passera automatiquement à l’autre volet de ton programme !'
               : 'Lors de ta prochaine séance, tu continueras exactement là où tu t’es arrêté !'}
           </p>
         </div>
 
+        {/* Bilan honnête : score du premier coup, erreurs (rattrapage compris) et XP */}
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700">
+            <p className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">Score</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white tabular-nums">{sessionScorePct === null ? '—' : `${sessionScorePct} %`}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400">du premier coup</p>
+          </div>
+          <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700">
+            <p className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">Erreurs</p>
+            <p className={`text-2xl font-black tabular-nums ${mistakeCount ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>{mistakeCount}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400">rattrapage compris</p>
+          </div>
+          <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-500/10 border-2 border-amber-200 dark:border-amber-500/30">
+            <p className="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-300">XP gagnés</p>
+            <p className="text-2xl font-black text-amber-700 dark:text-amber-300 tabular-nums">+{sessionXp}</p>
+            <p className="text-[10px] text-amber-700/80 dark:text-amber-300/80">{mistakeCount ? `${sessionBaseXp} − ${sessionBaseXp - sessionXp}` : `sur ${sessionBaseXp}`}</p>
+          </div>
+        </div>
+        {mistakeCount > 0 && (
+          <p className="text-xs text-slate-600 dark:text-slate-300">Chaque erreur retire 1 XP. KONAN te reposera les questions ratées lors des prochaines révisions.</p>
+        )}
+
         {/* Récapitulatif des points maîtrisés */}
         <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-left space-y-3 shadow-sm">
           <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            Points clés validés aujourd'hui ({items.length}) :
+            Mini-leçons faites aujourd'hui ({items.length}) — réussite du premier coup :
           </span>
           <div className="space-y-2">
-            {items.map((item, idx) => (
-              <div
-                key={item.point.id || idx}
-                className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 text-xs"
-              >
-                <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
-                    <Check className="w-3 h-3 stroke-[3]" />
+            {items.map((item, idx) => {
+              const score = pointScores[item.point.id];
+              const pct = score && score.total ? Math.round((score.firstTry / score.total) * 100) : null;
+              const tone = pct === null || pct === 100
+                ? 'text-emerald-600 dark:text-emerald-400'
+                : pct >= 70 ? 'text-amber-600 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400';
+              return (
+                <div
+                  key={item.point.id || idx}
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 text-xs"
+                >
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                      <Check className="w-3 h-3 stroke-[3]" />
+                    </div>
+                    <span className="font-extrabold text-slate-800 dark:text-slate-200 break-words min-w-0">
+                      {item.point.title}
+                    </span>
                   </div>
-                  <span className="font-extrabold text-slate-800 dark:text-slate-200 break-words min-w-0">
-                    {item.point.title}
+                  <span className={`font-mono font-black shrink-0 pl-2 ${tone}`}>
+                    {score ? `${score.firstTry}/${score.total} · ${pct} %` : 'faite'}
                   </span>
                 </div>
-                <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 shrink-0 pl-2">
-                  100%
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -2239,8 +2297,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto">
               {currentItem.isLastPointOfChapter
                 ? `Félicitations ! Tu as validé l'ensemble des ${currentItem.totalPointsInChapter} mini-leçons du chapitre « ${currentItem.chapterTitle} ». Chapitre maîtrisé !`
-                : `Excellente maîtrise ! Tu as validé cette notion clé. Il te reste encore ${currentItem.totalPointsInChapter - (currentItem.pointIndexInChapter + 1)} mini-leçon(s) pour terminer complètement le chapitre « ${currentItem.chapterTitle} ».`}
+                : `${missedIndices.length === 0 ? 'Excellente maîtrise ! ' : ''}Tu as validé cette notion. Il te reste encore ${currentItem.totalPointsInChapter - (currentItem.pointIndexInChapter + 1)} mini-leçon(s) pour terminer complètement le chapitre « ${currentItem.chapterTitle} ».`}
             </p>
+            {pointExercises.length > 0 && (
+              <p className={`text-sm font-black ${missedIndices.length === 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                Du premier coup : {pointExercises.length - new Set(missedIndices).size}/{pointExercises.length}
+                {missedIndices.length > 0 ? ` · ${new Set(missedIndices).size} erreur${new Set(missedIndices).size > 1 ? 's' : ''} rattrapée${new Set(missedIndices).size > 1 ? 's' : ''}` : ' · aucune erreur'}
+              </p>
+            )}
           </div>
 
           <div className="pt-2">

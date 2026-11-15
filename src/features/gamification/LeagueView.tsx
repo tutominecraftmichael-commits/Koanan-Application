@@ -50,14 +50,14 @@ function leagueErrorLabel(error: string): string {
 
 export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: number; hasCourses?: boolean; offline: boolean; errorText?: string; onOpen: () => void }> = ({ board, localReputation, hasCourses = true, offline, errorText = '', onOpen }) => {
   const reputation = board?.reputation ?? localReputation;
-  // Classes sans cours dans KONAN (LMD, BTS…) : pas de ligue
+  // Classe non admise dans la ligue (collège, ou classe pas encore indiquée). LMD et BTS y sont, au chronomètre.
   if (!hasCourses || board?.reason === 'no_courses') {
     return (
       <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-900/70 p-3.5 sm:p-4 flex items-center gap-3">
         <span className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center shrink-0"><Lock className="w-5 h-5 text-slate-500" /></span>
         <div className="min-w-0">
           <p className="text-sm font-black text-slate-900 dark:text-white">Ligue pas encore ouverte pour ta classe</p>
-          <p className="text-xs text-slate-600 dark:text-slate-300">La ligue est réservée aux classes qui ont leurs cours dans KONAN (Seconde, Première, Terminale). Elle ouvrira pour ta filière dès que ses cours seront prêts.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300">La ligue est ouverte de la Seconde à la Terminale, et aux étudiants LMD et BTS. Si tu es dans l’une de ces classes, indique ta classe exacte en réimportant ton emploi du temps.</p>
         </div>
       </div>
     );
@@ -154,8 +154,9 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
   <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3.5 space-y-2.5 text-xs text-slate-700 dark:text-slate-300 leading-snug">
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Gagner des XP</p>
-      <p>Séance terminée : 25 min <b>+35</b> · 45 min <b>+50</b> · 75 min <b>+90</b> · 2 h <b>+140</b>.</p>
-      <p>Séries d’exercices (icône ronde) : 15, 30, 60 puis 120 XP si tu les enchaînes ; chaque faute en retire.</p>
+      <p>Séance terminée : 25 min <b>+35</b> · 45 min <b>+50</b> · 75 min <b>+90</b> · 2 h <b>+140</b>. Chaque erreur dans les questions de la séance retire <b>1 XP</b>, rattrapage compris.</p>
+      <p>Séries d’exercices (icône ronde, classes avec cours) : 15, 30, 60 puis 120 XP si tu les enchaînes ; chaque faute en retire.</p>
+      <p>LMD et BTS : pas encore de cours ni d’exercices ; tu gagnes tes XP en menant le chronomètre de tes séances jusqu’au bout, puis en validant.</p>
       <p>Les XP du classement sont ceux de la semaine, vérifiés par KONAN : ils repartent de 0 chaque lundi.</p>
     </div>
     <div className="space-y-1">
