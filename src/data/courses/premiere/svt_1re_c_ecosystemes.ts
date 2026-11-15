@@ -9,6 +9,9 @@ export const SVT_1RE_C_L09_ECOSYSTEME_NATUREL_AGROSYSTEME: CurriculumChapter = {
   "alsoForGrades": [
     "premiere_d"
   ],
+  "orderForGrades": {
+    "premiere_d": 12
+  },
   "order": 9,
   "title": "Leçon 9 : L’écosystème naturel et l’agrosystème",
   "summary": "Caractéristiques d’une forêt naturelle et d’un champ cultivé, biomasse et énergie par niveau trophique, pyramides des énergies, productivités primaires brute et nette, rendements théorique et réel, apports extérieurs des agrosystèmes.",

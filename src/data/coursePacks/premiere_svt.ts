@@ -26,6 +26,9 @@ import { SVT_1RE_D_L03_GAMETOGENESE } from '../courses/premiere/svt_1re_d_gameto
 import { SVT_1RE_D_L04_TRANSMISSION_CARACTERE } from '../courses/premiere/svt_1re_d_transmission_caractere';
 import { SVT_1RE_D_L05_SYNTHESE_PROTEINES } from '../courses/premiere/svt_1re_d_synthese_proteines';
 import { SVT_1RE_D_L06_ACTIVITES_INTERNES_GLOBE } from '../courses/premiere/svt_1re_d_activites_internes_globe';
+import { SVT_1RE_D_L07_MOUVEMENTS_PLAQUES } from '../courses/premiere/svt_1re_d_mouvements_plaques';
+import { SVT_1RE_D_L08_ECHANGES_IONS_SOL } from '../courses/premiere/svt_1re_d_echanges_ions_sol';
+import { SVT_1RE_D_L09_EVOLUTION_SOLS_TROPICAUX } from '../courses/premiere/svt_1re_d_evolution_sols_tropicaux';
 
 export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L01_REFLEXE_CONDITIONNEL,
@@ -50,4 +53,7 @@ export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_D_L04_TRANSMISSION_CARACTERE,
   SVT_1RE_D_L05_SYNTHESE_PROTEINES,
   SVT_1RE_D_L06_ACTIVITES_INTERNES_GLOBE,
+  SVT_1RE_D_L07_MOUVEMENTS_PLAQUES,
+  SVT_1RE_D_L08_ECHANGES_IONS_SOL,
+  SVT_1RE_D_L09_EVOLUTION_SOLS_TROPICAUX,
 ];

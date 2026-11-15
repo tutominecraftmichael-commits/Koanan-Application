@@ -9,6 +9,9 @@ export const SVT_1RE_C_L08_PHOTOSYNTHESE: CurriculumChapter = {
   "alsoForGrades": [
     "premiere_d"
   ],
+  "orderForGrades": {
+    "premiere_d": 11
+  },
   "order": 8,
   "title": "Leçon 8 : La photosynthèse",
   "summary": "Facteurs de la photosynthèse (lumière, CO₂, température), chlorophylle et chloroplaste, pigments, phase lumineuse (photolyse de l’eau, ATP, TH,H⁺) et phase sombre (cycle de Calvin), équation bilan et importance pour la biosphère.",
