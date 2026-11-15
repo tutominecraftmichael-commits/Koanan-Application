@@ -106,6 +106,7 @@ const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.Foc
 const loadExerciseSeriesView = () => import('./features/gamification/ExerciseSeriesView').then((m) => m.ExerciseSeriesView);
 const ExerciseSeriesView = lazyView(loadExerciseSeriesView);
 const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
+const PlansSheet = lazyView(() => import('./features/pro/PlansSheet').then((m) => m.PlansSheet));
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
 const ScheduleManager = lazyView(loadScheduleManager);
@@ -786,6 +787,8 @@ export function App() {
   const [subscriptionLoading, setSubscriptionLoading] = useState(false);
   const [subscriptionError, setSubscriptionError] = useState('');
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
+  const [isPlansOpen, setIsPlansOpen] = useState(false);
+  const [subscriptionPeriod, setSubscriptionPeriod] = useState<'mois' | 'semestre'>('mois');
   const subscriptionAccount = state.userAccount?.isLoggedIn && !state.isDemoMode ? (state.userAccount.googleId || '') : '';
   const subscriptionPending = Boolean(subscriptionInfo?.status?.pending);
   const refreshSubscription = useCallback(async () => {
@@ -2826,6 +2829,8 @@ export function App() {
         onResetData={handleResetData}
         onSelectPlan={handleSelectPlan}
         onUpgradeToPro={() => handleSelectPlan('pro')}
+        onOpenPlans={() => setIsPlansOpen(true)}
+        subscriptionEndsAt={paidMode ? subscriptionInfo?.status?.endsAt : null}
         invitedEmails={state.userAccount?.invitedEmails || []}
         academicGoal={state.userAccount?.academicGoal || 'target_16'}
         onOpenGroupModal={() => {
@@ -2855,10 +2860,40 @@ export function App() {
         onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
       />
 
+      {/* Fiche des formules (Paramètres → « Voir les formules ») */}
+      {isPlansOpen && (
+        <Suspense fallback={null}>
+          <PlansSheet
+            currentTier={effectivePlanTier}
+            endsAt={paidMode ? subscriptionInfo?.status?.endsAt : null}
+            provisional={Boolean(paidMode && subscriptionInfo?.status?.provisional)}
+            canRenew={paidMode}
+            onClose={() => setIsPlansOpen(false)}
+            onChoosePro={(period) => {
+              setIsPlansOpen(false);
+              setSubscriptionPeriod(period);
+              // Paiement ouvert : formulaire Wave / Orange Money (souscrire ou prolonger) ; sinon ancien parcours
+              if (paidMode) setIsSubscriptionOpen(true);
+              else handleSelectPlan('pro');
+            }}
+            onJoinPlus={() => {
+              setIsPlansOpen(false);
+              setWaitlistModalInfo({
+                isOpen: true,
+                featureTitle: 'KONAN Plus',
+                featureDescription: 'Planning réglé sur ton objectif, pack groupe de 5 comptes et musiques de concentration. Laisse ton contact : tu seras parmi les premiers prévenus à l’ouverture.',
+                requiredTier: 'plus',
+              });
+            }}
+          />
+        </Suspense>
+      )}
+
       {/* Abonnement KONAN Pro (paiement Wave / Orange Money) */}
       {isSubscriptionOpen && (
         <Suspense fallback={null}>
           <SubscriptionView
+            initialPeriod={subscriptionPeriod}
             info={subscriptionInfo}
             loading={subscriptionLoading}
             loadError={subscriptionError}

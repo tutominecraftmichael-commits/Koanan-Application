@@ -23,14 +23,16 @@ interface Props {
   onClose: () => void;
   onUpdated: (info: SubscriptionInfo) => void;
   onRefresh: () => void;
+  /** Durée choisie dans la fiche des formules (mois ou semestre) */
+  initialPeriod?: PaidPeriod;
 }
 
-export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, onClose, onUpdated, onRefresh }) => {
+export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, onClose, onUpdated, onRefresh, initialPeriod = 'mois' }) => {
   const config = info?.config;
   const status = info?.status || null;
   const offers = useMemo(() => (config?.offers || []).filter((o) => o.tier === 'pro'), [config]);
   const providers = useMemo(() => Object.keys(config?.receivers || {}) as PaymentProvider[], [config]);
-  const [period, setPeriod] = useState<PaidPeriod>('mois');
+  const [period, setPeriod] = useState<PaidPeriod>(initialPeriod);
   const [provider, setProvider] = useState<PaymentProvider | ''>('');
   const [ref, setRef] = useState('');
   const [phone, setPhone] = useState('');
