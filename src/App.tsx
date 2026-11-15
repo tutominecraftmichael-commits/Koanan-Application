@@ -70,6 +70,7 @@ import { UltimateCompletionCelebrationModal } from './components/celebration/Ult
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
 import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy, lessonXp } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
+import { fetchSubscription, type SubscriptionInfo } from './services/subscriptionApi';
 import { LeaguePage } from './features/gamification/LeagueView';
 import { nextNameChangeAt } from '../api/_nameRules.js';
 import { leagueAvatarOf } from './lib/gamification/leagueAvatar';
@@ -104,6 +105,7 @@ const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashb
 const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
 const loadExerciseSeriesView = () => import('./features/gamification/ExerciseSeriesView').then((m) => m.ExerciseSeriesView);
 const ExerciseSeriesView = lazyView(loadExerciseSeriesView);
+const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
 const ScheduleManager = lazyView(loadScheduleManager);
@@ -778,6 +780,79 @@ export function App() {
     };
   }, [gamificationEnabled, syncLeague, pendingCount]);
 
+  // Abonnement payé (étape 4) : le SERVEUR dit si l'élève est Pro (paiement Wave / Orange Money déclaré puis vérifié).
+  // Tant que le paiement n'est pas activé sur le serveur (KONAN_PAYMENTS), rien ne change.
+  const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
+  const [subscriptionLoading, setSubscriptionLoading] = useState(false);
+  const [subscriptionError, setSubscriptionError] = useState('');
+  const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
+  const subscriptionAccount = state.userAccount?.isLoggedIn && !state.isDemoMode ? (state.userAccount.googleId || '') : '';
+  const refreshSubscription = useCallback(async () => {
+    if (!subscriptionAccount || !auth?.currentUser) return;
+    setSubscriptionLoading(true);
+    const r = await fetchSubscription();
+    setSubscriptionLoading(false);
+    if (r.success) {
+      setSubscriptionInfo(r.info);
+      setSubscriptionError('');
+    } else {
+      setSubscriptionError(r.error);
+    }
+  }, [subscriptionAccount]);
+  useEffect(() => {
+    if (!subscriptionAccount) {
+      setSubscriptionInfo(null);
+      return;
+    }
+    const first = setTimeout(refreshSubscription, 1500);
+    const every = setInterval(refreshSubscription, 10 * 60 * 1000);
+    const onVisible = () => { if (document.visibilityState === 'visible') refreshSubscription(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearTimeout(first);
+      clearInterval(every);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [subscriptionAccount, refreshSubscription]);
+  // Mode payant : la formule vient UNIQUEMENT du serveur
+  const paidMode = Boolean(subscriptionInfo?.config.enabled && subscriptionInfo.status);
+  const serverTier: PlanTier | null = paidMode ? (subscriptionInfo!.status!.tier as PlanTier) : null;
+  const paidModeRef = useRef({ paidMode, serverTier });
+  paidModeRef.current = { paidMode, serverTier };
+  // La formule enregistrée dans l'application suit toujours celle du serveur (fin d'abonnement, paiement refusé,
+  // ou « Pro » choisi dans l'application sans avoir payé)
+  useEffect(() => {
+    if (!paidMode || !serverTier) return;
+    const current = state.planTier || state.userAccount?.planTier || 'free';
+    if (current === serverTier) return;
+    if (serverTier === 'free') {
+      const { nextState } = transitionUserState(state, 'free');
+      nextState.planTier = 'free';
+      if (nextState.userAccount) {
+        nextState.userAccount.planTier = 'free';
+        nextState.userAccount.isGroupGuest = false;
+      }
+      nextState.isGroupGuest = false;
+      setState(nextState);
+      if (nextState.userAccount?.googleId && !nextState.isDemoMode) saveUserState(nextState.userAccount.googleId, nextState);
+      const rejected = subscriptionInfo?.status?.lastRejected;
+      showToast(rejected && subscriptionInfo?.status?.history[0]?.id === rejected.id
+        ? 'Ton paiement n’a pas été validé : KONAN Pro est retiré de ton compte.'
+        : 'KONAN Pro n’est pas actif sur ton compte. Abonne-toi pour en profiter.');
+      return;
+    }
+    setState((prev) => {
+      const next: AppState = {
+        ...prev,
+        planTier: serverTier,
+        userAccount: prev.userAccount ? { ...prev.userAccount, planTier: serverTier } : undefined,
+      };
+      if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
+      return next;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paidMode, serverTier, state.planTier, state.userAccount?.planTier]);
+
   // Réputation : jours terminés comptés à l'ouverture, au retour dans l'appli et toutes les 10 minutes
   useEffect(() => {
     if (!gamificationEnabled) return;
@@ -1150,6 +1225,20 @@ export function App() {
       if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
         showToast('Connexion requise : Vous devez impérativement être connecté avec votre compte pour configurer votre EDT Pro avec Konan.');
         setActiveView('auth');
+        return;
+      }
+      // Mode payant : Pro s'obtient en payant (Plus reste en liste d'attente) ; déjà payé → guide EDT Pro
+      if (paidMode) {
+        if (planId === 'plus') {
+          showToast('KONAN Plus arrive bientôt. KONAN Pro est déjà disponible.');
+          setIsSubscriptionOpen(true);
+          return;
+        }
+        if (serverTier !== 'pro') {
+          setIsSubscriptionOpen(true);
+          return;
+        }
+        setActiveView('pro-wizard');
         return;
       }
       setState(prev => ({
@@ -1637,6 +1726,13 @@ export function App() {
 
     //  Uniquement si l'utilisateur vient de cliquer explicitement sur le modèle KONAN PRO ou KONAN PLUS, lancer le guide EDT Pro
     if (payload.launchProWizard && (payload.planTier === 'pro' || payload.planTier === 'plus')) {
+      // Mode payant sans abonnement : on propose de payer au lieu d'ouvrir le guide Pro
+      if (paidModeRef.current.paidMode && paidModeRef.current.serverTier !== 'pro') {
+        showToast('Emploi du temps enregistré ! Pour KONAN Pro, choisis ta formule.');
+        setActiveView('dashboard');
+        setIsSubscriptionOpen(true);
+        return;
+      }
       showToast('Bienvenue dans le Guide EDT Pro avec Konan !');
       setActiveView('pro-wizard');
       return;
@@ -2736,6 +2832,32 @@ export function App() {
         }}
         onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
       />
+
+      {/* Abonnement KONAN Pro (paiement Wave / Orange Money) */}
+      {isSubscriptionOpen && (
+        <Suspense fallback={null}>
+          <SubscriptionView
+            info={subscriptionInfo}
+            loading={subscriptionLoading}
+            loadError={subscriptionError}
+            onClose={() => setIsSubscriptionOpen(false)}
+            onRefresh={refreshSubscription}
+            onUpdated={(info) => {
+              setSubscriptionInfo(info);
+              if (info.status?.tier === 'pro') {
+                setState((prev) => {
+                  const next: AppState = { ...prev, planTier: 'pro', userAccount: prev.userAccount ? { ...prev.userAccount, planTier: 'pro' } : undefined };
+                  if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
+                  return next;
+                });
+                setIsSubscriptionOpen(false);
+                showToast('Bienvenue dans KONAN Pro ! Ton paiement sera vérifié.');
+                setActiveView('pro-wizard');
+              }
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Pro Upgrade Modal */}
       <ProFeatureModal

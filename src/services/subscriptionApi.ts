@@ -1,0 +1,111 @@
+/**
+ * Appels à /api/subscription : abonnement KONAN Pro payé par Wave ou Orange Money.
+ * Le serveur fait foi : l'application n'est jamais celle qui décide qu'un élève est Pro.
+ */
+import { auth } from '../lib/firebase';
+import { getAdminAuthorizationHeader } from '../lib/adminAuth';
+
+export type PaidTier = 'pro' | 'plus';
+export type PaidPeriod = 'mois' | 'semestre';
+export type PaymentProvider = 'wave' | 'orange';
+
+export interface SubscriptionOffer { tier: PaidTier; period: PaidPeriod; days: number; amount: number; normalAmount: number }
+export interface SubscriptionConfig {
+  enabled: boolean;
+  testMode: boolean;
+  receiverName: string;
+  receivers: Partial<Record<PaymentProvider, { label: string; number: string }>>;
+  offers: SubscriptionOffer[];
+}
+export interface PaymentView {
+  id: string; tier: PaidTier; period: PaidPeriod; provider: PaymentProvider; ref: string; amount: number;
+  status: 'pending' | 'confirmed' | 'rejected'; declaredAt: string; checkedAt: string | null; rejectMessage: string | null;
+}
+export interface SubscriptionStatus {
+  tier: 'free' | PaidTier;
+  endsAt: string | null;
+  provisional: boolean;
+  trustBlocked: boolean;
+  pending: PaymentView | null;
+  lastRejected: PaymentView | null;
+  history: PaymentView[];
+}
+export interface SubscriptionInfo { config: SubscriptionConfig; status: SubscriptionStatus | null }
+
+export const PERIOD_LABEL: Record<PaidPeriod, string> = { mois: '1 mois', semestre: '6 mois' };
+
+/** Messages simples pour chaque refus du serveur. */
+export function subscriptionErrorText(code?: string): string {
+  switch (code) {
+    case 'REF_USED': return 'Ce numéro de transaction a déjà été utilisé. Vérifie que tu as recopié le bon numéro.';
+    case 'PENDING_EXISTS': return 'Tu as déjà un paiement en cours de vérification. Attends qu’il soit vérifié.';
+    case 'BAD_REF': return 'Numéro de transaction invalide. Recopie-le exactement comme dans ton application Wave ou Orange Money.';
+    case 'BAD_PHONE': return 'Numéro de téléphone invalide. Écris les 10 chiffres (exemple : 07 01 02 03 04).';
+    case 'TIER_NOT_SOLD': return 'Cette formule n’est pas encore disponible.';
+    case 'OTHER_TIER_ACTIVE': return 'Tu as déjà une autre formule en cours.';
+    case 'TOO_MANY': return 'Trop d’essais aujourd’hui. Réessaie demain.';
+    case 'BAD_PROVIDER': return 'Choisis Wave ou Orange Money.';
+    case 'PAYMENTS_DISABLED': return 'Le paiement n’est pas encore ouvert.';
+    case 'UNAUTHORIZED': case 'TOKEN_EXPIRED': return 'Reconnecte-toi à ton compte, puis réessaie.';
+    case 'NETWORK': return 'Pas de connexion Internet. Réessaie dans un instant.';
+    default: return 'Une erreur est survenue. Réessaie dans un instant.';
+  }
+}
+
+async function post(body: Record<string, unknown>, authorization: string | null): Promise<{ ok: boolean; status: number; json: any }> {
+  const res = await fetch('/api/subscription', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(authorization ? { Authorization: authorization } : {}) },
+    body: JSON.stringify(body),
+    cache: 'no-store',
+  });
+  let json: any = {};
+  try { json = await res.json(); } catch { /* réponse vide */ }
+  return { ok: res.ok && Boolean(json?.success), status: res.status, json };
+}
+
+async function asStudent(body: Record<string, unknown>) {
+  const user = auth?.currentUser;
+  if (!user) return { ok: false, status: 401, json: { error: 'UNAUTHORIZED' } };
+  try {
+    let r = await post(body, `Bearer ${await user.getIdToken(false)}`);
+    if (!r.ok && r.status === 401) r = await post(body, `Bearer ${await user.getIdToken(true)}`);
+    return r;
+  } catch {
+    return { ok: false, status: 0, json: { error: 'NETWORK' } };
+  }
+}
+
+export async function fetchSubscription(): Promise<{ success: true; info: SubscriptionInfo } | { success: false; error: string }> {
+  const r = await asStudent({ action: 'status' });
+  if (!r.ok) return { success: false, error: String(r.json?.error || `HTTP ${r.status}`) };
+  return { success: true, info: { config: r.json.config, status: r.json.status } };
+}
+
+export async function declarePayment(input: { tier: PaidTier; period: PaidPeriod; provider: PaymentProvider; ref: string; payerPhone: string }):
+  Promise<{ success: true; info: SubscriptionInfo } | { success: false; error: string }> {
+  const r = await asStudent({ action: 'declare', ...input });
+  if (!r.ok) return { success: false, error: String(r.json?.error || `HTTP ${r.status}`) };
+  return { success: true, info: { config: r.json.config, status: r.json.status } };
+}
+
+// ---------- Administrateur ----------
+export interface AdminPayment extends Omit<PaymentView, 'rejectMessage' | 'checkedAt'> {
+  uid: string; payerPhone: string; studentName: string; studentEmail: string; receiverNumber: string;
+  refRaw: string; checkedAt?: string; checkedBy?: string; rejectReason?: string; testMode?: boolean;
+}
+export type RejectReason = 'not_received' | 'wrong_amount' | 'duplicate' | 'other';
+
+export async function adminPayments(action: 'admin_list' | 'admin_confirm' | 'admin_reject', extra: Record<string, unknown> = {}) {
+  const authorization = await getAdminAuthorizationHeader();
+  // Les paiements exigent la connexion administrateur par Google (jamais l'ancien mot de passe partagé)
+  if (!authorization || authorization.slice(7).split('.').length !== 3) {
+    return { ok: false, error: 'GOOGLE_REQUIRED', json: {} as any };
+  }
+  try {
+    const r = await post({ action, ...extra }, authorization);
+    return { ok: r.ok, error: String(r.json?.error || (r.ok ? '' : `HTTP ${r.status}`)), json: r.json };
+  } catch {
+    return { ok: false, error: 'NETWORK', json: {} as any };
+  }
+}

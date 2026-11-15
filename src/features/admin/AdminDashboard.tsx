@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { getAdminAuthorizationHeader } from '../../lib/adminAuth';
+import { PaymentsPanel } from './PaymentsPanel';
 
 export interface AdminUserRecord {
   id: string;
@@ -310,6 +311,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <span>{errorMessage}</span>
           </div>
         )}
+
+        {/* Paiements KONAN Pro à vérifier (Wave / Orange Money) */}
+        <PaymentsPanel />
 
         {/* =========================================================================
             GRILLE DE KPI & CARTES MÉTRIQUES EN DIRECT

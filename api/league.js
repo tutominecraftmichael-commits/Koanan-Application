@@ -15,6 +15,7 @@ import { getDb, send, readBody, isAllowedOrigin, str } from './_examCommon.js';
 import { loadLocalEnvIfPresent } from './_env.js';
 import { verifyFirebaseIdToken } from './_firebaseToken.js';
 import { nextNameChangeAt } from './_nameRules.js';
+import { serverPlanTier } from './_subscriptionStore.js';
 import {
   DIVISIONS, GROUP_SIZE, PROMOTE_COUNT, DEMOTE_COUNT, applyXpEvents, clampDivision, cleanAvatar, gradeInLeague,
   guardReputation, isEligible, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
@@ -105,10 +106,11 @@ async function buildBoard(db, player, nowMs) {
  * Cœur de la ligue pour un élève : XP vérifiés, réputation bornée, nom (3 mois entre deux changements),
  * photo, classe, puis place dans un groupe et classement. `user` = fiche users/{uid} (formule, classe).
  */
-export async function syncPlayer(db, uid, body, user, nowMs = Date.now()) {
+export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts = {}) {
   const weekId = weekIdOf(nowMs);
   const playerRef = leagueCol(db, 'league_players').doc(uid);
-  const rawTier = String(user?.planTier || user?.userAccount?.planTier || 'free').toLowerCase();
+  // Formule réelle donnée par le serveur (abonnement payé) ; sinon ancienne formule enregistrée par l'application
+  const rawTier = String(opts.planTier || user?.planTier || user?.userAccount?.planTier || 'free').toLowerCase();
   const planTier = rawTier === 'pro' || rawTier === 'plus' ? rawTier : 'free';
   const grade = str(body.gradeLevel, 40) || user?.preferences?.gradeLevel || user?.userAccount?.gradeLevel || '';
   const wantedName = publicName(str(body.displayName, 60) || user?.studentName || '');
@@ -187,7 +189,10 @@ export default async function handler(req, res) {
   try {
     const db = await getDb();
     const userSnap = await db.collection('users').doc(uid).get();
-    const out = await syncPlayer(db, uid, body || {}, userSnap.exists ? userSnap.data() : {}, Date.now());
+    const userData = userSnap.exists ? userSnap.data() : {};
+    // Énergie illimitée et nom en couleur : seulement pour un abonnement réellement payé (vérifié par le serveur)
+    const planTier = await serverPlanTier(db, uid, userData);
+    const out = await syncPlayer(db, uid, body || {}, userData, Date.now(), { planTier });
     return send(res, 200, { success: true, ...out });
   } catch (err) {
     console.error('[league]', err?.message || err);

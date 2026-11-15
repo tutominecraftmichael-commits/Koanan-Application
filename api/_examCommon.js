@@ -4,6 +4,7 @@
  */
 import { loadLocalEnvIfPresent } from './_env.js';
 import { verifyFirebaseIdToken } from './_firebaseToken.js';
+import { paymentsEnabled } from './_subscriptionRules.js';
 
 export const MODELS = ['gemini-3.5-flash', 'gemini-3.5-flash-lite'];
 
@@ -85,6 +86,20 @@ export async function guard(req, res) {
   if (!apiKey) {
     send(res, 503, { success: false, error: 'AI_NOT_CONFIGURED' });
     return null;
+  }
+  // Devoirs = KONAN Pro. Quand le paiement est activé, seul un abonnement payé (vérifié par le serveur) y donne accès.
+  if (paymentsEnabled()) {
+    try {
+      const { serverPlanTier } = await import('./_subscriptionStore.js');
+      const tier = await serverPlanTier(await getDb(), uid, null);
+      if (tier !== 'pro' && tier !== 'plus') {
+        send(res, 403, { success: false, error: 'PRO_REQUIRED' });
+        return null;
+      }
+    } catch {
+      send(res, 503, { success: false, error: 'SUBSCRIPTION_UNAVAILABLE' });
+      return null;
+    }
   }
   return { uid, apiKey };
 }

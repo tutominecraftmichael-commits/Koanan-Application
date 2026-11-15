@@ -133,6 +133,9 @@ export default defineConfig(({ mode }) => {
             // Ligue : classement de la semaine et XP vérifiés par le serveur
             // @ts-ignore
             'league': () => import('./api/league.js'),
+            // Abonnements payés par Wave / Orange Money (zone de test « zz_test_ » sur l'ordinateur)
+            // @ts-ignore
+            'subscription': () => import('./api/subscription.js'),
           };
           for (const [route, load] of Object.entries(examRoutes)) {
             server.middlewares.use(`/api/${route}`, async (req, res) => {
