@@ -281,9 +281,15 @@ export function App() {
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
   // Source unique de vérité pour le palier actif (supporte le palier 'pro' et 'free')
+  // Abonnement payé : le SERVEUR dit si l'élève est Pro (paiement Wave / Orange Money). Tant que le paiement
+  // n'est pas activé sur le serveur (KONAN_PAYMENTS), rien ne change : formule enregistrée dans l'application.
+  const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
+  const paidMode = Boolean(subscriptionInfo?.config.enabled && subscriptionInfo.status);
+  const serverTier: PlanTier | null = paidMode ? (subscriptionInfo!.status!.tier as PlanTier) : null;
   const effectivePlanTier = useMemo<PlanTier>(() => {
+    if (serverTier) return serverTier;
     return state.planTier || state.userAccount?.planTier || 'free';
-  }, [state.planTier, state.userAccount?.planTier]);
+  }, [serverTier, state.planTier, state.userAccount?.planTier]);
 
   // Unified display name
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
@@ -699,7 +705,7 @@ export function App() {
 
   // Icône d'exercices (étape 2) : séries de 10 QCM, énergie ⚡ pour les comptes Gratuit
   const [isExerciseOpen, setIsExerciseOpen] = useState(false);
-  const exercisePlan = state.userAccount?.planTier || state.planTier || 'free';
+  const exercisePlan = effectivePlanTier;
   const updateGamification = (compute: (prev: AppState) => AppState['gamification'] | null) => {
     setState((prev) => {
       const g = compute(prev);
@@ -781,9 +787,7 @@ export function App() {
     };
   }, [gamificationEnabled, syncLeague, pendingCount]);
 
-  // Abonnement payé (étape 4) : le SERVEUR dit si l'élève est Pro (paiement Wave / Orange Money déclaré puis vérifié).
-  // Tant que le paiement n'est pas activé sur le serveur (KONAN_PAYMENTS), rien ne change.
-  const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
+  // Abonnement payé (étape 4) : voir subscriptionInfo / paidMode / serverTier plus haut.
   const [subscriptionLoading, setSubscriptionLoading] = useState(false);
   const [subscriptionError, setSubscriptionError] = useState('');
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
@@ -837,18 +841,28 @@ export function App() {
         message: p.rejectMessage,
       }));
   }, [subscriptionInfo]);
-  // Mode payant : la formule vient UNIQUEMENT du serveur
-  const paidMode = Boolean(subscriptionInfo?.config.enabled && subscriptionInfo.status);
-  const serverTier: PlanTier | null = paidMode ? (subscriptionInfo!.status!.tier as PlanTier) : null;
   const paidModeRef = useRef({ paidMode, serverTier });
   paidModeRef.current = { paidMode, serverTier };
-  // La formule enregistrée dans l'application suit toujours celle du serveur (fin d'abonnement, paiement refusé,
-  // ou « Pro » choisi dans l'application sans avoir payé)
+  // Quand la formule du SERVEUR change (fin d'abonnement, paiement refusé, paiement accepté), on l'applique
+  // UNE fois. Ne dépend PAS de state.planTier : la fusion avec le cloud garde « pro » si une des copies le dit,
+  // et réagir à chaque changement faisait une boucle (Gratuit → planning recalculé → Pro → …) qui figeait l'appli.
+  // L'affichage, lui, suit toujours le serveur (effectivePlanTier).
+  const appliedServerTierRef = useRef('');
   useEffect(() => {
-    if (!paidMode || !serverTier) return;
+    if (!paidMode || !serverTier || !subscriptionAccount) return;
+    const key = `${subscriptionAccount}:${serverTier}`;
+    if (appliedServerTierRef.current === key) return;
+    appliedServerTierRef.current = key;
+    const storeKey = `konan_server_tier_applied_${subscriptionAccount}`;
+    let alreadyApplied = false;
+    try { alreadyApplied = localStorage.getItem(storeKey) === serverTier; } catch { /* stockage indisponible */ }
     const current = state.planTier || state.userAccount?.planTier || 'free';
-    if (current === serverTier) return;
-    if (serverTier === 'free') {
+    if (current === serverTier) {
+      try { localStorage.setItem(storeKey, serverTier); } catch { /* sans effet */ }
+      return;
+    }
+    if (serverTier === 'free' && !alreadyApplied) {
+      // Première fois : on retire proprement les avantages Pro (méthodes Pro, devoirs) et on recalcule le planning
       const { nextState } = transitionUserState(state, 'free');
       nextState.planTier = 'free';
       if (nextState.userAccount) {
@@ -862,19 +876,22 @@ export function App() {
       showToast(rejected && subscriptionInfo?.status?.history[0]?.id === rejected.id
         ? 'Ton paiement n’a pas été validé : KONAN Pro est retiré de ton compte.'
         : 'KONAN Pro n’est pas actif sur ton compte. Abonne-toi pour en profiter.');
-      return;
+    } else {
+      // Déjà appliqué, ou passage à Pro : simple mise à jour de la formule, sans recalcul du planning
+      setState((prev) => {
+        if ((prev.planTier || 'free') === serverTier) return prev;
+        const next: AppState = {
+          ...prev,
+          planTier: serverTier,
+          userAccount: prev.userAccount ? { ...prev.userAccount, planTier: serverTier } : undefined,
+        };
+        if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
+        return next;
+      });
     }
-    setState((prev) => {
-      const next: AppState = {
-        ...prev,
-        planTier: serverTier,
-        userAccount: prev.userAccount ? { ...prev.userAccount, planTier: serverTier } : undefined,
-      };
-      if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
-      return next;
-    });
+    try { localStorage.setItem(storeKey, serverTier); } catch { /* sans effet */ }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paidMode, serverTier, state.planTier, state.userAccount?.planTier]);
+  }, [paidMode, serverTier, subscriptionAccount]);
 
   // Réputation : jours terminés comptés à l'ouverture, au retour dans l'appli et toutes les 10 minutes
   useEffect(() => {

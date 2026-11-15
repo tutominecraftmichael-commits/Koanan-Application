@@ -170,7 +170,6 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
       { title: 'Jusqu’à 3 méthodes combinées', detail: 'Dans le même planning, selon tes matières.' },
       { title: 'Planning configuré avec KONAN, pas à pas' },
       { title: 'Imports d’emploi du temps illimités' },
-      { title: 'Ton nom en doré dans la ligue' },
     ],
   },
   {
@@ -185,7 +184,6 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
       { title: 'Planning réglé sur ton objectif', detail: '12 de moyenne, une mention ou major de promo.' },
       { title: 'Pack groupe', detail: 'Invite jusqu’à 4 camarades (5 comptes).' },
       { title: 'Musiques de concentration', detail: 'Ondes alpha, lofi, bruit blanc.' },
-      { title: 'Ton nom en couleurs dans la ligue' },
     ],
   },
 ];
