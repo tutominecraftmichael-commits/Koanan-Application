@@ -15,6 +15,9 @@ import { SVT_1RE_A_L09_MISE_EN_RESERVE_NUTRIMENTS } from '../courses/premiere/sv
 import { SVT_1RE_C_L01_STRUCTURE_INTERNE_GLOBE } from '../courses/premiere/svt_1re_c_structure_interne_globe';
 import { SVT_1RE_C_L03_ECHANGES_IONS_SOL } from '../courses/premiere/svt_1re_c_echanges_ions_sol';
 import { SVT_1RE_C_L04_GAMETOGENESE_MAMMIFERES } from '../courses/premiere/svt_1re_c_gametogenese';
+import { SVT_1RE_C_L05_FECONDATION_MAMMIFERES } from '../courses/premiere/svt_1re_c_fecondation';
+import { SVT_1RE_C_L06_SYNTHESE_PROTEINES } from '../courses/premiere/svt_1re_c_synthese_proteines';
+import { SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE } from '../courses/premiere/svt_1re_c_transmission_caractere';
 
 export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L01_REFLEXE_CONDITIONNEL,
@@ -28,4 +31,7 @@ export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_C_L01_STRUCTURE_INTERNE_GLOBE,
   SVT_1RE_C_L03_ECHANGES_IONS_SOL,
   SVT_1RE_C_L04_GAMETOGENESE_MAMMIFERES,
+  SVT_1RE_C_L05_FECONDATION_MAMMIFERES,
+  SVT_1RE_C_L06_SYNTHESE_PROTEINES,
+  SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE,
 ];
