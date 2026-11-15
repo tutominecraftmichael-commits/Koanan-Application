@@ -137,10 +137,13 @@ export const LeaguePage: React.FC<{
   resultSeen: string;
   onDismissResult: (weekId: string) => void;
   onRefresh: () => void;
-}> = ({ board, localReputation, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh }) => {
+  /** Bandeau XP + réputation affiché en haut de la page */
+  statsBar?: React.ReactNode;
+}> = ({ board, localReputation, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh, statsBar }) => {
   React.useEffect(() => { onRefresh(); }, [onRefresh]);
   return (
     <div className="space-y-3 pb-24">
+      {statsBar}
       {board?.lastResult && board.lastResult.weekId !== resultSeen && (
         <LeagueResultBanner board={board} onClose={() => onDismissResult(board.lastResult?.weekId || '')} />
       )}

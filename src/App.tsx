@@ -2340,11 +2340,6 @@ export function App() {
                 />
               </div>
             )}
-            {gamificationEnabled && (
-              <div className="mb-4">
-                <XpReputationCard gamification={state.gamification} />
-              </div>
-            )}
             <DashboardOverview
               studentName={effectiveStudentName}
               academicLevel={effectiveClassLabel}
@@ -2570,6 +2565,7 @@ export function App() {
         {/* Ligue (onglet trophée) */}
         {activeView === 'league' && gamificationEnabled && (
           <LeaguePage
+            statsBar={<XpReputationCard gamification={state.gamification} weekXp={leagueBoard?.eligible ? leagueBoard.weekXp : undefined} />}
             board={leagueBoard}
             localReputation={gamificationOf(state.gamification).reputation}
             hasCourses={/^(seconde|premiere|terminale)_/.test(leagueGrade || '')}
