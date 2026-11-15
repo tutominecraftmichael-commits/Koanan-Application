@@ -7,9 +7,15 @@ import type { CurriculumChapter } from '../../lib/curriculum/types';
 import { SVT_1RE_A_L01_REFLEXE_CONDITIONNEL } from '../courses/premiere/svt_1re_a_reflexe_conditionnel';
 import { SVT_1RE_A_L02_EFFETS_DROGUES_COMPORTEMENT } from '../courses/premiere/svt_1re_a_effets_drogues';
 import { SVT_1RE_A_L03_ANOMALIES_CHROMOSOMIQUES } from '../courses/premiere/svt_1re_a_anomalies_chromosomiques';
+import { SVT_1RE_A_L04_CYCLES_SEXUELS_FEMME } from '../courses/premiere/svt_1re_a_cycles_sexuels';
+import { SVT_1RE_A_L05_REGULATION_NAISSANCES } from '../courses/premiere/svt_1re_a_regulation_naissances';
+import { SVT_1RE_A_L06_TRANSMISSION_CARACTERE_AUTOSOMES } from '../courses/premiere/svt_1re_a_transmission_autosomes';
 
 export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L01_REFLEXE_CONDITIONNEL,
   SVT_1RE_A_L02_EFFETS_DROGUES_COMPORTEMENT,
   SVT_1RE_A_L03_ANOMALIES_CHROMOSOMIQUES,
+  SVT_1RE_A_L04_CYCLES_SEXUELS_FEMME,
+  SVT_1RE_A_L05_REGULATION_NAISSANCES,
+  SVT_1RE_A_L06_TRANSMISSION_CARACTERE_AUTOSOMES,
 ];
