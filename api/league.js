@@ -20,29 +20,49 @@ import {
   guardReputation, isEligible, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
 } from './_leagueRules.js';
 
-/** Place l'élève dans un groupe ouvert de sa division (ou en crée un) pour la semaine en cours. */
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const isContention = (e) => e?.code === 10 || /ABORTED|contention|too much contention/i.test(String(e?.message || ''));
+
+/**
+ * Place l'élève dans un groupe ouvert de sa division (ou en crée un) pour la semaine en cours.
+ * Beaucoup d'élèves peuvent se connecter au même moment (lundi matin) : on choisit au hasard parmi
+ * les groupes ouverts pour ne pas tous écrire dans le même, et on réessaie après une courte attente
+ * si Firestore refuse une écriture simultanée.
+ */
 async function assignGroup(db, uid, weekId, division) {
-  return db.runTransaction(async (tx) => {
+  const attempt = () => db.runTransaction(async (tx) => {
     // Déjà placé par une autre requête au même moment : on garde ce groupe
     const me = await tx.get(leagueCol(db, 'league_players').doc(uid));
     if (me.exists && me.get('groupId') && me.get('weekId') === weekId) return me.get('groupId');
     const open = await tx.get(
-      leagueCol(db, 'league_groups').where('weekId', '==', weekId).where('division', '==', division).where('open', '==', true).limit(1),
+      leagueCol(db, 'league_groups').where('weekId', '==', weekId).where('division', '==', division).where('open', '==', true).limit(5),
     );
+    // Groupes ouverts avec de la place, le plus rempli en premier tiré plus souvent (on finit de remplir)
+    const candidates = open.docs.filter((d) => (d.get('members') || []).length < GROUP_SIZE);
     let ref;
     let members;
-    if (open.empty) {
+    if (!candidates.length) {
       ref = leagueCol(db, 'league_groups').doc(`${weekId}_d${division}_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`);
       members = [uid];
       tx.set(ref, { weekId, division, members, size: 1, open: true, createdAt: new Date().toISOString() });
     } else {
-      ref = open.docs[0].ref;
-      members = [...new Set([...(open.docs[0].get('members') || []), uid])];
+      const pick = candidates[Math.floor(Math.random() * candidates.length)];
+      ref = pick.ref;
+      members = [...new Set([...(pick.get('members') || []), uid])];
       tx.update(ref, { members, size: members.length, open: members.length < GROUP_SIZE });
     }
     tx.update(leagueCol(db, 'league_players').doc(uid), { groupId: ref.id });
     return ref.id;
-  });
+  }, { maxAttempts: 8 });
+
+  for (let i = 0; ; i++) {
+    try {
+      return await attempt();
+    } catch (e) {
+      if (!isContention(e) || i >= 5) throw e;
+      await sleep(80 + Math.random() * 400 * (i + 1));
+    }
+  }
 }
 
 /** Classement du groupe de l'élève (photo, nom, classe, XP de la semaine). */
@@ -128,8 +148,13 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now()) {
   // Place dans un groupe : réputation de plus de 80 % et classe avec cours
   let player = result.next;
   if (isParticipant(player) && !player.groupId) {
-    const groupId = await assignGroup(db, uid, weekId, clampDivision(player.division));
-    player = { ...player, groupId };
+    try {
+      const groupId = await assignGroup(db, uid, weekId, clampDivision(player.division));
+      player = { ...player, groupId };
+    } catch (e) {
+      // Trop d'élèves au même instant : pas d'erreur pour l'élève, il sera placé à la prochaine synchronisation
+      if (!isContention(e)) throw e;
+    }
   }
   return { accepted: result.accepted, rejected: result.rejected, board: await buildBoard(db, player, nowMs) };
 }
