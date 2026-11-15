@@ -29,6 +29,7 @@ const PACK_LOADERS: Partial<Record<PackKey, () => Promise<{ CHAPTERS: Curriculum
   seconde_histoire_geo: () => import('../../data/coursePacks/seconde_histoire_geo'),
   premiere_maths: () => import('../../data/coursePacks/premiere_maths'),
   premiere_physique_chimie: () => import('../../data/coursePacks/premiere_physique_chimie'),
+  premiere_svt: () => import('../../data/coursePacks/premiere_svt'),
   premiere_francais: () => import('../../data/coursePacks/premiere_francais'),
   premiere_histoire_geo: () => import('../../data/coursePacks/premiere_histoire_geo'),
   premiere_philosophie: () => import('../../data/coursePacks/premiere_philosophie'),
