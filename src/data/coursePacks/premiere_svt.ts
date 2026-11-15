@@ -12,6 +12,9 @@ import { SVT_1RE_A_L05_REGULATION_NAISSANCES } from '../courses/premiere/svt_1re
 import { SVT_1RE_A_L06_TRANSMISSION_CARACTERE_AUTOSOMES } from '../courses/premiere/svt_1re_a_transmission_autosomes';
 import { SVT_1RE_A_L08_PRODUCTION_ENERGIE_CELLULE } from '../courses/premiere/svt_1re_a_production_energie';
 import { SVT_1RE_A_L09_MISE_EN_RESERVE_NUTRIMENTS } from '../courses/premiere/svt_1re_a_mise_en_reserve_nutriments';
+import { SVT_1RE_C_L01_STRUCTURE_INTERNE_GLOBE } from '../courses/premiere/svt_1re_c_structure_interne_globe';
+import { SVT_1RE_C_L03_ECHANGES_IONS_SOL } from '../courses/premiere/svt_1re_c_echanges_ions_sol';
+import { SVT_1RE_C_L04_GAMETOGENESE_MAMMIFERES } from '../courses/premiere/svt_1re_c_gametogenese';
 
 export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L01_REFLEXE_CONDITIONNEL,
@@ -22,4 +25,7 @@ export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L06_TRANSMISSION_CARACTERE_AUTOSOMES,
   SVT_1RE_A_L08_PRODUCTION_ENERGIE_CELLULE,
   SVT_1RE_A_L09_MISE_EN_RESERVE_NUTRIMENTS,
+  SVT_1RE_C_L01_STRUCTURE_INTERNE_GLOBE,
+  SVT_1RE_C_L03_ECHANGES_IONS_SOL,
+  SVT_1RE_C_L04_GAMETOGENESE_MAMMIFERES,
 ];
