@@ -47,6 +47,55 @@ export interface OwnerNotificationItem {
   timestamp?: string;
 }
 
+/** Réponse de l'administrateur à un paiement KONAN Pro (Wave / Orange Money). */
+export interface PaymentNotice {
+  id: string;
+  status: 'confirmed' | 'rejected';
+  amount: number;
+  ref: string;
+  at: string;
+  endsAt?: string | null;
+  message?: string | null;
+}
+
+/** Message « paiement accepté / refusé » dans l'onglet des notifications (texte clair, mode jour et nuit). */
+const PaymentNoticeItem: React.FC<{ notice: PaymentNotice; onOpen?: () => void }> = ({ notice, onOpen }) => {
+  const ok = notice.status === 'confirmed';
+  const amount = `${Number(notice.amount || 0).toLocaleString('fr-FR').replace(/ | /g, ' ')} FCFA`;
+  const until = notice.endsAt ? new Date(notice.endsAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : '';
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className={`w-full p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left transition-all ${
+        ok
+          ? 'bg-emerald-50/80 border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-500/30'
+          : 'bg-rose-50/80 border-rose-200 dark:bg-rose-950/40 dark:border-rose-500/30'
+      }`}
+    >
+      <span className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${ok ? 'bg-emerald-100 dark:bg-emerald-500/20' : 'bg-rose-100 dark:bg-rose-500/20'}`}>
+        {ok ? <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-1">
+          <span className={`text-[9px] font-black uppercase tracking-wider ${ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}`}>
+            {ok ? 'Paiement accepté' : 'Paiement refusé'}
+          </span>
+          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">{formatNotificationTime(notice.at)}</span>
+        </span>
+        <span className="block text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">
+          {ok
+            ? `Ton paiement de ${amount} a été vérifié. Tu es KONAN Pro${until ? ` jusqu’au ${until}` : ''} !`
+            : `Ton paiement de ${amount} (n° ${notice.ref}) n’a pas été validé. KONAN Pro est retiré.`}
+        </span>
+        {!ok && notice.message && (
+          <span className="block text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">{notice.message}</span>
+        )}
+      </span>
+    </button>
+  );
+};
+
 export interface NavbarProps {
   activeView: ActiveAppView;
   onNavigate: (view: ActiveAppView) => void;
@@ -70,6 +119,9 @@ export interface NavbarProps {
   pendingInvitations?: PlusInvitationNotification[];
   acceptedNotifications?: { id: string; name: string; konanId?: string; timestamp?: string }[];
   ownerNotifications?: OwnerNotificationItem[];
+  /** Paiements KONAN Pro acceptés ou refusés par l'administrateur */
+  paymentNotices?: PaymentNotice[];
+  onOpenPaymentNotice?: () => void;
   onAcceptInvitation?: (invitation: PlusInvitationNotification) => void;
   onDeclineInvitation?: (invitation: PlusInvitationNotification) => void;
   /** Énergie ⚡ affichée en haut à droite (null : pas d'icône d'exercices pour cet élève) */
@@ -116,6 +168,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   pendingInvitations = [],
   acceptedNotifications = [],
   ownerNotifications,
+  paymentNotices = [],
+  onOpenPaymentNotice,
   onAcceptInvitation,
   onDeclineInvitation,
   energy = null,
@@ -209,7 +263,23 @@ export const Navbar: React.FC<NavbarProps> = ({
   });
 
   const hasUnreadNotifications = activePendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
-    || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id));
+    || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id))
+    || paymentNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
+
+  // Message non lu : la cloche bouge toute seule (toutes les 4 s) jusqu'à ce que l'élève ouvre l'onglet
+  useEffect(() => {
+    if (!hasUnreadNotifications || isNotificationsOpen) return;
+    const ring = () => {
+      setIsBellRinging(true);
+      window.setTimeout(() => setIsBellRinging(false), 800);
+    };
+    const first = window.setTimeout(ring, 600);
+    const every = window.setInterval(ring, 4000);
+    return () => {
+      window.clearTimeout(first);
+      window.clearInterval(every);
+    };
+  }, [hasUnreadNotifications, isNotificationsOpen]);
 
   // Opening the panel marks every visible notification as read
   useEffect(() => {
@@ -218,6 +288,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       const next = new Set(prev);
       activePendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
       normalizedOwnerNotifications.forEach(notif => notif?.id && next.add(notif.id));
+      paymentNotices.forEach(n => n?.id && next.add(n.id));
       try {
         localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
       } catch {
@@ -225,7 +296,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       return next;
     });
-  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications]);
+  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), component: AnimatedDashboardIcon, icon: AnimatedDashboardIcon },
@@ -513,13 +584,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                         )}
                       </div>
 
-                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
+                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 ? (
                         <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                           <Bell className="w-6 h-6 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                           <p>Aucune notification pour le moment.</p>
                         </div>
                       ) : (
                         <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
+                          {/* Paiements KONAN Pro acceptés ou refusés */}
+                          {paymentNotices.map((n) => (
+                            <PaymentNoticeItem key={n.id} notice={n} onOpen={() => { setIsNotificationsOpen(false); onOpenPaymentNotice?.(); }} />
+                          ))}
                           {/* Owner Notifications (Accepted or Declined) */}
                           {normalizedOwnerNotifications.map((notif) => {
                             const isAcc = notif.type === 'accepted';
@@ -675,14 +750,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </div>
                         </div>
 
-                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
+                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 ? (
                           <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                             <Bell className="w-7 h-7 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                             <p>Aucune notification pour le moment.</p>
                           </div>
                         ) : (
                           <div className="space-y-2.5 max-h-[60vh] overflow-y-auto custom-scrollbar">
-                            {/* Owner Notifications (Accepted or Declined) */}
+                            {/* Paiements KONAN Pro acceptés ou refusés */}
+                          {paymentNotices.map((n) => (
+                            <PaymentNoticeItem key={n.id} notice={n} onOpen={() => { setIsNotificationsOpen(false); onOpenPaymentNotice?.(); }} />
+                          ))}
+                          {/* Owner Notifications (Accepted or Declined) */}
                             {normalizedOwnerNotifications.map((notif) => {
                               const isAcc = notif.type === 'accepted';
                               const timeFormatted = formatNotificationTime(notif.timestamp);

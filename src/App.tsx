@@ -58,7 +58,7 @@ import { syncPushPlan, cancelSessionAlerts, markSessionStarted } from './service
 import { autoRegisterWebPush, detachDeviceFromAccount } from './services/webPushService';
 
 // Layout
-import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
+import { Navbar, type OwnerNotificationItem, type PaymentNotice } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { ProFeatureModal } from './components/common/ProFeatureModal';
 import { WaitlistModal } from './components/common/WaitlistModal';
@@ -787,6 +787,7 @@ export function App() {
   const [subscriptionError, setSubscriptionError] = useState('');
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const subscriptionAccount = state.userAccount?.isLoggedIn && !state.isDemoMode ? (state.userAccount.googleId || '') : '';
+  const subscriptionPending = Boolean(subscriptionInfo?.status?.pending);
   const refreshSubscription = useCallback(async () => {
     if (!subscriptionAccount || !auth?.currentUser) return;
     setSubscriptionLoading(true);
@@ -796,7 +797,7 @@ export function App() {
       setSubscriptionInfo(r.info);
       setSubscriptionError('');
     } else {
-      setSubscriptionError(r.error);
+      setSubscriptionError('error' in r ? r.error : '');
     }
   }, [subscriptionAccount]);
   useEffect(() => {
@@ -805,7 +806,8 @@ export function App() {
       return;
     }
     const first = setTimeout(refreshSubscription, 1500);
-    const every = setInterval(refreshSubscription, 10 * 60 * 1000);
+    // Paiement en attente : on regarde chaque minute si l'administrateur a répondu (message dans l'onglet notifications)
+    const every = setInterval(refreshSubscription, subscriptionPending ? 60 * 1000 : 10 * 60 * 1000);
     const onVisible = () => { if (document.visibilityState === 'visible') refreshSubscription(); };
     document.addEventListener('visibilitychange', onVisible);
     return () => {
@@ -813,7 +815,25 @@ export function App() {
       clearInterval(every);
       document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [subscriptionAccount, refreshSubscription]);
+  }, [subscriptionAccount, refreshSubscription, subscriptionPending]);
+  // Onglet des notifications : réponse de l'administrateur à chaque paiement (accepté ou refusé), 30 jours
+  const paymentNotices = useMemo<PaymentNotice[]>(() => {
+    const st = subscriptionInfo?.status;
+    if (!st) return [];
+    const limit = Date.now() - 30 * 24 * 3600 * 1000;
+    return st.history
+      .filter((p) => (p.status === 'confirmed' || p.status === 'rejected') && p.checkedAt && Date.parse(p.checkedAt) > limit)
+      .slice(0, 5)
+      .map((p) => ({
+        id: `pay_${p.id}_${p.status}`,
+        status: p.status as 'confirmed' | 'rejected',
+        amount: p.amount,
+        ref: p.ref,
+        at: p.checkedAt as string,
+        endsAt: p.status === 'confirmed' ? st.endsAt : null,
+        message: p.rejectMessage,
+      }));
+  }, [subscriptionInfo]);
   // Mode payant : la formule vient UNIQUEMENT du serveur
   const paidMode = Boolean(subscriptionInfo?.config.enabled && subscriptionInfo.status);
   const serverTier: PlanTier | null = paidMode ? (subscriptionInfo!.status!.tier as PlanTier) : null;
@@ -2332,6 +2352,8 @@ export function App() {
           completedSessions={state.studySessions ? state.studySessions.filter(s => s.completed).length : 0}
           pendingInvitations={pendingInvitations}
           ownerNotifications={ownerFeedbackNotifications}
+          paymentNotices={paymentNotices}
+          onOpenPaymentNotice={() => setIsSubscriptionOpen(true)}
           onAcceptInvitation={handleAcceptInvitation}
           onDeclineInvitation={handleDeclineInvitation}
         />
