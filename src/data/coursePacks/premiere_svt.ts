@@ -18,6 +18,8 @@ import { SVT_1RE_C_L04_GAMETOGENESE_MAMMIFERES } from '../courses/premiere/svt_1
 import { SVT_1RE_C_L05_FECONDATION_MAMMIFERES } from '../courses/premiere/svt_1re_c_fecondation';
 import { SVT_1RE_C_L06_SYNTHESE_PROTEINES } from '../courses/premiere/svt_1re_c_synthese_proteines';
 import { SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE } from '../courses/premiere/svt_1re_c_transmission_caractere';
+import { SVT_1RE_C_L08_PHOTOSYNTHESE } from '../courses/premiere/svt_1re_c_photosynthese';
+import { SVT_1RE_C_L09_ECOSYSTEME_NATUREL_AGROSYSTEME } from '../courses/premiere/svt_1re_c_ecosystemes';
 
 export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L01_REFLEXE_CONDITIONNEL,
@@ -34,4 +36,6 @@ export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_C_L05_FECONDATION_MAMMIFERES,
   SVT_1RE_C_L06_SYNTHESE_PROTEINES,
   SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE,
+  SVT_1RE_C_L08_PHOTOSYNTHESE,
+  SVT_1RE_C_L09_ECOSYSTEME_NATUREL_AGROSYSTEME,
 ];
