@@ -68,6 +68,16 @@ import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
+import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy } from './lib/gamification/gamification';
+import { callLeague, type LeagueBoard } from './services/leagueApi';
+import { LeaguePage } from './features/gamification/LeagueView';
+import { nextNameChangeAt } from '../api/_nameRules.js';
+import { leagueAvatarOf } from './lib/gamification/leagueAvatar';
+import { getDisplayAvatar } from './lib/avatar';
+import { XpReputationCard } from './features/gamification/XpReputationCard';
+import { XpBurst } from './features/gamification/XpBurst';
+import { ExerciseFab } from './features/gamification/ExerciseFab';
+import { SeriesErrorBoundary } from './features/gamification/SeriesErrorBoundary';
 import { SuperProActivationModal } from './components/pro/SuperProActivationModal';
 import { KonanPlusActivationModal } from './components/plus/KonanPlusActivationModal';
 import { KonanPlusGroupModal } from './components/plus/KonanPlusGroupModal';
@@ -92,6 +102,8 @@ const loadSubjectManager = () => import('./features/subjects/SubjectManager').th
 const loadPlannerView = () => import('./features/planner/PlannerView').then(m => m.PlannerView);
 const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashboard').then(m => m.AnalyticsDashboard);
 const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
+const loadExerciseSeriesView = () => import('./features/gamification/ExerciseSeriesView').then((m) => m.ExerciseSeriesView);
+const ExerciseSeriesView = lazyView(loadExerciseSeriesView);
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
 const ScheduleManager = lazyView(loadScheduleManager);
@@ -283,7 +295,10 @@ export function App() {
 
   // Bascule automatique de semaine (rollover d'agenda) sans pop-up de bilan
   useEffect(() => {
-    const rollover = checkAndPerformWeeklyRollover(state);
+    // La réputation des jours passés est comptée AVANT que la nouvelle semaine ne remplace les séances
+    const settled = settleReputation(state.gamification, state.studySessions, new Date(), state.cycleCompletedDate);
+    const base = settled.changed ? { ...state, gamification: settled.gamification } : state;
+    const rollover = checkAndPerformWeeklyRollover(base);
     if (rollover.hasRollover) {
       const cleanNextState = { ...rollover.nextState, pendingWeeklyRecap: null };
       setState(cleanNextState);
@@ -640,6 +655,129 @@ export function App() {
     state.preferences,
     state.cycleCompletedDate,
   ]);
+
+  // =========================================================================
+  // GAMIFICATION (étape 1) : XP à chaque séance terminée, réputation comptée chaque jour
+  // =========================================================================
+  const [xpBurst, setXpBurst] = useState<{ amount: number; id: number } | null>(null);
+  const closeXpBurst = useCallback(() => setXpBurst(null), []);
+  const gamificationEnabled = Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode);
+
+  // Séance terminée (tuteur, chronomètre, devoir ou validation) : XP gagnés, une seule fois par séance
+  useEffect(() => {
+    if (!gamificationEnabled) return;
+    const preview = awardCompletedSessions(state.gamification, state.studySessions);
+    if (!preview.gained) return;
+    setState((prev) => {
+      const r = awardCompletedSessions(prev.gamification, prev.studySessions);
+      if (!r.gained) return prev;
+      const next = { ...prev, gamification: r.gamification };
+      if (next.userAccount?.googleId) saveUserState(next.userAccount.googleId, next);
+      return next;
+    });
+    setXpBurst({ amount: preview.gained, id: Date.now() });
+  }, [state.studySessions, gamificationEnabled]);
+
+  // Icône d'exercices (étape 2) : séries de 10 QCM, énergie ⚡ pour les comptes Gratuit
+  const [isExerciseOpen, setIsExerciseOpen] = useState(false);
+  const exercisePlan = state.userAccount?.planTier || state.planTier || 'free';
+  const updateGamification = (compute: (prev: AppState) => AppState['gamification'] | null) => {
+    setState((prev) => {
+      const g = compute(prev);
+      if (!g) return prev;
+      const next = { ...prev, gamification: g };
+      if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
+      return next;
+    });
+  };
+  const handleSpendEnergy = (): boolean => {
+    if (!spendEnergy(state.gamification, exercisePlan)) return false;
+    updateGamification((prev) => spendEnergy(prev.gamification, exercisePlan));
+    return true;
+  };
+  const handleFinishSeries = (mistakes: number, startedAt: Date, total: number): number => {
+    const now = new Date();
+    const preview = finishSeries(state.gamification, mistakes, startedAt, now, total);
+    updateGamification((prev) => finishSeries(prev.gamification, mistakes, startedAt, now, total).gamification);
+    return preview.gained;
+  };
+  const handleLoseSeries = useCallback((reason: string) => {
+    updateGamification((prev) => loseSeries(prev.gamification, reason));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Ligue (étape 3) : les gains d'XP sont envoyés au serveur, qui les vérifie et renvoie le classement
+  const [leagueBoard, setLeagueBoard] = useState<LeagueBoard | null>(null);
+  const [leagueOffline, setLeagueOffline] = useState(false);
+  const [leagueError, setLeagueError] = useState('');
+  const [leagueResultSeen, setLeagueResultSeen] = useState<string>(() => {
+    try { return localStorage.getItem('konan_league_result_seen') || ''; } catch { return ''; }
+  });
+  const gamificationRef = useRef(state.gamification);
+  gamificationRef.current = state.gamification;
+  const leagueBusy = useRef(false);
+  const leagueGrade = tryResolveGradeLevel(state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel);
+  const leagueAvatarSrc = getDisplayAvatar(state.userAccount);
+  const syncLeague = useCallback(async () => {
+    if (!gamificationEnabled || leagueBusy.current || !auth?.currentUser) return;
+    leagueBusy.current = true;
+    try {
+      const g = gamificationOf(gamificationRef.current);
+      const r = await callLeague({
+        events: g.pendingEvents || [],
+        reputation: g.reputationUpdatedAt ? g.reputation : undefined,
+        displayName: effectiveStudentName,
+        classLabel: effectiveClassLabel,
+        // Classe reconnue (seconde_c, terminale_d…) : sans cours (LMD, BTS), pas de ligue
+        gradeLevel: leagueGrade || '',
+        avatar: await leagueAvatarOf(leagueAvatarSrc),
+      });
+      setLeagueOffline(!r.success);
+      setLeagueError(r.success ? '' : String(r.error || ''));
+      if (!r.success) return;
+      if (r.board) setLeagueBoard(r.board);
+      const done = [...(r.accepted || []), ...(r.rejected || []).map((x) => x.id)];
+      if (done.length) updateGamification((prev) => clearPendingEvents(prev.gamification, done));
+    } finally {
+      leagueBusy.current = false;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gamificationEnabled, effectiveStudentName, effectiveClassLabel, leagueGrade, leagueAvatarSrc]);
+
+  // À l'ouverture, au retour dans l'appli, toutes les 2 minutes et après chaque nouveau gain d'XP
+  const pendingCount = state.gamification?.pendingEvents?.length || 0;
+  useEffect(() => {
+    if (!gamificationEnabled) return;
+    const first = setTimeout(syncLeague, pendingCount ? 1500 : 3000);
+    const every = setInterval(syncLeague, 2 * 60 * 1000);
+    const onVisible = () => { if (document.visibilityState === 'visible') syncLeague(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearTimeout(first);
+      clearInterval(every);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [gamificationEnabled, syncLeague, pendingCount]);
+
+  // Réputation : jours terminés comptés à l'ouverture, au retour dans l'appli et toutes les 10 minutes
+  useEffect(() => {
+    if (!gamificationEnabled) return;
+    const settle = () => setState((prev) => {
+      const r = settleReputation(prev.gamification, prev.studySessions, new Date(), prev.cycleCompletedDate);
+      if (!r.changed) return prev;
+      const next = { ...prev, gamification: r.gamification };
+      if (next.userAccount?.googleId) saveUserState(next.userAccount.googleId, next);
+      return next;
+    });
+    settle();
+    const timer = setInterval(settle, 10 * 60 * 1000);
+    const onVisible = () => { if (document.visibilityState === 'visible') settle(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [gamificationEnabled]);
 
   // Fluidité : dès l'ouverture, on précharge en silence toutes les pages courantes (≈ 300 Ko au total),
   // pour qu'elles s'ouvrent instantanément. Seuls les cours guidés (trop lourds) attendent la séance.
@@ -1554,6 +1692,15 @@ export function App() {
     // Sécurité backend : assainit formellement le payload et empêche la modification frauduleuse de tier/isPro
     const safeData = sanitizeUserProfileUpdate(updated as any);
 
+    // Changement de nom : un seul tous les 3 mois (le classement de la ligue reste stable)
+    const currentName = (state.userAccount?.name || state.studentName || '').trim();
+    const nameChanged = Boolean(currentName) && safeData.name.trim() !== currentName;
+    const blockedUntil = nameChanged ? nextNameChangeAt(state.nameChangedAt) : null;
+    if (blockedUntil) {
+      safeData.name = currentName;
+      showToast(`Tu as déjà changé ton nom récemment. Prochain changement possible le ${new Date(blockedUntil).toLocaleDateString('fr-FR')}.`, 6000);
+    }
+
     setState(prev => {
       const nextUserAccount: UserAccount = prev.userAccount ? {
         ...prev.userAccount,
@@ -1578,6 +1725,7 @@ export function App() {
         academicLevel: safeData.academicLevel,
         // Date de la modification : à la reconnexion (ou sur un autre téléphone), c'est cette version qui gagne
         profileUpdatedAt: new Date().toISOString(),
+        nameChangedAt: nameChanged && !blockedUntil ? new Date().toISOString() : prev.nameChangedAt,
         userAccount: nextUserAccount,
         preferences: {
           ...prev.preferences,
@@ -1595,7 +1743,7 @@ export function App() {
       return next;
     });
 
-    showToast(`Nom et filière enregistrés : ${updated.name} (${updated.academicLevel})`);
+    if (!blockedUntil) showToast(`Nom et filière enregistrés : ${safeData.name} (${updated.academicLevel})`);
   };
 
   /** Photo de profil choisie dans les réglages (null = revenir à la photo du compte Google). */
@@ -1790,7 +1938,8 @@ export function App() {
     let hasChapters = false;
     if (wantsTutor) {
       try {
-        const { hasCurriculumChapters } = await import('./lib/curriculum/curriculumRegistry');
+        const { hasCurriculumChapters, loadCurriculumFor } = await import('./lib/curriculum/curriculumRegistry');
+        await loadCurriculumFor(resolvedGrade, [stemMatchForTutor.stemSubjectId!]); // seulement cette matière, à ce niveau
         hasChapters = hasCurriculumChapters(stemMatchForTutor.stemSubjectId!, resolvedGrade!);
       } catch {
         showToast('Connexion trop faible pour charger le cours guidé. Séance lancée en mode chronomètre.', 6000);
@@ -2045,6 +2194,11 @@ export function App() {
           onResetData={handleResetData}
           onLogout={handleLogout}
           onOpenSettings={() => setIsSettingsOpen(true)}
+          energy={gamificationEnabled ? {
+            value: energyNow(state.gamification).energy,
+            unlimited: hasUnlimitedEnergy(exercisePlan),
+          } : null}
+          onOpenExercises={() => setIsExerciseOpen(true)}
           totalStudySessions={state.studySessions?.length || 0}
           completedSessions={state.studySessions ? state.studySessions.filter(s => s.completed).length : 0}
           pendingInvitations={pendingInvitations}
@@ -2186,6 +2340,11 @@ export function App() {
                 />
               </div>
             )}
+            {gamificationEnabled && (
+              <div className="mb-4">
+                <XpReputationCard gamification={state.gamification} />
+              </div>
+            )}
             <DashboardOverview
               studentName={effectiveStudentName}
               academicLevel={effectiveClassLabel}
@@ -2198,7 +2357,6 @@ export function App() {
               onNavigate={handleNavigate}
               onViewPricing={handleViewPricing}
               onUpgradeToPro={() => handleSelectPlan('pro')}
-              onToggleSessionComplete={handleToggleSessionComplete}
               onStartFocusSession={handleStartFocusSession}
               onOpenPresetModal={() => {
                 if (state.isDemoMode) setIsPresetModalOpen(true);
@@ -2304,7 +2462,6 @@ export function App() {
               preferences={state.preferences}
               planTier={effectivePlanTier}
               onRegeneratePlan={handleRegeneratePlan}
-              onToggleSessionComplete={handleToggleSessionComplete}
               onStartFocusSession={handleStartFocusSession}
               onAddCustomSession={handleAddCustomSession}
               onUpdatePreferences={handleUpdatePreferences}
@@ -2410,6 +2567,23 @@ export function App() {
           )
         )}
 
+        {/* Ligue (onglet trophée) */}
+        {activeView === 'league' && gamificationEnabled && (
+          <LeaguePage
+            board={leagueBoard}
+            localReputation={gamificationOf(state.gamification).reputation}
+            hasCourses={/^(seconde|premiere|terminale)_/.test(leagueGrade || '')}
+            offline={leagueOffline}
+            errorText={leagueError}
+            resultSeen={leagueResultSeen}
+            onDismissResult={(id) => {
+              setLeagueResultSeen(id);
+              try { localStorage.setItem('konan_league_result_seen', id); } catch { /* sans effet */ }
+            }}
+            onRefresh={syncLeague}
+          />
+        )}
+
         {/* Analytics: STRICTLY PROTECTED */}
         {activeView === 'analytics' && (
           (state.userAccount?.isLoggedIn || state.isDemoMode) ? (
@@ -2451,6 +2625,28 @@ export function App() {
         </ViewErrorBoundary>
       </main>
 
+      {/* Icône ronde d'exercices (10 QCM au hasard, énergie ⚡) */}
+      {gamificationEnabled && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
+        <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
+      )}
+      {isExerciseOpen && (
+        <SeriesErrorBoundary onClose={() => setIsExerciseOpen(false)}>
+        <Suspense fallback={<div className="fixed inset-0 z-[80] bg-slate-50 dark:bg-[#070B13] flex items-center justify-center"><ViewLoader /></div>}>
+          <ExerciseSeriesView
+            userId={state.userAccount?.googleId || 'local_student'}
+            gradeLevel={tryResolveGradeLevel(state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel)}
+            gamification={state.gamification}
+            planTier={exercisePlan}
+            onSpend={handleSpendEnergy}
+            onFinish={handleFinishSeries}
+            onLose={handleLoseSeries}
+            onClose={() => setIsExerciseOpen(false)}
+            onUpgrade={() => { setIsExerciseOpen(false); handleViewPricing(); }}
+          />
+        </Suspense>
+        </SeriesErrorBoundary>
+      )}
+
       {/* Academic Track Presets Modal (ONLY FOR DEMO MODE) */}
       {state.isDemoMode && (
         <Suspense fallback={null}>
@@ -2475,6 +2671,7 @@ export function App() {
         onLogout={handleLogout}
 
         onUpdateProfile={handleUpdateProfile}
+        nameChangedAt={state.nameChangedAt}
         onUpdateAvatar={state.userAccount ? handleUpdateAvatar : undefined}
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}
@@ -2625,6 +2822,9 @@ export function App() {
 
       {/* Rappels KONAN : uniquement en notification du téléphone (rien dans l'appli). Bouton de test en développement. */}
       {import.meta.env.DEV && <KonanVoiceTestPanel appState={state} />}
+
+      {/* Célébration des XP gagnés à la fin d'une séance */}
+      {xpBurst && <XpBurst amount={xpBurst.amount} burstId={xpBurst.id} onDone={closeXpBurst} />}
 
       {/* Floating Notification Toast (Full multi-line sentence, zero truncation, crystal clear in light and dark mode) */}
       {toastMessage && (

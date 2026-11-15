@@ -11,7 +11,8 @@ import { registerHooks } from 'node:module';
 registerHooks({ load(url, c, next) { return url.endsWith('.css') ? { format: 'module', source: '', shortCircuit: true } : next(url, c); } });
 (globalThis as any).localStorage ??= { getItem: () => null, setItem() {}, removeItem() {} };
 
-const { getCurriculumChapters } = await import('../src/lib/curriculum/curriculumRegistry');
+const { getCurriculumChapters, loadAllCurriculum } = await import('../src/lib/curriculum/curriculumRegistry');
+await loadAllCurriculum();
 const { cleanFormulasAndIndices, sanitizeFormulaForKatex, isDescriptiveFormula, splitFormulaLines, latexCommandsToUnicode } = await import('../src/components/common/MathRenderer');
 const katex = (await import('katex')).default;
 

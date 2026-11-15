@@ -26,6 +26,7 @@ import {
   ymdIn,
 } from './_konanVoice.js';
 import { generateKonanMessage, mapWithLimit } from './_konanAI.js';
+import { rolloverLeague } from './_leagueRollover.js';
 
 // Clé PUBLIQUE utilisée par l'application pour abonner les téléphones (src/services/webPushService.ts).
 // Le serveur doit signer avec la clé privée qui lui correspond, sinon les services push refusent l'envoi.
@@ -478,6 +479,14 @@ export default async function handler(req, res) {
       await batch.commit();
     }
     stats.requeued = requeued;
+
+    // Ligue : fin de semaine (montées et descentes de division), une seule fois par semaine
+    try {
+      const league = await rolloverLeague(db, nowMs);
+      if (league) stats.league = league;
+    } catch (e) {
+      stats.leagueError = String(e?.message || e).slice(0, 120);
+    }
 
     return res.status(200).json({ success: true, durationMs: Date.now() - nowMs, stats, timestamp: now.toISOString() });
   } catch (err) {

@@ -14,7 +14,8 @@ registerHooks({
 });
 (globalThis as any).localStorage ??= { getItem: () => null, setItem() {}, removeItem() {} };
 
-const { getAuthoredChaptersRaw } = await import('../src/lib/curriculum/curriculumRegistry');
+const { getAuthoredChaptersRaw, loadAllCurriculum } = await import('../src/lib/curriculum/curriculumRegistry');
+await loadAllCurriculum();
 const { GENERATED_SCENES } = await import('../src/data/illustrations/generatedScenes');
 const { renderScene } = await import('../src/lib/scenes/sceneRenderer');
 

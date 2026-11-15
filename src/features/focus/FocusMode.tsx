@@ -118,17 +118,6 @@ export const FocusMode: React.FC<FocusModeProps> = ({
     setSecondsRemaining(totalSeconds);
   };
 
-  const handleManualComplete = () => {
-    setIsActive(false);
-    setIsFinished(true);
-    playCompletionChime();
-    confetti({
-      particleCount: 150,
-      spread: 90,
-      origin: { y: 0.6 }
-    });
-  };
-
   const handleSaveAndExit = () => {
     // Si la session est validée, elle crédite au moins la durée nominale de la séance (ex: 45 min, 1h30, etc.)
     const plannedMins = session?.durationMinutes || 45;
@@ -353,15 +342,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                   {isActive ? 'Pause' : 'Démarrer'}
                 </Button>
 
-                <Button
-                  variant="primary"
-                  size="md"
-                  leftIcon={<CheckCircle2 className="w-4 h-4" />}
-                  onClick={handleManualComplete}
-                  className="cursor-pointer bg-emerald-600 hover:bg-emerald-500 border-emerald-500/40 text-xs sm:text-sm px-3.5 py-2 hover:scale-105 active:scale-95 transition-transform"
-                >
-                  Terminer
-                </Button>
+                {/* Pas de bouton « Terminer » : la séance n'est validée qu'à la fin du vrai temps de travail */}
               </div>
 
             </div>

@@ -20,6 +20,7 @@ import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
 import { soundFX } from '../../lib/audioEffects';
 import { useTheme } from '../../context/ThemeContext';
+import { checkStudentName, nextNameChangeAt } from '../../../api/_nameRules.js';
 
 
 const COMMON_FILIERES = [
@@ -61,6 +62,8 @@ interface SettingsModalProps {
   onOpenGroupModal?: () => void;
   onOpenGoalModal?: () => void;
   onOpenPrivacyModal?: () => void;
+  /** Dernier changement de nom (le suivant n'est possible que 3 mois après) */
+  nameChangedAt?: string;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -84,12 +87,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onOpenGroupModal: _onOpenGroupModal,
   onOpenGoalModal: _onOpenGoalModal,
   onOpenPrivacyModal,
+  nameChangedAt,
 }) => {
   const [lang] = useLanguage();
+  const lockedUntil = nextNameChangeAt(nameChangedAt);
   const { toggleTheme, isLight } = useTheme();
 
   // Local form state for editable profile fields only (name, filiere)
   const [editName, setEditName] = useState('');
+  const [nameError, setNameError] = useState('');
   const [editFiliere, setEditFiliere] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isAvatarBusy, setIsAvatarBusy] = useState(false);
@@ -132,7 +138,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     if (onUpdateProfile) {
-      const finalName = editName.trim() || studentName || userAccount?.name || 'Étudiant';
+      // Le nom est vu par d'autres élèves (ligue) : il doit être correct
+      const currentName = (studentName || userAccount?.name || '').trim();
+      const wanted = editName.trim() || currentName;
+      // Un seul changement de nom tous les 3 mois
+      if (wanted !== currentName && lockedUntil) {
+        setNameError(`Tu as déjà changé ton nom récemment. Prochain changement possible le ${new Date(lockedUntil).toLocaleDateString('fr-FR')}.`);
+        soundFX.playNotificationPing();
+        return;
+      }
+      const check = checkStudentName(wanted);
+      if ('reason' in check) {
+        setNameError(check.reason);
+        soundFX.playNotificationPing();
+        return;
+      }
+      setNameError('');
+      const finalName = check.name;
       const finalFiliere = editFiliere.trim() || academicLevel || userAccount?.academicLevel || 'Licence Universitaire';
       onUpdateProfile({
         name: finalName,
@@ -317,13 +339,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       <input
                         type="text"
                         value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                        placeholder="Ex : Alexandre Étudiant"
-                        className="w-full px-3 py-2.5 pl-9 rounded-xl bg-white border border-slate-300 text-xs text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors shadow-xs"
+                        onChange={(e) => { setEditName(e.target.value); if (nameError) setNameError(''); }}
+                        readOnly={Boolean(lockedUntil)}
+                        placeholder="Ex : Aya Kouassi"
+                        maxLength={40}
+                        aria-invalid={Boolean(nameError)}
+                        className={`w-full px-3 py-2.5 pl-9 rounded-xl bg-white border text-xs text-slate-900 dark:bg-slate-900 dark:text-white placeholder-slate-400 focus:outline-none transition-colors shadow-xs ${nameError ? 'border-rose-500 focus:border-rose-500' : 'border-slate-300 dark:border-slate-700 focus:border-indigo-500'}`}
                         required
                       />
                       <User className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
                     </div>
+                    {nameError ? (
+                      <p className="mt-1 text-[11px] font-bold text-rose-700 dark:text-rose-300" role="alert">{nameError}</p>
+                    ) : lockedUntil ? (
+                      <p className="mt-1 text-[11px] font-semibold text-amber-700 dark:text-amber-300">Nom modifié récemment : prochain changement possible le {new Date(lockedUntil).toLocaleDateString('fr-FR')}.</p>
+                    ) : (
+                      <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Ton vrai nom : il apparaît dans le classement de la ligue. Après un changement, il faut attendre 3 mois pour en refaire un.</p>
+                    )}
                   </div>
 
                   {/* 2. Filière */}

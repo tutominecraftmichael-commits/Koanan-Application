@@ -238,6 +238,45 @@ export interface PlusInvitationNotification {
   updatedAt?: string;
 }
 
+/**
+ * XP et réputation (gamification, étape 1). Voir src/lib/gamification/gamification.ts pour les règles.
+ */
+export interface GamificationEvent {
+  at: string;          // ISO
+  kind: 'xp' | 'reputation';
+  amount: number;      // + ou −
+  reason: string;      // texte court affiché à l'élève
+}
+export interface GamificationState {
+  xp: number;
+  reputation: number;                // 0 à 100 (%)
+  reputationCheckedDate?: string;    // dernier jour déjà compté (YYYY-MM-DD)
+  reputationUpdatedAt?: string;      // ISO : dernier vrai calcul (un appareil neuf ne remplace pas la vraie réputation)
+  awardedKeys: string[];             // séances déjà récompensées (« idSéance_AAAA-MM-JJ »)
+  history: GamificationEvent[];      // derniers gains et pertes (les plus récents d'abord)
+  updatedAt?: string;                // ISO : la version la plus récente gagne entre deux appareils
+  /** Énergie ⚡ de l'icône d'exercices (Gratuit) : valeur au moment energyAt, recharge progressive ensuite */
+  energy?: number;
+  energyAt?: string;
+  /** Séries d'exercices enchaînées : la prochaine rapporte le double (15 → 30 → 60 → 120 XP) */
+  seriesChain?: { count: number; lastEndAt: string };
+  /** Gains d'XP pas encore confirmés par le serveur de la ligue (envoyés dès que possible) */
+  pendingEvents?: LeagueEvent[];
+}
+
+/** Gain d'XP envoyé au serveur de la ligue, qui le vérifie et le recompte. */
+export interface LeagueEvent {
+  id: string;
+  kind: 'lesson' | 'series';
+  amount: number;
+  at: number; // ms
+  durationMinutes?: number;
+  level?: number;
+  questions?: number;
+  mistakes?: number;
+  seconds?: number;
+}
+
 export interface UserStreak {
   currentStreak: number;
   bestStreak: number;
@@ -260,6 +299,7 @@ export type ActiveAppView =
   | 'focus'
   | 'tutor'
   | 'exam'
+  | 'league'
   | 'pro-wizard'
   | 'admin';
 

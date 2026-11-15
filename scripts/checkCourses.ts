@@ -23,7 +23,8 @@ registerHooks({
 });
 (globalThis as any).localStorage ??= { getItem: () => null, setItem() {}, removeItem() {} };
 
-const { getCurriculumChapters } = await import('../src/lib/curriculum/curriculumRegistry');
+const { getCurriculumChapters, loadAllCurriculum } = await import('../src/lib/curriculum/curriculumRegistry');
+await loadAllCurriculum();
 const { renderTextWithStackedFractions, StackedFraction } = await import('../src/components/common/StackedFraction');
 const { shuffleExerciseOptions } = await import('../src/lib/curriculum/optionShuffle');
 const { cleanFormulasAndIndices, sanitizeFormulaForKatex } = await import('../src/components/common/MathRenderer');

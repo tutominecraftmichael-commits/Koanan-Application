@@ -79,10 +79,11 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
     let alive = true;
     (async () => {
       try {
-        const [{ getCurriculumChapters }, sps] = await Promise.all([
+        const [{ getCurriculumChapters, loadCurriculumFor }, sps] = await Promise.all([
           import('../../lib/curriculum/curriculumRegistry'),
           import('../../lib/curriculum/studentProgressService'),
         ]);
+        await loadCurriculumFor(gradeLevel, [stemSubjectId]);
         const wanted = new Set(session.examChapterIds || []);
         const chapters = getCurriculumChapters(stemSubjectId, gradeLevel).filter((c) => wanted.has(c.id));
         if (!chapters.length) {
