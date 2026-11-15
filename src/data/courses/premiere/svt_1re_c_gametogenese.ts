@@ -1,6 +1,6 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L4_La gamétogénèse chez les mammifères.pdf (Mon école à la maison ; le document l’intitule « Leçon 5 ») ». Première C (la 1re D a sa propre leçon de gamétogenèse).
+// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L4_La gamétogénèse chez les mammifères.pdf (Mon école à la maison ; le document l’intitule « Leçon 5 ») ». Première C (la 1re D a sa propre leçon sur ce sujet).
 // Fichier généré (scratchpad build_1re_c_svt.mjs) : modifier le générateur plutôt que ce fichier.
 export const SVT_1RE_C_L04_GAMETOGENESE_MAMMIFERES: CurriculumChapter = {
   "id": "premiere_c_svt_l04_gametogenese_mammiferes",

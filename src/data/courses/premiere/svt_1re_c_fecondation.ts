@@ -9,6 +9,9 @@ export const SVT_1RE_C_L05_FECONDATION_MAMMIFERES: CurriculumChapter = {
   "alsoForGrades": [
     "premiere_d"
   ],
+  "orderForGrades": {
+    "premiere_d": 10
+  },
   "order": 5,
   "title": "Leçon 5 : La fécondation chez les mammifères",
   "summary": "Migration et rencontre des gamètes, capacitation, pénétration d’un spermatozoïde, activation de l’ovocyte II, pronucléi et caryogamie, rôles de la fécondation et transmission du VIH de la mère à l’enfant.",

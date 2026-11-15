@@ -1,17 +1,11 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L1_La structure interne du globe terrestre.pdf (Mon école à la maison) ». Première C et D (programme de SVT commun).
+// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L1_La structure interne du globe terrestre.pdf (Mon école à la maison) ». Première C (la 1re D a sa propre leçon sur ce sujet).
 // Fichier généré (scratchpad build_1re_c_svt.mjs) : modifier le générateur plutôt que ce fichier.
 export const SVT_1RE_C_L01_STRUCTURE_INTERNE_GLOBE: CurriculumChapter = {
   "id": "premiere_c_svt_l01_structure_interne_globe",
   "subjectId": "svt",
   "gradeLevel": "premiere_c",
-  "alsoForGrades": [
-    "premiere_d"
-  ],
-  "orderForGrades": {
-    "premiere_d": 10
-  },
   "order": 1,
   "title": "Leçon 1 : La structure interne du globe terrestre",
   "summary": "Séismes et volcans, foyer et épicentre, magnitude et intensité, ondes P, S et L, hodographes, vitesse des ondes en profondeur, croûte, manteau, noyau et discontinuités.",

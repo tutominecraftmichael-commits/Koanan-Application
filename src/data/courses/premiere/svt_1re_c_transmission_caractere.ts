@@ -1,14 +1,11 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L7_La transmission dun caractère héréditaire OK.pdf (Mon école à la maison ; le document l’intitule « Leçon 8 ») ». Première C et D (programme de SVT commun).
+// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L7_La transmission dun caractère héréditaire OK.pdf (Mon école à la maison ; le document l’intitule « Leçon 8 ») ». Première C (la 1re D a sa propre leçon sur ce sujet).
 // Fichier généré (scratchpad build_1re_c_svt_b.mjs) : modifier le générateur plutôt que ce fichier.
 export const SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE: CurriculumChapter = {
   "id": "premiere_c_svt_l07_transmission_caractere_hereditaire",
   "subjectId": "svt",
   "gradeLevel": "premiere_c",
-  "alsoForGrades": [
-    "premiere_d"
-  ],
   "order": 7,
   "title": "Leçon 7 : La transmission d’un caractère héréditaire",
   "summary": "Gène, locus et allèles (système ABO), monohybridisme avec dominance complète (souris), choix des symboles, F1, F2 et échiquier, test-cross, absence de dominance (belle-de-nuit) et lecture des ségrégations.",

@@ -1,14 +1,11 @@
 import type { CurriculumChapter } from '../../../lib/curriculum/types';
 
-// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L6_La synthèse des protéines.pdf (Mon école à la maison ; le document l’intitule « Leçon 7 ») ». Première C et D (programme de SVT commun).
+// Leçon rédigée à partir du PDF officiel « SVT 1ère C_L6_La synthèse des protéines.pdf (Mon école à la maison ; le document l’intitule « Leçon 7 ») ». Première C (la 1re D a sa propre leçon sur ce sujet).
 // Fichier généré (scratchpad build_1re_c_svt_b.mjs) : modifier le générateur plutôt que ce fichier.
 export const SVT_1RE_C_L06_SYNTHESE_PROTEINES: CurriculumChapter = {
   "id": "premiere_c_svt_l06_synthese_proteines",
   "subjectId": "svt",
   "gradeLevel": "premiere_c",
-  "alsoForGrades": [
-    "premiere_d"
-  ],
   "order": 6,
   "title": "Leçon 6 : La synthèse des protéines",
   "summary": "ADN, ARNm, ARNt et ribosomes ; code génétique (codons, codon initiateur, codons stop, redondance) ; transcription dans le noyau et traduction dans le cytoplasme (initiation, élongation, terminaison) ; ocytocine, vasopressine et drépanocytose.",

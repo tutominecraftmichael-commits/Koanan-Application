@@ -23,6 +23,9 @@ import { SVT_1RE_C_L09_ECOSYSTEME_NATUREL_AGROSYSTEME } from '../courses/premier
 import { SVT_1RE_D_L01_REFLEXE_INNE } from '../courses/premiere/svt_1re_d_reflexe_inne';
 import { SVT_1RE_D_L02_FONCTIONS_GONADES } from '../courses/premiere/svt_1re_d_fonctions_gonades';
 import { SVT_1RE_D_L03_GAMETOGENESE } from '../courses/premiere/svt_1re_d_gametogenese';
+import { SVT_1RE_D_L04_TRANSMISSION_CARACTERE } from '../courses/premiere/svt_1re_d_transmission_caractere';
+import { SVT_1RE_D_L05_SYNTHESE_PROTEINES } from '../courses/premiere/svt_1re_d_synthese_proteines';
+import { SVT_1RE_D_L06_ACTIVITES_INTERNES_GLOBE } from '../courses/premiere/svt_1re_d_activites_internes_globe';
 
 export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_A_L01_REFLEXE_CONDITIONNEL,
@@ -44,4 +47,7 @@ export const CHAPTERS: CurriculumChapter[] = [
   SVT_1RE_D_L01_REFLEXE_INNE,
   SVT_1RE_D_L02_FONCTIONS_GONADES,
   SVT_1RE_D_L03_GAMETOGENESE,
+  SVT_1RE_D_L04_TRANSMISSION_CARACTERE,
+  SVT_1RE_D_L05_SYNTHESE_PROTEINES,
+  SVT_1RE_D_L06_ACTIVITES_INTERNES_GLOBE,
 ];
