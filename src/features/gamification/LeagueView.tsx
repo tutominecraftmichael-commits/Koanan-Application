@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowDown, ArrowUp, Lock, Trophy, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, Info, Lock, ShieldCheck, Trophy, X } from 'lucide-react';
 import type { LeagueBoard } from '../../services/leagueApi';
 import { DIVISION_STYLES } from '../../services/leagueApi';
 
@@ -149,15 +149,54 @@ export const LeaguePage: React.FC<{
   );
 };
 
+/** Règles de la ligue (bouton ⓘ du titre) : XP, réputation, montées et descentes. */
+const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
+  <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3.5 space-y-2.5 text-xs text-slate-700 dark:text-slate-300 leading-snug">
+    <div className="space-y-1">
+      <p className="font-extrabold text-slate-900 dark:text-white">Gagner des XP</p>
+      <p>Séance terminée : 25 min <b>+35</b> · 45 min <b>+50</b> · 75 min <b>+90</b> · 2 h <b>+140</b>.</p>
+      <p>Séries d’exercices (icône ronde) : 15, 30, 60 puis 120 XP si tu les enchaînes ; chaque faute en retire.</p>
+      <p>Les XP du classement sont ceux de la semaine, vérifiés par KONAN : ils repartent de 0 chaque lundi.</p>
+    </div>
+    <div className="space-y-1">
+      <p className="font-extrabold text-slate-900 dark:text-white">Ta réputation : {reputation} %</p>
+      <p>Séance faite : <b>+1 %</b>. Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. Il faut plus de 80 % pour rester dans la ligue.</p>
+    </div>
+    <div className="space-y-1">
+      <p className="font-extrabold text-slate-900 dark:text-white">Fin de semaine</p>
+      <p>Groupes de 30 élèves. Les 10 premiers montent de division, les 5 derniers descendent. En Perle, les 10 premiers gardent leur place.</p>
+    </div>
+  </div>
+);
+
 export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
   const size = board.rows.length;
+  const [showRules, setShowRules] = React.useState(false);
+  const repTone = board.reputation > 80
+    ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/30'
+    : 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30';
   return (
     <div>
       <div className="max-w-xl mx-auto space-y-4">
-        <div className="flex items-center gap-3">
-          <p className="flex-1 text-lg font-black text-slate-900 dark:text-white">Ligue de la semaine</p>
-          <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Fin dans {timeLeftLabel(board.endsAt)}</span>
+        <div className="flex items-center gap-2">
+          <p className="flex-1 min-w-0 text-lg font-black text-slate-900 dark:text-white truncate">Ligue de la semaine</p>
+          {/* Réputation : pastille discrète */}
+          <span className={`shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[11px] font-black tabular-nums whitespace-nowrap ${repTone}`} title="Ta réputation (discipline)">
+            <ShieldCheck className="w-3.5 h-3.5" />{board.reputation}&nbsp;%
+          </span>
+          <button
+            type="button"
+            onClick={() => setShowRules((v) => !v)}
+            aria-expanded={showRules}
+            aria-label="Comment ça marche ?"
+            title="Comment ça marche ?"
+            className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors ${showRules ? 'bg-sky-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'}`}
+          >
+            <Info className="w-4 h-4" />
+          </button>
         </div>
+        <p className="-mt-3 text-xs font-bold text-slate-500 dark:text-slate-400">Fin dans {timeLeftLabel(board.endsAt)}</p>
+        {showRules && <LeagueRules reputation={board.reputation} />}
 
         {/* Les 5 divisions */}
         <div className="flex items-center justify-center gap-3 py-2">

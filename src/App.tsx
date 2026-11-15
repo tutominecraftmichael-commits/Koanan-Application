@@ -74,7 +74,6 @@ import { LeaguePage } from './features/gamification/LeagueView';
 import { nextNameChangeAt } from '../api/_nameRules.js';
 import { leagueAvatarOf } from './lib/gamification/leagueAvatar';
 import { getDisplayAvatar } from './lib/avatar';
-import { XpReputationCard } from './features/gamification/XpReputationCard';
 import { XpBurst } from './features/gamification/XpBurst';
 import { ExerciseFab } from './features/gamification/ExerciseFab';
 import { SeriesErrorBoundary } from './features/gamification/SeriesErrorBoundary';
@@ -2338,11 +2337,6 @@ export function App() {
                   planTier={effectivePlanTier}
                   onActivated={syncAlertsNow}
                 />
-              </div>
-            )}
-            {gamificationEnabled && (
-              <div className="mb-4">
-                <XpReputationCard gamification={state.gamification} />
               </div>
             )}
             <DashboardOverview

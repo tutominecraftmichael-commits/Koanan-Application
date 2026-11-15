@@ -427,6 +427,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // Le compte à rebours ne démarre qu'au clic sur « Commencer la leçon » (pas pendant l'accueil ni la révision du jour)
   const [timerStarted, setTimerStarted] = useState<boolean>(false);
   const [pauseLeft, setPauseLeft] = useState<number>(POMODORO_PAUSE_SEC);
+  // Temps écoulé sans avoir fini les mini-leçons : l'élève continue, chrono arrêté
+  const [overtime, setOvertime] = useState<boolean>(false);
+  const resumePhaseRef = useRef<LessonPhase>('learning');
   const [timeUpCounted, setTimeUpCounted] = useState<boolean>(true);
   // Marque-page de reprise (séance précédente arrêtée au milieu d'une mini-leçon)
   const resumeRef = useRef<ResumeBookmark | null>(null);
@@ -863,7 +866,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   };
 
   // Passer à la mini-leçon suivante ou célébrer la fin de séance.
-  // RÈGLE STRICTE : Dès que l'élève a réalisé ses 3, 4 ou 7 mini-leçons prévues dans la séance,
+  // RÈGLE STRICTE : Dès que l'élève a réalisé les mini-leçons prévues pour la durée de la séance
+  // (25-35 min : 3 ; 36-60 min : 4 à 5 ; plus de 60 min : 6 à 7, voir getSessionMiniLessonQuota),
   // la session est validée et c'est terminé. On ne le pousse jamais à continuer.
   const handleContinueToNextLesson = () => {
     try {
@@ -943,14 +947,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const timedPhase = phase === 'warmup' || phase === 'intro' || phase === 'learning' || phase === 'catchup' || phase === 'recall' || phase === 'point_celebration' || phase === 'feynman';
   const { isIdle: coachIdle } = coach;
   useEffect(() => {
-    if (!workLimitSec || !timedPhase || !timerStarted) return;
+    if (!workLimitSec || !timedPhase || !timerStarted || overtime) return;
     const timer = setInterval(() => {
       // Le chrono ne compte pas quand l'élève a quitté l'appli ou ne fait plus rien
       if (document.visibilityState === 'hidden' || coachIdle) return;
       setWorkSeconds((s) => s + 1);
     }, 1000);
     return () => clearInterval(timer);
-  }, [workLimitSec, timedPhase, coachIdle, timerStarted]);
+  }, [workLimitSec, timedPhase, coachIdle, timerStarted, overtime]);
 
   /**
    * Mémorise l'endroit exact où l'élève s'arrête au milieu d'une mini-leçon (marque-page) :
@@ -977,26 +981,40 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     }
   };
 
-  /** Fin des 25 minutes : marque-page si on est au milieu d'une mini-leçon, alternance, puis pause. */
+  /**
+   * Fin du temps (Pomodoro / Time Blocking). Comme pour toutes les séances, elle n'est validée que si
+   * l'élève a fait toutes les mini-leçons prévues pour sa durée (25 min : 3 ; 45 min : 4 à 5 ; 75 min : 6 à 7).
+   * Sinon : il peut les finir tout de suite (chrono arrêté), ou s'arrêter là et rattraper la séance plus tard.
+   */
   const handleTimeUp = () => {
     try {
-      saveWhereStopped();
-      // Alternance : la prochaine séance de cette matière passera à l'autre volet,
-      // seulement si la séance compte (sinon on reste sur ce volet, comme l'écran l'annonce)
-      if (totalExercisesAnswered >= 5) markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
-      alternationDoneRef.current = true;
+      saveWhereStopped(); // marque-page si on est au milieu d'une mini-leçon (rien n'est perdu s'il s'arrête)
     } catch {
       // la fin de séance ne doit jamais bloquer
     }
-    // Séance validée seulement si l'élève a vraiment travaillé (au moins 5 réponses)
-    setTimeUpCounted(totalExercisesAnswered >= 5);
+    const quotaDone = items.length > 0 && recordedPointIdsRef.current.size >= items.length;
+    if (quotaDone) {
+      try {
+        // Séance validée : la prochaine séance de cette matière passera à l'autre volet
+        markSessionAlternation(userId, stemSubjectId, gradeLevel, activeSubCategory);
+        alternationDoneRef.current = true;
+      } catch {}
+    }
+    resumePhaseRef.current = phase;
+    setTimeUpCounted(quotaDone);
     setPauseLeft(POMODORO_PAUSE_SEC);
-    try { soundFX.playVictoryJingle(); } catch {}
+    try { if (quotaDone) soundFX.playVictoryJingle(); } catch {}
     setPhase('time_up');
   };
 
+  /** Temps écoulé mais mini-leçons pas finies : l'élève continue jusqu'au bout, sans chrono. */
+  const handleKeepGoing = () => {
+    setOvertime(true);
+    setPhase(resumePhaseRef.current);
+  };
+
   useEffect(() => {
-    if (workLimitSec && timedPhase && workSeconds >= workLimitSec) handleTimeUp();
+    if (workLimitSec && timedPhase && !overtime && workSeconds >= workLimitSec) handleTimeUp();
   }, [workSeconds]);
 
   // Compte à rebours de la pause
@@ -1055,7 +1073,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       className={`shrink-0 whitespace-nowrap px-2.5 py-1 rounded-xl text-xs font-black font-mono tabular-nums border ${coachIdle ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500' : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300'}`}
       title={!timerStarted ? 'Le chrono démarre quand tu commences la leçon' : coachIdle ? 'Chrono en pause : tu ne travailles plus' : 'Temps de travail restant'}
     >
-      ⏱ {fmtClock(workLimitSec - workSeconds)}{coachIdle ? ' · pause' : ''}
+      {overtime ? '⏱ Temps écoulé · on finit' : <>⏱ {fmtClock(workLimitSec - workSeconds)}{coachIdle ? ' · pause' : ''}</>}
     </span>
   ) : null;
 
@@ -1554,6 +1572,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // =========================================================================
   if (phase === 'time_up') {
     const workedMin = Math.round(workSeconds / 60);
+    const doneCount = Math.min(items.length, recordedPointIdsRef.current.size);
+    const leftCount = Math.max(1, items.length - doneCount);
     return (
       <div className="max-w-md mx-auto py-10 px-4 text-center space-y-5 animate-in zoom-in-95 duration-300">
         <div className="flex justify-center">
@@ -1582,18 +1602,29 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         ) : (
           <>
             <div className="space-y-2">
-              <h2 className="text-xl font-black text-slate-900 dark:text-white">On a à peine commencé…</h2>
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">Le temps est écoulé</h2>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Cette séance ne compte pas, mais demain on se rattrape ensemble ? Tu reprendras là où tu t’es arrêté.
+                Mini-leçons faites : <strong className="text-slate-900 dark:text-white">{doneCount} sur {items.length}</strong>.
+                Pour que la séance compte, il te reste <strong className="text-slate-900 dark:text-white">{leftCount} mini-leçon{leftCount > 1 ? 's' : ''}</strong>.
               </p>
             </div>
             <button
               type="button"
-              onClick={onExit}
-              className="w-full py-4 rounded-2xl bg-slate-800 dark:bg-slate-700 text-white font-black uppercase tracking-wide cursor-pointer"
+              onClick={afterShine(handleKeepGoing)}
+              className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
             >
-              Retour au tableau de bord
+              Finir {leftCount > 1 ? `mes ${leftCount} mini-leçons` : 'ma mini-leçon'}
             </button>
+            <button
+              type="button"
+              onClick={onExit}
+              className="w-full py-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-black uppercase tracking-wide text-sm cursor-pointer"
+            >
+              M’arrêter ici
+            </button>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Si tu t’arrêtes, la séance ne compte pas encore : rattrape-la avant minuit pour garder ta réputation. Tu reprendras là où tu t’es arrêté.
+            </p>
           </>
         )}
       </div>
@@ -1710,6 +1741,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className="p-3.5 rounded-2xl bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-left text-xs sm:text-sm text-rose-900 dark:text-rose-100 font-semibold leading-relaxed">
             <strong>{isTimeBlocking ? 'Séance Time Blocking :' : 'Séance Pomodoro :'}</strong> {Math.round(workLimitSec / 60)} minutes de vrai travail
             {isTimeBlocking ? ' sur cette seule matière, sans changer de sujet' : ''}, puis {POMODORO_PAUSE_SEC / 60} minutes de pause.
+            La séance compte quand tes {items.length} mini-leçon{items.length > 1 ? 's sont faites' : ' est faite'}.
             Le chrono démarre quand tu cliques sur « Commencer la leçon », et il s’arrête si tu quittes l’appli ou si tu ne fais plus rien.
           </div>
         )}
