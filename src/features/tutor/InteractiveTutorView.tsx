@@ -2266,7 +2266,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
             <div className="relative space-y-4">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-300 text-[11px] font-extrabold uppercase tracking-[0.16em]">
-                {currentItem.isLastPointOfChapter ? 'Chapitre terminé' : 'Mini-leçon validée'} · {currentItem.pointIndexInChapter + 1}/{currentItem.totalPointsInChapter}
+                {currentItem.isLastPointOfChapter ? 'Chapitre terminé' : 'Mini-leçon validée'} · {currentItem.pointIndexInChapter + 1}/{currentItem.totalPointsInChapter} du chapitre
               </span>
 
               <div className="flex justify-center -mb-1">
@@ -2331,11 +2331,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 >
                   <span className="flex items-center gap-2">
                     {!isLastOfSession
-                      ? `Mini-leçon suivante (${activeItemIndex + 2}/${items.length})`
+                      ? `Mini-leçon suivante`
                       : `Terminer la séance (${items.length} mini-leçon${items.length > 1 ? 's' : ''})`}
                     {!isLastOfSession && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
                   </span>
                 </button>
+                {/* Compteur de la SÉANCE, séparé du compteur du chapitre (pastille du haut) */}
+                <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Séance du jour : {activeItemIndex + 1} mini-leçon{activeItemIndex + 1 > 1 ? 's' : ''} faite{activeItemIndex + 1 > 1 ? 's' : ''} sur {items.length}</p>
               </div>
             </div>
           </div>
