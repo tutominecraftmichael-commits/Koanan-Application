@@ -97,7 +97,7 @@ export function cleanSujet(raw, template) {
     const questions = Array.isArray(e.questions)
       ? e.questions
           // Un sujet « au choix » du format BAC contient son texte d'étude : longueur autorisée plus grande (questionMax)
-          .map((q) => { const numero = str(String(q?.numero ?? ''), 12); return { numero, texte: stripLeadingNumber(tidyText(str(q?.texte, model.questionMax || 1500)), numero), points: num(q?.points) }; })
+          .map((q) => { const numero = str(String(q?.numero ?? ''), 12).replace(/[\s.)]+$/, ''); return { numero, texte: stripLeadingNumber(tidyText(str(q?.texte, model.questionMax || 1500)), numero), points: num(q?.points) }; })
           .filter((q) => q.texte)
           .slice(0, 20)
       : [];
@@ -138,7 +138,7 @@ export function cleanSujet(raw, template) {
   if (corrige.length < exercices.length) return null;
   // Titre : jamais l'en-tête du ministère (déjà affiché à part) ni un titre trop long
   const titreBrut = tidyText(str(raw.titre, 200)).replace(/\s+/g, ' ').trim();
-  const titre = !titreBrut || titreBrut.length > 90 || /minist|r[ée]publique|direction des examens/i.test(titreBrut) ? `Devoir de ${template.matiere}` : titreBrut;
+  const titre = !titreBrut || titreBrut.length > 90 || /minist|r[ée]publique|direction des examens/i.test(titreBrut) ? `Devoir ${/^[aeiouyhéèêâî]/i.test(template.matiere) ? 'd’' : 'de '}${template.matiere}` : titreBrut;
   return { titre, exercices, corrige };
 }
 

@@ -42,6 +42,10 @@ export function buildCorrectionPrompt({ classe, matiere, sujet }) {
     '- Choix d’une lettre (a, b, c…) ou Vrai/Faux : la lettre ou le mot de la copie doit être EXACTEMENT celui du corrigé, sinon 0 et « faux ». Ne te fie jamais à l’ordre des lignes : relis le numéro écrit par l’élève.',
     '- Une réponse qui dit ce qui se passe sans en donner la cause demandée (« l’amidon a disparu » au lieu de « l’amidon a été hydrolysé par l’amylase ») est « partiel ».',
     '- Donne des points partiels quand la démarche est juste mais le résultat faux ; 0 pour une question non traitée.',
+    '- La « copie » de chaque question est la transcription EXACTE de ce que l’élève a écrit, caractère par caractère (crochets ] et [, signes, nombres, unités) : ne corrige JAMAIS la copie en la recopiant. Note ensuite ce qui est réellement écrit.',
+    '- Intervalle ou ensemble de solutions : compare CHAQUE borne et CHAQUE crochet avec l’attendu. Un seul crochet différent (valeur interdite incluse, borne exclue à tort) = réponse NON juste (« partiel » au mieux).',
+    '- Pas de code LaTeX dans « copie », « attendu » ni « erreur » : écris les symboles directement (∞, ∪, ≤, ≥, √, π, ½).',
+    '- Écris TOUT en français, y compris la transcription de la copie (jamais un mot d’anglais). Écris l’infini « ∞ », pas « inf ».',
     '- Quand un exercice a une grille (situation complexe, production écrite), note-le avec cette grille, critère par critère.',
     '- Exercice au choix : note seulement le sujet traité ; si l’élève en a traité deux, garde la meilleure note.',
     '- Une construction (graphique, frise chronologique) se note sur la photo : titre, échelle, exactitude des données, légende, soin.',
@@ -49,6 +53,7 @@ export function buildCorrectionPrompt({ classe, matiere, sujet }) {
     '- Un sujet de dissertation, de commentaire ou de résumé se note avec le barème détaillé donné dans le corrigé (introduction, développement, conclusion, présentation…), critère par critère ; pour un résumé, vérifie aussi le nombre de mots demandé.',
     'CORRECTION STRUCTURÉE, QUESTION PAR QUESTION (jamais un simple paragraphe) :',
     '- Pour CHAQUE question du sujet (dans l’ordre, avec son numéro exact) : obtenu (multiple de 0,25, jamais plus que ses points), statut (« juste », « partiel », « faux » ou « absent » si non traitée), copie = ce que l’élève a écrit, résumé en une ligne courte, attendu = la réponse attendue en une ligne courte, erreur = l’erreur PRÉCISE en une phrase (vide si juste).',
+    '- Question ouverte (explication, justification, conditions, calcul en plusieurs étapes) : remplis « elements » = la liste des éléments attendus par le corrigé, chacun avec present = true seulement s’il est VRAIMENT écrit dans la copie.',
     '- Exercice avec grille : remplis « grille » avec les points obtenus pour CHAQUE critère, dans l’ordre de la grille ; questions = le ou les sujets traités.',
     '- commentaire de chaque exercice : une seule phrase à la première personne (« J’ai vu que… »).',
     '- pointsForts : 1 à 3 savoir-faire réussis, chacun en quelques mots (« Calcul de la masse molaire »).',
@@ -57,7 +62,7 @@ export function buildCorrectionPrompt({ classe, matiere, sujet }) {
     '- conseils : 1 à 3 actions précises et courtes à faire avant le devoir (verbe à l’impératif en tête).',
     '- Si les photos sont illisibles, floues, ou ne sont pas une copie de ce devoir : lisible = false.',
     'Réponds UNIQUEMENT en JSON :',
-    '{"lisible":true,"exercices":[{"numero":1,"commentaire":"J’ai vu que…","questions":[{"numero":"1","obtenu":0.5,"statut":"juste","copie":"…","attendu":"…","erreur":""}],"grille":[{"critere":"CM1 : Pertinence","obtenu":0.5}]}],"pointsForts":["…"],"aRevoir":[{"notion":"…","pourquoi":"…"}],"appreciation":"Je …","conseils":["…"]}',
+    '{"lisible":true,"exercices":[{"numero":1,"commentaire":"J’ai vu que…","questions":[{"numero":"1","obtenu":0.5,"statut":"juste","copie":"…","attendu":"…","erreur":"","elements":[{"element":"…","present":true}]}],"grille":[{"critere":"CM1 : Pertinence","obtenu":0.5}]}],"pointsForts":["…"],"aRevoir":[{"notion":"…","pourquoi":"…"}],"appreciation":"Je …","conseils":["…"]}',
     '« grille » vaut [] pour un exercice sans grille.',
   ].join('\n');
 }
@@ -75,7 +80,8 @@ const qKey = (v) => String(v ?? '').toLowerCase().replace(/^q(?:uestion)?\s*/, '
 export function closedAnswer(text) {
   const t = String(text ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const last = (t.match(/reponse\s*:\s*(.+)$/m) || [null, t])[1].trim();
-  if (/^(vrai|faux)\b\.?$/.test(last)) return last.replace(/\W/g, '');
+  const vf = last.match(/^(?:\d+\s*[-–).:]\s*)?(vrai|faux)\b\.?$/);
+  if (vf) return vf[1];
   const m = last.match(/^(?:\d+\s*[-–).]\s*)?([a-e])\s*[.)]?$/);
   return m ? m[1] : null;
 }
@@ -86,6 +92,26 @@ export function closedChoice(copie) {
   if (vf && new Set(vf).size === 1) return vf[0];
   const m = t.match(/^(?:\d+\s*[-–).:]\s*)?([a-e])\s*[.)]?$/);
   return m ? m[1] : null;
+}
+
+/**
+ * Ensemble de solutions écrit avec des intervalles (« S = ]-∞ ; 3] ∪ ]4 ; +∞[ », « {−5 ; 4} ») :
+ * forme comparable (morceaux triés), ou null si ce n'est pas une écriture d'intervalles / d'ensemble.
+ */
+export function setAnswer(text) {
+  let t = String(text ?? '')
+    .replace(/\$/g, '')
+    .replace(/\\infty|∞|\binf(?:ini)?\b/gi, '∞')
+    .replace(/\\cup|\bunion\b|\s[Uu]\s/g, '∪')
+    .replace(/\\\{/g, '{').replace(/\\\}/g, '}')
+    .replace(/\\left|\\right|\\,|\\;/g, '')
+    .replace(/−/g, '-')
+    .replace(/\s+/g, '');
+  const m = t.match(/(?:S=|=|:)?((?:[\]\[{][^=]*?[\]\[}])(?:∪[\]\[{][^=]*?[\]\[}])*)$/);
+  if (!m) return null;
+  const parts = m[1].split('∪').map((x) => x.replace(/,/g, ';'));
+  if (!parts.every((x) => /^[\]\[{][^\]\[{}]*[\]\[}]$/.test(x))) return null;
+  return parts.sort().join('∪');
 }
 
 export function cleanCorrection(raw, sujet) {
@@ -112,18 +138,47 @@ export function cleanCorrection(raw, sujet) {
         copie: str(q?.copie, 300),
         attendu: str(q?.attendu, 400),
         erreur: statut === 'juste' ? '' : str(q?.erreur, 400),
+        elements: Array.isArray(q?.elements) ? q.elements.filter((x) => x && typeof x.element === 'string').slice(0, 8).map((x) => ({ element: str(x.element, 160), present: x.present === true })) : [],
       };
     }).filter((q) => q.numero).map((q) => {
+      // Question ouverte : points = part des éléments attendus réellement présents (jamais « juste » s'il en manque)
+      const els = q.elements || [];
+      const { elements: _drop, ...rest } = q;
+      if (els.length < 2 || !rest.sur) return rest;
+      const got = els.filter((x) => x.present).length;
+      if (got === els.length || rest.statut === 'absent') return rest;
+      const capped = Math.round(((rest.sur * got) / els.length) * 4) / 4;
+      const missing = els.filter((x) => !x.present).map((x) => x.element).join(' ; ');
+      return {
+        ...rest,
+        statut: got === 0 ? 'faux' : 'partiel',
+        obtenu: Math.min(rest.obtenu, capped),
+        erreur: rest.erreur || `Il manque : ${missing}.`,
+      };
+    }).map((q) => {
       // Questions fermées (lettre, Vrai/Faux) : c'est le SERVEUR qui compare, jamais l'IA (erreurs vues le 2026-11-16)
       const attendu = (sujet.corrige || []).find((c) => Number(c.exercice) === e.numero && qKey(c.question) === qKey(q.numero));
       const expected = attendu ? closedAnswer(attendu.resultat || attendu.reponse) : null;
       const chosen = expected ? closedChoice(q.copie) : null;
-      if (!expected || !chosen) return q;
-      const sur = q.sur ?? (Number.isFinite(bareme.get(qKey(q.numero))) ? bareme.get(qKey(q.numero)) : null);
-      const shown = (v) => (v === 'vrai' ? 'Vrai' : v === 'faux' ? 'Faux' : v);
+      // Intervalles / ensembles : bornes ET crochets comparés par le serveur
+      const expSet = attendu ? setAnswer(attendu.resultat || String(attendu.reponse || '').split(/r[ée]ponse\s*:/i).pop()) : null;
+      const gotSet = expSet ? setAnswer(q.copie) : null;
+      if (expSet && gotSet && q.statut === 'juste' && gotSet !== expSet) {
+        const surQ = q.sur ?? (attendu && attendu.points > 0 ? attendu.points : null);
+        const half = surQ ? Math.round((surQ / 2) * 4) / 4 : Math.round((q.obtenu / 2) * 4) / 4;
+        return { ...q, sur: surQ, statut: 'partiel', obtenu: Math.min(q.obtenu, half), erreur: `Ta réponse « ${gotSet} » ne correspond pas exactement à « ${expSet} » : vérifie chaque borne et chaque crochet (valeurs interdites exclues).` };
+      }
+      if (!expected || !chosen) {
+        // Question d'un tableau (pas de barème dans les questions) : barème lu dans le corrigé
+        const surCorrige = q.sur ?? (attendu && attendu.points > 0 ? attendu.points : null);
+        return surCorrige === q.sur ? q : { ...q, sur: surCorrige, obtenu: Math.min(q.obtenu, surCorrige) };
+      }
+      const sur = q.sur ?? (Number.isFinite(bareme.get(qKey(q.numero))) ? bareme.get(qKey(q.numero)) : (attendu.points > 0 ? attendu.points : null));
+      const upper = /(^|[^a-z])[A-E]([^a-z]|$)/.test(String(attendu.resultat || attendu.reponse || ''));
+      const shown = (v) => (v === 'vrai' ? 'Vrai' : v === 'faux' ? 'Faux' : upper ? v.toUpperCase() : v);
       return chosen === expected
-        ? { ...q, statut: 'juste', obtenu: sur ?? q.obtenu, erreur: '' }
-        : { ...q, statut: 'faux', obtenu: 0, erreur: `Tu as répondu « ${shown(chosen)} » : la bonne réponse est « ${shown(expected)} ».` };
+        ? { ...q, sur, statut: 'juste', obtenu: sur ?? q.obtenu, erreur: '' }
+        : { ...q, sur, statut: 'faux', obtenu: 0, erreur: `Tu as répondu « ${shown(chosen)} » : la bonne réponse est « ${shown(expected)} ».` };
     });
 
     const grille = Array.isArray(e.grille) && e.grille.length
