@@ -703,7 +703,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
    * après une reprise, l'élève voit bien où il en est dans le programme.
    */
   const chapterPositionLabel = (item: TutorPointSessionItem): string =>
-    `Mini-leçon ${item.pointIndexInChapter + 1} sur ${item.totalPointsInChapter}`;
+    `leçon ${item.pointIndexInChapter + 1}/${item.totalPointsInChapter} du chapitre`;
 
   // =========================================================================
   // ACTIONS PÉDAGOGIQUES
@@ -1936,6 +1936,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const barDone = phase === 'warmup' ? warmupIndex + answeredNow : phase === 'recall' ? recallIndex + answeredNow : masteredIndices.length;
   const barTotal = phase === 'warmup' ? Math.max(1, warmupItems.length) : phase === 'recall' ? Math.max(1, recallSteps.length) : totalSteps;
   const isLastQuestionOfPhase = phase === 'warmup' ? warmupIndex >= warmupItems.length - 1 : phase === 'recall' ? recallIndex >= recallSteps.length - 1 : false;
+  // Mini-leçons de CETTE séance (25 min : 3 ; 45 min : 4-5 ; 75 min : 6-7) : c'est ce compteur que l'élève doit voir.
+  // Avant, seul « 1 / 8 » s'affichait (les 8 étapes de la leçon en cours) avec « 8/8 requis » :
+  // l'élève croyait devoir faire 8 leçons en 25 min.
+  const sessionLessonTotal = Math.max(1, sessionPayload?.itemsToReview.length || 1);
+  const sessionLessonNumber = Math.min(activeItemIndex + 1, sessionLessonTotal);
 
   return (
     <div className="max-w-3xl mx-auto py-4 sm:py-6 px-3 sm:px-6 space-y-4">
@@ -1955,9 +1960,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             </div>
           </div>
 
-          {/* Badge de score X/totalSteps */}
-          <div className="shrink-0 px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black font-mono tabular-nums">
-            {barDone} / {barTotal}
+          {/* Leçon de la séance (ex. « Leçon 1/3 ») : la barre, elle, avance avec les étapes de la leçon en cours */}
+          <div
+            className="shrink-0 px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black tabular-nums whitespace-nowrap"
+            title={`Mini-leçons de cette séance : ${sessionLessonTotal}`}
+          >
+            Leçon {sessionLessonNumber}/{sessionLessonTotal}
           </div>
         </div>
         {/* Chrono (Pomodoro / Time Blocking) sur sa propre ligne : jamais caché ni coupé */}
@@ -1995,7 +2003,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           {phase !== 'warmup' && phase !== 'recall' && (
             <div className="flex items-center gap-1.5 font-bold text-sky-700 dark:text-sky-400">
               <Target className="w-3.5 h-3.5" />
-              <span>Étape {activeStepIndex + 1}/{totalSteps} · {totalSteps}/{totalSteps} requis</span>
+              <span>Étape {activeStepIndex + 1}/{totalSteps}</span>
             </div>
           )}
         </div>
@@ -2266,7 +2274,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
             <div className="relative space-y-4">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-300 text-[11px] font-extrabold uppercase tracking-[0.16em]">
-                {currentItem.isLastPointOfChapter ? 'Chapitre terminé' : 'Mini-leçon validée'} · {currentItem.pointIndexInChapter + 1}/{currentItem.totalPointsInChapter} du chapitre
+                {currentItem.isLastPointOfChapter ? 'Chapitre terminé' : 'Leçon validée'} · {activeItemIndex + 1}/{items.length} de la séance
               </span>
 
               <div className="flex justify-center -mb-1">
@@ -2287,9 +2295,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               {pointExercises.length > 0 && (
                 <div className="grid grid-cols-3 gap-2.5 max-w-md mx-auto">
                   <div className="rounded-2xl px-2 py-3 bg-slate-50 dark:bg-slate-900 border-[1.5px] border-emerald-300 dark:border-emerald-400/50">
-                    <span className="block text-[10px] font-extrabold uppercase tracking-[0.14em] text-emerald-700 dark:text-emerald-300">Score</span>
+                    <span className="block text-[10px] font-extrabold uppercase tracking-[0.14em] text-emerald-700 dark:text-emerald-300">Questions</span>
                     <span className="block text-[22px] font-extrabold tabular-nums text-slate-900 dark:text-white">{firstTry}/{pointExercises.length}</span>
-                    <span className="block text-[11px] text-slate-600 dark:text-slate-400">du premier coup</span>
+                    <span className="block text-[11px] text-slate-600 dark:text-slate-400">réussies du 1er coup</span>
                   </div>
                   {/* XP de la séance (vrais chiffres : barème de la séance moins 1 XP par erreur, rattrapage compris) */}
                   <div className="rounded-2xl px-2 py-3 bg-slate-50 dark:bg-slate-900 border-[1.5px] border-amber-300 dark:border-[#F5C451]/55">
