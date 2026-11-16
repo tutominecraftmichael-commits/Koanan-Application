@@ -14,6 +14,8 @@ interface Props {
   /** Fin de l'abonnement payé (null : pas de date, par exemple Pro offert avant l'ouverture du paiement) */
   endsAt?: string | null;
   provisional?: boolean;
+  /** Offre de lancement en cours (Pro offert) */
+  grace?: boolean;
   /** Le paiement est ouvert : un abonné peut prolonger. Sinon (Pro offert), pas de bouton « Prolonger ». */
   canRenew?: boolean;
   onClose: () => void;
@@ -38,7 +40,7 @@ const Feature: React.FC<{ title: string; detail?: string; muted?: boolean }> = (
   </li>
 );
 
-export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, canRenew = true, onClose, onChoosePro, onJoinPlus }) => {
+export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, grace = false, canRenew = true, onClose, onChoosePro, onJoinPlus }) => {
   const [billing, setBilling] = useState<BillingPeriod>('semester');
   const isPro = currentTier === 'pro';
   const isPlus = currentTier === 'plus';
@@ -83,7 +85,7 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
                 </p>
                 {endsAt && (
                   <p className="text-[11.5px] text-slate-600 dark:text-slate-400">
-                    {provisional ? 'Paiement en cours de vérification.' : 'Paiement vérifié. Prolonge avant la fin : les jours restants sont conservés.'}
+                    {grace ? 'Offert pendant le lancement. Abonne-toi dès maintenant : ton abonnement commencera à la fin de l’offre.' : provisional ? 'Paiement en cours de vérification.' : 'Paiement vérifié. Prolonge avant la fin : les jours restants sont conservés.'}
                   </p>
                 )}
               </div>
@@ -126,7 +128,7 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
               {!isPlus && !(isPro && !canRenew) && (
                 <button type="button" onClick={() => onChoosePro(period)}
                   className="mt-6 w-full py-3.5 rounded-2xl text-sm font-black tracking-wide bg-slate-900 text-white hover:bg-slate-800 dark:bg-amber-300 dark:text-slate-950 dark:hover:bg-amber-200 transition-colors inline-flex items-center justify-center gap-2 shadow-sm">
-                  {isPro ? 'Prolonger mon abonnement' : PAYMENTS_OPEN ? 'Devenir KONAN Pro' : 'Activer KONAN Pro (offert)'} <ArrowUpRight className="w-4 h-4" />
+                  {isPro ? (grace ? 'M’abonner pour la suite' : 'Prolonger mon abonnement') : PAYMENTS_OPEN ? 'Devenir KONAN Pro' : 'Activer KONAN Pro (offert)'} <ArrowUpRight className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -170,7 +172,7 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
           {PAYMENTS_OPEN && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
             {[
-              { icon: Smartphone, title: 'Wave ou Orange Money', text: 'Tu paies depuis ton téléphone.' },
+              { icon: Smartphone, title: 'Paiement par Wave', text: 'Tu paies depuis ton téléphone.' },
               { icon: Zap, title: 'Activé tout de suite', text: 'Tu deviens Pro dès ton paiement déclaré.' },
               { icon: ShieldCheck, title: 'Sans engagement', text: 'Tu paies seulement la période choisie.' },
             ].map(({ icon: Icon, title, text }) => (

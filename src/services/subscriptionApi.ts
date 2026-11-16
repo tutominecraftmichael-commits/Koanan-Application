@@ -25,6 +25,9 @@ export interface SubscriptionStatus {
   tier: 'free' | PaidTier;
   endsAt: string | null;
   provisional: boolean;
+  /** Offre de lancement : Pro offert à tous jusqu’à graceUntil */
+  grace?: boolean;
+  graceUntil?: string | null;
   trustBlocked: boolean;
   pending: PaymentView | null;
   lastRejected: PaymentView | null;

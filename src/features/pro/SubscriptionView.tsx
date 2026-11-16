@@ -104,7 +104,9 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
           {isActive && status && (
             <div className="rounded-2xl p-4 border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-500/10">
               <p className="text-sm font-black text-slate-900 dark:text-white">Tu es KONAN Pro jusqu’au {dateFr(status.endsAt)}</p>
-              {status.provisional ? (
+              {status.grace && !status.history.some((p) => p.status !== 'rejected') ? (
+                <p className="mt-1 text-xs text-amber-800 dark:text-amber-200">KONAN Pro t’est offert pendant le lancement. Tu peux déjà t’abonner : ton abonnement commencera à la fin de l’offre, sans perdre un seul jour.</p>
+              ) : status.provisional ? (
                 <p className="mt-1 text-xs text-amber-800 dark:text-amber-200 inline-flex items-start gap-1.5"><Clock className="w-4 h-4 shrink-0" /> Paiement en cours de vérification. Si l’argent n’est pas trouvé, Pro sera retiré.</p>
               ) : (
                 <p className="mt-1 text-xs text-emerald-800 dark:text-emerald-300 inline-flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4" /> Paiement vérifié.</p>

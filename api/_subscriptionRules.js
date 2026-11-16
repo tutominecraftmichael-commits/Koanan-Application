@@ -115,14 +115,26 @@ export function isTrustBlocked(payments) {
  * - paiement refusé : ne compte jamais (et les périodes suivantes sont recalculées sans lui).
  * Renvoie { tier, endsAt (ms|null), provisional, coveringId }.
  */
-export function computeEntitlement(payments, nowMs) {
+/**
+ * Offre de lancement : KONAN Pro offert à TOUS les élèves jusqu'à la fin du jour KONAN_PRO_FREE_UNTIL (AAAA-MM-JJ).
+ * Renvoie l'instant de fin en millisecondes, ou 0 s'il n'y a pas d'offre.
+ */
+export function launchGraceUntil(env = process.env) {
+  const raw = String(env.KONAN_PRO_FREE_UNTIL || '').trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) return 0;
+  const ms = Date.parse(`${raw}T23:59:59Z`);
+  return Number.isFinite(ms) ? ms : 0;
+}
+
+export function computeEntitlement(payments, nowMs, { startAfterMs = 0 } = {}) {
   const blocked = isTrustBlocked(payments);
   const counted = (payments || [])
     .filter((p) => p.status === PAYMENT_STATUS.confirmed || (p.status === PAYMENT_STATUS.pending && !blocked))
     .filter((p) => PRICES[p.tier] && PERIOD_DAYS[p.period] && Number.isFinite(Date.parse(p.declaredAt)))
     .sort((a, b) => Date.parse(a.declaredAt) - Date.parse(b.declaredAt) || String(a.id).localeCompare(String(b.id)));
 
-  let cursor = 0;
+  // Pendant l’offre de lancement, un paiement commence à la fin de l’offre (aucun jour perdu)
+  let cursor = startAfterMs > 0 ? startAfterMs : 0;
   const spans = [];
   for (const p of counted) {
     const start = Math.max(Date.parse(p.declaredAt), cursor);
@@ -145,8 +157,15 @@ export function computeEntitlement(payments, nowMs) {
 }
 
 /** Ce que l'élève voit de son abonnement (jamais le numéro de téléphone complet ni les notes admin). */
-export function publicStatus(payments, nowMs) {
-  const ent = computeEntitlement(payments, nowMs);
+export function publicStatus(payments, nowMs, { graceUntilMs = 0 } = {}) {
+  let ent = computeEntitlement(payments, nowMs, { startAfterMs: graceUntilMs });
+  let grace = false;
+  if (graceUntilMs && nowMs < graceUntilMs) {
+    // Offre de lancement : Pro jusqu'à la fin de l'offre, prolongé par les paiements déjà faits
+    const after = computeEntitlement(payments, graceUntilMs, { startAfterMs: graceUntilMs });
+    ent = { tier: after.tier !== 'free' ? after.tier : 'pro', endsAt: after.tier !== 'free' ? after.endsAt : graceUntilMs, provisional: after.provisional, coveringId: after.coveringId };
+    grace = true;
+  }
   const sorted = [...(payments || [])].sort((a, b) => Date.parse(b.declaredAt) - Date.parse(a.declaredAt));
   const pending = sorted.find((p) => p.status === PAYMENT_STATUS.pending) || null;
   const lastRejected = sorted.find((p) => p.status === PAYMENT_STATUS.rejected) || null;
@@ -159,6 +178,8 @@ export function publicStatus(payments, nowMs) {
     tier: ent.tier,
     endsAt: ent.endsAt ? new Date(ent.endsAt).toISOString() : null,
     provisional: ent.provisional,
+    grace,
+    graceUntil: graceUntilMs ? new Date(graceUntilMs).toISOString() : null,
     trustBlocked: isTrustBlocked(payments),
     pending: view(pending),
     lastRejected: view(lastRejected),
@@ -188,8 +209,9 @@ export function adminDecision(payment, action, { reason, nowMs, adminUid } = {})
  * Paiement activé : SEULEMENT la fiche d'abonnement écrite par le serveur.
  * Paiement pas encore activé : ancien comportement (formule enregistrée par l'application).
  */
-export function serverTierFrom({ paymentsEnabled, subscriptionDoc, userDoc, nowMs }) {
+export function serverTierFrom({ paymentsEnabled, subscriptionDoc, userDoc, nowMs, graceUntilMs = 0 }) {
   if (paymentsEnabled) {
+    if (graceUntilMs && nowMs < graceUntilMs) return subscriptionDoc?.tier === 'plus' ? 'plus' : 'pro'; // offre de lancement
     const tier = subscriptionDoc?.tier;
     const endsAt = Date.parse(subscriptionDoc?.endsAt || '');
     return (tier === 'pro' || tier === 'plus') && Number.isFinite(endsAt) && endsAt > nowMs ? tier : 'free';

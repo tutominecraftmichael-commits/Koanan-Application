@@ -57,6 +57,8 @@ interface SettingsModalProps {
   onUpgradeToPro?: () => void;
   /** Ouvre la fiche des formules KONAN Pro et KONAN Plus */
   onOpenPlans?: () => void;
+  /** Compte administrateur : ouvre la console (paiements à vérifier) */
+  onOpenAdmin?: () => void;
   /** Fin de l'abonnement payé (affichée sous la formule) */
   subscriptionEndsAt?: string | null;
 
@@ -87,6 +89,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onSelectPlan,
   onUpgradeToPro,
   onOpenPlans,
+  onOpenAdmin,
   subscriptionEndsAt,
   invitedEmails: _invitedEmails = [],
   academicGoal: _academicGoal = 'target_16',
@@ -408,6 +411,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   </div>
                 </div>
               </form>
+
+              {/* Administrateur : console (paiements à vérifier), accessible aussi en ligne */}
+              {onOpenAdmin && (
+                <button
+                  type="button"
+                  onClick={onOpenAdmin}
+                  className="w-full mt-1 py-2.5 rounded-xl bg-slate-900 text-white dark:bg-white/5 dark:text-[#F5C451] border border-slate-900 dark:border-[#F5C451]/40 text-xs font-extrabold flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <ShieldCheck className="w-4 h-4" /> Console admin · paiements à vérifier
+                </button>
+              )}
 
               {/* Bouton de Déconnexion */}
               {onLogout && (

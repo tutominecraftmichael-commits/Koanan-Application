@@ -843,6 +843,19 @@ export function App() {
         message: p.rejectMessage,
       }));
   }, [subscriptionInfo]);
+  // Compte administrateur (autorisation « admin » posée par scripts/set-admin-claim.mjs, connexion Google) :
+  // la console s'ouvre aussi EN LIGNE, pour confirmer les paiements depuis le téléphone
+  const [isAdminAccount, setIsAdminAccount] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    const user = auth?.currentUser;
+    if (!subscriptionAccount || !user) { setIsAdminAccount(false); return; }
+    user.getIdTokenResult().then((r) => {
+      if (alive) setIsAdminAccount(r.claims?.admin === true && r.signInProvider === 'google.com');
+    }).catch(() => { if (alive) setIsAdminAccount(false); });
+    return () => { alive = false; };
+  }, [subscriptionAccount]);
+  const canOpenAdmin = isLocalAdminEnvironment() || isAdminAccount;
   const paidModeRef = useRef({ paidMode, serverTier });
   paidModeRef.current = { paidMode, serverTier };
   // Quand la formule du SERVEUR change (fin d'abonnement, paiement refusé, paiement accepté), on l'applique
@@ -1033,7 +1046,7 @@ export function App() {
   const handleNavigate = (view: ActiveAppView) => {
     if (view === 'admin') {
       // Console administrateur : seulement sur l'ordinateur de développement, jamais sur le site en ligne
-      if (isLocalAdminEnvironment()) setActiveView('admin');
+      if (canOpenAdmin) setActiveView('admin');
       return;
     }
 
@@ -2409,7 +2422,7 @@ export function App() {
         <Suspense fallback={<ViewLoader />}>
 
         {/* Real-time Administrator Console */}
-        {activeView === 'admin' && isLocalAdminEnvironment() && (
+        {activeView === 'admin' && canOpenAdmin && (
           <AdminDashboard
             onSwitchToStudentView={() => setActiveView('dashboard')}
             onExitAdmin={() => {
@@ -2425,7 +2438,7 @@ export function App() {
           <DuolingoOnboarding
             currentUser={state.userAccount?.isLoggedIn ? state.userAccount : null}
             onOpenLogin={() => setActiveView('auth')}
-            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
+            onOpenAdmin={canOpenAdmin ? () => setActiveView('admin') : undefined}
             onLoginSuccess={(user) => {
               handleLoginSuccess(user);
             }}
@@ -2447,7 +2460,7 @@ export function App() {
             onLoginSuccess={handleLoginSuccess}
             onEnterDemoMode={handleEnterDemoMode}
             onBackToLanding={() => setActiveView('landing')}
-            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
+            onOpenAdmin={canOpenAdmin ? () => setActiveView('admin') : undefined}
             currentProfile={state.userAccount}
           />
         )}
@@ -2864,6 +2877,7 @@ export function App() {
         onSelectPlan={handleSelectPlan}
         onUpgradeToPro={() => handleSelectPlan('pro')}
         onOpenPlans={() => setIsPlansOpen(true)}
+        onOpenAdmin={isAdminAccount ? () => { setIsSettingsOpen(false); setActiveView('admin'); } : undefined}
         subscriptionEndsAt={paidMode ? subscriptionInfo?.status?.endsAt : null}
         invitedEmails={state.userAccount?.invitedEmails || []}
         academicGoal={state.userAccount?.academicGoal || 'target_16'}
@@ -2901,6 +2915,7 @@ export function App() {
             currentTier={effectivePlanTier}
             endsAt={paidMode ? subscriptionInfo?.status?.endsAt : null}
             provisional={Boolean(paidMode && subscriptionInfo?.status?.provisional)}
+            grace={Boolean(paidMode && subscriptionInfo?.status?.grace)}
             canRenew={paidMode}
             onClose={() => setIsPlansOpen(false)}
             onChoosePro={(period) => {

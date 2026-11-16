@@ -9,7 +9,7 @@
 import {
   PAYMENT_STATUS, PERIOD_DAYS, PRICES, PROVIDERS, SELLABLE_TIERS,
   adminDecision, computeEntitlement, expectedAmount, isTrustBlocked, paymentCollectionPrefix,
-  paymentsEnabled, publicStatus, serverTierFrom, validateDeclaration,
+  launchGraceUntil, paymentsEnabled, publicStatus, serverTierFrom, validateDeclaration,
 } from './_subscriptionRules.js';
 
 export const isProduction = (env = process.env) => Boolean(env.VERCEL) || env.NODE_ENV === 'production';
@@ -46,8 +46,11 @@ async function paymentsOf(db, uid, tx, env) {
   return snap.docs.map(docData);
 }
 
-function subscriptionDoc(payments, nowMs) {
-  const ent = computeEntitlement(payments, nowMs);
+function subscriptionDoc(payments, nowMs, env = process.env) {
+  const graceUntilMs = launchGraceUntil(env);
+  const ent = graceUntilMs && nowMs < graceUntilMs
+    ? computeEntitlement(payments, graceUntilMs, { startAfterMs: graceUntilMs })
+    : computeEntitlement(payments, nowMs, { startAfterMs: graceUntilMs });
   return {
     tier: ent.tier,
     endsAt: ent.endsAt ? new Date(ent.endsAt).toISOString() : null,
@@ -59,7 +62,7 @@ function subscriptionDoc(payments, nowMs) {
 
 /** État de l'abonnement d'un élève (ce que voit l'élève). */
 export async function getStatus(db, uid, nowMs = Date.now(), env = process.env) {
-  return publicStatus(await paymentsOf(db, uid, null, env), nowMs);
+  return publicStatus(await paymentsOf(db, uid, null, env), nowMs, { graceUntilMs: launchGraceUntil(env) });
 }
 
 /**
@@ -102,8 +105,8 @@ export async function declarePayment(db, uid, body, who = {}, nowMs = Date.now()
       };
       tx.create(payRef, payment);
       const all = [...existing, payment];
-      tx.set(subRef, subscriptionDoc(all, nowMs));
-      return { ok: true, status: publicStatus(all, nowMs) };
+      tx.set(subRef, subscriptionDoc(all, nowMs, env));
+      return { ok: true, status: publicStatus(all, nowMs, { graceUntilMs: launchGraceUntil(env) }) };
     }, { maxAttempts: 5 });
   } catch (e) {
     // Deux comptes qui déclarent le même numéro au même instant : le second « create » échoue
@@ -140,7 +143,7 @@ export async function adminDecide(db, paymentId, action, { reason, adminUid } = 
     if (!decision.ok) return decision;
     tx.update(payRef, decision.patch);
     const all = [...others, { ...payment, ...decision.patch }];
-    const sub = subscriptionDoc(all, nowMs);
+    const sub = subscriptionDoc(all, nowMs, env);
     tx.set(subRef, sub);
     return { ok: true, payment: { ...payment, ...decision.patch }, subscription: sub };
   }, { maxAttempts: 5 });
@@ -157,5 +160,5 @@ export async function serverPlanTier(db, uid, userDoc, nowMs = Date.now(), env =
     const snap = await payCol(db, 'subscriptions', env).doc(uid).get();
     subscriptionDoc = snap.exists ? snap.data() : null;
   }
-  return serverTierFrom({ paymentsEnabled: enabled, subscriptionDoc, userDoc, nowMs });
+  return serverTierFrom({ paymentsEnabled: enabled, subscriptionDoc, userDoc, nowMs, graceUntilMs: launchGraceUntil(env) });
 }
