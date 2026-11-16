@@ -373,7 +373,7 @@ export const ExerciseSeriesView: React.FC<ExerciseSeriesViewProps> = ({ userId, 
                       Plus assez d’énergie. Prochaine série dans <span className="text-amber-600 dark:text-amber-300 font-black">{fmtWait(waitMs)}</span>
                       {energy.fullAt ? <> · plein dans {fmtWait(energy.fullAt - now)}</> : null}.
                     </p>
-                    <button type="button" onClick={onUpgrade} className="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-black uppercase tracking-wide shadow-[0_4px_0_#4338CA] active:translate-y-1 active:shadow-none cursor-pointer">
+                    <button type="button" onClick={onUpgrade} className="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-400 to-violet-500 text-white font-black uppercase tracking-wide shadow-[0_4px_0_#0369A1] active:translate-y-1 active:shadow-none cursor-pointer">
                       Énergie illimitée avec KONAN Pro
                     </button>
                   </div>

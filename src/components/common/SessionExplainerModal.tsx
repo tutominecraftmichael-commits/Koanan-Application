@@ -198,7 +198,7 @@ export const SessionExplainerModal: React.FC<SessionExplainerModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/50">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-200 dark:bg-indigo-500/15 dark:border-indigo-500/30 dark:text-cyan-400 shadow-xs">
+            <div className="p-2.5 rounded-2xl bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-400/15 dark:border-sky-400/30 dark:text-cyan-400 shadow-xs">
               <Icon className="w-5 h-5" />
             </div>
             <div>
@@ -228,8 +228,8 @@ export const SessionExplainerModal: React.FC<SessionExplainerModalProps> = ({
         <div className="p-5 sm:p-6 space-y-5 overflow-y-auto flex-1 custom-scrollbar">
 
           {/* Section 1: En bref / In brief */}
-          <div className="p-4 rounded-2xl bg-indigo-50/90 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-500/30 space-y-1.5 shadow-xs">
-            <span className="text-xs font-bold text-indigo-700 dark:text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
+          <div className="p-4 rounded-2xl bg-sky-50/90 dark:bg-slate-950/30 border border-sky-200 dark:border-sky-400/30 space-y-1.5 shadow-xs">
+            <span className="text-xs font-bold text-sky-800 dark:text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               {t('whatIsIt', lang)}
             </span>
@@ -250,7 +250,7 @@ export const SessionExplainerModal: React.FC<SessionExplainerModalProps> = ({
                   key={idx} 
                   className="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed flex items-start gap-2.5 shadow-xs"
                 >
-                  <span className="text-indigo-600 dark:text-cyan-400 font-bold font-mono shrink-0">#{idx + 1}</span>
+                  <span className="text-sky-700 dark:text-cyan-400 font-bold font-mono shrink-0">#{idx + 1}</span>
                   <span className="font-medium">{step.replace(/^\d+\.\s*/, '')}</span>
                 </div>
               ))}

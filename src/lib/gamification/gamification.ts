@@ -197,6 +197,20 @@ export function lessonXp(durationMinutes: number): number {
   return 140;
 }
 
+/** Chaque erreur d'une séance (réponse fausse, rattrapage compris) retire 1 XP. */
+export const LESSON_MISTAKE_PENALTY = 1;
+
+/** Nombre d'erreurs accepté (entier entre 0 et 500). */
+export function cleanMistakes(mistakes: unknown): number {
+  const n = Math.round(Number(mistakes));
+  return Number.isFinite(n) ? Math.max(0, Math.min(500, n)) : 0;
+}
+
+/** XP d'une séance terminée, erreurs déduites (jamais sous 0). Séance au chronomètre : 0 erreur. */
+export function lessonXpAfterMistakes(durationMinutes: number, mistakes?: number): number {
+  return Math.max(0, lessonXp(durationMinutes) - cleanMistakes(mistakes) * LESSON_MISTAKE_PENALTY);
+}
+
 export function ymdLocal(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
@@ -237,13 +251,16 @@ export function awardCompletedSessions(
     const key = sessionKey(s);
     if (done.has(key)) continue;
     done.add(key);
-    const xp = lessonXp(s.durationMinutes);
+    const mistakes = cleanMistakes(s.mistakes);
+    const xp = lessonXpAfterMistakes(s.durationMinutes, mistakes);
     gained += xp;
     rewarded.push(s);
-    events.push({ at: now.toISOString(), kind: 'xp', amount: xp, reason: `Séance terminée (${s.durationMinutes} min)` });
-    league.push({ id: `L_${key}`, kind: 'lesson', amount: xp, at, durationMinutes: s.durationMinutes });
+    const errors = mistakes ? `, ${mistakes} erreur${mistakes > 1 ? 's' : ''} : −${mistakes * LESSON_MISTAKE_PENALTY} XP` : '';
+    events.push({ at: now.toISOString(), kind: 'xp', amount: xp, reason: `Séance terminée (${s.durationMinutes} min${errors})` });
+    league.push({ id: `L_${key}`, kind: 'lesson', amount: xp, at, durationMinutes: s.durationMinutes, mistakes });
   }
-  if (!gained) return { gamification: g, gained: 0, sessions: [] };
+  // Séance comptée même à 0 XP (beaucoup d'erreurs) : elle ne doit pas être récompensée une 2e fois
+  if (!rewarded.length) return { gamification: g, gained: 0, sessions: [] };
   return {
     gamification: {
       ...g,

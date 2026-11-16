@@ -20,7 +20,7 @@ export const PresetModal: React.FC<PresetModalProps> = ({
 }) => {
   const getIcon = (iconName: string) => {
     switch (iconName) {
-      case 'Terminal': return <Terminal className="w-5 h-5 text-indigo-400" />;
+      case 'Terminal': return <Terminal className="w-5 h-5 text-sky-700 dark:text-sky-300" />;
       case 'Scale': return <Scale className="w-5 h-5 text-purple-400" />;
       case 'Stethoscope': return <Stethoscope className="w-5 h-5 text-rose-400" />;
       default: return <GraduationCap className="w-5 h-5 text-cyan-400" />;
@@ -48,7 +48,7 @@ export const PresetModal: React.FC<PresetModalProps> = ({
               }}
               className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
                 isCurrent
-                  ? 'bg-indigo-950/40 border-indigo-500 shadow-lg shadow-indigo-500/10'
+                  ? 'bg-slate-950/40 border-sky-400 shadow-lg shadow-sky-400/10'
                   : 'bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900'
               }`}
             >

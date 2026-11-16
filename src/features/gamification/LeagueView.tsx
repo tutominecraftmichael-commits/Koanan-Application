@@ -9,6 +9,10 @@ import { DIVISION_STYLES } from '../../services/leagueApi';
  */
 
 const DIVISION_ORDER = [1, 2, 3, 4, 5];
+/** Couleur pleine de chaque division (badge hexagonal de la maquette) */
+/** Fonds des initiales (comme la maquette) */
+const AVATAR_COLORS = ['#1E3A5F', '#3B1F4A', '#1F4A3A', '#4A3A1F', '#1F3A4A', '#3A1F2A'];
+const HEX_COLORS: Record<number, string> = { 1: '#B45309', 2: '#94A3B8', 3: '#F5C451', 4: '#38BDF8', 5: '#F472B6' };
 const ordinal = (n: number) => (n === 1 ? '1er' : `${n}e`);
 
 export function timeLeftLabel(endsAt: number, now = Date.now()): string {
@@ -50,14 +54,14 @@ function leagueErrorLabel(error: string): string {
 
 export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: number; hasCourses?: boolean; offline: boolean; errorText?: string; onOpen: () => void }> = ({ board, localReputation, hasCourses = true, offline, errorText = '', onOpen }) => {
   const reputation = board?.reputation ?? localReputation;
-  // Classes sans cours dans KONAN (LMD, BTS…) : pas de ligue
+  // Classe non admise dans la ligue (collège, ou classe pas encore indiquée). LMD et BTS y sont, au chronomètre.
   if (!hasCourses || board?.reason === 'no_courses') {
     return (
       <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-900/70 p-3.5 sm:p-4 flex items-center gap-3">
         <span className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center shrink-0"><Lock className="w-5 h-5 text-slate-500" /></span>
         <div className="min-w-0">
           <p className="text-sm font-black text-slate-900 dark:text-white">Ligue pas encore ouverte pour ta classe</p>
-          <p className="text-xs text-slate-600 dark:text-slate-300">La ligue est réservée aux classes qui ont leurs cours dans KONAN (Seconde, Première, Terminale). Elle ouvrira pour ta filière dès que ses cours seront prêts.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-300">La ligue est ouverte de la Seconde à la Terminale, et aux étudiants LMD et BTS. Si tu es dans l’une de ces classes, indique ta classe exacte en réimportant ton emploi du temps.</p>
         </div>
       </div>
     );
@@ -154,8 +158,9 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
   <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3.5 space-y-2.5 text-xs text-slate-700 dark:text-slate-300 leading-snug">
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Gagner des XP</p>
-      <p>Séance terminée : 25 min <b>+35</b> · 45 min <b>+50</b> · 75 min <b>+90</b> · 2 h <b>+140</b>.</p>
-      <p>Séries d’exercices (icône ronde) : 15, 30, 60 puis 120 XP si tu les enchaînes ; chaque faute en retire.</p>
+      <p>Séance terminée : 25 min <b>+35</b> · 45 min <b>+50</b> · 75 min <b>+90</b> · 2 h <b>+140</b>. Chaque erreur dans les questions de la séance retire <b>1 XP</b>, rattrapage compris.</p>
+      <p>Séries d’exercices (icône ronde, classes avec cours) : 15, 30, 60 puis 120 XP si tu les enchaînes ; chaque faute en retire.</p>
+      <p>LMD et BTS : pas encore de cours ni d’exercices ; tu gagnes tes XP en menant le chronomètre de tes séances jusqu’au bout, puis en validant.</p>
       <p>Les XP du classement sont ceux de la semaine, vérifiés par KONAN : ils repartent de 0 chaque lundi.</p>
     </div>
     <div className="space-y-1">
@@ -175,55 +180,94 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
   const repTone = board.reputation > 80
     ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/30'
     : 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30';
+  const current = DIVISION_STYLES[board.division] || DIVISION_STYLES[1];
+  // Ta ligne : combien d'XP pour dépasser l'élève juste devant
+  const meIndex = board.rows.findIndex((r) => r.me);
+  const ahead = meIndex > 0 ? board.rows[meIndex - 1] : null;
+  const gapToNext = ahead && meIndex >= 0 ? Math.max(1, ahead.xp - board.rows[meIndex].xp + 1) : 0;
+  const rankColor = (rank: number, zone: ReturnType<typeof zoneOf>) =>
+    rank === 1 ? 'text-amber-600 dark:text-[#F5C451]'
+      : rank === 2 ? 'text-slate-500 dark:text-slate-300'
+        : rank === 3 ? 'text-orange-700 dark:text-orange-400'
+          : zone === 'down' ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500 dark:text-slate-400';
   return (
     <div>
       <div className="max-w-xl mx-auto space-y-4">
-        <div className="flex items-center gap-2">
-          <p className="flex-1 min-w-0 text-lg font-black text-slate-900 dark:text-white truncate">Ligue de la semaine</p>
-          {/* Réputation : pastille discrète */}
-          <span className={`shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[11px] font-black tabular-nums whitespace-nowrap ${repTone}`} title="Ta réputation (discipline)">
-            <ShieldCheck className="w-3.5 h-3.5" />{board.reputation}&nbsp;%
-          </span>
-          <button
-            type="button"
-            onClick={() => setShowRules((v) => !v)}
-            aria-expanded={showRules}
-            aria-label="Comment ça marche ?"
-            title="Comment ça marche ?"
-            className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors ${showRules ? 'bg-sky-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'}`}
-          >
-            <Info className="w-4 h-4" />
-          </button>
+        {/* En-tête : badge de la division, petit titre doré, nom de la division, fin de semaine */}
+        <div className="flex items-center gap-3.5">
+          {/* Badge hexagonal de la division (maquette) */}
+          <svg width="60" height="66" viewBox="0 0 64 70" aria-label={`Division ${current.name}`} role="img" className="shrink-0">
+            <polygon points="32,2 61,18 61,52 32,68 3,52 3,18" fill="#141A28" stroke={HEX_COLORS[board.division] || HEX_COLORS[3]} strokeWidth="2.5" strokeLinejoin="round" />
+            <polygon points="32,10 54,22 54,48 32,60 10,48 10,22" fill={HEX_COLORS[board.division] || HEX_COLORS[3]} />
+            <path d="M24 26h16v6a8 8 0 0 1-16 0z M28 44h8 M32 40v4" fill="none" stroke="#141A28" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M24 28h-4v2a4 4 0 0 0 4 4 M40 28h4v2a4 4 0 0 1-4 4" fill="none" stroke="#141A28" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+          <div className="min-w-0 flex-1">
+            <span className="konan-kicker">Ligue de la semaine</span>
+            <h1 className="text-[26px] leading-tight font-extrabold tracking-tight text-slate-900 dark:text-white">Division {current.name}</h1>
+            <p className="text-[13px] text-slate-600 dark:text-slate-400">Se termine dans <b className="text-slate-900 dark:text-white">{timeLeftLabel(board.endsAt)}</b></p>
+          </div>
+          <div className="shrink-0 flex flex-col items-end gap-1.5">
+            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[11px] font-black tabular-nums whitespace-nowrap ${repTone}`} title="Ta réputation (discipline)">
+              <ShieldCheck className="w-3.5 h-3.5" />{board.reputation}&nbsp;%
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowRules((v) => !v)}
+              aria-expanded={showRules}
+              aria-label="Comment ça marche ?"
+              title="Comment ça marche ?"
+              className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors ${showRules ? 'bg-sky-400 text-slate-950' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 border border-transparent dark:border-white/10'}`}
+            >
+              <Info className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-        <p className="-mt-3 text-xs font-bold text-slate-500 dark:text-slate-400">Fin dans {timeLeftLabel(board.endsAt)}</p>
         {showRules && <LeagueRules reputation={board.reputation} />}
 
-        {/* Les 5 divisions */}
-        <div className="flex items-center justify-center gap-3 py-2">
-          {DIVISION_ORDER.map((d) => (
-            <div key={d} className={`flex flex-col items-center gap-1 ${d === board.division ? '' : 'opacity-35'}`}>
-              <DivisionBadge division={d} size={d === board.division ? 48 : 32} />
-              <span className={`text-[10px] font-black uppercase ${d === board.division ? DIVISION_STYLES[d].text : 'text-slate-500'}`}>{DIVISION_STYLES[d].name}</span>
-            </div>
-          ))}
+        {/* Chemin des divisions : Bronze → Perle */}
+        <div className="flex items-center justify-between px-3.5 py-3 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10">
+          {DIVISION_ORDER.map((d, i) => {
+            const passed = d < board.division;
+            const isCurrent = d === board.division;
+            return (
+              <React.Fragment key={d}>
+                {i > 0 && <span aria-hidden="true" className={`flex-1 h-0.5 mx-1 mb-4 ${d <= board.division ? 'bg-slate-300 dark:bg-white/20' : 'bg-slate-200 dark:bg-white/[0.07]'}`} />}
+                <span className={`flex flex-col items-center gap-1 text-[10px] font-bold ${isCurrent ? current.text + ' font-extrabold' : passed ? 'text-slate-600 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
+                  <span
+                    className={`rounded-[9px] ${isCurrent ? 'w-8 h-8 ring-[3px] ring-offset-[3px] ring-offset-white dark:ring-offset-slate-900 ' + DIVISION_STYLES[d].ring : 'w-[26px] h-[26px]'} ${!isCurrent && !passed ? 'border-[1.5px] border-dashed' : ''}`}
+                    style={isCurrent || passed ? { background: HEX_COLORS[d] } : { background: HEX_COLORS[d] + '40', borderColor: HEX_COLORS[d] }}
+                  />
+                  {DIVISION_STYLES[d].name}
+                </span>
+              </React.Fragment>
+            );
+          })}
         </div>
-        <p className="text-center text-sm text-slate-600 dark:text-slate-300">
-          {board.division === 5
-            ? 'Division Perle : les 10 premiers gardent leur place, tous les autres redescendent.'
-            : `Les ${board.promoteCount} premiers montent en ${DIVISION_STYLES[board.division + 1].name}${board.demoteCount ? `, les ${board.demoteCount} derniers descendent` : ''}. Il faut au moins 1 XP pour monter.`}
-        </p>
 
-        {/* Classement */}
-        <ol className="rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden divide-y divide-slate-100 dark:divide-slate-800">
+        <div className="flex items-center justify-between px-0.5">
+          <span className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
+            {board.division === 5 ? `Les ${board.keepCount} premiers restent en Perle` : `Zone de montée · top ${board.promoteCount}`}
+          </span>
+          <span className="text-[11px] text-slate-500 dark:text-slate-400">{size} élève{size > 1 ? 's' : ''}</span>
+        </div>
+
+        {/* Classement : une carte par élève */}
+        <ol className="space-y-1.5">
           {board.rows.map((row) => {
             const zone = zoneOf(board, row.rank, size);
             return (
-              <li key={`${row.rank}-${row.name}`} className={`flex items-center gap-3 px-3 py-2.5 ${row.me ? 'bg-sky-50 dark:bg-sky-500/10' : ''}`}>
-                <span className={`w-7 text-center text-sm font-black tabular-nums ${zone === 'up' || zone === 'keep' ? 'text-emerald-600 dark:text-emerald-400' : zone === 'down' ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500'}`}>{row.rank}</span>
+              <li
+                key={`${row.rank}-${row.name}`}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl ${row.me
+                  ? 'bg-sky-50 dark:bg-sky-400/10 border-[1.5px] border-sky-400'
+                  : 'bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-transparent'}`}
+              >
+                <span className={`w-6 text-center text-[15px] font-extrabold tabular-nums ${row.me ? 'text-sky-700 dark:text-sky-300' : rankColor(row.rank, zone)}`}>{row.rank}</span>
                 {row.avatar ? (
-                  <img src={row.avatar} alt="" loading="lazy" referrerPolicy="no-referrer" className="w-9 h-9 rounded-full object-cover shrink-0 ring-2 ring-slate-200 dark:ring-slate-700" />
+                  <img src={row.avatar} alt="" loading="lazy" referrerPolicy="no-referrer" className={`w-9 h-9 rounded-full object-cover shrink-0 ${row.me ? 'ring-2 ring-sky-400' : 'ring-1 ring-slate-200 dark:ring-white/10'}`} />
                 ) : (
-                  <span className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-black text-slate-700 dark:text-slate-200 shrink-0">
+                  <span className="w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-extrabold text-white shrink-0" style={{ background: AVATAR_COLORS[[...row.name].reduce((h, ch) => h + ch.charCodeAt(0), 0) % AVATAR_COLORS.length] }}>
                     {row.name.slice(0, 1).toUpperCase()}
                   </span>
                 )}
@@ -232,23 +276,22 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
                   <span className={`block truncate text-sm ${
                     row.tier === 'plus' ? 'plus-multicolor-shimmer-text font-black'
                       : row.tier === 'pro' ? 'gold-shimmer-text font-black'
-                        : row.me ? 'font-black text-sky-800 dark:text-sky-200' : 'font-bold text-slate-900 dark:text-white'
-                  }`}>{row.name}{row.me ? ' (toi)' : ''}</span>
-                  {row.classLabel && <span className="block text-[11px] text-slate-500 dark:text-slate-400">{row.classLabel}</span>}
+                        : 'font-bold text-slate-900 dark:text-white'
+                  }`}>{row.me ? `Toi · ${row.name}` : row.name}</span>
+                  <span className="block text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                    {row.classLabel}{row.me && gapToNext ? `${row.classLabel ? ' · ' : ''}encore ${gapToNext} XP pour la ${ordinal(row.rank - 1)} place` : ''}
+                  </span>
                 </span>
-                {zone === 'up' && <ArrowUp className="w-4 h-4 text-emerald-500" aria-label="zone de montée" />}
-                {zone === 'down' && <ArrowDown className="w-4 h-4 text-rose-500" aria-label="zone de descente" />}
-                <span className="text-sm font-black text-slate-900 dark:text-white tabular-nums">{row.xp} XP</span>
+                <span className="text-sm font-extrabold text-slate-900 dark:text-white tabular-nums">{row.xp} XP</span>
               </li>
             );
           })}
-          {!size && <li className="px-3 py-6 text-center text-sm text-slate-500">Ton groupe se remplit : gagne des XP pour lancer le classement !</li>}
+          {!size && <li className="px-3 py-6 rounded-2xl bg-white dark:bg-[#0F1626] text-center text-sm text-slate-500">Ton groupe se remplit : gagne des XP pour lancer le classement !</li>}
         </ol>
         <p className="text-xs text-center text-slate-500 dark:text-slate-400 pb-4">
-          Groupe de {size} élève{size > 1 ? 's' : ''} (30 au maximum), de classes et de pays différents. Les XP sont vérifiés par KONAN. Sous 80 % de réputation, tu sors de la ligue jusqu’à la semaine où tu repasses au-dessus.
+          Groupe de {size} élève{size > 1 ? 's' : ''} (30 au maximum). Les XP sont vérifiés par KONAN. Sous 80 % de réputation, tu sors de la ligue jusqu’à la semaine où tu repasses au-dessus.
         </p>
       </div>
     </div>
   );
 };
-

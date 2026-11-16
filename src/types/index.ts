@@ -120,6 +120,8 @@ export interface StudySession {
   completed: boolean;
   completedAt?: string;
   actualDurationMinutes?: number;
+  /** Erreurs faites pendant la séance (cours guidé, 30 questions de devoir) : chacune retire 1 XP. */
+  mistakes?: number;
   rating?: 1 | 2 | 3 | 4 | 5;
   reflectionNotes?: string;
   pacingMethod?: StudyPacing; // Méthode spécifique appliquée à cette séance (ex: 'feynman', 'time_blocking', 'pomodoro')

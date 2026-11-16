@@ -47,6 +47,55 @@ export interface OwnerNotificationItem {
   timestamp?: string;
 }
 
+/** Réponse de l'administrateur à un paiement KONAN Pro (Wave / Orange Money). */
+export interface PaymentNotice {
+  id: string;
+  status: 'confirmed' | 'rejected';
+  amount: number;
+  ref: string;
+  at: string;
+  endsAt?: string | null;
+  message?: string | null;
+}
+
+/** Message « paiement accepté / refusé » dans l'onglet des notifications (texte clair, mode jour et nuit). */
+const PaymentNoticeItem: React.FC<{ notice: PaymentNotice; onOpen?: () => void }> = ({ notice, onOpen }) => {
+  const ok = notice.status === 'confirmed';
+  const amount = `${Number(notice.amount || 0).toLocaleString('fr-FR').replace(/ | /g, ' ')} FCFA`;
+  const until = notice.endsAt ? new Date(notice.endsAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : '';
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className={`w-full p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left transition-all ${
+        ok
+          ? 'bg-emerald-50/80 border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-500/30'
+          : 'bg-rose-50/80 border-rose-200 dark:bg-rose-950/40 dark:border-rose-500/30'
+      }`}
+    >
+      <span className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${ok ? 'bg-emerald-100 dark:bg-emerald-500/20' : 'bg-rose-100 dark:bg-rose-500/20'}`}>
+        {ok ? <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-1">
+          <span className={`text-[9px] font-black uppercase tracking-wider ${ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}`}>
+            {ok ? 'Paiement accepté' : 'Paiement refusé'}
+          </span>
+          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">{formatNotificationTime(notice.at)}</span>
+        </span>
+        <span className="block text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">
+          {ok
+            ? `Ton paiement de ${amount} a été vérifié. Tu es KONAN Pro${until ? ` jusqu’au ${until}` : ''} !`
+            : `Ton paiement de ${amount} (n° ${notice.ref}) n’a pas été validé. KONAN Pro est retiré.`}
+        </span>
+        {!ok && notice.message && (
+          <span className="block text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">{notice.message}</span>
+        )}
+      </span>
+    </button>
+  );
+};
+
 export interface NavbarProps {
   activeView: ActiveAppView;
   onNavigate: (view: ActiveAppView) => void;
@@ -70,6 +119,9 @@ export interface NavbarProps {
   pendingInvitations?: PlusInvitationNotification[];
   acceptedNotifications?: { id: string; name: string; konanId?: string; timestamp?: string }[];
   ownerNotifications?: OwnerNotificationItem[];
+  /** Paiements KONAN Pro acceptés ou refusés par l'administrateur */
+  paymentNotices?: PaymentNotice[];
+  onOpenPaymentNotice?: () => void;
   onAcceptInvitation?: (invitation: PlusInvitationNotification) => void;
   onDeclineInvitation?: (invitation: PlusInvitationNotification) => void;
   /** Énergie ⚡ affichée en haut à droite (null : pas d'icône d'exercices pour cet élève) */
@@ -79,9 +131,12 @@ export interface NavbarProps {
 
 /** Icône KONAN (le cube) pour l'onglet Accueil de la barre du bas. */
 const KonanTabIcon: React.FC<{ isActive?: boolean; className?: string }> = ({ isActive }) => (
-  <span className={`inline-flex transition-transform ${isActive ? 'scale-110' : 'opacity-80'}`}>
-    <KonanCube size={22} showStars={false} glow={false} />
-  </span>
+  // Le cube de la maquette (charte Excellence) : trois faces, sans contour
+  <svg width={isActive ? 26 : 24} height={isActive ? 26 : 24} viewBox="0 0 120 120" aria-hidden="true" style={{ opacity: isActive ? 1 : 0.75 }}>
+    <polygon points="60,14 104,38 60,62 16,38" fill="#BAE6FD" />
+    <polygon points="16,38 60,62 60,110 16,86" fill="#38BDF8" />
+    <polygon points="60,62 104,38 104,86 60,110" fill="#0284C7" />
+  </svg>
 );
 const lucideTab = (Icon: React.FC<{ className?: string; strokeWidth?: number }>) =>
   ({ className }: { isActive?: boolean; className?: string }) => <Icon className={className} strokeWidth={2.2} />;
@@ -112,10 +167,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   isDemoMode = false,
   onEnterDemoMode,
   onViewPricing,
-  onUpgradeToPro,
+  onUpgradeToPro: _onUpgradeToPro,
   pendingInvitations = [],
   acceptedNotifications = [],
   ownerNotifications,
+  paymentNotices = [],
+  onOpenPaymentNotice,
   onAcceptInvitation,
   onDeclineInvitation,
   energy = null,
@@ -209,7 +266,23 @@ export const Navbar: React.FC<NavbarProps> = ({
   });
 
   const hasUnreadNotifications = activePendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
-    || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id));
+    || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id))
+    || paymentNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
+
+  // Message non lu : la cloche bouge toute seule (toutes les 4 s) jusqu'à ce que l'élève ouvre l'onglet
+  useEffect(() => {
+    if (!hasUnreadNotifications || isNotificationsOpen) return;
+    const ring = () => {
+      setIsBellRinging(true);
+      window.setTimeout(() => setIsBellRinging(false), 800);
+    };
+    const first = window.setTimeout(ring, 600);
+    const every = window.setInterval(ring, 4000);
+    return () => {
+      window.clearTimeout(first);
+      window.clearInterval(every);
+    };
+  }, [hasUnreadNotifications, isNotificationsOpen]);
 
   // Opening the panel marks every visible notification as read
   useEffect(() => {
@@ -218,6 +291,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       const next = new Set(prev);
       activePendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
       normalizedOwnerNotifications.forEach(notif => notif?.id && next.add(notif.id));
+      paymentNotices.forEach(n => n?.id && next.add(n.id));
       try {
         localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
       } catch {
@@ -225,7 +299,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       return next;
     });
-  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications]);
+  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), component: AnimatedDashboardIcon, icon: AnimatedDashboardIcon },
@@ -253,8 +327,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       <header className={`sticky top-0 z-40 w-full transition-all pt-safe ${
       activeView === 'landing' 
-        ? 'bg-[#F9FAFB]/90 dark:bg-[#0A0E1A]/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/[0.08]' 
-        : 'border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl'
+        ? 'bg-[#F9FAFB]/90 dark:bg-[#0A0E1A]/85 backdrop-blur-xl lg:border-b lg:border-slate-200/80 lg:dark:border-white/[0.08]' 
+        : 'lg:border-b lg:border-slate-200/80 lg:dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl'
     }`}>
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
         
@@ -267,12 +341,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               type="button"
               onClick={() => { soundFX.playCheckmarkPop(); onOpenSettings?.(); }}
               aria-label="Mon profil et mes paramètres"
-              className="lg:hidden shrink-0 rounded-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="lg:hidden shrink-0 rounded-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
             >
               {getDisplayAvatar(userAccount) ? (
-                <img src={getDisplayAvatar(userAccount)} alt="Profil" className="w-9 h-9 rounded-full object-cover ring-2 ring-indigo-500/60 dark:ring-indigo-400/70 shadow-sm" />
+                <img src={getDisplayAvatar(userAccount)} alt="Profil" className="w-9 h-9 rounded-full object-cover ring-2 ring-sky-400/60 dark:ring-sky-400/70 shadow-sm" />
               ) : (
-                <span className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 ring-2 ring-indigo-500/40 flex items-center justify-center text-sm font-bold text-white shadow-sm">
+                <span className="w-9 h-9 rounded-full bg-gradient-to-tr from-sky-400 to-cyan-400 ring-2 ring-sky-400/40 flex items-center justify-center text-sm font-bold text-white shadow-sm">
                   {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
                 </span>
               )}
@@ -291,7 +365,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <KonanCube size={38} showStars={false} glow={true} />
                 </div>
               ) : (
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0 flex items-center justify-center overflow-hidden">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-sky-400 shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0 flex items-center justify-center overflow-hidden">
                   <img
                     src="/konan-logo.png"
                     alt="Logo Officiel KONAN"
@@ -330,7 +404,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className={`group flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer shrink-0 whitespace-nowrap active:scale-95 ${
                       isActive
-                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/40 ring-1 ring-blue-400/40'
+                        ? 'bg-gradient-to-r from-blue-600 to-sky-400 text-white shadow-md shadow-blue-600/40 ring-1 ring-blue-400/40'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/80 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/80'
                     }`}
                   >
@@ -372,9 +446,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={onOpenSettings}
                     title={t('navSettings', lang)}
                     aria-label={t('navSettings', lang)}
-                    className="hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 hover:border-indigo-500/60 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 dark:bg-slate-900/80 dark:border-slate-800 dark:hover:border-indigo-500/60 dark:hover:bg-slate-800/80 dark:text-slate-300 dark:hover:text-white items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 group"
+                    className="hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 hover:border-sky-400/60 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 dark:bg-slate-900/80 dark:border-slate-800 dark:hover:border-sky-400/60 dark:hover:bg-slate-800/80 dark:text-slate-300 dark:hover:text-white items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 group"
                   >
-                    <Settings className="w-4 h-4 text-indigo-500 dark:text-indigo-400 group-hover:rotate-45 transition-transform duration-300" />
+                    <Settings className="w-4 h-4 text-sky-700 dark:text-sky-400 group-hover:rotate-45 transition-transform duration-300" />
                   </button>
                 )}
 
@@ -385,7 +459,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     title={t('navTools', lang)}
                     className="group p-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-200 dark:bg-slate-900/70 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-all cursor-pointer flex items-center gap-1 active:scale-95"
                   >
-                    <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:rotate-45 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 group-active:scale-90" />
+                    <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:rotate-45 group-hover:text-sky-700 dark:group-hover:text-sky-400 group-active:scale-90" />
                     <ChevronDown className={`w-3 h-3 text-slate-400 dark:text-slate-500 transition-transform duration-300 ${isToolsOpen ? 'rotate-180 text-slate-900 dark:text-white' : 'group-hover:translate-y-0.5'}`} />
                   </button>
 
@@ -417,9 +491,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                       {isDemoMode && (
                         <button
                           onClick={() => { onOpenPresetModal(); setIsToolsOpen(false); }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 dark:text-indigo-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-sky-700 hover:text-sky-900 hover:bg-sky-50 dark:text-sky-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
                         >
-                          <GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+                          <GraduationCap className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
                           <span>Exemples d'EDT Démo</span>
                         </button>
                       )}
@@ -438,7 +512,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onClick={() => { onImportData(); setIsToolsOpen(false); }}
                         className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
                       >
-                        <Upload className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+                        <Upload className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
                         <span>{t('importConfig', lang)}</span>
                       </button>
 
@@ -513,13 +587,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                         )}
                       </div>
 
-                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
+                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 ? (
                         <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                           <Bell className="w-6 h-6 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                           <p>Aucune notification pour le moment.</p>
                         </div>
                       ) : (
                         <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
+                          {/* Paiements KONAN Pro acceptés ou refusés */}
+                          {paymentNotices.map((n) => (
+                            <PaymentNoticeItem key={n.id} notice={n} onOpen={() => { setIsNotificationsOpen(false); onOpenPaymentNotice?.(); }} />
+                          ))}
                           {/* Owner Notifications (Accepted or Declined) */}
                           {normalizedOwnerNotifications.map((notif) => {
                             const isAcc = notif.type === 'accepted';
@@ -530,7 +608,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 key={notif.id}
                                 className={`p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left animate-in fade-in transition-all ${
                                   isAcc
-                                    ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-indigo-950/30 dark:border-emerald-500/30'
+                                    ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-slate-950/30 dark:border-emerald-500/30'
                                     : 'bg-rose-50/80 border-rose-200 dark:bg-gradient-to-br dark:from-rose-950/40 dark:via-slate-950 dark:to-slate-900 dark:border-rose-500/30'
                                 }`}
                               >
@@ -575,7 +653,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             return (
                               <div 
                                 key={inv.id}
-                                className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-indigo-950/30 dark:border-amber-500/40"
+                                className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-slate-950/30 dark:border-amber-500/40"
                               >
                                 <div className="flex items-start gap-2.5">
                                   <div className="p-2 rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 shrink-0">
@@ -675,14 +753,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </div>
                         </div>
 
-                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 ? (
+                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 ? (
                           <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                             <Bell className="w-7 h-7 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                             <p>Aucune notification pour le moment.</p>
                           </div>
                         ) : (
                           <div className="space-y-2.5 max-h-[60vh] overflow-y-auto custom-scrollbar">
-                            {/* Owner Notifications (Accepted or Declined) */}
+                            {/* Paiements KONAN Pro acceptés ou refusés */}
+                          {paymentNotices.map((n) => (
+                            <PaymentNoticeItem key={n.id} notice={n} onOpen={() => { setIsNotificationsOpen(false); onOpenPaymentNotice?.(); }} />
+                          ))}
+                          {/* Owner Notifications (Accepted or Declined) */}
                             {normalizedOwnerNotifications.map((notif) => {
                               const isAcc = notif.type === 'accepted';
                               const timeFormatted = formatNotificationTime(notif.timestamp);
@@ -692,7 +774,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                   key={`mob-${notif.id}`}
                                   className={`p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left animate-in fade-in transition-all ${
                                     isAcc
-                                      ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-indigo-950/30 dark:border-emerald-500/30'
+                                      ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-slate-950/30 dark:border-emerald-500/30'
                                       : 'bg-rose-50/80 border-rose-200 dark:bg-gradient-to-br dark:from-rose-950/40 dark:via-slate-950 dark:to-slate-900 dark:border-rose-500/30'
                                   }`}
                                 >
@@ -737,7 +819,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                               return (
                                 <div 
                                   key={`mob-${inv.id}`}
-                                  className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-indigo-950/30 dark:border-amber-500/40"
+                                  className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-slate-950/30 dark:border-amber-500/40"
                                 >
                                   <div className="flex items-start gap-2.5">
                                     <div className="p-2 rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 shrink-0">
@@ -819,10 +901,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <img
                           src={getDisplayAvatar(userAccount)}
                           alt={displayName}
-                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-indigo-500/40 shadow-xs shrink-0"
+                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-sky-400/40 shadow-xs shrink-0"
                         />
                       ) : (
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-white font-bold text-xs shadow-xs shrink-0 border border-indigo-500/40">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-sky-400 to-cyan-500 flex items-center justify-center text-white font-bold text-xs shadow-xs shrink-0 border border-sky-400/40">
                           {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
                         </div>
                       )}
@@ -849,7 +931,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           if (onViewPricing) onViewPricing();
                           else onNavigate('landing');
                         }}
-                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-cyan-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-gradient-to-r from-amber-500/20 via-sky-400/20 to-cyan-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                         title="Modèle KONAN PLUS Actif - Cliquez pour voir les formules"
                       >
                         <Crown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 dark:text-amber-400 shrink-0" />
@@ -858,10 +940,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     ) : effectivePlan === 'pro' ? (
                       <span 
                         className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-sm border bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border-amber-300/80 cursor-default select-none"
-                        title="Modèle KONAN PRO Actif (Version PRO ouverte)"
+                        title="KONAN Pro actif"
                       >
-                        <span className="xs:hidden">PRO</span>
-                        <span className="hidden xs:inline">PRO OUVERTE</span>
+                        <span>PRO</span>
                       </span>
                     ) : (
                       <div className="flex items-center gap-1 shrink-0">
@@ -874,29 +955,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                             <span>Démo</span>
                           </span>
                         )}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (onUpgradeToPro) {
-                              onUpgradeToPro();
-                            } else {
-                              onNavigate('pro-wizard');
-                            }
-                          }}
-                          className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-50 text-amber-900 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                          title="Passer à KONAN PRO (Version PRO ouverte)"
-                        >
-                          <span className="font-black text-[8px] bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 px-1 py-0.2 rounded-xs border border-amber-300 shadow-xs">PRO</span>
-                          <span className="font-extrabold text-amber-700 dark:text-amber-300 hidden xs:inline">PRO ouverte</span>
-                        </button>
+                        {/* Élève Gratuit : aucun badge à côté de la cloche (demande du 2026-11-16) */}
                       </div>
                     )}
                   </div>
                 ) : (
                   <button
                     onClick={() => onNavigate('auth')}
-                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 dark:bg-slate-900 dark:border-indigo-500/40 dark:hover:border-indigo-400 dark:text-white text-[11px] sm:text-xs font-semibold shadow-sm cursor-pointer shrink-0 transition-colors"
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 dark:bg-slate-900 dark:border-sky-400/40 dark:hover:border-sky-400 dark:text-white text-[11px] sm:text-xs font-semibold shadow-sm cursor-pointer shrink-0 transition-colors"
                   >
                     <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 shrink-0">
                       <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
@@ -928,7 +994,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onClick={onEnterDemoMode}
                         className="hidden xs:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] dark:text-slate-300 dark:hover:text-white dark:border-white/10 backdrop-blur-md text-xs font-medium transition-all cursor-pointer"
                       >
-                        <GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
+                        <GraduationCap className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400 shrink-0" />
                         <span>Démo</span>
                       </button>
                     )}
@@ -936,10 +1002,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <button
                       type="button"
                       onClick={() => onNavigate('auth')}
-                      className="flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-white/[0.08] dark:hover:bg-white/[0.15] dark:text-white dark:border-white/15 backdrop-blur-md text-xs sm:text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+                      className="flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 dark:bg-white/[0.08] dark:hover:bg-white/[0.15] dark:text-white dark:border-white/15 backdrop-blur-md text-xs sm:text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
                     >
                       <span>Connexion</span>
-                      <span className="text-indigo-600 dark:text-sky-300">→</span>
+                      <span className="text-sky-700 dark:text-sky-300">→</span>
                     </button>
                   </>
                 )}
@@ -957,17 +1023,23 @@ export const Navbar: React.FC<NavbarProps> = ({
       <nav 
         role="navigation"
         aria-label="Navigation principale mobile"
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#0B0F19]/95 backdrop-blur-md border-t border-slate-200/90 dark:border-white/10 px-2 pt-1.5 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_25px_rgba(0,0,0,0.6)]"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[#0D1322] border-t border-slate-200 dark:border-white/[0.07] px-2 pb-safe"
       >
-        <div className="grid grid-cols-6 items-center justify-items-center max-w-md mx-auto">
+        {/* Barre du bas de la maquette : icône + libellé, l'onglet actif dans sa couleur (Planning bleu, Accueil blanc, Ligue or) */}
+        <div className="grid grid-cols-6 items-center max-w-md mx-auto h-[68px]">
           {mobileItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
-            const shortLabel = item.label;
+            const activeColor = item.id === 'league'
+              ? 'text-amber-700 dark:text-[#F5C451]'
+              : item.id === 'dashboard'
+                ? 'text-slate-900 dark:text-white'
+                : 'text-sky-700 dark:text-[#38BDF8]';
             return (
               <button
                 key={`bottom-${item.id}`}
                 type="button"
+                aria-current={isActive ? 'page' : undefined}
                 onClick={() => {
                   soundFX.playCheckmarkPop();
                   if (!userAccount?.isLoggedIn && !isDemoMode) {
@@ -976,32 +1048,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onNavigate(item.id);
                   }
                 }}
-                className={`flex flex-col items-center justify-center py-1 px-1 w-full rounded-xl transition-all cursor-pointer relative ${
-                  isActive 
-                    ? 'text-blue-600 dark:text-white font-bold' 
-                    : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                className={`flex flex-col items-center justify-center gap-[3px] w-full h-full cursor-pointer transition-colors ${
+                  isActive ? `${activeColor} font-extrabold` : 'text-slate-500 dark:text-[#8B96A8] font-bold hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
-                {isActive && (
-                  <span className="absolute -top-1.5 w-6 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 rounded-full shadow-[0_0_8px_rgba(79,70,229,0.5)] dark:shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
-                )}
-                <Icon 
-                  isActive={isActive} 
-                  className={`w-4.5 h-4.5 transition-transform duration-200 ${
-                    isActive 
-                      ? 'scale-110 text-blue-600 dark:text-white drop-shadow-[0_0_6px_rgba(37,99,235,0.3)] dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]' 
-                      : ''
-                  }`} 
-                />
-                <span className={`text-[10px] mt-1 tracking-tight truncate max-w-full ${
-                  isActive ? 'font-bold text-blue-600 dark:text-white' : 'font-medium'
-                }`}>
-                  {shortLabel}
-                </span>
+                <Icon isActive={isActive} className="w-[22px] h-[22px]" />
+                <span className="text-[10px] leading-none tracking-tight truncate max-w-full">{item.label}</span>
               </button>
             );
           })}
-
           {/* La photo de profil est maintenant en haut à gauche (plus d'onglet Profil en bas) */}
         </div>
       </nav>

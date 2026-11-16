@@ -39,6 +39,17 @@ export function tryResolveGradeLevel(rawLevel: string | undefined): CurriculumGr
 }
 
 /**
+ * Forme officielle d'une classe : les anciens identifiants « premiere_a » et « terminale_a » (sans série)
+ * correspondent à la série A1. Sans cela, ces élèves n'avaient ni devoirs (classe absente des listes) ni le bon
+ * nom de classe sur leurs sujets (« Seconde » par défaut).
+ */
+export function canonicalGradeLevel<T extends CurriculumGradeLevel | null | undefined>(grade: T): T | CurriculumGradeLevel {
+  if (grade === 'premiere_a') return 'premiere_a1';
+  if (grade === 'terminale_a') return 'terminale_a1';
+  return grade;
+}
+
+/**
  * Lecture STRICTE : la série doit être le mot qui suit immédiatement la classe
  * (« 2nde C », « Tle D », « TleD », « 1ère A1 »). Le reste du texte (nom du lycée,
  * de la ville…) est ignoré : « 2nde C Lycée Moderne Abobo » donne bien la 2nde C.

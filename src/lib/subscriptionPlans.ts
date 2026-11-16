@@ -79,23 +79,23 @@ export const PLAN_DETAILS: Record<PlanTier, PlanDetails> = {
   pro: {
     id: 'pro',
     name: 'KONAN PRO',
-    tagline: '1 200 F CFA / mois • 2 350 F CFA / semestre • Offert pendant le lancement',
-    priceLabel: '1 200 F',
-    periodLabel: 'CFA / mois (Version PRO ouverte)',
-    priceAmount: 1200,
+    tagline: '2 500 F CFA / mois • 9 950 F CFA / semestre • Paiement Wave ou Orange Money',
+    priceLabel: '2 500 F',
+    periodLabel: 'CFA / mois',
+    priceAmount: 2500,
     maxPdfImports: 99,
     maxConcurrentMethods: 3,
     allowedMethods: [...FREE_METHODS, ...PRO_METHODS],
-    isPurchaseActive: true, // Pro offert pendant la période de lancement
+    isPurchaseActive: true, // Paiement Wave / Orange Money (api/subscription.js, interrupteur KONAN_PAYMENTS)
     paymentProviders: [],
   },
   plus: {
     id: 'plus',
     name: 'KONAN PLUS',
-    tagline: '2 500 F CFA / mois • 5 000 F CFA / semestre • Disponible bientôt',
-    priceLabel: '2 500 F',
+    tagline: '5 000 F CFA / mois • 19 950 F CFA / semestre • Disponible bientôt',
+    priceLabel: '5 000 F',
     periodLabel: 'CFA / mois (Disponible bientôt)',
-    priceAmount: 2500,
+    priceAmount: 5000,
     maxPdfImports: 3,
     maxConcurrentMethods: 1,
     allowedMethods: FREE_METHODS,
@@ -145,9 +145,11 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     features: [
       { title: 'Ton emploi du temps importé', detail: 'PDF, photo ou texte : 3 imports.' },
       { title: 'Ton planning de révision', detail: 'Créé pour ta classe, avec tes matières et coefficients.' },
-      { title: 'Cours guidés du programme officiel', detail: 'Mini-leçons et QCM, rattrapage de tes erreurs.' },
+      { title: 'Cours guidés du programme officiel', detail: 'De la Seconde à la Terminale : mini-leçons, QCM et rattrapage de tes erreurs.' },
       { title: 'KONAN retient tes erreurs', detail: 'Il te les repose au bon moment (révision espacée).' },
-      { title: 'Rappels de séance sur ton téléphone' },
+      { title: 'Notifications avant chaque séance', detail: 'Un seul bouton à toucher : « Activer les notifications ».' },
+      { title: 'Ligue de la semaine', detail: 'Gagne des XP et affronte 30 élèves, de Bronze à Perle.' },
+      { title: 'Séries d’exercices', detail: 'Avec 25 ⚡ d’énergie (−5 ⚡ par série, l’énergie se recharge).' },
       { title: '1 méthode à la fois', detail: 'Pomodoro, Rappel actif ou Règle des 2 minutes.' },
     ],
   },
@@ -155,27 +157,26 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     id: 'pro',
     name: 'KONAN PRO',
     tagline: 'Pour progresser vite',
-    prices: { monthly: 1200, semester: 2350 },
+    prices: { monthly: 2500, semester: 9950 },
     includesLabel: 'Tout le Gratuit, plus :',
-    note: 'Offert pendant le lancement',
+    note: 'Paiement par Wave',
     available: true,
     recommended: true,
     features: [
+      { title: 'Préparation aux devoirs (Seconde, Première et Terminale)', detail: 'Séries de 30 questions, sujets de 2 h au format officiel, copie corrigée sur 20.' },
+      { title: 'Énergie illimitée ∞', detail: 'Autant de séries d’exercices que tu veux.' },
       { title: 'Méthode Feynman à l’oral', detail: 'Explique ta leçon à voix haute, KONAN te corrige : 3 vocaux par jour.' },
       { title: 'Time Blocking', detail: 'De longs blocs en mode concentration, sans distraction.' },
       { title: 'Jusqu’à 3 méthodes combinées', detail: 'Dans le même planning, selon tes matières.' },
-      { title: 'La recommandation de KONAN', detail: 'La meilleure méthode selon ton temps libre.' },
-      { title: 'Préparation aux devoirs (2nde A, 2nde C et Tle A)', detail: 'Séries de 30 questions, sujets de 2 h au format officiel (format du BAC en Tle A), copie corrigée sur 20.' },
       { title: 'Planning configuré avec KONAN, pas à pas' },
       { title: 'Imports d’emploi du temps illimités' },
-      { title: 'Export vers Google Agenda' },
     ],
   },
   {
     id: 'plus',
     name: 'KONAN PLUS',
     tagline: 'Pour viser l’excellence',
-    prices: { monthly: 2500, semester: 5000 },
+    prices: { monthly: 5000, semester: 19950 },
     includesLabel: 'Tout le Pro, plus :',
     note: 'Bientôt disponible',
     available: false,
@@ -186,6 +187,21 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     ],
   },
 ];
+
+/**
+ * KONAN Plus n'est pas encore officiel (fonctionnalités pas terminées) : on ne le montre PAS aux élèves.
+ * Passer à true pour le réafficher (fiche des tarifs, fiche des formules, Paramètres).
+ */
+export const PLUS_VISIBLE = false;
+
+/**
+ * Paiement ouvert aux élèves ? Tant que c'est false, KONAN Pro est OFFERT (activation libre, comme avant) :
+ * la fiche des tarifs l'annonce « Offert pendant le lancement ». À passer à true en même temps que KONAN_PAYMENTS=on.
+ */
+export const PAYMENTS_OPEN = true;
+
+/** Formules affichées aux élèves. */
+export const VISIBLE_DISPLAY_PLANS: DisplayPlan[] = DISPLAY_PLANS.filter((p) => p.id !== 'plus' || PLUS_VISIBLE);
 
 /** « 1 200 » : séparateur des milliers à la française. */
 export function formatFcfa(amount: number): string {

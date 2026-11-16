@@ -97,7 +97,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
       <div className="fixed inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
         <div className={`w-[450px] sm:w-[600px] h-[450px] sm:h-[600px] rounded-full blur-3xl opacity-60 animate-pulse ${
           isPlus 
-            ? 'bg-gradient-to-tr from-indigo-600/20 via-purple-600/15 to-transparent' 
+            ? 'bg-gradient-to-tr from-sky-400/20 via-purple-600/15 to-transparent' 
             : 'bg-gradient-to-tr from-amber-500/20 via-yellow-500/15 to-transparent'
         }`} />
       </div>
@@ -107,14 +107,14 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
         aria-modal="true"
         className={`relative w-full max-w-lg rounded-3xl bg-white dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-900/98 dark:to-slate-950 border-2 shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-slate-900 dark:text-slate-100 ${
           isPlus 
-            ? 'border-indigo-400/80 dark:border-indigo-500/50 shadow-indigo-500/10 dark:shadow-indigo-950/60' 
+            ? 'border-sky-400/80 dark:border-sky-400/50 shadow-sky-400/10 dark:shadow-slate-950/60' 
             : 'border-amber-400/80 dark:border-amber-400/50 shadow-amber-500/10 dark:shadow-amber-950/60'
         }`}
       >
         {/* Barre lumineuse supérieure */}
         <div className={`h-2 w-full animate-shimmer ${
           isPlus 
-            ? 'bg-gradient-to-r from-indigo-500 via-purple-400 to-indigo-500' 
+            ? 'bg-gradient-to-r from-sky-400 via-purple-400 to-sky-400' 
             : 'bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500'
         }`} />
 
@@ -134,12 +134,12 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
             <div className="relative">
               <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-3xl p-0.5 shadow-2xl flex items-center justify-center ${
                 isPlus 
-                  ? 'bg-gradient-to-tr from-indigo-500 via-purple-500 to-sky-400 shadow-indigo-500/30' 
+                  ? 'bg-gradient-to-tr from-sky-400 via-purple-500 to-sky-400 shadow-sky-400/30' 
                   : 'bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-300 shadow-amber-500/30'
               }`}>
                 <div className="w-full h-full rounded-[22px] bg-slate-50 dark:bg-slate-950/90 flex items-center justify-center">
                   {isPlus ? (
-                    <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-indigo-500 dark:text-indigo-400 drop-shadow-[0_0_12px_rgba(99,102,241,0.5)]" />
+                    <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-sky-700 dark:text-sky-400 drop-shadow-[0_0_12px_rgba(99,102,241,0.5)]" />
                   ) : (
                     <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-amber-500 dark:text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)]" />
                   )}
@@ -154,7 +154,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
             <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
               <span className={`text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${
                 isPlus 
-                  ? 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/40' 
+                  ? 'bg-sky-50 text-sky-800 border-sky-200 dark:bg-sky-400/20 dark:text-sky-300 dark:border-sky-400/40' 
                   : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40'
               }`}>
                 {priceBadge}
@@ -253,7 +253,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                   className={`w-full py-3.5 text-xs sm:text-sm font-black transition-all cursor-pointer ${
                     isPlus
-                      ? '!bg-gradient-to-r !from-indigo-600 !to-purple-600 !text-white !border-indigo-400'
+                      ? '!bg-gradient-to-r !from-sky-400 !to-purple-600 !text-white !border-sky-400'
                       : '!bg-gradient-to-r !from-amber-500 !via-yellow-400 !to-amber-500 !text-slate-950 !border-amber-300 shadow-xl shadow-amber-500/30'
                   }`}
                 >

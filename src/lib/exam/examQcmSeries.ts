@@ -9,6 +9,7 @@
 import type { CurriculumChapter, CurriculumPoint, InteractiveExercise, StemSubCategory } from '../curriculum/types';
 import type { ReviewEntry } from '../curriculum/reviewMemory';
 import { QCM_SERIES_LENGTH } from './examPrepRules';
+import { needsLessonContext } from '../gamification/exerciseContext';
 
 export interface ExamQcmItem {
   exercise: InteractiveExercise;
@@ -62,6 +63,8 @@ export function buildExamQcmSeries(params: {
     for (const point of chapter.points) {
       for (const exercise of pointExercises(point)) {
         if (byId.has(exercise.id)) continue;
+        // Devoir = questions autonomes : jamais « d'après le schéma ci-dessus » sans la leçon (même filtre que les séries)
+        if (needsLessonContext(exercise)) continue;
         const item: ExamQcmItem = {
           exercise,
           chapterId: chapter.id,

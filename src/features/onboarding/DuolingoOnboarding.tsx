@@ -1147,7 +1147,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
       case 'account_setup':
         return `Tout est prêt ! Renseigne tes informations de connexion avec une adresse Gmail/Email pour sauvegarder ton planning.`;
       case 'pricing_models':
-        return `Parfait ! Choisis maintenant ton modèle d'accompagnement KONAN (Gratuit, Pro ou Plus) pour ouvrir ton planning.`;
+        return `Parfait ! Choisis maintenant ton modèle d'accompagnement KONAN (Gratuit ou Pro) pour ouvrir ton planning.`;
     }
   }, [
     step,
@@ -1159,9 +1159,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   ]);
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 dark:bg-[#070B13] text-slate-900 dark:text-slate-100 flex flex-col justify-between relative overflow-x-hidden select-none font-sans transition-colors">
+    <div className="min-h-screen w-full bg-slate-50 dark:bg-[#0A0F1C] text-slate-900 dark:text-slate-100 flex flex-col justify-between relative overflow-x-hidden select-none font-sans transition-colors">
       {/* Glow d'ambiance */}
-      <div className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[520px] h-[320px] bg-indigo-600/15 blur-[130px] rounded-full" />
+
 
       {/* Inputs fichiers cachés */}
       <input
@@ -1246,7 +1246,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               }}
               placeholder="Mot de passe temporaire"
               aria-label="Mot de passe administrateur temporaire"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-sky-400"
             />
             <div className="flex items-center justify-end gap-2 pt-1">
               <button
@@ -1263,7 +1263,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               <button
                 type="button"
                 onClick={() => void submitAdminCode()}
-                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-sky-400 hover:bg-sky-300 text-xs font-bold text-slate-950 cursor-pointer"
               >
                 Ouvrir Admin
               </button>
@@ -1297,7 +1297,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               value={tempApiKey}
               onChange={(e) => setTempApiKey(e.target.value)}
               placeholder="AIzaSy..."
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-sky-400"
             />
             <div className="flex items-center justify-end gap-2 pt-1">
               <button
@@ -1311,7 +1311,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 type="button"
                 onClick={handleSaveCustomKey}
                 disabled={!tempApiKey.trim()}
-                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-xs font-bold text-white cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-sky-400 hover:bg-sky-300 disabled:opacity-40 text-xs font-bold text-slate-950 cursor-pointer"
               >
                 Enregistrer
               </button>
@@ -1340,7 +1340,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
             <div className="flex-1 flex items-center gap-3">
               <div className="flex-1 h-3.5 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300 dark:border-slate-800/80 p-0.5">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-300 relative"
+                  className="h-full rounded-full bg-sky-400 transition-all duration-300 relative"
                   style={{ width: `${progressPercent}%` }}
                 >
                   <div className="absolute top-0.5 left-2 right-2 h-1 bg-white/30 rounded-full" />
@@ -1421,7 +1421,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   <ArrowLeft className="w-4 h-4" />
                   <span>Retour à l'accueil</span>
                 </button>
-                <span className="text-xs font-extrabold uppercase tracking-wider text-indigo-500">Connexion Éspace Étudiant</span>
+                <span className="text-xs font-extrabold uppercase tracking-wider text-sky-700 dark:text-sky-300">Connexion Éspace Étudiant</span>
               </div>
 
               <h2 className="text-xl font-black text-slate-900 dark:text-white">Connexion à ton compte</h2>
@@ -1486,7 +1486,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         if (canCreateFromLogin) setCanCreateFromLogin(false);
                       }}
                       placeholder="ton.email@gmail.com"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-400"
                     />
                   </div>
                 </div>
@@ -1504,7 +1504,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         if (canCreateFromLogin) setCanCreateFromLogin(false);
                       }}
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-400"
                     />
                     <button
                       type="button"
@@ -1520,7 +1520,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               <button
                 type="submit"
                 disabled={isSubmittingAuth}
-                className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-sm shadow-[0_4px_0_0_#3730A3] active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-50"
+                className="w-full py-3.5 rounded-2xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-extrabold text-sm shadow-[0_4px_0_0_#0369A1] active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-50"
               >
                 {isSubmittingAuth ? 'Connexion en cours...' : 'SE CONNECTER DIRECTEMENT'}
               </button>
@@ -1542,7 +1542,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       setShowExistingLogin(false);
                       onOpenLogin();
                     }}
-                    className="text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline cursor-pointer"
+                    className="text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-sky-700 dark:hover:text-sky-400 hover:underline cursor-pointer"
                   >
                     Page de connexion avancée & réinitialisation de mot de passe →
                   </button>
@@ -1570,9 +1570,14 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           {/* PAGE 1 : ACCUEIL — « J'ai déjà un compte ? » / « Nouveau sur KONAN ? » */}
           {!showExistingLogin && step === 'welcome' && introPage === null && (
             <div className="flex flex-col items-center text-center max-w-md mx-auto w-full py-6 space-y-5 animate-in fade-in duration-300">
-              <p className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">KONAN</p>
+              {/* Charte Excellence : la mascotte salue, le nom, une promesse en petites capitales dorées */}
+              <div className="flex flex-col items-center gap-1">
+                <KonanMascot pose="wave" size={132} />
+                <p className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">KONAN</p>
+                <span className="konan-kicker">Révise comme les meilleurs</span>
+              </div>
 
-              <div className="w-full rounded-3xl bg-white dark:bg-slate-900/90 border-2 border-slate-200 dark:border-slate-800 shadow-xl p-6 space-y-6">
+              <div className="konan-hairline w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xl p-6 space-y-6">
                 <div className="space-y-3">
                   <p className="text-base font-extrabold text-slate-900 dark:text-white">J'ai déjà un compte ?</p>
                   <button
@@ -1582,7 +1587,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       setAuthError(null);
                       setShowExistingLogin(true);
                     }}
-                    className="w-full py-3.5 px-6 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-indigo-600 dark:text-indigo-300 font-extrabold text-sm uppercase tracking-wide border-2 border-slate-200 dark:border-slate-700 shadow-[0_4px_0_0_#CBD5E1] dark:shadow-[0_4px_0_0_#1E293B] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
+                    className="w-full py-3.5 px-6 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-sky-700 dark:text-sky-300 font-extrabold text-sm uppercase tracking-wide border-2 border-slate-200 dark:border-slate-700 shadow-[0_4px_0_0_#CBD5E1] dark:shadow-[0_4px_0_0_#1E293B] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
                   >
                     Se connecter
                   </button>
@@ -1595,7 +1600,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   <button
                     type="button"
                     onClick={startNewcomerJourney}
-                    className="w-full py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white font-black text-sm sm:text-base uppercase tracking-wide shadow-[0_5px_0_0_#047857] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2"
+                    className="w-full py-4 px-6 rounded-2xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-black text-sm sm:text-base uppercase tracking-wide shadow-[0_5px_0_0_#0369A1] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
                     <span>Commencer</span>
                     <ArrowRight className="w-5 h-5" />
@@ -1665,7 +1670,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                     setStep('study_type');
                   }
                 }}
-                className="w-full mt-4 py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white font-black text-sm sm:text-base uppercase tracking-wide shadow-[0_5px_0_0_#047857] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
+                className="w-full mt-4 py-4 px-6 rounded-2xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-black text-sm sm:text-base uppercase tracking-wide shadow-[0_5px_0_0_#0369A1] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
               >
                 Continuer
               </button>
@@ -1677,11 +1682,12 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           {!showExistingLogin && step === 'study_type' && (
             <div className="space-y-4">
               <div>
-                <h2 className="text-xl sm:text-2xl font-black text-white">
-                  1. Quel est ton système d'études ?
+                <span className="konan-kicker">Étape 1 sur 4</span>
+                <h2 className="mt-1 text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+                  Quel est ton système d'études ?
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                  Ce choix configure le moteur d'extraction et structure ton emploi du temps en fichier texte (<code className="text-indigo-400 font-mono">.txt</code>) adapté à ton niveau.
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+                  Ce choix configure le moteur d'extraction et structure ton emploi du temps en fichier texte (<code className="text-sky-700 font-mono dark:text-sky-300">.txt</code>) adapté à ton niveau.
                 </p>
               </div>
 
@@ -1703,15 +1709,15 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       onClick={() => handleSelectStudySystem(item.id)}
                       className={`w-full p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
                         selected
-                          ? 'bg-indigo-50 dark:bg-indigo-600/15 border-indigo-500 shadow-[0_4px_0_0_#4338CA]'
-                          : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-slate-700 shadow-[0_4px_0_0_#CBD5E1] dark:shadow-[0_4px_0_0_#0F172A]'
+                          ? 'bg-sky-50 dark:bg-sky-400/15 border-sky-400 shadow-[0_4px_0_0_#0369A1]'
+                          : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-sky-300 dark:hover:border-slate-700 shadow-[0_4px_0_0_#CBD5E1] dark:shadow-[0_4px_0_0_#0F172A]'
                       }`}
                     >
                       <div className="flex items-start gap-3.5">
                         <div
                           className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
                             selected
-                              ? 'bg-indigo-500 text-white'
+                              ? 'bg-sky-400 text-slate-950'
                               : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                           }`}
                         >
@@ -1722,7 +1728,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             <span className="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">
                               {cfg.title}
                             </span>
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-400/20 text-sky-800 dark:text-sky-300 border border-sky-200 dark:border-sky-400/30">
                               {cfg.badge}
                             </span>
                             <span className="text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-500/20">
@@ -1738,10 +1744,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         </div>
                         <div
                           className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 mt-1 ${
-                            selected ? 'border-indigo-500 bg-indigo-500' : 'border-slate-300 dark:border-slate-700'
+                            selected ? 'border-sky-400 bg-sky-400' : 'border-slate-300 dark:border-slate-700'
                           }`}
                         >
-                          {selected && <Check className="w-3.5 h-3.5 text-white stroke-[3]" />}
+                          {selected && <Check className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />}
                         </div>
                       </div>
                     </button>
@@ -1757,11 +1763,12 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               {/* En-tête + Sélecteur rapide de catégorie LMD / BTS / Lycée */}
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <h2 className="text-lg sm:text-xl font-black text-white">
-                    2. Extraction & Fichier Texte ({activeSystem.title})
+                  <span className="konan-kicker">Étape 2 sur 4</span>
+                  <h2 className="mt-1 text-lg sm:text-xl font-black tracking-tight text-slate-900 dark:text-white">
+                    Ton emploi du temps ({activeSystem.title})
                   </h2>
                   <p className="text-xs text-slate-400">
-                    Ton document est extrait et converti en fichier <code className="text-indigo-400 font-mono">{activeSystem.fileName}</code>.
+                    Ton document est extrait et converti en fichier <code className="text-sky-700 font-mono dark:text-sky-300">{activeSystem.fileName}</code>.
                   </p>
                 </div>
 
@@ -1789,7 +1796,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       onClick={() => handleSelectStudySystem(sysKey)}
                       className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                         isSelected
-                          ? 'bg-indigo-600 text-white shadow-xs'
+                          ? 'bg-sky-400 text-slate-950 shadow-xs'
                           : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
                       }`}
                     >
@@ -1822,9 +1829,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   type="button"
                   disabled={isAnalyzing}
                   onClick={() => pdfInputRef.current?.click()}
-                  className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/90 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/50 flex flex-col items-center text-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-xs"
+                  className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/90 border border-slate-200 dark:border-slate-800 hover:border-sky-400/50 flex flex-col items-center text-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 shadow-xs"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-sky-400/15 text-sky-700 dark:text-sky-400 flex items-center justify-center">
                     <FileText className="w-5 h-5" />
                   </div>
                   <span className="text-xs font-extrabold text-slate-900 dark:text-white">Fichier PDF</span>
@@ -1860,8 +1867,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
               {/* Indicateur d'extraction en cours */}
               {isAnalyzing && (
-                <div className="p-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-500/30 flex items-center gap-3 text-xs text-indigo-800 dark:text-indigo-200">
-                  <Loader2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 animate-spin shrink-0" />
+                <div className="p-3.5 rounded-2xl bg-sky-50 dark:bg-slate-950/40 border border-sky-200 dark:border-sky-400/30 flex items-center gap-3 text-xs text-sky-900 dark:text-sky-200">
+                  <Loader2 className="w-4 h-4 text-sky-700 dark:text-sky-400 animate-spin shrink-0" />
                   <span className="font-bold">{analysisStatus || 'Extraction en cours...'}</span>
                 </div>
               )}
@@ -1896,7 +1903,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               <div className="space-y-2 bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 shadow-xs">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                    <FileText className="w-4 h-4 text-sky-700 dark:text-sky-400 shrink-0" />
                     <span className="text-xs font-extrabold text-slate-900 dark:text-white font-mono">
                       {activeSystem.fileName}
                     </span>
@@ -1924,7 +1931,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       <button
                         type="button"
                         onClick={handleDownloadTxt}
-                        className="px-2.5 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 text-[11px] font-bold text-indigo-300 hover:text-white inline-flex items-center gap-1 cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-sky-400/20 hover:bg-sky-400/30 border border-sky-400/30 text-[11px] font-bold text-sky-300 hover:text-white inline-flex items-center gap-1 cursor-pointer"
                       >
                         <Download className="w-3 h-3" />
                         <span>Télécharger .txt</span>
@@ -1952,7 +1959,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   disabled={isAnalyzing}
                   rows={6}
                   placeholder={activeSystem.placeholder}
-                  className="w-full bg-slate-950/90 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-xs font-mono text-slate-100 placeholder:text-slate-600 focus:outline-none leading-relaxed resize-y"
+                  className="w-full bg-slate-950/90 border border-slate-800 focus:border-sky-400 rounded-xl p-3 text-xs font-mono text-slate-100 placeholder:text-slate-600 focus:outline-none leading-relaxed resize-y"
                 />
               </div>
 
@@ -1960,7 +1967,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               {slotsGroupedByDay.length > 0 && (
                 <div className="space-y-2.5 bg-slate-900/50 border border-slate-800/80 rounded-2xl p-3.5 max-h-60 overflow-y-auto">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="text-xs font-extrabold text-sky-300 uppercase tracking-wider flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5" />
                       <span>Organisation de ton EDT par Jour</span>
                     </span>
@@ -1975,7 +1982,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         key={dayGroup.dayIndex}
                         className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1.5"
                       >
-                        <div className="text-[11px] font-black text-indigo-400 uppercase tracking-wider border-b border-slate-800 pb-1 flex items-center justify-between">
+                        <div className="text-[11px] font-black text-sky-300 uppercase tracking-wider border-b border-slate-800 pb-1 flex items-center justify-between">
                           <span>{dayGroup.dayName}</span>
                           <span className="text-[10px] text-slate-500 font-mono">
                             {dayGroup.slots.length} créneau{dayGroup.slots.length > 1 ? 'x' : ''}
@@ -2008,12 +2015,13 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           {!showExistingLogin && step === 'grade_level' && (
             <div className="space-y-5">
               <div>
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                  <GraduationCap className="w-6 h-6 text-indigo-500 shrink-0" />
+                <span className="konan-kicker">Étape 3 sur 4</span>
+                <h2 className="mt-1 text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                  <GraduationCap className="w-6 h-6 text-sky-700 shrink-0 dark:text-sky-300" />
                   <span>
                     {studyType === 'lycee'
-                      ? '3. Quelle est ta classe & série ?'
-                      : "3. Quelle est ta filière d'études ?"}
+                      ? 'Quelle est ta classe et ta série ?'
+                      : "Quelle est ta filière d'études ?"}
                   </span>
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
@@ -2028,7 +2036,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 <div className="space-y-5">
                   {/* 1. Séries Scientifiques */}
                   <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 mb-2.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400 flex items-center gap-1.5 mb-2.5">
                       <Sparkles className="w-3.5 h-3.5" />
                       <span>Lycée — Séries Scientifiques (Maths pures, PC, SVT)</span>
                     </span>
@@ -2051,13 +2059,13 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             }}
                             className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
                               isSelected
-                                ? 'bg-indigo-50/90 dark:bg-indigo-950/60 border-indigo-600 dark:border-indigo-400 shadow-md shadow-indigo-600/10'
-                                : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-indigo-300'
+                                ? 'bg-sky-50/90 dark:bg-slate-950/60 border-sky-400 dark:border-sky-400 shadow-md shadow-sky-400/10'
+                                : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-sky-300'
                             }`}
                           >
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-2">
-                                <span className="text-xs font-black px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                                <span className="text-xs font-black px-2 py-0.5 rounded-md bg-sky-400/15 text-sky-800 dark:text-sky-300">
                                   {lvl.badge}
                                 </span>
                                 <h3 className="text-sm font-extrabold text-slate-900 dark:text-white truncate">
@@ -2070,7 +2078,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             </div>
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
                               isSelected
-                                ? 'border-indigo-600 bg-indigo-600 text-white'
+                                ? 'border-sky-400 bg-sky-400 text-slate-950'
                                 : 'border-slate-300 dark:border-slate-600'
                             }`}>
                               {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
@@ -2192,7 +2200,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               {/* Options Supérieur LMD & BTS */}
               {studyType !== 'lycee' && (
                 <div className="space-y-3 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
-                  <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                  <span className="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400">
                     Filières courantes ou personnalisée
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -2216,8 +2224,8 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                           }}
                           className={`p-3 rounded-xl border text-left text-xs font-bold transition-all cursor-pointer flex items-center justify-between ${
                             isSelected
-                              ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                              : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/80 hover:border-indigo-300'
+                              ? 'bg-sky-400 text-slate-950 border-sky-400 shadow-sm'
+                              : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/80 hover:border-sky-300'
                           }`}
                         >
                           <span className="truncate">{filiere}</span>
@@ -2239,7 +2247,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         setSelectedGradeLevel(studyType === 'bts' ? 'superieur_bts' : 'superieur_lmd');
                       }}
                       placeholder="Ex: Électronique Industrielle, Droit Privé, etc."
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-400"
                     />
                   </div>
                 </div>
@@ -2253,11 +2261,14 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               {/* 1. Matières & Coefficients */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
-                  <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                    <Sliders className="w-4 h-4 text-indigo-500 dark:text-indigo-400 shrink-0" />
-                    <span>1. Matières extraites & Coefficients</span>
-                  </h2>
-                  <span className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 shrink-0">
+                  <div>
+                    <span className="konan-kicker">Étape 4 sur 4</span>
+                    <h2 className="mt-1 text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <Sliders className="w-4 h-4 text-sky-700 dark:text-sky-400 shrink-0" />
+                      <span>Tes matières et leurs coefficients</span>
+                    </h2>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-sky-700 dark:text-sky-400 shrink-0">
                     {editableSubjects.filter(s => s.enabled).length}/{editableSubjects.length} actives
                   </span>
                 </div>
@@ -2279,7 +2290,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             type="checkbox"
                             checked={subject.enabled}
                             onChange={() => handleToggleSubjectEnabled(subject.id)}
-                            className="w-4 h-4 rounded text-indigo-600 bg-slate-100 dark:bg-slate-950 border-slate-300 dark:border-slate-700 cursor-pointer shrink-0"
+                            className="w-4 h-4 rounded text-sky-700 bg-slate-100 dark:bg-slate-950 border-slate-300 dark:border-slate-700 cursor-pointer shrink-0 dark:text-sky-300"
                           />
                           <span
                             className="w-3 h-3 rounded-full shrink-0 shadow-xs"
@@ -2289,10 +2300,10 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             type="text"
                             value={subject.name}
                             onChange={(e) => handleUpdateSubjectName(subject.id, e.target.value)}
-                            className="bg-transparent text-sm font-extrabold text-slate-900 dark:text-white focus:outline-none border-b border-transparent focus:border-indigo-500 flex-1 min-w-0 w-full"
+                            className="bg-transparent text-sm font-extrabold text-slate-900 dark:text-white focus:outline-none border-b border-transparent focus:border-sky-400 flex-1 min-w-0 w-full"
                           />
                           {subject.code && (
-                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 shrink-0">
+                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-sky-400/10 text-sky-700 dark:text-sky-300 border border-sky-400/20 shrink-0">
                               {subject.code}
                             </span>
                           )}
@@ -2324,7 +2335,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             >
                               <Minus className="w-3.5 h-3.5" />
                             </button>
-                            <span className="text-xs font-mono font-black text-indigo-600 dark:text-indigo-400 px-2">
+                            <span className="text-xs font-mono font-black text-sky-700 dark:text-sky-400 px-2">
                               C.{subject.coefficient}
                             </span>
                             <button
@@ -2346,7 +2357,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               <div className="space-y-2.5 pt-2 border-t border-slate-200 dark:border-slate-800/80">
                 <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-                  <span>2. Méthode de Révision & Diagnostic KONAN</span>
+                  <span>Ta méthode de révision</span>
                 </h2>
 
                 {/* La recommandation de KONAN est réservée à KONAN PRO : pendant l'inscription
@@ -2373,7 +2384,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         }}
                         className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-indigo-50 dark:bg-indigo-600/20 border-indigo-500 ring-2 ring-indigo-500/30 shadow-xs'
+                            ? 'bg-sky-50 dark:bg-sky-400/20 border-sky-400 ring-2 ring-sky-400/30 shadow-xs'
                             : isAllowed
                             ? 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                             : 'bg-slate-100 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/50 opacity-60'
@@ -2386,7 +2397,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-sky-500 text-white whitespace-nowrap">PRO</span>
                           )}
                         </div>
-                        <p className="mt-0.5 text-[10px] font-bold text-indigo-600 dark:text-indigo-300">
+                        <p className="mt-0.5 text-[10px] font-bold text-sky-700 dark:text-sky-300">
                           {strategy.badge}
                         </p>
                         <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
@@ -2407,7 +2418,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               {/* 3. Chronotype */}
               <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800/80">
                 <label className="text-xs font-extrabold text-slate-800 dark:text-slate-300 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                  <Clock className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
                   <span>3. Moment de la journée où tu es le plus concentré</span>
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -2429,7 +2440,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         }}
                         className={`p-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs'
+                            ? 'bg-sky-400 border-sky-400 text-slate-950 shadow-xs'
                             : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                         }`}
                       >
@@ -2447,12 +2458,13 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
           {!showExistingLogin && step === 'account_setup' && (
             <div className="space-y-4 max-w-xl mx-auto">
               {/* Bannière "Tout est prêt !" sans aucun nom pré-attribué */}
-              <div className="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-4 text-center shadow-xl">
+              <div className="konan-hairline p-5 rounded-3xl bg-slate-900 border border-white/10 space-y-4 text-center shadow-xl">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 mx-auto">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
-                  <h2 className="text-xl sm:text-2xl font-black text-white">
+                  <span className="block text-[10.5px] font-bold uppercase tracking-[0.24em] text-[#F5C451]">Ton planning est prêt</span>
+                  <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
                     Tout est prêt !
                   </h2>
                   <p className="text-xs sm:text-sm text-slate-400">
@@ -2463,7 +2475,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 {/* Carte récapitulative avec animation des nombres */}
                 <div className="grid grid-cols-3 gap-2.5 text-center pt-1">
                   <div className="p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800/80">
-                    <span className="text-xl sm:text-2xl font-black text-indigo-400 block">
+                    <span className="text-xl sm:text-2xl font-black text-sky-300 block">
                       <AnimatedCounter value={generatedSlots.length} duration={1200} />
                     </span>
                     <span className="text-[10px] font-bold text-slate-400 uppercase">
@@ -2492,7 +2504,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
               {/* Formulaire d'informations de connexion (Nouveau compte uniquement) */}
               <form
                 onSubmit={handleRegisterNewAccount}
-                className="space-y-3.5 bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl"
+                className="space-y-3.5 bg-slate-900 border border-white/10 rounded-3xl p-5 sm:p-6 shadow-2xl"
               >
                 <div className="space-y-1">
                   <h3 className="text-base sm:text-lg font-black text-white">
@@ -2518,7 +2530,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                           setAccountExistsRedirect(false);
                           setShowExistingLogin(true);
                         }}
-                        className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md"
+                        className="w-full py-2.5 px-4 rounded-xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md"
                       >
                         <LogIn className="w-4 h-4" />
                         <span>Se connecter directement à mon compte</span>
@@ -2554,7 +2566,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       }
                     }}
                     placeholder="Ton adresse Gmail / Email (nouveau compte)"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-sky-400"
                   />
                 </div>
 
@@ -2567,7 +2579,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                     value={authPassword}
                     onChange={(e) => setAuthPassword(e.target.value)}
                     placeholder="Mot de passe : 8 caractères min., lettres et chiffres"
-                    className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-sky-400"
                   />
                   <button
                     type="button"
@@ -2610,7 +2622,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       setAccountExistsRedirect(false);
                       setShowExistingLogin(true);
                     }}
-                    className="text-xs font-bold text-indigo-400 hover:text-indigo-300 cursor-pointer"
+                    className="text-xs font-bold text-sky-300 hover:text-sky-200 cursor-pointer"
                   >
                     Tu as déjà un compte ? Connecte-toi directement →
                   </button>
@@ -2667,7 +2679,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
       {/* PIED DE PAGE AVEC BOUTON CONTINUER */}
       {!showExistingLogin && (step === 'study_type' || step === 'upload' || step === 'grade_level' || step === 'customize') && (
-        <footer className="w-full border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-[#070B13]/95 backdrop-blur-md px-4 py-3.5 z-20">
+        <footer className="w-full border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-[#0A0F1C]/95 backdrop-blur-md px-4 py-3.5 z-20">
           <div className="max-w-2xl mx-auto">
             {step === 'study_type' && (
               <button
@@ -2677,7 +2689,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                   soundFX.playCheckmarkPop();
                   setStep('upload');
                 }}
-                className="w-full py-3.5 px-6 rounded-2xl font-extrabold text-sm tracking-wide bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_4px_0_0_#3730A3] active:translate-y-0.5 transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-6 rounded-2xl font-extrabold text-sm tracking-wide bg-sky-400 hover:bg-sky-300 text-slate-950 shadow-[0_4px_0_0_#0369A1] active:translate-y-0.5 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>CONTINUER AVEC LE {activeSystem.title.toUpperCase()}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -2719,7 +2731,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                 type="button"
                 disabled={editableSubjects.filter(s => s.enabled).length === 0}
                 onClick={handleProceedToAccountSetup}
-                className="w-full py-3.5 px-6 rounded-2xl font-extrabold text-sm tracking-wide bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_4px_0_0_#3730A3] active:translate-y-0.5 transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-6 rounded-2xl font-extrabold text-sm tracking-wide bg-sky-400 hover:bg-sky-300 text-slate-950 shadow-[0_4px_0_0_#0369A1] active:translate-y-0.5 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>
                   GÉNÉRER MON PLANNING ({editableSubjects.filter(s => s.enabled).length} MATIÈRES)

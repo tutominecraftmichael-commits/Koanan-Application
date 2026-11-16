@@ -7,7 +7,7 @@ import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/FormControls';
 import { generateId, getDaysRemaining } from '../../lib/utils';
-import { 
+import { Lock, 
   BookOpen, 
   Plus, 
   Trash2, 
@@ -22,6 +22,7 @@ import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
 import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { ExamChapterPicker } from '../exam/ExamChapterPicker';
+import { matchSubjectToStemCurriculum } from '../../lib/curriculum/curriculumMatcher';
 
 export interface SubjectManagerProps {
   subjects: Subject[];
@@ -49,19 +50,44 @@ const PRESET_COLORS = [
   '#EF4444', // Red
 ];
 
+/** Devoirs et examens réservés à KONAN Pro (élève Gratuit). */
+const ProExamLock: React.FC<{ compact?: boolean; onUpgrade?: () => void }> = ({ compact, onUpgrade }) => (
+  compact ? (
+    <div className="flex items-center gap-1.5 p-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 dark:bg-amber-400/[0.06] dark:border-[#F5C451]/30 dark:text-[#F5C451] text-[11px] font-bold">
+      <Lock className="w-3.5 h-3.5 shrink-0" />
+      <span>Devoirs et examens : KONAN Pro</span>
+    </div>
+  ) : (
+    <div className="konan-hairline p-4 rounded-2xl bg-white border border-amber-300 dark:bg-slate-900 dark:border-[#F5C451]/40 space-y-2.5">
+      <p className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+        <Lock className="w-4 h-4 text-amber-700 dark:text-[#F5C451]" /> Devoirs et examens : KONAN Pro
+      </p>
+      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+        Avec KONAN Pro, tu indiques la date de ton devoir : KONAN prépare des séries de 30 questions, des sujets au format officiel, et corrige ta copie sur 20.
+      </p>
+      {onUpgrade && (
+        <button type="button" onClick={onUpgrade} className="konan-btn-gold w-full h-11 text-sm cursor-pointer">Découvrir KONAN Pro</button>
+      )}
+    </div>
+  )
+);
+
 export const SubjectManager: React.FC<SubjectManagerProps> = ({
   subjects,
   onUpdateSubjects,
   onOpenPresetModal,
   isDemoMode = false,
-  planTier: _planTier = 'free',
+  planTier = 'free',
   onViewPricing,
   onUpgradeToPro,
   onTriggerPlanner,
   gradeLevel,
 }) => {
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C (cours et QCM complets)
-  const EXAM_PREP_PAUSED = !isExamPrepOpenFor(gradeLevel);
+  const examOpenForGrade = isExamPrepOpenFor(gradeLevel);
+  // Devoirs et examens = KONAN Pro : un élève Gratuit ne peut ni planifier ni préparer un devoir
+  const examLockedByPlan = examOpenForGrade && planTier !== 'pro' && planTier !== 'plus';
+  const EXAM_PREP_PAUSED = !examOpenForGrade || examLockedByPlan;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
   const [editingSubjectId, setEditingSubjectId] = useState<string | null>(null);
@@ -79,7 +105,8 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
   // Chapitres du devoir (matière avec cours) ; sans cours : chronomètre 75 min
   const [examChapterIds, setExamChapterIds] = useState<string[]>([]);
   const [examSubjectKey, setExamSubjectKey] = useState<string | undefined>(undefined);
-  const [examHasCourse, setExamHasCourse] = useState<boolean>(false);
+  // null = liste des chapitres encore en chargement (on ne sait pas encore si la matière a du cours)
+  const [examHasCourse, setExamHasCourse] = useState<boolean | null>(null);
   const [examFormError, setExamFormError] = useState<string | null>(null);
 
   // Real-time topic / theme list management
@@ -99,6 +126,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     setExamTime('08:30');
     setExamChapterIds([]);
     setExamSubjectKey(undefined);
+    setExamHasCourse(null);
     setExamFormError(null);
     setTopicsList(['Introduction & concepts clés', 'Exercices d’application']);
     setNewTopicInput('');
@@ -118,6 +146,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     setExamTime(sub.examTime || '08:30');
     setExamChapterIds(sub.examChapterIds || []);
     setExamSubjectKey(sub.examSubjectKey);
+    setExamHasCourse(null);
     setExamFormError(null);
     setTopicsList(sub.topics && sub.topics.length > 0 ? [...sub.topics] : ['Généralités & Notions clés']);
     setNewTopicInput('');
@@ -156,15 +185,24 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
       ? cleanTopics
       : ['Introduction & révisions'];
 
+    // Liste des chapitres pas encore chargée : on attend (avant, enregistrer trop tôt effaçait les chapitres
+    // choisis, et le devoir devenait une simple révision chronométrée au lieu du sujet)
+    if (!EXAM_PREP_PAUSED && examDate && examHasCourse === null) {
+      setExamFormError('Un instant : KONAN charge les chapitres de ta matière. Réessaie dans quelques secondes.');
+      return;
+    }
     // Devoir d'une matière qui a du cours : au moins un chapitre doit être coché
     if (!EXAM_PREP_PAUSED && examDate && examHasCourse && examChapterIds.length === 0) {
       setExamFormError('Coche au moins un chapitre de ton devoir pour que KONAN prépare tes séances.');
       return;
     }
     setExamFormError(null);
+    // Matière du programme : celle du choix des chapitres, sinon reconnue d'après le nom
+    const subjectMatch = matchSubjectToStemCurriculum(name.trim());
+    const keepChapters = Boolean(examDate) && examHasCourse !== false && examChapterIds.length > 0;
     const examFields = {
-      examChapterIds: examDate && examHasCourse ? examChapterIds : undefined,
-      examSubjectKey: examDate && examHasCourse ? examSubjectKey : undefined,
+      examChapterIds: keepChapters ? examChapterIds : undefined,
+      examSubjectKey: keepChapters ? (examSubjectKey || (subjectMatch.isStemSubject ? subjectMatch.stemSubjectId : undefined)) : undefined,
     };
 
     if (editingSubjectId) {
@@ -229,7 +267,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-            <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-500 dark:text-indigo-400 shrink-0" />
+            <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-sky-700 dark:text-sky-400 shrink-0" />
             <span>Matières & Coefficients</span>
           </h1>
         </div>
@@ -239,7 +277,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
             <Button
               variant="secondary"
               size="sm"
-              leftIcon={<GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />}
+              leftIcon={<GraduationCap className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />}
               onClick={onOpenPresetModal}
               title="Charger un modèle de cursus prédéfini (disponible en mode démo)"
               className="cursor-pointer text-xs font-semibold py-2 px-3 justify-center"
@@ -265,7 +303,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-2 sm:gap-4">
         <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 interactive-card shadow-xs">
-          <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0 hidden xs:block">
+          <div className="p-2 rounded-xl bg-sky-400/10 text-sky-700 dark:text-sky-400 shrink-0 hidden xs:block">
             <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0">
@@ -289,12 +327,12 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         </Card>
 
         <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 interactive-card shadow-xs">
-          <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 shrink-0 hidden xs:block">
+          <div className="p-2 rounded-xl bg-sky-500/10 text-sky-700 dark:text-sky-400 shrink-0 hidden xs:block">
             <Target className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0">
             <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Total Coeff</p>
-            <p className="text-sm sm:text-lg font-bold text-cyan-600 dark:text-cyan-400 font-mono">
+            <p className="text-sm sm:text-lg font-bold text-sky-700 dark:text-sky-400 font-mono">
               <AnimatedCounter value={totalCoeff} />
             </p>
           </div>
@@ -319,7 +357,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     {subject.code && (
-                      <span className="text-[10px] font-mono font-bold text-indigo-600 dark:text-indigo-400 uppercase">
+                      <span className="text-[10px] font-mono font-bold text-sky-700 dark:text-sky-400 uppercase">
                         {subject.code}
                       </span>
                     )}
@@ -349,7 +387,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                 <div className="flex items-center justify-between gap-2 p-2 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 text-xs">
                   <div className="flex items-center gap-1.5">
                     <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold">Coeff</span>
-                    <span className="font-mono font-black text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded text-xs">{subject.coefficient}</span>
+                    <span className="font-mono font-black text-sky-700 dark:text-sky-400 bg-sky-400/10 px-1.5 py-0.5 rounded text-xs">{subject.coefficient}</span>
                   </div>
 
                   <div className="flex items-center gap-1">
@@ -379,16 +417,16 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                   </div>
 
                   {EXAM_PREP_PAUSED ? (
-                    <ExamPrepPausedNotice compact />
+                    examLockedByPlan ? <ProExamLock compact /> : <ExamPrepPausedNotice compact />
                   ) : subject.examDate ? (
                     <div
                       onClick={() => handleOpenEdit(subject)}
-                      className="flex items-center justify-between p-2 rounded-xl bg-cyan-50/60 dark:bg-cyan-950/30 border border-cyan-200/80 dark:border-cyan-500/30 hover:border-cyan-400 transition-all cursor-pointer group"
+                      className="flex items-center justify-between p-2 rounded-xl bg-sky-50/60 dark:bg-sky-950/30 border border-sky-200/80 dark:border-sky-500/30 hover:border-sky-400 transition-all cursor-pointer group"
                       title="Cliquer pour modifier la date d'examen ou DS"
                     >
                       <div className="flex items-center gap-1.5 min-w-0">
-                        <Calendar className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 shrink-0" />
-                        <span className={`text-[11px] font-bold truncate ${subject.examType === 'devoir' ? 'text-rose-600 dark:text-rose-400' : 'text-cyan-700 dark:text-cyan-300'}`}>
+                        <Calendar className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400 shrink-0" />
+                        <span className={`text-[11px] font-bold truncate ${subject.examType === 'devoir' ? 'text-rose-600 dark:text-rose-400' : 'text-sky-700 dark:text-sky-300'}`}>
                           {subject.examType === 'devoir' ? 'Devoir (DS)' : subject.examType === 'rattrapage' ? 'Rattrapage' : 'Examen'} :
                         </span>
                         <span className="text-[11px] font-medium text-slate-800 dark:text-slate-200">
@@ -405,14 +443,14 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                             {daysToExam < 0 ? 'Épreuve passée' : daysToExam === 0 ? 'Jour J' : `J-${daysToExam}`}
                           </Badge>
                         )}
-                        <Edit3 className="w-3 h-3 text-slate-400 group-hover:text-cyan-600 transition-colors ml-0.5" />
+                        <Edit3 className="w-3 h-3 text-slate-400 group-hover:text-sky-700 transition-colors ml-0.5" />
                       </div>
                     </div>
                   ) : (
                     <button
                       type="button"
                       onClick={() => handleOpenEdit(subject)}
-                      className="w-full flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-dashed border-indigo-300 dark:border-indigo-500/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 text-[11px] font-semibold transition-colors cursor-pointer"
+                      className="w-full flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-dashed border-sky-300 dark:border-sky-400/40 text-sky-700 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-400/10 text-[11px] font-semibold transition-colors cursor-pointer"
                       title="Ajouter une date d'examen ou de devoir surveillé"
                     >
                       <Calendar className="w-3.5 h-3.5" />
@@ -431,7 +469,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                       <button
                         type="button"
                         onClick={() => handleOpenEdit(subject)}
-                        className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors cursor-pointer"
+                        className="text-[10px] font-bold text-sky-700 dark:text-sky-400 hover:underline transition-colors cursor-pointer"
                         title="Modifier ou supprimer les thèmes"
                       >
                         + Gérer
@@ -454,10 +492,10 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
 
               <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">
                 <span className="flex items-center gap-1">
-                  <Zap className="w-3 h-3 text-indigo-500 dark:text-indigo-400" />
+                  <Zap className="w-3 h-3 text-sky-700 dark:text-sky-400" />
                   Priorité :
                 </span>
-                <span className="font-bold text-indigo-600 dark:text-indigo-300">
+                <span className="font-bold text-sky-700 dark:text-sky-300">
                   {subject.difficulty >= 4 ? 'Élevée' : subject.difficulty === 3 ? 'Équilibrée' : 'Entretien'}
                 </span>
               </div>
@@ -513,7 +551,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
-                Coefficient : <span className="text-cyan-400 font-bold font-mono">{coefficient}</span>
+                Coefficient : <span className="text-sky-700 font-bold font-mono">{coefficient}</span>
               </label>
               <input
                 type="range"
@@ -561,7 +599,9 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
           </div>
 
           {/* Pendant la pause, la date déjà enregistrée est conservée telle quelle (non modifiable) */}
-          {EXAM_PREP_PAUSED && <ExamPrepPausedNotice />}
+          {EXAM_PREP_PAUSED && (examLockedByPlan
+            ? <ProExamLock onUpgrade={onUpgradeToPro ? () => { setIsModalOpen(false); onUpgradeToPro(); } : undefined} />
+            : <ExamPrepPausedNotice />)}
 
           {!EXAM_PREP_PAUSED && examDate && (
             <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
@@ -642,7 +682,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                     handleAddTopic();
                   }
                 }}
-                className="flex-1 bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+                className="flex-1 bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-400 font-medium"
               />
               <Button
                 type="button"
@@ -678,7 +718,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                         type="text"
                         value={topic}
                         onChange={(e) => handleEditTopic(index, e.target.value)}
-                        className="bg-transparent border-none text-slate-200 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500/50 rounded px-1.5 py-0.5 w-full truncate"
+                        className="bg-transparent border-none text-slate-200 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-sky-400/50 rounded px-1.5 py-0.5 w-full truncate"
                         title="Modifier directement l'intitulé de ce chapitre"
                       />
                     </div>
@@ -724,7 +764,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                 type="submit"
                 variant="primary"
                 size="sm"
-                className="text-xs font-bold bg-indigo-600 hover:bg-indigo-500"
+                className="text-xs font-bold bg-sky-400 hover:bg-sky-300"
               >
                 {editingSubjectId ? "Enregistrer" : "Créer"}
               </Button>

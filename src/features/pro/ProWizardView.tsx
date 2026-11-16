@@ -12,7 +12,6 @@ import type {
 import { DAYS_OF_WEEK } from '../../types';
 import { PACING_STRATEGIES, recommendPacingStrategies, getPacingStrategy } from '../../lib/pacingStrategies';
 import { generateOptimizedStudyPlan } from '../../services/plannerAlgorithm';
-import { downloadStudyPlanICS, getGoogleCalendarImportUrl } from '../../services/googleCalendarService';
 import { getDaysRemaining, generateId } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
 import { isExamPrepOpenFor } from '../../lib/featureFlags';
@@ -22,13 +21,9 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  Calendar,
-  Download,
-  ExternalLink,
   Clock,
   Plus,
   Trash2,
-  CheckCircle2,
   Zap,
   ShieldCheck,
   Flame,
@@ -91,17 +86,17 @@ function getStrategyTheme(id: StudyPacing) {
       return {
         accent: 'purple',
         badgeBg: 'bg-purple-500/15 border-purple-500/40 text-purple-700 dark:text-purple-300',
-        activeGlow: 'from-purple-500/15 via-indigo-500/10 to-transparent border-purple-500 ring-2 ring-purple-500/30 shadow-lg shadow-purple-500/15',
+        activeGlow: 'from-purple-500/15 via-sky-400/10 to-transparent border-purple-500 ring-2 ring-purple-500/30 shadow-lg shadow-purple-500/15',
         checkBg: 'bg-purple-600 text-white',
         borderAccent: 'border-purple-500/50',
       };
     case 'time_blocking':
       return {
         accent: 'indigo',
-        badgeBg: 'bg-indigo-500/15 border-indigo-500/40 text-indigo-700 dark:text-indigo-300',
-        activeGlow: 'from-indigo-500/15 via-cyan-500/10 to-transparent border-indigo-500 ring-2 ring-indigo-500/30 shadow-lg shadow-indigo-500/15',
-        checkBg: 'bg-indigo-600 text-white',
-        borderAccent: 'border-indigo-500/50',
+        badgeBg: 'bg-sky-400/15 border-sky-400/40 text-sky-800 dark:text-sky-300',
+        activeGlow: 'from-sky-400/15 via-cyan-500/10 to-transparent border-sky-400 ring-2 ring-sky-400/30 shadow-lg shadow-sky-400/15',
+        checkBg: 'bg-sky-400 text-slate-950',
+        borderAccent: 'border-sky-400/50',
       };
     case 'pomodoro':
       return {
@@ -137,10 +132,11 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   onNavigate,
   showToast,
 }) => {
-  // Stepper : 1 = Méthodes, 2 = Devoirs/Examens, 3 = Réorganisation, 4 = Google Agenda
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
+  // Stepper : 1 = Méthodes, 2 = Devoirs/Examens, 3 = Réorganisation (plus d'étape Google Agenda : les notifications de KONAN suffisent)
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C (cours et QCM complets)
-  const examGradeRaw = state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel;
+  // Même source de classe que le reste de l'appli : les préférences d'abord (synchronisées), puis le compte
+  const examGradeRaw = state.preferences?.gradeLevel || state.userAccount?.gradeLevel || state.academicLevel;
   const EXAM_PREP_PAUSED = !isExamPrepOpenFor(examGradeRaw);
 
   // État Étape 2 : Matières & Devoirs / Examens (initialisé d'abord)
@@ -230,10 +226,6 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   const [optimizationStepLabel, setOptimizationStepLabel] = useState('');
   const [reorganizedSessions, setReorganizedSessions] = useState<StudySession[] | null>(null);
   const [selectedDayFilter, setSelectedDayFilter] = useState<DayOfWeek | 'all'>('all');
-
-  // État Étape 4 : Téléchargement des rappels
-  const [hasDownloadedIcs, setHasDownloadedIcs] = useState(false);
-  const [hasOpenedGoogleCalendar, setHasOpenedGoogleCalendar] = useState(false);
 
   // État Accordéon pour les matières en Étape 2 (par défaut la première matière est ouverte)
   const [expandedSubjectId, setExpandedSubjectId] = useState<string | null>(() => subjectsList[0]?.id || null);
@@ -405,30 +397,6 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
     showToast(`⚡ Emploi du temps réorganisé avec succès (${newSessions.length} séances planifiées) !`);
   };
 
-  // Téléchargement du fichier de rappels .ics
-  const handleDownloadReminders = () => {
-    const sessionsToExport = reorganizedSessions || state.studySessions || [];
-    if (sessionsToExport.length === 0) {
-      showToast('Veuillez d’abord générer vos séances à l’étape précédente.');
-      return;
-    }
-    downloadStudyPlanICS(
-      sessionsToExport,
-      subjectsList,
-      state.preferences.studentName || 'Étudiant'
-    );
-    setHasDownloadedIcs(true);
-    soundFX.playCheckmarkPop();
-    showToast('Fichier de rappels (.ics) téléchargé avec succès !');
-  };
-
-  // Ouverture de Google Agenda
-  const handleOpenGoogleCalendar = () => {
-    window.open(getGoogleCalendarImportUrl(), '_blank', 'noopener,noreferrer');
-    setHasOpenedGoogleCalendar(true);
-    soundFX.playCheckmarkPop();
-  };
-
   const activeTier = state.planTier === 'plus' ? 'plus' : 'pro';
 
   // Sessions filtrées pour l'aperçu
@@ -452,24 +420,24 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
   // Message dynamique de Konan pas-à-pas selon l'étape actuelle
   const konanStepGuideText = useMemo(() => {
     if (currentStep === 1) {
-      return `Étape 1 sur 4 : Choisis jusqu'à 3 méthodes cognitives (${selectedCombinedPacings.length}/3 sélectionnées). Clique sur « Appliquer le conseil » si tu veux que je configure la combinaison idéale pour tes matières !`;
+      return `Étape 1 sur 3 : Choisis jusqu'à 3 méthodes cognitives (${selectedCombinedPacings.length}/3 sélectionnées). Clique sur « Appliquer le conseil » si tu veux que je configure la combinaison idéale pour tes matières !`;
     }
     if (currentStep === 2) {
       if (EXAM_PREP_PAUSED) {
-        return `Étape 2 sur 4 : Ajuste le coefficient et la difficulté de tes ${subjectsList.length} matières. La préparation aux devoirs et examens est momentanément indisponible pour mise à jour.`;
+        return `Étape 2 sur 3 : Ajuste le coefficient et la difficulté de tes ${subjectsList.length} matières. La préparation aux devoirs et examens est momentanément indisponible pour mise à jour.`;
       }
-      return `Étape 2 sur 4 : Ajoute les dates de tes prochains devoirs, contrôles ou examens sur tes ${subjectsList.length} matières. Je vais automatiquement intensifier tes séances à l'approche du Jour-J !`;
+      return `Étape 2 sur 3 : Ajoute les dates de tes prochains devoirs, contrôles ou examens sur tes ${subjectsList.length} matières. Je vais automatiquement intensifier tes séances à l'approche du Jour-J !`;
     }
     if (currentStep === 3) {
       if (isOptimizing) {
         return `Analyse en cours (${optimizationProgress}%)... Je croise tes horaires de cours, tes coefficients et tes échéances pour construire ton Emploi du Temps ${activeTier === 'plus' ? 'Plus' : 'Pro'} sur mesure !`;
       }
       if (reorganizedSessions) {
-        return `Étape 3 sur 4 : Ton EDT ${activeTier === 'plus' ? 'Plus' : 'Pro'} est prêt avec ${reorganizedSessions.length} séances (${totalHours}h/semaine) ! Vérifie tes créneaux par jour puis passe à l'étape finale.`;
+        return `Étape 3 sur 3 : Ton EDT ${activeTier === 'plus' ? 'Plus' : 'Pro'} est prêt avec ${reorganizedSessions.length} séances (${totalHours}h/semaine) ! Vérifie tes créneaux par jour, puis touche « Terminer ». Je te préviendrai avant chaque séance par une notification.`;
       }
-      return `Étape 3 sur 4 : Vérifie la réorganisation algorithmique de ton Emploi du Temps.`;
+      return `Étape 3 sur 3 : Vérifie la réorganisation algorithmique de ton Emploi du Temps.`;
     }
-    return `Étape 4 sur 4 : Dernière étape ! Télécharge ton fichier d'alertes (.ics) ou synchronise ton planning avec Google Agenda, puis clique sur « Terminer et ouvrir mon espace » !`;
+    return '';
   }, [currentStep, selectedCombinedPacings.length, subjectsList.length, isOptimizing, optimizationProgress, reorganizedSessions, totalHours, activeTier]);
 
   // Finalisation et enregistrement du palier Pro / Plus
@@ -542,17 +510,17 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
         {/* =========================================================================
             BULLE INTERACTIVE KONAN (MOT PAR MOT, SANS "GUIDE PAS-À-PAS")
             ========================================================================= */}
-        <div className="flex items-center gap-3.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border-2 border-indigo-500/30 dark:border-indigo-500/40 shadow-md shadow-indigo-500/5">
+        <div className="flex items-center gap-3.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border-2 border-sky-400/30 dark:border-sky-400/40 shadow-md shadow-sky-400/5">
           <div className="shrink-0">
             <KonanCube size={52} showStars={false} glow={true} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30">
+              <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-sky-400/15 text-sky-700 dark:text-sky-400 border border-sky-400/30">
                 Konan
               </span>
               <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500">
-                Étape {currentStep}/4
+                Étape {currentStep}/3
               </span>
             </div>
             <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 leading-relaxed">
@@ -568,23 +536,22 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
           <div className="w-full bg-slate-200/80 dark:bg-slate-800/80 h-2 rounded-full overflow-hidden shadow-inner relative">
             <div
               className="h-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 transition-all duration-500 ease-out rounded-full shadow-sm shadow-amber-400/50"
-              style={{ width: `${(currentStep / 4) * 100}%` }}
+              style={{ width: `${(currentStep / 3) * 100}%` }}
             />
           </div>
           <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1">
-            <span>Étape {currentStep} sur 4</span>
+            <span>Étape {currentStep} sur 3</span>
           </div>
         </div>
 
         {/* =========================================================================
             STEPPER DES 4 ÉTAPES : CERCLE CENTRÉ AU-DESSUS DU TEXTE (ZÉRO TRONCATURE)
             ========================================================================= */}
-        <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5">
           {[
             { step: 1, label: 'Méthodes' },
             { step: 2, label: EXAM_PREP_PAUSED ? 'Matières' : 'Devoirs' },
             { step: 3, label: 'Planning' },
-            { step: 4, label: 'Agenda' },
           ].map(s => {
             const isActive = currentStep === s.step;
             const isCompleted = currentStep > s.step;
@@ -630,17 +597,17 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
         {currentStep === 1 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             {/* Banner Recommandation Pédagogique - Épuré, Lumineux & Sans Répétition */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-slate-900/5 dark:to-transparent border border-indigo-500/30 dark:border-indigo-500/40 shadow-sm space-y-3.5">
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-sky-400/10 via-purple-500/5 to-slate-900/5 dark:to-transparent border border-sky-400/30 dark:border-sky-400/40 shadow-sm space-y-3.5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 w-fit">
-                  <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
+                <span className="text-[10px] font-black uppercase tracking-wider text-sky-700 dark:text-sky-400 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-400/10 border border-sky-400/20 w-fit">
+                  <BookOpen className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300" />
                   Recommandation de Konan
                 </span>
 
                 <button
                   type="button"
                   onClick={handleApplyAiRecommendation}
-                  className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs transition-all shadow-[0_4px_0_0_#3730A3] active:translate-y-0.5 active:shadow-[0_2px_0_0_#3730A3] cursor-pointer shrink-0 inline-flex items-center justify-center gap-2"
+                  className="px-4 py-2.5 rounded-xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-extrabold text-xs transition-all shadow-[0_4px_0_0_#0369A1] active:translate-y-0.5 active:shadow-[0_2px_0_0_#0369A1] cursor-pointer shrink-0 inline-flex items-center justify-center gap-2"
                 >
                   <Check className="w-4 h-4 stroke-[2.5]" />
                   <span>✓ Appliquer le conseil</span>
@@ -656,7 +623,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                   {aiRecommendation.recommendedIds.map(id => (
                     <span
                       key={id}
-                      className="text-xs font-bold px-3 py-1 rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-cyan-300 border border-indigo-300/60 dark:border-indigo-500/40 shadow-xs flex items-center gap-1.5"
+                      className="text-xs font-bold px-3 py-1 rounded-lg bg-sky-100 text-sky-800 dark:bg-sky-400/20 dark:text-cyan-300 border border-sky-300/60 dark:border-sky-400/40 shadow-xs flex items-center gap-1.5"
                     >
                       <span className="text-amber-400">★</span>
                       <span>{getPacingStrategy(id).title}</span>
@@ -1209,7 +1176,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
                 {/* Cartes de statistiques clés */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300">
+                  <div className="p-3 rounded-2xl bg-sky-400/10 border border-sky-400/30 text-sky-800 dark:text-sky-300">
                     <span className="text-[10px] font-bold uppercase tracking-wider block">Séances</span>
                     <span className="text-base sm:text-lg font-black">{reorganizedSessions.length} sessions</span>
                   </div>
@@ -1322,28 +1289,15 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                     {EXAM_PREP_PAUSED ? 'Retour aux matières' : 'Retour aux devoirs & examens'}
                   </Button>
 
-                  <Button
-                    variant="primary"
-                    size="md"
-                    onClick={() => {
-                      soundFX.playCheckmarkPop();
-                      onUpdateState({
-                        ...state,
-                        planTier: activeTier,
-                        userAccount: state.userAccount ? {
-                          ...state.userAccount,
-                          planTier: activeTier,
-                        } : undefined,
-                        subjects: subjectsList,
-                        studySessions: reorganizedSessions || state.studySessions,
-                      });
-                      setCurrentStep(4);
-                    }}
-                    rightIcon={<ArrowRight className="w-4 h-4" />}
-                    className="font-bold text-xs sm:text-sm px-6 py-3"
+                  {/* Fin du guide : plus d'étape Google Agenda, les notifications de KONAN préviennent avant chaque séance */}
+                  <button
+                    type="button"
+                    onClick={handleCompleteWizard}
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] hover:from-amber-300 hover:to-yellow-300 active:translate-y-0.5 active:shadow-[0_2px_0_0_#b45309] transition-all cursor-pointer inline-flex items-center justify-center gap-2"
                   >
-                    Valider et passer à la synchronisation Google Agenda
-                  </Button>
+                    <Check className="w-4 h-4 stroke-[3]" />
+                    <span>Terminer et accéder à mon espace Konan {activeTier === 'plus' ? 'Plus' : 'Pro'}</span>
+                  </button>
                 </div>
               </div>
             )}
@@ -1365,114 +1319,6 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
           </div>
         )}
 
-        {/* =========================================================================
-            ÉTAPE 4 : TÉLÉCHARGEMENT DES RAPPELS & GOOGLE AGENDA
-            ========================================================================= */}
-        {currentStep === 4 && (
-          <div className="space-y-6 animate-in fade-in duration-200">
-            <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-6 shadow-sm">
-              <div className="space-y-2 text-center max-w-xl mx-auto">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-400 via-yellow-400 to-amber-500 text-slate-950 flex items-center justify-center mx-auto shadow-lg shadow-amber-500/20">
-                  <Calendar className="w-7 h-7" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">
-                  Téléchargement des rappels & Synchronisation Google Agenda
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Pour garantir votre assiduité et ne jamais oublier une séance de travail, téléchargez vos alertes programmées et activez-les sur votre téléphone.
-                </p>
-              </div>
-
-              {/* Fiche d'information sur les rappels */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-2 text-xs text-slate-700 dark:text-slate-300">
-                <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
-                  <Clock className="w-4 h-4 text-amber-500" />
-                  <span>Rappels sonores intégrés avant chaque session :</span>
-                </div>
-                <ul className="space-y-1.5 pl-6 list-disc">
-                  <li><strong>Alerte 30 minutes avant :</strong> Vous avertit pour préparer vos cours et organiser votre espace de travail.</li>
-                  <li><strong>Alerte 10 minutes avant :</strong> Décompte final pour couper les distractions et vous installer.</li>
-                  <li><strong>Répétition hebdomadaire perpétuelle :</strong> S'applique automatiquement à tous les jours de la semaine (Lundi à Dimanche).</li>
-                </ul>
-              </div>
-
-              {/* Les 2 étapes de synchronisation */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* 1. Télécharger le fichier .ics */}
-                <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 space-y-4 flex flex-col justify-between hover:border-amber-400/60 transition-all">
-                  <div className="space-y-1.5">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-                      Étape 1 Obligatoire
-                    </span>
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                      Télécharger les rappels (.ics)
-                    </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Génère le fichier calendrier universel avec l'ensemble des notifications sonores configurées.
-                    </p>
-                  </div>
-
-                  <Button
-                    variant={hasDownloadedIcs ? "secondary" : "primary"}
-                    size="md"
-                    onClick={handleDownloadReminders}
-                    leftIcon={hasDownloadedIcs ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <Download className="w-4 h-4" />}
-                    className="w-full font-bold text-xs py-3"
-                  >
-                    {hasDownloadedIcs ? 'Rappels téléchargés (Re-télécharger)' : '1. Télécharger les rappels (.ics)'}
-                  </Button>
-                </div>
-
-                {/* 2. Ouvrir Google Agenda */}
-                <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 space-y-4 flex flex-col justify-between hover:border-indigo-400/60 transition-all">
-                  <div className="space-y-1.5">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-                      Étape 2
-                    </span>
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                      Importer dans Google Agenda
-                    </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Ouvre directement l'interface d'importation Google Agenda pour glisser-déposer le fichier téléchargé.
-                    </p>
-                  </div>
-
-                  <Button
-                    variant="secondary"
-                    size="md"
-                    onClick={handleOpenGoogleCalendar}
-                    rightIcon={<ExternalLink className="w-4 h-4" />}
-                    className="w-full font-bold text-xs py-3"
-                  >
-                    {hasOpenedGoogleCalendar ? 'Page d’import ouverte' : '2. Ouvrir Google Agenda'}
-                  </Button>
-                </div>
-              </div>
-
-              {/* Bouton de finalisation global */}
-              <div className="pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-4 sm:gap-6">
-                <Button
-                  variant="secondary"
-                  size="md"
-                  onClick={() => setCurrentStep(3)}
-                  leftIcon={<ArrowLeft className="w-4 h-4" />}
-                  className="font-bold text-xs sm:text-sm px-5 py-3 w-full sm:w-auto"
-                >
-                  Modifier le planning
-                </Button>
-
-                <button
-                  type="button"
-                  onClick={handleCompleteWizard}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-[0_4px_0_0_#b45309] hover:from-amber-300 hover:to-yellow-300 active:translate-y-0.5 active:shadow-[0_2px_0_0_#b45309] transition-all cursor-pointer inline-flex items-center justify-center gap-2"
-                >
-                  <Check className="w-4 h-4 stroke-[3]" />
-                  <span>Terminer et accéder à mon espace Konan Pro</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
       </div>
     </div>

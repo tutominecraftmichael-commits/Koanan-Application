@@ -116,6 +116,10 @@ export async function getAdminAuthorizationHeader(): Promise<string | null> {
   if (mode === 'google' && auth?.currentUser) {
     return `Bearer ${await auth.currentUser.getIdToken()}`;
   }
+  // En ligne : compte connecté par Google (le serveur vérifie l'autorisation « admin » et la connexion récente)
+  if (!mode && auth?.currentUser && isGoogleUser()) {
+    return `Bearer ${await auth.currentUser.getIdToken()}`;
+  }
   try {
     const legacy = sessionStorage.getItem(TOKEN_KEY);
     if (legacy) return `Bearer ${legacy}`;

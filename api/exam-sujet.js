@@ -9,7 +9,7 @@
  * Le nombre d'exercices et leurs points sont IMPOSÉS par le modèle (jamais laissés à l'IA).
  * Limite : 4 sujets par jour et par élève.
  */
-import { getExamTemplate, COMMON_STYLE_RULES } from './_examTemplates.js';
+import { getExamTemplate, canonicalExamGrade, COMMON_STYLE_RULES } from './_examTemplates.js';
 import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson } from './_examCommon.js';
 
 export const DAILY_SUJETS = 4;
@@ -66,6 +66,29 @@ const num = (v) => {
 };
 
 /** Valide et nettoie le sujet ; les points des exercices sont ceux du modèle officiel. */
+/**
+ * Nettoyage d'un texte du sujet (défauts vus sur de vrais sujets générés, 2026-11-16) :
+ * balises HTML (« <div> ») → retours à la ligne, « 1ème » → « 1ère ».
+ */
+export function tidyText(t) {
+  return String(t ?? '')
+    .replace(/<\s*br\s*\/?>/gi, '\n')
+    .replace(/\n?[ \t]*<\s*(div|p|li)\b[^>]*>/gi, '\n')
+    .replace(/<\/?\s*(div|p|span|ul|ol|li|b|i|strong|em)\b[^>]*>/gi, '')
+    .replace(/\b1(?:è|e)me\b/g, '1ère')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .replace(/^\n+|\n+$/g, '');
+}
+
+/** « 1. 1. Au cours… » : retire le numéro que l'IA a recopié au début du texte de la question. */
+export function stripLeadingNumber(texte, numero) {
+  const n = String(numero ?? '').replace(/[.)\s]+$/, '');
+  if (!n) return texte;
+  const esc = n.replace(/[.*+?^${}()|[\]\\]/g, '\\export function cleanSujet(raw, template) {');
+  return texte.replace(new RegExp(`^\\s*(?:question\\s*)?${esc}\\s*[.)\\-–:]\\s*`, 'i'), '');
+}
+
 export function cleanSujet(raw, template) {
   if (!raw || typeof raw !== 'object' || !Array.isArray(raw.exercices)) return null;
   if (raw.exercices.length !== template.exercices.length) return null;
@@ -74,7 +97,7 @@ export function cleanSujet(raw, template) {
     const questions = Array.isArray(e.questions)
       ? e.questions
           // Un sujet « au choix » du format BAC contient son texte d'étude : longueur autorisée plus grande (questionMax)
-          .map((q) => ({ numero: str(String(q?.numero ?? ''), 12), texte: str(q?.texte, model.questionMax || 1500), points: num(q?.points) }))
+          .map((q) => { const numero = str(String(q?.numero ?? ''), 12).replace(/[\s.)]+$/, ''); return { numero, texte: stripLeadingNumber(tidyText(str(q?.texte, model.questionMax || 1500)), numero), points: num(q?.points) }; })
           .filter((q) => q.texte)
           .slice(0, 20)
       : [];
@@ -88,9 +111,9 @@ export function cleanSujet(raw, template) {
       numero: model.numero,
       points: model.points,
       nature: model.nature,
-      consigne: str(e.consigne, 1500),
-      contexte: model.texteNumerote ? stripLineNumbers(str(e.contexte, 4000)) : str(e.contexte, 4000),
-      donnees: str(e.donnees, 1200),
+      consigne: tidyText(str(e.consigne, 1500)),
+      contexte: model.texteNumerote ? stripLineNumbers(tidyText(str(e.contexte, 4000))) : tidyText(str(e.contexte, 4000)),
+      donnees: tidyText(str(e.donnees, 1200)),
       tableau,
       questions,
       ...(model.grille ? { grille: model.grille } : {}),
@@ -106,14 +129,17 @@ export function cleanSujet(raw, template) {
           const etapes = Array.isArray(c?.etapes) ? c.etapes.map((x) => str(String(x ?? ''), 500)).filter(Boolean).slice(0, 8) : [];
           const resultat = str(c?.resultat, 400);
           // « reponse » (texte complet) reste fourni : la correction de la copie s'en sert comme barème
-          const reponse = str(c?.reponse, 1500) || [...etapes, resultat ? `Réponse : ${resultat}` : ''].filter(Boolean).join('\n');
+          const reponse = tidyText(str(c?.reponse, 1500)) || [...etapes, resultat ? `Réponse : ${resultat}` : ''].filter(Boolean).join('\n');
           return { exercice: Number(c?.exercice) || 0, question: str(String(c?.question ?? ''), 12), etapes, resultat, reponse, points: num(c?.points) };
         })
         .filter((c) => c.exercice >= 1 && c.exercice <= exercices.length && c.reponse)
         .slice(0, 80)
     : [];
   if (corrige.length < exercices.length) return null;
-  return { titre: str(raw.titre, 120) || `Devoir de ${template.matiere}`, exercices, corrige };
+  // Titre : jamais l'en-tête du ministère (déjà affiché à part) ni un titre trop long
+  const titreBrut = tidyText(str(raw.titre, 200)).replace(/\s+/g, ' ').trim();
+  const titre = !titreBrut || titreBrut.length > 90 || /minist|r[ée]publique|direction des examens/i.test(titreBrut) ? `Devoir ${/^[aeiouyhéèêâî]/i.test(template.matiere) ? 'd’' : 'de '}${template.matiere}` : titreBrut;
+  return { titre, exercices, corrige };
 }
 
 export default async function handler(req, res) {
@@ -127,7 +153,7 @@ export default async function handler(req, res) {
     return send(res, e?.code === 413 ? 413 : 400, { success: false, error: 'BAD_BODY' });
   }
 
-  const gradeId = str(body.gradeId, 40);
+  const gradeId = canonicalExamGrade(str(body.gradeId, 40)); // « premiere_a » → série A1 (bonnes notes de classe)
   // Le modèle dépend de la classe : format du BAC pour les Terminales A, modèles de Seconde sinon
   const template = getExamTemplate(str(body.subjectKey, 40), gradeId);
   if (!template) return send(res, 400, { success: false, error: 'NO_TEMPLATE' });

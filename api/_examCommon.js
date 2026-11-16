@@ -4,6 +4,7 @@
  */
 import { loadLocalEnvIfPresent } from './_env.js';
 import { verifyFirebaseIdToken } from './_firebaseToken.js';
+import { paymentsEnabled } from './_subscriptionRules.js';
 
 export const MODELS = ['gemini-3.5-flash', 'gemini-3.5-flash-lite'];
 
@@ -86,6 +87,20 @@ export async function guard(req, res) {
     send(res, 503, { success: false, error: 'AI_NOT_CONFIGURED' });
     return null;
   }
+  // Devoirs = KONAN Pro. Quand le paiement est activé, seul un abonnement payé (vérifié par le serveur) y donne accès.
+  if (paymentsEnabled()) {
+    try {
+      const { serverPlanTier } = await import('./_subscriptionStore.js');
+      const tier = await serverPlanTier(await getDb(), uid, null);
+      if (tier !== 'pro' && tier !== 'plus') {
+        send(res, 403, { success: false, error: 'PRO_REQUIRED' });
+        return null;
+      }
+    } catch {
+      send(res, 503, { success: false, error: 'SUBSCRIPTION_UNAVAILABLE' });
+      return null;
+    }
+  }
   return { uid, apiKey };
 }
 
@@ -110,7 +125,8 @@ export async function addUsage(ref, uid, kind) {
 }
 
 /** Demande une réponse JSON à Gemini (essaie les modèles dans l'ordre) et la valide avec `clean`. */
-export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4) {
+/** `primaryConfig` : réglages ajoutés pour le modèle principal seulement (le modèle de secours ne les accepte pas tous). */
+export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4, primaryConfig = {}) {
   const { GoogleGenAI } = await import('@google/genai');
   const ai = new GoogleGenAI({ apiKey });
   let lastErr;
@@ -119,7 +135,7 @@ export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4) {
       const response = await ai.models.generateContent({
         model,
         contents: [{ role: 'user', parts }],
-        config: { responseMimeType: 'application/json', temperature },
+        config: { responseMimeType: 'application/json', temperature, ...(model === MODELS[0] ? primaryConfig : {}) },
       });
       const text = String(response.text || '').trim().replace(/^```json\s*|```$/g, '');
       const value = clean(JSON.parse(text));

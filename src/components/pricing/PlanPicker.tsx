@@ -5,7 +5,7 @@
  */
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
-import { DISPLAY_PLANS, SEMESTER_MONTHS, formatFcfa, type BillingPeriod, type DisplayPlan, type PlanTier } from '../../lib/subscriptionPlans';
+import { VISIBLE_DISPLAY_PLANS, SEMESTER_MONTHS, formatFcfa, type BillingPeriod, type DisplayPlan, type PlanTier } from '../../lib/subscriptionPlans';
 import { afterShine } from '../../lib/shineClick';
 
 export interface PlanPickerProps {
@@ -32,7 +32,7 @@ const THEME: Record<PlanTier, {
   pro: {
     card: 'border-sky-400 dark:border-sky-500',
     check: 'bg-sky-100 text-sky-600 dark:bg-sky-500/20 dark:text-sky-300',
-    button: 'bg-sky-500 text-white shadow-[0_4px_0_#0284C7] hover:bg-sky-400',
+    button: 'bg-sky-400 text-slate-950 shadow-[0_4px_0_#0369A1] hover:bg-sky-300',
     price: 'text-sky-600 dark:text-sky-400',
   },
   plus: {
@@ -88,9 +88,9 @@ export const PlanPicker: React.FC<PlanPickerProps> = ({ onSelect, currentPlan, c
         </div>
       </div>
 
-      {/* Les 3 formules */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
-        {DISPLAY_PLANS.map((plan) => (
+      {/* Les formules montrées aux élèves (KONAN Plus masqué tant qu'il n'est pas officiel : PLUS_VISIBLE) */}
+      <div className={`grid grid-cols-1 gap-5 items-stretch ${VISIBLE_DISPLAY_PLANS.length === 3 ? 'lg:grid-cols-3' : 'md:grid-cols-2 max-w-4xl mx-auto w-full'}`}>
+        {VISIBLE_DISPLAY_PLANS.map((plan) => (
           <PlanCard
             key={plan.id}
             plan={plan}

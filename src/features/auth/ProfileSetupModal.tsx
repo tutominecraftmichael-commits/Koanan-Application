@@ -53,11 +53,9 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-      <Card className="w-full max-w-md bg-slate-900/95 border-indigo-500/40 p-5 sm:p-7 shadow-2xl rounded-3xl relative overflow-hidden">
+      <Card className="w-full max-w-md bg-slate-900/95 border-sky-400/40 p-5 sm:p-7 shadow-2xl rounded-3xl relative overflow-hidden">
         
         {/* Ambient background glow */}
-        <div className="absolute -top-20 -right-20 w-48 h-48 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
 
         {/* Header */}
         <div className="flex items-center gap-3.5 mb-5 border-b border-slate-800/80 pb-4">
@@ -65,7 +63,7 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
             <img
               src={initialAvatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name || 'User')}`}
               alt="Avatar"
-              className="w-12 h-12 rounded-2xl object-cover border-2 border-indigo-500/50 shadow-md"
+              className="w-12 h-12 rounded-2xl object-cover border-2 border-sky-400/50 shadow-md"
             />
             <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900 flex items-center justify-center">
               <ShieldCheck className="w-3 h-3 text-white" />
@@ -83,7 +81,7 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-3.5">
           <div className="space-y-1">
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-indigo-400" />
+              <User className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300" />
               <span>Votre Prénom & Nom d'Étudiant</span>
             </label>
             <input
@@ -93,7 +91,7 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Christ Boni"
-              className="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all"
             />
           </div>
 
@@ -107,7 +105,7 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Ex: christ.boni@univ.ci"
-              className="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all"
             />
           </div>
 
@@ -118,7 +116,7 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
             <select
               value={academicLevel}
               onChange={(e) => setAcademicLevel(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer"
+              className="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all cursor-pointer"
             >
               <option value="Licence Universitaire">Licence Universitaire</option>
               <option value="Master Universitaire">Master Universitaire</option>

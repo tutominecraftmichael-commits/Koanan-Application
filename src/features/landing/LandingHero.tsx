@@ -48,9 +48,6 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
       
       {/* Background Decorative Ambient Radial Glows (Calm Tech deep lighting) */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[450px] sm:h-[650px] radial-glow pointer-events-none" />
-      <div className="absolute top-12 left-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-blue-600/10 dark:bg-blue-600/15 rounded-full blur-[100px] pointer-events-none animate-pulse-slow" />
-      <div className="absolute top-36 right-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-500/10 dark:bg-indigo-500/15 rounded-full blur-[120px] pointer-events-none animate-pulse-slow" style={{ animationDelay: '2.5s' }} />
-      <div className="absolute top-96 left-1/3 w-64 sm:w-80 h-64 sm:h-80 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute inset-0 bg-grid-pattern opacity-30 dark:opacity-40 pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 space-y-16 sm:space-y-24">
@@ -64,7 +61,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           <div className="flex justify-center pb-1">
             <div className="relative inline-flex items-center justify-center group my-1 sm:my-3">
               {/* Halo lumineux d'ambiance lévitant */}
-              <div className="absolute -inset-6 sm:-inset-8 rounded-full bg-gradient-to-tr from-blue-600/20 via-indigo-500/15 to-violet-600/20 dark:from-blue-600/30 dark:via-indigo-500/25 dark:to-violet-600/30 blur-2xl pointer-events-none animate-pulse-slow" />
+              <div className="absolute -inset-6 sm:-inset-8 rounded-full bg-gradient-to-tr from-blue-600/20 via-sky-400/15 to-violet-600/20 dark:from-blue-600/30 dark:via-sky-400/25 dark:to-violet-600/30 blur-2xl pointer-events-none animate-pulse-slow" />
               
               {/* Étincelles féeriques bleues et violettes en orbite */}
               <div className="absolute -top-3 -right-4 text-sky-500 dark:text-sky-300 animate-pulse pointer-events-none drop-shadow-[0_0_12px_rgba(56,189,248,0.9)]">
@@ -99,7 +96,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           {/* Typographie & Grand Titre : "parfait" brille grâce à un dégradé lumineux royal blue -> violet électrique */}
           <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#1E293B] dark:text-white leading-[1.18] break-words px-2 max-w-4xl mx-auto">
             Transformez votre emploi du temps en un{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 dark:from-blue-400 dark:via-indigo-300 dark:to-violet-400 drop-shadow-none dark:drop-shadow-[0_0_35px_rgba(124,58,237,0.55)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-400 to-violet-600 dark:from-blue-400 dark:via-sky-300 dark:to-violet-400 drop-shadow-none dark:drop-shadow-[0_0_35px_rgba(124,58,237,0.55)]">
               planning d'étude parfait
             </span>
           </h1>
@@ -115,7 +112,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             <button
               type="button"
               onClick={onStartApp}
-              className="w-full sm:w-auto py-4 px-7 sm:px-9 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm sm:text-base shadow-[0_10px_35px_-5px_rgba(37,99,235,0.4),inset_0_1px_1px_rgba(255,255,255,0.35)] ring-1 ring-blue-400/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2.5"
+              className="w-full sm:w-auto py-4 px-7 sm:px-9 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-400 hover:from-blue-500 hover:to-sky-400 text-white font-bold text-sm sm:text-base shadow-[0_10px_35px_-5px_rgba(37,99,235,0.4),inset_0_1px_1px_rgba(255,255,255,0.35)] ring-1 ring-blue-400/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2.5"
             >
               <span>{isLoggedIn ? 'Accéder à mon Tableau de Bord' : "Générer mon Planning d'Étude"}</span>
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-sky-200 shrink-0" />
@@ -127,7 +124,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               onClick={() => onSelectPreset('cs-engineering')}
               className="w-full sm:w-auto py-3.5 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-[#334155] hover:text-slate-900 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] dark:text-slate-200 dark:hover:text-white dark:border-white/10 backdrop-blur-md font-semibold text-xs xs:text-sm sm:text-base shadow-sm dark:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
             >
-              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-sky-700 dark:text-sky-400 shrink-0" />
               <span>Tester en Mode Démo</span>
             </button>
           </div>
@@ -165,9 +162,9 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </div>
 
             {/* 3. x2.3 (Indigo) */}
-            <div className="p-4 rounded-2xl bg-white dark:bg-white/[0.04] backdrop-blur-xl border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.25)] text-center group hover:border-indigo-400/40 dark:hover:border-indigo-400/30 hover:bg-slate-50 dark:hover:bg-white/[0.06] transition-all cursor-default">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-black text-indigo-600 dark:text-indigo-400 dark:drop-shadow-[0_0_14px_rgba(129,140,248,0.45)]">
-                <AnimatedCounter value={2.3} prefix="x" decimals={1} className="text-indigo-600 dark:text-indigo-400" />
+            <div className="p-4 rounded-2xl bg-white dark:bg-white/[0.04] backdrop-blur-xl border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.25)] text-center group hover:border-sky-400/40 dark:hover:border-sky-400/30 hover:bg-slate-50 dark:hover:bg-white/[0.06] transition-all cursor-default">
+              <p className="text-2xl sm:text-3xl md:text-4xl font-black text-sky-700 dark:text-sky-400 dark:drop-shadow-[0_0_14px_rgba(129,140,248,0.45)]">
+                <AnimatedCounter value={2.3} prefix="x" decimals={1} className="text-sky-700 dark:text-sky-400" />
               </p>
               <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 mt-1 font-medium">Rétention Espacée</p>
             </div>
@@ -191,7 +188,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600 dark:text-sky-400 shrink-0" />
+                <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-sky-700 dark:text-sky-400 shrink-0" />
                 <span>Démonstrateur Interactif</span>
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
@@ -217,8 +214,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 onClick={() => setSelectedDemoTab('after')}
                 className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer text-center min-h-[38px] flex items-center justify-center gap-1.5 ${
                   selectedDemoTab === 'after'
-                    ? 'bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 text-white shadow-lg shadow-indigo-600/30 border border-indigo-400/40'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-violet-600 via-sky-400 to-blue-600 text-white shadow-lg shadow-sky-400/30 border border-sky-400/40'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-sky-700 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5'
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5 text-sky-200" />
@@ -231,7 +228,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           {selectedDemoTab === 'after' && (
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 animate-fadeIn">
               <span className="text-xs font-bold text-slate-600 dark:text-slate-400 shrink-0 mr-1 flex items-center gap-1">
-                <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-sky-400" />
+                <BookOpen className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
                 Filière test :
               </span>
               {ACADEMIC_PRESETS.map((preset, idx) => (
@@ -304,7 +301,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                       <div className="p-3 rounded-xl bg-white border border-slate-200 dark:bg-white/[0.04] dark:border-white/10 text-xs shadow-xs">
                         <div className="flex justify-between font-bold text-slate-900 dark:text-white">
                           <span>10:45 - 12:45</span>
-                          <span className="text-indigo-600 dark:text-indigo-400">TD</span>
+                          <span className="text-sky-700 dark:text-sky-400">TD</span>
                         </div>
                         <p className="text-slate-700 dark:text-slate-300 mt-1 font-semibold break-words leading-snug">{activePreset.subjects[0]?.name}</p>
                       </div>
@@ -398,7 +395,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                         </div>
                         <div className="flex justify-between items-center text-slate-700 dark:text-slate-300 p-2 rounded-xl bg-white border border-slate-200 dark:bg-white/[0.03] dark:border-white/5">
                           <span>Soirée libre dès :</span>
-                          <span className="font-mono text-indigo-600 dark:text-indigo-400 font-bold">19:30</span>
+                          <span className="font-mono text-sky-700 dark:text-sky-400 font-bold">19:30</span>
                         </div>
                       </div>
                     </div>
@@ -510,7 +507,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                   <button
                     type="button"
                     onClick={() => setSelectedDemoTab('after')}
-                    className="w-full sm:w-auto py-4 px-8 text-sm sm:text-base font-extrabold rounded-2xl cursor-pointer bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white shadow-[0_10px_35px_-5px_rgba(99,102,241,0.5)] border border-indigo-400/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 mx-auto"
+                    className="w-full sm:w-auto py-4 px-8 text-sm sm:text-base font-extrabold rounded-2xl cursor-pointer bg-gradient-to-r from-violet-600 via-sky-400 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white shadow-[0_10px_35px_-5px_rgba(99,102,241,0.5)] border border-sky-400/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 mx-auto"
                   >
                     <Sparkles className="w-5 h-5 text-sky-200" />
                     <span>Voir la solution KONAN</span>
@@ -585,7 +582,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         {/* =========================================================================
             5. APPEL À L'ACTION FINAL
             ========================================================================= */}
-        <div className="relative rounded-3xl p-6 sm:p-12 overflow-hidden border border-blue-200 bg-gradient-to-br from-blue-50 via-indigo-50/40 to-white text-slate-900 shadow-xl shadow-blue-500/10 dark:border-blue-500/30 dark:bg-gradient-to-br dark:from-blue-950/60 dark:via-[#0D1527] dark:to-[#0A0E1A] dark:text-white dark:shadow-2xl text-center space-y-4 sm:space-y-6">
+        <div className="relative rounded-3xl p-6 sm:p-12 overflow-hidden border border-blue-200 bg-gradient-to-br from-blue-50 via-sky-50/40 to-white text-slate-900 shadow-xl shadow-blue-500/10 dark:border-blue-500/30 dark:bg-gradient-to-br dark:from-blue-950/60 dark:via-[#0D1527] dark:to-[#0A0E1A] dark:text-white dark:shadow-2xl text-center space-y-4 sm:space-y-6">
           <div className="max-w-2xl mx-auto space-y-3">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Prêt à reprendre le contrôle de votre semestre ?
@@ -597,7 +594,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           <button
             type="button"
             onClick={onStartApp}
-            className="py-4 px-8 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm sm:text-base shadow-xl shadow-blue-600/30 ring-1 ring-blue-400/50 hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+            className="py-4 px-8 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-400 hover:from-blue-500 hover:to-sky-400 text-white font-bold text-sm sm:text-base shadow-xl shadow-blue-600/30 ring-1 ring-blue-400/50 hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
           >
             <span>Commencer avec Google & KONAN</span>
             <ChevronRight className="w-5 h-5 text-white" />

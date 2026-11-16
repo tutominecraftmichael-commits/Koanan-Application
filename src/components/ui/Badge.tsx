@@ -16,7 +16,7 @@ export const Badge: React.FC<BadgeProps> = ({
   ...props
 }) => {
   const variants = {
-    primary: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-500/30',
+    primary: 'bg-sky-50 text-sky-800 border-sky-200 dark:bg-sky-400/15 dark:text-sky-300 dark:border-sky-400/30',
     cyan: 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-500/30',
     emerald: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30',
     amber: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
@@ -27,7 +27,7 @@ export const Badge: React.FC<BadgeProps> = ({
   };
 
   const dotColors = {
-    primary: 'bg-blue-400',
+    primary: 'bg-sky-400',
     cyan: 'bg-sky-400',
     emerald: 'bg-emerald-400',
     amber: 'bg-amber-400',

@@ -326,11 +326,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         <div className="rounded-3xl p-5 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-xl dark:shadow-2xl space-y-5 relative overflow-hidden bg-white/95 dark:bg-slate-900/90 backdrop-blur-2xl">
           
           {/* Subtle Ambient Glow */}
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 bg-indigo-500/10 dark:bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
 
           {/* Header */}
           <div className="text-center space-y-2.5 relative z-10">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full p-[2px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 mx-auto shadow-lg shadow-sky-500/25 flex items-center justify-center overflow-hidden">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full p-[2px] bg-gradient-to-tr from-sky-400 via-blue-500 to-sky-400 mx-auto shadow-lg shadow-sky-500/25 flex items-center justify-center overflow-hidden">
               <img
                 src="/konan-logo.png"
                 alt="Logo Officiel KONAN"
@@ -381,7 +380,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <Mail className="w-4 h-4 shrink-0 text-indigo-500" />
+              <Mail className="w-4 h-4 shrink-0 text-sky-700 dark:text-sky-300" />
               <span>Email & Mot de passe</span>
             </button>
           </div>
@@ -464,7 +463,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 disabled={isLoading}
                 className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 dark:bg-slate-800/80 dark:hover:bg-slate-800 dark:border-slate-700/60 text-xs font-semibold dark:text-slate-300 transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-98"
               >
-                <Smartphone className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
+                <Smartphone className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400 shrink-0" />
                 <span>Option Redirection Directe (Mobile)</span>
               </button>
             </div>
@@ -477,19 +476,19 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               {/* Formulaire Mot de passe oublié */}
               {isForgotPassword ? (
                 <form onSubmit={handleForgotPassword} className="space-y-3">
-                  <div className="p-3 rounded-xl bg-indigo-50/70 dark:bg-indigo-500/10 border border-indigo-200/80 dark:border-indigo-500/20 text-xs text-indigo-900 dark:text-indigo-200">
+                  <div className="p-3 rounded-xl bg-sky-50/70 dark:bg-sky-400/10 border border-sky-200/80 dark:border-sky-400/20 text-xs text-sky-900 dark:text-sky-200">
                     <p className="font-bold flex items-center gap-1.5 mb-1">
-                      <KeyRound className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                      <KeyRound className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
                       <span>Réinitialisation du mot de passe</span>
                     </p>
-                    <p className="text-[11px] text-indigo-800/90 dark:text-indigo-300/90">
+                    <p className="text-[11px] text-sky-900/90 dark:text-sky-300/90">
                       Entrez votre adresse email existante pour recevoir un lien de réinitialisation sécurisé.
                     </p>
                   </div>
 
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                      <Mail className="w-3.5 h-3.5 text-indigo-500" />
+                      <Mail className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300" />
                       <span>Votre Adresse Email</span>
                     </label>
                     <input
@@ -498,14 +497,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="exemple : etudiant@gmail.com"
                       required
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full py-3 px-4 rounded-xl bg-sky-400 hover:bg-slate-700 text-slate-950 font-extrabold text-xs shadow-md shadow-sky-400/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isLoading ? (
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -535,7 +534,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   {isRegistering && (
                     <div className="space-y-1 animate-in fade-in duration-150">
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                        <User className="w-3.5 h-3.5 text-indigo-500" />
+                        <User className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300" />
                         <span>Prénom & Nom</span>
                       </label>
                       <input
@@ -544,7 +543,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                         onChange={(e) => setFullName(e.target.value)}
                         placeholder="Ex : Christ Michaël Boni"
                         required={isRegistering}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all"
                       />
                     </div>
                   )}
@@ -553,7 +552,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
                       <span className="flex items-center gap-1.5">
-                        <Mail className="w-3.5 h-3.5 text-indigo-500" />
+                        <Mail className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300" />
                         <span>Adresse Email réelle</span>
                       </span>
                       <span className="text-[10px] text-slate-400 font-normal">Gmail, Yahoo, Outlook, Univ...</span>
@@ -564,7 +563,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="etudiant@domaine.com"
                       required
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all"
                     />
                   </div>
 
@@ -572,14 +571,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                        <Lock className="w-3.5 h-3.5 text-indigo-500" />
+                        <Lock className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300" />
                         <span>Mot de passe</span>
                       </label>
                       {!isRegistering && (
                         <button
                           type="button"
                           onClick={() => { setIsForgotPassword(true); setErrorMessage(null); }}
-                          className="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                          className="text-[11px] font-medium text-sky-700 dark:text-sky-400 hover:underline cursor-pointer"
                         >
                           Mot de passe oublié ?
                         </button>
@@ -592,14 +591,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       placeholder="Au moins 6 caractères"
                       required
                       minLength={6}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full py-3 px-4 rounded-xl bg-sky-400 hover:bg-slate-700 text-slate-950 font-extrabold text-xs shadow-md shadow-sky-400/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isLoading ? (
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -619,7 +618,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                         setErrorMessage(null);
                         setSuccessMessage(null);
                       }}
-                      className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                      className="text-xs font-semibold text-sky-700 dark:text-sky-400 hover:underline cursor-pointer"
                     >
                       {isRegistering 
                         ? "Déjà inscrit ? Se connecter avec mon email" 
@@ -637,9 +636,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               <button
                 type="button"
                 onClick={onEnterDemoMode}
-                className="w-full py-2.5 px-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300/80 hover:border-indigo-400 text-xs font-bold text-slate-700 hover:text-indigo-600 dark:bg-slate-950/70 dark:border-slate-800 dark:text-slate-300 dark:hover:text-indigo-300 dark:hover:bg-slate-900 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs group"
+                className="w-full py-2.5 px-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300/80 hover:border-sky-400 text-xs font-bold text-slate-700 hover:text-sky-700 dark:bg-slate-950/70 dark:border-slate-800 dark:text-slate-300 dark:hover:text-sky-300 dark:hover:bg-slate-900 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs group"
               >
-                <GraduationCap className="w-4 h-4 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform" />
+                <GraduationCap className="w-4 h-4 text-sky-700 dark:text-sky-400 group-hover:scale-110 transition-transform" />
                 <span>Explorer en Mode Démo (EDT prédéfini)</span>
               </button>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 text-center">
@@ -748,7 +747,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               <button
                 type="submit"
                 disabled={isAdminChecking}
-                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-purple-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-sky-400 hover:from-purple-500 hover:to-sky-400 text-white font-bold text-xs shadow-lg shadow-purple-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {isAdminChecking ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

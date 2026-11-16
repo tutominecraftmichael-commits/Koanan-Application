@@ -12,10 +12,16 @@
  */
 import { loadLocalEnvIfPresent } from './_env.js';
 import { verifyFirebaseIdToken } from './_firebaseToken.js';
+import { paymentsEnabled } from './_subscriptionRules.js';
 
 export const DAILY_LIMITS = { audio: 3, text: 10 };
 const MAX_AUDIO_BYTES = 3 * 1024 * 1024; // ~3 Mo : largement plus qu'une minute de voix compressée
-const MODELS = ['gemini-3.5-flash', 'gemini-3.5-flash-lite'];
+// Réflexion « basse » : environ 3 à 5 s au lieu de 10 à 25 s, et le même jugement (mesuré le 2026-11-15 :
+// 4 explications sur 4 bien jugées). Le modèle « lite » (1 à 2 s) sert de secours.
+const MODELS = [
+  { model: 'gemini-3.5-flash', config: { thinkingConfig: { thinkingLevel: 'low' } } },
+  { model: 'gemini-3.5-flash-lite', config: {} },
+];
 const AUDIO_TYPES = /^audio\/(webm|ogg|mp4|mpeg|aac|wav|x-m4a|m4a)/;
 
 let initializeApp, getApps, cert, getFirestore;
@@ -87,6 +93,8 @@ export function buildFeynmanPrompt({ notion, reference, classe, written }) {
     'recite = true s’il répète le cours par cœur sans l’expliquer.',
     'Si l’audio est vide, inaudible ou hors sujet : transcription vide ou courte, juste/clair/simple à false, et conseil qui demande de réessayer.',
     'conseil : 1 ou 2 phrases, tutoiement, encourageant, concret (dis ce qui manque ou ce qu’il faut simplifier). Jamais de moquerie.',
+    'L’élève peut être une fille ou un garçon : aucune formule genrée (pas de « mon grand », « ma grande », « mon petit »), aucun accord au masculin ou au féminin qui le désigne (écris « Bravo ! » plutôt que « tu es doué »).',
+    'Une explication vague ou incomplète (l’idée principale du cours manque) n’est pas « juste » : note de 6 au plus.',
     'Réponds UNIQUEMENT en JSON : {"transcription":"…","juste":true,"clair":true,"simple":true,"recite":false,"note":8,"conseil":"…"} (note de 0 à 10).',
   ].join('\n');
 }
@@ -111,12 +119,12 @@ async function askGemini(apiKey, parts) {
   const { GoogleGenAI } = await import('@google/genai');
   const ai = new GoogleGenAI({ apiKey });
   let lastErr;
-  for (const model of MODELS) {
+  for (const { model, config } of MODELS) {
     try {
       const response = await ai.models.generateContent({
         model,
         contents: [{ role: 'user', parts }],
-        config: { responseMimeType: 'application/json', temperature: 0.3 },
+        config: { responseMimeType: 'application/json', temperature: 0.3, ...config },
       });
       const text = String(response.text || '').trim().replace(/^```json\s*|```$/g, '');
       const verdict = cleanVerdict(JSON.parse(text));
@@ -151,6 +159,17 @@ export default async function handler(req, res) {
     body = await readBody(req);
   } catch (e) {
     return send(res, e?.code === 413 ? 413 : 400, { success: false, error: 'BAD_BODY' });
+  }
+
+  // Feynman = KONAN Pro. Quand le paiement est ouvert, seul un abonnement payé (vérifié par le serveur) y donne accès.
+  if (paymentsEnabled()) {
+    try {
+      const { serverPlanTier } = await import('./_subscriptionStore.js');
+      const tier = await serverPlanTier(await getDb(), uid, null);
+      if (tier !== 'pro' && tier !== 'plus') return send(res, 403, { success: false, error: 'PRO_REQUIRED' });
+    } catch {
+      return send(res, 503, { success: false, error: 'SUBSCRIPTION_UNAVAILABLE' });
+    }
   }
 
   const notion = str(body.notion, 200);

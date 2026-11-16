@@ -116,10 +116,10 @@ export const PwaInstallPromptModal: React.FC = () => {
 
       {/* Bannière discrète d'installation sur mobile / desktop */}
       {!isBannerDismissed && (
-        <div className="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-md z-40 p-3.5 sm:p-4 rounded-2xl bg-slate-900/95 dark:bg-slate-900/95 backdrop-blur-md border border-indigo-500/30 shadow-2xl animate-in fade-in slide-in-from-bottom duration-300">
+        <div className="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-md z-40 p-3.5 sm:p-4 rounded-2xl bg-slate-900/95 dark:bg-slate-900/95 backdrop-blur-md border border-sky-400/30 shadow-2xl animate-in fade-in slide-in-from-bottom duration-300">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 p-0.5 shrink-0 shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-sky-400 p-0.5 shrink-0 shadow-md">
                 <div className="w-full h-full rounded-[10px] bg-slate-950 flex items-center justify-center overflow-hidden">
                   <img src="/icons/konan-icon-192.png" alt="Icône KONAN" className="w-7 h-7 rounded-lg object-cover" />
                 </div>
@@ -128,7 +128,7 @@ export const PwaInstallPromptModal: React.FC = () => {
               <div className="min-w-0">
                 <p className="text-xs font-bold text-white truncate flex items-center gap-1.5">
                   <span>Installer KONAN</span>
-                  <span className="text-[9px] uppercase font-mono px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                  <span className="text-[9px] uppercase font-mono px-1.5 py-0.2 rounded bg-sky-400/20 text-sky-300 border border-sky-400/30">
                     App Mobile
                   </span>
                 </p>
@@ -143,7 +143,7 @@ export const PwaInstallPromptModal: React.FC = () => {
                 variant="glow"
                 size="sm"
                 onClick={handleInstallClick}
-                className="text-xs py-1.5 px-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold shadow-md shadow-indigo-600/30 cursor-pointer"
+                className="text-xs py-1.5 px-3 bg-sky-400 hover:bg-sky-300 text-slate-950 font-extrabold shadow-[0_3px_0_0_#0369A1] cursor-pointer"
                 leftIcon={<Download className="w-3.5 h-3.5" />}
               >
                 Installer
@@ -165,7 +165,7 @@ export const PwaInstallPromptModal: React.FC = () => {
       {/* Modal / Guide d'installation spécial pour Apple iOS ou navigateurs sans prompt automatique */}
       {showIosGuide && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
-          <div className="w-full max-w-sm rounded-3xl bg-slate-900 border border-indigo-500/30 p-5 sm:p-6 shadow-2xl space-y-4 text-left relative">
+          <div className="w-full max-w-sm rounded-3xl bg-slate-900 border border-sky-400/30 p-5 sm:p-6 shadow-2xl space-y-4 text-left relative">
             <button
               onClick={() => setShowIosGuide(false)}
               className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800"
@@ -174,7 +174,7 @@ export const PwaInstallPromptModal: React.FC = () => {
             </button>
 
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-sky-400/20 border border-sky-400/30 flex items-center justify-center shrink-0">
                 <img src="/icons/konan-icon-192.png" alt="Icône KONAN" className="w-8 h-8 rounded-lg object-cover" />
               </div>
               <div>
@@ -182,7 +182,7 @@ export const PwaInstallPromptModal: React.FC = () => {
                   {isIos ? (
                     <Apple className="w-4 h-4 text-slate-200" />
                   ) : (
-                    <Smartphone className="w-4 h-4 text-indigo-400" />
+                    <Smartphone className="w-4 h-4 text-sky-300" />
                   )}
                   <span>Installer sur votre téléphone</span>
                 </h3>
@@ -196,13 +196,13 @@ export const PwaInstallPromptModal: React.FC = () => {
               {isIos ? (
                 <>
                   <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-800/60 border border-slate-700/50">
-                    <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-sky-400/20 text-sky-300 flex items-center justify-center font-bold shrink-0">
                       1
                     </div>
                     <div>
                       <p className="font-semibold text-white flex items-center gap-1.5">
                         <span>Appuyez sur</span>
-                        <Share className="w-4 h-4 text-indigo-400" />
+                        <Share className="w-4 h-4 text-sky-300" />
                         <span>Partager</span>
                       </p>
                       <p className="text-[11px] text-slate-400 mt-0.5">
@@ -212,13 +212,13 @@ export const PwaInstallPromptModal: React.FC = () => {
                   </div>
 
                   <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-800/60 border border-slate-700/50">
-                    <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-sky-400/20 text-sky-300 flex items-center justify-center font-bold shrink-0">
                       2
                     </div>
                     <div>
                       <p className="font-semibold text-white flex items-center gap-1.5">
                         <span>Sélectionnez</span>
-                        <PlusSquare className="w-4 h-4 text-indigo-400" />
+                        <PlusSquare className="w-4 h-4 text-sky-300" />
                         <span>« Sur l'écran d'accueil »</span>
                       </p>
                       <p className="text-[11px] text-slate-400 mt-0.5">
@@ -229,7 +229,7 @@ export const PwaInstallPromptModal: React.FC = () => {
                 </>
               ) : (
                 <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-800/60 border border-slate-700/50">
-                  <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-sky-400/20 text-sky-300 flex items-center justify-center font-bold shrink-0">
                     ℹ️
                   </div>
                   <div>

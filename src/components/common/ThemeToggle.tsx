@@ -28,13 +28,13 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '', showLa
       className={`group relative flex items-center justify-center gap-1.5 p-1.5 sm:p-2 rounded-full border transition-all duration-300 cursor-pointer shadow-sm active:scale-90 shrink-0 ${
         isLight
           ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 border-amber-300/50 shadow-amber-500/10'
-          : 'bg-slate-900/80 hover:bg-slate-800 border-slate-800 hover:border-indigo-500/40 text-slate-300 hover:text-white shadow-indigo-500/5'
+          : 'bg-slate-900/80 hover:bg-slate-800 border-slate-800 hover:border-sky-400/40 text-slate-300 hover:text-white shadow-sky-400/5'
       } ${className}`}
     >
       {/* Halo lumineux d'arrière-plan */}
       <span 
         className={`absolute inset-0 rounded-full transition-opacity duration-300 blur-sm pointer-events-none ${
-          isLight ? 'bg-amber-400/20 opacity-100' : 'bg-indigo-500/15 opacity-0 group-hover:opacity-100'
+          isLight ? 'bg-amber-400/20 opacity-100' : 'bg-sky-400/15 opacity-0 group-hover:opacity-100'
         }`} 
       />
 
@@ -71,7 +71,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '', showLa
             strokeWidth="2" 
             strokeLinecap="round" 
             strokeLinejoin="round" 
-            className="w-full h-full text-indigo-300 group-hover:text-amber-300 transition-colors duration-300"
+            className="w-full h-full text-sky-300 group-hover:text-amber-300 transition-colors duration-300"
           >
             <path 
               d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" 

@@ -6,6 +6,7 @@
  * - chaque réponse est enregistrée (erreur, chapitre, réponse fausse) pour les séances suivantes ;
  * - si l'élève quitte, il reprend sa série au même endroit.
  */
+import { cleanSeriesPrompt } from '../../lib/gamification/exerciseContext';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, CheckCircle2, AlertCircle, Clock, RotateCcw } from 'lucide-react';
 import type { StudySession } from '../../types';
@@ -19,6 +20,7 @@ import { getWrongQuestions, recordAnswer, RETRY_NOTE } from '../../lib/curriculu
 import { EXAM_PREP_DURATIONS, formatExactDurationFrench } from '../../lib/exam/examPrepRules';
 import { afterShine } from '../../lib/shineClick';
 import { soundFX } from '../../lib/audioEffects';
+import { lessonXp, lessonXpAfterMistakes } from '../../lib/gamification/gamification';
 
 export interface ExamQcmViewProps {
   userId: string;
@@ -27,7 +29,8 @@ export interface ExamQcmViewProps {
   stemSubjectId: StemSubjectId;
   gradeLevel: CurriculumGradeLevel;
   onExit: () => void;
-  onComplete: (sessionId: string, durationSec?: number) => void;
+  /** `mistakes` : réponses fausses de la série (chacune retire 1 XP à la séance). */
+  onComplete: (sessionId: string, durationSec?: number, mistakes?: number) => void;
 }
 
 interface SavedProgress {
@@ -311,14 +314,19 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
           ) : (
             <p className="text-slate-700 dark:text-slate-200">Aucune erreur : tu es prêt pour ce chapitre !</p>
           )}
+          <p className="pt-1 font-black text-amber-700 dark:text-amber-300">
+            {wrongItems.length > 0
+              ? `${wrongItems.length} erreur${wrongItems.length > 1 ? 's' : ''} = −${wrongItems.length} XP : tu gagnes ${lessonXpAfterMistakes(session.durationMinutes, wrongItems.length)} XP sur ${lessonXp(session.durationMinutes)}.`
+              : `Tu gagnes les ${lessonXp(session.durationMinutes)} XP de la séance.`}
+          </p>
         </div>
         <button
           type="button"
           onClick={afterShine(() => {
             try { localStorage.removeItem(storageKey(session.id)); } catch { /* rien */ }
-            onComplete(session.id, elapsed);
+            onComplete(session.id, elapsed, wrongItems.length);
           })}
-          className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
+          className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl font-black uppercase tracking-wide active:translate-y-1 cursor-pointer konan-btn"
         >
           Valider ma séance
         </button>
@@ -381,7 +389,7 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
           {subCategoryName(item.subCategory) ? `${subCategoryName(item.subCategory)} · ` : ''}{item.chapterTitle}
         </p>
         <div className="text-base font-bold text-slate-900 dark:text-white leading-snug">
-          <MathRenderer text={exercise.prompt} />
+          <MathRenderer text={cleanSeriesPrompt(exercise.prompt)} />
         </div>
         <div className="grid gap-2.5">
           {(exercise.options || []).map((opt, oIdx) => {

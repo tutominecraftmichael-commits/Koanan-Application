@@ -58,7 +58,7 @@ import { syncPushPlan, cancelSessionAlerts, markSessionStarted } from './service
 import { autoRegisterWebPush, detachDeviceFromAccount } from './services/webPushService';
 
 // Layout
-import { Navbar, type OwnerNotificationItem } from './components/layout/Navbar';
+import { Navbar, type OwnerNotificationItem, type PaymentNotice } from './components/layout/Navbar';
 import { SettingsModal } from './components/layout/SettingsModal';
 import { ProFeatureModal } from './components/common/ProFeatureModal';
 import { WaitlistModal } from './components/common/WaitlistModal';
@@ -68,8 +68,9 @@ import { PwaInstallPromptModal } from './components/common/PwaInstallPromptModal
 import { sanitizeUserProfileUpdate } from './lib/subscriptionGuard';
 import { UltimateCompletionCelebrationModal } from './components/celebration/UltimateCompletionCelebrationModal';
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
-import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy } from './lib/gamification/gamification';
+import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy, lessonXp } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
+import { fetchSubscription, type SubscriptionInfo } from './services/subscriptionApi';
 import { LeaguePage } from './features/gamification/LeagueView';
 import { nextNameChangeAt } from '../api/_nameRules.js';
 import { leagueAvatarOf } from './lib/gamification/leagueAvatar';
@@ -90,7 +91,8 @@ import { AcademicGoalSelectorModal } from './components/plus/AcademicGoalSelecto
 import { DashboardOverview } from './features/dashboard/DashboardOverview';
 import { DuolingoOnboarding } from './features/onboarding/DuolingoOnboarding'; // premier écran de tous : chargé tout de suite
 import { ViewLoader, ViewErrorBoundary, lazyView, prefetchViews } from './components/common/ViewLoader';
-import { tryResolveGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
+import { tryResolveGradeLevel, canonicalGradeLevel, shouldLaunchInteractiveTutor, matchSubjectToStemCurriculum, studentClassLabel } from './lib/curriculum/curriculumMatcher';
+import { gradeHasCourses, gradeInLeague } from './lib/gamification/leagueGrades';
 import { clearAdminSession } from './lib/adminAuth';
 import { isLocalAdminEnvironment } from './lib/adminAccess';
 
@@ -103,6 +105,8 @@ const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashb
 const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
 const loadExerciseSeriesView = () => import('./features/gamification/ExerciseSeriesView').then((m) => m.ExerciseSeriesView);
 const ExerciseSeriesView = lazyView(loadExerciseSeriesView);
+const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
+const PlansSheet = lazyView(() => import('./features/pro/PlansSheet').then((m) => m.PlansSheet));
 const AuthPage = lazyView(loadAuthPage);
 const PdfUploadView = lazyView(loadPdfUploadView);
 const ScheduleManager = lazyView(loadScheduleManager);
@@ -277,9 +281,15 @@ export function App() {
   }, [state.userAccount?.konanId, state.konanId, state.userAccount?.email]);
 
   // Source unique de vérité pour le palier actif (supporte le palier 'pro' et 'free')
+  // Abonnement payé : le SERVEUR dit si l'élève est Pro (paiement Wave / Orange Money). Tant que le paiement
+  // n'est pas activé sur le serveur (KONAN_PAYMENTS), rien ne change : formule enregistrée dans l'application.
+  const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
+  const paidMode = Boolean(subscriptionInfo?.config.enabled && subscriptionInfo.status);
+  const serverTier: PlanTier | null = paidMode ? (subscriptionInfo!.status!.tier as PlanTier) : null;
   const effectivePlanTier = useMemo<PlanTier>(() => {
+    if (serverTier) return serverTier;
     return state.planTier || state.userAccount?.planTier || 'free';
-  }, [state.planTier, state.userAccount?.planTier]);
+  }, [serverTier, state.planTier, state.userAccount?.planTier]);
 
   // Unified display name
   const effectiveStudentName = (state.userAccount?.isLoggedIn && state.userAccount?.name)
@@ -287,10 +297,25 @@ export function App() {
     : (state.studentName || 'Étudiant');
   // Vraie classe de l'élève (choisie à l'inscription), jamais la valeur par défaut « Licence Universitaire »
   const isDefaultLevel = /^licence universitaire$/i.test(String(state.academicLevel || '').trim());
+  // UNE seule source pour la classe, partout (planning, cours, devoirs, ligue) : la classe des préférences
+  // est celle qui suit les changements (import d'emploi du temps, autre appareil) ; le compte en garde une
+  // copie qui peut être ancienne. Avant, certains écrans lisaient l'une et d'autres l'autre.
+  const studentGradeRaw = state.preferences?.gradeLevel || state.userAccount?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel);
   const effectiveClassLabel = studentClassLabel(
-    state.userAccount?.gradeLevel || state.preferences?.gradeLevel || (isDefaultLevel ? undefined : state.academicLevel),
+    studentGradeRaw,
     isDefaultLevel ? undefined : state.academicLevel,
   ) || '';
+  // Ancien compte dont seule la fiche du compte connaît la classe : on la recopie dans les préférences,
+  // que lit le planificateur (sinon il ne voyait pas la classe et ne préparait aucun devoir)
+  useEffect(() => {
+    if (state.preferences?.gradeLevel || !state.userAccount?.gradeLevel) return;
+    setState((prev) => {
+      if (prev.preferences?.gradeLevel || !prev.userAccount?.gradeLevel) return prev;
+      const next = { ...prev, preferences: { ...prev.preferences, gradeLevel: prev.userAccount.gradeLevel } };
+      if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
+      return next;
+    });
+  }, [state.preferences?.gradeLevel, state.userAccount?.gradeLevel]);
 
   // Bascule automatique de semaine (rollover d'agenda) sans pop-up de bilan
   useEffect(() => {
@@ -554,7 +579,9 @@ export function App() {
 
         // Préparation aux devoirs (Pro, 2nde A / 2nde C) : chaque jour, la séance prend le bon type
         // (30 questions, sujet de 2 h, chrono 75 min) selon le nombre de jours avant l'épreuve
-        const isProTier = prev.planTier === 'pro' || prev.planTier === 'plus';
+        // Formule réelle : celle du serveur quand le paiement est ouvert (jamais un « pro » resté dans l'appli)
+        const tierNow = paidModeRef.current.serverTier || prev.planTier;
+        const isProTier = tierNow === 'pro' || tierNow === 'plus';
         const finalSessions = synchronizeSessionsWithExamCountdowns(
           updatedSessions,
           validSubjects,
@@ -666,20 +693,21 @@ export function App() {
   useEffect(() => {
     if (!gamificationEnabled) return;
     const preview = awardCompletedSessions(state.gamification, state.studySessions);
-    if (!preview.gained) return;
+    // Séance comptée même à 0 XP (trop d'erreurs) : on l'enregistre pour la ligue, sans animation
+    if (!preview.sessions.length) return;
     setState((prev) => {
       const r = awardCompletedSessions(prev.gamification, prev.studySessions);
-      if (!r.gained) return prev;
+      if (!r.sessions.length) return prev;
       const next = { ...prev, gamification: r.gamification };
       if (next.userAccount?.googleId) saveUserState(next.userAccount.googleId, next);
       return next;
     });
-    setXpBurst({ amount: preview.gained, id: Date.now() });
+    if (preview.gained > 0) setXpBurst({ amount: preview.gained, id: Date.now() });
   }, [state.studySessions, gamificationEnabled]);
 
   // Icône d'exercices (étape 2) : séries de 10 QCM, énergie ⚡ pour les comptes Gratuit
   const [isExerciseOpen, setIsExerciseOpen] = useState(false);
-  const exercisePlan = state.userAccount?.planTier || state.planTier || 'free';
+  const exercisePlan = effectivePlanTier;
   const updateGamification = (compute: (prev: AppState) => AppState['gamification'] | null) => {
     setState((prev) => {
       const g = compute(prev);
@@ -715,7 +743,10 @@ export function App() {
   const gamificationRef = useRef(state.gamification);
   gamificationRef.current = state.gamification;
   const leagueBusy = useRef(false);
-  const leagueGrade = tryResolveGradeLevel(state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel);
+  const leagueGrade = tryResolveGradeLevel(studentGradeRaw);
+  // Cours guidés et entraînement : Seconde à Terminale ; ligue : ces classes plus LMD et BTS (au chronomètre)
+  const gradeHasGuidedCourses = gradeHasCourses(leagueGrade);
+  const gradeIsInLeague = gradeInLeague(leagueGrade);
   const leagueAvatarSrc = getDisplayAvatar(state.userAccount);
   const syncLeague = useCallback(async () => {
     if (!gamificationEnabled || leagueBusy.current || !auth?.currentUser) return;
@@ -757,6 +788,125 @@ export function App() {
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [gamificationEnabled, syncLeague, pendingCount]);
+
+  // Abonnement payé (étape 4) : voir subscriptionInfo / paidMode / serverTier plus haut.
+  const [subscriptionLoading, setSubscriptionLoading] = useState(false);
+  const [subscriptionError, setSubscriptionError] = useState('');
+  const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
+  const [isPlansOpen, setIsPlansOpen] = useState(false);
+  const [subscriptionPeriod, setSubscriptionPeriod] = useState<'mois' | 'semestre'>('mois');
+  const subscriptionAccount = state.userAccount?.isLoggedIn && !state.isDemoMode ? (state.userAccount.googleId || '') : '';
+  const subscriptionPending = Boolean(subscriptionInfo?.status?.pending);
+  const refreshSubscription = useCallback(async () => {
+    if (!subscriptionAccount || !auth?.currentUser) return;
+    setSubscriptionLoading(true);
+    const r = await fetchSubscription();
+    setSubscriptionLoading(false);
+    if (r.success) {
+      setSubscriptionInfo(r.info);
+      setSubscriptionError('');
+    } else {
+      setSubscriptionError('error' in r ? r.error : '');
+    }
+  }, [subscriptionAccount]);
+  useEffect(() => {
+    if (!subscriptionAccount) {
+      setSubscriptionInfo(null);
+      return;
+    }
+    const first = setTimeout(refreshSubscription, 1500);
+    // Paiement en attente : on regarde chaque minute si l'administrateur a répondu (message dans l'onglet notifications)
+    const every = setInterval(refreshSubscription, subscriptionPending ? 60 * 1000 : 10 * 60 * 1000);
+    const onVisible = () => { if (document.visibilityState === 'visible') refreshSubscription(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearTimeout(first);
+      clearInterval(every);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [subscriptionAccount, refreshSubscription, subscriptionPending]);
+  // Onglet des notifications : réponse de l'administrateur à chaque paiement (accepté ou refusé), 30 jours
+  const paymentNotices = useMemo<PaymentNotice[]>(() => {
+    const st = subscriptionInfo?.status;
+    if (!st) return [];
+    const limit = Date.now() - 30 * 24 * 3600 * 1000;
+    return st.history
+      .filter((p) => (p.status === 'confirmed' || p.status === 'rejected') && p.checkedAt && Date.parse(p.checkedAt) > limit)
+      .slice(0, 5)
+      .map((p) => ({
+        id: `pay_${p.id}_${p.status}`,
+        status: p.status as 'confirmed' | 'rejected',
+        amount: p.amount,
+        ref: p.ref,
+        at: p.checkedAt as string,
+        endsAt: p.status === 'confirmed' ? st.endsAt : null,
+        message: p.rejectMessage,
+      }));
+  }, [subscriptionInfo]);
+  // Compte administrateur (autorisation « admin » posée par scripts/set-admin-claim.mjs, connexion Google) :
+  // la console s'ouvre aussi EN LIGNE, pour confirmer les paiements depuis le téléphone
+  const [isAdminAccount, setIsAdminAccount] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    const user = auth?.currentUser;
+    if (!subscriptionAccount || !user) { setIsAdminAccount(false); return; }
+    user.getIdTokenResult().then((r) => {
+      if (alive) setIsAdminAccount(r.claims?.admin === true && r.signInProvider === 'google.com');
+    }).catch(() => { if (alive) setIsAdminAccount(false); });
+    return () => { alive = false; };
+  }, [subscriptionAccount]);
+  const canOpenAdmin = isLocalAdminEnvironment() || isAdminAccount;
+  const paidModeRef = useRef({ paidMode, serverTier });
+  paidModeRef.current = { paidMode, serverTier };
+  // Quand la formule du SERVEUR change (fin d'abonnement, paiement refusé, paiement accepté), on l'applique
+  // UNE fois. Ne dépend PAS de state.planTier : la fusion avec le cloud garde « pro » si une des copies le dit,
+  // et réagir à chaque changement faisait une boucle (Gratuit → planning recalculé → Pro → …) qui figeait l'appli.
+  // L'affichage, lui, suit toujours le serveur (effectivePlanTier).
+  const appliedServerTierRef = useRef('');
+  useEffect(() => {
+    if (!paidMode || !serverTier || !subscriptionAccount) return;
+    const key = `${subscriptionAccount}:${serverTier}`;
+    if (appliedServerTierRef.current === key) return;
+    appliedServerTierRef.current = key;
+    const storeKey = `konan_server_tier_applied_${subscriptionAccount}`;
+    let alreadyApplied = false;
+    try { alreadyApplied = localStorage.getItem(storeKey) === serverTier; } catch { /* stockage indisponible */ }
+    const current = state.planTier || state.userAccount?.planTier || 'free';
+    if (current === serverTier) {
+      try { localStorage.setItem(storeKey, serverTier); } catch { /* sans effet */ }
+      return;
+    }
+    if (serverTier === 'free' && !alreadyApplied) {
+      // Première fois : on retire proprement les avantages Pro (méthodes Pro, devoirs) et on recalcule le planning
+      const { nextState } = transitionUserState(state, 'free');
+      nextState.planTier = 'free';
+      if (nextState.userAccount) {
+        nextState.userAccount.planTier = 'free';
+        nextState.userAccount.isGroupGuest = false;
+      }
+      nextState.isGroupGuest = false;
+      setState(nextState);
+      if (nextState.userAccount?.googleId && !nextState.isDemoMode) saveUserState(nextState.userAccount.googleId, nextState);
+      const rejected = subscriptionInfo?.status?.lastRejected;
+      showToast(rejected && subscriptionInfo?.status?.history[0]?.id === rejected.id
+        ? 'Ton paiement n’a pas été validé : KONAN Pro est retiré de ton compte.'
+        : 'KONAN Pro n’est pas actif sur ton compte. Abonne-toi pour en profiter.');
+    } else {
+      // Déjà appliqué, ou passage à Pro : simple mise à jour de la formule, sans recalcul du planning
+      setState((prev) => {
+        if ((prev.planTier || 'free') === serverTier) return prev;
+        const next: AppState = {
+          ...prev,
+          planTier: serverTier,
+          userAccount: prev.userAccount ? { ...prev.userAccount, planTier: serverTier } : undefined,
+        };
+        if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
+        return next;
+      });
+    }
+    try { localStorage.setItem(storeKey, serverTier); } catch { /* sans effet */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paidMode, serverTier, subscriptionAccount]);
 
   // Réputation : jours terminés comptés à l'ouverture, au retour dans l'appli et toutes les 10 minutes
   useEffect(() => {
@@ -896,7 +1046,7 @@ export function App() {
   const handleNavigate = (view: ActiveAppView) => {
     if (view === 'admin') {
       // Console administrateur : seulement sur l'ordinateur de développement, jamais sur le site en ligne
-      if (isLocalAdminEnvironment()) setActiveView('admin');
+      if (canOpenAdmin) setActiveView('admin');
       return;
     }
 
@@ -1130,6 +1280,20 @@ export function App() {
       if (!state.userAccount?.isLoggedIn || state.isDemoMode) {
         showToast('Connexion requise : Vous devez impérativement être connecté avec votre compte pour configurer votre EDT Pro avec Konan.');
         setActiveView('auth');
+        return;
+      }
+      // Mode payant : Pro s'obtient en payant (Plus reste en liste d'attente) ; déjà payé → guide EDT Pro
+      if (paidMode) {
+        if (planId === 'plus') {
+          showToast('KONAN Plus arrive bientôt. KONAN Pro est déjà disponible.');
+          setIsSubscriptionOpen(true);
+          return;
+        }
+        if (serverTier !== 'pro') {
+          setIsSubscriptionOpen(true);
+          return;
+        }
+        setActiveView('pro-wizard');
         return;
       }
       setState(prev => ({
@@ -1617,6 +1781,13 @@ export function App() {
 
     //  Uniquement si l'utilisateur vient de cliquer explicitement sur le modèle KONAN PRO ou KONAN PLUS, lancer le guide EDT Pro
     if (payload.launchProWizard && (payload.planTier === 'pro' || payload.planTier === 'plus')) {
+      // Mode payant sans abonnement : on propose de payer au lieu d'ouvrir le guide Pro
+      if (paidModeRef.current.paidMode && paidModeRef.current.serverTier !== 'pro') {
+        showToast('Emploi du temps enregistré ! Pour KONAN Pro, choisis ta formule.');
+        setActiveView('dashboard');
+        setIsSubscriptionOpen(true);
+        return;
+      }
       showToast('Bienvenue dans le Guide EDT Pro avec Konan !');
       setActiveView('pro-wizard');
       return;
@@ -1784,7 +1955,7 @@ export function App() {
     showToast('Votre planning d’étude a été réorganisé avec succès !');
   };
 
-  const handleToggleSessionComplete = (sessionId: string, bypassDayCheck: boolean = false) => {
+  const handleToggleSessionComplete = (sessionId: string, bypassDayCheck: boolean = false, mistakes?: number) => {
     const target = state.studySessions.find(s => s.id === sessionId);
     if (!target) return;
 
@@ -1816,6 +1987,8 @@ export function App() {
           completed: willBeCompleted,
           completedAt: willBeCompleted ? new Date().toISOString() : undefined,
           actualDurationMinutes: willBeCompleted ? (s.actualDurationMinutes || s.durationMinutes) : undefined,
+          // Erreurs de la séance (cours guidé, 30 questions) : chacune retire 1 XP
+          ...(mistakes !== undefined ? { mistakes: Math.max(0, Math.round(mistakes)) } : {}),
         }
         : s
     );
@@ -1906,28 +2079,47 @@ export function App() {
     // VÉRIFICATION CORRESPONDANCE PROGRAMME OFFICIEL (MATHS, PHYSIQUE-CHIMIE, SVT)
     const sub = state.subjects.find(s => s.id === session.subjectId);
     const subjectName = sub?.name || session.title;
-    // Classe STRICTE : jamais de classe devinée (ex: Terminale D par défaut)
-    const resolvedGrade = tryResolveGradeLevel(
-      state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel
-    );
+    // Classe STRICTE (jamais devinée), ramenée à sa forme officielle (« 1ère A » → 1re A1, « Tle A » → Tle A1)
+    const resolvedGrade = canonicalGradeLevel(tryResolveGradeLevel(studentGradeRaw));
     const stemMatchForTutor = matchSubjectToStemCurriculum(subjectName);
+
+    // Devoirs et examens = KONAN Pro : un élève Gratuit (par exemple dont l'abonnement est fini) ne lance jamais
+    // une préparation de devoir ; on lui montre l'offre au lieu d'une erreur du serveur
+    if (session.isExamPrep && effectivePlanTier !== 'pro' && effectivePlanTier !== 'plus') {
+      showToast('La préparation aux devoirs fait partie de KONAN Pro.', 4000);
+      setIsPlansOpen(true);
+      return;
+    }
 
     // PRÉPARATION AU DEVOIR : 30 questions, sujet complet de 2 h, ou chronomètre de 75 min (matière sans cours)
     if (session.isExamPrep && session.examPrepMode) {
-      const examSession: StudySession = {
-        ...session,
-        examChapterIds: session.examChapterIds?.length ? session.examChapterIds : sub?.examChapterIds,
-      };
+      // Les chapitres de la matière (choix le plus récent de l'élève) passent avant ceux recopiés dans la séance
+      const chapterIds = sub?.examChapterIds?.length ? sub.examChapterIds : session.examChapterIds;
+      const examSession: StudySession = { ...session, examChapterIds: chapterIds };
       const examKey = (sub?.examSubjectKey || stemMatchForTutor.stemSubjectId) as StemSubjectId | undefined;
-      if (session.examPrepMode === 'chrono75' || !resolvedGrade || !examKey || !examSession.examChapterIds?.length) {
-        // Révision sur le cahier, chronométrée 75 min
-        setFocusSession({ ...examSession, durationMinutes: 75 });
-        setActiveView('focus');
+      const examMode = session.examPrepMode;
+      const wantsCourse = examMode !== 'chrono75';
+      if (examMode !== 'chrono75' && resolvedGrade && examKey && chapterIds?.length) {
+        setActiveExamSession({ mode: examMode, session: examSession, subjectName, stemSubjectId: examKey, gradeLevel: resolvedGrade });
+        setActiveView('exam');
         soundFX.playCheckmarkPop();
         return;
       }
-      setActiveExamSession({ mode: session.examPrepMode, session: examSession, subjectName, stemSubjectId: examKey, gradeLevel: resolvedGrade });
-      setActiveView('exam');
+      if (wantsCourse) {
+        // Avant : bascule SILENCIEUSE sur le chronomètre, l'élève ne comprenait pas pourquoi il n'avait pas son sujet
+        const examLabel = sub?.examType === 'devoir' ? 'devoir' : 'examen';
+        if (resolvedGrade && examKey && !chapterIds?.length) {
+          showToast(`Choisis les chapitres de ton ${examLabel} de ${subjectName} (bouton « Modifier » de la matière) : KONAN pourra alors préparer ton sujet et tes questions.`, 9000);
+          setActiveView('subjects');
+          return;
+        }
+        showToast(!resolvedGrade
+          ? 'Indique ta classe exacte avec sa série (ex : 1ère D) en réimportant ton emploi du temps pour recevoir tes sujets de devoir. En attendant : révision chronométrée.'
+          : `KONAN ne reconnaît pas la matière « ${subjectName} » parmi ses cours. En attendant : révision chronométrée.`, 9000);
+      }
+      // Révision sur le cahier, chronométrée 75 min
+      setFocusSession({ ...examSession, durationMinutes: 75 });
+      setActiveView('focus');
       soundFX.playCheckmarkPop();
       return;
     }
@@ -1979,9 +2171,9 @@ export function App() {
    * Callback de complétion du Tuteur Interactif Duolingo / Séries de préparation examen :
    * Valide la séance, incrémente les statistiques et affiche la célébration avec le temps exact réalisé.
    */
-  const handleCompleteTutorSession = (studySessionId?: string, durationSec?: number) => {
+  const handleCompleteTutorSession = (studySessionId?: string, durationSec?: number, mistakes?: number) => {
     if (studySessionId) {
-      handleToggleSessionComplete(studySessionId, true);
+      handleToggleSessionComplete(studySessionId, true, mistakes);
     }
     setActiveTutorSession(null);
     setActiveView('dashboard');
@@ -2158,7 +2350,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#070B13] text-[#0F172A] dark:text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white w-full max-w-full overflow-x-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#0A0F1C] text-[#0F172A] dark:text-slate-100 flex flex-col selection:bg-sky-300 selection:text-slate-950 w-full max-w-full overflow-x-hidden transition-colors duration-300">
 
       {/* Hidden file input for JSON configuration backup imports */}
       <input
@@ -2193,7 +2385,8 @@ export function App() {
           onResetData={handleResetData}
           onLogout={handleLogout}
           onOpenSettings={() => setIsSettingsOpen(true)}
-          energy={gamificationEnabled ? {
+          // LMD, BTS : pas de cours, donc pas d'entraînement ni d'énergie (ils gagnent leurs XP au chronomètre)
+          energy={gamificationEnabled && gradeHasGuidedCourses ? {
             value: energyNow(state.gamification).energy,
             unlimited: hasUnlimitedEnergy(exercisePlan),
           } : null}
@@ -2202,6 +2395,8 @@ export function App() {
           completedSessions={state.studySessions ? state.studySessions.filter(s => s.completed).length : 0}
           pendingInvitations={pendingInvitations}
           ownerNotifications={ownerFeedbackNotifications}
+          paymentNotices={paymentNotices}
+          onOpenPaymentNotice={() => setIsSubscriptionOpen(true)}
           onAcceptInvitation={handleAcceptInvitation}
           onDeclineInvitation={handleDeclineInvitation}
         />
@@ -2211,7 +2406,7 @@ export function App() {
       {activeView !== 'admin' && activeView !== 'tutor' && isLocalAdminEnvironment() && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
         <button
           onClick={() => setActiveView('admin')}
-          className="fixed bottom-5 right-5 z-50 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs shadow-2xl shadow-purple-600/40 border border-purple-400/40 flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all"
+          className="fixed bottom-5 right-5 z-50 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-sky-400 text-white font-bold text-xs shadow-2xl shadow-purple-600/40 border border-purple-400/40 flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all"
         >
           <ShieldCheck className="w-4 h-4 text-purple-300" />
           <span>Console Admin</span>
@@ -2227,7 +2422,7 @@ export function App() {
         <Suspense fallback={<ViewLoader />}>
 
         {/* Real-time Administrator Console */}
-        {activeView === 'admin' && isLocalAdminEnvironment() && (
+        {activeView === 'admin' && canOpenAdmin && (
           <AdminDashboard
             onSwitchToStudentView={() => setActiveView('dashboard')}
             onExitAdmin={() => {
@@ -2243,7 +2438,7 @@ export function App() {
           <DuolingoOnboarding
             currentUser={state.userAccount?.isLoggedIn ? state.userAccount : null}
             onOpenLogin={() => setActiveView('auth')}
-            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
+            onOpenAdmin={canOpenAdmin ? () => setActiveView('admin') : undefined}
             onLoginSuccess={(user) => {
               handleLoginSuccess(user);
             }}
@@ -2265,7 +2460,7 @@ export function App() {
             onLoginSuccess={handleLoginSuccess}
             onEnterDemoMode={handleEnterDemoMode}
             onBackToLanding={() => setActiveView('landing')}
-            onOpenAdmin={isLocalAdminEnvironment() ? () => setActiveView('admin') : undefined}
+            onOpenAdmin={canOpenAdmin ? () => setActiveView('admin') : undefined}
             currentProfile={state.userAccount}
           />
         )}
@@ -2288,7 +2483,7 @@ export function App() {
             />
           ) : state.isDemoMode ? (
             <div className="text-center py-16 space-y-4 glass-panel max-w-md mx-auto p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/10">
+              <div className="w-14 h-14 rounded-2xl bg-sky-400/20 text-sky-700 flex items-center justify-center mx-auto shadow-lg shadow-sky-400/10 dark:text-sky-300">
                 <GraduationCap className="w-7 h-7" />
               </div>
               <div className="space-y-1.5">
@@ -2300,7 +2495,7 @@ export function App() {
               <div className="flex flex-col gap-2.5 pt-3">
                 <button
                   onClick={() => setActiveView('auth')}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs transition-colors cursor-pointer shadow-md shadow-blue-600/20"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-sky-400 hover:from-blue-500 hover:to-sky-400 text-white font-bold text-xs transition-colors cursor-pointer shadow-md shadow-blue-600/20"
                 >
                   Se connecter avec Google (3 imports gratuits)
                 </button>
@@ -2317,7 +2512,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour importer votre emploi du temps.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs cursor-pointer"
               >
                 Se connecter avec Google
               </button>
@@ -2366,6 +2561,11 @@ export function App() {
               isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
               userUid={state.userAccount?.googleId}
+              // Tuiles de la maquette : ligue (rang + division, élèves admis dans la ligue) et réputation
+              leagueSummary={gamificationEnabled && gradeIsInLeague
+                ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze' }
+                : null}
+              reputation={gamificationEnabled ? (leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) : undefined}
             />
             </>
           ) : (
@@ -2373,7 +2573,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Veuillez vous connecter pour accéder à votre tableau de bord.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2409,7 +2609,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour consulter votre emploi du temps.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2423,7 +2623,7 @@ export function App() {
             <SubjectManager
               subjects={state.subjects}
               isDemoMode={state.isDemoMode}
-              gradeLevel={state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel}
+              gradeLevel={studentGradeRaw}
               planTier={effectivePlanTier}
               onUpdateSubjects={handleUpdateSubjects}
               onTriggerPlanner={() => setActiveView('planner')}
@@ -2438,7 +2638,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour gérer vos matières.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2470,7 +2670,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour accéder à votre planning personnalisé.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2490,13 +2690,15 @@ export function App() {
                 setActiveView('dashboard');
               }}
               backLabel="Retour au tableau de bord"
+              // XP affichés à la fin du chronomètre (LMD et BTS gagnent ainsi leurs XP de ligue)
+              xpReward={gamificationEnabled && focusSession ? lessonXp(focusSession.durationMinutes) : undefined}
             />
           ) : (
             <div className="text-center py-16 space-y-4">
               <p className="text-lg text-white font-bold">Connexion requise pour accéder au chronomètre Focus.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2518,9 +2720,11 @@ export function App() {
               setActiveTutorSession(null);
               setActiveView('dashboard');
             }}
-            onSessionCompleted={(sessionId) => {
-              handleCompleteTutorSession(sessionId);
+            onSessionCompleted={(sessionId, stats) => {
+              handleCompleteTutorSession(sessionId, undefined, stats?.mistakes);
             }}
+            // KONAN Pro : « Explique à KONAN » (Feynman) après chaque mini-leçon ; il faut un compte connecté (serveur)
+            canExplain={(effectivePlanTier === 'pro' || effectivePlanTier === 'plus') && Boolean(state.userAccount?.isLoggedIn) && !state.isDemoMode}
           />
         )}
 
@@ -2537,9 +2741,9 @@ export function App() {
                 setActiveExamSession(null);
                 setActiveView('dashboard');
               }}
-              onComplete={(sessionId, durationSec) => {
+              onComplete={(sessionId, durationSec, mistakes) => {
                 setActiveExamSession(null);
-                handleCompleteTutorSession(sessionId, durationSec);
+                handleCompleteTutorSession(sessionId, durationSec, mistakes);
               }}
             />
           ) : (
@@ -2566,7 +2770,7 @@ export function App() {
           <LeaguePage
             board={leagueBoard}
             localReputation={gamificationOf(state.gamification).reputation}
-            hasCourses={/^(seconde|premiere|terminale)_/.test(leagueGrade || '')}
+            hasCourses={gradeIsInLeague}
             offline={leagueOffline}
             errorText={leagueError}
             resultSeen={leagueResultSeen}
@@ -2593,7 +2797,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour consulter vos analytics de progression.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2620,15 +2824,15 @@ export function App() {
       </main>
 
       {/* Icône ronde d'exercices (10 QCM au hasard, énergie ⚡) */}
-      {gamificationEnabled && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
+      {gamificationEnabled && gradeHasGuidedCourses && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
       )}
       {isExerciseOpen && (
         <SeriesErrorBoundary onClose={() => setIsExerciseOpen(false)}>
-        <Suspense fallback={<div className="fixed inset-0 z-[80] bg-slate-50 dark:bg-[#070B13] flex items-center justify-center"><ViewLoader /></div>}>
+        <Suspense fallback={<div className="fixed inset-0 z-[80] bg-slate-50 dark:bg-[#0A0F1C] flex items-center justify-center"><ViewLoader /></div>}>
           <ExerciseSeriesView
             userId={state.userAccount?.googleId || 'local_student'}
-            gradeLevel={tryResolveGradeLevel(state.userAccount?.gradeLevel || state.preferences?.gradeLevel || state.academicLevel)}
+            gradeLevel={canonicalGradeLevel(tryResolveGradeLevel(studentGradeRaw))}
             gamification={state.gamification}
             planTier={exercisePlan}
             onSpend={handleSpendEnergy}
@@ -2672,6 +2876,9 @@ export function App() {
         onResetData={handleResetData}
         onSelectPlan={handleSelectPlan}
         onUpgradeToPro={() => handleSelectPlan('pro')}
+        onOpenPlans={() => setIsPlansOpen(true)}
+        onOpenAdmin={isAdminAccount ? () => { setIsSettingsOpen(false); setActiveView('admin'); } : undefined}
+        subscriptionEndsAt={paidMode ? subscriptionInfo?.status?.endsAt : null}
         invitedEmails={state.userAccount?.invitedEmails || []}
         academicGoal={state.userAccount?.academicGoal || 'target_16'}
         onOpenGroupModal={() => {
@@ -2700,6 +2907,63 @@ export function App() {
         }}
         onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
       />
+
+      {/* Fiche des formules (Paramètres → « Voir les formules ») */}
+      {isPlansOpen && (
+        <Suspense fallback={null}>
+          <PlansSheet
+            currentTier={effectivePlanTier}
+            endsAt={paidMode ? subscriptionInfo?.status?.endsAt : null}
+            provisional={Boolean(paidMode && subscriptionInfo?.status?.provisional)}
+            grace={Boolean(paidMode && subscriptionInfo?.status?.grace)}
+            canRenew={paidMode}
+            onClose={() => setIsPlansOpen(false)}
+            onChoosePro={(period) => {
+              setIsPlansOpen(false);
+              setSubscriptionPeriod(period);
+              // Paiement ouvert : formulaire Wave / Orange Money (souscrire ou prolonger) ; sinon ancien parcours
+              if (paidMode) setIsSubscriptionOpen(true);
+              else handleSelectPlan('pro');
+            }}
+            onJoinPlus={() => {
+              setIsPlansOpen(false);
+              setWaitlistModalInfo({
+                isOpen: true,
+                featureTitle: 'KONAN Plus',
+                featureDescription: 'Planning réglé sur ton objectif, pack groupe de 5 comptes et musiques de concentration. Laisse ton contact : tu seras parmi les premiers prévenus à l’ouverture.',
+                requiredTier: 'plus',
+              });
+            }}
+          />
+        </Suspense>
+      )}
+
+      {/* Abonnement KONAN Pro (paiement Wave / Orange Money) */}
+      {isSubscriptionOpen && (
+        <Suspense fallback={null}>
+          <SubscriptionView
+            initialPeriod={subscriptionPeriod}
+            info={subscriptionInfo}
+            loading={subscriptionLoading}
+            loadError={subscriptionError}
+            onClose={() => setIsSubscriptionOpen(false)}
+            onRefresh={refreshSubscription}
+            onUpdated={(info) => {
+              setSubscriptionInfo(info);
+              if (info.status?.tier === 'pro') {
+                setState((prev) => {
+                  const next: AppState = { ...prev, planTier: 'pro', userAccount: prev.userAccount ? { ...prev.userAccount, planTier: 'pro' } : undefined };
+                  if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
+                  return next;
+                });
+                setIsSubscriptionOpen(false);
+                showToast('Bienvenue dans KONAN Pro ! Ton paiement sera vérifié.');
+                setActiveView('pro-wizard');
+              }
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Pro Upgrade Modal */}
       <ProFeatureModal
@@ -2825,10 +3089,10 @@ export function App() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-50 bg-white dark:bg-slate-900 border-2 border-indigo-200 dark:border-sky-400/50 text-slate-900 dark:text-white px-4 py-3 rounded-2xl shadow-xl shadow-indigo-950/15 dark:shadow-2xl dark:shadow-indigo-950/70 text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in slide-in-from-bottom-5 duration-200 max-w-[94vw] sm:max-w-md w-auto backdrop-blur-md"
+          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-50 bg-white dark:bg-slate-900 border-2 border-sky-200 dark:border-sky-400/50 text-slate-900 dark:text-white px-4 py-3 rounded-2xl shadow-xl shadow-slate-950/15 dark:shadow-2xl dark:shadow-slate-950/70 text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in slide-in-from-bottom-5 duration-200 max-w-[94vw] sm:max-w-md w-auto backdrop-blur-md"
         >
-          <div className="p-1.5 rounded-xl bg-indigo-50 dark:bg-sky-500/20 text-indigo-600 dark:text-sky-300 shrink-0 mt-0.5 border border-indigo-200 dark:border-sky-500/30">
-            <Sparkles className="w-4 h-4 text-indigo-600 dark:text-sky-300" />
+          <div className="p-1.5 rounded-xl bg-sky-50 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 shrink-0 mt-0.5 border border-sky-200 dark:border-sky-500/30">
+            <Sparkles className="w-4 h-4 text-sky-700 dark:text-sky-300" />
           </div>
           <div className="flex-1 min-w-0 pr-1">
             <p className="text-slate-900 dark:text-white text-xs sm:text-sm font-bold leading-relaxed break-words whitespace-normal">

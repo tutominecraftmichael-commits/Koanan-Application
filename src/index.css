@@ -4,6 +4,78 @@
 @theme {
   --color-slate-750: #1b253b;
   --color-slate-850: #0f172a;
+  /* Charte Excellence (2026-11-16) : « encre » et « ardoise » remplacent les deux noirs les plus profonds.
+     Tout ce qui utilise slate-900 / slate-950 prend la même teinte que la fiche KONAN Pro. */
+  --color-slate-900: #131B2C;
+  --color-slate-950: #0A0F1C;
+  /* Couleurs de marque : bg-konan-gold, text-konan-gold… */
+  --color-konan-ink: #0A0F1C;
+  --color-konan-slate: #131B2C;
+  --color-konan-blue: #38BDF8;
+  --color-konan-blue-deep: #0369A1;
+  --color-konan-gold: #F5C451;
+  --color-konan-gold-deep: #A16207;
+}
+
+/* ---------------------------------------------------------------------------
+   Charte Excellence : « sobre au repos, vivant dans la victoire »
+   --------------------------------------------------------------------------- */
+/* Petit titre doré en capitales (« LUNDI 16 NOVEMBRE », « PROCHAINE SÉANCE ») */
+@utility konan-kicker {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #8A5A00;
+  :where(.dark) & { color: #F5C451; }
+}
+/* Bouton d'action principal : bleu KONAN avec relief (côté Duolingo) */
+@utility konan-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 1rem;
+  background: #38BDF8;
+  color: #04121F;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 0 #0369A1;
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+  &:hover { background: #7DD3FC; }
+  &:active { transform: translateY(3px); box-shadow: 0 1px 0 #0369A1; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+/* Bouton « excellence » : or (KONAN Pro, récompenses) */
+@utility konan-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 1rem;
+  background: #F5C451;
+  color: #1A1203;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 0 #A16207;
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+  &:hover { background: #F8D47A; }
+  &:active { transform: translateY(3px); box-shadow: 0 1px 0 #A16207; }
+}
+/* Carte importante : un fil d'or en haut */
+@utility konan-hairline {
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245, 196, 81, 0.85), transparent);
+    pointer-events: none;
+  }
 }
 
 @layer base {
@@ -42,8 +114,8 @@
   .dark body,
   :root.dark body,
   body[data-theme="dark"] {
-    background-color: #070B13;
-    color: #F1F5F9;
+    background-color: #0A0F1C;
+    color: #F5F7FB;
   }
 
   #root {
@@ -217,12 +289,12 @@
 }
 
 .radial-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.06) 0%, rgba(56, 189, 248, 0.02) 45%, transparent 70%);
+  background: none; /* Charte Excellence : fond uni, sans halo bleu */
 }
 
 .dark .radial-glow,
 [data-theme="dark"] .radial-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.12) 0%, rgba(56, 189, 248, 0.03) 45%, transparent 70%);
+  background: none;
 }
 
 /* Mascotte KONAN de la bannière d'alerte : petit balancement façon Duolingo */

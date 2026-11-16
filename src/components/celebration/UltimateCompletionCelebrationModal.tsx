@@ -136,7 +136,7 @@ export const UltimateCompletionCelebrationModal: React.FC<UltimateCompletionCele
       {/* Ambient background glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
         <div className="w-[30rem] h-[30rem] rounded-full bg-amber-500/10 blur-3xl animate-pulse" />
-        <div className="w-[24rem] h-[24rem] rounded-full bg-indigo-500/10 blur-3xl animate-pulse delay-700" />
+        <div className="w-[24rem] h-[24rem] rounded-full bg-sky-400/10 blur-3xl animate-pulse delay-700" />
       </div>
 
       <div className="relative w-full max-w-xl rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 border border-amber-500/30 shadow-2xl shadow-amber-500/15 overflow-hidden flex flex-col p-5 sm:p-7 space-y-5 text-center">
@@ -208,7 +208,7 @@ export const UltimateCompletionCelebrationModal: React.FC<UltimateCompletionCele
                     ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 shadow-md shadow-emerald-500/50'
                     : isSuspense
                     ? 'bg-gradient-to-r from-amber-500 to-amber-300 shadow-md shadow-amber-500/40'
-                    : 'bg-gradient-to-r from-indigo-500 to-cyan-400'
+                    : 'bg-gradient-to-r from-sky-400 to-cyan-400'
                 }`}
                 style={{ width: `${progress}%` }}
               >

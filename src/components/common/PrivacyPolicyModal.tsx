@@ -191,7 +191,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             size="md"
             disabled={!hasAgreed}
             onClick={onAccept}
-            className="w-full sm:w-auto text-sm font-black py-3 px-6 !bg-none !bg-sky-500 hover:!bg-sky-400 !text-white !border-sky-400 !shadow-[0_4px_0_#0284C7]"
+            className="w-full sm:w-auto text-sm font-black py-3 px-6 !bg-none !bg-sky-400 hover:!bg-sky-300 !text-slate-950 !border-sky-400 !shadow-[0_4px_0_#0369A1]"
           >
             {isGatekeeper ? 'Accepter et continuer' : 'J’ai compris'}
           </Button>
