@@ -9,6 +9,10 @@ import { DIVISION_STYLES } from '../../services/leagueApi';
  */
 
 const DIVISION_ORDER = [1, 2, 3, 4, 5];
+/** Couleur pleine de chaque division (badge hexagonal de la maquette) */
+/** Fonds des initiales (comme la maquette) */
+const AVATAR_COLORS = ['#1E3A5F', '#3B1F4A', '#1F4A3A', '#4A3A1F', '#1F3A4A', '#3A1F2A'];
+const HEX_COLORS: Record<number, string> = { 1: '#B45309', 2: '#94A3B8', 3: '#F5C451', 4: '#38BDF8', 5: '#F472B6' };
 const ordinal = (n: number) => (n === 1 ? '1er' : `${n}e`);
 
 export function timeLeftLabel(endsAt: number, now = Date.now()): string {
@@ -191,7 +195,13 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
       <div className="max-w-xl mx-auto space-y-4">
         {/* En-tête : badge de la division, petit titre doré, nom de la division, fin de semaine */}
         <div className="flex items-center gap-3.5">
-          <DivisionBadge division={board.division} size={60} />
+          {/* Badge hexagonal de la division (maquette) */}
+          <svg width="60" height="66" viewBox="0 0 64 70" aria-label={`Division ${current.name}`} role="img" className="shrink-0">
+            <polygon points="32,2 61,18 61,52 32,68 3,52 3,18" fill="#141A28" stroke={HEX_COLORS[board.division] || HEX_COLORS[3]} strokeWidth="2.5" strokeLinejoin="round" />
+            <polygon points="32,10 54,22 54,48 32,60 10,48 10,22" fill={HEX_COLORS[board.division] || HEX_COLORS[3]} />
+            <path d="M24 26h16v6a8 8 0 0 1-16 0z M28 44h8 M32 40v4" fill="none" stroke="#141A28" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M24 28h-4v2a4 4 0 0 0 4 4 M40 28h4v2a4 4 0 0 1-4 4" fill="none" stroke="#141A28" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
           <div className="min-w-0 flex-1">
             <span className="konan-kicker">Ligue de la semaine</span>
             <h1 className="text-[26px] leading-tight font-extrabold tracking-tight text-slate-900 dark:text-white">Division {current.name}</h1>
@@ -224,7 +234,10 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
               <React.Fragment key={d}>
                 {i > 0 && <span aria-hidden="true" className={`flex-1 h-0.5 mx-1 mb-4 ${d <= board.division ? 'bg-slate-300 dark:bg-white/20' : 'bg-slate-200 dark:bg-white/[0.07]'}`} />}
                 <span className={`flex flex-col items-center gap-1 text-[10px] font-bold ${isCurrent ? current.text + ' font-extrabold' : passed ? 'text-slate-600 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
-                  <span className={`rounded-[9px] ${DIVISION_STYLES[d].badge} ${isCurrent ? 'w-8 h-8 ring-[3px] ring-offset-[3px] ring-offset-white dark:ring-offset-slate-900 ' + DIVISION_STYLES[d].ring : passed ? 'w-[26px] h-[26px]' : 'w-[26px] h-[26px] opacity-30'}`} />
+                  <span
+                    className={`rounded-[9px] ${isCurrent ? 'w-8 h-8 ring-[3px] ring-offset-[3px] ring-offset-white dark:ring-offset-slate-900 ' + DIVISION_STYLES[d].ring : 'w-[26px] h-[26px]'} ${!isCurrent && !passed ? 'border-[1.5px] border-dashed' : ''}`}
+                    style={isCurrent || passed ? { background: HEX_COLORS[d] } : { background: HEX_COLORS[d] + '40', borderColor: HEX_COLORS[d] }}
+                  />
                   {DIVISION_STYLES[d].name}
                 </span>
               </React.Fragment>
@@ -254,7 +267,7 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
                 {row.avatar ? (
                   <img src={row.avatar} alt="" loading="lazy" referrerPolicy="no-referrer" className={`w-9 h-9 rounded-full object-cover shrink-0 ${row.me ? 'ring-2 ring-sky-400' : 'ring-1 ring-slate-200 dark:ring-white/10'}`} />
                 ) : (
-                  <span className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-[13px] font-extrabold text-slate-700 dark:text-slate-200 shrink-0">
+                  <span className="w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-extrabold text-white shrink-0" style={{ background: AVATAR_COLORS[[...row.name].reduce((h, ch) => h + ch.charCodeAt(0), 0) % AVATAR_COLORS.length] }}>
                     {row.name.slice(0, 1).toUpperCase()}
                   </span>
                 )}
@@ -269,8 +282,6 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
                     {row.classLabel}{row.me && gapToNext ? `${row.classLabel ? ' · ' : ''}encore ${gapToNext} XP pour la ${ordinal(row.rank - 1)} place` : ''}
                   </span>
                 </span>
-                {zone === 'up' && <ArrowUp className="w-4 h-4 text-emerald-500" aria-label="zone de montée" />}
-                {zone === 'down' && <ArrowDown className="w-4 h-4 text-rose-500" aria-label="zone de descente" />}
                 <span className="text-sm font-extrabold text-slate-900 dark:text-white tabular-nums">{row.xp} XP</span>
               </li>
             );

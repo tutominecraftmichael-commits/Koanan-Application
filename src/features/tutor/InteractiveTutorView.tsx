@@ -12,7 +12,7 @@ import {
   Target,
   Brain,
   BookOpen,
-  HelpCircle,
+
   RotateCcw,
   RefreshCw,
   Zap,
@@ -403,7 +403,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const [isAnswerChecked, setIsAnswerChecked] = useState<boolean>(false);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean>(false);
   // Affichage de la justification à la demande (bouton "Pourquoi ?") sur bonne réponse
-  const [showExplanation, setShowExplanation] = useState<boolean>(false);
+  const [, setShowExplanation] = useState<boolean>(false);
 
   // Indices des étapes manquées au premier passage (pour la boucle de rattrapage)
   const [missedIndices, setMissedIndices] = useState<number[]>([]);
@@ -421,6 +421,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   // Erreurs de la séance : TOUTES les réponses fausses (révision, leçon, rattrapage, rappel). Chacune retire 1 XP.
   // Avant, la fin de séance affichait 100 % même après des erreurs rattrapées.
   const [mistakeCount, setMistakeCount] = useState<number>(0);
+  // Bonnes réponses d’affilée (bandeau « 5 bonnes réponses d’affilée »)
+  const [correctStreak, setCorrectStreak] = useState<number>(0);
   const mistakeCountRef = useRef<number>(0);
   mistakeCountRef.current = mistakeCount;
   // Score réel de chaque mini-leçon : bonnes réponses du premier coup sur le nombre d'étapes
@@ -725,6 +727,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
     const isCorrect = Number(selectedOptionIndex) === Number(activeExercise.correctAnswerIndex);
     setIsAnswerChecked(true);
     setIsAnswerCorrect(isCorrect);
+    setCorrectStreak((s) => (isCorrect ? s + 1 : 0));
     setTotalExercisesAnswered(prev => prev + 1);
     coach.answered(isCorrect);
 
@@ -2083,203 +2086,161 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           </div>
           )}
 
-          {/* PARTIE 2 : LE TEST DE COMPRÉHENSION IMMÉDIAT (ADAPTÉ STRICTEMENT À L'ÉTAPE) */}
-          <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
-            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-              <span className="font-extrabold uppercase tracking-wider text-sky-700 dark:text-sky-400 flex items-center gap-1.5">
-                <Target className="w-4 h-4" />
-                <span>
-                  {phase === 'warmup'
-                    ? `Révision ${warmupIndex + 1}/${warmupItems.length} · De mémoire`
-                    : phase === 'recall'
-                    ? `Rappel ${recallIndex + 1}/${recallSteps.length} · De mémoire`
-                    : activeCourseSlice.stepBadge
-                    ? `${activeCourseSlice.stepBadge} · Test de compréhension`
-                    : `QCM ${activeStepIndex + 1}/${totalSteps} · Compréhension`}
-                </span>
+          {/* PARTIE 2 (charte Excellence, comme la maquette) : la mascotte pose la question, réponses A-D à relief */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[10.5px] font-bold uppercase tracking-[0.22em] text-amber-800 dark:text-[#F5C451]">
+                {phase === 'warmup'
+                  ? `Révision ${warmupIndex + 1}/${warmupItems.length} · De mémoire`
+                  : phase === 'recall'
+                  ? `Rappel ${recallIndex + 1}/${recallSteps.length} · De mémoire`
+                  : activeCourseSlice.stepBadge
+                  ? `${activeCourseSlice.stepBadge} · Question`
+                  : `Question ${activeStepIndex + 1}/${totalSteps}`}
               </span>
-
               {phase === 'catchup' && (
-                <span className="px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 animate-pulse">
+                <span className="px-2.5 py-1 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-400/15 dark:text-orange-300 text-[11px] font-extrabold uppercase tracking-wider flex items-center gap-1.5">
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Rattrapage</span>
                 </span>
               )}
             </div>
 
-            {/* Énoncé de la question */}
-            <div className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white leading-relaxed">
-              <MathRenderer text={activeExercise.prompt} />
+            {/* La mascotte et la question dans une bulle */}
+            <div className="flex items-end gap-2.5">
+              <div className="shrink-0 -mb-1">
+                <KonanMascot pose={isAnswerChecked ? (isAnswerCorrect ? 'jump' : 'encourage') : 'idle'} size={64} />
+              </div>
+              <div className="flex-1 min-w-0 px-4 py-3.5 rounded-[18px] rounded-bl-[4px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-[15px] leading-relaxed font-semibold text-slate-900 dark:text-white">
+                <MathRenderer text={activeExercise.prompt} />
+              </div>
             </div>
 
-            {/* Support Visuel de la question si présent */}
+            {/* Support visuel de la question si présent */}
             {activeExercise.visualSchema && (
               <VisualSchemaRenderer schema={activeExercise.visualSchema} />
             )}
 
-            {/* Options QCM / Vrai-Faux */}
+            {/* Réponses : grosses tuiles à relief */}
             {activeExercise.options && activeExercise.options.length > 0 && (
-              <div className="grid gap-2.5">
+              <div role="radiogroup" aria-label="Réponses" className="grid gap-2.5">
                 {activeExercise.options.map((opt, oIdx) => {
                   const isSelected = selectedOptionIndex === oIdx;
                   const letter = String.fromCharCode(65 + oIdx);
-
-                  let btnStyle = 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-sky-400 dark:hover:border-sky-400 shadow-2xs';
-
-                  if (isSelected && !isAnswerChecked) {
-                    btnStyle = 'bg-sky-50 dark:bg-sky-400/70 border-sky-400 dark:border-sky-400 text-sky-900 dark:text-sky-200 shadow-sm ring-2 ring-sky-400/20';
-                  }
-
-                  if (isAnswerChecked) {
-                    if (oIdx === activeExercise.correctAnswerIndex) {
-                      btnStyle = 'bg-emerald-50 dark:bg-emerald-950/70 border-emerald-500 text-emerald-900 dark:text-emerald-200 ring-2 ring-emerald-500/30';
-                    } else if (isSelected && !isAnswerCorrect) {
-                      btnStyle = 'bg-rose-50 dark:bg-rose-950/70 border-rose-500 text-rose-900 dark:text-rose-200 ring-2 ring-rose-500/30';
-                    } else {
-                      btnStyle = 'opacity-40 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 text-slate-500';
-                    }
-                  }
-
+                  const isRight = isAnswerChecked && oIdx === activeExercise.correctAnswerIndex;
+                  const isWrongPick = isAnswerChecked && isSelected && !isAnswerCorrect;
+                  const tile = isRight
+                    ? 'bg-emerald-50 dark:bg-emerald-400/[0.12] border-emerald-500 dark:border-emerald-400 shadow-[0_3px_0_#047857] text-slate-900 dark:text-white font-bold'
+                    : isWrongPick
+                    ? 'bg-orange-50 dark:bg-orange-400/[0.12] border-orange-400 shadow-[0_3px_0_#C2410C] text-slate-900 dark:text-white font-bold'
+                    : isAnswerChecked
+                    ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-500 opacity-60'
+                    : isSelected
+                    ? 'bg-sky-50 dark:bg-sky-400/[0.12] border-sky-400 shadow-[0_3px_0_#0369A1] text-slate-900 dark:text-white font-bold'
+                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 shadow-[0_3px_0_rgba(15,23,42,0.08)] dark:shadow-[0_3px_0_rgba(255,255,255,0.06)] text-slate-900 dark:text-white font-semibold hover:border-sky-300 dark:hover:border-sky-400/60';
+                  const key = isRight
+                    ? 'bg-emerald-500 dark:bg-emerald-400 text-white dark:text-[#052E1F] border-transparent'
+                    : isWrongPick
+                    ? 'bg-orange-400 text-[#431407] border-transparent'
+                    : isSelected && !isAnswerChecked
+                    ? 'bg-sky-400 text-slate-950 border-transparent'
+                    : 'border-slate-300 dark:border-white/20 text-slate-500 dark:text-slate-400';
                   return (
                     <button
                       key={oIdx}
                       type="button"
+                      role="radio"
+                      aria-checked={isSelected}
                       disabled={isAnswerChecked}
                       onClick={() => handleSelectOption(oIdx)}
-                      className={`w-full p-3.5 sm:p-4 rounded-xl border-2 text-left font-semibold text-xs sm:text-sm flex items-start justify-between gap-3 transition-all cursor-pointer disabled:cursor-default select-none touch-manipulation active:scale-[0.99] ${btnStyle}`}
+                      className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl border-2 text-left text-[15px] transition-all cursor-pointer disabled:cursor-default select-none touch-manipulation active:translate-y-[2px] ${tile}`}
                     >
-                      <div className="flex items-start gap-3 min-w-0 pointer-events-none">
-                        <span
-                          className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 mt-0.5 ${
-                            isSelected
-                              ? 'bg-sky-400 text-slate-950'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-                          }`}
-                        >
-                          {letter}
-                        </span>
-                        <div className="leading-snug pt-0.5 pointer-events-none">
-                          <MathRenderer text={opt} />
-                        </div>
-                      </div>
-
-                      {isAnswerChecked && oIdx === activeExercise.correctAnswerIndex && (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 pointer-events-none" />
-                      )}
-                      {isAnswerChecked && isSelected && !isAnswerCorrect && (
-                        <AlertCircle className="w-5 h-5 text-rose-500 shrink-0 pointer-events-none" />
-                      )}
+                      <span className={`w-7 h-7 rounded-[9px] border-[1.5px] text-[13px] font-extrabold flex items-center justify-center shrink-0 pointer-events-none ${key}`}>
+                        {isRight ? <CheckCircle2 className="w-4 h-4 stroke-[3]" /> : letter}
+                      </span>
+                      <span className="leading-snug min-w-0 pointer-events-none"><MathRenderer text={opt} /></span>
                     </button>
                   );
                 })}
               </div>
             )}
 
-            {/* RÉACTION ENTHOUSIASTE ET BULLE DE DIALOGUE DE LA MASCOTTE KONAN */}
-            {isAnswerChecked && (
-              <div
-                className={`p-4 sm:p-5 rounded-2xl border-2 space-y-3 animate-in zoom-in-95 duration-200 ${
-                  isAnswerCorrect
-                    ? 'bg-emerald-50/90 dark:bg-emerald-950/50 border-emerald-500 shadow-md shadow-emerald-500/10'
-                    : 'bg-amber-50/90 dark:bg-amber-950/40 border-amber-500 shadow-md shadow-amber-500/10'
+            {/* Bouton « Vérifier » (avant la réponse) */}
+            {!isAnswerChecked && (
+              <button
+                type="button"
+                disabled={selectedOptionIndex === null}
+                onClick={handleVerifyAnswer}
+                className={`w-full h-14 rounded-2xl text-[15px] font-extrabold tracking-wide transition-all flex items-center justify-center select-none ${
+                  selectedOptionIndex !== null
+                    ? 'konan-btn cursor-pointer'
+                    : 'bg-slate-200 dark:bg-slate-900 text-slate-500 dark:text-slate-500 border border-slate-300 dark:border-white/10 cursor-not-allowed'
                 }`}
               >
-                <div className="flex items-start gap-3.5">
-                  <div className="shrink-0 pt-0.5">
-                    <KonanCube size={50} showStars={isAnswerCorrect} glow={true} />
-                  </div>
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      {isAnswerCorrect ? (
-                        <div className="w-full flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
-                            <span className="text-sm sm:text-base font-black text-emerald-900 dark:text-emerald-200">
-                              Bravo !
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setShowExplanation(prev => !prev)}
-                            className="px-3 py-1 rounded-xl text-xs font-bold border border-emerald-300 dark:border-emerald-700/80 bg-white dark:bg-slate-900 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-slate-800 transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
-                          >
-                            <HelpCircle className="w-3.5 h-3.5" />
-                            <span>{showExplanation ? 'Masquer' : 'Pourquoi ?'}</span>
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 stroke-[2.5]" />
-                            <span className="text-xs sm:text-sm font-black text-amber-900 dark:text-amber-200">
-                              Ce n'est pas la bonne réponse. Regarde la correction :
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Justification : affichée directement si faute, ou à la demande si succès */}
-                    {(!isAnswerCorrect || showExplanation) && (
-                      <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium bg-white/80 dark:bg-slate-900/80 p-3 rounded-xl border border-slate-200/60 dark:border-slate-800 space-y-1.5 animate-in fade-in duration-150">
-                        {!isAnswerCorrect && activeExercise.options && activeExercise.correctAnswerIndex !== undefined && (
-                          <p className="font-bold text-emerald-700 dark:text-emerald-400">
-                            Bonne réponse : <MathRenderer text={activeExercise.options[activeExercise.correctAnswerIndex]} />
-                          </p>
-                        )}
-                        <MathRenderer text={activeExercise.explanation} />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+                {selectedOptionIndex === null ? 'Choisis une réponse' : 'Vérifier'}
+              </button>
             )}
 
-            {/* Bouton d'Action Duolingo */}
-            <div className="pt-2">
-              {!isAnswerChecked ? (
-                <button
-                  type="button"
-                  disabled={selectedOptionIndex === null}
-                  onClick={handleVerifyAnswer}
-                  className={`w-full py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wide uppercase transition-all flex items-center justify-center gap-2 select-none ${
-                    selectedOptionIndex !== null
-                      ? 'bg-sky-400 hover:bg-sky-300 text-slate-950 shadow-[0_5px_0_#0369A1] active:translate-y-1 cursor-pointer'
-                      : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-300 dark:border-slate-700 cursor-not-allowed opacity-60'
-                  }`}
-                >
-                  <span>
-                    {selectedOptionIndex === null
-                      ? 'Sélectionne une réponse ci-dessus'
-                      : 'Vérifier ma compréhension'}
-                  </span>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleContinueAfterFeedback}
-                  className={`w-full py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wide uppercase transition-all cursor-pointer flex items-center justify-center gap-2 select-none active:translate-y-1 ${
-                    isAnswerCorrect
-                      ? 'konan-btn'
-                      : 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300/60 dark:border-amber-400/50 shadow-[0_5px_0_#d97706] hover:shadow-[0_2px_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
-                  }`}
-                >
-                  <span>
-                    {phase === 'warmup' || phase === 'recall'
-                      ? (isLastQuestionOfPhase
-                        ? (phase === 'warmup' ? 'Passer à la leçon du jour' : 'Terminer la mini-leçon')
-                        : 'Question suivante')
-                      : phase === 'catchup'
-                      ? (isAnswerCorrect ? "Continuer le rattrapage" : "Question suivante")
-                      : isAnswerCorrect
-                        ? (activeStepIndex === totalSteps - 1 ? "Terminer et valider la mini-leçon" : "Continuer vers l'étape suivante")
-                        : (activeStepIndex === totalSteps - 1 ? "Passer à la boucle de rattrapage" : "J'ai compris, étape suivante")}
-                  </span>
-                  <ArrowRight className="w-5 h-5 stroke-[2.5]" />
-                </button>
-              )}
-            </div>
+            {/* Après la réponse : place réservée pour le bandeau du bas */}
+            {isAnswerChecked && <div aria-hidden="true" className="h-64" />}
           </div>
+
+          {/* Bandeau qui monte du bas, comme la maquette : vert si juste, orange sinon */}
+          {isAnswerChecked && (() => {
+            const firstTry = isAnswerCorrect && phase !== 'catchup' && !missedIndices.includes(activeStepIndex);
+            const label = phase === 'warmup' || phase === 'recall'
+              ? (isLastQuestionOfPhase ? (phase === 'warmup' ? 'Passer à la leçon du jour' : 'Terminer la mini-leçon') : 'Question suivante')
+              : phase === 'catchup'
+              ? (isAnswerCorrect ? 'Continuer le rattrapage' : 'Question suivante')
+              : isAnswerCorrect
+              ? (activeStepIndex === totalSteps - 1 ? 'Terminer la mini-leçon' : 'Continuer')
+              : (activeStepIndex === totalSteps - 1 ? 'Passer au rattrapage' : 'J’ai compris');
+            return (
+              <div
+                role="status"
+                className={`fixed inset-x-0 bottom-0 z-[60] border-t-2 animate-in slide-in-from-bottom-6 duration-200 ${
+                  isAnswerCorrect
+                    ? 'bg-emerald-50 border-emerald-500 dark:bg-[#0E2A22] dark:border-emerald-400'
+                    : 'bg-orange-50 border-orange-400 dark:bg-[#2A1A0E] dark:border-orange-400'
+                }`}
+              >
+                <div className="max-w-3xl mx-auto px-5 pt-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isAnswerCorrect ? 'bg-emerald-500 dark:bg-emerald-400' : 'bg-orange-400'}`}>
+                      {isAnswerCorrect
+                        ? <CheckCircle2 className="w-6 h-6 text-white dark:text-[#052E1F] stroke-[2.6]" />
+                        : <AlertCircle className="w-6 h-6 text-[#431407] stroke-[2.6]" />}
+                    </span>
+                    <div className="min-w-0">
+                      <p className={`text-xl font-extrabold ${isAnswerCorrect ? 'text-emerald-800 dark:text-emerald-300' : 'text-orange-800 dark:text-orange-300'}`}>
+                        {isAnswerCorrect ? (firstTry ? 'Exact, du premier coup !' : 'Exact !') : 'Pas tout à fait…'}
+                      </p>
+                      {isAnswerCorrect && correctStreak >= 2 && (
+                        <p className="text-xs font-bold text-emerald-700 dark:text-emerald-200">{correctStreak} bonnes réponses d’affilée</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className={`text-sm leading-relaxed max-h-40 overflow-y-auto ${isAnswerCorrect ? 'text-emerald-900 dark:text-emerald-50' : 'text-orange-950 dark:text-orange-50'}`}>
+                    {!isAnswerCorrect && activeExercise.options && activeExercise.correctAnswerIndex !== undefined && (
+                      <p className="font-bold mb-1">Bonne réponse : <MathRenderer text={activeExercise.options[activeExercise.correctAnswerIndex]} /></p>
+                    )}
+                    <MathRenderer text={activeExercise.explanation} />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleContinueAfterFeedback}
+                    className={`w-full h-14 rounded-2xl text-[15px] font-extrabold tracking-wide cursor-pointer flex items-center justify-center gap-2 select-none active:translate-y-[3px] transition-transform ${
+                      isAnswerCorrect
+                        ? 'bg-emerald-400 hover:bg-emerald-300 text-[#052E1F] shadow-[0_4px_0_#047857]'
+                        : 'bg-orange-400 hover:bg-orange-300 text-[#431407] shadow-[0_4px_0_#C2410C]'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       )}
 
@@ -2330,15 +2291,16 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     <span className="block text-[22px] font-extrabold tabular-nums text-slate-900 dark:text-white">{firstTry}/{pointExercises.length}</span>
                     <span className="block text-[11px] text-slate-600 dark:text-slate-400">du premier coup</span>
                   </div>
+                  {/* XP de la séance (vrais chiffres : barème de la séance moins 1 XP par erreur, rattrapage compris) */}
+                  <div className="rounded-2xl px-2 py-3 bg-slate-50 dark:bg-slate-900 border-[1.5px] border-amber-300 dark:border-[#F5C451]/55">
+                    <span className="block text-[10px] font-extrabold uppercase tracking-[0.14em] text-amber-800 dark:text-[#F5C451]">XP</span>
+                    <span className="block text-[22px] font-extrabold tabular-nums text-slate-900 dark:text-white">+{sessionXp}</span>
+                    <span className="block text-[11px] text-slate-600 dark:text-slate-400">{mistakeCount ? `${sessionBaseXp} − ${mistakeCount} erreur${mistakeCount > 1 ? 's' : ''}` : 'séance sans erreur'}</span>
+                  </div>
                   <div className={`rounded-2xl px-2 py-3 bg-slate-50 dark:bg-slate-900 border-[1.5px] ${missedCount ? 'border-orange-300 dark:border-orange-400/50' : 'border-emerald-300 dark:border-emerald-400/50'}`}>
                     <span className={`block text-[10px] font-extrabold uppercase tracking-[0.14em] ${missedCount ? 'text-orange-700 dark:text-orange-300' : 'text-emerald-700 dark:text-emerald-300'}`}>Erreur{missedCount > 1 ? 's' : ''}</span>
                     <span className="block text-[22px] font-extrabold tabular-nums text-slate-900 dark:text-white">{missedCount}</span>
                     <span className="block text-[11px] text-slate-600 dark:text-slate-400">{missedCount ? (missedCount > 1 ? 'rattrapées' : 'rattrapée') : 'parfait !'}</span>
-                  </div>
-                  <div className="rounded-2xl px-2 py-3 bg-slate-50 dark:bg-slate-900 border-[1.5px] border-amber-300 dark:border-[#F5C451]/55">
-                    <span className="block text-[10px] font-extrabold uppercase tracking-[0.14em] text-amber-800 dark:text-[#F5C451]">Chapitre</span>
-                    <span className="block text-[22px] font-extrabold tabular-nums text-slate-900 dark:text-white">{currentItem.pointIndexInChapter + 1}/{currentItem.totalPointsInChapter}</span>
-                    <span className="block text-[11px] text-slate-600 dark:text-slate-400">mini-leçons</span>
                   </div>
                 </div>
               )}

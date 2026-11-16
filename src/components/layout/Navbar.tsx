@@ -131,9 +131,12 @@ export interface NavbarProps {
 
 /** Icône KONAN (le cube) pour l'onglet Accueil de la barre du bas. */
 const KonanTabIcon: React.FC<{ isActive?: boolean; className?: string }> = ({ isActive }) => (
-  <span className={`inline-flex transition-transform ${isActive ? 'scale-110' : 'opacity-80'}`}>
-    <KonanCube size={22} showStars={false} glow={false} />
-  </span>
+  // Le cube de la maquette (charte Excellence) : trois faces, sans contour
+  <svg width={isActive ? 26 : 24} height={isActive ? 26 : 24} viewBox="0 0 120 120" aria-hidden="true" style={{ opacity: isActive ? 1 : 0.75 }}>
+    <polygon points="60,14 104,38 60,62 16,38" fill="#BAE6FD" />
+    <polygon points="16,38 60,62 60,110 16,86" fill="#38BDF8" />
+    <polygon points="60,62 104,38 104,86 60,110" fill="#0284C7" />
+  </svg>
 );
 const lucideTab = (Icon: React.FC<{ className?: string; strokeWidth?: number }>) =>
   ({ className }: { isActive?: boolean; className?: string }) => <Icon className={className} strokeWidth={2.2} />;
@@ -1036,17 +1039,23 @@ export const Navbar: React.FC<NavbarProps> = ({
       <nav 
         role="navigation"
         aria-label="Navigation principale mobile"
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#0B0F19]/95 backdrop-blur-md border-t border-slate-200/90 dark:border-white/10 px-2 pt-1.5 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_25px_rgba(0,0,0,0.6)]"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[#0D1322] border-t border-slate-200 dark:border-white/[0.07] px-2 pb-safe"
       >
-        <div className="grid grid-cols-6 items-center justify-items-center max-w-md mx-auto">
+        {/* Barre du bas de la maquette : icône + libellé, l'onglet actif dans sa couleur (Planning bleu, Accueil blanc, Ligue or) */}
+        <div className="grid grid-cols-6 items-center max-w-md mx-auto h-[68px]">
           {mobileItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
-            const shortLabel = item.label;
+            const activeColor = item.id === 'league'
+              ? 'text-amber-700 dark:text-[#F5C451]'
+              : item.id === 'dashboard'
+                ? 'text-slate-900 dark:text-white'
+                : 'text-sky-700 dark:text-[#38BDF8]';
             return (
               <button
                 key={`bottom-${item.id}`}
                 type="button"
+                aria-current={isActive ? 'page' : undefined}
                 onClick={() => {
                   soundFX.playCheckmarkPop();
                   if (!userAccount?.isLoggedIn && !isDemoMode) {
@@ -1055,32 +1064,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onNavigate(item.id);
                   }
                 }}
-                className={`flex flex-col items-center justify-center py-1 px-1 w-full rounded-xl transition-all cursor-pointer relative ${
-                  isActive 
-                    ? 'text-blue-600 dark:text-white font-bold' 
-                    : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                className={`flex flex-col items-center justify-center gap-[3px] w-full h-full cursor-pointer transition-colors ${
+                  isActive ? `${activeColor} font-extrabold` : 'text-slate-500 dark:text-[#8B96A8] font-bold hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
-                {isActive && (
-                  <span className="absolute -top-1.5 w-6 h-1 bg-gradient-to-r from-blue-600 to-sky-400 dark:from-blue-500 dark:to-sky-400 rounded-full shadow-[0_0_8px_rgba(79,70,229,0.5)] dark:shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
-                )}
-                <Icon 
-                  isActive={isActive} 
-                  className={`w-4.5 h-4.5 transition-transform duration-200 ${
-                    isActive 
-                      ? 'scale-110 text-blue-600 dark:text-white drop-shadow-[0_0_6px_rgba(37,99,235,0.3)] dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]' 
-                      : ''
-                  }`} 
-                />
-                <span className={`text-[10px] mt-1 tracking-tight truncate max-w-full ${
-                  isActive ? 'font-bold text-blue-600 dark:text-white' : 'font-medium'
-                }`}>
-                  {shortLabel}
-                </span>
+                <Icon isActive={isActive} className="w-[22px] h-[22px]" />
+                <span className="text-[10px] leading-none tracking-tight truncate max-w-full">{item.label}</span>
               </button>
             );
           })}
-
           {/* La photo de profil est maintenant en haut à gauche (plus d'onglet Profil en bas) */}
         </div>
       </nav>
