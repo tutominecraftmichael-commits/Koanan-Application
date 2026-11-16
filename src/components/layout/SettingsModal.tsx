@@ -175,14 +175,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-xl rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950 dark:border-slate-800/90 dark:shadow-sky-400/40 text-slate-900 dark:text-slate-100"
+        className="relative w-full max-w-xl rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] dark:bg-[#0A0F1C] dark:border-white/10 text-slate-900 dark:text-slate-100"
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-900/50">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-sky-400/15 border border-sky-400/30 text-sky-700 dark:text-sky-400 shadow-sm">
+            <div className="p-2.5 rounded-2xl bg-slate-900 ring-1 ring-amber-400/40 text-[#F5C451] shadow-sm">
               <Settings className="w-5 h-5" />
             </div>
             <div>
@@ -211,7 +211,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                  <User className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300" />
                   {t('profileTitle', lang)}
                 </span>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
@@ -222,35 +222,36 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 dark:bg-slate-950/60 dark:border-slate-800/80 space-y-4">
               
-              {/* Profile Card Header */}
-              <div className="flex items-center gap-3.5 pb-3 border-b border-slate-200 dark:border-slate-800/60">
-                {/* Photo de profil : la toucher ouvre la galerie pour la changer */}
-                <div className="flex flex-col items-center gap-1 shrink-0">
+              {/* Profil (charte Excellence) : photo centrée, anneau doré pour Pro, nom en grand, classe et identifiant */}
+              <div className="flex flex-col items-center text-center gap-2 pb-4 border-b border-slate-200 dark:border-white/10">
+                <div className="flex flex-col items-center gap-1">
                   <button
                     type="button"
                     onClick={() => avatarInputRef.current?.click()}
                     disabled={!onUpdateAvatar || isAvatarBusy}
                     aria-label="Changer la photo de profil"
-                    className="relative w-16 h-16 rounded-full shrink-0 cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 disabled:cursor-default"
+                    className={`relative w-[92px] h-[92px] rounded-full p-[3px] shrink-0 cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 disabled:cursor-default ${
+                      currentPlan === 'free' ? 'bg-slate-200 dark:bg-white/15' : 'bg-[conic-gradient(from_210deg,#F5C451,#FDE68A,#B7791F,#F5C451)]'
+                    }`}
                   >
                     {currentAvatar ? (
                       <img
                         src={currentAvatar}
                         alt={displayName}
-                        className="w-16 h-16 rounded-full object-cover border-2 border-sky-400/40 shadow-md"
+                        className="w-full h-full rounded-full object-cover border-[3px] border-white dark:border-[#0A0F1C]"
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-sky-400 to-cyan-500 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                      <div className="w-full h-full rounded-full bg-slate-100 dark:bg-slate-900 border-[3px] border-white dark:border-[#0A0F1C] flex items-center justify-center text-slate-900 dark:text-white font-extrabold text-3xl">
                         {displayName.charAt(0).toUpperCase()}
                       </div>
                     )}
                     {isAvatarBusy && (
-                      <span className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center">
+                      <span className="absolute inset-[3px] rounded-full bg-black/40 flex items-center justify-center">
                         <span className="w-6 h-6 rounded-full border-2 border-white/40 border-t-white animate-spin" />
                       </span>
                     )}
                     {onUpdateAvatar && (
-                      <span className="absolute -bottom-0.5 -right-0.5 w-6 h-6 rounded-full bg-sky-400 text-slate-950 border-2 border-white dark:border-slate-900 flex items-center justify-center shadow group-hover:bg-sky-400 transition-colors">
+                      <span className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-sky-400 text-slate-950 border-2 border-white dark:border-[#0A0F1C] flex items-center justify-center shadow group-hover:bg-sky-300 transition-colors">
                         <Camera className="w-3.5 h-3.5" />
                       </span>
                     )}
@@ -272,52 +273,35 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     onChange={handleAvatarFile}
                   />
                 </div>
-                <div className="min-w-0 flex-1">
-                  {/* Nom en entier sur sa propre ligne (retour à la ligne si besoin), formule en dessous */}
-                  <h4 className={`text-base font-black leading-snug break-words pb-0.5 ${
-                    currentPlan === 'plus'
-                      ? 'plus-multicolor-shimmer-text'
-                      : currentPlan === 'pro'
-                      ? 'gold-shimmer-text'
-                      : 'text-slate-900 dark:text-white'
-                  }`}>{displayName}</h4>
+                <h4 className={`text-[22px] font-extrabold tracking-tight leading-snug break-words ${
+                  currentPlan === 'plus'
+                    ? 'plus-multicolor-shimmer-text'
+                    : currentPlan === 'pro'
+                    ? 'gold-shimmer-text'
+                    : 'text-slate-900 dark:text-white'
+                }`}>{displayName}</h4>
+                <p className="text-[13px] text-slate-600 dark:text-slate-400 break-words">
+                  {editFiliere || academicLevel || userAccount?.academicLevel || 'Classe non renseignée'}
+                  {userAccount?.konanId ? <> · KONAN ID <span className="font-mono">{userAccount.konanId}</span></> : null}
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-2">
                   <span
-                    className={`inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${
-                      currentPlan === 'pro'
-                        ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40'
-                        : currentPlan === 'plus'
-                        ? 'bg-sky-400/20 text-sky-800 dark:text-sky-300 border-sky-400/40'
-                        : 'bg-slate-200 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-[0.14em] border ${
+                      currentPlan === 'free'
+                        ? 'bg-slate-100 text-slate-700 border-slate-300 dark:bg-white/5 dark:text-slate-300 dark:border-white/15'
+                        : 'bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-400/10 dark:text-[#F5C451] dark:border-[#F5C451]/40'
                     }`}
                   >
-                    {currentPlan === 'pro' ? 'PRO' : currentPlan === 'plus' ? 'PLUS' : 'GRATUIT'}
+                    {currentPlan === 'pro' ? 'KONAN Pro' : currentPlan === 'plus' ? 'KONAN Plus' : 'Gratuit'}
                   </span>
-                  <p className="text-xs text-sky-700 dark:text-sky-300 font-semibold flex items-start gap-1.5 mt-1 break-words">
-                    <GraduationCap className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400 shrink-0 mt-px" />
-                    <span className="min-w-0">{editFiliere || academicLevel || userAccount?.academicLevel || 'Filière non renseignée'}</span>
-                  </p>
-                  
-                  {/* Compte Google connecté */}
-                  <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-600 dark:text-slate-300">
-                    <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                    </svg>
-                    <span className="font-medium text-slate-700 dark:text-slate-300">Compte connecté</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-1.5 mt-1 text-[11px] text-cyan-600 dark:text-cyan-400">
-                    <ShieldCheck className="w-3 h-3 text-cyan-500 dark:text-cyan-400" />
-                    <span>{isDemoMode ? t('demoIsolated', lang) : t('secureSession', lang)}</span>
-                  </div>
-                  {onUpdateAvatar && (
-                    <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                      Touche ta photo pour la changer.
-                    </p>
-                  )}
+                  <span className="inline-flex items-center gap-1.5 text-[11px] text-slate-600 dark:text-slate-400">
+                    <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                    {isDemoMode ? t('demoIsolated', lang) : 'Compte Google connecté'}
+                  </span>
                 </div>
+                {onUpdateAvatar && (
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Touche ta photo pour la changer.</p>
+                )}
               </div>
               {avatarError && (
                 <p role="alert" className="-mt-2 text-xs font-medium text-rose-600 dark:text-rose-400">
@@ -327,7 +311,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
               {/* Formulaire d'édition STRICTE : 1. Nom, 2. Filière */}
               <form onSubmit={handleSaveProfile} className="space-y-3.5 pt-1">
-                <div className="p-4 rounded-2xl bg-sky-50/70 border border-sky-200 dark:bg-sky-400/20 dark:border-sky-400/30 space-y-3.5 shadow-sm">
+                <div className="p-4 rounded-2xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-white/10 space-y-3.5 shadow-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
                       <User className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
@@ -410,7 +394,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       variant="glow"
                       size="md"
                       leftIcon={<Save className="w-4 h-4" />}
-                      className="w-full cursor-pointer text-xs sm:text-sm font-bold py-2.5 shadow-lg shadow-sky-400/20 bg-blue-600 hover:bg-blue-700 text-white"
+                      className="konan-btn w-full cursor-pointer text-xs sm:text-sm py-2.5"
                     >
                       {saveSuccess ? '✓ Nom & Filière Enregistrés !' : 'Enregistrer mon Nom et ma Filière'}
                     </Button>
@@ -537,7 +521,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 }}
                 className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   !isLight
-                    ? 'bg-gradient-to-r from-sky-400 to-blue-600 text-white shadow-md shadow-sky-400/50'
+                    ? 'bg-slate-900 text-white ring-1 ring-white/15 shadow-sm'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-900/60'
                 }`}
               >
@@ -566,7 +550,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {/* SECTION 2: GESTION DES DONNÉES */}
           <div className="space-y-3">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <Sparkles className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300" />
               {t('dataTitle', lang)}
             </span>
 
@@ -580,7 +564,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-slate-800 dark:bg-slate-950/50 dark:border-slate-800 dark:hover:border-slate-700 dark:hover:bg-slate-900/60 dark:text-slate-200 transition-colors text-xs cursor-pointer text-left shadow-xs"
                 >
                   <div className="flex items-center gap-2.5">
-                    <Download className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                    <Download className="w-4 h-4 text-sky-700 dark:text-sky-300" />
                     <span>{t('exportConfig', lang)}</span>
                   </div>
                   <span className="text-[10px] font-mono text-slate-500">.json</span>

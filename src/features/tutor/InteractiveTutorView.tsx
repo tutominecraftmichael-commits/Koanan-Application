@@ -2286,72 +2286,99 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       {/* =================================================================== */}
       {/* CÉLÉBRATION D'UNE MINI-LEÇON VALIDÉE                                */}
       {/* =================================================================== */}
-      {phase === 'point_celebration' && currentItem && (
-        <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border-2 border-emerald-400 dark:border-emerald-500/40 text-center space-y-5 animate-in zoom-in-95 duration-200 shadow-xl">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10">
-            <CheckCircle2 className="w-9 h-9 stroke-[2.5]" />
-          </div>
+      {phase === 'point_celebration' && currentItem && (() => {
+        // Charte Excellence : « vivant dans la victoire » — mascotte qui saute, confettis, chiffres honnêtes
+        const missedCount = new Set(missedIndices).size;
+        const firstTry = pointExercises.length - missedCount;
+        const remainingInChapter = currentItem.totalPointsInChapter - (currentItem.pointIndexInChapter + 1);
+        const isLastOfSession = activeItemIndex >= items.length - 1;
+        return (
+          <div className="relative overflow-hidden rounded-[28px] bg-white dark:bg-[#0A0F1C] border border-slate-200 dark:border-white/10 px-5 pt-6 pb-6 sm:px-8 text-center animate-in zoom-in-95 duration-200 shadow-xl dark:shadow-none">
+            {/* Lueur bleue et confettis : seulement ici, dans la victoire */}
+            <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-6 -translate-x-1/2 w-72 h-72 rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.22),rgba(56,189,248,0)_68%)]" />
+            <span aria-hidden="true" className="absolute left-[16%] top-[70px] w-2.5 h-[18px] rounded-[3px] bg-[#F5C451] -rotate-[24deg]" />
+            <span aria-hidden="true" className="absolute right-[18%] top-[56px] w-2.5 h-[18px] rounded-[3px] bg-emerald-400 rotate-[28deg]" />
+            <span aria-hidden="true" className="absolute left-[24%] top-[190px] w-3 h-3 rounded-full bg-orange-400" />
+            <span aria-hidden="true" className="absolute right-[22%] top-[176px] w-2 h-4 rounded-[3px] bg-sky-400 -rotate-[40deg]" />
+            <span aria-hidden="true" className="absolute left-[38%] top-[30px] w-2 h-2 rounded-full bg-pink-400" />
+            <span aria-hidden="true" className="absolute right-[34%] top-[26px] w-2 h-[15px] rounded-[3px] bg-[#F5C451] rotate-[52deg]" />
 
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-xs font-black uppercase">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>
-                {currentItem.isLastPointOfChapter
-                  ? `Dernière mini-leçon du chapitre (${currentItem.pointIndexInChapter + 1}/${currentItem.totalPointsInChapter})`
-                  : `Mini-leçon validée (${currentItem.pointIndexInChapter + 1}/${currentItem.totalPointsInChapter})`}
+            <div className="relative space-y-4">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-300 text-[11px] font-extrabold uppercase tracking-[0.16em]">
+                {currentItem.isLastPointOfChapter ? 'Chapitre terminé' : 'Mini-leçon validée'} · {currentItem.pointIndexInChapter + 1}/{currentItem.totalPointsInChapter}
               </span>
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-              {currentPoint?.title}
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto">
-              {currentItem.isLastPointOfChapter
-                ? `Félicitations ! Tu as validé l'ensemble des ${currentItem.totalPointsInChapter} mini-leçons du chapitre « ${currentItem.chapterTitle} ». Chapitre maîtrisé !`
-                : `${missedIndices.length === 0 ? 'Excellente maîtrise ! ' : ''}Tu as validé cette notion. Il te reste encore ${currentItem.totalPointsInChapter - (currentItem.pointIndexInChapter + 1)} mini-leçon(s) pour terminer complètement le chapitre « ${currentItem.chapterTitle} ».`}
-            </p>
-            {pointExercises.length > 0 && (
-              <p className={`text-sm font-black ${missedIndices.length === 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                Du premier coup : {pointExercises.length - new Set(missedIndices).size}/{pointExercises.length}
-                {missedIndices.length > 0 ? ` · ${new Set(missedIndices).size} erreur${new Set(missedIndices).size > 1 ? 's' : ''} rattrapée${new Set(missedIndices).size > 1 ? 's' : ''}` : ' · aucune erreur'}
-              </p>
-            )}
-          </div>
 
-          {/* KONAN Pro : méthode Feynman à la demande, après chaque mini-leçon */}
-          {canExplain && !isFeynman && currentPoint && !explainedPointIds.has(currentPoint.id) && (
-            <div className="mx-auto max-w-md rounded-2xl border border-amber-300 dark:border-amber-400/30 bg-amber-50 dark:bg-amber-400/[0.06] p-4 text-left space-y-2.5">
-              <p className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Mic className="w-4 h-4 text-amber-700 dark:text-amber-300" /> Explique à KONAN
-              </p>
-              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                Explique cette notion avec tes mots, à l’oral ou par écrit. KONAN te dit en quelques secondes si c’est juste, clair et simple. C’est la meilleure façon de retenir.
-              </p>
-              <button
-                type="button"
-                onClick={() => setPhase('feynman')}
-                className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-amber-300 dark:hover:bg-amber-200 dark:text-slate-950 text-xs font-black flex items-center justify-center gap-2 transition-colors cursor-pointer"
-              >
-                <Mic className="w-4 h-4" /> J’explique (environ 1 minute)
-              </button>
-            </div>
-          )}
+              <div className="flex justify-center -mb-1">
+                <KonanMascot pose="jump" size={150} />
+              </div>
 
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={afterShine(handleContinueToNextLesson)}
-              className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-xs sm:text-sm tracking-wide uppercase active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto konan-btn"
-            >
-              <span className="flex items-center gap-2">
-                {activeItemIndex < items.length - 1
-                  ? `Passer à la mini-leçon suivante (${activeItemIndex + 2}/${items.length} de la séance)`
-                  : `Valider et terminer la séance (${items.length} mini-leçon${items.length > 1 ? 's' : ''} terminée${items.length > 1 ? 's' : ''})`}
-                {activeItemIndex < items.length - 1 && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
-              </span>
-            </button>
+              <div className="space-y-1.5">
+                <h2 className="text-2xl sm:text-[28px] font-extrabold tracking-tight leading-tight text-slate-900 dark:text-white">
+                  {currentPoint?.title}{currentItem.isLastPointOfChapter ? ' : chapitre maîtrisé !' : ', c’est acquis !'}
+                </h2>
+                <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+                  {currentItem.isLastPointOfChapter
+                    ? `Tu as validé les ${currentItem.totalPointsInChapter} mini-leçons du chapitre « ${currentItem.chapterTitle} ».`
+                    : `Plus que ${remainingInChapter} mini-leçon${remainingInChapter > 1 ? 's' : ''} pour finir le chapitre « ${currentItem.chapterTitle} ».`}
+                </p>
+              </div>
+
+              {pointExercises.length > 0 && (
+                <div className="grid grid-cols-3 gap-2.5 max-w-md mx-auto">
+                  <div className="rounded-2xl px-2 py-3 bg-slate-50 dark:bg-slate-900 border-[1.5px] border-emerald-300 dark:border-emerald-400/50">
+                    <span className="block text-[10px] font-extrabold uppercase tracking-[0.14em] text-emerald-700 dark:text-emerald-300">Score</span>
+                    <span className="block text-[22px] font-extrabold tabular-nums text-slate-900 dark:text-white">{firstTry}/{pointExercises.length}</span>
+                    <span className="block text-[11px] text-slate-600 dark:text-slate-400">du premier coup</span>
+                  </div>
+                  <div className={`rounded-2xl px-2 py-3 bg-slate-50 dark:bg-slate-900 border-[1.5px] ${missedCount ? 'border-orange-300 dark:border-orange-400/50' : 'border-emerald-300 dark:border-emerald-400/50'}`}>
+                    <span className={`block text-[10px] font-extrabold uppercase tracking-[0.14em] ${missedCount ? 'text-orange-700 dark:text-orange-300' : 'text-emerald-700 dark:text-emerald-300'}`}>Erreur{missedCount > 1 ? 's' : ''}</span>
+                    <span className="block text-[22px] font-extrabold tabular-nums text-slate-900 dark:text-white">{missedCount}</span>
+                    <span className="block text-[11px] text-slate-600 dark:text-slate-400">{missedCount ? (missedCount > 1 ? 'rattrapées' : 'rattrapée') : 'parfait !'}</span>
+                  </div>
+                  <div className="rounded-2xl px-2 py-3 bg-slate-50 dark:bg-slate-900 border-[1.5px] border-amber-300 dark:border-[#F5C451]/55">
+                    <span className="block text-[10px] font-extrabold uppercase tracking-[0.14em] text-amber-800 dark:text-[#F5C451]">Chapitre</span>
+                    <span className="block text-[22px] font-extrabold tabular-nums text-slate-900 dark:text-white">{currentItem.pointIndexInChapter + 1}/{currentItem.totalPointsInChapter}</span>
+                    <span className="block text-[11px] text-slate-600 dark:text-slate-400">mini-leçons</span>
+                  </div>
+                </div>
+              )}
+
+              {/* KONAN Pro : méthode Feynman à la demande, après chaque mini-leçon */}
+              {canExplain && !isFeynman && currentPoint && !explainedPointIds.has(currentPoint.id) && (
+                <div className="konan-hairline mx-auto max-w-md rounded-[20px] bg-slate-50 dark:bg-slate-900 border border-amber-300 dark:border-[#F5C451]/45 p-4 text-left space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[15px] font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                      <Mic className="w-[18px] h-[18px] text-amber-700 dark:text-[#F5C451]" /> Explique à KONAN
+                    </p>
+                    <span className="px-2 py-0.5 rounded-full border border-amber-400 dark:border-[#F5C451]/50 text-amber-800 dark:text-[#F5C451] text-[10px] font-extrabold tracking-[0.12em]">PRO</span>
+                  </div>
+                  <p className="text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Explique la notion avec tes mots, à l’oral ou par écrit. KONAN te dit en quelques secondes si c’est juste, clair et simple.
+                  </p>
+                  <button type="button" onClick={() => setPhase('feynman')} className="konan-btn-gold w-full h-[46px] text-sm cursor-pointer">
+                    <Mic className="w-4 h-4" /> J’explique (environ 1 minute)
+                  </button>
+                </div>
+              )}
+
+              <div className="pt-1 max-w-md mx-auto">
+                <button
+                  type="button"
+                  onClick={afterShine(handleContinueToNextLesson)}
+                  className="relative overflow-hidden konan-btn-shine konan-btn w-full h-14 text-[15px] cursor-pointer"
+                >
+                  <span className="flex items-center gap-2">
+                    {!isLastOfSession
+                      ? `Mini-leçon suivante (${activeItemIndex + 2}/${items.length})`
+                      : `Terminer la séance (${items.length} mini-leçon${items.length > 1 ? 's' : ''})`}
+                    {!isLastOfSession && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 };
