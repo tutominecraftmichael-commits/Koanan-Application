@@ -18,7 +18,7 @@ import { nextNameChangeAt } from './_nameRules.js';
 import { serverPlanTier } from './_subscriptionStore.js';
 import {
   DIVISIONS, GROUP_SIZE, PROMOTE_COUNT, DEMOTE_COUNT, applyXpEvents, clampDivision, cleanAvatar, gradeInLeague,
-  guardReputation, isEligible, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
+  guardReputation, isFrozen, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
 } from './_leagueRules.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -70,8 +70,10 @@ async function assignGroup(db, uid, weekId, division) {
 async function buildBoard(db, player, nowMs) {
   const division = clampDivision(player.division);
   const base = {
+    // Le classement se voit toujours ; sous 80 % de réputation, seule la division est gelée
     eligible: isParticipant(player),
-    reason: player.hasCourses === false ? 'no_courses' : isEligible(player.reputation) ? null : 'reputation',
+    reason: player.hasCourses === false ? 'no_courses' : null,
+    frozen: isParticipant(player) && isFrozen(player),
     reputation: player.reputation,
     division,
     divisionName: DIVISIONS[division - 1].name,
@@ -147,7 +149,7 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
     return { next, accepted: applied.accepted, rejected: applied.rejected };
   });
 
-  // Place dans un groupe : réputation de plus de 80 % et classe avec cours
+  // Place dans un groupe : toute classe admise dans la ligue (quelle que soit la réputation)
   let player = result.next;
   if (isParticipant(player) && !player.groupId) {
     try {

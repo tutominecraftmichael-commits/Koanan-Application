@@ -6,7 +6,7 @@
  *   (durées intermédiaires : palier le plus proche)
  * Réputation (discipline) : démarre à 100 %.
  *   −5 % par séance manquée et non rattrapée avant minuit ; +1 % par séance faite ; jamais sous 0 ni au-dessus de 100.
- *   La ligue (étape 3) sera réservée aux élèves au-dessus de 80 %.
+ *   Ligue : à 80 % ou moins, l'élève voit le classement mais sa division est gelée (ni montée ni descente).
  * Tout est pur (aucun accès au stockage) : App.tsx applique le résultat à l'état de l'élève.
  */
 import type { GamificationEvent, GamificationState, LeagueEvent, StudySession } from '../../types';
