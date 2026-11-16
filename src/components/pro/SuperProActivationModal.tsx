@@ -63,7 +63,7 @@ export const SuperProActivationModal: React.FC<SuperProActivationModalProps> = (
       title: "Recommandations Intelligentes Konan",
       desc: "Analyse continue de votre emploi du temps et sélection de la meilleure méthode selon votre niveau de fatigue et vos heures de cours.",
       tag: "Guidage Personnalisé",
-      color: "from-purple-500/20 to-indigo-500/10 border-purple-500/30 text-purple-300",
+      color: "from-purple-500/20 to-sky-400/10 border-purple-500/30 text-purple-300",
       badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40",
     },
   ];

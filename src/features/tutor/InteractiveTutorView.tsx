@@ -168,7 +168,7 @@ const PedagogicalParagraph: React.FC<{ text: string }> = ({ text }) => {
               key={lIdx}
               className="text-sm sm:text-base font-black text-slate-900 dark:text-white pt-1 flex items-center gap-2"
             >
-              <span className="w-6 h-6 rounded-lg bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 flex items-center justify-center text-xs font-black shrink-0">
+              <span className="w-6 h-6 rounded-lg bg-sky-400/15 text-sky-800 dark:text-sky-300 flex items-center justify-center text-xs font-black shrink-0">
                 {num}
               </span>
               <span><MathRenderer text={titleContent} /></span>
@@ -219,7 +219,7 @@ const PedagogicalParagraph: React.FC<{ text: string }> = ({ text }) => {
 
           return (
             <div key={lIdx} className="flex items-start gap-2 text-slate-700 dark:text-slate-200">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 mt-2" />
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0 mt-2" />
               <div className="leading-relaxed font-medium">
                 <MathRenderer text={cleanLine} />
               </div>
@@ -1140,7 +1140,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <KonanCube size={64} showStars={false} glow={true} />
         </div>
         <div className="space-y-2">
-          <span className="inline-block text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+          <span className="inline-block text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-400/15 text-sky-800 dark:text-sky-300">
             {subjectTitle}
           </span>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight">
@@ -1156,7 +1156,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             try { soundFX.playClick(); } catch {}
             onExit();
           }}
-          className="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm transition-colors cursor-pointer shadow-sm"
+          className="w-full py-3 rounded-2xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-black text-sm transition-colors cursor-pointer shadow-sm"
         >
           Retour au tableau de bord
         </button>
@@ -1170,14 +1170,14 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   if (needsVoletChoice) {
     return (
       <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-        <div className="max-w-xl w-full bg-white dark:bg-slate-900 border-2 border-indigo-200 dark:border-indigo-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in zoom-in-95 duration-200 my-auto">
+        <div className="max-w-xl w-full bg-white dark:bg-slate-900 border-2 border-sky-200 dark:border-sky-400/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in zoom-in-95 duration-200 my-auto">
           {/* En-tête */}
           <div className="flex items-center gap-4">
             <div className="shrink-0">
               <KonanCube size={56} showStars={true} glow={true} />
             </div>
             <div className="min-w-0 flex-1">
-              <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+              <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-400/15 text-sky-800 dark:text-sky-300">
                 {subjectTitle} • Première séance
               </span>
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight mt-1">
@@ -1202,13 +1202,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('physique');
                   }}
-                  className="p-5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 bg-white dark:bg-slate-800/60 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <Zap className="w-6 h-6 stroke-[2.5]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-sky-700 dark:group-hover:text-sky-400">
                       Physique
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
@@ -1223,13 +1223,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('chimie');
                   }}
-                  className="p-5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 bg-white dark:bg-slate-800/60 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <FlaskConical className="w-6 h-6 stroke-[2.5]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-sky-700 dark:group-hover:text-sky-400">
                       Chimie
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
@@ -1246,13 +1246,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('histoire');
                   }}
-                  className="p-5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 bg-white dark:bg-slate-800/60 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <Landmark className="w-6 h-6 stroke-[2.5]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-sky-700 dark:group-hover:text-sky-400">
                       Histoire
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
@@ -1267,13 +1267,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('geographie');
                   }}
-                  className="p-5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 bg-white dark:bg-slate-800/60 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <Globe className="w-6 h-6 stroke-[2.5]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-sky-700 dark:group-hover:text-sky-400">
                       Géographie
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
@@ -1290,13 +1290,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('numerique');
                   }}
-                  className="p-5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 bg-white dark:bg-slate-800/60 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <Calculator className="w-6 h-6 stroke-[2.5]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-sky-700 dark:group-hover:text-sky-400">
                       Domaine Numérique
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
@@ -1311,13 +1311,13 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('geometrie');
                   }}
-                  className="p-5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 bg-white dark:bg-slate-800/60 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <Shapes className="w-6 h-6 stroke-[2.5]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                    <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-sky-700 dark:group-hover:text-sky-400">
                       Géométrie
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
@@ -1339,7 +1339,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   if (showChapterSelector) {
     return (
       <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-        <div className="max-w-xl w-full bg-white dark:bg-slate-900 border-2 border-indigo-200 dark:border-indigo-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 animate-in zoom-in-95 duration-200 my-auto">
+        <div className="max-w-xl w-full bg-white dark:bg-slate-900 border-2 border-sky-200 dark:border-sky-400/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 animate-in zoom-in-95 duration-200 my-auto">
           {/* En-tête */}
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -1348,7 +1348,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                  <span className="text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-400/15 text-sky-800 dark:text-sky-300">
                     {subjectTitle} • {subCategoryLabel}
                   </span>
                   <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
@@ -1373,12 +1373,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
           {/* Bannière d'alternance obligatoire (Règle 2) */}
           {isSecondSessionAlternance ? (
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/60 dark:to-purple-950/50 border-2 border-indigo-300 dark:border-indigo-700 flex items-center gap-3.5 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-50 to-purple-50 dark:from-sky-400/60 dark:to-purple-950/50 border-2 border-sky-300 dark:border-sky-400 flex items-center gap-3.5 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-sky-400 text-slate-950 flex items-center justify-center shrink-0 shadow-sm">
                 <RefreshCw className="w-5 h-5 animate-spin-slow" />
               </div>
               <div className="space-y-0.5">
-                <div className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
+                <div className="text-[11px] font-black uppercase tracking-wider text-sky-800 dark:text-sky-300">
                   Alternance obligatoire
                 </div>
                 <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white leading-snug">
@@ -1403,7 +1403,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
                         activeSubCategory === 'chimie'
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                          ? 'border-sky-400 bg-sky-50 dark:bg-sky-400/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
                           : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                       }`}
                     >
@@ -1425,7 +1425,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
                         activeSubCategory === 'physique'
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                          ? 'border-sky-400 bg-sky-50 dark:bg-sky-400/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
                           : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                       }`}
                     >
@@ -1449,7 +1449,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
                         activeSubCategory === 'numerique'
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                          ? 'border-sky-400 bg-sky-50 dark:bg-sky-400/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
                           : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                       }`}
                     >
@@ -1471,7 +1471,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
                         activeSubCategory === 'geometrie'
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 shadow-md ring-2 ring-indigo-500/20 text-indigo-950 dark:text-white'
+                          ? 'border-sky-400 bg-sky-50 dark:bg-sky-400/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
                           : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                       }`}
                     >
@@ -1522,8 +1522,8 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   onClick={() => { soundFX.playCheckmarkPop(); setSelectedChapter(ch); }}
                   className={`w-full text-left p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
                     selectedChapter?.id === ch.id
-                      ? 'bg-indigo-50 dark:bg-indigo-950/80 border-indigo-600 dark:border-indigo-400 text-indigo-900 dark:text-indigo-200 shadow-sm ring-2 ring-indigo-500/20'
-                      : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-indigo-300 dark:hover:border-slate-600'
+                      ? 'bg-sky-50 dark:bg-sky-400/80 border-sky-400 dark:border-sky-400 text-sky-900 dark:text-sky-200 shadow-sm ring-2 ring-sky-400/20'
+                      : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-sky-300 dark:hover:border-slate-600'
                   }`}
                 >
                   <span className="text-xs sm:text-sm font-bold break-words min-w-0">
@@ -1558,7 +1558,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               onClick={() => selectedChapter && handleConfirmInitialChapter(selectedChapter.id)}
               className={`px-6 py-2.5 rounded-xl font-black text-xs transition-all flex items-center gap-2 ${
                 selectedChapter !== null
-                  ? 'bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/30 hover:from-indigo-500 hover:to-blue-500 cursor-pointer active:scale-95'
+                  ? 'bg-gradient-to-r from-sky-400 via-blue-600 to-sky-400 text-white shadow-lg shadow-sky-400/30 hover:from-sky-400 hover:to-blue-500 cursor-pointer active:scale-95'
                   : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-300 dark:border-slate-700'
               }`}
             >
@@ -1633,7 +1633,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             <button
               type="button"
               onClick={afterShine(handleFinishAndExit)}
-              className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
+              className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl font-black uppercase tracking-wide active:translate-y-1 cursor-pointer konan-btn"
             >
               {pauseLeft > 0 ? 'Terminer la séance' : 'Pause terminée : matière suivante'}
             </button>
@@ -1650,7 +1650,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             <button
               type="button"
               onClick={afterShine(handleKeepGoing)}
-              className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
+              className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl font-black uppercase tracking-wide active:translate-y-1 cursor-pointer konan-btn"
             >
               Finir {leftCount > 1 ? `mes ${leftCount} mini-leçons` : 'ma mini-leçon'}
             </button>
@@ -1675,7 +1675,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
       <div className="max-w-2xl mx-auto py-6 sm:py-10 px-4 space-y-6 text-center animate-in zoom-in-95 duration-300">
         <div className="relative inline-block">
           <div className="absolute -inset-4 rounded-full bg-emerald-500/20 blur-xl animate-pulse" />
-          <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-2xl shadow-emerald-500/40 relative">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-3xl flex items-center justify-center relative bg-emerald-500 text-white shadow-[0_5px_0_#047857]">
             <Award className="w-10 h-10 sm:w-12 sm:h-12 stroke-[2.5]" />
           </div>
         </div>
@@ -1755,7 +1755,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         <button
           type="button"
           onClick={afterShine(handleFinishAndExit)}
-          className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+          className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-4 rounded-2xl font-black text-sm sm:text-base tracking-wide uppercase active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto konan-btn"
         >
           <span>Valider et Enregistrer dans mon planning</span>
           <ArrowRight className="w-5 h-5" />
@@ -1823,7 +1823,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
         {/* Mascotte KonanCube animée */}
         <div className="relative inline-block my-2">
-          <div className="absolute -inset-4 rounded-full bg-indigo-500/20 blur-xl animate-pulse" />
+          <div className="absolute -inset-4 rounded-full bg-sky-400/20 blur-xl animate-pulse" />
           <div className="relative transform hover:scale-105 transition-transform duration-300 cursor-pointer">
             <KonanCube size={72} showStars={true} glow={true} />
           </div>
@@ -1834,11 +1834,11 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <button
             type="button"
             onClick={() => setShowChapterSelector(true)}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/60 dark:hover:bg-indigo-900/70 border border-indigo-200/80 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold cursor-pointer transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 hover:bg-sky-100 dark:bg-sky-400/60 dark:hover:bg-sky-400/70 border border-sky-200/80 dark:border-sky-400/60 text-sky-800 dark:text-sky-300 text-xs font-bold cursor-pointer transition-colors"
             title="Changer de chapitre"
           >
             <span>Ch. {currentItem.chapterOrder} : {currentItem.chapterTitle}</span>
-            <span className="text-[10px] text-indigo-500 font-normal underline">Changer ▾</span>
+            <span className="text-[10px] text-sky-700 font-normal underline dark:text-sky-300">Changer ▾</span>
           </button>
           {currentItem.isReview && (
             <p className="text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-300">
@@ -1862,9 +1862,9 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         )}
 
         {/* Enjeu pour devoirs et examens */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 text-left space-y-2 shadow-xs">
-          <div className="flex items-center gap-2 text-indigo-900 dark:text-indigo-200 font-black text-xs sm:text-sm">
-            <Target className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+        <div className="p-4 sm:p-5 rounded-2xl bg-sky-50/70 dark:bg-sky-400/40 border border-sky-200/80 dark:border-sky-400/60 text-left space-y-2 shadow-xs">
+          <div className="flex items-center gap-2 text-sky-900 dark:text-sky-200 font-black text-xs sm:text-sm">
+            <Target className="w-4 h-4 text-sky-700 dark:text-sky-400 shrink-0" />
             <span>Pourquoi cette notion est essentielle pour tes devoirs & examens ?</span>
           </div>
           <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -1903,7 +1903,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 startLearningAt(0, currentPoint);
               })();
             }}
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm sm:text-base tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto relative overflow-hidden konan-btn-shine"
+            className="w-full sm:w-auto px-8 py-4 rounded-2xl font-black text-sm sm:text-base tracking-wide uppercase active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-3 mx-auto relative overflow-hidden konan-btn-shine konan-btn"
           >
             <span>C'est parti ! Commencer la leçon</span>
             <ArrowRight className="w-5 h-5" />
@@ -1945,7 +1945,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           {/* Barre de progression continue Style Duolingo (Couleur Bleue) */}
           <div className="flex-1 min-w-0 h-4 sm:h-5 bg-slate-200 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-300 dark:border-slate-800/80 p-0.5 shadow-inner">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 dark:from-blue-500 dark:via-indigo-500 dark:to-cyan-400 transition-all duration-500 ease-out relative shadow-sm"
+              className="h-full rounded-full bg-emerald-400 transition-all duration-500 ease-out relative shadow-sm"
               style={{ width: `${Math.min(100, Math.max(0, (barDone / barTotal) * 100))}%` }}
             >
               <div className="absolute top-0.5 left-2 right-2 h-1 bg-white/35 rounded-full" />
@@ -1990,7 +1990,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           )}
 
           {phase !== 'warmup' && phase !== 'recall' && (
-            <div className="flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400">
+            <div className="flex items-center gap-1.5 font-bold text-sky-700 dark:text-sky-400">
               <Target className="w-3.5 h-3.5" />
               <span>Étape {activeStepIndex + 1}/{totalSteps} · {totalSteps}/{totalSteps} requis</span>
             </div>
@@ -2022,10 +2022,10 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <div className={`p-4 sm:p-6 rounded-2xl border-2 space-y-4 shadow-sm ${
             activeCourseSlice.stepKind
               ? STEP_KIND_STYLE[activeCourseSlice.stepKind].card
-              : 'bg-white dark:bg-slate-900 border-indigo-100 dark:border-slate-800'
+              : 'bg-white dark:bg-slate-900 border-sky-100 dark:border-slate-800'
           }`}>
             <div className="flex items-center justify-between gap-2 border-b border-slate-200/70 dark:border-slate-800 pb-3">
-              <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 min-w-0">
+              <div className="flex items-center gap-2 text-sky-700 dark:text-sky-400 min-w-0">
                 {activeCourseSlice.stepKind ? (
                   <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0 ${STEP_KIND_STYLE[activeCourseSlice.stepKind].chip}`}>
                     {STEP_KIND_STYLE[activeCourseSlice.stepKind].label}
@@ -2038,7 +2038,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 </span>
               </div>
               {!retrievalMode && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-400/60 text-sky-800 dark:text-sky-300">
                   Étape {activeStepIndex + 1} / {totalSteps}
                 </span>
               )}
@@ -2065,12 +2065,12 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
             {/* Astuce Konan si présente */}
             {activeCourseSlice.konanTip && (
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-50/90 to-cyan-50/70 dark:from-indigo-950/40 dark:to-cyan-950/20 border border-indigo-200/80 dark:border-indigo-500/30 flex items-start gap-3 shadow-2xs">
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-sky-50/90 to-cyan-50/70 dark:from-sky-400/40 dark:to-cyan-950/20 border border-sky-200/80 dark:border-sky-400/30 flex items-start gap-3 shadow-2xs">
                 <div className="shrink-0 pt-0.5">
                   <KonanCube size={40} showStars={true} glow={true} />
                 </div>
                 <div className="space-y-1 min-w-0 flex-1">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-sky-800 dark:text-sky-300 flex items-center gap-1.5">
                     <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
                     <span>L'Astuce du Professeur Konan</span>
                   </span>
@@ -2086,7 +2086,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           {/* PARTIE 2 : LE TEST DE COMPRÉHENSION IMMÉDIAT (ADAPTÉ STRICTEMENT À L'ÉTAPE) */}
           <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
             <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-              <span className="font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
+              <span className="font-extrabold uppercase tracking-wider text-sky-700 dark:text-sky-400 flex items-center gap-1.5">
                 <Target className="w-4 h-4" />
                 <span>
                   {phase === 'warmup'
@@ -2124,10 +2124,10 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   const isSelected = selectedOptionIndex === oIdx;
                   const letter = String.fromCharCode(65 + oIdx);
 
-                  let btnStyle = 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-indigo-400 dark:hover:border-indigo-500 shadow-2xs';
+                  let btnStyle = 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-sky-400 dark:hover:border-sky-400 shadow-2xs';
 
                   if (isSelected && !isAnswerChecked) {
-                    btnStyle = 'bg-indigo-50 dark:bg-indigo-950/70 border-indigo-600 dark:border-indigo-400 text-indigo-900 dark:text-indigo-200 shadow-sm ring-2 ring-indigo-500/20';
+                    btnStyle = 'bg-sky-50 dark:bg-sky-400/70 border-sky-400 dark:border-sky-400 text-sky-900 dark:text-sky-200 shadow-sm ring-2 ring-sky-400/20';
                   }
 
                   if (isAnswerChecked) {
@@ -2152,7 +2152,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                         <span
                           className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 mt-0.5 ${
                             isSelected
-                              ? 'bg-indigo-600 text-white'
+                              ? 'bg-sky-400 text-slate-950'
                               : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
                           }`}
                         >
@@ -2244,7 +2244,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   onClick={handleVerifyAnswer}
                   className={`w-full py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wide uppercase transition-all flex items-center justify-center gap-2 select-none ${
                     selectedOptionIndex !== null
-                      ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_5px_0_#3730A3] active:translate-y-1 cursor-pointer'
+                      ? 'bg-sky-400 hover:bg-sky-300 text-slate-950 shadow-[0_5px_0_#0369A1] active:translate-y-1 cursor-pointer'
                       : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-300 dark:border-slate-700 cursor-not-allowed opacity-60'
                   }`}
                 >
@@ -2260,7 +2260,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   onClick={handleContinueAfterFeedback}
                   className={`w-full py-4 px-6 rounded-2xl font-black text-sm sm:text-base tracking-wide uppercase transition-all cursor-pointer flex items-center justify-center gap-2 select-none active:translate-y-1 ${
                     isAnswerCorrect
-                      ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
+                      ? 'konan-btn'
                       : 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300/60 dark:border-amber-400/50 shadow-[0_5px_0_#d97706] hover:shadow-[0_2px_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
                   }`}
                 >
@@ -2340,7 +2340,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             <button
               type="button"
               onClick={afterShine(handleContinueToNextLesson)}
-              className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm tracking-wide uppercase shadow-[0_5px_0_#065f46] hover:shadow-[0_2px_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto"
+              className="relative overflow-hidden konan-btn-shine w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-xs sm:text-sm tracking-wide uppercase active:translate-y-1 transition-all cursor-pointer flex items-center justify-center gap-2 mx-auto konan-btn"
             >
               <span className="flex items-center gap-2">
                 {activeItemIndex < items.length - 1

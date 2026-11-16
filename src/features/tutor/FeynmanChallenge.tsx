@@ -224,7 +224,7 @@ export const FeynmanChallenge: React.FC<Props> = ({ notion, reference, classe, o
                 {ok ? <Check className="w-3.5 h-3.5" /> : <X className="w-3.5 h-3.5" />} {label}
               </span>
             ))}
-            <span className="px-3 py-1 rounded-full text-xs font-black bg-indigo-100 text-indigo-800 dark:bg-indigo-500/20 dark:text-indigo-300">{verdict.note}/10</span>
+            <span className="px-3 py-1 rounded-full text-xs font-black bg-sky-100 text-sky-900 dark:bg-sky-400/20 dark:text-sky-300">{verdict.note}/10</span>
           </div>
           <div className="flex items-end gap-2">
             <KonanMascot pose={mascotPose} size={80} />

@@ -32,7 +32,7 @@ const THEME: Record<PlanTier, {
   pro: {
     card: 'border-sky-400 dark:border-sky-500',
     check: 'bg-sky-100 text-sky-600 dark:bg-sky-500/20 dark:text-sky-300',
-    button: 'bg-sky-500 text-white shadow-[0_4px_0_#0284C7] hover:bg-sky-400',
+    button: 'bg-sky-400 text-slate-950 shadow-[0_4px_0_#0369A1] hover:bg-sky-300',
     price: 'text-sky-600 dark:text-sky-400',
   },
   plus: {

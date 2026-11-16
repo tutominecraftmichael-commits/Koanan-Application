@@ -242,7 +242,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-            <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-500 dark:text-indigo-400 shrink-0" />
+            <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-sky-700 dark:text-sky-400 shrink-0" />
             <span>Matières & Coefficients</span>
           </h1>
         </div>
@@ -252,7 +252,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
             <Button
               variant="secondary"
               size="sm"
-              leftIcon={<GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />}
+              leftIcon={<GraduationCap className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />}
               onClick={onOpenPresetModal}
               title="Charger un modèle de cursus prédéfini (disponible en mode démo)"
               className="cursor-pointer text-xs font-semibold py-2 px-3 justify-center"
@@ -278,7 +278,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-2 sm:gap-4">
         <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 interactive-card shadow-xs">
-          <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0 hidden xs:block">
+          <div className="p-2 rounded-xl bg-sky-400/10 text-sky-700 dark:text-sky-400 shrink-0 hidden xs:block">
             <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0">
@@ -332,7 +332,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     {subject.code && (
-                      <span className="text-[10px] font-mono font-bold text-indigo-600 dark:text-indigo-400 uppercase">
+                      <span className="text-[10px] font-mono font-bold text-sky-700 dark:text-sky-400 uppercase">
                         {subject.code}
                       </span>
                     )}
@@ -362,7 +362,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                 <div className="flex items-center justify-between gap-2 p-2 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 text-xs">
                   <div className="flex items-center gap-1.5">
                     <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold">Coeff</span>
-                    <span className="font-mono font-black text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded text-xs">{subject.coefficient}</span>
+                    <span className="font-mono font-black text-sky-700 dark:text-sky-400 bg-sky-400/10 px-1.5 py-0.5 rounded text-xs">{subject.coefficient}</span>
                   </div>
 
                   <div className="flex items-center gap-1">
@@ -425,7 +425,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                     <button
                       type="button"
                       onClick={() => handleOpenEdit(subject)}
-                      className="w-full flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-dashed border-indigo-300 dark:border-indigo-500/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 text-[11px] font-semibold transition-colors cursor-pointer"
+                      className="w-full flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-dashed border-sky-300 dark:border-sky-400/40 text-sky-700 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-400/10 text-[11px] font-semibold transition-colors cursor-pointer"
                       title="Ajouter une date d'examen ou de devoir surveillé"
                     >
                       <Calendar className="w-3.5 h-3.5" />
@@ -444,7 +444,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                       <button
                         type="button"
                         onClick={() => handleOpenEdit(subject)}
-                        className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors cursor-pointer"
+                        className="text-[10px] font-bold text-sky-700 dark:text-sky-400 hover:underline transition-colors cursor-pointer"
                         title="Modifier ou supprimer les thèmes"
                       >
                         + Gérer
@@ -467,10 +467,10 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
 
               <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">
                 <span className="flex items-center gap-1">
-                  <Zap className="w-3 h-3 text-indigo-500 dark:text-indigo-400" />
+                  <Zap className="w-3 h-3 text-sky-700 dark:text-sky-400" />
                   Priorité :
                 </span>
-                <span className="font-bold text-indigo-600 dark:text-indigo-300">
+                <span className="font-bold text-sky-700 dark:text-sky-300">
                   {subject.difficulty >= 4 ? 'Élevée' : subject.difficulty === 3 ? 'Équilibrée' : 'Entretien'}
                 </span>
               </div>
@@ -655,7 +655,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                     handleAddTopic();
                   }
                 }}
-                className="flex-1 bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+                className="flex-1 bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-400 font-medium"
               />
               <Button
                 type="button"
@@ -691,7 +691,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                         type="text"
                         value={topic}
                         onChange={(e) => handleEditTopic(index, e.target.value)}
-                        className="bg-transparent border-none text-slate-200 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500/50 rounded px-1.5 py-0.5 w-full truncate"
+                        className="bg-transparent border-none text-slate-200 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-sky-400/50 rounded px-1.5 py-0.5 w-full truncate"
                         title="Modifier directement l'intitulé de ce chapitre"
                       />
                     </div>
@@ -737,7 +737,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                 type="submit"
                 variant="primary"
                 size="sm"
-                className="text-xs font-bold bg-indigo-600 hover:bg-indigo-500"
+                className="text-xs font-bold bg-sky-400 hover:bg-sky-300"
               >
                 {editingSubjectId ? "Enregistrer" : "Créer"}
               </Button>

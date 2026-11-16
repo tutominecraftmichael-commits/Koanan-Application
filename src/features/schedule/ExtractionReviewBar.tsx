@@ -26,9 +26,9 @@ export const ExtractionReviewBar: React.FC<ExtractionReviewBarProps> = ({ result
   return (
     <div className="space-y-2.5">
       {classes.length > 1 && (
-        <div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-3.5 dark:border-indigo-500/30 dark:bg-indigo-500/10">
-          <p className="flex items-center gap-2 text-xs font-bold text-indigo-900 dark:text-indigo-200">
-            <Users className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-300" />
+        <div className="rounded-2xl border border-sky-200 bg-sky-50 p-3.5 dark:border-sky-400/30 dark:bg-sky-400/10">
+          <p className="flex items-center gap-2 text-xs font-bold text-sky-900 dark:text-sky-200">
+            <Users className="h-4 w-4 shrink-0 text-sky-700 dark:text-sky-300" />
             Ce document contient {classes.length} classes. Laquelle est la tienne ?
           </p>
           <div className="mt-2.5 flex flex-wrap gap-2">
@@ -42,12 +42,12 @@ export const ExtractionReviewBar: React.FC<ExtractionReviewBarProps> = ({ result
                   aria-pressed={selected}
                   className={`cursor-pointer rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors ${
                     selected
-                      ? 'border-indigo-600 bg-indigo-600 text-white dark:border-indigo-400 dark:bg-indigo-500'
-                      : 'border-indigo-200 bg-white text-indigo-800 hover:border-indigo-400 dark:border-indigo-500/30 dark:bg-slate-900/60 dark:text-indigo-200 dark:hover:border-indigo-400'
+                      ? 'border-sky-400 bg-sky-400 text-slate-950 dark:border-sky-400 dark:bg-sky-400'
+                      : 'border-sky-200 bg-white text-sky-900 hover:border-sky-400 dark:border-sky-400/30 dark:bg-slate-900/60 dark:text-sky-200 dark:hover:border-sky-400'
                   }`}
                 >
                   {c.name}
-                  <span className={`ml-1.5 font-normal ${selected ? 'text-indigo-100' : 'text-slate-500 dark:text-slate-400'}`}>
+                  <span className={`ml-1.5 font-normal ${selected ? 'text-sky-100' : 'text-slate-500 dark:text-slate-400'}`}>
                     {c.slotCount} cours · {c.subjectCount} matières
                   </span>
                 </button>

@@ -109,8 +109,8 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
 
           {/* Automatic Schedule Applied Banner */}
           {autoOpenedReason === 'plan_applied' && (
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-950/80 via-slate-900 to-sky-950/80 border border-indigo-500/50 space-y-1.5 shadow-lg animate-in slide-in-from-top-2 duration-300">
-              <div className="text-indigo-300 font-extrabold text-xs uppercase tracking-wide">
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-400/80 via-slate-900 to-sky-950/80 border border-sky-400/50 space-y-1.5 shadow-lg animate-in slide-in-from-top-2 duration-300">
+              <div className="text-sky-300 font-extrabold text-xs uppercase tracking-wide">
                 Nouvel Emploi du Temps : Synchronisation Quotidienne Déclenchée !
               </div>
               <p className="text-slate-200 text-xs leading-relaxed">
@@ -145,7 +145,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                 {daysBreakdown.map(d => (
                   <div key={d.id} className="p-2 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-1 text-[11px]">
                     <span className="font-bold text-white">{d.label}</span>
-                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 font-semibold flex items-center gap-0.5">
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-sky-400/20 text-sky-300 font-semibold flex items-center gap-0.5">
                       <Bell className="w-2.5 h-2.5 text-amber-400" />
                       <span>{d.count} répétés</span>
                     </span>
@@ -230,10 +230,10 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
 
               {/* Option 2: 1-Click Next Session on Google Calendar Web */}
               {nextSession && nextSubject && (
-                <div className="p-3.5 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-indigo-500/40 transition-all space-y-2 shadow-sm">
+                <div className="p-3.5 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-sky-400/40 transition-all space-y-2 shadow-sm">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <ExternalLink className="w-3.5 h-3.5 text-indigo-400" />
+                      <ExternalLink className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300" />
                       <h4 className="text-xs font-bold text-white">
                         2. Ajouter la prochaine séance en 1 clic
                       </h4>
@@ -246,9 +246,9 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
                   <Button
                     variant="secondary"
                     size="sm"
-                    leftIcon={<ExternalLink className="w-3.5 h-3.5 text-indigo-300" />}
+                    leftIcon={<ExternalLink className="w-3.5 h-3.5 text-sky-300" />}
                     onClick={handleOpenNextInGoogleCalendar}
-                    className="w-full text-xs font-semibold py-2 cursor-pointer border-indigo-500/30 text-indigo-200 hover:text-white"
+                    className="w-full text-xs font-semibold py-2 cursor-pointer border-sky-400/30 text-sky-200 hover:text-white"
                   >
                     Ouvrir la séance sur Google Agenda Web
                   </Button>

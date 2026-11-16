@@ -206,7 +206,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
           <div className={`relative rounded-3xl p-6 sm:p-12 border text-center overflow-hidden shadow-2xl transition-all duration-500 ${
             isCatchupMode 
               ? (isActive ? 'border-amber-400 shadow-amber-500/20 bg-amber-50/70 dark:bg-slate-900/90' : 'border-amber-300 bg-amber-50/50 dark:bg-slate-900/70')
-              : (isActive ? 'timer-active-aura border-indigo-300 dark:border-blue-500/40 bg-white dark:bg-slate-900/90' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80')
+              : (isActive ? 'timer-active-aura border-sky-300 dark:border-blue-500/40 bg-white dark:bg-slate-900/90' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80')
           }`}>
             <div
               className="absolute -top-32 left-1/2 -translate-x-1/2 w-80 sm:w-96 h-80 sm:h-96 rounded-full blur-3xl opacity-20 pointer-events-none"
@@ -316,7 +316,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                     className={`h-full transition-all duration-1000 ease-linear ${
                       isCatchupMode
                         ? 'bg-gradient-to-r from-amber-500 via-orange-400 to-emerald-400'
-                        : 'bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400'
+                        : 'bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400'
                     }`}
                     style={{ width: `${progressPercent}%` }}
                   />
@@ -340,7 +340,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                   size="md"
                   leftIcon={isActive ? <Pause className="w-4 h-4 sm:w-5 sm:h-5 fill-current" /> : <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />}
                   onClick={toggleTimer}
-                  className="px-6 sm:px-8 cursor-pointer text-xs sm:text-base font-bold shadow-indigo-500/30 py-2.5 hover:scale-105 active:scale-95 transition-transform"
+                  className="px-6 sm:px-8 cursor-pointer text-xs sm:text-base font-bold shadow-sky-400/30 py-2.5 hover:scale-105 active:scale-95 transition-transform"
                 >
                   {isActive ? 'Pause' : 'Démarrer'}
                 </Button>
@@ -391,14 +391,14 @@ export const FocusMode: React.FC<FocusModeProps> = ({
 
             <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-4 sm:p-6 space-y-3 shadow-xs">
               <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                <FileText className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+                <FileText className="w-4 h-4 text-sky-700 dark:text-sky-400" />
                 Bloc-Notes & Synthèse Rapide
               </h3>
               <textarea
                 placeholder="Notez vos formules clés, doutes ou points d'attention..."
                 value={reflectionNotes}
                 onChange={(e) => setReflectionNotes(e.target.value)}
-                className="w-full h-32 sm:h-36 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full h-32 sm:h-36 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-sky-400"
               />
             </Card>
 

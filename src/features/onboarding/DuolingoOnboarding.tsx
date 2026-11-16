@@ -1717,7 +1717,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         <div
                           className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
                             selected
-                              ? 'bg-sky-400 text-white'
+                              ? 'bg-sky-400 text-slate-950'
                               : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                           }`}
                         >
@@ -1747,7 +1747,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             selected ? 'border-sky-400 bg-sky-400' : 'border-slate-300 dark:border-slate-700'
                           }`}
                         >
-                          {selected && <Check className="w-3.5 h-3.5 text-white stroke-[3]" />}
+                          {selected && <Check className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />}
                         </div>
                       </div>
                     </button>
@@ -1796,7 +1796,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                       onClick={() => handleSelectStudySystem(sysKey)}
                       className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                         isSelected
-                          ? 'bg-sky-400 text-white shadow-xs'
+                          ? 'bg-sky-400 text-slate-950 shadow-xs'
                           : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
                       }`}
                     >
@@ -2078,7 +2078,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             </div>
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
                               isSelected
-                                ? 'border-sky-400 bg-sky-400 text-white'
+                                ? 'border-sky-400 bg-sky-400 text-slate-950'
                                 : 'border-slate-300 dark:border-slate-600'
                             }`}>
                               {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
@@ -2224,7 +2224,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                           }}
                           className={`p-3 rounded-xl border text-left text-xs font-bold transition-all cursor-pointer flex items-center justify-between ${
                             isSelected
-                              ? 'bg-sky-400 text-white border-sky-400 shadow-sm'
+                              ? 'bg-sky-400 text-slate-950 border-sky-400 shadow-sm'
                               : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/80 hover:border-sky-300'
                           }`}
                         >
@@ -2440,7 +2440,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                         }}
                         className={`p-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-sky-400 border-sky-400 text-white shadow-xs'
+                            ? 'bg-sky-400 border-sky-400 text-slate-950 shadow-xs'
                             : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                         }`}
                       >

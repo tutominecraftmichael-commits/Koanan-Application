@@ -93,7 +93,7 @@ export class ViewErrorBoundary extends React.Component<{ children: React.ReactNo
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold cursor-pointer"
+          className="px-5 py-2.5 rounded-xl bg-sky-400 hover:bg-sky-300 text-slate-950 text-sm font-bold cursor-pointer"
         >
           Réessayer
         </button>

@@ -2383,7 +2383,7 @@ export function App() {
       {activeView !== 'admin' && activeView !== 'tutor' && isLocalAdminEnvironment() && typeof window !== 'undefined' && sessionStorage.getItem('konan_admin_authenticated') === 'true' && (
         <button
           onClick={() => setActiveView('admin')}
-          className="fixed bottom-5 right-5 z-50 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs shadow-2xl shadow-purple-600/40 border border-purple-400/40 flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all"
+          className="fixed bottom-5 right-5 z-50 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-sky-400 text-white font-bold text-xs shadow-2xl shadow-purple-600/40 border border-purple-400/40 flex items-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all"
         >
           <ShieldCheck className="w-4 h-4 text-purple-300" />
           <span>Console Admin</span>
@@ -2460,7 +2460,7 @@ export function App() {
             />
           ) : state.isDemoMode ? (
             <div className="text-center py-16 space-y-4 glass-panel max-w-md mx-auto p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/10">
+              <div className="w-14 h-14 rounded-2xl bg-sky-400/20 text-sky-700 flex items-center justify-center mx-auto shadow-lg shadow-sky-400/10 dark:text-sky-300">
                 <GraduationCap className="w-7 h-7" />
               </div>
               <div className="space-y-1.5">
@@ -2472,7 +2472,7 @@ export function App() {
               <div className="flex flex-col gap-2.5 pt-3">
                 <button
                   onClick={() => setActiveView('auth')}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs transition-colors cursor-pointer shadow-md shadow-blue-600/20"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-sky-400 hover:from-blue-500 hover:to-sky-400 text-white font-bold text-xs transition-colors cursor-pointer shadow-md shadow-blue-600/20"
                 >
                   Se connecter avec Google (3 imports gratuits)
                 </button>
@@ -2489,7 +2489,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour importer votre emploi du temps.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs cursor-pointer"
               >
                 Se connecter avec Google
               </button>
@@ -2545,7 +2545,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Veuillez vous connecter pour accéder à votre tableau de bord.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2581,7 +2581,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour consulter votre emploi du temps.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2610,7 +2610,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour gérer vos matières.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2642,7 +2642,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour accéder à votre planning personnalisé.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2670,7 +2670,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour accéder au chronomètre Focus.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -2769,7 +2769,7 @@ export function App() {
               <p className="text-lg text-white font-bold">Connexion requise pour consulter vos analytics de progression.</p>
               <button
                 onClick={() => setActiveView('auth')}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-sky-400 text-slate-950 font-bold text-xs"
               >
                 Se connecter avec Google
               </button>
@@ -3059,10 +3059,10 @@ export function App() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-50 bg-white dark:bg-slate-900 border-2 border-indigo-200 dark:border-sky-400/50 text-slate-900 dark:text-white px-4 py-3 rounded-2xl shadow-xl shadow-indigo-950/15 dark:shadow-2xl dark:shadow-indigo-950/70 text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in slide-in-from-bottom-5 duration-200 max-w-[94vw] sm:max-w-md w-auto backdrop-blur-md"
+          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-50 bg-white dark:bg-slate-900 border-2 border-sky-200 dark:border-sky-400/50 text-slate-900 dark:text-white px-4 py-3 rounded-2xl shadow-xl shadow-sky-400/15 dark:shadow-2xl dark:shadow-sky-400/70 text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in slide-in-from-bottom-5 duration-200 max-w-[94vw] sm:max-w-md w-auto backdrop-blur-md"
         >
-          <div className="p-1.5 rounded-xl bg-indigo-50 dark:bg-sky-500/20 text-indigo-600 dark:text-sky-300 shrink-0 mt-0.5 border border-indigo-200 dark:border-sky-500/30">
-            <Sparkles className="w-4 h-4 text-indigo-600 dark:text-sky-300" />
+          <div className="p-1.5 rounded-xl bg-sky-50 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 shrink-0 mt-0.5 border border-sky-200 dark:border-sky-500/30">
+            <Sparkles className="w-4 h-4 text-sky-700 dark:text-sky-300" />
           </div>
           <div className="flex-1 min-w-0 pr-1">
             <p className="text-slate-900 dark:text-white text-xs sm:text-sm font-bold leading-relaxed break-words whitespace-normal">

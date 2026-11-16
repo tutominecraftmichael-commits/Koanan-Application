@@ -86,17 +86,17 @@ function getStrategyTheme(id: StudyPacing) {
       return {
         accent: 'purple',
         badgeBg: 'bg-purple-500/15 border-purple-500/40 text-purple-700 dark:text-purple-300',
-        activeGlow: 'from-purple-500/15 via-indigo-500/10 to-transparent border-purple-500 ring-2 ring-purple-500/30 shadow-lg shadow-purple-500/15',
+        activeGlow: 'from-purple-500/15 via-sky-400/10 to-transparent border-purple-500 ring-2 ring-purple-500/30 shadow-lg shadow-purple-500/15',
         checkBg: 'bg-purple-600 text-white',
         borderAccent: 'border-purple-500/50',
       };
     case 'time_blocking':
       return {
         accent: 'indigo',
-        badgeBg: 'bg-indigo-500/15 border-indigo-500/40 text-indigo-700 dark:text-indigo-300',
-        activeGlow: 'from-indigo-500/15 via-cyan-500/10 to-transparent border-indigo-500 ring-2 ring-indigo-500/30 shadow-lg shadow-indigo-500/15',
-        checkBg: 'bg-indigo-600 text-white',
-        borderAccent: 'border-indigo-500/50',
+        badgeBg: 'bg-sky-400/15 border-sky-400/40 text-sky-800 dark:text-sky-300',
+        activeGlow: 'from-sky-400/15 via-cyan-500/10 to-transparent border-sky-400 ring-2 ring-sky-400/30 shadow-lg shadow-sky-400/15',
+        checkBg: 'bg-sky-400 text-slate-950',
+        borderAccent: 'border-sky-400/50',
       };
     case 'pomodoro':
       return {
@@ -510,13 +510,13 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
         {/* =========================================================================
             BULLE INTERACTIVE KONAN (MOT PAR MOT, SANS "GUIDE PAS-À-PAS")
             ========================================================================= */}
-        <div className="flex items-center gap-3.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border-2 border-indigo-500/30 dark:border-indigo-500/40 shadow-md shadow-indigo-500/5">
+        <div className="flex items-center gap-3.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border-2 border-sky-400/30 dark:border-sky-400/40 shadow-md shadow-sky-400/5">
           <div className="shrink-0">
             <KonanCube size={52} showStars={false} glow={true} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30">
+              <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-sky-400/15 text-sky-700 dark:text-sky-400 border border-sky-400/30">
                 Konan
               </span>
               <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500">
@@ -597,17 +597,17 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
         {currentStep === 1 && (
           <div className="space-y-6 animate-in fade-in duration-200">
             {/* Banner Recommandation Pédagogique - Épuré, Lumineux & Sans Répétition */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-slate-900/5 dark:to-transparent border border-indigo-500/30 dark:border-indigo-500/40 shadow-sm space-y-3.5">
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-sky-400/10 via-purple-500/5 to-slate-900/5 dark:to-transparent border border-sky-400/30 dark:border-sky-400/40 shadow-sm space-y-3.5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 w-fit">
-                  <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
+                <span className="text-[10px] font-black uppercase tracking-wider text-sky-700 dark:text-sky-400 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-400/10 border border-sky-400/20 w-fit">
+                  <BookOpen className="w-3.5 h-3.5 text-sky-700 dark:text-sky-300" />
                   Recommandation de Konan
                 </span>
 
                 <button
                   type="button"
                   onClick={handleApplyAiRecommendation}
-                  className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs transition-all shadow-[0_4px_0_0_#3730A3] active:translate-y-0.5 active:shadow-[0_2px_0_0_#3730A3] cursor-pointer shrink-0 inline-flex items-center justify-center gap-2"
+                  className="px-4 py-2.5 rounded-xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-extrabold text-xs transition-all shadow-[0_4px_0_0_#0369A1] active:translate-y-0.5 active:shadow-[0_2px_0_0_#0369A1] cursor-pointer shrink-0 inline-flex items-center justify-center gap-2"
                 >
                   <Check className="w-4 h-4 stroke-[2.5]" />
                   <span>✓ Appliquer le conseil</span>
@@ -623,7 +623,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
                   {aiRecommendation.recommendedIds.map(id => (
                     <span
                       key={id}
-                      className="text-xs font-bold px-3 py-1 rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-cyan-300 border border-indigo-300/60 dark:border-indigo-500/40 shadow-xs flex items-center gap-1.5"
+                      className="text-xs font-bold px-3 py-1 rounded-lg bg-sky-100 text-sky-800 dark:bg-sky-400/20 dark:text-cyan-300 border border-sky-300/60 dark:border-sky-400/40 shadow-xs flex items-center gap-1.5"
                     >
                       <span className="text-amber-400">★</span>
                       <span>{getPacingStrategy(id).title}</span>
@@ -1176,7 +1176,7 @@ export const ProWizardView: React.FC<ProWizardViewProps> = ({
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
                 {/* Cartes de statistiques clés */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300">
+                  <div className="p-3 rounded-2xl bg-sky-400/10 border border-sky-400/30 text-sky-800 dark:text-sky-300">
                     <span className="text-[10px] font-bold uppercase tracking-wider block">Séances</span>
                     <span className="text-base sm:text-lg font-black">{reorganizedSessions.length} sessions</span>
                   </div>

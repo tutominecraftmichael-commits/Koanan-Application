@@ -338,12 +338,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               type="button"
               onClick={() => { soundFX.playCheckmarkPop(); onOpenSettings?.(); }}
               aria-label="Mon profil et mes paramètres"
-              className="lg:hidden shrink-0 rounded-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="lg:hidden shrink-0 rounded-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
             >
               {getDisplayAvatar(userAccount) ? (
-                <img src={getDisplayAvatar(userAccount)} alt="Profil" className="w-9 h-9 rounded-full object-cover ring-2 ring-indigo-500/60 dark:ring-indigo-400/70 shadow-sm" />
+                <img src={getDisplayAvatar(userAccount)} alt="Profil" className="w-9 h-9 rounded-full object-cover ring-2 ring-sky-400/60 dark:ring-sky-400/70 shadow-sm" />
               ) : (
-                <span className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 ring-2 ring-indigo-500/40 flex items-center justify-center text-sm font-bold text-white shadow-sm">
+                <span className="w-9 h-9 rounded-full bg-gradient-to-tr from-sky-400 to-cyan-400 ring-2 ring-sky-400/40 flex items-center justify-center text-sm font-bold text-white shadow-sm">
                   {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
                 </span>
               )}
@@ -362,7 +362,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <KonanCube size={38} showStars={false} glow={true} />
                 </div>
               ) : (
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0 flex items-center justify-center overflow-hidden">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-sky-400 via-blue-500 to-sky-400 shadow-md shadow-sky-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0 flex items-center justify-center overflow-hidden">
                   <img
                     src="/konan-logo.png"
                     alt="Logo Officiel KONAN"
@@ -401,7 +401,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className={`group flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer shrink-0 whitespace-nowrap active:scale-95 ${
                       isActive
-                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/40 ring-1 ring-blue-400/40'
+                        ? 'bg-gradient-to-r from-blue-600 to-sky-400 text-white shadow-md shadow-blue-600/40 ring-1 ring-blue-400/40'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/80 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/80'
                     }`}
                   >
@@ -443,9 +443,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={onOpenSettings}
                     title={t('navSettings', lang)}
                     aria-label={t('navSettings', lang)}
-                    className="hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 hover:border-indigo-500/60 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 dark:bg-slate-900/80 dark:border-slate-800 dark:hover:border-indigo-500/60 dark:hover:bg-slate-800/80 dark:text-slate-300 dark:hover:text-white items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 group"
+                    className="hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 hover:border-sky-400/60 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 dark:bg-slate-900/80 dark:border-slate-800 dark:hover:border-sky-400/60 dark:hover:bg-slate-800/80 dark:text-slate-300 dark:hover:text-white items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 group"
                   >
-                    <Settings className="w-4 h-4 text-indigo-500 dark:text-indigo-400 group-hover:rotate-45 transition-transform duration-300" />
+                    <Settings className="w-4 h-4 text-sky-700 dark:text-sky-400 group-hover:rotate-45 transition-transform duration-300" />
                   </button>
                 )}
 
@@ -456,7 +456,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     title={t('navTools', lang)}
                     className="group p-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-200 dark:bg-slate-900/70 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-all cursor-pointer flex items-center gap-1 active:scale-95"
                   >
-                    <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:rotate-45 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 group-active:scale-90" />
+                    <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:rotate-45 group-hover:text-sky-700 dark:group-hover:text-sky-400 group-active:scale-90" />
                     <ChevronDown className={`w-3 h-3 text-slate-400 dark:text-slate-500 transition-transform duration-300 ${isToolsOpen ? 'rotate-180 text-slate-900 dark:text-white' : 'group-hover:translate-y-0.5'}`} />
                   </button>
 
@@ -488,9 +488,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                       {isDemoMode && (
                         <button
                           onClick={() => { onOpenPresetModal(); setIsToolsOpen(false); }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 dark:text-indigo-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-sky-700 hover:text-sky-900 hover:bg-sky-50 dark:text-sky-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
                         >
-                          <GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+                          <GraduationCap className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
                           <span>Exemples d'EDT Démo</span>
                         </button>
                       )}
@@ -509,7 +509,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onClick={() => { onImportData(); setIsToolsOpen(false); }}
                         className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900 rounded-xl transition-colors cursor-pointer text-left"
                       >
-                        <Upload className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+                        <Upload className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
                         <span>{t('importConfig', lang)}</span>
                       </button>
 
@@ -605,7 +605,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 key={notif.id}
                                 className={`p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left animate-in fade-in transition-all ${
                                   isAcc
-                                    ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-indigo-950/30 dark:border-emerald-500/30'
+                                    ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-sky-400/30 dark:border-emerald-500/30'
                                     : 'bg-rose-50/80 border-rose-200 dark:bg-gradient-to-br dark:from-rose-950/40 dark:via-slate-950 dark:to-slate-900 dark:border-rose-500/30'
                                 }`}
                               >
@@ -650,7 +650,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             return (
                               <div 
                                 key={inv.id}
-                                className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-indigo-950/30 dark:border-amber-500/40"
+                                className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-sky-400/30 dark:border-amber-500/40"
                               >
                                 <div className="flex items-start gap-2.5">
                                   <div className="p-2 rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 shrink-0">
@@ -771,7 +771,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                   key={`mob-${notif.id}`}
                                   className={`p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left animate-in fade-in transition-all ${
                                     isAcc
-                                      ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-indigo-950/30 dark:border-emerald-500/30'
+                                      ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-sky-400/30 dark:border-emerald-500/30'
                                       : 'bg-rose-50/80 border-rose-200 dark:bg-gradient-to-br dark:from-rose-950/40 dark:via-slate-950 dark:to-slate-900 dark:border-rose-500/30'
                                   }`}
                                 >
@@ -816,7 +816,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                               return (
                                 <div 
                                   key={`mob-${inv.id}`}
-                                  className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-indigo-950/30 dark:border-amber-500/40"
+                                  className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-sky-400/30 dark:border-amber-500/40"
                                 >
                                   <div className="flex items-start gap-2.5">
                                     <div className="p-2 rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 shrink-0">
@@ -898,10 +898,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <img
                           src={getDisplayAvatar(userAccount)}
                           alt={displayName}
-                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-indigo-500/40 shadow-xs shrink-0"
+                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-sky-400/40 shadow-xs shrink-0"
                         />
                       ) : (
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-white font-bold text-xs shadow-xs shrink-0 border border-indigo-500/40">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-sky-400 to-cyan-500 flex items-center justify-center text-white font-bold text-xs shadow-xs shrink-0 border border-sky-400/40">
                           {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
                         </div>
                       )}
@@ -928,7 +928,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           if (onViewPricing) onViewPricing();
                           else onNavigate('landing');
                         }}
-                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-cyan-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                        className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-xs border bg-gradient-to-r from-amber-500/20 via-sky-400/20 to-cyan-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                         title="Modèle KONAN PLUS Actif - Cliquez pour voir les formules"
                       >
                         <Crown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 dark:text-amber-400 shrink-0" />
@@ -975,7 +975,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ) : (
                   <button
                     onClick={() => onNavigate('auth')}
-                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 dark:bg-slate-900 dark:border-indigo-500/40 dark:hover:border-indigo-400 dark:text-white text-[11px] sm:text-xs font-semibold shadow-sm cursor-pointer shrink-0 transition-colors"
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 dark:bg-slate-900 dark:border-sky-400/40 dark:hover:border-sky-400 dark:text-white text-[11px] sm:text-xs font-semibold shadow-sm cursor-pointer shrink-0 transition-colors"
                   >
                     <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 shrink-0">
                       <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
@@ -1007,7 +1007,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onClick={onEnterDemoMode}
                         className="hidden xs:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] dark:text-slate-300 dark:hover:text-white dark:border-white/10 backdrop-blur-md text-xs font-medium transition-all cursor-pointer"
                       >
-                        <GraduationCap className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
+                        <GraduationCap className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400 shrink-0" />
                         <span>Démo</span>
                       </button>
                     )}
@@ -1015,10 +1015,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <button
                       type="button"
                       onClick={() => onNavigate('auth')}
-                      className="flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-white/[0.08] dark:hover:bg-white/[0.15] dark:text-white dark:border-white/15 backdrop-blur-md text-xs sm:text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+                      className="flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 dark:bg-white/[0.08] dark:hover:bg-white/[0.15] dark:text-white dark:border-white/15 backdrop-blur-md text-xs sm:text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
                     >
                       <span>Connexion</span>
-                      <span className="text-indigo-600 dark:text-sky-300">→</span>
+                      <span className="text-sky-700 dark:text-sky-300">→</span>
                     </button>
                   </>
                 )}
@@ -1062,7 +1062,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 {isActive && (
-                  <span className="absolute -top-1.5 w-6 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 rounded-full shadow-[0_0_8px_rgba(79,70,229,0.5)] dark:shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+                  <span className="absolute -top-1.5 w-6 h-1 bg-gradient-to-r from-blue-600 to-sky-400 dark:from-blue-500 dark:to-sky-400 rounded-full shadow-[0_0_8px_rgba(79,70,229,0.5)] dark:shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
                 )}
                 <Icon 
                   isActive={isActive} 

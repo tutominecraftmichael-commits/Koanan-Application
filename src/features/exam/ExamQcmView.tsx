@@ -325,7 +325,7 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
             try { localStorage.removeItem(storageKey(session.id)); } catch { /* rien */ }
             onComplete(session.id, elapsed, wrongItems.length);
           })}
-          className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer"
+          className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl font-black uppercase tracking-wide active:translate-y-1 cursor-pointer konan-btn"
         >
           Valider ma séance
         </button>

@@ -250,7 +250,7 @@ export const PrintableScheduleModal: React.FC<PrintableScheduleModalProps> = ({
       {/* Barre d'outils supérieure (Masquée à l'impression) */}
       <div className="w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-2xl flex flex-wrap items-center justify-between gap-3 mb-4 sticky top-2 z-50 print:hidden">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-cyan-400">
+          <div className="p-2 rounded-xl bg-sky-50 dark:bg-sky-400/20 text-sky-700 dark:text-cyan-400">
             <Calendar className="w-5 h-5" />
           </div>
           <div>
@@ -271,7 +271,7 @@ export const PrintableScheduleModal: React.FC<PrintableScheduleModalProps> = ({
             leftIcon={isExportingPdf ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
             onClick={handleDownloadPdf}
             disabled={isExportingPdf || isExportingPng}
-            className="font-bold text-xs py-2 shadow-md shadow-indigo-500/20 cursor-pointer"
+            className="font-bold text-xs py-2 shadow-md shadow-sky-400/20 cursor-pointer"
           >
             {isExportingPdf ? 'Génération...' : 'Télécharger PDF'}
           </Button>

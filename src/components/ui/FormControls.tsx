@@ -31,7 +31,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             className={cn(
-              'w-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 dark:bg-slate-900/90 dark:border-slate-700/80 dark:text-slate-100 dark:placeholder-slate-500 rounded-xl px-3.5 py-2.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 shadow-sm',
+              'w-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 dark:bg-slate-900/90 dark:border-slate-700/80 dark:text-slate-100 dark:placeholder-slate-500 rounded-xl px-3.5 py-2.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-400/50 focus:border-sky-400 shadow-sm',
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
               error && 'border-rose-500/80 focus:ring-rose-500/50 focus:border-rose-500',
@@ -75,7 +75,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={textareaId}
           ref={ref}
           className={cn(
-            'w-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 dark:bg-slate-900/90 dark:border-slate-700/80 dark:text-slate-100 dark:placeholder-slate-500 rounded-xl p-3.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 min-h-[90px] resize-y shadow-sm',
+            'w-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 dark:bg-slate-900/90 dark:border-slate-700/80 dark:text-slate-100 dark:placeholder-slate-500 rounded-xl p-3.5 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-400/50 focus:border-sky-400 min-h-[90px] resize-y shadow-sm',
             error && 'border-rose-500/80 focus:ring-rose-500/50 focus:border-rose-500',
             className
           )}
@@ -117,7 +117,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             id={selectId}
             ref={ref}
             className={cn(
-              'w-full bg-white border border-slate-300 text-slate-900 dark:bg-slate-900/90 dark:border-slate-700/80 dark:text-slate-100 rounded-xl px-3.5 py-2.5 text-sm appearance-none transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 cursor-pointer pr-10 shadow-sm',
+              'w-full bg-white border border-slate-300 text-slate-900 dark:bg-slate-900/90 dark:border-slate-700/80 dark:text-slate-100 rounded-xl px-3.5 py-2.5 text-sm appearance-none transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-400/50 focus:border-sky-400 cursor-pointer pr-10 shadow-sm',
               error && 'border-rose-500/80 focus:ring-rose-500/50 focus:border-rose-500',
               className
             )}
@@ -165,12 +165,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const percentage = Math.min(100, Math.max(0, Math.round((value / max) * 100)));
 
   const colorStyles = {
-    indigo: 'bg-indigo-500 shadow-sm shadow-indigo-500/50',
+    indigo: 'bg-sky-400 shadow-sm shadow-sky-400/50',
     cyan: 'bg-cyan-500 shadow-sm shadow-cyan-500/50',
     emerald: 'bg-emerald-500 shadow-sm shadow-emerald-500/50',
     amber: 'bg-amber-500 shadow-sm shadow-amber-500/50',
     rose: 'bg-rose-500 shadow-sm shadow-rose-500/50',
-    gradient: 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 shadow-sm shadow-indigo-500/40',
+    gradient: 'bg-gradient-to-r from-sky-400 via-purple-500 to-cyan-400 shadow-sm shadow-sky-400/40',
   };
 
   const sizes = {

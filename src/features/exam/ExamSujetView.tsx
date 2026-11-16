@@ -403,7 +403,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
         </button>
         {showCorrige && <Corrige sujet={sujet} />}
 
-        <button type="button" onClick={finish} className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-black uppercase tracking-wide shadow-[0_5px_0_#065f46] active:translate-y-1 cursor-pointer">
+        <button type="button" onClick={finish} className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl font-black uppercase tracking-wide active:translate-y-1 cursor-pointer konan-btn">
           Valider ma séance
         </button>
       </div>
@@ -520,7 +520,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
           <Clock className="w-5 h-5" /> Commencer l’épreuve (2 h)
         </button>
       ) : !showPhotos ? (
-        <button type="button" onClick={() => setShowPhotos(true)} className="w-full py-4 rounded-2xl bg-emerald-500 text-white font-black uppercase tracking-wide shadow-[0_4px_0_#047857] active:translate-y-1 cursor-pointer flex items-center justify-center gap-2">
+        <button type="button" onClick={() => setShowPhotos(true)} className="w-full py-4 rounded-2xl bg-sky-400 text-slate-950 font-black uppercase tracking-wide shadow-[0_4px_0_#0369A1] active:translate-y-1 cursor-pointer flex items-center justify-center gap-2">
           <FileText className="w-5 h-5" /> {timeUp ? 'Le temps est écoulé : faire corriger ma copie' : 'J’ai terminé : faire corriger ma copie'}
         </button>
       ) : (
