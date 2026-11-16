@@ -26,8 +26,10 @@ import {
   ChevronDown,
   ChevronUp,
   Moon,
-  Zap
+  Zap,
+  Play
 } from 'lucide-react';
+import { KonanMascot } from '../../components/common/KonanMascot';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
 import { GoogleCalendarSyncModal } from '../../components/common/GoogleCalendarSyncModal';
 import { useLanguage, t } from '../../lib/i18n';
@@ -177,85 +179,83 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     .map(s => ({ ...s, daysRemaining: getDaysRemaining(s.examDate) }))
     .sort((a, b) => (a.daysRemaining || 999) - (b.daysRemaining || 999));
 
+  // Charte Excellence : « Lundi 16 novembre » et « Bonjour » / « Bonsoir » selon l'heure
+  const nowForGreeting = new Date();
+  const todayLongLabel = nowForGreeting.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const greetingWord = nowForGreeting.getHours() >= 18 ? 'Bonsoir' : 'Bonjour';
+
   return (
     <div className="space-y-5 sm:space-y-7 animate-in fade-in duration-300">
       
-      {/* WELCOME BANNER WITH INTEGRATED NEXT SESSION */}
-      <div className="relative rounded-2xl sm:rounded-3xl p-4 sm:p-7 overflow-hidden border border-indigo-100 dark:border-indigo-500/30 bg-gradient-to-r from-indigo-50/90 via-sky-50/40 to-white dark:from-indigo-950/60 dark:via-slate-900 dark:to-slate-950 shadow-sm dark:shadow-2xl">
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 sm:gap-6 relative z-10">
-          
-          {/* User & Curriculum Greeting */}
-          <div className="space-y-1.5 sm:space-y-2 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              {(isCycleCompletedToday || isDayFullyComplete) && (
-                <Badge variant="emerald" size="sm" dot>
-                  {isCycleCompletedToday ? "Cycle Validé 100%" : "Journée Validée 100%"}
-                </Badge>
-              )}
-              <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Aujourd'hui : {currentDayInfo.label}</span>
-            </div>
-            
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              Bonjour, <span className={
-                planTier === 'plus' 
-                  ? 'plus-multicolor-shimmer-text font-black' 
-                  : planTier === 'pro' 
-                  ? 'gold-shimmer-text font-black' 
-                  : 'text-gradient-primary'
-              }>{studentName}</span>
-            </h1>
-
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
-              {isCycleCompletedToday ? (
-                <span><strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Programme 100% validé !</strong> Repos bien mérité, on reprend demain.</span>
-              ) : isDayFullyComplete ? (
-                <span><strong className="text-emerald-600 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
-              ) : (
-                <>
-                  {academicLevel && (
-                    <>Classe : <strong className="text-slate-700 dark:text-slate-200 font-semibold">{academicLevel}</strong>.</>
-                  )}
-                  {allTodaysStudySessions.length > 0
-                    ? ` ${activeDisplaySessions.length} session(s) active(s) (${completedToday} terminée(s)).`
-                    : ` Journée d'assimilation libre.`}
-                </>
-              )}
-            </p>
+      {/* ACCUEIL (charte Excellence) : date en petites capitales dorées, salutation, puis la prochaine séance en grand */}
+      <div className="space-y-4">
+        <div className="space-y-1.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="konan-kicker">{todayLongLabel}</span>
+            {(isCycleCompletedToday || isDayFullyComplete) && (
+              <Badge variant="emerald" size="sm" dot>
+                {isCycleCompletedToday ? "Cycle validé 100 %" : "Journée validée 100 %"}
+              </Badge>
+            )}
           </div>
+          <h1 className="text-[28px] sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+            {greetingWord}, <span className={
+              planTier === 'plus'
+                ? 'plus-multicolor-shimmer-text font-black'
+                : planTier === 'pro'
+                ? 'gold-shimmer-text font-black'
+                : ''
+            }>{studentName}</span>.
+          </h1>
+          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
+            {isCycleCompletedToday ? (
+              <span><strong className="text-emerald-700 dark:text-emerald-300 font-semibold">Programme 100 % validé !</strong> Repos bien mérité, on reprend demain.</span>
+            ) : isDayFullyComplete ? (
+              <span><strong className="text-emerald-700 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
+            ) : (
+              <>
+                {academicLevel && <>{academicLevel} · </>}
+                {allTodaysStudySessions.length > 0
+                  ? `${allTodaysStudySessions.length} séance${allTodaysStudySessions.length > 1 ? 's' : ''} aujourd’hui · ${completedToday} terminée${completedToday > 1 ? 's' : ''}`
+                  : 'Journée libre : profites-en pour souffler.'}
+              </>
+            )}
+          </p>
+        </div>
 
-          {/* Quick Launch Card / Next Session / À Demain Card */}
-          {isCycleCompletedToday ? (
-            <div className="w-full lg:w-auto p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/40 shadow-xs flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shrink-0">
-                <Moon className="w-5 h-5" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs font-bold text-slate-900 dark:text-white">À demain !</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Toutes les matières sont accomplies.</p>
-              </div>
+        {isCycleCompletedToday ? (
+          <div className="p-4 rounded-[22px] bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/40 flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 shrink-0">
+              <Moon className="w-5 h-5" />
             </div>
-          ) : isDayFullyComplete ? (
-            <div className="w-full lg:w-auto p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/40 shadow-xs flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shrink-0">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs font-bold text-slate-900 dark:text-white">Journée validée à 100% !</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Bravo pour votre assiduité.</p>
-              </div>
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-slate-900 dark:text-white">À demain !</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400">Toutes les matières sont accomplies.</p>
             </div>
-          ) : nextStudySession && (
-            <div className="w-full lg:max-w-md p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-indigo-200 dark:border-indigo-500/40 shadow-sm dark:shadow-xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 shrink-0">
-              <div className="space-y-1 text-left min-w-0 flex-1">
+          </div>
+        ) : isDayFullyComplete ? (
+          <div className="p-4 rounded-[22px] bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/40 flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 shrink-0">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-slate-900 dark:text-white">Journée validée à 100 % !</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400">Bravo pour ton assiduité.</p>
+            </div>
+          </div>
+        ) : nextStudySession && (
+          <div className="konan-hairline p-4 sm:p-5 rounded-[22px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none space-y-3.5">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1.5 min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="text-[10px] uppercase font-bold text-indigo-600 dark:text-indigo-400 tracking-wider">
-                    Prochaine Session
+                  <span className="text-[10.5px] font-bold uppercase tracking-[0.22em] text-sky-700 dark:text-sky-300">
+                    {nextStudySession.isRescheduledToday ? 'Rattrapage' : 'Prochaine séance'} · {nextStudySession.startTime}
                   </span>
                   {nextStudySession.isExamPrep && (
-                    <span className={`text-[9px] font-black px-1.5 py-0.2 rounded-full flex items-center gap-1 shrink-0 ${
+                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 ${
                       nextStudySession.examType === 'devoir'
                         ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40'
-                        : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
+                        : 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'
                     }`}>
                       <span>{nextStudySession.examType === 'devoir' ? 'Devoir' : 'Examen'}</span>
                       {(() => {
@@ -266,43 +266,34 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       })()}
                     </span>
                   )}
-                  {nextStudySession.isRescheduledToday && (
-                    <Badge variant="amber" size="sm" className="text-[9px] px-1.5 py-0 font-bold animate-pulse">
-                      Rattrapage
-                    </Badge>
-                  )}
                 </div>
-                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words leading-tight line-clamp-2">
+                <p className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white break-words leading-tight line-clamp-2">
                   {cleanSessionTitle(nextStudySession.title)}
                 </p>
-                <div className="flex flex-wrap items-center gap-2 pt-0.5">
-                  <span className="text-[11px] font-mono text-cyan-700 dark:text-cyan-400 font-semibold">
-                    {nextStudySession.startTime} - {nextStudySession.endTime} ({nextStudySession.durationMinutes} min)
+                <p className="text-[13px] text-slate-600 dark:text-slate-400">
+                  {nextStudySession.startTime} – {nextStudySession.endTime} · {nextStudySession.durationMinutes} min
+                </p>
+                {nextStudySession.isRescheduledToday && nextStudySession.originalStartTime && (
+                  <span className="inline-block text-[11px] font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-500/40">
+                    Manquée à {nextStudySession.originalStartTime} → replacée à {nextStudySession.startTime}
                   </span>
-                  {nextStudySession.isRescheduledToday && nextStudySession.originalStartTime && (
-                    <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-500/40">
-                      Manquée à {nextStudySession.originalStartTime} → Replacée à {nextStudySession.startTime}
-                    </span>
-                  )}
-                </div>
+                )}
               </div>
-              <Button
-                variant={nextStudySession.isRescheduledToday ? "secondary" : "glow"}
-                size="sm"
-                leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                onClick={afterShine(() => onStartFocusSession(nextStudySession))}
-                className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto cursor-pointer text-xs font-black whitespace-nowrap py-2.5 px-4 rounded-xl transition-all shrink-0 active:translate-y-1 ${
-                  nextStudySession.isRescheduledToday
-                    ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
-                    : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
-                }`}
-                title="Lancer le cours guidé ou le chronomètre d'étude pour cette séance"
-              >
-                {nextStudySession.isRescheduledToday ? 'Faire le rattrapage' : 'Commencer la séance'}
-              </Button>
+              <div className="shrink-0 -mt-1 -mr-1 hidden min-[360px]:block">
+                <KonanMascot pose="notes" size={72} />
+              </div>
             </div>
-          )}
-        </div>
+            <button
+              type="button"
+              onClick={afterShine(() => onStartFocusSession(nextStudySession))}
+              className={`relative overflow-hidden konan-btn-shine w-full h-[52px] text-[15px] cursor-pointer ${nextStudySession.isRescheduledToday ? 'konan-btn-gold' : 'konan-btn'}`}
+              title="Lancer le cours guidé ou le chronomètre d'étude pour cette séance"
+            >
+              <Play className="w-4 h-4 fill-current" />
+              <span>{nextStudySession.isRescheduledToday ? 'Faire le rattrapage' : 'Commencer la séance'}</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 2-COLUMN COCKPIT (TODAY'S TIMELINE + ACADEMIC INSIGHTS) */}
@@ -313,7 +304,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           
           <div className="flex items-center justify-between">
             <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500 dark:text-indigo-400" />
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-sky-700 dark:text-sky-400" />
               <span>Programme ({currentDayInfo.label})</span>
             </h2>
             <Button
@@ -321,7 +312,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               size="sm"
               rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               onClick={() => onNavigate('planner')}
-              className="text-xs text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 p-1 sm:px-3"
+              className="text-xs text-sky-700 hover:text-sky-800 dark:text-sky-400 dark:hover:text-sky-300 p-1 sm:px-3"
             >
               Semaine complète
             </Button>
@@ -353,7 +344,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         </div>
                         <div className="flex items-center sm:flex-col justify-between sm:justify-center sm:text-right font-mono shrink-0 pt-1 sm:pt-0 border-t border-slate-100 dark:border-slate-800/60 sm:border-t-0">
                           <span className="text-slate-700 dark:text-slate-300 font-semibold text-xs">{c.startTime} - {c.endTime}</span>
-                          <span className="text-[10px] text-cyan-700 dark:text-cyan-400 uppercase font-bold">{c.type}</span>
+                          <span className="text-[10px] text-sky-700 dark:text-sky-300 uppercase font-bold">{c.type}</span>
                         </div>
                       </div>
                     );
@@ -364,7 +355,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
             {/* 2. Study Sessions */}
             {isCycleCompletedToday ? (
-              <div className="p-6 sm:p-8 rounded-3xl bg-emerald-50 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-900 dark:to-indigo-950/40 border border-emerald-200 dark:border-emerald-500/30 text-center space-y-4 shadow-sm dark:shadow-xl">
+              <div className="p-6 sm:p-8 rounded-3xl bg-emerald-50 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-900 dark:to-sky-400/40 border border-emerald-200 dark:border-emerald-500/30 text-center space-y-4 shadow-sm dark:shadow-xl">
                 <div className="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 flex items-center justify-center mx-auto border border-emerald-200 dark:border-emerald-500/30 shadow-md">
                   <Moon className="w-7 h-7" />
                 </div>
@@ -393,8 +384,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             ) : (
               <div className="space-y-2.5 pt-1">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-sky-800 dark:text-sky-300 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
                     Sessions d'Étude ({completedToday}/{allTodaysStudySessions.length} faites)
                   </span>
                   <div className="flex items-center gap-2">
@@ -418,7 +409,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={() => onNavigate('planner')}
-                      className="mt-2 text-xs text-indigo-600 dark:text-indigo-400"
+                      className="mt-2 text-xs text-sky-700 dark:text-sky-400"
                     >
                       Consulter mon planning de révision
                     </Button>
@@ -434,13 +425,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         className={`p-3.5 sm:p-4 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${
                           isRescheduled
                             ? 'bg-gradient-to-r from-amber-50/60 via-white to-amber-50/30 dark:from-slate-900 dark:via-amber-950/20 dark:to-slate-900 border-amber-200 dark:border-amber-500/40'
-                            : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-700/80 hover:border-indigo-400'
+                            : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-700/80 hover:border-sky-400'
                         }`}
                         style={{ borderLeftColor: isRescheduled ? '#F59E0B' : (sub?.color || '#6366F1'), borderLeftWidth: '4px' }}
                       >
                         <div className="space-y-1.5 min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-[11px] font-mono font-bold text-cyan-700 dark:text-cyan-400">
+                            <span className="text-[11px] font-mono font-bold text-sky-700 dark:text-sky-300">
                               {session.startTime} - {session.endTime} ({session.durationMinutes} min)
                             </span>
                             {isRescheduled && session.originalStartTime && (
@@ -468,7 +459,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                               </span>
                             )}
                             {session.pacingMethod && (
-                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-cyan-300 border border-indigo-200 dark:border-indigo-500/30 font-mono">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-sky-50 dark:bg-sky-400/20 text-sky-800 dark:text-sky-300 border border-sky-200 dark:border-sky-400/30 font-mono">
                                 {session.pacingMethod === 'feynman' ? 'Feynman' : session.pacingMethod === 'time_blocking' ? 'Time Blocking' : session.pacingMethod === 'pomodoro' ? 'Pomodoro' : session.pacingMethod === 'two_minutes_rule' ? '2-Min' : 'Répétition'}
                               </span>
                             )}
@@ -478,7 +469,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                               className="cursor-pointer hover:scale-105 transition-transform"
                               title={t('clickForGuide', lang)}
                             >
-                              <Badge variant="primary" size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-cyan-400">
+                              <Badge variant="primary" size="sm" className="text-[10px] px-1.5 py-0 hover:ring-1 hover:ring-sky-400">
                                 {session.type === 'exercises' ? t('exercisesLabel', lang) :
                                  session.type === 'deep_summary' ? t('deepSummaryLabel', lang) :
                                  session.type === 'flashcards' ? t('activeRecallLabel', lang) :
@@ -495,20 +486,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         </div>
 
                         <div className="flex items-center gap-2 self-stretch sm:self-center justify-end shrink-0 pt-2 sm:pt-0 border-t border-slate-100 dark:border-slate-800/60 sm:border-t-0">
-                          <Button
-                            variant={isRescheduled ? "secondary" : "glow"}
-                            size="sm"
-                            leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
+                          <button
+                            type="button"
                             onClick={afterShine(() => onStartFocusSession(session))}
                             className={`relative overflow-hidden konan-btn-shine w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[40px] active:translate-y-1 ${
                               isRescheduled
-                                ? 'konan-btn-shine-amber bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-white border border-amber-300 dark:border-amber-400/50 shadow-[0_4px_0_0_#d97706] hover:shadow-[0_2px_0_0_#d97706] dark:shadow-[0_0_20px_rgba(245,158,11,0.35)] dark:hover:shadow-[0_0_25px_rgba(245,158,11,0.5)]'
-                                : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white border border-emerald-400 shadow-[0_4px_0_0_#065f46] hover:shadow-[0_2px_0_0_#065f46] dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
+                                ? 'konan-btn-gold'
+                                : 'konan-btn'
                             }`}
                             title="Lancer le cours guidé ou le chronomètre d'étude pour cette séance"
                           >
+                            <Play className="w-3.5 h-3.5 fill-current" />
                             <span>{isRescheduled ? 'Faire le rattrapage' : 'Commencer la séance'}</span>
-                          </Button>
+                          </button>
                         </div>
                       </div>
                     );
@@ -603,9 +593,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   type="button"
                   onClick={onUpgradeToPro || onViewPricing}
                   className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border border-amber-300 shadow-sm shrink-0 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                  title="Modèle KONAN PRO (Version PRO ouverte)"
+                  title="Inclus dans KONAN PRO"
                 >
-                  PRO OUVERTE
+                  PRO
                 </button>
               )}
             </div>
@@ -615,7 +605,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             ) : planTier === 'free' ? (
               <div className="p-3.5 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/30 space-y-2.5 text-xs">
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                  Le compte à rebours et l'adaptation automatique du planning aux dates de partiels et devoirs surveillés sont inclus dans <strong className="text-amber-600 dark:text-amber-400 font-extrabold">KONAN PRO</strong> (version PRO ouverte).
+                  Le compte à rebours et l'adaptation automatique du planning aux dates de partiels et devoirs surveillés sont inclus dans <strong className="text-amber-600 dark:text-amber-400 font-extrabold">KONAN PRO</strong>.
                 </p>
                 <button
                   type="button"
@@ -701,7 +691,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               </div>
               <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
                 <span>Objectif quotidien :</span>
-                <span className="font-bold text-cyan-600 dark:text-cyan-400 font-mono">
+                <span className="font-bold text-sky-700 dark:text-sky-300 font-mono">
                   {formatMinutesToHours(preferences.targetDailyStudyMinutes)}
                 </span>
               </div>
@@ -713,7 +703,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               </div>
               <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
                 <span>Cette semaine :</span>
-                <span className="font-bold text-indigo-600 dark:text-indigo-400 font-mono">
+                <span className="font-bold text-sky-700 dark:text-sky-400 font-mono">
                   {formatMinutesToHours(weekCompletedMins)} / {formatMinutesToHours(weekPlannedMins)} ({weekCompletedSessions.length} validées)
                 </span>
               </div>
