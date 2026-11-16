@@ -148,6 +148,7 @@ export function applyXpEvents(player0, events, { nowMs, planTier }) {
   const accepted = [];
   const rejected = [];
   let lessonsCounted = 0;
+  let repCredits = 0; // hausses de réputation gagnées : 1 par séance, 1 par série (5 par jour)
   let xpGained = 0;
   const unlimited = planTier === 'pro' || planTier === 'plus';
   const sorted = [...(Array.isArray(events) ? events : [])]
@@ -165,7 +166,7 @@ export function applyXpEvents(player0, events, { nowMs, planTier }) {
     if (weekIdOf(at) !== weekId) { seen.add(id); accepted.push(id); continue; } // semaine passée : ne compte plus pour la ligue
 
     const day = dayKeyOf(at);
-    if (player.dayKey !== day) { player.dayKey = day; player.dayLessons = 0; player.daySeries = 0; }
+    if (player.dayKey !== day) { player.dayKey = day; player.dayLessons = 0; player.daySeries = 0; player.dayRepSeries = 0; }
 
     let xp = 0;
     if (e.kind === 'lesson') {
@@ -177,6 +178,7 @@ export function applyXpEvents(player0, events, { nowMs, planTier }) {
       if (player.dayLessons >= MAX_LESSONS_PER_DAY) { reject('trop de séances dans la journée'); continue; }
       player.dayLessons += 1;
       lessonsCounted += 1;
+      repCredits += 1;
       xp = expected;
     } else if (e.kind === 'series') {
       const lvl = SERIES_LEVELS.find((l) => l.level === Number(e.level));
@@ -203,6 +205,11 @@ export function applyXpEvents(player0, events, { nowMs, planTier }) {
         player.energyAt = base;
       }
       player.daySeries += 1;
+      // Réputation : une série terminée vaut +1 %, 5 séries comptées par jour au plus
+      if ((player.dayRepSeries || 0) < TRAINING_REP_DAILY_MAX) {
+        player.dayRepSeries = (player.dayRepSeries || 0) + 1;
+        repCredits += 1;
+      }
       player.lastSeriesEndAt = at;
       xp = expected;
     } else {
@@ -217,7 +224,7 @@ export function applyXpEvents(player0, events, { nowMs, planTier }) {
   }
   player.seenIds = [...seen].slice(-300);
   if (xpGained > 0) player.xpReachedAt = nowMs;
-  return { player, accepted, rejected, lessonsCounted, xpGained };
+  return { player, accepted, rejected, lessonsCounted, repCredits, xpGained };
 }
 
 /**
@@ -230,6 +237,30 @@ export function guardReputation(previous, claimed, lessonsAccepted) {
   if (!Number.isFinite(c)) return prev;
   if (c <= prev) return c;
   return Math.min(c, prev + Math.max(0, lessonsAccepted));
+}
+
+/** Crédits de réputation gardés d'un envoi à l'autre (au plus 30). */
+export const MAX_REP_CREDITS = 30;
+export const TRAINING_REP_DAILY_MAX = 5;
+
+/**
+ * Réputation envoyée par l'appli, avec crédits gardés : chaque séance ou série vérifiée donne 1 crédit,
+ * utilisable même plus tard (l'appli peut compter le +1 % d'une séance le lendemain). Une hausse consomme
+ * les crédits ; une baisse est toujours acceptée. Sans crédit, pas de hausse (on ne remonte pas sans travailler).
+ * `trustOnce` : première synchronisation après la correction du 2026-11-16 (l'ancien serveur refusait à tort
+ * les hausses comptées le lendemain) : la réputation de l'appli est reprise telle quelle, une seule fois.
+ * @returns { reputation, credits }
+ */
+export function settleServerReputation(previous, claimed, credits0, newCredits, trustOnce = false) {
+  const prev = Number.isFinite(previous) ? previous : 100;
+  let credits = Math.min(MAX_REP_CREDITS, Math.max(0, Number(credits0) || 0) + Math.max(0, Number(newCredits) || 0));
+  const c = Math.round(Number(claimed));
+  if (claimed === undefined || claimed === null || !Number.isFinite(c)) return { reputation: prev, credits };
+  const want = Math.max(0, Math.min(100, c));
+  if (trustOnce || want <= prev) return { reputation: want, credits };
+  const rise = Math.min(want - prev, credits);
+  credits -= rise;
+  return { reputation: prev + rise, credits };
 }
 
 // ---------------------------------------------------------------------------

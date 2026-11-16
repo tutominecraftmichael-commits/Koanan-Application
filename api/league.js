@@ -18,7 +18,7 @@ import { nextNameChangeAt } from './_nameRules.js';
 import { serverPlanTier } from './_subscriptionStore.js';
 import {
   DIVISIONS, GROUP_SIZE, PROMOTE_COUNT, DEMOTE_COUNT, applyXpEvents, clampDivision, cleanAvatar, gradeInLeague,
-  guardReputation, isFrozen, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
+  settleServerReputation, isFrozen, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
 } from './_leagueRules.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -122,7 +122,10 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
     const prev = snap.exists ? snap.data() : { uid, division: 1, reputation: 100 };
     if (prev.weekId && prev.weekId !== weekId) prev.groupId = null; // nouvelle semaine : nouveau groupe
     const applied = applyXpEvents(prev, body.events, { nowMs, planTier });
-    const reputation = body.reputation === undefined ? (prev.reputation ?? 100) : guardReputation(prev.reputation, body.reputation, applied.lessonsCounted);
+    // Réputation : chaque séance ou série vérifiée donne un crédit de hausse, gardé pour plus tard
+    // (l'appli compte parfois le +1 % d'une séance le lendemain). Première fois après la correction : reprise telle quelle.
+    const rep = settleServerReputation(prev.reputation, body.reputation, prev.repCredits, applied.repCredits, snap.exists && !prev.repV2);
+    const reputation = rep.reputation;
     // Nom : changement accepté seulement 3 mois après le précédent
     let displayName = prev.displayName || wantedName;
     let nameChangedAt = prev.nameChangedAt || null;
@@ -136,6 +139,9 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
       uid,
       division: clampDivision(prev.division),
       reputation,
+      repCredits: rep.credits,
+      // Reprise unique faite seulement quand l'appli a envoyé sa réputation
+      repV2: Boolean(prev.repV2 || body.reputation !== undefined || !snap.exists),
       displayName,
       nameChangedAt,
       avatar,
