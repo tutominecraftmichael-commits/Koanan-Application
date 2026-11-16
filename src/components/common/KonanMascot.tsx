@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 /**
  * KONAN, la mascotte : le cube bleu du logo, avec un visage (charte Excellence, maquette validée le 2026-11-16).
@@ -22,7 +22,7 @@ export type KonanMascotPose = 'wave' | 'jump' | 'notes' | 'done' | 'idle'
   | 'whoa'         // surpris : réponses au hasard
   | 'encourage'    // doux sourire : l'élève a du mal
   | 'pause'        // repos : pause Pomodoro
-  | 'cta';         // invite à commencer : enchaîne des grimaces drôles (sourire, clin d’œil, langue, surprise…)
+  | 'cta';         // carte « Prochaine séance » : sourire, immobile
 
 interface KonanMascotProps {
   pose?: KonanMascotPose;
@@ -81,18 +81,9 @@ const Sparkle: React.FC<{ x: number; y: number; r: number; fill: string; classNa
   />
 );
 
-/** Grimaces de la pose « cta » (une toutes les 1,5 s), pour donner envie de commencer la séance. */
-const CTA_FACES = ['smile', 'wink', 'tongue', 'surprised', 'grin', 'look'] as const;
-
 export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 160, className = '' }) => {
-  const [faceIdx, setFaceIdx] = useState(0);
-  useEffect(() => {
-    if (pose !== 'cta') return;
-    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-    const timer = window.setInterval(() => setFaceIdx((i) => (i + 1) % CTA_FACES.length), 1500);
-    return () => window.clearInterval(timer);
-  }, [pose]);
-  const face = pose === 'cta' ? CTA_FACES[faceIdx] : null;
+  // Carte « Prochaine séance » : un simple sourire, sans changement d'expression (choix du 2026-11-16)
+  const face: string | null = pose === 'cta' ? 'smile' : null;
 
   const happyEyes = pose === 'jump' || pose === 'done' || face === 'grin';
   const closedEyes = pose === 'pause';
