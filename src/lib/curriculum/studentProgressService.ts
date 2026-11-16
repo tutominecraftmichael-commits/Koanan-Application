@@ -365,6 +365,44 @@ function resolveNextPointIndex(chapter: CurriculumChapter, subProg: SubCategoryS
 }
 
 /**
+ * Où en est l'élève dans les mini-leçons d'une matière (pour que le planning s'adapte à sa progression) :
+ * nombre total de mini-leçons, nombre qu'il lui reste à faire, et date de sa dernière séance.
+ * Un volet où l'élève s'est placé au chapitre N compte les leçons à partir de sa position ; un volet pas
+ * encore commencé compte toutes ses leçons. Null : KONAN n'a pas (encore) de cours pour cette matière.
+ * Les cours de la matière doivent être chargés avant (loadCurriculumFor).
+ */
+export function getSubjectLessonStatus(
+  userId: string,
+  subjectId: StemSubjectId,
+  gradeLevel: CurriculumGradeLevel,
+  subjectName = ''
+): { totalLessons: number; newLessonsLeft: number; lastStudiedAt?: string } | null {
+  const allChapters = getCurriculumChapters(subjectId, gradeLevel);
+  if (!allChapters.length) return null;
+  const prog = readSubjectProgress(getStudentProgressMap(userId), subjectId, gradeLevel);
+  const imposed = voletFromSubjectName(subjectId, subjectName);
+  const volets = imposed ? [imposed] : Array.from(new Set(allChapters.map(getChapterSubCategory)));
+  let totalLessons = 0;
+  let newLessonsLeft = 0;
+  for (const volet of volets) {
+    const subChapters = chaptersOfSubCategory(allChapters, subjectId, volet, gradeLevel);
+    const subProg = prog?.subCategories?.[volet];
+    const mastered = new Set(subProg?.masteredPointIds || []);
+    const current = subProg?.positioningCompleted ? subChapters.find((c) => c.id === subProg.currentChapterId) : undefined;
+    const startChapter = current ? subChapters.indexOf(current) : 0;
+    subChapters.forEach((chapter, ci) => {
+      totalLessons += chapter.points.length;
+      if (ci < startChapter) return; // chapitres d'avant sa position : déjà vus en classe
+      const from = current && ci === startChapter ? resolveNextPointIndex(chapter, subProg!) : 0;
+      chapter.points.forEach((p, pi) => {
+        if (pi >= from && !mastered.has(p.id)) newLessonsLeft += 1;
+      });
+    });
+  }
+  return { totalLessons, newLessonsLeft, lastStudiedAt: prog?.lastSessionAt };
+}
+
+/**
  * Mini-leçons du volet à réviser, de la plus utile à la moins utile, d'après la mémoire de KONAN :
  *  1. celles où l'élève a encore des questions ratées (les plus nombreuses d'abord) ;
  *  2. puis celles revues il y a le plus longtemps (jamais revues = en premier).
