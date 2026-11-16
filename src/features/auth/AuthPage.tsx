@@ -326,7 +326,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         <div className="rounded-3xl p-5 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-xl dark:shadow-2xl space-y-5 relative overflow-hidden bg-white/95 dark:bg-slate-900/90 backdrop-blur-2xl">
           
           {/* Subtle Ambient Glow */}
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 bg-sky-400/10 dark:bg-sky-400/15 rounded-full blur-3xl pointer-events-none" />
 
           {/* Header */}
           <div className="text-center space-y-2.5 relative z-10">

@@ -56,8 +56,6 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
       <Card className="w-full max-w-md bg-slate-900/95 border-sky-400/40 p-5 sm:p-7 shadow-2xl rounded-3xl relative overflow-hidden">
         
         {/* Ambient background glow */}
-        <div className="absolute -top-20 -right-20 w-48 h-48 bg-sky-400/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
 
         {/* Header */}
         <div className="flex items-center gap-3.5 mb-5 border-b border-slate-800/80 pb-4">

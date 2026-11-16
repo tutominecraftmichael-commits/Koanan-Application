@@ -48,9 +48,6 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
       
       {/* Background Decorative Ambient Radial Glows (Calm Tech deep lighting) */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[450px] sm:h-[650px] radial-glow pointer-events-none" />
-      <div className="absolute top-12 left-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-blue-600/10 dark:bg-blue-600/15 rounded-full blur-[100px] pointer-events-none animate-pulse-slow" />
-      <div className="absolute top-36 right-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-sky-400/10 dark:bg-sky-400/15 rounded-full blur-[120px] pointer-events-none animate-pulse-slow" style={{ animationDelay: '2.5s' }} />
-      <div className="absolute top-96 left-1/3 w-64 sm:w-80 h-64 sm:h-80 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute inset-0 bg-grid-pattern opacity-30 dark:opacity-40 pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 space-y-16 sm:space-y-24">

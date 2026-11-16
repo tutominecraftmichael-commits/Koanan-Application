@@ -1159,9 +1159,9 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
   ]);
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 dark:bg-[#070B13] text-slate-900 dark:text-slate-100 flex flex-col justify-between relative overflow-x-hidden select-none font-sans transition-colors">
+    <div className="min-h-screen w-full bg-slate-50 dark:bg-[#0A0F1C] text-slate-900 dark:text-slate-100 flex flex-col justify-between relative overflow-x-hidden select-none font-sans transition-colors">
       {/* Glow d'ambiance */}
-      <div className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[520px] h-[320px] bg-sky-400/15 blur-[130px] rounded-full" />
+
 
       {/* Inputs fichiers cachés */}
       <input
@@ -2679,7 +2679,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
       {/* PIED DE PAGE AVEC BOUTON CONTINUER */}
       {!showExistingLogin && (step === 'study_type' || step === 'upload' || step === 'grade_level' || step === 'customize') && (
-        <footer className="w-full border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-[#070B13]/95 backdrop-blur-md px-4 py-3.5 z-20">
+        <footer className="w-full border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-[#0A0F1C]/95 backdrop-blur-md px-4 py-3.5 z-20">
           <div className="max-w-2xl mx-auto">
             {step === 'study_type' && (
               <button

@@ -630,7 +630,6 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   return (
     <div className="max-w-4xl mx-auto space-y-6 py-4 px-3 sm:px-4 relative">
       {/* Ambient diffuse background glow */}
-      <div className="pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 w-full max-w-2xl h-96 bg-gradient-to-b from-[#6366F1]/10 via-[#8B5CF6]/10 to-transparent blur-3xl -z-10 rounded-full" />
       
       {/* Hidden File Inputs */}
       <input 
