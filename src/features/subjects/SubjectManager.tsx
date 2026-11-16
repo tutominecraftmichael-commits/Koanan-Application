@@ -7,7 +7,7 @@ import { AnimatedCounter } from '../../components/common/AnimatedCounter';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/FormControls';
 import { generateId, getDaysRemaining } from '../../lib/utils';
-import { 
+import { Lock, 
   BookOpen, 
   Plus, 
   Trash2, 
@@ -50,19 +50,44 @@ const PRESET_COLORS = [
   '#EF4444', // Red
 ];
 
+/** Devoirs et examens réservés à KONAN Pro (élève Gratuit). */
+const ProExamLock: React.FC<{ compact?: boolean; onUpgrade?: () => void }> = ({ compact, onUpgrade }) => (
+  compact ? (
+    <div className="flex items-center gap-1.5 p-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 dark:bg-amber-400/[0.06] dark:border-[#F5C451]/30 dark:text-[#F5C451] text-[11px] font-bold">
+      <Lock className="w-3.5 h-3.5 shrink-0" />
+      <span>Devoirs et examens : KONAN Pro</span>
+    </div>
+  ) : (
+    <div className="konan-hairline p-4 rounded-2xl bg-white border border-amber-300 dark:bg-slate-900 dark:border-[#F5C451]/40 space-y-2.5">
+      <p className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+        <Lock className="w-4 h-4 text-amber-700 dark:text-[#F5C451]" /> Devoirs et examens : KONAN Pro
+      </p>
+      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+        Avec KONAN Pro, tu indiques la date de ton devoir : KONAN prépare des séries de 30 questions, des sujets au format officiel, et corrige ta copie sur 20.
+      </p>
+      {onUpgrade && (
+        <button type="button" onClick={onUpgrade} className="konan-btn-gold w-full h-11 text-sm cursor-pointer">Découvrir KONAN Pro</button>
+      )}
+    </div>
+  )
+);
+
 export const SubjectManager: React.FC<SubjectManagerProps> = ({
   subjects,
   onUpdateSubjects,
   onOpenPresetModal,
   isDemoMode = false,
-  planTier: _planTier = 'free',
+  planTier = 'free',
   onViewPricing,
   onUpgradeToPro,
   onTriggerPlanner,
   gradeLevel,
 }) => {
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C (cours et QCM complets)
-  const EXAM_PREP_PAUSED = !isExamPrepOpenFor(gradeLevel);
+  const examOpenForGrade = isExamPrepOpenFor(gradeLevel);
+  // Devoirs et examens = KONAN Pro : un élève Gratuit ne peut ni planifier ni préparer un devoir
+  const examLockedByPlan = examOpenForGrade && planTier !== 'pro' && planTier !== 'plus';
+  const EXAM_PREP_PAUSED = !examOpenForGrade || examLockedByPlan;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
   const [editingSubjectId, setEditingSubjectId] = useState<string | null>(null);
@@ -392,7 +417,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                   </div>
 
                   {EXAM_PREP_PAUSED ? (
-                    <ExamPrepPausedNotice compact />
+                    examLockedByPlan ? <ProExamLock compact /> : <ExamPrepPausedNotice compact />
                   ) : subject.examDate ? (
                     <div
                       onClick={() => handleOpenEdit(subject)}
@@ -574,7 +599,9 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
           </div>
 
           {/* Pendant la pause, la date déjà enregistrée est conservée telle quelle (non modifiable) */}
-          {EXAM_PREP_PAUSED && <ExamPrepPausedNotice />}
+          {EXAM_PREP_PAUSED && (examLockedByPlan
+            ? <ProExamLock onUpgrade={onUpgradeToPro ? () => { setIsModalOpen(false); onUpgradeToPro(); } : undefined} />
+            : <ExamPrepPausedNotice />)}
 
           {!EXAM_PREP_PAUSED && examDate && (
             <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-200">

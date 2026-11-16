@@ -579,7 +579,9 @@ export function App() {
 
         // Préparation aux devoirs (Pro, 2nde A / 2nde C) : chaque jour, la séance prend le bon type
         // (30 questions, sujet de 2 h, chrono 75 min) selon le nombre de jours avant l'épreuve
-        const isProTier = prev.planTier === 'pro' || prev.planTier === 'plus';
+        // Formule réelle : celle du serveur quand le paiement est ouvert (jamais un « pro » resté dans l'appli)
+        const tierNow = paidModeRef.current.serverTier || prev.planTier;
+        const isProTier = tierNow === 'pro' || tierNow === 'plus';
         const finalSessions = synchronizeSessionsWithExamCountdowns(
           updatedSessions,
           validSubjects,
@@ -2067,6 +2069,14 @@ export function App() {
     // Classe STRICTE (jamais devinée), ramenée à sa forme officielle (« 1ère A » → 1re A1, « Tle A » → Tle A1)
     const resolvedGrade = canonicalGradeLevel(tryResolveGradeLevel(studentGradeRaw));
     const stemMatchForTutor = matchSubjectToStemCurriculum(subjectName);
+
+    // Devoirs et examens = KONAN Pro : un élève Gratuit (par exemple dont l'abonnement est fini) ne lance jamais
+    // une préparation de devoir ; on lui montre l'offre au lieu d'une erreur du serveur
+    if (session.isExamPrep && effectivePlanTier !== 'pro' && effectivePlanTier !== 'plus') {
+      showToast('La préparation aux devoirs fait partie de KONAN Pro.', 4000);
+      setIsPlansOpen(true);
+      return;
+    }
 
     // PRÉPARATION AU DEVOIR : 30 questions, sujet complet de 2 h, ou chronomètre de 75 min (matière sans cours)
     if (session.isExamPrep && session.examPrepMode) {

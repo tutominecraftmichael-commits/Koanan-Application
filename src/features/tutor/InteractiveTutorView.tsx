@@ -360,7 +360,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
   const workLimitSec = isPomodoro || isTimeBlocking ? Math.max(1, durationMinutes || (isTimeBlocking ? 75 : 25)) * 60 : null;
   const POMODORO_PAUSE_SEC = (isTimeBlocking ? 15 : 5) * 60;
   // Feynman : après chaque mini-leçon, l'élève explique la notion avec ses mots (à l'oral ou par écrit)
-  const isFeynman = pacingMethod === 'feynman';
+  const isFeynman = pacingMethod === 'feynman' && canExplain;
   // Règle des 2 minutes : on démarre tout de suite, sans écran d'accueil ; après 2 minutes, « Tu continues ? »
   const isTwoMinutes = pacingMethod === 'two_minutes_rule';
   // 1. Sous-catégorie active calculée selon la règle d'alternance officielle ivoirienne
