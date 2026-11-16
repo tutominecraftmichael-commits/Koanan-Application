@@ -2538,6 +2538,11 @@ export function App() {
               isGroupGuest={state.isGroupGuest || state.userAccount?.isGroupGuest}
               invitedBy={state.invitedBy || state.userAccount?.invitedBy}
               userUid={state.userAccount?.googleId}
+              // Tuiles de la maquette : ligue (rang + division, élèves admis dans la ligue) et réputation
+              leagueSummary={gamificationEnabled && gradeIsInLeague
+                ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze' }
+                : null}
+              reputation={gamificationEnabled ? (leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) : undefined}
             />
             </>
           ) : (

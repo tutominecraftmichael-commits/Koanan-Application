@@ -27,7 +27,9 @@ import {
   ChevronUp,
   Moon,
   Zap,
-  Play
+  Play,
+  Trophy,
+  ShieldCheck
 } from 'lucide-react';
 import { KonanMascot } from '../../components/common/KonanMascot';
 import { SessionExplainerModal } from '../../components/common/SessionExplainerModal';
@@ -62,7 +64,26 @@ export interface DashboardOverviewProps {
   isGroupGuest?: boolean;
   invitedBy?: { name: string; konanId: string; email?: string };
   userUid?: string;
+  /** Tuile « Ligue » : rang de la semaine et division (null : pas dans la ligue) */
+  leagueSummary?: { rank: number | null; divisionName: string } | null;
+  /** Tuile « Réputation » (%) */
+  reputation?: number;
 }
+
+/** Pastille de la méthode, comme la maquette (« Pomodoro · 25 + 5 »). */
+const methodChipLabel = (pacing?: string): string => {
+  switch (pacing) {
+    case 'pomodoro': return 'Pomodoro · 25 + 5';
+    case 'time_blocking':
+    case 'deep_work': return 'Time Blocking · 75 + 15';
+    case 'feynman': return 'Feynman';
+    case 'two_minutes_rule': return 'Règle des 2 minutes';
+    case 'active_recall':
+    case 'active_recall_spaced':
+    case 'spaced_repetition': return 'Rappel actif';
+    default: return 'Séance guidée';
+  }
+};
 
 export const cleanSessionTitle = (rawTitle: string): string => {
   if (!rawTitle) return '';
@@ -96,6 +117,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   isGroupGuest: _isGroupGuest = false,
   invitedBy: _invitedBy,
   userUid: _userUid,
+  leagueSummary = null,
+  reputation,
 }) => {
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C
   const EXAM_PREP_PAUSED = !isExamPrepOpenFor(preferences?.gradeLevel || academicLevel);
@@ -283,6 +306,17 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <KonanMascot pose="cta" size={72} />
               </div>
             </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-400/[0.12] dark:text-sky-300 text-xs font-bold">
+                {methodChipLabel(nextStudySession.pacingMethod || preferences.pacing)}
+              </span>
+              <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-white/[0.06] dark:text-slate-300 text-xs font-bold">
+                Aujourd’hui · {completedToday}/{allTodaysStudySessions.length} faite{completedToday > 1 ? 's' : ''}
+              </span>
+            </div>
+            <div className="h-2 rounded-full bg-slate-200 dark:bg-white/[0.08] overflow-hidden" role="progressbar" aria-label="Séances du jour" aria-valuemin={0} aria-valuemax={allTodaysStudySessions.length} aria-valuenow={completedToday}>
+              <div className="h-full rounded-full bg-sky-500 dark:bg-sky-400 transition-all" style={{ width: `${allTodaysStudySessions.length ? Math.round((completedToday / allTodaysStudySessions.length) * 100) : 0}%` }} />
+            </div>
             <button
               type="button"
               onClick={afterShine(() => onStartFocusSession(nextStudySession))}
@@ -292,6 +326,32 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <Play className="w-4 h-4 fill-current" />
               <span>{nextStudySession.isRescheduledToday ? 'Faire le rattrapage' : 'Commencer la séance'}</span>
             </button>
+          </div>
+        )}
+
+        {/* Ligue et réputation (maquette ; pas de série de jours) */}
+        {(leagueSummary || typeof reputation === 'number') && (
+          <div className="grid grid-cols-2 gap-2.5">
+            {leagueSummary && (
+              <button
+                type="button"
+                onClick={() => onNavigate('league')}
+                className="text-left p-3 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.07] flex flex-col gap-1 cursor-pointer hover:border-amber-300 dark:hover:border-[#F5C451]/40 transition-colors"
+              >
+                <Trophy className="w-5 h-5 text-amber-600 dark:text-[#F5C451]" />
+                <span className="text-[17px] font-extrabold text-slate-900 dark:text-white">
+                  {leagueSummary.rank ? <>{leagueSummary.rank}<span className="text-[11px]">{leagueSummary.rank === 1 ? 'er' : 'e'}</span></> : '—'}
+                </span>
+                <span className="text-[11px] text-slate-600 dark:text-slate-400">Ligue {leagueSummary.divisionName}</span>
+              </button>
+            )}
+            {typeof reputation === 'number' && (
+              <div className="p-3 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.07] flex flex-col gap-1">
+                <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                <span className="text-[17px] font-extrabold text-slate-900 dark:text-white tabular-nums">{reputation} %</span>
+                <span className="text-[11px] text-slate-600 dark:text-slate-400">Réputation</span>
+              </div>
+            )}
           </div>
         )}
       </div>

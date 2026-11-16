@@ -327,8 +327,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       <header className={`sticky top-0 z-40 w-full transition-all pt-safe ${
       activeView === 'landing' 
-        ? 'bg-[#F9FAFB]/90 dark:bg-[#0A0E1A]/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/[0.08]' 
-        : 'border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl'
+        ? 'bg-[#F9FAFB]/90 dark:bg-[#0A0E1A]/85 backdrop-blur-xl lg:border-b lg:border-slate-200/80 lg:dark:border-white/[0.08]' 
+        : 'lg:border-b lg:border-slate-200/80 lg:dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl'
     }`}>
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
         
