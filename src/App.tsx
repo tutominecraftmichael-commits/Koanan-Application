@@ -2327,7 +2327,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#070B13] text-[#0F172A] dark:text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white w-full max-w-full overflow-x-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#0A0F1C] text-[#0F172A] dark:text-slate-100 flex flex-col selection:bg-sky-300 selection:text-slate-950 w-full max-w-full overflow-x-hidden transition-colors duration-300">
 
       {/* Hidden file input for JSON configuration backup imports */}
       <input
@@ -2801,7 +2801,7 @@ export function App() {
       )}
       {isExerciseOpen && (
         <SeriesErrorBoundary onClose={() => setIsExerciseOpen(false)}>
-        <Suspense fallback={<div className="fixed inset-0 z-[80] bg-slate-50 dark:bg-[#070B13] flex items-center justify-center"><ViewLoader /></div>}>
+        <Suspense fallback={<div className="fixed inset-0 z-[80] bg-slate-50 dark:bg-[#0A0F1C] flex items-center justify-center"><ViewLoader /></div>}>
           <ExerciseSeriesView
             userId={state.userAccount?.googleId || 'local_student'}
             gradeLevel={canonicalGradeLevel(tryResolveGradeLevel(studentGradeRaw))}

@@ -55,7 +55,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       document.body.classList.remove('light');
       document.body.classList.add('dark');
       document.body.setAttribute('data-theme', 'dark');
-      setStatusBarColor('#070B13');
+      setStatusBarColor('#0A0F1C');
     }
   };
 
