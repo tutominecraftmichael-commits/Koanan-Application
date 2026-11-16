@@ -38,6 +38,9 @@ export function buildCorrectionPrompt({ classe, matiere, sujet }) {
     'CORRIGÉ ET BARÈME :',
     corrige,
     'Règles :',
+    '- AVANT de noter une question, compare la copie à la réponse attendue ÉLÉMENT PAR ÉLÉMENT. « juste » SEULEMENT si la copie contient TOUS les éléments attendus ; sinon « partiel » avec des points proportionnels aux éléments présents (ex. 1 condition sur 2 = la moitié des points), ou « faux ».',
+    '- Choix d’une lettre (a, b, c…) ou Vrai/Faux : la lettre ou le mot de la copie doit être EXACTEMENT celui du corrigé, sinon 0 et « faux ». Ne te fie jamais à l’ordre des lignes : relis le numéro écrit par l’élève.',
+    '- Une réponse qui dit ce qui se passe sans en donner la cause demandée (« l’amidon a disparu » au lieu de « l’amidon a été hydrolysé par l’amylase ») est « partiel ».',
     '- Donne des points partiels quand la démarche est juste mais le résultat faux ; 0 pour une question non traitée.',
     '- Quand un exercice a une grille (situation complexe, production écrite), note-le avec cette grille, critère par critère.',
     '- Exercice au choix : note seulement le sujet traité ; si l’élève en a traité deux, garde la meilleure note.',
@@ -68,6 +71,23 @@ const qKey = (v) => String(v ?? '').toLowerCase().replace(/^q(?:uestion)?\s*/, '
  * l'élève, réponse attendue, erreur) et la grille critère par critère. Tous les points sont RECALCULÉS ici :
  * chaque question est plafonnée à son barème, chaque exercice à ses points, la note est la somme.
  */
+/** Réponse fermée du corrigé : une lettre (« 2-b », « b ») ou Vrai / Faux. Renvoie la forme comparable, ou null. */
+export function closedAnswer(text) {
+  const t = String(text ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const last = (t.match(/reponse\s*:\s*(.+)$/m) || [null, t])[1].trim();
+  if (/^(vrai|faux)\b\.?$/.test(last)) return last.replace(/\W/g, '');
+  const m = last.match(/^(?:\d+\s*[-–).]\s*)?([a-e])\s*[.)]?$/);
+  return m ? m[1] : null;
+}
+/** Ce que l'élève a choisi, lu dans sa copie (« 2 - a », « 2) Vrai »). */
+export function closedChoice(copie) {
+  const t = String(copie ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const vf = t.match(/\b(vrai|faux)\b/g);
+  if (vf && new Set(vf).size === 1) return vf[0];
+  const m = t.match(/^(?:\d+\s*[-–).:]\s*)?([a-e])\s*[.)]?$/);
+  return m ? m[1] : null;
+}
+
 export function cleanCorrection(raw, sujet) {
   if (!raw || typeof raw !== 'object') return null;
   if (raw.lisible === false) {
@@ -93,7 +113,18 @@ export function cleanCorrection(raw, sujet) {
         attendu: str(q?.attendu, 400),
         erreur: statut === 'juste' ? '' : str(q?.erreur, 400),
       };
-    }).filter((q) => q.numero);
+    }).filter((q) => q.numero).map((q) => {
+      // Questions fermées (lettre, Vrai/Faux) : c'est le SERVEUR qui compare, jamais l'IA (erreurs vues le 2026-11-16)
+      const attendu = (sujet.corrige || []).find((c) => Number(c.exercice) === e.numero && qKey(c.question) === qKey(q.numero));
+      const expected = attendu ? closedAnswer(attendu.resultat || attendu.reponse) : null;
+      const chosen = expected ? closedChoice(q.copie) : null;
+      if (!expected || !chosen) return q;
+      const sur = q.sur ?? (Number.isFinite(bareme.get(qKey(q.numero))) ? bareme.get(qKey(q.numero)) : null);
+      const shown = (v) => (v === 'vrai' ? 'Vrai' : v === 'faux' ? 'Faux' : v);
+      return chosen === expected
+        ? { ...q, statut: 'juste', obtenu: sur ?? q.obtenu, erreur: '' }
+        : { ...q, statut: 'faux', obtenu: 0, erreur: `Tu as répondu « ${shown(chosen)} » : la bonne réponse est « ${shown(expected)} ».` };
+    });
 
     const grille = Array.isArray(e.grille) && e.grille.length
       ? e.grille.map((g, i) => {
@@ -173,7 +204,7 @@ export default async function handler(req, res) {
   let correction;
   try {
     const prompt = buildCorrectionPrompt({ classe: str(body.classe, 40) || 'Seconde', matiere: str(body.matiere, 80) || 'la matière', sujet: cleanSujet });
-    correction = await askGeminiJson(ctx.apiKey, [...parts, { text: prompt }], (raw) => cleanCorrection(raw, cleanSujet), 0.2);
+    correction = await askGeminiJson(ctx.apiKey, [...parts, { text: prompt }], (raw) => cleanCorrection(raw, cleanSujet), 0.2, { thinkingConfig: { thinkingLevel: 'high' } });
   } catch (e) {
     console.error('[exam-correct]', String(e?.message || e).slice(0, 200));
     return send(res, 502, { success: false, error: 'AI_UNAVAILABLE' });

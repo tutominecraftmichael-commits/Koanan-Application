@@ -125,7 +125,8 @@ export async function addUsage(ref, uid, kind) {
 }
 
 /** Demande une réponse JSON à Gemini (essaie les modèles dans l'ordre) et la valide avec `clean`. */
-export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4) {
+/** `primaryConfig` : réglages ajoutés pour le modèle principal seulement (le modèle de secours ne les accepte pas tous). */
+export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4, primaryConfig = {}) {
   const { GoogleGenAI } = await import('@google/genai');
   const ai = new GoogleGenAI({ apiKey });
   let lastErr;
@@ -134,7 +135,7 @@ export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4) {
       const response = await ai.models.generateContent({
         model,
         contents: [{ role: 'user', parts }],
-        config: { responseMimeType: 'application/json', temperature },
+        config: { responseMimeType: 'application/json', temperature, ...(model === MODELS[0] ? primaryConfig : {}) },
       });
       const text = String(response.text || '').trim().replace(/^```json\s*|```$/g, '');
       const value = clean(JSON.parse(text));
