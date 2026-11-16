@@ -170,7 +170,7 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Ta réputation : {reputation} %</p>
-      <p>Séance faite : <b>+1 %</b>. Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, tu vois toujours le classement, mais ta division est <b>gelée</b> : ni montée ni descente tant que tu ne repasses pas au-dessus de 80 %.</p>
+      <p>Séance de révision faite : <b>+1 %</b> tout de suite. Série d’entraînement terminée : <b>+1 %</b> (5 séries comptées par jour au plus). Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, tu vois toujours le classement, mais ta division est <b>gelée</b> : ni montée ni descente tant que tu ne repasses pas au-dessus de 80 %.</p>
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Fin de semaine</p>

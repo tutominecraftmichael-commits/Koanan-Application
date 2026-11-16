@@ -262,6 +262,8 @@ export interface GamificationState {
   energyAt?: string;
   /** Séries d'exercices enchaînées : la prochaine rapporte le double (15 → 30 → 60 → 120 XP) */
   seriesChain?: { count: number; lastEndAt: string };
+  /** Séries d'entraînement qui ont déjà rapporté de la réputation ce jour-là (+1 % chacune, 5 par jour au plus) */
+  trainingRep?: { day: string; count: number };
   /** Gains d'XP pas encore confirmés par le serveur de la ligue (envoyés dès que possible) */
   pendingEvents?: LeagueEvent[];
 }

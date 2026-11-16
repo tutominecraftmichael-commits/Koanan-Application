@@ -5,7 +5,8 @@
  *   25 min → +35 XP · 45 min → +50 XP · 75 min → +90 XP · 2 h → +140 XP
  *   (durées intermédiaires : palier le plus proche)
  * Réputation (discipline) : démarre à 100 %.
- *   −5 % par séance manquée et non rattrapée avant minuit ; +1 % par séance faite ; jamais sous 0 ni au-dessus de 100.
+ *   −5 % par séance manquée et non rattrapée avant minuit ; +1 % par séance faite, TOUT DE SUITE ;
+ *   +1 % par série d'entraînement terminée (5 par jour au plus) ; jamais sous 0 ni au-dessus de 100.
  *   Ligue : à 80 % ou moins, l'élève voit le classement mais sa division est gelée (ni montée ni descente).
  * Tout est pur (aucun accès au stockage) : App.tsx applique le résultat à l'état de l'élève.
  */
@@ -28,9 +29,14 @@ export function clearPendingEvents(g0: GamificationState | undefined, ids: strin
 export const REPUTATION_START = 100;
 export const REPUTATION_MISSED = -5;
 export const REPUTATION_DONE = 1;
+/** Série d'entraînement terminée : +1 %, au plus 5 séries comptées par jour (le serveur applique la même limite). */
+export const REPUTATION_TRAINING = 1;
+export const REPUTATION_TRAINING_DAILY_MAX = 5;
 export const LEAGUE_MIN_REPUTATION = 80;
+/** Préfixe des clés de séances dont le +1 % de réputation est déjà donné (au moment où elles sont terminées). */
+const REP_KEY = 'R_';
 const MAX_HISTORY = 40;
-const MAX_KEYS = 300;
+const MAX_KEYS = 600; // séances récompensées + leurs clés de réputation « R_ »
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export function defaultGamification(): GamificationState {
@@ -52,6 +58,7 @@ export function gamificationOf(g?: Partial<GamificationState> | null): Gamificat
     energy: Number.isFinite(g.energy) ? Math.max(0, Math.min(ENERGY_MAX, Number(g.energy))) : undefined,
     energyAt: g.energyAt,
     seriesChain: g.seriesChain && Number.isFinite(g.seriesChain.count) ? g.seriesChain : undefined,
+    trainingRep: g.trainingRep && typeof g.trainingRep.day === 'string' && Number.isFinite(g.trainingRep.count) ? g.trainingRep : undefined,
     pendingEvents: Array.isArray(g.pendingEvents) ? g.pendingEvents.filter((e) => e && e.id && Number.isFinite(e.at)) : [],
   };
 }
@@ -172,13 +179,23 @@ export function finishSeries(
     level: seriesLevelFor(chainIndex).level, questions: total, mistakes: Math.max(0, Math.round(mistakes)),
     seconds: Math.max(0, Math.round((now.getTime() - startedAt.getTime()) / 1000)),
   };
+  // Réputation : l'entraînement aussi montre la discipline (+1 %, 5 séries comptées par jour au plus)
+  const today = ymdLocal(now);
+  const trainedToday = g.trainingRep?.day === today ? g.trainingRep.count : 0;
+  const repGain = trainedToday < REPUTATION_TRAINING_DAILY_MAX ? REPUTATION_TRAINING : 0;
+  const reputation = clampReputation(g.reputation + repGain);
+  const repEvents: GamificationEvent[] = reputation !== g.reputation
+    ? [{ at: now.toISOString(), kind: 'reputation', amount: reputation - g.reputation, reason: 'Série d’entraînement terminée' }]
+    : [];
   return {
     gamification: {
       ...g,
       xp: g.xp + gained,
+      reputation,
+      ...(repGain ? { reputationUpdatedAt: now.toISOString(), trainingRep: { day: today, count: trainedToday + 1 } } : {}),
       pendingEvents: withPending(g, [leagueEvent]),
       seriesChain: { count: Math.min(chainIndex, SERIES_LEVELS.length - 1), lastEndAt: now.toISOString() },
-      history: pushEvents(g.history, [event]),
+      history: pushEvents(g.history, [event, ...repEvents]),
       updatedAt: now.toISOString(),
     },
     gained,
@@ -261,10 +278,18 @@ export function awardCompletedSessions(
   }
   // Séance comptée même à 0 XP (beaucoup d'erreurs) : elle ne doit pas être récompensée une 2e fois
   if (!rewarded.length) return { gamification: g, gained: 0, sessions: [] };
+  // Réputation : +1 % tout de suite par séance faite (le calcul du soir ne la recompte pas : clé « R_ »)
+  for (const s of rewarded) done.add(REP_KEY + sessionKey(s));
+  const reputation = clampReputation(g.reputation + rewarded.length * REPUTATION_DONE);
+  if (reputation !== g.reputation) {
+    events.push({ at: now.toISOString(), kind: 'reputation', amount: reputation - g.reputation, reason: rewarded.length > 1 ? `${rewarded.length} séances faites` : 'Séance faite' });
+  }
   return {
     gamification: {
       ...g,
       xp: g.xp + gained,
+      reputation,
+      reputationUpdatedAt: now.toISOString(),
       awardedKeys: [...done].slice(-MAX_KEYS),
       history: pushEvents(g.history, events),
       pendingEvents: withPending(g, league),
@@ -301,6 +326,7 @@ export function settleReputation(
   if (!sessions || sessions.length === 0) return { gamification: g, changed: false, missed: 0, done: 0 };
 
   const list = (sessions || []).filter((s) => s && !s.isExpired);
+  const repGiven = new Set(g.awardedKeys.filter((k) => k.startsWith(REP_KEY)));
   const lastPlanned = list.reduce((max, s) => (s.date && s.date > max ? s.date : max), '');
   let reputation = g.reputation;
   let missed = 0;
@@ -317,7 +343,8 @@ export function settleReputation(
     let dayDone = 0;
     if (dated.length) {
       for (const s of dated) {
-        if (s.completed) dayDone += 1;
+        // Séance faite : +1 %, sauf si elle l'a déjà rapporté au moment où elle a été terminée
+        if (s.completed) { if (!repGiven.has(REP_KEY + sessionKey(s))) dayDone += 1; }
         else dayMissed += 1;
       }
     } else if (lastPlanned && day > lastPlanned) {
@@ -391,6 +418,9 @@ export function mergeGamification(local?: Partial<GamificationState> | null, clo
       ? (a.energyAt ? { energy: a.energy, energyAt: a.energyAt } : {})
       : { energy: b.energy, energyAt: b.energyAt }),
     seriesChain: time(a.seriesChain?.lastEndAt) >= time(b.seriesChain?.lastEndAt) ? a.seriesChain : b.seriesChain,
+    // Entraînement compté pour la réputation : le jour le plus récent, et le plus grand nombre ce jour-là
+    trainingRep: [a.trainingRep, b.trainingRep].filter(Boolean)
+      .sort((x, y) => (x!.day === y!.day ? y!.count - x!.count : y!.day.localeCompare(x!.day)))[0],
     // Gains pas encore confirmés par la ligue : réunis (le serveur ignore ceux qu'il a déjà comptés)
     pendingEvents: withPending(a, b.pendingEvents || []),
   };
