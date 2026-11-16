@@ -9,7 +9,7 @@
  * La note sur 20 est RECALCULÉE ici à partir des points de chaque exercice (jamais recopiée telle quelle).
  * Limite : 4 corrections par jour et par élève.
  */
-import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson } from './_examCommon.js';
+import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode } from './_examCommon.js';
 
 export const DAILY_CORRECTIONS = 4;
 const IMAGE_TYPES = /^image\/(jpeg|jpg|png|webp)$/;
@@ -259,10 +259,12 @@ export default async function handler(req, res) {
   let correction;
   try {
     const prompt = buildCorrectionPrompt({ classe: str(body.classe, 40) || 'Seconde', matiere: str(body.matiere, 80) || 'la matière', sujet: cleanSujet });
-    correction = await askGeminiJson(ctx.apiKey, [...parts, { text: prompt }], (raw) => cleanCorrection(raw, cleanSujet), 0.2, { thinkingConfig: { thinkingLevel: 'high' } });
+    // Correction avec réflexion poussée : plus longue, un nouvel essai seulement si la panne arrive vite
+    correction = await askGeminiJson(ctx.apiKey, [...parts, { text: prompt }], (raw) => cleanCorrection(raw, cleanSujet), 0.2, { thinkingConfig: { thinkingLevel: 'high' } }, { attemptMs: 30_000 });
   } catch (e) {
     console.error('[exam-correct]', String(e?.message || e).slice(0, 200));
-    return send(res, 502, { success: false, error: 'AI_UNAVAILABLE' });
+    // Rien n'est décompté : la correction ratée ne compte pas dans les 4 du jour
+    return send(res, 503, { success: false, error: aiErrorCode(e) });
   }
 
   // Une copie illisible ne compte pas dans la limite du jour

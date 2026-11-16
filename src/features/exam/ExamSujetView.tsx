@@ -175,7 +175,8 @@ const ERRORS: Record<string, string> = {
   DAILY_LIMIT: 'Tu as atteint la limite du jour (4 sujets et 4 corrections). Reviens demain !',
   UNAUTHORIZED: 'Connecte-toi à ton compte pour utiliser les sujets de devoir.',
   TOKEN_EXPIRED: 'Ta connexion a expiré : ferme et rouvre KONAN, puis réessaie.',
-  AI_UNAVAILABLE: 'Je suis un peu débordé en ce moment. Réessaie dans une minute.',
+  AI_UNAVAILABLE: 'L’IA de KONAN ne répond pas pour le moment, malgré plusieurs essais. Rien n’est décompté de ta limite du jour : réessaie dans quelques minutes.',
+  AI_QUOTA: 'KONAN a atteint sa limite de travail pour aujourd’hui. Rien n’est décompté de ta limite du jour : réessaie plus tard, ou demain.',
   AI_NOT_CONFIGURED: 'Les sujets de devoir ne sont pas encore activés.',
   TOO_LARGE: 'Tes photos sont trop lourdes. Envoie moins de pages ou reprends-les.',
   NO_TEMPLATE: 'Je n’ai pas encore de modèle de sujet officiel pour cette matière.',
@@ -237,6 +238,23 @@ async function callApi(path: string, body: unknown): Promise<any> {
   return json;
 }
 
+/**
+ * Appel avec un nouvel essai automatique si l'IA n'a pas répondu (panne passagère, délai dépassé) :
+ * l'élève voit « je réessaie » au lieu d'une erreur. Pas de nouvel essai si la limite du jour est atteinte.
+ */
+async function callApiWithRetry(path: string, body: unknown, onRetry: (attempt: number) => void): Promise<any> {
+  const RETRY_DELAYS_MS = [6000];
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await callApi(path, body);
+    } catch (e: any) {
+      if (e?.code !== 'AI_UNAVAILABLE' || attempt >= RETRY_DELAYS_MS.length) throw e;
+      onRetry(attempt + 1);
+      await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
+    }
+  }
+}
+
 export const ExamSujetView: React.FC<ExamSujetViewProps> = (props) => (
   <PlainTextContext.Provider value={(LITERARY_EXAM_SUBJECTS as readonly string[]).includes(props.stemSubjectId)}>
     <ExamSujetViewInner {...props} />
@@ -247,6 +265,8 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
   const [saved, setSaved] = useState<Saved | null>(() => readSaved(session.id));
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<'sujet' | 'correction' | null>(null);
+  // L'IA n'a pas répondu du premier coup : KONAN réessaie tout seul (message rassurant pendant ce temps)
+  const [retrying, setRetrying] = useState(false);
   const [photos, setPhotos] = useState<{ mimeType: string; data: string; preview: string }[]>([]);
   const [showPhotos, setShowPhotos] = useState(false);
   const [showCorrige, setShowCorrige] = useState(false);
@@ -267,13 +287,13 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
       const wanted = new Set(session.examChapterIds || []);
       const chapters = getCurriculumChapters(stemSubjectId, gradeLevel).filter((c) => wanted.has(c.id));
       if (!chapters.length) throw Object.assign(new Error('NO_CHAPTERS'), { code: 'NO_CHAPTERS' });
-      const json = await callApi('/api/exam-sujet', {
+      const json = await callApiWithRetry('/api/exam-sujet', {
         subjectKey: stemSubjectId,
         gradeId: canonical, // forme officielle : le serveur choisit le bon modèle (1re A1, Tle A1…)
         classe: gradeLabel,
         matiere: subjectName,
         chapitres: chapters.map((c) => ({ titre: c.title, notions: c.points.map((p) => p.title) })),
-      });
+      }, () => setRetrying(true));
       const next: Saved = { sujet: json.sujet, chapterTitles: chapters.map((c) => c.title) };
       writeSaved(session.id, next);
       setSaved(next);
@@ -284,6 +304,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
         : errorMessage(e?.code));
     } finally {
       setBusy(null);
+      setRetrying(false);
     }
   };
 
@@ -325,12 +346,12 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
     setError(null);
     setBusy('correction');
     try {
-      const json = await callApi('/api/exam-correct', {
+      const json = await callApiWithRetry('/api/exam-correct', {
         classe: gradeLabel,
         matiere: saved.sujet.matiere || subjectName,
         sujet: { exercices: saved.sujet.exercices, corrige: saved.sujet.corrige },
         images: photos.map(({ mimeType, data }) => ({ mimeType, data })),
-      });
+      }, () => setRetrying(true));
       const correction: Correction = json.correction;
       if (correction.lisible) {
         const next = { ...saved, correction };
@@ -345,6 +366,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
       setError(errorMessage(e?.code));
     } finally {
       setBusy(null);
+      setRetrying(false);
     }
   };
 
@@ -361,7 +383,9 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
           <>
             <div className="w-10 h-10 mx-auto rounded-full border-4 border-sky-200 border-t-sky-500 animate-spin" />
             <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Je rédige ton sujet de {subjectName} au format officiel…</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Cela peut prendre jusqu’à une minute.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {retrying ? 'Le premier essai n’a pas abouti : je recommence, ne quitte pas cette page.' : 'Cela peut prendre jusqu’à une minute.'}
+            </p>
           </>
         ) : (
           <>
@@ -551,7 +575,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
             onClick={sendCopy}
             className="relative overflow-hidden konan-btn-shine w-full py-4 rounded-2xl bg-sky-500 text-white font-black uppercase tracking-wide shadow-[0_4px_0_#0284C7] active:translate-y-1 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >
-            {busy === 'correction' ? 'Je corrige ta copie…' : 'Envoyer ma copie à KONAN'}
+            {busy === 'correction' ? (retrying ? 'Je recommence la correction…' : 'Je corrige ta copie…') : 'Envoyer ma copie à KONAN'}
           </button>
         </div>
       )}
