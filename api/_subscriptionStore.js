@@ -21,13 +21,12 @@ export function payCol(db, name, env = process.env) {
 /** Réglages lus dans les variables du serveur (numéros de paiement, prix de test hors production). */
 export function paymentConfig(env = process.env) {
   const production = isProduction(env);
-  const testPrice = production ? 0 : Number(env.KONAN_PAYMENT_TEST_PRICE || 0);
   const clean = (v) => String(v || '').replace(/[^\d+ ]/g, '').trim().slice(0, 20);
   const receivers = {};
   if (clean(env.KONAN_WAVE_NUMBER)) receivers.wave = { label: PROVIDERS.wave, number: clean(env.KONAN_WAVE_NUMBER) };
   if (clean(env.KONAN_ORANGE_NUMBER)) receivers.orange = { label: PROVIDERS.orange, number: clean(env.KONAN_ORANGE_NUMBER) };
   const offers = SELLABLE_TIERS.flatMap((tier) => Object.keys(PERIOD_DAYS).map((period) => ({
-    tier, period, days: PERIOD_DAYS[period], amount: expectedAmount(tier, period, { testPrice, production }), normalAmount: PRICES[tier][period],
+    tier, period, days: PERIOD_DAYS[period], amount: expectedAmount(tier, period), normalAmount: PRICES[tier][period],
   })));
   return {
     enabled: paymentsEnabled(env),
@@ -36,7 +35,6 @@ export function paymentConfig(env = process.env) {
     receiverName: String(env.KONAN_PAYMENT_NAME || '').replace(/[<>]/g, '').trim().slice(0, 60),
     receivers,
     offers,
-    testPrice,
   };
 }
 
@@ -94,7 +92,7 @@ export async function declarePayment(db, uid, body, who = {}, nowMs = Date.now()
         ref,
         refRaw: String(body.ref).slice(0, 60),
         payerPhone,
-        amount: expectedAmount(tier, period, { testPrice: config.testPrice, production: config.production }),
+        amount: expectedAmount(tier, period),
         receiverNumber: config.receivers[provider].number,
         status: PAYMENT_STATUS.pending,
         declaredAt: new Date(nowMs).toISOString(),

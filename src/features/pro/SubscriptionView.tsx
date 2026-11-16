@@ -89,11 +89,6 @@ export const SubscriptionView: React.FC<Props> = ({ info, loading, loadError, on
         </div>
 
         <div className="p-4 sm:p-5 space-y-4">
-          {config?.testMode && (
-            <p className="text-xs font-bold rounded-xl px-3 py-2 bg-violet-100 text-violet-900 border border-violet-300 dark:bg-violet-500/15 dark:text-violet-200 dark:border-violet-500/40">
-              Mode test (sur l’ordinateur) : prix réduits, et rien n’est enregistré pour les vrais élèves.
-            </p>
-          )}
 
           {loading && !info && (
             <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300"><Loader2 className="w-4 h-4 animate-spin" /> Chargement…</div>

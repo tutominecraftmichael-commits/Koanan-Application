@@ -159,7 +159,7 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
     tagline: 'Pour progresser vite',
     prices: { monthly: 2500, semester: 9950 },
     includesLabel: 'Tout le Gratuit, plus :',
-    note: 'Paiement par Wave ou Orange Money',
+    note: 'Offert pendant le lancement', // devient « Paiement par Wave ou Orange Money » quand PAYMENTS_OPEN
     available: true,
     recommended: true,
     features: [
@@ -193,6 +193,12 @@ export const DISPLAY_PLANS: DisplayPlan[] = [
  * Passer à true pour le réafficher (fiche des tarifs, fiche des formules, Paramètres).
  */
 export const PLUS_VISIBLE = false;
+
+/**
+ * Paiement ouvert aux élèves ? Tant que c'est false, KONAN Pro est OFFERT (activation libre, comme avant) :
+ * la fiche des tarifs l'annonce « Offert pendant le lancement ». À passer à true en même temps que KONAN_PAYMENTS=on.
+ */
+export const PAYMENTS_OPEN = false;
 
 /** Formules affichées aux élèves. */
 export const VISIBLE_DISPLAY_PLANS: DisplayPlan[] = DISPLAY_PLANS.filter((p) => p.id !== 'plus' || PLUS_VISIBLE);

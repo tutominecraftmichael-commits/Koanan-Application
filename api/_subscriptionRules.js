@@ -66,13 +66,9 @@ export function normalizePayerPhone(raw) {
   return d;
 }
 
-/** Montant attendu pour une formule (le prix de test ne s'applique JAMAIS en production). */
-export function expectedAmount(tier, period, { testPrice = 0, production = true } = {}) {
-  const base = PRICES[tier]?.[period];
-  if (!base) return 0;
-  const t = Math.round(Number(testPrice));
-  if (!production && Number.isFinite(t) && t > 0 && t < base) return t;
-  return base;
+/** Montant attendu pour une formule : toujours le vrai prix. */
+export function expectedAmount(tier, period) {
+  return PRICES[tier]?.[period] || 0;
 }
 
 /**

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowUpRight, Check, Clock, Crown, Gem, Lock, ShieldCheck, Smartphone, X, Zap } from 'lucide-react';
-import { DISPLAY_PLANS, PLUS_VISIBLE, SEMESTER_MONTHS, formatFcfa, type BillingPeriod } from '../../lib/subscriptionPlans';
+import { DISPLAY_PLANS, PAYMENTS_OPEN, PLUS_VISIBLE, SEMESTER_MONTHS, formatFcfa, type BillingPeriod } from '../../lib/subscriptionPlans';
 
 /**
  * Fiche des formules (ouverte depuis les Paramètres) : KONAN Pro (et KONAN Plus quand PLUS_VISIBLE sera vrai).
@@ -126,7 +126,7 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
               {!isPlus && !(isPro && !canRenew) && (
                 <button type="button" onClick={() => onChoosePro(period)}
                   className="mt-6 w-full py-3.5 rounded-2xl text-sm font-black tracking-wide bg-slate-900 text-white hover:bg-slate-800 dark:bg-amber-300 dark:text-slate-950 dark:hover:bg-amber-200 transition-colors inline-flex items-center justify-center gap-2 shadow-sm">
-                  {isPro ? 'Prolonger mon abonnement' : 'Devenir KONAN Pro'} <ArrowUpRight className="w-4 h-4" />
+                  {isPro ? 'Prolonger mon abonnement' : PAYMENTS_OPEN ? 'Devenir KONAN Pro' : 'Activer KONAN Pro (offert)'} <ArrowUpRight className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -166,7 +166,8 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
             )}
           </div>
 
-          {/* Garanties */}
+          {/* Garanties du paiement : seulement quand le paiement est ouvert */}
+          {PAYMENTS_OPEN && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
             {[
               { icon: Smartphone, title: 'Wave ou Orange Money', text: 'Tu paies depuis ton téléphone.' },
@@ -182,6 +183,10 @@ export const PlansSheet: React.FC<Props> = ({ currentTier, endsAt, provisional, 
               </div>
             ))}
           </div>
+          )}
+          {!PAYMENTS_OPEN && (
+            <p className="text-center text-[12px] font-bold text-amber-800 dark:text-[#F5C451]">KONAN Pro est offert pendant le lancement.</p>
+          )}
         </div>
       </div>
     </div>
