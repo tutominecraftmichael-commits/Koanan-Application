@@ -6,6 +6,7 @@
  * - chaque réponse est enregistrée (erreur, chapitre, réponse fausse) pour les séances suivantes ;
  * - si l'élève quitte, il reprend sa série au même endroit.
  */
+import { cleanSeriesPrompt } from '../../lib/gamification/exerciseContext';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, CheckCircle2, AlertCircle, Clock, RotateCcw } from 'lucide-react';
 import type { StudySession } from '../../types';
@@ -388,7 +389,7 @@ export const ExamQcmView: React.FC<ExamQcmViewProps> = ({ userId, session, subje
           {subCategoryName(item.subCategory) ? `${subCategoryName(item.subCategory)} · ` : ''}{item.chapterTitle}
         </p>
         <div className="text-base font-bold text-slate-900 dark:text-white leading-snug">
-          <MathRenderer text={exercise.prompt} />
+          <MathRenderer text={cleanSeriesPrompt(exercise.prompt)} />
         </div>
         <div className="grid gap-2.5">
           {(exercise.options || []).map((opt, oIdx) => {
