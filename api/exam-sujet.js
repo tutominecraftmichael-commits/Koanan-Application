@@ -10,7 +10,7 @@
  * Limite : 4 sujets par jour et par élève.
  */
 import { getExamTemplate, canonicalExamGrade, COMMON_STYLE_RULES } from './_examTemplates.js';
-import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson } from './_examCommon.js';
+import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode } from './_examCommon.js';
 
 export const DAILY_SUJETS = 4;
 
@@ -85,7 +85,7 @@ export function tidyText(t) {
 export function stripLeadingNumber(texte, numero) {
   const n = String(numero ?? '').replace(/[.)\s]+$/, '');
   if (!n) return texte;
-  const esc = n.replace(/[.*+?^${}()|[\]\\]/g, '\\export function cleanSujet(raw, template) {');
+  const esc = n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return texte.replace(new RegExp(`^\\s*(?:question\\s*)?${esc}\\s*[.)\\-–:]\\s*`, 'i'), '');
 }
 
@@ -181,7 +181,8 @@ export default async function handler(req, res) {
     sujet = await askGeminiJson(ctx.apiKey, [{ text: prompt }], (raw) => cleanSujet(raw, template), 0.6);
   } catch (e) {
     console.error('[exam-sujet]', String(e?.message || e).slice(0, 200));
-    return send(res, 502, { success: false, error: 'AI_UNAVAILABLE' });
+    // Rien n'est décompté : le sujet raté ne compte pas dans les 4 du jour
+    return send(res, 503, { success: false, error: aiErrorCode(e) });
   }
 
   await addUsage(usage.ref, ctx.uid, 'sujet');

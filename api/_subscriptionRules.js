@@ -220,8 +220,19 @@ export function serverTierFrom({ paymentsEnabled, subscriptionDoc, userDoc, nowM
   return raw === 'pro' || raw === 'plus' ? raw : 'free';
 }
 
-/** Interrupteur général : le paiement n'est actif que si KONAN_PAYMENTS=on sur le serveur. */
+/**
+ * Interrupteur principal dans le code : tant qu'il vaut false, le paiement est ÉTEINT partout, même si
+ * KONAN_PAYMENTS=on est resté sur Vercel (choix du fondateur, 2026-11-16 : KONAN Pro redevient offert à
+ * tous en attendant de retravailler les paiements). Pour rallumer : true ici ET KONAN_PAYMENTS=on, et
+ * PAYMENTS_OPEN = true dans src/lib/subscriptionPlans.ts.
+ */
+export const PAYMENTS_ALLOWED_IN_CODE = false;
+
+/** Interrupteur général : le paiement n'est actif que si le code l'autorise ET KONAN_PAYMENTS=on sur le serveur. */
 export function paymentsEnabled(env = process.env) {
+  // Tests sur l'ordinateur seulement (KONAN_PAYMENTS_TEST_UNLOCK=1) : jamais possible sur le site en ligne
+  const testUnlock = env.KONAN_PAYMENTS_TEST_UNLOCK === '1' && env.VERCEL_ENV !== 'production' && env.NODE_ENV !== 'production';
+  if (!PAYMENTS_ALLOWED_IN_CODE && !testUnlock) return false;
   return String(env.KONAN_PAYMENTS || '').trim().toLowerCase() === 'on';
 }
 

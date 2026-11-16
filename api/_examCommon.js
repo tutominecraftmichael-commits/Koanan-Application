@@ -124,26 +124,79 @@ export async function addUsage(ref, uid, kind) {
   }
 }
 
-/** Demande une réponse JSON à Gemini (essaie les modèles dans l'ordre) et la valide avec `clean`. */
-/** `primaryConfig` : réglages ajoutés pour le modèle principal seulement (le modèle de secours ne les accepte pas tous). */
-export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4, primaryConfig = {}) {
+/**
+ * Nature d'une erreur de Gemini :
+ * - 'quota'     : limite de la clé atteinte (formule gratuite : 20 demandes par jour et par modèle) ;
+ * - 'transient' : service surchargé ou coupure passagère (503, 500, 429 « par minute »…) : réessayer aide ;
+ * - 'bad'       : réponse reçue mais inutilisable (JSON invalide, sujet incomplet) : réessayer aide aussi ;
+ * - 'fatal'     : clé refusée, modèle inconnu, demande invalide : réessayer ne sert à rien.
+ */
+export function classifyAiError(e) {
+  const msg = String(e?.message || e || '');
+  const status = Number(e?.status || e?.code) || Number((msg.match(/"code"\s*:\s*(\d{3})/) || [])[1]) || 0;
+  if (e?.message === 'BAD_AI_ANSWER' || e instanceof SyntaxError) return 'bad';
+  if (status === 429 || /RESOURCE_EXHAUSTED|quota/i.test(msg)) {
+    // Limite par minute : passagère. Limite par jour (formule gratuite) : inutile de réessayer ce modèle aujourd'hui
+    if (/per ?minute|PerMinute/i.test(msg)) return 'transient';
+    return /per ?day|PerDay|daily|free_tier|FreeTier/i.test(msg) ? 'quota' : 'transient';
+  }
+  if (status >= 500 || /UNAVAILABLE|overloaded|INTERNAL|DEADLINE|ECONNRESET|ETIMEDOUT|fetch failed|socket/i.test(msg)) return 'transient';
+  return 'fatal';
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Demande une réponse JSON à Gemini et la valide avec `clean`. Pour ne pas laisser l'élève sur une erreur :
+ * modèle principal, puis nouvel essai après une courte pause si la panne est passagère ou la réponse
+ * inutilisable, puis modèle de secours (même chose). On ne lance un essai que s'il a le temps de finir
+ * avant la limite de la fonction (60 s sur Vercel). Si toutes les limites du jour sont atteintes,
+ * l'erreur a le code « AI_QUOTA » (message honnête côté élève).
+ * `primaryConfig` : réglages ajoutés pour le modèle principal seulement (le modèle de secours ne les accepte pas tous).
+ * `opts.budgetMs` : temps total disponible ; `opts.attemptMs` : durée prévue d'un essai.
+ */
+export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4, primaryConfig = {}, opts = {}) {
   const { GoogleGenAI } = await import('@google/genai');
   const ai = new GoogleGenAI({ apiKey });
+  const generate = opts.generate || ((req) => ai.models.generateContent(req));
+  const budgetMs = opts.budgetMs ?? 52_000;
+  const attemptMs = opts.attemptMs ?? 20_000;
+  const started = Date.now();
+  const timeLeft = () => budgetMs - (Date.now() - started);
   let lastErr;
+  let sawQuota = false;
   for (const model of MODELS) {
-    try {
-      const response = await ai.models.generateContent({
-        model,
-        contents: [{ role: 'user', parts }],
-        config: { responseMimeType: 'application/json', temperature, ...(model === MODELS[0] ? primaryConfig : {}) },
-      });
-      const text = String(response.text || '').trim().replace(/^```json\s*|```$/g, '');
-      const value = clean(JSON.parse(text));
-      if (value) return value;
-      lastErr = new Error('BAD_AI_ANSWER');
-    } catch (e) {
-      lastErr = e;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      // Premier essai : toujours ; les suivants seulement s'ils ont le temps de finir
+      if ((attempt > 0 || model !== MODELS[0]) && timeLeft() < attemptMs) break;
+      try {
+        const response = await generate({
+          model,
+          contents: [{ role: 'user', parts }],
+          config: {
+            responseMimeType: 'application/json',
+            // Nouvel essai : un peu moins de fantaisie, pour une réponse plus sage
+            temperature: attempt > 0 ? Math.max(0.1, temperature - 0.2) : temperature,
+            ...(model === MODELS[0] ? primaryConfig : {}),
+          },
+        });
+        const text = String(response.text || '').trim().replace(/^```json\s*|```$/g, '');
+        const value = clean(JSON.parse(text));
+        if (value) return value;
+        lastErr = new Error('BAD_AI_ANSWER');
+      } catch (e) {
+        lastErr = e;
+      }
+      const kind = classifyAiError(lastErr);
+      console.warn(`[gemini] ${model} essai ${attempt + 1} : ${kind} (${String(lastErr?.message || lastErr).slice(0, 140)})`);
+      if (kind === 'quota') { sawQuota = true; break; } // modèle suivant
+      if (kind === 'fatal') break;
+      if (kind === 'transient') await sleep(Math.min(3000, Math.max(0, timeLeft() - attemptMs)));
     }
   }
+  if (sawQuota && classifyAiError(lastErr) === 'quota') throw Object.assign(new Error('AI_QUOTA'), { code: 'AI_QUOTA', cause: lastErr });
   throw lastErr;
 }
+
+/** Code d'erreur renvoyé à l'élève quand l'IA n'a pas pu répondre. */
+export const aiErrorCode = (e) => (e?.code === 'AI_QUOTA' ? 'AI_QUOTA' : 'AI_UNAVAILABLE');
