@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 /**
  * KONAN, la mascotte : le cube bleu du logo, avec un visage (charte Excellence, maquette validée le 2026-11-16).
@@ -22,7 +22,7 @@ export type KonanMascotPose = 'wave' | 'jump' | 'notes' | 'done' | 'idle'
   | 'whoa'         // surpris : réponses au hasard
   | 'encourage'    // doux sourire : l'élève a du mal
   | 'pause'        // repos : pause Pomodoro
-  | 'cta';         // invite à cliquer : regarde le bouton en dessous, petits sauts, flèche qui rebondit
+  | 'cta';         // invite à commencer : enchaîne des grimaces drôles (sourire, clin d’œil, langue, surprise…)
 
 interface KonanMascotProps {
   pose?: KonanMascotPose;
@@ -81,17 +81,29 @@ const Sparkle: React.FC<{ x: number; y: number; r: number; fill: string; classNa
   />
 );
 
+/** Grimaces de la pose « cta » (une toutes les 1,5 s), pour donner envie de commencer la séance. */
+const CTA_FACES = ['smile', 'wink', 'tongue', 'surprised', 'grin', 'look'] as const;
+
 export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 160, className = '' }) => {
-  const happyEyes = pose === 'jump' || pose === 'done';
+  const [faceIdx, setFaceIdx] = useState(0);
+  useEffect(() => {
+    if (pose !== 'cta') return;
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = window.setInterval(() => setFaceIdx((i) => (i + 1) % CTA_FACES.length), 1500);
+    return () => window.clearInterval(timer);
+  }, [pose]);
+  const face = pose === 'cta' ? CTA_FACES[faceIdx] : null;
+
+  const happyEyes = pose === 'jump' || pose === 'done' || face === 'grin';
   const closedEyes = pose === 'pause';
-  const bigEyes = pose === 'whoa';
+  const bigEyes = pose === 'whoa' || face === 'surprised';
   const sadFace = pose === 'sad' || pose === 'sad_watch';
   // Direction du regard (décalage des pupilles)
-  const look = pose === 'cta' ? { x: -1.3, y: 2.6 } : pose === 'notes' ? { x: 1.6, y: -2.2 } : pose === 'sad_watch' ? { x: 0.6, y: 2.2 } : { x: 1, y: 0.8 };
+  const look = face === 'look' ? { x: -1.3, y: 2.6 } : pose === 'notes' ? { x: 1.6, y: -2.2 } : pose === 'sad_watch' ? { x: 0.6, y: 2.2 } : { x: 1, y: 0.8 };
 
   const bodyAnim =
     pose === 'jump' ? 'kcm-jump'
-    : pose === 'cta' ? 'kcm-hop'
+    : pose === 'cta' ? ''
     : pose === 'wave' ? 'kcm-sway'
     : pose === 'encourage' ? 'kcm-nod'
     : pose === 'whoa' ? 'kcm-shake'
@@ -101,6 +113,8 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
   const tilt = pose === 'sad' || pose === 'sad_watch' ? 'rotate(4 60 100)' : pose === 'wave' ? 'rotate(-4 60 100)' : undefined;
 
   const eye = (cx: number, cy: number) => {
+    // Clin d'œil : l'œil gauche se ferme en sourire
+    if (face === 'wink' && cx < 40) return <path d={`M${cx - 5} ${cy + 1} q5 -7 10 0`} fill="none" stroke={INK} strokeWidth={3} strokeLinecap="round" />;
     if (happyEyes) return <path d={`M${cx - 5} ${cy + 1} q5 -7 10 0`} fill="none" stroke={INK} strokeWidth={3} strokeLinecap="round" />;
     if (closedEyes) return <path d={`M${cx - 5} ${cy} q5 4 10 0`} fill="none" stroke={INK} strokeWidth={3} strokeLinecap="round" />;
     const rx = bigEyes ? 6 : 4.5;
@@ -116,7 +130,18 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
   };
 
   const mouth = (() => {
-    if (pose === 'wave' || pose === 'jump' || pose === 'done' || pose === 'cta') {
+    if (face === 'tongue') {
+      // Tire la langue
+      return (
+        <g>
+          <path d="M28 82 Q38 92 50 88" fill="none" stroke={INK} strokeWidth={3} strokeLinecap="round" />
+          <path d="M36 88 Q37 97 43 96 Q47 95 45 89 Z" fill="#FB7185" stroke={INK} strokeWidth={2} strokeLinejoin="round" />
+        </g>
+      );
+    }
+    if (face === 'surprised') return <ellipse cx="39" cy="87" rx="3.6" ry="4.6" fill={INK} />;
+    if (face === 'smile' || face === 'wink' || face === 'look') return <path d="M27 82 Q37 94 50 90" fill="none" stroke={INK} strokeWidth={3} strokeLinecap="round" />;
+    if (pose === 'wave' || pose === 'jump' || pose === 'done' || face === 'grin') {
       return (
         <g>
           <path d="M26 80 Q38 99 53 89 Z" fill={INK} stroke={INK} strokeWidth={2} strokeLinejoin="round" />
@@ -172,13 +197,14 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
           <polygon points="60,14 104,38 60,62 16,38" fill={TOP} stroke={INK} strokeWidth="3" strokeLinejoin="round" />
           <polygon points="16,38 60,62 60,110 16,86" fill={LEFT} stroke={INK} strokeWidth="3" strokeLinejoin="round" />
           <polygon points="60,62 104,38 104,86 60,110" fill={RIGHT} stroke={INK} strokeWidth="3" strokeLinejoin="round" />
-          {/* Reflet discret sur le dessus */}
-          <path d="M44 30 L60 22" stroke="#FFFFFF" strokeOpacity="0.55" strokeWidth="3" strokeLinecap="round" />
+          {/* Les « K » du logo, posés à plat sur le dessus et sur la face droite */}
+          <text transform="matrix(1 -0.545 1 0.545 16 38)" x="22" y="31" textAnchor="middle" fontSize="24" fontWeight="900" fill={INK} fontFamily="'Plus Jakarta Sans', Arial, sans-serif">K</text>
+          <text transform="matrix(1 -0.545 0 1 60 62)" x="22" y="35" textAnchor="middle" fontSize="28" fontWeight="900" fill={INK} fillOpacity="0.9" fontFamily="'Plus Jakarta Sans', Arial, sans-serif">K</text>
 
           {/* Visage */}
           {eye(30, 66)}
           {eye(46, 74)}
-          {(pose === 'wave' || pose === 'jump' || pose === 'done' || pose === 'encourage') && (
+          {(pose === 'wave' || pose === 'jump' || pose === 'done' || pose === 'encourage' || face === 'grin' || face === 'wink' || face === 'tongue') && (
             <>
               <ellipse cx="23" cy="77" rx="3.5" ry="2.4" fill="#F9A8D4" opacity="0.75" />
               <ellipse cx="53" cy="85" rx="3.5" ry="2.4" fill="#F9A8D4" opacity="0.75" />
@@ -194,12 +220,6 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
           <circle className="kcm-dot" cx="86" cy="14" r="3.2" fill={LEFT} />
           <circle className="kcm-dot" cx="96" cy="9" r="3.2" fill={LEFT} style={{ animationDelay: '.2s' }} />
           <circle className="kcm-dot" cx="106" cy="4" r="3.2" fill={LEFT} style={{ animationDelay: '.4s' }} />
-        </g>
-      )}
-      {/* Invitation : flèche bleue qui rebondit vers le bouton en dessous */}
-      {pose === 'cta' && (
-        <g className="kcm-arrow">
-          <path d="M14 104 v14 M8 112 l6 7 6 -7" fill="none" stroke={LEFT} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />
         </g>
       )}
       {/* Salut : petite étoile qui brille */}
