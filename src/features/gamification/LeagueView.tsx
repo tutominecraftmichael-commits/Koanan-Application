@@ -66,7 +66,9 @@ export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: 
       </div>
     );
   }
-  const eligible = board ? board.eligible : reputation > 80;
+  // Le classement se voit toujours, quelle que soit la réputation (sous 80 % : division gelée seulement).
+  // Ce message ne sert plus qu'avec l'ancien serveur, tant que la nouvelle version n'est pas en ligne.
+  const eligible = board ? board.eligible : true;
   if (!eligible) {
     return (
       <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-900/70 p-3.5 sm:p-4 flex items-center gap-3">
@@ -98,9 +100,10 @@ export const LeagueCard: React.FC<{ board: LeagueBoard | null; localReputation: 
           {me ? `${ordinal(me.rank)} sur ${size}` : 'Classement en cours'} · <span className="tabular-nums">{board.weekXp} XP</span>
         </p>
         <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-          {zone === 'up' && 'Zone de montée ✓ · '}
-          {zone === 'keep' && 'Tu gardes ta place en Perle ✓ · '}
-          {zone === 'down' && 'Zone de descente ! · '}
+          {board.frozen && <span className="text-amber-700 dark:text-amber-300">Division gelée (réputation {reputation} %) · </span>}
+          {!board.frozen && zone === 'up' && 'Zone de montée ✓ · '}
+          {!board.frozen && zone === 'keep' && 'Tu gardes ta place en Perle ✓ · '}
+          {!board.frozen && zone === 'down' && 'Zone de descente ! · '}
           Fin dans {timeLeftLabel(board.endsAt)}
         </p>
       </div>
@@ -118,7 +121,9 @@ export const LeagueResultBanner: React.FC<{ board: LeagueBoard; onClose: () => v
     ? `Semaine terminée : ${ordinal(r.rank)} sur ${r.size}. Tu montes en division ${to} !`
     : r.movement === 'down'
       ? `Semaine terminée : ${ordinal(r.rank)} sur ${r.size}. Tu redescends en division ${to}. Reprends ta place cette semaine !`
-      : `Semaine terminée : ${ordinal(r.rank)} sur ${r.size}. Tu restes en division ${to}.`;
+      : r.movement === 'frozen'
+        ? `Semaine terminée : ${ordinal(r.rank)} sur ${r.size}. Ta division ${to} est restée gelée (réputation de 80 % ou moins). Repasse au-dessus de 80 % pour pouvoir monter.`
+        : `Semaine terminée : ${ordinal(r.rank)} sur ${r.size}. Tu restes en division ${to}.`;
   return (
     <div className={`rounded-2xl border-2 p-3 flex items-start gap-2 text-sm font-bold ${r.movement === 'up' ? 'bg-emerald-50 border-emerald-300 text-emerald-900 dark:bg-emerald-500/10 dark:border-emerald-500/40 dark:text-emerald-200' : r.movement === 'down' ? 'bg-rose-50 border-rose-300 text-rose-900 dark:bg-rose-500/10 dark:border-rose-500/40 dark:text-rose-200' : 'bg-slate-50 border-slate-200 text-slate-800 dark:bg-slate-800/60 dark:border-slate-700 dark:text-slate-200'}`}>
       {r.movement === 'up' ? <ArrowUp className="w-5 h-5 shrink-0" /> : r.movement === 'down' ? <ArrowDown className="w-5 h-5 shrink-0" /> : <Trophy className="w-5 h-5 shrink-0" />}
@@ -130,7 +135,7 @@ export const LeagueResultBanner: React.FC<{ board: LeagueBoard; onClose: () => v
 
 /**
  * Page Ligue (onglet trophée de la barre du bas) : résultat de la semaine passée, puis classement,
- * ou « Ligue verrouillée » sous 80 % de réputation. Actualisée à chaque ouverture.
+ * toujours visible (à 80 % de réputation ou moins : bandeau « Division gelée »). Actualisée à chaque ouverture.
  */
 export const LeaguePage: React.FC<{
   board: LeagueBoard | null;
@@ -165,7 +170,7 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Ta réputation : {reputation} %</p>
-      <p>Séance faite : <b>+1 %</b>. Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. Il faut plus de 80 % pour rester dans la ligue.</p>
+      <p>Séance faite : <b>+1 %</b>. Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, tu vois toujours le classement, mais ta division est <b>gelée</b> : ni montée ni descente tant que tu ne repasses pas au-dessus de 80 %.</p>
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Fin de semaine</p>
@@ -224,6 +229,14 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
           </div>
         </div>
         {showRules && <LeagueRules reputation={board.reputation} />}
+
+        {/* Réputation de 80 % ou moins : classement visible, division gelée */}
+        {board.frozen && (
+          <div className="rounded-2xl border-2 p-3 flex items-start gap-2 text-sm font-bold bg-amber-50 border-amber-300 text-amber-900 dark:bg-amber-500/10 dark:border-amber-500/40 dark:text-amber-200">
+            <Lock className="w-5 h-5 shrink-0" />
+            <span>Division gelée : ta réputation est à {board.reputation} %. Tu restes dans le classement, mais tant qu’elle est à 80 % ou moins, tu ne peux pas monter de division. Fais tes séances pour repasser au-dessus de 80 % avant la fin de la semaine.</span>
+          </div>
+        )}
 
         {/* Chemin des divisions : Bronze → Perle */}
         <div className="flex items-center justify-between px-3.5 py-3 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10">
@@ -289,7 +302,7 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
           {!size && <li className="px-3 py-6 rounded-2xl bg-white dark:bg-[#0F1626] text-center text-sm text-slate-500">Ton groupe se remplit : gagne des XP pour lancer le classement !</li>}
         </ol>
         <p className="text-xs text-center text-slate-500 dark:text-slate-400 pb-4">
-          Groupe de {size} élève{size > 1 ? 's' : ''} (30 au maximum). Les XP sont vérifiés par KONAN. Sous 80 % de réputation, tu sors de la ligue jusqu’à la semaine où tu repasses au-dessus.
+          Groupe de {size} élève{size > 1 ? 's' : ''} (30 au maximum). Les XP sont vérifiés par KONAN. À 80 % de réputation ou moins, tu restes dans le classement mais ta division est gelée.
         </p>
       </div>
     </div>

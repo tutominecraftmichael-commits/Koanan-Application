@@ -436,10 +436,16 @@ export async function saveUserState(uid: string, state: AppState): Promise<void>
  * Fetches user data from Cloud Firestore and merges into local state.
  * Enables seamless multi-device synchronization (Wave8, any smartphone, tablet, or PC).
  */
-export async function fetchAndMergeCloudState(uid: string, currentState: AppState): Promise<AppState> {
+export async function fetchAndMergeCloudState(
+  uid: string,
+  currentState: AppState,
+  report?: { cloudReached?: boolean },
+): Promise<AppState> {
   if (!uid || uid === 'google-demo') return currentState;
   try {
     const cloudData = await loadUserStateFromCloud(uid);
+    // Le cloud a vraiment répondu (pas de coupure réseau ni de délai dépassé)
+    if (report) report.cloudReached = Boolean(cloudData);
 
     const hasCloudSubjects = Array.isArray(cloudData?.subjects) && cloudData.subjects.length > 0;
     const hasLocalSubjects = Array.isArray(currentState.subjects) && currentState.subjects.length > 0;
@@ -497,9 +503,24 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
           : [(!isPro && (rawPreferences.pacing === 'feynman' || rawPreferences.pacing === 'time_blocking')) ? 'pomodoro' : rawPreferences.pacing],
       };
 
-      let mergedStudySessions: StudySession[] = (Array.isArray(cloudData.studySessions) && cloudData.studySessions.length > 0
-        ? cloudData.studySessions
-        : currentState.studySessions)
+      // Semaine du planning : ce téléphone est peut-être déjà passé à la semaine suivante alors que le cloud
+      // a encore l'ancienne (ou l'inverse). On garde le planning de la semaine la plus récente, avec SA date
+      // de semaine : sinon les jours suivants comptaient comme « manqués » (bug du 2026-11-16).
+      const localSessions: StudySession[] = Array.isArray(currentState.studySessions) ? currentState.studySessions : [];
+      const cloudSessions: StudySession[] = Array.isArray(cloudData.studySessions) ? cloudData.studySessions : [];
+      const localWeek = currentState.currentWeekMonday || '';
+      const cloudWeek = typeof cloudData.currentWeekMonday === 'string' ? cloudData.currentWeekMonday : '';
+      const keepLocalWeek = localSessions.length > 0 && (cloudSessions.length === 0 || Boolean(localWeek && cloudWeek && localWeek > cloudWeek));
+      const mergedWeekMonday = keepLocalWeek ? (localWeek || cloudWeek) : (cloudWeek || localWeek);
+      // Une séance terminée sur un appareil reste terminée (jamais « manquée » à cause d'une copie en retard)
+      const otherCopy = new Map((keepLocalWeek ? cloudSessions : localSessions).filter((s) => s?.id).map((s) => [s.id, s]));
+      const withCompletions = (keepLocalWeek ? localSessions : cloudSessions).map((sess: StudySession) => {
+        const other = otherCopy.get(sess.id);
+        if (sess.completed || !other?.completed || !other.completedAt) return sess;
+        return { ...sess, completed: true, completedAt: other.completedAt, ...(other.mistakes !== undefined ? { mistakes: other.mistakes } : {}) };
+      });
+
+      let mergedStudySessions: StudySession[] = withCompletions
         .filter((sess: StudySession) => {
           if (isNonAcademicSubject(sess.title)) return false;
           if (sess.subjectId && !validSubjectIds.has(sess.subjectId)) return false;
@@ -549,6 +570,7 @@ export async function fetchAndMergeCloudState(uid: string, currentState: AppStat
           ...(profile.gradeLevel ? { gradeLevel: profile.gradeLevel } : {}),
         },
         studySessions: mergedStudySessions,
+        ...(mergedWeekMonday ? { currentWeekMonday: mergedWeekMonday } : {}),
         logs: Array.isArray(cloudData.logs) ? cloudData.logs : currentState.logs,
         cycleCompletedDate: cloudData.cycleCompletedDate !== undefined ? cloudData.cycleCompletedDate : currentState.cycleCompletedDate,
         gamification: mergeGamification(currentState.gamification, cloudData.gamification),

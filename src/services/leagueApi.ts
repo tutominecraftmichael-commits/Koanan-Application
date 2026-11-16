@@ -10,6 +10,8 @@ export interface LeagueBoard {
   eligible: boolean;
   /** Pourquoi l'élève n'est pas dans la ligue : réputation trop basse ou classe sans cours (LMD, BTS…) */
   reason?: 'reputation' | 'no_courses' | null;
+  /** Réputation de 80 % ou moins : classement visible, mais division gelée (ni montée ni descente) */
+  frozen?: boolean;
   reputation: number;
   division: number;
   divisionName: string;
@@ -19,7 +21,7 @@ export interface LeagueBoard {
   promoteCount: number;
   keepCount: number;
   demoteCount: number | null;
-  lastResult: { weekId: string; rank: number; size: number; movement: 'up' | 'down' | 'stay'; fromDivision: number; toDivision: number; weekXp: number } | null;
+  lastResult: { weekId: string; rank: number; size: number; movement: 'up' | 'down' | 'stay' | 'frozen'; fromDivision: number; toDivision: number; weekXp: number } | null;
   rows: LeagueRow[];
 }
 export interface LeagueSyncResult {

@@ -317,11 +317,27 @@ export function App() {
     });
   }, [state.preferences?.gradeLevel, state.userAccount?.gradeLevel]);
 
+  // Copie du cloud arrivée ? (séances faites sur un AUTRE appareil). Tant qu'elle n'est pas là, on ne compte
+  // ni la réputation ni le changement de semaine : sinon des séances faites ailleurs comptaient « manquées »
+  // (bug du 2026-11-16 : réputation en chute à la fin de la semaine alors que tout était fait).
+  const [cloudReady, setCloudReady] = useState(false);
+  // Pas de réponse du cloud après 3 essais (hors ligne) : la nouvelle semaine s'affiche quand même,
+  // mais la réputation n'est pas touchée (elle sera comptée à la prochaine ouverture avec Internet)
+  const [cloudGaveUp, setCloudGaveUp] = useState(false);
+  const cloudReadyRef = useRef(false);
+  cloudReadyRef.current = cloudReady;
+  const latestStateRef = useRef(state);
+  latestStateRef.current = state;
+  const needsCloud = Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode);
+
   // Bascule automatique de semaine (rollover d'agenda) sans pop-up de bilan
   useEffect(() => {
+    if (needsCloud && !cloudReady && !cloudGaveUp) return;
     // La réputation des jours passés est comptée AVANT que la nouvelle semaine ne remplace les séances
-    const settled = settleReputation(state.gamification, state.studySessions, new Date(), state.cycleCompletedDate);
-    const base = settled.changed ? { ...state, gamification: settled.gamification } : state;
+    // (seulement avec la copie du cloud : jamais sur un planning en retard)
+    const canSettle = !needsCloud || cloudReady;
+    const settled = canSettle ? settleReputation(state.gamification, state.studySessions, new Date(), state.cycleCompletedDate) : null;
+    const base = settled?.changed ? { ...state, gamification: settled.gamification } : state;
     const rollover = checkAndPerformWeeklyRollover(base);
     if (rollover.hasRollover) {
       const cleanNextState = { ...rollover.nextState, pendingWeeklyRecap: null };
@@ -331,7 +347,7 @@ export function App() {
         saveUserState(state.userAccount.googleId, cleanNextState);
       }
     }
-  }, [state.studySessions.length, state.currentWeekMonday]);
+  }, [state.studySessions.length, state.currentWeekMonday, cloudReady, cloudGaveUp, needsCloud]);
 
   // Repli vers Gratuit UNIQUEMENT pour les comptes qui tenteraient d'activer 'plus' (qui reste en liste d'attente)
   useEffect(() => {
@@ -912,6 +928,8 @@ export function App() {
   useEffect(() => {
     if (!gamificationEnabled) return;
     const settle = () => setState((prev) => {
+      // Compte connecté : on attend la copie du cloud (séances faites sur un autre appareil)
+      if (prev.userAccount?.isLoggedIn && !prev.isDemoMode && !cloudReadyRef.current) return prev;
       const r = settleReputation(prev.gamification, prev.studySessions, new Date(), prev.cycleCompletedDate);
       if (!r.changed) return prev;
       const next = { ...prev, gamification: r.gamification };
@@ -926,7 +944,7 @@ export function App() {
       clearInterval(timer);
       document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [gamificationEnabled]);
+  }, [gamificationEnabled, cloudReady]);
 
   // Fluidité : dès l'ouverture, on précharge en silence toutes les pages courantes (≈ 300 Ko au total),
   // pour qu'elles s'ouvrent instantanément. Seuls les cours guidés (trop lourds) attendent la séance.
@@ -1006,6 +1024,28 @@ export function App() {
           lastSyncedAt: new Date().toISOString(),
         };
         await handleLoginSuccess(profile);
+      } else if (firebaseUser && !cloudReadyRef.current && latestStateRef.current.userAccount?.googleId === firebaseUser.uid) {
+        // Élève déjà connecté qui rouvre KONAN : on récupère d'abord la copie du cloud (séances faites sur un
+        // autre appareil), PUIS la réputation et le changement de semaine sont comptés.
+        // Réseau coupé ou trop lent : on réessaie (20 s, puis 1 min) ; sans réponse, rien n'est compté
+        // pendant cette ouverture (les jours seront comptés à la prochaine, rien n'est perdu).
+        const uid = firebaseUser.uid;
+        const syncFromCloud = (attempt: number) => {
+          const report: { cloudReached?: boolean } = {};
+          fetchAndMergeCloudState(uid, latestStateRef.current, report)
+            .then((merged) => {
+              if (!isMounted || cloudReadyRef.current) return;
+              if (!report.cloudReached) {
+                if (attempt < 2) setTimeout(() => syncFromCloud(attempt + 1), attempt === 0 ? 20_000 : 60_000);
+                else setCloudGaveUp(true);
+                return;
+              }
+              setState((prev) => (prev.userAccount?.googleId === uid ? merged : prev));
+              setCloudReady(true);
+            })
+            .catch((err) => console.warn('Synchronisation cloud au démarrage impossible :', err));
+        };
+        syncFromCloud(0);
       }
       setAuthPending(false);
     });
@@ -1106,10 +1146,14 @@ export function App() {
     // Récupérer et fusionner immédiatement les matières, devoirs et sessions stockés sur Cloud Firestore
     let finalUserState = userState;
     try {
-      const mergedFromCloud = await fetchAndMergeCloudState(profile.googleId, userState);
+      const report: { cloudReached?: boolean } = {};
+      const mergedFromCloud = await fetchAndMergeCloudState(profile.googleId, userState, report);
       if (mergedFromCloud && (mergedFromCloud.subjects?.length > 0 || mergedFromCloud.completedOnboarding)) {
         finalUserState = mergedFromCloud;
       }
+      // Copie du cloud reçue (ou compte tout neuf, sans copie) : la réputation et le changement de semaine
+      // peuvent maintenant être comptés
+      if (report.cloudReached || !userState.completedOnboarding) setCloudReady(true);
     } catch (err) {
       console.warn('Erreur synchronisation cloud initiale:', err);
     }
@@ -1642,6 +1686,8 @@ export function App() {
    */
   const handleLogout = async () => {
     hasGreetedAuthRef.current = '';
+    setCloudReady(false);
+    setCloudGaveUp(false);
     lastRescheduledSignature.current = '';
     if (state.userAccount?.googleId && !state.isDemoMode) {
       try {

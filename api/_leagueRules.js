@@ -6,8 +6,9 @@
  * - Fin de semaine : les 10 premiers montent (Perle : ils restent en Perle), les 5 derniers descendent
  *   (pas plus bas que Bronze) ; en Perle, tous ceux qui ne sont pas dans les 10 premiers redescendent.
  *   Pour monter, il faut avoir gagné au moins 1 XP dans la semaine.
- * - Réputation de plus de 80 % obligatoire : en dessous, l'élève ne participe plus et ne voit plus le
- *   classement ; sa division est gelée et il revient la semaine suivante s'il repasse au-dessus de 80 %.
+ * - Réputation de 80 % ou moins : l'élève reste dans son groupe et VOIT toujours le classement, mais sa
+ *   division est gelée (ni montée ni descente à la fin de la semaine) tant qu'il ne repasse pas au-dessus
+ *   de 80 % (choix du fondateur, 2026-11-16). Il ne prend pas non plus la place de montée d'un autre.
  *
  * Anti-triche : les XP sont recalculés et bornés par le serveur (montants autorisés, durée minimale
  * d'une série, énergie des comptes Gratuit, plafonds par jour). Un gain impossible est refusé.
@@ -85,9 +86,14 @@ export function gradeInLeague(gradeLevel) {
   return gradeHasCourses(gradeLevel) || /^superieur_(lmd|bts)$/.test(String(gradeLevel || ''));
 }
 
-/** L'élève participe-t-il au classement (réputation de plus de 80 % ET classe admise dans la ligue) ? */
+/** L'élève est-il dans le classement (classe admise dans la ligue) ? La réputation n'y change rien. */
 export function isParticipant(player) {
-  return Boolean(player) && isEligible(player.reputation) && player.hasCourses !== false;
+  return Boolean(player) && player.hasCourses !== false;
+}
+
+/** Division gelée (réputation de 80 % ou moins) : ni montée ni descente à la fin de la semaine. */
+export function isFrozen(player) {
+  return !isEligible(player?.reputation ?? 100);
 }
 
 /** Collections de la ligue (préfixe réservé aux tests sur la vraie base : LEAGUE_COLLECTION_PREFIX). */
@@ -236,12 +242,19 @@ export function rankPlayers(players) {
 
 /**
  * Montées et descentes d'un groupe à la fin de la semaine.
- * @returns Map uid -> { rank, toDivision, movement: 'up' | 'down' | 'stay' }
+ * Les élèves à division gelée (`frozen`) gardent leur division ; les places de montée et de descente
+ * se jouent entre les autres. `rank` = place dans le classement complet (celle que l'élève a vue).
+ * @returns Map uid -> { rank, toDivision, movement: 'up' | 'down' | 'stay' | 'frozen' }
  */
 export function computeMovements(players, division) {
-  const ranked = rankPlayers(players);
+  const all = rankPlayers(players);
+  const fullRank = new Map(all.map((p, i) => [p.uid, i + 1]));
+  const ranked = all.filter((p) => !p.frozen);
   const size = ranked.length;
   const out = new Map();
+  for (const p of all) {
+    if (p.frozen) out.set(p.uid, { rank: fullRank.get(p.uid), toDivision: division, movement: 'frozen' });
+  }
   ranked.forEach((p, i) => {
     const rank = i + 1;
     const top = rank <= PROMOTE_COUNT;
@@ -254,7 +267,7 @@ export function computeMovements(players, division) {
     } else if (!top && rank > size - DEMOTE_COUNT && division > 1) {
       to = division - 1;
     }
-    out.set(p.uid, { rank, toDivision: to, movement: to > division ? 'up' : to < division ? 'down' : 'stay' });
+    out.set(p.uid, { rank: fullRank.get(p.uid), toDivision: to, movement: to > division ? 'up' : to < division ? 'down' : 'stay' });
   });
   return out;
 }
