@@ -1159,7 +1159,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
             try { soundFX.playClick(); } catch {}
             onExit();
           }}
-          className="w-full py-3 rounded-2xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-black text-sm transition-colors cursor-pointer shadow-sm"
+          className="w-full py-3 rounded-2xl bg-sky-400 hover:bg-slate-700 text-slate-950 font-black text-sm transition-colors cursor-pointer shadow-sm"
         >
           Retour au tableau de bord
         </button>
@@ -1205,7 +1205,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('physique');
                   }}
-                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-slate-800/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-slate-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <Zap className="w-6 h-6 stroke-[2.5]" />
@@ -1226,7 +1226,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('chimie');
                   }}
-                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-slate-800/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-slate-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <FlaskConical className="w-6 h-6 stroke-[2.5]" />
@@ -1249,7 +1249,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('histoire');
                   }}
-                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-slate-800/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-slate-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <Landmark className="w-6 h-6 stroke-[2.5]" />
@@ -1270,7 +1270,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('geographie');
                   }}
-                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-slate-800/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-slate-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <Globe className="w-6 h-6 stroke-[2.5]" />
@@ -1293,7 +1293,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('numerique');
                   }}
-                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-slate-800/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-slate-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <Calculator className="w-6 h-6 stroke-[2.5]" />
@@ -1314,7 +1314,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                     try { soundFX.playClick(); } catch {}
                     refreshSessionPayload('geometrie');
                   }}
-                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-sky-400/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-sky-400/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
+                  className="p-5 rounded-2xl border-2 border-sky-200 dark:border-slate-800/80 bg-white dark:bg-slate-800/60 hover:border-sky-400 hover:bg-sky-50/50 dark:hover:bg-slate-950/40 transition-all cursor-pointer text-left space-y-2 group hover:scale-[1.02] shadow-sm"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     <Shapes className="w-6 h-6 stroke-[2.5]" />
@@ -1376,7 +1376,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
           {/* Bannière d'alternance obligatoire (Règle 2) */}
           {isSecondSessionAlternance ? (
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-50 to-purple-50 dark:from-sky-400/60 dark:to-purple-950/50 border-2 border-sky-300 dark:border-sky-400 flex items-center gap-3.5 shadow-sm">
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-50 to-purple-50 dark:from-slate-950/60 dark:to-purple-950/50 border-2 border-sky-300 dark:border-slate-700 flex items-center gap-3.5 shadow-sm">
               <div className="w-10 h-10 rounded-xl bg-sky-400 text-slate-950 flex items-center justify-center shrink-0 shadow-sm">
                 <RefreshCw className="w-5 h-5 animate-spin-slow" />
               </div>
@@ -1406,7 +1406,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
                         activeSubCategory === 'chimie'
-                          ? 'border-sky-400 bg-sky-50 dark:bg-sky-400/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
+                          ? 'border-sky-400 bg-sky-50 dark:bg-slate-950/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
                           : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                       }`}
                     >
@@ -1428,7 +1428,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
                         activeSubCategory === 'physique'
-                          ? 'border-sky-400 bg-sky-50 dark:bg-sky-400/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
+                          ? 'border-sky-400 bg-sky-50 dark:bg-slate-950/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
                           : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                       }`}
                     >
@@ -1452,7 +1452,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
                         activeSubCategory === 'numerique'
-                          ? 'border-sky-400 bg-sky-50 dark:bg-sky-400/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
+                          ? 'border-sky-400 bg-sky-50 dark:bg-slate-950/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
                           : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                       }`}
                     >
@@ -1474,7 +1474,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                       }}
                       className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3 ${
                         activeSubCategory === 'geometrie'
-                          ? 'border-sky-400 bg-sky-50 dark:bg-sky-400/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
+                          ? 'border-sky-400 bg-sky-50 dark:bg-slate-950/60 shadow-md ring-2 ring-sky-400/20 text-sky-900 dark:text-white'
                           : 'border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                       }`}
                     >
@@ -1525,7 +1525,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                   onClick={() => { soundFX.playCheckmarkPop(); setSelectedChapter(ch); }}
                   className={`w-full text-left p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
                     selectedChapter?.id === ch.id
-                      ? 'bg-sky-50 dark:bg-sky-400/80 border-sky-400 dark:border-sky-400 text-sky-900 dark:text-sky-200 shadow-sm ring-2 ring-sky-400/20'
+                      ? 'bg-sky-50 dark:bg-slate-950/80 border-sky-400 dark:border-sky-400 text-sky-900 dark:text-sky-200 shadow-sm ring-2 ring-sky-400/20'
                       : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-sky-300 dark:hover:border-slate-600'
                   }`}
                 >
@@ -1561,7 +1561,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
               onClick={() => selectedChapter && handleConfirmInitialChapter(selectedChapter.id)}
               className={`px-6 py-2.5 rounded-xl font-black text-xs transition-all flex items-center gap-2 ${
                 selectedChapter !== null
-                  ? 'bg-gradient-to-r from-sky-400 via-blue-600 to-sky-400 text-white shadow-lg shadow-sky-400/30 hover:from-sky-400 hover:to-blue-500 cursor-pointer active:scale-95'
+                  ? 'bg-gradient-to-r from-sky-400 via-blue-600 to-slate-700 text-white shadow-lg shadow-sky-400/30 hover:from-sky-400 hover:to-blue-500 cursor-pointer active:scale-95'
                   : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-300 dark:border-slate-700'
               }`}
             >
@@ -1837,7 +1837,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
           <button
             type="button"
             onClick={() => setShowChapterSelector(true)}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 hover:bg-sky-100 dark:bg-sky-400/60 dark:hover:bg-sky-400/70 border border-sky-200/80 dark:border-sky-400/60 text-sky-800 dark:text-sky-300 text-xs font-bold cursor-pointer transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 hover:bg-sky-100 dark:bg-slate-950/60 dark:hover:bg-slate-900/70 border border-sky-200/80 dark:border-slate-800/60 text-sky-800 dark:text-sky-300 text-xs font-bold cursor-pointer transition-colors"
             title="Changer de chapitre"
           >
             <span>Ch. {currentItem.chapterOrder} : {currentItem.chapterTitle}</span>
@@ -1865,7 +1865,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
         )}
 
         {/* Enjeu pour devoirs et examens */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-sky-50/70 dark:bg-sky-400/40 border border-sky-200/80 dark:border-sky-400/60 text-left space-y-2 shadow-xs">
+        <div className="p-4 sm:p-5 rounded-2xl bg-sky-50/70 dark:bg-slate-950/40 border border-sky-200/80 dark:border-slate-800/60 text-left space-y-2 shadow-xs">
           <div className="flex items-center gap-2 text-sky-900 dark:text-sky-200 font-black text-xs sm:text-sm">
             <Target className="w-4 h-4 text-sky-700 dark:text-sky-400 shrink-0" />
             <span>Pourquoi cette notion est essentielle pour tes devoirs & examens ?</span>
@@ -2041,7 +2041,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
                 </span>
               </div>
               {!retrievalMode && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-400/60 text-sky-800 dark:text-sky-300">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 dark:bg-slate-950/60 text-sky-800 dark:text-sky-300">
                   Étape {activeStepIndex + 1} / {totalSteps}
                 </span>
               )}
@@ -2068,7 +2068,7 @@ export const InteractiveTutorView: React.FC<InteractiveTutorViewProps> = ({
 
             {/* Astuce Konan si présente */}
             {activeCourseSlice.konanTip && (
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-sky-50/90 to-cyan-50/70 dark:from-sky-400/40 dark:to-cyan-950/20 border border-sky-200/80 dark:border-sky-400/30 flex items-start gap-3 shadow-2xs">
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-sky-50/90 to-cyan-50/70 dark:from-slate-950/40 dark:to-cyan-950/20 border border-sky-200/80 dark:border-sky-400/30 flex items-start gap-3 shadow-2xs">
                 <div className="shrink-0 pt-0.5">
                   <KonanCube size={40} showStars={true} glow={true} />
                 </div>

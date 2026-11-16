@@ -187,7 +187,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
             title={soundEnabled ? "Couper le son" : "Activer le son"}
             className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
           >
-            {soundEnabled ? <Volume2 className="w-4 h-4 text-cyan-400" /> : <VolumeX className="w-4 h-4" />}
+            {soundEnabled ? <Volume2 className="w-4 h-4 text-sky-700" /> : <VolumeX className="w-4 h-4" />}
           </button>
           {isCatchupMode ? (
             <Badge variant="amber" size="sm" className="font-bold px-2.5 py-0.5 border border-amber-500/50 bg-amber-500/20 text-amber-200 animate-pulse">
@@ -251,14 +251,14 @@ export const FocusMode: React.FC<FocusModeProps> = ({
               <div className="p-3 sm:p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-left max-w-lg mx-auto space-y-2 shadow-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                    <BookOpen className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
+                    <BookOpen className="w-4 h-4 text-sky-700 dark:text-sky-400 shrink-0" />
                     Chapitre en cours d'étude
                   </span>
                   {chapterName && !isEditingChapter && (
                     <button
                       type="button"
                       onClick={() => setIsEditingChapter(true)}
-                      className="text-[11px] font-bold text-cyan-600 dark:text-cyan-400 hover:underline cursor-pointer"
+                      className="text-[11px] font-bold text-sky-700 dark:text-sky-400 hover:underline cursor-pointer"
                     >
                       Modifier
                     </button>
@@ -276,7 +276,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                         value={chapterName}
                         onChange={(e) => setChapterName(e.target.value)}
                         placeholder="Ex : Nombres Complexes, Loi de Laplace, Tissu nerveux..."
-                        className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
                         autoFocus={!chapterName}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && chapterName.trim()) {
@@ -298,9 +298,9 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                     </div>
                   </div>
                 ) : (
-                  <div className="p-2.5 rounded-xl bg-cyan-50/80 dark:bg-cyan-950/50 border border-cyan-200 dark:border-cyan-800/40 text-xs font-bold text-cyan-900 dark:text-cyan-200 flex items-center justify-between">
+                  <div className="p-2.5 rounded-xl bg-sky-50/80 dark:bg-sky-950/50 border border-sky-200 dark:border-sky-800/40 text-xs font-bold text-sky-900 dark:text-sky-200 flex items-center justify-between">
                     <span className="truncate">📖 {chapterName}</span>
-                    <span className="text-[10px] text-cyan-700 dark:text-cyan-400 font-normal ml-2">Enregistré</span>
+                    <span className="text-[10px] text-sky-700 dark:text-sky-400 font-normal ml-2">Enregistré</span>
                   </div>
                 )}
               </div>
@@ -316,7 +316,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
                     className={`h-full transition-all duration-1000 ease-linear ${
                       isCatchupMode
                         ? 'bg-gradient-to-r from-amber-500 via-orange-400 to-emerald-400'
-                        : 'bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400'
+                        : 'bg-gradient-to-r from-sky-400 via-sky-400 to-emerald-400'
                     }`}
                     style={{ width: `${progressPercent}%` }}
                   />
@@ -356,7 +356,7 @@ export const FocusMode: React.FC<FocusModeProps> = ({
             
             <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-4 sm:p-6 space-y-3 shadow-xs">
               <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                <CheckCircle2 className="w-4 h-4 text-sky-700 dark:text-sky-400" />
                 Objectifs de la Séance
               </h3>
               

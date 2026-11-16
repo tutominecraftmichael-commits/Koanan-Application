@@ -228,7 +228,7 @@ export const SessionExplainerModal: React.FC<SessionExplainerModalProps> = ({
         <div className="p-5 sm:p-6 space-y-5 overflow-y-auto flex-1 custom-scrollbar">
 
           {/* Section 1: En bref / In brief */}
-          <div className="p-4 rounded-2xl bg-sky-50/90 dark:bg-sky-400/30 border border-sky-200 dark:border-sky-400/30 space-y-1.5 shadow-xs">
+          <div className="p-4 rounded-2xl bg-sky-50/90 dark:bg-slate-950/30 border border-sky-200 dark:border-sky-400/30 space-y-1.5 shadow-xs">
             <span className="text-xs font-bold text-sky-800 dark:text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               {t('whatIsIt', lang)}

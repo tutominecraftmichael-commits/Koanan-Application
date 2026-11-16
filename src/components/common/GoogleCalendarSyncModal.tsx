@@ -109,7 +109,7 @@ export const GoogleCalendarSyncModal: React.FC<GoogleCalendarSyncModalProps> = (
 
           {/* Automatic Schedule Applied Banner */}
           {autoOpenedReason === 'plan_applied' && (
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-400/80 via-slate-900 to-sky-950/80 border border-sky-400/50 space-y-1.5 shadow-lg animate-in slide-in-from-top-2 duration-300">
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-950/80 via-slate-900 to-sky-950/80 border border-sky-400/50 space-y-1.5 shadow-lg animate-in slide-in-from-top-2 duration-300">
               <div className="text-sky-300 font-extrabold text-xs uppercase tracking-wide">
                 Nouvel Emploi du Temps : Synchronisation Quotidienne Déclenchée !
               </div>

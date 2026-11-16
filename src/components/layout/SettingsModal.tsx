@@ -377,7 +377,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                             className={`text-[10px] px-2 py-0.5 rounded-lg border transition-colors cursor-pointer ${
                               editFiliere === f 
                                 ? 'bg-sky-400 text-slate-950 border-sky-400 font-bold' 
-                                : 'bg-white hover:bg-sky-50 text-slate-700 border-slate-300 hover:border-sky-300 dark:bg-slate-900/80 dark:hover:bg-sky-400 dark:text-slate-300 dark:border-slate-800 dark:hover:border-sky-400/40'
+                                : 'bg-white hover:bg-sky-50 text-slate-700 border-slate-300 hover:border-sky-300 dark:bg-slate-900/80 dark:hover:bg-slate-950 dark:text-slate-300 dark:border-slate-800 dark:hover:border-sky-400/40'
                             }`}
                           >
                             {f}

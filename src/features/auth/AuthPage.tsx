@@ -504,7 +504,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-3 px-4 rounded-xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-extrabold text-xs shadow-md shadow-sky-400/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full py-3 px-4 rounded-xl bg-sky-400 hover:bg-slate-700 text-slate-950 font-extrabold text-xs shadow-md shadow-sky-400/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isLoading ? (
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -598,7 +598,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-3 px-4 rounded-xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-extrabold text-xs shadow-md shadow-sky-400/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full py-3 px-4 rounded-xl bg-sky-400 hover:bg-slate-700 text-slate-950 font-extrabold text-xs shadow-md shadow-sky-400/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isLoading ? (
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

@@ -167,7 +167,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   isDemoMode = false,
   onEnterDemoMode,
   onViewPricing,
-  onUpgradeToPro,
+  onUpgradeToPro: _onUpgradeToPro,
   pendingInvitations = [],
   acceptedNotifications = [],
   ownerNotifications,
@@ -608,7 +608,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 key={notif.id}
                                 className={`p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left animate-in fade-in transition-all ${
                                   isAcc
-                                    ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-sky-400/30 dark:border-emerald-500/30'
+                                    ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-slate-950/30 dark:border-emerald-500/30'
                                     : 'bg-rose-50/80 border-rose-200 dark:bg-gradient-to-br dark:from-rose-950/40 dark:via-slate-950 dark:to-slate-900 dark:border-rose-500/30'
                                 }`}
                               >
@@ -653,7 +653,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             return (
                               <div 
                                 key={inv.id}
-                                className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-sky-400/30 dark:border-amber-500/40"
+                                className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-slate-950/30 dark:border-amber-500/40"
                               >
                                 <div className="flex items-start gap-2.5">
                                   <div className="p-2 rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 shrink-0">
@@ -774,7 +774,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                   key={`mob-${notif.id}`}
                                   className={`p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left animate-in fade-in transition-all ${
                                     isAcc
-                                      ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-sky-400/30 dark:border-emerald-500/30'
+                                      ? 'bg-emerald-50/80 border-emerald-200 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-950 dark:to-slate-950/30 dark:border-emerald-500/30'
                                       : 'bg-rose-50/80 border-rose-200 dark:bg-gradient-to-br dark:from-rose-950/40 dark:via-slate-950 dark:to-slate-900 dark:border-rose-500/30'
                                   }`}
                                 >
@@ -819,7 +819,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                               return (
                                 <div 
                                   key={`mob-${inv.id}`}
-                                  className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-sky-400/30 dark:border-amber-500/40"
+                                  className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300/80 space-y-2.5 shadow-md text-left dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-950 dark:to-slate-950/30 dark:border-amber-500/40"
                                 >
                                   <div className="flex items-start gap-2.5">
                                     <div className="p-2 rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 shrink-0">
@@ -940,10 +940,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     ) : effectivePlan === 'pro' ? (
                       <span 
                         className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shrink-0 shadow-sm border bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 border-amber-300/80 cursor-default select-none"
-                        title="Modèle KONAN PRO Actif (Version PRO ouverte)"
+                        title="KONAN Pro actif"
                       >
-                        <span className="xs:hidden">PRO</span>
-                        <span className="hidden xs:inline">PRO OUVERTE</span>
+                        <span>PRO</span>
                       </span>
                     ) : (
                       <div className="flex items-center gap-1 shrink-0">
@@ -956,22 +955,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             <span>Démo</span>
                           </span>
                         )}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (onUpgradeToPro) {
-                              onUpgradeToPro();
-                            } else {
-                              onNavigate('pro-wizard');
-                            }
-                          }}
-                          className="inline-flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 shadow-xs border bg-amber-50 text-amber-900 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                          title="Passer à KONAN PRO (Version PRO ouverte)"
-                        >
-                          <span className="font-black text-[8px] bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 px-1 py-0.2 rounded-xs border border-amber-300 shadow-xs">PRO</span>
-                          <span className="font-extrabold text-amber-700 dark:text-amber-300 hidden xs:inline">PRO ouverte</span>
-                        </button>
+                        {/* Élève Gratuit : aucun badge à côté de la cloche (demande du 2026-11-16) */}
                       </div>
                     )}
                   </div>

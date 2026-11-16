@@ -302,12 +302,12 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
         </Card>
 
         <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 interactive-card shadow-xs">
-          <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 shrink-0 hidden xs:block">
+          <div className="p-2 rounded-xl bg-sky-500/10 text-sky-700 dark:text-sky-400 shrink-0 hidden xs:block">
             <Target className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="min-w-0">
             <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Total Coeff</p>
-            <p className="text-sm sm:text-lg font-bold text-cyan-600 dark:text-cyan-400 font-mono">
+            <p className="text-sm sm:text-lg font-bold text-sky-700 dark:text-sky-400 font-mono">
               <AnimatedCounter value={totalCoeff} />
             </p>
           </div>
@@ -396,12 +396,12 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                   ) : subject.examDate ? (
                     <div
                       onClick={() => handleOpenEdit(subject)}
-                      className="flex items-center justify-between p-2 rounded-xl bg-cyan-50/60 dark:bg-cyan-950/30 border border-cyan-200/80 dark:border-cyan-500/30 hover:border-cyan-400 transition-all cursor-pointer group"
+                      className="flex items-center justify-between p-2 rounded-xl bg-sky-50/60 dark:bg-sky-950/30 border border-sky-200/80 dark:border-sky-500/30 hover:border-sky-400 transition-all cursor-pointer group"
                       title="Cliquer pour modifier la date d'examen ou DS"
                     >
                       <div className="flex items-center gap-1.5 min-w-0">
-                        <Calendar className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 shrink-0" />
-                        <span className={`text-[11px] font-bold truncate ${subject.examType === 'devoir' ? 'text-rose-600 dark:text-rose-400' : 'text-cyan-700 dark:text-cyan-300'}`}>
+                        <Calendar className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400 shrink-0" />
+                        <span className={`text-[11px] font-bold truncate ${subject.examType === 'devoir' ? 'text-rose-600 dark:text-rose-400' : 'text-sky-700 dark:text-sky-300'}`}>
                           {subject.examType === 'devoir' ? 'Devoir (DS)' : subject.examType === 'rattrapage' ? 'Rattrapage' : 'Examen'} :
                         </span>
                         <span className="text-[11px] font-medium text-slate-800 dark:text-slate-200">
@@ -418,7 +418,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
                             {daysToExam < 0 ? 'Épreuve passée' : daysToExam === 0 ? 'Jour J' : `J-${daysToExam}`}
                           </Badge>
                         )}
-                        <Edit3 className="w-3 h-3 text-slate-400 group-hover:text-cyan-600 transition-colors ml-0.5" />
+                        <Edit3 className="w-3 h-3 text-slate-400 group-hover:text-sky-700 transition-colors ml-0.5" />
                       </div>
                     </div>
                   ) : (
@@ -526,7 +526,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
-                Coefficient : <span className="text-cyan-400 font-bold font-mono">{coefficient}</span>
+                Coefficient : <span className="text-sky-700 font-bold font-mono">{coefficient}</span>
               </label>
               <input
                 type="range"

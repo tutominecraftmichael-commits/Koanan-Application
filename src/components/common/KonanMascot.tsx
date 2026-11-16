@@ -21,7 +21,8 @@ export type KonanMascotPose = 'wave' | 'jump' | 'notes' | 'done' | 'idle'
   | 'sad_watch'    // triste, regarde en bas : « Je mets le chrono en pause… »
   | 'whoa'         // surpris : réponses au hasard
   | 'encourage'    // doux sourire : l'élève a du mal
-  | 'pause';       // repos : pause Pomodoro
+  | 'pause'        // repos : pause Pomodoro
+  | 'cta';         // invite à cliquer : regarde le bouton en dessous, petits sauts, flèche qui rebondit
 
 interface KonanMascotProps {
   pose?: KonanMascotPose;
@@ -48,9 +49,13 @@ const STYLES = `
 @keyframes kcm-blink { 0%,92%,100% { transform: scaleY(1) } 95% { transform: scaleY(0.1) } }
 @keyframes kcm-dots { 0%,100% { opacity: .25 } 50% { opacity: 1 } }
 @keyframes kcm-spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+@keyframes kcm-hop { 0%,55%,100% { transform: translateY(0) } 65% { transform: translateY(-6px) } 75% { transform: translateY(0) } 85% { transform: translateY(-3px) } }
+@keyframes kcm-arrow { 0%,100% { transform: translateY(0); opacity: .55 } 50% { transform: translateY(5px); opacity: 1 } }
 @keyframes kcm-pop { 0% { transform: translateY(0) scale(.4); opacity: 0 } 30% { opacity: 1 } 100% { transform: translateY(-14px) scale(1); opacity: 0 } }
 .kcm-body { transform-box: view-box; transform-origin: 60px 112px; }
 .kcm-float { animation: kcm-float 3.2s ease-in-out infinite; }
+.kcm-hop { animation: kcm-hop 2.4s ease-in-out infinite; }
+.kcm-arrow { animation: kcm-arrow 1.1s ease-in-out infinite; }
 .kcm-sway { animation: kcm-sway 1.4s ease-in-out 2; }
 .kcm-jump { animation: kcm-jump 1.1s ease-in-out infinite; }
 .kcm-nod { animation: kcm-nod 1.8s ease-in-out infinite; }
@@ -63,7 +68,7 @@ const STYLES = `
 .kcm-orbit { transform-box: view-box; transform-origin: 60px 64px; animation: kcm-spin 6s linear infinite; }
 .kcm-pop { transform-box: fill-box; transform-origin: center; animation: kcm-pop 1.1s ease-out infinite; }
 @media (prefers-reduced-motion: reduce) {
-  .kcm-float, .kcm-sway, .kcm-jump, .kcm-nod, .kcm-shake, .kcm-breathe, .kcm-shadow-jump, .kcm-eye, .kcm-dot, .kcm-orbit, .kcm-pop { animation: none !important; }
+  .kcm-float, .kcm-hop, .kcm-arrow, .kcm-sway, .kcm-jump, .kcm-nod, .kcm-shake, .kcm-breathe, .kcm-shadow-jump, .kcm-eye, .kcm-dot, .kcm-orbit, .kcm-pop { animation: none !important; }
 }
 `;
 
@@ -82,10 +87,11 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
   const bigEyes = pose === 'whoa';
   const sadFace = pose === 'sad' || pose === 'sad_watch';
   // Direction du regard (décalage des pupilles)
-  const look = pose === 'notes' ? { x: 1.6, y: -2.2 } : pose === 'sad_watch' ? { x: 0.6, y: 2.2 } : { x: 1, y: 0.8 };
+  const look = pose === 'cta' ? { x: -1.3, y: 2.6 } : pose === 'notes' ? { x: 1.6, y: -2.2 } : pose === 'sad_watch' ? { x: 0.6, y: 2.2 } : { x: 1, y: 0.8 };
 
   const bodyAnim =
     pose === 'jump' ? 'kcm-jump'
+    : pose === 'cta' ? 'kcm-hop'
     : pose === 'wave' ? 'kcm-sway'
     : pose === 'encourage' ? 'kcm-nod'
     : pose === 'whoa' ? 'kcm-shake'
@@ -110,7 +116,7 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
   };
 
   const mouth = (() => {
-    if (pose === 'wave' || pose === 'jump' || pose === 'done') {
+    if (pose === 'wave' || pose === 'jump' || pose === 'done' || pose === 'cta') {
       return (
         <g>
           <path d="M26 80 Q38 99 53 89 Z" fill={INK} stroke={INK} strokeWidth={2} strokeLinejoin="round" />
@@ -188,6 +194,12 @@ export const KonanMascot: React.FC<KonanMascotProps> = ({ pose = 'idle', size = 
           <circle className="kcm-dot" cx="86" cy="14" r="3.2" fill={LEFT} />
           <circle className="kcm-dot" cx="96" cy="9" r="3.2" fill={LEFT} style={{ animationDelay: '.2s' }} />
           <circle className="kcm-dot" cx="106" cy="4" r="3.2" fill={LEFT} style={{ animationDelay: '.4s' }} />
+        </g>
+      )}
+      {/* Invitation : flèche bleue qui rebondit vers le bouton en dessous */}
+      {pose === 'cta' && (
+        <g className="kcm-arrow">
+          <path d="M14 104 v14 M8 112 l6 7 6 -7" fill="none" stroke={LEFT} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />
         </g>
       )}
       {/* Salut : petite étoile qui brille */}

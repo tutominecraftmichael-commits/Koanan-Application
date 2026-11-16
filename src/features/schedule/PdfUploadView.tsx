@@ -951,7 +951,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                           }}
                           className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
                             isSelected
-                              ? 'bg-sky-50 dark:bg-sky-400/60 border-sky-400 text-slate-900 dark:text-white shadow-sm ring-1 ring-sky-400/50'
+                              ? 'bg-sky-50 dark:bg-slate-950/60 border-sky-400 text-slate-900 dark:text-white shadow-sm ring-1 ring-sky-400/50'
                               : 'bg-white dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 hover:border-sky-400/40 hover:bg-slate-50 dark:hover:bg-slate-800/70'
                           }`}
                         >
@@ -1138,7 +1138,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                           }}
                           className={`p-2 rounded-lg text-xs font-medium text-left truncate transition-all cursor-pointer ${
                             isSelected
-                              ? 'bg-sky-400/80 border border-sky-400 text-sky-200'
+                              ? 'bg-slate-950/80 border border-sky-400 text-sky-200'
                               : 'bg-slate-800/40 text-slate-300 border border-slate-700/60 hover:bg-slate-800'
                           }`}
                         >
@@ -1185,7 +1185,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
               }}
               className={`grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl border-2 border-dashed transition-all ${
                 isDragOver 
-                  ? 'border-sky-400 bg-sky-50 dark:bg-sky-400/20' 
+                  ? 'border-sky-400 bg-sky-50 dark:bg-slate-950/20' 
                   : 'border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 hover:border-slate-400 dark:hover:border-slate-700'
               }`}
             >
@@ -1210,9 +1210,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 type="button"
                 disabled={isAnalyzing}
                 onClick={() => cameraInputRef.current?.click()}
-                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/50 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
+                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-500/50 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-all cursor-pointer group text-left disabled:opacity-50 shadow-xs"
               >
-                <div className="w-10 h-10 rounded-lg bg-cyan-50 text-cyan-600 border border-cyan-200 dark:bg-cyan-500/10 dark:border-cyan-500/20 dark:text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 rounded-lg bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-500/10 dark:border-sky-500/20 dark:text-sky-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <Camera className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
@@ -1487,8 +1487,8 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   <p className="text-[11px] text-slate-600 dark:text-slate-400">
                     La méthode recommandée ci-dessous est calibrée sur votre emploi du temps. Vous pouvez aussi combiner librement jusqu'à 3 techniques.
                   </p>
-                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border-cyan-200 dark:bg-cyan-500/10 dark:text-cyan-300 border dark:border-cyan-500/30 flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-800 border-sky-200 dark:bg-sky-500/10 dark:text-sky-300 border dark:border-sky-500/30 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-sky-700 dark:text-sky-400" />
                     {selectedPacings.length}/3 méthode{selectedPacings.length > 1 ? 's' : ''} sélectionnée{selectedPacings.length > 1 ? 's' : ''}
                   </span>
                 </div>
@@ -1601,9 +1601,9 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     onClick={() => handleSelectPacingStrategy(strategy.id)}
                     className={`group p-4 rounded-xl border transition-all duration-200 cursor-pointer relative active:scale-[0.99] ${
                       isSelected
-                        ? 'bg-sky-50 border-sky-400 dark:bg-[#131B2E]/70 dark:border-[#6366F1] shadow-md dark:shadow-sky-400/50 ring-1 ring-sky-400/40 dark:ring-[#6366F1]/50'
+                        ? 'bg-sky-50 border-sky-400 dark:bg-[#131B2E]/70 dark:border-[#6366F1] shadow-md dark:shadow-slate-950/50 ring-1 ring-sky-400/40 dark:ring-[#6366F1]/50'
                         : isPrimaryRec
-                        ? 'bg-white border-cyan-400 hover:border-cyan-500 dark:bg-[#131B2E]/50 dark:border-cyan-500/40'
+                        ? 'bg-white border-sky-400 hover:border-sky-500 dark:bg-[#131B2E]/50 dark:border-sky-500/40'
                         : isAllowed
                         ? 'bg-white border-slate-200 hover:border-slate-300 dark:bg-[#131B2E]/40 dark:border-white/5 dark:hover:border-white/10 dark:hover:bg-[#131B2E]/60'
                         : 'bg-slate-50 border-slate-200 dark:bg-black/20 dark:border-white/5 opacity-70'
@@ -1627,7 +1627,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                           </span>
                         )}
                         {isRecommended && !isPrimaryRec && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border-cyan-200 dark:bg-cyan-500/10 dark:text-cyan-300 border dark:border-cyan-500/30">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-800 border-sky-200 dark:bg-sky-500/10 dark:text-sky-300 border dark:border-sky-500/30">
                             Alternatif
                           </span>
                         )}

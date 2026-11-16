@@ -1867,7 +1867,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
 
               {/* Indicateur d'extraction en cours */}
               {isAnalyzing && (
-                <div className="p-3.5 rounded-2xl bg-sky-50 dark:bg-sky-400/40 border border-sky-200 dark:border-sky-400/30 flex items-center gap-3 text-xs text-sky-900 dark:text-sky-200">
+                <div className="p-3.5 rounded-2xl bg-sky-50 dark:bg-slate-950/40 border border-sky-200 dark:border-sky-400/30 flex items-center gap-3 text-xs text-sky-900 dark:text-sky-200">
                   <Loader2 className="w-4 h-4 text-sky-700 dark:text-sky-400 animate-spin shrink-0" />
                   <span className="font-bold">{analysisStatus || 'Extraction en cours...'}</span>
                 </div>
@@ -2059,7 +2059,7 @@ export const DuolingoOnboarding: React.FC<DuolingoOnboardingProps> = ({
                             }}
                             className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
                               isSelected
-                                ? 'bg-sky-50/90 dark:bg-sky-400/60 border-sky-400 dark:border-sky-400 shadow-md shadow-sky-400/10'
+                                ? 'bg-sky-50/90 dark:bg-slate-950/60 border-sky-400 dark:border-sky-400 shadow-md shadow-sky-400/10'
                                 : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-sky-300'
                             }`}
                           >

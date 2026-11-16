@@ -107,7 +107,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
         aria-modal="true"
         className={`relative w-full max-w-lg rounded-3xl bg-white dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-900/98 dark:to-slate-950 border-2 shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-slate-900 dark:text-slate-100 ${
           isPlus 
-            ? 'border-sky-400/80 dark:border-sky-400/50 shadow-sky-400/10 dark:shadow-sky-400/60' 
+            ? 'border-sky-400/80 dark:border-sky-400/50 shadow-sky-400/10 dark:shadow-slate-950/60' 
             : 'border-amber-400/80 dark:border-amber-400/50 shadow-amber-500/10 dark:shadow-amber-950/60'
         }`}
       >

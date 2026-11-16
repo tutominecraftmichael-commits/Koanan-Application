@@ -454,10 +454,10 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             <Button
               variant="secondary"
               size="sm"
-              leftIcon={<FileText className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />}
+              leftIcon={<FileText className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />}
               onClick={() => onNavigate('upload-schedule')}
               title="Importer un nouvel emploi du temps au format texte"
-              className="cursor-pointer text-xs font-semibold py-1.5 px-2.5 sm:px-3 border-cyan-200 dark:border-cyan-500/30 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-cyan-500/10 shrink-0 whitespace-nowrap"
+              className="cursor-pointer text-xs font-semibold py-1.5 px-2.5 sm:px-3 border-sky-200 dark:border-sky-500/30 text-sky-700 dark:text-sky-300 hover:bg-sky-50 dark:hover:bg-sky-500/10 shrink-0 whitespace-nowrap"
             >
               Importer EDT
             </Button>
@@ -467,7 +467,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            leftIcon={<Lock className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />}
+            leftIcon={<Lock className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />}
             onClick={() => {
               const enriched = classSlots.map(c => ({
                 ...c,
@@ -515,7 +515,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         {/* Filter Mode Selector */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar w-full sm:w-auto pb-1 sm:pb-0">
           <span className="text-xs font-bold text-slate-600 dark:text-slate-400 mr-1 flex items-center gap-1 shrink-0">
-            <Eye className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+            <Eye className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400" />
             Affichage :
           </span>
 
@@ -523,7 +523,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             onClick={() => setFilterMode('combined')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer min-h-[34px] shrink-0 interactive-pill ${
               filterMode === 'combined'
-                ? 'bg-gradient-to-r from-sky-400 to-cyan-600 text-white shadow-md shadow-sky-400/30'
+                ? 'bg-gradient-to-r from-sky-400 to-sky-600 text-white shadow-md shadow-sky-400/30'
                 : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
@@ -545,7 +545,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             onClick={() => setFilterMode('study_only')}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer min-h-[34px] shrink-0 interactive-pill ${
               filterMode === 'study_only'
-                ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30'
+                ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
                 : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
@@ -566,10 +566,10 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               }
               setIsStrategyModalOpen(true);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-50 dark:bg-sky-400/40 border border-sky-200 dark:border-sky-400/40 text-sky-800 dark:text-sky-300 hover:text-sky-900 dark:hover:text-white hover:border-sky-400 text-xs font-semibold cursor-pointer transition-all shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-50 dark:bg-slate-950/40 border border-sky-200 dark:border-sky-400/40 text-sky-800 dark:text-sky-300 hover:text-sky-900 dark:hover:text-white hover:border-sky-400 text-xs font-semibold cursor-pointer transition-all shadow-xs"
             title="Consulter l'explication de la méthode d'espacement appliquée à votre emploi du temps"
           >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 shrink-0" />
+            <Sparkles className="w-3.5 h-3.5 text-sky-700 dark:text-sky-400 shrink-0" />
             <span className="break-words">
               Méthode : {preferences.combinedPacings && preferences.combinedPacings.length > 1
                 ? `${preferences.combinedPacings.length} Méthodes Combinées`
@@ -580,7 +580,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 ×{preferences.combinedPacings.length}
               </span>
             ) : (
-              <span className="text-[10px] text-cyan-700 dark:text-cyan-400 font-mono ml-0.5 shrink-0">({activeStrategy.focusBlockDuration}m)</span>
+              <span className="text-[10px] text-sky-700 dark:text-sky-400 font-mono ml-0.5 shrink-0">({activeStrategy.focusBlockDuration}m)</span>
             )}
           </button>
 
@@ -590,7 +590,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               <span>Cours fixes</span>
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400" />
+              <span className="w-2.5 h-2.5 rounded-full bg-sky-400" />
               <span>Révision</span>
             </span>
           </div>
@@ -619,7 +619,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               >
                 <span>{d.label}</span>
                 {totalForDay > 0 && (
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-800 text-cyan-400'}`}>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-800 text-sky-700'}`}>
                     {totalForDay}
                   </span>
                 )}
@@ -654,7 +654,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                   >
                     <div className="min-w-0 space-y-1">
                       <div className="flex items-center gap-2 text-xs">
-                        <span className="font-mono font-bold text-cyan-600 dark:text-cyan-400">{slot.startTime} - {slot.endTime}</span>
+                        <span className="font-mono font-bold text-sky-700 dark:text-sky-400">{slot.startTime} - {slot.endTime}</span>
                         <Badge variant="slate" size="sm">{typeInfo.badge}</Badge>
                       </div>
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">{subject.name}</h4>
@@ -692,12 +692,12 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 return (
                   <div
                     key={session.id}
-                    className="p-4 rounded-2xl bg-cyan-50/80 dark:bg-cyan-950/20 border border-cyan-200 dark:border-cyan-500/30 flex items-center justify-between gap-3 shadow-xs interactive-card"
+                    className="p-4 rounded-2xl bg-sky-50/80 dark:bg-sky-950/20 border border-sky-200 dark:border-sky-500/30 flex items-center justify-between gap-3 shadow-xs interactive-card"
                     style={{ borderLeftColor: '#06B6D4', borderLeftWidth: '5px' }}
                   >
                     <div className="min-w-0 space-y-1 flex-1">
                       <div className="flex items-center gap-2 text-xs">
-                        <span className="font-mono font-bold text-cyan-700 dark:text-cyan-300">{session.startTime} - {session.endTime}</span>
+                        <span className="font-mono font-bold text-sky-700 dark:text-sky-300">{session.startTime} - {session.endTime}</span>
                         <Badge variant="cyan" size="sm">Révision</Badge>
                       </div>
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white break-words leading-snug">{session.title}</h4>
@@ -776,7 +776,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                               style={{ borderLeftColor: subject.color, borderLeftWidth: '5px' }}
                             >
                               <div className="flex items-center justify-between gap-1 text-[11px] mb-1">
-                                <span className="font-mono font-bold text-cyan-700 dark:text-cyan-400">
+                                <span className="font-mono font-bold text-sky-700 dark:text-sky-400">
                                   {slot.startTime} - {slot.endTime}
                                 </span>
                                 <Badge variant="slate" size="sm" className="text-[10px] px-1.5 py-0">
@@ -825,14 +825,14 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                           return (
                             <div
                               key={session.id}
-                              className="rounded-xl p-2.5 bg-cyan-50/80 dark:bg-cyan-950/30 hover:bg-cyan-100/60 dark:hover:bg-cyan-950/50 border border-cyan-200 dark:border-cyan-500/40 transition-all text-left shadow-xs"
+                              className="rounded-xl p-2.5 bg-sky-50/80 dark:bg-sky-950/30 hover:bg-sky-100/60 dark:hover:bg-sky-950/50 border border-sky-200 dark:border-sky-500/40 transition-all text-left shadow-xs"
                               style={{ borderLeftColor: '#06B6D4', borderLeftWidth: '5px' }}
                             >
                               <div className="flex items-center justify-between gap-1 text-[10px] mb-1">
-                                <span className="font-mono font-bold text-cyan-700 dark:text-cyan-300">
+                                <span className="font-mono font-bold text-sky-700 dark:text-sky-300">
                                   {session.startTime} - {session.endTime}
                                 </span>
-                                <span className="text-[10px] text-cyan-800 dark:text-cyan-400/70 font-semibold">
+                                <span className="text-[10px] text-sky-800 dark:text-sky-400/70 font-semibold">
                                   Révision
                                 </span>
                               </div>
@@ -841,7 +841,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                                 {session.title}
                               </h4>
 
-                              <p className="text-[10px] text-cyan-800 dark:text-cyan-400/80 mt-1 truncate font-medium">
+                              <p className="text-[10px] text-sky-800 dark:text-sky-400/80 mt-1 truncate font-medium">
                                 {subject.name} • {session.durationMinutes}m
                               </p>
                             </div>
@@ -1025,7 +1025,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
         maxWidth="lg"
       >
         <div className="space-y-4">
-          <div className="p-3 rounded-xl bg-sky-400/40 border border-sky-400/30 text-xs text-slate-300">
+          <div className="p-3 rounded-xl bg-slate-950/40 border border-sky-400/30 text-xs text-slate-300">
             Cette extraction constitue le socle fixe de votre semaine. Vos sessions de révision sont organisées harmonieusement autour de ces horaires.
           </div>
 
@@ -1098,7 +1098,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
               </div>
             </div>
           ) : (
-            <pre className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-cyan-300 font-mono text-xs leading-relaxed overflow-x-auto whitespace-pre-wrap">
+            <pre className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-sky-300 font-mono text-xs leading-relaxed overflow-x-auto whitespace-pre-wrap">
               {truthEditText || '(Aucun cours dans la source de vérité)'}
             </pre>
           )}
@@ -1177,11 +1177,11 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
             const isRecActive = selectedCombinedPacings.length === targetPacings.length &&
               targetPacings.every(id => selectedCombinedPacings.includes(id));
             return (
-              <div className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-sky-50/90 via-sky-50/50 to-sky-50/90 border border-sky-200/90 shadow-sm text-xs dark:bg-gradient-to-r dark:from-sky-400/60 dark:via-slate-900 dark:to-sky-400/40 dark:border-sky-400/40 dark:shadow-md">
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-sky-50/90 via-sky-50/50 to-sky-50/90 border border-sky-200/90 shadow-sm text-xs dark:bg-gradient-to-r dark:from-slate-950/60 dark:via-slate-900 dark:to-slate-950/40 dark:border-sky-400/40 dark:shadow-md">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
                   <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                    <div className="p-1.5 sm:p-2 rounded-xl bg-sky-400/10 text-sky-800 dark:bg-sky-400/20 dark:text-cyan-300 shrink-0">
-                      <Sparkles className="w-4 h-4 text-sky-700 dark:text-cyan-400" />
+                    <div className="p-1.5 sm:p-2 rounded-xl bg-sky-400/10 text-sky-800 dark:bg-sky-400/20 dark:text-sky-300 shrink-0">
+                      <Sparkles className="w-4 h-4 text-sky-700 dark:text-sky-400" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
@@ -1189,7 +1189,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                           Recommandation de KONAN :
                         </span>
                         {targetPacings.map(id => (
-                          <span key={id} className="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-200 dark:bg-sky-400/20 dark:text-cyan-300 dark:border-sky-400/40">
+                          <span key={id} className="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-200 dark:bg-sky-400/20 dark:text-sky-300 dark:border-sky-400/40">
                             {getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
                           </span>
                         ))}
@@ -1204,7 +1204,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowRecDiagnostic(!showRecDiagnostic)}
-                      className="px-2.5 py-1 rounded-lg border border-sky-200 hover:border-sky-300 text-sky-800 dark:border-sky-400/40 dark:text-cyan-300 text-[10px] sm:text-[11px] font-semibold flex items-center gap-1 bg-white/70 dark:bg-slate-900/60 transition-all cursor-pointer"
+                      className="px-2.5 py-1 rounded-lg border border-sky-200 hover:border-sky-300 text-sky-800 dark:border-sky-400/40 dark:text-sky-300 text-[10px] sm:text-[11px] font-semibold flex items-center gap-1 bg-white/70 dark:bg-slate-900/60 transition-all cursor-pointer"
                     >
                       <span>{showRecDiagnostic ? "Masquer le diagnostic" : "Voir le diagnostic"}</span>
                       {showRecDiagnostic ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -1230,7 +1230,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                           });
                           onTriggerPlanner();
                         }}
-                        className="px-3 py-1 rounded-lg bg-sky-400 hover:bg-sky-300 text-slate-950 font-bold text-[11px] shrink-0 flex items-center gap-1 transition-all shadow-sm active:scale-95 cursor-pointer"
+                        className="px-3 py-1 rounded-lg bg-sky-400 hover:bg-slate-700 text-slate-950 font-bold text-[11px] shrink-0 flex items-center gap-1 transition-all shadow-sm active:scale-95 cursor-pointer"
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>Appliquer</span>
@@ -1404,7 +1404,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                           isCombined
                             ? 'bg-amber-50/80 border-amber-500 ring-2 ring-amber-400/40 shadow-sm dark:bg-slate-900 dark:border-amber-400 dark:ring-1 dark:ring-amber-400/50 dark:shadow-md'
                             : isCurrent
-                              ? 'bg-sky-50/80 border-sky-400 ring-2 ring-sky-400/40 shadow-sm dark:bg-slate-900 dark:border-cyan-400 dark:ring-1 dark:ring-cyan-400/50 dark:shadow-md'
+                              ? 'bg-sky-50/80 border-sky-400 ring-2 ring-sky-400/40 shadow-sm dark:bg-slate-900 dark:border-sky-400 dark:ring-1 dark:ring-sky-400/50 dark:shadow-md'
                               : isLocked
                                 ? 'bg-slate-100/70 border-slate-200 text-slate-500 hover:border-amber-400/60 dark:bg-slate-950/40 dark:border-slate-800/80 dark:text-slate-400 dark:hover:border-amber-500/40'
                                 : isPrimaryRec
@@ -1413,7 +1413,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                         }`}
                       >
                         <div className="flex items-center justify-between gap-1 mb-1">
-                          <span className={`text-xs font-bold ${isCombined ? 'text-amber-900 dark:text-amber-300' : isCurrent ? 'text-sky-900 dark:text-cyan-300' : 'text-slate-800 dark:text-slate-200'}`}>
+                          <span className={`text-xs font-bold ${isCombined ? 'text-amber-900 dark:text-amber-300' : isCurrent ? 'text-sky-900 dark:text-sky-300' : 'text-slate-800 dark:text-slate-200'}`}>
                             {s.number}. {s.title}
                           </span>
                           <div className="flex items-center gap-1 shrink-0">
@@ -1466,10 +1466,10 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                 const isIdeaLabel = strat.number <= 2;
 
                 return (
-                  <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-sky-50/90 via-sky-50/40 to-slate-50 border border-sky-200 space-y-3.5 shadow-sm dark:bg-gradient-to-br dark:from-slate-900/90 dark:via-sky-400/40 dark:to-slate-950 dark:border-sky-400/40 dark:shadow-xl">
+                  <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-sky-50/90 via-sky-50/40 to-slate-50 border border-sky-200 space-y-3.5 shadow-sm dark:bg-gradient-to-br dark:from-slate-900/90 dark:via-slate-950/40 dark:to-slate-950 dark:border-sky-400/40 dark:shadow-xl">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-sky-400/10 border border-sky-400/30 flex items-center justify-center text-sky-800 dark:bg-cyan-500/20 dark:border-cyan-400/40 dark:text-cyan-300 font-black text-sm shrink-0">
+                        <div className="w-9 h-9 rounded-xl bg-sky-400/10 border border-sky-400/30 flex items-center justify-center text-sky-800 dark:bg-sky-500/20 dark:border-sky-400/40 dark:text-sky-300 font-black text-sm shrink-0">
                           {strat.number}
                         </div>
                         <div>
@@ -1478,14 +1478,14 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                         </div>
                       </div>
 
-                      <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-sky-800 dark:bg-slate-900 dark:border-slate-700 dark:text-cyan-300 w-fit shrink-0">
+                      <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-sky-800 dark:bg-slate-900 dark:border-slate-700 dark:text-sky-300 w-fit shrink-0">
                         {strat.badge}
                       </span>
                     </div>
 
                     <div className="space-y-2.5 text-xs">
                       <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-sm flex items-start gap-2 dark:bg-slate-950/70 dark:border-slate-800">
-                        <span className="font-bold text-sky-700 dark:text-cyan-400 uppercase tracking-wide shrink-0 text-[11px]">
+                        <span className="font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wide shrink-0 text-[11px]">
                           En bref :
                         </span>
                         <span className="font-semibold text-slate-800 dark:text-white leading-relaxed">{strat.shortSummary}</span>
@@ -1501,7 +1501,7 @@ export const ScheduleManager: React.FC<ScheduleManagerProps> = ({
                       </div>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-sky-50 border border-sky-200 text-xs text-sky-900 flex items-center gap-2.5 dark:bg-sky-400/40 dark:border-sky-400/20 dark:text-sky-200">
+                    <div className="p-3 rounded-xl bg-sky-50 border border-sky-200 text-xs text-sky-900 flex items-center gap-2.5 dark:bg-slate-950/40 dark:border-sky-400/20 dark:text-sky-200">
                       <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                       <span>
                         <strong>Calibrage algorithmique :</strong> Blocs d'étude de <strong>{strat.focusBlockDuration} min</strong> avec pause de <strong>{strat.breakBlockDuration} min</strong> et objectifs ciblés.

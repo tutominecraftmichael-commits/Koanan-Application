@@ -280,7 +280,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 )}
               </div>
               <div className="shrink-0 -mt-1 -mr-1 hidden min-[360px]:block">
-                <KonanMascot pose="notes" size={72} />
+                <KonanMascot pose="cta" size={72} />
               </div>
             </div>
             <button
@@ -355,7 +355,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
             {/* 2. Study Sessions */}
             {isCycleCompletedToday ? (
-              <div className="p-6 sm:p-8 rounded-3xl bg-emerald-50 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-900 dark:to-sky-400/40 border border-emerald-200 dark:border-emerald-500/30 text-center space-y-4 shadow-sm dark:shadow-xl">
+              <div className="p-6 sm:p-8 rounded-3xl bg-emerald-50 dark:bg-gradient-to-br dark:from-emerald-950/40 dark:via-slate-900 dark:to-slate-950/40 border border-emerald-200 dark:border-emerald-500/30 text-center space-y-4 shadow-sm dark:shadow-xl">
                 <div className="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 flex items-center justify-center mx-auto border border-emerald-200 dark:border-emerald-500/30 shadow-md">
                   <Moon className="w-7 h-7" />
                 </div>

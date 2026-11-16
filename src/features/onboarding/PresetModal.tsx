@@ -48,7 +48,7 @@ export const PresetModal: React.FC<PresetModalProps> = ({
               }}
               className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
                 isCurrent
-                  ? 'bg-sky-400/40 border-sky-400 shadow-lg shadow-sky-400/10'
+                  ? 'bg-slate-950/40 border-sky-400 shadow-lg shadow-sky-400/10'
                   : 'bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900'
               }`}
             >

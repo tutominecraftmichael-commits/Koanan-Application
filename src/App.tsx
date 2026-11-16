@@ -3059,7 +3059,7 @@ export function App() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-50 bg-white dark:bg-slate-900 border-2 border-sky-200 dark:border-sky-400/50 text-slate-900 dark:text-white px-4 py-3 rounded-2xl shadow-xl shadow-sky-400/15 dark:shadow-2xl dark:shadow-sky-400/70 text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in slide-in-from-bottom-5 duration-200 max-w-[94vw] sm:max-w-md w-auto backdrop-blur-md"
+          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-50 bg-white dark:bg-slate-900 border-2 border-sky-200 dark:border-sky-400/50 text-slate-900 dark:text-white px-4 py-3 rounded-2xl shadow-xl shadow-slate-950/15 dark:shadow-2xl dark:shadow-slate-950/70 text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in slide-in-from-bottom-5 duration-200 max-w-[94vw] sm:max-w-md w-auto backdrop-blur-md"
         >
           <div className="p-1.5 rounded-xl bg-sky-50 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 shrink-0 mt-0.5 border border-sky-200 dark:border-sky-500/30">
             <Sparkles className="w-4 h-4 text-sky-700 dark:text-sky-300" />
