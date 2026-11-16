@@ -21,7 +21,7 @@ import {
   invitationBroadcastChannel
 } from './services/storage';
 
-import { generateOptimizedStudyPlan, mergePreservingCompletedSessions, synchronizeSessionsWithExamCountdowns } from './services/plannerAlgorithm';
+import { generateOptimizedStudyPlan, mergePreservingCompletedSessions, synchronizeSessionsWithExamCountdowns, setPlannerWorkload, replanFromToday, PLANNER_VERSION } from './services/plannerAlgorithm';
 import { transitionUserState } from './services/tierTransitionService';
 import { harmonizeAndDeduplicateSlots } from './services/pdfParserService';
 import {
@@ -330,9 +330,67 @@ export function App() {
   latestStateRef.current = state;
   const needsCloud = Boolean(state.userAccount?.isLoggedIn && !state.isDemoMode);
 
+  // PLANNING ADAPTÉ À LA PROGRESSION (2026-11-16) : le planning sait, pour chaque matière avec des cours KONAN,
+  // combien de mini-leçons il reste. Matière terminée → révisions espacées (selon la méthode) au lieu de tous
+  // les jours. Calculé au démarrage (progression du compte comprise), puis après chaque séance terminée.
+  // Quand une matière vient d'être terminée, ou que le planning a été fait avec d'anciennes règles,
+  // la semaine est réorganisée à partir d'aujourd'hui (ce qui est fait reste fait).
+  const [workloadReady, setWorkloadReady] = useState(false);
+  const plannerUid = state.userAccount?.googleId || '';
+  const completedCount = state.studySessions.filter((s) => s.completed).length;
+  const subjectsKey = state.subjects.map((s) => `${s.id}:${s.name}`).join('|');
+  const tierForPlanRef = useRef<PlanTier>('free');
+  tierForPlanRef.current = effectivePlanTier;
+  useEffect(() => {
+    if (needsCloud && !cloudReady && !cloudGaveUp) return;
+    if (!plannerUid) { setWorkloadReady(true); return; }
+    let cancelled = false;
+    (async () => {
+      try {
+        const { pullLearning } = await import('./lib/curriculum/learningCloudSync');
+        if (!workloadReady) await pullLearning(plannerUid).catch(() => false); // progression des autres appareils
+        const { computeSubjectWorkloads, workloadSignature } = await import('./lib/curriculum/subjectWorkload');
+        const st = latestStateRef.current;
+        const map = await computeSubjectWorkloads(plannerUid, studentGradeRaw, st.subjects);
+        if (cancelled) return;
+        setPlannerWorkload(map);
+        const sigKey = `konan_planner_sig_${plannerUid}`;
+        const verKey = `konan_planner_version_${plannerUid}`;
+        let prevSig = '';
+        let prevVer = 0;
+        try { prevSig = localStorage.getItem(sigKey) || ''; prevVer = Number(localStorage.getItem(verKey) || 0); } catch { /* rien */ }
+        const sig = workloadSignature(map);
+        // Une matière vient de passer de « leçons à faire » à « tout est fait » ?
+        const before = new Map(prevSig.split('|').filter(Boolean).map((x) => { const i = x.lastIndexOf(':'); return [x.slice(0, i), x.slice(i + 1)] as const; }));
+        const justFinished = Object.keys(map).filter((id) => map[id].newLessonsLeft === 0 && before.get(id) === 'new');
+        const outdatedPlan = prevVer < PLANNER_VERSION;
+        try { localStorage.setItem(sigKey, sig); localStorage.setItem(verKey, String(PLANNER_VERSION)); } catch { /* rien */ }
+        if ((outdatedPlan || justFinished.length) && st.subjects.length && st.classSlots.length && st.currentWeekMonday) {
+          setState((prev) => {
+            const fresh = generateOptimizedStudyPlan(prev.subjects, prev.classSlots, prev.preferences, tierForPlanRef.current);
+            const next: AppState = { ...prev, studySessions: replanFromToday(prev.studySessions, fresh) };
+            if (next.userAccount?.googleId && !next.isDemoMode) saveUserState(next.userAccount.googleId, next);
+            return next;
+          });
+          // Ancien planning refait en silence ; matière terminée : on prévient l'élève
+          const names = justFinished.map((id) => st.subjects.find((s) => s.id === id)?.name).filter(Boolean);
+          if (names.length) showToast(`Bravo, tu as terminé les mini-leçons de ${names.join(', ')} ! J’ai réorganisé ta semaine : place aux révisions espacées.`, 7000);
+        }
+      } catch (err) {
+        console.warn('Progression pour le planning indisponible :', err);
+      } finally {
+        if (!cancelled) setWorkloadReady(true);
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plannerUid, cloudReady, cloudGaveUp, needsCloud, completedCount, subjectsKey, studentGradeRaw]);
+
   // Bascule automatique de semaine (rollover d'agenda) sans pop-up de bilan
   useEffect(() => {
     if (needsCloud && !cloudReady && !cloudGaveUp) return;
+    // La nouvelle semaine est faite avec la progression de l'élève (sinon une matière terminée revenait tous les jours)
+    if (!workloadReady) return;
     // La réputation des jours passés est comptée AVANT que la nouvelle semaine ne remplace les séances
     // (seulement avec la copie du cloud : jamais sur un planning en retard)
     const canSettle = !needsCloud || cloudReady;
@@ -347,7 +405,7 @@ export function App() {
         saveUserState(state.userAccount.googleId, cleanNextState);
       }
     }
-  }, [state.studySessions.length, state.currentWeekMonday, cloudReady, cloudGaveUp, needsCloud]);
+  }, [state.studySessions.length, state.currentWeekMonday, cloudReady, cloudGaveUp, needsCloud, workloadReady]);
 
   // Repli vers Gratuit UNIQUEMENT pour les comptes qui tenteraient d'activer 'plus' (qui reste en liste d'attente)
   useEffect(() => {

@@ -25,12 +25,58 @@ interface AvailableSlot {
   duration: number; // minutes
 }
 
+/**
+ * Où en est l'élève dans les cours KONAN d'une matière (calculé à part, voir subjectWorkload.ts) :
+ * - hasCourse : KONAN a des mini-leçons pour cette matière et cette classe ;
+ * - newLessonsLeft : mini-leçons pas encore faites ;
+ * - lastStudiedDaysAgo : il y a combien de jours la matière a été travaillée (null : jamais).
+ */
+export interface SubjectWorkload {
+  hasCourse: boolean;
+  newLessonsLeft: number;
+  lastStudiedDaysAgo?: number | null;
+}
+export type SubjectWorkloadMap = Record<string, SubjectWorkload>; // clé : identifiant de la matière de l'élève
+
+/**
+ * Progression connue de l'élève, tenue à jour par l'application (App.tsx) : tous les endroits qui refont le
+ * planning (changement de semaine, matières, préférences…) en profitent sans rien changer chez eux.
+ */
+let currentWorkload: SubjectWorkloadMap = {};
+export function setPlannerWorkload(map: SubjectWorkloadMap | null | undefined): void {
+  currentWorkload = map || {};
+}
+export function getPlannerWorkload(): SubjectWorkloadMap {
+  return currentWorkload;
+}
+
+/** Version des règles du planning : un planning fait avec une version plus ancienne est refait une fois. */
+export const PLANNER_VERSION = 2;
+
+/**
+ * Révisions espacées d'une matière dont toutes les mini-leçons sont faites, selon la méthode choisie :
+ * - Rappel actif & révision espacée : 3 révisions, de plus en plus espacées (J+1, J+3, J+7) ;
+ * - autres méthodes : 2 révisions par semaine, à 2 ou 3 jours d'écart.
+ */
+export function reviewRhythmFor(pacing?: string): { perWeek: number; gaps: number[] } {
+  return pacing === 'active_recall_spaced' ? { perWeek: 3, gaps: [1, 2, 4] } : { perWeek: 2, gaps: [2, 3] };
+}
+
+/** Mini-leçons faites pendant une séance de cette durée (mêmes repères que les séances guidées). */
+function lessonsPerSession(minutes: number): number {
+  if (minutes >= 75) return 6;
+  if (minutes >= 45) return 4;
+  return 3;
+}
+
 export function generateOptimizedStudyPlan(
   subjects: Subject[],
   classes: ClassSlot[],
   preferences: StudyPreferences,
-  userOrTier?: PlanTier | { tier?: PlanTier; planTier?: PlanTier; isPro?: boolean }
+  userOrTier?: PlanTier | { tier?: PlanTier; planTier?: PlanTier; isPro?: boolean },
+  options: { workload?: SubjectWorkloadMap; now?: Date } = {}
 ): StudySession[] {
+  const workload = options.workload ?? currentWorkload;
   // Préparation aux devoirs/examens ouverte seulement pour certaines classes (2nde A, 2nde C) :
   // ailleurs, les dates d'épreuve sont ignorées
   const examGrade = preferences.gradeLevel || preferences.academicLevel;
@@ -90,7 +136,7 @@ export function generateOptimizedStudyPlan(
       const daysUntilExam = getDaysRemaining(sub.examDate);
       if (daysUntilExam !== null) {
         if (daysUntilExam < 0) {
-          examUrgencyFactor = 0.7; // Épreuve déjà passée : ne pas surcharger la semaine
+          examUrgencyFactor = 1.0; // Épreuve déjà passée : la matière redevient une matière comme les autres
         } else if (daysUntilExam <= 3) {
           examUrgencyFactor = 1.45; // Urgence J-3 : surpondération équilibrée
         } else if (daysUntilExam <= 7) {
@@ -105,6 +151,9 @@ export function generateOptimizedStudyPlan(
 
     // Formule basée sur la difficulté cognitive, le coefficient et l'urgence des examens/devoirs (si Pro/Plus)
     const rawScore = (Math.pow(sub.difficulty, 1.35) * Math.pow(sub.coefficient, 1.25)) * examUrgencyFactor;
+    // Où en est l'élève : nouvelles leçons à faire, ou tout est fait (révisions espacées), ou inconnu
+    const w = workload[sub.id];
+    const mode: 'new' | 'review' | 'free' = w?.hasCourse ? (w.newLessonsLeft > 0 ? 'new' : 'review') : 'free';
     return {
       subject: sub,
       score: rawScore,
@@ -112,6 +161,12 @@ export function generateOptimizedStudyPlan(
       scheduledCount: 0,
       lastScheduledDay: -999,
       topicIndex: 0,
+      mode,
+      newLessonsLeft: w?.newLessonsLeft ?? 0,
+      lastStudiedDaysAgo: w?.lastStudiedDaysAgo ?? null,
+      /** Premier jour (en jours à partir d'aujourd'hui) où la matière peut revenir */
+      nextAllowedAhead: 0,
+      minGap: 1,
     };
   });
 
@@ -130,11 +185,27 @@ export function generateOptimizedStudyPlan(
 
   const totalSessionsTarget = targetSessionsPerDay * daysToSchedule.length;
 
-  // Répartition proportionnelle des sessions cibles par matière
+  // Répartition proportionnelle des sessions cibles par matière, puis ajustée à la progression de l'élève :
+  // - tout est fait : seulement les révisions espacées de la méthode (2 ou 3 dans la semaine) ;
+  // - il reste N leçons : pas plus de séances qu'il n'en faut pour les faire, plus une révision ;
+  // - jamais plus d'une séance par jour (sauf s'il n'y a qu'une ou deux matières).
+  const review = reviewRhythmFor(effectivePreferences.pacing);
+  const perSession = lessonsPerSession(sessionBlock);
+  const onePerDay = revisableSubjects.length >= 3;
   subjectScores.forEach(item => {
     const ratio = totalScore > 0 ? item.score / totalScore : 1 / revisableSubjects.length;
     const computed = Math.round(ratio * totalSessionsTarget);
-    item.targetSessions = Math.max(1, computed);
+    let target = Math.max(1, computed);
+    if (item.mode === 'review') target = Math.min(target, review.perWeek);
+    else if (item.mode === 'new') target = Math.min(target, Math.ceil(item.newLessonsLeft / perSession) + 1);
+    if (onePerDay) target = Math.min(target, daysToSchedule.length);
+    item.targetSessions = Math.max(1, target);
+    // Écart minimal entre deux séances de la matière, pour étaler sur la semaine (2 séances : lundi et jeudi…)
+    item.minGap = item.mode === 'review' ? review.gaps[0] : Math.max(1, Math.min(3, Math.floor(daysToSchedule.length / item.targetSessions)));
+    // Révision : la première vient au bon moment après la dernière fois où la matière a été travaillée
+    if (item.mode === 'review' && item.lastStudiedDaysAgo !== null) {
+      item.nextAllowedAhead = Math.max(0, review.gaps[0] - item.lastStudiedDaysAgo);
+    }
   });
 
   // 2. Détection précise des créneaux libres par jour
@@ -243,11 +314,8 @@ export function generateOptimizedStudyPlan(
   });
 
   // 3. Calcul de la date de référence (Lundi de la semaine courante ancré à midi pour éliminer tout décalage de fuseau horaire)
-  const referenceDate = new Date();
+  const referenceDate = options.now ? new Date(options.now) : new Date();
   const currentDayIndex = (referenceDate.getDay() + 6) % 7; // 0 = Lundi, 6 = Dimanche
-  const mondayDate = new Date(referenceDate);
-  mondayDate.setDate(referenceDate.getDate() - currentDayIndex);
-  mondayDate.setHours(12, 0, 0, 0);
 
   const sessionTypeCycle: SessionType[] = [
     'spaced_review',
@@ -261,10 +329,13 @@ export function generateOptimizedStudyPlan(
   const generatedSessions: StudySession[] = [];
   const subjectPool = [...subjectScores];
 
-  // 4. Planification intelligente jour par jour : GARANTIE DE COUVERTURE COMPLÈTE & ALTERNANCE
-  for (const day of daysToSchedule) {
+  // 4. Planification jour par jour, dans l'ordre réel des jours à venir (aujourd'hui, demain…) :
+  //    l'écart entre deux séances d'une même matière se compte en vrais jours.
+  const chronologicalDays = [...daysToSchedule].sort((a, b) => ((a - currentDayIndex + 7) % 7) - ((b - currentDayIndex + 7) % 7));
+  for (const day of chronologicalDays) {
     const slots = dailyFreeSlots[day];
     if (!slots || slots.length === 0) continue;
+    const ahead = (day - currentDayIndex + 7) % 7; // 0 = aujourd'hui
 
     // Si l'étudiant est du soir, ordonner les créneaux libres pour favoriser la fin d'après-midi / soirée
     const sortedSlots = [...slots].sort((a, b) => {
@@ -294,6 +365,7 @@ export function generateOptimizedStudyPlan(
 
     let daySessionsCount = 0;
     const scheduledSubjectsToday = new Set<string>();
+    let lastSubjectToday: string | null = null;
 
     for (const slot of sortedSlots) {
       if (daySessionsCount >= targetSessionsPerDay) break;
@@ -306,29 +378,36 @@ export function generateOptimizedStudyPlan(
         // 2. RÈGLE STRICTE : INTERDICTION ABSOLUE de réviser une matière dont l'épreuve est déjà passée (daysToExam < 0) !
         // 3. Priorité absolue aux épreuves imminentes (J-1 ou J-2) pour réviser avant l'épreuve
         // 4. Si c'est le jour J de l'épreuve, ne pas réviser après l'heure de l'épreuve
+        // Matière qu'on peut placer ici ?
+        // - jour de l'épreuve : jamais après l'heure de l'épreuve (l'élève a déjà composé) ;
+        // - épreuve PASSÉE : la matière redevient normale (avant : elle était retirée du planning pour
+        //   toujours, et les créneaux se remplissaient avec une seule matière, 4 fois par jour) ;
+        // - préparation au devoir : une séance chaque jour, en priorité ;
+        // - sinon : pas plus que ce que demande la progression de l'élève, et pas avant le jour prévu
+        //   par l'espacement (révisions espacées, séances étalées dans la semaine).
+        const isPrepToday = (item: (typeof subjectPool)[number]) => isExamFeatureAllowed
+          && Boolean(item.subject.examDate && item.subject.examType)
+          && examPrepModeFor(getDaysRemainingFrom(item.subject.examDate, sessionDate), item.subject) !== null;
+        const canPlace = (item: (typeof subjectPool)[number], allowSecondToday: boolean): boolean => {
+          const daysToExam = getDaysRemainingFrom(item.subject.examDate, sessionDate);
+          if (daysToExam === 0) {
+            const examMin = item.subject.examTime ? parseTimeToMinutes(item.subject.examTime) : 720;
+            if (slotCurrentStart >= examMin) return false;
+          }
+          const prep = isPrepToday(item);
+          if (scheduledSubjectsToday.has(item.subject.id)) {
+            // 2e séance le même jour : seulement s'il n'y a qu'une ou deux matières, jamais deux fois de suite,
+            // jamais pour une préparation de devoir ni pour une révision espacée
+            if (!allowSecondToday || prep || item.mode === 'review' || lastSubjectToday === item.subject.id) return false;
+            return item.mode === 'free' || item.scheduledCount < item.targetSessions;
+          }
+          if (prep) return true;
+          if (item.mode !== 'free' && item.scheduledCount >= item.targetSessions) return false;
+          return ahead >= item.nextAllowedAhead;
+        };
+
         let bestCandidate = subjectPool
-          .filter(item => {
-            if (scheduledSubjectsToday.has(item.subject.id)) return false;
-
-            const daysToExam = getDaysRemainingFrom(item.subject.examDate, sessionDate);
-            // Épreuve passée par rapport à ce jour : STRICTEMENT INTERDIT de réviser pour une épreuve déjà passée !
-            if (daysToExam !== null && daysToExam < 0) {
-              return false;
-            }
-
-            // Jour J de l'épreuve : si l'heure d'épreuve est passée, l'étudiant a déjà composé !
-            if (daysToExam === 0) {
-              if (item.subject.examTime) {
-                const examMin = parseTimeToMinutes(item.subject.examTime);
-                if (slotCurrentStart >= examMin) return false;
-              } else {
-                // Par défaut, si pas d'heure précisée, considérer que l'épreuve a eu lieu en matinée (12h)
-                if (slotCurrentStart >= 720) return false;
-              }
-            }
-
-            return true;
-          })
+          .filter(item => canPlace(item, false))
           .sort((a, b) => {
             const aDaysToExam = getDaysRemainingFrom(a.subject.examDate, sessionDate);
             const bDaysToExam = getDaysRemainingFrom(b.subject.examDate, sessionDate);
@@ -371,39 +450,17 @@ export function generateOptimizedStudyPlan(
             if (aIsExamSoon && !bIsExamSoon) return -1;
             if (!aIsExamSoon && bIsExamSoon) return 1;
 
-            const aDistance = day - a.lastScheduledDay;
-            const bDistance = day - b.lastScheduledDay;
+            const aDistance = ahead - a.lastScheduledDay;
+            const bDistance = ahead - b.lastScheduledDay;
             if (aDistance !== bDistance) return bDistance - aDistance;
 
             return b.score - a.score;
           })[0];
 
-        // Si toutes les matières ont déjà été étudiées aujourd'hui, autoriser une 2e session pour une matière majeure ENCORE ACTIVE
-        if (!bestCandidate) {
+        // Une ou deux matières seulement : une 2e séance le même jour est permise (jamais deux fois de suite)
+        if (!bestCandidate && !onePerDay) {
           bestCandidate = subjectPool
-            .filter(item => {
-              if (isExamFeatureAllowed) {
-                const daysToExam = getDaysRemainingFrom(item.subject.examDate, sessionDate);
-                // RÈGLE STRICTE : INTERDICTION ABSOLUE de réviser une matière dont l'épreuve est déjà passée
-                if (daysToExam !== null && daysToExam < 0) {
-                  return false;
-                }
-                // Ne jamais réviser après l'épreuve le jour J
-                if (daysToExam === 0) {
-                  if (item.subject.examTime) {
-                    return slotCurrentStart < parseTimeToMinutes(item.subject.examTime);
-                  }
-                  return slotCurrentStart < 720;
-                }
-                // Préparation au devoir : UNE séance par jour (jamais deux sujets de 2 h le même jour)
-                // Uniquement si une date ET un type d'évaluation sont saisis
-                const hasExam = Boolean(item.subject.examDate && item.subject.examType);
-                if (hasExam && scheduledSubjectsToday.has(item.subject.id) && examPrepModeFor(daysToExam, item.subject) !== null) {
-                  return false;
-                }
-              }
-              return true;
-            })
+            .filter(item => canPlace(item, true))
             .sort((a, b) => {
               const aDeficit = a.targetSessions - a.scheduledCount;
               const bDeficit = b.targetSessions - b.scheduledCount;
@@ -412,6 +469,7 @@ export function generateOptimizedStudyPlan(
             })[0];
         }
 
+        // Rien d'utile à placer ici : le créneau reste libre (jamais de séance « pour remplir »)
         if (!bestCandidate) break;
 
         const subject = bestCandidate.subject;
@@ -419,7 +477,9 @@ export function generateOptimizedStudyPlan(
           ? subject.topics[bestCandidate.topicIndex % subject.topics.length]
           : 'Chapitre clé & Fondamentaux';
 
-        const sessionType = sessionTypeCycle[bestCandidate.scheduledCount % sessionTypeCycle.length];
+        // Matière terminée : séance de révision espacée (KONAN reprend d'abord les leçons les plus ratées)
+        const isSpacedReview = bestCandidate.mode === 'review';
+        const sessionType: SessionType = isSpacedReview ? 'spaced_review' : sessionTypeCycle[bestCandidate.scheduledCount % sessionTypeCycle.length];
         // Évaluation active uniquement si la date ET le type d'évaluation ont été explicitement saisis
         const hasExamScheduled = Boolean(subject.examDate && subject.examType);
         const daysUntilExamOnDate = (isExamFeatureAllowed && hasExamScheduled)
@@ -562,6 +622,14 @@ export function generateOptimizedStudyPlan(
           finalTitle = text.title;
           finalDesc = text.description;
           finalObjectives = text.objectives;
+        } else if (isSpacedReview) {
+          finalTitle = `Révision espacée : ${displaySubjectName}`;
+          finalDesc = `Tu as terminé les mini-leçons de ${displaySubjectName}. KONAN te fait réviser au bon moment pour ne rien oublier, en commençant par les leçons où tu as fait le plus d’erreurs.`;
+          finalObjectives = [
+            'Reprendre de tête les leçons déjà vues',
+            'Refaire les questions ratées jusqu’à les réussir',
+            `Garder ${displaySubjectName} en mémoire jusqu’au jour du devoir`,
+          ];
         }
 
         generatedSessions.push({
@@ -590,9 +658,14 @@ export function generateOptimizedStudyPlan(
         // Mise à jour des compteurs
         daySessionsCount++;
         scheduledSubjectsToday.add(subject.id);
+        lastSubjectToday = subject.id;
         bestCandidate.scheduledCount++;
-        bestCandidate.lastScheduledDay = day;
+        bestCandidate.lastScheduledDay = ahead; // en jours à partir d'aujourd'hui
         bestCandidate.topicIndex++;
+        // Prochain jour possible : écart de la révision espacée (de plus en plus long), sinon étalement régulier
+        bestCandidate.nextAllowedAhead = ahead + (isSpacedReview
+          ? review.gaps[Math.min(bestCandidate.scheduledCount, review.gaps.length - 1)]
+          : bestCandidate.minGap);
 
         // Avancement du créneau horaire avec la pause spécifique
         slotCurrentStart += (actualDuration + sessionBreak);
@@ -685,6 +758,29 @@ export function mergePreservingCompletedSessions(
     if (a.dayOfWeek !== b.dayOfWeek) return a.dayOfWeek - b.dayOfWeek;
     return parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime);
   });
+}
+
+/**
+ * Réorganise la semaine À PARTIR D'AUJOURD'HUI (progression qui change, ancien planning à refaire) :
+ * - les jours passés restent tels quels (faits ou manqués : la réputation les a déjà comptés) ;
+ * - les séances déjà faites aujourd'hui restent, et le nouveau planning n'en remet pas par-dessus
+ *   (même matière ou même heure) ;
+ * - les séances pas encore faites d'aujourd'hui et des jours suivants sont remplacées par le nouveau planning.
+ */
+export function replanFromToday(existing: StudySession[], fresh: StudySession[], now: Date = new Date()): StudySession[] {
+  const ymd = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const today = ymd(now);
+  const kept = (existing || []).filter((s) => (s.date ? s.date < today : false) || (s.date === today && s.completed));
+  const doneToday = kept.filter((s) => s.date === today);
+  const overlaps = (a: StudySession, b: StudySession) =>
+    parseTimeToMinutes(a.startTime) < parseTimeToMinutes(b.endTime) && parseTimeToMinutes(b.startTime) < parseTimeToMinutes(a.endTime);
+  const next = (fresh || []).filter((f) => {
+    if (!f.date || f.date < today) return false;
+    if (f.date !== today) return true;
+    if (f.startTime && parseTimeToMinutes(f.startTime) < now.getHours() * 60 + now.getMinutes()) return false; // heure déjà passée
+    return !doneToday.some((d) => d.subjectId === f.subjectId || overlaps(d, f));
+  });
+  return [...kept, ...next].sort((a, b) => (a.date || '').localeCompare(b.date || '') || parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime));
 }
 
 /**
