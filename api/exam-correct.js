@@ -7,11 +7,12 @@
  *
  * Les photos ne sont pas gardées : elles sont envoyées à Gemini pour la correction, puis oubliées.
  * La note sur 20 est RECALCULÉE ici à partir des points de chaque exercice (jamais recopiée telle quelle).
- * Limite : 4 corrections par jour et par élève.
+ * Limite : 1 correction par jour et par élève (2026-11-17, comme les sujets). Une copie illisible ou une
+ * panne de l'IA n'est pas décomptée : l'élève peut renvoyer ses photos.
  */
 import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode } from './_examCommon.js';
 
-export const DAILY_CORRECTIONS = 4;
+export const DAILY_CORRECTIONS = 1;
 const IMAGE_TYPES = /^image\/(jpeg|jpg|png|webp)$/;
 const MAX_IMAGES = 4;
 

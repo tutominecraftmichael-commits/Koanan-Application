@@ -172,7 +172,7 @@ const fmt = (sec: number) => {
 };
 
 const ERRORS: Record<string, string> = {
-  DAILY_LIMIT: 'Tu as atteint la limite du jour (4 sujets et 4 corrections). Reviens demain !',
+  DAILY_LIMIT: 'Tu as déjà eu ton sujet ou ta correction du jour (1 sujet et 1 correction par jour). Reviens demain !',
   UNAUTHORIZED: 'Connecte-toi à ton compte pour utiliser les sujets de devoir.',
   TOKEN_EXPIRED: 'Ta connexion a expiré : ferme et rouvre KONAN, puis réessaie.',
   AI_UNAVAILABLE: 'L’IA de KONAN ne répond pas pour le moment, malgré plusieurs essais. Rien n’est décompté de ta limite du jour : réessaie dans quelques minutes.',

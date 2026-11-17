@@ -7,12 +7,13 @@
  *
  * Le modèle (structure, points, types d'exercices, barème) vient de api/_examTemplates.js.
  * Le nombre d'exercices et leurs points sont IMPOSÉS par le modèle (jamais laissés à l'IA).
- * Limite : 4 sujets par jour et par élève.
+ * Limite : 1 sujet par jour et par élève (choix du fondateur, 2026-11-17 : coût de l'IA maîtrisé ;
+ * le planning ne propose de toute façon un sujet de 2 h qu'un jour sur trois). Un échec n'est pas décompté.
  */
 import { getExamTemplate, canonicalExamGrade, COMMON_STYLE_RULES } from './_examTemplates.js';
 import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode } from './_examCommon.js';
 
-export const DAILY_SUJETS = 4;
+export const DAILY_SUJETS = 1;
 
 export function buildSujetPrompt({ template, classe, gradeId, matiere, chapitres }) {
   const structure = template.exercices
