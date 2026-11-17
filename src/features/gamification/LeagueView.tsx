@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowDown, ArrowUp, Info, Lock, ShieldCheck, Trophy, X } from 'lucide-react';
 import type { LeagueBoard } from '../../services/leagueApi';
 import { DIVISION_STYLES } from '../../services/leagueApi';
+import { FallingSnow, FrostOverlay, IceStyles, Snowflake } from './Ice';
 
 /**
  * Ligue : carte du tableau de bord + écran du classement de la semaine.
@@ -170,7 +171,7 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Ta réputation : {reputation} %</p>
-      <p>Séance de révision faite : <b>+1 %</b> tout de suite. Série d’entraînement terminée : <b>+1 %</b> (5 séries comptées par jour au plus). Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, tu vois toujours le classement, mais ta division est <b>gelée</b> : ni montée ni descente tant que tu ne repasses pas au-dessus de 80 %.</p>
+      <p>Séance de révision faite : <b>+1 %</b> tout de suite. Série d’entraînement terminée : <b>+1 %</b> (5 séries comptées par jour au plus). Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, ta ligue est <b>gelée</b> : tu vois toujours le classement, mais tes XP n’y comptent plus (ils restent dans ton total) et ta division ne bouge plus. Pour dégeler, chaque leçon terminée te rend <b>+3 %</b>.</p>
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Fin de semaine</p>
@@ -206,6 +207,13 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
             <polygon points="32,10 54,22 54,48 32,60 10,48 10,22" fill={HEX_COLORS[board.division] || HEX_COLORS[3]} />
             <path d="M24 26h16v6a8 8 0 0 1-16 0z M28 44h8 M32 40v4" fill="none" stroke="#141A28" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M24 28h-4v2a4 4 0 0 0 4 4 M40 28h4v2a4 4 0 0 1-4 4" fill="none" stroke="#141A28" strokeWidth="2.5" strokeLinecap="round" />
+            {/* Ligue gelée : le badge est pris dans la glace */}
+            {board.frozen && (
+              <g>
+                <polygon points="32,2 61,18 61,52 32,68 3,52 3,18" fill="#A5F3FC" fillOpacity="0.55" stroke="#67E8F9" strokeWidth="2.5" strokeLinejoin="round" className="konan-ice-pulse" />
+                <path d="M14 22l10 8M50 20l-8 10M32 66V54M10 46l9-4M54 46l-9-4" stroke="#ECFEFF" strokeWidth="1.6" strokeLinecap="round" />
+              </g>
+            )}
           </svg>
           <div className="min-w-0 flex-1">
             <span className="konan-kicker">Ligue de la semaine</span>
@@ -230,11 +238,19 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
         </div>
         {showRules && <LeagueRules reputation={board.reputation} />}
 
-        {/* Réputation de 80 % ou moins : classement visible, division gelée */}
+        {/* Réputation de 80 % ou moins : ligue gelée (glace animée), XP gelés, comment dégeler */}
+        <IceStyles />
         {board.frozen && (
-          <div className="rounded-2xl border-2 p-3 flex items-start gap-2 text-sm font-bold bg-amber-50 border-amber-300 text-amber-900 dark:bg-amber-500/10 dark:border-amber-500/40 dark:text-amber-200">
-            <Lock className="w-5 h-5 shrink-0" />
-            <span>Division gelée : ta réputation est à {board.reputation} %. Tu restes dans le classement, mais tant qu’elle est à 80 % ou moins, tu ne peux pas monter de division. Fais tes séances pour repasser au-dessus de 80 % avant la fin de la semaine.</span>
+          <div className="relative overflow-hidden rounded-2xl border-2 border-cyan-300 dark:border-cyan-300/50 bg-gradient-to-br from-cyan-50 to-sky-100 dark:from-cyan-400/10 dark:to-sky-500/10 p-3.5 flex items-start gap-3 text-cyan-950 dark:text-cyan-50">
+            <FallingSnow />
+            <span className="relative shrink-0 w-10 h-10 rounded-full bg-white/80 dark:bg-cyan-300/15 border border-cyan-300 dark:border-cyan-300/40 flex items-center justify-center text-cyan-600 dark:text-cyan-200">
+              <Snowflake size={24} />
+            </span>
+            <span className="relative text-sm leading-snug">
+              <b className="block text-[15px]">Ta ligue est gelée</b>
+              Ta réputation est à {board.reputation} %. Tant qu’elle reste à 80 % ou moins, tes XP <b>ne comptent plus dans le classement</b> et tu ne peux pas monter de division.
+              <span className="block mt-1 font-bold">Pour dégeler : termine tes leçons, chacune te rend <span className="text-cyan-700 dark:text-cyan-200">+3 %</span> de réputation.</span>
+            </span>
           </div>
         )}
 
@@ -272,10 +288,12 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
             return (
               <li
                 key={`${row.rank}-${row.name}`}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl ${row.me
+                className={`relative isolate overflow-hidden flex items-center gap-3 px-3 py-2.5 rounded-2xl ${row.me
                   ? 'bg-sky-50 dark:bg-sky-400/10 border-[1.5px] border-sky-400'
                   : 'bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-transparent'}`}
               >
+                {/* Ligue gelée : givre sur ta ligne */}
+                {row.me && board.frozen && <FrostOverlay className="-z-10" />}
                 <span className={`w-6 text-center text-[15px] font-extrabold tabular-nums ${row.me ? 'text-sky-700 dark:text-sky-300' : rankColor(row.rank, zone)}`}>{row.rank}</span>
                 {row.avatar ? (
                   <img src={row.avatar} alt="" loading="lazy" referrerPolicy="no-referrer" className={`w-9 h-9 rounded-full object-cover shrink-0 ${row.me ? 'ring-2 ring-sky-400' : 'ring-1 ring-slate-200 dark:ring-white/10'}`} />
@@ -295,14 +313,17 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
                     {row.classLabel}{row.me && gapToNext ? `${row.classLabel ? ' · ' : ''}encore ${gapToNext} XP pour la ${ordinal(row.rank - 1)} place` : ''}
                   </span>
                 </span>
-                <span className="text-sm font-extrabold text-slate-900 dark:text-white tabular-nums">{row.xp} XP</span>
+                <span className={`relative inline-flex items-center gap-1 text-sm font-extrabold tabular-nums ${row.me && board.frozen ? 'text-cyan-700 dark:text-cyan-200' : 'text-slate-900 dark:text-white'}`}>
+                  {row.me && board.frozen && <Snowflake size={15} />}
+                  {row.xp} XP
+                </span>
               </li>
             );
           })}
           {!size && <li className="px-3 py-6 rounded-2xl bg-white dark:bg-[#0F1626] text-center text-sm text-slate-500">Ton groupe se remplit : gagne des XP pour lancer le classement !</li>}
         </ol>
         <p className="text-xs text-center text-slate-500 dark:text-slate-400 pb-4">
-          Groupe de {size} élève{size > 1 ? 's' : ''} (30 au maximum). Les XP sont vérifiés par KONAN. À 80 % de réputation ou moins, tu restes dans le classement mais ta division est gelée.
+          Groupe de {size} élève{size > 1 ? 's' : ''} (30 au maximum). Les XP sont vérifiés par KONAN. Les XP du classement repartent de 0 chaque semaine (et donc dans ta nouvelle division) ; ton total est dans ton profil. À 80 % de réputation ou moins, ta ligue est gelée.
         </p>
       </div>
     </div>

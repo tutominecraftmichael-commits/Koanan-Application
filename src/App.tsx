@@ -840,7 +840,13 @@ export function App() {
       setLeagueError(r.success ? '' : String(r.error || ''));
       if (!r.success) return;
       if (r.board) setLeagueBoard(r.board);
-      const done = [...(r.accepted || []), ...(r.rejected || []).map((x) => x.id)];
+      // Gains refusés par le serveur : avant, ils disparaissaient sans un mot (« mes XP ne comptent pas »)
+      const refused = r.rejected || [];
+      if (refused.length) {
+        console.warn('[ligue] gains refusés :', refused);
+        showToast(`${refused.length > 1 ? `${refused.length} gains d’XP n’ont` : 'Un gain d’XP n’a'} pas été compté${refused.length > 1 ? 's' : ''} dans la ligue (${refused[0].reason}).`, 7000);
+      }
+      const done = [...(r.accepted || []), ...refused.map((x) => x.id)];
       if (done.length) updateGamification((prev) => clearPendingEvents(prev.gamification, done));
     } finally {
       leagueBusy.current = false;
@@ -2059,7 +2065,7 @@ export function App() {
     showToast('Votre planning d’étude a été réorganisé avec succès !');
   };
 
-  const handleToggleSessionComplete = (sessionId: string, bypassDayCheck: boolean = false, mistakes?: number) => {
+  const handleToggleSessionComplete = (sessionId: string, bypassDayCheck: boolean = false, mistakes?: number, noXp?: boolean) => {
     const target = state.studySessions.find(s => s.id === sessionId);
     if (!target) return;
 
@@ -2093,6 +2099,8 @@ export function App() {
           actualDurationMinutes: willBeCompleted ? (s.actualDurationMinutes || s.durationMinutes) : undefined,
           // Erreurs de la séance (cours guidé, 30 questions) : chacune retire 1 XP
           ...(mistakes !== undefined ? { mistakes: Math.max(0, Math.round(mistakes)) } : {}),
+          // Devoir rendu hors temps (plus de 2 h + 15 min) : séance faite, mais sans XP ni points de ligue
+          ...(willBeCompleted && noXp ? { noXp: true } : {}),
         }
         : s
     );
@@ -2275,12 +2283,16 @@ export function App() {
    * Callback de complétion du Tuteur Interactif Duolingo / Séries de préparation examen :
    * Valide la séance, incrémente les statistiques et affiche la célébration avec le temps exact réalisé.
    */
-  const handleCompleteTutorSession = (studySessionId?: string, durationSec?: number, mistakes?: number) => {
+  const handleCompleteTutorSession = (studySessionId?: string, durationSec?: number, mistakes?: number, noXp?: boolean) => {
     if (studySessionId) {
-      handleToggleSessionComplete(studySessionId, true, mistakes);
+      handleToggleSessionComplete(studySessionId, true, mistakes, noXp);
     }
     setActiveTutorSession(null);
     setActiveView('dashboard');
+    if (noXp) {
+      showToast('Devoir validé. Rendu hors temps : pas de XP cette fois. Garde un œil sur le chrono la prochaine fois !', 7000);
+      return;
+    }
     const timeInfo = durationSec ? ` en exactement ${formatExactDurationFrench(durationSec)}` : '';
     showToast(`Félicitations ! Séance validée avec succès${timeInfo} dans ton tuteur interactif KONAN !`, 7000);
   };
@@ -2667,7 +2679,7 @@ export function App() {
               userUid={state.userAccount?.googleId}
               // Tuiles de la maquette : ligue (rang + division, élèves admis dans la ligue) et réputation
               leagueSummary={gamificationEnabled && gradeIsInLeague
-                ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze' }
+                ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze', frozen: Boolean(leagueBoard?.frozen) }
                 : null}
               reputation={gamificationEnabled ? (leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) : undefined}
             />
@@ -2861,9 +2873,9 @@ export function App() {
                 setActiveExamSession(null);
                 setActiveView('dashboard');
               }}
-              onComplete={(sessionId: string) => {
+              onComplete={(sessionId: string, opts?: { noXp?: boolean }) => {
                 setActiveExamSession(null);
-                handleCompleteTutorSession(sessionId);
+                handleCompleteTutorSession(sessionId, undefined, undefined, opts?.noXp);
               }}
             />
           )
@@ -2974,6 +2986,8 @@ export function App() {
 
         onUpdateProfile={handleUpdateProfile}
         nameChangedAt={state.nameChangedAt}
+        // Total de tous les XP : le plus grand entre le téléphone et le serveur de la ligue (tous appareils confondus)
+        totalXp={gamificationEnabled ? Math.max(gamificationOf(state.gamification).xp, leagueBoard?.totalXp ?? 0) : undefined}
         onUpdateAvatar={state.userAccount ? handleUpdateAvatar : undefined}
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}

@@ -19,6 +19,7 @@ import { auth } from '../../lib/firebase';
 import { afterShine } from '../../lib/shineClick';
 import { soundFX } from '../../lib/audioEffects';
 import { LITERARY_EXAM_SUBJECTS } from '../../lib/exam/examPrepRules';
+import { SujetChart, type ChartKind } from './SujetChart';
 
 export interface ExamSujetViewProps {
   userId: string;
@@ -27,18 +28,24 @@ export interface ExamSujetViewProps {
   stemSubjectId: StemSubjectId;
   gradeLevel: CurriculumGradeLevel;
   onExit: () => void;
-  onComplete: (sessionId: string) => void;
+  /** noXp : copie rendue hors temps (plus de 2 h + 15 min) → séance validée sans XP. */
+  onComplete: (sessionId: string, opts?: { noXp?: boolean }) => void;
 }
 
 interface SujetQuestion { numero: string; texte: string; points: number }
+type SujetTable = { colonnes: string[]; lignes: string[][] };
+/** Document numéroté (texte ou tableau de valeurs), affiché dans son cadre. */
+interface SujetDocument { id: string; titre: string; texte: string; tableau: SujetTable | null; graphique?: ChartKind | null }
 interface SujetExercice {
   numero: number;
   points: number;
   nature?: string;
   consigne: string;
   contexte: string;
+  /** Sujets rédigés depuis le 2026-11-17 : documents fournis (jamais de document cité mais invisible). */
+  documents?: SujetDocument[];
   donnees: string;
-  tableau: { colonnes: string[]; lignes: string[][] } | null;
+  tableau: SujetTable | null;
   questions: SujetQuestion[];
   grille?: { critere: string; indicateurs: string; points: number }[];
   /** Texte à lignes numérotées (Français, commentaire de document en Histoire-Géo). */
@@ -80,14 +87,37 @@ interface Correction {
   pointsForts?: string[];
   aRevoir?: { notion: string; pourquoi: string }[];
 }
+/** Temps mis, d'après le chrono du serveur (ou du téléphone s'il était hors ligne au départ). */
+interface ExamTiming { startedAt: number; endsAt: number; submittedAt: number; elapsedMinutes: number; lateMinutes: number }
 interface Saved {
   sujet: Sujet;
   chapterTitles: string[];
   startedAt?: number;
   correction?: Correction;
+  timing?: ExamTiming;
+  /** Alertes déjà données (« m30 », « m5 », « fin ») : jamais deux fois. */
+  alerts?: string[];
 }
 
 const DURATION_SEC = 2 * 60 * 60;
+/** Marge pour photographier et envoyer la copie après les 2 h (même valeur que le serveur). */
+const GRACE_SEC = 15 * 60;
+/** Alertes du chrono : à 30 min, à 5 min de la fin, puis la fin (alarme). */
+const TIME_ALERTS = [
+  { key: 'm30', atRemaining: 30 * 60, text: 'Plus que 30 minutes : relis tes réponses et garde du temps pour la dernière question.' },
+  { key: 'm5', atRemaining: 5 * 60, text: 'Plus que 5 minutes : termine ta phrase et prépare-toi à rendre ta copie.' },
+  { key: 'fin', atRemaining: 0, text: 'Temps écoulé : pose ton stylo et photographie ta copie (tu as 15 minutes pour l’envoyer).' },
+] as const;
+
+/** Temps mis (secours quand le serveur n'a pas de chrono : départ hors ligne). */
+function localTiming(startedAt: number, submittedAt: number): ExamTiming {
+  const endsAt = startedAt + DURATION_SEC * 1000;
+  const over = submittedAt - endsAt;
+  return { startedAt, endsAt, submittedAt, elapsedMinutes: Math.round((submittedAt - startedAt) / 60000), lateMinutes: over > GRACE_SEC * 1000 ? Math.round(over / 60000) : 0 };
+}
+
+/** « 1 h 52 », « 47 min ». */
+const durationLabel = (minutes: number) => (minutes >= 60 ? `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, '0')}` : `${minutes} min`);
 
 /**
  * Une barre oblique ENTRE DEUX MOTS (« trajectoire / constante ») n'est pas une fraction : on l'écrit
@@ -119,12 +149,31 @@ function plainText(text: string): string {
   );
 }
 
+/**
+ * Morceaux à écrire tels quels, jamais transformés par l'afficheur de formules des cours :
+ * « Document 1a », « Documents 1a et 1b » (avant : « 1a » devenait une formule, affichée « 1𝑇 ») et les unités
+ * « mmol/L », « g/L », « km/h », « m/s » (avant : dessinées en fraction empilée).
+ */
+const PROTECTED_PLAIN = /(\bDocuments?\s+\d+\s*[a-z]?(?:\s*(?:,|et|à)\s*\d+\s*[a-z]?)*(?![\p{L}\d])|\b[mµkcd]?(?:mol|g|L|m|s|V|A|W|J|N|Pa|h)\s*\/\s*[mµkcd]?(?:L|m|s|h|min|kg|g|mol|m²|m³)(?![\p{L}\d]))/gu;
+
+/** Découpe un texte en morceaux « à écrire tels quels » et « à confier à l'afficheur de formules » (les $…$ ne sont jamais coupés). */
+function splitProtected(text: string): { plain: boolean; text: string }[] {
+  const maths: string[] = [];
+  const masked = text.replace(/\$\$[\s\S]+?\$\$|\$[^$\n]+?\$/g, (m) => `\u0000${maths.push(m) - 1}\u0000`);
+  return masked
+    .split(PROTECTED_PLAIN)
+    .map((part, i) => ({ plain: i % 2 === 1, text: part.replace(/\u0000(\d+)\u0000/g, (_, k: string) => maths[Number(k)]) }))
+    .filter((p) => p.text);
+}
+
 /** Texte du sujet : formules rendues (matières scientifiques), retours à la ligne gardés, pas de fausses fractions. */
 const SujetText: React.FC<{ text: string; className?: string }> = ({ text, className = '' }) => {
   const plain = useContext(PlainTextContext);
   return (
     <span className={`whitespace-pre-line ${className}`}>
-      {plain ? plainText(text) : <MathRenderer text={noWordFractions(text)} />}
+      {plain
+        ? plainText(text)
+        : splitProtected(text || '').map((p, i) => (p.plain ? <span key={i}>{p.text}</span> : <MathRenderer key={i} text={noWordFractions(p.text)} />))}
     </span>
   );
 };
@@ -161,9 +210,85 @@ const NumberedText: React.FC<{ text: string }> = ({ text }) => {
     </div>
   );
 };
+/** Tableau du sujet (questions à choix, ou valeurs d'un document) : défile sur le côté s'il est large. */
+const SujetTableView: React.FC<{ table: SujetTable }> = ({ table: raw }) => {
+  // Tableau de valeurs (cellules courtes : « 0,5 », « −70 ») : il tient dans l'écran du téléphone, sans défiler.
+  // Tableau de mesures en ligne mais aux cellules longues (« Concentration en alpha-cobratoxine (mol/L) »,
+  // « 0 (témoin) »…) : on le tourne à la verticale (une mesure par ligne), sinon seules 2 colonnes se voyaient.
+  // Tableau de phrases (questions à choix) : largeur minimale, et il défile sur le côté si besoin.
+  const isCompact = (t: SujetTable) => [t.colonnes, ...t.lignes].every((row) => row.slice(1).every((c) => String(c).length <= 7));
+  const transpose = !isCompact(raw) && raw.lignes.length >= 1 && raw.lignes.length <= 3 && raw.colonnes.length >= 5
+    && raw.lignes.every((r) => r.length === raw.colonnes.length);
+  const table: SujetTable = transpose
+    ? { colonnes: [raw.colonnes[0], ...raw.lignes.map((r) => r[0])], lignes: raw.colonnes.slice(1).map((c, i) => [c, ...raw.lignes.map((r) => r[i + 1])]) }
+    : raw;
+  const compact = transpose || isCompact(table);
+  const cell = compact ? 'px-1 py-1.5 text-[12px]' : 'px-2 py-1.5 text-[13px]';
+  return (
+    <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/[0.12]">
+      <table className={`w-full border-collapse ${!compact && table.colonnes.length > 4 ? 'min-w-[420px]' : ''}`}>
+        <thead>
+          <tr>
+            {table.colonnes.map((c, i) => (
+              <th key={i} className={`${cell} border-b border-slate-200 dark:border-white/[0.12] bg-slate-100 dark:bg-white/[0.06] text-center font-black text-slate-800 dark:text-slate-100 [&:not(:last-child)]:border-r`}><SujetText text={c} /></th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {table.lignes.map((row, r) => (
+            <tr key={r} className="[&:not(:last-child)]:border-b border-slate-200 dark:border-white/[0.08]">
+              {row.map((c, j) => (
+                <td key={j} className={`${cell} align-top text-center tabular-nums text-slate-700 dark:text-slate-200 [&:not(:last-child)]:border-r border-slate-200 dark:border-white/[0.08] ${j === 0 ? 'font-bold text-slate-500 dark:text-slate-400' : ''}`}><SujetText text={c} /></td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+/** Document numéroté : cadre bleu, étiquette « Document 1a », titre, texte et/ou tableau de valeurs. */
+const DocumentCard: React.FC<{ doc: SujetDocument }> = ({ doc }) => (
+  <figure className="m-0 rounded-xl border-[1.5px] border-sky-300 dark:border-sky-400/45 bg-sky-50/50 dark:bg-slate-950/40 overflow-hidden">
+    <figcaption className="flex items-start gap-2 px-3 py-2 bg-sky-100/80 dark:bg-sky-400/10 border-b border-sky-200 dark:border-sky-400/30">
+      <span data-pdf-chip className="shrink-0 px-2 py-0.5 rounded-md bg-sky-600 text-white dark:bg-sky-400 dark:text-slate-950 text-[11px] font-black">{doc.id}</span>
+      {doc.titre && <span className="min-w-0 text-[13px] font-bold leading-snug text-sky-950 dark:text-sky-100"><SujetText text={doc.titre} /></span>}
+    </figcaption>
+    <div className="p-3 space-y-2">
+      {doc.texte && <p className="m-0 text-[13px] leading-relaxed text-slate-700 dark:text-slate-300"><SujetText text={doc.texte} /></p>}
+      {/* Courbe ou diagramme dessiné par KONAN à partir des valeurs, puis les valeurs elles-mêmes */}
+      {doc.tableau && doc.graphique ? (
+        <>
+          <div className="rounded-lg bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-white/[0.08] p-2">
+            <SujetChart table={doc.tableau} kind={doc.graphique} title={doc.titre} />
+          </div>
+          {/* Le graphique montre tout ; les valeurs exactes restent à portée de main */}
+          <details className="group">
+            <summary className="cursor-pointer select-none text-xs font-bold text-sky-700 dark:text-sky-300 py-1">Voir les valeurs</summary>
+            <div className="pt-1.5"><SujetTableView table={doc.tableau} /></div>
+          </details>
+        </>
+      ) : doc.tableau ? (
+        <SujetTableView table={doc.tableau} />
+      ) : null}
+    </div>
+  </figure>
+);
+
+/** Encadré « Données » (le mot « Données : » écrit par l'IA est retiré : il est déjà dans l'étiquette). */
+const DonneesBox: React.FC<{ text: string }> = ({ text }) => (
+  <div className="rounded-xl border border-dashed border-amber-400 dark:border-[#F5C451]/55 bg-amber-50 dark:bg-[#F5C451]/[0.08] px-3 py-2.5 space-y-1">
+    <p className="m-0 text-[11px] font-black uppercase tracking-[0.14em] text-amber-800 dark:text-[#F5C451]">Données</p>
+    <p className="m-0 text-[13px] leading-relaxed text-slate-800 dark:text-slate-200"><SujetText text={text.replace(/^\s*données\s*:\s*/i, '')} /></p>
+  </div>
+);
+
 const storageKey = (sessionId: string) => `konan_exam_sujet_v1_${sessionId}`;
 const pts = (n: number) => `${String(n).replace('.', ',')} point${n > 1 ? 's' : ''}`;
-const ptShort = (n: number) => `${String(n).replace('.', ',')} pt`;
+const ptShort = (n: number) => `${String(n).replace('.', ',')} pt${n > 1 ? 's' : ''}`;
+/** Heure lisible « 14 h 05 ». */
+const clockLabel = (ms: number) => { const d = new Date(ms); return `${d.getHours()} h ${String(d.getMinutes()).padStart(2, '0')}`; };
 const fmt = (sec: number) => {
   const h = Math.floor(sec / 3600);
   const m = Math.floor((sec % 3600) / 60);
@@ -172,7 +297,7 @@ const fmt = (sec: number) => {
 };
 
 const ERRORS: Record<string, string> = {
-  DAILY_LIMIT: 'Tu as atteint la limite du jour (4 sujets et 4 corrections). Reviens demain !',
+  DAILY_LIMIT: 'Tu as déjà eu ton sujet ou ta correction du jour (1 sujet et 1 correction par jour). Reviens demain !',
   UNAUTHORIZED: 'Connecte-toi à ton compte pour utiliser les sujets de devoir.',
   TOKEN_EXPIRED: 'Ta connexion a expiré : ferme et rouvre KONAN, puis réessaie.',
   AI_UNAVAILABLE: 'L’IA de KONAN ne répond pas pour le moment, malgré plusieurs essais. Rien n’est décompté de ta limite du jour : réessaie dans quelques minutes.',
@@ -267,6 +392,9 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
   const [busy, setBusy] = useState<'sujet' | 'correction' | null>(null);
   // L'IA n'a pas répondu du premier coup : KONAN réessaie tout seul (message rassurant pendant ce temps)
   const [retrying, setRetrying] = useState(false);
+  // Sujet en PDF (A4) pour composer sur papier : fabriqué dans le téléphone à partir de la fiche affichée
+  const sheetRef = useRef<HTMLElement>(null);
+  const [pdfBusy, setPdfBusy] = useState(false);
   const [photos, setPhotos] = useState<{ mimeType: string; data: string; preview: string }[]>([]);
   const [showPhotos, setShowPhotos] = useState(false);
   const [showCorrige, setShowCorrige] = useState(false);
@@ -320,14 +448,52 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
     return () => clearInterval(t);
   }, [saved?.startedAt, saved?.correction]);
 
-  const startExam = () => {
+  // Départ : le chrono démarre tout de suite, puis l'heure du serveur fait foi (elle sert aux rappels et au
+  // calcul du retard). Hors ligne : l'heure du téléphone sert de secours.
+  const startExam = async () => {
     if (!saved) return;
-    const next = { ...saved, startedAt: Date.now() };
+    const local = Date.now();
+    const first = { ...saved, startedAt: local };
+    writeSaved(session.id, first);
+    setSaved(first);
+    setNow(local);
+    try { soundFX.playCheckmarkPop(); } catch { /* son */ }
+    try {
+      const json = await callApi('/api/exam-sujet', { action: 'start', sessionId: session.id });
+      const serverStart = Number(json?.startedAt);
+      if (serverStart > 0) {
+        setSaved((cur) => {
+          if (!cur) return cur;
+          const next = { ...cur, startedAt: serverStart };
+          writeSaved(session.id, next);
+          return next;
+        });
+      }
+    } catch {
+      // hors ligne : le chrono du téléphone continue
+    }
+  };
+
+  // Alertes du chrono (30 min, 5 min, fin) : son et vibration ; à la fin, une alarme. Seule la dernière alerte
+  // atteinte sonne (un élève qui rouvre KONAN en retard entend l'alarme, pas les trois d'un coup).
+  const [timeAlert, setTimeAlert] = useState<{ key: string; text: string } | null>(null);
+  useEffect(() => {
+    if (!saved?.startedAt || saved.correction) return;
+    const remainingSec = DURATION_SEC - Math.floor((now - saved.startedAt) / 1000);
+    const reached = TIME_ALERTS.filter((a) => remainingSec <= a.atRemaining);
+    const last = reached[reached.length - 1];
+    if (!last || (saved.alerts || []).includes(last.key)) return;
+    const next = { ...saved, alerts: [...new Set([...(saved.alerts || []), ...reached.map((a) => a.key)])] };
     writeSaved(session.id, next);
     setSaved(next);
-    setNow(Date.now());
-    try { soundFX.playCheckmarkPop(); } catch { /* son */ }
-  };
+    setTimeAlert({ key: last.key, text: last.text });
+    try {
+      if (last.key === 'fin') soundFX.playStudyAlertAlarm();
+      else soundFX.playNotificationPing();
+      navigator.vibrate?.(last.key === 'fin' ? [400, 200, 400, 200, 800] : [200]);
+    } catch { /* son ou vibration indisponibles */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [now, saved?.startedAt, saved?.correction]);
 
   const addPhotos = async (files: FileList | null) => {
     if (!files?.length) return;
@@ -351,10 +517,15 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
         matiere: saved.sujet.matiere || subjectName,
         sujet: { exercices: saved.sujet.exercices, corrige: saved.sujet.corrige },
         images: photos.map(({ mimeType, data }) => ({ mimeType, data })),
+        sessionId: session.id, // chrono du serveur : temps mis et éventuel retard
       }, () => setRetrying(true));
       const correction: Correction = json.correction;
       if (correction.lisible) {
-        const next = { ...saved, correction };
+        // Temps mis : chrono du serveur, sinon celui du téléphone (départ hors ligne)
+        const timing: ExamTiming | undefined = json.timing?.startedAt
+          ? json.timing
+          : saved.startedAt ? localTiming(saved.startedAt, Date.now()) : undefined;
+        const next = { ...saved, correction, timing };
         writeSaved(session.id, next);
         setSaved(next);
         setPhotos([]); // les photos sont oubliées dès la correction
@@ -372,7 +543,8 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
 
   const finish = afterShine(() => {
     try { localStorage.removeItem(storageKey(session.id)); } catch { /* rien */ }
-    onComplete(session.id);
+    // Copie rendue hors temps : devoir validé, mais sans XP
+    onComplete(session.id, { noXp: Boolean(saved?.timing && saved.timing.lateMinutes > 0) });
   });
 
   // ------------------------------------------------------------------ chargement / erreur avant sujet
@@ -419,6 +591,19 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
           <p className="text-sm font-black uppercase tracking-wider text-slate-600 dark:text-slate-300">{mention(correction.note)}</p>
         </div>
 
+        {/* Temps mis : dans les temps, ou hors temps (copie corrigée, mais sans XP) */}
+        {saved.timing && (saved.timing.lateMinutes > 0 ? (
+          <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-200 text-rose-900 dark:bg-rose-500/10 dark:border-rose-500/30 dark:text-rose-100">
+            <Clock className="w-5 h-5 shrink-0 mt-0.5" />
+            <p className="m-0 text-sm"><strong>Hors temps (+{durationLabel(saved.timing.lateMinutes)})</strong> : ta copie est corrigée, mais ce devoir ne rapporte pas de XP. Au vrai devoir, la copie est ramassée à la fin des 2 h !</p>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-emerald-50 border-2 border-emerald-200 text-emerald-900 dark:bg-emerald-500/10 dark:border-emerald-500/30 dark:text-emerald-100">
+            <Clock className="w-5 h-5 shrink-0" />
+            <p className="m-0 text-sm"><strong>Rendu dans les temps</strong> : en {durationLabel(Math.min(saved.timing.elapsedMinutes, 120))} sur 2 h.</p>
+          </div>
+        ))}
+
         <CorrectionReport correction={correction} />
 
         <button type="button" onClick={() => setShowCorrige((v) => !v)} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-700 dark:text-slate-200 cursor-pointer">
@@ -446,12 +631,21 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
             <Clock className="w-4 h-4" /> {timeUp ? 'Temps écoulé' : fmt(remaining)}
           </span>
         ) : (
-          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Lis le sujet, puis lance le chrono</span>
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Le sujet s’affiche au départ du chrono</span>
         )}
       </div>
 
+      {/* Alerte du chrono (30 min, 5 min, fin) */}
+      {timeAlert && !correction && (
+        <div role="alert" className={`flex items-start gap-2.5 p-3.5 rounded-2xl border-2 text-sm font-bold ${timeAlert.key === 'fin' ? 'bg-rose-50 border-rose-300 text-rose-900 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-100' : 'bg-amber-50 border-amber-300 text-amber-900 dark:bg-amber-500/10 dark:border-amber-500/40 dark:text-amber-100'}`}>
+          <Clock className="w-5 h-5 shrink-0" />
+          <span className="flex-1">{timeAlert.text}</span>
+          <button type="button" onClick={() => setTimeAlert(null)} aria-label="Fermer" className="p-0.5 rounded cursor-pointer opacity-70 hover:opacity-100"><X className="w-4 h-4" /></button>
+        </div>
+      )}
+
       {/* La fiche d'épreuve */}
-      <article className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <article ref={sheetRef} className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
         <header className="p-4 sm:p-5 border-b-2 border-slate-100 dark:border-slate-800 space-y-3">
           <div className="flex items-center gap-3">
             <img src="/icons/konan-icon-192.png" alt="KONAN" className="w-12 h-12 rounded-2xl shrink-0" />
@@ -477,64 +671,94 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
             <strong className="text-slate-800 dark:text-slate-100">Chapitres :</strong> {saved.chapterTitles.join(' ; ')}
           </p>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Cette épreuve comporte {sujet.exercices.length} exercices. Elle est notée sur 20 points. Rédige tes réponses sur une feuille de copie.
+            Cette épreuve comporte {sujet.exercices.length} exercice{sujet.exercices.length > 1 ? 's' : ''}. Elle est notée sur 20 points. Rédige tes réponses sur une feuille de copie.
           </p>
+          {saved.startedAt && (
+            <p className="text-xs font-bold text-slate-700 dark:text-slate-200">
+              Début {clockLabel(saved.startedAt)} · Fin {clockLabel(saved.startedAt + DURATION_SEC * 1000)}
+            </p>
+          )}
         </header>
 
-        <div className="p-4 sm:p-6 space-y-6 text-[15px] leading-relaxed text-slate-800 dark:text-slate-100">
+        {/* Sujet caché tant que le chrono n'est pas lancé (comme au vrai devoir : on retourne la feuille au signal) */}
+        {!saved.startedAt ? (
+          <div className="p-5 sm:p-6 text-center space-y-2">
+            <p className="m-0 text-base font-black text-slate-900 dark:text-white">Le sujet est prêt, face cachée</p>
+            <p className="m-0 text-sm text-slate-600 dark:text-slate-300">Prépare ta feuille de copie et ton stylo. Au départ, le sujet s’affiche et tu as 2 heures. Des rappels sonnent à 30 min et à 5 min de la fin.</p>
+          </div>
+        ) : (
+        /* Chaque exercice dans sa carte : en-tête et points, situation, documents encadrés, données, questions */
+        <div className="p-3 sm:p-5 space-y-4 text-[15px] leading-relaxed text-slate-800 dark:text-slate-100">
           {sujet.exercices.map((e) => (
-            <section key={e.numero} className="space-y-2.5">
-              <h2 className="font-black text-slate-900 dark:text-white underline underline-offset-4 decoration-2">
-                EXERCICE {e.numero} ({pts(e.points)})
-              </h2>
-              {(() => {
-                const table = e.tableau && e.tableau.colonnes.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <table className={`w-full border-collapse text-sm ${e.tableau.colonnes.length > 3 ? 'min-w-[480px]' : ''}`}>
-                      <thead>
-                        <tr>
-                          {e.tableau.colonnes.map((c, i) => (
-                            <th key={i} className="border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-2 py-1.5 text-left font-black"><SujetText text={c} /></th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {e.tableau.lignes.map((row, r) => (
-                          <tr key={r}>
-                            {row.map((cell, c) => (
-                              <td key={c} className="border border-slate-300 dark:border-slate-600 px-2 py-1.5 align-top"><SujetText text={cell} /></td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : null;
-                const contexte = e.contexte
-                  ? (e.texteNumerote ? <NumberedText text={e.contexte} /> : <div><SujetText text={e.contexte} /></div>)
-                  : null;
-                const consigne = e.consigne ? <div className="font-semibold"><SujetText text={e.consigne} /></div> : null;
-                const donnees = e.donnees ? <div className="text-sm text-slate-600 dark:text-slate-300 italic"><SujetText text={e.donnees} /></div> : null;
-                const questions = e.questions.length > 0 ? (
-                  <ol className="space-y-1.5">
-                    {e.questions.map((q, i) => (
-                      <li key={i} className="flex gap-2">
-                        <span className="font-black shrink-0">{numLabel(q.numero)}</span>
-                        <span className="min-w-0"><SujetText text={q.texte} />{q.points > 0 && <span className="ml-1 text-xs font-bold text-slate-500 dark:text-slate-400">({ptShort(q.points)})</span>}</span>
-                      </li>
-                    ))}
-                  </ol>
-                ) : null;
-                // Situation : contexte, tableau et données, puis consigne et questions (ordre des sujets officiels).
-                // Tests objectifs : consigne, tableau, questions, puis données.
-                return e.contexte
-                  ? <>{contexte}{table}{donnees}{consigne}{questions}</>
-                  : <>{consigne}{table}{questions}{donnees}</>;
-              })()}
+            <section key={e.numero} className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 overflow-hidden">
+              <header className="flex items-center justify-between gap-3 px-4 py-3 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.03]">
+                <h2 className="m-0 text-[17px] font-extrabold text-slate-900 dark:text-white">Exercice {e.numero}</h2>
+                <span data-pdf-chip className="shrink-0 px-2.5 py-1 rounded-full bg-[#F5C451] text-slate-950 text-xs font-black">{pts(e.points)}</span>
+              </header>
+              <div className="p-4 space-y-4">
+                {(() => {
+                  const table = e.tableau && e.tableau.colonnes.length > 0 ? <SujetTableView table={e.tableau} /> : null;
+                  const contexte = e.contexte
+                    ? (e.texteNumerote ? <NumberedText text={e.contexte} /> : <div><SujetText text={e.contexte} /></div>)
+                    : null;
+                  const documents = (e.documents || []).length > 0 ? (
+                    <div className="space-y-3">{e.documents!.map((d, i) => <DocumentCard key={i} doc={d} />)}</div>
+                  ) : null;
+                  const consigne = e.consigne ? <div className="font-bold text-slate-900 dark:text-white"><SujetText text={e.consigne} /></div> : null;
+                  const donnees = e.donnees ? <DonneesBox text={e.donnees} /> : null;
+                  const questions = e.questions.length > 0 ? (
+                    <ol className="m-0 p-0 list-none space-y-2">
+                      {e.questions.map((q, i) => (
+                        <li key={i} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/[0.07] space-y-1.5">
+                          {/* Numéro et points sur une ligne, la question en dessous sur toute la largeur (lisible sur téléphone) */}
+                          <div className="flex items-center justify-between gap-2">
+                            <span data-pdf-chip className="min-w-[26px] h-[26px] px-1.5 rounded-lg bg-sky-100 text-sky-800 dark:bg-sky-400/15 dark:text-sky-300 text-[13px] font-black flex items-center justify-center">{String(q.numero || i + 1).replace(/\.+$/, '')}</span>
+                            {q.points > 0 && <span className="text-xs font-black whitespace-nowrap text-amber-700 dark:text-[#F5C451]">{ptShort(q.points)}</span>}
+                          </div>
+                          <div className="text-[14px] leading-relaxed"><SujetText text={q.texte} /></div>
+                        </li>
+                      ))}
+                    </ol>
+                  ) : null;
+                  // Situation : texte, documents, tableau et données, puis consigne et questions (ordre des sujets officiels).
+                  // Tests objectifs : consigne, documents, tableau, questions, puis données.
+                  return e.contexte
+                    ? <>{contexte}{documents}{table}{donnees}{consigne}{questions}</>
+                    : <>{consigne}{documents}{table}{questions}{donnees}</>;
+                })()}
+              </div>
             </section>
           ))}
         </div>
+        )}
       </article>
+
+      {/* Sujet en PDF (A4) : pour composer sur papier ; le chrono continue dans KONAN */}
+      {saved.startedAt && !timeUp && (
+        <button
+          type="button"
+          disabled={pdfBusy}
+          onClick={async () => {
+            if (!sheetRef.current) return;
+            setPdfBusy(true);
+            setError(null);
+            try {
+              const { downloadSujetPdf } = await import('./sujetPdf');
+              const matiere = sujet.matiere || subjectName;
+              const slug = matiere.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+              await downloadSujetPdf(sheetRef.current, { fileName: `devoir-konan-${slug || 'sujet'}.pdf`, footer: `KONAN · ${matiere}${gradeLabel ? ` · ${gradeLabel}` : ''}` });
+            } catch (err) {
+              console.warn('PDF du sujet impossible :', err);
+              setError('Je n’arrive pas à fabriquer le PDF sur ce téléphone. Tu peux composer en lisant le sujet ici.');
+            } finally {
+              setPdfBusy(false);
+            }
+          }}
+          className="w-full py-3 rounded-2xl border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-transparent text-slate-700 dark:text-slate-200 font-black text-sm cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+        >
+          <FileText className="w-4 h-4" /> {pdfBusy ? 'Je prépare le PDF…' : 'Télécharger le sujet en PDF (A4)'}
+        </button>
+      )}
 
       {/* Actions */}
       {error && <p className="p-3 rounded-2xl bg-rose-50 border-2 border-rose-200 text-rose-800 dark:bg-rose-500/10 dark:border-rose-500/30 dark:text-rose-200 text-sm font-semibold">{error}</p>}

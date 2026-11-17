@@ -15,6 +15,7 @@ import { Card } from '../../components/ui/Card';
 import { formatMinutesToHours, getDaysRemaining, getSessionExamCountdown, parseTimeToMinutes, getWeekDateRange, isDateInWeek } from '../../lib/utils';
 import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
+import { FrostOverlay, IceStyles, Snowflake } from '../gamification/Ice';
 import { 
   Sparkles, 
   Calendar, 
@@ -65,7 +66,8 @@ export interface DashboardOverviewProps {
   invitedBy?: { name: string; konanId: string; email?: string };
   userUid?: string;
   /** Tuile « Ligue » : rang de la semaine et division (null : pas dans la ligue) */
-  leagueSummary?: { rank: number | null; divisionName: string } | null;
+  /** frozen : réputation de 80 % ou moins → ligue gelée (glace sur la tuile) */
+  leagueSummary?: { rank: number | null; divisionName: string; frozen?: boolean } | null;
   /** Tuile « Réputation » (%) */
   reputation?: number;
 }
@@ -336,13 +338,18 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('league')}
-                className="text-left p-3 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.07] flex flex-col gap-1 cursor-pointer hover:border-amber-300 dark:hover:border-[#F5C451]/40 transition-colors"
+                className="relative overflow-hidden text-left p-3 rounded-[18px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.07] flex flex-col gap-1 cursor-pointer hover:border-amber-300 dark:hover:border-[#F5C451]/40 transition-colors"
               >
-                <Trophy className="w-5 h-5 text-amber-600 dark:text-[#F5C451]" />
-                <span className="text-[17px] font-extrabold text-slate-900 dark:text-white">
+                {/* Ligue gelée (réputation de 80 % ou moins) : la tuile est prise dans la glace */}
+                {leagueSummary.frozen && <><IceStyles /><FrostOverlay /></>}
+                <span className="relative flex items-center gap-1.5">
+                  <Trophy className="w-5 h-5 text-amber-600 dark:text-[#F5C451]" />
+                  {leagueSummary.frozen && <Snowflake size={16} className="text-cyan-600 dark:text-cyan-200" />}
+                </span>
+                <span className="relative text-[17px] font-extrabold text-slate-900 dark:text-white">
                   {leagueSummary.rank ? <>{leagueSummary.rank}<span className="text-[11px]">{leagueSummary.rank === 1 ? 'er' : 'e'}</span></> : '—'}
                 </span>
-                <span className="text-[11px] text-slate-600 dark:text-slate-400">Ligue {leagueSummary.divisionName}</span>
+                <span className="relative text-[11px] text-slate-600 dark:text-slate-400">{leagueSummary.frozen ? `Ligue ${leagueSummary.divisionName} · gelée` : `Ligue ${leagueSummary.divisionName}`}</span>
               </button>
             )}
             {typeof reputation === 'number' && (

@@ -16,6 +16,7 @@ import { loadLocalEnvIfPresent } from './_env.js';
 import { verifyFirebaseIdToken } from './_firebaseToken.js';
 import { nextNameChangeAt } from './_nameRules.js';
 import { serverPlanTier } from './_subscriptionStore.js';
+import { paymentsEnabled } from './_subscriptionRules.js';
 import {
   DIVISIONS, GROUP_SIZE, PROMOTE_COUNT, DEMOTE_COUNT, applyXpEvents, clampDivision, cleanAvatar, gradeInLeague,
   settleServerReputation, isFrozen, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
@@ -80,6 +81,8 @@ async function buildBoard(db, player, nowMs) {
     weekId: weekIdOf(nowMs),
     endsAt: weekEndMs(nowMs),
     weekXp: player.weekXp || 0,
+    // Total de tous les XP gagnés (toutes semaines et divisions, gel compris) : affiché dans le profil
+    totalXp: player.totalXp || 0,
     promoteCount: division === DIVISIONS.length ? 0 : PROMOTE_COUNT,
     keepCount: division === DIVISIONS.length ? PROMOTE_COUNT : 0,
     demoteCount: division === 1 ? 0 : division === DIVISIONS.length ? null : DEMOTE_COUNT,
@@ -121,11 +124,16 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
     const snap = await tx.get(playerRef);
     const prev = snap.exists ? snap.data() : { uid, division: 1, reputation: 100 };
     if (prev.weekId && prev.weekId !== weekId) prev.groupId = null; // nouvelle semaine : nouveau groupe
-    const applied = applyXpEvents(prev, body.events, { nowMs, planTier });
+    // Énergie vérifiée seulement quand la formule est sûre (paiement allumé) ; pendant le gel, une leçon vaut +3 %
+    const xpOpts = { nowMs, planTier, enforceEnergy: paymentsEnabled(), lessonRepCredit: isFrozen(prev) ? 3 : 1 };
+    const counted = applyXpEvents(prev, body.events, xpOpts);
     // Réputation : chaque séance ou série vérifiée donne un crédit de hausse, gardé pour plus tard
     // (l'appli compte parfois le +1 % d'une séance le lendemain). Première fois après la correction : reprise telle quelle.
-    const rep = settleServerReputation(prev.reputation, body.reputation, prev.repCredits, applied.repCredits, snap.exists && !prev.repV2);
+    const rep = settleServerReputation(prev.reputation, body.reputation, prev.repCredits, counted.repCredits, snap.exists && !prev.repV2);
     const reputation = rep.reputation;
+    // Ligue gelée (réputation de 80 % ou moins APRÈS ces gains) : XP gardés dans le total, pas dans le classement.
+    // La leçon qui fait repasser au-dessus de 80 % compte donc déjà dans le classement.
+    const applied = isFrozen({ reputation }) ? applyXpEvents(prev, body.events, { ...xpOpts, frozen: true }) : counted;
     // Nom : changement accepté seulement 3 mois après le précédent
     let displayName = prev.displayName || wantedName;
     let nameChangedAt = prev.nameChangedAt || null;

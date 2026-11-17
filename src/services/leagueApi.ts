@@ -18,6 +18,8 @@ export interface LeagueBoard {
   weekId: string;
   endsAt: number;
   weekXp: number;
+  /** Total de tous les XP gagnés (toutes semaines et divisions, gel compris), pour le profil. */
+  totalXp?: number;
   promoteCount: number;
   keepCount: number;
   demoteCount: number | null;

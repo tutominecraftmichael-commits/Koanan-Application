@@ -134,7 +134,12 @@ function energyNow(player, nowMs) {
  * Renvoie le nouvel état, les identifiants acceptés et refusés (avec la raison).
  * `player` : { weekId, weekXp, totalXp, dayKey, dayLessons, daySeries, lastSeriesEndAt, energy, energyAt, seenIds[] }
  */
-export function applyXpEvents(player0, events, { nowMs, planTier }) {
+export function applyXpEvents(player0, events, { nowMs, planTier, enforceEnergy = true, frozen = false, lessonRepCredit = 1 }) {
+  // enforceEnergy : l'énergie des comptes Gratuit n'est vérifiée que quand la formule est sûre (paiement allumé).
+  //   Paiement éteint (Pro offert, formule écrite par l'appli) : les séries d'un élève Pro « offert » vu Gratuit
+  //   par le serveur étaient refusées en silence (« plus d'énergie ») → ses XP d'entraînement ne comptaient pas.
+  // frozen : réputation de 80 % ou moins → XP gardés dans le total, mais PAS dans le classement de la semaine.
+  // lessonRepCredit : crédit de réputation par séance (3 pendant le gel : +3 % par leçon pour dégeler).
   const player = {
     weekXp: 0, totalXp: 0, dayLessons: 0, daySeries: 0, seenIds: [], lastSeriesEndAt: 0,
     ...player0,
@@ -178,7 +183,7 @@ export function applyXpEvents(player0, events, { nowMs, planTier }) {
       if (player.dayLessons >= MAX_LESSONS_PER_DAY) { reject('trop de séances dans la journée'); continue; }
       player.dayLessons += 1;
       lessonsCounted += 1;
-      repCredits += 1;
+      repCredits += lessonRepCredit;
       xp = expected;
     } else if (e.kind === 'series') {
       const lvl = SERIES_LEVELS.find((l) => l.level === Number(e.level));
@@ -195,7 +200,7 @@ export function applyXpEvents(player0, events, { nowMs, planTier }) {
       const expected = Math.max(0, lvl.xp - mistakes * penalty);
       if (Number(e.amount) !== expected) { reject('XP de série incorrects'); continue; }
       if (player.daySeries >= MAX_SERIES_PER_DAY) { reject('trop de séries dans la journée'); continue; }
-      if (!unlimited) {
+      if (!unlimited && enforceEnergy) {
         const energy = energyNow(player, startedAt);
         if (energy < ENERGY_COST) { reject('plus d’énergie'); continue; }
         const base = Number.isFinite(player.energy) && player.energyAt && energy < ENERGY_MAX
@@ -218,13 +223,13 @@ export function applyXpEvents(player0, events, { nowMs, planTier }) {
     }
     seen.add(id);
     accepted.push(id);
-    player.weekXp += xp;
+    if (!frozen) player.weekXp += xp; // ligue gelée : ces XP ne font pas avancer dans le classement
     player.totalXp += xp;
     xpGained += xp;
   }
   player.seenIds = [...seen].slice(-300);
-  if (xpGained > 0) player.xpReachedAt = nowMs;
-  return { player, accepted, rejected, lessonsCounted, repCredits, xpGained };
+  if (xpGained > 0 && !frozen) player.xpReachedAt = nowMs;
+  return { player, accepted, rejected, lessonsCounted, repCredits, xpGained, frozenXp: frozen ? xpGained : 0 };
 }
 
 /**

@@ -198,5 +198,61 @@ export async function askGeminiJson(apiKey, parts, clean, temperature = 0.4, pri
   throw lastErr;
 }
 
+// ---------------------------------------------------------------------------
+// Chrono du devoir de 2 h (2026-11-17) : début noté par le serveur, rappels envoyés par le cron,
+// retard calculé à la correction. Collection exam_timers/{uid}_{sessionId}, écrite par le serveur seulement.
+// ---------------------------------------------------------------------------
+export const EXAM_DURATION_MS = 2 * 60 * 60 * 1000;
+/** Marge pour photographier et envoyer la copie après les 2 h. */
+export const EXAM_GRACE_MS = 15 * 60 * 1000;
+
+const timerRef = (db, uid, sessionId) => db.collection('exam_timers').doc(`${uid}_${String(sessionId).replace(/[^\w-]/g, '').slice(0, 80)}`);
+
+/** Démarre le chrono (ou renvoie celui déjà lancé : relancer ne remet jamais le compteur à zéro). */
+export async function startExamTimer(db, uid, sessionId, nowMs) {
+  if (!sessionId) throw Object.assign(new Error('NO_SESSION'), { code: 400 });
+  const ref = timerRef(db, uid, sessionId);
+  return db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (snap.exists && Number(snap.get('startedAt')) > 0) {
+      return { startedAt: Number(snap.get('startedAt')), endsAt: Number(snap.get('endsAt')) };
+    }
+    const timer = { uid, sessionId, startedAt: nowMs, endsAt: nowMs + EXAM_DURATION_MS, sent: [] };
+    tx.set(ref, timer);
+    return { startedAt: timer.startedAt, endsAt: timer.endsAt };
+  });
+}
+
+/**
+ * Temps mis par l'élève, d'après le chrono du serveur. lateMinutes > 0 seulement au-delà des 2 h + 15 min
+ * de marge (minutes comptées depuis la fin des 2 h). Null si le chrono n'a pas été lancé sur le serveur.
+ */
+export async function examTiming(db, uid, sessionId, nowMs) {
+  if (!sessionId) return null;
+  const ref = timerRef(db, uid, sessionId);
+  const snap = await ref.get();
+  if (!snap.exists) return null;
+  // Heure du PREMIER envoi de la copie : si l'IA est en panne et que l'élève renvoie plus tard, il n'est pas pénalisé
+  let submittedAt = Number(snap.get('firstSubmitAt')) || 0;
+  if (!submittedAt) {
+    submittedAt = nowMs;
+    try { await ref.update({ firstSubmitAt: nowMs }); } catch { /* sans gravité */ }
+  }
+  return timingFrom(Number(snap.get('startedAt')), submittedAt);
+}
+
+export function timingFrom(startedAt, nowMs) {
+  if (!(startedAt > 0)) return null;
+  const endsAt = startedAt + EXAM_DURATION_MS;
+  const overMs = nowMs - endsAt;
+  return {
+    startedAt,
+    endsAt,
+    submittedAt: nowMs,
+    elapsedMinutes: Math.max(0, Math.round((nowMs - startedAt) / 60000)),
+    lateMinutes: overMs > EXAM_GRACE_MS ? Math.round(overMs / 60000) : 0,
+  };
+}
+
 /** Code d'erreur renvoyé à l'élève quand l'IA n'a pas pu répondre. */
 export const aiErrorCode = (e) => (e?.code === 'AI_QUOTA' ? 'AI_QUOTA' : 'AI_UNAVAILABLE');

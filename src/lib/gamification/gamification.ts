@@ -29,6 +29,10 @@ export function clearPendingEvents(g0: GamificationState | undefined, ids: strin
 export const REPUTATION_START = 100;
 export const REPUTATION_MISSED = -5;
 export const REPUTATION_DONE = 1;
+/** Pendant le gel (réputation de 80 % ou moins) : une leçon terminée rapporte +3 % pour aider à dégeler. */
+export const REPUTATION_DONE_FROZEN = 3;
+/** +1 % par leçon, ou +3 % tant que la réputation est à 80 % ou moins (ligue gelée). */
+export const lessonReputationGain = (reputation: number) => (reputation <= 80 ? REPUTATION_DONE_FROZEN : REPUTATION_DONE);
 /** Série d'entraînement terminée : +1 %, au plus 5 séries comptées par jour (le serveur applique la même limite). */
 export const REPUTATION_TRAINING = 1;
 export const REPUTATION_TRAINING_DAILY_MAX = 5;
@@ -268,6 +272,12 @@ export function awardCompletedSessions(
     const key = sessionKey(s);
     if (done.has(key)) continue;
     done.add(key);
+    // Devoir rendu hors temps : la séance compte comme faite (réputation), mais ne rapporte aucun XP
+    if (s.noXp) {
+      rewarded.push(s);
+      events.push({ at: now.toISOString(), kind: 'xp', amount: 0, reason: 'Devoir rendu hors temps : pas de XP' });
+      continue;
+    }
     const mistakes = cleanMistakes(s.mistakes);
     const xp = lessonXpAfterMistakes(s.durationMinutes, mistakes);
     gained += xp;
@@ -280,7 +290,9 @@ export function awardCompletedSessions(
   if (!rewarded.length) return { gamification: g, gained: 0, sessions: [] };
   // Réputation : +1 % tout de suite par séance faite (le calcul du soir ne la recompte pas : clé « R_ »)
   for (const s of rewarded) done.add(REP_KEY + sessionKey(s));
-  const reputation = clampReputation(g.reputation + rewarded.length * REPUTATION_DONE);
+  // +1 % par séance, +3 % tant que la ligue est gelée (80 % ou moins)
+  let reputation = g.reputation;
+  for (let i = 0; i < rewarded.length; i++) reputation = clampReputation(reputation + lessonReputationGain(reputation));
   if (reputation !== g.reputation) {
     events.push({ at: now.toISOString(), kind: 'reputation', amount: reputation - g.reputation, reason: rewarded.length > 1 ? `${rewarded.length} séances faites` : 'Séance faite' });
   }
@@ -354,7 +366,9 @@ export function settleReputation(
     }
     if (!dayMissed && !dayDone) continue;
     const before = reputation;
-    reputation = clampReputation(reputation + dayDone * REPUTATION_DONE + dayMissed * REPUTATION_MISSED);
+    // Manquées d'abord, puis faites (+1 %, ou +3 % si la journée a fait passer à 80 % ou moins)
+    reputation = clampReputation(reputation + dayMissed * REPUTATION_MISSED);
+    for (let i = 0; i < dayDone; i++) reputation = clampReputation(reputation + lessonReputationGain(reputation));
     missed += dayMissed;
     done += dayDone;
     if (reputation !== before) {
