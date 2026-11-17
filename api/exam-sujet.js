@@ -160,6 +160,16 @@ export function tidyText(t) {
     .replace(/^\n+|\n+$/g, '');
 }
 
+/**
+ * « Résous le problème : 1. Identifie… 2. Explique… 3. Propose… » → chaque consigne numérotée sur sa ligne.
+ * Seulement quand la suite 1., 2. (et plus) est complète et suivie d'une majuscule : « 2.5 cm » n'est jamais coupé.
+ */
+export function splitNumberedTasks(text) {
+  const t = String(text || '');
+  if (!/(^|\s)1\.\s+[A-ZÉÈÀÂ]/.test(t) || !/\s2\.\s+[A-ZÉÈÀÂ]/.test(t)) return t;
+  return t.replace(/[ \t]+(\d{1,2})\.\s+(?=[A-ZÉÈÀÂ])/g, '\n$1. ').replace(/:\s*\n1\./, ':\n1.');
+}
+
 /** « 1. 1. Au cours… » : retire le numéro que l'IA a recopié au début du texte de la question. */
 export function stripLeadingNumber(texte, numero) {
   const n = String(numero ?? '').replace(/[.)\s]+$/, '');
@@ -197,7 +207,8 @@ export function cleanSujet(raw, template) {
       numero: model.numero,
       points: model.points,
       nature: model.nature,
-      consigne: tidyText(str(e.consigne, 1500)),
+      // Consignes numérotées écrites à la suite (« … : 1. Identifie… 2. Explique… ») : une par ligne
+      consigne: splitNumberedTasks(tidyText(str(e.consigne, 1500))),
       contexte: model.texteNumerote ? stripLineNumbers(tidyText(str(e.contexte, 4000))) : tidyText(str(e.contexte, 4000)),
       documents,
       donnees: tidyText(str(e.donnees, 1200)),
@@ -220,7 +231,8 @@ export function cleanSujet(raw, template) {
     ? raw.corrige
         .map((c) => {
           const etapes = Array.isArray(c?.etapes) ? c.etapes.map((x) => fixSciNotation(str(String(x ?? ''), 500))).filter(Boolean).slice(0, 8) : [];
-          const resultat = fixSciNotation(str(c?.resultat, 400));
+          // 900 caractères : une réponse de situation complexe était coupée au milieu d'un mot à 400 (vu le 2026-11-17)
+          const resultat = fixSciNotation(str(c?.resultat, 900));
           // « reponse » (texte complet) reste fourni : la correction de la copie s'en sert comme barème
           const reponse = tidyText(str(c?.reponse, 1500)) || [...etapes, resultat ? `Réponse : ${resultat}` : ''].filter(Boolean).join('\n');
           return { exercice: Number(c?.exercice) || 0, question: str(String(c?.question ?? ''), 12), etapes, resultat, reponse, points: num(c?.points) };

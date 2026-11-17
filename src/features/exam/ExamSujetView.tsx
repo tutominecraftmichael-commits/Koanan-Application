@@ -186,10 +186,18 @@ const NumberedText: React.FC<{ text: string }> = ({ text }) => {
   );
 };
 /** Tableau du sujet (questions à choix, ou valeurs d'un document) : défile sur le côté s'il est large. */
-const SujetTableView: React.FC<{ table: SujetTable }> = ({ table }) => {
+const SujetTableView: React.FC<{ table: SujetTable }> = ({ table: raw }) => {
   // Tableau de valeurs (cellules courtes : « 0,5 », « −70 ») : il tient dans l'écran du téléphone, sans défiler.
+  // Tableau de mesures en ligne mais aux cellules longues (« Concentration en alpha-cobratoxine (mol/L) »,
+  // « 0 (témoin) »…) : on le tourne à la verticale (une mesure par ligne), sinon seules 2 colonnes se voyaient.
   // Tableau de phrases (questions à choix) : largeur minimale, et il défile sur le côté si besoin.
-  const compact = [table.colonnes, ...table.lignes].every((row) => row.slice(1).every((c) => String(c).length <= 7));
+  const isCompact = (t: SujetTable) => [t.colonnes, ...t.lignes].every((row) => row.slice(1).every((c) => String(c).length <= 7));
+  const transpose = !isCompact(raw) && raw.lignes.length >= 1 && raw.lignes.length <= 3 && raw.colonnes.length >= 5
+    && raw.lignes.every((r) => r.length === raw.colonnes.length);
+  const table: SujetTable = transpose
+    ? { colonnes: [raw.colonnes[0], ...raw.lignes.map((r) => r[0])], lignes: raw.colonnes.slice(1).map((c, i) => [c, ...raw.lignes.map((r) => r[i + 1])]) }
+    : raw;
+  const compact = transpose || isCompact(table);
   const cell = compact ? 'px-1 py-1.5 text-[12px]' : 'px-2 py-1.5 text-[13px]';
   return (
     <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/[0.12]">
@@ -586,10 +594,13 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
                   const questions = e.questions.length > 0 ? (
                     <ol className="m-0 p-0 list-none space-y-2">
                       {e.questions.map((q, i) => (
-                        <li key={i} className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/[0.07]">
-                          <span className="shrink-0 min-w-[26px] h-[26px] px-1 rounded-lg bg-sky-100 text-sky-800 dark:bg-sky-400/15 dark:text-sky-300 text-[13px] font-black flex items-center justify-center">{String(q.numero || i + 1).replace(/\.+$/, '')}</span>
-                          <span className="flex-1 min-w-0 text-[14px] leading-relaxed"><SujetText text={q.texte} /></span>
-                          {q.points > 0 && <span className="shrink-0 pt-0.5 text-xs font-black whitespace-nowrap text-amber-700 dark:text-[#F5C451]">{ptShort(q.points)}</span>}
+                        <li key={i} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/[0.07] space-y-1.5">
+                          {/* Numéro et points sur une ligne, la question en dessous sur toute la largeur (lisible sur téléphone) */}
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="min-w-[26px] h-[26px] px-1.5 rounded-lg bg-sky-100 text-sky-800 dark:bg-sky-400/15 dark:text-sky-300 text-[13px] font-black flex items-center justify-center">{String(q.numero || i + 1).replace(/\.+$/, '')}</span>
+                            {q.points > 0 && <span className="text-xs font-black whitespace-nowrap text-amber-700 dark:text-[#F5C451]">{ptShort(q.points)}</span>}
+                          </div>
+                          <div className="text-[14px] leading-relaxed"><SujetText text={q.texte} /></div>
                         </li>
                       ))}
                     </ol>
