@@ -19,6 +19,7 @@ import { auth } from '../../lib/firebase';
 import { afterShine } from '../../lib/shineClick';
 import { soundFX } from '../../lib/audioEffects';
 import { LITERARY_EXAM_SUBJECTS } from '../../lib/exam/examPrepRules';
+import { SujetChart, type ChartKind } from './SujetChart';
 
 export interface ExamSujetViewProps {
   userId: string;
@@ -33,7 +34,7 @@ export interface ExamSujetViewProps {
 interface SujetQuestion { numero: string; texte: string; points: number }
 type SujetTable = { colonnes: string[]; lignes: string[][] };
 /** Document numéroté (texte ou tableau de valeurs), affiché dans son cadre. */
-interface SujetDocument { id: string; titre: string; texte: string; tableau: SujetTable | null }
+interface SujetDocument { id: string; titre: string; texte: string; tableau: SujetTable | null; graphique?: ChartKind | null }
 interface SujetExercice {
   numero: number;
   points: number;
@@ -232,7 +233,21 @@ const DocumentCard: React.FC<{ doc: SujetDocument }> = ({ doc }) => (
     </figcaption>
     <div className="p-3 space-y-2">
       {doc.texte && <p className="m-0 text-[13px] leading-relaxed text-slate-700 dark:text-slate-300"><SujetText text={doc.texte} /></p>}
-      {doc.tableau && <SujetTableView table={doc.tableau} />}
+      {/* Courbe ou diagramme dessiné par KONAN à partir des valeurs, puis les valeurs elles-mêmes */}
+      {doc.tableau && doc.graphique ? (
+        <>
+          <div className="rounded-lg bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-white/[0.08] p-2">
+            <SujetChart table={doc.tableau} kind={doc.graphique} title={doc.titre} />
+          </div>
+          {/* Le graphique montre tout ; les valeurs exactes restent à portée de main */}
+          <details className="group">
+            <summary className="cursor-pointer select-none text-xs font-bold text-sky-700 dark:text-sky-300 py-1">Voir les valeurs</summary>
+            <div className="pt-1.5"><SujetTableView table={doc.tableau} /></div>
+          </details>
+        </>
+      ) : doc.tableau ? (
+        <SujetTableView table={doc.tableau} />
+      ) : null}
     </div>
   </figure>
 );

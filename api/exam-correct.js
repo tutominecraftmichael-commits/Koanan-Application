@@ -37,7 +37,8 @@ export function buildCorrectionPrompt({ classe, matiere, sujet }) {
     if (e.contexte) lines.push(`Texte ou document de l’exercice :\n${e.contexte}`);
     // Documents numérotés et données : le correcteur doit voir les mêmes valeurs que l'élève
     for (const d of e.documents || []) {
-      lines.push(`${d.id}${d.titre ? ` — ${d.titre}` : ''} :${d.texte ? `\n${d.texte}` : ''}${d.tableau ? `\n${tableText(d.tableau)}` : ''}`);
+      const shownAs = d.graphique === 'courbe' ? ' (montré à l’élève en courbe)' : d.graphique === 'barres' ? ' (montré à l’élève en diagramme en barres)' : '';
+      lines.push(`${d.id}${d.titre ? ` — ${d.titre}` : ''}${shownAs} :${d.texte ? `\n${d.texte}` : ''}${d.tableau ? `\n${tableText(d.tableau)}` : ''}`);
     }
     if (e.tableau) lines.push(`Tableau de l’exercice :\n${tableText(e.tableau)}`);
     if (e.donnees) lines.push(e.donnees);
@@ -247,7 +248,7 @@ export default async function handler(req, res) {
       consigne: str(e?.consigne, 1500),
       contexte: str(e?.contexte, 4000),
       documents: Array.isArray(e?.documents)
-        ? e.documents.slice(0, 6).map((d) => ({ id: str(d?.id, 40), titre: str(d?.titre, 200), texte: str(d?.texte, 3000), tableau: cleanTableIn(d?.tableau) })).filter((d) => d.id)
+        ? e.documents.slice(0, 6).map((d) => ({ id: str(d?.id, 40), titre: str(d?.titre, 200), texte: str(d?.texte, 3000), tableau: cleanTableIn(d?.tableau), graphique: ['courbe', 'barres'].includes(d?.graphique) ? d.graphique : null })).filter((d) => d.id)
         : [],
       donnees: str(e?.donnees, 1200),
       tableau: cleanTableIn(e?.tableau),

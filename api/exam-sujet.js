@@ -22,8 +22,9 @@ export const DAILY_SUJETS = 1;
  * refusé et refait (voir invisibleDocumentProblem).
  */
 export const DOCUMENT_RULES = [
-  'DOCUMENTS : KONAN ne peut afficher AUCUNE image (ni courbe, ni schéma, ni photo, ni carte, ni dessin). Tout document cité (« Document 1 », « Document 2a »…) est donné EN ENTIER dans « documents » de son exercice : un texte, ou un TABLEAU DE VALEURS (par exemple un enregistrement : une ligne « t (ms) » et une ligne « Potentiel (mV) » avec 6 à 10 mesures).',
-  'N’écris jamais « figure », « schéma », « courbe ci-dessous », « le tracé », « la photo », « la carte » pour désigner un document : écris « les valeurs du Document 1 », « le texte du Document 2 ». Tu peux en revanche demander à l’élève de TRACER lui-même une courbe à partir d’un tableau.',
+  'DOCUMENTS : KONAN ne peut afficher AUCUNE image (ni schéma, ni photo, ni carte, ni dessin). Tout document cité (« Document 1 », « Document 2a »…) est donné EN ENTIER dans « documents » de son exercice : un texte, ou un TABLEAU DE VALEURS (par exemple un enregistrement : une ligne « t (ms) » et une ligne « Potentiel (mV) » avec 8 à 12 mesures).',
+  'COURBES ET DIAGRAMMES : KONAN trace lui-même un graphique à partir du tableau d’un document. Mets "graphique":"courbe" pour un enregistrement ou une évolution (1re ligne du tableau = abscisses avec leur unité ; chaque ligne suivante = une courbe, son nom et son unité dans la 1re case ; nombres seuls dans les autres cases, ex. -70 ou 0,5), "graphique":"barres" pour des quantités à comparer, sinon "graphique":null. Seulement dans ce cas tu peux écrire « la courbe du Document 1 » ou « le tracé du Document 1 ».',
+  'N’écris jamais « figure », « schéma », « courbe ci-dessous », « la photo », « la carte » pour désigner un document sans graphique : écris « les valeurs du Document 1 », « le texte du Document 2 ». Tu peux en revanche demander à l’élève de TRACER lui-même une courbe à partir d’un tableau.',
   'Le nom d’un document s’écrit en texte simple (« Document 1a »), jamais en formule. Les ions et formules chimiques s’écrivent en texte avec des exposants et indices Unicode : Na⁺, K⁺, Cl⁻, Ca²⁺, SO₄²⁻, H₂O, CO₂ (jamais de LaTeX pour un ion).',
   'Un texte d’étude (Français, Histoire-Géographie) reste dans « contexte » ; « documents » sert aux documents numérotés.',
 ];
@@ -61,16 +62,26 @@ export function docKey(raw) {
  */
 export function invisibleDocumentProblem(exercices) {
   const VISUAL = '(?:figures?|fig\\.|schémas?|graphiques?|courbes?|tracés?|photos?|photographies?|images?|cartes?|dessins?|croquis|diagrammes?|histogrammes?)';
-  const shown = new RegExp(`\\b${VISUAL}\\s+(?:ci-dessous|ci-contre|ci-après|suivante?s?|n°\\s*\\d+|\\d+\\b)`, 'i');
-  const ofDoc = new RegExp(`\\b${VISUAL}\\s+(?:du|de la|des|de l['’])\\s*doc`, 'i');
+  const shown = new RegExp(`\\b(${VISUAL})\\s+(?:ci-dessous|ci-contre|ci-après|suivante?s?|n°\\s*\\d+|\\d+\\b)`, 'i');
+  const ofDoc = new RegExp(`\\b(${VISUAL})\\s+(?:du|de la|des|de l['’])\\s*doc(?:ument)?s?\\.?\\s*(\\d+\\s*[a-z]?(?![a-zà-ÿ]))?`, 'i');
+  // Ce que KONAN dessine lui-même (document avec « graphique ») : courbe, tracé, graphique, diagramme, histogramme
+  const DRAWN = /^(graphiques?|courbes?|tracés?|diagrammes?|histogrammes?)$/i;
   const studentDraws = /(trace|tracez|construis|construisez|dessine|dessinez|représente|représentez|réalise|réalisez|reproduis|complète|complétez)\b[^.;:]{0,25}$/i;
   for (const e of exercices) {
     const own = new Set((e.documents || []).map((d) => docKey(d.id)).filter(Boolean));
+    const charted = new Set((e.documents || []).filter((d) => d.graphique).map((d) => docKey(d.id)).filter(Boolean));
     const texts = [e.consigne, e.contexte, e.donnees, ...(e.questions || []).map((q) => q.texte), ...(e.documents || []).map((d) => d.texte)].filter(Boolean);
     for (const t of texts) {
       for (const re of [shown, ofDoc]) {
         const m = t.match(re);
-        if (m && !studentDraws.test(t.slice(Math.max(0, m.index - 40), m.index))) return `exercice ${e.numero} : « ${m[0]} » (rien à montrer)`;
+        if (!m || studentDraws.test(t.slice(Math.max(0, m.index - 40), m.index))) continue;
+        // « la courbe du Document 1 » : permis si KONAN dessine ce document (ou l'un de ses documents 1a, 1b…)
+        if (DRAWN.test(m[1])) {
+          const key = re === ofDoc ? docKey(m[2] || '') : '';
+          const drawnHere = key ? [...charted].some((k) => k === key || k.startsWith(key)) : charted.size > 0;
+          if (drawnHere) continue;
+        }
+        return `exercice ${e.numero} : « ${m[0]} » (rien à montrer)`;
       }
       for (const ref of t.matchAll(/\bdoc(?:ument)?s?\.?\s*(?:n°\s*)?((?:\d+\s*[a-z]?(?![a-zà-ÿ])\s*(?:,|et|à|-|&)?\s*)+)/gi)) {
         for (const one of ref[1].matchAll(/(\d+)\s*([a-z])?(?![a-zà-ÿ])/gi)) {
@@ -82,6 +93,22 @@ export function invisibleDocumentProblem(exercices) {
     }
   }
   return '';
+}
+
+const SUPER_DIGITS = { '⁰': 0, '¹': 1, '²': 2, '³': 3, '⁴': 4, '⁵': 5, '⁶': 6, '⁷': 7, '⁸': 8, '⁹': 9 };
+
+/** « −70 », « +30 », « 0,5 », « 1 200 » → nombre ; « 10⁻⁹ » → 1e-9 ; sinon NaN (même lecture que l'appli). */
+export function chartNumber(raw) {
+  const s = String(raw ?? '').trim().replace(/[−–]/g, '-').replace(/\s+/g, '').replace(',', '.');
+  const pow = s.match(/^10([⁻]?)([⁰¹²³⁴⁵⁶⁷⁸⁹]+)$/);
+  if (pow) return 10 ** ((pow[1] ? -1 : 1) * Number([...pow[2]].map((c) => SUPER_DIGITS[c]).join('')));
+  return /^[+-]?\d+(\.\d+)?$/.test(s) ? Number(s) : NaN;
+}
+
+/** Un tableau peut-il devenir un graphique ? Au moins 3 abscisses et une ligne de valeurs presque toute en nombres. */
+export function chartable(t) {
+  if (!t || t.colonnes.length < 4 || !t.lignes.length) return false;
+  return t.lignes.some((r) => r.slice(1).filter((c) => Number.isFinite(chartNumber(c))).length >= Math.max(3, (t.colonnes.length - 1) * 0.8));
 }
 
 /** Tableau (exercice ou document) : 8 colonnes et 12 lignes au plus, cellules nettoyées. */
@@ -115,7 +142,7 @@ export function buildSujetPrompt({ template, classe, gradeId, matiere, chapitres
     exemples,
     '',
     'Réponds UNIQUEMENT en JSON, avec exactement un objet par exercice du format, dans l’ordre :',
-    '{"titre":"Devoir de …","exercices":[{"numero":1,"points":2,"consigne":"consigne générale de l’exercice","contexte":"texte de la situation ou vide","documents":[{"id":"Document 1","titre":"titre court du document","texte":"texte du document ou vide","tableau":{"colonnes":["t (ms)","0","1","2"],"lignes":[["Potentiel (mV)","-70","+30","-70"]]}}],"donnees":"Données : … ou vide","tableau":{"colonnes":["N°","Énoncés","A","B","C"],"lignes":[["1","…","…","…","…"]]},"questions":[{"numero":"1","texte":"…","points":0.5}]}],',
+    '{"titre":"Devoir de …","exercices":[{"numero":1,"points":2,"consigne":"consigne générale de l’exercice","contexte":"texte de la situation ou vide","documents":[{"id":"Document 1","titre":"titre court du document","texte":"texte du document ou vide","graphique":"courbe","tableau":{"colonnes":["t (ms)","0","1","2"],"lignes":[["Potentiel (mV)","-70","+30","-70"]]}}],"donnees":"Données : … ou vide","tableau":{"colonnes":["N°","Énoncés","A","B","C"],"lignes":[["1","…","…","…","…"]]},"questions":[{"numero":"1","texte":"…","points":0.5}]}],',
     '"corrige":[{"exercice":1,"question":"1","etapes":["étape 1 : …","étape 2 : …"],"resultat":"réponse finale en une ligne","points":0.5}]}',
     'CORRIGÉ STRUCTURÉ : une entrée par question (même numéro que dans le sujet). « etapes » = la démarche découpée en 1 à 6 étapes courtes (une idée, un calcul ou une justification par étape, jamais un paragraphe) ; « resultat » = la réponse finale seule (valeur avec unité, lettre, mot, ou idée principale). Pour un QCM ou un Vrai/Faux : etapes = une justification courte par item, resultat = « 1-B ; 2-A ; … ». Pour une situation complexe ou une production écrite : etapes = le plan ou la démarche attendue, point par point.',
     'tableau vaut null quand il n’y a pas de tableau. Pour une situation complexe : questions = [] et la consigne finale dans « consigne ».',
@@ -195,11 +222,15 @@ export function cleanSujet(raw, template) {
     const documents = Array.isArray(e.documents)
       ? e.documents.slice(0, 6).map((d) => {
           const key = docKey(fixSciNotation(str(d?.id, 40))); // « Document $1_a$ » → 1a
+          const tableau = cleanTable(d?.tableau);
+          // Graphique dessiné par KONAN : seulement si le tableau s'y prête (abscisses et valeurs en nombres)
+          const graphique = ['courbe', 'barres'].includes(d?.graphique) && chartable(tableau) ? d.graphique : null;
           return {
             id: key ? `Document ${key}` : tidyText(str(d?.id, 40)),
             titre: tidyText(str(d?.titre, 200)),
             texte: tidyText(str(d?.texte, 3000)),
-            tableau: cleanTable(d?.tableau),
+            tableau,
+            graphique,
           };
         }).filter((d) => d.id && (d.texte || d.tableau))
       : [];
