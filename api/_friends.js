@@ -23,6 +23,18 @@ export function normalizeKonanId(raw) {
   return m ? `KN-${m[1]}` : '';
 }
 
+/** ID KONAN déterministe à partir de l'identifiant du compte (secours si le champ n'était pas encore enregistré). */
+export function konanIdFromUid(uid) {
+  const s = String(uid || '');
+  if (!s) return '';
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) - h) + s.charCodeAt(i);
+    h |= 0;
+  }
+  return `KN-${Math.abs(h) % 900000 + 100000}`;
+}
+
 const emptyDoc = (uid) => ({ uid, friends: [], incoming: [], outgoing: [], notices: [], allowRequests: true, profileVisibility: 'all' });
 const fsCol = (db) => leagueCol(db, 'friendships');
 
@@ -32,13 +44,14 @@ async function readDoc(tx, db, uid) {
   return snap.exists ? { ...emptyDoc(uid), ...snap.data() } : emptyDoc(uid);
 }
 
-/** Élève dont c'est l'ID KONAN (compte), ou null. Deux comptes avec le même ID : null (cas très rare). */
+/** Élève dont c'est l'ID KONAN (compte ou fiche de ligue), ou null. */
 export async function uidOfKonanId(db, konanId) {
   const id = normalizeKonanId(konanId);
   if (!id) return null;
   const users = db.collection('users');
   let snap = await users.where('konanId', '==', id).limit(2).get();
   if (snap.empty) snap = await users.where('userAccount.konanId', '==', id).limit(2).get();
+  if (snap.empty) snap = await leagueCol(db, 'league_players').where('konanId', '==', id).limit(2).get();
   return snap.size === 1 ? snap.docs[0].id : null;
 }
 
@@ -49,7 +62,7 @@ export async function publicCards(db, uids) {
   if (!ids.length) return out;
   const [league, users, friendDocs] = await Promise.all([
     db.getAll(...ids.map((u) => leagueCol(db, 'league_players').doc(u))),
-    db.getAll(...ids.map((u) => db.collection('users').doc(u)), { fieldMask: ['konanId', 'studentName', 'planTier', 'userAccount.konanId', 'userAccount.name', 'userAccount.avatar', 'userAccount.planTier'] }),
+    db.getAll(...ids.map((u) => db.collection('users').doc(u)), { fieldMask: ['konanId', 'studentName', 'planTier', 'userAccount.konanId', 'userAccount.name', 'userAccount.avatar', 'userAccount.customAvatar', 'userAccount.planTier'] }),
     db.getAll(...ids.map((u) => fsCol(db).doc(u))),
   ]);
   ids.forEach((uid, i) => {
@@ -59,9 +72,9 @@ export async function publicCards(db, uids) {
     const tierRaw = String(lp.planTier || us.planTier || us.userAccount?.planTier || 'free').toLowerCase();
     out.set(uid, {
       uid,
-      konanId: normalizeKonanId(us.konanId || us.userAccount?.konanId || lp.konanId) || '',
+      konanId: normalizeKonanId(us.konanId || us.userAccount?.konanId || lp.konanId) || konanIdFromUid(uid),
       name: lp.displayName || publicName(us.studentName || us.userAccount?.name || ''),
-      avatar: cleanAvatar(lp.avatar || us.userAccount?.avatar || ''),
+      avatar: cleanAvatar(lp.avatar || us.userAccount?.customAvatar || us.userAccount?.avatar || ''),
       tier: tierRaw === 'pro' || tierRaw === 'plus' ? tierRaw : 'free',
       totalXp: Number(lp.totalXp) || 0,
       division: lp.division ? DIVISIONS[clampDivision(lp.division) - 1].name : null,

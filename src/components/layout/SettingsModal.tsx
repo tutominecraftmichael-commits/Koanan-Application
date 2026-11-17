@@ -153,20 +153,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       // Le nom est vu par d'autres élèves (ligue) : il doit être correct
       const currentName = (studentName || userAccount?.name || '').trim();
       const wanted = editName.trim() || currentName;
-      // Un seul changement de nom tous les 3 mois
-      if (wanted !== currentName && lockedUntil) {
-        setNameError(`Tu as déjà changé ton nom récemment. Prochain changement possible le ${new Date(lockedUntil).toLocaleDateString('fr-FR')}.`);
-        soundFX.playNotificationPing();
-        return;
-      }
-      const check = checkStudentName(wanted);
-      if ('reason' in check) {
-        setNameError(check.reason);
-        soundFX.playNotificationPing();
-        return;
+      let finalName = currentName;
+      if (wanted !== currentName) {
+        // Un seul changement de nom tous les 3 mois
+        if (lockedUntil) {
+          setNameError(`Tu as déjà changé ton nom récemment. Prochain changement possible le ${new Date(lockedUntil).toLocaleDateString('fr-FR')}.`);
+          soundFX.playNotificationPing();
+          return;
+        }
+        const check = checkStudentName(wanted);
+        if ('reason' in check) {
+          setNameError(check.reason);
+          soundFX.playNotificationPing();
+          return;
+        }
+        finalName = check.name;
       }
       setNameError('');
-      const finalName = check.name;
       const finalFiliere = editFiliere.trim() || academicLevel || userAccount?.academicLevel || 'Licence Universitaire';
       onUpdateProfile({
         name: finalName,
@@ -298,7 +301,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         : 'bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-400/10 dark:text-[#F5C451] dark:border-[#F5C451]/40'
                     }`}
                   >
-                    {currentPlan === 'pro' ? 'KONAN Pro' : currentPlan === 'plus' ? 'KONAN Plus' : 'Gratuit'}
+                    {currentPlan === 'pro' ? 'Pro' : currentPlan === 'plus' ? 'Plus' : 'Gratuit'}
                   </span>
                   <span className="inline-flex items-center gap-1.5 text-[11px] text-slate-600 dark:text-slate-400">
                     <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
