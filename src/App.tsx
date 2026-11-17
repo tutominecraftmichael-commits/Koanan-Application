@@ -70,6 +70,8 @@ import { UltimateCompletionCelebrationModal } from './components/celebration/Ult
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
 import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy, lessonXp } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
+import { fetchFriends, respondFriendRequest, friendErrorMessage, type FriendsState } from './services/friendsApi';
+import { ProfilePage, PublicProfileSheet } from './features/profile/ProfilePage';
 import { fetchSubscription, type SubscriptionInfo } from './services/subscriptionApi';
 import { LeaguePage } from './features/gamification/LeagueView';
 import { nextNameChangeAt } from '../api/_nameRules.js';
@@ -164,6 +166,9 @@ export function App() {
   const [isPlusGroupModalOpen, setIsPlusGroupModalOpen] = useState(false);
   const [isAcademicGoalModalOpen, setIsAcademicGoalModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  // Page Profil (2026-11-17, comme Duolingo) et fiche d'un élève (ligue, amis)
+  const [profileScreen, setProfileScreen] = useState<null | 'menu' | 'friends' | 'privacy'>(null);
+  const [playerCardId, setPlayerCardId] = useState<string | null>(null);
   const [pendingAuth, setPendingAuth] = useState<{
     profile: UserAccount;
     preferences?: { chronotype: Chronotype };
@@ -876,6 +881,47 @@ export function App() {
   const [isPlansOpen, setIsPlansOpen] = useState(false);
   const [subscriptionPeriod, setSubscriptionPeriod] = useState<'mois' | 'semestre'>('mois');
   const subscriptionAccount = state.userAccount?.isLoggedIn && !state.isDemoMode ? (state.userAccount.googleId || '') : '';
+
+  // Amis (2026-11-17) : état complet (amis, demandes reçues/envoyées, notifications cloche, confidentialité)
+  const [friendsData, setFriendsData] = useState<FriendsState | null>(null);
+  const [friendsError, setFriendsError] = useState('');
+  const reloadFriends = useCallback(async () => {
+    if (!subscriptionAccount || !auth?.currentUser) return;
+    const r = await fetchFriends();
+    if (r.ok) {
+      setFriendsData(r.data);
+      setFriendsError('');
+    } else {
+      setFriendsError(friendErrorMessage(r.error));
+    }
+  }, [subscriptionAccount]);
+
+  const handleRespondFriend = useCallback(async (konanId: string, accept: boolean) => {
+    const r = await respondFriendRequest(konanId, accept);
+    if (r.ok) {
+      await reloadFriends();
+      showToast(accept ? 'Demande acceptée : vous êtes maintenant amis !' : 'Demande d’ami refusée.');
+    } else {
+      showToast(friendErrorMessage(r.error));
+    }
+  }, [reloadFriends]);
+
+  useEffect(() => {
+    if (!subscriptionAccount) {
+      setFriendsData(null);
+      setFriendsError('');
+      return;
+    }
+    const first = setTimeout(reloadFriends, 1200);
+    const every = setInterval(reloadFriends, 2 * 60 * 1000);
+    const onVisible = () => { if (document.visibilityState === 'visible') reloadFriends(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearTimeout(first);
+      clearInterval(every);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [subscriptionAccount, reloadFriends]);
   const subscriptionPending = Boolean(subscriptionInfo?.status?.pending);
   const refreshSubscription = useCallback(async () => {
     if (!subscriptionAccount || !auth?.currentUser) return;
@@ -2501,6 +2547,10 @@ export function App() {
           onResetData={handleResetData}
           onLogout={handleLogout}
           onOpenSettings={() => setIsSettingsOpen(true)}
+          onOpenProfile={(state.userAccount?.isLoggedIn || state.isDemoMode) ? () => setProfileScreen('menu') : undefined}
+          friendNotices={friendsData?.notices || []}
+          onRespondFriend={handleRespondFriend}
+          onOpenFriends={() => setProfileScreen('friends')}
           // LMD, BTS : pas de cours, donc pas d'entraînement ni d'énergie (ils gagnent leurs XP au chronomètre)
           energy={gamificationEnabled && gradeHasGuidedCourses ? {
             value: energyNow(state.gamification).energy,
@@ -2895,6 +2945,7 @@ export function App() {
               try { localStorage.setItem('konan_league_result_seen', id); } catch { /* sans effet */ }
             }}
             onRefresh={syncLeague}
+            onOpenPlayer={setPlayerCardId}
           />
         )}
 
@@ -2971,6 +3022,36 @@ export function App() {
             currentLevel={state.academicLevel}
           />
         </Suspense>
+      )}
+
+      {/* Page Profil façon Duolingo (photo, XP, amis, abonnement, mode jour/nuit, paiement, amis par ID, confidentialité, paramètres) */}
+      {profileScreen && (
+        <ProfilePage
+          initialScreen={profileScreen}
+          onClose={() => setProfileScreen(null)}
+          name={effectiveStudentName}
+          avatar={leagueAvatarSrc}
+          classLabel={effectiveClassLabel}
+          konanId={friendsData?.me.konanId || state.userAccount?.konanId || state.konanId || ''}
+          planTier={effectivePlanTier}
+          totalXp={gamificationEnabled ? Math.max(gamificationOf(state.gamification).xp, leagueBoard?.totalXp ?? 0, friendsData?.me.totalXp ?? 0) : (friendsData?.me.totalXp ?? 0)}
+          divisionName={leagueBoard?.divisionName || null}
+          friends={friendsData}
+          friendsError={friendsError}
+          onReloadFriends={reloadFriends}
+          onOpenPlans={() => setIsPlansOpen(true)}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          onOpenPrivacyPolicy={() => setIsPrivacyModalOpen(true)}
+        />
+      )}
+
+      {/* Fiche publique d'un élève (ouverte en cliquant sur un joueur dans la Ligue) */}
+      {playerCardId && (
+        <PublicProfileSheet
+          konanId={playerCardId}
+          onClose={() => setPlayerCardId(null)}
+          onChanged={reloadFriends}
+        />
       )}
 
       {/* User Settings & Profile Modal */}
