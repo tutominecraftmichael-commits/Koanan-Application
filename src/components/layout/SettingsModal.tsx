@@ -70,6 +70,8 @@ interface SettingsModalProps {
   onOpenPrivacyModal?: () => void;
   /** Dernier changement de nom (le suivant n'est possible que 3 mois après) */
   nameChangedAt?: string;
+  /** Total de tous les XP gagnés depuis le début (le classement de la ligue, lui, repart de 0 chaque semaine) */
+  totalXp?: number;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -97,6 +99,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onOpenGoalModal: _onOpenGoalModal,
   onOpenPrivacyModal,
   nameChangedAt,
+  totalXp,
 }) => {
   const [lang] = useLanguage();
   const lockedUntil = nextNameChangeAt(nameChangedAt);
@@ -302,6 +305,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     {isDemoMode ? t('demoIsolated', lang) : 'Compte Google connecté'}
                   </span>
                 </div>
+                {/* Total de tous les XP gagnés (leçons, entraînements, toutes semaines et divisions) */}
+                {typeof totalXp === 'number' && (
+                  <div className="mt-1 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-amber-50 border border-amber-300 dark:bg-[#F5C451]/10 dark:border-[#F5C451]/40">
+                    <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-amber-800 dark:text-[#F5C451]">XP gagnés au total</span>
+                    <span className="text-[17px] font-extrabold tabular-nums text-slate-900 dark:text-white">{totalXp.toLocaleString('fr-FR')}</span>
+                  </div>
+                )}
                 {onUpdateAvatar && (
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">Touche ta photo pour la changer.</p>
                 )}

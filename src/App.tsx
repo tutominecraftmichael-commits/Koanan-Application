@@ -840,7 +840,13 @@ export function App() {
       setLeagueError(r.success ? '' : String(r.error || ''));
       if (!r.success) return;
       if (r.board) setLeagueBoard(r.board);
-      const done = [...(r.accepted || []), ...(r.rejected || []).map((x) => x.id)];
+      // Gains refusés par le serveur : avant, ils disparaissaient sans un mot (« mes XP ne comptent pas »)
+      const refused = r.rejected || [];
+      if (refused.length) {
+        console.warn('[ligue] gains refusés :', refused);
+        showToast(`${refused.length > 1 ? `${refused.length} gains d’XP n’ont` : 'Un gain d’XP n’a'} pas été compté${refused.length > 1 ? 's' : ''} dans la ligue (${refused[0].reason}).`, 7000);
+      }
+      const done = [...(r.accepted || []), ...refused.map((x) => x.id)];
       if (done.length) updateGamification((prev) => clearPendingEvents(prev.gamification, done));
     } finally {
       leagueBusy.current = false;
@@ -2673,7 +2679,7 @@ export function App() {
               userUid={state.userAccount?.googleId}
               // Tuiles de la maquette : ligue (rang + division, élèves admis dans la ligue) et réputation
               leagueSummary={gamificationEnabled && gradeIsInLeague
-                ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze' }
+                ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze', frozen: Boolean(leagueBoard?.frozen) }
                 : null}
               reputation={gamificationEnabled ? (leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) : undefined}
             />
@@ -2980,6 +2986,8 @@ export function App() {
 
         onUpdateProfile={handleUpdateProfile}
         nameChangedAt={state.nameChangedAt}
+        // Total de tous les XP : le plus grand entre le téléphone et le serveur de la ligue (tous appareils confondus)
+        totalXp={gamificationEnabled ? Math.max(gamificationOf(state.gamification).xp, leagueBoard?.totalXp ?? 0) : undefined}
         onUpdateAvatar={state.userAccount ? handleUpdateAvatar : undefined}
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}
