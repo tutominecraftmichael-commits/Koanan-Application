@@ -228,7 +228,7 @@ const SujetTableView: React.FC<{ table: SujetTable }> = ({ table: raw }) => {
 const DocumentCard: React.FC<{ doc: SujetDocument }> = ({ doc }) => (
   <figure className="m-0 rounded-xl border-[1.5px] border-sky-300 dark:border-sky-400/45 bg-sky-50/50 dark:bg-slate-950/40 overflow-hidden">
     <figcaption className="flex items-start gap-2 px-3 py-2 bg-sky-100/80 dark:bg-sky-400/10 border-b border-sky-200 dark:border-sky-400/30">
-      <span className="shrink-0 px-2 py-0.5 rounded-md bg-sky-600 text-white dark:bg-sky-400 dark:text-slate-950 text-[11px] font-black">{doc.id}</span>
+      <span data-pdf-chip className="shrink-0 px-2 py-0.5 rounded-md bg-sky-600 text-white dark:bg-sky-400 dark:text-slate-950 text-[11px] font-black">{doc.id}</span>
       {doc.titre && <span className="min-w-0 text-[13px] font-bold leading-snug text-sky-950 dark:text-sky-100"><SujetText text={doc.titre} /></span>}
     </figcaption>
     <div className="p-3 space-y-2">
@@ -368,6 +368,9 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
   const [busy, setBusy] = useState<'sujet' | 'correction' | null>(null);
   // L'IA n'a pas répondu du premier coup : KONAN réessaie tout seul (message rassurant pendant ce temps)
   const [retrying, setRetrying] = useState(false);
+  // Sujet en PDF (A4) pour composer sur papier : fabriqué dans le téléphone à partir de la fiche affichée
+  const sheetRef = useRef<HTMLElement>(null);
+  const [pdfBusy, setPdfBusy] = useState(false);
   const [photos, setPhotos] = useState<{ mimeType: string; data: string; preview: string }[]>([]);
   const [showPhotos, setShowPhotos] = useState(false);
   const [showCorrige, setShowCorrige] = useState(false);
@@ -552,7 +555,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
       </div>
 
       {/* La fiche d'épreuve */}
-      <article className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <article ref={sheetRef} className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
         <header className="p-4 sm:p-5 border-b-2 border-slate-100 dark:border-slate-800 space-y-3">
           <div className="flex items-center gap-3">
             <img src="/icons/konan-icon-192.png" alt="KONAN" className="w-12 h-12 rounded-2xl shrink-0" />
@@ -593,7 +596,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
             <section key={e.numero} className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 overflow-hidden">
               <header className="flex items-center justify-between gap-3 px-4 py-3 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.03]">
                 <h2 className="m-0 text-[17px] font-extrabold text-slate-900 dark:text-white">Exercice {e.numero}</h2>
-                <span className="shrink-0 px-2.5 py-1 rounded-full bg-[#F5C451] text-slate-950 text-xs font-black">{pts(e.points)}</span>
+                <span data-pdf-chip className="shrink-0 px-2.5 py-1 rounded-full bg-[#F5C451] text-slate-950 text-xs font-black">{pts(e.points)}</span>
               </header>
               <div className="p-4 space-y-4">
                 {(() => {
@@ -612,7 +615,7 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
                         <li key={i} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/[0.07] space-y-1.5">
                           {/* Numéro et points sur une ligne, la question en dessous sur toute la largeur (lisible sur téléphone) */}
                           <div className="flex items-center justify-between gap-2">
-                            <span className="min-w-[26px] h-[26px] px-1.5 rounded-lg bg-sky-100 text-sky-800 dark:bg-sky-400/15 dark:text-sky-300 text-[13px] font-black flex items-center justify-center">{String(q.numero || i + 1).replace(/\.+$/, '')}</span>
+                            <span data-pdf-chip className="min-w-[26px] h-[26px] px-1.5 rounded-lg bg-sky-100 text-sky-800 dark:bg-sky-400/15 dark:text-sky-300 text-[13px] font-black flex items-center justify-center">{String(q.numero || i + 1).replace(/\.+$/, '')}</span>
                             {q.points > 0 && <span className="text-xs font-black whitespace-nowrap text-amber-700 dark:text-[#F5C451]">{ptShort(q.points)}</span>}
                           </div>
                           <div className="text-[14px] leading-relaxed"><SujetText text={q.texte} /></div>
@@ -631,6 +634,33 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
           ))}
         </div>
       </article>
+
+      {/* Sujet en PDF (A4) : pour composer sur papier ; le chrono continue dans KONAN */}
+      {saved.startedAt && !timeUp && (
+        <button
+          type="button"
+          disabled={pdfBusy}
+          onClick={async () => {
+            if (!sheetRef.current) return;
+            setPdfBusy(true);
+            setError(null);
+            try {
+              const { downloadSujetPdf } = await import('./sujetPdf');
+              const matiere = sujet.matiere || subjectName;
+              const slug = matiere.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+              await downloadSujetPdf(sheetRef.current, { fileName: `devoir-konan-${slug || 'sujet'}.pdf`, footer: `KONAN · ${matiere}${gradeLabel ? ` · ${gradeLabel}` : ''}` });
+            } catch (err) {
+              console.warn('PDF du sujet impossible :', err);
+              setError('Je n’arrive pas à fabriquer le PDF sur ce téléphone. Tu peux composer en lisant le sujet ici.');
+            } finally {
+              setPdfBusy(false);
+            }
+          }}
+          className="w-full py-3 rounded-2xl border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-transparent text-slate-700 dark:text-slate-200 font-black text-sm cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+        >
+          <FileText className="w-4 h-4" /> {pdfBusy ? 'Je prépare le PDF…' : 'Télécharger le sujet en PDF (A4)'}
+        </button>
+      )}
 
       {/* Actions */}
       {error && <p className="p-3 rounded-2xl bg-rose-50 border-2 border-rose-200 text-rose-800 dark:bg-rose-500/10 dark:border-rose-500/30 dark:text-rose-200 text-sm font-semibold">{error}</p>}
