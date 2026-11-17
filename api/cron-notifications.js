@@ -318,8 +318,62 @@ async function removeDeadSubscriptions(db, userId, deadKeys) {
   }
 }
 
+/**
+ * Rappels du devoir de 2 h (2026-11-17) : à 30 min et à 5 min de la fin, puis « Temps écoulé ».
+ * Seul le dernier rappel dû est envoyé (jamais trois d'un coup si le cron a eu du retard) ; un rappel en
+ * retard de plus de 10 min n'est plus envoyé. Chrono : collection exam_timers (voir _examCommon.js).
+ */
+export const EXAM_REMINDERS = [
+  { key: 'm30', beforeEndMs: 30 * 60000, title: 'Devoir : plus que 30 minutes', body: 'Relis tes réponses et garde du temps pour la dernière question.' },
+  { key: 'm5', beforeEndMs: 5 * 60000, title: 'Devoir : plus que 5 minutes', body: 'Termine ta phrase et prépare-toi à rendre ta copie.' },
+  { key: 'fin', beforeEndMs: 0, title: 'Temps écoulé : pose ton stylo', body: 'Ouvre KONAN et photographie ta copie (tu as 15 minutes pour l’envoyer).' },
+];
+
+/** Rappel à envoyer maintenant pour un chrono, ou null. */
+export function dueExamReminder(timer, nowMs) {
+  const sent = new Set(Array.isArray(timer?.sent) ? timer.sent : []);
+  const endsAt = Number(timer?.endsAt) || 0;
+  if (!endsAt || timer?.firstSubmitAt) return null; // copie déjà rendue : plus de rappel
+  const passed = EXAM_REMINDERS.filter((r) => nowMs >= endsAt - r.beforeEndMs);
+  const last = passed[passed.length - 1];
+  if (!last || sent.has(last.key) || nowMs - (endsAt - last.beforeEndMs) >= 10 * 60000) return null;
+  // Tous les rappels déjà passés sont marqués « faits » : seul le plus récent est envoyé
+  return { reminder: last, markSent: passed.map((r) => r.key) };
+}
+
+async function examReminders(db, nowMs) {
+  const snap = await db.collection('exam_timers')
+    .where('endsAt', '>', nowMs - 11 * 60000)
+    .where('endsAt', '<', nowMs + 31 * 60000)
+    .limit(200)
+    .get();
+  const due = snap.docs.map((d) => ({ ref: d.ref, data: d.data(), plan: dueExamReminder(d.data(), nowMs) })).filter((x) => x.plan);
+  if (!due.length) return { sent: 0 };
+  const people = await loadUsers(db, due.map((x) => x.data.uid));
+  let sent = 0;
+  await Promise.all(due.map(async ({ ref, data, plan }) => {
+    const subs = subscriptionsOf(people.get(data.uid)?.device);
+    // Marqué « envoyé » d'abord : un passage du cron qui se croise avec celui-ci n'envoie pas en double
+    await ref.update({ sent: [...new Set([...(data.sent || []), ...plan.markSent])] });
+    if (!subs.length) return;
+    const payload = JSON.stringify({
+      title: plan.reminder.title,
+      body: plan.reminder.body,
+      icon: '/icons/konan-notif-192.png',
+      badge: '/icons/konan-badge-96.png',
+      tag: `konan-exam-${data.sessionId}`,
+      requireInteraction: plan.reminder.key === 'fin',
+      data: { url: '/', sessionId: data.sessionId, kind: `exam_${plan.reminder.key}` },
+    });
+    const result = await sendToDevices(subs, payload);
+    await removeDeadSubscriptions(db, data.uid, result.dead);
+    sent += result.delivered > 0 ? 1 : 0;
+  }));
+  return { sent, due: due.length };
+}
+
 /** Fonctions internes exposées pour les tests à blanc (aucun accès réseau). */
-export const __test = { checkEnvelope, subscriptionsOf, planTierOf, nextWeekEnvelope };
+export const __test = { checkEnvelope, subscriptionsOf, planTierOf, nextWeekEnvelope, dueExamReminder };
 
 // ---------------------------------------------------------------------------
 // Route
@@ -486,6 +540,14 @@ export default async function handler(req, res) {
       if (league) stats.league = league;
     } catch (e) {
       stats.leagueError = String(e?.message || e).slice(0, 120);
+    }
+
+    // Devoirs de 2 h en cours : rappels à 30 min et 5 min de la fin, puis « Temps écoulé » (même appli fermée)
+    try {
+      const exams = await examReminders(db, nowMs);
+      if (exams.sent) stats.examReminders = exams;
+    } catch (e) {
+      stats.examError = String(e?.message || e).slice(0, 120);
     }
 
     return res.status(200).json({ success: true, durationMs: Date.now() - nowMs, stats, timestamp: now.toISOString() });

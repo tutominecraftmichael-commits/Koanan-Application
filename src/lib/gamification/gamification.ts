@@ -268,6 +268,12 @@ export function awardCompletedSessions(
     const key = sessionKey(s);
     if (done.has(key)) continue;
     done.add(key);
+    // Devoir rendu hors temps : la séance compte comme faite (réputation), mais ne rapporte aucun XP
+    if (s.noXp) {
+      rewarded.push(s);
+      events.push({ at: now.toISOString(), kind: 'xp', amount: 0, reason: 'Devoir rendu hors temps : pas de XP' });
+      continue;
+    }
     const mistakes = cleanMistakes(s.mistakes);
     const xp = lessonXpAfterMistakes(s.durationMinutes, mistakes);
     gained += xp;

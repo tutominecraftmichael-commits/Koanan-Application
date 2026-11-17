@@ -10,7 +10,7 @@
  * Limite : 1 correction par jour et par élève (2026-11-17, comme les sujets). Une copie illisible ou une
  * panne de l'IA n'est pas décomptée : l'élève peut renvoyer ses photos.
  */
-import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode } from './_examCommon.js';
+import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode, getDb, examTiming } from './_examCommon.js';
 
 export const DAILY_CORRECTIONS = 1;
 const IMAGE_TYPES = /^image\/(jpeg|jpg|png|webp)$/;
@@ -277,6 +277,14 @@ export default async function handler(req, res) {
   }
   if (usage.used >= DAILY_CORRECTIONS) return send(res, 429, { success: false, error: 'DAILY_LIMIT', limit: DAILY_CORRECTIONS, remaining: 0 });
 
+  // Temps mis (chrono du serveur) : au-delà de 2 h + 15 min, copie « hors temps » (corrigée, mais sans XP)
+  let timing = null;
+  try {
+    timing = await examTiming(await getDb(), ctx.uid, str(body.sessionId, 80), Date.now());
+  } catch {
+    // chrono illisible : la copie est corrigée sans indication de temps
+  }
+
   let correction;
   try {
     const prompt = buildCorrectionPrompt({ classe: str(body.classe, 40) || 'Seconde', matiere: str(body.matiere, 80) || 'la matière', sujet: cleanSujet });
@@ -290,5 +298,5 @@ export default async function handler(req, res) {
 
   // Une copie illisible ne compte pas dans la limite du jour
   if (correction.lisible) await addUsage(usage.ref, ctx.uid, 'correction');
-  return send(res, 200, { success: true, correction, remaining: Math.max(0, DAILY_CORRECTIONS - usage.used - (correction.lisible ? 1 : 0)) });
+  return send(res, 200, { success: true, correction, timing, remaining: Math.max(0, DAILY_CORRECTIONS - usage.used - (correction.lisible ? 1 : 0)) });
 }

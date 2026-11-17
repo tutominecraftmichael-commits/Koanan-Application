@@ -2059,7 +2059,7 @@ export function App() {
     showToast('Votre planning d’étude a été réorganisé avec succès !');
   };
 
-  const handleToggleSessionComplete = (sessionId: string, bypassDayCheck: boolean = false, mistakes?: number) => {
+  const handleToggleSessionComplete = (sessionId: string, bypassDayCheck: boolean = false, mistakes?: number, noXp?: boolean) => {
     const target = state.studySessions.find(s => s.id === sessionId);
     if (!target) return;
 
@@ -2093,6 +2093,8 @@ export function App() {
           actualDurationMinutes: willBeCompleted ? (s.actualDurationMinutes || s.durationMinutes) : undefined,
           // Erreurs de la séance (cours guidé, 30 questions) : chacune retire 1 XP
           ...(mistakes !== undefined ? { mistakes: Math.max(0, Math.round(mistakes)) } : {}),
+          // Devoir rendu hors temps (plus de 2 h + 15 min) : séance faite, mais sans XP ni points de ligue
+          ...(willBeCompleted && noXp ? { noXp: true } : {}),
         }
         : s
     );
@@ -2275,12 +2277,16 @@ export function App() {
    * Callback de complétion du Tuteur Interactif Duolingo / Séries de préparation examen :
    * Valide la séance, incrémente les statistiques et affiche la célébration avec le temps exact réalisé.
    */
-  const handleCompleteTutorSession = (studySessionId?: string, durationSec?: number, mistakes?: number) => {
+  const handleCompleteTutorSession = (studySessionId?: string, durationSec?: number, mistakes?: number, noXp?: boolean) => {
     if (studySessionId) {
-      handleToggleSessionComplete(studySessionId, true, mistakes);
+      handleToggleSessionComplete(studySessionId, true, mistakes, noXp);
     }
     setActiveTutorSession(null);
     setActiveView('dashboard');
+    if (noXp) {
+      showToast('Devoir validé. Rendu hors temps : pas de XP cette fois. Garde un œil sur le chrono la prochaine fois !', 7000);
+      return;
+    }
     const timeInfo = durationSec ? ` en exactement ${formatExactDurationFrench(durationSec)}` : '';
     showToast(`Félicitations ! Séance validée avec succès${timeInfo} dans ton tuteur interactif KONAN !`, 7000);
   };
@@ -2861,9 +2867,9 @@ export function App() {
                 setActiveExamSession(null);
                 setActiveView('dashboard');
               }}
-              onComplete={(sessionId: string) => {
+              onComplete={(sessionId: string, opts?: { noXp?: boolean }) => {
                 setActiveExamSession(null);
-                handleCompleteTutorSession(sessionId);
+                handleCompleteTutorSession(sessionId, undefined, undefined, opts?.noXp);
               }}
             />
           )

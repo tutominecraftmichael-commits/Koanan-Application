@@ -11,7 +11,7 @@
  * le planning ne propose de toute façon un sujet de 2 h qu'un jour sur trois). Un échec n'est pas décompté.
  */
 import { getExamTemplate, canonicalExamGrade, COMMON_STYLE_RULES } from './_examTemplates.js';
-import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode } from './_examCommon.js';
+import { guard, readBody, send, str, readUsage, addUsage, askGeminiJson, aiErrorCode, getDb, startExamTimer } from './_examCommon.js';
 
 export const DAILY_SUJETS = 1;
 
@@ -287,6 +287,16 @@ export default async function handler(req, res) {
     body = await readBody(req, 200_000);
   } catch (e) {
     return send(res, e?.code === 413 ? 413 : 400, { success: false, error: 'BAD_BODY' });
+  }
+
+  // Début de l'épreuve (« Commencer l'épreuve ») : l'heure est notée par le serveur, jamais par le téléphone
+  if (body.action === 'start') {
+    try {
+      const timer = await startExamTimer(await getDb(), ctx.uid, str(body.sessionId, 80), Date.now());
+      return send(res, 200, { success: true, ...timer });
+    } catch (e) {
+      return send(res, e?.code === 400 ? 400 : 500, { success: false, error: String(e?.message || 'SERVER_ERROR').slice(0, 120) });
+    }
   }
 
   const gradeId = canonicalExamGrade(str(body.gradeId, 40)); // « premiere_a » → série A1 (bonnes notes de classe)
