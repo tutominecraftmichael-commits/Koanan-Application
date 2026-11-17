@@ -22,11 +22,25 @@ const num = (v) => {
 };
 const round = (n) => Math.round(n * 4) / 4; // au quart de point, comme une vraie correction
 
+/** Tableau en lignes de texte (« colonne | colonne »), pour le correcteur. */
+const tableText = (t) => [t.colonnes, ...(t.lignes || [])].map((row) => row.join(' | ')).join('\n');
+
+/** Tableau reçu de l'appli : bornes de taille, cellules en texte court. */
+const cleanTableIn = (t) => (t && Array.isArray(t.colonnes) && Array.isArray(t.lignes)
+  ? { colonnes: t.colonnes.slice(0, 12).map((c) => str(String(c ?? ''), 200)), lignes: t.lignes.slice(0, 12).map((r) => (Array.isArray(r) ? r.slice(0, 12).map((c) => str(String(c ?? ''), 400)) : [])) }
+  : null);
+
 export function buildCorrectionPrompt({ classe, matiere, sujet }) {
   const lines = [];
   for (const e of sujet.exercices) {
     lines.push(`EXERCICE ${e.numero} (${e.points} points) — ${e.nature || ''}${e.auChoix ? ' — AU CHOIX : l’élève traite UN seul des sujets proposés' : ''}`);
     if (e.contexte) lines.push(`Texte ou document de l’exercice :\n${e.contexte}`);
+    // Documents numérotés et données : le correcteur doit voir les mêmes valeurs que l'élève
+    for (const d of e.documents || []) {
+      lines.push(`${d.id}${d.titre ? ` — ${d.titre}` : ''} :${d.texte ? `\n${d.texte}` : ''}${d.tableau ? `\n${tableText(d.tableau)}` : ''}`);
+    }
+    if (e.tableau) lines.push(`Tableau de l’exercice :\n${tableText(e.tableau)}`);
+    if (e.donnees) lines.push(e.donnees);
     if (e.consigne) lines.push(`Consigne : ${e.consigne}`);
     for (const q of e.questions || []) lines.push(`  ${q.numero}. ${q.texte} (${q.points} pt)`);
     if (e.grille) lines.push(`  Grille officielle : ${e.grille.map((g) => `${g.critere} (${g.points} pt) : ${g.indicateurs}`).join(' | ')}`);
@@ -232,6 +246,11 @@ export default async function handler(req, res) {
       nature: str(e?.nature, 200),
       consigne: str(e?.consigne, 1500),
       contexte: str(e?.contexte, 4000),
+      documents: Array.isArray(e?.documents)
+        ? e.documents.slice(0, 6).map((d) => ({ id: str(d?.id, 40), titre: str(d?.titre, 200), texte: str(d?.texte, 3000), tableau: cleanTableIn(d?.tableau) })).filter((d) => d.id)
+        : [],
+      donnees: str(e?.donnees, 1200),
+      tableau: cleanTableIn(e?.tableau),
       auChoix: e?.auChoix === true,
       // Jusqu'à 6000 caractères : un sujet au choix du format BAC contient son texte d'étude
       questions: Array.isArray(e?.questions) ? e.questions.slice(0, 20).map((q) => ({ numero: str(String(q?.numero ?? ''), 12), texte: str(q?.texte, 6000), points: num(q?.points) })) : [],

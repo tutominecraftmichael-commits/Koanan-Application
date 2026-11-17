@@ -31,14 +31,19 @@ export interface ExamSujetViewProps {
 }
 
 interface SujetQuestion { numero: string; texte: string; points: number }
+type SujetTable = { colonnes: string[]; lignes: string[][] };
+/** Document numéroté (texte ou tableau de valeurs), affiché dans son cadre. */
+interface SujetDocument { id: string; titre: string; texte: string; tableau: SujetTable | null }
 interface SujetExercice {
   numero: number;
   points: number;
   nature?: string;
   consigne: string;
   contexte: string;
+  /** Sujets rédigés depuis le 2026-11-17 : documents fournis (jamais de document cité mais invisible). */
+  documents?: SujetDocument[];
   donnees: string;
-  tableau: { colonnes: string[]; lignes: string[][] } | null;
+  tableau: SujetTable | null;
   questions: SujetQuestion[];
   grille?: { critere: string; indicateurs: string; points: number }[];
   /** Texte à lignes numérotées (Français, commentaire de document en Histoire-Géo). */
@@ -119,12 +124,31 @@ function plainText(text: string): string {
   );
 }
 
+/**
+ * Morceaux à écrire tels quels, jamais transformés par l'afficheur de formules des cours :
+ * « Document 1a », « Documents 1a et 1b » (avant : « 1a » devenait une formule, affichée « 1𝑇 ») et les unités
+ * « mmol/L », « g/L », « km/h », « m/s » (avant : dessinées en fraction empilée).
+ */
+const PROTECTED_PLAIN = /(\bDocuments?\s+\d+\s*[a-z]?(?:\s*(?:,|et|à)\s*\d+\s*[a-z]?)*(?![\p{L}\d])|\b[mµkcd]?(?:mol|g|L|m|s|V|A|W|J|N|Pa|h)\s*\/\s*[mµkcd]?(?:L|m|s|h|min|kg|g|mol|m²|m³)(?![\p{L}\d]))/gu;
+
+/** Découpe un texte en morceaux « à écrire tels quels » et « à confier à l'afficheur de formules » (les $…$ ne sont jamais coupés). */
+function splitProtected(text: string): { plain: boolean; text: string }[] {
+  const maths: string[] = [];
+  const masked = text.replace(/\$\$[\s\S]+?\$\$|\$[^$\n]+?\$/g, (m) => `\u0000${maths.push(m) - 1}\u0000`);
+  return masked
+    .split(PROTECTED_PLAIN)
+    .map((part, i) => ({ plain: i % 2 === 1, text: part.replace(/\u0000(\d+)\u0000/g, (_, k: string) => maths[Number(k)]) }))
+    .filter((p) => p.text);
+}
+
 /** Texte du sujet : formules rendues (matières scientifiques), retours à la ligne gardés, pas de fausses fractions. */
 const SujetText: React.FC<{ text: string; className?: string }> = ({ text, className = '' }) => {
   const plain = useContext(PlainTextContext);
   return (
     <span className={`whitespace-pre-line ${className}`}>
-      {plain ? plainText(text) : <MathRenderer text={noWordFractions(text)} />}
+      {plain
+        ? plainText(text)
+        : splitProtected(text || '').map((p, i) => (p.plain ? <span key={i}>{p.text}</span> : <MathRenderer key={i} text={noWordFractions(p.text)} />))}
     </span>
   );
 };
@@ -161,9 +185,63 @@ const NumberedText: React.FC<{ text: string }> = ({ text }) => {
     </div>
   );
 };
+/** Tableau du sujet (questions à choix, ou valeurs d'un document) : défile sur le côté s'il est large. */
+const SujetTableView: React.FC<{ table: SujetTable }> = ({ table }) => {
+  // Tableau de valeurs (cellules courtes : « 0,5 », « −70 ») : il tient dans l'écran du téléphone, sans défiler.
+  // Tableau de phrases (questions à choix) : largeur minimale, et il défile sur le côté si besoin.
+  const compact = [table.colonnes, ...table.lignes].every((row) => row.slice(1).every((c) => String(c).length <= 7));
+  const cell = compact ? 'px-1 py-1.5 text-[12px]' : 'px-2 py-1.5 text-[13px]';
+  return (
+    <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/[0.12]">
+      <table className={`w-full border-collapse ${!compact && table.colonnes.length > 4 ? 'min-w-[420px]' : ''}`}>
+        <thead>
+          <tr>
+            {table.colonnes.map((c, i) => (
+              <th key={i} className={`${cell} border-b border-slate-200 dark:border-white/[0.12] bg-slate-100 dark:bg-white/[0.06] text-center font-black text-slate-800 dark:text-slate-100 [&:not(:last-child)]:border-r`}><SujetText text={c} /></th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {table.lignes.map((row, r) => (
+            <tr key={r} className="[&:not(:last-child)]:border-b border-slate-200 dark:border-white/[0.08]">
+              {row.map((c, j) => (
+                <td key={j} className={`${cell} align-top text-center tabular-nums text-slate-700 dark:text-slate-200 [&:not(:last-child)]:border-r border-slate-200 dark:border-white/[0.08] ${j === 0 ? 'font-bold text-slate-500 dark:text-slate-400' : ''}`}><SujetText text={c} /></td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+/** Document numéroté : cadre bleu, étiquette « Document 1a », titre, texte et/ou tableau de valeurs. */
+const DocumentCard: React.FC<{ doc: SujetDocument }> = ({ doc }) => (
+  <figure className="m-0 rounded-xl border-[1.5px] border-sky-300 dark:border-sky-400/45 bg-sky-50/50 dark:bg-slate-950/40 overflow-hidden">
+    <figcaption className="flex items-start gap-2 px-3 py-2 bg-sky-100/80 dark:bg-sky-400/10 border-b border-sky-200 dark:border-sky-400/30">
+      <span className="shrink-0 px-2 py-0.5 rounded-md bg-sky-600 text-white dark:bg-sky-400 dark:text-slate-950 text-[11px] font-black">{doc.id}</span>
+      {doc.titre && <span className="min-w-0 text-[13px] font-bold leading-snug text-sky-950 dark:text-sky-100"><SujetText text={doc.titre} /></span>}
+    </figcaption>
+    <div className="p-3 space-y-2">
+      {doc.texte && <p className="m-0 text-[13px] leading-relaxed text-slate-700 dark:text-slate-300"><SujetText text={doc.texte} /></p>}
+      {doc.tableau && <SujetTableView table={doc.tableau} />}
+    </div>
+  </figure>
+);
+
+/** Encadré « Données » (le mot « Données : » écrit par l'IA est retiré : il est déjà dans l'étiquette). */
+const DonneesBox: React.FC<{ text: string }> = ({ text }) => (
+  <div className="rounded-xl border border-dashed border-amber-400 dark:border-[#F5C451]/55 bg-amber-50 dark:bg-[#F5C451]/[0.08] px-3 py-2.5 space-y-1">
+    <p className="m-0 text-[11px] font-black uppercase tracking-[0.14em] text-amber-800 dark:text-[#F5C451]">Données</p>
+    <p className="m-0 text-[13px] leading-relaxed text-slate-800 dark:text-slate-200"><SujetText text={text.replace(/^\s*données\s*:\s*/i, '')} /></p>
+  </div>
+);
+
 const storageKey = (sessionId: string) => `konan_exam_sujet_v1_${sessionId}`;
 const pts = (n: number) => `${String(n).replace('.', ',')} point${n > 1 ? 's' : ''}`;
-const ptShort = (n: number) => `${String(n).replace('.', ',')} pt`;
+const ptShort = (n: number) => `${String(n).replace('.', ',')} pt${n > 1 ? 's' : ''}`;
+/** Heure lisible « 14 h 05 ». */
+const clockLabel = (ms: number) => { const d = new Date(ms); return `${d.getHours()} h ${String(d.getMinutes()).padStart(2, '0')}`; };
 const fmt = (sec: number) => {
   const h = Math.floor(sec / 3600);
   const m = Math.floor((sec % 3600) / 60);
@@ -479,58 +557,50 @@ const ExamSujetViewInner: React.FC<ExamSujetViewProps> = ({ userId: _userId, ses
           <p className="text-xs text-slate-500 dark:text-slate-400">
             Cette épreuve comporte {sujet.exercices.length} exercices. Elle est notée sur 20 points. Rédige tes réponses sur une feuille de copie.
           </p>
+          {saved.startedAt && (
+            <p className="text-xs font-bold text-slate-700 dark:text-slate-200">
+              Début {clockLabel(saved.startedAt)} · Fin {clockLabel(saved.startedAt + DURATION_SEC * 1000)}
+            </p>
+          )}
         </header>
 
-        <div className="p-4 sm:p-6 space-y-6 text-[15px] leading-relaxed text-slate-800 dark:text-slate-100">
+        {/* Chaque exercice dans sa carte : en-tête et points, situation, documents encadrés, données, questions */}
+        <div className="p-3 sm:p-5 space-y-4 text-[15px] leading-relaxed text-slate-800 dark:text-slate-100">
           {sujet.exercices.map((e) => (
-            <section key={e.numero} className="space-y-2.5">
-              <h2 className="font-black text-slate-900 dark:text-white underline underline-offset-4 decoration-2">
-                EXERCICE {e.numero} ({pts(e.points)})
-              </h2>
-              {(() => {
-                const table = e.tableau && e.tableau.colonnes.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <table className={`w-full border-collapse text-sm ${e.tableau.colonnes.length > 3 ? 'min-w-[480px]' : ''}`}>
-                      <thead>
-                        <tr>
-                          {e.tableau.colonnes.map((c, i) => (
-                            <th key={i} className="border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-2 py-1.5 text-left font-black"><SujetText text={c} /></th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {e.tableau.lignes.map((row, r) => (
-                          <tr key={r}>
-                            {row.map((cell, c) => (
-                              <td key={c} className="border border-slate-300 dark:border-slate-600 px-2 py-1.5 align-top"><SujetText text={cell} /></td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : null;
-                const contexte = e.contexte
-                  ? (e.texteNumerote ? <NumberedText text={e.contexte} /> : <div><SujetText text={e.contexte} /></div>)
-                  : null;
-                const consigne = e.consigne ? <div className="font-semibold"><SujetText text={e.consigne} /></div> : null;
-                const donnees = e.donnees ? <div className="text-sm text-slate-600 dark:text-slate-300 italic"><SujetText text={e.donnees} /></div> : null;
-                const questions = e.questions.length > 0 ? (
-                  <ol className="space-y-1.5">
-                    {e.questions.map((q, i) => (
-                      <li key={i} className="flex gap-2">
-                        <span className="font-black shrink-0">{numLabel(q.numero)}</span>
-                        <span className="min-w-0"><SujetText text={q.texte} />{q.points > 0 && <span className="ml-1 text-xs font-bold text-slate-500 dark:text-slate-400">({ptShort(q.points)})</span>}</span>
-                      </li>
-                    ))}
-                  </ol>
-                ) : null;
-                // Situation : contexte, tableau et données, puis consigne et questions (ordre des sujets officiels).
-                // Tests objectifs : consigne, tableau, questions, puis données.
-                return e.contexte
-                  ? <>{contexte}{table}{donnees}{consigne}{questions}</>
-                  : <>{consigne}{table}{questions}{donnees}</>;
-              })()}
+            <section key={e.numero} className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 overflow-hidden">
+              <header className="flex items-center justify-between gap-3 px-4 py-3 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.03]">
+                <h2 className="m-0 text-[17px] font-extrabold text-slate-900 dark:text-white">Exercice {e.numero}</h2>
+                <span className="shrink-0 px-2.5 py-1 rounded-full bg-[#F5C451] text-slate-950 text-xs font-black">{pts(e.points)}</span>
+              </header>
+              <div className="p-4 space-y-4">
+                {(() => {
+                  const table = e.tableau && e.tableau.colonnes.length > 0 ? <SujetTableView table={e.tableau} /> : null;
+                  const contexte = e.contexte
+                    ? (e.texteNumerote ? <NumberedText text={e.contexte} /> : <div><SujetText text={e.contexte} /></div>)
+                    : null;
+                  const documents = (e.documents || []).length > 0 ? (
+                    <div className="space-y-3">{e.documents!.map((d, i) => <DocumentCard key={i} doc={d} />)}</div>
+                  ) : null;
+                  const consigne = e.consigne ? <div className="font-bold text-slate-900 dark:text-white"><SujetText text={e.consigne} /></div> : null;
+                  const donnees = e.donnees ? <DonneesBox text={e.donnees} /> : null;
+                  const questions = e.questions.length > 0 ? (
+                    <ol className="m-0 p-0 list-none space-y-2">
+                      {e.questions.map((q, i) => (
+                        <li key={i} className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/[0.07]">
+                          <span className="shrink-0 min-w-[26px] h-[26px] px-1 rounded-lg bg-sky-100 text-sky-800 dark:bg-sky-400/15 dark:text-sky-300 text-[13px] font-black flex items-center justify-center">{String(q.numero || i + 1).replace(/\.+$/, '')}</span>
+                          <span className="flex-1 min-w-0 text-[14px] leading-relaxed"><SujetText text={q.texte} /></span>
+                          {q.points > 0 && <span className="shrink-0 pt-0.5 text-xs font-black whitespace-nowrap text-amber-700 dark:text-[#F5C451]">{ptShort(q.points)}</span>}
+                        </li>
+                      ))}
+                    </ol>
+                  ) : null;
+                  // Situation : texte, documents, tableau et données, puis consigne et questions (ordre des sujets officiels).
+                  // Tests objectifs : consigne, documents, tableau, questions, puis données.
+                  return e.contexte
+                    ? <>{contexte}{documents}{table}{donnees}{consigne}{questions}</>
+                    : <>{consigne}{documents}{table}{questions}{donnees}</>;
+                })()}
+              </div>
             </section>
           ))}
         </div>
