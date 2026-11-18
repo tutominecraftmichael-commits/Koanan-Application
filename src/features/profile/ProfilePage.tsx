@@ -10,7 +10,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { resizeImageToAvatar } from '../../lib/avatar';
 import { soundFX } from '../../lib/audioEffects';
 import {
-  fetchPublicProfile, friendErrorMessage, removeFriend, respondFriendRequest, saveFriendPrivacy, sendFriendRequest,
+  fetchPublicProfile, friendErrorMessage, readLocalFriendPrivacy, removeFriend, respondFriendRequest, saveFriendPrivacy, sendFriendRequest,
   type FriendCard, type FriendsState,
 } from '../../services/friendsApi';
 
@@ -247,10 +247,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   const [searching, setSearching] = useState(false);
 
   // État local optimiste pour la confidentialité (réponse visuelle immédiate sans blocage)
-  const [allowRequests, setAllowRequests] = useState<boolean>(friends?.privacy.allowRequests ?? true);
-  const [profileVisibility, setProfileVisibility] = useState<'all' | 'friends'>(friends?.privacy.profileVisibility ?? 'all');
-  const [privacySaving, setPrivacySaving] = useState(false);
+  const initialPrivacy = friends?.privacy ?? readLocalFriendPrivacy();
+  const [allowRequests, setAllowRequests] = useState<boolean>(initialPrivacy.allowRequests);
+  const [profileVisibility, setProfileVisibility] = useState<'all' | 'friends'>(initialPrivacy.profileVisibility);
   const [privacyMsg, setPrivacyMsg] = useState('');
+  const lastManualPrivacyAt = useRef(0);
 
   // Changement direct de photo de profil depuis Mon profil
   const [avatarBusy, setAvatarBusy] = useState(false);
@@ -262,9 +263,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   }, [props.initialScreen]);
 
   useEffect(() => {
+    // N'écrase jamais un clic récent de l'utilisateur par une ancienne réponse réseau
+    if (Date.now() - lastManualPrivacyAt.current < 4000) return;
     if (friends?.privacy) {
-      setAllowRequests(friends.privacy.allowRequests);
-      setProfileVisibility(friends.privacy.profileVisibility);
+      setAllowRequests(friends.privacy.allowRequests !== false);
+      setProfileVisibility(friends.privacy.profileVisibility === 'friends' ? 'friends' : 'all');
     }
   }, [friends?.privacy]);
 
@@ -296,35 +299,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
     if (r.ok) setSearchCard(r.data.profile); else setSearchMsg(friendErrorMessage(r.error));
   };
   const changed = () => { onReloadFriends(); if (searchCard) fetchPublicProfile(searchCard.konanId).then((r) => r.ok && setSearchCard(r.data.profile)); };
-  const friendsCount = friends?.me.friendsCount ?? 0;
-  const incomingCount = friends?.incoming.length ?? 0;
+  const friendsCount = friends?.me?.friendsCount ?? 0;
+  const incomingCount = friends?.incoming?.length ?? 0;
 
   const updateAllowRequests = async (next: boolean) => {
+    lastManualPrivacyAt.current = Date.now();
     setAllowRequests(next);
-    setPrivacySaving(true);
-    setPrivacyMsg('');
-    const r = await saveFriendPrivacy({ allowRequests: next });
-    setPrivacySaving(false);
-    if (r.ok) {
-      setPrivacyMsg('Préférence enregistrée.');
-      onReloadFriends();
-    } else {
-      setPrivacyMsg(friendErrorMessage(r.error));
-    }
+    soundFX.playCheckmarkPop();
+    setPrivacyMsg(next ? 'Demandes d’ami activées ✓' : 'Demandes d’ami désactivées ✓');
+    await saveFriendPrivacy({ allowRequests: next });
+    onReloadFriends();
   };
 
   const updateVisibility = async (next: 'all' | 'friends') => {
+    lastManualPrivacyAt.current = Date.now();
     setProfileVisibility(next);
-    setPrivacySaving(true);
-    setPrivacyMsg('');
-    const r = await saveFriendPrivacy({ profileVisibility: next });
-    setPrivacySaving(false);
-    if (r.ok) {
-      setPrivacyMsg('Visibilité enregistrée.');
-      onReloadFriends();
-    } else {
-      setPrivacyMsg(friendErrorMessage(r.error));
-    }
+    soundFX.playCheckmarkPop();
+    setPrivacyMsg(next === 'all' ? 'Visible par tout le monde ✓' : 'Visible par tes amis seulement ✓');
+    await saveFriendPrivacy({ profileVisibility: next });
+    onReloadFriends();
   };
 
   return (
@@ -511,19 +504,28 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
               </button>
             </div>
             <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.08] divide-y divide-slate-100 dark:divide-white/[0.06]">
-              <label className="flex items-center gap-3 px-4 py-4 cursor-pointer">
-                <span className="flex-1">
+              <div className="flex items-center justify-between gap-3 px-4 py-4">
+                <div className="flex-1 min-w-0">
                   <span className="block text-[15px] font-bold text-slate-900 dark:text-white">Recevoir des demandes d’ami</span>
                   <span className="block text-xs text-slate-600 dark:text-slate-400">Si c’est désactivé, personne ne peut t’ajouter.</span>
-                </span>
-                <input
-                  type="checkbox"
-                  className="w-5 h-5 accent-sky-500 cursor-pointer"
-                  disabled={privacySaving}
-                  checked={allowRequests}
-                  onChange={(e) => updateAllowRequests(e.target.checked)}
-                />
-              </label>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={allowRequests}
+                  aria-label="Recevoir des demandes d’ami"
+                  onClick={() => updateAllowRequests(!allowRequests)}
+                  className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors cursor-pointer ${
+                    allowRequests ? 'bg-sky-500 dark:bg-sky-400' : 'bg-slate-300 dark:bg-slate-700'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+                      allowRequests ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
               <div className="px-4 py-4 space-y-2.5">
                 <span className="block text-[15px] font-bold text-slate-900 dark:text-white">Qui peut voir mon profil (XP, amis, abonnement)</span>
                 <div className="grid grid-cols-2 gap-2">
@@ -533,9 +535,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
                       <button
                         key={value}
                         type="button"
-                        disabled={privacySaving}
                         onClick={() => updateVisibility(value)}
-                        className={`h-11 rounded-xl text-sm font-extrabold cursor-pointer border transition-colors ${active ? 'bg-sky-500 text-white border-sky-500 dark:bg-sky-400 dark:text-slate-950 dark:border-sky-400' : 'bg-slate-50 text-slate-700 border-slate-200 dark:bg-white/[0.04] dark:text-slate-200 dark:border-white/10'}`}
+                        className={`h-11 rounded-xl text-sm font-extrabold cursor-pointer border transition-colors ${active ? 'bg-sky-500 text-white border-sky-500 dark:bg-sky-400 dark:text-slate-950 dark:border-sky-400' : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-sky-400/50 dark:bg-white/[0.04] dark:text-slate-200 dark:border-white/10'}`}
                       >
                         {label}
                       </button>
@@ -543,7 +544,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
                   })}
                 </div>
                 <span className="block text-xs text-slate-600 dark:text-slate-400">Dans tous les cas, les autres voient ton nom, ta photo et ton ID dans la ligue.</span>
-                {privacyMsg && <span className="block text-xs font-bold text-sky-600 dark:text-sky-300">{privacyMsg}</span>}
+                {privacyMsg && <span className="block text-xs font-bold text-emerald-600 dark:text-emerald-400">{privacyMsg}</span>}
               </div>
             </div>
             <button type="button" onClick={onOpenPrivacyPolicy} className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.08] cursor-pointer text-left">

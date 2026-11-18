@@ -156,32 +156,34 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             </section>
           ))}
 
-          {/* Accord */}
-          <label
-            className={`flex items-start gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-colors ${
-              hasAgreed
-                ? 'bg-sky-50 border-sky-300 dark:bg-sky-500/10 dark:border-sky-500/40'
-                : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-slate-700'
-            }`}
-          >
-            <input
-              type="checkbox"
-              checked={hasAgreed}
-              onChange={(e) => setHasAgreed(e.target.checked)}
-              className="w-5 h-5 mt-0.5 rounded-lg cursor-pointer accent-sky-500 shrink-0"
-            />
-            <span className="text-xs sm:text-sm text-slate-700 dark:text-slate-200">
-              <strong className="block text-slate-900 dark:text-white">J’ai lu et j’accepte</strong>
-              J’accepte que mon compte et mes informations scolaires soient enregistrés dans mon compte KONAN, comme expliqué ci-dessus.
-            </span>
-          </label>
+            {/* Accord (affiché uniquement lors de la première connexion obligatoire) */}
+          {isGatekeeper && (
+            <label
+              className={`flex items-start gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-colors ${
+                hasAgreed
+                  ? 'bg-sky-50 border-sky-300 dark:bg-sky-500/10 dark:border-sky-500/40'
+                  : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-slate-700'
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={hasAgreed}
+                onChange={(e) => setHasAgreed(e.target.checked)}
+                className="w-5 h-5 mt-0.5 rounded-lg cursor-pointer accent-sky-500 shrink-0"
+              />
+              <span className="text-xs sm:text-sm text-slate-700 dark:text-slate-200">
+                <strong className="block text-slate-900 dark:text-white">J’ai lu et j’accepte</strong>
+                J’accepte que mon compte et mes informations scolaires soient enregistrés dans mon compte KONAN, comme expliqué ci-dessus.
+              </span>
+            </label>
+          )}
         </div>
 
         {/* Boutons */}
         <div className="p-4 sm:p-5 border-t-2 border-slate-100 dark:border-slate-800 flex flex-col-reverse sm:flex-row items-center justify-between gap-3 shrink-0">
           <button
             type="button"
-            onClick={onDecline}
+            onClick={isGatekeeper ? onDecline : (onClose || onAccept)}
             className="w-full sm:w-auto py-2.5 px-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 text-slate-600 hover:text-rose-600 hover:border-rose-300 dark:text-slate-300 dark:hover:text-rose-300 text-xs font-bold transition-colors cursor-pointer"
           >
             {isGatekeeper ? 'Refuser et me déconnecter' : 'Fermer'}
@@ -189,8 +191,8 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           <Button
             variant="glow"
             size="md"
-            disabled={!hasAgreed}
-            onClick={onAccept}
+            disabled={isGatekeeper && !hasAgreed}
+            onClick={isGatekeeper ? onAccept : (onClose || onAccept)}
             className="w-full sm:w-auto text-sm font-black py-3 px-6 !bg-none !bg-sky-400 hover:!bg-sky-300 !text-slate-950 !border-sky-400 !shadow-[0_4px_0_#0369A1]"
           >
             {isGatekeeper ? 'Accepter et continuer' : 'J’ai compris'}

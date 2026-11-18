@@ -28,6 +28,36 @@ export interface FriendsState {
   privacy: { allowRequests: boolean; profileVisibility: 'all' | 'friends' };
 }
 
+const LOCAL_PRIVACY_KEY = 'konan_friend_privacy';
+
+export function readLocalFriendPrivacy(): FriendsState['privacy'] {
+  try {
+    const raw = localStorage.getItem(LOCAL_PRIVACY_KEY);
+    if (!raw) return { allowRequests: true, profileVisibility: 'all' };
+    const parsed = JSON.parse(raw);
+    return {
+      allowRequests: parsed?.allowRequests !== false,
+      profileVisibility: parsed?.profileVisibility === 'friends' ? 'friends' : 'all',
+    };
+  } catch {
+    return { allowRequests: true, profileVisibility: 'all' };
+  }
+}
+
+export function writeLocalFriendPrivacy(patch: Partial<FriendsState['privacy']>): FriendsState['privacy'] {
+  const next: FriendsState['privacy'] = {
+    ...readLocalFriendPrivacy(),
+    ...(patch.allowRequests !== undefined ? { allowRequests: Boolean(patch.allowRequests) } : {}),
+    ...(patch.profileVisibility !== undefined ? { profileVisibility: patch.profileVisibility === 'friends' ? 'friends' : 'all' } : {}),
+  };
+  try {
+    localStorage.setItem(LOCAL_PRIVACY_KEY, JSON.stringify(next));
+  } catch {
+    /* ignore storage error */
+  }
+  return next;
+}
+
 /** Messages clairs pour chaque refus du serveur. */
 export const FRIEND_ERRORS: Record<string, string> = {
   NOT_FOUND: 'Aucun élève avec cet ID. Vérifie les 6 chiffres (ex. KN-123456).',
@@ -66,9 +96,41 @@ async function call<T>(body: Record<string, unknown>): Promise<{ ok: true; data:
   }
 }
 
-export const fetchFriends = () => call<FriendsState>({ action: 'friends' });
+export async function fetchFriends(): Promise<{ ok: true; data: FriendsState } | { ok: false; error: string }> {
+  const r = await call<Partial<FriendsState>>({ action: 'friends' });
+  const localPriv = readLocalFriendPrivacy();
+  if (!r.ok) return r;
+  const raw = r.data || {};
+  const privacy: FriendsState['privacy'] = raw.privacy && typeof raw.privacy === 'object'
+    ? writeLocalFriendPrivacy({
+        allowRequests: raw.privacy.allowRequests !== false,
+        profileVisibility: raw.privacy.profileVisibility === 'friends' ? 'friends' : 'all',
+      })
+    : localPriv;
+  return {
+    ok: true,
+    data: {
+      me: {
+        konanId: raw.me?.konanId || '',
+        friendsCount: Number(raw.me?.friendsCount) || 0,
+        totalXp: Number(raw.me?.totalXp) || 0,
+      },
+      friends: Array.isArray(raw.friends) ? raw.friends : [],
+      incoming: Array.isArray(raw.incoming) ? raw.incoming : [],
+      outgoing: Array.isArray(raw.outgoing) ? raw.outgoing : [],
+      notices: Array.isArray(raw.notices) ? raw.notices : [],
+      privacy,
+    },
+  };
+}
+
 export const fetchPublicProfile = (konanId: string) => call<{ profile: FriendCard }>({ action: 'profile', konanId });
 export const sendFriendRequest = (konanId: string) => call<{ status: 'sent' | 'friends' }>({ action: 'friend_request', konanId });
 export const respondFriendRequest = (konanId: string, accept: boolean) => call<{ status: string }>({ action: 'friend_respond', konanId, accept });
 export const removeFriend = (konanId: string) => call<{ status: string }>({ action: 'friend_remove', konanId });
-export const saveFriendPrivacy = (privacy: Partial<FriendsState['privacy']>) => call<{ status: string }>({ action: 'privacy', ...privacy });
+
+export async function saveFriendPrivacy(privacy: Partial<FriendsState['privacy']>): Promise<{ ok: true; data: { status: string; privacy: FriendsState['privacy'] } }> {
+  const savedLocal = writeLocalFriendPrivacy(privacy);
+  await call<{ status: string }>({ action: 'privacy', ...savedLocal }).catch(() => null);
+  return { ok: true, data: { status: 'saved', privacy: savedLocal } };
+}

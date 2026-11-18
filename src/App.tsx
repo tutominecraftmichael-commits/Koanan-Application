@@ -3034,9 +3034,9 @@ export function App() {
           hasCustomAvatar={Boolean(state.userAccount?.customAvatar)}
           onUpdateAvatar={state.userAccount ? handleUpdateAvatar : undefined}
           classLabel={effectiveClassLabel}
-          konanId={friendsData?.me.konanId || state.userAccount?.konanId || state.konanId || ''}
+          konanId={friendsData?.me?.konanId || state.userAccount?.konanId || state.konanId || ''}
           planTier={effectivePlanTier}
-          totalXp={gamificationEnabled ? Math.max(gamificationOf(state.gamification).xp, leagueBoard?.totalXp ?? 0, friendsData?.me.totalXp ?? 0) : (friendsData?.me.totalXp ?? 0)}
+          totalXp={gamificationEnabled ? Math.max(gamificationOf(state.gamification).xp, leagueBoard?.totalXp ?? 0, friendsData?.me?.totalXp ?? 0) : (friendsData?.me?.totalXp ?? 0)}
           divisionName={leagueBoard?.divisionName || null}
           friends={friendsData}
           friendsError={friendsError}
@@ -3272,8 +3272,8 @@ export function App() {
             setIsPrivacyModalOpen(false);
           }
         }}
-        onAccept={handleAcceptPrivacyPolicy}
-        onDecline={handleDeclinePrivacyPolicy}
+        onAccept={pendingAuth || !state.privacyPolicyAccepted ? handleAcceptPrivacyPolicy : () => setIsPrivacyModalOpen(false)}
+        onDecline={pendingAuth || !state.privacyPolicyAccepted ? handleDeclinePrivacyPolicy : () => setIsPrivacyModalOpen(false)}
         isGatekeeper={Boolean(pendingAuth || (state.userAccount?.isLoggedIn && !state.privacyPolicyAccepted))}
         studentName={pendingAuth?.profile.name || effectiveStudentName}
         studentEmail={pendingAuth?.profile.email || state.userAccount?.email}
