@@ -1,0 +1,686 @@
+import React, { useMemo, useState } from 'react';
+import {
+  BellRing,
+  Check,
+  Clock,
+  Copy,
+  Gift,
+  MessageCircle,
+  Send,
+  Sparkles,
+  UserPlus,
+  Users,
+  X,
+} from 'lucide-react';
+import type { FriendCard, FriendQuest, QuestState } from '../../services/friendsApi';
+import {
+  cancelFriendQuest,
+  claimFriendQuestReward,
+  nudgeFriendQuestPartner,
+  proposeFriendQuest,
+  questErrorMessage,
+  respondFriendQuest,
+} from '../../services/friendsApi';
+import { soundFX } from '../../lib/audioEffects';
+import { timeLeftLabel } from './LeagueView';
+import { GoldCoinIcon } from './GoldCoin';
+import { Snowflake } from './Ice';
+
+const AVATAR_COLORS = ['#1E3A5F', '#3B1F4A', '#1F4A3A', '#4A3A1F', '#1F3A4A', '#3A1F2A'];
+const fr = (n: number) => Math.max(0, Math.round(n)).toLocaleString('fr-FR');
+
+const QuestAvatar: React.FC<{ name: string; src?: string; size?: number; ring?: string }> = ({
+  name,
+  src,
+  size = 40,
+  ring = '',
+}) =>
+  src ? (
+    <img
+      src={src}
+      alt=""
+      referrerPolicy="no-referrer"
+      className={`rounded-full object-cover shrink-0 ${ring}`}
+      style={{ width: size, height: size }}
+    />
+  ) : (
+    <span
+      className={`rounded-full flex items-center justify-center font-extrabold text-white shrink-0 ${ring}`}
+      style={{
+        width: size,
+        height: size,
+        fontSize: Math.max(12, Math.round(size * 0.4)),
+        background:
+          AVATAR_COLORS[[...(name || '?')].reduce((h, c) => h + c.charCodeAt(0), 0) % AVATAR_COLORS.length],
+      }}
+    >
+      {(name || '?').slice(0, 1).toUpperCase()}
+    </span>
+  );
+
+function buildShareMessage(quest: FriendQuest): string {
+  const total = quest.me.xpContributed + quest.partner.xpContributed;
+  const remaining = Math.max(0, quest.targetXp - total);
+  const name = quest.partner.name || 'ami';
+  if (quest.status === 'pending') {
+    return `Eh ${name}, clique sur « C'est parti » pour lancer notre quête de ${fr(quest.targetXp)} XP sur KONAN cette semaine et gagner +${quest.rewardGold} Or chacun ! ⚡🔥`;
+  }
+  return `Eh ${name}, il nous manque ${fr(remaining)} XP pour gagner notre Or sur KONAN cette semaine ! À toi de jouer ⚡🔥`;
+}
+
+export interface FriendQuestCardProps {
+  questState: QuestState | null;
+  friends: FriendCard[];
+  loading?: boolean;
+  /** True si la ligue de l'élève est gelée (réputation <= 80 %) */
+  isFrozen?: boolean;
+  reputation?: number;
+  onRefresh: () => Promise<void> | void;
+  onGoldUpdated?: (gold: number) => void;
+  onOpenFriends?: () => void;
+  onToast?: (message: string) => void;
+}
+
+export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
+  questState,
+  friends,
+  loading = false,
+  isFrozen,
+  reputation,
+  onRefresh,
+  onGoldUpdated,
+  onOpenFriends,
+  onToast,
+}) => {
+  const [selectedFriendId, setSelectedFriendId] = useState<string>('');
+  const [busyAction, setBusyAction] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{ tone: 'ok' | 'err'; text: string } | null>(null);
+  const [shareOpenForId, setShareOpenForId] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [dismissedExpiredId, setDismissedExpiredId] = useState<string>('');
+
+  const effectiveFrozen = isFrozen ?? questState?.isFrozen ?? false;
+  const effectiveReputation = reputation ?? questState?.reputation ?? 100;
+
+  const chosenFriend = useMemo(() => {
+    if (friends.length === 1) return friends[0];
+    return friends.find((f) => f.konanId === selectedFriendId) || friends[0] || null;
+  }, [friends, selectedFriendId]);
+
+  const activeQuest = questState?.activeQuest || null;
+  const outgoingQuest = questState?.outgoingQuest || null;
+  const incomingQuests = questState?.incomingQuests || [];
+  const expiredQuest =
+    questState?.expiredQuest && questState.expiredQuest.id !== dismissedExpiredId
+      ? questState.expiredQuest
+      : null;
+
+  const handlePropose = async (konanId: string) => {
+    if (!konanId || busyAction) return;
+    setBusyAction(`propose_${konanId}`);
+    setFeedback(null);
+    const r = await proposeFriendQuest(konanId);
+    setBusyAction(null);
+    if (r.ok) {
+      soundFX.playCheckmarkPop();
+      const msg =
+        r.data.status === 'active'
+          ? 'Double accord ! Votre quête en duo est lancée.'
+          : 'Proposition envoyée ! La quête démarre dès que ton ami clique sur « C’est parti ».';
+      setFeedback({ tone: 'ok', text: msg });
+      onToast?.(msg);
+      await onRefresh();
+    } else {
+      setFeedback({ tone: 'err', text: questErrorMessage(r.error) });
+    }
+  };
+
+  const handleRespond = async (questId: string, accept: boolean) => {
+    if (!questId || busyAction) return;
+    setBusyAction(`respond_${questId}_${accept}`);
+    setFeedback(null);
+    const r = await respondFriendQuest(questId, accept);
+    setBusyAction(null);
+    if (r.ok) {
+      if (accept) soundFX.playCelebrationFanfare();
+      const msg = accept
+        ? 'C’est parti ! Votre quête de 1 000 XP est maintenant active.'
+        : 'Invitation déclinée sans pénalité.';
+      setFeedback({ tone: 'ok', text: msg });
+      onToast?.(msg);
+      await onRefresh();
+    } else {
+      setFeedback({ tone: 'err', text: questErrorMessage(r.error) });
+    }
+  };
+
+  const handleCancel = async (questId: string) => {
+    if (!questId || busyAction) return;
+    setBusyAction(`cancel_${questId}`);
+    setFeedback(null);
+    const r = await cancelFriendQuest(questId);
+    setBusyAction(null);
+    if (r.ok) {
+      setFeedback({ tone: 'ok', text: 'Proposition annulée. Tu peux inviter un autre ami.' });
+      await onRefresh();
+    } else {
+      setFeedback({ tone: 'err', text: questErrorMessage(r.error) });
+    }
+  };
+
+  const handleClaim = async (questId: string) => {
+    if (!questId || busyAction) return;
+    setBusyAction(`claim_${questId}`);
+    setFeedback(null);
+    const r = await claimFriendQuestReward(questId);
+    setBusyAction(null);
+    if (r.ok) {
+      soundFX.playVictoryCelebration();
+      onGoldUpdated?.(r.data.gold);
+      const msg = `Bravo ! +${r.data.rewardGold} Or ajoutés à ton compte (${fr(r.data.gold)} Or au total).`;
+      setFeedback({ tone: 'ok', text: msg });
+      onToast?.(msg);
+      await onRefresh();
+    } else {
+      setFeedback({ tone: 'err', text: questErrorMessage(r.error) });
+    }
+  };
+
+  const handleNudge = async (quest: FriendQuest) => {
+    if (busyAction) return;
+    setBusyAction(`nudge_${quest.id}`);
+    setFeedback(null);
+    const r = await nudgeFriendQuestPartner(quest.id);
+    setBusyAction(null);
+    setShareOpenForId(quest.id);
+    if (r.ok) {
+      soundFX.playCheckmarkPop();
+      const msg = `Relance envoyée à ${quest.partner.name} ! Tu peux aussi lui écrire sur WhatsApp.`;
+      setFeedback({ tone: 'ok', text: msg });
+      onToast?.(msg);
+      await onRefresh();
+    } else {
+      setFeedback({ tone: 'err', text: questErrorMessage(r.error) });
+    }
+  };
+
+  const handleCopyShare = (quest: FriendQuest) => {
+    const text = buildShareMessage(quest);
+    navigator.clipboard
+      ?.writeText(text)
+      .then(() => {
+        setCopiedId(quest.id);
+        setTimeout(() => setCopiedId(null), 2000);
+        onToast?.('Message d’encouragement copié !');
+      })
+      .catch(() => {});
+  };
+
+  const openWhatsAppShare = (quest: FriendQuest) => {
+    const text = encodeURIComponent(buildShareMessage(quest));
+    window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener,noreferrer');
+  };
+
+  // Rendu de la barre de progression bicolore divisée (Toi à gauche en bleu, Ton ami à droite en orange)
+  const renderActiveOrCompletedQuest = (quest: FriendQuest) => {
+    const myXp = quest.me.xpContributed;
+    const partnerXp = quest.partner.xpContributed;
+    const totalXp = myXp + partnerXp;
+    const targetXp = Math.max(1, quest.targetXp);
+    const clampedTotal = Math.min(totalXp, targetXp);
+    const overallPct = Math.min(100, Math.round((totalXp / targetXp) * 100));
+
+    // Largeurs exactes en % de l'objectif (ne dépasse jamais 100% visuellement)
+    let myPct = (myXp / targetXp) * 100;
+    let partnerPct = (partnerXp / targetXp) * 100;
+    if (myPct + partnerPct > 100 && totalXp > 0) {
+      myPct = (myXp / totalXp) * 100;
+      partnerPct = (partnerXp / totalXp) * 100;
+    }
+
+    const isCompleted = quest.status === 'completed';
+    const remainingXp = Math.max(0, targetXp - totalXp);
+
+    return (
+      <div className="space-y-4">
+        {/* En-tête : titre, récompense Or, compte à rebours */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 space-y-1">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                  isCompleted
+                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300'
+                    : 'bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-300'
+                }`}
+              >
+                <Sparkles className="w-3 h-3" />
+                {isCompleted ? 'Quête réussie !' : 'Quête en duo · Active'}
+              </span>
+              {!isCompleted && quest.expiresAt > 0 && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                  <Clock className="w-3 h-3 text-slate-400" />
+                  Termine dans <b className="text-slate-800 dark:text-slate-200">{timeLeftLabel(quest.expiresAt)}</b>
+                </span>
+              )}
+            </div>
+            <h3 className="m-0 text-base sm:text-[17px] font-black text-slate-900 dark:text-white leading-snug">
+              Récoltez {fr(targetXp)} XP ensemble cette semaine
+            </h3>
+          </div>
+
+          <div className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/35">
+            <GoldCoinIcon size={18} />
+            <span className="text-xs font-black tabular-nums text-amber-700 dark:text-amber-300">
+              +{quest.rewardGold} Or
+            </span>
+          </div>
+        </div>
+
+        {/* Binôme + bouton Encourager / Relancer à côté du nom de l'ami */}
+        <div className="flex items-center justify-between gap-2.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-white/[0.07]">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="flex -space-x-2 shrink-0">
+              <QuestAvatar name={quest.me.name} src={quest.me.avatar} size={36} ring="ring-2 ring-sky-400" />
+              <QuestAvatar name={quest.partner.name} src={quest.partner.avatar} size={36} ring="ring-2 ring-amber-400" />
+            </div>
+            <div className="min-w-0">
+              <p className="m-0 text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                Toi &amp; {quest.partner.name}
+              </p>
+              <p className="m-0 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                {quest.partner.frozen
+                  ? 'Ligue de ton ami gelée (ses XP ne comptent pas encore)'
+                  : isCompleted
+                    ? 'Objectif atteint ensemble !'
+                    : `Encore ${fr(remainingXp)} XP à récolter`}
+              </p>
+            </div>
+          </div>
+
+          {!isCompleted && (
+            <button
+              type="button"
+              disabled={busyAction === `nudge_${quest.id}`}
+              onClick={() => handleNudge(quest)}
+              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-400/35 text-xs font-extrabold cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+            >
+              <BellRing className="w-3.5 h-3.5" />
+              <span>{busyAction === `nudge_${quest.id}` ? 'Envoi…' : 'Encourager / Relancer'}</span>
+            </button>
+          )}
+        </div>
+
+        {/* Partage rapide WhatsApp / Copier après relance (ou à la demande) */}
+        {!isCompleted && shareOpenForId === quest.id && (
+          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-150">
+            <p className="m-0 text-xs text-slate-700 dark:text-slate-300 italic leading-relaxed">
+              « {buildShareMessage(quest)} »
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => openWhatsAppShare(quest)}
+                className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold cursor-pointer transition-colors"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>Partager sur WhatsApp</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleCopyShare(quest)}
+                className="inline-flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl bg-white dark:bg-white/[0.08] border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-200 text-xs font-extrabold cursor-pointer transition-colors"
+              >
+                {copiedId === quest.id ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedId === quest.id ? 'Copié !' : 'Copier'}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Alerte Gel de Ligue si la réputation de l'élève est <= 80 % */}
+        {!isCompleted && effectiveFrozen && (
+          <div className="p-3 rounded-2xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-300 dark:border-cyan-400/35 flex items-start gap-2.5 text-xs text-cyan-950 dark:text-cyan-100">
+            <Snowflake size={18} className="shrink-0 mt-0.5 text-cyan-600 dark:text-cyan-300" />
+            <span>
+              <b>Ta ligue est gelée ({effectiveReputation} %) :</b> tes XP sont bloqués à 0 et ne contribuent pas à la quête tant que tu ne repasses pas au-dessus de 80 % en terminant tes leçons.
+            </span>
+          </div>
+        )}
+
+        {/* Barre de progression visuelle divisée en deux (Bleu = Toi | Orange = Ton ami) */}
+        <div className="space-y-2">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300">Progression commune</span>
+            <span className="text-sm font-black tabular-nums text-slate-900 dark:text-white">
+              {fr(clampedTotal)} / {fr(targetXp)} XP{' '}
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">({overallPct} %)</span>
+            </span>
+          </div>
+
+          <div
+            className="h-4 w-full rounded-full bg-slate-200 dark:bg-slate-800/90 overflow-hidden flex p-0.5 gap-0.5 shadow-inner"
+            role="progressbar"
+            aria-label="Progression de la quête en duo"
+            aria-valuemin={0}
+            aria-valuemax={targetXp}
+            aria-valuenow={clampedTotal}
+          >
+            {myPct > 0 && (
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-700 ease-out shadow-[0_0_10px_rgba(56,189,248,0.45)]"
+                style={{ width: `${myPct}%` }}
+                title={`Toi : ${fr(myXp)} XP`}
+              />
+            )}
+            {partnerPct > 0 && (
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-700 ease-out shadow-[0_0_10px_rgba(245,158,11,0.45)]"
+                style={{ width: `${partnerPct}%` }}
+                title={`${quest.partner.name} : ${fr(partnerXp)} XP`}
+              />
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 pt-0.5">
+            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-sky-50/90 dark:bg-sky-500/10 border border-sky-200/80 dark:border-sky-400/25">
+              <span className="w-2.5 h-2.5 rounded-full bg-sky-500 shrink-0" />
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
+                Toi : <b className="tabular-nums text-sky-700 dark:text-sky-300">{fr(myXp)} XP</b>
+              </span>
+            </div>
+            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-amber-50/90 dark:bg-amber-500/10 border border-amber-200/80 dark:border-amber-400/25">
+              <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0" />
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
+                {quest.partner.name} : <b className="tabular-nums text-amber-700 dark:text-amber-300">{fr(partnerXp)} XP</b>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Réclamation de la récompense en Or si la quête est terminée */}
+        {isCompleted && (
+          <div className="pt-1">
+            {quest.claimedByMe ? (
+              <div className="w-full h-11 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-300 dark:border-emerald-500/35 text-emerald-800 dark:text-emerald-300 font-extrabold text-sm flex items-center justify-center gap-2">
+                <Check className="w-4 h-4" />
+                <span>+{quest.rewardGold} Or réclamés ! Rendez-vous la semaine prochaine</span>
+              </div>
+            ) : (
+              <button
+                type="button"
+                disabled={busyAction === `claim_${quest.id}`}
+                onClick={() => handleClaim(quest.id)}
+                className="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/30 cursor-pointer transition-all active:scale-[0.98] disabled:opacity-60"
+              >
+                <Gift className="w-4 h-4" />
+                <GoldCoinIcon size={18} />
+                <span>{busyAction === `claim_${quest.id}` ? 'Attribution…' : `Réclamer mes +${quest.rewardGold} Or`}</span>
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <section
+      aria-label="Quête d’XP entre amis"
+      className="rounded-[22px] bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/10 p-4 sm:p-5 shadow-sm dark:shadow-xl dark:shadow-slate-950/40 space-y-4"
+    >
+      {/* 1. QUÊTE ACTIVE OU TERMINÉE */}
+      {activeQuest ? (
+        renderActiveOrCompletedQuest(activeQuest)
+      ) : (
+        <div className="space-y-4">
+          {/* En-tête commun hors quête active */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-0.5">
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-amber-600 dark:text-[#F5C451]">
+                <Users className="w-3.5 h-3.5" />
+                Quête hebdomadaire en duo
+              </span>
+              <h3 className="m-0 text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight">
+                Récoltez 1 000 XP ensemble cette semaine
+              </h3>
+            </div>
+            <div className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/30">
+              <GoldCoinIcon size={16} />
+              <span className="text-xs font-black text-amber-700 dark:text-amber-300">+50 Or chacun</span>
+            </div>
+          </div>
+
+          {/* Quête de la semaine passée expirée */}
+          {expiredQuest && (
+            <div className="p-3 rounded-2xl bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 flex items-start justify-between gap-2 text-xs text-slate-600 dark:text-slate-300">
+              <span>
+                La quête précédente avec <b>{expiredQuest.partner.name}</b> a expiré à{' '}
+                <b>{fr(expiredQuest.me.xpContributed + expiredQuest.partner.xpContributed)} / {fr(expiredQuest.targetXp)} XP</b>{' '}
+                (aucun Or attribué). Lance un nouveau duo cette semaine !
+              </span>
+              <button
+                type="button"
+                onClick={() => setDismissedExpiredId(expiredQuest.id)}
+                aria-label="Fermer"
+                className="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-white/10 cursor-pointer shrink-0"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
+          {/* 2. INVITATIONS REÇUES (DOUBLE CONSENTEMENT : C'EST PARTI / REFUSER) */}
+          {incomingQuests.length > 0 && (
+            <div className="space-y-2.5">
+              {incomingQuests.map((inv) => (
+                <div
+                  key={inv.id}
+                  className="p-3.5 rounded-2xl bg-sky-50/90 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-400/30 space-y-3"
+                >
+                  <div className="flex items-center gap-3">
+                    <QuestAvatar name={inv.partner.name} src={inv.partner.avatar} size={42} ring="ring-2 ring-sky-400/60" />
+                    <div className="min-w-0 flex-1">
+                      <p className="m-0 text-sm font-extrabold text-slate-900 dark:text-white leading-snug">
+                        {inv.partner.name} te propose une quête en duo !
+                      </p>
+                      <p className="m-0 text-xs text-slate-600 dark:text-slate-300">
+                        Objectif : <b>{fr(inv.targetXp)} XP</b> ensemble → <b>+{inv.rewardGold} Or chacun</b>. Tes XP ne comptent qu’une fois acceptée.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      disabled={Boolean(busyAction)}
+                      onClick={() => handleRespond(inv.id, true)}
+                      className="flex-1 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm inline-flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition-all active:scale-[0.98] disabled:opacity-50"
+                    >
+                      <Check className="w-4 h-4" />
+                      <span>{busyAction === `respond_${inv.id}_true` ? 'Lancement…' : 'C’est parti !'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={Boolean(busyAction)}
+                      onClick={() => handleRespond(inv.id, false)}
+                      className="h-10 px-4 rounded-xl bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-300 dark:bg-white/[0.06] dark:hover:bg-rose-500/15 dark:text-slate-200 dark:border-white/15 font-extrabold text-xs sm:text-sm inline-flex items-center justify-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+                    >
+                      <X className="w-4 h-4" />
+                      <span>Refuser</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 3. PROPOSITION ENVOYÉE EN ATTENTE (STATUS PENDING — XP NON COMPTABILISÉS) */}
+          {outgoingQuest ? (
+            <div className="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-400/30 space-y-3">
+              <div className="flex items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <QuestAvatar name={outgoingQuest.partner.name} src={outgoingQuest.partner.avatar} size={40} ring="ring-2 ring-amber-400/60" />
+                  <div className="min-w-0">
+                    <p className="m-0 text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                      En attente de {outgoingQuest.partner.name}
+                    </p>
+                    <p className="m-0 text-xs text-slate-600 dark:text-slate-300">
+                      La quête démarrera dès qu’il/elle cliquera sur <b>« C’est parti »</b> (les XP ne comptent pas encore).
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  disabled={Boolean(busyAction)}
+                  onClick={() => handleNudge(outgoingQuest)}
+                  className="flex-1 min-w-[140px] h-9 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors disabled:opacity-50"
+                >
+                  <BellRing className="w-3.5 h-3.5" />
+                  <span>{busyAction === `nudge_${outgoingQuest.id}` ? 'Relance…' : 'Encourager / Relancer'}</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={Boolean(busyAction)}
+                  onClick={() => handleCancel(outgoingQuest.id)}
+                  className="h-9 px-3.5 rounded-xl bg-white dark:bg-white/[0.06] border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-200 font-bold text-xs cursor-pointer hover:border-rose-300 dark:hover:border-rose-400/40 transition-colors disabled:opacity-50"
+                >
+                  Annuler
+                </button>
+              </div>
+              {shareOpenForId === outgoingQuest.id && (
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => openWhatsAppShare(outgoingQuest)}
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold cursor-pointer"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>Relancer sur WhatsApp</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyShare(outgoingQuest)}
+                    className="inline-flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl bg-white dark:bg-white/[0.08] border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-200 text-xs font-extrabold cursor-pointer"
+                  >
+                    {copiedId === outgoingQuest.id ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedId === outgoingQuest.id ? 'Copié !' : 'Copier'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : loading && !questState ? (
+            <div className="py-4 text-center text-xs font-bold text-slate-500 dark:text-slate-400">
+              Chargement de ta quête de la semaine…
+            </div>
+          ) : friends.length === 0 ? (
+            /* 4. AUCUN AMI ENCORE */
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="space-y-0.5">
+                <p className="m-0 text-sm font-extrabold text-slate-900 dark:text-white">
+                  Ajoute un ami pour débloquer les quêtes en duo
+                </p>
+                <p className="m-0 text-xs text-slate-600 dark:text-slate-400">
+                  Entre son ID KONAN pour l’ajouter, puis lancez votre défi de 1 000 XP ensemble.
+                </p>
+              </div>
+              {onOpenFriends && (
+                <button
+                  type="button"
+                  onClick={onOpenFriends}
+                  className="shrink-0 h-10 px-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-white dark:bg-sky-400 dark:hover:bg-sky-300 dark:text-slate-950 font-extrabold text-xs inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>Ajouter un ami</span>
+                </button>
+              )}
+            </div>
+          ) : friends.length === 1 ? (
+            /* 5. EXACTEMENT 1 AMI : PROPOSITION DIRECTE « C'EST PARTI » */
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <QuestAvatar name={friends[0].name} src={friends[0].avatar} size={42} ring="ring-2 ring-sky-400/40" />
+                <div className="min-w-0">
+                  <p className="m-0 text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                    Faire la quête avec {friends[0].name} ?
+                  </p>
+                  <p className="m-0 text-xs text-slate-500 dark:text-slate-400">
+                    Ton ami devra aussi cliquer sur « C’est parti » pour démarrer.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled={Boolean(busyAction)}
+                onClick={() => handlePropose(friends[0].konanId)}
+                className="shrink-0 h-10 px-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-white dark:bg-sky-400 dark:hover:bg-sky-300 dark:text-slate-950 font-black text-xs sm:text-sm inline-flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>{busyAction ? 'Envoi…' : 'C’est parti'}</span>
+              </button>
+            </div>
+          ) : (
+            /* 6. 2 AMIS OU PLUS : SÉLECTEUR DE BINÔME POUR LA SEMAINE */
+            <div className="space-y-3">
+              <p className="m-0 text-xs font-bold text-slate-600 dark:text-slate-400">
+                Choisis 1 ami avec qui lancer la quête cette semaine (accord mutuel requis) :
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-44 overflow-y-auto pr-0.5">
+                {friends.map((f) => {
+                  const selected = chosenFriend?.konanId === f.konanId;
+                  return (
+                    <button
+                      key={f.konanId}
+                      type="button"
+                      onClick={() => setSelectedFriendId(f.konanId)}
+                      className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-left cursor-pointer transition-all ${
+                        selected
+                          ? 'bg-sky-50 border-sky-400 dark:bg-sky-500/15 dark:border-sky-400 ring-1 ring-sky-400/50'
+                          : 'bg-slate-50 border-slate-200 hover:border-slate-300 dark:bg-slate-950/50 dark:border-white/[0.08] dark:hover:border-white/20'
+                      }`}
+                    >
+                      <QuestAvatar name={f.name} src={f.avatar} size={34} />
+                      <div className="min-w-0 flex-1">
+                        <p className="m-0 text-xs font-extrabold text-slate-900 dark:text-white truncate">{f.name}</p>
+                        <p className="m-0 text-[10px] font-mono text-slate-500 dark:text-slate-400">{f.konanId}</p>
+                      </div>
+                      {selected && (
+                        <span className="w-5 h-5 rounded-full bg-sky-500 text-white flex items-center justify-center shrink-0">
+                          <Check className="w-3 h-3" />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+              {chosenFriend && (
+                <button
+                  type="button"
+                  disabled={Boolean(busyAction)}
+                  onClick={() => handlePropose(chosenFriend.konanId)}
+                  className="w-full h-11 rounded-xl bg-sky-500 hover:bg-sky-400 text-white dark:bg-sky-400 dark:hover:bg-sky-300 dark:text-slate-950 font-black text-sm inline-flex items-center justify-center gap-2 shadow-sm cursor-pointer transition-all active:scale-[0.98] disabled:opacity-50"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>
+                    {busyAction ? 'Envoi de la proposition…' : `C’est parti avec ${chosenFriend.name}`}
+                  </span>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {feedback && (
+        <p
+          className={`m-0 text-xs font-bold leading-snug ${
+            feedback.tone === 'ok' ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'
+          }`}
+        >
+          {feedback.text}
+        </p>
+      )}
+    </section>
+  );
+};

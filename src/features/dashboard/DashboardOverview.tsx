@@ -70,6 +70,8 @@ export interface DashboardOverviewProps {
   leagueSummary?: { rank: number | null; divisionName: string; frozen?: boolean } | null;
   /** Tuile « Réputation » (%) */
   reputation?: number;
+  /** Carte « Quête d'XP en duo entre amis » */
+  friendQuestSlot?: React.ReactNode;
 }
 
 /** Pastille de la méthode, comme la maquette (« Pomodoro · 25 + 5 »). */
@@ -121,6 +123,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   userUid: _userUid,
   leagueSummary = null,
   reputation,
+  friendQuestSlot,
 }) => {
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C
   const EXAM_PREP_PAUSED = !isExamPrepOpenFor(preferences?.gradeLevel || academicLevel);
@@ -361,6 +364,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             )}
           </div>
         )}
+
+        {/* Quête d'XP hebdomadaire en duo entre amis */}
+        {friendQuestSlot}
       </div>
 
       {/* 2-COLUMN COCKPIT (TODAY'S TIMELINE + ACADEMIC INSIGHTS) */}

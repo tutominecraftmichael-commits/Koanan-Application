@@ -5,7 +5,8 @@
  * La fiche publique d'un élève (ligue, liste d'amis) est ici aussi.
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, Camera, Check, ChevronRight, Copy, CreditCard, Moon, Search, Settings, Shield, Sun, UserCheck, UserPlus, Users, X } from 'lucide-react';
+import { ArrowLeft, Camera, Check, ChevronRight, Copy, CreditCard, Moon, Search, Settings, Shield, Store, Sun, UserCheck, UserPlus, Users, X } from 'lucide-react';
+import { GoldCoinIcon } from '../gamification/GoldCoin';
 import { useTheme } from '../../context/ThemeContext';
 import { resizeImageToAvatar } from '../../lib/avatar';
 import { soundFX } from '../../lib/audioEffects';
@@ -236,6 +237,9 @@ export interface ProfilePageProps {
   onOpenPlans: () => void;
   onOpenSettings: () => void;
   onOpenPrivacyPolicy: () => void;
+  /** Solde d'Or (Gold) + aperçu « Boutique — Bientôt disponible » */
+  gold?: number;
+  onOpenShop?: () => void;
   /** Ouvrir directement un écran (ex. « Ajouter des amis » depuis la cloche) */
   initialScreen?: 'menu' | 'friends' | 'privacy';
 }
@@ -244,6 +248,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   const {
     onClose, name, avatar, hasCustomAvatar, onUpdateAvatar, classLabel, konanId, planTier,
     totalXp, friends, friendsError, leaguePeers = [], onReloadFriends, onOpenPlans, onOpenSettings, onOpenPrivacyPolicy,
+    gold, onOpenShop,
   } = props;
   const { toggleTheme, isLight } = useTheme();
   const [screen, setScreen] = useState<'menu' | 'friends' | 'privacy'>(props.initialScreen || 'menu');
@@ -474,6 +479,26 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
                 detail={<span className={`text-xs font-extrabold ${tierTone(planTier)}`}>{tierLabel(planTier)}</span>}
                 onClick={onOpenPlans}
               />
+              {onOpenShop && (
+                <MenuItem
+                  icon={<Store className="w-[18px] h-[18px] text-amber-500" />}
+                  label="Boutique"
+                  detail={
+                    <span className="inline-flex items-center gap-1.5">
+                      {typeof gold === 'number' && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/30 text-[11px] font-black tabular-nums text-amber-700 dark:text-amber-300">
+                          <GoldCoinIcon size={13} />
+                          {fr(gold)}
+                        </span>
+                      )}
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.08] text-slate-600 dark:text-slate-300">
+                        Bientôt
+                      </span>
+                    </span>
+                  }
+                  onClick={onOpenShop}
+                />
+              )}
               <MenuItem
                 icon={<UserPlus className="w-[18px] h-[18px]" />}
                 label="Ajouter des amis"

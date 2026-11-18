@@ -32,6 +32,7 @@ export interface LeagueSyncResult {
   accepted?: string[];
   rejected?: Array<{ id: string; reason: string }>;
   board?: LeagueBoard;
+  gold?: number;
 }
 
 export async function callLeague(body: { events: LeagueEvent[]; reputation?: number; displayName?: string; classLabel?: string; gradeLevel?: string; avatar?: string }): Promise<LeagueSyncResult> {
@@ -51,7 +52,15 @@ export async function callLeague(body: { events: LeagueEvent[]; reputation?: num
   try {
     let r = await attempt(false);
     if (!r.ok && (r.json?.error === 'TOKEN_EXPIRED' || r.status === 401)) r = await attempt(true);
-    if (r.ok) return { success: true, accepted: r.json.accepted, rejected: r.json.rejected, board: r.json.board };
+    if (r.ok) {
+      return {
+        success: true,
+        accepted: r.json.accepted,
+        rejected: r.json.rejected,
+        board: r.json.board,
+        gold: typeof r.json.gold === 'number' && Number.isFinite(r.json.gold) ? r.json.gold : undefined,
+      };
+    }
     return { success: false, error: String(r.json?.error || `HTTP ${r.status}`) };
   } catch (err: any) {
     return { success: false, error: err?.message?.includes('fetch') ? 'pas de connexion Internet' : String(err?.message || err) };

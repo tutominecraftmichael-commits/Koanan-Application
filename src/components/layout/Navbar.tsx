@@ -19,7 +19,8 @@ import {
   User
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount, PlusInvitationNotification } from '../../types';
-import type { FriendNotice } from '../../services/friendsApi';
+import type { FriendNotice, QuestNotice } from '../../services/friendsApi';
+import { GoldCoinIcon } from '../../features/gamification/GoldCoin';
 import { Badge } from '../ui/Badge';
 import { KonanCube } from '../common/KonanCube';
 import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
@@ -138,6 +139,87 @@ const FriendNoticeItem: React.FC<{ notice: FriendNotice; onRespond?: (konanId: s
   );
 };
 
+/** Notification de quête en duo dans la cloche : invitation (« C'est parti ! » / « Refuser »), relance, réussite. */
+const QuestNoticeItem: React.FC<{
+  notice: QuestNotice;
+  onRespond?: (questId: string, accept: boolean) => Promise<void>;
+  onOpen?: () => void;
+}> = ({ notice, onRespond, onOpen }) => {
+  const [busy, setBusy] = useState(false);
+  const who = notice.fromName || 'Un ami';
+  const tone =
+    notice.kind === 'quest_declined'
+      ? 'bg-rose-50/80 border-rose-200 dark:bg-rose-950/40 dark:border-rose-500/30'
+      : notice.kind === 'quest_completed' || notice.kind === 'quest_accepted'
+        ? 'bg-emerald-50/80 border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-500/30'
+        : notice.kind === 'quest_nudge'
+          ? 'bg-amber-50/80 border-amber-200 dark:bg-amber-950/40 dark:border-amber-500/30'
+          : 'bg-sky-50/80 border-sky-200 dark:bg-sky-950/40 dark:border-sky-500/30';
+  const label =
+    notice.kind === 'quest_invite'
+      ? 'Invitation · Quête en duo'
+      : notice.kind === 'quest_accepted'
+        ? 'Quête lancée !'
+        : notice.kind === 'quest_declined'
+          ? 'Quête déclinée'
+          : notice.kind === 'quest_completed'
+            ? `Quête réussie · +${notice.rewardGold} Or`
+            : 'Encouragement · Quête';
+
+  return (
+    <div className={`w-full p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left ${tone}`}>
+      <button type="button" onClick={onOpen} className="shrink-0 cursor-pointer" aria-label={`Ouvrir la quête avec ${who}`}>
+        {notice.fromAvatar ? (
+          <img src={notice.fromAvatar} alt="" referrerPolicy="no-referrer" className="w-8 h-8 rounded-full object-cover" />
+        ) : (
+          <span className="w-8 h-8 rounded-full bg-amber-500 text-slate-950 text-xs font-black flex items-center justify-center">
+            {who.slice(0, 1).toUpperCase()}
+          </span>
+        )}
+      </button>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-1">
+          <span className="text-[9px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-300">{label}</span>
+          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">
+            {formatNotificationTime(new Date(notice.at).toISOString())}
+          </span>
+        </span>
+        <button type="button" onClick={onOpen} className="block text-left w-full text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1 cursor-pointer">
+          {notice.message}
+        </button>
+        {notice.pending && onRespond && (
+          <span className="flex gap-2 mt-2">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={async () => {
+                setBusy(true);
+                await onRespond(notice.questId, true);
+                setBusy(false);
+              }}
+              className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-black cursor-pointer disabled:opacity-50"
+            >
+              C’est parti !
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={async () => {
+                setBusy(true);
+                await onRespond(notice.questId, false);
+                setBusy(false);
+              }}
+              className="px-3 py-1.5 rounded-lg bg-white text-slate-700 border border-slate-300 dark:bg-white/[0.06] dark:text-slate-200 dark:border-white/15 text-[11px] font-black cursor-pointer disabled:opacity-50"
+            >
+              Refuser
+            </button>
+          </span>
+        )}
+      </span>
+    </div>
+  );
+};
+
 export interface NavbarProps {
   activeView: ActiveAppView;
   onNavigate: (view: ActiveAppView) => void;
@@ -169,6 +251,12 @@ export interface NavbarProps {
   onRespondFriend?: (konanId: string, accept: boolean) => Promise<void>;
   onOpenFriends?: () => void;
   onOpenProfile?: () => void;
+  /** Monnaie virtuelle Or (Gold) + notifications de quêtes en duo */
+  gold?: number | null;
+  onOpenShop?: () => void;
+  questNotices?: QuestNotice[];
+  onRespondQuest?: (questId: string, accept: boolean) => Promise<void>;
+  onOpenQuest?: () => void;
   onAcceptInvitation?: (invitation: PlusInvitationNotification) => void;
   onDeclineInvitation?: (invitation: PlusInvitationNotification) => void;
   /** Énergie ⚡ affichée en haut à droite (null : pas d'icône d'exercices pour cet élève) */
@@ -224,6 +312,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   onRespondFriend,
   onOpenFriends,
   onOpenProfile,
+  gold = null,
+  onOpenShop,
+  questNotices = [],
+  onRespondQuest,
+  onOpenQuest,
   onAcceptInvitation,
   onDeclineInvitation,
   energy = null,
@@ -319,7 +412,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   const hasUnreadNotifications = activePendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
     || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id))
     || paymentNotices.some(n => n?.id && !seenNotificationIds.has(n.id))
-    || friendNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
+    || friendNotices.some(n => n?.id && !seenNotificationIds.has(n.id))
+    || questNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
 
   // Message non lu : la cloche bouge toute seule (toutes les 4 s) jusqu'à ce que l'élève ouvre l'onglet
   useEffect(() => {
@@ -345,6 +439,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       normalizedOwnerNotifications.forEach(notif => notif?.id && next.add(notif.id));
       paymentNotices.forEach(n => n?.id && next.add(n.id));
       friendNotices.forEach(n => n?.id && next.add(n.id));
+      questNotices.forEach(n => n?.id && next.add(n.id));
       try {
         localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
       } catch {
@@ -352,7 +447,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       return next;
     });
-  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices, friendNotices]);
+  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices, friendNotices, questNotices]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), component: AnimatedDashboardIcon, icon: AnimatedDashboardIcon },
@@ -478,6 +573,20 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Controls */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Solde d'Or (Gold) permanent dans la barre supérieure */}
+            {isAppView && typeof gold === 'number' && (
+              <button
+                type="button"
+                onClick={() => { soundFX.playCheckmarkPop(); onOpenShop?.(); }}
+                aria-label={`Ton solde : ${gold.toLocaleString('fr-FR')} Or. Ouvrir l'aperçu Boutique`}
+                title="Ton Or KONAN (Boutique bientôt disponible)"
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-amber-50 border border-amber-300/80 text-amber-800 hover:bg-amber-100/80 dark:bg-amber-500/15 dark:border-amber-400/35 dark:text-amber-300 dark:hover:bg-amber-500/25 text-xs sm:text-sm font-black tabular-nums cursor-pointer active:scale-95 transition-all"
+              >
+                <GoldCoinIcon size={16} />
+                <span>{gold.toLocaleString('fr-FR')}</span>
+              </button>
+            )}
+
             {/* Énergie ⚡ des exercices (le mode jour / nuit est désormais dans les Paramètres) */}
             {isAppView && energy && (
               <button
@@ -630,13 +739,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                         )}
                       </div>
 
-                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && friendNotices.length === 0 ? (
+                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && friendNotices.length === 0 && questNotices.length === 0 ? (
                         <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                           <Bell className="w-6 h-6 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                           <p>Aucune notification pour le moment.</p>
                         </div>
                       ) : (
                         <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
+                          {/* Quêtes d'XP en duo : invitations, relances, réussites */}
+                          {questNotices.map((n) => (
+                            <QuestNoticeItem key={n.id} notice={n} onRespond={onRespondQuest} onOpen={() => { setIsNotificationsOpen(false); onOpenQuest?.(); }} />
+                          ))}
                           {/* Paiements KONAN Pro acceptés ou refusés */}
                           {/* Amis : demandes reçues, acceptées ou refusées */}
                           {friendNotices.map((n) => (
@@ -800,13 +913,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </div>
                         </div>
 
-                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && friendNotices.length === 0 ? (
+                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && friendNotices.length === 0 && questNotices.length === 0 ? (
                           <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                             <Bell className="w-7 h-7 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                             <p>Aucune notification pour le moment.</p>
                           </div>
                         ) : (
                           <div className="space-y-2.5 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                            {/* Quêtes d'XP en duo : invitations, relances, réussites */}
+                            {questNotices.map((n) => (
+                              <QuestNoticeItem key={`mob-${n.id}`} notice={n} onRespond={onRespondQuest} onOpen={() => { setIsNotificationsOpen(false); onOpenQuest?.(); }} />
+                            ))}
                             {/* Paiements KONAN Pro acceptés ou refusés */}
                           {/* Amis : demandes reçues, acceptées ou refusées */}
                           {friendNotices.map((n) => (

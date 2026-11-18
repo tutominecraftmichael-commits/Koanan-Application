@@ -709,6 +709,8 @@ export async function syncUserStateToCloud(uid: string, data: any): Promise<{ su
     const userRef = doc(db, 'users', uid);
     // Sanitize data (remove undefined fields that Firestore doesn't like)
     const sanitized = JSON.parse(JSON.stringify(data));
+    // L'Or (gold) est strictement géré côté serveur (api/_quests.js) : ne jamais l'écraser par un cache local
+    delete sanitized.gold;
 
     // GARDE STRICTE DE CONFIDENTIALITÉ / RGPD :
     // Tant que l'utilisateur n'a pas accepté la politique de confidentialité,

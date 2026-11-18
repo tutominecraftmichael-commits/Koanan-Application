@@ -149,14 +149,23 @@ export const LeaguePage: React.FC<{
   onRefresh: () => void;
   /** Toucher un élève du classement : sa fiche (ID KONAN) */
   onOpenPlayer?: (konanId: string) => void;
-}> = ({ board, localReputation, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh, onOpenPlayer }) => {
+  /** Quête d'XP hebdomadaire en duo entre amis */
+  questSection?: React.ReactNode;
+}> = ({ board, localReputation, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh, onOpenPlayer, questSection }) => {
   React.useEffect(() => { onRefresh(); }, [onRefresh]);
   return (
     <div className="space-y-3 pb-24">
       {board?.lastResult && board.lastResult.weekId !== resultSeen && (
         <LeagueResultBanner board={board} onClose={() => onDismissResult(board.lastResult?.weekId || '')} />
       )}
-      {board?.eligible && hasCourses ? <LeagueView board={board} onOpenPlayer={onOpenPlayer} /> : <LeagueCard board={board} localReputation={localReputation} hasCourses={hasCourses} offline={offline} errorText={errorText} onOpen={onRefresh} />}
+      {board?.eligible && hasCourses ? (
+        <LeagueView board={board} onOpenPlayer={onOpenPlayer} questSection={questSection} />
+      ) : (
+        <div className="max-w-xl mx-auto space-y-4">
+          {questSection}
+          <LeagueCard board={board} localReputation={localReputation} hasCourses={hasCourses} offline={offline} errorText={errorText} onOpen={onRefresh} />
+        </div>
+      )}
     </div>
   );
 };
@@ -182,7 +191,7 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
   </div>
 );
 
-export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId: string) => void }> = ({ board, onOpenPlayer }) => {
+export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId: string) => void; questSection?: React.ReactNode }> = ({ board, onOpenPlayer, questSection }) => {
   const size = board.rows.length;
   const [showRules, setShowRules] = React.useState(false);
   const repTone = board.reputation > 80
@@ -239,6 +248,9 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
           </div>
         </div>
         {showRules && <LeagueRules reputation={board.reputation} />}
+
+        {/* Quête d'XP hebdomadaire en duo entre amis */}
+        {questSection}
 
         {/* Réputation de 80 % ou moins : ligue gelée (glace animée), XP gelés, comment dégeler */}
         <IceStyles />

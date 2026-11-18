@@ -70,7 +70,18 @@ import { UltimateCompletionCelebrationModal } from './components/celebration/Ult
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
 import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy, lessonXp } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
-import { fetchFriends, respondFriendRequest, friendErrorMessage, type FriendsState } from './services/friendsApi';
+import {
+  fetchFriends,
+  fetchQuestState,
+  friendErrorMessage,
+  questErrorMessage,
+  respondFriendQuest,
+  respondFriendRequest,
+  type FriendsState,
+  type QuestState,
+} from './services/friendsApi';
+import { FriendQuestCard } from './features/gamification/FriendQuestCard';
+import { ShopComingSoonModal } from './features/gamification/GoldCoin';
 import { ProfilePage, PublicProfileSheet } from './features/profile/ProfilePage';
 import { fetchSubscription, type SubscriptionInfo } from './services/subscriptionApi';
 import { LeaguePage } from './features/gamification/LeagueView';
@@ -845,6 +856,7 @@ export function App() {
       setLeagueError(r.success ? '' : String(r.error || ''));
       if (!r.success) return;
       if (r.board) setLeagueBoard(r.board);
+      if (typeof r.gold === 'number') setUserGold(r.gold);
       // Gains refusés par le serveur : avant, ils disparaissaient sans un mot (« mes XP ne comptent pas »)
       const refused = r.rejected || [];
       if (refused.length) {
@@ -853,6 +865,7 @@ export function App() {
       }
       const done = [...(r.accepted || []), ...refused.map((x) => x.id)];
       if (done.length) updateGamification((prev) => clearPendingEvents(prev.gamification, done));
+      if ((r.accepted || []).length > 0) reloadQuestsRef.current();
     } finally {
       leagueBusy.current = false;
     }
@@ -885,6 +898,18 @@ export function App() {
   // Amis (2026-11-17) : état complet (amis, demandes reçues/envoyées, notifications cloche, confidentialité)
   const [friendsData, setFriendsData] = useState<FriendsState | null>(null);
   const [friendsError, setFriendsError] = useState('');
+  // Or (Gold) & Quêtes d'XP en duo hebdomadaires
+  const [questState, setQuestState] = useState<QuestState | null>(null);
+  const [questLoading, setQuestLoading] = useState(false);
+  const [userGold, setUserGold] = useState<number>(() => (typeof state.gold === 'number' && Number.isFinite(state.gold) ? state.gold : 100));
+  const [isShopModalOpen, setIsShopModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!questState && typeof state.gold === 'number' && Number.isFinite(state.gold)) {
+      setUserGold(state.gold);
+    }
+  }, [state.gold, questState]);
+
   const reloadFriends = useCallback(async () => {
     if (!subscriptionAccount || !auth?.currentUser) return;
     const r = await fetchFriends();
@@ -895,6 +920,35 @@ export function App() {
       setFriendsError(friendErrorMessage(r.error));
     }
   }, [subscriptionAccount]);
+
+  const reloadQuests = useCallback(async () => {
+    if (!subscriptionAccount || !auth?.currentUser) return;
+    setQuestLoading(true);
+    const r = await fetchQuestState();
+    setQuestLoading(false);
+    if (r.ok) {
+      setQuestState(r.data);
+      if (typeof r.data.gold === 'number' && Number.isFinite(r.data.gold)) {
+        setUserGold(r.data.gold);
+      }
+    }
+  }, [subscriptionAccount]);
+  const reloadQuestsRef = useRef(reloadQuests);
+  reloadQuestsRef.current = reloadQuests;
+  const handleRefreshLeagueAndQuests = useCallback(() => {
+    syncLeague();
+    reloadQuests();
+  }, [syncLeague, reloadQuests]);
+
+  const handleRespondQuest = useCallback(async (questId: string, accept: boolean) => {
+    const r = await respondFriendQuest(questId, accept);
+    if (r.ok) {
+      await reloadQuests();
+      showToast(accept ? 'C’est parti ! Ta quête en duo de 1 000 XP est lancée.' : 'Invitation de quête refusée sans pénalité.');
+    } else {
+      showToast(questErrorMessage(r.error));
+    }
+  }, [reloadQuests]);
 
   const handleRespondFriend = useCallback(async (konanId: string, accept: boolean) => {
     const r = await respondFriendRequest(konanId, accept);
@@ -910,18 +964,20 @@ export function App() {
     if (!subscriptionAccount) {
       setFriendsData(null);
       setFriendsError('');
+      setQuestState(null);
+      setUserGold(100);
       return;
     }
-    const first = setTimeout(reloadFriends, 1200);
-    const every = setInterval(reloadFriends, 2 * 60 * 1000);
-    const onVisible = () => { if (document.visibilityState === 'visible') reloadFriends(); };
+    const first = setTimeout(() => { reloadFriends(); reloadQuests(); }, 1200);
+    const every = setInterval(() => { reloadFriends(); reloadQuests(); }, 2 * 60 * 1000);
+    const onVisible = () => { if (document.visibilityState === 'visible') { reloadFriends(); reloadQuests(); } };
     document.addEventListener('visibilitychange', onVisible);
     return () => {
       clearTimeout(first);
       clearInterval(every);
       document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [subscriptionAccount, reloadFriends]);
+  }, [subscriptionAccount, reloadFriends, reloadQuests]);
   const subscriptionPending = Boolean(subscriptionInfo?.status?.pending);
   const refreshSubscription = useCallback(async () => {
     if (!subscriptionAccount || !auth?.currentUser) return;
@@ -2551,6 +2607,11 @@ export function App() {
           friendNotices={friendsData?.notices || []}
           onRespondFriend={handleRespondFriend}
           onOpenFriends={() => setProfileScreen('friends')}
+          gold={state.userAccount?.isLoggedIn ? userGold : null}
+          onOpenShop={() => setIsShopModalOpen(true)}
+          questNotices={questState?.questNotices || []}
+          onRespondQuest={handleRespondQuest}
+          onOpenQuest={() => setActiveView('league')}
           // LMD, BTS : pas de cours, donc pas d'entraînement ni d'énergie (ils gagnent leurs XP au chronomètre)
           energy={gamificationEnabled && gradeHasGuidedCourses ? {
             value: energyNow(state.gamification).energy,
@@ -2732,6 +2793,19 @@ export function App() {
                 ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze', frozen: Boolean(leagueBoard?.frozen) }
                 : null}
               reputation={gamificationEnabled ? (leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) : undefined}
+              friendQuestSlot={subscriptionAccount ? (
+                <FriendQuestCard
+                  questState={questState}
+                  friends={friendsData?.friends || []}
+                  loading={questLoading}
+                  isFrozen={leagueBoard?.frozen ?? ((leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) <= 80)}
+                  reputation={leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation}
+                  onRefresh={reloadQuests}
+                  onGoldUpdated={setUserGold}
+                  onOpenFriends={() => setProfileScreen('friends')}
+                  onToast={showToast}
+                />
+              ) : null}
             />
             </>
           ) : (
@@ -2944,8 +3018,21 @@ export function App() {
               setLeagueResultSeen(id);
               try { localStorage.setItem('konan_league_result_seen', id); } catch { /* sans effet */ }
             }}
-            onRefresh={syncLeague}
+            onRefresh={handleRefreshLeagueAndQuests}
             onOpenPlayer={setPlayerCardId}
+            questSection={subscriptionAccount ? (
+              <FriendQuestCard
+                questState={questState}
+                friends={friendsData?.friends || []}
+                loading={questLoading}
+                isFrozen={leagueBoard?.frozen ?? ((leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) <= 80)}
+                reputation={leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation}
+                onRefresh={reloadQuests}
+                onGoldUpdated={setUserGold}
+                onOpenFriends={() => setProfileScreen('friends')}
+                onToast={showToast}
+              />
+            ) : null}
           />
         )}
 
@@ -3052,7 +3139,14 @@ export function App() {
           onOpenPlans={() => setIsPlansOpen(true)}
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenPrivacyPolicy={() => setIsPrivacyModalOpen(true)}
+          gold={userGold}
+          onOpenShop={() => setIsShopModalOpen(true)}
         />
+      )}
+
+      {/* Aperçu Boutique — Bientôt disponible (monnaie virtuelle Or) */}
+      {isShopModalOpen && (
+        <ShopComingSoonModal gold={userGold} onClose={() => setIsShopModalOpen(false)} />
       )}
 
       {/* Fiche publique d'un élève (ouverte en cliquant sur un joueur dans la Ligue) */}
