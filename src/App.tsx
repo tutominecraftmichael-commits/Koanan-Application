@@ -3040,6 +3040,14 @@ export function App() {
           divisionName={leagueBoard?.divisionName || null}
           friends={friendsData}
           friendsError={friendsError}
+          leaguePeers={(leagueBoard?.rows || []).filter((r) => !r.me && Boolean(r.konanId)).map((r) => ({
+            konanId: r.konanId!,
+            name: r.name,
+            avatar: r.avatar,
+            classLabel: r.classLabel,
+            xp: r.xp,
+            tier: r.tier,
+          }))}
           onReloadFriends={reloadFriends}
           onOpenPlans={() => setIsPlansOpen(true)}
           onOpenSettings={() => setIsSettingsOpen(true)}

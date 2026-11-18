@@ -95,17 +95,22 @@ const RelationActions: React.FC<{ card: FriendCard; onChanged: () => void; compa
     <div className="space-y-1.5">
       <div className="flex flex-wrap gap-2">
         {relation === 'none' && card.canRequest !== false && (
-          <button type="button" disabled={busy} onClick={() => run(() => sendFriendRequest(card.konanId), 'Demande d’ami envoyée !', 'outgoing')} className={`${btn} bg-sky-500 hover:bg-sky-400 text-white dark:bg-sky-400 dark:hover:bg-sky-300 dark:text-slate-950`}>
-            <UserPlus className="w-4 h-4" /> Ajouter en ami
+          <button type="button" disabled={busy} onClick={() => run(() => sendFriendRequest(card.konanId), 'Demande d’ami envoyée ! Il/elle la verra dans sa cloche.', 'outgoing')} className={`${btn} bg-sky-500 hover:bg-sky-400 text-white dark:bg-sky-400 dark:hover:bg-sky-300 dark:text-slate-950 shadow-sm`}>
+            <UserPlus className="w-4 h-4" /> {compact ? 'Demander en ami' : 'Envoyer une demande d’ami'}
           </button>
         )}
         {relation === 'none' && card.canRequest === false && (
           <span className="text-xs text-slate-500 dark:text-slate-400">Cet élève ne reçoit pas de demandes d’ami.</span>
         )}
         {relation === 'outgoing' && (
-          <button type="button" disabled={busy} onClick={() => run(() => removeFriend(card.konanId), 'Demande annulée.', 'none')} className={`${btn} bg-slate-100 text-slate-700 dark:bg-white/[0.06] dark:text-slate-200`}>
-            Demande envoyée · Annuler
-          </button>
+          <>
+            <span className={`${btn} flex-1 bg-sky-50 text-sky-800 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-300 dark:border-sky-500/30 cursor-default`}>
+              <Check className="w-4 h-4" /> Demande envoyée
+            </span>
+            <button type="button" disabled={busy} onClick={() => run(() => removeFriend(card.konanId), 'Demande annulée.', 'none')} className={`${btn} bg-slate-100 text-slate-700 dark:bg-white/[0.06] dark:text-slate-200 ${compact ? '' : 'flex-1'}`}>
+              Annuler
+            </button>
+          </>
         )}
         {relation === 'incoming' && (
           <>
@@ -225,6 +230,8 @@ export interface ProfilePageProps {
   divisionName?: string | null;
   friends: FriendsState | null;
   friendsError?: string;
+  /** Camarades du groupe de ligue actuel pour pouvoir les demander en ami en 1 clic */
+  leaguePeers?: Array<{ konanId: string; name: string; avatar?: string; classLabel?: string; xp?: number; tier?: 'free' | 'pro' | 'plus' }>;
   onReloadFriends: () => void;
   onOpenPlans: () => void;
   onOpenSettings: () => void;
@@ -236,7 +243,7 @@ export interface ProfilePageProps {
 export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   const {
     onClose, name, avatar, hasCustomAvatar, onUpdateAvatar, classLabel, konanId, planTier,
-    totalXp, friends, friendsError, onReloadFriends, onOpenPlans, onOpenSettings, onOpenPrivacyPolicy,
+    totalXp, friends, friendsError, leaguePeers = [], onReloadFriends, onOpenPlans, onOpenSettings, onOpenPrivacyPolicy,
   } = props;
   const { toggleTheme, isLight } = useTheme();
   const [screen, setScreen] = useState<'menu' | 'friends' | 'privacy'>(props.initialScreen || 'menu');
@@ -244,7 +251,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   const [search, setSearch] = useState('');
   const [searchCard, setSearchCard] = useState<FriendCard | null>(null);
   const [searchMsg, setSearchMsg] = useState('');
+  const [searchOkMsg, setSearchOkMsg] = useState('');
   const [searching, setSearching] = useState(false);
+  const [sendingDirect, setSendingDirect] = useState(false);
 
   // État local optimiste pour la confidentialité (réponse visuelle immédiate sans blocage)
   const initialPrivacy = friends?.privacy ?? readLocalFriendPrivacy();
@@ -290,17 +299,87 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
     }
   };
 
+  // Aperçu automatique dès que l'élève saisit les 6 chiffres d'un ID KONAN (ex. 123456 ou KN-123456)
+  useEffect(() => {
+    const m = search.trim().toUpperCase().replace(/\s+/g, '').match(/^(?:KN-?)?(\d{6})$/);
+    if (!m) return;
+    const normalized = `KN-${m[1]}`;
+    if (searchCard?.konanId === normalized) return;
+    let alive = true;
+    const timer = window.setTimeout(async () => {
+      setSearching(true);
+      setSearchMsg('');
+      const r = await fetchPublicProfile(normalized);
+      if (!alive) return;
+      setSearching(false);
+      if (r.ok) setSearchCard(r.data.profile);
+      else setSearchMsg(friendErrorMessage(r.error));
+    }, 220);
+    return () => {
+      alive = false;
+      window.clearTimeout(timer);
+    };
+  }, [search, searchCard?.konanId]);
+
   const doSearch = async () => {
     setSearching(true);
     setSearchMsg('');
+    setSearchOkMsg('');
     setSearchCard(null);
     const r = await fetchPublicProfile(search);
     setSearching(false);
     if (r.ok) setSearchCard(r.data.profile); else setSearchMsg(friendErrorMessage(r.error));
   };
+
+  /** Envoie directement une demande d'ami à l'ID saisi en 1 clic. */
+  const doSendDirectRequest = async () => {
+    const raw = search.trim();
+    if (!raw) return;
+    setSendingDirect(true);
+    setSearchMsg('');
+    setSearchOkMsg('');
+    const r = await sendFriendRequest(raw);
+    setSendingDirect(false);
+    if (r.ok) {
+      soundFX.playCheckmarkPop();
+      if (r.data.profile) setSearchCard(r.data.profile);
+      else {
+        const prof = await fetchPublicProfile(raw);
+        if (prof.ok) setSearchCard(prof.data.profile);
+      }
+      const targetName = r.data.profile?.name || searchCard?.name || raw.toUpperCase();
+      setSearchOkMsg(
+        r.data.status === 'friends'
+          ? `✓ ${targetName} et toi êtes maintenant amis !`
+          : `✓ Demande d’ami envoyée à ${targetName} ! Il/elle a reçu une notification dans sa cloche.`,
+      );
+      onReloadFriends();
+    } else {
+      setSearchMsg(friendErrorMessage(r.error));
+      const prof = await fetchPublicProfile(raw);
+      if (prof.ok) setSearchCard(prof.data.profile);
+    }
+  };
+
   const changed = () => { onReloadFriends(); if (searchCard) fetchPublicProfile(searchCard.konanId).then((r) => r.ok && setSearchCard(r.data.profile)); };
   const friendsCount = friends?.me?.friendsCount ?? 0;
   const incomingCount = friends?.incoming?.length ?? 0;
+
+  // Camarades de ligue avec leur statut d'amitié actuel
+  const friendIds = new Set((friends?.friends || []).map((f) => f.konanId));
+  const outgoingIds = new Set((friends?.outgoing || []).map((f) => f.konanId));
+  const incomingIds = new Set((friends?.incoming || []).map((f) => f.konanId));
+  const suggestedPeers: FriendCard[] = leaguePeers
+    .filter((p) => p.konanId && p.konanId !== konanId && !friendIds.has(p.konanId))
+    .map((p) => ({
+      konanId: p.konanId,
+      name: p.name,
+      avatar: p.avatar,
+      tier: p.tier,
+      totalXp: p.xp,
+      relation: incomingIds.has(p.konanId) ? 'incoming' : outgoingIds.has(p.konanId) ? 'outgoing' : 'none',
+      canRequest: true,
+    }));
 
   const updateAllowRequests = async (next: boolean) => {
     lastManualPrivacyAt.current = Date.now();
@@ -420,29 +499,59 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 
         {screen === 'friends' && (
           <div className="space-y-5">
-            {/* Ajouter par ID */}
+            {/* Ajouter par ID et envoyer une demande d'ami en 1 clic */}
             <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.08] space-y-3">
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <p className="m-0 text-sm font-extrabold text-slate-900 dark:text-white">Ajouter un ami avec son ID</p>
+                <p className="m-0 text-sm font-extrabold text-slate-900 dark:text-white">Faire une demande d’ami avec son ID</p>
                 <KonanIdChip id={konanId} />
               </div>
-              <p className="m-0 text-xs text-slate-600 dark:text-slate-400">Entre l’ID unique KONAN de ton camarade (ex. <span className="font-mono font-bold">KN-123456</span>) pour lui envoyer une demande d’ami.</p>
-              <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); if (search.trim()) doSearch(); }}>
+              <p className="m-0 text-xs text-slate-600 dark:text-slate-400">
+                Entre l’ID unique KONAN de ton camarade (ex. <span className="font-mono font-bold">KN-123456</span> ou les 6 chiffres) puis clique sur <b>Demander en ami</b>.
+              </p>
+              <form
+                className="flex flex-col sm:flex-row gap-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (search.trim()) doSendDirectRequest();
+                }}
+              >
                 <label className="sr-only" htmlFor="konan-friend-id">ID KONAN de ton ami</label>
-                <input
-                  id="konan-friend-id"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="KN-123456"
-                  inputMode="text"
-                  autoCapitalize="characters"
-                  className="flex-1 min-w-0 h-11 px-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-300 dark:border-white/15 text-[15px] font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-400"
-                />
-                <button type="submit" disabled={searching || !search.trim()} className="h-11 px-4 rounded-xl bg-sky-500 text-white dark:bg-sky-400 dark:text-slate-950 font-extrabold text-sm cursor-pointer disabled:opacity-50 inline-flex items-center gap-1.5">
-                  <Search className="w-4 h-4" /> {searching ? 'Recherche…' : 'Chercher'}
+                <div className="flex flex-1 gap-2">
+                  <input
+                    id="konan-friend-id"
+                    value={search}
+                    onChange={(e) => { setSearch(e.target.value); if (searchMsg) setSearchMsg(''); if (searchOkMsg) setSearchOkMsg(''); }}
+                    placeholder="KN-123456"
+                    inputMode="text"
+                    autoCapitalize="characters"
+                    className="flex-1 min-w-0 h-11 px-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-300 dark:border-white/15 text-[15px] font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-sky-400"
+                  />
+                  <button
+                    type="button"
+                    disabled={searching || sendingDirect || !search.trim()}
+                    onClick={doSearch}
+                    title="Voir le profil de cet ID"
+                    className="h-11 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] dark:text-slate-200 font-extrabold text-xs cursor-pointer disabled:opacity-50 inline-flex items-center gap-1.5 shrink-0"
+                  >
+                    <Search className="w-4 h-4" />
+                    <span>{searching ? '…' : 'Aperçu'}</span>
+                  </button>
+                </div>
+                <button
+                  type="submit"
+                  disabled={sendingDirect || searching || !search.trim()}
+                  className="h-11 px-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-white dark:bg-sky-400 dark:hover:bg-sky-300 dark:text-slate-950 font-extrabold text-sm cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-1.5 shadow-sm"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>{sendingDirect ? 'Envoi…' : 'Envoyer une demande d’ami'}</span>
                 </button>
               </form>
               {searchMsg && <p className="m-0 text-xs font-bold text-rose-700 dark:text-rose-300">{searchMsg}</p>}
+              {searchOkMsg && (
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 dark:bg-emerald-500/15 dark:border-emerald-500/30 dark:text-emerald-200 text-xs font-bold">
+                  {searchOkMsg}
+                </div>
+              )}
               {searchCard && (
                 <ul className="m-0 p-0 list-none">
                   <PersonRow card={searchCard} onOpen={() => setOpenCard(searchCard.konanId)} onChanged={changed} />
@@ -452,31 +561,48 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 
             {friendsError && !friends && <p className="text-sm text-slate-600 dark:text-slate-300">{friendsError}</p>}
 
-            {(friends?.incoming.length ?? 0) > 0 && (
+            {(friends?.incoming?.length ?? 0) > 0 && (
               <div className="space-y-2">
-                <SectionTitle>Demandes reçues</SectionTitle>
+                <SectionTitle>Demandes d’amis reçues ({friends!.incoming.length})</SectionTitle>
                 <ul className="m-0 p-0 list-none space-y-2">
                   {friends!.incoming.map((c) => <PersonRow key={c.konanId} card={c} hint="veut devenir ton ami" onOpen={() => setOpenCard(c.konanId)} onChanged={changed} />)}
                 </ul>
               </div>
             )}
 
-            <div className="space-y-2">
-              <SectionTitle>Mes amis ({friendsCount})</SectionTitle>
-              {(!friends || friends.friends.length === 0) && <p className="m-0 px-1 text-sm text-slate-600 dark:text-slate-400">Pas encore d’amis : ajoute tes camarades avec leur ID.</p>}
-              <ul className="m-0 p-0 list-none space-y-2">
-                {friends?.friends.map((c) => <PersonRow key={c.konanId} card={c} hint={`${fr(c.totalXp)} XP · ${tierLabel(c.tier)}`} onOpen={() => setOpenCard(c.konanId)} onChanged={changed} />)}
-              </ul>
-            </div>
-
-            {(friends?.outgoing.length ?? 0) > 0 && (
+            {(friends?.outgoing?.length ?? 0) > 0 && (
               <div className="space-y-2">
-                <SectionTitle>Demandes envoyées</SectionTitle>
+                <SectionTitle>Demandes d’amis envoyées ({friends!.outgoing.length})</SectionTitle>
                 <ul className="m-0 p-0 list-none space-y-2">
                   {friends!.outgoing.map((c) => <PersonRow key={c.konanId} card={c} hint="en attente de sa réponse" onOpen={() => setOpenCard(c.konanId)} onChanged={changed} />)}
                 </ul>
               </div>
             )}
+
+            {suggestedPeers.length > 0 && (
+              <div className="space-y-2">
+                <SectionTitle>Ajouter un camarade de ta ligue</SectionTitle>
+                <ul className="m-0 p-0 list-none space-y-2">
+                  {suggestedPeers.slice(0, 8).map((c) => (
+                    <PersonRow
+                      key={c.konanId}
+                      card={c}
+                      hint={`${fr(c.totalXp)} XP cette semaine · ${tierLabel(c.tier)}`}
+                      onOpen={() => setOpenCard(c.konanId)}
+                      onChanged={changed}
+                    />
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <SectionTitle>Mes amis ({friendsCount})</SectionTitle>
+              {(!friends || friends.friends.length === 0) && <p className="m-0 px-1 text-sm text-slate-600 dark:text-slate-400">Pas encore d’amis : entre l’ID d’un camarade ci-dessus ou ajoute un élève de ta ligue.</p>}
+              <ul className="m-0 p-0 list-none space-y-2">
+                {friends?.friends.map((c) => <PersonRow key={c.konanId} card={c} hint={`${fr(c.totalXp)} XP · ${tierLabel(c.tier)}`} onOpen={() => setOpenCard(c.konanId)} onChanged={changed} />)}
+              </ul>
+            </div>
           </div>
         )}
 

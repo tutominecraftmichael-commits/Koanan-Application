@@ -70,9 +70,13 @@ export async function publicCards(db, uids) {
     const us = users[i].exists ? users[i].data() : {};
     const fr = friendDocs[i].exists ? friendDocs[i].data() : {};
     const tierRaw = String(lp.planTier || us.planTier || us.userAccount?.planTier || 'free').toLowerCase();
+    const resolvedId = normalizeKonanId(us.konanId || us.userAccount?.konanId || lp.konanId) || konanIdFromUid(uid);
+    if (users[i].exists && !us.konanId && resolvedId) {
+      db.collection('users').doc(uid).set({ konanId: resolvedId }, { merge: true }).catch(() => {});
+    }
     out.set(uid, {
       uid,
-      konanId: normalizeKonanId(us.konanId || us.userAccount?.konanId || lp.konanId) || konanIdFromUid(uid),
+      konanId: resolvedId,
       name: lp.displayName || publicName(us.studentName || us.userAccount?.name || ''),
       avatar: cleanAvatar(lp.avatar || us.userAccount?.customAvatar || us.userAccount?.avatar || ''),
       tier: tierRaw === 'pro' || tierRaw === 'plus' ? tierRaw : 'free',
@@ -150,12 +154,20 @@ export async function sendFriendRequest(db, uid, konanId, nowMs = Date.now()) {
     return { status: 'sent', notify: 'request' };
   });
   if (result.error) return result;
-  const me = (await publicCards(db, [uid])).get(uid);
+  const [meMap, targetProf] = await Promise.all([
+    publicCards(db, [uid, target]),
+    readDoc(null, db, uid),
+  ]);
+  const me = meMap.get(uid);
+  const targetCard = meMap.get(target);
   const who = me?.name || 'Un élève';
   await sendPushToUser(db, target, result.notify === 'request'
     ? { title: 'Nouvelle demande d’ami', body: `${who} veut devenir ton ami sur KONAN. Ouvre la cloche pour répondre.`, tag: 'konan-friend-request' }
     : { title: 'Nouvel ami sur KONAN', body: `${who} et toi êtes maintenant amis !`, tag: 'konan-friend-accepted' });
-  return { status: result.status };
+  return {
+    status: result.status,
+    profile: targetCard ? cardFor(targetCard, relationOf(targetProf, target)) : undefined,
+  };
 }
 
 /** Réponse à une demande reçue : accepter (amis) ou refuser ; celui qui a demandé reçoit la réponse. */

@@ -129,7 +129,7 @@ export async function fetchFriends(): Promise<FriendApiResult<FriendsState>> {
 }
 
 export const fetchPublicProfile = (konanId: string) => call<{ profile: FriendCard }>({ action: 'profile', konanId });
-export const sendFriendRequest = (konanId: string) => call<{ status: 'sent' | 'friends' }>({ action: 'friend_request', konanId });
+export const sendFriendRequest = (konanId: string) => call<{ status: 'sent' | 'friends'; profile?: FriendCard }>({ action: 'friend_request', konanId });
 export const respondFriendRequest = (konanId: string, accept: boolean) => call<{ status: string }>({ action: 'friend_respond', konanId, accept });
 export const removeFriend = (konanId: string) => call<{ status: string }>({ action: 'friend_remove', konanId });
 
