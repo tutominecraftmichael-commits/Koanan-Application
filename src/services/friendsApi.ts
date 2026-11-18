@@ -72,7 +72,11 @@ export const FRIEND_ERRORS: Record<string, string> = {
 };
 export const friendErrorMessage = (code?: string) => FRIEND_ERRORS[code || ''] || 'Les amis ne répondent pas pour le moment. Réessaie dans un instant.';
 
-async function call<T>(body: Record<string, unknown>): Promise<{ ok: true; data: T } | { ok: false; error: string }> {
+export type FriendApiResult<T> =
+  | { ok: true; data: T; error?: string }
+  | { ok: false; data?: undefined; error: string };
+
+async function call<T>(body: Record<string, unknown>): Promise<FriendApiResult<T>> {
   const user = auth?.currentUser;
   if (!user) return { ok: false, error: 'UNAUTHORIZED' };
   const attempt = async (refresh: boolean) => {
@@ -96,7 +100,7 @@ async function call<T>(body: Record<string, unknown>): Promise<{ ok: true; data:
   }
 }
 
-export async function fetchFriends(): Promise<{ ok: true; data: FriendsState } | { ok: false; error: string }> {
+export async function fetchFriends(): Promise<FriendApiResult<FriendsState>> {
   const r = await call<Partial<FriendsState>>({ action: 'friends' });
   const localPriv = readLocalFriendPrivacy();
   if (!r.ok) return r;
@@ -129,7 +133,7 @@ export const sendFriendRequest = (konanId: string) => call<{ status: 'sent' | 'f
 export const respondFriendRequest = (konanId: string, accept: boolean) => call<{ status: string }>({ action: 'friend_respond', konanId, accept });
 export const removeFriend = (konanId: string) => call<{ status: string }>({ action: 'friend_remove', konanId });
 
-export async function saveFriendPrivacy(privacy: Partial<FriendsState['privacy']>): Promise<{ ok: true; data: { status: string; privacy: FriendsState['privacy'] } }> {
+export async function saveFriendPrivacy(privacy: Partial<FriendsState['privacy']>): Promise<FriendApiResult<{ status: string; privacy: FriendsState['privacy'] }>> {
   const savedLocal = writeLocalFriendPrivacy(privacy);
   await call<{ status: string }>({ action: 'privacy', ...savedLocal }).catch(() => null);
   return { ok: true, data: { status: 'saved', privacy: savedLocal } };
