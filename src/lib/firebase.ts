@@ -730,10 +730,12 @@ export async function syncUserStateToCloud(uid: string, data: any): Promise<{ su
         const cloudTime = Date.parse(existing.profileUpdatedAt || '') || 0;
         if (localTime > cloudTime) {
           const profileOnly = JSON.parse(JSON.stringify({
+            konanId: sanitized.konanId || sanitized.userAccount?.konanId,
             studentName: sanitized.studentName,
             academicLevel: sanitized.academicLevel,
             profileUpdatedAt: sanitized.profileUpdatedAt,
             userAccount: {
+              konanId: sanitized.userAccount?.konanId || sanitized.konanId,
               name: sanitized.userAccount?.name,
               academicLevel: sanitized.userAccount?.academicLevel,
               customAvatar: sanitized.userAccount?.customAvatar,

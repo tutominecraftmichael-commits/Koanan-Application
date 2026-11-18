@@ -91,7 +91,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/85 backdrop-blur-xl animate-in fade-in duration-200 overflow-y-auto">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 bg-slate-950/85 backdrop-blur-xl animate-in fade-in duration-200 overflow-y-auto">
       
       {/* Halo lumineux d'ambiance */}
       <div className="fixed inset-0 pointer-events-none flex items-center justify-center overflow-hidden">

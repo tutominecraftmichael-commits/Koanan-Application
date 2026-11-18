@@ -17,6 +17,7 @@ import { verifyFirebaseIdToken } from './_firebaseToken.js';
 import { nextNameChangeAt } from './_nameRules.js';
 import { serverPlanTier } from './_subscriptionStore.js';
 import { paymentsEnabled } from './_subscriptionRules.js';
+import { friendsState, konanIdFromUid, normalizeKonanId, publicProfile, removeFriend, respondFriendRequest, savePrivacy, sendFriendRequest } from './_friends.js';
 import {
   DIVISIONS, GROUP_SIZE, PROMOTE_COUNT, DEMOTE_COUNT, applyXpEvents, clampDivision, cleanAvatar, gradeInLeague,
   settleServerReputation, isFrozen, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
@@ -100,9 +101,10 @@ async function buildBoard(db, player, nowMs) {
       uid: s.id, weekXp: Number(s.get('weekXp')) || 0, xpReachedAt: Number(s.get('xpReachedAt')) || 0,
       name: s.get('displayName'), classLabel: s.get('classLabel'), avatar: s.get('avatar') || '',
       tier: ['pro', 'plus'].includes(s.get('planTier')) ? s.get('planTier') : 'free',
+      konanId: s.get('konanId') || konanIdFromUid(s.id),
     }));
   base.rows = rankPlayers(players).map((p, i) => ({
-    rank: i + 1, name: p.name || 'Élève KONAN', classLabel: p.classLabel || '', avatar: p.avatar, xp: p.weekXp, me: p.uid === player.uid, tier: p.tier,
+    rank: i + 1, name: p.name || 'Élève KONAN', classLabel: p.classLabel || '', avatar: p.avatar, xp: p.weekXp, me: p.uid === player.uid, tier: p.tier, konanId: p.konanId,
   }));
   return base;
 }
@@ -155,6 +157,8 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
       avatar,
       classLabel: str(body.classLabel, 20),
       gradeLevel: grade,
+      // ID KONAN (public) : toucher un élève dans le classement ouvre sa fiche
+      konanId: normalizeKonanId(user?.konanId || user?.userAccount?.konanId) || prev.konanId || konanIdFromUid(uid),
       hasCourses: gradeInLeague(grade), // « admis dans la ligue » (LMD et BTS compris)
       planTier,
       updatedAt: new Date(nowMs).toISOString(),
@@ -200,6 +204,27 @@ export default async function handler(req, res) {
     body = await readBody(req, 200_000);
   } catch (e) {
     return send(res, e?.code === 413 ? 413 : 400, { success: false, error: 'BAD_BODY' });
+  }
+
+  // Amis (2026-11-17) : mêmes contrôles (élève connecté), sans toucher à la ligue
+  const FRIEND_ACTIONS = ['friends', 'profile', 'friend_request', 'friend_respond', 'friend_remove', 'privacy'];
+  if (FRIEND_ACTIONS.includes(body?.action)) {
+    try {
+      const db = await getDb();
+      const id = str(String(body.konanId || ''), 20);
+      let out;
+      if (body.action === 'friends') out = await friendsState(db, uid);
+      else if (body.action === 'profile') out = await publicProfile(db, uid, id);
+      else if (body.action === 'friend_request') out = await sendFriendRequest(db, uid, id);
+      else if (body.action === 'friend_respond') out = await respondFriendRequest(db, uid, id, body.accept === true);
+      else if (body.action === 'friend_remove') out = await removeFriend(db, uid, id);
+      else out = await savePrivacy(db, uid, { allowRequests: body.allowRequests, profileVisibility: body.profileVisibility });
+      if (out?.error) return send(res, out.error === 'NOT_FOUND' ? 404 : 400, { success: false, error: out.error });
+      return send(res, 200, { success: true, ...out });
+    } catch (err) {
+      console.error('[league/amis]', err?.message || err);
+      return send(res, 500, { success: false, error: String(err?.message || 'SERVER_ERROR').slice(0, 120) });
+    }
   }
 
   try {

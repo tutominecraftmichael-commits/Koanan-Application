@@ -8,7 +8,6 @@ import {
   RotateCcw,
   GraduationCap,
   FileText,
-  Settings,
   Settings2,
   ChevronDown,
   Bell,
@@ -20,6 +19,7 @@ import {
   User
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount, PlusInvitationNotification } from '../../types';
+import type { FriendNotice } from '../../services/friendsApi';
 import { Badge } from '../ui/Badge';
 import { KonanCube } from '../common/KonanCube';
 import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
@@ -96,6 +96,48 @@ const PaymentNoticeItem: React.FC<{ notice: PaymentNotice; onOpen?: () => void }
   );
 };
 
+/**
+ * Message d'ami dans la cloche (2026-11-17) : demande reçue (Accepter / Refuser directement ici),
+ * demande acceptée ou refusée par l'autre. Toucher le nom ouvre « Mes amis ».
+ */
+const FriendNoticeItem: React.FC<{ notice: FriendNotice; onRespond?: (konanId: string, accept: boolean) => Promise<void>; onOpen?: () => void }> = ({ notice, onRespond, onOpen }) => {
+  const [busy, setBusy] = useState(false);
+  const who = notice.from.name || 'Un élève';
+  const whoWithId = notice.from.konanId ? `${who} (${notice.from.konanId})` : who;
+  const tone = notice.kind === 'declined'
+    ? 'bg-rose-50/80 border-rose-200 dark:bg-rose-950/40 dark:border-rose-500/30'
+    : notice.kind === 'accepted'
+      ? 'bg-emerald-50/80 border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-500/30'
+      : 'bg-sky-50/80 border-sky-200 dark:bg-sky-950/40 dark:border-sky-500/30';
+  const label = notice.kind === 'request' ? 'Demande d’ami' : notice.kind === 'accepted' ? 'Demande acceptée' : 'Demande refusée';
+  const text = notice.kind === 'request'
+    ? `${whoWithId} veut devenir ton ami sur KONAN.`
+    : notice.kind === 'accepted' ? `${whoWithId} a accepté ta demande : vous êtes amis !` : `${whoWithId} n’a pas accepté ta demande d’ami.`;
+  const pending = notice.kind === 'request' && notice.from.relation === 'incoming';
+  return (
+    <div className={`w-full p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left ${tone}`}>
+      <button type="button" onClick={onOpen} className="shrink-0 cursor-pointer" aria-label={`Voir ${who}`}>
+        {notice.from.avatar
+          ? <img src={notice.from.avatar} alt="" referrerPolicy="no-referrer" className="w-8 h-8 rounded-full object-cover" />
+          : <span className="w-8 h-8 rounded-full bg-sky-600 text-white text-xs font-black flex items-center justify-center">{who.slice(0, 1).toUpperCase()}</span>}
+      </button>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-1">
+          <span className="text-[9px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-300">{label}</span>
+          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">{formatNotificationTime(new Date(notice.at).toISOString())}</span>
+        </span>
+        <span className="block text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">{text}</span>
+        {pending && onRespond && (
+          <span className="flex gap-2 mt-2">
+            <button type="button" disabled={busy} onClick={async () => { setBusy(true); await onRespond(notice.from.konanId, true); setBusy(false); }} className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-black cursor-pointer disabled:opacity-50">Accepter</button>
+            <button type="button" disabled={busy} onClick={async () => { setBusy(true); await onRespond(notice.from.konanId, false); setBusy(false); }} className="px-3 py-1.5 rounded-lg bg-white text-slate-700 border border-slate-300 dark:bg-white/[0.06] dark:text-slate-200 dark:border-white/15 text-[11px] font-black cursor-pointer disabled:opacity-50">Refuser</button>
+          </span>
+        )}
+      </span>
+    </div>
+  );
+};
+
 export interface NavbarProps {
   activeView: ActiveAppView;
   onNavigate: (view: ActiveAppView) => void;
@@ -122,6 +164,11 @@ export interface NavbarProps {
   /** Paiements KONAN Pro acceptés ou refusés par l'administrateur */
   paymentNotices?: PaymentNotice[];
   onOpenPaymentNotice?: () => void;
+  /** Amis : demandes reçues et réponses (cloche), réponse directe, page Profil */
+  friendNotices?: FriendNotice[];
+  onRespondFriend?: (konanId: string, accept: boolean) => Promise<void>;
+  onOpenFriends?: () => void;
+  onOpenProfile?: () => void;
   onAcceptInvitation?: (invitation: PlusInvitationNotification) => void;
   onDeclineInvitation?: (invitation: PlusInvitationNotification) => void;
   /** Énergie ⚡ affichée en haut à droite (null : pas d'icône d'exercices pour cet élève) */
@@ -173,6 +220,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   ownerNotifications,
   paymentNotices = [],
   onOpenPaymentNotice,
+  friendNotices = [],
+  onRespondFriend,
+  onOpenFriends,
+  onOpenProfile,
   onAcceptInvitation,
   onDeclineInvitation,
   energy = null,
@@ -267,7 +318,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const hasUnreadNotifications = activePendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
     || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id))
-    || paymentNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
+    || paymentNotices.some(n => n?.id && !seenNotificationIds.has(n.id))
+    || friendNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
 
   // Message non lu : la cloche bouge toute seule (toutes les 4 s) jusqu'à ce que l'élève ouvre l'onglet
   useEffect(() => {
@@ -292,6 +344,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       activePendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
       normalizedOwnerNotifications.forEach(notif => notif?.id && next.add(notif.id));
       paymentNotices.forEach(n => n?.id && next.add(n.id));
+      friendNotices.forEach(n => n?.id && next.add(n.id));
       try {
         localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
       } catch {
@@ -299,7 +352,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       return next;
     });
-  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices]);
+  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices, friendNotices]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), component: AnimatedDashboardIcon, icon: AnimatedDashboardIcon },
@@ -339,8 +392,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           {isAppView && userAccount?.isLoggedIn && (
             <button
               type="button"
-              onClick={() => { soundFX.playCheckmarkPop(); onOpenSettings?.(); }}
-              aria-label="Mon profil et mes paramètres"
+              onClick={() => { soundFX.playCheckmarkPop(); (onOpenProfile || onOpenSettings)?.(); }}
+              aria-label="Mon profil"
               className="lg:hidden shrink-0 rounded-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
             >
               {getDisplayAvatar(userAccount) ? (
@@ -440,17 +493,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {activeView !== 'landing' && activeView !== 'auth' ? (
               <>
-                {/* Paramètres (Settings) Button */}
-                {onOpenSettings && (
-                  <button
-                    onClick={onOpenSettings}
-                    title={t('navSettings', lang)}
-                    aria-label={t('navSettings', lang)}
-                    className="hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 hover:border-sky-400/60 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 dark:bg-slate-900/80 dark:border-slate-800 dark:hover:border-sky-400/60 dark:hover:bg-slate-800/80 dark:text-slate-300 dark:hover:text-white items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 group"
-                  >
-                    <Settings className="w-4 h-4 text-sky-700 dark:text-sky-400 group-hover:rotate-45 transition-transform duration-300" />
-                  </button>
-                )}
+                {/* Les paramètres sont désormais accessibles depuis la page Profil (façon Duolingo) */}
 
                 {/* Secondary Tools Menu (Data Export, Import, Reset) */}
                 <div className="relative hidden sm:block" ref={toolsMenuRef}>
@@ -587,7 +630,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         )}
                       </div>
 
-                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 ? (
+                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && friendNotices.length === 0 ? (
                         <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                           <Bell className="w-6 h-6 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                           <p>Aucune notification pour le moment.</p>
@@ -595,6 +638,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       ) : (
                         <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
                           {/* Paiements KONAN Pro acceptés ou refusés */}
+                          {/* Amis : demandes reçues, acceptées ou refusées */}
+                          {friendNotices.map((n) => (
+                            <FriendNoticeItem key={n.id} notice={n} onRespond={onRespondFriend} onOpen={() => { setIsNotificationsOpen(false); onOpenFriends?.(); }} />
+                          ))}
                           {paymentNotices.map((n) => (
                             <PaymentNoticeItem key={n.id} notice={n} onOpen={() => { setIsNotificationsOpen(false); onOpenPaymentNotice?.(); }} />
                           ))}
@@ -753,7 +800,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </div>
                         </div>
 
-                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 ? (
+                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && friendNotices.length === 0 ? (
                           <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                             <Bell className="w-7 h-7 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                             <p>Aucune notification pour le moment.</p>
@@ -761,6 +808,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         ) : (
                           <div className="space-y-2.5 max-h-[60vh] overflow-y-auto custom-scrollbar">
                             {/* Paiements KONAN Pro acceptés ou refusés */}
+                          {/* Amis : demandes reçues, acceptées ou refusées */}
+                          {friendNotices.map((n) => (
+                            <FriendNoticeItem key={n.id} notice={n} onRespond={onRespondFriend} onOpen={() => { setIsNotificationsOpen(false); onOpenFriends?.(); }} />
+                          ))}
                           {paymentNotices.map((n) => (
                             <PaymentNoticeItem key={n.id} notice={n} onOpen={() => { setIsNotificationsOpen(false); onOpenPaymentNotice?.(); }} />
                           ))}
@@ -893,8 +944,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {userAccount && userAccount.isLoggedIn ? (
                   <div className="flex items-center gap-1 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-800/80 shrink-0">
                     <div
-                      onClick={onOpenSettings}
-                      title="Voir mon profil et paramètres"
+                      onClick={onOpenProfile || onOpenSettings}
+                      title="Voir mon profil"
                       className="hidden lg:flex items-center gap-1 sm:gap-2 hover:opacity-90 transition-opacity cursor-pointer text-left shrink-0"
                     >
                       {getDisplayAvatar(userAccount) ? (

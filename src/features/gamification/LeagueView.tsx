@@ -147,14 +147,16 @@ export const LeaguePage: React.FC<{
   resultSeen: string;
   onDismissResult: (weekId: string) => void;
   onRefresh: () => void;
-}> = ({ board, localReputation, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh }) => {
+  /** Toucher un élève du classement : sa fiche (ID KONAN) */
+  onOpenPlayer?: (konanId: string) => void;
+}> = ({ board, localReputation, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh, onOpenPlayer }) => {
   React.useEffect(() => { onRefresh(); }, [onRefresh]);
   return (
     <div className="space-y-3 pb-24">
       {board?.lastResult && board.lastResult.weekId !== resultSeen && (
         <LeagueResultBanner board={board} onClose={() => onDismissResult(board.lastResult?.weekId || '')} />
       )}
-      {board?.eligible && hasCourses ? <LeagueView board={board} /> : <LeagueCard board={board} localReputation={localReputation} hasCourses={hasCourses} offline={offline} errorText={errorText} onOpen={onRefresh} />}
+      {board?.eligible && hasCourses ? <LeagueView board={board} onOpenPlayer={onOpenPlayer} /> : <LeagueCard board={board} localReputation={localReputation} hasCourses={hasCourses} offline={offline} errorText={errorText} onOpen={onRefresh} />}
     </div>
   );
 };
@@ -180,7 +182,7 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
   </div>
 );
 
-export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
+export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId: string) => void }> = ({ board, onOpenPlayer }) => {
   const size = board.rows.length;
   const [showRules, setShowRules] = React.useState(false);
   const repTone = board.reputation > 80
@@ -294,6 +296,10 @@ export const LeagueView: React.FC<{ board: LeagueBoard }> = ({ board }) => {
               >
                 {/* Ligue gelée : givre sur ta ligne */}
                 {row.me && board.frozen && <FrostOverlay className="-z-10" />}
+                {/* Toucher un élève ouvre sa fiche (XP au total, amis, abonnement, ID) */}
+                {onOpenPlayer && row.konanId && (
+                  <button type="button" onClick={() => onOpenPlayer(row.konanId!)} aria-label={`Voir le profil de ${row.name}`} className="absolute inset-0 z-10 rounded-2xl cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400" />
+                )}
                 <span className={`w-6 text-center text-[15px] font-extrabold tabular-nums ${row.me ? 'text-sky-700 dark:text-sky-300' : rankColor(row.rank, zone)}`}>{row.rank}</span>
                 {row.avatar ? (
                   <img src={row.avatar} alt="" loading="lazy" referrerPolicy="no-referrer" className={`w-9 h-9 rounded-full object-cover shrink-0 ${row.me ? 'ring-2 ring-sky-400' : 'ring-1 ring-slate-200 dark:ring-white/10'}`} />
