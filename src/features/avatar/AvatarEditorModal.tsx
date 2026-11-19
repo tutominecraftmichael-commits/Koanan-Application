@@ -608,12 +608,7 @@ export const AvatarEditorModal: React.FC<AvatarEditorModalProps> = ({
                       )}
                     </div>
                     <p className="m-0 text-sm font-black text-slate-900 dark:text-white leading-tight">
-                      Tenue Or Massif (PRO)
-                    </p>
-                    <p className="m-0 text-xs text-slate-600 dark:text-slate-300 leading-snug">
-                      {isPro
-                        ? 'Or métallique animé visible partout (Ligue, Amis, Quêtes).'
-                        : 'Clique pour prévisualiser l’animation dorée. Inclus uniquement avec KONAN Pro.'}
+                      Tenue Or Massif
                     </p>
                   </div>
                   {draft.outfit === PRO_ONLY_OUTFIT_ID && isPro && (

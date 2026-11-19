@@ -168,7 +168,7 @@ export const ACCESSORY_OPTIONS: AvatarItemOption[] = [
 
 export const OUTFIT_OPTIONS: AvatarItemOption[] = [
   // Exclusivité KONAN PRO (toujours en haut de la catégorie Habits)
-  { id: PRO_ONLY_OUTFIT_ID, label: 'Tenue Or Massif (PRO)', price: 0, gender: 'unisex', proOnly: true, tag: 'PRO' },
+  { id: PRO_ONLY_OUTFIT_ID, label: 'Tenue Or Massif', price: 0, gender: 'unisex', proOnly: true, tag: 'PRO' },
   // Gratuits
   { id: 'outfit_tee_blue', label: 'T-shirt KONAN officiel', price: 0, gender: 'unisex' },
   { id: 'outfit_school_polo', label: 'Polo scolaire classique', price: 0, gender: 'unisex' },
