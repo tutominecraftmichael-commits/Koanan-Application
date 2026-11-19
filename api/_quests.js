@@ -7,7 +7,8 @@
  *   - Double consentement obligatoire (« C'est parti » des deux amis) : tant que `status === 'pending'`,
  *     aucun XP n'est comptabilisé. Si l'ami refuse, la proposition passe en `declined` sans pénalité.
  *   - Cycle synchronisé avec la Ligue (lundi 00:00 UTC → dimanche 23:59 UTC).
- *   - Gel de Ligue : si un ami a une réputation <= 80 %, ses XP sont gelés (0) et n'avancent pas la quête.
+ *   - Gel de Ligue : les XP gagnés dans les leçons et l'entraînement comptent toujours pour la quête en duo,
+ *     même si la ligue est gelée (réputation <= 80 %) ; seul le classement de la ligue reste bloqué.
  *   - Objectif atteint avant `expiresAt` → `status: 'completed'`, chaque ami peut réclamer +50 Or.
  *   - Temps expiré → `status: 'expired'`, 0 Or, nouvelle quête possible la semaine suivante.
  *   - Relance sociale (« Encourager / Relancer ») : notification cloche + push téléphone.

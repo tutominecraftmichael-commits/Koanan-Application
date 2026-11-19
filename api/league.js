@@ -167,11 +167,13 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
       updatedAt: new Date(nowMs).toISOString(),
     };
     tx.set(playerRef, next);
-    const validQuestXp = Math.max(0, (applied.xpGained || 0) - (applied.frozenXp || 0));
+    // Quête en duo : tous les XP vérifiés (leçons et entraînement) comptent dans la quête active,
+    // même si la ligue est gelée (seul le classement de la ligue reste bloqué à <= 80 %).
+    const validQuestXp = Math.max(0, Number(applied.xpGained) || 0);
     return { next, accepted: applied.accepted, rejected: applied.rejected, validQuestXp };
   });
 
-  // Quête d'XP en duo : seuls les XP valides (non gelés) incrémentent la quête active de la semaine
+  // Quête d'XP en duo : les XP vérifiés (leçons + entraînement) incrémentent la quête active de la semaine
   if (result.validQuestXp > 0) {
     await recordQuestXp(db, uid, result.validQuestXp, nowMs).catch((e) => console.warn('[quests/xp]', e?.message || e));
   }

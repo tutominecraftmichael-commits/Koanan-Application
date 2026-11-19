@@ -289,11 +289,9 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
                 Toi &amp; {quest.partner.name}
               </p>
               <p className="m-0 text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                {quest.partner.frozen
-                  ? 'Ligue de ton ami gelée (ses XP ne comptent pas encore)'
-                  : isCompleted
-                    ? 'Objectif atteint ensemble !'
-                    : `Encore ${fr(remainingXp)} XP à récolter`}
+                {isCompleted
+                  ? 'Objectif atteint ensemble !'
+                  : `Encore ${fr(remainingXp)} XP à récolter`}
               </p>
             </div>
           </div>
@@ -338,12 +336,12 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
           </div>
         )}
 
-        {/* Alerte Gel de Ligue si la réputation de l'élève est <= 80 % */}
+        {/* Note Gel de Ligue : les XP comptent bien pour la quête, mais pas dans le classement de la ligue */}
         {!isCompleted && effectiveFrozen && (
           <div className="p-3 rounded-2xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-300 dark:border-cyan-400/35 flex items-start gap-2.5 text-xs text-cyan-950 dark:text-cyan-100">
             <Snowflake size={18} className="shrink-0 mt-0.5 text-cyan-600 dark:text-cyan-300" />
             <span>
-              <b>Ta ligue est gelée ({effectiveReputation} %) :</b> tes XP sont bloqués à 0 et ne contribuent pas à la quête tant que tu ne repasses pas au-dessus de 80 % en terminant tes leçons.
+              <b>Ta ligue est gelée ({effectiveReputation} %) :</b> tes XP de leçons et d’entraînement <b>comptent bien pour la quête en duo</b>, mais ils ne comptent pas dans le classement de la ligue tant que ta réputation reste à 80 % ou moins.
             </span>
           </div>
         )}
