@@ -11,7 +11,7 @@
  * et la question n'est redessinée que quand l'élève touche une réponse.
  */
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AlertCircle, CheckCircle2, Infinity as InfinityIcon, Star, Timer, X, Zap } from 'lucide-react';
+import { AlertCircle, ArrowLeft, CheckCircle2, Infinity as InfinityIcon, Star, Timer, X, Zap } from 'lucide-react';
 import type { GamificationState } from '../../types';
 import type { CurriculumGradeLevel } from '../../lib/curriculum/types';
 import { MathRenderer, VisualSchemaRenderer } from '../../components/common/MathRenderer';
@@ -38,6 +38,8 @@ export interface ExerciseSeriesViewProps {
   /** Série perdue (temps écoulé ou abandon) : rien de gagné, retour au niveau 1. */
   onLose: (reason: string) => void;
   onClose: () => void;
+  /** Retour vers la liste des Mini-Jeux (si ouvert depuis le hub) */
+  onBackToHub?: () => void;
   onUpgrade: () => void;
 }
 
@@ -141,7 +143,7 @@ const QuestionCard: React.FC<{ q: SeriesQuestion; selected: number | null; check
   </>
 ));
 
-export const ExerciseSeriesView: React.FC<ExerciseSeriesViewProps> = ({ userId, gradeLevel, gamification, planTier, onSpend, onFinish, onLose, onClose, onUpgrade }) => {
+export const ExerciseSeriesView: React.FC<ExerciseSeriesViewProps> = ({ userId, gradeLevel, gamification, planTier, onSpend, onFinish, onLose, onClose, onBackToHub, onUpgrade }) => {
   const unlimited = hasUnlimitedEnergy(planTier);
   const [now, setNow] = useState(() => Date.now());
   const [phase, setPhase] = useState<Phase>('intro');
@@ -273,8 +275,12 @@ export const ExerciseSeriesView: React.FC<ExerciseSeriesViewProps> = ({ userId, 
 
   const quit = () => {
     if (phase === 'question') {
-      if (!window.confirm('Quitter la série ? Elle sera perdue : pas d’XP, l’énergie n’est pas rendue et tu repars au niveau 1.')) return;
+      if (!window.confirm('Quitter la partie de XP à gogo ? Elle sera perdue : pas d’XP, les charges ne sont pas rendues et tu repars au niveau 1.')) return;
       onLose('Série abandonnée');
+    }
+    if (phase === 'intro' && onBackToHub) {
+      onBackToHub();
+      return;
     }
     onClose();
   };
@@ -288,8 +294,13 @@ export const ExerciseSeriesView: React.FC<ExerciseSeriesViewProps> = ({ userId, 
       <div className="max-w-xl mx-auto px-4 py-4 sm:py-6 space-y-4 min-h-full flex flex-col">
         {/* En-tête */}
         <div className="flex items-center gap-3">
-          <button type="button" onClick={quit} aria-label="Fermer" className="p-2 -ml-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-200 dark:hover:text-white dark:hover:bg-slate-800 cursor-pointer">
-            <X className="w-6 h-6" />
+          <button
+            type="button"
+            onClick={quit}
+            aria-label={phase === 'intro' && onBackToHub ? 'Retour aux mini-jeux' : 'Fermer'}
+            className="p-2 -ml-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-200 dark:hover:text-white dark:hover:bg-slate-800 cursor-pointer"
+          >
+            {phase === 'intro' && onBackToHub ? <ArrowLeft className="w-6 h-6" /> : <X className="w-6 h-6" />}
           </button>
           {phase === 'question' ? (
             <>
@@ -300,7 +311,7 @@ export const ExerciseSeriesView: React.FC<ExerciseSeriesViewProps> = ({ userId, 
             </>
           ) : (
             <>
-              <p className="flex-1 text-base font-black text-slate-900 dark:text-white">Exercices</p>
+              <p className="flex-1 text-base font-black text-slate-900 dark:text-white">XP à gogo</p>
               {!unlimited && (
                 <span className="flex items-center gap-1 text-sm font-black text-amber-600 dark:text-amber-300 tabular-nums">
                   <Zap className="w-4 h-4 fill-current" />{energy.energy}

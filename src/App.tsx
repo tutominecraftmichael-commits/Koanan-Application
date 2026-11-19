@@ -116,8 +116,8 @@ const loadSubjectManager = () => import('./features/subjects/SubjectManager').th
 const loadPlannerView = () => import('./features/planner/PlannerView').then(m => m.PlannerView);
 const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashboard').then(m => m.AnalyticsDashboard);
 const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
-const loadExerciseSeriesView = () => import('./features/gamification/ExerciseSeriesView').then((m) => m.ExerciseSeriesView);
-const ExerciseSeriesView = lazyView(loadExerciseSeriesView);
+const loadMiniGamesHubView = () => import('./features/gamification/MiniGamesHubView').then((m) => m.MiniGamesHubView);
+const MiniGamesHubView = lazyView(loadMiniGamesHubView);
 const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
 const PlansSheet = lazyView(() => import('./features/pro/PlansSheet').then((m) => m.PlansSheet));
 const AuthPage = lazyView(loadAuthPage);
@@ -3090,14 +3090,14 @@ export function App() {
         </ViewErrorBoundary>
       </main>
 
-      {/* Icône ronde d'exercices (10 QCM au hasard, énergie ⚡) */}
+      {/* Bouton flottant jaune des Mini-Jeux KONAN (XP à gogo, etc., avec charges ⚡) */}
       {gamificationEnabled && gradeHasGuidedCourses && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
       )}
       {isExerciseOpen && (
         <SeriesErrorBoundary onClose={() => setIsExerciseOpen(false)}>
         <Suspense fallback={<div className="fixed inset-0 z-[80] bg-slate-50 dark:bg-[#0A0F1C] flex items-center justify-center"><ViewLoader /></div>}>
-          <ExerciseSeriesView
+          <MiniGamesHubView
             userId={state.userAccount?.googleId || 'local_student'}
             gradeLevel={canonicalGradeLevel(tryResolveGradeLevel(studentGradeRaw))}
             gamification={state.gamification}

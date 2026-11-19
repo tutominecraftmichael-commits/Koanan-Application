@@ -682,7 +682,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenExercises?.()}
-                aria-label={`Énergie : ${energy.unlimited ? 'illimitée' : `${energy.value} sur 25`}. Ouvrir les exercices`}
+                aria-label={`Charges : ${energy.unlimited ? 'illimitées' : `${energy.value} sur 25`}. Ouvrir les mini-jeux`}
                 className="flex items-center gap-0.5 px-2.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 dark:bg-amber-500/10 dark:border-amber-400/30 dark:text-amber-300 text-sm font-black tabular-nums cursor-pointer active:scale-95"
               >
                 <Zap className="w-4 h-4 fill-current" />
