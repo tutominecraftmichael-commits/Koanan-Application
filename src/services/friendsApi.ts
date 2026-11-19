@@ -281,6 +281,7 @@ export const nudgeFriendQuestPartner = (questId: string) =>
 
 export interface AvatarState {
   gold: number;
+  isPro: boolean;
   avatarConfig: AvatarConfig | null;
   unlockedItems: string[];
   hasCustomized: boolean;
@@ -290,6 +291,8 @@ export const AVATAR_ERRORS: Record<string, string> = {
   INVALID_ITEM: 'Cet objet n’existe plus dans la boutique.',
   INSUFFICIENT_GOLD: 'Tu n’as pas assez de pièces d’or ! Complète des quêtes d’XP avec tes amis pour en gagner.',
   ITEM_LOCKED: 'Achète d’abord ce skin avec tes pièces d’or avant de l’enregistrer sur ton profil.',
+  PRO_REQUIRED: 'La Tenue Or Massif est réservée aux membres KONAN Pro.',
+  PRO_ONLY_ITEM: 'Cette tenue légendaire ne s’achète pas en pièces d’or : elle est incluse avec KONAN Pro.',
   INVALID_CONFIG: 'Configuration d’avatar invalide.',
 };
 
@@ -304,6 +307,7 @@ export async function fetchAvatarState(): Promise<FriendApiResult<AvatarState>> 
     ok: true,
     data: {
       gold: typeof raw.gold === 'number' && Number.isFinite(raw.gold) ? raw.gold : 100,
+      isPro: Boolean(raw.isPro),
       avatarConfig: raw.avatarConfig || null,
       unlockedItems: Array.isArray(raw.unlockedItems) ? raw.unlockedItems : [],
       hasCustomized: Boolean(raw.hasCustomized || raw.avatarConfig),

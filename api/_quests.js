@@ -278,13 +278,22 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
   const participantUids = [...new Set(visibleQuests.flatMap((q) => [q.userA?.uid, q.userB?.uid]).filter(Boolean))];
   const avatarMap = new Map();
   if (participantUids.length) {
-    const userSnaps = await db.getAll(
-      ...participantUids.map((u) => db.collection('users').doc(u)),
-      { fieldMask: ['avatarConfig'] },
-    );
+    const [userSnaps, lpSnaps] = await Promise.all([
+      db.getAll(
+        ...participantUids.map((u) => db.collection('users').doc(u)),
+        { fieldMask: ['avatarConfig', 'planTier', 'isPro', 'plan', 'userAccount.planTier'] },
+      ),
+      db.getAll(...participantUids.map((u) => leagueCol(db, 'league_players').doc(u))),
+    ]);
     participantUids.forEach((u, i) => {
-      const cfg = userSnaps[i]?.exists ? userSnaps[i].data()?.avatarConfig : null;
-      if (cfg && typeof cfg === 'object') avatarMap.set(u, cfg);
+      const us = userSnaps[i]?.exists ? userSnaps[i].data() : null;
+      const lpd = lpSnaps[i]?.exists ? lpSnaps[i].data() : null;
+      const cfg = us?.avatarConfig;
+      if (cfg && typeof cfg === 'object') {
+        const tierRaw = String(lpd?.planTier || us?.planTier || us?.userAccount?.planTier || 'free').toLowerCase();
+        const isPro = tierRaw === 'pro' || tierRaw === 'plus' || us?.isPro === true || String(us?.plan || '').toLowerCase() === 'pro';
+        avatarMap.set(u, !isPro && cfg.outfit === 'outfit_pro_gold' ? { ...cfg, outfit: 'outfit_tee_blue' } : cfg);
+      }
     });
   }
 

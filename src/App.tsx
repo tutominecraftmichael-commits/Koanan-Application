@@ -908,7 +908,16 @@ export function App() {
   const [avatarConfig, setAvatarConfig] = useState<AvatarConfig | null>(() => state.avatarConfig || null);
   const [unlockedItems, setUnlockedItems] = useState<string[]>(() => (Array.isArray(state.unlockedItems) ? state.unlockedItems : []));
   const [hasCustomizedAvatar, setHasCustomizedAvatar] = useState<boolean>(() => Boolean(state.avatarConfig));
+  const [serverAvatarIsPro, setServerAvatarIsPro] = useState<boolean | null>(null);
   const [avatarEditorTab, setAvatarEditorTab] = useState<EditorTab | null>(null);
+  const effectiveAvatarIsPro = serverAvatarIsPro !== null ? serverAvatarIsPro : (effectivePlanTier === 'pro' || effectivePlanTier === 'plus');
+  const displayAvatarConfig = useMemo<AvatarConfig | null>(() => {
+    if (!avatarConfig) return null;
+    if (avatarConfig.outfit === 'outfit_pro_gold' && !effectiveAvatarIsPro) {
+      return { ...avatarConfig, outfit: 'outfit_tee_blue' };
+    }
+    return avatarConfig;
+  }, [avatarConfig, effectiveAvatarIsPro]);
 
   useEffect(() => {
     if (!questState && typeof state.gold === 'number' && Number.isFinite(state.gold)) {
@@ -923,6 +932,7 @@ export function App() {
       setAvatarConfig(r.data.avatarConfig || null);
       setHasCustomizedAvatar(Boolean(r.data.hasCustomized && r.data.avatarConfig));
       setUnlockedItems(Array.isArray(r.data.unlockedItems) ? r.data.unlockedItems : []);
+      setServerAvatarIsPro(Boolean(r.data.isPro));
       if (typeof r.data.gold === 'number' && Number.isFinite(r.data.gold)) {
         setUserGold(r.data.gold);
       }
@@ -995,6 +1005,7 @@ export function App() {
       setAvatarConfig(null);
       setUnlockedItems([]);
       setHasCustomizedAvatar(false);
+      setServerAvatarIsPro(null);
       return;
     }
     const refreshSocial = () => {
@@ -2629,7 +2640,7 @@ export function App() {
           onOpenFriends={() => setProfileScreen('friends')}
           gold={state.userAccount?.isLoggedIn ? userGold : null}
           onOpenShop={() => openAvatarEditor('outfit')}
-          avatarConfig={avatarConfig}
+          avatarConfig={displayAvatarConfig}
           hasCustomizedAvatar={hasCustomizedAvatar}
           questNotices={questState?.questNotices || []}
           incomingQuests={questState?.incomingQuests || []}
@@ -2788,7 +2799,7 @@ export function App() {
             <DashboardOverview
               studentName={effectiveStudentName}
               academicLevel={effectiveClassLabel}
-              avatarConfig={avatarConfig}
+              avatarConfig={displayAvatarConfig}
               hasCustomizedAvatar={hasCustomizedAvatar}
               onOpenAvatarEditor={() => openAvatarEditor('skin')}
               subjects={state.subjects}
@@ -3144,7 +3155,7 @@ export function App() {
           initialScreen={profileScreen}
           onClose={() => setProfileScreen(null)}
           name={effectiveStudentName}
-          avatarConfig={avatarConfig}
+          avatarConfig={displayAvatarConfig}
           hasCustomizedAvatar={hasCustomizedAvatar}
           onOpenAvatarEditor={(tab) => openAvatarEditor(tab || 'skin')}
           classLabel={effectiveClassLabel}
@@ -3176,9 +3187,10 @@ export function App() {
       {avatarEditorTab !== null && (
         <Suspense fallback={null}>
           <AvatarEditorModal
-            initialConfig={avatarConfig}
+            initialConfig={displayAvatarConfig}
             unlockedItems={unlockedItems}
             gold={userGold}
+            isPro={effectiveAvatarIsPro}
             userSeed={friendsData?.me?.konanId || state.userAccount?.konanId || state.konanId || effectiveStudentName}
             initialTab={avatarEditorTab}
             onClose={() => setAvatarEditorTab(null)}
@@ -3204,6 +3216,10 @@ export function App() {
             onOpenQuests={() => {
               setProfileScreen(null);
               setActiveView('league');
+            }}
+            onOpenPlans={() => {
+              setProfileScreen(null);
+              setIsPlansOpen(true);
             }}
             onToast={showToast}
           />
@@ -3234,7 +3250,7 @@ export function App() {
         nameChangedAt={state.nameChangedAt}
         // Total de tous les XP : le plus grand entre le téléphone et le serveur de la ligue (tous appareils confondus)
         totalXp={gamificationEnabled ? Math.max(gamificationOf(state.gamification).xp, leagueBoard?.totalXp ?? 0) : undefined}
-        avatarConfig={avatarConfig}
+        avatarConfig={displayAvatarConfig}
         hasCustomizedAvatar={hasCustomizedAvatar}
         onOpenAvatarEditor={() => {
           setIsSettingsOpen(false);

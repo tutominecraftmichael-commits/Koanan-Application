@@ -1353,9 +1353,35 @@ select,
   will-change: transform;
 }
 
+@keyframes goldShimmer {
+  0% { transform: translateX(-80px); opacity: 0; }
+  12% { opacity: 0.95; }
+  52% { transform: translateX(92px); opacity: 0.95; }
+  62%, 100% { transform: translateX(92px); opacity: 0; }
+}
+
+@keyframes goldSparkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.55) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.18) rotate(22deg); }
+}
+
+.konan-gold-shimmer-beam {
+  animation: goldShimmer 2.8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.konan-gold-sparkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: goldSparkle 2.4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .konan-av-pupils,
-  .konan-av-eyelids {
+  .konan-av-eyelids,
+  .konan-gold-shimmer-beam,
+  .konan-gold-sparkle {
     animation: none !important;
   }
 }

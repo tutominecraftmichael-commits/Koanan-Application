@@ -63,7 +63,7 @@ export async function publicCards(db, uids) {
   if (!ids.length) return out;
   const [league, users, friendDocs] = await Promise.all([
     db.getAll(...ids.map((u) => leagueCol(db, 'league_players').doc(u))),
-    db.getAll(...ids.map((u) => db.collection('users').doc(u)), { fieldMask: ['konanId', 'studentName', 'planTier', 'avatarConfig', 'userAccount.konanId', 'userAccount.name', 'userAccount.avatar', 'userAccount.customAvatar', 'userAccount.planTier'] }),
+    db.getAll(...ids.map((u) => db.collection('users').doc(u)), { fieldMask: ['konanId', 'studentName', 'planTier', 'isPro', 'plan', 'avatarConfig', 'userAccount.konanId', 'userAccount.name', 'userAccount.avatar', 'userAccount.customAvatar', 'userAccount.planTier'] }),
     db.getAll(...ids.map((u) => fsCol(db).doc(u))),
   ]);
   ids.forEach((uid, i) => {
@@ -71,6 +71,7 @@ export async function publicCards(db, uids) {
     const us = users[i].exists ? users[i].data() : {};
     const fr = friendDocs[i].exists ? friendDocs[i].data() : {};
     const tierRaw = String(lp.planTier || us.planTier || us.userAccount?.planTier || 'free').toLowerCase();
+    const isPro = tierRaw === 'pro' || tierRaw === 'plus' || us.isPro === true || String(us.plan || '').toLowerCase() === 'pro';
     const resolvedId = normalizeKonanId(us.konanId || us.userAccount?.konanId || lp.konanId) || konanIdFromUid(uid);
     if (users[i].exists && !us.konanId && resolvedId) {
       db.collection('users').doc(uid).set({ konanId: resolvedId }, { merge: true }).catch(() => {});
@@ -80,7 +81,7 @@ export async function publicCards(db, uids) {
       konanId: resolvedId,
       name: lp.displayName || publicName(us.studentName || us.userAccount?.name || ''),
       avatar: cleanAvatar(lp.avatar || us.userAccount?.customAvatar || us.userAccount?.avatar || ''),
-      avatarConfig: sanitizeAvatarConfig(us.avatarConfig) || sanitizeAvatarConfig(lp.avatarConfig) || null,
+      avatarConfig: sanitizeAvatarConfig(us.avatarConfig, { isPro }) || sanitizeAvatarConfig(lp.avatarConfig, { isPro }) || null,
       tier: tierRaw === 'pro' || tierRaw === 'plus' ? tierRaw : 'free',
       totalXp: Number(lp.totalXp) || 0,
       division: lp.division ? DIVISIONS[clampDivision(lp.division) - 1].name : null,
