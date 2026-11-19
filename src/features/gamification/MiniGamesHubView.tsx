@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Gamepad2, Infinity as InfinityIcon, Lock, Play, Star, X, Zap } from 'lucide-react';
+import { Gamepad2, Infinity as InfinityIcon, Play, Star, X, Zap } from 'lucide-react';
 import type { ExerciseSeriesViewProps } from './ExerciseSeriesView';
 import { ExerciseSeriesView } from './ExerciseSeriesView';
 import {
@@ -19,23 +19,6 @@ const fmtWait = (ms: number) => {
   const m = min % 60;
   return h ? `${h} h ${String(m).padStart(2, '0')}` : `${m} min`;
 };
-
-const UPCOMING_MINI_GAMES = [
-  {
-    id: 'duel-chrono',
-    title: 'Duel Chrono',
-    description: 'Affronte un ami sur 10 questions chronométrées et prouve qui maîtrise le mieux le chapitre.',
-    cost: 5,
-    accent: 'from-sky-500/20 to-indigo-500/20 border-sky-400/20',
-  },
-  {
-    id: 'chasse-or',
-    title: 'Chasse aux pièces d’or',
-    description: 'Enchaîne un sans-faute pour décrocher des pièces d’or bonus pour la Boutique.',
-    cost: 10,
-    accent: 'from-amber-500/20 to-orange-500/20 border-amber-400/20',
-  },
-] as const;
 
 export type MiniGamesHubViewProps = Omit<ExerciseSeriesViewProps, 'onBackToHub'>;
 
@@ -218,35 +201,6 @@ export const MiniGamesHubView: React.FC<MiniGamesHubViewProps> = (props) => {
               </button>
             </div>
           </article>
-        </div>
-
-        {/* AUTRES MINI-JEUX À VENIR (clairement indiqués Bientôt disponibles, non cliquables) */}
-        <div className="space-y-2.5 pt-1">
-          <p className="m-0 px-1 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-            Prochains mini-jeux · Bientôt disponibles
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {UPCOMING_MINI_GAMES.map((game) => (
-              <div
-                key={game.id}
-                aria-disabled="true"
-                className={`rounded-2xl p-4 bg-gradient-to-br ${game.accent} bg-white/80 dark:bg-[#0F1626]/80 border border-slate-200 dark:border-white/10 space-y-2 opacity-80`}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-200/80 dark:bg-white/10 text-[10px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-300">
-                    <Lock className="w-3 h-3" />
-                    Bientôt
-                  </span>
-                  <span className="inline-flex items-center gap-0.5 text-[11px] font-extrabold text-amber-700 dark:text-amber-300 tabular-nums">
-                    <Zap className="w-3.5 h-3.5 fill-current" />
-                    {game.cost} charges
-                  </span>
-                </div>
-                <h3 className="m-0 text-sm font-black text-slate-900 dark:text-white">{game.title}</h3>
-                <p className="m-0 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{game.description}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>
