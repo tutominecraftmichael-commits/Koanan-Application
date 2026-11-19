@@ -71,9 +71,9 @@ export function isEligible(reputation) {
   return Number(reputation) > MIN_REPUTATION;
 }
 
-/** Classes qui ont des cours dans KONAN (Seconde, Première, Terminale). */
+/** Classes qui ont des cours dans KONAN (Seconde, Première, Terminale, et filières LMD intégrées). */
 export function gradeHasCourses(gradeLevel) {
-  return /^(seconde|premiere|terminale)_/.test(String(gradeLevel || ''));
+  return /^(seconde|premiere|terminale|lmd)_/.test(String(gradeLevel || ''));
 }
 
 /**

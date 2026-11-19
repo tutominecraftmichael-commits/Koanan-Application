@@ -22,7 +22,7 @@ import { ProFeatureModal } from '../../components/common/ProFeatureModal';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
 import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { ExamChapterPicker } from '../exam/ExamChapterPicker';
-import { matchSubjectToStemCurriculum } from '../../lib/curriculum/curriculumMatcher';
+import { matchSubjectToStemCurriculum, tryResolveGradeLevel } from '../../lib/curriculum/curriculumMatcher';
 
 export interface SubjectManagerProps {
   subjects: Subject[];
@@ -198,7 +198,7 @@ export const SubjectManager: React.FC<SubjectManagerProps> = ({
     }
     setExamFormError(null);
     // Matière du programme : celle du choix des chapitres, sinon reconnue d'après le nom
-    const subjectMatch = matchSubjectToStemCurriculum(name.trim());
+    const subjectMatch = matchSubjectToStemCurriculum(name.trim(), tryResolveGradeLevel(gradeLevel));
     const keepChapters = Boolean(examDate) && examHasCourse !== false && examChapterIds.length > 0;
     const examFields = {
       examChapterIds: keepChapters ? examChapterIds : undefined,

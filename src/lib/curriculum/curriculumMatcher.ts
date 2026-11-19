@@ -3,7 +3,8 @@ import type {
   StemSubjectId,
   StemSubjectMeta,
 } from './types';
-import { STEM_SUBJECTS } from './types';
+import { LMD_SUBJECT_IDS, LYCEE_SUBJECT_IDS, STEM_SUBJECTS } from './types';
+import { getLmdAllowedSubjects, getLmdProgramByGrade, isLmdTrackGrade } from './lmdTracks';
 
 /**
  * Normalise un texte brut (enlève accents, majuscules, tirets et caractères spéciaux)
@@ -73,6 +74,12 @@ function parseGradeStrict(clean: string): CurriculumGradeLevel | null {
   if (/\b(4eme|4e|quatrieme)\b/.test(clean)) return '4eme';
   if (/\b(5eme|5e|cinquieme)\b/.test(clean)) return '5eme';
   if (/\b(6eme|6e|sixieme)\b/.test(clean)) return '6eme';
+  if (
+    /\blmd entd l1\b|\bentd\s*(?:l\s*)?1\b/.test(clean)
+    || ((/\bentd\b/.test(clean) || clean.includes('economie numerique')) && /\b(?:l\s*1|licence\s*1)\b/.test(clean))
+  ) {
+    return 'lmd_entd_l1';
+  }
   if (/\b(bts|prepa)\b/.test(clean)) return 'superieur_bts';
   if (/\b(lmd|licence|master|doctorat)\b|universit/.test(clean)) return 'superieur_lmd';
   return null;
@@ -83,17 +90,20 @@ const GRADE_LABELS: Partial<Record<CurriculumGradeLevel, string>> = {
   seconde_a: 'Seconde A', seconde_c: 'Seconde C',
   premiere_a: 'Première A', premiere_a1: 'Première A1', premiere_a2: 'Première A2', premiere_c: 'Première C', premiere_d: 'Première D',
   terminale_a: 'Terminale A', terminale_a1: 'Terminale A1', terminale_a2: 'Terminale A2', terminale_c: 'Terminale C', terminale_d: 'Terminale D',
+  lmd_entd_l1: 'ENTD — Licence 1 (L1)',
   superieur_bts: 'BTS', superieur_lmd: 'Université (LMD)',
 };
 
 /**
- * Nom lisible de la VRAIE classe de l'élève (« Terminale D », « Seconde A »…), lu d'abord dans la classe
- * choisie à l'inscription. Ne renvoie jamais une classe devinée : null si elle est inconnue.
- * `freeText` (ex. filière saisie à l'université) n'est utilisé que pour l'enseignement supérieur.
+ * Nom lisible de la VRAIE classe de l'élève (« Terminale D », « Seconde A », « ENTD — Licence 1 (L1) »…),
+ * lu d'abord dans la classe choisie à l'inscription. Ne renvoie jamais une classe devinée : null si elle est inconnue.
+ * `freeText` n'est utilisé que pour les anciens comptes 'superieur_bts' / 'superieur_lmd' sans filière typée.
  */
 export function studentClassLabel(gradeId: string | undefined, freeText?: string): string | null {
   const grade = tryResolveGradeLevel(gradeId);
   if (!grade) return null;
+  const lmdProg = getLmdProgramByGrade(grade);
+  if (lmdProg) return lmdProg.displayLabel;
   if (grade.startsWith('superieur')) {
     const t = String(freeText || '').trim();
     // « Licence Universitaire » est la valeur par défaut posée à la connexion, pas une vraie filière
@@ -107,6 +117,7 @@ const EXACT_GRADE_IDS: CurriculumGradeLevel[] = [
   'seconde_c', 'seconde_a',
   'premiere_c', 'premiere_d', 'premiere_a1', 'premiere_a2', 'premiere_a',
   'terminale_c', 'terminale_d', 'terminale_a1', 'terminale_a2', 'terminale_a',
+  'lmd_entd_l1',
   'superieur_bts', 'superieur_lmd'
 ];
 
@@ -169,7 +180,13 @@ function resolveGradeLevelInternal(rawLevel: string | undefined, strict: boolean
     return strict ? null : 'seconde_c'; // Série inconnue
   }
 
-  // Supérieur (BTS / LMD)
+  // Supérieur (Filières LMD prédéfinies puis générique BTS / LMD)
+  if (
+    /\blmd entd l1\b|\bentd\s*(?:l\s*)?1\b/.test(clean)
+    || ((/\bentd\b/.test(clean) || clean.includes('economie numerique')) && /\b(?:l\s*1|licence\s*1)\b/.test(clean))
+  ) {
+    return 'lmd_entd_l1';
+  }
   if (clean.includes('bts') || clean.includes('prepa') || clean.includes('technicien')) {
     return 'superieur_bts';
   }
@@ -194,40 +211,60 @@ export interface MatchResult {
 
 /**
  * Moteur de correspondance sémantique :
- * Associe une matière extraite de l'emploi du temps (ex: "MATHS", "Algèbre", "SP", "SVT", "CHIMIE")
- * à la matière officielle du programme ivoirien (Mathématiques, Physique-Chimie, SVT).
+ * - Pour le Collège/Lycée : associe la matière de l'EDT aux 6 matières officielles du programme ivoirien.
+ * - Pour une filière LMD prédéfinie (ex. `lmd_entd_l1`) : associe strictement la matière de l'EDT
+ *   aux matières officielles de cette filière LMD (sans collision avec les alias du lycée).
  */
-export function matchSubjectToStemCurriculum(subjectName: string): MatchResult {
+export function matchSubjectToStemCurriculum(
+  subjectName: string,
+  gradeLevel?: CurriculumGradeLevel | null,
+): MatchResult {
   if (!subjectName) return { isStemSubject: false };
   let clean = normalizeCurriculumText(subjectName);
-  // Sigle écrit lettre par lettre (« P.C », « S V T », « H-G ») : on recolle les lettres -> « pc », « svt », « hg »
+  // Sigle écrit lettre par lettre (« P.C », « S V T », « H-G », « O.G.E », « T.E.F ») -> « pc », « svt », « hg », « oge », « tef »
   if (/^([a-z] )+[a-z]$/.test(clean)) clean = clean.replace(/ /g, '');
 
-  // L'Éducation Physique et Sportive n'est PAS de la Physique-Chimie (le mot « physique » piégeait l'alias)
+  // L'Éducation Physique et Sportive n'est PAS une matière académique de cours guidé
   if (/\b(eps|sports?|sportives?)\b|education physique/.test(clean)) {
     return { isStemSubject: false };
   }
-  // « Histoire de l'art », « Histoire des religions » : matières sans cours (le mot « histoire » piégeait l'alias)
+  // « Histoire de l'art », « Histoire des religions » : matières sans cours
   if (/\bhistoire (de l |de la |des |du )?(art|arts|religion|religions|musique)\b/.test(clean)) {
     return { isStemSubject: false };
   }
 
-  // Vérifier chaque matière scientifique
-  for (const key of Object.keys(STEM_SUBJECTS) as StemSubjectId[]) {
+  const isLmd = isLmdTrackGrade(gradeLevel);
+  const allowedLmd = isLmd ? getLmdAllowedSubjects(gradeLevel) : null;
+  const candidateKeys: StemSubjectId[] = isLmd
+    ? LMD_SUBJECT_IDS.filter((k) => !allowedLmd || allowedLmd.includes(k))
+    : LYCEE_SUBJECT_IDS;
+
+  // Passe 1 : correspondance exacte ou phrase complète (prioritaire pour éviter qu'un mot court ne vole un titre long)
+  for (const key of candidateKeys) {
     const meta = STEM_SUBJECTS[key];
     const directNameMatch = normalizeCurriculumText(meta.name);
-
-    // Correspondance inverse (nom saisi contenu dans le nom officiel) limitée aux saisies d'au moins
-    // 5 caractères : « TE » ou « EPS » ne doivent plus être pris pour « Sciences de la Vie et de la Terre ».
-    if (clean === directNameMatch || clean.includes(directNameMatch) || (clean.length >= 5 && directNameMatch.includes(clean))) {
+    if (clean === directNameMatch || clean.includes(directNameMatch)) {
       return { isStemSubject: true, stemSubjectId: key, stemMeta: meta };
     }
-
     for (const alias of meta.aliases) {
       const cleanAlias = normalizeCurriculumText(alias);
-      // Correspondance exacte de mot ou préfixe (ex: "SP", "MATH", "SVT")
+      if (clean === cleanAlias || (cleanAlias.includes(' ') && clean.includes(cleanAlias))) {
+        return { isStemSubject: true, stemSubjectId: key, stemMeta: meta };
+      }
+    }
+  }
+
+  // Passe 2 : correspondance par mot-clé ou inclusion inverse sécurisée (>= 5 caractères)
+  for (const key of candidateKeys) {
+    const meta = STEM_SUBJECTS[key];
+    const directNameMatch = normalizeCurriculumText(meta.name);
+    if (clean.length >= 5 && directNameMatch.includes(clean)) {
+      return { isStemSubject: true, stemSubjectId: key, stemMeta: meta };
+    }
+    for (const alias of meta.aliases) {
+      const cleanAlias = normalizeCurriculumText(alias);
       const words = clean.split(' ');
-      if (words.includes(cleanAlias) || clean === cleanAlias || clean.startsWith(cleanAlias + ' ') || clean.endsWith(' ' + cleanAlias)) {
+      if (words.includes(cleanAlias) || clean.startsWith(cleanAlias + ' ') || clean.endsWith(' ' + cleanAlias)) {
         return { isStemSubject: true, stemSubjectId: key, stemMeta: meta };
       }
     }
@@ -256,16 +293,16 @@ export function voletFromSubjectName(subjectId: StemSubjectId, subjectName: stri
 
 /**
  * Détermine si une séance donnée doit lancer le tuteur interactif Duolingo
- * ou le chronomètre standard (pour les matières non scientifiques ou LMD hors base).
+ * ou le chronomètre standard (pour les matières sans cours ou filières non encore intégrées).
  */
 export function shouldLaunchInteractiveTutor(
   subjectName: string,
   gradeLevel: CurriculumGradeLevel
 ): boolean {
-  // Le tuteur interactif est pour l'instant actif sur le Collège et Lycée (3ème à Terminale)
+  // Les anciens comptes génériques 'superieur_lmd' (sans filière choisie) et 'superieur_bts' restent au chronomètre
   const isTargetGrade = gradeLevel !== 'superieur_lmd' && gradeLevel !== 'superieur_bts';
   if (!isTargetGrade) return false;
 
-  const match = matchSubjectToStemCurriculum(subjectName);
+  const match = matchSubjectToStemCurriculum(subjectName, gradeLevel);
   return match.isStemSubject;
 }

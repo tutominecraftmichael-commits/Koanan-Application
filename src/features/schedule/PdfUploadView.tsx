@@ -42,6 +42,7 @@ import type {
 } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { soundFX } from '../../lib/audioEffects';
+import { LMD_PROGRAMS, LMD_TRACKS, getLmdProgramByGrade, isLmdTrackGrade } from '../../lib/curriculum/lmdTracks';
 import { 
   parseStructuredScheduleTruth, 
   harmonizeAndDeduplicateSlots, 
@@ -151,7 +152,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   }, [initialGradeLevel, initialAcademicLevel]);
 
   const initialFormat: ScheduleFormatType = useMemo(() => {
-    if (resolvedInitialGrade === 'superieur_lmd') return 'lmd';
+    if (resolvedInitialGrade === 'superieur_lmd' || isLmdTrackGrade(resolvedInitialGrade)) return 'lmd';
     if (resolvedInitialGrade === 'superieur_bts') return 'tpcm';
     return 'scolaire';
   }, [resolvedInitialGrade]);
@@ -160,12 +161,17 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const [selectedFormat, setSelectedFormat] = useState<ScheduleFormatType>(initialFormat);
   const [selectedGradeLevel, setSelectedGradeLevel] = useState<CurriculumGradeLevel>(resolvedInitialGrade);
   const [customFiliere, setCustomFiliere] = useState<string>(() => {
+    const lmdProg = getLmdProgramByGrade(resolvedInitialGrade);
+    if (lmdProg) return lmdProg.displayLabel;
     if (initialAcademicLevel && (resolvedInitialGrade === 'superieur_lmd' || resolvedInitialGrade === 'superieur_bts')) {
       return initialAcademicLevel;
     }
     return '';
   });
-  const [selectedLmdLevel, setSelectedLmdLevel] = useState<string>('Licence 3 (L3)');
+  const [selectedLmdLevel, setSelectedLmdLevel] = useState<string>(() => {
+    const lmdProg = getLmdProgramByGrade(resolvedInitialGrade);
+    return lmdProg ? lmdProg.levelFull : 'Licence 1 (L1)';
+  });
   const [scheduleText, setScheduleText] = useState<string>('');
   // Résultat de la dernière lecture par l'IA : classes trouvées dans le document et points à vérifier
   const [extraction, setExtraction] = useState<StructuredTimetableResult | null>(null);
@@ -230,7 +236,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
   const handleFormatChange = (newFormat: ScheduleFormatType) => {
     setSelectedFormat(newFormat);
     if (newFormat === 'scolaire') {
-      if (selectedGradeLevel === 'superieur_bts' || selectedGradeLevel === 'superieur_lmd') {
+      if (selectedGradeLevel === 'superieur_bts' || selectedGradeLevel === 'superieur_lmd' || isLmdTrackGrade(selectedGradeLevel)) {
         setSelectedGradeLevel('seconde_c');
       }
     } else if (newFormat === 'tpcm') {
@@ -239,9 +245,13 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
         setCustomFiliere("BTS Informatique Développeur d'Application (IDA)");
       }
     } else if (newFormat === 'lmd') {
-      setSelectedGradeLevel('superieur_lmd');
-      if (!customFiliere) {
-        setCustomFiliere('ESATIC (Abidjan)');
+      const currentProg = getLmdProgramByGrade(selectedGradeLevel) || LMD_PROGRAMS[0];
+      if (currentProg) {
+        setSelectedGradeLevel(currentProg.gradeLevel);
+        setSelectedLmdLevel(currentProg.levelFull);
+        setCustomFiliere(currentProg.displayLabel);
+      } else {
+        setSelectedGradeLevel('superieur_lmd');
       }
     }
 
@@ -1084,85 +1094,55 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
             {/* SYSTÈME LMD : NIVEAU & UNIVERSITÉ */}
             {selectedFormat === 'lmd' && (
               <div className="space-y-3">
-                <div>
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-sky-700 block mb-1.5 dark:text-sky-300">
-                    1. Degré d'étude universitaire :
-                  </label>
-                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
-                    {['Licence 1 (L1)', 'Licence 2 (L2)', 'Licence 3 (L3)', 'Master 1 (M1)', 'Master 2 (M2)', 'Doctorat'].map(deg => {
-                      const isSelected = selectedLmdLevel === deg;
-                      return (
-                        <button
-                          key={deg}
-                          type="button"
-                          onClick={() => {
-                            soundFX.playCheckmarkPop();
-                            setSelectedLmdLevel(deg);
-                            setSelectedGradeLevel('superieur_lmd');
-                          }}
-                          className={`py-1.5 px-2 rounded-lg text-xs font-bold text-center transition-all cursor-pointer ${
-                            isSelected
-                              ? 'bg-sky-400 text-slate-950 shadow-sm'
-                              : 'bg-slate-800/60 text-slate-300 hover:bg-slate-800 border border-slate-700/60'
-                          }`}
-                        >
-                          {deg.split(' ')[0]} {deg.match(/\((.*?)\)/)?.[0] || ''}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-sky-700 block mb-1.5 dark:text-sky-300">
-                    2. Établissement / Filière de référence :
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                    {[
-                      'ESATIC (Abidjan)',
-                      'INP-HB (Yamoussoukro)',
-                      'UFHB (Cocody)',
-                      'UNA (Abobo-Adjamé)',
-                      'UVCI (Virtuelle)',
-                      'Autre Grande École',
-                    ].map(school => {
-                      const isSelected = customFiliere.startsWith(school);
-                      return (
-                        <button
-                          key={school}
-                          type="button"
-                          onClick={() => {
-                            soundFX.playCheckmarkPop();
-                            setCustomFiliere(school === 'Autre Grande École' ? '' : school);
-                            setSelectedGradeLevel('superieur_lmd');
-                          }}
-                          className={`p-2 rounded-lg text-xs font-medium text-left truncate transition-all cursor-pointer ${
-                            isSelected
-                              ? 'bg-slate-950/80 border border-sky-400 text-sky-200'
-                              : 'bg-slate-800/40 text-slate-300 border border-slate-700/60 hover:bg-slate-800'
-                          }`}
-                        >
-                          {school}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-400 mb-1">
-                    Filière ou mention exacte :
-                  </label>
-                  <input
-                    type="text"
-                    value={customFiliere}
-                    onChange={(e) => {
-                      setCustomFiliere(e.target.value);
-                      setSelectedGradeLevel('superieur_lmd');
-                    }}
-                    placeholder="Ex: ESATIC — SRIT L3, INP-HB Informatique, UFHB Math-Info..."
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-medium text-white focus:outline-none focus:border-sky-400"
-                  />
+                <label className="text-[11px] font-bold uppercase tracking-wider text-sky-700 block dark:text-sky-300">
+                  Choisis ta filière LMD et ton niveau (prédéfinis) :
+                </label>
+                <div className="space-y-2.5">
+                  {LMD_TRACKS.map((track) => (
+                    <div
+                      key={track.id}
+                      className="p-3 rounded-xl bg-slate-900/70 border border-slate-700/80 space-y-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-md bg-sky-400/20 text-sky-300 text-[10px] font-black uppercase">
+                          {track.code}
+                        </span>
+                        <span className="text-xs font-extrabold text-white">
+                          {track.name}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {track.levels.map((lvl) => {
+                          const isSelected = selectedGradeLevel === lvl.gradeLevel;
+                          const label = `${track.code} — ${lvl.fullLabel}`;
+                          return (
+                            <button
+                              key={lvl.gradeLevel}
+                              type="button"
+                              onClick={() => {
+                                soundFX.playCheckmarkPop();
+                                setSelectedGradeLevel(lvl.gradeLevel);
+                                setSelectedLmdLevel(lvl.fullLabel);
+                                setCustomFiliere(label);
+                              }}
+                              className={`py-1.5 px-3 rounded-lg text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                                isSelected
+                                  ? 'bg-sky-400 text-slate-950 shadow-sm'
+                                  : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800 border border-slate-700/70'
+                              }`}
+                            >
+                              <span>{lvl.fullLabel}</span>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded font-black ${
+                                isSelected ? 'bg-slate-950/15 text-slate-950' : 'bg-emerald-500/20 text-emerald-300'
+                              }`}>
+                                {lvl.subjectIds.length} matières
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

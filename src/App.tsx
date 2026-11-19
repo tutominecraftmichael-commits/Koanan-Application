@@ -2136,11 +2136,15 @@ export function App() {
       showToast(`Tu as déjà changé ton nom récemment. Prochain changement possible le ${new Date(blockedUntil).toLocaleDateString('fr-FR')}.`, 6000);
     }
 
+    const resolvedProfileGrade = tryResolveGradeLevel(safeData.academicLevel);
+
     setState(prev => {
+      const nextGrade = resolvedProfileGrade || prev.preferences?.gradeLevel || prev.userAccount?.gradeLevel;
       const nextUserAccount: UserAccount = prev.userAccount ? {
         ...prev.userAccount,
         name: safeData.name,
         academicLevel: safeData.academicLevel,
+        gradeLevel: nextGrade,
         phoneNumber: safeData.phoneNumber,
         countryCode: safeData.countryCode,
         lastSyncedAt: new Date().toISOString(),
@@ -2151,6 +2155,7 @@ export function App() {
         avatar: '',
         googleId: '',
         academicLevel: safeData.academicLevel,
+        gradeLevel: nextGrade,
         lastSyncedAt: new Date().toISOString(),
       };
 
@@ -2166,6 +2171,7 @@ export function App() {
           ...prev.preferences,
           studentName: safeData.name,
           academicLevel: safeData.academicLevel,
+          gradeLevel: nextGrade,
         }
       };
 
@@ -2325,7 +2331,7 @@ export function App() {
     const subjectName = sub?.name || session.title;
     // Classe STRICTE (jamais devinée), ramenée à sa forme officielle (« 1ère A » → 1re A1, « Tle A » → Tle A1)
     const resolvedGrade = canonicalGradeLevel(tryResolveGradeLevel(studentGradeRaw));
-    const stemMatchForTutor = matchSubjectToStemCurriculum(subjectName);
+    const stemMatchForTutor = matchSubjectToStemCurriculum(subjectName, resolvedGrade);
 
     // Devoirs et examens = KONAN Pro : un élève Gratuit (par exemple dont l'abonnement est fini) ne lance jamais
     // une préparation de devoir ; on lui montre l'offre au lieu d'une erreur du serveur

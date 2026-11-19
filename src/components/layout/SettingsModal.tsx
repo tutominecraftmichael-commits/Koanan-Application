@@ -22,16 +22,21 @@ import { useLanguage, t } from '../../lib/i18n';
 import { soundFX } from '../../lib/audioEffects';
 import { useTheme } from '../../context/ThemeContext';
 import { checkStudentName, nextNameChangeAt } from '../../../api/_nameRules.js';
+import { LMD_PROGRAMS } from '../../lib/curriculum/lmdTracks';
 
-
-const COMMON_FILIERES = [
-  'Licence Informatique',
-  'Médecine & Santé (PASS)',
-  'Droit & Sciences Politiques',
-  'Classes Préparatoires (CPGE)',
-  'Économie & Gestion',
-  'École d’Ingénieurs',
-  'Lycée (Baccalauréat)',
+const PREDEFINED_LYCEE_CLASSES = [
+  '3ème',
+  'Seconde A',
+  'Seconde C',
+  'Première A1',
+  'Première A2',
+  'Première C',
+  'Première D',
+  'Terminale A1',
+  'Terminale A2',
+  'Terminale C',
+  'Terminale D',
+  'BTS / Prépa',
 ];
 
 interface SettingsModalProps {
@@ -320,35 +325,57 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     )}
                   </div>
 
-                  {/* 2. Filière */}
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
-                      Filière ou Niveau d'études
+                  {/* 2. Classe ou Filière LMD prédéfinie (zéro saisie libre) */}
+                  <div className="space-y-2.5">
+                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase">
+                      Classe ou Filière LMD (prédéfinie)
                     </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        value={editFiliere}
-                        onChange={(e) => setEditFiliere(e.target.value)}
-                        placeholder="Ex : Licence Informatique, Droit, Médecine..."
-                        className="w-full px-3 py-2.5 pl-9 rounded-xl bg-white border border-slate-300 text-xs text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 transition-colors shadow-xs"
-                        required
-                      />
-                      <GraduationCap className="w-4 h-4 text-sky-700 dark:text-sky-400 absolute left-3 top-2.5 pointer-events-none" />
+
+                    <div className="px-3 py-2 rounded-xl bg-sky-50/80 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-400/30 flex items-center gap-2 text-xs font-extrabold text-sky-900 dark:text-sky-200">
+                      <GraduationCap className="w-4 h-4 text-sky-600 dark:text-sky-400 shrink-0" />
+                      <span className="truncate">{editFiliere || 'Sélectionne ta classe ou filière ci-dessous'}</span>
                     </div>
 
-                    {/* Suggestions de filières en 1 clic */}
-                    <div className="mt-2">
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 block mb-1">Suggestions rapides :</span>
+                    {/* Filières & Niveaux LMD officiels */}
+                    <div className="space-y-1.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-sky-700 dark:text-sky-400 block">
+                        Université (LMD) :
+                      </span>
                       <div className="flex flex-wrap gap-1.5">
-                        {COMMON_FILIERES.map((f, idx) => (
+                        {LMD_PROGRAMS.map((prog) => {
+                          const active = editFiliere === prog.displayLabel;
+                          return (
+                            <button
+                              key={prog.gradeLevel}
+                              type="button"
+                              onClick={() => { soundFX.playCheckmarkPop(); setEditFiliere(prog.displayLabel); }}
+                              className={`text-[11px] px-2.5 py-1.5 rounded-xl border transition-colors cursor-pointer font-bold ${
+                                active
+                                  ? 'bg-sky-500 text-white border-sky-500 shadow-xs'
+                                  : 'bg-white hover:bg-sky-50 text-slate-700 border-slate-300 hover:border-sky-300 dark:bg-slate-900/80 dark:hover:bg-slate-950 dark:text-slate-200 dark:border-slate-700'
+                              }`}
+                            >
+                              {prog.displayLabel}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Classes Collège, Lycée & BTS */}
+                    <div className="space-y-1.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
+                        Collège, Lycée &amp; BTS :
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {PREDEFINED_LYCEE_CLASSES.map((f) => (
                           <button
-                            key={idx}
+                            key={f}
                             type="button"
-                            onClick={() => setEditFiliere(f)}
-                            className={`text-[10px] px-2 py-0.5 rounded-lg border transition-colors cursor-pointer ${
-                              editFiliere === f 
-                                ? 'bg-sky-400 text-slate-950 border-sky-400 font-bold' 
+                            onClick={() => { soundFX.playCheckmarkPop(); setEditFiliere(f); }}
+                            className={`text-[11px] px-2.5 py-1 rounded-xl border transition-colors cursor-pointer ${
+                              editFiliere === f
+                                ? 'bg-sky-400 text-slate-950 border-sky-400 font-bold'
                                 : 'bg-white hover:bg-sky-50 text-slate-700 border-slate-300 hover:border-sky-300 dark:bg-slate-900/80 dark:hover:bg-slate-950 dark:text-slate-300 dark:border-slate-800 dark:hover:border-sky-400/40'
                             }`}
                           >

@@ -23,7 +23,8 @@ export type CurriculumGradeLevel =
   | 'terminale_a1'
   | 'terminale_a2'
   | 'terminale_a' // Rétrocompatibilité
-  // Supérieur (LMD, BTS, Prépa)
+  // Supérieur (Filières LMD prédéfinies avec niveau + rétrocompatibilité)
+  | 'lmd_entd_l1'
   | 'superieur_lmd'
   | 'superieur_bts';
 
@@ -119,6 +120,13 @@ export const GRADE_LEVELS: GradeLevelMeta[] = [
   },
   // Supérieur
   {
+    id: 'lmd_entd_l1',
+    label: 'ENTD — Licence 1 (L1)',
+    category: 'superieur',
+    badge: 'ENTD L1',
+    description: 'Économie Numérique et Transformation Digitale — Licence 1 (24 matières)',
+  },
+  {
     id: 'superieur_lmd',
     label: 'Licence Universitaire (LMD)',
     category: 'superieur',
@@ -134,7 +142,78 @@ export const GRADE_LEVELS: GradeLevelMeta[] = [
   },
 ];
 
-export type StemSubjectId = 'maths' | 'physique_chimie' | 'svt' | 'francais' | 'histoire_geo' | 'philosophie';
+export type LyceeSubjectId = 'maths' | 'physique_chimie' | 'svt' | 'francais' | 'histoire_geo' | 'philosophie';
+
+export type LmdSubjectId =
+  // Lot 1 : Maths, Info & Réseaux
+  | 'lmd_algorithmique'
+  | 'lmd_algebre'
+  | 'lmd_analyse'
+  | 'lmd_logique_math'
+  | 'lmd_stat_descriptive'
+  | 'lmd_reseaux'
+  // Lot 2 : Économie, Numérique & Finance
+  | 'lmd_intro_eco_num'
+  | 'lmd_modele_dev_eco_num'
+  | 'lmd_macroeconomie'
+  | 'lmd_microeconomie'
+  | 'lmd_banque'
+  | 'lmd_assurance'
+  // Lot 3 : Gestion, Comptabilité & Droit
+  | 'lmd_compta_generale'
+  | 'lmd_compta_analytique'
+  | 'lmd_oge'
+  | 'lmd_intro_management'
+  | 'lmd_intro_marketing'
+  | 'lmd_intro_droit_num'
+  | 'lmd_droit_numerique'
+  // Lot 4 : Bureautique, Digital & Communication
+  | 'lmd_bureautique'
+  | 'lmd_init_info'
+  | 'lmd_tef'
+  | 'lmd_ecriture_creative'
+  | 'lmd_dev_perso';
+
+export type StemSubjectId = LyceeSubjectId | LmdSubjectId;
+
+export const LYCEE_SUBJECT_IDS: LyceeSubjectId[] = [
+  'maths',
+  'physique_chimie',
+  'svt',
+  'francais',
+  'histoire_geo',
+  'philosophie',
+];
+
+export const LMD_SUBJECT_IDS: LmdSubjectId[] = [
+  // Ordre prioritaire pour éviter toute collision entre intitulés proches
+  // (ex: Intro au Droit du Numérique avant Droit du Numérique, Compta Analytique avant Compta Générale,
+  // Modèle de Développement en Éco Numérique avant Intro à l'Éco Numérique)
+  'lmd_intro_droit_num',
+  'lmd_droit_numerique',
+  'lmd_modele_dev_eco_num',
+  'lmd_intro_eco_num',
+  'lmd_compta_analytique',
+  'lmd_compta_generale',
+  'lmd_algorithmique',
+  'lmd_algebre',
+  'lmd_analyse',
+  'lmd_logique_math',
+  'lmd_stat_descriptive',
+  'lmd_reseaux',
+  'lmd_macroeconomie',
+  'lmd_microeconomie',
+  'lmd_banque',
+  'lmd_assurance',
+  'lmd_oge',
+  'lmd_intro_management',
+  'lmd_intro_marketing',
+  'lmd_bureautique',
+  'lmd_init_info',
+  'lmd_tef',
+  'lmd_ecriture_creative',
+  'lmd_dev_perso',
+];
 
 export interface StemSubjectMeta {
   id: StemSubjectId;
@@ -253,6 +332,257 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
       'philosophie',
       'philo',
       'philosophy',
+    ],
+  },
+  // ==========================================================================
+  // MATIÈRES LMD — ENTD 1 (Économie Numérique et Transformation Digitale L1)
+  // ==========================================================================
+  lmd_algorithmique: {
+    id: 'lmd_algorithmique',
+    name: 'Algorithmique',
+    color: '#2563EB',
+    iconName: 'Calculator',
+    aliases: ['algorithmique', 'algorithme', 'algo', 'programmation', 'algorithmique et programmation'],
+  },
+  lmd_algebre: {
+    id: 'lmd_algebre',
+    name: 'Algèbre',
+    color: '#3B82F6',
+    iconName: 'Calculator',
+    aliases: ['algebre', 'algèbre', 'algebre 1', 'algebre1', 'algebre lineaire', 'arithmetique'],
+  },
+  lmd_analyse: {
+    id: 'lmd_analyse',
+    name: 'Analyse',
+    color: '#1D4ED8',
+    iconName: 'Calculator',
+    aliases: ['analyse', 'analyse 1', 'analyse1', 'analyse mathematique', 'calcul differentiel'],
+  },
+  lmd_logique_math: {
+    id: 'lmd_logique_math',
+    name: 'Logique et Raisonnement Mathématique',
+    color: '#4F46E5',
+    iconName: 'Calculator',
+    aliases: ['logique', 'logique et raisonnement mathematique', 'logique mathematique', 'raisonnement mathematique', 'maths 1', 'math 1'],
+  },
+  lmd_stat_descriptive: {
+    id: 'lmd_stat_descriptive',
+    name: 'Statistique Descriptive',
+    color: '#0284C7',
+    iconName: 'Calculator',
+    aliases: ['statistique descriptive', 'statistiques descriptives', 'statistique', 'statistiques', 'stats', 'stat'],
+  },
+  lmd_reseaux: {
+    id: 'lmd_reseaux',
+    name: 'Réseaux',
+    color: '#0891B2',
+    iconName: 'Atom',
+    aliases: ['reseaux', 'réseaux', 'reseau', 'réseau', 'rsx', 'reseaux informatiques', 'architecture reseaux'],
+  },
+  lmd_intro_eco_num: {
+    id: 'lmd_intro_eco_num',
+    name: "Intro à l'Éco Numérique",
+    color: '#0EA5E9',
+    iconName: 'BookOpen',
+    aliases: [
+      'intro a l eco numerique',
+      'introduction a l economie numerique',
+      'intro economie numerique',
+      'intro eco numerique',
+      'economie numerique',
+      'eco numerique',
+      'economie digitale',
+    ],
+  },
+  lmd_modele_dev_eco_num: {
+    id: 'lmd_modele_dev_eco_num',
+    name: 'Modèle de Développement en Économie Numérique',
+    color: '#0369A1',
+    iconName: 'BookOpen',
+    aliases: [
+      'modele de developpement en economie numerique',
+      'modeles de developpement en economie numerique',
+      'modele de developpement',
+      'modele developpement eco numerique',
+      'mden',
+    ],
+  },
+  lmd_macroeconomie: {
+    id: 'lmd_macroeconomie',
+    name: 'Macroéconomie',
+    color: '#D97706',
+    iconName: 'Calculator',
+    aliases: ['macroeconomie', 'macroéconomie', 'macro', 'macro 1', 'macro 2', 'macro1', 'macro2'],
+  },
+  lmd_microeconomie: {
+    id: 'lmd_microeconomie',
+    name: 'Microéconomie',
+    color: '#EA580C',
+    iconName: 'Calculator',
+    aliases: ['microeconomie', 'microéconomie', 'micro', 'micro 1', 'micro 2', 'micro1', 'micro2'],
+  },
+  lmd_banque: {
+    id: 'lmd_banque',
+    name: 'Banque',
+    color: '#16A34A',
+    iconName: 'BookOpen',
+    aliases: ['banque', 'economie bancaire', 'technique bancaire', 'techniques bancaires', 'monnaie et banque'],
+  },
+  lmd_assurance: {
+    id: 'lmd_assurance',
+    name: 'Assurance',
+    color: '#059669',
+    iconName: 'BookOpen',
+    aliases: ['assurance', 'assurances', 'techniques d assurance', 'droit des assurances'],
+  },
+  lmd_compta_generale: {
+    id: 'lmd_compta_generale',
+    name: 'Comptabilité Générale',
+    color: '#10B981',
+    iconName: 'Calculator',
+    aliases: [
+      'comptabilite generale',
+      'comptabilité générale',
+      'compta generale',
+      'compta g1',
+      'compta g2',
+      'comptabilite g1',
+      'comptabilite g2',
+      'comptabilite',
+      'compta',
+    ],
+  },
+  lmd_compta_analytique: {
+    id: 'lmd_compta_analytique',
+    name: 'Comptabilité Analytique',
+    color: '#14B8A6',
+    iconName: 'Calculator',
+    aliases: [
+      'comptabilite analytique',
+      'comptabilité analytique',
+      'compta analytique',
+      'comptabilite analytique de gestion',
+      'cae',
+      'cag',
+    ],
+  },
+  lmd_oge: {
+    id: 'lmd_oge',
+    name: 'OGE',
+    color: '#7C3AED',
+    iconName: 'BookOpen',
+    aliases: [
+      'oge',
+      'organisation et gestion des entreprises',
+      'organisation et gestion d entreprise',
+      'organisation gestion entreprise',
+      'gestion des entreprises',
+    ],
+  },
+  lmd_intro_management: {
+    id: 'lmd_intro_management',
+    name: 'Intro au Management',
+    color: '#8B5CF6',
+    iconName: 'BookOpen',
+    aliases: ['intro au management', 'introduction au management', 'management', 'principes de management'],
+  },
+  lmd_intro_marketing: {
+    id: 'lmd_intro_marketing',
+    name: 'Intro au Marketing',
+    color: '#EC4899',
+    iconName: 'BookOpen',
+    aliases: ['intro au marketing', 'introduction au marketing', 'marketing', 'marketing fondamental', 'marketing digital'],
+  },
+  lmd_intro_droit_num: {
+    id: 'lmd_intro_droit_num',
+    name: 'Intro au Droit du Numérique',
+    color: '#9333EA',
+    iconName: 'BookOpen',
+    aliases: [
+      'intro au droit du numerique',
+      'introduction au droit du numerique',
+      'intro droit numerique',
+      'intro droit du numerique',
+    ],
+  },
+  lmd_droit_numerique: {
+    id: 'lmd_droit_numerique',
+    name: 'Droit du Numérique',
+    color: '#6D28D9',
+    iconName: 'BookOpen',
+    aliases: [
+      'droit du numerique',
+      'droit numérique',
+      'droit numerique',
+      'droit des tic',
+      'droit informatique',
+      'cyberdroit',
+    ],
+  },
+  lmd_bureautique: {
+    id: 'lmd_bureautique',
+    name: 'Bureautique',
+    color: '#06B6D4',
+    iconName: 'Atom',
+    aliases: ['bureautique', 'outils bureautiques', 'traitement de texte', 'ms office', 'word excel'],
+  },
+  lmd_init_info: {
+    id: 'lmd_init_info',
+    name: "Initiation à l'Informatique",
+    color: '#0284C7',
+    iconName: 'Atom',
+    aliases: [
+      'initiation a l informatique',
+      'initiation informatique',
+      'init informatique',
+      'culture numerique',
+      'communication numerique',
+      'communication digitale',
+      'informatique generale',
+      'informatique',
+    ],
+  },
+  lmd_tef: {
+    id: 'lmd_tef',
+    name: "Technique d'Expression Française",
+    color: '#F43F5E',
+    iconName: 'BookOpen',
+    aliases: [
+      'technique d expression francaise',
+      'techniques d expression francaise',
+      'technique d expression',
+      'techniques d expression',
+      'tef',
+      'tef s1',
+      'tef s2',
+      'expression francaise',
+      'expression ecrite et orale',
+    ],
+  },
+  lmd_ecriture_creative: {
+    id: 'lmd_ecriture_creative',
+    name: 'Écriture Créative et Communication',
+    color: '#FB7185',
+    iconName: 'BookOpen',
+    aliases: [
+      'ecriture creative et communication',
+      'ecriture creative',
+      'redaction creative',
+      'communication professionnelle',
+    ],
+  },
+  lmd_dev_perso: {
+    id: 'lmd_dev_perso',
+    name: 'Développement Personnel',
+    color: '#F59E0B',
+    iconName: 'BookOpen',
+    aliases: [
+      'developpement personnel',
+      'développement personnel',
+      'dev perso',
+      'dev personnel',
+      'developpement perso',
+      'soft skills',
     ],
   },
 };
@@ -477,7 +807,8 @@ export interface TutorPointSessionItem {
 // ============================================================================
 
 // 'histoire_geo' est conservé pour les anciennes progressions ; l'Histoire-Géo a deux volets : 'histoire' et 'geographie'.
-export type StemSubCategory = 'chimie' | 'physique' | 'geometrie' | 'numerique' | 'svt' | 'francais' | 'histoire_geo' | 'histoire' | 'geographie' | 'philosophie';
+// Les matières LMD (lmd_*) sont chacune leur propre sous-catégorie à volet unique.
+export type StemSubCategory = 'chimie' | 'physique' | 'geometrie' | 'numerique' | 'svt' | 'francais' | 'histoire_geo' | 'histoire' | 'geographie' | 'philosophie' | LmdSubjectId;
 
 export interface SubCategoryStudentProgress {
   subCategory: StemSubCategory;
