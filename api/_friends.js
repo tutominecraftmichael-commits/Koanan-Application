@@ -108,12 +108,21 @@ export async function friendsState(db, uid) {
   const me = await readDoc(null, db, uid);
   const cards = await publicCards(db, [uid, ...me.friends, ...me.incoming.map((x) => x.from), ...me.outgoing.map((x) => x.to), ...me.notices.map((n) => n.from)]);
   const card = (u, relation) => (cards.get(u) ? cardFor(cards.get(u), relation) : null);
+  const notices = me.notices.map((n) => ({ id: n.id, kind: n.kind, at: n.at, from: card(n.from, relationOf(me, n.from)) })).filter((n) => n.from);
+  // Garantie : chaque demande d'ami entrante non traitée figure dans la cloche avec les boutons Accepter / Refuser
+  const coveredIncomingIds = new Set(notices.filter((n) => n.kind === 'request' && n.from?.relation === 'incoming').map((n) => n.from.konanId));
+  for (const inc of me.incoming) {
+    const c = card(inc.from, 'incoming');
+    if (c && c.konanId && !coveredIncomingIds.has(c.konanId)) {
+      notices.unshift({ id: `request_${inc.from}_${inc.at || 0}`, kind: 'request', at: inc.at || Date.now(), from: c });
+    }
+  }
   return {
     me: { konanId: cards.get(uid)?.konanId || '', friendsCount: me.friends.length, totalXp: cards.get(uid)?.totalXp || 0 },
     friends: me.friends.map((u) => card(u, 'friend')).filter(Boolean),
     incoming: me.incoming.map((x) => ({ ...card(x.from, 'incoming'), at: x.at })).filter((x) => x.konanId),
     outgoing: me.outgoing.map((x) => ({ ...card(x.to, 'outgoing'), at: x.at })).filter((x) => x.konanId),
-    notices: me.notices.map((n) => ({ id: n.id, kind: n.kind, at: n.at, from: card(n.from, relationOf(me, n.from)) })).filter((n) => n.from),
+    notices,
     privacy: { allowRequests: me.allowRequests !== false, profileVisibility: me.profileVisibility === 'friends' ? 'friends' : 'all' },
   };
 }

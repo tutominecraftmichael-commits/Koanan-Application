@@ -968,13 +968,23 @@ export function App() {
       setUserGold(100);
       return;
     }
-    const first = setTimeout(() => { reloadFriends(); reloadQuests(); }, 1200);
-    const every = setInterval(() => { reloadFriends(); reloadQuests(); }, 2 * 60 * 1000);
-    const onVisible = () => { if (document.visibilityState === 'visible') { reloadFriends(); reloadQuests(); } };
+    const refreshBoth = () => {
+      reloadFriends();
+      reloadQuests();
+    };
+    const first = setTimeout(refreshBoth, 800);
+    const every = setInterval(() => {
+      if (document.visibilityState === 'visible') refreshBoth();
+    }, 45 * 1000);
+    const onVisible = () => { if (document.visibilityState === 'visible') refreshBoth(); };
+    window.addEventListener('focus', refreshBoth);
+    window.addEventListener('online', refreshBoth);
     document.addEventListener('visibilitychange', onVisible);
     return () => {
       clearTimeout(first);
       clearInterval(every);
+      window.removeEventListener('focus', refreshBoth);
+      window.removeEventListener('online', refreshBoth);
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [subscriptionAccount, reloadFriends, reloadQuests]);
@@ -2605,13 +2615,16 @@ export function App() {
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenProfile={(state.userAccount?.isLoggedIn || state.isDemoMode) ? () => setProfileScreen('menu') : undefined}
           friendNotices={friendsData?.notices || []}
+          incomingFriends={friendsData?.incoming || []}
           onRespondFriend={handleRespondFriend}
           onOpenFriends={() => setProfileScreen('friends')}
           gold={state.userAccount?.isLoggedIn ? userGold : null}
           onOpenShop={() => setIsShopModalOpen(true)}
           questNotices={questState?.questNotices || []}
+          incomingQuests={questState?.incomingQuests || []}
           onRespondQuest={handleRespondQuest}
           onOpenQuest={() => setActiveView('league')}
+          onRefreshNotifications={() => { reloadFriends(); reloadQuests(); }}
           // LMD, BTS : pas de cours, donc pas d'entraînement ni d'énergie (ils gagnent leurs XP au chronomètre)
           energy={gamificationEnabled && gradeHasGuidedCourses ? {
             value: energyNow(state.gamification).energy,

@@ -19,7 +19,7 @@ import {
   User
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount, PlusInvitationNotification } from '../../types';
-import type { FriendNotice, QuestNotice } from '../../services/friendsApi';
+import type { FriendCard, FriendNotice, FriendQuest, QuestNotice } from '../../services/friendsApi';
 import { GoldCoinIcon } from '../../features/gamification/GoldCoin';
 import { Badge } from '../ui/Badge';
 import { KonanCube } from '../common/KonanCube';
@@ -129,9 +129,37 @@ const FriendNoticeItem: React.FC<{ notice: FriendNotice; onRespond?: (konanId: s
         </span>
         <span className="block text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">{text}</span>
         {pending && onRespond && (
-          <span className="flex gap-2 mt-2">
-            <button type="button" disabled={busy} onClick={async () => { setBusy(true); await onRespond(notice.from.konanId, true); setBusy(false); }} className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-black cursor-pointer disabled:opacity-50">Accepter</button>
-            <button type="button" disabled={busy} onClick={async () => { setBusy(true); await onRespond(notice.from.konanId, false); setBusy(false); }} className="px-3 py-1.5 rounded-lg bg-white text-slate-700 border border-slate-300 dark:bg-white/[0.06] dark:text-slate-200 dark:border-white/15 text-[11px] font-black cursor-pointer disabled:opacity-50">Refuser</button>
+          <span className="flex gap-2 mt-2.5">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setBusy(true);
+                await onRespond(notice.from.konanId, true);
+                setBusy(false);
+              }}
+              className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-1 shadow-sm"
+            >
+              <Check className="w-3.5 h-3.5" />
+              <span>{busy ? 'En cours…' : 'Accepter'}</span>
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setBusy(true);
+                await onRespond(notice.from.konanId, false);
+                setBusy(false);
+              }}
+              className="py-2 px-3 rounded-xl bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-300 dark:bg-white/[0.06] dark:text-slate-200 dark:border-white/15 text-xs font-black cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-1"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Refuser</span>
+            </button>
           </span>
         )}
       </span>
@@ -188,30 +216,36 @@ const QuestNoticeItem: React.FC<{
           {notice.message}
         </button>
         {notice.pending && onRespond && (
-          <span className="flex gap-2 mt-2">
+          <span className="flex gap-2 mt-2.5">
             <button
               type="button"
               disabled={busy}
-              onClick={async () => {
+              onClick={async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
                 setBusy(true);
                 await onRespond(notice.questId, true);
                 setBusy(false);
               }}
-              className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-black cursor-pointer disabled:opacity-50"
+              className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-1 shadow-sm"
             >
-              C’est parti !
+              <Check className="w-3.5 h-3.5" />
+              <span>{busy ? 'Lancement…' : 'C’est parti !'}</span>
             </button>
             <button
               type="button"
               disabled={busy}
-              onClick={async () => {
+              onClick={async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
                 setBusy(true);
                 await onRespond(notice.questId, false);
                 setBusy(false);
               }}
-              className="px-3 py-1.5 rounded-lg bg-white text-slate-700 border border-slate-300 dark:bg-white/[0.06] dark:text-slate-200 dark:border-white/15 text-[11px] font-black cursor-pointer disabled:opacity-50"
+              className="py-2 px-3 rounded-xl bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-300 dark:bg-white/[0.06] dark:text-slate-200 dark:border-white/15 text-xs font-black cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-1"
             >
-              Refuser
+              <X className="w-3.5 h-3.5" />
+              <span>Refuser</span>
             </button>
           </span>
         )}
@@ -248,6 +282,7 @@ export interface NavbarProps {
   onOpenPaymentNotice?: () => void;
   /** Amis : demandes reçues et réponses (cloche), réponse directe, page Profil */
   friendNotices?: FriendNotice[];
+  incomingFriends?: FriendCard[];
   onRespondFriend?: (konanId: string, accept: boolean) => Promise<void>;
   onOpenFriends?: () => void;
   onOpenProfile?: () => void;
@@ -255,8 +290,11 @@ export interface NavbarProps {
   gold?: number | null;
   onOpenShop?: () => void;
   questNotices?: QuestNotice[];
+  incomingQuests?: FriendQuest[];
   onRespondQuest?: (questId: string, accept: boolean) => Promise<void>;
   onOpenQuest?: () => void;
+  /** Actualise immédiatement les notifications (amis + quêtes) à l'ouverture de la cloche */
+  onRefreshNotifications?: () => void;
   onAcceptInvitation?: (invitation: PlusInvitationNotification) => void;
   onDeclineInvitation?: (invitation: PlusInvitationNotification) => void;
   /** Énergie ⚡ affichée en haut à droite (null : pas d'icône d'exercices pour cet élève) */
@@ -309,14 +347,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   paymentNotices = [],
   onOpenPaymentNotice,
   friendNotices = [],
+  incomingFriends = [],
   onRespondFriend,
   onOpenFriends,
   onOpenProfile,
   gold = null,
   onOpenShop,
   questNotices = [],
+  incomingQuests = [],
   onRespondQuest,
   onOpenQuest,
+  onRefreshNotifications,
   onAcceptInvitation,
   onDeclineInvitation,
   energy = null,
@@ -409,11 +450,60 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   });
 
+  // Fusion garantie : toute quête entrante et toute demande d'ami entrante a ses boutons Accepter / Refuser dans la cloche
+  const effectiveQuestNotices = React.useMemo<QuestNotice[]>(() => {
+    const pendingQuestIds = new Set(incomingQuests.map((q) => q.id));
+    const list = questNotices.map((n) => ({
+      ...n,
+      pending: n.pending || ((n.kind === 'quest_invite' || n.kind === 'quest_nudge') && pendingQuestIds.has(n.questId)),
+    }));
+    const covered = new Set(list.filter((n) => n.pending).map((n) => n.questId));
+    for (const inv of incomingQuests) {
+      if (covered.has(inv.id)) continue;
+      list.unshift({
+        id: `qinv_${inv.id}`,
+        kind: 'quest_invite',
+        questId: inv.id,
+        at: inv.createdAt || Date.now(),
+        fromName: inv.partner.name || 'Un ami',
+        fromKonanId: inv.partner.konanId || '',
+        fromAvatar: inv.partner.avatar || '',
+        targetXp: inv.targetXp,
+        rewardGold: inv.rewardGold,
+        message: `${inv.partner.name} te propose une quête en duo : récoltez ${inv.targetXp.toLocaleString('fr-FR')} XP ensemble cette semaine pour gagner +${inv.rewardGold} Or chacun !`,
+        pending: true,
+      });
+    }
+    return list;
+  }, [questNotices, incomingQuests]);
+
+  const effectiveFriendNotices = React.useMemo<FriendNotice[]>(() => {
+    const incomingIds = new Set(incomingFriends.map((f) => f.konanId));
+    const list = friendNotices.map((n) => (
+      n.kind === 'request' && incomingIds.has(n.from.konanId)
+        ? { ...n, from: { ...n.from, relation: 'incoming' as const } }
+        : n
+    ));
+    const covered = new Set(list.filter((n) => n.kind === 'request' && n.from.relation === 'incoming').map((n) => n.from.konanId));
+    for (const f of incomingFriends) {
+      if (!f.konanId || covered.has(f.konanId)) continue;
+      list.unshift({
+        id: `request_inc_${f.konanId}`,
+        kind: 'request',
+        at: f.at || Date.now(),
+        from: { ...f, relation: 'incoming' },
+      });
+    }
+    return list;
+  }, [friendNotices, incomingFriends]);
+
+  const totalPendingCount = activePendingInvitations.length + incomingQuests.length + incomingFriends.length;
+
   const hasUnreadNotifications = activePendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
     || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id))
     || paymentNotices.some(n => n?.id && !seenNotificationIds.has(n.id))
-    || friendNotices.some(n => n?.id && !seenNotificationIds.has(n.id))
-    || questNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
+    || effectiveFriendNotices.some(n => n?.id && !seenNotificationIds.has(n.id))
+    || effectiveQuestNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
 
   // Message non lu : la cloche bouge toute seule (toutes les 4 s) jusqu'à ce que l'élève ouvre l'onglet
   useEffect(() => {
@@ -438,8 +528,8 @@ export const Navbar: React.FC<NavbarProps> = ({
       activePendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
       normalizedOwnerNotifications.forEach(notif => notif?.id && next.add(notif.id));
       paymentNotices.forEach(n => n?.id && next.add(n.id));
-      friendNotices.forEach(n => n?.id && next.add(n.id));
-      questNotices.forEach(n => n?.id && next.add(n.id));
+      effectiveFriendNotices.forEach(n => n?.id && next.add(n.id));
+      effectiveQuestNotices.forEach(n => n?.id && next.add(n.id));
       try {
         localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
       } catch {
@@ -447,7 +537,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       return next;
     });
-  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices, friendNotices, questNotices]);
+  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices, effectiveFriendNotices, effectiveQuestNotices]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), component: AnimatedDashboardIcon, icon: AnimatedDashboardIcon },
@@ -703,7 +793,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setIsNotificationsOpen(prev => !prev);
+                      setIsNotificationsOpen(prev => {
+                        const next = !prev;
+                        if (next) onRefreshNotifications?.();
+                        return next;
+                      });
                       setIsBellRinging(true);
                       setTimeout(() => setIsBellRinging(false), 800);
                     }}
@@ -732,14 +826,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                           <Bell className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                           Notifications & Invitations
                         </span>
-                        {activePendingInvitations.length > 0 && (
+                        {totalPendingCount > 0 && (
                           <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30 px-2 py-0.5 rounded-full">
-                            {activePendingInvitations.length} en attente
+                            {totalPendingCount} en attente
                           </span>
                         )}
                       </div>
 
-                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && friendNotices.length === 0 && questNotices.length === 0 ? (
+                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && effectiveFriendNotices.length === 0 && effectiveQuestNotices.length === 0 ? (
                         <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                           <Bell className="w-6 h-6 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                           <p>Aucune notification pour le moment.</p>
@@ -747,12 +841,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                       ) : (
                         <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
                           {/* Quêtes d'XP en duo : invitations, relances, réussites */}
-                          {questNotices.map((n) => (
+                          {effectiveQuestNotices.map((n) => (
                             <QuestNoticeItem key={n.id} notice={n} onRespond={onRespondQuest} onOpen={() => { setIsNotificationsOpen(false); onOpenQuest?.(); }} />
                           ))}
                           {/* Paiements KONAN Pro acceptés ou refusés */}
                           {/* Amis : demandes reçues, acceptées ou refusées */}
-                          {friendNotices.map((n) => (
+                          {effectiveFriendNotices.map((n) => (
                             <FriendNoticeItem key={n.id} notice={n} onRespond={onRespondFriend} onOpen={() => { setIsNotificationsOpen(false); onOpenFriends?.(); }} />
                           ))}
                           {paymentNotices.map((n) => (
@@ -897,9 +991,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                             Notifications & Invitations
                           </span>
                           <div className="flex items-center gap-2">
-                            {activePendingInvitations.length > 0 && (
+                            {totalPendingCount > 0 && (
                               <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30 px-2 py-0.5 rounded-full">
-                                {activePendingInvitations.length} en attente
+                                {totalPendingCount} en attente
                               </span>
                             )}
                             <button
@@ -913,7 +1007,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </div>
                         </div>
 
-                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && friendNotices.length === 0 && questNotices.length === 0 ? (
+                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && effectiveFriendNotices.length === 0 && effectiveQuestNotices.length === 0 ? (
                           <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                             <Bell className="w-7 h-7 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                             <p>Aucune notification pour le moment.</p>
@@ -921,12 +1015,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                         ) : (
                           <div className="space-y-2.5 max-h-[60vh] overflow-y-auto custom-scrollbar">
                             {/* Quêtes d'XP en duo : invitations, relances, réussites */}
-                            {questNotices.map((n) => (
+                            {effectiveQuestNotices.map((n) => (
                               <QuestNoticeItem key={`mob-${n.id}`} notice={n} onRespond={onRespondQuest} onOpen={() => { setIsNotificationsOpen(false); onOpenQuest?.(); }} />
                             ))}
                             {/* Paiements KONAN Pro acceptés ou refusés */}
                           {/* Amis : demandes reçues, acceptées ou refusées */}
-                          {friendNotices.map((n) => (
+                          {effectiveFriendNotices.map((n) => (
                             <FriendNoticeItem key={n.id} notice={n} onRespond={onRespondFriend} onOpen={() => { setIsNotificationsOpen(false); onOpenFriends?.(); }} />
                           ))}
                           {paymentNotices.map((n) => (

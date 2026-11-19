@@ -56,7 +56,7 @@ async function pushQuestNotice(db, targetUid, notice) {
   });
 }
 
-/** Supprime une notification d'invitation de quête déjà traitée (acceptée, refusée ou annulée). */
+/** Supprime les notifications d'invitation/relance d'une quête déjà traitée (acceptée, refusée ou annulée). */
 async function removeInviteNotice(db, targetUid, questId) {
   if (!targetUid || !questId) return;
   const ref = inboxCol(db).doc(targetUid);
@@ -64,7 +64,9 @@ async function removeInviteNotice(db, targetUid, questId) {
     const snap = await tx.get(ref);
     if (!snap.exists) return;
     const prev = Array.isArray(snap.data()?.notices) ? snap.data().notices : [];
-    const next = prev.filter((n) => !(n?.kind === 'quest_invite' && n?.questId === questId));
+    const next = prev.filter(
+      (n) => !((n?.kind === 'quest_invite' || n?.kind === 'quest_nudge') && n?.questId === questId),
+    );
     if (next.length !== prev.length) tx.set(ref, { uid: targetUid, notices: next }, { merge: true });
   }).catch(() => {});
 }
@@ -179,11 +181,14 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
     }
   }
 
-  // Notifications de quête récentes (avec état frais pour les invitations en attente)
+  // Notifications de quête récentes (avec état frais pour les invitations et relances en attente)
   const pendingIncomingIds = new Set(incomingRaw.map((q) => q.id));
+  const deadQuestIds = new Set(docs.filter((q) => q.status === 'declined' || q.status === 'expired').map((q) => q.id));
   const rawNotices = inboxSnap.exists && Array.isArray(inboxSnap.data()?.notices) ? inboxSnap.data().notices : [];
   const questNotices = rawNotices
     .filter((n) => n && n.id && nowMs - (Number(n.at) || 0) <= NOTICE_TTL_MS)
+    // Ne plus afficher une vieille relance/invitation d'une quête déjà annulée ou expirée
+    .filter((n) => !((n.kind === 'quest_invite' || n.kind === 'quest_nudge') && deadQuestIds.has(n.questId)))
     .map((n) => ({
       id: n.id,
       kind: n.kind,
@@ -195,8 +200,31 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
       message: n.message || '',
       targetXp: Number(n.targetXp) || QUEST_TARGET_XP,
       rewardGold: Number(n.rewardGold) || QUEST_REWARD_GOLD,
-      pending: n.kind === 'quest_invite' && pendingIncomingIds.has(n.questId),
+      // Une invitation OU une relance liée à une quête encore en attente pour cet élève affiche les boutons Accepter / Refuser
+      pending: (n.kind === 'quest_invite' || n.kind === 'quest_nudge') && pendingIncomingIds.has(n.questId),
     }));
+
+  // Garantie absolue : toute invitation de quête en attente apparaît dans la cloche avec ses boutons d'action
+  const coveredQuestIds = new Set(questNotices.filter((n) => n.pending).map((n) => n.questId));
+  for (const inv of incomingRaw) {
+    if (coveredQuestIds.has(inv.id)) continue;
+    const targetXp = Number(inv.targetXp) || QUEST_TARGET_XP;
+    const rewardGold = Number(inv.rewardGold) || QUEST_REWARD_GOLD;
+    const who = inv.userA?.name || 'Un ami';
+    questNotices.unshift({
+      id: `qinv_${inv.id}`,
+      kind: 'quest_invite',
+      questId: inv.id,
+      at: Number(inv.createdAt) || nowMs,
+      fromName: who,
+      fromKonanId: inv.userA?.konanId || '',
+      fromAvatar: inv.userA?.avatar || '',
+      message: `${who} te propose une quête en duo : récoltez ${targetXp.toLocaleString('fr-FR')} XP ensemble cette semaine pour gagner +${rewardGold} Or chacun !`,
+      targetXp,
+      rewardGold,
+      pending: true,
+    });
+  }
 
   return {
     gold,
