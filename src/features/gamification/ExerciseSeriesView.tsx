@@ -67,18 +67,20 @@ function verdict(pct: number): { label: string; tone: string } {
 
 const EnergyBar: React.FC<{ energy: number; unlimited: boolean }> = ({ energy, unlimited }) => (
   <div className="flex items-center gap-2">
-    <div className="flex gap-1" aria-hidden="true">
-      {Array.from({ length: ENERGY_MAX / ENERGY_COST }).map((_, i) => {
-        const filled = unlimited || energy >= (i + 1) * ENERGY_COST;
-        return (
-          <span key={i} className={`w-7 h-7 rounded-lg flex items-center justify-center border-2 ${filled ? 'bg-amber-400 border-amber-500 shadow-[0_2px_0_#b45309]' : 'bg-slate-100 border-slate-200 dark:bg-slate-800 dark:border-slate-700'}`}>
-            <Zap className={`w-4 h-4 ${filled ? 'text-white fill-white' : 'text-slate-400 dark:text-slate-500'}`} />
-          </span>
-        );
-      })}
-    </div>
+    {!unlimited && (
+      <div className="flex gap-1" aria-hidden="true">
+        {Array.from({ length: ENERGY_MAX / ENERGY_COST }).map((_, i) => {
+          const filled = energy >= (i + 1) * ENERGY_COST;
+          return (
+            <span key={i} className={`w-7 h-7 rounded-lg flex items-center justify-center border-2 ${filled ? 'bg-amber-400 border-amber-500 shadow-[0_2px_0_#b45309]' : 'bg-slate-100 border-slate-200 dark:bg-slate-800 dark:border-slate-700'}`}>
+              <Zap className={`w-4 h-4 ${filled ? 'text-white fill-white' : 'text-slate-400 dark:text-slate-500'}`} />
+            </span>
+          );
+        })}
+      </div>
+    )}
     <span className="text-sm font-black text-slate-900 dark:text-white tabular-nums flex items-center gap-1">
-      {unlimited ? <><InfinityIcon className="w-4 h-4" /> ⚡</> : `${energy} / ${ENERGY_MAX} ⚡`}
+      {unlimited ? <><Zap className="w-4 h-4 text-amber-500 fill-amber-500" /><InfinityIcon className="w-4 h-4" /> Charges illimitées</> : `${energy} / ${ENERGY_MAX} ⚡`}
     </span>
   </div>
 );

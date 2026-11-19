@@ -191,7 +191,7 @@ const QuestNoticeItem: React.FC<{
         : notice.kind === 'quest_declined'
           ? 'Quête déclinée'
           : notice.kind === 'quest_completed'
-            ? `Quête réussie · +${notice.rewardGold} Or`
+            ? `Quête réussie · +${notice.rewardGold} pièces d’or`
             : 'Encouragement · Quête';
 
   return (
@@ -470,7 +470,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         fromAvatar: inv.partner.avatar || '',
         targetXp: inv.targetXp,
         rewardGold: inv.rewardGold,
-        message: `${inv.partner.name} te propose une quête de 6 jours : récoltez ${inv.targetXp.toLocaleString('fr-FR')} XP ensemble pour gagner +${inv.rewardGold} Or chacun !`,
+        message: `${inv.partner.name} te propose une quête de 6 jours : récoltez ${inv.targetXp.toLocaleString('fr-FR')} XP ensemble pour gagner +${inv.rewardGold} pièces d’or chacun !`,
         pending: true,
       });
     }
@@ -668,8 +668,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 type="button"
                 onClick={() => { soundFX.playCheckmarkPop(); onOpenShop?.(); }}
-                aria-label={`Ton solde : ${gold.toLocaleString('fr-FR')} Or. Ouvrir l'aperçu Boutique`}
-                title="Ton Or KONAN (Boutique bientôt disponible)"
+                aria-label={`Ton solde : ${gold.toLocaleString('fr-FR')} pièces d'or. Ouvrir l'aperçu Boutique`}
+                title="Tes pièces d'or (Boutique bientôt disponible)"
                 className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-amber-50 border border-amber-300/80 text-amber-800 hover:bg-amber-100/80 dark:bg-amber-500/15 dark:border-amber-400/35 dark:text-amber-300 dark:hover:bg-amber-500/25 text-xs sm:text-sm font-black tabular-nums cursor-pointer active:scale-95 transition-all"
               >
                 <GoldCoinIcon size={16} />

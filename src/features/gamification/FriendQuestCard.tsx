@@ -7,7 +7,6 @@ import {
   Gift,
   MessageCircle,
   Send,
-  Sparkles,
   UserPlus,
   Users,
   X,
@@ -65,9 +64,9 @@ function buildShareMessage(quest: FriendQuest): string {
   const remaining = Math.max(0, quest.targetXp - total);
   const name = quest.partner.name || 'ami';
   if (quest.status === 'pending') {
-    return `Eh ${name}, clique sur « C'est parti » pour lancer notre quête de ${fr(quest.targetXp)} XP (${QUEST_DURATION_DAYS} jours) sur KONAN et gagner +${quest.rewardGold} Or chacun ! ⚡🔥`;
+    return `Eh ${name}, clique sur « C'est parti » pour lancer notre quête de ${fr(quest.targetXp)} XP (${QUEST_DURATION_DAYS} jours) sur KONAN et gagner +${quest.rewardGold} pièces d'or chacun ! ⚡🔥`;
   }
-  return `Eh ${name}, il nous manque ${fr(remaining)} XP pour gagner nos +${quest.rewardGold} Or sur KONAN ! À toi de jouer ⚡🔥`;
+  return `Eh ${name}, il nous manque ${fr(remaining)} XP pour gagner nos +${quest.rewardGold} pièces d'or sur KONAN ! À toi de jouer ⚡🔥`;
 }
 
 export interface FriendQuestCardProps {
@@ -185,7 +184,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
     if (r.ok) {
       soundFX.playVictoryCelebration();
       onGoldUpdated?.(r.data.gold);
-      const msg = `Bravo ! +${r.data.rewardGold} Or ajoutés à ton compte (${fr(r.data.gold)} Or au total).`;
+      const msg = `Bravo ! +${r.data.rewardGold} pièces d’or ajoutées à ton compte (${fr(r.data.gold)} pièces d’or au total).`;
       setFeedback({ tone: 'ok', text: msg });
       onToast?.(msg);
       await onRefresh();
@@ -258,7 +257,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
               <div className="flex flex-wrap items-center gap-1.5">
                 {isCompleted ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300">
-                    <Sparkles className="w-3 h-3" />
+                    <Check className="w-3 h-3" />
                     Quête réussie !
                   </span>
                 ) : (
@@ -276,15 +275,15 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
 
           <div className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/35">
             <GoldCoinIcon size={18} />
-            <span className="text-xs font-black tabular-nums text-amber-700 dark:text-amber-300">
-              +{quest.rewardGold} Or
+            <span className="text-xs font-black tabular-nums text-amber-700 dark:text-amber-300 whitespace-nowrap">
+              +{quest.rewardGold} pièces d’or
             </span>
           </div>
         </div>
 
-        {/* Binôme + bouton Encourager / Relancer à côté du nom de l'ami */}
-        <div className="flex items-center justify-between gap-2.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-white/[0.07]">
-          <div className="flex items-center gap-2.5 min-w-0">
+        {/* Binôme + bouton Encourager / Relancer à côté du nom de l'ami (passe à la ligne proprement sur petit écran) */}
+        <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-white/[0.07]">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
             <div className="flex -space-x-2 shrink-0">
               <QuestAvatar name={quest.me.name} src={quest.me.avatar} size={36} ring="ring-2 ring-sky-400" />
               <QuestAvatar name={quest.partner.name} src={quest.partner.avatar} size={36} ring="ring-2 ring-amber-400" />
@@ -293,7 +292,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
               <p className="m-0 text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
                 Toi &amp; {quest.partner.name}
               </p>
-              <p className="m-0 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+              <p className="m-0 text-[11px] text-slate-500 dark:text-slate-400">
                 {isCompleted
                   ? 'Objectif atteint ensemble !'
                   : `Encore ${fr(remainingXp)} XP à récolter`}
@@ -407,7 +406,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
             {quest.claimedByMe ? (
               <div className="w-full h-11 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-300 dark:border-emerald-500/35 text-emerald-800 dark:text-emerald-300 font-extrabold text-sm flex items-center justify-center gap-2">
                 <Check className="w-4 h-4" />
-                <span>+{quest.rewardGold} Or réclamés ! Prochaine quête disponible après la fin des {QUEST_DURATION_DAYS} jours</span>
+                <span>+{quest.rewardGold} pièces d’or réclamées ! Prochaine quête disponible après la fin des {QUEST_DURATION_DAYS} jours</span>
               </div>
             ) : (
               <button
@@ -418,7 +417,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
               >
                 <Gift className="w-4 h-4" />
                 <GoldCoinIcon size={18} />
-                <span>{busyAction === `claim_${quest.id}` ? 'Attribution…' : `Réclamer mes +${quest.rewardGold} Or`}</span>
+                <span>{busyAction === `claim_${quest.id}` ? 'Attribution…' : `Réclamer mes +${quest.rewardGold} pièces d’or`}</span>
               </button>
             )}
           </div>
@@ -450,7 +449,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
             </div>
             <div className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/30">
               <GoldCoinIcon size={16} />
-              <span className="text-xs font-black text-amber-700 dark:text-amber-300">+{selectedTier.rewardGold} Or chacun</span>
+              <span className="text-xs font-black text-amber-700 dark:text-amber-300 whitespace-nowrap">+{selectedTier.rewardGold} pièces d’or</span>
             </div>
           </div>
 
@@ -460,7 +459,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
               <span>
                 La quête précédente avec <b>{expiredQuest.partner.name}</b> a expiré à{' '}
                 <b>{fr(expiredQuest.me.xpContributed + expiredQuest.partner.xpContributed)} / {fr(expiredQuest.targetXp)} XP</b>{' '}
-                (aucun Or attribué). Lance une nouvelle quête de {QUEST_DURATION_DAYS} jours !
+                (aucune pièce d’or attribuée). Lance une nouvelle quête de {QUEST_DURATION_DAYS} jours !
               </span>
               <button
                 type="button"
@@ -488,7 +487,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
                         {inv.partner.name} te propose une quête en duo !
                       </p>
                       <p className="m-0 text-xs text-slate-600 dark:text-slate-300">
-                        Objectif : <b>{fr(inv.targetXp)} XP</b> ensemble → <b>+{inv.rewardGold} Or chacun</b>. Tes XP ne comptent qu’une fois acceptée.
+                        Objectif : <b>{fr(inv.targetXp)} XP</b> ensemble → <b>+{inv.rewardGold} pièces d’or chacun</b>. Tes XP ne comptent qu’une fois acceptée.
                       </p>
                     </div>
                   </div>
@@ -585,7 +584,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
                   Ajoute un ami pour lancer une quête
                 </p>
                 <p className="m-0 text-xs text-slate-600 dark:text-slate-400">
-                  Entre son ID KONAN pour l’ajouter, puis lancez votre défi de {QUEST_DURATION_DAYS} jours pour gagner 100 à 500 Or chacun.
+                  Entre son ID KONAN pour l’ajouter, puis lancez votre défi de {QUEST_DURATION_DAYS} jours pour gagner 100 à 500 pièces d’or chacun.
                 </p>
               </div>
               {onOpenFriends && (
@@ -703,7 +702,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
                     >
                       <Send className="w-4 h-4" />
                       <span>
-                        {busyAction ? 'Envoi de la proposition…' : `C’est parti avec ${chosenFriend.name} (+${selectedTier.rewardGold} Or)`}
+                        {busyAction ? 'Envoi de la proposition…' : `C’est parti avec ${chosenFriend.name} (+${selectedTier.rewardGold} pièces d’or)`}
                       </span>
                     </button>
                   )}

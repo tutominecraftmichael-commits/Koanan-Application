@@ -128,22 +128,47 @@ function serializeQuest(doc, viewerUid, partnerFrozen = false) {
 
 /**
  * Expire automatiquement toute quête `pending` ou `active` dont `expiresAt <= nowMs`.
- * Retourne la liste à jour des documents de l'utilisateur.
+ * Migre aussi les anciennes quêtes en cours créées avant les paliers 100–500 pièces d'or et la durée fixe de 6 jours.
  */
 async function loadAndExpireUserQuests(db, uid, nowMs) {
   const snap = await questsCol(db).where('participants', 'array-contains', uid).get();
   const docs = [];
-  const expireBatch = [];
+  const updateBatch = [];
   for (const d of snap.docs) {
     const data = { id: d.id, ...d.data() };
+    const patch = {};
+
+    // Migration transparente des anciennes quêtes actives/en attente (ex. 50 Or ou durée fin de semaine < 6 j)
+    if (data.status === 'pending' || data.status === 'active') {
+      const currentReward = Number(data.rewardGold) || 0;
+      if (currentReward < 100) {
+        const matchedTier = QUEST_TIERS.find((t) => t.targetXp === Number(data.targetXp)) || DEFAULT_QUEST_TIER;
+        data.tierId = matchedTier.id;
+        data.rewardGold = matchedTier.rewardGold;
+        patch.tierId = matchedTier.id;
+        patch.rewardGold = matchedTier.rewardGold;
+      }
+      const startRef = Number(data.acceptedAt || data.createdAt) || nowMs;
+      const expectedEnd = startRef + QUEST_DURATION_MS;
+      if (!Number.isFinite(Number(data.expiresAt)) || Number(data.expiresAt) < expectedEnd - 60_000) {
+        data.expiresAt = expectedEnd;
+        patch.expiresAt = expectedEnd;
+      }
+    }
+
     if ((data.status === 'pending' || data.status === 'active') && Number(data.expiresAt) <= nowMs) {
       data.status = 'expired';
+      patch.status = 'expired';
+    }
+
+    if (Object.keys(patch).length > 0) {
       data.updatedAt = nowMs;
-      expireBatch.push(d.ref.update({ status: 'expired', updatedAt: nowMs }).catch(() => {}));
+      patch.updatedAt = nowMs;
+      updateBatch.push(d.ref.update(patch).catch(() => {}));
     }
     docs.push(data);
   }
-  if (expireBatch.length) await Promise.all(expireBatch);
+  if (updateBatch.length) await Promise.all(updateBatch);
   docs.sort((a, b) => (Number(b.updatedAt || b.createdAt) || 0) - (Number(a.updatedAt || a.createdAt) || 0));
   return docs;
 }
@@ -237,7 +262,7 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
       fromName: who,
       fromKonanId: inv.userA?.konanId || '',
       fromAvatar: inv.userA?.avatar || '',
-      message: `${who} te propose une quête de ${QUEST_DURATION_DAYS} jours : récoltez ${targetXp.toLocaleString('fr-FR')} XP ensemble pour gagner +${rewardGold} Or chacun !`,
+      message: `${who} te propose une quête de ${QUEST_DURATION_DAYS} jours : récoltez ${targetXp.toLocaleString('fr-FR')} XP ensemble pour gagner +${rewardGold} pièces d’or chacun !`,
       targetXp,
       rewardGold,
       pending: true,
@@ -357,12 +382,12 @@ export async function proposeFriendQuest(db, uid, friendKonanId, tierIdOrNow = D
     fromAvatar: doc.userA.avatar,
     targetXp: tier.targetXp,
     rewardGold: tier.rewardGold,
-    message: `${who} te propose une quête de ${QUEST_DURATION_DAYS} jours : récoltez ${tier.targetXp.toLocaleString('fr-FR')} XP ensemble pour gagner +${tier.rewardGold} Or chacun !`,
+    message: `${who} te propose une quête de ${QUEST_DURATION_DAYS} jours : récoltez ${tier.targetXp.toLocaleString('fr-FR')} XP ensemble pour gagner +${tier.rewardGold} pièces d’or chacun !`,
   });
 
   await sendPushToUser(db, targetUid, {
     title: 'Quête en duo proposée !',
-    body: `${who} t’invite à récolter ${tier.targetXp} XP en ${QUEST_DURATION_DAYS} jours (+${tier.rewardGold} Or chacun). Clique sur « C’est parti » dans KONAN !`,
+    body: `${who} t’invite à récolter ${tier.targetXp} XP en ${QUEST_DURATION_DAYS} jours (+${tier.rewardGold} pièces d’or chacun). Clique sur « C’est parti » dans KONAN !`,
     tag: `konan-quest-invite-${questId}`,
   });
 
@@ -475,11 +500,11 @@ export async function respondFriendQuest(db, uid, questId, accept, nowMs = Date.
       fromAvatar: quest.userB?.avatar || '',
       targetXp,
       rewardGold,
-      message: `${partnerName} a cliqué sur « C’est parti » ! Vous avez ${QUEST_DURATION_DAYS} jours pour récolter ${targetXp.toLocaleString('fr-FR')} XP (+${rewardGold} Or chacun).`,
+      message: `${partnerName} a cliqué sur « C’est parti » ! Vous avez ${QUEST_DURATION_DAYS} jours pour récolter ${targetXp.toLocaleString('fr-FR')} XP (+${rewardGold} pièces d’or chacun).`,
     });
     await sendPushToUser(db, userAUid, {
       title: 'C’est parti ! Quête lancée pour 6 jours',
-      body: `${partnerName} a accepté ta quête ! Récoltez ${targetXp} XP en ${QUEST_DURATION_DAYS} jours pour gagner +${rewardGold} Or chacun.`,
+      body: `${partnerName} a accepté ta quête ! Récoltez ${targetXp} XP en ${QUEST_DURATION_DAYS} jours pour gagner +${rewardGold} pièces d’or chacun.`,
       tag: `konan-quest-active-${questId}`,
     });
   }
@@ -564,11 +589,11 @@ export async function recordQuestXp(db, uid, xpEarned, nowMs = Date.now()) {
         fromAvatar: t.partnerAvatar,
         targetXp: txResult.targetXp,
         rewardGold: reward,
-        message: `Bravo ! Toi et ${t.partner} avez atteint ${txResult.targetXp.toLocaleString('fr-FR')} XP ! Réclame tes +${reward} Or.`,
+        message: `Bravo ! Toi et ${t.partner} avez atteint ${txResult.targetXp.toLocaleString('fr-FR')} XP ! Réclame tes +${reward} pièces d’or.`,
       });
       await sendPushToUser(db, t.uid, {
-        title: `Quête terminée ! +${reward} Or à réclamer`,
-        body: `Objectif de ${txResult.targetXp} XP atteint avec ${t.partner} ! Ouvre KONAN pour récupérer ton Or.`,
+        title: `Quête terminée ! +${reward} pièces d’or à réclamer`,
+        body: `Objectif de ${txResult.targetXp} XP atteint avec ${t.partner} ! Ouvre KONAN pour récupérer tes pièces d’or.`,
         tag: `konan-quest-done-${q.id}`,
       });
     }));
@@ -658,8 +683,8 @@ export async function nudgeQuestPartner(db, uid, questId, nowMs = Date.now()) {
   const partnerName = partner?.name || 'ami';
 
   const message = q.status === 'pending'
-    ? `Eh ${partnerName}, clique sur « C’est parti » pour lancer notre quête de ${targetXp.toLocaleString('fr-FR')} XP (${QUEST_DURATION_DAYS} jours) sur KONAN et gagner +${reward} Or chacun ! ⚡🔥`
-    : `Eh ${partnerName}, il nous manque ${remainingXp.toLocaleString('fr-FR')} XP pour gagner nos +${reward} Or sur KONAN ! À toi de jouer ⚡🔥`;
+    ? `Eh ${partnerName}, clique sur « C’est parti » pour lancer notre quête de ${targetXp.toLocaleString('fr-FR')} XP (${QUEST_DURATION_DAYS} jours) sur KONAN et gagner +${reward} pièces d’or chacun ! ⚡🔥`
+    : `Eh ${partnerName}, il nous manque ${remainingXp.toLocaleString('fr-FR')} XP pour gagner nos +${reward} pièces d’or sur KONAN ! À toi de jouer ⚡🔥`;
 
   await ref.update({ [`lastNudgeBy.${uid}`]: nowMs, updatedAt: nowMs });
 

@@ -228,7 +228,7 @@ export const QUEST_ERRORS: Record<string, string> = {
   QUEST_EXPIRED: 'Les 6 jours de cette quête sont déjà écoulés.',
   QUEST_NOT_ACTIVE: 'Cette quête n’est pas active.',
   NOT_COMPLETED: 'L’objectif d’XP n’est pas encore atteint.',
-  ALREADY_CLAIMED: 'Tu as déjà réclamé ton Or pour cette quête.',
+  ALREADY_CLAIMED: 'Tu as déjà réclamé tes pièces d’or pour cette quête.',
   NUDGE_COOLDOWN: 'Tu as déjà relancé ton ami récemment. Tu peux quand même lui envoyer un message WhatsApp !',
   FORBIDDEN: 'Tu n’as pas accès à cette action.',
 };

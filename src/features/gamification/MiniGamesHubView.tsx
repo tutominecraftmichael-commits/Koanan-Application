@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Gamepad2, Infinity as InfinityIcon, Lock, Play, Sparkles, Star, X, Zap } from 'lucide-react';
+import { Gamepad2, Infinity as InfinityIcon, Lock, Play, Star, X, Zap } from 'lucide-react';
 import type { ExerciseSeriesViewProps } from './ExerciseSeriesView';
 import { ExerciseSeriesView } from './ExerciseSeriesView';
 import {
@@ -30,8 +30,8 @@ const UPCOMING_MINI_GAMES = [
   },
   {
     id: 'chasse-or',
-    title: 'Chasse à l’Or',
-    description: 'Enchaîne un sans-faute pour décrocher des pièces d’Or bonus pour la Boutique KONAN.',
+    title: 'Chasse aux pièces d’or',
+    description: 'Enchaîne un sans-faute pour décrocher des pièces d’or bonus pour la Boutique.',
     cost: 10,
     accent: 'from-amber-500/20 to-orange-500/20 border-amber-400/20',
   },
@@ -81,18 +81,13 @@ export const MiniGamesHubView: React.FC<MiniGamesHubViewProps> = (props) => {
             >
               <X className="w-6 h-6" />
             </button>
-            <div className="flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-2.5 min-w-0">
               <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center shadow-md shadow-orange-500/25 shrink-0">
                 <Gamepad2 className="w-5 h-5" />
               </span>
-              <div className="min-w-0">
-                <h1 className="m-0 text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-tight truncate">
-                  Mini-Jeux KONAN
-                </h1>
-                <p className="m-0 text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
-                  Choisis ton mini-jeu et dépense tes charges (⚡)
-                </p>
-              </div>
+              <h1 className="m-0 text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-tight truncate">
+                Mini-jeux
+              </h1>
             </div>
           </div>
 
@@ -102,55 +97,54 @@ export const MiniGamesHubView: React.FC<MiniGamesHubViewProps> = (props) => {
           </div>
         </div>
 
-        {/* Barre de charges (éclairs) */}
-        <div className="rounded-2xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/10 p-4 space-y-2.5 shadow-xs">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5">
-              {Array.from({ length: ENERGY_MAX / ENERGY_COST }).map((_, i) => {
-                const filled = unlimited || energy.energy >= (i + 1) * ENERGY_COST;
-                return (
-                  <span
-                    key={i}
-                    className={`w-7 h-7 rounded-lg flex items-center justify-center border-2 transition-colors ${
-                      filled
-                        ? 'bg-amber-400 border-amber-500 shadow-[0_2px_0_#b45309]'
-                        : 'bg-slate-100 border-slate-200 dark:bg-slate-800 dark:border-slate-700'
-                    }`}
-                  >
-                    <Zap className={`w-4 h-4 ${filled ? 'text-white fill-white' : 'text-slate-400 dark:text-slate-500'}`} />
-                  </span>
-                );
-              })}
-            </div>
-            <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
-              {unlimited
-                ? 'Charges illimitées (KONAN Pro)'
-                : energy.energy >= ENERGY_MAX
+        {/* Barre de charges (affichée uniquement lorsque l'énergie n'est pas illimitée) */}
+        {!unlimited && (
+          <div className="rounded-2xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/10 p-4 space-y-2.5 shadow-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5">
+                {Array.from({ length: ENERGY_MAX / ENERGY_COST }).map((_, i) => {
+                  const filled = energy.energy >= (i + 1) * ENERGY_COST;
+                  return (
+                    <span
+                      key={i}
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center border-2 transition-colors ${
+                        filled
+                          ? 'bg-amber-400 border-amber-500 shadow-[0_2px_0_#b45309]'
+                          : 'bg-slate-100 border-slate-200 dark:bg-slate-800 dark:border-slate-700'
+                      }`}
+                    >
+                      <Zap className={`w-4 h-4 ${filled ? 'text-white fill-white' : 'text-slate-400 dark:text-slate-500'}`} />
+                    </span>
+                  );
+                })}
+              </div>
+              <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                {energy.energy >= ENERGY_MAX
                   ? 'Charges au maximum !'
                   : `Plein dans ${fmtWait((energy.fullAt || now) - now)}`}
-            </span>
-          </div>
-          {!canPlayXp && (
-            <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-slate-100 dark:border-white/[0.06]">
-              <p className="m-0 text-xs font-semibold text-slate-600 dark:text-slate-300">
-                Plus assez de charges ({ENERGY_COST} ⚡ requises). Prochaine partie dans{' '}
-                <b className="text-amber-600 dark:text-amber-300">{fmtWait(waitMs)}</b>.
-              </p>
-              <button
-                type="button"
-                onClick={onUpgrade}
-                className="shrink-0 px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-violet-500 text-white text-xs font-black cursor-pointer"
-              >
-                Charges illimitées (Pro)
-              </button>
+              </span>
             </div>
-          )}
-        </div>
+            {!canPlayXp && (
+              <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-slate-100 dark:border-white/[0.06]">
+                <p className="m-0 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                  Plus assez de charges ({ENERGY_COST} ⚡ requises). Prochaine partie dans{' '}
+                  <b className="text-amber-600 dark:text-amber-300">{fmtWait(waitMs)}</b>.
+                </p>
+                <button
+                  type="button"
+                  onClick={onUpgrade}
+                  className="shrink-0 px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-violet-500 text-white text-xs font-black cursor-pointer"
+                >
+                  Charges illimitées (Pro)
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
-        {/* CARTE PRINCIPALE : XP À GOGO (Miniature 4K KONAN aura jaune + yeux bleus) */}
+        {/* CARTE PRINCIPALE : XP À GOGO (Miniature 4K KONAN avec K sur les faces, aura jaune et yeux bleus) */}
         <div className="space-y-2.5">
-          <p className="m-0 px-1 text-[11px] font-black uppercase tracking-[0.16em] text-amber-600 dark:text-[#F5C451] flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" />
+          <p className="m-0 px-1 text-[11px] font-black uppercase tracking-[0.16em] text-amber-600 dark:text-[#F5C451]">
             Mini-jeu disponible
           </p>
 
@@ -167,7 +161,7 @@ export const MiniGamesHubView: React.FC<MiniGamesHubViewProps> = (props) => {
             >
               <img
                 src="/mini-games/xp-a-gogo.jpg"
-                alt="KONAN chargé d'XP avec une aura dorée et les yeux bleus — miniature XP à gogo"
+                alt="KONAN chargé d'XP avec les K sur le cube, aura dorée et yeux bleus — miniature XP à gogo"
                 className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
               />
               {/* Dégradé discret pour la lisibilité des badges */}
@@ -191,7 +185,7 @@ export const MiniGamesHubView: React.FC<MiniGamesHubViewProps> = (props) => {
               <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between gap-2">
                 <div>
                   <span className="inline-block text-[10px] font-black uppercase tracking-[0.2em] text-sky-300">
-                    Mini-Jeu · Défi XP
+                    Mini-jeu · Défi XP
                   </span>
                   <h2 className="m-0 text-2xl sm:text-[26px] font-black text-white tracking-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)]">
                     XP à gogo
@@ -203,7 +197,7 @@ export const MiniGamesHubView: React.FC<MiniGamesHubViewProps> = (props) => {
             {/* Détails & bouton Jouer */}
             <div className="p-4 sm:p-5 space-y-3.5">
               <p className="m-0 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Enchaîne des séries chronométrées sur tes chapitres déjà étudiés pour accumuler un maximum d’XP (<b>15 → 30 → 60 → 120 XP</b>). Tes XP comptent pour ta quête en duo et ta Ligue !
+                Enchaîne des séries chronométrées sur tes chapitres déjà étudiés pour accumuler un maximum d’XP (<b>15 → 30 → 60 → 120 XP</b>). Tes XP comptent pour ta quête et ta Ligue !
               </p>
 
               <button
