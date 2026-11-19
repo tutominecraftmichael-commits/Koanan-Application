@@ -594,7 +594,19 @@ export const STEM_SUBJECTS: Record<StemSubjectId, StemSubjectMeta> = {
 export type ExerciseType = 'mcq' | 'true_false' | 'formula_blank' | 'numeric_input';
 
 export interface PointVisualSchema {
-  type: 'geometry_svg' | 'variation_table' | 'sign_table' | 'probability_tree' | 'coordinate_system' | 'custom_svg' | 'function_plot';
+  type:
+    | 'geometry_svg'
+    | 'variation_table'
+    | 'sign_table'
+    | 'probability_tree'
+    | 'coordinate_system'
+    | 'custom_svg'
+    | 'function_plot'
+    | 'bar_chart'
+    | 'flowchart'
+    | 'layered_stack'
+    | 'matrix_2x2'
+    | 'cycle_diagram';
   title?: string;
   caption?: string;
   svgContent?: string;
@@ -608,10 +620,68 @@ export interface PointVisualSchema {
   variation?: VariationTableSpec;
   /** Tableau de signes structuré (type 'sign_table'). */
   signs?: SignTableSpec;
+  /** Diagramme en barres / histogramme (type 'bar_chart'). */
+  barChart?: BarChartSpec;
+  /** Organigramme / processus séquentiel ou conditionnel (type 'flowchart'). */
+  flowchart?: FlowchartSpec;
+  /** Architecture en couches ou pyramide (type 'layered_stack'). */
+  layeredStack?: LayeredStackSpec;
+  /** Matrice 2×2 (SWOT, Eisenhower, structures de marché, etc.) (type 'matrix_2x2'). */
+  matrix2x2?: Matrix2x2Spec;
+  /** Schéma cyclique / circuit fermé (circuit économique, PDCA, effet de réseau) (type 'cycle_diagram'). */
+  cycle?: CycleDiagramSpec;
   /** Scène illustrée (dessin d'ambiance façon livre illustré) plutôt qu'un schéma. */
   scene?: boolean;
   /** Description de scène dessinée par le moteur de KONAN (src/lib/scenes). */
   sceneSpec?: import('../scenes/sceneTypes').SceneSpec;
+}
+
+export interface BarChartSpec {
+  yLabel?: string;
+  unit?: string;
+  bars: { label: string; value: number; color?: SketchColor; annotation?: string }[];
+}
+
+export interface FlowchartNodeSpec {
+  id?: string;
+  label: string;
+  sublabel?: string;
+  kind?: 'start' | 'process' | 'decision' | 'end';
+  color?: SketchColor;
+  /** Branche secondaire facultative pour une décision (ex: "Sinon → ..."). */
+  branchLabel?: string;
+  branchTarget?: string;
+}
+
+export interface FlowchartSpec {
+  direction?: 'vertical' | 'horizontal';
+  steps: FlowchartNodeSpec[];
+}
+
+export interface LayeredStackSpec {
+  style?: 'stack' | 'pyramid';
+  layers: { badge?: string; title: string; subtitle?: string; color?: SketchColor }[];
+}
+
+export interface MatrixQuadrantSpec {
+  title: string;
+  items: string[];
+  color?: SketchColor;
+}
+
+export interface Matrix2x2Spec {
+  topAxis?: [string, string];
+  leftAxis?: [string, string];
+  topLeft: MatrixQuadrantSpec;
+  topRight: MatrixQuadrantSpec;
+  bottomLeft: MatrixQuadrantSpec;
+  bottomRight: MatrixQuadrantSpec;
+}
+
+export interface CycleDiagramSpec {
+  centerLabel?: string;
+  centerSublabel?: string;
+  nodes: { title: string; subtitle?: string; color?: SketchColor }[];
 }
 
 /** Couleurs du code pédagogique Konan utilisables dans les figures. */

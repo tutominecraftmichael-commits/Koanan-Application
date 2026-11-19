@@ -215,9 +215,21 @@ export function expandChapterTo12MiniLessons(chapter: CurriculumChapter): Curric
     return chapter;
   }
 
-  // Nouveau format (rédigé étape par étape depuis le PDF officiel) : servi tel quel, jamais réécrit.
+  // Nouveau format (rédigé étape par étape) : servi tel quel, jamais réécrit.
+  // Si `exercises` est vide alors que `structuredSteps` contient les QCM, on synchronise automatiquement.
   if (chapter.contentVersion === 2) {
-    return chapter;
+    const needsSync = existingPoints.some(
+      (p) => (!p.exercises || p.exercises.length === 0) && Array.isArray(p.structuredSteps) && p.structuredSteps.length > 0
+    );
+    if (!needsSync) return chapter;
+    return {
+      ...chapter,
+      points: existingPoints.map((p) =>
+        (!p.exercises || p.exercises.length === 0) && p.structuredSteps?.length
+          ? { ...p, exercises: p.structuredSteps.map((s) => s.exercise).filter(Boolean) }
+          : p
+      ),
+    };
   }
 
   // Si le chapitre dispose déjà de 10 à 12 points à 8 étapes sans mélange, on vérifie leur intégrité
