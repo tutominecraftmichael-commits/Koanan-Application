@@ -316,7 +316,7 @@ export const PHILO_1RE_L02_INTRODUCTION_COMMENTAIRE: CurriculumChapter = {
               "Oui, sinon la copie est nulle"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Le cours précise que « cet ordre n'est pas rigide », tant que l'ensemble reste cohérent."
+            "explanation": "En pratique, « cet ordre n'est pas rigide », tant que l'ensemble reste cohérent."
           }
         },
         {
@@ -458,7 +458,7 @@ export const PHILO_1RE_L02_INTRODUCTION_COMMENTAIRE: CurriculumChapter = {
             "Oui, sinon la copie est nulle"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Le cours précise que « cet ordre n'est pas rigide », tant que l'ensemble reste cohérent."
+          "explanation": "En pratique, « cet ordre n'est pas rigide », tant que l'ensemble reste cohérent."
         },
         {
           "id": "premiere_philo_methodologie_l02_introduction_commentaire_p02_q2",

@@ -438,7 +438,7 @@ export const SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE: CurriculumChapter = {
               "Aucune modification"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "C'est la deuxième hypothèse du cours, vérifiée."
+            "explanation": "Cette hypothèse sur l’évolution humaine est bien vérifiée."
           }
         }
       ],
@@ -532,7 +532,7 @@ export const SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE: CurriculumChapter = {
             "Aucune modification"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "C'est la deuxième hypothèse du cours, vérifiée."
+          "explanation": "Cette hypothèse sur l’évolution humaine est bien vérifiée."
         }
       ]
     },
@@ -1219,7 +1219,7 @@ export const SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE: CurriculumChapter = {
               "Aucune : l'homme n'a pas évolué"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Ce sont les trois premières hypothèses du cours, toutes vérifiées."
+            "explanation": "Ces trois caractéristiques de la lignée humaine sont toutes vérifiées."
           }
         }
       ],
@@ -1313,7 +1313,7 @@ export const SVT_TLE_A_L04_EVOLUTION_LIGNEE_HUMAINE: CurriculumChapter = {
             "Aucune : l'homme n'a pas évolué"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Ce sont les trois premières hypothèses du cours, toutes vérifiées."
+          "explanation": "Ces trois caractéristiques de la lignée humaine sont toutes vérifiées."
         }
       ]
     }

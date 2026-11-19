@@ -54,7 +54,7 @@ export const HIST_1RE_T2_L01_IMPERIALISME_CONGRES_BERLIN: CurriculumChapter = {
               "Une alliance d'égal à égal entre pays"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "C'est la question 1 de l'activité d'application 3 du cours."
+            "explanation": "Cette notion est un point clé à retenir pour les évaluations."
           }
         },
         {
@@ -196,7 +196,7 @@ export const HIST_1RE_T2_L01_IMPERIALISME_CONGRES_BERLIN: CurriculumChapter = {
             "Une alliance d'égal à égal entre pays"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "C'est la question 1 de l'activité d'application 3 du cours."
+          "explanation": "Cette notion est un point clé à retenir pour les évaluations."
         },
         {
           "id": "premiere_a1_hg_histoire_t2_l01_imperialisme_congres_berlin_p01_q2",

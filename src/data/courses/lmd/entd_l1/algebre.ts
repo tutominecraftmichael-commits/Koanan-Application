@@ -12,8 +12,8 @@ const makePoint = (
 });
 
 // ============================================================================
-// ALGÈBRE — ENTD LICENCE 1 (ESATIC)
-// Sources : ALGBRE1-ENTD.pdf, Peg arithmétiques ds Z, TD_1_Ens, TD_2_op_ens
+// ALGÈBRE — ENTD LICENCE 1
+// Programme structuré KONAN
 // ============================================================================
 
 export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
@@ -27,7 +27,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 1,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Algèbre 1 (Chapitre 1, TD 1 Ensembles, TD 2 Opérations)',
+    source: 'ENTD L1 — Algèbre 1',
     title: 'Chapitre 1 — Ensembles, relations et applications',
     summary:
       'Théorie naïve des ensembles, cardinalité, ensemble des parties, opérations ensemblistes (lois de De Morgan, différence symétrique) et propriétés des applications (injection, surjection, bijection).',
@@ -64,9 +64,9 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Ne jamais confondre $\\in$ (élément dans un ensemble) et $\\subset$ (partie incluse dans un ensemble) : $a \\in E \\iff \\{a\\} \\subset E \\iff \\{a\\} \\in \\mathcal{P}(E)$.',
         workedExample: {
-          title: 'Cardinal des lettres d’une ville ivoirienne et opérations (TD 1 & TD 2)',
+          title: 'Cardinal des lettres d’une ville ivoirienne et opérations',
           statement:
-            '1) Déterminer l’ensemble $L$ des lettres distinctes du nom de la ville « YAMOUSSOUKRO » et son cardinal (inspiré du TD 1 ESATIC). 2) Soient $A = \\{1, 2, 4, 6\\}$ et $B = \\{2, 4, 5, 7\\}$. Calculer $A \\cap B$, $A \\setminus B$ et $A \\Delta B$.',
+            '1) Déterminer l’ensemble $L$ des lettres distinctes du nom de la ville « YAMOUSSOUKRO » et son cardinal. 2) Soient $A = \\{1, 2, 4, 6\\}$ et $B = \\{2, 4, 5, 7\\}$. Calculer $A \\cap B$, $A \\setminus B$ et $A \\Delta B$.',
           methodSteps: [
             '1) On recense chaque lettre une seule fois : $L = \\{\\text{Y}, \\text{A}, \\text{M}, \\text{O}, \\text{U}, \\text{S}, \\text{K}, \\text{R}\\}$ (les répétitions de O, U, S ne comptent pas).',
             'On compte les éléments distincts : $|L| = 8$. De même, pour « MAN », l’ensemble $\\{\\text{M}, \\text{A}, \\text{N}\\}$ a pour cardinal $3$ ; pour « GAGNOA », $\\{\\text{G}, \\text{A}, \\text{N}, \\text{O}\\}$ a pour cardinal $4$.',
@@ -81,7 +81,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'definition',
             stepBadge: 'Cardinalité',
             stepTheme: 'blue',
-            stepTitle: 'Unicité des éléments dans un ensemble (TD 1)',
+            stepTitle: 'Unicité des éléments dans un ensemble',
             paragraphText:
               'Dans un ensemble, un élément ne figure qu’une seule fois. Par exemple, l’ensemble des lettres de la ville ivoirienne « ABIDJAN » est $\\{\\text{A}, \\text{B}, \\text{I}, \\text{D}, \\text{J}, \\text{N}\\}$ : la lettre A n’est comptée qu’une fois, donc son cardinal vaut $6$ (et non $7$).',
             exercise: {
@@ -396,7 +396,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 2,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Algèbre 1 (Arithmétique dans Z)',
+    source: 'ENTD L1 — Algèbre 1 (Arithmétique dans Z)',
     title: 'Chapitre 2 — Arithmétique dans $\\mathbb{Z}$ : divisibilité, PGCD et Bézout',
     summary:
       'Divisibilité, nombres premiers, division euclidienne (clé ISBN-10), algorithme d’Euclide, décomposition en facteurs premiers, identité de Bézout, lemme de Gauss et équations diophantiennes.',
@@ -411,7 +411,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         conceptExplanation:
           'Soient $a, b \\in \\mathbb{Z}$. On dit que $b$ **divise** $a$ (noté $b \\mid a$) s’il existe $q \\in \\mathbb{Z}$ tel que $a = bq$. Si $c \\mid a$ et $c \\mid b$, alors pour tous $u, v \\in \\mathbb{Z}$, $c \\mid (ua + vb)$ (combinaison linéaire).\n\n' +
           'Un entier $n > 1$ est **premier** si ses seuls diviseurs positifs sont $1$ et $n$. Si $n$ est composé, son plus petit diviseur $d > 1$ est premier et vérifie $d \\leqslant \\sqrt{n}$ (ce qui permet de tester la primalité de $139$ en ne testant que les nombres premiers $\\leqslant 11$).\n\n' +
-          '**Théorème de la division euclidienne** : pour tout $(a, b) \\in \\mathbb{Z} \\times \\mathbb{Z}^*$, il existe un unique couple $(q, r) \\in \\mathbb{Z} \\times \\mathbb{N}$ tel que $a = bq + r$ et $0 \\leqslant r < |b|$. Application réelle du cours : la clé $c$ d’un numéro **ISBN-10** ($a_1\\dots a_9$) est le reste de la division euclidienne de $\\sum_{i=1}^9 i a_i$ par $11$.',
+          '**Théorème de la division euclidienne** : pour tout $(a, b) \\in \\mathbb{Z} \\times \\mathbb{Z}^*$, il existe un unique couple $(q, r) \\in \\mathbb{Z} \\times \\mathbb{N}$ tel que $a = bq + r$ et $0 \\leqslant r < |b|$. Application concrète : la clé $c$ d’un numéro **ISBN-10** ($a_1\\dots a_9$) est le reste de la division euclidienne de $\\sum_{i=1}^9 i a_i$ par $11$.',
         formulas: [
           {
             name: 'Division euclidienne dans Z',
@@ -421,13 +421,13 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Clé d’un numéro ISBN-10',
             formula: 'c = \\left( \\sum_{i=1}^{9} i \\cdot a_i \\right) \\bmod 11',
-            note: 'Exemple du cours : 0-901690-54-? donne 182 = 16 × 11 + 6, donc la clé est 6.',
+            note: 'Exemple : 0-901690-54-? donne 182 = 16 × 11 + 6, donc la clé est 6.',
           },
         ],
         keyRule:
           'Dans une division euclidienne d’un entier négatif $a$ par $b$, le reste $r$ doit impérativement rester dans $[0, |b|[$, jamais négatif !',
         workedExample: {
-          title: 'Clé ISBN-10 et primalité de 139 (Applications du cours)',
+          title: 'Clé ISBN-10 et primalité de 139',
           statement:
             '1) Vérifier la clé du numéro ISBN-10 commençant par `0-901690-54`. 2) Montrer que $139$ est un nombre premier.',
           methodSteps: [
@@ -468,7 +468,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_algebre_ch2_p1_q2',
               type: 'mcq',
-              prompt: 'L’entier $302\\,328$ (Application 1 du cours) est-il divisible par $12$ ?',
+              prompt: 'L’entier $302\\,328$ est-il divisible par $12$ ?',
               options: [
                 'Oui, car la somme de ses chiffres vaut $18$ (multiple de 3) et $28$ est multiple de 4.',
                 'Non, car il ne se termine pas par 0.',
@@ -590,7 +590,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Calcul de $\\operatorname{pgcd}(621, 405)$ par Euclide et $\\operatorname{pgcd}(126, 230)$ par facteurs premiers',
           statement:
-            '1) Calculer $\\operatorname{pgcd}(621, 405)$ par l’algorithme d’Euclide (Exemple du cours). 2) Calculer $\\operatorname{pgcd}(126, 230)$ par décomposition en facteurs premiers (Application 7).',
+            '1) Calculer $\\operatorname{pgcd}(621, 405)$ par l’algorithme d’Euclide. 2) Calculer $\\operatorname{pgcd}(126, 230)$ par décomposition en facteurs premiers.',
           methodSteps: [
             '1) Étape 1 : $621 = 405 \\times 1 + 216$.',
             'Étape 2 : $405 = 216 \\times 1 + 189$.',
@@ -648,7 +648,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_algebre_ch2_p2_q3',
               type: 'mcq',
-              prompt: 'Quelle est la décomposition en facteurs premiers de $360$ (Application 8 du cours) ?',
+              prompt: 'Quelle est la décomposition en facteurs premiers de $360$ ?',
               options: [
                 '$2^3 \\times 3^2 \\times 5$',
                 '$2^2 \\times 3^2 \\times 10$',
@@ -690,7 +690,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'slate',
             stepTitle: 'Division euclidienne et PGCD de grands entiers',
             paragraphText:
-              'Dans l’Application 6 du cours, avec $a = 1\\,111\\,111\\,111$ et $b = 123\\,456\\,789$, on trouve $a = 9b + 10$ ! Par l’algorithme d’Euclide, $\\operatorname{pgcd}(a, b) = \\operatorname{pgcd}(b, 10)$. Comme $b$ se termine par $9$, $b$ n’est divisible ni par $2$ ni par $5$, donc $\\operatorname{pgcd}(a, b) = 1$ !',
+              'Par exemple, avec $a = 1\\,111\\,111\\,111$ et $b = 123\\,456\\,789$, on trouve $a = 9b + 10$ ! Par l’algorithme d’Euclide, $\\operatorname{pgcd}(a, b) = \\operatorname{pgcd}(b, 10)$. Comme $b$ se termine par $9$, $b$ n’est divisible ni par $2$ ni par $5$, donc $\\operatorname{pgcd}(a, b) = 1$ !',
             exercise: {
               id: 'lmd_entd_l1_algebre_ch2_p2_q5',
               type: 'mcq',
@@ -757,7 +757,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Toujours vérifier d’abord si $\\operatorname{pgcd}(a, b) \\mid c$ avant de chercher une solution particulière, et ne jamais oublier de **diviser** l’équation homogène par $d = \\operatorname{pgcd}(a, b)$ avant d’appliquer le lemme de Gauss !',
         workedExample: {
-          title: 'Résolution de $161x + 368y = 115$ (Exemple 5 du cours)',
+          title: 'Résolution de $161x + 368y = 115$',
           statement:
             'Déterminer tous les couples d’entiers relatifs $(x, y) \\in \\mathbb{Z}^2$ solutions de $(E) : 161x + 368y = 115$.',
           methodSteps: [
@@ -846,7 +846,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'slate',
             stepTitle: 'Constituer 59 euros avec des pièces de 2 € et billets de 5 €',
             paragraphText:
-              'L’Application 10 du cours modélise $2x + 5y = 59$ avec $x, y \\in \\mathbb{N}$. Une solution particulière est $(x_0, y_0) = (27, 1)$ (car $54 + 5 = 59$), d’où les solutions générales $(27 - 5k,\\ 1 + 2k)$. Avec $x \\geqslant 0$ et $y \\geqslant 0$, on obtient $k \\in \\{0, 1, 2, 3, 4, 5\\}$ : $y$ est toujours impair ($1, 3, 5, 7, 9, 11$), donc il y a au moins un billet de 5 € et jamais un nombre pair de billets !',
+              'On modélise $2x + 5y = 59$ avec $x, y \\in \\mathbb{N}$. Une solution particulière est $(x_0, y_0) = (27, 1)$ (car $54 + 5 = 59$), d’où les solutions générales $(27 - 5k,\\ 1 + 2k)$. Avec $x \\geqslant 0$ et $y \\geqslant 0$, on obtient $k \\in \\{0, 1, 2, 3, 4, 5\\}$ : $y$ est toujours impair ($1, 3, 5, 7, 9, 11$), donc il y a au moins un billet de 5 € et jamais un nombre pair de billets !',
             exercise: {
               id: 'lmd_entd_l1_algebre_ch2_p3_q4',
               type: 'mcq',
@@ -919,7 +919,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 3,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Algèbre 1 (Congruences, Cryptographie & Chapitre 2 Nombres complexes)',
+    source: 'ENTD L1 — Algèbre 1',
     title: 'Chapitre 3 — Congruences, cryptographie et nombres complexes',
     summary:
       'Calcul modulaire, équations de congruence, petit théorème de Fermat, théorème des restes chinois, chiffre de César et nombres complexes (formes algébrique, trigonométrique et exponentielle).',
@@ -971,7 +971,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'propriete',
             stepBadge: 'Calcul modulaire',
             stepTheme: 'blue',
-            stepTitle: 'Carrés modulo 8 (Application 11 du cours)',
+            stepTitle: 'Carrés modulo 8',
             paragraphText:
               'Tout entier impair s’écrit $2k + 1$, d’où $(2k + 1)^2 = 4k(k+1) + 1$. Comme $k(k+1)$ est pair, $4k(k+1)$ est multiple de $8$, donc le carré de **tout** nombre impair est congru à $1$ modulo $8$ ! Pour un nombre pair $2k$, son carré est congru à $0$ ou $4$ modulo $8$.',
             exercise: {
@@ -995,7 +995,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_algebre_ch3_p1_q2',
               type: 'mcq',
-              prompt: 'Quelle est la solution dans $\\{0, 1, \\dots, 34\\}$ de l’équation $12x \\equiv 5 \\pmod{35}$ (Application 13 du cours) ?',
+              prompt: 'Quelle est la solution dans $\\{0, 1, \\dots, 34\\}$ de l’équation $12x \\equiv 5 \\pmod{35}$ ?',
               options: ['$x = 5$', '$x = 12$', '$x = 20$', '$x = 15$'],
               correctAnswerIndex: 3,
               explanation:
@@ -1027,7 +1027,7 @@ export const ALGEBRE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'green',
             stepTitle: 'Théorème des restes chinois',
             paragraphText:
-              'Lorsque les modulos $n_1, n_2$ sont premiers entre eux, le système $\\{x \\equiv a_1 \\pmod{n_1},\\ x \\equiv a_2 \\pmod{n_2}\\}$ admet une unique solution modulo $n_1 n_2$. Si les modulos ne sont pas premiers entre eux (Remarque 6 du cours), on les décompose en facteurs premiers entre eux (ex. $\\bmod 6$ devient $\\bmod 2$ et $\\bmod 3$).',
+              'Lorsque les modulos $n_1, n_2$ sont premiers entre eux, le système $\\{x \\equiv a_1 \\pmod{n_1},\\ x \\equiv a_2 \\pmod{n_2}\\}$ admet une unique solution modulo $n_1 n_2$. Si les modulos ne sont pas premiers entre eux, on les décompose en facteurs premiers entre eux (ex. $\\bmod 6$ devient $\\bmod 2$ et $\\bmod 3$).',
             exercise: {
               id: 'lmd_entd_l1_algebre_ch3_p1_q4',
               type: 'mcq',

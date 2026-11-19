@@ -881,7 +881,7 @@ export const MATHS_TLE_C_L04_PRIMITIVES: CurriculumChapter = {
     'Notion de primitive sur un intervalle, existence par continuité, unicité avec condition initiale, primitives des fonctions usuelles, opérations et compositions (u′u^r, u′/√u, u′cos u, u′sin u), linéarisation et modélisation.',
   officialVolumeHours: 6,
   contentVersion: 2,
-  source: 'Programme officiel de Mathématiques — Terminale C (Côte d’Ivoire)',
+  source: 'Mathématiques — Terminale C',
   points: [
     {
       id: 'terminale_c_maths_numerique_l04_primitives_p01',

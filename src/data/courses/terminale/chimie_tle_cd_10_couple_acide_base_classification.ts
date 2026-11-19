@@ -47,7 +47,7 @@ export const CHIMIE_TLE_CD_L10_COUPLE_ACIDE_BASE_CLASSIFICATION: CurriculumChapt
       },
       "visualSchema": {
         "type": "custom_svg",
-        "title": "Exemples types de couples acide/base du programme officiel",
+        "title": "Exemples types de couples acide/base du programme",
         "tableData": {
           "headers": [
             "Formule du couple",

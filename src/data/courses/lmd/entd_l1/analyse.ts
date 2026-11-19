@@ -12,8 +12,8 @@ const makePoint = (
 });
 
 // ============================================================================
-// ANALYSE — ENTD LICENCE 1 (ESATIC UP MATHS — Dr Mamadou Ibrahima KONÉ)
-// Sources : Analyse 1-1.pdf, ch2_MAJ.pdf, Ch3bis.pdf, Ch4-5.pdf, TD1, TD2, TD3
+// ANALYSE — ENTD LICENCE 1
+// Programme structuré KONAN
 // ============================================================================
 
 export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
@@ -27,7 +27,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 1,
     officialVolumeHours: 14,
     contentVersion: 2,
-    source: 'ESATIC UP Maths — Analyse 1 (Chapitres 1 & 2, TD 1 & TD 2)',
+    source: 'ENTD L1 — Analyse 1',
     title: 'Chapitre 1 — Nombres réels et suites numériques',
     summary:
       'Corps $\\mathbb{R}$, bornes supérieure et inférieure, valeur absolue, partie entière $E(x)$, limites de suites, théorèmes de convergence (monotones bornées, gendarmes, adjacentes) et applications économiques.',
@@ -50,7 +50,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Encadrement fondamental de la partie entière',
             formula: '\\forall x \\in \\mathbb{R},\\quad E(x) \\leqslant x < E(x) + 1 \\iff x - 1 < E(x) \\leqslant x',
-            note: 'Exemples du cours : E(π) = 3 et E(-π) = -4 (attention aux nombres négatifs !).',
+            note: 'Exemple : E(π) = 3 et E(-π) = -4 (attention aux nombres négatifs !).',
           },
           {
             name: 'Inégalités triangulaires',
@@ -60,13 +60,13 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Expression de max et min avec la valeur absolue',
             formula: '\\max(x, y) = \\frac{x + y + |x - y|}{2}, \\qquad \\min(x, y) = \\frac{x + y - |x - y|}{2}',
-            note: 'Proposition 1.6.3 du cours Analyse 1.',
+            note: 'Propriété fondamentale.',
           },
         ],
         keyRule:
           'Une borne supérieure ou inférieure n’appartient pas toujours à l’ensemble : si $M = \\sup(A) \\notin A$, alors $A$ n’a pas de maximum !',
         workedExample: {
-          title: 'Bornes de $B = \\{1/n \\mid n \\in \\mathbb{N}^*\\}$ et identité $E(x) + E(-x)$ (TD 1 Ex. 1 & Ex. 3)',
+          title: 'Bornes de $B = \\{1/n \\mid n \\in \\mathbb{N}^*\\}$ et identité $E(x) + E(-x)$',
           statement:
             '1) Déterminer $\\sup(B)$, $\\inf(B)$, $\\max(B)$ et $\\min(B)$ pour $B = \\left\\{\\frac{1}{n} \\mid n \\in \\mathbb{N}^*\\right\\}$. 2) Calculer $E(x) + E(-x)$ pour tout $x \\in \\mathbb{R}$.',
           methodSteps: [
@@ -84,7 +84,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'definition',
             stepBadge: 'Bornes & Extrema',
             stepTheme: 'blue',
-            stepTitle: 'Distinguer borne inférieure et minimum (TD 1 Ex. 1)',
+            stepTitle: 'Distinguer borne inférieure et minimum',
             paragraphText:
               'Pour l’intervalle semi-ouvert $A = ]0, 5]$, $0$ est le plus grand des minorants ($\\inf(A) = 0$) et $5$ est le plus petit des majorants ($\\sup(A) = 5$). Comme $5 \\in A$, $5 = \\max(A)$ ; mais comme $0 \\notin A$, $A$ ne possède **pas de minimum**.',
             exercise: {
@@ -132,7 +132,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_analyse_ch1_p1_q3',
               type: 'mcq',
-              prompt: 'Soit $A$ une partie non vide et majorée de $\\mathbb{R}$, et $B = \\{-x \\mid x \\in A\\}$ (TD 1 Ex. 4). Quelle égalité est toujours vraie ?',
+              prompt: 'Soit $A$ une partie non vide et majorée de $\\mathbb{R}$, et $B = \\{-x \\mid x \\in A\\}$. Quelle égalité est toujours vraie ?',
               options: [
                 '$\\inf(B) = -\\sup(A)$',
                 '$\\inf(B) = \\sup(A)$',
@@ -193,7 +193,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 6,
             stepKind: 'exemple',
-            stepBadge: 'TD 1 Ex. 1',
+            stepBadge: 'Application',
             stepTheme: 'slate',
             stepTitle: 'Bornes de $C = \\{(-1)^n + \\frac{1}{n} \\mid n \\in \\mathbb{N}^*\\}$',
             paragraphText:
@@ -201,7 +201,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_analyse_ch1_p1_q6',
               type: 'mcq',
-              prompt: 'Pour $C = \\{(-1)^n + \\frac{1}{n} \\mid n \\in \\mathbb{N}^*\\}$ (TD 1 Ex. 1), quelles sont les valeurs de $\\sup(C)$ et $\\inf(C)$ ?',
+              prompt: 'Pour $C = \\{(-1)^n + \\frac{1}{n} \\mid n \\in \\mathbb{N}^*\\}$, quelles sont les valeurs de $\\sup(C)$ et $\\inf(C)$ ?',
               options: [
                 '$\\sup(C) = 2$ et $\\inf(C) = -1$',
                 '$\\sup(C) = 1$ et $\\inf(C) = -1$',
@@ -238,13 +238,13 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Somme des n premiers entiers',
             formula: '1 + 2 + \\dots + n = \\frac{n(n + 1)}{2}',
-            note: 'Utilisée dans le cours pour montrer que (1+2+...+n)/n² = (n+1)/(2n) → 1/2.',
+            note: 'Utilisée notamment pour montrer que (1+2+...+n)/n² = (n+1)/(2n) → 1/2.',
           },
         ],
         keyRule:
           'Convergence $\\implies$ Bornée (réciproque FAUSSE !). Croissante + Majorée $\\implies$ Convergente.',
         workedExample: {
-          title: 'Étude de $u_n = \\sqrt{n + 1} - \\sqrt{n}$ et $v_n = \\frac{1 + 2 + \\dots + n}{n^2}$ (Cours Ch. 2 & TD 2 Ex. 3)',
+          title: 'Étude de $u_n = \\sqrt{n + 1} - \\sqrt{n}$ et $v_n = \\frac{1 + 2 + \\dots + n}{n^2}$',
           statement:
             'Calculer $\\lim_{n \\to +\\infty} (\\sqrt{n + 1} - \\sqrt{n})$ et $\\lim_{n \\to +\\infty} \\frac{1 + 2 + \\dots + n}{n^2}$.',
           methodSteps: [
@@ -259,7 +259,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'propriete',
-            stepBadge: 'Quiz du cours',
+            stepBadge: 'Vérification',
             stepTheme: 'violet',
             stepTitle: 'Lien entre convergence, monotonie et suite bornée',
             paragraphText:
@@ -267,7 +267,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_analyse_ch1_p2_q1',
               type: 'mcq',
-              prompt: 'Laquelle des affirmations suivantes est **correcte** (Quiz du cours Chapitre 2) ?',
+              prompt: 'Laquelle des affirmations suivantes est **correcte** ?',
               options: [
                 'Toute suite convergente est monotone.',
                 'Toute suite bornée est convergente.',
@@ -276,13 +276,13 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 2,
               explanation:
-                'C’est la Proposition 2 du cours : toute suite convergente est bornée. Les contre-exemples $(-1)^n/n$ et $(-1)^n$ réfutent les deux premières affirmations.',
+                'Propriété fondamentale : toute suite convergente est bornée. Les contre-exemples $(-1)^n/n$ et $(-1)^n$ réfutent les deux premières affirmations.',
             },
           },
           {
             stepNumber: 2,
             stepKind: 'piege',
-            stepBadge: 'TD 2 Ex. 1',
+            stepBadge: 'Application',
             stepTheme: 'orange',
             stepTitle: 'Piège de la valeur absolue : $\\lim |u_n| = |\\ell|$',
             paragraphText:
@@ -351,7 +351,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'slate',
             stepTitle: 'Comportement de la suite $y_n = C\\left(1 + \\frac{i}{n}\\right)^n$',
             paragraphText:
-              'Dans l’Exemple 2 du cours, un capital $C = 1\\,000\\,000$ placé au taux annuel $i = 7\\%$ capitalisé $n$ fois par an vaut $y_n = C\\left(1 + \\frac{0{,}07}{n}\\right)^n$. Quand $n \\to +\\infty$, la suite converge vers $C e^{0{,}07}$ (intérêts continus).',
+              'Par exemple, un capital $C = 1\\,000\\,000$ placé au taux annuel $i = 7\\%$ capitalisé $n$ fois par an vaut $y_n = C\\left(1 + \\frac{0{,}07}{n}\\right)^n$. Quand $n \\to +\\infty$, la suite converge vers $C e^{0{,}07}$ (intérêts continus).',
             exercise: {
               id: 'lmd_entd_l1_analyse_ch1_p2_q5',
               type: 'mcq',
@@ -359,21 +359,21 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               options: ['$1$', '$+\\infty$', '$e \\approx 2{,}718$', '$0$'],
               correctAnswerIndex: 2,
               explanation:
-                'Démontré dans le cours (Chapitre 2) : $(u_n)$ est croissante et majorée par $3$, elle converge vers le nombre d’Euler $e \\approx 2{,}71828$. (Forme indéterminée $1^{+\\infty}$, jamais égal à $1$ !)',
+                'Propriété établie : $(u_n)$ est croissante et majorée par $3$, elle converge vers le nombre d’Euler $e \\approx 2{,}71828$. (Forme indéterminée $1^{+\\infty}$, jamais égal à $1$ !)',
             },
           },
           {
             stepNumber: 6,
             stepKind: 'exemple',
-            stepBadge: 'TD 2 Ex. 3',
+            stepBadge: 'Application',
             stepTheme: 'slate',
             stepTitle: 'Série harmonique vs série de Riemann d’ordre 2',
             paragraphText:
-              'Dans le TD 2 Ex. 3, on rencontre deux suites de sommes partielles célèbres : $u_n = 1 + \\frac{1}{2^2} + \\dots + \\frac{1}{n^2}$ est croissante et majorée (par $2$) donc **converge** (vers $\\pi^2/6$), tandis que la série harmonique $H_n = 1 + \\frac{1}{2} + \\dots + \\frac{1}{n}$ **diverge vers $+\\infty$**.',
+              'On rencontre deux suites de sommes partielles célèbres : $u_n = 1 + \\frac{1}{2^2} + \\dots + \\frac{1}{n^2}$ est croissante et majorée (par $2$) donc **converge** (vers $\\pi^2/6$), tandis que la série harmonique $H_n = 1 + \\frac{1}{2} + \\dots + \\frac{1}{n}$ **diverge vers $+\\infty$**.',
             exercise: {
               id: 'lmd_entd_l1_analyse_ch1_p2_q6',
               type: 'mcq',
-              prompt: 'Que peut-on dire de la suite $u_n = \\left(-\\frac{1}{9}\\right)^n$ (TD 2 Ex. 3d) ?',
+              prompt: 'Que peut-on dire de la suite $u_n = \\left(-\\frac{1}{9}\\right)^n$ ?',
               options: [
                 'Elle converge vers $0$ car $\\left|-\\frac{1}{9}\\right| < 1$.',
                 'Elle diverge car elle change de signe à chaque rang.',
@@ -398,12 +398,12 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         conceptExplanation:
           '• **Suites adjacentes** : deux suites $(u_n)$ et $(v_n)$ sont adjacentes si $(u_n)$ est croissante, $(v_n)$ est décroissante et $\\lim_{n \\to +\\infty} (u_n - v_n) = 0$. Alors elles **convergent toutes deux vers la même limite $\\ell$** et $\\forall n,\\ u_n \\leqslant \\ell \\leqslant v_n$.\n\n' +
           '• **Suites géométriques** ($u_{n+1} = q u_n$, $u_n = u_0 q^n$) : la somme vaut $\\sum_{k=0}^n u_k = u_0 \\frac{1 - q^{n+1}}{1 - q}$ pour $q \\neq 1$. Si $|q| < 1$, la somme infinie converge vers $\\frac{u_0}{1 - q}$ (application économique du **multiplicateur keynésien** $\\frac{1}{1 - c}$).\n\n' +
-          '• **Suites récurrentes $u_{n+1} = f(u_n)$** : méthode en 5 étapes du cours : (a) domaine de définition, (b) premiers termes, (c) monotonie (signe de $u_{n+1} - u_n$), (d) borne par récurrence pour conclure à la convergence, (e) si $f$ est continue, la limite $\\ell$ est un **point fixe** vérifiant $\\ell = f(\\ell)$.',
+          '• **Suites récurrentes $u_{n+1} = f(u_n)$** : méthode en 5 étapes : (a) domaine de définition, (b) premiers termes, (c) monotonie (signe de $u_{n+1} - u_n$), (d) borne par récurrence pour conclure à la convergence, (e) si $f$ est continue, la limite $\\ell$ est un **point fixe** vérifiant $\\ell = f(\\ell)$.',
         formulas: [
           {
             name: 'Somme d’une série géométrique (|q| < 1)',
             formula: '\\sum_{k=0}^{+\\infty} u_0 q^k = \\frac{u_0}{1 - q} \\quad (|q| < 1)',
-            note: 'En macroéconomie (TD 2 Ex. 5) : impact total = injection / (1 - c).',
+            note: 'En macroéconomie : impact total = injection / (1 - c).',
           },
           {
             name: 'Point fixe d’une suite récurrente convergente',
@@ -414,7 +414,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Pour une suite récurrente $u_{n+1} = f(u_n)$, on prouve **d’abord** la convergence (monotone + bornée), et on résout **ensuite** l’équation du point fixe $\\ell = f(\\ell)$.',
         workedExample: {
-          title: 'Suite récurrente $u_{n+1} = \\sqrt{6 + u_n}$ et Multiplicateur keynésien (TD 2 Ex. 4 & Ex. 5)',
+          title: 'Suite récurrente $u_{n+1} = \\sqrt{6 + u_n}$ et Multiplicateur keynésien',
           statement:
             '1) Soit $u_0 = 0$ et $u_{n+1} = \\sqrt{6 + u_n}$. Prouver que $(u_n)$ converge et trouver sa limite. 2) L’État injecte 100 M€ avec une propension marginale à consommer $c = 0{,}8$. Calculer l’impact économique total.',
           methodSteps: [
@@ -437,7 +437,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_analyse_ch1_p3_q1',
               type: 'mcq',
-              prompt: 'Les suites $u_n = 1 + \\frac{1}{1!} + \\dots + \\frac{1}{n!}$ et $v_n = u_n + \\frac{1}{n!}$ (TD 2 Ex. 2) sont-elles adjacentes ?',
+              prompt: 'Les suites $u_n = 1 + \\frac{1}{1!} + \\dots + \\frac{1}{n!}$ et $v_n = u_n + \\frac{1}{n!}$ sont-elles adjacentes ?',
               options: [
                 'Non, car $v_n$ est croissante.',
                 'Oui : $(u_n)$ est croissante, $(v_n)$ est décroissante et $v_n - u_n = \\frac{1}{n!} \\to 0$.',
@@ -454,7 +454,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'methode',
             stepBadge: 'Économie',
             stepTheme: 'green',
-            stepTitle: 'Multiplicateur keynésien par suite géométrique (TD 2 Ex. 5)',
+            stepTitle: 'Multiplicateur keynésien par suite géométrique',
             paragraphText:
               'Lorsque chaque euro de revenu génère une dépense de $c \\in ]0, 1[$ euro (propension marginale à consommer), une injection initiale $I$ engendre une somme totale $S = \\sum_{k=0}^{+\\infty} I \\cdot c^k = \\frac{I}{1 - c}$.',
             exercise: {
@@ -477,7 +477,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'propriete',
             stepBadge: 'Suites géométriques',
             stepTheme: 'violet',
-            stepTitle: 'Somme partielle et limite de $u_n = 1 + \\frac{1}{3} + \\dots + \\frac{1}{3^n}$ (TD 2 Ex. 3e)',
+            stepTitle: 'Somme partielle et limite de $u_n = 1 + \\frac{1}{3} + \\dots + \\frac{1}{3^n}$',
             paragraphText:
               'Pour $q = \\frac{1}{3}$, la somme des $n + 1$ termes vaut $u_n = \\frac{1 - (1/3)^{n+1}}{1 - 1/3} = \\frac{3}{2}\\left(1 - \\frac{1}{3^{n+1}}\\right)$. Comme $\\left(\\frac{1}{3}\\right)^{n+1} \\to 0$, la suite converge vers $\\frac{3}{2}$.',
             exercise: {
@@ -535,7 +535,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 6,
             stepKind: 'propriete',
-            stepBadge: 'TD 2 Ex. 1c',
+            stepBadge: 'Application',
             stepTheme: 'violet',
             stepTitle: 'Limite du quotient $u_n / u_{n+1}$',
             paragraphText:
@@ -565,7 +565,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 2,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC UP Maths — Analyse 1 (Chapitre 3 & TD 3)',
+    source: 'ENTD L1 — Analyse 1',
     title: 'Chapitre 2 — Limites, fonctions équivalentes et continuité',
     summary:
       'Limites finies, infinies et unilatérales, équivalents en $0$ et en $\\pm\\infty$, continuité, Théorème des Valeurs Intermédiaires (TVI), Weierstrass et point fixe.',
@@ -592,13 +592,13 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Condition d’existence par limites unilatérales',
             formula: '\\lim_{x \\to a} f(x) = \\ell \\iff \\lim_{x \\to a^-} f(x) = \\lim_{x \\to a^+} f(x) = \\ell',
-            note: 'Exemple du cours : |x|/x tend vers -1 en 0⁻ et +1 en 0⁺, donc pas de limite en 0.',
+            note: 'Exemple : |x|/x tend vers -1 en 0⁻ et +1 en 0⁺, donc pas de limite en 0.',
           },
         ],
         keyRule:
           'En $0$ : garder le **plus bas** degré d’un polynôme. En $\\pm\\infty$ : garder le **plus haut** degré. Ne jamais additionner deux équivalents sans vérifier l’absence d’annulation !',
         workedExample: {
-          title: 'Équivalents d’une fraction rationnelle en $0$ et en $+\\infty$ (TD 3 Ex. 2a)',
+          title: 'Équivalents d’une fraction rationnelle en $0$ et en $+\\infty$',
           statement:
             'Soit $f(x) = \\frac{(x^2 + 7x^3)(x + 3)}{x^5 + x^2}$. Trouver un équivalent et la limite de $f(x)$ quand $x \\to 0$ puis quand $x \\to +\\infty$.',
           methodSteps: [
@@ -613,7 +613,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'definition',
-            stepBadge: 'QCM du cours',
+            stepBadge: 'Vérification',
             stepTheme: 'blue',
             stepTitle: 'Limites à gauche et à droite différentes',
             paragraphText:
@@ -636,7 +636,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'QCM du cours',
+            stepBadge: 'Vérification',
             stepTheme: 'green',
             stepTitle: 'Limite en $+\\infty$ d’une fraction rationnelle',
             paragraphText:
@@ -692,7 +692,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'piege',
             stepBadge: 'Piège d’examen',
             stepTheme: 'orange',
-            stepTitle: 'Interdiction d’additionner des équivalents (QCM Ch. 3 & TD 3 Ex. 6)',
+            stepTitle: 'Interdiction d’additionner des équivalents',
             paragraphText:
               'Si $f_1(x) = x + x^2 \\underset{0}{\\sim} x$ et $f_2(x) = -x + x^3 \\underset{0}{\\sim} -x$, alors $f_1(x) + f_2(x) = x^2 + x^3 \\underset{0}{\\sim} x^2$, et **non** $x + (-x) = 0$ (on n’écrit d’ailleurs jamais $f \\sim 0$). En général, on ne peut rien conclure sur l’équivalent d’une somme.',
             keyRule: 'On multiplie et divise les équivalents ; on n’additionne et ne compose JAMAIS les équivalents sans précaution !',
@@ -714,15 +714,15 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 6,
             stepKind: 'exemple',
-            stepBadge: 'TD 3 Ex. 2b',
+            stepBadge: 'Application',
             stepTheme: 'slate',
             stepTitle: 'Lever une forme indéterminée $0/0$ par factorisation',
             paragraphText:
-              'Pour $f(x) = \\frac{x^2 - 1}{\\sqrt{x - 1}}$ quand $x \\to 1^+$ (TD 3 Ex. 2b), on factorise $x^2 - 1 = (x - 1)(x + 1) = (\\sqrt{x - 1})^2 (x + 1)$. En simplifiant par $\\sqrt{x - 1} > 0$, il reste $f(x) = \\sqrt{x - 1}\\,(x + 1) \\to 0 \\times 2 = 0$.',
+              'Pour $f(x) = \\frac{x^2 - 1}{\\sqrt{x - 1}}$ quand $x \\to 1^+$, on factorise $x^2 - 1 = (x - 1)(x + 1) = (\\sqrt{x - 1})^2 (x + 1)$. En simplifiant par $\\sqrt{x - 1} > 0$, il reste $f(x) = \\sqrt{x - 1}\\,(x + 1) \\to 0 \\times 2 = 0$.',
             exercise: {
               id: 'lmd_entd_l1_analyse_ch2_p1_q6',
               type: 'mcq',
-              prompt: 'Que vaut $\\lim_{x \\to 1^+} \\frac{x^2 - 1}{\\sqrt{x - 1}}$ (TD 3 Ex. 2b) ?',
+              prompt: 'Que vaut $\\lim_{x \\to 1^+} \\frac{x^2 - 1}{\\sqrt{x - 1}}$ ?',
               options: ['$+\\infty$', '$2$', '$0$', '$1$'],
               correctAnswerIndex: 2,
               explanation:
@@ -760,7 +760,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Continuité $\\neq$ Dérivabilité : toute fonction dérivable est continue, mais la continuité n’exige **pas** la dérivabilité (ex. $|x|$ est continue mais non dérivable en $0$).',
         workedExample: {
-          title: 'Continuité d’un barème progressif de frais immobiliers (TD 3 Ex. 5)',
+          title: 'Continuité d’un barème progressif de frais immobiliers',
           statement:
             'Un agent immobilier perçoit $14\\%$ sur la tranche de loyer $x \\in [0, 1000]$, puis $10\\%$ sur la tranche de $1000$ à $1500$, $6\\%$ de $1500$ à $3000$ et $4\\%$ au-delà de $3000$. Écrire la fonction $F(x)$ sur $[0, 1500]$ et vérifier sa continuité en $x = 1000$.',
           methodSteps: [
@@ -776,7 +776,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'definition',
-            stepBadge: 'QCM du cours',
+            stepBadge: 'Vérification',
             stepTheme: 'blue',
             stepTitle: 'Conditions nécessaires de continuité en un point',
             paragraphText:
@@ -799,7 +799,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'propriete',
-            stepBadge: 'TVI (QCM cours)',
+            stepBadge: 'TVI',
             stepTheme: 'violet',
             stepTitle: 'Ce que garantit — et ne garantit pas — le TVI',
             paragraphText:
@@ -868,11 +868,11 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 5,
             stepKind: 'methode',
-            stepBadge: 'Prolongement (TD 3 Ex. 4)',
+            stepBadge: 'Prolongement',
             stepTheme: 'green',
             stepTitle: 'Étudier la continuité en $0$ d’une fonction définie par morceaux',
             paragraphText:
-              'Dans le TD 3 Ex. 4, $f(x) = \\frac{x + 2 - \\sqrt{4 - x^2}}{x}$ pour $x \\neq 0$ et $f(0) = 1$. En multipliant par la quantité conjuguée de $2 - \\sqrt{4 - x^2}$ : $\\frac{2 - \\sqrt{4 - x^2}}{x} = \\frac{x^2}{x(2 + \\sqrt{4 - x^2})} = \\frac{x}{2 + \\sqrt{4 - x^2}} \\to 0$, donc $f(x) = 1 + \\frac{x}{2 + \\sqrt{4 - x^2}} \\to 1 = f(0)$ : $f$ est continue en $0$ !',
+              '$f(x) = \\frac{x + 2 - \\sqrt{4 - x^2}}{x}$ pour $x \\neq 0$ et $f(0) = 1$. En multipliant par la quantité conjuguée de $2 - \\sqrt{4 - x^2}$ : $\\frac{2 - \\sqrt{4 - x^2}}{x} = \\frac{x^2}{x(2 + \\sqrt{4 - x^2})} = \\frac{x}{2 + \\sqrt{4 - x^2}} \\to 0$, donc $f(x) = 1 + \\frac{x}{2 + \\sqrt{4 - x^2}} \\to 1 = f(0)$ : $f$ est continue en $0$ !',
             exercise: {
               id: 'lmd_entd_l1_analyse_ch2_p2_q5',
               type: 'mcq',
@@ -886,7 +886,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 6,
             stepKind: 'exemple',
-            stepBadge: 'TD 3 Ex. 1',
+            stepBadge: 'Application',
             stepTheme: 'slate',
             stepTitle: 'Continuité de la fonction racine carrée sur $\\mathbb{R}_+$',
             paragraphText:
@@ -894,7 +894,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_analyse_ch2_p2_q6',
               type: 'mcq',
-              prompt: 'Que peut-on dire de la fonction $f(x) = \\sqrt{x}$ au point $a = 0$ (TD 3 Ex. 1) ?',
+              prompt: 'Que peut-on dire de la fonction $f(x) = \\sqrt{x}$ au point $a = 0$ ?',
               options: [
                 'Elle est continue à droite en $0$ (car $\\lim_{x \\to 0^+} \\sqrt{x} = 0 = f(0)$), et $\\lim_{x \\to 0^-} \\sqrt{x}$ n’est pas définie.',
                 'Elle n’est pas continue en $0$.',
@@ -921,7 +921,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 3,
     officialVolumeHours: 14,
     contentVersion: 2,
-    source: 'ESATIC UP Maths — Analyse 1 (Chapitres 4 & 5, QCM du cours, TD 3)',
+    source: 'ENTD L1 — Analyse 1',
     title: 'Chapitre 3 — Dérivation, convexité et fonctions usuelles',
     summary:
       'Taux d’accroissement, règles de dérivation, Rolle, TAF, règle de l’Hôpital, prolongement dérivable, convexité ($f\'\' \\geqslant 0$), $\\ln$, $\\exp$, puissances $x^a$ et croissances comparées.',
@@ -953,9 +953,9 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         keyRule:
-          'Si $f$ est dérivable en $a$, elle est continue en $a$. Mais attention : $f$ peut être dérivable en $0$ sans que sa dérivée $f\'$ soit continue en $0$ (exemple du TD 3 : $x^2 \\sin(1/x)$) !',
+          'Si $f$ est dérivable en $a$, elle est continue en $a$. Mais attention : $f$ peut être dérivable en $0$ sans que sa dérivée $f\'$ soit continue en $0$ (par exemple : $x^2 \\sin(1/x)$) !',
         workedExample: {
-          title: 'Dérivabilité en $0$ de $f(x) = x^2 \\sin(1/x)$ (TD 3 Ex. 3)',
+          title: 'Dérivabilité en $0$ de $f(x) = x^2 \\sin(1/x)$',
           statement:
             'Soit $f(x) = x^2 \\sin(1/x)$ pour $x \\neq 0$ et $f(0) = 0$. Montrer que $f$ est dérivable sur $\\mathbb{R}$, mais que $f\'$ n’est pas continue en $0$.',
           methodSteps: [
@@ -971,7 +971,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'propriete',
-            stepBadge: 'Rolle (QCM cours)',
+            stepBadge: 'Rolle',
             stepTheme: 'violet',
             stepTitle: 'Énoncé exact du Théorème de Rolle',
             paragraphText:
@@ -994,7 +994,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'propriete',
-            stepBadge: 'Prolongement (QCM)',
+            stepBadge: 'Prolongement',
             stepTheme: 'violet',
             stepTitle: 'Théorème du prolongement dérivable (Thm 4.3.9)',
             paragraphText:
@@ -1011,7 +1011,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 1,
               explanation:
-                'C’est le Théorème 4.3.9 du cours (prolongement dérivable) : $f$ est dérivable en $a$ et $f\'(a) = \\ell$.',
+                'Par le théorème de prolongement dérivable : $f$ est dérivable en $a$ et $f\'(a) = \\ell$.',
             },
           },
           {
@@ -1154,7 +1154,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'propriete',
-            stepBadge: 'Convexité (QCM)',
+            stepBadge: 'Convexité',
             stepTheme: 'violet',
             stepTitle: 'Caractérisation d’une fonction concave par $f\'\'$',
             paragraphText:
@@ -1171,13 +1171,13 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 2,
               explanation:
-                'D’après le Théorème 4.5.1 et le QCM officiel du cours, la concavité d’une fonction $C^2$ équivaut à $f\'\'(x) \\leqslant 0$ sur $I$.',
+                'Propriété : la concavité d’une fonction $C^2$ équivaut à $f\'\'(x) \\leqslant 0$ sur $I$.',
             },
           },
           {
             stepNumber: 2,
             stepKind: 'propriete',
-            stepBadge: 'Logarithme (QCM)',
+            stepBadge: 'Logarithme',
             stepTheme: 'violet',
             stepTitle: 'Concavité du logarithme népérien',
             paragraphText:
@@ -1200,7 +1200,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'propriete',
-            stepBadge: 'Puissances (QCM)',
+            stepBadge: 'Puissances',
             stepTheme: 'violet',
             stepTitle: 'Dérivée de $x^a$ vs dérivée de $a^x$',
             paragraphText:
@@ -1217,7 +1217,7 @@ export const ANALYSE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 0,
               explanation:
-                'Par la Proposition 5.1.15 du cours, $(x^a)\' = (e^{a \\ln x})\' = \\frac{a}{x} e^{a \\ln x} = a x^{a-1}$.',
+                'Par dérivation composée, $(x^a)\' = (e^{a \\ln x})\' = \\frac{a}{x} e^{a \\ln x} = a x^{a-1}$.',
             },
           },
           {

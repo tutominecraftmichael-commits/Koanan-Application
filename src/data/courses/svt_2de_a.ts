@@ -1,12 +1,12 @@
 // ============================================================================
 // MODULE OFFICIEL : SCIENCES DE LA VIE ET DE LA TERRE (SVT) 2de A
-// Ministère de l'Éducation Nationale et de l'Alphabétisation (MENA - Côte d'Ivoire)
+// Programme structuré KONAN
 // Programme complet de Seconde A :
 // - Leçon 1 : La transmission d’un message nerveux dans l’organisme (8H)
 // - Leçon 2 : La transmission d’un message hormonal (6H)
 // - Leçon 3 : Les grands ensembles environnementaux (6H)
-// - Leçon 4 : La diversité des comportements alimentaires de l’homme (Leçon 8 MENA - 4H)
-// - Leçon 5 : Les habitudes alimentaires et la santé de l’homme (Leçon 9 MENA - 6H)
+// - Leçon 4 : La diversité des comportements alimentaires de l’homme
+// - Leçon 5 : Les habitudes alimentaires et la santé de l’homme
 // Règle absolue : Zéro code brut informatique, pédagogie pas-à-pas, 8 questions QCM par mini-leçon (score 8/8 exigé)
 // ============================================================================
 
@@ -1116,7 +1116,7 @@ L'eau de l'hydrosphère s'évapore dans l'atmosphère, retombe sous forme de pr�
 
 // ============================================================================
 // LEÇON 4 : LA PRODUCTION DE LA MATIÈRE ORGANIQUE
-// (Leçon 4 du programme officiel MENA Côte d'Ivoire - 4 Heures)
+//
 // ============================================================================
 export const svt2deALaProductionMatiereOrganiqueChapter: CurriculumChapter = {
   "id": "seconde_a_svt_ch4_production_matiere_organique",
@@ -1404,7 +1404,7 @@ export const svt2deALaProductionMatiereOrganiqueChapter: CurriculumChapter = {
 
 // ============================================================================
 // LEÇON 5 : LE CHANGEMENT CLIMATIQUE
-// (Leçon 5 du programme officiel MENA Côte d'Ivoire - 4 Heures)
+//
 // ============================================================================
 export const svt2deALeChangementClimatiqueChapter: CurriculumChapter = {
   "id": "seconde_a_svt_ch5_changement_climatique",
@@ -1692,7 +1692,7 @@ export const svt2deALeChangementClimatiqueChapter: CurriculumChapter = {
 
 // ============================================================================
 // LEÇON 6 : LA STRUCTURE D’UNE CELLULE ANIMALE
-// (Leçon 6 du programme officiel MENA Côte d'Ivoire - 4 Heures)
+//
 // ============================================================================
 export const svt2deALaStructureCelluleAnimaleChapter: CurriculumChapter = {
   "id": "seconde_a_svt_ch6_structure_cellule_animale",
@@ -1980,7 +1980,7 @@ export const svt2deALaStructureCelluleAnimaleChapter: CurriculumChapter = {
 
 // ============================================================================
 // LEÇON 7 : LA REPRODUCTION CONFORME OU MITOSE
-// (Leçon 7 du programme officiel MENA Côte d'Ivoire - 6 Heures)
+//
 // ============================================================================
 export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
   "id": "seconde_a_svt_ch7_reproduction_conforme_mitose",
@@ -2267,7 +2267,7 @@ export const svt2deALaReproductionConformeMitoseChapter: CurriculumChapter = {
 };
 
 // LEÇON 4 : LA DIVERSITÉ DES COMPORTEMENTS ALIMENTAIRES DE L’HOMME
-// (Leçon 8 du programme officiel MENA Côte d'Ivoire)
+//
 // ============================================================================
 export const svt2deADiversiteComportementsAlimentairesChapter: CurriculumChapter = {
   id: 'seconde_a_svt_ch8_diversite_comportements_alimentaires',
@@ -2403,7 +2403,7 @@ export const svt2deADiversiteComportementsAlimentairesChapter: CurriculumChapter
           ],
           correctAnswerIndex: 1,
           explanation:
-            'Selon la définition officielle du cours de 2de A, l’habitude alimentaire est le choix récurrent et habituel d’aliments opéré par un groupe humain.'
+            'Par définition, l’habitude alimentaire est le choix récurrent et habituel d’aliments opéré par un groupe humain.'
         },
         {
           id: 'seconde_a_svt_ch8_p1_ex8',
@@ -2455,7 +2455,7 @@ Les habitudes alimentaires sont également modulées par l'héritage social :
         {
           name: 'Origines de la diversité alimentaire',
           formula: 'Diversité alimentaire = Nature des Sols + Climat & Végétation + Traditions sociologiques & Tabous',
-          note: 'Synthèse des 4 piliers explicatifs du programme officiel de SVT 2de A.'
+          note: 'Synthèse des 4 piliers explicatifs de SVT 2de A.'
         }
       ],
       keyRule:
@@ -2567,7 +2567,7 @@ Les habitudes alimentaires sont également modulées par l'héritage social :
 
 // ============================================================================
 // LEÇON 5 : LES HABITUDES ALIMENTAIRES ET LA SANTÉ DE L’HOMME
-// (Leçon 9 du programme officiel MENA Côte d'Ivoire)
+//
 // ============================================================================
 export const svt2deAHabitudesAlimentairesEtSanteChapter: CurriculumChapter = {
   id: 'seconde_a_svt_ch9_habitudes_alimentaires_et_sante',

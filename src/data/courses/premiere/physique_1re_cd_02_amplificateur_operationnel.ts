@@ -44,7 +44,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
       ],
       visualSchema: {
         type: 'geometry_svg',
-        title: 'Brochage standard à 8 bornes (encoche) et symbole de l’AO (p. 1)',
+        title: 'Brochage standard à 8 bornes (encoche) et symbole de l’AO',
         caption: 'Repérage normalisé des 8 pattes du boîtier et symbole électrique (E⁻, E⁺, ▷ ∞, S).',
         svgContent: `<svg viewBox="0 0 380 175" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-md mx-auto">
   <!-- DIP-8 package -->
@@ -118,7 +118,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p01_q1',
             type: 'mcq',
-            prompt: 'Complète correctement : « L’amplificateur opérationnel fait partie de la famille des … et se présente sous la forme d’un boîtier possédant … de branchement. » (Exercice 2 p. 6)',
+            prompt: 'Complète correctement : « L’amplificateur opérationnel fait partie de la famille des … et se présente sous la forme d’un boîtier possédant … de branchement. »',
             options: [
               'circuits intégrés / huit bornes',
               'dipôles passifs / deux bornes',
@@ -148,7 +148,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
               'Borne 1 pour E⁻ et borne 5 pour E⁺',
             ],
             correctAnswerIndex: 0,
-            explanation: 'Borne 2 = entrée inverseuse E⁻ ; Borne 3 = entrée non inverseuse E⁺ (p. 1).',
+            explanation: 'Borne 2 = entrée inverseuse E⁻ ; Borne 3 = entrée non inverseuse E⁺.',
           },
         },
         {
@@ -252,7 +252,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
       summary:
         'Lire la caractéristique U_s = f(U_d) de l’AO réel et de l’AO idéal, distinguer régime linéaire et saturation (±V_sat < ±V_CC).',
       conceptExplanation:
-        "La courbe $U_s = f(U_d)$ représente la **caractéristique de transfert** de l’AO.\n\n- **AO réel** (p. 2) : il possède deux régimes distincts :\n  - **Régime linéaire** (zone centrale très étroite, $|U_d| < \\varepsilon$) : $U_s$ est proportionnelle à $U_d$ :\n    $$U_s = G \\cdot U_d$$\n    où $G$ est le **gain différentiel** (très grand, typiquement $10^4$ à $10^6$).\n  - **Régime saturé** ($|U_d| \\ge \\varepsilon$) : $U_s$ reste bloquée à $+V_{\\text{sat}}$ (si $U_d > 0$) ou à $-V_{\\text{sat}}$ (si $U_d < 0$).\n    Les tensions $-V_{CC}$ et $+V_{CC}$ sont les tensions d’alimentation ; les tensions de saturation vérifient toujours :\n    $$|\\pm V_{\\text{sat}}| < |\\pm V_{CC}|$$\n    *(par exemple $V_{CC} = 15\\,\\mathrm{V}$ et $V_{\\text{sat}} \\approx 13\\text{ à }14\\,\\mathrm{V}$)*.\n- **AO idéal (parfait)** : son gain différentiel est **infini** ($G \\to \\infty$), donc la zone linéaire $\\varepsilon \\to 0$ est portée par l’axe vertical $U_d = 0$ :\n  - **Régime linéaire** : $U_d = 0$ et $|U_s| < V_{\\text{sat}}$ (amplificateur de tension) ;\n  - **Régime saturé** : $U_d \\ne 0 \\implies U_s = +V_{\\text{sat}}$ (si $U_d > 0$) ou $U_s = -V_{\\text{sat}}$ (si $U_d < 0$) (comparateur de tension).",
+        "La courbe $U_s = f(U_d)$ représente la **caractéristique de transfert** de l’AO.\n\n- **AO réel** : il possède deux régimes distincts :\n - **Régime linéaire** (zone centrale très étroite, $|U_d| < \\varepsilon$) : $U_s$ est proportionnelle à $U_d$ :\n $$U_s = G \\cdot U_d$$\n où $G$ est le **gain différentiel** (très grand, typiquement $10^4$ à $10^6$).\n - **Régime saturé** ($|U_d| \\ge \\varepsilon$) : $U_s$ reste bloquée à $+V_{\\text{sat}}$ (si $U_d > 0$) ou à $-V_{\\text{sat}}$ (si $U_d < 0$).\n Les tensions $-V_{CC}$ et $+V_{CC}$ sont les tensions d’alimentation ; les tensions de saturation vérifient toujours :\n $$|\\pm V_{\\text{sat}}| < |\\pm V_{CC}|$$\n *(par exemple $V_{CC} = 15\\,\\mathrm{V}$ et $V_{\\text{sat}} \\approx 13\\text{ à }14\\,\\mathrm{V}$)*.\n- **AO idéal (parfait)** : son gain différentiel est **infini** ($G \\to \\infty$), donc la zone linéaire $\\varepsilon \\to 0$ est portée par l’axe vertical $U_d = 0$ :\n - **Régime linéaire** : $U_d = 0$ et $|U_s| < V_{\\text{sat}}$ (amplificateur de tension) ;\n - **Régime saturé** : $U_d \\ne 0 \\implies U_s = +V_{\\text{sat}}$ (si $U_d > 0$) ou $U_s = -V_{\\text{sat}}$ (si $U_d < 0$) (comparateur de tension).",
       keyRule:
         'Pour un AO idéal : si U_d = 0 et |U_s| < V_sat ⇒ régime linéaire ; si U_d ≠ 0 ⇒ régime saturé avec U_s = +V_sat (U_d > 0) ou −V_sat (U_d < 0). On a toujours |V_sat| < |V_CC|.',
       formulas: [
@@ -269,7 +269,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
       ],
       visualSchema: {
         type: 'geometry_svg',
-        title: 'Caractéristique U_s = f(U_d) : AO réel vs AO idéal (p. 2)',
+        title: 'Caractéristique U_s = f(U_d) : AO réel vs AO idéal',
         caption: 'À gauche : AO réel (pente très forte G entre −ε et +ε). À droite : AO idéal (G infini : régime linéaire sur U_d = 0, saturé dès U_d ≠ 0).',
         svgContent: `<svg viewBox="0 0 380 185" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-md mx-auto">
   <defs>
@@ -311,7 +311,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
 </svg>`,
       },
       workedExample: {
-        title: 'Déterminer le régime de fonctionnement d’un AO idéal (Exercice 1–3 p. 6–7)',
+        title: 'Déterminer le régime de fonctionnement d’un AO idéal',
         statement:
           'Un AO idéal est alimenté sous $\\pm 15\\,\\mathrm{V}$ et possède $V_{\\text{sat}} = 13\\,\\mathrm{V}$. On mesure successivement : a) $U_d = 0\\,\\mathrm{V}$ et $U_s = -8\\,\\mathrm{V}$ ; b) $U_d = +0{,}5\\,\\mathrm{V}$. Quel est son régime et la valeur de $U_s$ ?',
         methodSteps: [
@@ -333,7 +333,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p02_q1',
             type: 'mcq',
-            prompt: 'Quelle phrase exprime correctement les deux rôles possibles d’un amplificateur opérationnel ? (Exercice 3 p. 7)',
+            prompt: 'Quelle phrase exprime correctement les deux rôles possibles d’un amplificateur opérationnel ?',
             options: [
               'Il peut fonctionner comme amplificateur de tension en régime linéaire et comme comparateur de tension en régime saturé',
               'Il fonctionne comme amplificateur en régime saturé et comme comparateur en régime linéaire',
@@ -413,7 +413,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           stepTheme: 'Rapport Us/Ue',
           stepTitle: 'Gain en tension d’un montage vs gain différentiel interne',
           paragraphText:
-            'En régime linéaire, l’AO est inséré dans un montage avec des résistances externes : on appelle **gain en tension** du montage le rapport $G = \\left|\\frac{U_s}{U_e}\\right|$ (Exercice 1 Q4 p. 6, à ne pas confondre avec le gain différentiel interne $\\infty$ de l’AO seul).',
+            'En régime linéaire, l’AO est inséré dans un montage avec des résistances externes : on appelle **gain en tension** du montage le rapport $G = \\left|\\frac{U_s}{U_e}\\right|$.',
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p02_q5',
             type: 'mcq',
@@ -430,11 +430,11 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           stepTheme: 'Exercice 1 p. 6',
           stepTitle: 'Déjouer les affirmations fausses sur l’AO en régime linéaire',
           paragraphText:
-            'Dans l’Exercice 1 (p. 6), trois pièges reviennent souvent : 1) les courants d’entrée sont **extrêmement faibles** ($i^+ = i^- = 0$), jamais élevés ; 2) en régime linéaire, $U_d = 0$ (pas $\\ne 0$) et $|U_s| < V_{\\text{sat}}$ (jamais $U_s > V_{\\text{sat}}$) ; 3) la résistance d’entrée entre $E^+$ et $E^-$ (et non « $E^+$ et $E^+$ » !) est infinie.',
+            'Dans l’Exercice 1, trois pièges reviennent souvent : 1) les courants d’entrée sont **extrêmement faibles** ($i^+ = i^- = 0$), jamais élevés ; 2) en régime linéaire, $U_d = 0$ (pas $\\ne 0$) et $|U_s| < V_{\\text{sat}}$ (jamais $U_s > V_{\\text{sat}}$) ; 3) la résistance d’entrée entre $E^+$ et $E^-$ (et non « $E^+$ et $E^+$ » !) est infinie.',
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p02_q6',
             type: 'mcq',
-            prompt: 'Parmi ces affirmations extraites de l’Exercice 1 (p. 6), laquelle est **VRAIE** ?',
+            prompt: 'Parmi ces affirmations extraites de l’Exercice 1, laquelle est **VRAIE** ?',
             options: [
               'En régime linéaire idéal, les courants aux entrées sont négligeables : i⁺ = i⁻ = 0 et |U_s| < V_sat',
               'Dans un AO, les intensités des courants d’entrée sont très élevées',
@@ -458,7 +458,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
       summary:
         'Appliquer les 3 conditions du régime linéaire idéal (i⁺ = i⁻ = 0, U_d = 0, |U_s| < V_sat) et analyser le montage suiveur.',
       conceptExplanation:
-        "Pour étudier tout montage à amplificateur opérationnel idéal fonctionnant en **régime linéaire** (ce qui exige en pratique une boucle de rétroaction de la sortie $S$ vers l’entrée inverseuse $E^-$), on pose systématiquement les trois hypothèses fondamentales (p. 2 & p. 5) :\n\n1. **Résistance d’entrée infinie $\\implies$ courants d’entrée nuls** :\n   $$i^+ = i^- = 0$$\n2. **Gain interne infini $\\implies$ entrées au même potentiel** :\n   $$U_d = U_+ - U_- = 0 \\iff V^+ = V^-$$\n3. **Absence de saturation** :\n   $$|U_s| < V_{\\text{sat}}$$\n\n- **Montage suiveur** (p. 2) : on relie directement la sortie $S$ à l’entrée inverseuse $E^-$ (fil de bouclage sans résistance) et on applique la tension d’entrée $U_e$ à l’entrée non inverseuse $E^+$.\n  - Comme $U_+ = U_e$, $U_- = U_s$ et $U_d = U_+ - U_- = 0$, on obtient :\n    $$U_s = U_e$$\n  - La tension de sortie **suit** exactement la tension d’entrée ($G = 1$), mais le circuit ne prélève aucun courant sur la source ($i^+ = 0$) : il sert d’**adaptateur d’impédance** (exemple du **voltmètre électronique**).",
+        "Pour étudier tout montage à amplificateur opérationnel idéal fonctionnant en **régime linéaire** (ce qui exige en pratique une boucle de rétroaction de la sortie $S$ vers l’entrée inverseuse $E^-$), on pose systématiquement les trois hypothèses fondamentales :\n\n1. **Résistance d’entrée infinie $\\implies$ courants d’entrée nuls** :\n $$i^+ = i^- = 0$$\n2. **Gain interne infini $\\implies$ entrées au même potentiel** :\n $$U_d = U_+ - U_- = 0 \\iff V^+ = V^-$$\n3. **Absence de saturation** :\n $$|U_s| < V_{\\text{sat}}$$\n\n- **Montage suiveur** : on relie directement la sortie $S$ à l’entrée inverseuse $E^-$ (fil de bouclage sans résistance) et on applique la tension d’entrée $U_e$ à l’entrée non inverseuse $E^+$.\n - Comme $U_+ = U_e$, $U_- = U_s$ et $U_d = U_+ - U_- = 0$, on obtient :\n $$U_s = U_e$$\n - La tension de sortie **suit** exactement la tension d’entrée ($G = 1$), mais le circuit ne prélève aucun courant sur la source ($i^+ = 0$) : il sert d’**adaptateur d’impédance** (exemple du **voltmètre électronique**).",
       keyRule:
         'Régime linéaire idéal : i⁺ = i⁻ = 0, U_d = 0 (donc V⁺ = V⁻) et |U_s| < V_sat. Pour le montage suiveur (S relié à E⁻, U_e sur E⁺) : U_s = U_e.',
       formulas: [
@@ -536,7 +536,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           stepTheme: 'Schéma & relation',
           stepTitle: 'Reconnaître un montage suiveur',
           paragraphText:
-            'Dans le montage suiveur (p. 2), la borne de sortie $S$ est reliée directement à l’entrée inverseuse $E^-$ (sans résistance) et la tension d’entrée $U_e$ est appliquée à $E^+$. Comme $U_d = 0$, on a directement $U_s = U_e$.',
+            'Dans le montage suiveur, la borne de sortie $S$ est reliée directement à l’entrée inverseuse $E^-$ (sans résistance) et la tension d’entrée $U_e$ est appliquée à $E^+$. Comme $U_d = 0$, on a directement $U_s = U_e$.',
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p03_q3',
             type: 'mcq',
@@ -557,7 +557,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p03_q4',
             type: 'mcq',
-            prompt: 'Quel appareil du cours illustre directement l’intérêt du montage suiveur ?',
+            prompt: 'Quel appareil illustre directement l’intérêt du montage suiveur ?',
             options: [
               'Le voltmètre électronique',
               'Le moteur synchrone triphasé',
@@ -565,7 +565,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
               'La cellule photovoltaïque',
             ],
             correctAnswerIndex: 0,
-            explanation: 'Le PDF p. 2 mentionne le voltmètre électronique comme exemple d’application du montage suiveur.',
+            explanation: 'On cite notamment le voltmètre électronique comme exemple d’application du montage suiveur.',
           },
         },
         {
@@ -620,7 +620,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
       summary:
         'Démontrer la relation U_s = -(R₂/R₁) U_e, calculer le gain en tension G = R₂/R₁ et exploiter la courbe U_s = f(U_e) d’un TP.',
       conceptExplanation:
-        "Dans le **montage amplificateur inverseur** (p. 3, Situation Montage 1 p. 5, Exercice 4 p. 7–8), la tension d’entrée $U_e$ est appliquée à l’entrée **inverseuse** $E^-$ (nœud $A$) à travers une résistance $R_1$, la sortie $S$ est rebouclée sur $E^-$ par une résistance $R_2$, et l’entrée non inverseuse $E^+$ est reliée à la masse $M$.\n\n- **Démonstration (AO idéal en régime linéaire : $i^- = 0$ et $U_d = 0$)** :\n  - Loi des nœuds en $A$ : $I_1 = I_2 + i^- \\implies I_1 = I_2$ (même intensité dans $R_1$ et $R_2$).\n  - Maille d’entrée $MNABM$ : $U_e - R_1 I_1 + U_d = 0 \\implies U_e = R_1 I_1$.\n  - Maille de sortie $MASBM$ : $U_s + R_2 I_2 + U_d = 0 \\implies U_s = -R_2 I_2$.\n  - Par quotient (avec $I_1 = I_2$) :\n    $$U_s = -\\frac{R_2}{R_1}\\,U_e$$\n- **Signification** : le signe `−` indique que $U_s$ et $U_e$ sont de **signes opposés** (en opposition de phase pour un signal alternatif) : d’où le nom *inverseur*.\n- **Gain en tension** :\n  $$G = \\left|\\frac{U_s}{U_e}\\right| = \\frac{R_2}{R_1}$$\n  Sur le graphe expérimental $U_s = f(U_e)$ (Exercice 4 p. 7–8, avec $R_1 = 1\\,\\mathrm{k}\\Omega$ et $R_2 = 2\\,\\mathrm{k}\\Omega$), on obtient une droite passant par l’origine de pente négative $\\frac{\\Delta U_s}{\\Delta U_e} = -2 = -\\frac{R_2}{R_1}$.",
+        "Dans le **montage amplificateur inverseur**, la tension d’entrée $U_e$ est appliquée à l’entrée **inverseuse** $E^-$ (nœud $A$) à travers une résistance $R_1$, la sortie $S$ est rebouclée sur $E^-$ par une résistance $R_2$, et l’entrée non inverseuse $E^+$ est reliée à la masse $M$.\n\n- **Démonstration (AO idéal en régime linéaire : $i^- = 0$ et $U_d = 0$)** :\n - Loi des nœuds en $A$ : $I_1 = I_2 + i^- \\implies I_1 = I_2$ (même intensité dans $R_1$ et $R_2$).\n - Maille d’entrée $MNABM$ : $U_e - R_1 I_1 + U_d = 0 \\implies U_e = R_1 I_1$.\n - Maille de sortie $MASBM$ : $U_s + R_2 I_2 + U_d = 0 \\implies U_s = -R_2 I_2$.\n - Par quotient (avec $I_1 = I_2$) :\n $$U_s = -\\frac{R_2}{R_1}\\,U_e$$\n- **Signification** : le signe `−` indique que $U_s$ et $U_e$ sont de **signes opposés** (en opposition de phase pour un signal alternatif) : d’où le nom *inverseur*.\n- **Gain en tension** :\n $$G = \\left|\\frac{U_s}{U_e}\\right| = \\frac{R_2}{R_1}$$\n Sur le graphe expérimental $U_s = f(U_e)$, on obtient une droite passant par l’origine de pente négative $\\frac{\\Delta U_s}{\\Delta U_e} = -2 = -\\frac{R_2}{R_1}$.",
       keyRule:
         'Montage inverseur (E⁺ à la masse, U_e via R₁ sur E⁻, R₂ entre E⁻ et S) : U_s = −(R₂ / R₁) · U_e et gain G = |U_s / U_e| = R₂ / R₁.',
       formulas: [
@@ -637,7 +637,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
       ],
       visualSchema: {
         type: 'geometry_svg',
-        title: 'Schéma du montage amplificateur inverseur (p. 3 & Ex. 4 p. 7)',
+        title: 'Schéma du montage amplificateur inverseur',
         caption: 'E⁺ est à la masse M ; I₁ = I₂ car i⁻ = 0 ; V_A = V_B = 0 V ⇒ U_s = −(R₂/R₁) U_e.',
         svgContent: `<svg viewBox="0 0 380 185" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-md mx-auto">
   <defs>
@@ -695,7 +695,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
 </svg>`,
       },
       workedExample: {
-        title: 'Exploitation du TP amplificateur inverseur (Exercice 4 p. 7–8)',
+        title: 'Exploitation du TP amplificateur inverseur',
         statement:
           'Avec $R_1 = 1\\,\\mathrm{k}\\Omega$ et $R_2 = 2\\,\\mathrm{k}\\Omega$, les mesures donnent pour $U_e = 1\\,\\mathrm{V} \\to U_s = -2\\,\\mathrm{V}$ et pour $U_e = 4\\,\\mathrm{V} \\to U_s = -7{,}8\\,\\mathrm{V}$. Comparer la pente $\\frac{\\Delta U_s}{\\Delta U_e}$ au rapport $\\frac{R_2}{R_1}$.',
         methodSteps: [
@@ -735,7 +735,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           stepTheme: 'Calcul direct',
           stepTitle: 'Calculer U_s lorsque R₂ = 2 R₁',
           paragraphText:
-            'Dans l’activité d’application (p. 3), on a $R_2 = 2R_1$ et $U_e = +2\\,\\mathrm{V}$ : alors $U_s = -\\frac{2R_1}{R_1} U_e = -2 U_e = -2\\times 2 = -4\\,\\mathrm{V}$.',
+            'Dans l’activité d’application, on a $R_2 = 2R_1$ et $U_e = +2\\,\\mathrm{V}$ : alors $U_s = -\\frac{2R_1}{R_1} U_e = -2 U_e = -2\\times 2 = -4\\,\\mathrm{V}$.',
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p04_q2',
             type: 'mcq',
@@ -846,7 +846,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
       summary:
         'Démontrer U_s = ((R₁ + R₂)/R₁) U_e, calculer G = 1 + R₂/R₁ et départager un montage inverseur d’un non inverseur.',
       conceptExplanation:
-        "Dans le **montage amplificateur non inverseur** (p. 3, Situation Montage 2 p. 5–6), on souhaite amplifier $U_e$ **en conservant son signe** ($U_s$ et $U_e$ de même signe).\n\n- **Branchement** : $U_e$ est appliquée directement à l’entrée **non inverseuse** $E^+$ ; l’entrée inverseuse $E^-$ (nœud $A$) est reliée à la masse $M$ par $R_1$ et à la sortie $S$ par $R_2$.\n- **Démonstration (AO idéal en régime linéaire : $i^- = 0$, $U_d = 0$)** :\n  - Le même courant $i$ circule dans $R_2$ et $R_1$ (pont diviseur de tension).\n  - Maille d’entrée : $V_A = V^+ = U_e$, donc aux bornes de $R_1$, la tension vaut $U_{AM} = U_e$.\n  - Comme $R_1$ et $R_2$ sont parcourues par le même courant $i = \\frac{U_e}{R_1}$ (dirigé de $S$ vers $M$), on a :\n    $$U_s = (R_1 + R_2)\\,i = (R_1 + R_2)\\frac{U_e}{R_1} = \\frac{R_1 + R_2}{R_1}\\,U_e = \\left(1 + \\frac{R_2}{R_1}\\right)U_e$$\n  *(Remarque : dans le PDF p. 5, la ligne intermédiaire imprime par erreur `Us = -(R1+R2)i` en inversant le sens du courant, mais la relation encadrée $U_s = \\frac{R_1+R_2}{R_1}U_e$ est bien positive.)*\n- **Gain en tension** :\n  $$G = \\frac{U_s}{U_e} = 1 + \\frac{R_2}{R_1} > 1$$",
+        "Dans le **montage amplificateur non inverseur**, on souhaite amplifier $U_e$ **en conservant son signe** ($U_s$ et $U_e$ de même signe).\n\n- **Branchement** : $U_e$ est appliquée directement à l’entrée **non inverseuse** $E^+$ ; l’entrée inverseuse $E^-$ (nœud $A$) est reliée à la masse $M$ par $R_1$ et à la sortie $S$ par $R_2$.\n- **Démonstration (AO idéal en régime linéaire : $i^- = 0$, $U_d = 0$)** :\n - Le même courant $i$ circule dans $R_2$ et $R_1$ (pont diviseur de tension).\n - Maille d’entrée : $V_A = V^+ = U_e$, donc aux bornes de $R_1$, la tension vaut $U_{AM} = U_e$.\n - Comme $R_1$ et $R_2$ sont parcourues par le même courant $i = \\frac{U_e}{R_1}$ (dirigé de $S$ vers $M$), on a :\n $$U_s = (R_1 + R_2)\\,i = (R_1 + R_2)\\frac{U_e}{R_1} = \\frac{R_1 + R_2}{R_1}\\,U_e = \\left(1 + \\frac{R_2}{R_1}\\right)U_e$$\n *(Remarque : en référence, la ligne intermédiaire imprime par erreur `Us = -(R1+R2)i` en inversant le sens du courant, mais la relation encadrée $U_s = \\frac{R_1+R_2}{R_1}U_e$ est bien positive.)*\n- **Gain en tension** :\n $$G = \\frac{U_s}{U_e} = 1 + \\frac{R_2}{R_1} > 1$$",
       keyRule:
         'Montage non inverseur (U_e sur E⁺, R₁ entre E⁻ et la masse, R₂ entre E⁻ et S) : U_s = (1 + R₂ / R₁) · U_e et gain G = 1 + R₂ / R₁ > 1.',
       formulas: [
@@ -862,7 +862,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
         },
       ],
       workedExample: {
-        title: 'Départager deux schémas en TP (Situation d’évaluation p. 5–6)',
+        title: 'Départager deux schémas en TP',
         statement:
           'Pour réaliser un amplificateur non inverseur, on hésite entre le Montage 1 ($E^+$ à la masse, $U_e$ sur $E^-$ via $R_1$) et le Montage 2 ($U_e$ sur $E^+$, $R_1$ entre $E^-$ et la masse, $R_2$ entre $E^-$ et $S$). On prend $R_1 = 2\\,\\mathrm{k}\\Omega$, $R_2 = 4\\,\\mathrm{k}\\Omega$ et $U_e = +3\\,\\mathrm{V}$. Quel montage choisir et que vaut $U_s$ ?',
         methodSteps: [
@@ -892,7 +892,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
               'G = R₁ / (R₁ + R₂)',
             ],
             correctAnswerIndex: 0,
-            explanation: 'U_s = ((R₁ + R₂) / R₁) U_e = (1 + R₂ / R₁) U_e, donc G = 1 + R₂ / R₁ (p. 3).',
+            explanation: 'U_s = ((R₁ + R₂) / R₁) U_e = (1 + R₂ / R₁) U_e, donc G = 1 + R₂ / R₁.',
           },
         },
         {
@@ -902,7 +902,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           stepTheme: 'Application R₂ = 2 R₁',
           stepTitle: 'Calcul du gain et de U_s pour R₂ = 2 R₁',
           paragraphText:
-            'Dans l’activité d’application (p. 3), on pose $R_2 = 2R_1$ : le gain en tension vaut alors $G = 1 + \\frac{2R_1}{R_1} = 1 + 2 = 3$ (alors que l’inverseur avec les mêmes résistances a un gain de $2$).',
+            'Dans l’activité d’application, on pose $R_2 = 2R_1$ : le gain en tension vaut alors $G = 1 + \\frac{2R_1}{R_1} = 1 + 2 = 3$ (alors que l’inverseur avec les mêmes résistances a un gain de $2$).',
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p05_q2',
             type: 'mcq',
@@ -928,7 +928,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p05_q3',
             type: 'mcq',
-            prompt: 'Comment reconnaît-on immédiatement un montage **non inverseur** sur un schéma (Situation p. 5) ?',
+            prompt: 'Comment reconnaît-on immédiatement un montage **non inverseur** sur un schéma ?',
             options: [
               'La tension d’entrée U_e est appliquée sur E⁺ tandis que R₁ relie E⁻ à la masse',
               'L’entrée E⁺ est reliée directement à la masse',
@@ -1008,7 +1008,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
       summary:
         'Établir la loi du sommateur inverseur U_s = −R₃(U₁/R₁ + U₂/R₂) et prévoir les basculements +V_sat / −V_sat du comparateur en régime saturé.',
       conceptExplanation:
-        "Deux autres montages essentiels du programme exploitent l’AO en régime linéaire (sommateur) et en régime saturé (comparateur).\n\n- **Montage sommateur inverseur (régime linéaire)** (p. 4 & Exercice 5 p. 8–9) : deux tensions $U_1$ et $U_2$ sont appliquées respectivement via $R_1$ et $R_2$ sur le nœud $A$ relié à $E^-$ ; $R_3$ assure la contre-réaction entre $A$ et $S$ ; $E^+$ est à la masse $M$.\n  - Comme $V_A = V_B = 0\\,\\mathrm{V}$ ($U_d = 0$), on a $i_1 = \\frac{U_1}{R_1}$ et $i_2 = \\frac{U_2}{R_2}$.\n  - Loi des nœuds en $A$ ($i^- = 0$) : $i_3 = i_1 + i_2$, avec $U_s = -R_3 i_3$ :\n    $$U_s = -R_3\\left(\\frac{U_1}{R_1} + \\frac{U_2}{R_2}\\right)$$\n  - **Cas particulier ($R_1 = R_2 = R_3 = R$)** : $U_s = -(U_1 + U_2)$, soit exactement l’opposée de la somme des entrées.\n- **Montage comparateur (régime saturé)** (p. 4) : il n’y a **pas de rétroaction sur $E^-$** (boucle ouverte) : $U_d \\ne 0$, donc $U_s$ ne peut prendre que deux valeurs ($+V_{\\text{sat}}$ ou $-V_{\\text{sat}}$).\n  - Si $U_1$ (tension de référence) est sur $E^-$ et $U_2$ (tension à comparer) est sur $E^+$, alors $U_d = U_2 - U_1$ :\n    - Si $U_2 > U_1 \\implies U_d > 0 \\implies U_s = +V_{\\text{sat}}$ ;\n    - Si $U_2 < U_1 \\implies U_d < 0 \\implies U_s = -V_{\\text{sat}}$.",
+        "Deux autres montages essentiels du programme exploitent l’AO en régime linéaire (sommateur) et en régime saturé (comparateur).\n\n- **Montage sommateur inverseur (régime linéaire)** : deux tensions $U_1$ et $U_2$ sont appliquées respectivement via $R_1$ et $R_2$ sur le nœud $A$ relié à $E^-$ ; $R_3$ assure la contre-réaction entre $A$ et $S$ ; $E^+$ est à la masse $M$.\n - Comme $V_A = V_B = 0\\,\\mathrm{V}$ ($U_d = 0$), on a $i_1 = \\frac{U_1}{R_1}$ et $i_2 = \\frac{U_2}{R_2}$.\n - Loi des nœuds en $A$ ($i^- = 0$) : $i_3 = i_1 + i_2$, avec $U_s = -R_3 i_3$ :\n $$U_s = -R_3\\left(\\frac{U_1}{R_1} + \\frac{U_2}{R_2}\\right)$$\n - **Cas particulier ($R_1 = R_2 = R_3 = R$)** : $U_s = -(U_1 + U_2)$, soit exactement l’opposée de la somme des entrées.\n- **Montage comparateur (régime saturé)** : il n’y a **pas de rétroaction sur $E^-$** (boucle ouverte) : $U_d \\ne 0$, donc $U_s$ ne peut prendre que deux valeurs ($+V_{\\text{sat}}$ ou $-V_{\\text{sat}}$).\n - Si $U_1$ (tension de référence) est sur $E^-$ et $U_2$ (tension à comparer) est sur $E^+$, alors $U_d = U_2 - U_1$ :\n - Si $U_2 > U_1 \\implies U_d > 0 \\implies U_s = +V_{\\text{sat}}$ ;\n - Si $U_2 < U_1 \\implies U_d < 0 \\implies U_s = -V_{\\text{sat}}$.",
       keyRule:
         'Sommateur inverseur (linéaire) : U_s = −R₃(U₁/R₁ + U₂/R₂). Comparateur (boucle ouverte, saturé) : U_s = +V_sat si V⁺ > V⁻ (U_d > 0) et −V_sat si V⁺ < V⁻ (U_d < 0).',
       formulas: [
@@ -1024,7 +1024,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
         },
       ],
       workedExample: {
-        title: 'Sommateur à trois résistances égales (Exercice 5 p. 8–9)',
+        title: 'Sommateur à trois résistances égales',
         statement:
           'Dans un montage sommateur inverseur, toutes les résistances sont égales à $R = 250\\,\\Omega$. On applique $U_1 = 4\\,\\mathrm{V}$ et $U_2 = 6\\,\\mathrm{V}$ (avec $V_{\\text{sat}} = 14\\,\\mathrm{V}$). Calculer $U_s$.',
         methodSteps: [
@@ -1043,7 +1043,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           stepTheme: 'Loi générale',
           stepTitle: 'Formule du montage sommateur inverseur',
           paragraphText:
-            'Dans le montage sommateur inverseur (p. 4), la loi des nœuds à l’entrée $E^-$ ($i_3 = i_1 + i_2$ avec $V_A = 0\\,\\mathrm{V}$) conduit à la relation $U_s = -R_3\\left(\\frac{U_1}{R_1} + \\frac{U_2}{R_2}\\right)$.',
+            'Dans le montage sommateur inverseur, la loi des nœuds à l’entrée $E^-$ ($i_3 = i_1 + i_2$ avec $V_A = 0\\,\\mathrm{V}$) conduit à la relation $U_s = -R_3\\left(\\frac{U_1}{R_1} + \\frac{U_2}{R_2}\\right)$.',
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p06_q1',
             type: 'mcq',
@@ -1060,7 +1060,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           stepTheme: 'Cas R₁ = R₂ = R₃ = R',
           stepTitle: 'Sommateur simple lorsque les trois résistances sont égales',
           paragraphText:
-            'Lorsque $R_1 = R_2 = R_3 = R$ (Exercice 5 p. 8–9, $R = 250\\,\\Omega$), le facteur $R$ se simplifie : $U_s = -(U_1 + U_2)$, soit $-10\\,\\mathrm{V}$ pour $U_1 = 4\\,\\mathrm{V}$ et $U_2 = 6\\,\\mathrm{V}$.',
+            'Lorsque $R_1 = R_2 = R_3 = R$, le facteur $R$ se simplifie : $U_s = -(U_1 + U_2)$, soit $-10\\,\\mathrm{V}$ pour $U_1 = 4\\,\\mathrm{V}$ et $U_2 = 6\\,\\mathrm{V}$.',
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p06_q2',
             type: 'mcq',
@@ -1072,7 +1072,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
               'U_s = −250(U₁ + U₂) = −2 500 V',
             ],
             correctAnswerIndex: 0,
-            explanation: 'Quand les trois résistances valent R, U_s = −R(U₁/R + U₂/R) = −(U₁ + U₂) = −10 V (Exercice 5 p. 9).',
+            explanation: 'Quand les trois résistances valent R, U_s = −R(U₁/R + U₂/R) = −(U₁ + U₂) = −10 V.',
           },
         },
         {
@@ -1082,7 +1082,7 @@ export const PHYSIQUE_1RE_CD_L02_AMPLIFICATEUR_OPERATIONNEL: CurriculumChapter =
           stepTheme: 'Boucle ouverte',
           stepTitle: 'Principe du montage comparateur en régime saturé',
           paragraphText:
-            'Dans un comparateur simple (p. 4), aucune liaison n’existe entre $S$ et $E^-$ : l’AO fonctionne en **régime saturé** ($U_d \\ne 0$). On compare $U_2$ (appliquée sur $E^+$) à la tension de référence $U_1$ (appliquée sur $E^-$) via $U_d = U_2 - U_1$.',
+            'Dans un comparateur simple, aucune liaison n’existe entre $S$ et $E^-$ : l’AO fonctionne en **régime saturé** ($U_d \\ne 0$). On compare $U_2$ (appliquée sur $E^+$) à la tension de référence $U_1$ (appliquée sur $E^-$) via $U_d = U_2 - U_1$.',
           exercise: {
             id: 'premiere_c_physique_l02_amplificateur_operationnel_p06_q3',
             type: 'mcq',

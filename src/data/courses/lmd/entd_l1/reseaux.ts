@@ -12,7 +12,7 @@ const makePoint = (
 });
 
 // ============================================================================
-// RÉSEAUX & SERVICES — ENTD LICENCE 1 (ESATIC)
+// RÉSEAUX & SERVICES — ENTD LICENCE 1
 // Sources : Cours_RSX_Chapitre_1, 2, 3 (début & suite/fin), 4
 // ============================================================================
 
@@ -27,7 +27,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 1,
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Réseaux & Services (Chapitres 1 et 2)',
+    source: 'ENTD L1 — Réseaux & Services',
     title: 'Chapitre 1 — Généralités sur les réseaux et réseaux locaux (LAN)',
     summary:
       'Classifications (PAN/LAN/MAN/WAN, Client-Serveur/P2P), composants physiques et logiques, topologies physiques (bus, anneau, étoile, maillée) et méthodes d’accès (CSMA/CD, CSMA/CA, Token Ring).',
@@ -50,7 +50,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           '• **Les 3 composants fondamentaux** : (1) **Périphériques** finaux/terminaux (PC, smartphone, imprimante) et intermédiaires (switch, routeur, pare-feu) ; (2) **Supports de transmission** (cuivre/impulsions électriques, fibre optique/lumière, sans-fil/ondes radio) ; (3) **Services et processus** logiciels.',
         formulas: [
           {
-            name: 'Échelle des étendues réseau (Cours Ch. 1)',
+            name: 'Échelle des étendues réseau',
             formula: '\\text{PAN } (\\leqslant 10\\text{ m}) < \\text{LAN } (10\\text{ m} - 5\\text{ km}) < \\text{MAN } (5 - 50\\text{ km}) < \\text{WAN } (> 50\\text{ km})',
             note: 'RITER (Côte d’Ivoire), WACREN (Afrique de l’Ouest/Centre) et Internet sont des WAN.',
           },
@@ -60,7 +60,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Classification de l’infrastructure d’une banque et des universités ivoiriennes',
           statement:
-            'Classer selon leur étendue et leurs composants : (1) liaison Bluetooth entre un smartphone et une oreillette ; (2) réseau interne du campus de l’ESATIC ; (3) interconnexion des agences bancaires dans la ville d’Abidjan ; (4) le réseau RITER reliant les universités de Côte d’Ivoire.',
+            'Classer selon leur étendue et leurs composants : (1) liaison Bluetooth entre un smartphone et une oreillette ; (2) réseau interne du campus universitaire ; (3) interconnexion des agences bancaires dans la ville d’Abidjan ; (4) le réseau RITER reliant les universités de Côte d’Ivoire.',
           methodSteps: [
             '(1) Distance $< 10$ m, équipements personnels sans fil → **WPAN** (PAN sans fil).',
             '(2) Réseau privé d’un campus/bâtiment ($< 5$ km) → **LAN** (réseau local).',
@@ -78,7 +78,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'blue',
             stepTitle: 'PAN, LAN, MAN et WAN',
             paragraphText:
-              'La classification par étendue distingue : PAN ($\\leqslant 10$ m), LAN ($10$ m à $5$ km), MAN ($5$ km à $50$ km, échelle d’une ville) et WAN (pays, continents). Le RITER (réseau des universités ivoiriennes) et le WACREN sont des exemples de WAN cités dans le cours.',
+              'La classification par étendue distingue : PAN ($\\leqslant 10$ m), LAN ($10$ m à $5$ km), MAN ($5$ km à $50$ km, échelle d’une ville) et WAN (pays, continents). Le RITER (réseau des universités ivoiriennes) et le WACREN sont des exemples de WAN cités.',
             exercise: {
               id: 'lmd_entd_l1_reseaux_ch1_p1_q1',
               type: 'mcq',
@@ -178,7 +178,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 1,
               explanation:
-                'Le Chapitre 1 (p. 17) identifie exactement ces 3 piliers : périphériques, supports de transmission, et services/processus.',
+                'Le Chapitre 1 identifie exactement ces 3 piliers : périphériques, supports de transmission, et services/processus.',
             },
           },
           {
@@ -192,7 +192,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_reseaux_ch1_p1_q6',
               type: 'mcq',
-              prompt: 'Que désigne le sigle **RITER** cité dans le cours de Réseaux à l’ESATIC ?',
+              prompt: 'Que désigne le sigle **RITER** en Côte d’Ivoire ?',
               options: [
                 'Un protocole de routage sans fil.',
                 'Un modèle de câble coaxial épais.',
@@ -376,7 +376,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 1,
               explanation:
-                'Récapitulatif des normes IEEE du cours : 802.2 = LLC, 802.3 = Ethernet (CSMA/CD), 802.4 = Bus à jeton, 802.5 = Token Ring, 802.11 = Wi-Fi.',
+                'Récapitulatif des principales normes IEEE : 802.2 = LLC, 802.3 = Ethernet (CSMA/CD), 802.4 = Bus à jeton, 802.5 = Token Ring, 802.11 = Wi-Fi.',
             },
           },
         ],
@@ -394,7 +394,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 2,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Réseaux & Services (Chapitre 3 : Normes ISO et IEEE)',
+    source: 'ENTD L1 — Réseaux & Services',
     title: 'Chapitre 2 — Protocoles, codage, modèle OSI et normes IEEE 802',
     summary:
       'Codage binaire (ASCII, EBCDIC, Unicode), encapsulation, segmentation, synchronisation, les 7 couches du modèle OSI (rôles, PDU, équipements) et sous-couches LLC/MAC (IEEE 802.2 / 802.3).',
@@ -627,7 +627,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 0,
               explanation:
-                'D’après le Chapitre 3 (p. 67), les couches hautes (logicielles) regroupent les couches 5, 6 et 7, et les couches basses (matérielles) les couches 1, 2, 3 et 4.',
+                'D’après le Chapitre 3, les couches hautes (logicielles) regroupent les couches 5, 6 et 7, et les couches basses (matérielles) les couches 1, 2, 3 et 4.',
             },
           },
           {
@@ -872,7 +872,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 1,
               explanation:
-                'D’après le Chapitre 3 (p. 88), la taille d’une trame Ethernet est de $64$ octets minimum et $1518$ octets maximum.',
+                'D’après le Chapitre 3, la taille d’une trame Ethernet est de $64$ octets minimum et $1518$ octets maximum.',
             },
           },
           {
@@ -918,7 +918,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 0,
               explanation:
-                'Le Chapitre 3 (p. 84) indique explicitement qu’Ethernet couvre la couche physique et la sous-couche MAC du modèle OSI.',
+                'Le Chapitre 3 indique explicitement qu’Ethernet couvre la couche physique et la sous-couche MAC du modèle OSI.',
             },
           },
         ],
@@ -936,7 +936,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 3,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Réseaux & Services (Chapitre 4 : Modèle TCP/IP)',
+    source: 'ENTD L1 — Réseaux & Services',
     title: 'Chapitre 3 — Modèle TCP/IP, protocole IP et adressage IPv4',
     summary:
       'Les 4 couches TCP/IP (Accès réseau, Internet, Transport TCP/UDP, Application), propriétés du protocole IP, structure IPv4 (32 bits), masques contigus, classes A/B/C/D/E, adresses privées et adresses spéciales.',
@@ -998,7 +998,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 1,
               explanation:
-                'Le Chapitre 4 (p. 92–94) définit les 4 couches du modèle TCP/IP : Accès réseau, Internet, Transport et Application.',
+                'Le Chapitre 4 définit les 4 couches du modèle TCP/IP : Accès réseau, Internet, Transport et Application.',
             },
           },
           {
@@ -1108,7 +1108,7 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 2,
               explanation:
-                'Le Chapitre 4 (p. 96–97) précise que le protocole IP est responsable de la fragmentation des données si nécessaire et de leur réassemblage à la réception.',
+                'Le Chapitre 4 précise que le protocole IP est responsable de la fragmentation des données si nécessaire et de leur réassemblage à la réception.',
             },
           },
         ],
@@ -1135,12 +1135,12 @@ export const RESEAUX_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Espace d’adressage IPv4 et octets valides',
             formula: '2^{32} = 4\\,294\\,967\\,296 \\text{ adresses}, \\qquad \\text{chaque octet } \\in [0, 255]',
-            note: 'Ex. du cours : 192.168.355.20 est INVALIDE car 355 > 255.',
+            note: 'Exemple : 192.168.355.20 est INVALIDE car 355 > 255.',
           },
           {
             name: 'Octets valides dans un masque contigu',
             formula: '\\{0,\\ 128,\\ 192,\\ 224,\\ 240,\\ 248,\\ 252,\\ 254,\\ 255\\}',
-            note: 'Ex. invalides du cours : 255.128.255.0 et 255.0.224.0 (les bits à 1 ne sont pas contigus !).',
+            note: 'Exemples invalides : 255.128.255.0 et 255.0.224.0 (les bits à 1 ne sont pas contigus !).',
           },
         ],
         keyRule:

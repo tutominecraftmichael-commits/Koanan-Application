@@ -78,7 +78,7 @@ export const PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE: CurriculumChapter
         caption: 'En convention récepteur, U_AB et I sont de sens contraires et toute la puissance U·I est dissipée par effet Joule.',
       },
       workedExample: {
-        title: 'Intensité dans un résistor chauffant (Activité p. 2)',
+        title: 'Intensité dans un résistor chauffant',
         statement:
           'Un conducteur ohmique de résistance $R = 20\\,\\Omega$ dissipe une énergie thermique $W = 540\\,\\mathrm{J}$ pendant $\\Delta t = 5\\,\\text{min}$. Calculer l’intensité $I$ du courant qui le traverse.',
         methodSteps: [
@@ -252,7 +252,7 @@ export const PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE: CurriculumChapter
         caption: 'Caractéristique U_PN(I) décroissante : l’ordonnée à l’origine vaut e et la pente vaut −r.',
       },
       workedExample: {
-        title: 'Bilan de puissance d’un accumulateur (Ex 3 p. 7)',
+        title: 'Bilan de puissance d’un accumulateur',
         statement:
           'Un générateur a pour équation caractéristique $U_{PN} = -0{,}01\\,I + 2$. Calculer sa tension aux bornes, sa puissance disponible et ses pertes internes lorsqu’il débite $I = 10\\,\\mathrm{A}$.',
         methodSteps: [
@@ -330,7 +330,7 @@ export const PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE: CurriculumChapter
           exercise: {
             id: 'physique_1re_cd_l05_p02_q04',
             type: 'mcq',
-            prompt: 'Dans la situation d’évaluation du cours, un générateur ($E = 120\\,\\mathrm{V}$, $r \\approx 0$) débite $I = 3\\,\\mathrm{A}$ pendant $2\\,\\text{h}$. Quelle énergie électrique totale fournit-il ?',
+            prompt: 'Dans une situation concrète, un générateur ($E = 120\\,\\mathrm{V}$, $r \\approx 0$) débite $I = 3\\,\\mathrm{A}$ pendant $2\\,\\text{h}$. Quelle énergie électrique totale fournit-il ?',
             options: ['$2{,}592\\,\\mathrm{MJ}$', '$360\\,\\mathrm{J}$', '$720\\,\\mathrm{kJ}$', '$1{,}296\\,\\mathrm{MJ}$'],
             correctAnswerIndex: 0,
             explanation: '$t = 2 \\times 3\\,600 = 7\\,200\\,\\mathrm{s}$, donc $E = E\\,I\\,t = 120 \\times 3 \\times 7\\,200 = 2\\,592\\,000\\,\\mathrm{J} \\approx 2{,}59\\,\\mathrm{MJ}$.',
@@ -434,7 +434,7 @@ export const PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE: CurriculumChapter
         caption: 'Pour I > 0, la caractéristique U_AB(I) est une droite d’ordonnée à l’origine E′ et de pente +r′.',
       },
       workedExample: {
-        title: 'Bilan énergétique d’un électrolyseur (Activité p. 4–5 corrigée)',
+        title: 'Bilan énergétique d’un électrolyseur',
         statement:
           'Un électrolyseur ($E\' = 6\\,\\mathrm{V}$, $r\' = 2\\,\\Omega$) fonctionne pendant $t = 30\\,\\mathrm{s}$ sous $I = 0{,}5\\,\\mathrm{A}$. Calculer l’énergie électrique reçue $W_r$ et l’énergie utile $W_u$.',
         methodSteps: [
@@ -629,7 +629,7 @@ export const PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE: CurriculumChapter
         caption: 'Lorsque E2 > E1 et que leurs bornes + sont reliées ensemble, E2 débite et E1 fonctionne en récepteur.',
       },
       workedExample: {
-        title: 'Association en opposition (Situation Exp. 3 p. 5–6)',
+        title: 'Association en opposition',
         statement:
           'Un générateur ($E = 120\\,\\mathrm{V}$, $r = 0$) est branché en série avec $R_0 = 25\\,\\Omega$ et un autre générateur ($E_0 = 150\\,\\mathrm{V}$, $r_0 = 15\\,\\Omega$) en opposition. Déterminer le sens du courant et son intensité $I$.',
         methodSteps: [
@@ -781,7 +781,7 @@ export const PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE: CurriculumChapter
         },
       ],
       workedExample: {
-        title: 'Rendement d’un circuit avec opposition et électrolyseur (Ex 5 p. 8)',
+        title: 'Rendement d’un circuit avec opposition et électrolyseur',
         statement:
           'Deux piles ($e_1 = 7\\,\\mathrm{V}, r_1 = 2\\,\\Omega$ et $e_2 = 10\\,\\mathrm{V}, r_2 = 0{,}5\\,\\Omega$) en opposition alimentent $R = 10\\,\\Omega$ et un électrolyseur ($e\' = 1{,}5\\,\\mathrm{V}, r\' = 2\\,\\Omega$). Calculer l’intensité et le rendement chimique global.',
         methodSteps: [
@@ -917,7 +917,7 @@ export const PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE: CurriculumChapter
       summary:
         'Comprendre pourquoi la haute tension réduit les pertes Joule en ligne et identifier les niveaux THT, HT, MT et BT du réseau.',
       conceptExplanation:
-        "La documentation du cours (p. 9) décrit l’acheminement de l’énergie électrique des centrales vers les consommateurs.\n\n- **Pourquoi transporter en très haute tension (THT) ?** Une ligne électrique de résistance $R_{\\text{ligne}}$ transportant une puissance $P = U\\,I$ dissipe par effet Joule la puissance :\n  $$P_{\\text{perdue}} = R_{\\text{ligne}}\\,I^2 = R_{\\text{ligne}}\\left(\\frac{P}{U}\\right)^2$$\n  À puissance transportée $P$ donnée, **élever la tension $U$ diminue l’intensité $I$**, ce qui réduit considérablement les pertes thermiques par effet Joule (proportionnelles à $1/U^2$).\n- **Architecture du réseau électrique** :\n  1. **Réseau de transport et d’interconnexion (THT : $225\\,000\\,\\mathrm{V}$ à $400\\,000\\,\\mathrm{V}$)** : acheminement sur de longues distances entre régions et pays via des **pylônes** métalliques supportant des câbles conducteurs (cuivre, aluminium ou alliage).\n  2. **Postes sources (transformateurs abaisseurs)** : abaissent la tension vers le réseau de répartition.\n  3. **Haute Tension (HT : $\\approx 90\\,000\\,\\mathrm{V}$) et Moyenne Tension (MT : $\\approx 20\\,000\\,\\mathrm{V}$)** : alimentent les gros utilisateurs industriels (sidérurgie, transport ferroviaire, grande industrie) via des **poteaux** ou câbles souterrains.\n  4. **Postes de distribution et Basse Tension (BT : $230\\,\\mathrm{V}$ / $400\\,\\mathrm{V}$)** : distribuent l’électricité aux PME, commerces et habitations.",
+        "On distingue plusieurs étapes dans l’acheminement de l’énergie électrique des centrales vers les consommateurs.\n\n- **Pourquoi transporter en très haute tension (THT) ?** Une ligne électrique de résistance $R_{\\text{ligne}}$ transportant une puissance $P = U\\,I$ dissipe par effet Joule la puissance :\n $$P_{\\text{perdue}} = R_{\\text{ligne}}\\,I^2 = R_{\\text{ligne}}\\left(\\frac{P}{U}\\right)^2$$\n À puissance transportée $P$ donnée, **élever la tension $U$ diminue l’intensité $I$**, ce qui réduit considérablement les pertes thermiques par effet Joule (proportionnelles à $1/U^2$).\n- **Architecture du réseau électrique** :\n 1. **Réseau de transport et d’interconnexion (THT : $225\\,000\\,\\mathrm{V}$ à $400\\,000\\,\\mathrm{V}$)** : acheminement sur de longues distances entre régions et pays via des **pylônes** métalliques supportant des câbles conducteurs (cuivre, aluminium ou alliage).\n 2. **Postes sources (transformateurs abaisseurs)** : abaissent la tension vers le réseau de répartition.\n 3. **Haute Tension (HT : $\\approx 90\\,000\\,\\mathrm{V}$) et Moyenne Tension (MT : $\\approx 20\\,000\\,\\mathrm{V}$)** : alimentent les gros utilisateurs industriels (sidérurgie, transport ferroviaire, grande industrie) via des **poteaux** ou câbles souterrains.\n 4. **Postes de distribution et Basse Tension (BT : $230\\,\\mathrm{V}$ / $400\\,\\mathrm{V}$)** : distribuent l’électricité aux PME, commerces et habitations.",
       keyRule:
         'Élever la tension U réduit l’intensité I = P/U et divise les pertes Joule en ligne P_J = R_ligne·(P/U)² par U². Réseau : THT (225-400 kV) -> HT/MT -> BT (230/400 V).',
       formulas: [
@@ -1082,7 +1082,7 @@ export const PHYSIQUE_1RE_CD_L05_PUISSANCE_ENERGIE_ELECTRIQUE: CurriculumChapter
             prompt: 'Quel ordre de grandeur de tension équipe les réseaux de moyenne tension (MT) destinés aux grandes industries ?',
             options: ['$20\\,000\\,\\mathrm{V}$', '$230\\,\\mathrm{V}$', '$400\\,\\mathrm{V}$', '$12\\,\\mathrm{V}$'],
             correctAnswerIndex: 0,
-            explanation: 'Selon la documentation du cours, le réseau MT fonctionne autour de $20\\,000\\,\\mathrm{V}$ et le réseau HT autour de $90\\,000\\,\\mathrm{V}$.',
+            explanation: 'Le réseau MT fonctionne autour de $20\\,000\\,\\mathrm{V}$ et le réseau HT autour de $90\\,000\\,\\mathrm{V}$.',
           },
         },
       ],

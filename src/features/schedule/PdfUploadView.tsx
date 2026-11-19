@@ -772,7 +772,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   ? "Extraction & Catégorisation de l'EDT" 
                   : "Configuration des Matières & Méthodes"}
               </h1>
-              <span className="bg-sky-100 text-sky-800 border-sky-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] border dark:border-[#6366F1]/30 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
+              <span className="bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-500/15 dark:text-sky-300 border dark:border-sky-400/30 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
                 {currentStep === 'upload' ? 'Étape 1/2' : 'Étape 2/2'}
               </span>
             </div>
@@ -1356,7 +1356,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 <Sliders className="w-4 h-4 text-sky-700 dark:text-sky-400 shrink-0" />
                 <span>1. Coefficients & Notes Cibles de vos Matières</span>
               </h2>
-              <span className="text-xs font-mono font-bold text-sky-700 dark:text-[#818CF8] shrink-0">
+              <span className="text-xs font-mono font-bold text-sky-700 dark:text-sky-400 shrink-0">
                 {editableSubjects.filter(s => s.enabled).length} / {editableSubjects.length} actives
               </span>
             </div>
@@ -1431,7 +1431,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       </button>
                       <div className="px-1 text-center min-w-[50px]">
                         <span className="text-[9px] text-slate-500 dark:text-slate-400 block font-mono leading-none">COEFF</span>
-                        <span className="text-xs font-bold text-sky-700 dark:text-[#818CF8] leading-tight">{subject.coefficient}</span>
+                        <span className="text-xs font-bold text-sky-700 dark:text-sky-400 leading-tight">{subject.coefficient}</span>
                       </div>
                       <button
                         type="button"
@@ -1481,7 +1481,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
 
             {/* BANNIÈRE DE RECOMMANDATION CONTEXTUELLE */}
             {planTier !== 'free' ? (
-              <div className="rounded-xl bg-gradient-to-r from-sky-50 via-white to-sky-50 border border-sky-200 dark:from-sky-400/60 dark:via-slate-900/80 dark:to-blue-950/40 dark:border-sky-400/20 p-4 sm:p-5 shadow-sm dark:shadow-lg dark:shadow-sky-400/30 space-y-3">
+              <div className="rounded-2xl bg-sky-50/80 border border-sky-200 dark:bg-[#0F172A] dark:border-sky-400/25 p-4 sm:p-5 shadow-sm dark:shadow-lg dark:shadow-slate-950/40 space-y-3">
                 {(() => {
                   const targetPacings = pacingRecommendation.recommendedIds && pacingRecommendation.recommendedIds.length > 0
                     ? pacingRecommendation.recommendedIds
@@ -1491,20 +1491,20 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                   return (
                     <div className="space-y-3">
                       <div className="flex items-start gap-3 min-w-0">
-                        <div className="p-2 rounded-xl bg-sky-100 text-sky-700 border border-sky-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] dark:border-[#6366F1]/30 shrink-0 mt-0.5">
-                          <BarChart2 className="w-4 h-4 text-sky-700 dark:text-[#818CF8]" />
+                        <div className="p-2 rounded-xl bg-sky-100 text-sky-700 border border-sky-200 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 shrink-0 mt-0.5">
+                          <BarChart2 className="w-4 h-4 text-sky-700 dark:text-sky-300" />
                         </div>
                         <div className="min-w-0 flex-1 space-y-1.5">
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="text-xs font-black uppercase tracking-wider text-sky-800 dark:text-[#818CF8]">
+                            <span className="text-xs font-black uppercase tracking-wider text-sky-800 dark:text-sky-400">
                               RECOMMANDATION KONAN
                             </span>
                             {targetPacings.map(id => (
-                              <span key={id} className="text-[10px] px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 border-sky-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] font-bold border dark:border-[#6366F1]/30">
+                              <span key={id} className="text-[10px] px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-500/15 dark:text-sky-300 font-bold border dark:border-sky-400/30">
                                 {getPacingStrategy(id).title.replace('La Technique de ', '').replace('La Technique ', '').replace("L'", '')}
                               </span>
                             ))}
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 border dark:border-slate-700">
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white text-slate-700 border-slate-200 dark:bg-slate-800/90 dark:text-slate-300 border dark:border-slate-700">
                               {pacingRecommendation.contextTag}
                             </span>
                           </div>
@@ -1519,7 +1519,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                             <button
                               type="button"
                               onClick={() => setShowFullDiagnostic(!showFullDiagnostic)}
-                              className="text-xs font-bold text-sky-800 hover:text-sky-900 dark:text-[#818CF8] dark:hover:text-white mt-1 inline-flex items-center gap-1 cursor-pointer transition-colors"
+                              className="text-xs font-bold text-sky-700 hover:text-sky-900 dark:text-sky-400 dark:hover:text-sky-300 mt-1 inline-flex items-center gap-1 cursor-pointer transition-colors"
                             >
                               {showFullDiagnostic ? 'Voir moins ▴' : 'Voir plus ▾'}
                             </button>
@@ -1538,7 +1538,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                           onClick={() => {
                             setSelectedPacings(targetPacings);
                           }}
-                          className="bg-[#6366F1] hover:bg-[#5558E6] text-white py-3 px-6 rounded-xl font-bold w-full transition shadow-md shadow-sky-400/25 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                          className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white py-3 px-6 rounded-xl font-bold w-full transition shadow-md shadow-sky-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
                         >
                           <Check className="w-4 h-4" />
                           <span>Appliquer la recommandation</span>
@@ -1581,7 +1581,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     onClick={() => handleSelectPacingStrategy(strategy.id)}
                     className={`group p-4 rounded-xl border transition-all duration-200 cursor-pointer relative active:scale-[0.99] ${
                       isSelected
-                        ? 'bg-sky-50 border-sky-400 dark:bg-[#131B2E]/70 dark:border-[#6366F1] shadow-md dark:shadow-slate-950/50 ring-1 ring-sky-400/40 dark:ring-[#6366F1]/50'
+                        ? 'bg-sky-50 border-sky-400 dark:bg-[#131B2E]/80 dark:border-sky-400 shadow-md dark:shadow-slate-950/50 ring-1 ring-sky-400/40'
                         : isPrimaryRec
                         ? 'bg-white border-sky-400 hover:border-sky-500 dark:bg-[#131B2E]/50 dark:border-sky-500/40'
                         : isAllowed
@@ -1602,7 +1602,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                       {/* Badges */}
                       <div className="flex flex-wrap items-center justify-end gap-1 shrink-0">
                         {isPrimaryRec && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border-sky-200 dark:bg-[#6366F1]/20 dark:text-[#818CF8] border dark:border-[#6366F1]/30">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-500/15 dark:text-sky-300 border dark:border-sky-400/30">
                              Recommandé
                           </span>
                         )}
@@ -1614,7 +1614,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                         {isAllowed ? (
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
                             isSelected
-                              ? 'bg-[#6366F1] text-white shadow-xs'
+                              ? 'bg-sky-500 text-white shadow-xs'
                               : 'bg-slate-100 border border-slate-200 text-slate-700 dark:bg-white/5 dark:border-white/10 dark:text-slate-300 dark:hover:text-white'
                           }`}>
                             {isSelected 
@@ -1693,7 +1693,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                     }}
                     className={`group p-3 rounded-xl border text-xs font-medium transition-all duration-200 cursor-pointer text-center flex items-center justify-center gap-2 active:scale-95 ${
                       isSelected
-                        ? 'bg-gradient-to-r from-sky-400 to-violet-600 border-sky-400 text-white shadow-md shadow-sky-400/30 ring-2 ring-sky-400/40 font-bold scale-[1.01]'
+                        ? 'bg-gradient-to-r from-sky-500 to-blue-600 border-sky-400 text-white shadow-md shadow-sky-500/25 ring-2 ring-sky-400/35 font-bold scale-[1.01]'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 dark:bg-transparent dark:border-white/5 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5 dark:hover:border-white/10'
                     }`}
                   >
@@ -1715,7 +1715,7 @@ export const PdfUploadView: React.FC<PdfUploadViewProps> = ({
                 soundFX.playSuccessChime();
                 handleFinalSubmit();
               }}
-              className="w-full py-4 px-6 text-sm sm:text-base font-bold text-white rounded-2xl cursor-pointer bg-gradient-to-r from-[#6366F1] to-[#0369A1] hover:from-[#5558E6] hover:to-[#0369A1] shadow-xl shadow-sky-400/30 hover:shadow-sky-400/40 flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98]"
+              className="w-full py-4 px-6 text-sm sm:text-base font-bold text-white rounded-2xl cursor-pointer bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 shadow-xl shadow-sky-500/25 hover:shadow-sky-500/35 flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98]"
             >
               <Calendar className="w-5 h-5 text-white shrink-0" />
               <span>Générer mon planning d'étude avec ces paramètres ({editableSubjects.filter(s => s.enabled).length} matières) </span>

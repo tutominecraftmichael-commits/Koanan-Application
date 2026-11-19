@@ -1,8 +1,8 @@
 import type { CurriculumChapter, CurriculumPoint, StructuredLessonStep } from '../../../../lib/curriculum/types';
 
-// Cours authentique rédigé à partir des supports officiels ESATIC ENTD 1 :
-// - Compta G1 : COURS DE COMPTABILITE 2025-2026 (M. SILUE YACOUBA)
-// - Compta G2 : COMPTABILITE GENERALE ENTD 1 ESATIC 2026 + Corrigés d'examen G&B Sarl / BROU
+// Cours authentique rédigé à partir des supports officiels ENTD L1 ENTD 1 :
+// - Compta G1 : COURS DE COMPTABILITE 2025-2026
+// - Compta G2 : COMPTABILITE GENERALE ENTD 1 ENTD L1 2026 + Corrigés d'examen G&B Sarl / BROU
 
 const makePoint = (
   p: Omit<CurriculumPoint, 'exercises'> & { structuredSteps: StructuredLessonStep[] },
@@ -20,12 +20,12 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_compta_generale',
     gradeLevel: 'lmd_entd_l1',
     order: 1,
-    title: 'Chapitre 1 : Fondements de la comptabilité, Bilan et Organisation comptable (Compta G1)',
+    title: 'Chapitre 1 : Fondements de la comptabilité, Bilan et Organisation comptable',
     summary:
       'Notion d’entreprise et flux économiques, structure du Bilan et calcul de la situation nette, fonctionnement des comptes (partie double), Livre-Journal, Grand-Livre, Balance et Compte de Résultat selon le SYSCOHADA.',
     officialVolumeHours: 16,
     contentVersion: 2,
-    source: 'Compta G1 — COURS DE COMPTABILITE 2025-2026 (M. SILUE YACOUBA).pdf',
+    source: 'ENTD L1 — Comptabilité Générale (Fondements et Bilan)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_compta_generale_ch1_p1',
@@ -55,7 +55,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Évaluation du patrimoine et du résultat — Société SORO et BONI (Cours G1)',
+          title: 'Évaluation du patrimoine et du résultat — Société SORO et BONI',
           statement:
             'Au 1er janvier N, la société SORO et BONI dispose de : Bâtiments 12 500 000 F, Matériel de transport 2 500 000 F, Marchandises 5 000 000 F, Clients 4 000 000 F, Banque 4 000 000 F, Caisse 1 000 000 F, Emprunt (3 ans) 10 000 000 F, Fournisseurs 3 500 000 F. Calculer le patrimoine net puis le résultat si le capital initial était de 10 000 000 F.',
           methodSteps: [
@@ -422,7 +422,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 2,
               explanation:
-                'Règle SYSCOHADA : en classe 8, 2e chiffre impair = Charge HAO (ex. 812 VCCI) ; 2e chiffre pair = Produit HAO (ex. 822 Produits des cessions).',
+                'Règle SYSCOHADA : en classe 8, 2e chiffre impair = Charge HAO ; 2e chiffre pair = Produit HAO.',
             },
           },
           {
@@ -491,7 +491,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 1,
               explanation:
-                'Un compte de tiers à solde débiteur est une créance (Actif) ; un compte de tiers à solde créditeur (ex. 401 Fournisseurs) est une dette inscrite au Passif.',
+                'Un compte de tiers à solde débiteur est une créance (Actif) ; un compte de tiers à solde créditeur est une dette inscrite au Passif.',
             },
           },
         ],
@@ -507,12 +507,12 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_compta_generale',
     gradeLevel: 'lmd_entd_l1',
     order: 2,
-    title: 'Chapitre 2 : Opérations d’achats-ventes — Factures de Doit, Réductions, TVA, Port & Avoir (Compta G2)',
+    title: 'Chapitre 2 : Opérations d’achats-ventes — Factures de Doit, Réductions, TVA, Port & Avoir',
     summary:
       'Mentions obligatoires de la facture, calcul en cascade des RRR, escompte (673/773), TVA 18 % (4431/4452), distinction port facturé vs port débours et comptabilisation des factures d’avoir.',
     officialVolumeHours: 18,
     contentVersion: 2,
-    source: 'Compta G2 — COMPTABILITE GENERALE ENTD 1 ESATIC 2026.pdf (Chapitre 1)',
+    source: 'ENTD L1 — Comptabilité Générale (Opérations courantes)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_compta_generale_ch2_p1',
@@ -539,7 +539,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Facture N°00M21 — Établissement SERY & Cie vers IIT (Cours G2)',
+          title: 'Facture N°00M21 — Établissement SERY & Cie vers IIT',
           statement:
             'SERY & Cie vend 100 sacs de riz à 10 000 F l’unité à crédit au client IIT avec une 1re remise de 5 % puis une 2e remise de 10 % (hors TVA). Calculer le Net Commercial et passer l’écriture chez les deux parties.',
           methodSteps: [
@@ -693,7 +693,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Facture BDP → TK avec remise 5 %, escompte 2 % et TVA 18 % (Cours G2, Exemple 5)',
+          title: 'Facture BDP → TK avec remise 5 %, escompte 2 % et TVA 18 %',
           statement:
             'BDP vend à TK des marchandises pour 4 000 000 F HT, remise 5 %, escompte 2 %, TVA 18 %. Dresser le décompte et passer l’écriture chez le fournisseur BDP et chez le client TK.',
           methodSteps: [
@@ -750,7 +750,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 2,
               explanation:
-                'Règle impérative du cours : la TVA s’applique toujours sur le Net Financier (augmenté éventuellement du port facturé).',
+                'Règle impérative : la TVA s’applique toujours sur le Net Financier (augmenté éventuellement du port facturé).',
             },
           },
           {
@@ -902,7 +902,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 2,
               explanation:
-                'Les activités de transport public étant exonérées de TVA dans le cours, le port débours s’ajoute après le calcul de la TVA.',
+                'Les activités de transport public étant exonérées de TVA, le port débours s’ajoute après le calcul de la TVA.',
             },
           },
           {
@@ -948,7 +948,7 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 0,
               explanation:
-                'Escompte HT = 3 % × 3 000 000 = 90 000 F ; TVA (18 %) = 16 200 F ; Escompte TTC = 90 000 + 16 200 = 106 200 F (Exemple 11 du cours G2).',
+                'Escompte HT = 3 % × 3 000 000 = 90 000 F ; TVA (18 %) = 16 200 F ; Escompte TTC = 90 000 + 16 200 = 106 200 F.',
             },
           },
           {
@@ -987,12 +987,12 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     subjectId: 'lmd_compta_generale',
     gradeLevel: 'lmd_entd_l1',
     order: 3,
-    title: 'Chapitre 3 : Emballages commerciaux, Trésorerie et Effets de commerce (Compta G2)',
+    title: 'Chapitre 3 : Emballages commerciaux, Trésorerie et Effets de commerce',
     summary:
       'Consignation, déconsignation et destruction d’emballages récupérables (cas SOLIBRA/DASI), règlements et opérations sur Lettres de change (création, renouvellement avec intérêts de retard, négociation/escompte).',
     officialVolumeHours: 16,
     contentVersion: 2,
-    source: 'Compta G2 — ESATIC 2026 & Examen Session 1 Corrigé (G&B Sarl / Entreprise BROU)',
+    source: 'ENTD L1 — Comptabilité Générale (Emballages et Effets de commerce)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_compta_generale_ch3_p1',
@@ -1005,18 +1005,18 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           "- **Consignation** (sur la facture de Doit, **non soumise à la TVA** car ce n'est pas une vente définitive) : créance conditionnelle chez le client (`Débit 4094 Fournisseurs, créances pour emballages à rendre` ou `4196` selon l'énoncé d'examen) et dette conditionnelle chez le fournisseur (`Crédit 4194 Clients, dettes pour emballages consignés`).\n" +
           "- **Déconsignation au prix de consignation** : l'écriture inverse solde la créance/dette d'emballages (aucun gain ni perte).\n" +
           "- **Déconsignation à un prix inférieur** (casiers abîmés ou retenue d'usage) : le client constate une **perte (mali sur emballages)** égale à `Prix consigné − Prix repris` (charge en classe 6) et le fournisseur réalise un **boni** (produit en `7074`).\n" +
-          "- **Emballages détruits ou conservés** : la consignation se transforme en achat/charge définitive (ex. 40 casiers détruits chez G&B Sarl → `Débit charge / Crédit compte d'emballages consignés`).",
+          "- **Emballages détruits ou conservés** : la consignation se transforme en achat/charge définitive.",
         keyRule:
           'La consignation d’emballages est un dépôt de garantie exonéré de TVA. Si le prix de reprise est inférieur au prix de consignation, la différence est un mali (charge) chez le client et un boni (produit) chez le fournisseur.',
         formulas: [
           {
             name: 'Mali sur déconsignation (chez le client)',
             formula: '\\text{Mali} = \\text{Prix de consignation} - \\text{Prix de reprise}',
-            note: 'Enregistré au Débit d’un compte de charge (ex. 6224 Malis sur emballages)',
+            note: 'Enregistré au Débit d’un compte de charge',
           },
         ],
         workedExample: {
-          title: 'Consignation et déconsignation avec perte — Examen G&B Sarl (ESATIC 2025-2026)',
+          title: 'Consignation et déconsignation avec perte — Cas G&B Sarl',
           statement:
             'Le 07/04/N, G&B Sarl achète 1 000 casiers de SODA à DASI avec consignation de 1 000 casiers à 900 F l’unité (900 000 F). Le 15/10/N, DASI déconsigne ces 1 000 casiers pour 800 000 F seulement (avoir AV5810). Passer les écritures chez G&B Sarl.',
           methodSteps: [
@@ -1173,11 +1173,11 @@ export const COMPTA_GENERALE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Nominal du nouvel effet renouvelé',
             formula: 'V_{\\text{nouveau}} = V_{\\text{ancien}} + I + \\text{Timbre} + \\text{Frais de correspondance}',
-            note: 'Cas de l’exercice 2 BROU / Kouamé (Examen ESATIC 2025-2026)',
+            note: 'Cas pratique BROU / Kouamé',
           },
         ],
         workedExample: {
-          title: 'Renouvellement et négociation de traite — Exercice 2 BROU / Kouamé (Examen ESATIC)',
+          title: 'Renouvellement et négociation de traite — Cas BROU / Kouamé',
           statement:
             'BROU détient la LC N°104 de 708 000 F sur son client Kouamé (éch. 03/01/N+1). Le 21/12/N, Kouamé demande un report de 60 jours au taux de 12 % l’an, timbre 200 F, correspondance 100 F (nouvelle LC N°106). Le 30/12/N, BROU remet la LC N°106 à l’escompte à NSIA BANQUE et reçoit le 02/01/N+1 un avis de crédit de 700 000 F.',
           methodSteps: [

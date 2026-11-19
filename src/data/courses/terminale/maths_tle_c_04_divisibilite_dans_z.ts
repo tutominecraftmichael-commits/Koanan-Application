@@ -1421,7 +1421,7 @@ export const MATHS_TLE_C_L04_DIVISIBILITE_DANS_Z: CurriculumChapter = {
     'Diviseurs et multiples dans Z, combinaisons linéaires, fractions irréductibles, division euclidienne dans Z (reste positif), congruences modulo n, puissances périodiques, bases de numération (2, 8, 10, 16), critères de divisibilité, nombres premiers, décomposition et applications à la cryptographie.',
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: 'Programme officiel de Mathématiques — Terminale C (Côte d’Ivoire)',
+  source: 'Mathématiques — Terminale C',
   points: [
     {
       id: 'terminale_c_maths_numerique_l04_divisibilite_dans_z_p01',

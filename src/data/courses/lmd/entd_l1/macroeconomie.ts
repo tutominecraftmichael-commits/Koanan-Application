@@ -25,7 +25,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Maîtriser le circuit économique, l'équilibre emplois-ressources, les trois optiques du PIB (nominal/réel/déflateur), le PNB, l'IPC/inflation et les indicateurs du marché du travail.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC — Dr N’GUESSAN Bi Zambé Serge Constant — Macroéconomie 1 (Intro, Ch. 2, Ch. 3, TD 1 & TD 2)',
+    source: 'ENTD L1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_macroeconomie_ch1_p1',
@@ -132,7 +132,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 0,
               explanation:
-                'Le cours précise que la FBCF des ménages se limite à l’acquisition de logements (les biens durables courants sont de la consommation finale).',
+                'En pratique, la FBCF des ménages se limite à l’acquisition de logements (les biens durables courants sont de la consommation finale).',
             },
           },
           {
@@ -185,7 +185,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         order: 2,
         title: 'Le PIB (3 optiques, nominal vs réel, déflateur) et le PNB',
         summary:
-          "Calculer le PIB selon les optiques production, dépense et revenu, distinguer PIB nominal et réel (TD2), calculer le déflateur et relier PIB et PNB.",
+          "Calculer le PIB selon les optiques production, dépense et revenu, distinguer PIB nominal et réel, calculer le déflateur et relier PIB et PNB.",
         conceptExplanation:
           "Le Produit Intérieur Brut (PIB) mesure la valeur totale des biens et services finaux produits sur un territoire donné pendant une période donnée (an ou trimestre). Il se mesure selon trois optiques équivalentes :\n1. Optique production : PIB = Σ Valeurs Ajoutées + Impôts sur les produits − Subventions sur les produits.\n2. Optique dépense : PIB = C + FBCF + ΔS + X − M.\n3. Optique revenu : PIB = Rémunération des salariés + Excédent Brut d'Exploitation (EBE) + Revenu mixte + Impôts sur la production et importations − Subventions.\n\nPour mesurer la véritable croissance en volume, il faut distinguer :\n- PIB nominal (aux prix courants de l'année en cours) : Σ P_t · Q_t ;\n- PIB réel (en volume / aux prix constants de l'année de base 0) : Σ P_0 · Q_t.\nLe taux de croissance réel vaut [(PIB réel_t − PIB réel_{t-1}) / PIB réel_{t-1}] × 100. Le déflateur du PIB = (PIB nominal / PIB réel) × 100 mesure l'évolution générale des prix de la production intérieure.\n\nEnfin, le Produit National Brut (PNB) se déduit du PIB en ajoutant les revenus reçus du reste du monde et en retranchant les revenus versés au reste du monde : PNB = PIB + Revenus reçus du RDM − Revenus versés au RDM.",
         keyRule:
@@ -203,9 +203,9 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Calcul du PIB nominal, PIB réel et taux de croissance (TD2 Macro 1)',
+          title: 'Calcul du PIB nominal, PIB réel et taux de croissance',
           statement:
-            "Dans une économie (TD2, Exercice 1), on produit en 2023 (année de base) : 100 biens A à 10 € et 150 biens B à 20 €. En 2024 : 110 biens A à 12 € et 160 biens B à 22 €. Calculez le PIB nominal 2023 et 2024, le PIB réel 2024, le taux de croissance réel et le déflateur 2024.",
+            "Dans une économie, on produit en 2023 (année de base) : 100 biens A à 10 € et 150 biens B à 20 €. En 2024 : 110 biens A à 12 € et 160 biens B à 22 €. Calculez le PIB nominal 2023 et 2024, le PIB réel 2024, le taux de croissance réel et le déflateur 2024.",
           methodSteps: [
             'PIB nominal 2023 (= PIB réel 2023) = (100 × 10) + (150 × 20) = 1 000 + 3 000 = 4 000 €.',
             'PIB nominal 2024 = (110 × 12) + (160 × 22) = 1 320 + 3 520 = 4 840 €.',
@@ -268,7 +268,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'methode',
-            stepBadge: 'Application TD2',
+            stepBadge: 'Application',
             stepTheme: 'Calcul PIB réel',
             stepTitle: 'Calculer un PIB réel et son taux de croissance',
             paragraphText:
@@ -277,7 +277,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_macroeconomie_ch1_p2_q3',
               type: 'mcq',
               prompt:
-                "D'après l'exercice 1 du TD2 (2023 base : 100 A à 10 € et 150 B à 20 € ; 2024 : 110 A à 12 € et 160 B à 22 €), quel est le PIB réel de 2024 ?",
+                "Avec 2023 base : 100 A à 10 € et 150 B à 20 € ; 2024 : 110 A à 12 € et 160 B à 22 €, quel est le PIB réel de 2024 ?",
               options: ['4 300 €', '4 840 €', '4 000 €', '5 100 €'],
               correctAnswerIndex: 0,
               explanation:
@@ -332,7 +332,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       makePoint({
         id: 'lmd_entd_l1_macroeconomie_ch1_p3',
         order: 3,
-        title: "Inflation (IPC) et indicateurs du marché du travail (TD2)",
+        title: "Inflation (IPC) et indicateurs du marché du travail",
         summary:
           "Calculer l'Indice des Prix à la Consommation (IPC), le taux d'inflation, et maîtriser taux de chômage, taux d'activité et taux d'emploi à partir des exercices de TD.",
         conceptExplanation:
@@ -352,7 +352,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Calcul de l’IPC et des taux du marché du travail (TD2 Macro 1, Ex. 2 & 3)',
+          title: 'Calcul de l’IPC et des taux du marché du travail',
           statement:
             "A) Panier 2023 : 50 pains (2 € -> 2,2 € en 2024), 30 laits (1,5 € -> 1,8 €), 10 locations voiture (150 € -> 160 €). Calculez l'IPC 2024.\nB) Économie de 1 000 personnes : 800 en âge de travailler, dont 650 travaillent, 50 cherchent un emploi et 100 sont inactives. Calculez les trois taux.",
           methodSteps: [
@@ -420,7 +420,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_macroeconomie_ch1_p3_q3',
               type: 'mcq',
               prompt:
-                "D'après le TD1 Macro 1, lesquels de ces individus appartiennent à la population active ?",
+                "Lesquels de ces individus appartiennent à la population active ?",
               options: [
                 'Un retraité et un élève de seconde',
                 'Une mère au foyer ne cherchant pas d’emploi et un étudiant en master',
@@ -435,11 +435,11 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'methode',
-            stepBadge: 'Calcul TD2',
+            stepBadge: 'Calcul',
             stepTheme: 'Taux de chômage',
             stepTitle: "Calculer taux de chômage et taux d'activité",
             paragraphText:
-              "Dans l'exercice 3 du TD2 (800 personnes en âge de travailler : 650 en emploi, 50 chômeurs, 100 inactifs), la population active vaut 650 + 50 = 700. Donc taux de chômage = 50 / 700 ≈ 7,14 % et taux d'activité = 700 / 800 = 87,5 %.",
+              "Avec 800 personnes en âge de travailler : 650 en emploi, 50 chômeurs, 100 inactifs, la population active vaut 650 + 50 = 700. Donc taux de chômage = 50 / 700 ≈ 7,14 % et taux d'activité = 700 / 800 = 87,5 %.",
             exercise: {
               id: 'lmd_entd_l1_macroeconomie_ch1_p3_q4',
               type: 'mcq',
@@ -493,12 +493,12 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Maîtriser la fonction de consommation keynésienne, Friedman et Modigliani, les critères VAN/TRI et l'accélérateur d'investissement, ainsi que l'équilibre keynésien et les multiplicateurs.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC — Macro 1 (Ch. 4, 5, 7, TD3, TD4) & Macro 2 Dr Assandé KADJO (Ch. 1, TD1)',
+    source: 'ENTD L1 — Macro 1 & Macro 2 Dr Assandé KADJO',
     points: [
       makePoint({
         id: 'lmd_entd_l1_macroeconomie_ch2_p1',
         order: 1,
-        title: 'Fonctions de consommation : Keynes, Friedman et Modigliani (TD3)',
+        title: 'Fonctions de consommation : Keynes, Friedman et Modigliani',
         summary:
           "Loi psychologique fondamentale de Keynes (C = cYd + C0), PMC/PmC/épargne, revenu permanent (Friedman) et cycle de vie (Modigliani-Brumberg).",
         conceptExplanation:
@@ -518,7 +518,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Fonction keynésienne et revenu permanent (TD3 Macro 1, Ex. 1 & 2)',
+          title: 'Fonction keynésienne et revenu permanent',
           statement:
             "A) Soit C = 0,8Y + 100 (en Mds €). Calculez la PmC, la consommation pour Y = 1 400 et le PIB Y pour C = 1 000.\nB) Selon Friedman (PMC de long terme k = 0,8), calculez Y_p et C_p pour Y = 700 et Y_t = −100.",
           methodSteps: [
@@ -553,7 +553,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'TD3 Ex. 1',
+            stepBadge: 'Application',
             stepTheme: 'C = 0,8Y + 100',
             stepTitle: 'Lire et calculer avec C = cY + C0',
             paragraphText:
@@ -562,7 +562,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_macroeconomie_ch2_p1_q2',
               type: 'mcq',
               prompt:
-                'Avec la fonction de consommation C = 0,8Y + 100 (TD3), quelle est la valeur du PIB Y lorsque la consommation vaut C = 1 000 ?',
+                'Avec la fonction de consommation C = 0,8Y + 100, quelle est la valeur du PIB Y lorsque la consommation vaut C = 1 000 ?',
               options: ['900', '1 250', '1 125', '1 000'],
               correctAnswerIndex: 2,
               explanation:
@@ -598,7 +598,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'methode',
             stepBadge: 'Friedman',
             stepTheme: 'Revenu permanent',
-            stepTitle: 'Interpréter la PMC de court terme chez Milton Friedman (TD3 Ex. 2)',
+            stepTitle: 'Interpréter la PMC de court terme chez Milton Friedman',
             paragraphText:
               "Selon Milton Friedman (1957), C = k·Y_p avec Y = Y_p + Y_t. Si la PMC de long terme vaut 0,8 mais qu'on observe une PMC courante de 0,78 (< 0,8), cela signifie que Y > Y_p, donc le revenu transitoire Y_t est positif (l'excédent temporaire est épargné). Inversement, une PMC de 0,82 (> 0,8) révèle Y_t < 0.",
             exercise: {
@@ -641,7 +641,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       makePoint({
         id: 'lmd_entd_l1_macroeconomie_ch2_p2',
         order: 2,
-        title: "Investissement : VAN, TRI et principe de l'accélérateur (TD4 & Macro 2 TD1)",
+        title: "Investissement : VAN, TRI et principe de l'accélérateur",
         summary:
           "Distinguer investissement brut/net/amortissement, évaluer un projet par la VAN et le TRI, et calculer l'investissement induit par l'accélérateur de Clark.",
         conceptExplanation:
@@ -666,9 +666,9 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Critère du TRI et effet accélérateur (TD4 Macro 1 & TD1 Macro 2)',
+          title: 'Critère du TRI et effet accélérateur',
           statement:
-            "A) Cinq projets ont pour coûts (en FCFA) et TRI : P1 (75 000 ; 9 %), P2 (30 000 ; 11 %), P3 (50 000 ; 14 %), P4 (105 000 ; 10,5 %), P5 (80 000 ; 8 %). Quel montant investir si r = 10 % ?\nB) Dans une économie (Macro 2 TD1 Ex. 5) : v = 2,5, Y_t = 2 000, Y_{t-1} = 1 800, δ = 10 %, K_{t-1} = 4 000. Calculez I_net et I_brut.",
+            "A) Cinq projets ont pour coûts (en FCFA) et TRI : P1 (75 000 ; 9 %), P2 (30 000 ; 11 %), P3 (50 000 ; 14 %), P4 (105 000 ; 10,5 %), P5 (80 000 ; 8 %). Quel montant investir si r = 10 % ?\nB) Dans une économie : v = 2,5, Y_t = 2 000, Y_{t-1} = 1 800, δ = 10 %, K_{t-1} = 4 000. Calculez I_net et I_brut.",
           methodSteps: [
             'A) Règle TRI > r (= 10 %) : seuls P2 (11 %), P3 (14 %) et P4 (10,5 %) sont rentables.',
             'Montant total investi à r = 10 % : 30 000 + 50 000 + 105 000 = 185 000 FCFA. (À r = 12 %, seul P3 est retenu : 50 000 FCFA.)',
@@ -691,7 +691,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_macroeconomie_ch2_p2_q1',
               type: 'mcq',
               prompt:
-                'Lequel de ces achats est EXCLU de la définition macroéconomique de l’investissement (I) selon le cours de Macro 2 ?',
+                'Lequel de ces achats est EXCLU de la définition macroéconomique de l’investissement (I) ?',
               options: [
                 "L'achat de nouvelles machines industrielles par une entreprise",
                 'La construction d’un nouvel entrepôt logistique',
@@ -725,16 +725,16 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'methode',
-            stepBadge: 'TRI (TD4)',
+            stepBadge: 'TRI ()',
             stepTheme: 'Taux d’intérêt',
             stepTitle: 'Utiliser le TRI face au taux d’intérêt de marché',
             paragraphText:
-              "Le TRI (taux annulant la VAN) représente le taux d'intérêt maximal supportable par le projet. On retient tous les projets dont TRI > r. Dans le TD4 (P1=9 %, P2=11 %, P3=14 %, P4=10,5 %, P5=8 %), si r = 12 %, seul P3 (50 000 FCFA) reste rentable.",
+              "Le TRI (taux annulant la VAN) représente le taux d'intérêt maximal supportable par le projet. On retient tous les projets dont TRI > r. Avec P1=9 %, P2=11 %, P3=14 %, P4=10,5 %, P5=8 %, si r = 12 %, seul P3 (50 000 FCFA) reste rentable.",
             exercise: {
               id: 'lmd_entd_l1_macroeconomie_ch2_p2_q3',
               type: 'mcq',
               prompt:
-                'D’après le TD4 (P1 : 75 000 à 9 %, P2 : 30 000 à 11 %, P3 : 50 000 à 14 %, P4 : 105 000 à 10,5 %, P5 : 80 000 à 8 %), quel est le montant total investi si le taux d’intérêt vaut r = 10 % ?',
+                'Soient les projets (P1 : 75 000 à 9 %, P2 : 30 000 à 11 %, P3 : 50 000 à 14 %, P4 : 105 000 à 10,5 %, P5 : 80 000 à 8 %). quel est le montant total investi si le taux d’intérêt vaut r = 10 % ?',
               options: ['50 000 FCFA', '185 000 FCFA', '260 000 FCFA', '340 000 FCFA'],
               correctAnswerIndex: 1,
               explanation:
@@ -753,7 +753,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_macroeconomie_ch2_p2_q4',
               type: 'mcq',
               prompt:
-                'Dans une économie où il faut un capital de 200 pour produire 100 (TD4 Ex. 2), quel est le coefficient de capital v et quel est l’investissement net si la demande passe de 300 à 400 ?',
+                'Dans une économie où il faut un capital de 200 pour produire 100, quel est le coefficient de capital v et quel est l’investissement net si la demande passe de 300 à 400 ?',
               options: [
                 'v = 0,5 et I_n = 50',
                 'v = 2 et I_n = 100',
@@ -952,15 +952,15 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 3,
     title: 'Chapitre 3 : Marché de la monnaie et marché du travail (Macro 2)',
     summary:
-      "Maîtriser les fonctions de la monnaie, M1/M2/M3, base monétaire, multiplicateur/diviseur, équilibre monétaire (LM), ainsi que le marché du travail classique et keynésien (TD2 & TD3 Macro 2).",
+      "Maîtriser les fonctions de la monnaie, M1/M2/M3, base monétaire, multiplicateur/diviseur, équilibre monétaire (LM), ainsi que le marché du travail classique et keynésien.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC — Dr Assandé KADJO — Introduction à la Macroéconomie 2 (Ch. 2, Ch. 3, TD2 & TD3)',
+    source: 'ENTD L1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_macroeconomie_ch3_p1',
         order: 1,
-        title: 'Monnaie, agrégats M1/M2/M3, base monétaire et équilibre LM (TD2 Macro 2)',
+        title: 'Monnaie, agrégats M1/M2/M3, base monétaire et équilibre LM',
         summary:
           "Trois fonctions de la monnaie, agrégats M1/M2/M3, relation BM = k·M (multiplicateur m = 1/k et diviseur d = k), motifs de Keynes et équilibre du marché monétaire.",
         conceptExplanation:
@@ -985,9 +985,9 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Multiplicateur monétaire et équilibre LM (TD2 Macro 2, Ex. 2, 4 & 7)',
+          title: 'Multiplicateur monétaire et équilibre LM',
           statement:
-            "A) Données : Billets = 500, DAV = 300, Dépôts d'épargne = 200, Dépôts à terme = 100. Calculez M1 et M2.\nB) Avec r = 10 % et b = 1/6 (soit 300/1800), calculez d et m.\nC) Équilibre LM (Ex. 7) : L_1 = 0,2Y, L_2 = 500 − 5 000i, M^0/P = 400. Trouvez i pour Y = 1 000, puis pour M^0/P = 500.",
+            "A) Données : Billets = 500, DAV = 300, Dépôts d'épargne = 200, Dépôts à terme = 100. Calculez M1 et M2.\nB) Avec r = 10 % et b = 1/6 (soit 300/1800), calculez d et m.\nC) Équilibre LM : L_1 = 0,2Y, L_2 = 500 − 5 000i, M^0/P = 400. Trouvez i pour Y = 1 000, puis pour M^0/P = 500.",
           methodSteps: [
             'A) M1 = 500 + 300 = 800 ; M2 = M1 + 200 + 100 = 1 100.',
             'B) d = k = b + r − br = (1/6) + 0,1 − (1/6)(0,1) = 0,1667 + 0,1 − 0,0167 = 0,25 ; donc m = 1 / 0,25 = 4.',
@@ -1026,7 +1026,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'Agrégats (TD2)',
+            stepBadge: 'Agrégats ()',
             stepTheme: 'M1 et M2',
             stepTitle: 'Calculer M1 et M2 à partir des actifs monétaires',
             paragraphText:
@@ -1035,7 +1035,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_macroeconomie_ch3_p1_q2',
               type: 'mcq',
               prompt:
-                'Dans une économie (TD2 Ex. 2) : billets et pièces = 500, dépôts à vue = 300, dépôts d’épargne = 200, dépôts à terme = 100. Que valent M1 et M2 ?',
+                'Dans une économie : billets et pièces = 500, dépôts à vue = 300, dépôts d’épargne = 200, dépôts à terme = 100. Que valent M1 et M2 ?',
               options: [
                 'M1 = 500 et M2 = 800',
                 'M1 = 800 et M2 = 1 100',
@@ -1093,7 +1093,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 5,
             stepKind: 'methode',
-            stepBadge: 'Courbe LM (TD2)',
+            stepBadge: 'Courbe LM ()',
             stepTheme: 'Équilibre monétaire',
             stepTitle: "Déterminer le taux d'intérêt d'équilibre i",
             paragraphText:
@@ -1102,7 +1102,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_macroeconomie_ch3_p1_q5',
               type: 'mcq',
               prompt:
-                'Avec L_1 = 0,2Y, L_2 = 500 − 5 000i, Y = 1 000 et M^0/P = 400 (TD2 Ex. 7), quel est le taux d’intérêt d’équilibre i ?',
+                'Avec L_1 = 0,2Y, L_2 = 500 − 5 000i, Y = 1 000 et M^0/P = 400, quel est le taux d’intérêt d’équilibre i ?',
               options: ['4 %', '6 %', '8 %', '2 %'],
               correctAnswerIndex: 1,
               explanation:
@@ -1114,7 +1114,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       makePoint({
         id: 'lmd_entd_l1_macroeconomie_ch3_p2',
         order: 2,
-        title: 'Marché du travail classique et keynésien (TD3 Macro 2)',
+        title: 'Marché du travail classique et keynésien',
         summary:
           "Calculer le salaire réel w/P, la productivité marginale PmL, l'équilibre classique de plein-emploi, l'arbitrage travail-loisir et le chômage involontaire keynésien.",
         conceptExplanation:
@@ -1134,7 +1134,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Résoudre les exercices clés du marché du travail (TD3 Macro 2, Ex. 1, 2, 3 & 4)',
+          title: 'Résoudre les exercices clés du marché du travail',
           statement:
             "A) Salaire nominal W = 150 000 FCFA, indice des prix P = 1,25 : calculez w_r.\nB) Offre L^o = 20 + 2w_r, Demande L^d = 100 − 3w_r : trouvez l'équilibre classique.\nC) Économie keynésienne : Y* = 500, Y = 10L et plein emploi L_p = 60 : trouvez L* et le chômage involontaire.",
           methodSteps: [
@@ -1159,7 +1159,7 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_macroeconomie_ch3_p2_q1',
               type: 'mcq',
               prompt:
-                'Un salarié perçoit 3 000 FCFA/heure et le niveau général des prix est P = 1,5 (TD3 Ex. 5). Quel est son salaire réel horaire ?',
+                'Un salarié perçoit 3 000 FCFA/heure et le niveau général des prix est P = 1,5. Quel est son salaire réel horaire ?',
               options: ['4 500 FCFA', '2 000 FCFA', '1 500 FCFA', '3 000 FCFA'],
               correctAnswerIndex: 1,
               explanation:
@@ -1171,14 +1171,14 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'methode',
             stepBadge: 'Productivité',
             stepTheme: 'PmL = w_r',
-            stepTitle: 'Décision d’embauche d’une entreprise (TD3 Ex. 2)',
+            stepTitle: 'Décision d’embauche d’une entreprise',
             paragraphText:
               "L'entreprise maximise son profit en égalisant la productivité marginale du travail PmL = ∂Y/∂L au salaire réel w_r = W/P. Si PmL > w_r, le travailleur supplémentaire rapporte plus qu'il ne coûte : l'entreprise embauche.",
             exercise: {
               id: 'lmd_entd_l1_macroeconomie_ch3_p2_q2',
               type: 'mcq',
               prompt:
-                'Avec Y = 100·L^{0,5}, P = 2 000 FCFA et W = 4 000 FCFA (TD3 Ex. 2), que vaut le salaire réel w_r et que vaut PmL pour L = 160 (sachant √160 ≈ 12,65) ?',
+                'Avec Y = 100·L^{0,5}, P = 2 000 FCFA et W = 4 000 FCFA, que vaut le salaire réel w_r et que vaut PmL pour L = 160 (sachant √160 ≈ 12,65) ?',
               options: [
                 'w_r = 2 et PmL ≈ 3,95 ⇒ PmL > w_r, donc l’entreprise embauche',
                 'w_r = 0,5 et PmL ≈ 0,10 ⇒ l’entreprise licencie',
@@ -1195,14 +1195,14 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'methode',
             stepBadge: 'Classiques',
             stepTheme: 'Équilibre L^o = L^d',
-            stepTitle: "Calculer l'équilibre classique du marché du travail (TD3 Ex. 7)",
+            stepTitle: "Calculer l'équilibre classique du marché du travail",
             paragraphText:
               "À l'équilibre classique, on résout L^o(w_r) = L^d(w_r). Comme le salaire réel s'ajuste librement, toute personne disposée à travailler au salaire réel d'équilibre trouve un emploi : il n'y a pas de chômage involontaire.",
             exercise: {
               id: 'lmd_entd_l1_macroeconomie_ch3_p2_q3',
               type: 'mcq',
               prompt:
-                'Avec L^o = 2w_r et L^d = 100 − 3w_r (TD3 Ex. 7), quels sont le salaire réel d’équilibre w_r* et l’emploi d’équilibre L* ?',
+                'Avec L^o = 2w_r et L^d = 100 − 3w_r, quels sont le salaire réel d’équilibre w_r* et l’emploi d’équilibre L* ?',
               options: [
                 'w_r* = 10 et L* = 20',
                 'w_r* = 25 et L* = 50',
@@ -1218,15 +1218,15 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepNumber: 4,
             stepKind: 'methode',
             stepBadge: 'Arbitrage',
-            stepTheme: 'Travail-Loisir (Ex. 9)',
+            stepTheme: 'Travail-Loisir',
             stepTitle: 'Arbitrage consommation-loisir du salarié',
             paragraphText:
-              "Dans l'exercice 9 du TD3 (U(C, L) = C^{1/2}·L^{1/2}, temps total L̄ = 20 h = L + L^o, contrainte C = (W/P)·L^o), l'utilité Cobb-Douglas à exposants égaux (1/2 et 1/2) conduit toujours à partager le temps total en deux parts égales : L* = L̄ / 2 = 10 h de loisir et L^o = 10 h de travail !",
+              "Pour une fonction d'utilité Cobb-Douglas symétrique U(C, L) = C^{1/2}·L^{1/2} avec temps total L̄ = 20 h = L + L^o et contrainte C = (W/P)·L^o, les exposants égaux (1/2 et 1/2) conduisent toujours à partager le temps total en deux parts égales : L* = L̄ / 2 = 10 h de loisir et L^o = 10 h de travail !",
             exercise: {
               id: 'lmd_entd_l1_macroeconomie_ch3_p2_q4',
               type: 'mcq',
               prompt:
-                'Pour U(C, L) = C^{1/2}·L^{1/2} avec L̄ = 20 h, W = 1 000 et P = 2 (w_r = 500, TD3 Ex. 9), quelles sont l’offre de travail L^o et la consommation optimale C* ?',
+                'Pour U(C, L) = C^{1/2}·L^{1/2} avec L̄ = 20 h, W = 1 000 et P = 2, quelles sont l’offre de travail L^o et la consommation optimale C* ?',
               options: [
                 'L^o = 5 h et C* = 2 500',
                 'L^o = 20 h et C* = 10 000',
@@ -1243,14 +1243,14 @@ export const MACROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'piege',
             stepBadge: 'Keynes',
             stepTheme: 'Chômage involontaire',
-            stepTitle: 'Pourquoi Keynes rejette le plein emploi automatique (TD3 Ex. 4 & 8)',
+            stepTitle: 'Pourquoi Keynes rejette le plein emploi automatique',
             paragraphText:
               "Pour Keynes, le niveau d'emploi ne se fixe pas par une simple baisse des salaires sur le marché du travail, mais dépend de la demande effective sur le marché des biens. Baisser les salaires risque même de réduire le pouvoir d'achat et la demande globale ! Il faut stimuler la demande effective (dépenses publiques, investissement, baisse d'impôts).",
             exercise: {
               id: 'lmd_entd_l1_macroeconomie_ch3_p2_q5',
               type: 'mcq',
               prompt:
-                'Dans une économie keynésienne où Y = 10L, le plein emploi vaut L_p = 60 et la demande effective fixe Y* = 500 (TD3 Ex. 4), quel est le volume de chômage involontaire ?',
+                'Dans une économie keynésienne où Y = 10L, le plein emploi vaut L_p = 60 et la demande effective fixe Y* = 500, quel est le volume de chômage involontaire ?',
               options: ['50 unités', '10 unités', '0 unité', '60 unités'],
               correctAnswerIndex: 1,
               explanation:

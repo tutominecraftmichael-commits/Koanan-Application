@@ -1389,7 +1389,7 @@ export const SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES: CurriculumChapter = {
           "exercise": {
             "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q3",
             "type": "mcq",
-            "prompt": "Quelle est la définition du stress donnée dans le cours sur les réactions émotionnelles ?",
+            "prompt": "Quelle est la définition du stress relative aux les réactions émotionnelles ?",
             "options": [
               "Une maladie contagieuse",
               "L'état d'alarme qui résulte d'une agression, puis l'état de défense et d'adaptation de l'organisme",
@@ -1515,7 +1515,7 @@ export const SVT_TLE_A_L01_REACTIONS_EMOTIONNELLES: CurriculumChapter = {
         {
           "id": "terminale_a_svt_l01_reactions_emotionnelles_p06_q3",
           "type": "mcq",
-          "prompt": "Quelle est la définition du stress donnée dans le cours sur les réactions émotionnelles ?",
+          "prompt": "Quelle est la définition du stress relative aux les réactions émotionnelles ?",
           "options": [
             "Une maladie contagieuse",
             "L'état d'alarme qui résulte d'une agression, puis l'état de défense et d'adaptation de l'organisme",

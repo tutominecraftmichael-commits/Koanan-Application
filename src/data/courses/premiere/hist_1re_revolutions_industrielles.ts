@@ -88,7 +88,7 @@ export const HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_histoire_t1_l02_revolutions_industrielles_p01_q3",
             "type": "mcq",
-            "prompt": "Quelle période couvre la révolution industrielle selon le cours ?",
+            "prompt": "Quelle période couvre la révolution industrielle ?",
             "options": [
               "Du Ier au Xe siècle",
               "Du XIIe au XIVe siècle",
@@ -180,7 +180,7 @@ export const HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES: CurriculumChapter = {
               "Non, elle commence en 2000"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "C'est la question 1 de l'activité d'évaluation du cours."
+            "explanation": "Cette notion est un point clé à retenir pour les évaluations."
           }
         }
       ],
@@ -214,7 +214,7 @@ export const HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_histoire_t1_l02_revolutions_industrielles_p01_q3",
           "type": "mcq",
-          "prompt": "Quelle période couvre la révolution industrielle selon le cours ?",
+          "prompt": "Quelle période couvre la révolution industrielle ?",
           "options": [
             "Du Ier au Xe siècle",
             "Du XIIe au XIVe siècle",
@@ -274,7 +274,7 @@ export const HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES: CurriculumChapter = {
             "Non, elle commence en 2000"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "C'est la question 1 de l'activité d'évaluation du cours."
+          "explanation": "Cette notion est un point clé à retenir pour les évaluations."
         }
       ]
     },
@@ -701,7 +701,7 @@ export const HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES: CurriculumChapter = {
               "Louis Pasteur"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "C'est l'activité d'application n°2 du cours."
+            "explanation": "Cette notion est un point clé à maîtriser."
           }
         }
       ],
@@ -795,7 +795,7 @@ export const HIST_1RE_T1_L02_REVOLUTIONS_INDUSTRIELLES: CurriculumChapter = {
             "Louis Pasteur"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "C'est l'activité d'application n°2 du cours."
+          "explanation": "Cette notion est un point clé à maîtriser."
         }
       ]
     },

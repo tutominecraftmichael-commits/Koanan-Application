@@ -541,7 +541,7 @@ export const SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES: CurriculumChapter = {
       "order": 3,
       "title": "La transcription : de l'ADN à l'ARN messager",
       "summary": "Dans le noyau, l'ARN polymérase copie un gène en ARNm.",
-      "conceptExplanation": "La transcription a lieu dans le NOYAU.\n1. La molécule d'ADN s'ouvre localement, au niveau du gène dont la cellule a besoin.\n2. Une enzyme, l'ARN POLYMÉRASE, se déplace le long d'un des deux brins (le brin qui sert de matrice) et assemble des nucléotides libres (ribonucléotides précurseurs) par complémentarité. Il faut de l'énergie.\n3. Il se forme un ARN messager, qui sort ensuite du noyau vers le cytoplasme.\n\nCorrection du document : l'enzyme de la transcription est l'ARN polymérase (le document écrit d'abord « ADN polymérase », qui sert à copier l'ADN lors de la division cellulaire).\n\nRègles de complémentarité pour la transcription (base de l'ADN matrice → base de l'ARNm) :\n- A → U ; T → A ; C → G ; G → C.\n\nNoms des brins dans ce cours : le brin qui sert de matrice est appelé brin CODANT (ou brin transcrit, ou brin informatif) ; l'autre est le brin NON CODANT (non transcrit). L'ARNm est complémentaire du brin codant, et il a la même séquence que le brin non codant, avec U à la place de T.\n(Attention : dans certains manuels étrangers, les noms « codant » et « non codant » sont inversés. Retiens la règle : l'ARNm est COMPLÉMENTAIRE du brin transcrit.)\n\nExemple du document :\n- brin 1 (codant, transcrit) : AGC TAC GGA TAA GCT TGA\n- brin 2 (non codant) : TCG ATG CCT ATT CGA TCT\n- ARNm : UCG AUG CCU AUU CGA UCU",
+      "conceptExplanation": "La transcription a lieu dans le NOYAU.\n1. La molécule d'ADN s'ouvre localement, au niveau du gène dont la cellule a besoin.\n2. Une enzyme, l'ARN POLYMÉRASE, se déplace le long d'un des deux brins (le brin qui sert de matrice) et assemble des nucléotides libres (ribonucléotides précurseurs) par complémentarité. Il faut de l'énergie.\n3. Il se forme un ARN messager, qui sort ensuite du noyau vers le cytoplasme.\n\nCorrection du document : l'enzyme de la transcription est l'ARN polymérase (le document écrit d'abord « ADN polymérase », qui sert à copier l'ADN lors de la division cellulaire).\n\nRègles de complémentarité pour la transcription (base de l'ADN matrice → base de l'ARNm) :\n- A → U ; T → A ; C → G ; G → C.\n\nNoms des brins dans ce cours : le brin qui sert de matrice est appelé brin CODANT (ou brin transcrit, ou brin informatif) ; l'autre est le brin NON CODANT (non transcrit). L'ARNm est complémentaire du brin codant, et il a la même séquence que le brin non codant, avec U à la place de T.\n(Attention : dans certains manuels étrangers, les noms « codant » et « non codant » sont inversés. Retiens la règle : l'ARNm est COMPLÉMENTAIRE du brin transcrit.)\n\nExemple :\n- brin 1 (codant, transcrit) : AGC TAC GGA TAA GCT TGA\n- brin 2 (non codant) : TCG ATG CCT ATT CGA TCT\n- ARNm : UCG AUG CCU AUU CGA UCU",
       "keyRule": "Transcription (noyau, ARN polymérase) : ARNm complémentaire du brin transcrit (A→U, T→A, C→G, G→C) = même séquence que l'autre brin, avec U au lieu de T.",
       "formulas": [],
       "workedExample": {
@@ -1478,7 +1478,7 @@ export const SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES: CurriculumChapter = {
               "Par la digestion des protéines des aliments, sans modification"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Acteurs, code et mécanisme : les trois hypothèses du cours."
+            "explanation": "Acteurs, code et mécanisme : les trois piliers de la biosynthèse des protéines."
           }
         }
       ],
@@ -1572,7 +1572,7 @@ export const SVT_TLE_A_L07_BIOSYNTHESE_PROTEINES: CurriculumChapter = {
             "Par la digestion des protéines des aliments, sans modification"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Acteurs, code et mécanisme : les trois hypothèses du cours."
+          "explanation": "Acteurs, code et mécanisme : les trois piliers de la biosynthèse des protéines."
         }
       ]
     }

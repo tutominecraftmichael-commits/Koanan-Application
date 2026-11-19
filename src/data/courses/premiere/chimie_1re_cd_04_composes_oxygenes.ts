@@ -24,7 +24,7 @@ export const CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES: CurriculumChapter = {
       summary:
         'Distinguer le groupe hydroxyle –OH d’un alcool du pont –O– d’un éther-oxyde, connaître leur formule brute commune CₙH₂ₙ₊₂O et identifier alcool primaire, secondaire et tertiaire.',
       conceptExplanation:
-        "Un **composé oxygéné** est un composé organique dont la molécule renferme, en plus de $\\mathrm{C}$ et $\\mathrm{H}$, au moins un atome d’oxygène ($\\mathrm{O}$). Les deux premières familles possèdent la même formule brute saturée :\n\n1. **Les alcools** : composés organiques dans lesquels un **groupe hydroxyle** ($-\\mathrm{OH}$) est fixé sur un **atome de carbone tétragonal** (lié uniquement par des liaisons simples), appelé *carbone fonctionnel*. Formule brute générale : $\\mathrm{C_nH_{2n+2}O}$ ($n \\ge 1$), de masse molaire $M = 14n + 18\\text{ g/mol}$.\n   - **Trois classes d’alcools** selon le nombre de groupes alkyles portés par le carbone fonctionnel :\n     - **Alcool primaire** ($\\mathrm{R-CH_2-OH}$ ou $\\mathrm{CH_3-OH}$) : le carbone portant $-\\mathrm{OH}$ est lié à $0$ ou $1$ autre carbone (ex. éthanol, propan-1-ol).\n     - **Alcool secondaire** ($\\mathrm{R-CH(OH)-R'}$) : lié à $2$ groupes alkyles (ex. propan-2-ol, butan-2-ol).\n     - **Alcool tertiaire** ($\\mathrm{R-C(OH)(R')-R''}$) : lié à $3$ groupes alkyles (ex. 2-méthylpropan-2-ol).\n2. **Les éthers-oxydes** : composés dans lesquels un atome d’oxygène est **directement lié à deux atomes de carbone tétragonaux** : $\\mathrm{R_1-O-R_2}$ (avec $R_1, R_2$ groupes alkyles). Ils ont aussi pour formule brute générale $\\mathrm{C_nH_{2n+2}O}$ ($n \\ge 2$) : alcools et éthers-oxydes sont donc des **isomères de fonction**.",
+        "Un **composé oxygéné** est un composé organique dont la molécule renferme, en plus de $\\mathrm{C}$ et $\\mathrm{H}$, au moins un atome d’oxygène ($\\mathrm{O}$). Les deux premières familles possèdent la même formule brute saturée :\n\n1. **Les alcools** : composés organiques dans lesquels un **groupe hydroxyle** ($-\\mathrm{OH}$) est fixé sur un **atome de carbone tétragonal** (lié uniquement par des liaisons simples), appelé *carbone fonctionnel*. Formule brute générale : $\\mathrm{C_nH_{2n+2}O}$ ($n \\ge 1$), de masse molaire $M = 14n + 18\\text{ g/mol}$.\n - **Trois classes d’alcools** selon le nombre de groupes alkyles portés par le carbone fonctionnel :\n - **Alcool primaire** ($\\mathrm{R-CH_2-OH}$ ou $\\mathrm{CH_3-OH}$) : le carbone portant $-\\mathrm{OH}$ est lié à $0$ ou $1$ autre carbone (ex. éthanol, propan-1-ol).\n - **Alcool secondaire** ($\\mathrm{R-CH(OH)-R'}$) : lié à $2$ groupes alkyles (ex. propan-2-ol, butan-2-ol).\n - **Alcool tertiaire** ($\\mathrm{R-C(OH)(R')-R''}$) : lié à $3$ groupes alkyles.\n2. **Les éthers-oxydes** : composés dans lesquels un atome d’oxygène est **directement lié à deux atomes de carbone tétragonaux** : $\\mathrm{R_1-O-R_2}$ (avec $R_1, R_2$ groupes alkyles). Ils ont aussi pour formule brute générale $\\mathrm{C_nH_{2n+2}O}$ ($n \\ge 2$) : alcools et éthers-oxydes sont donc des **isomères de fonction**.",
       keyRule:
         'Alcools (R–OH) et éthers-oxydes (R₁–O–R₂) partagent la formule brute CₙH₂ₙ₊₂O ; la classe d’un alcool (I, II ou III) dépend du nombre de carbones directement liés au carbone porteur de –OH.',
       formulas: [
@@ -35,7 +35,7 @@ export const CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Trouver tous les isomères de formule brute C₃H₈O (Exercice 2 p. 6)',
+        title: 'Trouver tous les isomères de formule brute C₃H₈O',
         statement:
           'Écris toutes les formules semi-développées possibles d’un composé oxygéné de formule brute $\\mathrm{C_3H_8O}$, précise leur famille et la classe des alcools obtenus.',
         methodSteps: [
@@ -295,7 +295,7 @@ export const CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Nommer un alcool complexe et traduire sa formule (Ex 1D p. 6 & Activité p. 3)',
+        title: 'Nommer un alcool complexe et traduire sa formule',
         statement:
           'Écris la formule semi-développée du `3,4-diméthylheptan-4-ol`, et donne les deux noms possibles de $\\mathrm{CH_3-CH_2-O-CH_2-CH_2-CH_3}$.',
         methodSteps: [
@@ -426,7 +426,7 @@ export const CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES: CurriculumChapter = {
           stepNumber: 6,
           stepKind: 'exemple',
           stepBadge: 'Éther ramifié',
-          stepTheme: 'Exercice du cours p. 2',
+          stepTheme: 'Application',
           stepTitle: 'Nommer un éther-oxyde comportant une chaîne ramifiée',
           paragraphText:
             'Si l’un des groupes liés à l’oxygène est ramifié (ex. –CH₂–CH(CH₃)–CH₃, dit 2-méthylpropyle), on numérote ce groupe à partir du carbone lié à O.',
@@ -555,13 +555,13 @@ export const CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Comparer deux cétones isomères et écrire un aldéhyde ramifié (p. 3 & Ex 1B p. 6)',
+        title: 'Comparer deux cétones isomères et écrire un aldéhyde ramifié',
         statement:
           'Écris les formules semi-développées du `2,3-diméthylpentanal` et de la `2-méthylpentan-3-one`, puis vérifie si cette dernière est identique à la `3-méthylpentan-3-one`.',
         methodSteps: [
           '1) 2,3-diméthylpentanal : C1 est toujours –CHO ; méthyles en C2 et C3 sur une chaîne à 5 C → CH₃-CH₂-CH(CH₃)-CH(CH₃)-CHO.',
           '2) 2-méthylpentan-3-one : pentane (5 C) avec C=O en C3 et méthyle en C2 → CH₃-CH(CH₃)-CO-CH₂-CH₃ (formule brute C₆H₁₂O).',
-          '3) 3-méthylpentan-3-one : est impossible ! Sur C3 déjà lié à C2, C4 et doublement à O (=O), C3 forme déjà 4 liaisons covalentes et ne peut pas porter de méthyle ! La molécule tracée p. 3 du cours est CH₃-CH(CH₃)-CO-CH₂-CH₃, dont le vrai nom est bien 2-méthylpentan-3-one (ou 4-méthyl... numéroté en 2 depuis le bout portant le méthyle car C=O est en C3 dans les deux sens).',
+          '3) 3-méthylpentan-3-one : est impossible ! Sur C3 déjà lié à C2, C4 et doublement à O (=O), C3 forme déjà 4 liaisons covalentes et ne peut pas porter de méthyle ! En revanche, la molécule CH₃-CH(CH₃)-CO-CH₂-CH₃, dont le vrai nom est bien 2-méthylpentan-3-one (ou 4-méthyl... numéroté en 2 depuis le bout portant le méthyle car C=O est en C3 dans les deux sens).',
         ],
         conclusion:
           'Un carbone de cétone (>C=O) est déjà lié à 2 carbones et doublement à O (soit 4 liaisons) : il ne peut jamais porter un substituant supplémentaire !',
@@ -815,7 +815,7 @@ export const CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES: CurriculumChapter = {
       summary:
         'Identifier le groupe carboxyle –COOH (à ne pas confondre avec l’aldéhyde), connaître la formule brute saturée CₙH₂ₙO₂ et nommer les acides carboxyliques en « acide ...oïque ».',
       conceptExplanation:
-        "Les **acides carboxyliques** sont des composés organiques comportant le **groupe carboxyle** $-\\mathrm{COOH}$ (réunion sur un même carbone d’un $=\\mathrm{O}$ et d’un $-\\mathrm{OH}$).\n\n- **Formule générale** : $\\mathrm{R-COOH}$, où $R$ est un atome d’hydrogène ($\\mathrm{H-COOH}$, acide méthanoïque) ou un groupe alkyle.\n- **Formule brute générale à chaîne saturée** : $\\mathrm{C_nH_{2n}O_2}$ ($n \\ge 1$), de masse molaire $M = 14n + 32\\text{ g/mol}$.\n- **Règle de nomenclature** : on fait précéder du mot **acide** le nom de l’alcane de même squelette carboné dont on remplace le *« e »* final par **-oïque**. La chaîne principale se **numérote obligatoirement à partir du carbone du groupe carboxyle ($\\text{C}_1$)**.\n- **Exemples officiels** : $\\mathrm{CH_3-CH_2-COOH}$ = `acide propanoïque` ; $\\mathrm{CH_3-CH(CH_3)-CH_2-COOH}$ = `acide 3-méthylbutanoïque` ; $\\mathrm{CH_3-C(CH_3)_2-CH_2-COOH}$ = `acide 3,3-diméthylbutanoïque`.\n- **Risque de confusion (Documentation p. 9–10)** : ne jamais confondre le groupe aldéhyde ($-\\mathrm{CO-H}$, 1 seul oxygène) avec le groupe carboxyle ($-\\mathrm{CO-OH}$, 2 oxygènes dont un H acide).",
+        "Les **acides carboxyliques** sont des composés organiques comportant le **groupe carboxyle** $-\\mathrm{COOH}$ (réunion sur un même carbone d’un $=\\mathrm{O}$ et d’un $-\\mathrm{OH}$).\n\n- **Formule générale** : $\\mathrm{R-COOH}$, où $R$ est un atome d’hydrogène ($\\mathrm{H-COOH}$, acide méthanoïque) ou un groupe alkyle.\n- **Formule brute générale à chaîne saturée** : $\\mathrm{C_nH_{2n}O_2}$ ($n \\ge 1$), de masse molaire $M = 14n + 32\\text{ g/mol}$.\n- **Règle de nomenclature** : on fait précéder du mot **acide** le nom de l’alcane de même squelette carboné dont on remplace le *« e »* final par **-oïque**. La chaîne principale se **numérote obligatoirement à partir du carbone du groupe carboxyle ($\\text{C}_1$)**.\n- **Exemples officiels** : $\\mathrm{CH_3-CH_2-COOH}$ = `acide propanoïque` ; $\\mathrm{CH_3-CH(CH_3)-CH_2-COOH}$ = `acide 3-méthylbutanoïque` ; $\\mathrm{CH_3-C(CH_3)_2-CH_2-COOH}$ = `acide 3,3-diméthylbutanoïque`.\n- **Risque de confusion** : ne jamais confondre le groupe aldéhyde ($-\\mathrm{CO-H}$, 1 seul oxygène) avec le groupe carboxyle ($-\\mathrm{CO-OH}$, 2 oxygènes dont un H acide).",
       keyRule:
         'Un acide carboxylique R–COOH (formule saturée CₙH₂ₙO₂) se nomme « acide [chaîne principale]oïque », en comptant le carbone de –COOH comme le carbone n°1.',
       formulas: [
@@ -826,7 +826,7 @@ export const CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Nommer et représenter l’acide 3,3-diméthylbutanoïque (Activité p. 4)',
+        title: 'Nommer et représenter l’acide 3,3-diméthylbutanoïque',
         statement:
           'Écris la formule semi-développée de l’`acide 3,3-diméthylbutanoïque`, puis détermine le nom de $\\mathrm{CH_3-CH(CH_3)-CH_2-COOH}$.',
         methodSteps: [
@@ -1074,7 +1074,7 @@ export const CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES: CurriculumChapter = {
       summary:
         'Nommer un ester R–COO–R′ en deux termes ([alcane]oate de [alkyle]), écrire sa formule et déterminer sa formule brute par pourcentage massique ou densité de vapeur.',
       conceptExplanation:
-        "Les **esters** comportent le groupe fonctionnel ester $-\\mathrm{COO}-$ : formule générale $\\mathrm{R-C(=O)-O-R'}$ (où $R$ est $\\mathrm{H}$ ou un groupe alkyle, et $R'$ est obligatoirement un groupe alkyle). Leur formule brute générale est $\\mathrm{C_nH_{2n}O_2}$ ($n \\ge 2$) : ils sont **isomères de fonction des acides carboxyliques**.\n\n**Règle de nomenclature (2 termes)** :\n1. Le **premier terme** provient de la partie acide $\\mathrm{R-COO-}$ (numérotée depuis le carbone $\\mathrm{C=O}$ = $\\text{C}_1$) : on remplace *« oïque »* de l’acide par **-oate** (ex. `éthanoate`, `propanoate`, `3-méthylbutanoate`).\n2. Le **second terme** est le nom du groupe **alkyle $-R'$** lié par liaison simple au deuxième atome d’oxygène (numéroté à partir du carbone lié à O = $\\text{C}_1'$) : ex. `de méthyle`, `de propyle`, `de 2-méthylpropyle`, `de 1-méthylpropyle`.\n\n**Détermination quantitative (exercices du cours p. 5, 7, 8)** :\n- Par le pourcentage en oxygène : $\\%\\mathrm{O} = \\frac{32}{M} \\times 100 \\implies M = \\frac{3200}{\\%\\mathrm{O}} = 14n + 32$.\n- Par la densité de vapeur par rapport à l’air : $M = 29 \\cdot d$.",
+        "Les **esters** comportent le groupe fonctionnel ester $-\\mathrm{COO}-$ : formule générale $\\mathrm{R-C(=O)-O-R'}$ (où $R$ est $\\mathrm{H}$ ou un groupe alkyle, et $R'$ est obligatoirement un groupe alkyle). Leur formule brute générale est $\\mathrm{C_nH_{2n}O_2}$ ($n \\ge 2$) : ils sont **isomères de fonction des acides carboxyliques**.\n\n**Règle de nomenclature (2 termes)** :\n1. Le **premier terme** provient de la partie acide $\\mathrm{R-COO-}$ (numérotée depuis le carbone $\\mathrm{C=O}$ = $\\text{C}_1$) : on remplace *« oïque »* de l’acide par **-oate** (ex. `éthanoate`, `propanoate`, `3-méthylbutanoate`).\n2. Le **second terme** est le nom du groupe **alkyle $-R'$** lié par liaison simple au deuxième atome d’oxygène (numéroté à partir du carbone lié à O = $\\text{C}_1'$) : ex. `de méthyle`, `de propyle`, `de 2-méthylpropyle`, `de 1-méthylpropyle`.\n\n**Détermination quantitative** :\n- Par le pourcentage en oxygène : $\\%\\mathrm{O} = \\frac{32}{M} \\times 100 \\implies M = \\frac{3200}{\\%\\mathrm{O}} = 14n + 32$.\n- Par la densité de vapeur par rapport à l’air : $M = 29 \\cdot d$.",
       keyRule:
         'Un ester R–COO–R′ (formule CₙH₂ₙO₂ pour n ≥ 2) se nomme « [chaîne acide R–C=O]oate de [alkyle R′] » ; on trouve M par 3200/%O ou 29·d puis n via 14n + 32 = M.',
       formulas: [
@@ -1085,7 +1085,7 @@ export const CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Identifier un ester par analyse élémentaire ou densité (Situation p. 5 & Ex 4–5 p. 7–8)',
+        title: 'Identifier un ester par analyse élémentaire ou densité',
         statement:
           'Détermine l’ester dans ces deux cas : (1) un ester $\\mathrm{C_xH_{2x}O_2}$ à chaîne ramifiée contient $36{,}36\\%$ d’oxygène et son carbone fonctionnel est lié à un seul H ; (2) un ester de densité $d = 4{,}48$ possède un groupe $R\'$ linéaire à $5$ carbones.',
         methodSteps: [
@@ -1333,18 +1333,18 @@ export const CHIMIE_1RE_CD_L04_COMPOSES_OXYGENES: CurriculumChapter = {
       summary:
         'Relier immédiatement chaque formule brute (CₙH₂ₙ₊₂O, CₙH₂ₙO, CₙH₂ₙO₂) aux deux familles correspondantes et connaître les applications courantes des composés oxygénés.',
       conceptExplanation:
-        "Les 6 familles oxygénées au programme de 1ères CD se regroupent deux par deux selon leur formule brute générale :\n\n- **$\\mathrm{C_nH_{2n+2}O}$** $\\leftrightarrow$ **Alcools** ($-\\mathrm{OH}$) et **Éthers-oxydes** ($-\\mathrm{O}-$).\n- **$\\mathrm{C_nH_{2n}O}$** $\\leftrightarrow$ **Aldéhydes** ($-\\mathrm{CHO}$) et **Cétones** ($>\\mathrm{C=O}$ interne).\n- **$\\mathrm{C_nH_{2n}O_2}$** $\\leftrightarrow$ **Acides carboxyliques** ($-\\mathrm{COOH}$) et **Esters** ($-\\mathrm{COO}-$).\n\n**Intérêt général des composés oxygénés (cours p. 5)** :\n- **Alcools et éthers-oxydes** : solvants organiques, désinfectants médicaux (éthanol à 70°, éther), boissons alcoolisées et **biocarburant** (éthanol).\n- **Aldéhydes et cétones** : solvants industriels (acétone / propanone), parfumerie ; le **formol** (solution aqueuse de méthanal) sert à la **conservation des corps** biologiques.\n- **Acides carboxyliques** : très présents dans l’**alimentation** (**acide citrique** dans le citron, **acide éthanoïque** dans le vinaigre).\n- **Esters** : responsables des **arômes naturels des fruits**, utilisés en **parfumerie** et en **savonnerie** (corps gras / triglycérides).",
+        "Les 6 familles oxygénées au programme de 1ères CD se regroupent deux par deux selon leur formule brute générale :\n\n- **$\\mathrm{C_nH_{2n+2}O}$** $\\leftrightarrow$ **Alcools** ($-\\mathrm{OH}$) et **Éthers-oxydes** ($-\\mathrm{O}-$).\n- **$\\mathrm{C_nH_{2n}O}$** $\\leftrightarrow$ **Aldéhydes** ($-\\mathrm{CHO}$) et **Cétones** ($>\\mathrm{C=O}$ interne).\n- **$\\mathrm{C_nH_{2n}O_2}$** $\\leftrightarrow$ **Acides carboxyliques** ($-\\mathrm{COOH}$) et **Esters** ($-\\mathrm{COO}-$).\n\n**Intérêt général des composés oxygénés** :\n- **Alcools et éthers-oxydes** : solvants organiques, désinfectants médicaux (éthanol à 70°, éther), boissons alcoolisées et **biocarburant** (éthanol).\n- **Aldéhydes et cétones** : solvants industriels (acétone / propanone), parfumerie ; le **formol** (solution aqueuse de méthanal) sert à la **conservation des corps** biologiques.\n- **Acides carboxyliques** : très présents dans l’**alimentation** (**acide citrique** dans le citron, **acide éthanoïque** dans le vinaigre).\n- **Esters** : responsables des **arômes naturels des fruits**, utilisés en **parfumerie** et en **savonnerie** (corps gras / triglycérides).",
       keyRule:
         'À chaque formule brute saturée correspondent exactement deux familles oxygénées : CₙH₂ₙ₊₂O → alcool ou éther-oxyde ; CₙH₂ₙO → aldéhyde ou cétone ; CₙH₂ₙO₂ → acide carboxylique ou ester.',
       formulas: [
         {
           name: 'Tableau d’équivalence formule brute → familles',
           formula: '\\mathrm{C_nH_{2n+2}O} \\leftrightarrow \\text{Alcool / Éther} \\;;\\; \\mathrm{C_nH_{2n}O} \\leftrightarrow \\text{Aldéhyde / Cétone} \\;;\\; \\mathrm{C_nH_{2n}O_2} \\leftrightarrow \\text{Acide / Ester}',
-          note: 'Permet d’identifier instantanément les familles possibles d’une formule brute (Exercice 3 p. 6–7)',
+          note: 'Permet d’identifier instantanément les familles possibles d’une formule brute',
         },
       ],
       workedExample: {
-        title: 'Associer chaque formule brute à ses familles possibles (Exercice 3 p. 6–7)',
+        title: 'Associer chaque formule brute à ses familles possibles',
         statement:
           'Relie chacune des formules brutes suivantes aux familles correspondantes : $\\mathrm{C_5H_{12}O}$, $\\mathrm{C_4H_8O}$ et $\\mathrm{C_3H_6O_2}$.',
         methodSteps: [

@@ -629,7 +629,7 @@ export const SVT_1RE_D_L09_EVOLUTION_SOLS_TROPICAUX: CurriculumChapter = {
           "stepBadge": "Horizon B",
           "stepTheme": "Erreur du document",
           "stepTitle": "Comment se forme l’horizon B ?",
-          "paragraphText": "Le corrigé de la situation 1 dit que B se forme par migrations **ascendantes**. D’après le cours lui-même, B se forme par migrations **descendantes** : il **reçoit** ce que l’eau entraîne depuis **A**.",
+          "paragraphText": "Attention au sens des migrations : B se forme par migrations **descendantes** : il **reçoit** ce que l’eau entraîne depuis **A**.",
           "exercise": {
             "id": "premiere_d_svt_l09_evolution_sols_tropicaux_p03_q5",
             "type": "mcq",

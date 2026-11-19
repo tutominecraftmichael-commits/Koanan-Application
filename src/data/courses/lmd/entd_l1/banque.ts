@@ -25,7 +25,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Maîtriser l'historique et la définition légale UEMOA de la banque, l'intermédiation financière (taux, multiplicateur, capacité maximale, bilan) et la typologie des institutions bancaires.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC — Enseignant KADJO Assandé Pierre — Cours Banque (Ch. 1 à 3) & Exercices de préparation examen',
+    source: 'ENTD L1 — Enseignant KADJO Assandé Pierre — Cours Banque (Ch. 1 à 3) & Exercices de préparation examen',
     points: [
       makePoint({
         id: 'lmd_entd_l1_banque_ch1_p1',
@@ -69,7 +69,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_banque_ch1_p1_q1',
               type: 'mcq',
               prompt:
-                'Dans quelle ville européenne a été créée en 1151 la première banque au sens moderne du terme selon le cours ESATIC ?',
+                'Dans quelle ville européenne a été créée en 1151 la première banque au sens moderne du terme ?',
               options: ['Paris', 'Venise', 'Londres', 'Abidjan'],
               correctAnswerIndex: 1,
               explanation:
@@ -136,7 +136,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_banque_ch1_p1_q4',
               type: 'mcq',
               prompt:
-                'Quelle part approximative des actifs financiers les banques détiennent-elles dans l’économie ivoirienne selon le cours ?',
+                'Quelle part approximative des actifs financiers les banques détiennent-elles dans l’économie ivoirienne ?',
               options: ['15 %', '35 %', '50 %', '90 %'],
               correctAnswerIndex: 3,
               explanation:
@@ -172,7 +172,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       makePoint({
         id: 'lmd_entd_l1_banque_ch1_p2',
         order: 2,
-        title: "Intermédiation, multiplicateur de crédit et bilan bancaire (Ex. 8 à 11)",
+        title: "Intermédiation, multiplicateur de crédit et bilan bancaire",
         summary:
           "Calculer le taux d'intermédiation, le besoin de refinancement, le multiplicateur de crédit (m = 1/r), la capacité maximale C_Max et dresser un bilan bancaire en partie double.",
         conceptExplanation:
@@ -199,7 +199,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Taux d’intermédiation, multiplicateur et bilan (Exercices 8, 9 & 11)',
           statement:
-            "A) Dépôts = 850 Mds FCFA, Crédits = 680 Mds FCFA (Ex. 8). Calculez le taux d'intermédiation et les crédits supplémentaires pour atteindre 90 %.\nB) Dépôt initial = 200 M FCFA, réserves obligatoires r = 2 % (Ex. 9). Calculez les réserves, le prêt initial, m et C_Max.",
+            "A) Dépôts = 850 Mds FCFA, Crédits = 680 Mds FCFA. Calculez le taux d'intermédiation et les crédits supplémentaires pour atteindre 90 %.\nB) Dépôt initial = 200 M FCFA, réserves obligatoires r = 2 %. Calculez les réserves, le prêt initial, m et C_Max.",
           methodSteps: [
             'A1) Taux d’intermédiation = (680 / 850) × 100 = 80 % (bonne transformation, 20 % des dépôts non prêtés).',
             'A2) Pour 90 % sans changer les dépôts : Crédits cibles = 0,90 × 850 = 765 Mds ⇒ Crédits supplémentaires = 765 − 680 = 85 Mds FCFA.',
@@ -214,16 +214,16 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'methode',
-            stepBadge: 'Ex. 8',
+            stepBadge: 'Application',
             stepTheme: 'Taux d’intermédiation',
             stepTitle: "Calculer et ajuster le taux d'intermédiation",
             paragraphText:
-              "Le taux d'intermédiation vaut (Crédits / Dépôts) × 100. Dans l'exemple du cours (Dépôts = 850 Mds, Crédits = 680 Mds), il vaut 80 %. Pour atteindre 85 % sans nouveaux dépôts, les crédits doivent passer à 0,85 × 850 = 722,5 Mds (+42,5 Mds).",
+              "Le taux d'intermédiation vaut (Crédits / Dépôts) × 100. Par exemple (Dépôts = 850 Mds, Crédits = 680 Mds), il vaut 80 %. Pour atteindre 85 % sans nouveaux dépôts, les crédits doivent passer à 0,85 × 850 = 722,5 Mds (+42,5 Mds).",
             exercise: {
               id: 'lmd_entd_l1_banque_ch1_p2_q1',
               type: 'mcq',
               prompt:
-                'Une banque collecte 850 milliards FCFA de dépôts et distribue 680 milliards FCFA de crédits (Ex. 8). Quel est son taux d’intermédiation et quels crédits supplémentaires faut-il pour atteindre 90 % ?',
+                'Une banque collecte 850 milliards FCFA de dépôts et distribue 680 milliards FCFA de crédits. Quel est son taux d’intermédiation et quels crédits supplémentaires faut-il pour atteindre 90 % ?',
               options: [
                 'Taux = 80 % ; crédits supplémentaires = 85 milliards FCFA',
                 'Taux = 125 % ; crédits supplémentaires = 170 milliards FCFA',
@@ -238,7 +238,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'Ex. 10',
+            stepBadge: 'Application',
             stepTheme: 'Refinancement',
             stepTitle: 'Besoin de refinancement interbancaire quand Crédits > Dépôts',
             paragraphText:
@@ -247,7 +247,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_banque_ch1_p2_q2',
               type: 'mcq',
               prompt:
-                'Une banque dispose de 400 millions FCFA de dépôts et a accordé 520 millions FCFA de crédits (Ex. 10). Quel est son taux d’intermédiation et son besoin de refinancement ?',
+                'Une banque dispose de 400 millions FCFA de dépôts et a accordé 520 millions FCFA de crédits. Quel est son taux d’intermédiation et son besoin de refinancement ?',
               options: [
                 'Taux = 76,9 % ; aucun refinancement nécessaire',
                 'Taux = 130 % ; besoin de refinancement de 120 millions FCFA',
@@ -262,7 +262,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'methode',
-            stepBadge: 'Ex. 9',
+            stepBadge: 'Application',
             stepTheme: 'Multiplicateur de crédit',
             stepTitle: 'Calculer le multiplicateur m et la capacité maximale C_Max',
             paragraphText:
@@ -271,7 +271,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_banque_ch1_p2_q3',
               type: 'mcq',
               prompt:
-                'La BCEAO fixe r = 2 % et un client dépose 200 millions FCFA (Ex. 9). Que valent le multiplicateur m et la création maximale de crédits C_Max ?',
+                'La BCEAO fixe r = 2 % et un client dépose 200 millions FCFA. Que valent le multiplicateur m et la création maximale de crédits C_Max ?',
               options: [
                 'm = 20 et C_Max = 4 000 millions FCFA',
                 'm = 50 et C_Max = 10 000 millions FCFA',
@@ -295,7 +295,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_banque_ch1_p2_q4',
               type: 'mcq',
               prompt:
-                'Dans le bilan simplifié d’une banque (Ex. 11), comment se classent respectivement les « Dépôts de la clientèle » et les « Crédits accordés » ?',
+                'Dans le bilan simplifié d’une banque, comment se classent respectivement les « Dépôts de la clientèle » et les « Crédits accordés » ?',
               options: [
                 'Dépôts à l’Actif ; Crédits au Passif',
                 'Les deux à l’Actif',
@@ -310,7 +310,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 5,
             stepKind: 'exemple',
-            stepBadge: 'Ex. 11',
+            stepBadge: 'Application',
             stepTheme: 'Équilibre comptable',
             stepTitle: 'Construire et mettre à jour un bilan bancaire',
             paragraphText:
@@ -336,7 +336,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       makePoint({
         id: 'lmd_entd_l1_banque_ch1_p3',
         order: 3,
-        title: 'Typologie des banques et produits/crédits bancaires (Ex. 1, 3 & 4)',
+        title: 'Typologie des banques et produits/crédits bancaires',
         summary:
           "Classifier BCEAO, SGCI, BNI, BOAD et Djamo, distinguer crédit d'exploitation et crédit d'investissement et calculer le coût total d'un emprunt.",
         conceptExplanation:
@@ -351,9 +351,9 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Classifier les banques et calculer un crédit d’exploitation (Ex. 1 & Ex. 4)',
+          title: 'Classifier les banques et calculer un crédit d’exploitation',
           statement:
-            "Un commerçant emprunte 10 millions FCFA à 6 % par an sur 2 ans pour financer ses stocks (remboursement annuel des intérêts et du capital en fin de période, Ex. 3 & 4). Calculez les intérêts annuels, le montant total remboursé et justifiez la nature du crédit.",
+            "Un commerçant emprunte 10 millions FCFA à 6 % par an sur 2 ans pour financer ses stocks. Calculez les intérêts annuels, le montant total remboursé et justifiez la nature du crédit.",
           methodSteps: [
             'Intérêts annuels = 10 000 000 × 6 % = 600 000 FCFA par an.',
             'Intérêts totaux sur 2 ans = 600 000 × 2 = 1 200 000 FCFA.',
@@ -367,11 +367,11 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'definition',
-            stepBadge: 'Ex. 1',
+            stepBadge: 'Application',
             stepTheme: 'Classification UEMOA',
             stepTitle: 'Classer BCEAO, SGCI, BNI, BOAD et Djamo',
             paragraphText:
-              "Dans l'espace UEMOA/Côte d'Ivoire (Ex. 1) : la BCEAO est la Banque centrale, la Société Générale CI est une Banque commerciale, la BNI est une Banque d'investissement, la BOAD est une Banque de développement régionale et Djamo est une Néobanque.",
+              "Dans l'espace UEMOA/Côte d'Ivoire : la BCEAO est la Banque centrale, la Société Générale CI est une Banque commerciale, la BNI est une Banque d'investissement, la BOAD est une Banque de développement régionale et Djamo est une Néobanque.",
             exercise: {
               id: 'lmd_entd_l1_banque_ch1_p3_q1',
               type: 'mcq',
@@ -415,16 +415,16 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'methode',
-            stepBadge: 'Calcul Ex. 4',
+            stepBadge: 'Calcul',
             stepTheme: 'Coût d’un crédit',
             stepTitle: 'Calculer les intérêts annuels et le total remboursé',
             paragraphText:
-              "Pour un crédit de 10 000 000 FCFA à 6 % sur 2 ans (Ex. 3 & 4), l'intérêt annuel vaut 10 000 000 × 0,06 = 600 000 FCFA, soit 1 200 000 FCFA d'intérêts totaux et 11 200 000 FCFA remboursés au total.",
+              "Pour un crédit de 10 000 000 FCFA à 6 % sur 2 ans, l'intérêt annuel vaut 10 000 000 × 0,06 = 600 000 FCFA, soit 1 200 000 FCFA d'intérêts totaux et 11 200 000 FCFA remboursés au total.",
             exercise: {
               id: 'lmd_entd_l1_banque_ch1_p3_q3',
               type: 'mcq',
               prompt:
-                'Un commerçant emprunte 10 millions FCFA à 6 % par an sur 2 ans (Ex. 3 & 4). Quels sont les intérêts annuels et le montant total remboursé ?',
+                'Un commerçant emprunte 10 millions FCFA à 6 % par an sur 2 ans. Quels sont les intérêts annuels et le montant total remboursé ?',
               options: [
                 '600 000 FCFA/an et 11 200 000 FCFA au total',
                 '600 000 FCFA/an et 10 600 000 FCFA au total',
@@ -499,15 +499,15 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 2,
     title: 'Chapitre 2 : Gestion bancaire, performance financière et risques',
     summary:
-      "Calculer la marge d'intermédiation, le PNB, le ROA, le ROE, le coefficient d'exploitation et le ratio NPL (Ex. 5, 6 & 7), et maîtriser la gestion des risques bancaires et cyber.",
+      "Calculer la marge d'intermédiation, le PNB, le ROA, le ROE, le coefficient d'exploitation et le ratio NPL, et maîtriser la gestion des risques bancaires et cyber.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC — KADJO Assandé Pierre — Cours Banque (Ch. 4 & 5) & Exercices 5, 6, 7',
+    source: 'ENTD L1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_banque_ch2_p1',
         order: 1,
-        title: "Marge d'intermédiation et Produit Net Bancaire (Ex. 5)",
+        title: "Marge d'intermédiation et Produit Net Bancaire",
         summary:
           "Calculer produits d'intérêts, charges d'intérêts et marge d'intermédiation, et comprendre la structure des revenus bancaires (PNB).",
         conceptExplanation:
@@ -529,7 +529,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Calculer la marge d’intermédiation d’une banque (Exercice 5)',
           statement:
-            "Une banque accorde 200 milliards FCFA de crédits au taux moyen de 8 % et collecte 150 milliards FCFA de dépôts rémunérés à 3 % (Ex. 5). Calculez les produits d'intérêts, les charges d'intérêts et la marge d'intermédiation.",
+            "Une banque accorde 200 milliards FCFA de crédits au taux moyen de 8 % et collecte 150 milliards FCFA de dépôts rémunérés à 3 %. Calculez les produits d'intérêts, les charges d'intérêts et la marge d'intermédiation.",
           methodSteps: [
             'Produits d’intérêts = 200 × 8 % = 16 milliards FCFA.',
             'Charges d’intérêts = 150 × 3 % = 4,5 milliards FCFA.',
@@ -566,7 +566,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'Ex. 5',
+            stepBadge: 'Application',
             stepTheme: 'Calcul numérique',
             stepTitle: 'Calculer produits, charges et marge d’intermédiation',
             paragraphText:
@@ -664,7 +664,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       makePoint({
         id: 'lmd_entd_l1_banque_ch2_p2',
         order: 2,
-        title: "Indicateurs de performance (ROA, ROE, Coefficient d'exploitation) et NPL (Ex. 6 & 7)",
+        title: "Indicateurs de performance (ROA, ROE, Coefficient d'exploitation) et NPL",
         summary:
           "Calculer et interpréter les quatre grands ratios de gestion bancaire issus des exercices d'examen : ROA, ROE, Coefficient d'exploitation et taux de créances douteuses (NPL ratio).",
         conceptExplanation:
@@ -684,9 +684,9 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Diagnostic complet de performance et qualité des actifs (Ex. 6 & Ex. 7)',
+          title: 'Diagnostic complet de performance et qualité des actifs',
           statement:
-            "A) Données 2024 (Ex. 6) : Résultat net = 20 Mds, Fonds propres = 55 Mds, Total actif = 600 Mds, Charges d'exploitation = 20 Mds, PNB = 80 Mds. Calculez ROA, ROE et coefficient d'exploitation.\nB) Encours total crédits = 400 Mds, créances douteuses = 20 Mds (Ex. 7). Calculez le ratio NPL et proposez 2 solutions.",
+            "A) Données 2024 : Résultat net = 20 Mds, Fonds propres = 55 Mds, Total actif = 600 Mds, Charges d'exploitation = 20 Mds, PNB = 80 Mds. Calculez ROA, ROE et coefficient d'exploitation.\nB) Encours total crédits = 400 Mds, créances douteuses = 20 Mds. Calculez le ratio NPL et proposez 2 solutions.",
           methodSteps: [
             'ROA = (20 / 600) × 100 ≈ 3,33 % (très bonne rentabilité des actifs, bien au-dessus de la référence de 1 %).',
             'ROE = (20 / 55) × 100 ≈ 36,36 % (excellente rentabilité des capitaux propres pour les actionnaires).',
@@ -701,7 +701,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'methode',
-            stepBadge: 'Ex. 6',
+            stepBadge: 'Application',
             stepTheme: 'ROA',
             stepTitle: 'Calculer et interpréter le ROA (Return On Assets)',
             paragraphText:
@@ -720,7 +720,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'Ex. 6',
+            stepBadge: 'Application',
             stepTheme: 'ROE',
             stepTitle: 'Calculer et interpréter le ROE (Return On Equity)',
             paragraphText:
@@ -768,7 +768,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'methode',
-            stepBadge: 'Ex. 7',
+            stepBadge: 'Application',
             stepTheme: 'Qualité des actifs (NPL)',
             stepTitle: 'Calculer le taux de créances douteuses (NPL ratio)',
             paragraphText:
@@ -777,7 +777,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_banque_ch2_p2_q4',
               type: 'mcq',
               prompt:
-                'Sur un encours total de crédits de 400 milliards FCFA, 20 milliards FCFA sont classés en créances douteuses (Ex. 7). Quel est le ratio NPL ?',
+                'Sur un encours total de crédits de 400 milliards FCFA, 20 milliards FCFA sont classés en créances douteuses. Quel est le ratio NPL ?',
               options: ['20 %', '0,5 %', '2 %', '5 %'],
               correctAnswerIndex: 3,
               explanation:
@@ -976,19 +976,19 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 3,
     title: 'Chapitre 3 : BCEAO, régulation UMOA et inclusion financière numérique',
     summary:
-      "Comprendre le rôle de la BCEAO, la politique monétaire (taux directeur — Ex. 2), la Commission Bancaire UMOA et les leviers d'inclusion financière numérique (microfinance, mobile money, open banking).",
+      "Comprendre le rôle de la BCEAO, la politique monétaire (taux directeur), la Commission Bancaire UMOA et les leviers d'inclusion financière numérique (microfinance, mobile money, open banking).",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC — KADJO Assandé Pierre — Cours Banque (Ch. 6 & 7) & Exercice 2',
+    source: 'ENTD L1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_banque_ch3_p1',
         order: 1,
-        title: 'BCEAO, politique monétaire et Commission Bancaire de l’UMOA (Ex. 2)',
+        title: 'BCEAO, politique monétaire et Commission Bancaire de l’UMOA',
         summary:
           "Missions de la BCEAO, fonctionnement du taux directeur (politique restrictive vs expansionniste) et rôle de supervision de la Commission Bancaire de l'UMOA.",
         conceptExplanation:
-          "Dans les 8 États membres de l'UEMOA (dont la Côte d'Ivoire), le système bancaire est encadré par deux institutions majeures :\n\n1. La BCEAO (Banque Centrale des États de l'Afrique de l'Ouest) : institut d'émission du Franc CFA (XOF), elle a pour objectif prioritaire la stabilité des prix (maîtrise de l'inflation), soutient les politiques économiques de l'Union, gère les réserves de change, assure le bon fonctionnement des systèmes de paiement et conduit la politique monétaire à l'aide de ses instruments (taux directeur, taux de réserves obligatoires, opérations d'open market).\n- Politique monétaire restrictive (hausse du taux directeur, ex. de 2,75 % à 4 % dans l'Ex. 2) : objectif principal = freiner l'inflation. Effets attendus : renchérissement et ralentissement des crédits bancaires, modération de l'inflation, mais risque de ralentissement de la croissance économique.\n- Politique monétaire expansionniste (baisse du taux directeur) : objectif = relancer le crédit, l'investissement et la croissance en période de ralentissement.\n\n2. La Commission Bancaire de l'UMOA : autorité régionale chargée de la supervision prudentielle et du contrôle (sur pièces et sur place) des banques et établissements financiers ; elle délivre des avis sur les agréments, vérifie les ratios de solvabilité/liquidité et prononce des sanctions (avertissement, blâme, amende, retrait d'agrément) pour protéger les déposants.",
+          "Dans les 8 États membres de l'UEMOA (dont la Côte d'Ivoire), le système bancaire est encadré par deux institutions majeures :\n\n1. La BCEAO (Banque Centrale des États de l'Afrique de l'Ouest) : institut d'émission du Franc CFA (XOF), elle a pour objectif prioritaire la stabilité des prix (maîtrise de l'inflation), soutient les politiques économiques de l'Union, gère les réserves de change, assure le bon fonctionnement des systèmes de paiement et conduit la politique monétaire à l'aide de ses instruments (taux directeur, taux de réserves obligatoires, opérations d'open market).\n- Politique monétaire restrictive : objectif principal = freiner l'inflation. Effets attendus : renchérissement et ralentissement des crédits bancaires, modération de l'inflation, mais risque de ralentissement de la croissance économique.\n- Politique monétaire expansionniste (baisse du taux directeur) : objectif = relancer le crédit, l'investissement et la croissance en période de ralentissement.\n\n2. La Commission Bancaire de l'UMOA : autorité régionale chargée de la supervision prudentielle et du contrôle (sur pièces et sur place) des banques et établissements financiers ; elle délivre des avis sur les agréments, vérifie les ratios de solvabilité/liquidité et prononce des sanctions (avertissement, blâme, amende, retrait d'agrément) pour protéger les déposants.",
         keyRule:
           "Hausse du taux directeur BCEAO = Politique restrictive ⇒ lutte contre l'inflation ⇒ crédits plus chers et moins nombreux ⇒ baisse de l'inflation mais frein possible sur la croissance.",
         formulas: [
@@ -1001,7 +1001,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Analyser une hausse du taux directeur de la BCEAO (Exercice 2)',
           statement:
-            "La BCEAO décide d'augmenter son taux directeur de 2,75 % à 4 % (Ex. 2). Identifiez la nature de cette politique, son objectif principal et son impact attendu sur les crédits bancaires, l'inflation et la croissance.",
+            "La BCEAO décide d'augmenter son taux directeur de 2,75 % à 4 %. Identifiez la nature de cette politique, son objectif principal et son impact attendu sur les crédits bancaires, l'inflation et la croissance.",
           methodSteps: [
             'Nature : augmentation du taux directeur ⇒ Politique monétaire restrictive (resserrement monétaire).',
             'Objectif principal : maîtriser et réduire l’inflation afin de préserver la stabilité des prix et la valeur du Franc CFA.',
@@ -1040,7 +1040,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'Ex. 2',
+            stepBadge: 'Application',
             stepTheme: 'Politique restrictive',
             stepTitle: 'Qualifier une hausse du taux directeur (2,75 % → 4 %)',
             paragraphText:
@@ -1049,7 +1049,7 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_banque_ch3_p1_q2',
               type: 'mcq',
               prompt:
-                'Lorsque la BCEAO relève son taux directeur de 2,75 % à 4 % (Ex. 2), de quel type de politique monétaire s’agit-il ?',
+                'Lorsque la BCEAO relève son taux directeur de 2,75 % à 4 %, de quel type de politique monétaire s’agit-il ?',
               options: [
                 'Une politique monétaire expansionniste',
                 'Une politique monétaire restrictive (lutte contre l’inflation)',
@@ -1268,12 +1268,12 @@ export const BANQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Innovation & Sécurité',
             stepTitle: 'Conjuguer innovation digitale et conformité réglementaire',
             paragraphText:
-              "Comme le rappelle l'introduction du cours, la transformation digitale ne dispense jamais du respect de la réglementation (BCEAO, lutte contre le blanchiment LBC/FT, protection des données et cybersécurité) : la confiance reste le socle absolu de toute finance numérique.",
+              "En finance numérique, la transformation digitale ne dispense jamais du respect de la réglementation (BCEAO, lutte contre le blanchiment LBC/FT, protection des données et cybersécurité) : la confiance reste le socle absolu de toute finance numérique.",
             exercise: {
               id: 'lmd_entd_l1_banque_ch3_p2_q5',
               type: 'mcq',
               prompt:
-                'Quelle double exigence les banques et fintechs doivent-elles impérativement concilier dans la transformation digitale selon le cours ?',
+                'Quelle double exigence les banques et fintechs doivent-elles impérativement concilier dans la transformation digitale ?',
               options: [
                 'Croissance rapide et suppression de tout contrôle de la BCEAO',
                 'Innovation digitale et sécurité / respect du cadre réglementaire (BCEAO, Commission Bancaire)',

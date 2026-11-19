@@ -566,7 +566,7 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_geographie_t2_l01_urbanisation_cote_ivoire_p03_q1",
             "type": "mcq",
-            "prompt": "Combien d'habitants compte Abidjan aujourd'hui selon le cours ?",
+            "prompt": "Combien d'habitants compte Abidjan aujourd'hui ?",
             "options": [
               "Environ 600 000",
               "Environ 23 millions",
@@ -708,7 +708,7 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
         {
           "id": "premiere_a1_hg_geographie_t2_l01_urbanisation_cote_ivoire_p03_q1",
           "type": "mcq",
-          "prompt": "Combien d'habitants compte Abidjan aujourd'hui selon le cours ?",
+          "prompt": "Combien d'habitants compte Abidjan aujourd'hui ?",
           "options": [
             "Environ 600 000",
             "Environ 23 millions",
@@ -1397,7 +1397,7 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
               "Voter pour le maire"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "La conclusion du cours insiste sur ce point."
+            "explanation": "C’est un point de synthèse essentiel à retenir."
           }
         },
         {
@@ -1523,7 +1523,7 @@ export const GEO_1RE_T2_L01_URBANISATION_COTE_IVOIRE: CurriculumChapter = {
             "Voter pour le maire"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "La conclusion du cours insiste sur ce point."
+          "explanation": "C’est un point de synthèse essentiel à retenir."
         },
         {
           "id": "premiere_a1_hg_geographie_t2_l01_urbanisation_cote_ivoire_p06_q4",

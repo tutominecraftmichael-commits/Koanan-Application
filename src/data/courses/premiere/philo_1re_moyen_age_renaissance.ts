@@ -1086,7 +1086,7 @@ export const PHILO_1RE_L07_MOYEN_AGE_RENAISSANCE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_philo_histoire_l07_moyen_age_renaissance_p05_q1",
             "type": "mcq",
-            "prompt": "Selon le cours sur la Renaissance (Machiavel), à quoi la philosophie doit-elle contribuer dans le domaine politique ?",
+            "prompt": "Chez Machiavel à la Renaissance, à quoi la philosophie doit-elle contribuer dans le domaine politique ?",
             "options": [
               "À rejeter tout pouvoir",
               "À l'acquisition, à l'exercice et à la conservation du pouvoir",
@@ -1228,7 +1228,7 @@ export const PHILO_1RE_L07_MOYEN_AGE_RENAISSANCE: CurriculumChapter = {
         {
           "id": "premiere_philo_histoire_l07_moyen_age_renaissance_p05_q1",
           "type": "mcq",
-          "prompt": "Selon le cours sur la Renaissance (Machiavel), à quoi la philosophie doit-elle contribuer dans le domaine politique ?",
+          "prompt": "Chez Machiavel à la Renaissance, à quoi la philosophie doit-elle contribuer dans le domaine politique ?",
           "options": [
             "À rejeter tout pouvoir",
             "À l'acquisition, à l'exercice et à la conservation du pouvoir",

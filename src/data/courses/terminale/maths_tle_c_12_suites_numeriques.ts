@@ -204,7 +204,7 @@ const p02Steps: StructuredLessonStep[] = [
   {
     stepNumber: 2,
     stepKind: 'exemple',
-    stepBadge: 'Exercice du cours',
+    stepBadge: 'Exercice',
     stepTheme: 'blue',
     stepTitle: 'Prouver par récurrence que $\\forall n \\in \\mathbb{N},\\; u_n < 6$ pour $u_{n+1} = \\frac{1}{2}u_n + 3$',
     paragraphText:
@@ -1179,7 +1179,7 @@ export const MATHS_TLE_C_L12_SUITES_NUMERIQUES: CurriculumChapter = {
     'Suites arithmétiques et géométriques, raisonnement par récurrence, sens de variation, suites majorées/minorées/bornées, convergence et limites de référence, théorèmes de comparaison et convergence monotone, suites récurrentes et adjacentes.',
   officialVolumeHours: 14,
   contentVersion: 2,
-  source: 'Programme officiel de Mathématiques — Terminale C (Côte d’Ivoire)',
+  source: 'Mathématiques — Terminale C',
   points: [
     {
       id: 'terminale_c_maths_numerique_l12_suites_numeriques_p01',

@@ -6,7 +6,7 @@ import type { CurriculumChapter } from '../../lib/curriculum/types';
 // Leçon 1 : Résumé du texte argumentatif & La production écrite
 // Leçon 2 : Le commentaire composé (Libellé, Construction du sens, Plan détaillé, Rédaction CI, Rédaction Intro)
 // Supports textuels officiels : Victor Hugo, Arthur Rimbaud, Léopold Sédar Senghor, Francis Bebey, Joël & Stella de Rosnay
-// 100% conforme aux inspections pédagogiques nationales (MENA Côte d'Ivoire).
+// 100% conforme aux inspections pédagogiques nationales.
 // ============================================================================
 
 export const francais2deAExpressionEcriteAnalyseSujetChapter: CurriculumChapter = {
@@ -138,7 +138,7 @@ Ne jamais confondre ces deux verbes ! Se tromper d'orientation (réfuter au lieu
             'Un résumé strict de 10 mots'
           ],
           correctAnswerIndex: 0,
-          explanation: 'Selon le programme officiel de Côte d\'Ivoire (MENA), la production écrite attendue est un texte argumentatif structuré de 20 à 30 lignes.'
+          explanation: 'En rédaction, la production écrite attendue est un texte argumentatif structuré de 20 à 30 lignes.'
         },
         {
           id: 'seconde_a_francais_ch1_p1_ex7',

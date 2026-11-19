@@ -125,7 +125,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepKind: 'methode',
     stepBadge: 'Exercice corrigé',
     stepTheme: 'green',
-    stepTitle: 'Plan orthogonal à une droite $(AB)$ passant par $C$ (Ex. 2 p.12)',
+    stepTitle: 'Plan orthogonal à une droite $(AB)$ passant par $C$',
     paragraphText:
       'On donne $A(5; 2; 3)$, $B(4; -2; 1)$ et $C(2; 4; -5)$. Pour trouver l’équation du plan passant par $C$ et orthogonal à $(AB)$, on prend $\\overrightarrow{AB}$ comme vecteur normal ! Calculons soigneusement : $\\overrightarrow{AB}(4 - 5 ; -2 - 2 ; 1 - 3) = (-1 ; -4 ; -2)$ (attention à bien faire $x_B - x_A = -1$ et non $+1$). Une équation est donc $-x - 4y - 2z + d’ = 0$, ou en multipliant par $-1$ : $x + 4y + 2z + d = 0$. Comme $C(2; 4; -5)$ est dans le plan, $2 + 4(4) + 2(-5) + d = 0 \\implies 8 + d = 0 \\implies d = -8$, soit $x + 4y + 2z - 8 = 0$.',
     formula: {
@@ -153,7 +153,7 @@ const p01Steps: StructuredLessonStep[] = [
     stepTheme: 'violet',
     stepTitle: 'Distance d’un point $A(x_0; y_0; z_0)$ à un plan $(P)$',
     paragraphText:
-      'En repère orthonormé, si $(P)$ a pour équation $ax + by + cz + d = 0$ et $A(x_0; y_0; z_0)$ est un point de $\\mathcal{E}$, la distance de $A$ à $(P)$ (longueur $AH$ où $H$ est le projeté orthogonal de $A$ sur $(P)$) vaut $d(A ; P) = \\frac{|ax_0 + by_0 + cz_0 + d|}{\\sqrt{a^2 + b^2 + c^2}}$. Exemple du cours : pour $A(3; 2; 1)$ et $(P) : 2x - y + 3z + 5 = 0$, $d(A;P) = \\frac{|6 - 2 + 3 + 5|}{\\sqrt{4 + 1 + 9}} = \\frac{12}{\\sqrt{14}} = \\frac{6\\sqrt{14}}{7}$.',
+      'En repère orthonormé, si $(P)$ a pour équation $ax + by + cz + d = 0$ et $A(x_0; y_0; z_0)$ est un point de $\\mathcal{E}$, la distance de $A$ à $(P)$ (longueur $AH$ où $H$ est le projeté orthogonal de $A$ sur $(P)$) vaut $d(A ; P) = \\frac{|ax_0 + by_0 + cz_0 + d|}{\\sqrt{a^2 + b^2 + c^2}}$. Exemple : pour $A(3; 2; 1)$ et $(P) : 2x - y + 3z + 5 = 0$, $d(A;P) = \\frac{|6 - 2 + 3 + 5|}{\\sqrt{4 + 1 + 9}} = \\frac{12}{\\sqrt{14}} = \\frac{6\\sqrt{14}}{7}$.',
     formula: {
       name: 'Distance d’un point à un plan',
       formula: 'd(A ; P) = \\frac{|a x_0 + b y_0 + c z_0 + d|}{\\sqrt{a^2 + b^2 + c^2}}',
@@ -541,7 +541,7 @@ const p04Steps: StructuredLessonStep[] = [
   {
     stepNumber: 1,
     stepKind: 'methode',
-    stepBadge: 'Renforcement Ex. 1.1',
+    stepBadge: 'Renforcement .1',
     stepTheme: 'green',
     stepTitle: 'Déterminer une équation cartésienne du plan $(ABC)$ depuis $3$ points',
     paragraphText:
@@ -567,7 +567,7 @@ const p04Steps: StructuredLessonStep[] = [
   {
     stepNumber: 2,
     stepKind: 'methode',
-    stepBadge: 'Renforcement Ex. 1.2',
+    stepBadge: 'Renforcement .2',
     stepTheme: 'green',
     stepTitle: 'Trouver UN plan passant par $A$ et orthogonal à $(ABC)$',
     paragraphText:
@@ -593,7 +593,7 @@ const p04Steps: StructuredLessonStep[] = [
   {
     stepNumber: 3,
     stepKind: 'methode',
-    stepBadge: 'Renforcement Ex. 2',
+    stepBadge: 'Renforcement',
     stepTheme: 'green',
     stepTitle: 'Plan $(\\Pi)$ contenant une droite $(D)$ et perpendiculaire à $(P)$',
     paragraphText:
@@ -970,7 +970,7 @@ export const MATHS_TLE_C_L06_GEOMETRIE_ANALYTIQUE_ESPACE: CurriculumChapter = {
         { name: 'Plans ⊥', formula: '\\vec{n}\\cdot\\vec{n}’ = 0' },
       ],
       workedExample: {
-        title: 'Droite d’intersection de deux plans perpendiculaires (p.10)',
+        title: 'Droite d’intersection de deux plans perpendiculaires',
         statement: 'Paramétrer $(\\Delta) = (P) \\cap (P’)$ pour $2x+y+2z-6=0$ et $2x-2y-z+3=0$.',
         methodSteps: [
           '$\\vec{n}(2;1;2)$ et $\\vec{n}’(2;-2;-1)$ ne sont pas colinéaires et $\\vec{n}\\cdot\\vec{n}’ = 0$ ($(P)\\perp(P’)$).',
@@ -994,7 +994,7 @@ export const MATHS_TLE_C_L06_GEOMETRIE_ANALYTIQUE_ESPACE: CurriculumChapter = {
         { name: 'Plan parallèle à P', formula: 'ax + by + cz + d’ = 0' },
       ],
       workedExample: {
-        title: 'Plan (Π) contenant (D) et perpendiculaire à (P) (Ex. 2 p.13)',
+        title: 'Plan (Π) contenant (D) et perpendiculaire à (P)',
         statement: 'Avec $\\vec{u}(1;1;1)$, $E(2;-5;0) \\in (D)$ et $\\vec{n}_P(1;-1;0)$, déterminer $(\\Pi)$.',
         methodSteps: [
           '$\\vec{n}’(a’;b’;c’)$ vérifie $a’+b’+c’=0$ et $a’-b’=0$, d’où $\\vec{n}’(1;1;-2)$.',
@@ -1018,7 +1018,7 @@ export const MATHS_TLE_C_L06_GEOMETRIE_ANALYTIQUE_ESPACE: CurriculumChapter = {
         { name: 'Plan (BDE) dans le cube unité', formula: 'x + y + z - 1 = 0 \\quad (\\vec{n} = \\overrightarrow{AG}(1;1;1))' },
       ],
       workedExample: {
-        title: 'Orthogonalité paramétrique (approfondissement p.13-14)',
+        title: 'Orthogonalité paramétrique',
         statement: 'Pour $(P): x+y+z=0$ et $(Q): ax+y+z+b=0$, trouver $(a, b)$ pour que $(D)=(P)\\cap(Q)$ existe et soit orthogonale à $(D’)$ de vecteur $\\vec{u}’(0;b;1)$.',
         methodSteps: [
           '$(P)$ et $(Q)$ sont sécants $\\iff \\vec{n}(1;1;1) \\nparallel \\vec{n}’(a;1;1) \\iff a \\neq 1$.',

@@ -23,7 +23,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     officialVolumeHours: 12,
     contentVersion: 2,
     source:
-      'ESATIC ENTD L1 — Support de Cours S1 (Introduction au Développement Personnel) & S2 Module 1',
+      'ENTD L1 — S1 (Introduction au Développement Personnel) & S2 Module 1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_dev_perso_ch1_p1',
@@ -42,7 +42,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           methodSteps: [
             'Connaissance de soi : lister honnêtement 3 forces (ex. curiosité digitale, entraide) et 3 limites (ex. procrastination, trac à l’oral).',
             'Remplacer une croyance destructrice (« Je suis nul à l’oral ») par une croyance constructrice (« Je peux progresser en m’entraînant »).',
-            'Définir un objectif clair et mesurable à court terme (ex. réviser 45 min/jour et poser une question en TD chaque semaine).',
+            'Définir un objectif clair et mesurable à court terme.',
           ],
           conclusion:
             'L’auto-évaluation par le journal transforme un ressenti vague en plan d’amélioration continue concret.',
@@ -84,7 +84,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_dev_perso_ch1_p1_q2',
               type: 'mcq',
               prompt:
-                'Quelle dimension constitue la « première pierre angulaire » du développement personnel selon le cours S1 ?',
+                'Quelle dimension constitue la « première pierre angulaire » du développement personnel ?',
               options: [
                 'La mémorisation de raccourcis clavier',
                 'La compétition agressive contre ses camarades',
@@ -183,7 +183,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Relier cinq concepts phares à leurs auteurs de référence',
           statement:
-            'Associer chaque auteur du cours à son apport majeur : Socrate, William James, Carl Jung, Abraham Maslow, Daniel Goleman.',
+            'Associer chaque auteur majeur à son apport majeur : Socrate, William James, Carl Jung, Abraham Maslow, Daniel Goleman.',
           methodSteps: [
             'Socrate -> « Connais-toi toi-même » (introspection).',
             'William James -> Rôle fondamental des habitudes (psychologie pragmatique).',
@@ -303,7 +303,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_dev_perso_ch1_p2_q5',
               type: 'mcq',
               prompt:
-                'Que signifie l’acronyme « TED » dans les conférences TED Talks citées dans le cours sur la diffusion contemporaine du développement personnel ?',
+                'Que signifie l’acronyme « TED » dans les conférences TED Talks liées à la diffusion contemporaine du développement personnel ?',
               options: [
                 'Technologie, Entertainment, Design',
                 'Travail, Économie, Droit',
@@ -376,7 +376,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_dev_perso_ch1_p3_q2',
               type: 'mcq',
               prompt:
-                'Parmi ces listes, laquelle ne regroupe QUE des « soft skills » (compétences transversales) mentionnées dans le cours ?',
+                'Parmi ces listes, laquelle ne regroupe QUE des « soft skills » (compétences transversales) mentionnées ?',
               options: [
                 'Formatage A4, câblage RJ45 et installation Windows',
                 'Calcul matriciel, écriture comptable et syntaxe HTML',
@@ -424,7 +424,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_dev_perso_ch1_p3_q4',
               type: 'mcq',
               prompt:
-                'Quelle leçon essentielle véhicule la maxime du cours : « Ne jugez pas chaque journée par votre récolte, mais par les graines que vous avez plantées » ?',
+                'Quelle leçon essentielle véhicule la maxime : « Ne jugez pas chaque journée par votre récolte, mais par les graines que vous avez plantées » ?',
               options: [
                 'Il faut changer d’objectif chaque matin si le résultat n’est pas immédiat',
                 'Les raccourcis instantanés (« hacks ») remplacent toujours l’effort régulier',
@@ -448,7 +448,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_dev_perso_ch1_p3_q5',
               type: 'mcq',
               prompt:
-                'Quelles techniques concrètes de gestion du stress sont recommandées aux étudiants dans le cours S1 ?',
+                'Quelles techniques concrètes de gestion du stress sont recommandées pour les étudiants ?',
               options: [
                 'Veiller toute la nuit avant l’examen en buvant du café sans planning',
                 'La respiration contrôlée, la méditation, la visualisation et la planification progressive des tâches',
@@ -474,7 +474,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       'Dépasser le fatalisme, envisager la vie comme une partie exigeante dont on est l’acteur principal, cultiver son savoir-être et structurer sa réussite du rêve jusqu’aux objectifs.',
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Développement Personnel S2 (Module 2 : Maître de son destin)',
+    source: 'ENTD L1 — Développement Personnel S2',
     points: [
       makePoint({
         id: 'lmd_entd_l1_dev_perso_ch2_p1',
@@ -760,7 +760,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_dev_perso_ch2_p2_q5',
               type: 'mcq',
               prompt:
-                'Quelles sont les deux forces majeures mises en exergue dans le cours pour transformer un rêve en objectifs atteints ?',
+                'Quelles sont les deux forces majeures essentielles pour transformer un rêve en objectifs atteints ?',
               options: [
                 'La chance et le hasard',
                 'Le mental et la discipline',
@@ -786,7 +786,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       'Distinguer rigoureusement l’estime de soi et la confiance en soi, puis appliquer deux outils pratiques puissants : la Valeur Personnelle (carnet de réalisations et affirmations en « Je ») et le Diagnostic de la Fenêtre de Johari.',
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Développement Personnel S2 (S’estimer et développer sa confiance en soi L1)',
+    source: 'ENTD L1 — Développement Personnel S2 (S’estimer et développer sa confiance en soi L1)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_dev_perso_ch3_p1',
@@ -809,7 +809,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           statement:
             'Analyser deux situations : (A) Aïcha réussit brillamment ses projets web, mais elle craint de présenter son premier exposé devant 200 personnes. (B) Koffi a triché pour obtenir une note alors qu’il valorise profondément l’honnêteté, et il se sent mal vis-à-vis de lui-même.',
           methodSteps: [
-            'Situation A : manque de CONFIANCE en soi contextualisé (domaine spécifique de la prise de parole en public, faute d’expérience accumulée). Solution : graduer la difficulté (s’entraîner d’abord devant 3 amis, puis en TD de 20 personnes, puis en amphi).',
+            'Situation A : manque de CONFIANCE en soi contextualisé (domaine spécifique de la prise de parole en public, faute d’expérience accumulée). Solution : graduer la difficulté.',
             'Situation B : baisse d’ESTIME de soi, car l’action réalisée (tricherie) crée un écart brutal entre le Moi Réel et le Moi Idéal/les valeurs d’honnêteté.',
           ],
           conclusion:
@@ -828,7 +828,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_dev_perso_ch3_p1_q1',
               type: 'mcq',
               prompt:
-                'À quel rapport psychologique l’estime de soi est-elle directement liée selon le cours ?',
+                'À quel rapport psychologique l’estime de soi est-elle directement liée ?',
               options: [
                 'L’écart entre son âge et son diplôme',
                 'L’écart entre le Moi Réel (ce que l’on pense être) et le Moi Idéal (ce que l’on aimerait ou devrait être)',
@@ -852,7 +852,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_dev_perso_ch3_p1_q2',
               type: 'mcq',
               prompt:
-                'Quelles sont les quatre dimensions du « Moi » citées dans le cours sur l’estime de soi ?',
+                'Quelles sont les quatre dimensions du « Moi » liées à l’estime de soi ?',
               options: [
                 'Le budget, le logement, le transport et les loisirs',
                 'La lecture, l’écriture, le calcul et le dessin',
@@ -924,7 +924,7 @@ export const DEV_PERSO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_dev_perso_ch3_p1_q5',
               type: 'mcq',
               prompt:
-                'Selon le cours, quelle condition est indispensable pour maintenir son estime de soi à un niveau élevé dans la durée ?',
+                'Quelle condition est indispensable pour maintenir son estime de soi à un niveau élevé dans la durée ?',
               options: [
                 'Ne jamais évaluer aucune de ses actions',
                 'Vivre en conformité avec ses propres valeurs',

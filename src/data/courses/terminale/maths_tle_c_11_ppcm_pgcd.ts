@@ -562,7 +562,7 @@ const p04Steps: StructuredLessonStep[] = [
   {
     stepNumber: 2,
     stepKind: 'methode',
-    stepBadge: 'Système Somme & PGCD (Ex 4)',
+    stepBadge: 'Système Somme & PGCD',
     stepTheme: 'emerald',
     stepTitle: 'Résoudre un système avec $\\operatorname{PGCD}(x ; y) = d$ et $x + y = S$',
     paragraphText:
@@ -1055,7 +1055,7 @@ export const MATHS_TLE_C_L11_PPCM_PGCD: CurriculumChapter = {
     'PPCM et PGCD, algorithme d’Euclide et remontée, nombres premiers entre eux, théorèmes de Bézout et de Gauss, relation ab = PGCD×PPCM, systèmes, équations ax+by=c et ax≡b[n], cryptographie affine.',
   officialVolumeHours: 8,
   contentVersion: 2,
-  source: 'Programme officiel de Mathématiques — Terminale C (Côte d’Ivoire)',
+  source: 'Mathématiques — Terminale C',
   points: [
     {
       id: 'terminale_c_maths_numerique_l11_ppcm_pgcd_p01',

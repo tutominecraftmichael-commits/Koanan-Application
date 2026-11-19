@@ -244,7 +244,7 @@ export const SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE: CurriculumChapter
       "order": 2,
       "title": "Dominance complète : les souris grises et blanches",
       "summary": "F1 homogène, F2 en 3/4 et 1/4, choix des symboles.",
-      "conceptExplanation": "- 1er croisement : souris grise × souris blanche, toutes deux de lignée pure (homozygotes). Toute la descendance (F1, première génération filiale) est grise : elle est homogène. Le phénotype qui s’exprime seul en F1 est dominant (gris) ; celui qui disparaît est récessif (blanc). C’est l’uniformité des hybrides de F1 (première loi de Mendel).\n- Choix des symboles (convention du cours) : on prend l’initiale du phénotype récessif, en minuscule pour l’allèle récessif et en majuscule pour l’allèle dominant : allèle blanc b, allèle gris B ; phénotypes [b] et [B].\n- 2e croisement : F1 × F1 donne 54 grises et 18 blanches (F2), soit 75 % et 25 % : une ségrégation 3/4, 1/4. Les parents F1 sont hétérozygotes (B//b). Le caractère est gouverné par un couple d’allèles autosomal avec dominance complète.\n- Génotypes : parent gris B//B, parent blanc b//b, F1 B//b.\n- Un caractère héréditaire se transmet de génération en génération. Un phénotype est une forme sous laquelle s’exprime le caractère.\n- Correction du document : dans son vrai ou faux, il déclare faux « un caractère gouverné par un gène autosomal avec dominance complète se traduit par 75 %, 25 % en F2 ». C’est vrai : c’est exactement la ségrégation 3/4, 1/4 de la F2.",
+      "conceptExplanation": "- 1er croisement : souris grise × souris blanche, toutes deux de lignée pure (homozygotes). Toute la descendance (F1, première génération filiale) est grise : elle est homogène. Le phénotype qui s’exprime seul en F1 est dominant (gris) ; celui qui disparaît est récessif (blanc). C’est l’uniformité des hybrides de F1 (première loi de Mendel).\n- Choix des symboles (convention usuelle) : on prend l’initiale du phénotype récessif, en minuscule pour l’allèle récessif et en majuscule pour l’allèle dominant : allèle blanc b, allèle gris B ; phénotypes [b] et [B].\n- 2e croisement : F1 × F1 donne 54 grises et 18 blanches (F2), soit 75 % et 25 % : une ségrégation 3/4, 1/4. Les parents F1 sont hétérozygotes (B//b). Le caractère est gouverné par un couple d’allèles autosomal avec dominance complète.\n- Génotypes : parent gris B//B, parent blanc b//b, F1 B//b.\n- Un caractère héréditaire se transmet de génération en génération. Un phénotype est une forme sous laquelle s’exprime le caractère.",
       "keyRule": "F1 homogène → parents homozygotes ; phénotype de F1 = dominant. F2 en 3/4 [dominant] et 1/4 [récessif] → F1 hétérozygotes, un gène, dominance complète.",
       "formulas": [],
       "workedExample": {
@@ -338,7 +338,7 @@ export const SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE: CurriculumChapter
           "exercise": {
             "id": "premiere_c_svt_l07_transmission_caractere_hereditaire_p02_q3",
             "type": "mcq",
-            "prompt": "Couleur du pelage : gris dominant, blanc récessif. Quel symbole désigne l’allèle gris selon la convention du cours ?",
+            "prompt": "Couleur du pelage : gris dominant, blanc récessif. Quel symbole désigne l’allèle gris par convention usuelle ?",
             "options": [
               "B majuscule, initiale du récessif (blanc) écrite en majuscule",
               "g minuscule",
@@ -443,7 +443,7 @@ export const SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE: CurriculumChapter
         {
           "id": "premiere_c_svt_l07_transmission_caractere_hereditaire_p02_q3",
           "type": "mcq",
-          "prompt": "Couleur du pelage : gris dominant, blanc récessif. Quel symbole désigne l’allèle gris selon la convention du cours ?",
+          "prompt": "Couleur du pelage : gris dominant, blanc récessif. Quel symbole désigne l’allèle gris par convention usuelle ?",
           "options": [
             "B majuscule, initiale du récessif (blanc) écrite en majuscule",
             "g minuscule",
@@ -1020,7 +1020,7 @@ export const SVT_1RE_C_L07_TRANSMISSION_CARACTERE_HEREDITAIRE: CurriculumChapter
       "order": 5,
       "title": "Évaluation : lire les ségrégations",
       "summary": "Associer ségrégations et interprétations ; exploiter une généalogie de souris.",
-      "conceptExplanation": "- Exercice 2 (correspondances) : 100 % (F1 homogène) → parents homozygotes ; 3/4, 1/4 → parents hétérozygotes, dominance complète ; 1/2, 1/2 → test-cross ; 1/4, 1/2, 1/4 → parents hétérozygotes, sans dominance.\n- Situation 2 : souris grise × souris blanche (P) → F1 100 % grises ; F1 × F1 → 198 grises et 72 blanches (F2), soit environ 73 % et 27 %, proches de 3/4 et 1/4 ; des grises de F2 croisées entre elles → 93 grises et 27 blanches ; des blanches de F2 croisées entre elles → 100 % blanches. Il y a quatre croisements.\n- Les souris blanches donnent toujours des blanches : elles sont homozygotes récessives (b//b).\n- Le monohybridisme est l’étude de la transmission d’un seul caractère héréditaire (un gène) chez des diploïdes.\n- Exercice d’approfondissement : un brin codant TAT TTC TCC ATG CCG CTC GTT CGT GCA CGA donne, selon la convention du cours (brin codant = brin transcrit), l’ARNm AUA AAG AGG UAC GGC GAG CAA GCA CGU GCU, traduit en Ile-Lys-Arg-Tyr-Gly-Glu-Gln-Ala-Arg-Ala.",
+      "conceptExplanation": "- Exercice 2 (correspondances) : 100 % (F1 homogène) → parents homozygotes ; 3/4, 1/4 → parents hétérozygotes, dominance complète ; 1/2, 1/2 → test-cross ; 1/4, 1/2, 1/4 → parents hétérozygotes, sans dominance.\n- Situation 2 : souris grise × souris blanche (P) → F1 100 % grises ; F1 × F1 → 198 grises et 72 blanches (F2), soit environ 73 % et 27 %, proches de 3/4 et 1/4 ; des grises de F2 croisées entre elles → 93 grises et 27 blanches ; des blanches de F2 croisées entre elles → 100 % blanches. Il y a quatre croisements.\n- Les souris blanches donnent toujours des blanches : elles sont homozygotes récessives (b//b).\n- Le monohybridisme est l’étude de la transmission d’un seul caractère héréditaire (un gène) chez des diploïdes.\n- Exercice d’approfondissement : un brin codant TAT TTC TCC ATG CCG CTC GTT CGT GCA CGA donne, avec la convention brin codant = brin transcrit, l’ARNm AUA AAG AGG UAC GGC GAG CAA GCA CGU GCU, traduit en Ile-Lys-Arg-Tyr-Gly-Glu-Gln-Ala-Arg-Ala.",
       "keyRule": "100 % : homozygotes. 3/4 ; 1/4 : hétérozygotes, dominance. 1/2 ; 1/2 : test-cross. 1/4 ; 1/2 ; 1/4 : hétérozygotes, sans dominance.",
       "formulas": [],
       "workedExample": {

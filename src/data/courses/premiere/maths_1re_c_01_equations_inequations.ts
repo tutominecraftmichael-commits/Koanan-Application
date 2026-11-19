@@ -1414,7 +1414,7 @@ export const MATHS_1RE_C_L01_EQUATIONS_INEQUATIONS: CurriculumChapter = {
         {
           stepNumber: 3,
           stepKind: 'exemple',
-          stepBadge: 'Exemple du cours',
+          stepBadge: 'Exemple',
           stepTheme: 'Résoudre √(x²+5x+3) < 2x+1',
           stepTitle: 'Inéquation avec un trinôme sous le radical',
           paragraphText:
@@ -1459,7 +1459,7 @@ export const MATHS_1RE_C_L01_EQUATIONS_INEQUATIONS: CurriculumChapter = {
         {
           stepNumber: 5,
           stepKind: 'exemple',
-          stepBadge: 'Exemple du cours',
+          stepBadge: 'Exemple',
           stepTheme: 'Résoudre √(2−x) ≥ x+4',
           stepTitle: 'Réunir les deux intervalles obtenus',
           paragraphText:

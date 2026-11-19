@@ -22,32 +22,32 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 1,
     title: "Chapitre 1 : Introduction à l'assurance et principes techniques actuariels",
     summary:
-      "Maîtriser le rôle économique de l'assurance (2 % de pénétration en CI), les critères du risque assurable, la mutualisation (espérance, écart-type, Poisson) et le calcul des primes (TD1).",
+      "Maîtriser le rôle économique de l'assurance (2 % de pénétration en CI), les critères du risque assurable, la mutualisation (espérance, écart-type, Poisson) et le calcul des primes.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC — Enseignant KADJO Assandé Pierre — Cours d’Assurance (Ch. 1 & 2) & TD N°1',
+    source: 'ENTD L1 — Enseignant KADJO Assandé Pierre — Cours d’Assurance (Ch. 1 & 2) & TD N°1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_assurance_ch1_p1',
         order: 1,
         title: "Définition, rôle, fonctions de l'assurance et développement économique",
         summary:
-          "Contrat d'assurance (assuré, assureur, prime, risque), 4 rôles, 3 fonctions et analyse du faible taux de pénétration en Côte d'Ivoire (2 % — OHCA 2024, TD1 Ex. 3).",
+          "Contrat d'assurance (assuré, assureur, prime, risque), 4 rôles, 3 fonctions et analyse du faible taux de pénétration en Côte d'Ivoire (2 %).",
         conceptExplanation:
-          "L'assurance est un contrat par lequel une personne (l'assuré) se protège contre la survenance d'un risque incertain (maladie, accident, incendie, décès...) en versant une prime ou cotisation régulière à une autre partie (l'assureur), qui s'engage à indemniser en cas de sinistre.\n\n1. Rôles majeurs de l'assurance : sécurisation des personnes et des biens, stabilité sociale, facilitation de la prise de risque entrepreneuriale et mobilisation de ressources financières à long terme.\n2. Trois fonctions économiques : mécanisme de prévoyance sociale, outil de crédit (garantie pour emprunter) et dispositif d'épargne (notamment en assurance vie).\n\n3. Assurance et développement économique : selon l'OHCA (2024), seulement 2 % de la population est assurée en Côte d'Ivoire (soit environ 580 000 personnes sur 29 millions d'habitants — TD1 Ex. 3). Or, l'assurance stimule la croissance (réduction de l'incertitude, mobilisation de l'épargne pour le marché financier et les infrastructures), renforce la stabilité sociale et macroéconomique (résilience des ménages et entreprises) et soutient la formalisation et l'inclusion financière en zone UEMOA.",
+          "L'assurance est un contrat par lequel une personne (l'assuré) se protège contre la survenance d'un risque incertain (maladie, accident, incendie, décès...) en versant une prime ou cotisation régulière à une autre partie (l'assureur), qui s'engage à indemniser en cas de sinistre.\n\n1. Rôles majeurs de l'assurance : sécurisation des personnes et des biens, stabilité sociale, facilitation de la prise de risque entrepreneuriale et mobilisation de ressources financières à long terme.\n2. Trois fonctions économiques : mécanisme de prévoyance sociale, outil de crédit (garantie pour emprunter) et dispositif d'épargne (notamment en assurance vie).\n\n3. Assurance et développement économique : selon l'OHCA (2024), seulement 2 % de la population est assurée en Côte d'Ivoire (soit environ 580 000 personnes sur 29 millions d'habitants). Or, l'assurance stimule la croissance (réduction de l'incertitude, mobilisation de l'épargne pour le marché financier et les infrastructures), renforce la stabilité sociale et macroéconomique (résilience des ménages et entreprises) et soutient la formalisation et l'inclusion financière en zone UEMOA.",
         keyRule:
-          "Retiens le chiffre clé du cours : 2 % seulement de la population est assurée en Côte d'Ivoire (OHCA, 2024), alors que l'assurance est à la fois outil de prévoyance, de crédit, d'épargne et de financement long terme.",
+          "Chiffre clé à retenir : 2 % seulement de la population est assurée en Côte d'Ivoire (OHCA, 2024), alors que l'assurance est à la fois outil de prévoyance, de crédit, d'épargne et de financement long terme.",
         formulas: [
           {
-            name: 'Population assurée en Côte d’Ivoire (OHCA 2024 — TD1 Ex. 3)',
+            name: 'Population assurée en Côte d’Ivoire (OHCA 2024)',
             formula: 'Assurés = 2 % × 29 000 000 = 580 000 personnes',
             note: 'Révèle un potentiel immense d’inclusion assurantielle via la micro-assurance et le mobile.',
           },
         ],
         workedExample: {
-          title: 'Analyser la faible pénétration de l’assurance en Côte d’Ivoire (TD1 Ex. 3)',
+          title: 'Analyser la faible pénétration de l’assurance en Côte d’Ivoire',
           statement:
-            "En Côte d'Ivoire, seul 2 % de la population (sur 29 millions d'habitants) est assuré (TD1 Ex. 3). Calculez le nombre d'assurés, citez deux conséquences économiques et proposez trois leviers d'amélioration.",
+            "En Côte d'Ivoire, seul 2 % de la population (sur 29 millions d'habitants) est assuré. Calculez le nombre d'assurés, citez deux conséquences économiques et proposez trois leviers d'amélioration.",
           methodSteps: [
             'Nombre de personnes assurées = 29 000 000 × 2 % = 580 000 personnes.',
             'Conséquences économiques : forte vulnérabilité des ménages et PME face aux chocs (maladie, incendie), faible mobilisation d’épargne longue pour financer les infrastructures et frein à l’investissement privé.',
@@ -132,16 +132,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'exemple',
-            stepBadge: 'Chiffre CI (TD1)',
+            stepBadge: 'Chiffre CI ()',
             stepTheme: 'Pénétration en Côte d’Ivoire',
             stepTitle: 'Mesurer la couverture assurantielle en Côte d’Ivoire (OHCA 2024)',
             paragraphText:
-              "Selon l'OHCA (2024) cité dans le cours et le TD1 (Ex. 3), seuls 2 % de la population ivoirienne sont assurés, soit 580 000 personnes sur 29 millions d'habitants.",
+              "En Côte d'Ivoire (données OHCA 2024), seuls 2 % de la population ivoirienne sont assurés, soit 580 000 personnes sur 29 millions d'habitants.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch1_p1_q4',
               type: 'mcq',
               prompt:
-                'Selon l’exercice 3 du TD1 (taux de couverture de 2 % sur une population de 29 millions d’habitants en Côte d’Ivoire), combien de personnes sont assurées ?',
+                'Avec taux de couverture de 2 % sur une population de 29 millions d’habitants en Côte d’Ivoire, combien de personnes sont assurées ?',
               options: [
                 '290 000 personnes',
                 '2 900 000 personnes',
@@ -182,29 +182,29 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       makePoint({
         id: 'lmd_entd_l1_assurance_ch1_p2',
         order: 2,
-        title: 'Risque assurable, mutualisation, taux de sinistre et loi de Poisson (TD1)',
+        title: 'Risque assurable, mutualisation, taux de sinistre et loi de Poisson',
         summary:
-          "Vérifier les 3 critères du risque assurable (TD1 Ex. 1), calculer espérance E(X), écart-type σ, taux de sinistre TS (Ex. 2) et appliquer la loi de Poisson aux sinistres rares (Ex. 6 & 8).",
+          "Vérifier les 3 critères du risque assurable, calculer espérance E(X), écart-type σ, taux de sinistre TS et appliquer la loi de Poisson aux sinistres rares.",
         conceptExplanation:
-          "La technique assurantielle repose sur deux piliers : un risque assurable et la mutualisation (loi des grands nombres).\n\n1. Trois caractéristiques du risque assurable (TD1 Ex. 1) : l'événement doit être futur, indépendant de la volonté de l'assuré et présenter : (a) Incertitude (peut survenir ou non), (b) Aléa (date, fréquence ou intensité inconnues d'avance) et (c) Indépendance (les sinistres ne doivent pas frapper tous les assurés à la fois, hors risques systémiques/catastrophes traités spécifiquement).\n\n2. Mutualisation et indicateurs statistiques : regrouper n assurés soumis au même risque rend la perte moyenne prévisible :\n- Espérance mathématique (perte moyenne espérée) : E(X) = Σ x_i · P(x_i) (pour n assurés indépendants avec sinistre C et probabilité p : E(S) = n·p·C) ;\n- Écart-type σ : mesure la dispersion/volatilité des sinistres (pour n sinistres binomiaux indépendants : σ = C · √[n·p·(1 − p)]). Plus σ est faible par rapport à E(X), plus la mutualisation est maîtrisée ;\n- Taux de sinistre (rapport de dispersion du cours) : TS = (σ / E(X)) × 100 (si TS < 50 %, la prévisibilité est favorable ; si TS ≥ 50 %, risque trop volatil).\n\n3. Modélisation du nombre de sinistres : loi Binomiale pour des assurés homogènes, ou loi de Poisson P(X = k) = (e^{−λ} · λ^k) / k! (avec E(X) = V(X) = λ) très utilisée lorsque les sinistres sont rares (TD1 Ex. 6 & 8).",
+          "La technique assurantielle repose sur deux piliers : un risque assurable et la mutualisation (loi des grands nombres).\n\n1. Trois caractéristiques du risque assurable : l'événement doit être futur, indépendant de la volonté de l'assuré et présenter : (a) Incertitude (peut survenir ou non), (b) Aléa (date, fréquence ou intensité inconnues d'avance) et (c) Indépendance (les sinistres ne doivent pas frapper tous les assurés à la fois, hors risques systémiques/catastrophes traités spécifiquement).\n\n2. Mutualisation et indicateurs statistiques : regrouper n assurés soumis au même risque rend la perte moyenne prévisible :\n- Espérance mathématique (perte moyenne espérée) : E(X) = Σ x_i · P(x_i) (pour n assurés indépendants avec sinistre C et probabilité p : E(S) = n·p·C) ;\n- Écart-type σ : mesure la dispersion/volatilité des sinistres (pour n sinistres binomiaux indépendants : σ = C · √[n·p·(1 − p)]). Plus σ est faible par rapport à E(X), plus la mutualisation est maîtrisée ;\n- Taux de sinistre (rapport de dispersion) : TS = (σ / E(X)) × 100 (si TS < 50 %, la prévisibilité est favorable ; si TS ≥ 50 %, risque trop volatil).\n\n3. Modélisation du nombre de sinistres : loi Binomiale pour des assurés homogènes, ou loi de Poisson P(X = k) = (e^{−λ} · λ^k) / k! (avec E(X) = V(X) = λ) très utilisée lorsque les sinistres sont rares.",
         keyRule:
           "Risque assurable = Futur + Incertain/Aléatoire + Indépendant de la volonté de l'assuré. Pour n assurés : E(S) = n·p·C, σ = C·√[n·p(1−p)], TS = (σ / E(S))×100. Pour Poisson(λ) : P(X=k) = e^{−λ}·λ^k / k! et E(X) = Var(X) = λ.",
         formulas: [
           {
-            name: 'Espérance, Écart-type et Taux de sinistre (TD1 Ex. 2)',
+            name: 'Espérance, Écart-type et Taux de sinistre',
             formula: 'E(S) = n·p·C   |   σ(S) = C·√[n·p·(1−p)]   |   TS = [σ / E(S)] × 100',
             note: 'Plus n est grand, plus TS diminue (en 1/√n) : c’est la puissance de la loi des grands nombres !',
           },
           {
-            name: 'Loi de Poisson pour sinistres rares (TD1 Ex. 6 & 8)',
+            name: 'Loi de Poisson pour sinistres rares',
             formula: 'P(X = k) = (e^{−λ} · λ^k) / k!   |   E(X) = λ   |   Var(X) = λ',
             note: 'Ex. pour k = 0 : P(X = 0) = e^{−λ} ; pour k = 1 : P(X = 1) = λ · e^{−λ}.',
           },
         ],
         workedExample: {
-          title: 'Mutualisation (TD1 Ex. 2) et Loi de Poisson (TD1 Ex. 8)',
+          title: 'Mutualisation et Loi de Poisson',
           statement:
-            "A) Une compagnie assure n = 10 000 personnes contre un sinistre de C = 100 000 FCFA avec p = 2 % (TD1 Ex. 2). Calculez la perte totale espérée, l'écart-type et le TS.\nB) Sinistres catastrophiques ~ Poisson(λ = 2) par an (TD1 Ex. 8) : calculez P(X = 0), E(X) et Var(X).",
+            "A) Une compagnie assure n = 10 000 personnes contre un sinistre de C = 100 000 FCFA avec p = 2 %. Calculez la perte totale espérée, l'écart-type et le TS.\nB) Sinistres catastrophiques ~ Poisson(λ = 2) par an : calculez P(X = 0), E(X) et Var(X).",
           methodSteps: [
             'A1) Nombre moyen de sinistres = n·p = 10 000 × 0,02 = 200 sinistres ⇒ Perte totale espérée E(S) = 200 × 100 000 = 20 000 000 FCFA.',
             'A2) Écart-type : σ(S) = 100 000 × √[10 000 × 0,02 × 0,98] = 100 000 × √196 = 100 000 × 14 = 1 400 000 FCFA.',
@@ -218,7 +218,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'piege',
-            stepBadge: 'TD1 Ex. 1',
+            stepBadge: 'Application',
             stepTheme: 'Risque assurable',
             stepTitle: 'Reconnaître ce qui est assurable et ce qui ne l’est pas',
             paragraphText:
@@ -227,7 +227,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_assurance_ch1_p2_q1',
               type: 'mcq',
               prompt:
-                'D’après l’exercice 1 du TD1, lequel des événements suivants n’est PAS un risque assurable ?',
+                'Lequel des événements suivants n’est PAS un risque assurable ?',
               options: [
                 'Les accidents de circulation d’un conducteur',
                 'La perte de clients d’un commerçant causée par sa propre incompétence',
@@ -266,16 +266,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'methode',
-            stepBadge: 'TD1 Ex. 2',
+            stepBadge: 'Application',
             stepTheme: 'Espérance & Écart-type',
             stepTitle: 'Calculer perte espérée, écart-type et TS sur 10 000 assurés',
             paragraphText:
-              "Avec n = 10 000, p = 2 % et C = 100 000 FCFA (TD1 Ex. 2) : E(S) = 10 000 × 0,02 × 100 000 = 20 000 000 FCFA ; σ = 100 000 × √(10 000 × 0,02 × 0,98) = 1 400 000 FCFA ; TS = (1,4 M / 20 M) × 100 = 7 %.",
+              "Avec n = 10 000, p = 2 % et C = 100 000 FCFA : E(S) = 10 000 × 0,02 × 100 000 = 20 000 000 FCFA ; σ = 100 000 × √(10 000 × 0,02 × 0,98) = 1 400 000 FCFA ; TS = (1,4 M / 20 M) × 100 = 7 %.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch1_p2_q3',
               type: 'mcq',
               prompt:
-                'Dans l’exercice 2 du TD1 (10 000 assurés, sinistre 100 000 FCFA, probabilité 2 %), quelles sont la perte totale espérée et la valeur exacte du TS = (σ / E(S)) × 100 ?',
+                'Avec 10 000 assurés, sinistre 100 000 FCFA, probabilité 2 %, quelles sont la perte totale espérée et la valeur exacte du TS = (σ / E(S)) × 100 ?',
               options: [
                 'Perte espérée = 20 000 000 FCFA et TS = 7 %',
                 'Perte espérée = 2 000 000 FCFA et TS = 70 %',
@@ -290,16 +290,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'methode',
-            stepBadge: 'Poisson (Ex. 6)',
+            stepBadge: 'Poisson',
             stepTheme: 'Sinistres rares',
             stepTitle: 'Appliquer la loi de Poisson à un portefeuille d’assurés',
             paragraphText:
-              "La loi de Poisson(λ) est privilégiée lorsque les sinistres sont rares. Dans le TD1 Ex. 6 (5 000 assurés, moyenne λ = 0,03 sinistre par assuré), le nombre moyen annuel est 5 000 × 0,03 = 150 sinistres ; pour un assuré, P(0 sinistre) = e^{−0,03} ≈ 97,04 % et P(1 sinistre) = 0,03·e^{−0,03} ≈ 2,91 %.",
+              "La loi de Poisson(λ) est privilégiée lorsque les sinistres sont rares. Avec 5 000 assurés, moyenne λ = 0,03 sinistre par assuré, le nombre moyen annuel est 5 000 × 0,03 = 150 sinistres ; pour un assuré, P(0 sinistre) = e^{−0,03} ≈ 97,04 % et P(1 sinistre) = 0,03·e^{−0,03} ≈ 2,91 %.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch1_p2_q4',
               type: 'mcq',
               prompt:
-                'Pour un portefeuille de 5 000 assurés générant en moyenne 0,03 sinistre par assuré et par an (TD1 Ex. 6), quel est le nombre moyen annuel total de sinistres et quelle est la formule de P(X = 0) pour un assuré sous Poisson ?',
+                'Pour un portefeuille de 5 000 assurés générant en moyenne 0,03 sinistre par assuré et par an, quel est le nombre moyen annuel total de sinistres et quelle est la formule de P(X = 0) pour un assuré sous Poisson ?',
               options: [
                 '15 sinistres/an et P(0) = 0,03',
                 '300 sinistres/an et P(0) = 1 − e^{−0,03}',
@@ -314,16 +314,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 5,
             stepKind: 'propriete',
-            stepBadge: 'Poisson (Ex. 8)',
+            stepBadge: 'Poisson',
             stepTheme: 'Espérance & Variance',
             stepTitle: 'Propriété clé et calcul sur Poisson(λ = 2)',
             paragraphText:
-              "Une propriété remarquable de la loi de Poisson(λ) est que son espérance et sa variance sont toutes deux égales à λ : E(X) = Var(X) = λ. Pour λ = 2 (TD1 Ex. 8), P(X ≥ 3) = 1 − [P(0) + P(1) + P(2)] = 1 − e^{−2}(1 + 2 + 2) = 1 − 5e^{−2} ≈ 32,33 %.",
+              "Une propriété remarquable de la loi de Poisson(λ) est que son espérance et sa variance sont toutes deux égales à λ : E(X) = Var(X) = λ. Pour λ = 2, P(X ≥ 3) = 1 − [P(0) + P(1) + P(2)] = 1 − e^{−2}(1 + 2 + 2) = 1 − 5e^{−2} ≈ 32,33 %.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch1_p2_q5',
               type: 'mcq',
               prompt:
-                'Si le nombre annuel de sinistres catastrophiques suit une loi de Poisson(λ = 2) (TD1 Ex. 8), quelles sont son espérance et sa variance ?',
+                'Si le nombre annuel de sinistres catastrophiques suit une loi de Poisson(λ = 2), quelles sont son espérance et sa variance ?',
               options: [
                 'E(X) = 2 et Var(X) = 4',
                 'E(X) = 2 et Var(X) = 2',
@@ -340,16 +340,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       makePoint({
         id: 'lmd_entd_l1_assurance_ch1_p3',
         order: 3,
-        title: 'Tarification actuarielle : prime pure, prime commerciale HT/TTC et actualisation (TD1)',
+        title: 'Tarification actuarielle : prime pure, prime commerciale HT/TTC et actualisation',
         summary:
           "Calculer la prime pure (fréquence × coût moyen), ajouter les chargements (sécurité, gestion, marge), appliquer la TCA (HT → TTC) et utiliser la formule d'actualisation actuarielle.",
         conceptExplanation:
-          "La fixation du prix d'un contrat d'assurance (tarification actuarielle) suit une construction rigoureuse en trois étages (TD1 Ex. 4, 5 & 7) :\n\n1. Prime pure (ou prime de risque) : coût statistique moyen du sinistre par assuré :\nPrime pure = Probabilité (ou Fréquence) de sinistre × Coût moyen d'un sinistre = Coût total attendu des sinistres / Nombre d'assurés.\n\n2. Prime commerciale Hors Taxes (HT) : ajoute à la prime pure les chargements (chargement de sécurité, frais de gestion/acquisition et marge bénéficiaire) :\nPrime commerciale HT = Prime pure × (1 + Taux de chargement total).\n\n3. Prime commerciale TTC (prime finale payée par l'assuré) : applique la Taxe sur les Conventions d'Assurance (TCA) :\nPrime commerciale TTC = Prime commerciale HT × (1 + TCA).\n\n4. Base actuarielle multi-périodes (taux d'actualisation i sur T années) :\n- Probabilités variables p_t : P = Σ_{t=1}^T [p_t · C_t / (1 + i)^t] ;\n- Probabilité p et coût c identiques chaque année : P = p · c · [(1 − (1 + i)^{−T}) / i].",
+          "La fixation du prix d'un contrat d'assurance (tarification actuarielle) suit une construction rigoureuse en trois étages :\n\n1. Prime pure (ou prime de risque) : coût statistique moyen du sinistre par assuré :\nPrime pure = Probabilité (ou Fréquence) de sinistre × Coût moyen d'un sinistre = Coût total attendu des sinistres / Nombre d'assurés.\n\n2. Prime commerciale Hors Taxes (HT) : ajoute à la prime pure les chargements (chargement de sécurité, frais de gestion/acquisition et marge bénéficiaire) :\nPrime commerciale HT = Prime pure × (1 + Taux de chargement total).\n\n3. Prime commerciale TTC (prime finale payée par l'assuré) : applique la Taxe sur les Conventions d'Assurance (TCA) :\nPrime commerciale TTC = Prime commerciale HT × (1 + TCA).\n\n4. Base actuarielle multi-périodes (taux d'actualisation i sur T années) :\n- Probabilités variables p_t : P = Σ_{t=1}^T [p_t · C_t / (1 + i)^t] ;\n- Probabilité p et coût c identiques chaque année : P = p · c · [(1 − (1 + i)^{−T}) / i].",
         keyRule:
           "Chaîne de tarification : Prime pure = p × C  →  Prime commerciale HT = Prime pure × (1 + chargements)  →  Prime TTC = Prime HT × (1 + TCA).",
         formulas: [
           {
-            name: 'Prime pure, HT et TTC (TD1 Ex. 4, 5 & 7)',
+            name: 'Prime pure, HT et TTC',
             formula: 'P_pure = p × C   |   P_HT = P_pure × (1 + ch.)   |   P_TTC = P_HT × (1 + TCA)',
             note: 'Chargement global = chargement de sécurité + frais de gestion + marge bénéficiaire.',
           },
@@ -360,9 +360,9 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Calcul complet Prime pure → HT → TTC (TD1 Ex. 4 & Ex. 5)',
+          title: 'Calcul complet Prime pure → HT → TTC',
           statement:
-            "A) Assurance maladie (TD1 Ex. 4) : indemnisation moyenne 300 000 FCFA, probabilité p = 8 %, chargement sécurité 10 %, frais de gestion 25 %, marge 5 %, TCA = 14,5 %. Calculez Prime pure, Prime HT et Prime TTC.\nB) Assurance auto (TD1 Ex. 7) : 5 000 assurés, p = 3 %, coût moyen 1 200 000 FCFA, chargements 20 % : calculez coût total, prime pure et prime commerciale.",
+            "A) Assurance maladie : indemnisation moyenne 300 000 FCFA, probabilité p = 8 %, chargement sécurité 10 %, frais de gestion 25 %, marge 5 %, TCA = 14,5 %. Calculez Prime pure, Prime HT et Prime TTC.\nB) Assurance auto : 5 000 assurés, p = 3 %, coût moyen 1 200 000 FCFA, chargements 20 % : calculez coût total, prime pure et prime commerciale.",
           methodSteps: [
             'A1) Prime pure = 8 % × 300 000 = 24 000 FCFA.',
             'A2) Chargement total = 10 % + 25 % + 5 % = 40 % ⇒ Prime commerciale HT = 24 000 × (1 + 0,40) = 33 600 FCFA.',
@@ -377,7 +377,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'methode',
-            stepBadge: 'TD1 Ex. 4',
+            stepBadge: 'Application',
             stepTheme: 'Prime pure',
             stepTitle: 'Calculer la prime pure d’un contrat d’assurance',
             paragraphText:
@@ -386,7 +386,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_assurance_ch1_p3_q1',
               type: 'mcq',
               prompt:
-                'Pour un contrat maladie prévoyant une indemnisation moyenne de 300 000 FCFA avec une probabilité de sinistre de 8 % (TD1 Ex. 4), quelle est la prime pure ?',
+                'Pour un contrat maladie prévoyant une indemnisation moyenne de 300 000 FCFA avec une probabilité de sinistre de 8 %, quelle est la prime pure ?',
               options: [
                 '24 000 FCFA',
                 '37 500 FCFA',
@@ -401,7 +401,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'TD1 Ex. 4',
+            stepBadge: 'Application',
             stepTheme: 'HT et TTC',
             stepTitle: 'Passer de la prime pure à la prime commerciale HT puis TTC',
             paragraphText:
@@ -410,7 +410,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_assurance_ch1_p3_q2',
               type: 'mcq',
               prompt:
-                'Dans la suite de l’exercice 4 du TD1 (prime pure = 24 000 FCFA, chargements cumulés = 40 %, TCA = 14,5 %), quelles sont la prime commerciale HT et la prime TTC ?',
+                'Avec prime pure = 24 000 FCFA, chargements cumulés = 40 %, TCA = 14,5 %, quelles sont la prime commerciale HT et la prime TTC ?',
               options: [
                 'HT = 28 000 FCFA et TTC = 32 060 FCFA',
                 'HT = 33 600 FCFA et TTC = 38 472 FCFA',
@@ -425,16 +425,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'methode',
-            stepBadge: 'TD1 Ex. 5',
+            stepBadge: 'Application',
             stepTheme: 'Statistiques sur 3 ans',
             stepTitle: 'Estimer la tarification à partir d’un historique de sinistres',
             paragraphText:
-              "Dans l'exercice 5 du TD1 sur 3 ans : total assurés = 1 000 + 1 200 + 1 500 = 3 700 ; total sinistres = 80 + 100 + 120 = 300 ; coût total = 24 M + 30 M + 36 M = 90 000 000 FCFA. Fréquence moyenne = 300 / 3 700 ≈ 8,11 % ; coût moyen par sinistre = 90 M / 300 = 300 000 FCFA ; prime pure = 90 M / 3 700 ≈ 24 324 FCFA.",
+              "Sur 3 ans : total assurés = 1 000 + 1 200 + 1 500 = 3 700 ; total sinistres = 80 + 100 + 120 = 300 ; coût total = 24 M + 30 M + 36 M = 90 000 000 FCFA. Fréquence moyenne = 300 / 3 700 ≈ 8,11 % ; coût moyen par sinistre = 90 M / 300 = 300 000 FCFA ; prime pure = 90 M / 3 700 ≈ 24 324 FCFA.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch1_p3_q3',
               type: 'mcq',
               prompt:
-                'Dans l’étude de cas sur 3 ans (TD1 Ex. 5 : 300 sinistres pour un coût cumulé de 90 millions FCFA sur 3 700 assurés-années), quel est le coût moyen par sinistre ?',
+                'Dans l’étude de cas sur 3 ans (Exemple : 300 sinistres pour un coût cumulé de 90 millions FCFA sur 3 700 assurés-années), quel est le coût moyen par sinistre ?',
               options: [
                 '24 324 FCFA',
                 '150 000 FCFA',
@@ -449,16 +449,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'methode',
-            stepBadge: 'TD1 Ex. 7',
+            stepBadge: 'Application',
             stepTheme: 'Assurance auto',
             stepTitle: 'Calculer coût total attendu et prime commerciale auto',
             paragraphText:
-              "Pour 5 000 automobilistes assurés avec p = 3 %, coût moyen 1 200 000 FCFA et 20 % de frais/marge (TD1 Ex. 7) : prime pure = 36 000 FCFA et prime commerciale = 36 000 × 1,20 = 43 200 FCFA.",
+              "Pour 5 000 automobilistes assurés avec p = 3 %, coût moyen 1 200 000 FCFA et 20 % de frais/marge : prime pure = 36 000 FCFA et prime commerciale = 36 000 × 1,20 = 43 200 FCFA.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch1_p3_q4',
               type: 'mcq',
               prompt:
-                'Une police auto couvre 5 000 clients avec une probabilité d’accident de 3 %, un coût moyen de 1 200 000 FCFA et 20 % de chargements (TD1 Ex. 7). Quelle est la prime commerciale par assuré ?',
+                'Une police auto couvre 5 000 clients avec une probabilité d’accident de 3 %, un coût moyen de 1 200 000 FCFA et 20 % de chargements. Quelle est la prime commerciale par assuré ?',
               options: [
                 '36 000 FCFA',
                 '40 000 FCFA',
@@ -509,37 +509,37 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 2,
     title: 'Chapitre 2 : Assurance vie, assurance non-vie (dommages) et Insurtech',
     summary:
-      "Maîtriser les produits et calculs d'assurance vie (capital décès, valeur de rachat, rente éducation), l'assurance dommages (RC, franchise, sous-assurance — TD2) et les innovations numériques.",
+      "Maîtriser les produits et calculs d'assurance vie (capital décès, valeur de rachat, rente éducation), l'assurance dommages (RC, franchise, sous-assurance) et les innovations numériques.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC — KADJO Assandé Pierre — Cours d’Assurance (Ch. 3 & 4) & TD N°2',
+    source: 'ENTD L1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_assurance_ch2_p1',
         order: 1,
-        title: 'Assurance vie : produits, valeur acquise, rachat et rente éducation (TD2)',
+        title: 'Assurance vie : produits, valeur acquise, rachat et rente éducation',
         summary:
-          "Distinguer épargne vie, temporaire décès et rente éducation, calculer une valeur de rachat nette (Ex. 6), une valeur acquise capitalisée et une valeur actuelle de rente (Ex. 8 & 9).",
+          "Distinguer épargne vie, temporaire décès et rente éducation, calculer une valeur de rachat nette, une valeur acquise capitalisée et une valeur actuelle de rente.",
         conceptExplanation:
-          "L'assurance vie est un contrat couvrant les risques liés à la durée de la vie humaine (vie ou décès) : elle permet à la fois de constituer et faire fructifier un capital sur le long terme (épargne/retraite) et de transmettre ce capital à des bénéficiaires désignés en cas de décès avec une fiscalité avantageuse (notamment après 8 ans).\n\nPrincipaux produits (TD2 Ex. 1, 4, 6, 7 & 8) :\n- Assurance temporaire décès : garantit le versement d'un capital aux proches si l'assuré décède pendant la durée du contrat (ex. couvrir le capital restant dû d'un prêt immobilier : 25 M − 5 M déjà remboursés = 20 M FCFA — Ex. 6 Cas 1) ;\n- Assurance vie épargne / retraite : capitalisation des primes versées au taux garanti + participation aux bénéfices ;\n- Rente éducation / conjoint survivant : versement d'un revenu périodique garanti en cas de décès.\n\nTrois calculs actuariels clés du TD2 :\n1. Valeur acquise d'un capital unique C placé à taux r pendant n années : V_n = C · (1 + r)^n. En cas de rachat anticipé avant 8 ans avec frais f : Valeur de rachat nette = V_n · (1 − f).\n2. Valeur acquise de versements annuels constants a (en début/fin de période) capitalisés au taux r.\n3. Valeur actuelle d'une rente constante R versée pendant n périodes au taux technique i : VA = R · [(1 − (1 + i)^{−n}) / i].",
+          "L'assurance vie est un contrat couvrant les risques liés à la durée de la vie humaine (vie ou décès) : elle permet à la fois de constituer et faire fructifier un capital sur le long terme (épargne/retraite) et de transmettre ce capital à des bénéficiaires désignés en cas de décès avec une fiscalité avantageuse (notamment après 8 ans).\n\nPrincipaux produits :\n- Assurance temporaire décès : garantit le versement d'un capital aux proches si l'assuré décède pendant la durée du contrat (ex. couvrir le capital restant dû d'un prêt immobilier : 25 M − 5 M déjà remboursés = 20 M FCFA) ;\n- Assurance vie épargne / retraite : capitalisation des primes versées au taux garanti + participation aux bénéfices ;\n- Rente éducation / conjoint survivant : versement d'un revenu périodique garanti en cas de décès.\n\nTrois calculs actuariels clés :\n1. Valeur acquise d'un capital unique C placé à taux r pendant n années : V_n = C · (1 + r)^n. En cas de rachat anticipé avant 8 ans avec frais f : Valeur de rachat nette = V_n · (1 − f).\n2. Valeur acquise de versements annuels constants a (en début/fin de période) capitalisés au taux r.\n3. Valeur actuelle d'une rente constante R versée pendant n périodes au taux technique i : VA = R · [(1 − (1 + i)^{−n}) / i].",
         keyRule:
           "En temporaire décès emprunteur, on assure le capital RESTANT DÛ (pas le prêt initial). Pour une rente de montant R sur n périodes au taux i : VA = R · [1 − (1+i)^{−n}] / i.",
         formulas: [
           {
-            name: 'Valeur acquise et Valeur de rachat nette (TD2 Ex. 6)',
+            name: 'Valeur acquise et Valeur de rachat nette',
             formula: 'V_n = C · (1 + r)^n   |   Rachat net = V_n · (1 − frais)',
             note: 'Avec r = taux garanti + participation aux bénéfices.',
           },
           {
-            name: 'Valeur actuelle d’une rente éducation (TD2 Ex. 8 & 9)',
+            name: 'Valeur actuelle d’une rente éducation',
             formula: 'VA = R · [(1 − (1 + i)^{−n}) / i]',
             note: 'Capital à constituer aujourd’hui pour servir une rente R pendant n périodes au taux technique i.',
           },
         ],
         workedExample: {
-          title: 'Capital décès, valeur de rachat et rente éducation (TD2 Ex. 6 & Ex. 8)',
+          title: 'Capital décès, valeur de rachat et rente éducation',
           statement:
-            "A) Prêt immobilier de 25 M FCFA dont 5 M déjà remboursés (Ex. 6 Cas 1) : quel capital assurer ?\nB) Contrat épargne 6 ans : primes 2 000 000 FCFA, taux garanti 2,5 %, participation 1,5 %, frais rachat avant 8 ans = 3 % (Ex. 6 Cas 2) : calculez la valeur de rachat nette.\nC) Rente éducation 500 000 FCFA/an pendant 4 ans à i = 2 % (Ex. 8 Cas 1) : calculez le capital VA.",
+            "A) Prêt immobilier de 25 M FCFA dont 5 M déjà remboursés : quel capital assurer ?\nB) Contrat épargne 6 ans : primes 2 000 000 FCFA, taux garanti 2,5 %, participation 1,5 %, frais rachat avant 8 ans = 3 % : calculez la valeur de rachat nette.\nC) Rente éducation 500 000 FCFA/an pendant 4 ans à i = 2 % : calculez le capital VA.",
           methodSteps: [
             'A) Capital restant dû à assurer = 25 000 000 − 5 000 000 = 20 000 000 FCFA (inutile de payer des primes sur la part déjà remboursée).',
             'B1) Taux annuel global r = 2,5 % + 1,5 % = 4 % ⇒ Valeur acquise avant frais (6 ans) = 2 000 000 × (1,04)^6 ≈ 2 530 638 FCFA.',
@@ -562,26 +562,26 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_assurance_ch2_p1_q1',
               type: 'mcq',
               prompt:
-                'D’après le cours, au-delà de quelle durée de détention la fiscalité des gains d’un contrat d’assurance vie devient-elle particulièrement avantageuse ?',
+                'Au-delà de quelle durée de détention la fiscalité des gains d’un contrat d’assurance vie devient-elle particulièrement avantageuse ?',
               options: ['Après 1 an', 'Après 8 ans', 'Après 2 ans', 'Après 6 mois'],
               correctAnswerIndex: 1,
               explanation:
-                'Le cours précise que les gains générés sur les contrats d’assurance vie bénéficient d’une fiscalité avantageuse, particulièrement après huit ans (d’où les frais de rachat anticipé avant 8 ans dans le TD2).',
+                'En pratique, les gains générés sur les contrats d’assurance vie bénéficient d’une fiscalité avantageuse, particulièrement après huit ans (d’où les frais de rachat anticipé avant 8 ans).',
             },
           },
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'TD2 Ex. 4 & 6',
+            stepBadge: 'Application',
             stepTheme: 'Temporaire décès',
             stepTitle: 'Choisir une temporaire décès et fixer le capital assuré',
             paragraphText:
-              "Pour garantir les études d'un enfant en cas de décès prématuré du parent (Ex. 4), la temporaire décès (ou rente éducation) est plus adaptée qu'une simple épargne scolaire car elle verse immédiatement le capital entier même si le décès survient dès la 1re année. Pour un prêt (Ex. 6), on assure uniquement le capital restant dû.",
+              "Pour garantir les études d'un enfant en cas de décès prématuré du parent, la temporaire décès (ou rente éducation) est plus adaptée qu'une simple épargne scolaire car elle verse immédiatement le capital entier même si le décès survient dès la 1re année. Pour un prêt, on assure uniquement le capital restant dû.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch2_p1_q2',
               type: 'mcq',
               prompt:
-                'Un client a emprunté 25 000 000 FCFA et a déjà remboursé 5 000 000 FCFA (TD2 Ex. 6). Quel capital doit-il assurer en temporaire décès pour protéger sa famille face à ce prêt ?',
+                'Un client a emprunté 25 000 000 FCFA et a déjà remboursé 5 000 000 FCFA. Quel capital doit-il assurer en temporaire décès pour protéger sa famille face à ce prêt ?',
               options: [
                 '25 000 000 FCFA obligatoirement',
                 '5 000 000 FCFA',
@@ -596,7 +596,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'methode',
-            stepBadge: 'TD2 Ex. 6',
+            stepBadge: 'Application',
             stepTheme: 'Valeur de rachat',
             stepTitle: 'Calculer une valeur acquise et une valeur de rachat nette',
             paragraphText:
@@ -620,11 +620,11 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'methode',
-            stepBadge: 'TD2 Ex. 8',
+            stepBadge: 'Application',
             stepTheme: 'Rente & Capitalisation',
             stepTitle: 'Calculer la valeur acquise de primes annuelles et la VA d’une rente',
             paragraphText:
-              "Dans le TD2 Ex. 8 Cas 2, 300 000 FCFA versés fin d'année 1, 2 et 3 à 4 % donnent : 300 000×(1,04)² + 300 000×(1,04)¹ + 300 000 = 324 480 + 312 000 + 300 000 = 936 480 FCFA (ou en début d'année : 936 480 × 1,04 = 973 939 FCFA). Pour la rente éducation (Cas 1), VA = 500 000 × [(1 − 1,02^{−4}) / 0,02] ≈ 1 903 864 FCFA.",
+              "300 000 FCFA versés fin d'année 1, 2 et 3 à 4 % donnent : 300 000×(1,04)² + 300 000×(1,04)¹ + 300 000 = 324 480 + 312 000 + 300 000 = 936 480 FCFA (ou en début d'année : 936 480 × 1,04 = 973 939 FCFA). Pour la rente éducation (Cas 1), VA = 500 000 × [(1 − 1,02^{−4}) / 0,02] ≈ 1 903 864 FCFA.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch2_p1_q4',
               type: 'mcq',
@@ -644,7 +644,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 5,
             stepKind: 'exemple',
-            stepBadge: 'TD2 Ex. 1',
+            stepBadge: 'Application',
             stepTheme: 'Vie vs Non-Vie',
             stepTitle: 'Bien classer les besoins entre Vie et Non-Vie',
             paragraphText:
@@ -653,7 +653,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_assurance_ch2_p1_q5',
               type: 'mcq',
               prompt:
-                'Parmi les situations de l’exercice 1 du TD2, lesquelles relèvent de l’ASSURANCE VIE ?',
+                'Parmi les situations suivantes, lesquelles relèvent de l’ASSURANCE VIE ?',
               options: [
                 'Protéger une maison contre l’incendie et couvrir sa voiture contre les accidents',
                 'Assurer les études de sa fille en cas de décès et épargner progressivement pour la retraite',
@@ -670,29 +670,29 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       makePoint({
         id: 'lmd_entd_l1_assurance_ch2_p2',
         order: 2,
-        title: 'Assurance non-vie (dommages) : RC, franchise et règle proportionnelle (TD2)',
+        title: 'Assurance non-vie (dommages) : RC, franchise et règle proportionnelle',
         summary:
-          "Maîtriser la Responsabilité Civile (RC) obligatoire, la garantie dommages collision avec franchise (Ex. 2, 3, 11) et la règle proportionnelle de sous-assurance (Ex. 5).",
+          "Maîtriser la Responsabilité Civile (RC) obligatoire, la garantie dommages collision avec franchise et la règle proportionnelle de sous-assurance.",
         conceptExplanation:
-          "L'assurance non-vie (ou assurance dommages) engage l'assureur à indemniser l'assuré ou un tiers en cas d'événement aléatoire affectant un bien (auto, incendie, vol), une personne (santé/accidents) ou une responsabilité (RC auto, RC professionnelle d'un médecin ou commerçant).\n\nTrois règles techniques reviennent systématiquement au TD2 et à l'examen :\n1. Responsabilité Civile (RC) automobile obligatoire (Ex. 2, 3 & 11) : elle indemnise UNIQUEMENT les dommages corporels et matériels causés aux TIERS (piéton, motocycliste, autre véhicule) lorsque l'assuré est responsable. Elle ne répare JAMAIS le propre véhicule de l'assuré responsable !\n2. Garantie Dommages collision / Tous risques et Franchise (Ex. 2) : si l'assuré a souscrit cette garantie facultative, son propre véhicule est indemnisé sous déduction de la franchise contractuelle (part restant à la charge de l'assuré) : Indemnité = Dommages véhicule − Franchise.\n3. Principe indemnitaire et règle proportionnelle de capitaux en cas de sous-assurance (Ex. 5 Cas 1) : si un bien de valeur réelle V_r est assuré pour un capital inférieur V_a < V_r, l'indemnité est réduite proportionnellement :\nIndemnité = Dommage × (Capital assuré / Valeur réelle).",
+          "L'assurance non-vie (ou assurance dommages) engage l'assureur à indemniser l'assuré ou un tiers en cas d'événement aléatoire affectant un bien (auto, incendie, vol), une personne (santé/accidents) ou une responsabilité (RC auto, RC professionnelle d'un médecin ou commerçant).\n\nTrois règles techniques essentielles à maîtriser :\n1. Responsabilité Civile (RC) automobile obligatoire : elle indemnise UNIQUEMENT les dommages corporels et matériels causés aux TIERS (piéton, motocycliste, autre véhicule) lorsque l'assuré est responsable. Elle ne répare JAMAIS le propre véhicule de l'assuré responsable !\n2. Garantie Dommages collision / Tous risques et Franchise : si l'assuré a souscrit cette garantie facultative, son propre véhicule est indemnisé sous déduction de la franchise contractuelle (part restant à la charge de l'assuré) : Indemnité = Dommages véhicule − Franchise.\n3. Principe indemnitaire et règle proportionnelle de capitaux en cas de sous-assurance : si un bien de valeur réelle V_r est assuré pour un capital inférieur V_a < V_r, l'indemnité est réduite proportionnellement :\nIndemnité = Dommage × (Capital assuré / Valeur réelle).",
         keyRule:
-          "Retiens les 3 réflexes TD2 : (1) La RC indemnise les TIERS, jamais le véhicule de l'assuré responsable ; (2) Indemnité dommages = Dommage − Franchise ; (3) Sous-assurance ⇒ Indemnité = Dommage × (Capital assuré / Valeur réelle).",
+          "Retiens les 3 réflexes essentiels : (1) La RC indemnise les TIERS, jamais le véhicule de l'assuré responsable ; (2) Indemnité dommages = Dommage − Franchise ; (3) Sous-assurance ⇒ Indemnité = Dommage × (Capital assuré / Valeur réelle).",
         formulas: [
           {
-            name: 'Indemnisation avec franchise (TD2 Ex. 2)',
+            name: 'Indemnisation avec franchise',
             formula: 'Indemnité véhicule assuré = Dommages constatés − Franchise',
             note: 'Applicable uniquement si le contrat comporte une garantie Dommages (collision ou tous risques).',
           },
           {
-            name: 'Règle proportionnelle de sous-assurance (TD2 Ex. 5)',
+            name: 'Règle proportionnelle de sous-assurance',
             formula: 'Indemnité = Dommage × (Capital assuré / Valeur réelle du bien)',
             note: 'S’applique lorsque Capital assuré < Valeur réelle afin de respecter l’équité tarifaire.',
           },
         ],
         workedExample: {
-          title: 'Sinistre auto avec franchise (TD2 Ex. 2) et sous-assurance incendie (TD2 Ex. 5)',
+          title: 'Sinistre auto avec franchise et sous-assurance incendie',
           statement:
-            "A) Un conducteur heurte un piéton (Ex. 2) : soins piéton 300 000 FCFA, téléphone piéton 120 000 FCFA, véhicule assuré 450 000 FCFA. Contrat : RC obligatoire + Dommages collision (franchise 100 000 FCFA). Calculez les indemnités.\nB) Bâtiment assuré 100 M FCFA, valeur réelle 200 M FCFA, dommage incendie 40 M FCFA (Ex. 5) : calculez l'indemnité.",
+            "A) Un conducteur heurte un piéton : soins piéton 300 000 FCFA, téléphone piéton 120 000 FCFA, véhicule assuré 450 000 FCFA. Contrat : RC obligatoire + Dommages collision (franchise 100 000 FCFA). Calculez les indemnités.\nB) Bâtiment assuré 100 M FCFA, valeur réelle 200 M FCFA, dommage incendie 40 M FCFA : calculez l'indemnité.",
           methodSteps: [
             'A1) Garantie RC obligatoire (dommages causés au tiers piéton) : 300 000 (soins) + 120 000 (téléphone) = 420 000 FCFA.',
             'A2) Garantie Dommages collision (véhicule de l’assuré) : 450 000 − 100 000 (franchise) = 350 000 FCFA (si l’assuré n’avait que la RC, il recevrait 0 FCFA pour son véhicule).',
@@ -705,16 +705,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'piege',
-            stepBadge: 'TD2 Ex. 3 & 11',
+            stepBadge: 'Application',
             stepTheme: 'Responsabilité Civile',
             stepTitle: 'Qui est indemnisé par la RC automobile obligatoire ?',
             paragraphText:
-              "La garantie Responsabilité Civile (RC) automobile obligatoire couvre exclusivement les dommages corporels et matériels causés aux TIERS victimes (piéton, motocycliste, passagers tiers). Dans l'Ex. 11 (moto 350 000 + frais médicaux motocycliste 420 000 + voiture assuré 500 000), la RC indemnise 770 000 FCFA au motocycliste et 0 FCFA pour la voiture de l'assuré responsable !",
+              "La garantie Responsabilité Civile (RC) automobile obligatoire couvre exclusivement les dommages corporels et matériels causés aux TIERS victimes (piéton, motocycliste, passagers tiers). Par exemple (moto 350 000 + frais médicaux motocycliste 420 000 + voiture assuré 500 000), la RC indemnise 770 000 FCFA au motocycliste et 0 FCFA pour la voiture de l'assuré responsable !",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch2_p2_q1',
               type: 'mcq',
               prompt:
-                'Un conducteur responsable heurte un motocycliste (TD2 Ex. 11 : moto 350 000 FCFA, frais médicaux motocycliste 420 000 FCFA, voiture du conducteur 500 000 FCFA). Quel montant est indemnisé par la seule garantie RC obligatoire ?',
+                'Un conducteur responsable heurte un motocycliste (Exemple : moto 350 000 FCFA, frais médicaux motocycliste 420 000 FCFA, voiture du conducteur 500 000 FCFA). Quel montant est indemnisé par la seule garantie RC obligatoire ?',
               options: [
                 '770 000 FCFA (moto + frais médicaux du tiers motocycliste ; 0 FCFA pour la voiture de l’assuré)',
                 '1 270 000 FCFA (la totalité des dommages)',
@@ -729,16 +729,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'TD2 Ex. 2',
+            stepBadge: 'Application',
             stepTheme: 'Dommages collision & Franchise',
             stepTitle: 'Appliquer la franchise sur la garantie Dommages collision',
             paragraphText:
-              "Lorsque l'assuré a souscrit une garantie Dommages collision en plus de la RC, son propre véhicule est indemnisé à hauteur des réparations diminuées de la franchise (dans l'Ex. 2 : 450 000 − 100 000 = 350 000 FCFA). Note : la collision implique un choc avec un tiers identifié (véhicule, piéton, animal).",
+              "Lorsque l'assuré a souscrit une garantie Dommages collision en plus de la RC, son propre véhicule est indemnisé à hauteur des réparations diminuées de la franchise (par exemple : 450 000 − 100 000 = 350 000 FCFA). Note : la collision implique un choc avec un tiers identifié (véhicule, piéton, animal).",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch2_p2_q2',
               type: 'mcq',
               prompt:
-                'Dans l’exercice 2 du TD2 (dommages véhicule assuré = 450 000 FCFA, garantie dommages collision avec franchise de 100 000 FCFA), combien l’assureur verse-t-il pour réparer le véhicule de l’assuré ?',
+                'Avec dommages véhicule assuré = 450 000 FCFA, garantie dommages collision avec franchise de 100 000 FCFA, combien l’assureur verse-t-il pour réparer le véhicule de l’assuré ?',
               options: [
                 '450 000 FCFA',
                 '350 000 FCFA',
@@ -753,16 +753,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'methode',
-            stepBadge: 'TD2 Ex. 5',
+            stepBadge: 'Application',
             stepTheme: 'Sous-assurance',
             stepTitle: 'Appliquer la règle proportionnelle de capitaux',
             paragraphText:
-              "Si un bien est assuré en dessous de sa valeur réelle (sous-assurance), l'assureur applique la règle proportionnelle : Indemnité = Dommage × (Capital assuré / Valeur réelle). Dans l'Ex. 5 : 40 M × (100 M / 200 M) = 20 M FCFA.",
+              "Si un bien est assuré en dessous de sa valeur réelle (sous-assurance), l'assureur applique la règle proportionnelle : Indemnité = Dommage × (Capital assuré / Valeur réelle). Exemple : 40 M × (100 M / 200 M) = 20 M FCFA.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch2_p2_q3',
               type: 'mcq',
               prompt:
-                'Un entrepôt d’une valeur réelle de 200 millions FCFA est assuré pour seulement 100 millions FCFA (TD2 Ex. 5). Un incendie cause 40 millions FCFA de dégâts. Quelle indemnité l’assureur verse-t-il ?',
+                'Un entrepôt d’une valeur réelle de 200 millions FCFA est assuré pour seulement 100 millions FCFA. Un incendie cause 40 millions FCFA de dégâts. Quelle indemnité l’assureur verse-t-il ?',
               options: [
                 '40 millions FCFA',
                 '100 millions FCFA',
@@ -777,16 +777,16 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'exemple',
-            stepBadge: 'TD2 Ex. 5 Cas 2',
+            stepBadge: 'Application',
             stepTheme: 'RC Professionnelle',
             stepTitle: 'Identifier une assurance Responsabilité Civile Professionnelle',
             paragraphText:
-              "Lorsqu'un médecin commet une erreur de diagnostic causant un préjudice financier ou corporel à son patient (TD2 Ex. 5 Cas 2), c'est son assurance Responsabilité Civile Professionnelle (RCP) qui indemnise le patient (bénéficiaire/tiers victime) sur la base légale de la responsabilité civile (faute + dommage + lien de causalité).",
+              "Lorsqu'un médecin commet une erreur de diagnostic causant un préjudice financier ou corporel à son patient, c'est son assurance Responsabilité Civile Professionnelle (RCP) qui indemnise le patient (bénéficiaire/tiers victime) sur la base légale de la responsabilité civile (faute + dommage + lien de causalité).",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch2_p2_q4',
               type: 'mcq',
               prompt:
-                'Un médecin commet une erreur de diagnostic entraînant un préjudice pour son patient (TD2 Ex. 5 Cas 2). Quelle assurance et quel bénéficiaire sont concernés ?',
+                'Un médecin commet une erreur de diagnostic entraînant un préjudice pour son patient. Quelle assurance et quel bénéficiaire sont concernés ?',
               options: [
                 'Assurance vie épargne ; bénéficiaire : la clinique',
                 'Assurance incendie ; bénéficiaire : l’État',
@@ -844,7 +844,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Choisir le modèle Insurtech adapté à des planteurs de cacao ivoiriens',
           statement:
-            "Des milliers de petits planteurs de cacao craignent une sécheresse prolongée. Une expertise individuelle de chaque parcelle coûterait plus cher que la prime. Quelle innovation assurantielle du cours recommander ?",
+            "Des milliers de petits planteurs de cacao craignent une sécheresse prolongée. Une expertise individuelle de chaque parcelle coûterait plus cher que la prime. Quelle innovation assurantielle recommander ?",
           methodSteps: [
             "Identifier le blocage classique : l'assurance dommage traditionnelle exige un expert terrain par sinistre, trop coûteux et lent pour des milliers de petites parcelles.",
             "Recommander l'assurance paramétrique : le contrat fixe un indice satellite/météo objectif (ex. cumul de pluie inférieur à X mm sur la saison).",
@@ -914,7 +914,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_assurance_ch2_p3_q3',
               type: 'mcq',
               prompt:
-                'Quel est le rôle principal de la RPA (Robotic Process Automation) dans une compagnie d’assurance selon le cours ?',
+                'Quel est le rôle principal de la RPA (Robotic Process Automation) dans une compagnie d’assurance ?',
               options: [
                 'Automatiser les tâches administratives répétitives comme les quittances, relances et renouvellements',
                 'Remplacer la loi des grands nombres',
@@ -938,7 +938,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_assurance_ch2_p3_q4',
               type: 'mcq',
               prompt:
-                'Comment la technologie Blockchain contribue-t-elle à moderniser le secteur de l’assurance selon le cours ?',
+                'Comment la technologie Blockchain contribue-t-elle à moderniser le secteur de l’assurance ?',
               options: [
                 'En rendant tous les contrats anonymes et illégaux',
                 'En supprimant le besoin de mutualisation',
@@ -992,7 +992,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Maîtriser la Conférence Interafricaine des Marchés d'Assurances (Traité de Yaoundé 1992, Code CIMA, CMA, CRCA, CICA-RE), la solvabilité et les nouveaux canaux digitaux d'inclusion assurantielle.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC — KADJO Assandé Pierre — Cours d’Assurance (Ch. 5 & 6)',
+    source: 'ENTD L1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_assurance_ch3_p1',
@@ -1255,7 +1255,7 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Micro-assurance mobile',
             stepTitle: 'Leviers pour dépasser les 2 % de pénétration en Côte d’Ivoire',
             paragraphText:
-              "Pour développer la culture assurantielle (TD1 Ex. 3), trois leviers sont décisifs : des produits simples de micro-assurance à primes fractionnées, la distribution par plateformes mobiles/Mobile Money (atteignant les non-bancarisés) et la rapidité/transparence des indemnisations pour bâtir la confiance.",
+              "Pour développer la culture assurantielle, trois leviers sont décisifs : des produits simples de micro-assurance à primes fractionnées, la distribution par plateformes mobiles/Mobile Money (atteignant les non-bancarisés) et la rapidité/transparence des indemnisations pour bâtir la confiance.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch3_p2_q4',
               type: 'mcq',
@@ -1276,15 +1276,15 @@ export const ASSURANCE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepNumber: 5,
             stepKind: 'piege',
             stepBadge: 'Conseil client',
-            stepTheme: 'Pédagogie (TD2 Ex. 10)',
+            stepTheme: 'Pédagogie',
             stepTitle: 'Savoir expliquer l’assurance simplement à un client novice',
             paragraphText:
-              "Comme le demande l'exercice 10 du TD2 (« Je n'y connais rien. C'est quoi une assurance vie ? »), la pédagogie commerciale est essentielle : utiliser un langage clair (épargne qui fructifie + bouclier financier pour protéger sa famille si un malheur arrive) sans jargon actuariel obscur.",
+              "Face à un client débutant (« Je n'y connais rien. C'est quoi une assurance vie ? »), la pédagogie commerciale est essentielle : utiliser un langage clair (épargne qui fructifie + bouclier financier pour protéger sa famille si un malheur arrive) sans jargon actuariel obscur.",
             exercise: {
               id: 'lmd_entd_l1_assurance_ch3_p2_q5',
               type: 'mcq',
               prompt:
-                'Face à un client novice qui demande « C’est quoi une assurance vie ? » (TD2 Ex. 10), quelle explication est la plus juste et accessible ?',
+                'Face à un client novice qui demande « C’est quoi une assurance vie ? », quelle explication est la plus juste et accessible ?',
               options: [
                 'C’est uniquement une taxe obligatoire qui ne rapporte jamais rien de votre vivant',
                 'C’est un contrat qui permet à la fois de faire fructifier votre épargne sur le long terme et de protéger vos proches en leur transmettant un capital en cas de décès',

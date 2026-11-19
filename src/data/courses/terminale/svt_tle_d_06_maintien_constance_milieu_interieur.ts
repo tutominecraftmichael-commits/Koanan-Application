@@ -7,10 +7,10 @@ export const SVT_TLE_D_L06_MAINTIEN_CONSTANCE_MILIEU_INTERIEUR: CurriculumChapte
   alsoForGrades: ["terminale_c"],
   order: 5,
   title: "Le maintien de la constance du milieu intérieur (Régulation rénale, équilibre hydrominéral, volémie, ADH et aldostérone)",
-  summary: "Étude complète et approfondie du rôle des reins dans l'homéostasie du milieu intérieur selon le programme officiel de Côte d'Ivoire (Leçon 8 SVT Tle D) : ultrastructure du rein et du néphron (corpuscule de Malpighi, capsule de Bowman, glomérule, tubules urinaires), analyse comparative et mécanismes de formation de l'urine (filtration glomérulaire sélective, réabsorption tubulaire totale ou partielle, sécrétion active et excrétion), régulation neuro-hormonale de la teneur en eau et de la volémie par l'ADH (osmorécepteurs, tensiorécepteurs, polyurie et oligurie), régulation de la natrémie et de la pression artérielle par le système rénine-angiotensine-aldostérone (SRAA), et régulation couplée de l'équilibre acido-basique (tampon bicarbonate, poumons et reins).",
+  summary: "Étude complète et approfondie du rôle des reins dans l'homéostasie du milieu intérieur : ultrastructure du rein et du néphron (corpuscule de Malpighi, capsule de Bowman, glomérule, tubules urinaires), analyse comparative et mécanismes de formation de l'urine (filtration glomérulaire sélective, réabsorption tubulaire totale ou partielle, sécrétion active et excrétion), régulation neuro-hormonale de la teneur en eau et de la volémie par l'ADH (osmorécepteurs, tensiorécepteurs, polyurie et oligurie), régulation de la natrémie et de la pression artérielle par le système rénine-angiotensine-aldostérone (SRAA), et régulation couplée de l'équilibre acido-basique (tampon bicarbonate, poumons et reins).",
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC) - SVT Terminale D",
+  source: "Programme KONAN — SVT Terminale D",
   points: [
     {
       id: "pt1_milieu_interieur_homeostasie_organisation_rein_nephron",

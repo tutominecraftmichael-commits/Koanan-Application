@@ -23,7 +23,7 @@ export const TEF_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     officialVolumeHours: 14,
     contentVersion: 2,
     source:
-      'ESATIC ENTD L1 — TEF S1 (Accord du PP, La Sémantique, Ponctuation, Les Connecteurs Logiques, Questions de Vocabulaire)',
+      'ENTD L1 — TEF S1 (Accord du PP, La Sémantique, Ponctuation, Les Connecteurs Logiques, Questions de Vocabulaire)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_tef_ch1_p1',
@@ -268,7 +268,7 @@ export const TEF_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 1,
               explanation:
-                'Le respect de la classe grammaticale (nom -> nom, adjectif -> adjectif) suivi de la mise en contexte est la règle d’or du cours de TEF.',
+                'Le respect de la classe grammaticale (nom -> nom, adjectif -> adjectif) suivi de la mise en contexte est la règle d’or en expression française.',
             },
           },
           {
@@ -473,7 +473,7 @@ export const TEF_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       'Maîtriser les 4 étapes, la présentation et le décompte des mots du résumé de texte, ainsi que la méthodologie complète de la dissertation d’ordre général (analyse du sujet, structure et plans).',
     officialVolumeHours: 14,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Cours Résumé de Texte L1 (S1) et Cours TEF S2 (Méthodologie de la Dissertation)',
+    source: 'ENTD L1 — Cours Résumé de Texte L1 (S1) et Cours TEF S2 (Méthodologie de la Dissertation)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_tef_ch2_p1',
@@ -681,7 +681,7 @@ export const TEF_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Décompte des mots',
             stepTitle: 'Compter les mots élidés, apostrophes et nombres',
             paragraphText:
-              'Selon la règle du cours, un mot est une unité typographique séparée par des blancs ; les mots élidés avec apostrophe comptent chacun comme un mot distinct (ex. « l’auteur » = 2 mots, « qu’il » = 2 mots), et un nombre en chiffres compte pour 1 mot.',
+              'En technique de résumé, un mot est une unité typographique séparée par des blancs ; les mots élidés avec apostrophe comptent chacun comme un mot distinct (ex. « l’auteur » = 2 mots, « qu’il » = 2 mots), et un nombre en chiffres compte pour 1 mot.',
             exercise: {
               id: 'lmd_entd_l1_tef_ch2_p2_q2',
               type: 'mcq',
@@ -779,7 +779,7 @@ export const TEF_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           'Analyser l’information et la consigne, structurer l’introduction, le développement et la conclusion, et choisir entre plan dialectique et plan thématique.',
         conceptExplanation:
-          "La dissertation d'ordre général (Partie I du cours TEF S2) évalue l'aptitude de l'étudiant à mener une réflexion personnelle argumentée, structurée et rédigée dans une langue claire sur un problème de société ou d'actualité.\n\n1. Analyse du sujet : tout sujet comporte deux parties :\n- L'information : l'énoncé d'un thème ou d'une opinion portant sur un fait de société.\n- La consigne : la phrase (souvent injonctive ou au futur simple) qui pose le problème et oriente le travail demandé (« Discutez », « Montrez comment… »).\n2. Activités préparatoires : identifier le thème, reformuler le sujet, formuler la problématique (question directrice), déterminer les axes d'argumentation et classer les idées et exemples.\n3. Les trois parties du devoir :\n- Introduction (3 étapes obligatoires) : perspective générale (amorce liée au thème) -> citation/rappel du sujet suivi du problème -> annonce du plan.\n- Développement : conforme au plan annoncé ; chaque partie/paragraphe suit la démarche Affirmation (idée directrice) -> Argumentation -> Illustration(s) précise(s), avec des phrases de transition entre les grandes parties.\n- Conclusion : bilan/résumé du développement (reformulé différemment de l'introduction) -> réponse claire à la problématique -> ouverture éventuelle.\n4. Types de plans :\n- Plan dialectique (Thèse / Antithèse / Synthèse) : pour les consignes invitant au débat (« Discuter », « Peut-on dire… ? », « Pensez-vous que… ? », « Critiquer »).\n- Plan thématique (ou analytique) : organise le devoir autour des dimensions du thème pour les consignes d'explication (« Exposer », « Montrer comment », « Quels sont les enjeux… ? », « Justifier »).",
+          "La dissertation d'ordre général évalue l'aptitude de l'étudiant à mener une réflexion personnelle argumentée, structurée et rédigée dans une langue claire sur un problème de société ou d'actualité.\n\n1. Analyse du sujet : tout sujet comporte deux parties :\n- L'information : l'énoncé d'un thème ou d'une opinion portant sur un fait de société.\n- La consigne : la phrase (souvent injonctive ou au futur simple) qui pose le problème et oriente le travail demandé (« Discutez », « Montrez comment… »).\n2. Activités préparatoires : identifier le thème, reformuler le sujet, formuler la problématique (question directrice), déterminer les axes d'argumentation et classer les idées et exemples.\n3. Les trois parties du devoir :\n- Introduction (3 étapes obligatoires) : perspective générale (amorce liée au thème) -> citation/rappel du sujet suivi du problème -> annonce du plan.\n- Développement : conforme au plan annoncé ; chaque partie/paragraphe suit la démarche Affirmation (idée directrice) -> Argumentation -> Illustration(s) précise(s), avec des phrases de transition entre les grandes parties.\n- Conclusion : bilan/résumé du développement (reformulé différemment de l'introduction) -> réponse claire à la problématique -> ouverture éventuelle.\n4. Types de plans :\n- Plan dialectique (Thèse / Antithèse / Synthèse) : pour les consignes invitant au débat (« Discuter », « Peut-on dire… ? », « Pensez-vous que… ? », « Critiquer »).\n- Plan thématique (ou analytique) : organise le devoir autour des dimensions du thème pour les consignes d'explication (« Exposer », « Montrer comment », « Quels sont les enjeux… ? », « Justifier »).",
         keyRule:
           'Introduction = Perspective générale + Sujet & Problème + Annonce du plan. Paragraphe de développement = Affirmation + Argumentation + Illustration (+ Transition).',
         workedExample: {
@@ -928,7 +928,7 @@ export const TEF_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       'Préparer et présenter un exposé oral convaincant (voix, posture, gestuelle, mimique), prendre des notes exploitables à l’oral comme à l’écrit et rédiger différents types de comptes rendus.',
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — TEF S2 (Parties II et III : Exposé oral, Prise de notes, Compte rendu)',
+    source: 'ENTD L1 — TEF S2 (Parties II et III : Exposé oral, Prise de notes, Compte rendu)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_tef_ch3_p1',
@@ -1082,13 +1082,13 @@ export const TEF_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           'Appliquer les méthodes de prise de notes (à l’oral et à l’écrit) et rédiger un compte rendu d’activité, d’événement ou de réunion (intégral ou analytique).',
         conceptExplanation:
-          "La Partie III du cours de TEF S2 forme les futurs professionnels du numérique à deux outils quotidiens en entreprise : la prise de notes et le compte rendu.\n\n1. La prise de notes :\n- Objectif : dégager le raisonnement général, le plan, les idées directrices et les liens entre idées (une simple juxtaposition sans liens rend les notes inutilisables).\n- À l'oral (cours/conférence) : repérer les titres, définitions capitales, phases d'annonce/transition, variations de ton, répétitions et pauses ; reformuler en une phrase les longs développements.\n- À l'écrit : repérer d'abord les indices typographiques (titres, sous-titres, gras) et ÉVITER de noter au fur et à mesure de la première lecture, car le sens global n'apparaît qu'à la fin.\n- Présentation des notes : écrire uniquement au recto des feuilles, aérer la page avec des marges, retours à la ligne structurés et laisser des blancs pour des ajouts ultérieurs (dans une autre couleur).\n2. Le compte rendu (CR) :\n- Types : CR d'activité/de mission, CR d'événement, CR de réunion.\n- Plan d'un CR d'activité : Titre précis (objet, dates, lieu) -> Texte narratif clair (brève introduction sur les circonstances/motifs, développement chronologique/analytique mentionnant les personnes rencontrées, conclusion résumant les points et éventuellement une appréciation générale SANS formuler de propositions de solutions) -> Lieu et date -> Signature du rédacteur.\n- CR de réunion : soit intégral (style direct, mot à mot des interventions : « Le président : ... »), soit analytique (style indirect synthétique résumant les débats : « Après avoir constaté la présence…, le président déclare… »).",
+          "En communication professionnelle, deux outils sont essentiels au quotidien : la prise de notes et le compte rendu.\n\n1. La prise de notes :\n- Objectif : dégager le raisonnement général, le plan, les idées directrices et les liens entre idées (une simple juxtaposition sans liens rend les notes inutilisables).\n- À l'oral (cours/conférence) : repérer les titres, définitions capitales, phases d'annonce/transition, variations de ton, répétitions et pauses ; reformuler en une phrase les longs développements.\n- À l'écrit : repérer d'abord les indices typographiques (titres, sous-titres, gras) et ÉVITER de noter au fur et à mesure de la première lecture, car le sens global n'apparaît qu'à la fin.\n- Présentation des notes : écrire uniquement au recto des feuilles, aérer la page avec des marges, retours à la ligne structurés et laisser des blancs pour des ajouts ultérieurs (dans une autre couleur).\n2. Le compte rendu (CR) :\n- Types : CR d'activité/de mission, CR d'événement, CR de réunion.\n- Plan d'un CR d'activité : Titre précis (objet, dates, lieu) -> Texte narratif clair (brève introduction sur les circonstances/motifs, développement chronologique/analytique mentionnant les personnes rencontrées, conclusion résumant les points et éventuellement une appréciation générale SANS formuler de propositions de solutions) -> Lieu et date -> Signature du rédacteur.\n- CR de réunion : soit intégral (style direct, mot à mot des interventions : « Le président : ... »), soit analytique (style indirect synthétique résumant les débats : « Après avoir constaté la présence…, le président déclare… »).",
         keyRule:
           'Le compte rendu relève du style narratif et objectif (sans propositions de solutions, réservées au rapport). En réunion : CR intégral = style direct ; CR analytique = synthèse en style indirect.',
         workedExample: {
           title: 'Distinguer un extrait de CR intégral d’un CR analytique',
           statement:
-            'Comparer les deux extraits issus du cours TEF S2 et identifier le type de compte rendu correspondant.',
+            'Comparer ces deux extraits et identifier le type de compte rendu correspondant.',
           methodSteps: [
             'Extrait A : « Le président : le quorum étant atteint, je déclare la séance ouverte et je donne la parole à M. K… » -> Style direct, reproduction mot à mot des interventions = Compte rendu intégral.',
             'Extrait B : « Après avoir constaté la présence de tous les participants invités, le président déclare la séance ouverte… » -> Relation synthétique en style indirect = Compte rendu analytique.',
@@ -1157,7 +1157,7 @@ export const TEF_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_tef_ch3_p2_q3',
               type: 'mcq',
               prompt:
-                'Quelle caractéristique distingue la conclusion d’un compte rendu d’activité dans le cours de TEF S2 ?',
+                'Quelle caractéristique distingue la conclusion d’un compte rendu d’activité en communication professionnelle ?',
               options: [
                 'Elle résume les points présentés (avec éventuelle appréciation générale), mais sans formuler de propositions de solutions',
                 'Elle impose des sanctions disciplinaires aux participants',

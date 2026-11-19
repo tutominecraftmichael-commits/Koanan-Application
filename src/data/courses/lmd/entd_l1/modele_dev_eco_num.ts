@@ -25,7 +25,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Définir un modèle économique numérique (Osterwalder & Pigneur), ses 5 spécificités, l'alignement stratégique avec la proposition de valeur et la typologie des 8 sources de revenus.",
     officialVolumeHours: 8,
     contentVersion: 2,
-    source: 'ESATIC — Dr N’GUESSAN Bi Zambé Serge Constant — Modèle de Développement en Économie Numérique (Chapitre 1.pptx)',
+    source: 'ENTD L1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_modele_dev_eco_num_ch1_p1',
@@ -142,7 +142,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_modele_dev_eco_num_ch1_p1_q4',
               type: 'mcq',
               prompt:
-                "Parmi les quatre dimensions suivantes, lesquelles sont directement conditionnées par le choix du modèle économique selon le cours ?",
+                "Parmi les quatre dimensions suivantes, lesquelles sont directement conditionnées par le choix du modèle économique ?",
               options: [
                 'Uniquement la couleur du logo et le nom de domaine',
                 'Uniquement le salaire du comptable',
@@ -200,7 +200,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Identifier les sources de revenus d’un modèle hybride (Amazon)',
           statement:
-            "Amazon combine boutique en ligne, place de marché pour vendeurs tiers, abonnement Prime, publicités sponsorisées et services cloud AWS. Identifiez les sources de revenus mobilisées selon la typologie du cours.",
+            "Amazon combine boutique en ligne, place de marché pour vendeurs tiers, abonnement Prime, publicités sponsorisées et services cloud AWS. Identifiez les sources de revenus mobilisées selon la typologie des modèles de revenus.",
           methodSteps: [
             'Vente directe de produits (Amazon retail) -> Vente de biens/services.',
             'Amazon Marketplace (prélèvement sur vendeurs tiers) -> Commission / Transaction.',
@@ -296,7 +296,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_modele_dev_eco_num_ch1_p2_q4',
               type: 'mcq',
               prompt:
-                'Quelle source de revenus de la typologie du cours est illustrée par Bloomberg et Experian ?',
+                'Quelle source de revenus est illustrée par Bloomberg et Experian ?',
               options: [
                 'Le modèle du don',
                 'La commission sur covoiturage',
@@ -320,7 +320,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_modele_dev_eco_num_ch1_p2_q5',
               type: 'mcq',
               prompt:
-                'Quel trio d’exemples du cours illustre spécifiquement le modèle « Freemium » (gratuit + options payantes) ?',
+                'Quel trio d’exemples illustre spécifiquement le modèle « Freemium » (gratuit + options payantes) ?',
               options: [
                 'Dropbox, LinkedIn Premium et Canva',
                 'Bloomberg, Experian et Stripe',
@@ -350,7 +350,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Maîtriser l'écosystème, les formats et les indicateurs tarifaires (CPM, CPV, CPC, CPE, CPA, CPL, CPI) de la publicité en ligne, ainsi que l'économie et les enjeux de l'abonnement.",
     officialVolumeHours: 8,
     contentVersion: 2,
-    source: 'ESATIC — Dr N’GUESSAN Bi Zambé Serge Constant (Chapitre 2.pptx & Chapitre 3.pptx)',
+    source: 'ENTD L1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_modele_dev_eco_num_ch2_p1',
@@ -507,7 +507,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           "Passage de la propriété à l'accès (transactionnel vs récurrent) et bénéfices respectifs pour l'entreprise, le consommateur et l'écosystème numérique.",
         conceptExplanation:
-          "Le modèle basé sur l'abonnement implique que les utilisateurs paient régulièrement pour accéder à un contenu ou service numérique pendant une durée déterminée sans en devenir propriétaires. Dans l'économie numérique, l'abonnement transfère la propriété du bien vers la location du service.\n\nOn distingue :\n- le modèle transactionnel (achat définitif, ex. téléchargement d'un morceau sur iTunes) ;\n- le modèle récurrent (accès temporaire, ex. abonnement Spotify).\n\nCe modèle offre des avantages majeurs aux trois niveaux :\n1. Pour l'entreprise : revenus prévisibles (meilleure trésorerie et valorisation boursière), réduction du piratage (authentification requise), données clients continues (personnalisation), mises à jour continues (fin des cycles de versions coûteux) et amortissement du coût d'acquisition client sur la durée.\n2. Pour le consommateur : coût d'entrée faible (ex. 9,99 €/mois au lieu de 500 € pour une suite logicielle), accès à un catalogue large (mutualisation des coûts), flexibilité de résiliation et absence d'obsolescence (mises à jour automatiques).\n3. Pour l'écosystème : standardisation des usages, baisse des coûts de distribution physique et meilleure allocation des serveurs et de la bande passante.",
+          "Le modèle basé sur l'abonnement implique que les utilisateurs paient régulièrement pour accéder à un contenu ou service numérique pendant une durée déterminée sans en devenir propriétaires. Dans l'économie numérique, l'abonnement transfère la propriété du bien vers la location du service.\n\nOn distingue :\n- le modèle transactionnel (achat définitif, ex. téléchargement d'un morceau sur iTunes) ;\n- le modèle récurrent (accès temporaire, ex. abonnement Spotify).\n\nCe modèle offre des avantages majeurs aux trois niveaux :\n1. Pour l'entreprise : revenus prévisibles (meilleure trésorerie et valorisation boursière), réduction du piratage (authentification requise), données clients continues (personnalisation), mises à jour continues (fin des cycles de versions coûteux) et amortissement du coût d'acquisition client sur la durée.\n2. Pour le consommateur : coût d'entrée faible, accès à un catalogue large (mutualisation des coûts), flexibilité de résiliation et absence d'obsolescence (mises à jour automatiques).\n3. Pour l'écosystème : standardisation des usages, baisse des coûts de distribution physique et meilleure allocation des serveurs et de la bande passante.",
         keyRule:
           "L'abonnement fait passer l'économie numérique de la propriété du bien (transactionnel) à l'accès récurrent au service, créant de la prévisibilité pour l'entreprise et un faible coût d'entrée pour le client.",
         formulas: [
@@ -585,7 +585,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Avantages client',
             stepTitle: 'Les quatre bénéfices de l’abonnement pour le consommateur',
             paragraphText:
-              "Côté consommateur, l'abonnement offre un coût d'entrée faible (ex. 9,99 €/mois au lieu de 500 € à l'achat), l'accès à un catalogue large (coûts mutualisés), la flexibilité de résiliation (hors engagement) et l'absence d'obsolescence grâce aux mises à jour automatiques.",
+              "Côté consommateur, l'abonnement offre un coût d'entrée faible, l'accès à un catalogue large (coûts mutualisés), la flexibilité de résiliation (hors engagement) et l'absence d'obsolescence grâce aux mises à jour automatiques.",
             exercise: {
               id: 'lmd_entd_l1_modele_dev_eco_num_ch2_p2_q3',
               type: 'mcq',
@@ -647,7 +647,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 1,
               explanation:
-                "L'achat définitif d'un titre sur iTunes est l'exemple exact du cours pour le modèle transactionnel, opposé au streaming récurrent de Spotify.",
+                "L'achat définitif d'un titre sur iTunes illustre parfaitement le modèle transactionnel, opposé au streaming récurrent de Spotify.",
             },
           },
         ],
@@ -820,7 +820,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Opposer entreprise linéaire et plateforme, analyser les effets de réseau, le cas Google vs Yahoo, le renversement de chaîne de valeur par l'agrégation et les enjeux de régulation.",
     officialVolumeHours: 8,
     contentVersion: 2,
-    source: 'ESATIC — Dr N’GUESSAN Bi Zambé Serge Constant (Chapitre 4.pptx)',
+    source: 'ENTD L1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_modele_dev_eco_num_ch3_p1',
@@ -842,7 +842,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Comparer un groupe hôtelier classique (Accor) et une plateforme (Airbnb)',
           statement:
-            "Comparez un groupe hôtelier construisant ses propres immeubles et Airbnb selon la grille du cours (propriété de l'offre, moteur de croissance, cœur opérationnel).",
+            "Comparez un groupe hôtelier construisant ses propres immeubles et Airbnb selon trois critères (propriété de l'offre, moteur de croissance, cœur opérationnel).",
           methodSteps: [
             "Propriété de l'offre : le groupe hôtelier possède ou loue les chambres (entreprise linéaire) ; Airbnb ne possède pas les logements et met en relation hôtes et voyageurs.",
             'Moteur de croissance : le groupe hôtelier croît en investissant du capital physique (ressources internes) ; Airbnb croît par effets de réseau croisés (plus de voyageurs attirent plus d’hôtes et inversement).',
@@ -864,7 +864,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_modele_dev_eco_num_ch3_p1_q1',
               type: 'mcq',
               prompt:
-                'Quelle définition correspond le plus fidèlement à une plateforme numérique selon le cours ?',
+                'Quelle définition correspond le plus fidèlement à une plateforme numérique ?',
               options: [
                 'Une usine qui fabrique et vend directement ses propres biens sans écosystème',
                 'Une infrastructure économique et technique qui met en relation plusieurs groupes d’acteurs via des règles, données, interface, paiement et confiance',
@@ -955,12 +955,12 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Technologie vs Modèle',
             stepTitle: 'La technologie soutient le modèle, elle ne le remplace pas',
             paragraphText:
-              "Point d'attention du cours : une infrastructure technique scalable (cloud, API, algorithmes) est indispensable au passage à l'échelle, mais « la technologie soutient le modèle économique, elle ne le remplace pas ». Sans unité de valeur claire ni confiance, la meilleure technique échoue.",
+              "Point clé : une infrastructure technique scalable (cloud, API, algorithmes) est indispensable au passage à l'échelle, mais « la technologie soutient le modèle économique, elle ne le remplace pas ». Sans unité de valeur claire ni confiance, la meilleure technique échoue.",
             exercise: {
               id: 'lmd_entd_l1_modele_dev_eco_num_ch3_p1_q5',
               type: 'mcq',
               prompt:
-                "Quelle maxime du cours résume le juste rôle de l'infrastructure technique dans une plateforme ?",
+                "Quelle formule résume le juste rôle de l'infrastructure technique dans une plateforme ?",
               options: [
                 'Une bonne technologie remplace totalement la nécessité d’un modèle de revenus',
                 'La technologie soutient le modèle économique, elle ne le remplace pas',
@@ -994,7 +994,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Expliquer la divergence stratégique entre Google et Yahoo',
           statement:
-            "Au début des années 2000, Yahoo et Google dominaient l'accès au Web. À partir des critères du cours, expliquez pourquoi Google a surclassé Yahoo.",
+            "Au début des années 2000, Yahoo et Google dominaient l'accès au Web. En analysant leurs modèles économiques, expliquez pourquoi Google a surclassé Yahoo.",
           methodSteps: [
             "Interface et coûts : Yahoo supportait des coûts éditoriaux élevés (portail média rempli de contenus et bannières) ; Google proposait une page de recherche épurée à coût marginal quasi nul.",
             'Modèle publicitaire : Yahoo vendait des bannières en logique d’audience (peu ciblées) ; Google vendait des mots-clés aux enchères liés à l’intention exacte de recherche.',
@@ -1040,7 +1040,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_modele_dev_eco_num_ch3_p2_q2',
               type: 'mcq',
               prompt:
-                'Dans le comparatif du cours Google vs Yahoo, quels éléments caractérisaient le modèle de Yahoo ?',
+                'Dans la comparaison entre Google et Yahoo, quels éléments caractérisaient le modèle de Yahoo ?',
               options: [
                 'Recherche minimaliste et enchères sur mots-clés au CPC',
                 'Portail média, bannières publicitaires, coûts élevés de contenu et logique d’audience',
@@ -1064,7 +1064,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_modele_dev_eco_num_ch3_p2_q3',
               type: 'mcq',
               prompt:
-                'Quel trio constitue le « cœur opérationnel d’une plateforme performante » selon le cours ?',
+                'Quel trio constitue le « cœur opérationnel d’une plateforme performante » ?',
               options: [
                 'Usines, entrepôts et camions de livraison',
                 'Imprimerie, courrier postal et affichage urbain',
@@ -1216,7 +1216,7 @@ export const MODELE_DEV_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_modele_dev_eco_num_ch3_p3_q3',
               type: 'mcq',
               prompt:
-                'Lequel de ces thèmes fait partie des enjeux ÉCONOMIQUES de régulation des plateformes identifiés dans le cours ?',
+                'Lequel de ces thèmes fait partie des enjeux ÉCONOMIQUES de régulation des plateformes identifiés ?',
               options: [
                 'Fiscalité transfrontalière, abus de position dominante, statut des travailleurs de plateforme et accès équitable des PME',
                 'Uniquement la couleur des interfaces mobiles',

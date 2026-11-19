@@ -277,7 +277,7 @@ export const MATHS_1RE_C_L15_SUITES_NUMERIQUES: CurriculumChapter = {
         },
       },
       workedExample: {
-        title: 'Représenter graphiquement les 4 premiers termes (Exercice 9 p. 10-11)',
+        title: 'Représenter graphiquement les 4 premiers termes',
         statement:
           'Soit $(U_n)_{n\\in\\mathbb{N}}$ définie par $U_0 = 1$ et $\\forall n \\in \\mathbb{N},\\ U_{n+1} = 2U_n + 1$. Décris la construction et les valeurs des 4 premiers termes sur l’axe $(OI)$.',
         methodSteps: [
@@ -341,7 +341,7 @@ export const MATHS_1RE_C_L15_SUITES_NUMERIQUES: CurriculumChapter = {
           stepTheme: 'Cas de Uₙ₊₁ = (2/3)Uₙ + 2',
           stepTitle: 'Lire U₀, U₁, U₂ et le point fixe',
           paragraphText:
-            'Dans l’exemple du cours (p. 4), $U_0 = 0$ et $U_{n+1} = \\dfrac{2}{3}U_n + 2$. On lit $U_1 = 2$, $U_2 = \\dfrac{10}{3} \\approx 3{,}33$, puis les termes se rapprochent de l’abscisse du point d’intersection entre $(C_f)$ et $(\\Delta)$.',
+            'Par exemple, $U_0 = 0$ et $U_{n+1} = \\dfrac{2}{3}U_n + 2$. On lit $U_1 = 2$, $U_2 = \\dfrac{10}{3} \\approx 3{,}33$, puis les termes se rapprochent de l’abscisse du point d’intersection entre $(C_f)$ et $(\\Delta)$.',
           exercise: {
             id: 'premiere_c_maths_numerique_l15_suites_numeriques_p02_q3',
             type: 'mcq',
@@ -397,9 +397,9 @@ export const MATHS_1RE_C_L15_SUITES_NUMERIQUES: CurriculumChapter = {
           stepKind: 'exemple',
           stepBadge: 'Exemple',
           stepTheme: 'Représentation sur (OJ) pour une suite explicite',
-          stepTitle: 'Lire U₀, U₁, U₂ pour Uₙ = 2n + 1 (Exemple p. 3)',
+          stepTitle: 'Lire U₀, U₁, U₂ pour Uₙ = 2n + 1',
           paragraphText:
-            'Dans l’exemple de la page 3 du cours, avec $U_n = 2n + 1$, on trace $y = 2x + 1$ et l’on projette horizontalement les points d’abscisses $0, 1, 2$ sur l’axe des ordonnées pour y lire $U_0 = 1$, $U_1 = 3$, $U_2 = 5$.',
+            'Par exemple, avec $U_n = 2n + 1$, on trace $y = 2x + 1$ et l’on projette horizontalement les points d’abscisses $0, 1, 2$ sur l’axe des ordonnées pour y lire $U_0 = 1$, $U_1 = 3$, $U_2 = 5$.',
           exercise: {
             id: 'premiere_c_maths_numerique_l15_suites_numeriques_p02_q6',
             type: 'mcq',
@@ -498,7 +498,7 @@ export const MATHS_1RE_C_L15_SUITES_NUMERIQUES: CurriculumChapter = {
         { name: 'Terme général quelconque', formula: 'U_n = U_k + (n - k)r' },
       ],
       workedExample: {
-        title: 'Retrouver la raison et un autre terme (Exercices 11 et 14 p. 11-12)',
+        title: 'Retrouver la raison et un autre terme',
         statement:
           '1. Soit $(P_n)$ définie par $P_0 = -2$ et $2P_{n+1} = 2P_n - 5$. Montre que $(P_n)_{n\\in\\mathbb{N}^*}$ est arithmétique et précise $r$ et $P_1$.\n2. Soit $(U_n)$ arithmétique telle que $U_8 = 4$ et $U_{20} = 28$. Calcule $r$ puis $U_{18}$.',
         methodSteps: [
@@ -599,7 +599,7 @@ export const MATHS_1RE_C_L15_SUITES_NUMERIQUES: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_maths_numerique_l15_suites_numeriques_p03_q5',
             type: 'mcq',
-            prompt: 'Soit $(U_n)_{n\\in\\mathbb{N}}$ arithmétique de raison $-4$ et de premier terme $U_0 = 5$ (Exercice de fixation p. 5). Que vaut $U_{10}$ ?',
+            prompt: 'Soit $(U_n)_{n\\in\\mathbb{N}}$ arithmétique de raison $-4$ et de premier terme $U_0 = 5$. Que vaut $U_{10}$ ?',
             options: ['$-31$', '$-35$', '$-39$', '$45$'],
             correctAnswerIndex: 1,
             explanation: 'Ici on part de $U_0 = 5$, donc $U_n = U_0 + nr = 5 - 4n$, et $U_{10} = 5 - 4\\times 10 = -35$.',
@@ -670,7 +670,7 @@ export const MATHS_1RE_C_L15_SUITES_NUMERIQUES: CurriculumChapter = {
         {
           id: 'premiere_c_maths_numerique_l15_suites_numeriques_p03_q5',
           type: 'mcq',
-          prompt: 'Soit $(U_n)_{n\\in\\mathbb{N}}$ arithmétique de raison $-4$ et de premier terme $U_0 = 5$ (Exercice de fixation p. 5). Que vaut $U_{10}$ ?',
+          prompt: 'Soit $(U_n)_{n\\in\\mathbb{N}}$ arithmétique de raison $-4$ et de premier terme $U_0 = 5$. Que vaut $U_{10}$ ?',
           options: ['$-31$', '$-35$', '$-39$', '$45$'],
           correctAnswerIndex: 1,
           explanation: 'Ici on part de $U_0 = 5$, donc $U_n = U_0 + nr = 5 - 4n$, et $U_{10} = 5 - 4\\times 10 = -35$.',
@@ -704,7 +704,7 @@ export const MATHS_1RE_C_L15_SUITES_NUMERIQUES: CurriculumChapter = {
         { name: 'Somme des n premiers entiers', formula: '1 + 2 + \\dots + n = \\frac{n(n + 1)}{2}' },
       ],
       workedExample: {
-        title: 'Calculer deux sommes de suite arithmétique (p. 6)',
+        title: 'Calculer deux sommes de suite arithmétique',
         statement:
           'Soit $(U_n)_{n\\in\\mathbb{N}}$ la suite arithmétique de raison $9$ et de premier terme $U_0 = -2$. Calcule $S = U_0 + U_1 + \\dots + U_{n-1}$ en fonction de $n$, puis $T = U_3 + U_4 + \\dots + U_{77}$.',
         methodSteps: [
@@ -738,7 +738,7 @@ export const MATHS_1RE_C_L15_SUITES_NUMERIQUES: CurriculumChapter = {
           stepKind: 'exemple',
           stepBadge: 'Exemple',
           stepTheme: 'Somme des entiers consécutifs',
-          stepTitle: 'Calculer 1 + 2 + … + 2020 (p. 5)',
+          stepTitle: 'Calculer 1 + 2 + … + 2020',
           paragraphText:
             'Les entiers naturels consécutifs forment une suite arithmétique de raison $1$. De $1$ à $2020$, il y a $2020$ termes avec pour extrêmes $1$ et $2020$.',
           exercise: {
@@ -901,7 +901,7 @@ export const MATHS_1RE_C_L15_SUITES_NUMERIQUES: CurriculumChapter = {
         { name: 'Somme de m termes (q ≠ 1)', formula: 'S = U_k \\times \\frac{1 - q^m}{1 - q}' },
       ],
       workedExample: {
-        title: 'Terme général et somme d’une suite géométrique (p. 6-7)',
+        title: 'Terme général et somme d’une suite géométrique',
         statement:
           '1. Montre que $U_n = 7 \\times 2^n$ ($n\\in\\mathbb{N}$) est géométrique et donne $U_0$ et $q$.\n2. Calcule $T = \\dfrac{1}{3} + \\dfrac{1}{3^2} + \\dots + \\dfrac{1}{3^7}$.',
         methodSteps: [
@@ -1107,7 +1107,7 @@ export const MATHS_1RE_C_L15_SUITES_NUMERIQUES: CurriculumChapter = {
         { name: 'Baisse annuelle de t %', formula: 'P_{n+1} = \\left(1 - \\frac{t}{100}\\right) P_n' },
       ],
       workedExample: {
-        title: 'Baisse annuelle de production de 3 % (Situation complexe p. 7-8)',
+        title: 'Baisse annuelle de production de 3 %',
         statement:
           'En 2010, une usine produit $U_0 = 65\\,000$ articles. Chaque année, la production baisse de $3\\%$. Elle n’est plus rentable dès qu’elle devient strictement inférieure à $56\\,000$ articles. À partir de quelle année cela se produit-il ?',
         methodSteps: [

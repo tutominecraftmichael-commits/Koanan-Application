@@ -25,7 +25,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Définition et caractère transversal du droit du numérique, typologie des quatre sources (lois, normes techniques, jurisprudence, conventions internationales), spécificités de l'espace numérique (dématérialisation, instantanéité, territorialité, hybridité) et acteurs clés.",
     officialVolumeHours: 8,
     contentVersion: 2,
-    source: 'Cours_Droit_Numerique_Dynamique_Complet.pptx (ESATIC L1 ENTD — Partie introductive)',
+    source: 'Cours_Droit_Numerique_Dynamique_Complet.pptx (ENTD L1 L1 ENTD — Partie introductive)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_droit_num_ch1_p1',
@@ -45,7 +45,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           "Le droit du numérique est transversal (pas isolé). Retiens la classification exacte des 4 sources : Loi 2013 = Loi/règlement ; HTTPS/ISO = Norme technique ; Décision de justice = Jurisprudence ; Budapest 2001 = Convention internationale.",
         workedExample: {
-          title: 'Exercices 1 et 2 du cours interactif — Qualifier une situation et classer les sources',
+          title: 'Cas pratiques — Qualifier une situation et classer les sources',
           statement:
             "Cas A : Un étudiant achète un logiciel en ligne ; son paiement est débité mais le vendeur refuse d'envoyer la clé d'activation. Cela relève-t-il du droit du numérique ?\nCas B : Classer par source : (1) Loi ivoirienne de 2013 sur les données personnelles, (2) Protocole HTTPS, (3) Convention de Budapest (2001), (4) Décision de justice condamnant Facebook.",
           methodSteps: [
@@ -70,7 +70,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_droit_num_ch1_p1_q1',
               type: 'mcq',
               prompt:
-                'Un étudiant paie un logiciel en ligne mais le vendeur refuse de lui transmettre la clé d’activation (Exercice 1 du cours). Pourquoi cette situation relève-t-elle du droit du numérique ?',
+                'Un étudiant paie un logiciel en ligne mais le vendeur refuse de lui transmettre la clé d’activation. Pourquoi cette situation relève-t-elle du droit du numérique ?',
               options: [
                 'Parce que tout achat effectué par un étudiant relève du droit pénal',
                 'Parce qu’il s’agit d’un contrat électronique conclu et exécuté dans l’espace numérique',
@@ -89,7 +89,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Nature du droit du numérique',
             stepTitle: 'Pourquoi dit-on que le droit du numérique est un droit transversal ?',
             paragraphText:
-              "La conclusion du cours introductif insiste sur ce point : le droit du numérique n'est pas un droit isolé coupé des autres disciplines, mais un droit transversal qui traverse et adapte le droit civil, pénal, commercial et constitutionnel aux réalités numériques.",
+              "Point essentiel : le droit du numérique n'est pas un droit isolé coupé des autres disciplines, mais un droit transversal qui traverse et adapte le droit civil, pénal, commercial et constitutionnel aux réalités numériques.",
             exercise: {
               id: 'lmd_entd_l1_intro_droit_num_ch1_p1_q2',
               type: 'mcq',
@@ -118,7 +118,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_droit_num_ch1_p1_q3',
               type: 'mcq',
               prompt:
-                'Dans l’Exercice 2 du cours sur les sources du droit du numérique, à quelle catégorie rattache-t-on le protocole HTTPS et les standards ISO ?',
+                'À propos des les sources du droit du numérique, à quelle catégorie rattache-t-on le protocole HTTPS et les standards ISO ?',
               options: [
                 'Aux normes techniques',
                 'À la jurisprudence nationale',
@@ -212,7 +212,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           "Caractériser les 4 spécificités de l'espace numérique (dématérialisation, instantanéité, territorialité incertaine, hybridité), analyser les liens entre virtuel et réel et identifier les 3 grandes catégories d'acteurs.",
         conceptExplanation:
-          "L'espace numérique présente quatre caractéristiques majeures qui bousculent les catégories juridiques traditionnelles (Exercice 3 du cours) :\n1) La dématérialisation : disparition du support papier traditionnel au profit de fichiers et documents numériques (ex. bulletin de salaire PDF, facture électronique, contrat en ligne).\n2) L'instantanéité : transmission quasi immédiate des informations, transactions et messages à l'échelle mondiale (ex. message WhatsApp, virement instantané, diffusion virale d'une diffamation).\n3) La territorialité incertaine : les frontières physiques s'effacent, soulevant des conflits de lois et de juridictions (ex. litige entre un site marchand ivoirien, un consommateur à Abidjan et un hébergeur situé à l'étranger).\n4) L'hybridité : interpénétration permanente entre monde numérique et monde physique (ex. achat commandé en ligne puis livré physiquement à domicile).\n\nConcernant les effets juridiques de l'espace virtuel (Exercice 5) : contrairement à une idée reçue, les actes posés en ligne ne sont pas « sans conséquence réelle ». L'espace numérique est un espace HYBRIDE où un acte virtuel (insulte/diffamation en ligne, cyberfraude, piratage) produit des conséquences juridiques, économiques et réputationnelles bien réelles dans la vie physique.\n\nEnfin, trois grandes catégories d'acteurs animent cet espace (Exercice 4) :\n- Les usagers (individus/internautes, ex. Marie qui publie une vidéo sur TikTok) ;\n- Les entreprises (opérateurs télécoms, e-commerçants, prestataires, ex. Jumia qui vend un téléphone en ligne) ;\n- Les plateformes (intermédiaires numériques structurants soumis à des obligations de modération, ex. Facebook, TikTok, Jumia en tant que marketplace).",
+          "L'espace numérique présente quatre caractéristiques majeures qui bousculent les catégories juridiques traditionnelles :\n1) La dématérialisation : disparition du support papier traditionnel au profit de fichiers et documents numériques (ex. bulletin de salaire PDF, facture électronique, contrat en ligne).\n2) L'instantanéité : transmission quasi immédiate des informations, transactions et messages à l'échelle mondiale (ex. message WhatsApp, virement instantané, diffusion virale d'une diffamation).\n3) La territorialité incertaine : les frontières physiques s'effacent, soulevant des conflits de lois et de juridictions (ex. litige entre un site marchand ivoirien, un consommateur à Abidjan et un hébergeur situé à l'étranger).\n4) L'hybridité : interpénétration permanente entre monde numérique et monde physique (ex. achat commandé en ligne puis livré physiquement à domicile).\n\nConcernant les effets juridiques de l'espace virtuel (Exercice 5) : contrairement à une idée reçue, les actes posés en ligne ne sont pas « sans conséquence réelle ». L'espace numérique est un espace HYBRIDE où un acte virtuel (insulte/diffamation en ligne, cyberfraude, piratage) produit des conséquences juridiques, économiques et réputationnelles bien réelles dans la vie physique.\n\nEnfin, trois grandes catégories d'acteurs animent cet espace (Exercice 4) :\n- Les usagers (individus/internautes, ex. Marie qui publie une vidéo sur TikTok) ;\n- Les entreprises (opérateurs télécoms, e-commerçants, prestataires, ex. Jumia qui vend un téléphone en ligne) ;\n- Les plateformes (intermédiaires numériques structurants soumis à des obligations de modération, ex. Facebook, TikTok, Jumia en tant que marketplace).",
         formulas: [
           {
             name: 'Les 4 spécificités de l’espace numérique',
@@ -223,7 +223,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           "Dématérialisation (PDF) + Instantanéité (WhatsApp) + Territorialité incertaine (serveur étranger) + Hybridité (e-commerce livré physiquement). Les actes posés dans le virtuel produisent des conséquences juridiques bien réelles !",
         workedExample: {
-          title: 'Exercices 3 et 4 du cours — Qualifier les spécificités et les acteurs',
+          title: 'Cas pratiques — Qualifier les spécificités et les acteurs',
           statement:
             "Associer : (A) un bulletin de salaire envoyé en PDF, (B) un conflit entre un site ivoirien et un hébergeur américain, (C) une commande sur Jumia livrée par coursier, (D) Marie poste une vidéo sur TikTok, (E) Facebook doit retirer un contenu haineux.",
           methodSteps: [
@@ -248,7 +248,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_droit_num_ch1_p2_q1',
               type: 'mcq',
               prompt:
-                'Dans l’Exercice 3 du cours, quel exemple concret illustre la « dématérialisation » dans l’espace numérique ?',
+                'En pratique, quel exemple concret illustre la « dématérialisation » dans l’espace numérique ?',
               options: [
                 'L’envoi d’un bulletin de salaire au format PDF',
                 'La livraison d’un colis par camion',
@@ -315,12 +315,12 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Usagers, Entreprises, Plateformes',
             stepTitle: 'Qualifier le rôle d’un acteur du numérique',
             paragraphText:
-              "Dans l'Exercice 4 du cours, on distingue trois catégories d'acteurs : l'Usager (Marie postant une vidéo sur TikTok), l'Entreprise (Jumia vendant un téléphone en ligne) et la Plateforme (Facebook sommée de retirer un contenu haineux).",
+              "En pratique, on distingue trois catégories d'acteurs : l'Usager (Marie postant une vidéo sur TikTok), l'Entreprise (Jumia vendant un téléphone en ligne) et la Plateforme (Facebook sommée de retirer un contenu haineux).",
             exercise: {
               id: 'lmd_entd_l1_intro_droit_num_ch1_p2_q4',
               type: 'mcq',
               prompt:
-                'Dans la typologie des acteurs du cours, comment classe-t-on un individu (ex. Marie) qui publie une vidéo personnelle sur TikTok ?',
+                'Dans la typologie des acteurs numériques, comment classe-t-on un individu (ex. Marie) qui publie une vidéo personnelle sur TikTok ?',
               options: [
                 'Une autorité de régulation',
                 'Un hébergeur cloud',
@@ -368,7 +368,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_droit_num_ch1_p2_q6',
               type: 'mcq',
               prompt:
-                'Quel exemple du cours illustre la caractéristique d’« instantanéité » de l’espace numérique ?',
+                'Quel exemple concret illustre la caractéristique d’« instantanéité » de l’espace numérique ?',
               options: [
                 'La signature d’une convention internationale en 2001',
                 'L’envoi et la réception immédiate d’un message WhatsApp',
@@ -398,7 +398,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Notion de donnée à caractère personnel (« l'or du XXIe siècle »), principes clés de la Loi ivoirienne n° 2013-450 et du RGPD (licéité, finalité, proportionnalité, consentement, transparence), droits des personnes et pouvoirs de l'ARTCI.",
     officialVolumeHours: 8,
     contentVersion: 2,
-    source: 'Cours_Droit_Numerique_Chapitre2_Dynamique.pptx & Chapitre 5 (ESATIC L1 ENTD)',
+    source: 'Cours_Droit_Numerique_Chapitre2_Dynamique.pptx & Chapitre 5 (ENTD L1 L1 ENTD)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_droit_num_ch2_p1',
@@ -662,7 +662,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Enquête, mise en demeure et sanction',
             stepTitle: 'Quelles sanctions l’ARTCI peut-elle prendre contre un opérateur fautif ?',
             paragraphText:
-              "Si une société de téléphonie collecte les coordonnées GPS de ses clients sans les informer (exemple ivoirien du cours), l'ARTCI peut mener une enquête, mettre en demeure l'opérateur, exiger la suspension immédiate du traitement et imposer une amende.",
+              "Si une société de téléphonie collecte les coordonnées GPS de ses clients sans les informer, l'ARTCI peut mener une enquête, mettre en demeure l'opérateur, exiger la suspension immédiate du traitement et imposer une amende.",
             exercise: {
               id: 'lmd_entd_l1_intro_droit_num_ch2_p2_q3',
               type: 'mcq',
@@ -739,7 +739,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_droit_num_ch2_p2_q6',
               type: 'mcq',
               prompt:
-                'Quelle est la double finalité majeure de la protection juridique des données personnelles soulignée dans le cours ?',
+                'Quelle est la double finalité majeure de la protection juridique des données personnelles soulignée ?',
               options: [
                 'Interdire tout commerce électronique en Côte d’Ivoire',
                 'Garantir la vie privée numérique des individus et instaurer la confiance dans l’économie numérique',
@@ -769,7 +769,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Cadre ivoirien de l'e-commerce (Loi 2013-546 : hébergeur vs éditeur, mentions légales, CGU/CGV, droit de rétractation 7j/30j), cybersécurité (triptyque CIA, sécurité vs confidentialité) et responsabilités civile et pénale (Loi 2013-451).",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ENTD Chap 4.docx & Chapitre_5_Cybersecurite_et_Responsabilite_ESATIC.docx (ESATIC L1 ENTD)',
+    source: 'ENTD L1 — Introduction au Droit du Numérique',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_droit_num_ch3_p1',
@@ -830,9 +830,9 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'piege',
             stepBadge: 'Éditeur',
             stepTheme: 'Rôle actif d’une plateforme',
-            stepTitle: 'Pourquoi Jumia Côte d’Ivoire est-elle qualifiée d’éditeur dans le cours ?',
+            stepTitle: 'Pourquoi Jumia Côte d’Ivoire est-elle qualifiée d’éditeur ?',
             paragraphText:
-              "Lorsqu'une plateforme ne se contente pas d'un stockage neutre, mais sélectionne ses vendeurs, fixe des règles de présentation et met activement en avant certains produits (comme Jumia CI dans le cours), elle joue un rôle actif et relève du régime plus strict de l'éditeur (responsabilité pleine et directe).",
+              "Lorsqu'une plateforme ne se contente pas d'un stockage neutre, mais sélectionne ses vendeurs, fixe des règles de présentation et met activement en avant certains produits (comme une marketplace active), elle joue un rôle actif et relève du régime plus strict de l'éditeur (responsabilité pleine et directe).",
             exercise: {
               id: 'lmd_entd_l1_intro_droit_num_ch3_p1_q2',
               type: 'mcq',
@@ -909,7 +909,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_droit_num_ch3_p1_q5',
               type: 'mcq',
               prompt:
-                'Quel est le délai légal normal du droit de rétractation en e-commerce enseigné dans le cours, et à combien est-il prolongé si le vendeur n’en informe pas clairement le client ?',
+                'Quel est le délai légal normal du droit de rétractation en e-commerce enseigné, et à combien est-il prolongé si le vendeur n’en informe pas clairement le client ?',
               options: [
                 '7 jours, prolongé à 30 jours en cas de défaut d’information',
                 '24 heures, prolongé à 48 heures',
@@ -955,7 +955,7 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           "Maîtriser le triptyque CIA, l'obligation légale de sécurité (Art. 37 Loi 2013-450), la distinction juridique sécurité / confidentialité et les responsabilités civile (réparation) et pénale (Loi 2013-451 Art. 25 et 29).",
         conceptExplanation:
-          "La cybersécurité n'est pas un simple choix technique : c'est une OBLIGATION LÉGALE encadrée par le droit (Article 37 de la Loi n° 2013-450 imposant au responsable de traitement de garantir la sécurité des données, et Décision n° 2015-008/ARTCI/CD précisant les mesures minimales : chiffrement, authentification forte, sauvegardes régulières testées, formation du personnel, audit annuel).\n\n1) Triptyque CIA et distinction Sécurité vs Confidentialité :\nLa sécurité des systèmes d'information (SI) protège le système global autour de 3 piliers — le triptyque CIA :\n   - C = Confidentiality (Confidentialité : accès réservé aux seules personnes autorisées) ;\n   - I = Integrity (Intégrité : exactitude des données, non modifiées sans droit) ;\n   - A = Availability (Disponibilité : accessibilité continue du système et des données).\nLa sécurité est donc la FINALITÉ GLOBALE (qui englobe les trois piliers), tandis que la confidentialité en est UN PILIER fondamental (Article 3 de la Loi n° 2013-450). Ainsi, lorsqu'un employé d'une société télécom consulte sans autorisation la base de données clients, il y a DOUBLE atteinte : atteinte à la sécurité du système (contrôle d'accès défaillant — Art. 37, engageant la responsabilité civile de l'entreprise) ET atteinte à la confidentialité des données (Art. 3 + infractions informatiques, engageant la responsabilité disciplinaire et pénale de l'employé).\n\n2) Responsabilité civile vs Responsabilité pénale :\n   - Responsabilité civile : vise à RÉPARER le préjudice causé à une victime par une négligence ou une faute, au moyen de dommages et intérêts (ex. divulgation accidentelle de données clients ou perte de dossiers patients d'un hôpital ivoirien en 2022 faute de sauvegardes et de pare-feu).\n   - Responsabilité pénale : vise à PUNIR une infraction troublant la société (emprisonnement et/ou amende). La Loi n° 2013-451 sur la cybercriminalité réprime notamment : l'accès frauduleux à un système d'information (Art. 25), l'atteinte à l'intégrité des données, la falsification ou suppression de données (Art. 29) et l'usurpation d'identité numérique. Dans le cas pratique du cours, l'étudiant qui pirate le Wi-Fi de l'ESATIC pour modifier ses notes commet un accès frauduleux (Art. 25) et une falsification de données (Art. 29) : il encourt prison, amende et exclusion disciplinaire.",
+          "La cybersécurité n'est pas un simple choix technique : c'est une OBLIGATION LÉGALE encadrée par le droit (Article 37 de la Loi n° 2013-450 imposant au responsable de traitement de garantir la sécurité des données, et Décision n° 2015-008/ARTCI/CD précisant les mesures minimales : chiffrement, authentification forte, sauvegardes régulières testées, formation du personnel, audit annuel).\n\n1) Triptyque CIA et distinction Sécurité vs Confidentialité :\nLa sécurité des systèmes d'information (SI) protège le système global autour de 3 piliers — le triptyque CIA :\n - C = Confidentiality (Confidentialité : accès réservé aux seules personnes autorisées) ;\n - I = Integrity (Intégrité : exactitude des données, non modifiées sans droit) ;\n - A = Availability (Disponibilité : accessibilité continue du système et des données).\nLa sécurité est donc la FINALITÉ GLOBALE (qui englobe les trois piliers), tandis que la confidentialité en est UN PILIER fondamental (Article 3 de la Loi n° 2013-450). Ainsi, lorsqu'un employé d'une société télécom consulte sans autorisation la base de données clients, il y a DOUBLE atteinte : atteinte à la sécurité du système (contrôle d'accès défaillant — Art. 37, engageant la responsabilité civile de l'entreprise) ET atteinte à la confidentialité des données (Art. 3 + infractions informatiques, engageant la responsabilité disciplinaire et pénale de l'employé).\n\n2) Responsabilité civile vs Responsabilité pénale :\n - Responsabilité civile : vise à RÉPARER le préjudice causé à une victime par une négligence ou une faute, au moyen de dommages et intérêts (ex. divulgation accidentelle de données clients ou perte de dossiers patients d'un hôpital ivoirien en 2022 faute de sauvegardes et de pare-feu).\n - Responsabilité pénale : vise à PUNIR une infraction troublant la société (emprisonnement et/ou amende). La Loi n° 2013-451 sur la cybercriminalité réprime notamment : l'accès frauduleux à un système d'information (Art. 25), l'atteinte à l'intégrité des données, la falsification ou suppression de données (Art. 29) et l'usurpation d'identité numérique. Dans cette situation, l'étudiant qui pirate le Wi-Fi d'un campus universitaire pour modifier ses notes commet un accès frauduleux (Art. 25) et une falsification de données (Art. 29) : il encourt prison, amende et exclusion disciplinaire.",
         formulas: [
           {
             name: 'Triptyque CIA de la cybersécurité',
@@ -971,9 +971,9 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           "Sécurité = finalité globale CIA (Art. 37 Loi 2013-450) ; Confidentialité = pilier d'accès restreint (Art. 3). Civile = réparer ; Pénale = punir (Loi 2013-451 : Art. 25 accès frauduleux, Art. 29 falsification de données).",
         workedExample: {
-          title: "Deux cas pratiques du Chapitre 5 — Wi-Fi de l'ESATIC et Employé télécom",
+          title: "Deux cas pratiques — Wi-Fi d'un campus universitaire et Employé télécom",
           statement:
-            "Cas 1 : Un étudiant pirate le réseau Wi-Fi de l'ESATIC pour modifier ses notes. Qualifier les infractions et sanctions.\nCas 2 : Dans une entreprise ivoirienne de télécommunication, un employé accède sans autorisation à la base de données clients. Est-ce une atteinte à la sécurité, à la confidentialité, ou aux deux ?",
+            "Cas 1 : Un étudiant pirate le réseau Wi-Fi d'un campus universitaire pour modifier ses notes. Qualifier les infractions et sanctions.\nCas 2 : Dans une entreprise ivoirienne de télécommunication, un employé accède sans autorisation à la base de données clients. Est-ce une atteinte à la sécurité, à la confidentialité, ou aux deux ?",
           methodSteps: [
             "Cas 1 (Loi n° 2013-451) : Deux infractions pénales cumulées — accès frauduleux à un système d'information (Article 25) et falsification de données (Article 29). Sanctions : emprisonnement, amende et exclusion disciplinaire de l'université.",
             "Cas 2 — Atteinte à la sécurité : le système de contrôle d'accès de l'entreprise n'a pas bloqué l'intrusion interne (manquement à l'obligation de sécurité, Art. 37 Loi 2013-450 et Décision 2015-008/ARTCI/CD → responsabilité civile possible de l'entreprise).",
@@ -1058,11 +1058,11 @@ export const INTRO_DROIT_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'methode',
-            stepBadge: 'Cas pratique ESATIC',
+            stepBadge: 'Cas pratique',
             stepTheme: 'Loi n° 2013-451 (Art. 25 et Art. 29)',
             stepTitle: 'Qualifier pénalement le piratage de notes sur le réseau Wi-Fi',
             paragraphText:
-              "Dans le cas pratique du cours, un étudiant qui pirate le réseau Wi-Fi de l'ESATIC pour modifier ses notes commet deux infractions prévues par la Loi n° 2013-451 sur la cybercriminalité : l'accès frauduleux à un système d'information (Art. 25) et la falsification de données (Art. 29).",
+              "Dans cette situation, un étudiant qui pirate le réseau Wi-Fi d'un campus universitaire pour modifier ses notes commet deux infractions prévues par la Loi n° 2013-451 sur la cybercriminalité : l'accès frauduleux à un système d'information (Art. 25) et la falsification de données (Art. 29).",
             exercise: {
               id: 'lmd_entd_l1_intro_droit_num_ch3_p2_q4',
               type: 'mcq',

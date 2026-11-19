@@ -1199,7 +1199,7 @@ export const HIST_1RE_T2_L03_COLONISATION_COTE_IVOIRE: CurriculumChapter = {
               "Domaines d'exploitation"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "C'est l'activité d'application n°2 du cours."
+            "explanation": "Cette notion est un point clé à maîtriser."
           }
         },
         {
@@ -1212,7 +1212,7 @@ export const HIST_1RE_T2_L03_COLONISATION_COTE_IVOIRE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_histoire_t2_l03_colonisation_cote_ivoire_p05_q7",
             "type": "mcq",
-            "prompt": "Comment se terminent les résistances à la colonisation selon le cours ?",
+            "prompt": "Comment se terminent les résistances à la colonisation ?",
             "options": [
               "Elles chassent les Français dès 1920",
               "Elles sont étouffées par le colonisateur",
@@ -1301,12 +1301,12 @@ export const HIST_1RE_T2_L03_COLONISATION_COTE_IVOIRE: CurriculumChapter = {
             "Domaines d'exploitation"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "C'est l'activité d'application n°2 du cours."
+          "explanation": "Cette notion est un point clé à maîtriser."
         },
         {
           "id": "premiere_a1_hg_histoire_t2_l03_colonisation_cote_ivoire_p05_q7",
           "type": "mcq",
-          "prompt": "Comment se terminent les résistances à la colonisation selon le cours ?",
+          "prompt": "Comment se terminent les résistances à la colonisation ?",
           "options": [
             "Elles chassent les Français dès 1920",
             "Elles sont étouffées par le colonisateur",

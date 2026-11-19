@@ -25,7 +25,7 @@ export const INTRO_MARKETING_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Étymologie et définitions du marketing (Kotler, AMA, Mercator), historique et écoles de pensée (crise de 1929, Borden & McCarthy, Prahalad), distinction Marketing / Communication / Vente, marketing stratégique vs opérationnel et rôle dans l'entreprise.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'COURS INTRO AU MARKETING — ENTD 1 (Dr HIEN Sié Clotaire, ESATIC 2025-2026, Chapitre 1)',
+    source: 'COURS INTRO AU MARKETING — ENTD 1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_marketing_ch1_p1',
@@ -165,7 +165,7 @@ export const INTRO_MARKETING_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_marketing_ch1_p1_q5',
               type: 'mcq',
               prompt:
-                'Quel auteur est à l’origine de la théorie des compétences clés (« core competences ») citée dans le cours ?',
+                'Quel auteur est à l’origine de la théorie des compétences clés (« core competences ») de référence ?',
               options: [
                 'C. K. Prahalad',
                 'Max Weber',
@@ -402,7 +402,7 @@ export const INTRO_MARKETING_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Acteurs du micro-environnement (entreprise, fournisseurs, intermédiaires, concurrents, 7 types de publics, 5 types de marchés clients) et grandes forces du macro-environnement (démographique, économique, technologique, politico-légal, socioculturel).",
     officialVolumeHours: 8,
     contentVersion: 2,
-    source: 'COURS INTRO AU MARKETING — ENTD 1 (Dr HIEN Sié Clotaire, Chapitre 2)',
+    source: 'COURS INTRO AU MARKETING — ENTD 1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_marketing_ch2_p1',
@@ -424,7 +424,7 @@ export const INTRO_MARKETING_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: "Cartographie du micro-environnement d'un éditeur de logiciels ivoirien",
           statement:
-            "La société AbidjanSoft vend son logiciel de facturation à la fois à des PME industrielles, à un ministère (appel d'offres) et à des revendeurs informatiques au Sénégal. Elle dépend de serveurs cloud (fournisseur) et reçoit des critiques d'une association de consommateurs sur ses tarifs. Qualifier chacun de ces acteurs selon le cours.",
+            "La société AbidjanSoft vend son logiciel de facturation à la fois à des PME industrielles, à un ministère (appel d'offres) et à des revendeurs informatiques au Sénégal. Elle dépend de serveurs cloud (fournisseur) et reçoit des critiques d'une association de consommateurs sur ses tarifs. Qualifier chacun de ces acteurs.",
           methodSteps: [
             "Étape 1 (Types de marchés clients) : Les PME industrielles = Marché des entreprises (B2B) ; le ministère = Marché public ; les revendeurs au Sénégal = Marché des revendeurs ET Marché international.",
             "Étape 2 (Fournisseur) : L'hébergeur cloud est un fournisseur clé dont la disponibilité et le coût conditionnent la qualité du service.",
@@ -465,7 +465,7 @@ export const INTRO_MARKETING_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Public d’action citoyenne',
             stepTitle: 'Identifier le public d’action citoyenne',
             paragraphText:
-              "Parmi les 7 catégories de publics du cours (action citoyenne, financier, grand public, gouvernemental, interne, local, médias), le public d'action citoyenne rassemble les associations de consommateurs, ONG et mouvements écologistes susceptibles d'interpeller l'entreprise sur ses pratiques.",
+              "Parmi les 7 catégories de publics (action citoyenne, financier, grand public, gouvernemental, interne, local, médias), le public d'action citoyenne rassemble les associations de consommateurs, ONG et mouvements écologistes susceptibles d'interpeller l'entreprise sur ses pratiques.",
             exercise: {
               id: 'lmd_entd_l1_intro_marketing_ch2_p1_q2',
               type: 'mcq',
@@ -494,7 +494,7 @@ export const INTRO_MARKETING_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_marketing_ch2_p1_q3',
               type: 'mcq',
               prompt:
-                'Selon le cours, quel impact positif a un « public interne » satisfait sur la performance marketing de l’entreprise ?',
+                'Quel impact positif a un « public interne » satisfait sur la performance marketing de l’entreprise ?',
               options: [
                 'Il dispense l’entreprise de toute concurrence',
                 'Il supprime le besoin d’avoir des fournisseurs',
@@ -542,7 +542,7 @@ export const INTRO_MARKETING_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_marketing_ch2_p1_q5',
               type: 'mcq',
               prompt:
-                'Lorsque l’ESATIC ou un ministère lance un appel d’offres pour acquérir 200 ordinateurs destinés aux salles de TP, à quel type de marché client le fournisseur s’adresse-t-il ?',
+                'Lorsque universitaire ou un ministère lance un appel d’offres pour acquérir 200 ordinateurs destinés aux salles de TP, à quel type de marché client le fournisseur s’adresse-t-il ?',
               options: [
                 'Aux marchés publics',
                 'Aux marchés des consommateurs individuels',
@@ -566,7 +566,7 @@ export const INTRO_MARKETING_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_marketing_ch2_p1_q6',
               type: 'mcq',
               prompt:
-                'Selon l’exemple du cours, comment un petit commerce local peut-il se positionner efficacement face aux grandes chaînes de magasins ?',
+                'En pratique, comment un petit commerce local peut-il se positionner efficacement face aux grandes chaînes de magasins ?',
               options: [
                 'En copiant exactement les mêmes produits standards sans service',
                 'En offrant un service personnalisé et des produits uniques (différenciation)',
@@ -623,7 +623,7 @@ export const INTRO_MARKETING_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_marketing_ch2_p2_q1',
               type: 'mcq',
               prompt:
-                'Selon le cours d’Introduction au Marketing, quel facteur externe est qualifié de « plus important » car ce sont des personnes qui constituent les marchés ?',
+                'En marketing, quel facteur externe est qualifié de « plus important » car ce sont des personnes qui constituent les marchés ?',
               options: [
                 'L’environnement démographique (taille, âge, densité, éducation, localisation de la population)',
                 'La couleur des locaux de l’entreprise',
@@ -773,7 +773,7 @@ export const INTRO_MARKETING_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Besoins, désirs et demande, études de marché qualitatives et quantitatives, démarche stratégique STP (Segmentation, Ciblage, Positionnement) et déclinaison opérationnelle des 4P à l'ère du marketing digital.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'COURS INTRO AU MARKETING — ENTD 1 (Dr HIEN Sié Clotaire — Démarche et Mix Marketing)',
+    source: 'COURS INTRO AU MARKETING — ENTD 1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_marketing_ch3_p1',

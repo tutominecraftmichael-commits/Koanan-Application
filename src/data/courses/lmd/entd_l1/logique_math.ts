@@ -12,8 +12,8 @@ const makePoint = (
 });
 
 // ============================================================================
-// LOGIQUE ET RAISONNEMENT MATHÉMATIQUE — ENTD LICENCE 1 (ESATIC)
-// Sources : MATHS 1 1 2024-2025.pdf, TD_Logique_ENTD.pdf, Corrigé TD Logique
+// LOGIQUE ET RAISONNEMENT MATHÉMATIQUE — ENTD LICENCE 1
+// Programme structuré KONAN
 // ============================================================================
 
 export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
@@ -27,7 +27,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 1,
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Logique et Raisonnement Mathématique (Cours Ch. 2 & TD Ex. 1–13, 21–28)',
+    source: 'ENTD L1 — Logique et Raisonnement Mathématique',
     title: 'Chapitre 1 — Calcul propositionnel, connecteurs et quantificateurs',
     summary:
       'Propositions, connecteurs logiques, tables de vérité, lois de De Morgan, quantificateurs $\\forall, \\exists$, négation, implication, réciproque, contraposée et conditions nécessaires/suffisantes.',
@@ -53,7 +53,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Lois de De Morgan',
             formula: '\\neg(P \\lor Q) \\equiv (\\neg P \\land \\neg Q), \\qquad \\neg(P \\land Q) \\equiv (\\neg P \\lor \\neg Q)',
-            note: 'TD Ex. 3 : « Nous n’acceptons ni les chèques ni les virements » = ¬C ∧ ¬V.',
+            note: 'Exemple : « Nous n’acceptons ni les chèques ni les virements » = ¬C ∧ ¬V.',
           },
           {
             name: 'Définition de l’implication et sa négation',
@@ -64,9 +64,9 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Pour nier une formule composée, appliquer systématiquement De Morgan : $\\neg$ transforme $\\land$ en $\\lor$, $\\lor$ en $\\land$, et transforme $P \\implies Q$ en $P \\land \\neg Q$.',
         workedExample: {
-          title: 'Simplification logique et règle de fidélité client (TD Ex. 4 & Ex. 22)',
+          title: 'Simplification logique et règle de fidélité client',
           statement:
-            '1) Un client est fidèle ($F$) ssi il bénéficie de promotions ($P$) ou aime la marque ($M$) : $F \\iff (P \\lor M)$. Si un client n’aime pas la marque ($M = F$) mais est fidèle ($F = V$), que déduire ? 2) Simplifier $\\neg[(A \\land B) \\lor \\neg C]$ (TD Ex. 22).',
+            '1) Un client est fidèle ($F$) ssi il bénéficie de promotions ($P$) ou aime la marque ($M$) : $F \\iff (P \\lor M)$. Si un client n’aime pas la marque ($M = F$) mais est fidèle ($F = V$), que déduire ? 2) Simplifier $\\neg[(A \\land B) \\lor \\neg C]$.',
           methodSteps: [
             '1) On a $F = V$, donc $P \\lor M$ doit valoir $V$. Comme $M = F$, il faut nécessairement $P = V$ : le client bénéficie de promotions.',
             '2) Appliquons la première loi de De Morgan à $\\neg[(A \\land B) \\lor \\neg C]$ :',
@@ -80,7 +80,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'definition',
-            stepBadge: 'TD Ex. 1 & 2',
+            stepBadge: 'Application',
             stepTheme: 'blue',
             stepTitle: 'Traduire un énoncé économique en symboles logiques',
             paragraphText:
@@ -88,7 +88,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_logique_ch1_p1_q1',
               type: 'mcq',
-              prompt: 'Soient $P$ : « Le prix est élevé » et $Q$ : « La demande baisse » (TD Ex. 1). Comment s’écrit « Le prix est élevé mais la demande ne baisse pas » ?',
+              prompt: 'Soient $P$ : « Le prix est élevé » et $Q$ : « La demande baisse ». Comment s’écrit « Le prix est élevé mais la demande ne baisse pas » ?',
               options: [
                 '$P \\implies \\neg Q$',
                 '$P \\land \\neg Q$',
@@ -103,7 +103,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'propriete',
-            stepBadge: 'De Morgan (TD Ex. 3)',
+            stepBadge: 'De Morgan',
             stepTheme: 'violet',
             stepTitle: 'Équivalence $\\neg(P \\lor Q) \\equiv (\\neg P \\land \\neg Q)$',
             paragraphText:
@@ -126,7 +126,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'propriete',
-            stepBadge: 'TD Ex. 21',
+            stepBadge: 'Application',
             stepTheme: 'violet',
             stepTitle: 'Équivalence entre bi-implication et négation du OU exclusif',
             paragraphText:
@@ -134,7 +134,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_logique_ch1_p1_q3',
               type: 'mcq',
-              prompt: 'Quelle formule est logiquement équivalente à $P \\iff Q$ (TD Ex. 21) ?',
+              prompt: 'Quelle formule est logiquement équivalente à $P \\iff Q$ ?',
               options: [
                 '$\\neg(P \\oplus Q)$',
                 '$P \\oplus Q$',
@@ -149,7 +149,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'methode',
-            stepBadge: 'TD Ex. 22',
+            stepBadge: 'Application',
             stepTheme: 'green',
             stepTitle: 'Simplifier la négation d’une expression composée',
             paragraphText:
@@ -172,11 +172,11 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 5,
             stepKind: 'piege',
-            stepBadge: 'TD Ex. 28',
+            stepBadge: 'Application',
             stepTheme: 'orange',
             stepTitle: 'Paradoxe de l’implication vacuellement vraie',
             paragraphText:
-              'Dans la table de vérité de $P \\implies Q$, dès que la prémisse $P$ est **Fausse**, l’implication $P \\implies Q$ est automatiquement **Vraie** quelle que soit la valeur de $Q$ ! En marketing (TD Ex. 28), une promesse conditionnée à un événement impossible ne peut pas être déclarée logiquement fausse, mais elle est sans valeur pratique.',
+              'Dans la table de vérité de $P \\implies Q$, dès que la prémisse $P$ est **Fausse**, l’implication $P \\implies Q$ est automatiquement **Vraie** quelle que soit la valeur de $Q$ ! En marketing, une promesse conditionnée à un événement impossible ne peut pas être déclarée logiquement fausse, mais elle est sans valeur pratique.',
             keyRule: '« Du faux, on peut tout impliquer » : $F \\implies V$ est VRAI et $F \\implies F$ est VRAI.',
             exercise: {
               id: 'lmd_entd_l1_logique_ch1_p1_q5',
@@ -196,15 +196,15 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 6,
             stepKind: 'exemple',
-            stepBadge: 'TD Ex. 20',
+            stepBadge: 'Application',
             stepTheme: 'slate',
             stepTitle: 'Évaluer une règle conjonctive d’achat d’impulsion',
             paragraphText:
-              'Dans le TD Ex. 20, la règle est : `Achat d’impulsion ⟺ (Pressé ∧ Tête de gondole)`. Si un client achète un produit en tête de gondole (`V`) mais déambule tranquillement (`Pressé = F`), alors `(F ∧ V) = F` : ce n’est pas un achat d’impulsion selon la règle.',
+              'Par exemple, la règle est : `Achat d’impulsion ⟺ (Pressé ∧ Tête de gondole)`. Si un client achète un produit en tête de gondole (`V`) mais déambule tranquillement (`Pressé = F`), alors `(F ∧ V) = F` : ce n’est pas un achat d’impulsion selon la règle.',
             exercise: {
               id: 'lmd_entd_l1_logique_ch1_p1_q6',
               type: 'mcq',
-              prompt: 'Avec la règle $F \\iff (P \\lor M)$ (TD Ex. 4), si un client est fidèle ($F = V$) et n’aime pas la marque ($M = F$), que peut-on déduire ?',
+              prompt: 'Avec la règle $F \\iff (P \\lor M)$, si un client est fidèle ($F = V$) et n’aime pas la marque ($M = F$), que peut-on déduire ?',
               options: [
                 'Il ne bénéficie pas de promotions ($P = F$).',
                 'On ne peut rien déduire sur $P$.',
@@ -228,7 +228,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Manipuler $\\forall$ et $\\exists$, nier des propositions quantifiées, et distinguer implication, réciproque, contraposée, condition nécessaire et condition suffisante.',
         conceptExplanation:
           '• **Quantificateurs** : $\\forall$ (« pour tout / quel que soit ») est le quantificateur universel ; $\\exists$ (« il existe au moins un ») est le quantificateur existentiel ($\\exists!$ signifie « il existe un unique »).\n' +
-          '• **Ordre des quantificateurs** : on ne peut **jamais** permuter $\\forall$ et $\\exists$ sans changer le sens ! Exemple du TD Ex. 26 : $\\forall c,\\ \\exists p,\\ \\text{Achat}(c, p)$ (« chaque client a acheté au moins un produit, éventuellement différent ») est beaucoup plus faible que $\\exists p,\\ \\forall c,\\ \\text{Achat}(c, p)$ (« un même produit a été acheté par tous les clients »).\n' +
+          '• **Ordre des quantificateurs** : on ne peut **jamais** permuter $\\forall$ et $\\exists$ sans changer le sens ! Exemple du Exemple : $\\forall c,\\ \\exists p,\\ \\text{Achat}(c, p)$ (« chaque client a acheté au moins un produit, éventuellement différent ») est beaucoup plus faible que $\\exists p,\\ \\forall c,\\ \\text{Achat}(c, p)$ (« un même produit a été acheté par tous les clients »).\n' +
           '• **Négation des quantificateurs** : $\\neg(\\forall x \\in E,\\ P(x)) \\equiv (\\exists x \\in E,\\ \\neg P(x))$ et $\\neg(\\exists x \\in E,\\ P(x)) \\equiv (\\forall x \\in E,\\ \\neg P(x))$.\n' +
           '• **Autour de l’implication $P \\implies Q$** :\n' +
           '  — **Réciproque** : $Q \\implies P$ (pas forcément vraie si $P \\implies Q$ est vraie).\n' +
@@ -243,13 +243,13 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Loi de la contraposée',
             formula: '(P \\implies Q) \\equiv (\\neg Q \\implies \\neg P)',
-            note: 'TD Ex. 25 : la contraposée de (S ∧ F) ⇒ R est ¬R ⇒ (¬S ∨ ¬F).',
+            note: 'Exemple : la contraposée de (S ∧ F) ⇒ R est ¬R ⇒ (¬S ∨ ¬F).',
           },
         ],
         keyRule:
-          'Observer $Q = V$ quand $P \\implies Q$ est vrai NE permet JAMAIS de conclure $P = V$ (sophisme de l’affirmation du conséquent, TD Ex. 13) ! Seul $\\neg Q$ permet de conclure $\\neg P$ (modus tollens).',
+          'Observer $Q = V$ quand $P \\implies Q$ est vrai NE permet JAMAIS de conclure $P = V$ ! Seul $\\neg Q$ permet de conclure $\\neg P$ (modus tollens).',
         workedExample: {
-          title: 'Carte Gold / Salon VIP et contraposée de $(S \\land F) \\implies R$ (TD Ex. 10 & Ex. 25)',
+          title: 'Carte Gold / Salon VIP et contraposée de $(S \\land F) \\implies R$',
           statement:
             '1) Soit l’implication « Si un client possède la carte Gold ($G$), alors il a accès au salon VIP ($V$) ». Écrire sa réciproque et sa contraposée. 2) Écrire et interpréter la contraposée de $(S \\land F) \\implies R$ (Satisfaction et Fidélité impliquent Recommandation).',
           methodSteps: [
@@ -265,7 +265,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'methode',
-            stepBadge: 'TD Ex. 5 & 6',
+            stepBadge: 'Application',
             stepTheme: 'green',
             stepTitle: 'Formaliser un énoncé avec $\\forall$ et $\\exists$',
             paragraphText:
@@ -273,7 +273,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_logique_ch1_p2_q1',
               type: 'mcq',
-              prompt: 'Comment traduire « Il existe un produit qui a été acheté par tous les clients » (TD Ex. 26) ?',
+              prompt: 'Comment traduire « Il existe un produit qui a été acheté par tous les clients » ?',
               options: [
                 '$\\exists p \\in \\text{Produits},\\ \\forall c \\in \\text{Clients},\\ \\text{Achat}(c, p)$',
                 '$\\forall c \\in \\text{Clients},\\ \\exists p \\in \\text{Produits},\\ \\text{Achat}(c, p)$',
@@ -288,7 +288,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'TD Ex. 7 & 9',
+            stepBadge: 'Application',
             stepTheme: 'green',
             stepTitle: 'Nier une affirmation universelle et une implication quantifiée',
             paragraphText:
@@ -296,7 +296,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_logique_ch1_p2_q2',
               type: 'mcq',
-              prompt: 'Quelle est la négation mathématique exacte de $\\forall x,\\ \\text{Bio}(x) \\implies \\text{PlusCher}(x)$ (TD Ex. 9) ?',
+              prompt: 'Quelle est la négation mathématique exacte de $\\forall x,\\ \\text{Bio}(x) \\implies \\text{PlusCher}(x)$ ?',
               options: [
                 '$\\forall x,\\ \\text{Bio}(x) \\implies \\neg\\text{PlusCher}(x)$',
                 '$\\exists x,\\ \\text{Bio}(x) \\land \\neg\\text{PlusCher}(x)$',
@@ -311,7 +311,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'propriete',
-            stepBadge: 'TD Ex. 11',
+            stepBadge: 'Application',
             stepTheme: 'violet',
             stepTitle: 'Reformuler un slogan par la loi de la contraposée',
             paragraphText:
@@ -319,7 +319,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_logique_ch1_p2_q3',
               type: 'mcq',
-              prompt: 'Quelle est la contraposée de l’implication $(S \\land F) \\implies R$ (TD Ex. 25) ?',
+              prompt: 'Quelle est la contraposée de l’implication $(S \\land F) \\implies R$ ?',
               options: [
                 '$R \\implies (S \\land F)$',
                 '$(\\neg S \\land \\neg F) \\implies \\neg R$',
@@ -334,11 +334,11 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'definition',
-            stepBadge: 'TD Ex. 12',
+            stepBadge: 'Application',
             stepTheme: 'blue',
             stepTitle: 'Condition nécessaire vs condition suffisante',
             paragraphText:
-              'Dans $A \\implies B$ : $A$ est une condition **suffisante** pour $B$ (il suffit d’avoir $A$ pour avoir $B$), et $B$ est une condition **nécessaire** pour $A$ (il faut obligatoirement avoir $B$ pour avoir $A$). Exemple TD Ex. 12 : avoir un compte Instagram est une condition **nécessaire** (mais non suffisante) pour faire du marketing d’influence sur Instagram.',
+              'Dans $A \\implies B$ : $A$ est une condition **suffisante** pour $B$ (il suffit d’avoir $A$ pour avoir $B$), et $B$ est une condition **nécessaire** pour $A$ (il faut obligatoirement avoir $B$ pour avoir $A$). Exemple Exemple : avoir un compte Instagram est une condition **nécessaire** (mais non suffisante) pour faire du marketing d’influence sur Instagram.',
             exercise: {
               id: 'lmd_entd_l1_logique_ch1_p2_q4',
               type: 'mcq',
@@ -357,7 +357,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 5,
             stepKind: 'piege',
-            stepBadge: 'TD Ex. 13',
+            stepBadge: 'Application',
             stepTheme: 'orange',
             stepTitle: 'Erreur logique : l’affirmation du conséquent',
             paragraphText:
@@ -381,11 +381,11 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 6,
             stepKind: 'methode',
-            stepBadge: 'TD Ex. 8',
+            stepBadge: 'Application',
             stepTheme: 'green',
             stepTitle: 'Nier une affirmation existentielle avec disjonction',
             paragraphText:
-              'Dans le TD Ex. 8, pour nier « Certains clients achètent le samedi ou le dimanche » ($\\exists c,\\ A(c, \\text{sam}) \\lor A(c, \\text{dim})$), on remplace $\\exists$ par $\\forall$ et $\\lor$ par $\\land$ : $\\forall c,\\ \\neg A(c, \\text{sam}) \\land \\neg A(c, \\text{dim})$ (« Aucun client n’achète ni le samedi ni le dimanche »).',
+              'Par exemple, pour nier « Certains clients achètent le samedi ou le dimanche » ($\\exists c,\\ A(c, \\text{sam}) \\lor A(c, \\text{dim})$), on remplace $\\exists$ par $\\forall$ et $\\lor$ par $\\land$ : $\\forall c,\\ \\neg A(c, \\text{sam}) \\land \\neg A(c, \\text{dim})$ (« Aucun client n’achète ni le samedi ni le dimanche »).',
             exercise: {
               id: 'lmd_entd_l1_logique_ch1_p2_q6',
               type: 'mcq',
@@ -416,7 +416,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 2,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Logique et Raisonnement Mathématique (Cours Ch. 3 & TD Ex. 14–20, 23–29)',
+    source: 'ENTD L1 — Logique et Raisonnement Mathématique',
     title: 'Chapitre 2 — Méthodes de raisonnement mathématique',
     summary:
       'Maîtriser les 8 grands schémas de démonstration : direct, double implication, disjonction de cas, contre-exemple, contraposée, absurde, récurrence (simple/forte) et analyse-synthèse.',
@@ -438,7 +438,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Syllogisme (transitivité de l’implication)',
             formula: '\\big((P \\implies Q) \\land (Q \\implies R)\\big) \\implies (P \\implies R)',
-            note: 'TD Ex. 23 : Luxe ⇒ Prestige ⇒ Prix élevé ⇒ (Prix bas ⇒ Non luxe).',
+            note: 'Exemple : Luxe ⇒ Prestige ⇒ Prix élevé ⇒ (Prix bas ⇒ Non luxe).',
           },
           {
             name: 'Principe de la disjonction de cas',
@@ -449,7 +449,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Un seul contre-exemple suffit pour **réfuter** une affirmation universelle (« pour tout $x$ »), mais même un million d’exemples ne suffisent jamais pour la **prouver** !',
         workedExample: {
-          title: 'Syllogisme du luxe, segmentation et disjonction de cas (TD Ex. 15, 19 & 23)',
+          title: 'Syllogisme du luxe, segmentation et disjonction de cas',
           statement:
             '1) Si $\\forall x,\\ x \\in \\text{Luxe} \\implies x \\in \\text{Prestige}$ et $\\forall x,\\ x \\in \\text{Prestige} \\implies x \\in \\text{Prix élevé}$, montrer qu’un produit à prix bas ne peut être de luxe. 2) Si $A \\subseteq B$ et $B \\cap C = \\emptyset$, un client peut-il appartenir à $A \\cap C$ ?',
           methodSteps: [
@@ -464,7 +464,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'methode',
-            stepBadge: 'TD Ex. 17',
+            stepBadge: 'Application',
             stepTheme: 'green',
             stepTitle: 'Réfuter une proposition universelle par contre-exemple',
             paragraphText:
@@ -487,7 +487,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'methode',
-            stepBadge: 'TD Ex. 15',
+            stepBadge: 'Application',
             stepTheme: 'green',
             stepTitle: 'Raisonnement par disjonction de cas',
             paragraphText:
@@ -510,7 +510,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'propriete',
-            stepBadge: 'TD Ex. 19',
+            stepBadge: 'Application',
             stepTheme: 'violet',
             stepTitle: 'Logique de segmentation ensembliste',
             paragraphText:
@@ -518,7 +518,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_logique_ch2_p1_q3',
               type: 'mcq',
-              prompt: 'Sachant que $A \\subseteq B$ et $B \\cap C = \\emptyset$, que vaut $A \\cap C$ (TD Ex. 19) ?',
+              prompt: 'Sachant que $A \\subseteq B$ et $B \\cap C = \\emptyset$, que vaut $A \\cap C$ ?',
               options: [
                 '$\\emptyset$',
                 '$A$',
@@ -533,7 +533,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'propriete',
-            stepBadge: 'TD Ex. 23',
+            stepBadge: 'Application',
             stepTheme: 'violet',
             stepTitle: 'Combiner syllogisme et contraposée',
             paragraphText:
@@ -612,7 +612,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Démontrer par contraposée, par l’absurde, par récurrence (simple ou forte) et résoudre des problèmes par analyse-synthèse.',
         conceptExplanation:
           '• **Raisonnement par contraposée** : pour prouver $P \\implies Q$, on suppose $\\neg Q$ et on démontre $\\neg P$ (ex. $n^2$ pair $\\implies n$ pair : on prouve $n$ impair $\\implies n^2$ impair).\n' +
-          '• **Raisonnement par l’absurde** : pour prouver $R$ (ou $P \\implies Q$), on suppose $\\neg R$ (ou $P \\land \\neg Q$) et l’on aboutit à une **contradiction** logique (ex. $\\sqrt{2} \\notin \\mathbb{Q}$, ou guerre des prix impossible en monopole, TD Ex. 14).\n' +
+          '• **Raisonnement par l’absurde** : pour prouver $R$ (ou $P \\implies Q$), on suppose $\\neg R$ (ou $P \\land \\neg Q$) et l’on aboutit à une **contradiction** logique.\n' +
           '• **Raisonnement par récurrence** (pour prouver $\\forall n \\geqslant n_0,\\ P(n)$) :\n' +
           '  1. **Initialisation** : vérifier $P(n_0)$.\n' +
           '  2. **Hérédité** : fixer un entier $n \\geqslant n_0$, supposer $P(n)$ (récurrence simple) ou $\\forall k \\in [n_0, n],\\ P(k)$ (récurrence forte), et prouver $P(n + 1)$.\n' +
@@ -622,7 +622,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Principe de récurrence classique',
             formula: '\\big[ P(n_0) \\land (\\forall n \\geqslant n_0,\\ P(n) \\implies P(n+1)) \\big] \\implies \\forall n \\geqslant n_0,\\ P(n)',
-            note: 'TD Ex. 29 (parrainage) : C(0) = 1, C(n+1) = 2 C(n) ⇒ C(n) = 2^n.',
+            note: 'Exemple (parrainage) : C(0) = 1, C(n+1) = 2 C(n) ⇒ C(n) = 2^n.',
           },
           {
             name: 'Structure du raisonnement par l’absurde',
@@ -633,7 +633,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'En récurrence, **l’initialisation ET l’hérédité** sont toutes deux indispensables : une propriété héréditaire sans initialisation (ex. « $10^n + 1$ est divisible par 9 ») peut être fausse pour tout $n$ !',
         workedExample: {
-          title: 'Preuve par l’absurde en duopole et récurrence sur le parrainage (TD Ex. 24 & Ex. 29)',
+          title: 'Preuve par l’absurde en duopole et récurrence sur le parrainage',
           statement:
             '1) Dans un duopole strict ($S_1 + S_2 = 100\\%$), prouver par l’absurde que tout gain $\\Delta > 0$ de part de marché pour l’acteur 1 est une perte pour l’acteur 2. 2) Prouver par récurrence que si $C(0) = 1$ et $C(n+1) = 2C(n)$, alors $C(n) = 2^n$.',
           methodSteps: [
@@ -649,11 +649,11 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'methode',
-            stepBadge: 'TD Ex. 14',
+            stepBadge: 'Application',
             stepTheme: 'green',
             stepTitle: 'Raisonnement par l’absurde : monopole et guerre des prix',
             paragraphText:
-              'Pour prouver qu’il n’y a pas de guerre des prix en situation de monopole (TD Ex. 14), on suppose par l’absurde qu’il existe une guerre des prix dans un monopole. Or une guerre des prix nécessite au moins 2 entreprises concurrentes, ce qui contredit la définition d’un monopole (1 seul offreur).',
+              'Pour prouver qu’il n’y a pas de guerre des prix en situation de monopole, on suppose par l’absurde qu’il existe une guerre des prix dans un monopole. Or une guerre des prix nécessite au moins 2 entreprises concurrentes, ce qui contredit la définition d’un monopole (1 seul offreur).',
             exercise: {
               id: 'lmd_entd_l1_logique_ch2_p2_q1',
               type: 'mcq',
@@ -719,11 +719,11 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'exemple',
-            stepBadge: 'TD Ex. 18',
+            stepBadge: 'Application',
             stepTheme: 'slate',
             stepTitle: 'Le paradoxe de la rareté (contradiction par transitivité)',
             paragraphText:
-              'Dans le TD Ex. 18 : Rare $\\implies$ Désirable $\\implies$ Tout le monde l’achète $\\implies$ N’est plus rare. Par transitivité, on obtient Rare $\\implies \\neg$Rare, ce qui est une contradiction si le produit est rare : un positionnement fondé uniquement sur la rareté s’autodétruit sans contrôle de l’offre.',
+              'Dans le Exemple : Rare $\\implies$ Désirable $\\implies$ Tout le monde l’achète $\\implies$ N’est plus rare. Par transitivité, on obtient Rare $\\implies \\neg$Rare, ce qui est une contradiction si le produit est rare : un positionnement fondé uniquement sur la rareté s’autodétruit sans contrôle de l’offre.',
             exercise: {
               id: 'lmd_entd_l1_logique_ch2_p2_q4',
               type: 'mcq',
@@ -800,7 +800,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 3,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Logique et Raisonnement Mathématique (Cours Ch. 1, 4 & 5 ; TD Ex. 30–40)',
+    source: 'ENTD L1 — Logique et Raisonnement Mathématique',
     title: 'Chapitre 3 — Ensembles, relations d’équivalence et relations d’ordre',
     summary:
       'Diagrammes de Venn, partitions, propriétés des relations binaires (réflexivité, symétrie, antisymétrie, transitivité), classes d’équivalence et ordres partiels/totaux.',
@@ -823,18 +823,18 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Inclusion-exclusion pour 2 ensembles',
             formula: '|A \\cup B| = |A| + |B| - |A \\cap B|',
-            note: 'TD Ex. 30 : 100 clients, 60 aiment A, 45 aiment B, 20 ni A ni B ⇒ |A ∩ B| = 25.',
+            note: 'Exemple : 100 clients, 60 aiment A, 45 aiment B, 20 ni A ni B ⇒ |A ∩ B| = 25.',
           },
           {
             name: 'Axiomes d’une partition de E',
             formula: 'A_i \\neq \\emptyset, \\qquad A_i \\cap A_j = \\emptyset \\ (i \\neq j), \\qquad \\bigcup_{i \\in I} A_i = E',
-            note: 'Exemple du cours : {A, C_E(A)} est une partition dès que A ≠ ∅ et A ≠ E.',
+            note: 'Exemple : {A, C_E(A)} est une partition dès que A ≠ ∅ et A ≠ E.',
           },
         ],
         keyRule:
           'Une partition exige les **trois** critères simultanément : parties **non vides**, **deux à deux disjointes**, et **couvrantes**.',
         workedExample: {
-          title: 'Sondage clients par diagramme de Venn (TD Ex. 30)',
+          title: 'Sondage clients par diagramme de Venn',
           statement:
             'Sur un échantillon de $100$ clients, $60$ aiment la marque $A$, $45$ aiment la marque $B$, et $20$ n’aiment ni $A$ ni $B$. Combien de clients aiment simultanément $A$ et $B$ ? Combien aiment uniquement $A$ ?',
           methodSteps: [
@@ -850,7 +850,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'exemple',
-            stepBadge: 'TD Ex. 30',
+            stepBadge: 'Application',
             stepTheme: 'slate',
             stepTitle: 'Calculer une intersection via diagramme de Venn',
             paragraphText:
@@ -895,7 +895,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'blue',
             stepTitle: 'Vérifier qu’une famille est une partition de $E$',
             paragraphText:
-              'Pour $E = \\{a, b, c, d, e, f\\}$ (Exemple 27 du cours), la famille $\\{\\{a\\},\\ \\{b, c, f\\},\\ \\{d, e\\}\\}$ est une partition de $E$, mais $\\{\\{a\\},\\ \\{b, c, f\\},\\ \\{b, c, d, e\\}\\}$ n’en est pas une car les deux dernières parties ont une intersection non vide $\\{b, c\\}$.',
+              'Pour $E = \\{a, b, c, d, e, f\\}$, la famille $\\{\\{a\\},\\ \\{b, c, f\\},\\ \\{d, e\\}\\}$ est une partition de $E$, mais $\\{\\{a\\},\\ \\{b, c, f\\},\\ \\{b, c, d, e\\}\\}$ n’en est pas une car les deux dernières parties ont une intersection non vide $\\{b, c\\}$.',
             exercise: {
               id: 'lmd_entd_l1_logique_ch3_p1_q3',
               type: 'mcq',
@@ -918,7 +918,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'violet',
             stepTitle: 'Nombre de régions d’un diagramme de Venn à 3 ensembles',
             paragraphText:
-              'Un diagramme de Venn pour $3$ ensembles $A, B, C$ dans un référentiel $E$ (« diagramme en trèfle », Cours Ch. 1) délimite exactement $2^3 = 8$ zones élémentaires disjointes (selon l’appartenance ou non à chacun des 3 ensembles).',
+              'Un diagramme de Venn pour $3$ ensembles $A, B, C$ dans un référentiel $E$ délimite exactement $2^3 = 8$ zones élémentaires disjointes (selon l’appartenance ou non à chacun des 3 ensembles).',
             exercise: {
               id: 'lmd_entd_l1_logique_ch3_p1_q4',
               type: 'mcq',
@@ -936,7 +936,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'orange',
             stepTitle: 'Nier l’appartenance à une intersection ou une réunion',
             paragraphText:
-              'D’après les Remarques 8 et 9 du cours : $a \\notin (A \\cup B)$ signifie $(a \\notin A) \\land (a \\notin B)$, tandis que $a \\notin (A \\cap B)$ signifie $(a \\notin A) \\lor (a \\notin B)$ (soit 3 situations possibles sur le diagramme de Venn).',
+              'Par les lois de De Morgan : $a \\notin (A \\cup B)$ signifie $(a \\notin A) \\land (a \\notin B)$, tandis que $a \\notin (A \\cap B)$ signifie $(a \\notin A) \\lor (a \\notin B)$ (soit 3 situations possibles sur le diagramme de Venn).',
             keyRule: '$a \\notin (A \\cap B) \\iff a \\notin A \\text{ OU } a \\notin B$.',
             exercise: {
               id: 'lmd_entd_l1_logique_ch3_p1_q5',
@@ -956,7 +956,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 6,
             stepKind: 'propriete',
-            stepBadge: 'TD Ex. 37',
+            stepBadge: 'Application',
             stepTheme: 'violet',
             stepTitle: 'Correspondance fondamentale entre partition et relation d’équivalence',
             paragraphText:
@@ -964,7 +964,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_logique_ch3_p1_q6',
               type: 'mcq',
-              prompt: 'Quel est le lien exact entre une relation d’équivalence sur un ensemble de prospects $E$ et une partition de $E$ (TD Ex. 37) ?',
+              prompt: 'Quel est le lien exact entre une relation d’équivalence sur un ensemble de prospects $E$ et une partition de $E$ ?',
               options: [
                 'Les classes d’équivalence peuvent se chevaucher sur certains prospects.',
                 'Une relation d’équivalence ne définit une partition que si $E$ est infini.',
@@ -1010,7 +1010,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Vérifier toujours les contre-exemples de **transitivité** (« avoir un produit commun », « être concurrent direct ») et d’**antisymétrie** (`Prix(x) ≤ Prix(y)` échoue si deux articles différents ont le même prix !).',
         workedExample: {
-          title: 'Étude des relations du TD Ex. 31, 32, 36 et 38',
+          title: 'Étude de relations binaires classiques',
           statement:
             'Déterminer la nature de : (a) $x \\mathcal{R}_1 y \\iff « x \\text{ et } y \\text{ ont acheté au moins un produit en commun} »$ ; (b) $x \\mathcal{R}_2 y \\iff \\text{Prix}(x) \\leqslant \\text{Prix}(y)$ sur un catalogue d’articles ; (c) la domination stratégique $S_1 \\gg S_2 \\iff \\text{Prix}(S_1) \\leqslant \\text{Prix}(S_2) \\land \\text{Qualité}(S_1) \\geqslant \\text{Qualité}(S_2)$.',
           methodSteps: [
@@ -1025,11 +1025,11 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 1,
             stepKind: 'exemple',
-            stepBadge: 'TD Ex. 32 & 35',
+            stepBadge: 'Application',
             stepTheme: 'slate',
             stepTitle: 'Reconnaître une relation d’équivalence',
             paragraphText:
-              'La relation $x \\sim y \\iff « x \\text{ et } y \\text{ ont le même code promo} »$ (TD Ex. 32) ou « habitent dans la même zone géographique » (TD Ex. 35) est réflexive, symétrique et transitive : c’est une relation d’équivalence. La classe d’équivalence d’un produit est l’ensemble des produits partageant son code promo.',
+              'La relation $x \\sim y \\iff « x \\text{ et } y \\text{ ont le même code promo} »$ ou « habitent dans la même zone géographique » est réflexive, symétrique et transitive : c’est une relation d’équivalence. La classe d’équivalence d’un produit est l’ensemble des produits partageant son code promo.',
             exercise: {
               id: 'lmd_entd_l1_logique_ch3_p2_q1',
               type: 'mcq',
@@ -1048,15 +1048,15 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 2,
             stepKind: 'piege',
-            stepBadge: 'TD Ex. 31 & 40',
+            stepBadge: 'Application',
             stepTheme: 'orange',
             stepTitle: 'Relations symétriques mais non transitives',
             paragraphText:
-              'La relation « être un concurrent direct de » (TD Ex. 40) est symétrique (si A est concurrent de B, B l’est de A), mais ni réflexive (une entreprise n’est pas son propre concurrent), ni transitive (A peut concurrencer B sur le mobile, B concurrencer C sur le cloud, sans que A et C ne soient concurrents directs).',
+              'La relation « être un concurrent direct de » est symétrique (si A est concurrent de B, B l’est de A), mais ni réflexive (une entreprise n’est pas son propre concurrent), ni transitive (A peut concurrencer B sur le mobile, B concurrencer C sur le cloud, sans que A et C ne soient concurrents directs).',
             exercise: {
               id: 'lmd_entd_l1_logique_ch3_p2_q2',
               type: 'mcq',
-              prompt: 'Sur l’ensemble des clients ayant fait au moins un achat, pourquoi la relation $x \\mathcal{R} y \\iff « x \\text{ et } y \\text{ ont acheté au moins un produit en commun} »$ N’EST-ELLE PAS une relation d’équivalence (TD Ex. 31) ?',
+              prompt: 'Sur l’ensemble des clients ayant fait au moins un achat, pourquoi la relation $x \\mathcal{R} y \\iff « x \\text{ et } y \\text{ ont acheté au moins un produit en commun} »$ N’EST-ELLE PAS une relation d’équivalence ?',
               options: [
                 'Parce qu’elle n’est pas symétrique.',
                 'Parce qu’elle n’est pas réflexive.',
@@ -1071,15 +1071,15 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'definition',
-            stepBadge: 'TD Ex. 39',
+            stepBadge: 'Application',
             stepTheme: 'blue',
             stepTitle: 'Relation d’ordre partiel : l’inclusion $\\subseteq$ sur $\\mathcal{P}(S)$',
             paragraphText:
-              'Sur l’ensemble $\\mathcal{P}(S)$ des packs de services optionnels d’un abonnement (TD Ex. 39), l’inclusion $\\subseteq$ est réflexive ($A \\subseteq A$), antisymétrique ($A \\subseteq B \\land B \\subseteq A \\implies A = B$) et transitive. C’est une **relation d’ordre partiel** (car dès que $|S| \\geqslant 2$, $\\{s_1\\}$ et $\\{s_2\\}$ ne sont pas comparables).',
+              'Sur l’ensemble $\\mathcal{P}(S)$ des packs de services optionnels d’un abonnement, l’inclusion $\\subseteq$ est réflexive ($A \\subseteq A$), antisymétrique ($A \\subseteq B \\land B \\subseteq A \\implies A = B$) et transitive. C’est une **relation d’ordre partiel** (car dès que $|S| \\geqslant 2$, $\\{s_1\\}$ et $\\{s_2\\}$ ne sont pas comparables).',
             exercise: {
               id: 'lmd_entd_l1_logique_ch3_p2_q3',
               type: 'mcq',
-              prompt: 'Pourquoi la relation d’inclusion $\\subseteq$ sur $\\mathcal{P}(S)$ (avec $|S| \\geqslant 2$) est-elle un ordre **partiel** et non total (TD Ex. 39) ?',
+              prompt: 'Pourquoi la relation d’inclusion $\\subseteq$ sur $\\mathcal{P}(S)$ (avec $|S| \\geqslant 2$) est-elle un ordre **partiel** et non total ?',
               options: [
                 'Parce qu’il existe des parties $A$ et $B$ de $S$ telles que $A \\not\\subseteq B$ et $B \\not\\subseteq A$.',
                 'Parce qu’elle n’est pas transitive.',
@@ -1094,7 +1094,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 4,
             stepKind: 'piege',
-            stepBadge: 'TD Ex. 38',
+            stepBadge: 'Application',
             stepTheme: 'orange',
             stepTitle: 'Échec de l’antisymétrie pour $x \\mathcal{R} y \\iff \\text{Prix}(x) \\leqslant \\text{Prix}(y)$',
             paragraphText:
@@ -1103,7 +1103,7 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_logique_ch3_p2_q4',
               type: 'mcq',
-              prompt: 'Quelle propriété de la relation d’ordre échoue pour $x \\mathcal{R} y \\iff \\text{Prix}(x) \\leqslant \\text{Prix}(y)$ lorsque deux articles différents ont le même prix (TD Ex. 38) ?',
+              prompt: 'Quelle propriété de la relation d’ordre échoue pour $x \\mathcal{R} y \\iff \\text{Prix}(x) \\leqslant \\text{Prix}(y)$ lorsque deux articles différents ont le même prix ?',
               options: [
                 'La réflexivité.',
                 'La transitivité.',
@@ -1118,15 +1118,15 @@ export const LOGIQUE_MATH_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 5,
             stepKind: 'exemple',
-            stepBadge: 'TD Ex. 33 & 34',
+            stepBadge: 'Application',
             stepTheme: 'slate',
             stepTitle: 'Ordre total, paradoxe de Condorcet et tâches parallèles',
             paragraphText:
-              'Dans la gestion d’un projet marketing (TD Ex. 34), la précédence des tâches ($x \\leqslant y$) forme un **ordre partiel** (graphe acyclique dirigé / DAG) car deux tâches peuvent être exécutées en parallèle. En choix collectif de marques (TD Ex. 33), l’agrégation de votes peut violer la transitivité (paradoxe de Condorcet : $A \\succ B$, $B \\succ C$, mais $C \\succ A$).',
+              'Dans la gestion d’un projet marketing, la précédence des tâches ($x \\leqslant y$) forme un **ordre partiel** (graphe acyclique dirigé / DAG) car deux tâches peuvent être exécutées en parallèle. En choix collectif de marques, l’agrégation de votes peut violer la transitivité (paradoxe de Condorcet : $A \\succ B$, $B \\succ C$, mais $C \\succ A$).',
             exercise: {
               id: 'lmd_entd_l1_logique_ch3_p2_q5',
               type: 'mcq',
-              prompt: 'Dans un projet marketing, pourquoi la relation « la tâche $x$ précède la tâche $y$ » est-elle généralement un ordre **partiel** (TD Ex. 34) ?',
+              prompt: 'Dans un projet marketing, pourquoi la relation « la tâche $x$ précède la tâche $y$ » est-elle généralement un ordre **partiel** ?',
               options: [
                 'Parce qu’une tâche ne précède jamais une autre.',
                 'Parce que deux tâches indépendantes peuvent être menées en parallèle sans qu’aucune ne précède l’autre.',

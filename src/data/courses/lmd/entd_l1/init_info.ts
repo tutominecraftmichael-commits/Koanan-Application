@@ -23,7 +23,7 @@ export const INIT_INFO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     officialVolumeHours: 14,
     contentVersion: 2,
     source:
-      'ESATIC ENTD L1 — Cours Communication Numérique et Réseaux Sociaux + Formation Communication Digitale',
+      'ENTD L1 — Cours Communication Numérique et Réseaux Sociaux + Formation Communication Digitale',
     points: [
       makePoint({
         id: 'lmd_entd_l1_init_info_ch1_p1',
@@ -66,7 +66,7 @@ export const INIT_INFO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_init_info_ch1_p1_q1',
               type: 'mcq',
               prompt:
-                'Selon le cours de communication numérique, qu’est-ce qui caractérise fondamentalement un ordinateur (incluant PC, smartphones et TV connectées) ?',
+                'Qu’est-ce qui caractérise fondamentalement un ordinateur (incluant PC, smartphones et TV connectées) ?',
               options: [
                 'La présence obligatoire d’un clavier physique et d’une souris',
                 'La présence d’un processeur et de mémoire exécutant un jeu d’instructions',
@@ -476,7 +476,7 @@ export const INIT_INFO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     officialVolumeHours: 12,
     contentVersion: 2,
     source:
-      'ESATIC ENTD L1 — Cours Communication Numérique et Réseaux Sociaux (Sections II et III)',
+      'ENTD L1 — Cours Communication Numérique et Réseaux Sociaux',
     points: [
       makePoint({
         id: 'lmd_entd_l1_init_info_ch2_p1',
@@ -561,7 +561,7 @@ export const INIT_INFO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_init_info_ch2_p1_q3',
               type: 'mcq',
               prompt:
-                'Quels sont les trois piliers éditoriaux recommandés dans le cours pour animer efficacement une Page Facebook ?',
+                'Quels sont les trois piliers éditoriaux recommandés pour animer efficacement une Page Facebook ?',
               options: [
                 'Répéter le prix, bloquer les commentaires, ignorer les messages',
                 'Informer, distraire et éduquer',
@@ -604,7 +604,7 @@ export const INIT_INFO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_init_info_ch2_p1_q5',
               type: 'mcq',
               prompt:
-                'Quel constat majeur du cours sur la communication digitale justifie la maîtrise d’Internet par les entreprises ?',
+                'Quel constat majeur sur la communication digitale justifie la maîtrise d’Internet par les entreprises ?',
               options: [
                 'Internet a dépassé la télévision dès 2016 et les dépenses publicitaires en ligne connaissent une croissance à deux chiffres',
                 'La télévision a définitivement remplacé les smartphones en Afrique',
@@ -625,7 +625,7 @@ export const INIT_INFO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           'Planifier et partager des agendas en ligne, stocker dans le cloud (15 Go), gérer les 3 niveaux de permissions et co-éditer en temps réel.',
         conceptExplanation:
-          "Les outils Google constituent un pilier pratique de la communication numérique et du travail collaboratif en entreprise (Section III du cours) :\n\n1. Google Agenda : outil de gestion de calendrier en ligne permettant de créer des événements uniques ou récurrents, partager des agendas, envoyer des invitations de réunion, programmer des rappels (e-mail, notification Android ou SMS), importer des événements et gérer ses tâches.\n2. Google Drive : service de stockage et de partage dans le cloud offrant gratuitement 15 Go accessibles sur ordinateur, tablette et smartphone, couplé à la suite bureautique en ligne (Google Docs, Sheets, Slides, Drawings, Forms).\n3. Conversion et partage collaboratif : pour co-éditer un fichier Microsoft Office en temps réel, on l'ouvre avec Google Docs/Sheets/Slides et on l'enregistre au format Google. On partage ensuite le fichier (ou un dossier complet) en attribuant l'un des 3 niveaux de permissions :\n- Lecture autorisée (consultation seule).\n- Commentaire autorisé (consultation + ajout de commentaires, applicable aux fichiers mais pas aux dossiers).\n- Modification autorisée (édition complète et partage).\n4. Co-édition en temps réel et chat intégré : chaque collaborateur connecté voit en direct le curseur coloré et le nom des autres auteurs, et peut discuter dans le chat intégré du document (à condition d'être connecté à un compte Google).",
+          "Les outils Google constituent un pilier pratique de la communication numérique et du travail collaboratif en entreprise :\n\n1. Google Agenda : outil de gestion de calendrier en ligne permettant de créer des événements uniques ou récurrents, partager des agendas, envoyer des invitations de réunion, programmer des rappels (e-mail, notification Android ou SMS), importer des événements et gérer ses tâches.\n2. Google Drive : service de stockage et de partage dans le cloud offrant gratuitement 15 Go accessibles sur ordinateur, tablette et smartphone, couplé à la suite bureautique en ligne (Google Docs, Sheets, Slides, Drawings, Forms).\n3. Conversion et partage collaboratif : pour co-éditer un fichier Microsoft Office en temps réel, on l'ouvre avec Google Docs/Sheets/Slides et on l'enregistre au format Google. On partage ensuite le fichier (ou un dossier complet) en attribuant l'un des 3 niveaux de permissions :\n- Lecture autorisée (consultation seule).\n- Commentaire autorisé (consultation + ajout de commentaires, applicable aux fichiers mais pas aux dossiers).\n- Modification autorisée (édition complète et partage).\n4. Co-édition en temps réel et chat intégré : chaque collaborateur connecté voit en direct le curseur coloré et le nom des autres auteurs, et peut discuter dans le chat intégré du document (à condition d'être connecté à un compte Google).",
         keyRule:
           'Dans Google Drive, on choisit toujours le niveau de permission minimal nécessaire (Lecture / Commentaire / Modification) ; la collaboration temps réel exige une connexion Internet et le format Google.',
         formulas: [
@@ -777,7 +777,7 @@ export const INIT_INFO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       'Découvrir l’environnement PowerPoint, maîtriser les formats de fichiers (.pptx, .pptm, .ppt), les effets visuels, les transitions, les animations et la conception de supports interactifs.',
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Cours Introduction à PowerPoint (Ing. Soro Namongon Adama)',
+    source: 'ENTD L1 — Cours Introduction à PowerPoint (Ing. Soro Namongon Adama)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_init_info_ch3_p1',
@@ -896,7 +896,7 @@ export const INIT_INFO_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 3,
               explanation:
-                'Comme précisé dans le cours, appuyer sur la touche Échap depuis l’écran d’accueil de PowerPoint ouvre directement une nouvelle présentation.',
+                'Comme précisé, appuyer sur la touche Échap depuis l’écran d’accueil de PowerPoint ouvre directement une nouvelle présentation.',
             },
           },
           {

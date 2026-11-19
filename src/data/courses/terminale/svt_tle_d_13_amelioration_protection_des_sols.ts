@@ -7,10 +7,10 @@ export const SVT_TLE_D_L13_AMELIORATION_PROTECTION_DES_SOLS: CurriculumChapter =
   alsoForGrades: ["terminale_c"],
   order: 14,
   title: "L'amélioration et la protection des sols (Amendements chimiques, organiques, calcaires, CAH et techniques de conservation)",
-  summary: "Étude complète et approfondie de la gestion rationnelle et de la fertilisation des sols agricoles selon le programme officiel de SVT Terminale D de Côte d'Ivoire : amendements chimiques par engrais minéraux NPK (loi des rendements décroissants et risques de toxicité), amendements organiques (rôle décomposeur et minéralisateur des vers de terre, débris animaux et végétaux, engrais verts et symbiose fixatrice d'azote des légumineuses), amendements calcaires (chaux vive CaO, carbonate de calcium CaCO3) et humifères pour la formation du Complexe Argilo-Humique (CAH) et la neutralisation de l'acidité, et techniques culturales de protection et de lutte anti-érosive (paillage, jachère, assolement, cultures en terrasses et engazonnement).",
+  summary: "Étude complète et approfondie de la gestion rationnelle et de la fertilisation des sols agricoles : amendements chimiques par engrais minéraux NPK (loi des rendements décroissants et risques de toxicité), amendements organiques (rôle décomposeur et minéralisateur des vers de terre, débris animaux et végétaux, engrais verts et symbiose fixatrice d'azote des légumineuses), amendements calcaires (chaux vive CaO, carbonate de calcium CaCO3) et humifères pour la formation du Complexe Argilo-Humique (CAH) et la neutralisation de l'acidité, et techniques culturales de protection et de lutte anti-érosive (paillage, jachère, assolement, cultures en terrasses et engazonnement).",
   officialVolumeHours: 5,
   contentVersion: 2,
-  source: "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC) - SVT Terminale D",
+  source: "Programme KONAN — SVT Terminale D",
   points: [
     {
       id: "pt1_amendements_chimiques_engrais_npk_rendement",

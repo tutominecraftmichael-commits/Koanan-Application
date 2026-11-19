@@ -1,5 +1,5 @@
 // ============================================================================
-// MODULE OFFICIEL : CHIMIE 2de C (MENA CÔTE D'IVOIRE)
+// MODULE OFFICIEL : CHIMIE 2de C
 // Volet : Chimie | Classe : Seconde C
 // Leçon 1 approfondie : L'élément chimique (8 mini-leçons ; l'atome, Z, A et les isotopes sont traités en Leçon 2, la masse molaire en Leçon 5)
 // ============================================================================
@@ -3452,7 +3452,7 @@ export const chimie2deCClassificationPeriodiqueChapter: CurriculumChapter = {
         },
       ],
       keyRule:
-        "Règle d'or MENA : Pour situer un élément dans le tableau, écris d'abord sa formule électronique. Le nombre de couches donne la période (ligne) et le nombre d'électrons sur la dernière couche donne la colonne (groupe).",
+        "Règle d'or : Pour situer un élément dans le tableau, écris d'abord sa formule électronique. Le nombre de couches donne la période (ligne) et le nombre d'électrons sur la dernière couche donne la colonne (groupe).",
       workedExample: {
         title: "Situation d'évaluation officielle : Localiser le Soufre S (Z = 16) et le Chlore Cl (Z = 17)",
         statement: "Écrire la formule électronique du soufre (Z = 16) et du chlore (Z = 17), puis déterminer leur ligne et leur colonne dans le tableau simplifié.",
@@ -3764,7 +3764,7 @@ export const chimie2deCClassificationPeriodiqueChapter: CurriculumChapter = {
         },
       ],
       keyRule:
-        "Vocabulaire officiel MENA : 'Halogène' signifie étymologiquement 'générateur de sel'. 'Gaz noble' ou 'gaz rare' traduit l'inertie chimique liée à une couche de valence saturée d'un octet d'électrons.",
+        "Vocabulaire essentiel : 'Halogène' signifie étymologiquement 'générateur de sel'. 'Gaz noble' ou 'gaz rare' traduit l'inertie chimique liée à une couche de valence saturée d'un octet d'électrons.",
       workedExample: {
         title: "Situation d'évaluation officielle : L'élément dans le dentifrice (Z = 9)",
         statement: "Le principe actif de certains dentifrices contient un élément X de numéro atomique Z = 9. Déterminer sa formule électronique, sa position, son nom et sa famille.",
@@ -4582,7 +4582,7 @@ export const chimie2deCMoleEtGrandeursMolairesChapter: CurriculumChapter = {
         "Elle s'exprime en grammes par mole, notée g/mol ou g·mol⁻¹.\n\n" +
         "2. Masse molaire atomique :\n" +
         "C'est la masse d'une mole d'atomes de l'élément considéré. Elle est inscrite dans chaque case de la classification périodique.\n" +
-        "Valeurs usuelles officielles MENA :\n" +
+        "Valeurs usuelles de référence :\n" +
         "- Hydrogène : M(H) = 1 g/mol\n" +
         "- Carbone : M(C) = 12 g/mol\n" +
         "- Azote : M(N) = 14 g/mol\n" +
@@ -4798,7 +4798,7 @@ export const chimie2deCMoleEtGrandeursMolairesChapter: CurriculumChapter = {
       keyRule:
         "Attention aux conversions de volume : 1 L = 1 dm³ = 1 000 cm³ = 1 000 mL. Donc pour convertir des cm³ ou mL en litres, divise par 1 000 (ex : 44,8 cm³ = 0,0448 L).",
       workedExample: {
-        title: "Situation officielle MENA : Volume de dioxygène recueilli à l'électrolyse",
+        title: "Situation d'application : Volume de dioxygène recueilli à l'électrolyse",
         statement: "Lors d'une électrolyse de l'eau, on recueille V = 44,8 cm³ de dioxygène O₂ dans les CNTP (Vm = 22,4 L/mol). Calculer la quantité de matière n(O₂) puis sa masse.",
         methodSteps: [
           "Étape 1 : Convertir le volume en litres : V = 44,8 cm³ = 44,8 × 10⁻³ L = 0,0448 L.",

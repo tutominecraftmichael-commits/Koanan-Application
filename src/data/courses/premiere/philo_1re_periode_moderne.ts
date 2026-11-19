@@ -827,7 +827,7 @@ export const PHILO_1RE_L08_PERIODE_MODERNE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_philo_histoire_l08_periode_moderne_p04_q1",
             "type": "mcq",
-            "prompt": "Dans le cours sur la période moderne, comment définit-on l'expérience ?",
+            "prompt": "À la période moderne, comment définit-on l'expérience ?",
             "options": [
               "L'ensemble des idées innées",
               "L'ensemble des objets et des phénomènes extérieurs qui frappent nos sens",
@@ -969,7 +969,7 @@ export const PHILO_1RE_L08_PERIODE_MODERNE: CurriculumChapter = {
         {
           "id": "premiere_philo_histoire_l08_periode_moderne_p04_q1",
           "type": "mcq",
-          "prompt": "Dans le cours sur la période moderne, comment définit-on l'expérience ?",
+          "prompt": "À la période moderne, comment définit-on l'expérience ?",
           "options": [
             "L'ensemble des idées innées",
             "L'ensemble des objets et des phénomènes extérieurs qui frappent nos sens",

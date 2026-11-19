@@ -1393,7 +1393,7 @@ export const GEO_2DE_L01_OBJET_INTERET_DEMARCHE: CurriculumChapter = {
           "exercise": {
             "id": "seconde_a_hg_geographie_l01_objet_interet_demarche_p06_q3",
             "type": "mcq",
-            "prompt": "Selon le cours, la géographie sert-elle aussi à faire la guerre ?",
+            "prompt": "La géographie sert-elle aussi à faire la guerre ?",
             "options": [
               "Non, la géographie n'a aucun lien avec les questions militaires",
               "Oui, car la connaissance du terrain est indispensable aux opérations militaires",
@@ -1519,7 +1519,7 @@ export const GEO_2DE_L01_OBJET_INTERET_DEMARCHE: CurriculumChapter = {
         {
           "id": "seconde_a_hg_geographie_l01_objet_interet_demarche_p06_q3",
           "type": "mcq",
-          "prompt": "Selon le cours, la géographie sert-elle aussi à faire la guerre ?",
+          "prompt": "La géographie sert-elle aussi à faire la guerre ?",
           "options": [
             "Non, la géographie n'a aucun lien avec les questions militaires",
             "Oui, car la connaissance du terrain est indispensable aux opérations militaires",

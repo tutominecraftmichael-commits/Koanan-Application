@@ -766,7 +766,7 @@ export const PHILO_TLE_L01_DISSERTATION: CurriculumChapter = {
           "stepTitle": "Arguments et références",
           "stepTheme": "Arguments et références",
           "stepBadge": "Arguments et références",
-          "paragraphText": "Argument : la vie en société n'est pas toujours sûre, à cause de l'agressivité d'autrui.\nRéférences : Hobbes, « L'homme est un loup pour l'homme » ; Sartre, « L'enfer, c'est les autres » (Huis clos).\nPrécision : la formule de Hobbes vient du Du citoyen (De Cive), pas du Léviathan comme l'écrit le PDF.",
+          "paragraphText": "Argument : la vie en société n'est pas toujours sûre, à cause de l'agressivité d'autrui.\nRéférences : Hobbes, « L'homme est un loup pour l'homme » ; Sartre, « L'enfer, c'est les autres » (Huis clos).\nPrécision : la formule de Hobbes vient du Du citoyen (De Cive), pas du Léviathan comme l'écrit une erreur fréquente.",
           "exercise": {
             "id": "terminale_philo_methodologie_l01_dissertation_p04_q3",
             "type": "mcq",
@@ -1013,7 +1013,7 @@ export const PHILO_TLE_L01_DISSERTATION: CurriculumChapter = {
           "stepTitle": "La pluralité des cultures : un obstacle ?",
           "stepTheme": "La pluralité des cultures : un obstacle ?",
           "stepBadge": "La pluralité des cultures : un obstacle ?",
-          "paragraphText": "Axe 1 : les différences culturelles peuvent créer des conflits et l'ethnocentrisme.\nRéférence : Lévi-Strauss décrit la tendance ancienne à « répudier » les cultures éloignées de la nôtre (dans Race et histoire ; le PDF écrit à tort Race et culture).\nExemple : Jules Ferry (1885) prétend que les « races supérieures » doivent civiliser les autres.",
+          "paragraphText": "Axe 1 : les différences culturelles peuvent créer des conflits et l'ethnocentrisme.\nRéférence : Lévi-Strauss décrit la tendance ancienne à « répudier » les cultures éloignées de la nôtre.\nExemple : Jules Ferry (1885) prétend que les « races supérieures » doivent civiliser les autres.",
           "exercise": {
             "id": "terminale_philo_methodologie_l01_dissertation_p05_q4",
             "type": "mcq",
@@ -1034,7 +1034,7 @@ export const PHILO_TLE_L01_DISSERTATION: CurriculumChapter = {
           "stepTitle": "La pluralité des cultures : une richesse",
           "stepTheme": "La pluralité des cultures : une richesse",
           "stepBadge": "La pluralité des cultures : une richesse",
-          "paragraphText": "Axe 2 : le brassage culturel enrichit l'humanité.\nCésaire : « marier des mondes différents est excellent ».\nSaint-Exupéry : « Si tu diffères de moi, loin de me léser, tu m'enrichis » (Lettre à un otage ; le PDF l'attribue à Terre des hommes).\nKant : traiter l'humanité toujours comme une fin, jamais seulement comme un moyen.",
+          "paragraphText": "Axe 2 : le brassage culturel enrichit l'humanité.\nCésaire : « marier des mondes différents est excellent ».\nSaint-Exupéry : « Si tu diffères de moi, loin de me léser, tu m'enrichis ».\nKant : traiter l'humanité toujours comme une fin, jamais seulement comme un moyen.",
           "exercise": {
             "id": "terminale_philo_methodologie_l01_dissertation_p05_q5",
             "type": "mcq",

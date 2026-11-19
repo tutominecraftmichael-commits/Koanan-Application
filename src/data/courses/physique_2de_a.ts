@@ -1,6 +1,6 @@
 // ============================================================================
 // MODULE OFFICIEL : PHYSIQUE 2de A (PHYSIQUE-CHIMIE)
-// Ministère de l'Éducation Nationale et de l'Alphabétisation (MENA - Côte d'Ivoire)
+// Programme structuré KONAN
 // Thème 1 : Mécanique
 // Leçon 1 : Le mouvement
 // Leçon 2 : Équilibre d'un solide soumis à deux forces
@@ -640,7 +640,7 @@ On accroche un solide très léger (anneau de masse négligeable) entre deux dyn
 - Les forces F₁ et F₂ exercées par les dynamomètres tirent dans des directions opposées.
 - Les aiguilles des deux dynamomètres indiquent rigoureusement la même graduation (même intensité en Newtons : F₁ = F₂).
 
-3. Règle fondamentale : Conditions d'équilibre officiel MENA :
+3. Règle fondamentale : Conditions d'équilibre :
 Un solide soumis à l'action de deux forces F₁ et F₂ est en équilibre si et seulement si ces deux forces vérifient simultanément trois conditions :
 - Elles ont la même direction (même droite d'action ou même support).
 - Elles sont de sens opposés (l'une tire dans un sens, l'autre dans le sens contraire).

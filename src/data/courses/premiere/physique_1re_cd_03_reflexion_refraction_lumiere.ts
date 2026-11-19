@@ -32,7 +32,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
       summary:
         'Définir la réflexion, repérer le plan d’incidence et la normale, et appliquer les deux lois de Descartes (r = i).',
       conceptExplanation:
-        "Devant un miroir plan $(M)$, un pinceau lumineux rebondit sans changer de milieu de propagation.\n\n- **Définition** : la **réflexion de la lumière** est le changement de direction et de sens de propagation de la lumière lorsqu’elle rencontre une surface réfléchissante (ex. miroir plan), tout en **restant dans le milieu de propagation initial**.\n- **Repères géométriques** :\n  - Le point $I$ où le rayon incident $(SI)$ frappe le miroir est le **point d’incidence**.\n  - La droite perpendiculaire au miroir passant par $I$ est la **normale** $(IN)$.\n  - L’**angle d’incidence** $i$ est l’angle entre le rayon incident $(SI)$ et la **normale** ; l’**angle de réflexion** $r$ est l’angle entre le rayon réfléchi $(IR)$ et la **normale**.\n- **Lois de Descartes pour la réflexion** (vérifiées par les mesures $i = r = 0^\\circ, 10^\\circ, \\dots, 50^\\circ$ p. 1) :\n  1. **Première loi (loi du plan)** : le rayon incident $(SI)$, le rayon réfléchi $(IR)$ et la normale au point d’incidence appartiennent à un même plan appelé **plan d’incidence**.\n  2. **Deuxième loi (loi des angles)** : l’angle d’incidence et l’angle de réflexion ont la **même mesure** :\n     $$r = i$$",
+        "Devant un miroir plan $(M)$, un pinceau lumineux rebondit sans changer de milieu de propagation.\n\n- **Définition** : la **réflexion de la lumière** est le changement de direction et de sens de propagation de la lumière lorsqu’elle rencontre une surface réfléchissante (ex. miroir plan), tout en **restant dans le milieu de propagation initial**.\n- **Repères géométriques** :\n - Le point $I$ où le rayon incident $(SI)$ frappe le miroir est le **point d’incidence**.\n - La droite perpendiculaire au miroir passant par $I$ est la **normale** $(IN)$.\n - L’**angle d’incidence** $i$ est l’angle entre le rayon incident $(SI)$ et la **normale** ; l’**angle de réflexion** $r$ est l’angle entre le rayon réfléchi $(IR)$ et la **normale**.\n- **Lois de Descartes pour la réflexion** :\n 1. **Première loi (loi du plan)** : le rayon incident $(SI)$, le rayon réfléchi $(IR)$ et la normale au point d’incidence appartiennent à un même plan appelé **plan d’incidence**.\n 2. **Deuxième loi (loi des angles)** : l’angle d’incidence et l’angle de réflexion ont la **même mesure** :\n $$r = i$$",
       keyRule:
         'Les angles i et r se mesurent toujours par rapport à la NORMALE au miroir (et non par rapport à la surface). Lois de la réflexion : même plan d’incidence et r = i.',
       formulas: [
@@ -44,7 +44,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
       ],
       visualSchema: {
         type: 'geometry_svg',
-        title: 'Réflexion sur un miroir plan (p. 1)',
+        title: 'Réflexion sur un miroir plan',
         caption: 'Le rayon incident SI, la normale IN et le rayon réfléchi IR sont dans le même plan d’incidence, avec r = i.',
         svgContent: `<svg viewBox="0 0 360 175" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-md mx-auto">
   <defs>
@@ -89,7 +89,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
 </svg>`,
       },
       workedExample: {
-        title: 'Rayon arrivant sur un miroir vertical (Activité 1 p. 2)',
+        title: 'Rayon arrivant sur un miroir vertical',
         statement:
           'Un rayon lumineux frappe un miroir plan disposé verticalement avec un angle d’incidence $\\theta = 45^\\circ$ par rapport à la normale horizontale. Déterminer la valeur de l’angle $\\alpha$ du rayon réfléchi et la direction finale du rayon.',
         methodSteps: [
@@ -129,11 +129,11 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
           stepTheme: '1re et 2e lois',
           stepTitle: 'Énoncé des deux lois de Descartes pour la réflexion',
           paragraphText:
-            'D’après les lois de Descartes (p. 2) : 1) le rayon incident et le rayon réfléchi appartiennent à un même plan appelé **plan d’incidence** ; 2) l’angle d’incidence $i$ et l’angle de réflexion $r$ ont la même mesure ($r = i$).',
+            'D’après les lois de Descartes : 1) le rayon incident et le rayon réfléchi appartiennent à un même plan appelé **plan d’incidence** ; 2) l’angle d’incidence $i$ et l’angle de réflexion $r$ ont la même mesure ($r = i$).',
           exercise: {
             id: 'premiere_c_physique_l03_reflexion_refraction_lumiere_p01_q2',
             type: 'mcq',
-            prompt: 'D’après l’Exercice 1 (p. 6), quelle affirmation concernant les lois de la réflexion est **VRAIE** ?',
+            prompt: 'D’après l’Exercice 1, quelle affirmation concernant les lois de la réflexion est **VRAIE** ?',
             options: [
               'Le rayon incident et le rayon réfléchi appartiennent au plan d’incidence et vérifient i = r',
               'Dans une réflexion, l’angle d’incidence i est toujours supérieur à l’angle de réflexion r',
@@ -235,7 +235,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
       summary:
         'Définir la réfraction à la traversée d’un dioptre, interpréter l’indice n et appliquer la relation n₁ sin i₁ = n₂ sin i₂.',
       conceptExplanation:
-        "Un bâton plongé dans l’eau semble brisé à la surface : la lumière change de direction en passant d’un milieu transparent à un autre.\n\n- **Définition** : la **réfraction** est le changement de direction de propagation de la lumière lorsqu’elle traverse la surface de séparation (**dioptre**) entre deux milieux homogènes et transparents distincts (ex. air–eau, air–verre).\n- **Vocabulaire (Exercice 2 p. 6)** : rayon incident $(SI)$ dans le milieu 1 d’indice $n_1$, normale $(IN)$ au dioptre, angle d’incidence $i_1$, angle de réfraction $i_2$ et rayon réfracté $(IT)$ dans le milieu 2 d’indice $n_2$.\n- **Lois de Descartes–Snell pour la réfraction** (p. 3) :\n  1. **Première loi** : le rayon réfracté $(IT)$, le rayon incident $(SI)$ et la normale appartiennent au **même plan d’incidence**.\n  2. **Deuxième loi** : l’angle d’incidence $i_1$ et l’angle de réfraction $i_2$ vérifient :\n     $$n_1 \\cdot \\sin i_1 = n_2 \\cdot \\sin i_2$$\n     où $n_1$ et $n_2$ sont les **indices de réfraction** des deux milieux ($n_{\\text{air}} \\approx 1{,}00$, $n_{\\text{eau}} \\approx 1{,}33$, $n_{\\text{verre}} \\approx 1{,}50$ à $1{,}52$).\n- **Vérification expérimentale (p. 3)** : pour l’interface air ($n_1=1$) / verre ($n_2=1{,}5$), le tableau donne pour $i_1 = 30^\\circ, 40^\\circ, 50^\\circ$ des angles réfractés $i_2 = 19{,}5^\\circ, 25{,}5^\\circ, 31^\\circ$, tels que le rapport $\\frac{\\sin i_1}{\\sin i_2} \\approx 1{,}5 = \\frac{n_2}{n_1}$ reste constant.",
+        "Un bâton plongé dans l’eau semble brisé à la surface : la lumière change de direction en passant d’un milieu transparent à un autre.\n\n- **Définition** : la **réfraction** est le changement de direction de propagation de la lumière lorsqu’elle traverse la surface de séparation (**dioptre**) entre deux milieux homogènes et transparents distincts (ex. air–eau, air–verre).\n- **Vocabulaire** : rayon incident $(SI)$ dans le milieu 1 d’indice $n_1$, normale $(IN)$ au dioptre, angle d’incidence $i_1$, angle de réfraction $i_2$ et rayon réfracté $(IT)$ dans le milieu 2 d’indice $n_2$.\n- **Lois de Descartes–Snell pour la réfraction** :\n 1. **Première loi** : le rayon réfracté $(IT)$, le rayon incident $(SI)$ et la normale appartiennent au **même plan d’incidence**.\n 2. **Deuxième loi** : l’angle d’incidence $i_1$ et l’angle de réfraction $i_2$ vérifient :\n $$n_1 \\cdot \\sin i_1 = n_2 \\cdot \\sin i_2$$\n où $n_1$ et $n_2$ sont les **indices de réfraction** des deux milieux ($n_{\\text{air}} \\approx 1{,}00$, $n_{\\text{eau}} \\approx 1{,}33$, $n_{\\text{verre}} \\approx 1{,}50$ à $1{,}52$).\n- **Vérification expérimentale** : pour l’interface air ($n_1=1$) / verre ($n_2=1{,}5$), le tableau donne pour $i_1 = 30^\\circ, 40^\\circ, 50^\\circ$ des angles réfractés $i_2 = 19{,}5^\\circ, 25{,}5^\\circ, 31^\\circ$, tels que le rapport $\\frac{\\sin i_1}{\\sin i_2} \\approx 1{,}5 = \\frac{n_2}{n_1}$ reste constant.",
       keyRule:
         'Lois de Descartes–Snell : plan d’incidence commun et n₁ sin i₁ = n₂ sin i₂. L’indice de réfraction est sans unité et toujours ≥ 1 (air ≈ 1,00 ; eau ≈ 1,33 ; verre ≈ 1,5).',
       formulas: [
@@ -251,13 +251,13 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
         },
       ],
       workedExample: {
-        title: 'Réfraction air → verre et air → eau (Tableau p. 3 & Activité 2 p. 4)',
+        title: 'Réfraction air → verre et air → eau',
         statement:
-          'Un rayon lumineux passe de l’air ($n_1 = 1{,}00$) dans de l’eau ($n_2 = 1{,}33$) sous un angle d’incidence $\\theta_1 = 45^\\circ$. Calculer l’angle de réfraction $\\theta_2$. (Comparer avec le cas $\\theta_1 = 60^\\circ$ utilisé par mégarde dans le corrigé du PDF p. 4).',
+          'Un rayon lumineux passe de l’air ($n_1 = 1{,}00$) dans de l’eau ($n_2 = 1{,}33$) sous un angle d’incidence $\\theta_1 = 45^\\circ$. Calculer l’angle de réfraction $\\theta_2$..',
         methodSteps: [
           '1) Appliquer Descartes-Snell : n₁ sin θ₁ = n₂ sin θ₂ ⇒ sin θ₂ = (n₁ / n₂) sin θ₁.',
           '2) Pour θ₁ = 45° : sin θ₂ = (1 × sin 45°) / 1,33 = 0,7071 / 1,33 ≈ 0,5317 ⇒ θ₂ = arcsin(0,5317) ≈ 32,1°.',
-          '3) Si l’incidence était θ₁ = 60° (valeur substituée dans le corrigé du PDF p. 4), sin θ₂ = 0,866 / 1,33 ≈ 0,651 ⇒ θ₂ ≈ 40,6° (arrondi à 40° dans le PDF).',
+          '3) Si l’incidence était θ₁ = 60°, sin θ₂ = 0,866 / 1,33 ≈ 0,651 ⇒ θ₂ ≈ 40,6° (soit environ 40°–40,6°).',
         ],
         conclusion: 'Pour θ₁ = 45° dans l’énoncé de l’Activité 2, l’angle réfracté exact est θ₂ ≈ 32,1° (et non 40°).',
       },
@@ -281,7 +281,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
               'La propagation en ligne droite dans le vide',
             ],
             correctAnswerIndex: 0,
-            explanation: 'Lors de la réfraction, la lumière traverse le dioptre et change de direction dans le second milieu transparent (Exercice 1 Q3 p. 6).',
+            explanation: 'Lors de la réfraction, la lumière traverse le dioptre et change de direction dans le second milieu transparent.',
           },
         },
         {
@@ -320,7 +320,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
             prompt: 'Un rayon venant de l’air ($n_1 = 1{,}00$) pénètre dans un bloc transparent sous $i_1 = 30^\\circ$ ($\\sin 30^\\circ = 0{,}50$) et est réfracté à $i_2 = 19{,}5^\\circ$ ($\\sin 19{,}5^\\circ \\approx 0{,}334$). Quel est l’indice $n_2$ de ce milieu ?',
             options: ['≈ 1,50', '≈ 0,67', '≈ 1,33', '≈ 2,00'],
             correctAnswerIndex: 0,
-            explanation: 'n₂ = n₁ · (sin i₁ / sin i₂) = 1,00 × (0,50 / 0,334) ≈ 1,50 (tableau p. 3).',
+            explanation: 'N₂ = n₁ · (sin i₁ / sin i₂) = 1,00 × (0,50 / 0,334) ≈ 1,50.',
           },
         },
         {
@@ -334,7 +334,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
           exercise: {
             id: 'premiere_c_physique_l03_reflexion_refraction_lumiere_p02_q4',
             type: 'mcq',
-            prompt: 'Un rayon passe de l’air ($n_1 = 1{,}00$) dans l’eau ($n_2 = 1{,}33$) avec un angle d’incidence $\\theta_1 = 45^\\circ$ (Activité 2 p. 4). Quelle est la valeur exacte de l’angle réfracté $\\theta_2$ ?',
+            prompt: 'Un rayon passe de l’air ($n_1 = 1{,}00$) dans l’eau ($n_2 = 1{,}33$) avec un angle d’incidence $\\theta_1 = 45^\\circ$. Quelle est la valeur exacte de l’angle réfracté $\\theta_2$ ?',
             options: ['≈ 32,1°', '≈ 40,6°', '≈ 70,5°', '45,0°'],
             correctAnswerIndex: 0,
             explanation: 'sin θ₂ = (1 × sin 45°) / 1,33 ≈ 0,5317 ⇒ θ₂ = arcsin(0,5317) ≈ 32,1° (le corrigé PDF avait utilisé sin 60° par erreur).',
@@ -392,7 +392,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
       summary:
         'Calculer l’angle limite de réfraction sin L = n₁/n₂ quand la lumière passe d’un milieu moins réfringent vers un milieu plus réfringent.',
       conceptExplanation:
-        "Que se passe-t-il si la lumière arrive depuis un milieu moins réfringent ($n_1 < n_2$, par exemple air $\\to$ eau ou air $\\to$ verre) avec un angle d’incidence très grand ?\n\n- **Comportement pour $n_1 < n_2$** (p. 3) : on a toujours $i_2 < i_1$. Quel que soit $i_1 \\in [0^\\circ, 90^\\circ[$, $\\frac{n_1}{n_2}\\sin i_1 < 1$, donc la réfraction existe **toujours** (il n’y a **jamais** de réflexion totale dans ce sens !).\n- **Angle limite de réfraction $L$ (ou $i_\\ell$)** : lorsque le rayon incident rase le dioptre ($i_1 \\to 90^\\circ$, $\\sin i_1 = 1$), l’angle réfracté $i_2$ atteint sa valeur maximale possible, appelée **angle limite de réfraction** $L$ :\n  $$n_2 \\sin L = n_1 \\sin 90^\\circ \\implies \\sin L = \\frac{n_1}{n_2}$$\n- **Correction importante de l’Exercice 4 (p. 7–8)** :\n  - Un rayon dans l’air ($n_1 = 1{,}00$) arrive en faisant $30^\\circ$ **avec la surface de l’eau** ($n_2 = 1{,}33$) : l’angle d’incidence vaut donc $i_1 = 90^\\circ - 30^\\circ = 60^\\circ$.\n  - L’angle de réflexion vaut $r = 60^\\circ$, l’angle de réfraction vaut $i_2 = \\arcsin(\\sin 60^\\circ / 1{,}33) \\approx 40{,}6^\\circ$ *(arrondi à $40^\\circ$ dans le PDF)*.\n  - Pour l’angle limite air $\\to$ eau, $\\sin i_\\ell = \\frac{1{,}00}{1{,}33} \\approx 0{,}7519$, ce qui donne exactement $i_\\ell = \\arcsin(0{,}7519) \\approx 48{,}75^\\circ$ *(le corrigé PDF p. 8 affiche par coquille `76,19°`, valeur impossible car $\\sin 76{,}19^\\circ \\approx 0{,}971$ !)*.",
+        "Que se passe-t-il si la lumière arrive depuis un milieu moins réfringent ($n_1 < n_2$, par exemple air $\\to$ eau ou air $\\to$ verre) avec un angle d’incidence très grand ?\n\n- **Comportement pour $n_1 < n_2$** : on a toujours $i_2 < i_1$. Quel que soit $i_1 \\in [0^\\circ, 90^\\circ[$, $\\frac{n_1}{n_2}\\sin i_1 < 1$, donc la réfraction existe **toujours** (il n’y a **jamais** de réflexion totale dans ce sens !).\n- **Angle limite de réfraction $L$ (ou $i_\\ell$)** : lorsque le rayon incident rase le dioptre ($i_1 \\to 90^\\circ$, $\\sin i_1 = 1$), l’angle réfracté $i_2$ atteint sa valeur maximale possible, appelée **angle limite de réfraction** $L$ :\n $$n_2 \\sin L = n_1 \\sin 90^\\circ \\implies \\sin L = \\frac{n_1}{n_2}$$\n- **Correction importante de l’Exercice 4** :\n - Un rayon dans l’air ($n_1 = 1{,}00$) arrive en faisant $30^\\circ$ **avec la surface de l’eau** ($n_2 = 1{,}33$) : l’angle d’incidence vaut donc $i_1 = 90^\\circ - 30^\\circ = 60^\\circ$.\n - L’angle de réflexion vaut $r = 60^\\circ$, l’angle de réfraction vaut $i_2 = \\arcsin(\\sin 60^\\circ / 1{,}33) \\approx 40{,}6^\\circ$ **.\n - Pour l’angle limite air $\\to$ eau, $\\sin i_\\ell = \\frac{1{,}00}{1{,}33} \\approx 0{,}7519$, ce qui donne exactement $i_\\ell = \\arcsin(0{,}7519) \\approx 48{,}75^\\circ$ **.",
       keyRule:
         'Quand n₁ < n₂ (ex. air → eau ou air → verre), il y a toujours réfraction et l’angle réfracté reste inférieur à l’angle limite de réfraction L donné par sin L = n₁ / n₂ (≈ 48,75° pour air/eau).',
       formulas: [
@@ -403,14 +403,14 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
         },
       ],
       workedExample: {
-        title: 'Rayon air → eau incliné à 30° de la surface (Exercice 4 p. 7–8 corrigé)',
+        title: 'Rayon air → eau incliné à 30° de la surface',
         statement:
           'Un rayon lumineux dans l’air ($n_1 = 1{,}00$) arrive sur la surface horizontale de l’eau ($n_2 = 1{,}33$) en faisant un angle de $30^\\circ$ avec cette surface. Déterminer $i_1$, $r$, $i_2$ et l’angle limite de réfraction $i_\\ell$.',
         methodSteps: [
           '1) Angle d’incidence avec la normale : i₁ = 90° − 30° = 60°.',
           '2) Angle de réflexion : r = i₁ = 60°.',
           '3) Angle de réfraction : sin i₂ = (1,00 × sin 60°) / 1,33 ≈ 0,8660 / 1,33 ≈ 0,6511 ⇒ i₂ = arcsin(0,6511) ≈ 40,6°.',
-          '4) Angle limite de réfraction (pour i₁ = 90°) : sin i_ℓ = 1,00 / 1,33 ≈ 0,7519 ⇒ i_ℓ = arcsin(0,7519) ≈ 48,75° (correction de la coquille 76,19° du PDF).',
+          '4) Angle limite de réfraction (pour i₁ = 90°) : sin i_ℓ = 1,00 / 1,33 ≈ 0,7519 ⇒ i_ℓ = arcsin(0,7519) ≈ 48,75°.',
         ],
         conclusion: 'i₁ = 60° ; r = 60° ; i₂ ≈ 40,6° ; angle limite de réfraction i_ℓ ≈ 48,75°.',
       },
@@ -451,7 +451,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
             prompt: 'Avec $n_{\\text{air}} = 1{,}00$ et $n_{\\text{eau}} = 1{,}33$, quelle est la valeur exacte de l’angle limite de réfraction $i_\\ell$ (Activité 2 Q3 & Exercice 4 Q4) ?',
             options: ['≈ 48,8° (48,75°)', '76,19°', '30,0°', '41,8°'],
             correctAnswerIndex: 0,
-            explanation: 'arcsin(1 / 1,33) = arcsin(0,7519) ≈ 48,75° (la valeur 76,19° imprimée dans le corrigé PDF p. 8 est une coquille).',
+            explanation: 'Arcsin(1 / 1,33) = arcsin(0,7519) ≈ 48,75°.',
           },
         },
         {
@@ -465,7 +465,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
           exercise: {
             id: 'premiere_c_physique_l03_reflexion_refraction_lumiere_p03_q3',
             type: 'mcq',
-            prompt: 'Dans l’Exercice 4 (p. 7), un rayon arrive dans l’air en formant un angle de $30^\\circ$ **avec la surface de l’eau** ($n_2 = 1{,}33$). Que valent l’angle d’incidence $i_1$ et l’angle de réfraction $i_2$ ?',
+            prompt: 'Dans l’Exercice 4, un rayon arrive dans l’air en formant un angle de $30^\\circ$ **avec la surface de l’eau** ($n_2 = 1{,}33$). Que valent l’angle d’incidence $i_1$ et l’angle de réfraction $i_2$ ?',
             options: [
               'i₁ = 60° et i₂ ≈ 40,6°',
               'i₁ = 30° et i₂ ≈ 22,1°',
@@ -550,7 +550,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
       summary:
         'Prévoir la réfraction (i₁ < L), la réfraction limite (i₁ = L) et la réflexion totale (i₁ > L) lorsque la lumière sort d’un milieu plus réfringent.',
       conceptExplanation:
-        "Considérons maintenant un rayon qui se propage d’un milieu $1$ **plus réfringent** vers un milieu $2$ **moins réfringent** ($n_1 > n_2$, par exemple **eau $\\to$ air** ou **verre $\\to$ air**, p. 4–5).\n\n- **Écartement de la normale** : puisque $n_1 > n_2$, $\\sin i_2 = \\frac{n_1}{n_2}\\sin i_1 > \\sin i_1$, donc $i_2 > i_1$ : le rayon réfracté **s’écarte** de la normale.\n- **Angle limite d’incidence $L$ (réfraction limite)** : comme $i_2 > i_1$, c’est l’angle réfracté $i_2$ qui atteint le premier $90^\\circ$ ($\\sin i_2 = 1$). L’angle d’incidence correspondant est appelé **angle limite** $L$ tel que :\n  $$\\sin L = \\frac{n_2}{n_1}$$\n  *(ex. eau $1{,}33 \\to$ air $1{,}00$ : $L \\approx 48{,}8^\\circ$ ; verre $1{,}50 \\to$ air $1{,}00$ : $L \\approx 41{,}8^\\circ$)*.\n- **Les trois cas selon la valeur de $i_1$** (p. 4–5 et Exercice 3 p. 7) :\n  1. **$i_1 < L$ (Réfraction)** : il existe un rayon réfracté ($i_2 > i_1$) et un faible rayon réfléchi ($r_1 = i_1$).\n  2. **$i_1 = L$ (Réfraction limite)** : le rayon réfracté rase le dioptre en faisant $i_2 = 90^\\circ = \\frac{\\pi}{2}\\,\\mathrm{rad}$ avec la normale.\n  3. **$i_1 > L$ (Réflexion totale)** : l’équation $\\sin i_2 = \\frac{n_1}{n_2}\\sin i_1 > 1$ n’a **aucune solution** : le rayon ne sort pas dans le milieu 2, il est **intégralement réfléchi** dans le milieu 1 selon $r = i_1$.",
+        "Considérons maintenant un rayon qui se propage d’un milieu $1$ **plus réfringent** vers un milieu $2$ **moins réfringent**.\n\n- **Écartement de la normale** : puisque $n_1 > n_2$, $\\sin i_2 = \\frac{n_1}{n_2}\\sin i_1 > \\sin i_1$, donc $i_2 > i_1$ : le rayon réfracté **s’écarte** de la normale.\n- **Angle limite d’incidence $L$ (réfraction limite)** : comme $i_2 > i_1$, c’est l’angle réfracté $i_2$ qui atteint le premier $90^\\circ$ ($\\sin i_2 = 1$). L’angle d’incidence correspondant est appelé **angle limite** $L$ tel que :\n $$\\sin L = \\frac{n_2}{n_1}$$\n *(ex. eau $1{,}33 \\to$ air $1{,}00$ : $L \\approx 48{,}8^\\circ$ ; verre $1{,}50 \\to$ air $1{,}00$ : $L \\approx 41{,}8^\\circ$)*.\n- **Les trois cas selon la valeur de $i_1$** :\n 1. **$i_1 < L$ (Réfraction)** : il existe un rayon réfracté ($i_2 > i_1$) et un faible rayon réfléchi ($r_1 = i_1$).\n 2. **$i_1 = L$ (Réfraction limite)** : le rayon réfracté rase le dioptre en faisant $i_2 = 90^\\circ = \\frac{\\pi}{2}\\,\\mathrm{rad}$ avec la normale.\n 3. **$i_1 > L$ (Réflexion totale)** : l’équation $\\sin i_2 = \\frac{n_1}{n_2}\\sin i_1 > 1$ n’a **aucune solution** : le rayon ne sort pas dans le milieu 2, il est **intégralement réfléchi** dans le milieu 1 selon $r = i_1$.",
       keyRule:
         'Conditions de la réflexion totale : (1) le rayon doit passer d’un milieu PLUS réfringent vers un milieu MOINS réfringent (n₁ > n₂), ET (2) l’angle d’incidence doit dépasser l’angle limite : i₁ > L avec sin L = n₂ / n₁.',
       formulas: [
@@ -567,7 +567,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
       ],
       visualSchema: {
         type: 'geometry_svg',
-        title: 'Les trois cas pour n₁ > n₂ (p. 4 & Exercice 3 p. 7)',
+        title: 'Les trois cas pour n₁ > n₂',
         caption: 'De gauche à droite : 1) i₁ < L (réfraction) ; 2) i₁ = L (réfraction limite i₂ = 90°) ; 3) i₁ > L (réflexion totale).',
         svgContent: `<svg viewBox="0 0 390 170" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-md mx-auto">
   <defs>
@@ -628,7 +628,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
           stepTheme: 'Réflexion totale',
           stepTitle: 'Quelles sont les deux conditions indispensables de la réflexion totale ?',
           paragraphText:
-            'Pour observer une **réflexion totale**, il faut obligatoirement réunir deux conditions (p. 4) : 1) la lumière doit passer d’un milieu **plus réfringent** vers un milieu **moins réfringent** ($n_1 > n_2$) ; 2) l’angle d’incidence $i_1$ doit être strictement supérieur à l’angle limite ($i_1 > L$, avec $\\sin L = \\frac{n_2}{n_1}$).',
+            'Pour observer une **réflexion totale**, il faut obligatoirement réunir deux conditions : 1) la lumière doit passer d’un milieu **plus réfringent** vers un milieu **moins réfringent** ($n_1 > n_2$) ; 2) l’angle d’incidence $i_1$ doit être strictement supérieur à l’angle limite ($i_1 > L$, avec $\\sin L = \\frac{n_2}{n_1}$).',
           exercise: {
             id: 'premiere_c_physique_l03_reflexion_refraction_lumiere_p04_q1',
             type: 'mcq',
@@ -650,7 +650,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
           stepTheme: 'Trois figures',
           stepTitle: 'Associer chaque figure (i₁ < L, i₁ = L, i₁ > L) au bon phénomène',
           paragraphText:
-            'Lorsque $n_2 < n_1$ (Exercice 3 p. 7) : si $i_1 < i_{1\\ell}$, le rayon sort dans le milieu 2 (**réfraction**) ; si $i_1 = i_{1\\ell}$, il longe la surface (**réfraction limite**) ; si $i_1 > i_{1\\ell}$, il reste intégralement dans le milieu 1 (**réflexion totale**).',
+            'Lorsque $n_2 < n_1$ : si $i_1 < i_{1\\ell}$, le rayon sort dans le milieu 2 (**réfraction**) ; si $i_1 = i_{1\\ell}$, il longe la surface (**réfraction limite**) ; si $i_1 > i_{1\\ell}$, il reste intégralement dans le milieu 1 (**réflexion totale**).',
           exercise: {
             id: 'premiere_c_physique_l03_reflexion_refraction_lumiere_p04_q2',
             type: 'mcq',
@@ -662,7 +662,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
               'Il ressort avec le même angle i₂ = L',
             ],
             correctAnswerIndex: 0,
-            explanation: 'Par définition de l’angle limite L, n₁ sin L = n₂ sin 90° = n₂ : le rayon réfracté rase le dioptre à i₂ = 90° (p. 5).',
+            explanation: 'Par définition de l’angle limite L, n₁ sin L = n₂ sin 90° = n₂ : le rayon réfracté rase le dioptre à i₂ = 90°.',
           },
         },
         {
@@ -754,9 +754,9 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
       order: 5,
       title: 'Systèmes optiques : cuve avec miroir et prisme en verre',
       summary:
-        'Suivre pas à pas la marche d’un rayon dans une cuve d’eau à miroir plan (Situation p. 5–6) et à travers un prisme équilatéral (Exercice 5 p. 8–9).',
+        'Suivre pas à pas la marche d’un rayon dans une cuve d’eau à miroir plan et à travers un prisme équilatéral.',
       conceptExplanation:
-        "En épreuve, plusieurs réfractions et réflexions s’enchaînent sur un même trajet lumineux.\n\n- **1) Cuve d’eau avec miroir horizontal au fond (Situation p. 5–6)** :\n  - Un laser dans l’air ($n_1 = 1{,}00$, *le PDF p. 5 imprime par coquille `n1 = 1,33` mais utilise bien `1` dans le calcul !*) arrive sur l’eau ($n_2 = 1{,}33$) sous $i_1 = 60^\\circ$.\n  - **Entrée air $\\to$ eau** : $i_2 = \\arcsin(\\sin 60^\\circ / 1{,}33) \\approx 40{,}63^\\circ$ *(arrondi à $40^\\circ$ dans le PDF)*.\n  - **Réflexion au fond sur le miroir plan** : le miroir est parallèle à la surface libre, donc les normales sont parallèles ; par angles alternes-internes, l’incidence sur le miroir vaut $i_2$ et l’angle réfléchi vaut $i_3 = i_2 \\approx 40{,}63^\\circ$.\n  - **Sortie eau $\\to$ air** : par le principe du **retour inverse** (symétrie exacte), $n_1\\sin\\alpha = n_2\\sin i_3 = n_2\\sin i_2 = n_1\\sin i_1 \\implies \\alpha = i_1 = 60^\\circ$ *(le PDF trouve $58{,}74^\\circ$ uniquement parce qu’il a tronqué $40{,}63^\\circ$ à $40^\\circ$ !)*.\n- **2) Prisme équilatéral d’angle au sommet $A = 60^\\circ$ et d’indice $n = 1{,}52$ (Exercice 5 p. 8–9)** :\n  - Rayon incident dans l’air sous $\\theta_1 = 30^\\circ$ sur la face d’entrée : $\\theta_2 = \\arcsin(\\sin 30^\\circ / 1{,}52) \\approx 19{,}2^\\circ$.\n  - Dans le quadrilatère formé par les deux faces et les deux normales perpendiculaires aux faces, l’angle au croisement des normales vaut $180^\\circ - 60^\\circ = 120^\\circ$, donc dans le triangle interne l’angle d’incidence sur la face de sortie vaut exactement $r' = A - \\theta_2 = 60^\\circ - 19{,}2^\\circ = 40{,}8^\\circ$.\n  - Comme $40{,}8^\\circ < L_{\\text{verre/air}} \\approx 41{,}1^\\circ$, le rayon ressort dans l’air sous $\\theta_3 = \\arcsin(1{,}52\\sin 40{,}8^\\circ) \\approx 83{,}3^\\circ$ *(à ne pas confondre avec la coquille du PDF p. 9 qui avait substitué $30^\\circ$ dans la formule de sortie)*.",
+        "En épreuve, plusieurs réfractions et réflexions s’enchaînent sur un même trajet lumineux.\n\n- **1) Cuve d’eau avec miroir horizontal au fond** :\n - Un laser dans l’air arrive sur l’eau ($n_2 = 1{,}33$) sous $i_1 = 60^\\circ$.\n - **Entrée air $\\to$ eau** : $i_2 = \\arcsin(\\sin 60^\\circ / 1{,}33) \\approx 40{,}63^\\circ$ **.\n - **Réflexion au fond sur le miroir plan** : le miroir est parallèle à la surface libre, donc les normales sont parallèles ; par angles alternes-internes, l’incidence sur le miroir vaut $i_2$ et l’angle réfléchi vaut $i_3 = i_2 \\approx 40{,}63^\\circ$.\n - **Sortie eau $\\to$ air** : par le principe du **retour inverse** (symétrie exacte), $n_1\\sin\\alpha = n_2\\sin i_3 = n_2\\sin i_2 = n_1\\sin i_1 \\implies \\alpha = i_1 = 60^\\circ$ **.\n- **2) Prisme équilatéral d’angle au sommet $A = 60^\\circ$ et d’indice $n = 1{,}52$** :\n - Rayon incident dans l’air sous $\\theta_1 = 30^\\circ$ sur la face d’entrée : $\\theta_2 = \\arcsin(\\sin 30^\\circ / 1{,}52) \\approx 19{,}2^\\circ$.\n - Dans le quadrilatère formé par les deux faces et les deux normales perpendiculaires aux faces, l’angle au croisement des normales vaut $180^\\circ - 60^\\circ = 120^\\circ$, donc dans le triangle interne l’angle d’incidence sur la face de sortie vaut exactement $r' = A - \\theta_2 = 60^\\circ - 19{,}2^\\circ = 40{,}8^\\circ$.\n - Comme $40{,}8^\\circ < L_{\\text{verre/air}} \\approx 41{,}1^\\circ$, le rayon ressort dans l’air sous $\\theta_3 = \\arcsin(1{,}52\\sin 40{,}8^\\circ) \\approx 83{,}3^\\circ$ **.",
       keyRule:
         'Cuve + miroir parallèle : le rayon ressort toujours dans l’air sous le même angle que l’incidence initiale (retour inverse). Dans un prisme d’angle au sommet A : les deux angles internes vérifient r + r′ = A.',
       formulas: [
@@ -772,7 +772,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
         },
       ],
       workedExample: {
-        title: 'Marche d’un rayon dans un prisme équilatéral (Exercice 5 p. 8–9 corrigé)',
+        title: 'Marche d’un rayon dans un prisme équilatéral',
         statement:
           'Un rayon frappe la face d’entrée d’un prisme équilatéral ($A = 60^\\circ$) en verre ($n = 1{,}52$) dans l’air ($n_1 = 1$) sous un angle d’incidence $\\theta_1 = 30^\\circ$. Calculer l’angle de réfraction interne $\\theta_2$, l’angle d’incidence interne $r\'$ sur la deuxième face et l’angle d’émergence $\\theta_3$.',
         methodSteps: [
@@ -791,7 +791,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
           stepTheme: 'Situation p. 5–6',
           stepTitle: 'Angle d’émergence après réflexion sur le miroir au fond d’une cuve',
           paragraphText:
-            'Dans la Situation d’évaluation (p. 5–6), le rayon entre dans l’eau ($n_2 = 1{,}33$) sous $i_1 = 60^\\circ$, se réfracte à $i_2 \\approx 40{,}63^\\circ$, se réfléchit sur le miroir horizontal du fond avec $i_3 = i_2$, puis retraverse l’interface eau/air. Sans erreur d’arrondi, il ressort dans l’air exactement à $60^\\circ$.',
+            'Dans la Situation d’évaluation, le rayon entre dans l’eau ($n_2 = 1{,}33$) sous $i_1 = 60^\\circ$, se réfracte à $i_2 \\approx 40{,}63^\\circ$, se réfléchit sur le miroir horizontal du fond avec $i_3 = i_2$, puis retraverse l’interface eau/air. Sans erreur d’arrondi, il ressort dans l’air exactement à $60^\\circ$.',
           exercise: {
             id: 'premiere_c_physique_l03_reflexion_refraction_lumiere_p05_q1',
             type: 'mcq',
@@ -803,7 +803,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
               '90°',
             ],
             correctAnswerIndex: 0,
-            explanation: 'n₁ sin α = n₂ sin i₃ = n₂ sin i₂ = n₁ sin i₁ ⇒ α = i₁ = 60° (l’écart 58,74° du PDF vient uniquement d’un arrondi intermédiaire à 40°).',
+            explanation: 'n₁ sin α = n₂ sin i₃ = n₂ sin i₂ = n₁ sin i₁ ⇒ α = i₁ = 60° (un arrondi intermédiaire à 40° donnerait un léger écart autour de 58,7°).',
           },
         },
         {
@@ -835,7 +835,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
           stepTheme: 'Exercice 5 p. 8–9',
           stepTitle: 'Angle de réfraction à l’entrée d’un prisme en verre',
           paragraphText:
-            'Dans l’Exercice 5 (p. 8–9), un rayon dans l’air ($n_1 = 1$) frappe la face d’un prisme en verre ($n_2 = 1{,}52$) sous $\\theta_1 = 30^\\circ$. D’après Snell-Descartes, $\\sin\\theta_2 = \\frac{\\sin 30^\\circ}{1{,}52} = \\frac{0{,}5}{1{,}52} \\approx 0{,}3289 \\implies \\theta_2 \\approx 19{,}2^\\circ$.',
+            'Dans l’Exercice 5, un rayon dans l’air ($n_1 = 1$) frappe la face d’un prisme en verre ($n_2 = 1{,}52$) sous $\\theta_1 = 30^\\circ$. D’après Snell-Descartes, $\\sin\\theta_2 = \\frac{\\sin 30^\\circ}{1{,}52} = \\frac{0{,}5}{1{,}52} \\approx 0{,}3289 \\implies \\theta_2 \\approx 19{,}2^\\circ$.',
           exercise: {
             id: 'premiere_c_physique_l03_reflexion_refraction_lumiere_p05_q3',
             type: 'mcq',
@@ -891,7 +891,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
           stepTheme: 'Ne pas réinjecter θ₁',
           stepTitle: 'Attention : l’incidence sur la 2e face n’est pas 30° ni θ₂',
           paragraphText:
-            'En traversant un prisme, les deux faces ne sont **pas parallèles** (elles font un angle $A = 60^\\circ$). Il ne faut donc jamais remettre $\\theta_1$ ou $\\theta_2$ à la place de $r\' = A - \\theta_2$ dans la loi de sortie (l’angle $40{,}8^\\circ$ du PDF est d’ailleurs la valeur de $r\'$, pas de $\\theta_3$). Et vérifie toujours si $r\' > L$ (réflexion totale sur la 2e face !).',
+            'En traversant un prisme, les deux faces ne sont **pas parallèles** (elles font un angle $A = 60^\\circ$). Il ne faut donc jamais remettre $\\theta_1$ ou $\\theta_2$ à la place de $r\' = A - \\theta_2$ dans la loi de sortie. Et vérifie toujours si $r\' > L$ (réflexion totale sur la 2e face !).',
           exercise: {
             id: 'premiere_c_physique_l03_reflexion_refraction_lumiere_p05_q6',
             type: 'mcq',
@@ -919,7 +919,7 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
       summary:
         'Expliquer la décomposition de la lumière blanche par un prisme (indice n dépendant de la couleur) et le guidage dans une fibre optique par réflexion totale.',
       conceptExplanation:
-        "Les lois de la réfraction et de la réflexion totale expliquent deux phénomènes majeurs : la séparation des couleurs par le prisme et la transmission par fibre optique.\n\n- **Dispersion de la lumière blanche par un prisme** :\n  - La lumière blanche (soleil, lampe à incandescence) est **polychromatique** : c’est une superposition de radiations monochromatiques colorées (du rouge au violet).\n  - Dans le verre ou l’eau, l’indice de réfraction $n$ dépend légèrement de la couleur (milieu **dispersif**) : il est un peu plus grand pour le **violet** que pour le **rouge** ($n_{\\text{violet}} > n_{\\text{rouge}}$).\n  - D’après $n\\sin i_2 = n_1\\sin i_1$, le rayon **violet** est donc **plus dévié** que le rayon **rouge**, ce qui étale la lumière blanche en un spectre continu (arc-en-ciel).\n- **Fibre optique et applications industrielles (Documentation p. 10)** :\n  - Une fibre optique comporte un **cœur** transparent d’indice $n_1$ entouré d’une **gaine** d’indice inférieur ($n_2 < n_1$). Un rayon entrant sous incidence rasante sur la paroi cœur/gaine ($i > L = \\arcsin(n_2/n_1)$) est guidé sur des kilomètres par **réflexions totales successives** sans perte.\n  - **Domaines d’application (p. 10)** : télécommunications (réseaux urbains, interurbains et sous-marins), audiovisuel (TV câblée), médecine (**endoscopie** et **chirurgie laser** pour calculs rénaux, tumeurs ou rétine), éclairage décoratif (piscines, fontaines, enseignes), signalisation routière et **astronautique** (navigation des fusées et satellites).",
+        "Les lois de la réfraction et de la réflexion totale expliquent deux phénomènes majeurs : la séparation des couleurs par le prisme et la transmission par fibre optique.\n\n- **Dispersion de la lumière blanche par un prisme** :\n - La lumière blanche (soleil, lampe à incandescence) est **polychromatique** : c’est une superposition de radiations monochromatiques colorées (du rouge au violet).\n - Dans le verre ou l’eau, l’indice de réfraction $n$ dépend légèrement de la couleur (milieu **dispersif**) : il est un peu plus grand pour le **violet** que pour le **rouge** ($n_{\\text{violet}} > n_{\\text{rouge}}$).\n - D’après $n\\sin i_2 = n_1\\sin i_1$, le rayon **violet** est donc **plus dévié** que le rayon **rouge**, ce qui étale la lumière blanche en un spectre continu (arc-en-ciel).\n- **Fibre optique et applications industrielles** :\n - Une fibre optique comporte un **cœur** transparent d’indice $n_1$ entouré d’une **gaine** d’indice inférieur ($n_2 < n_1$). Un rayon entrant sous incidence rasante sur la paroi cœur/gaine ($i > L = \\arcsin(n_2/n_1)$) est guidé sur des kilomètres par **réflexions totales successives** sans perte.\n - **Domaines d’application** : télécommunications (réseaux urbains, interurbains et sous-marins), audiovisuel (TV câblée), médecine (**endoscopie** et **chirurgie laser** pour calculs rénaux, tumeurs ou rétine), éclairage décoratif (piscines, fontaines, enseignes), signalisation routière et **astronautique** (navigation des fusées et satellites).",
       keyRule:
         'Un prisme disperse la lumière blanche car l’indice du verre dépend de la couleur (violet plus dévié que le rouge). La fibre optique guide la lumière grâce à des réflexions totales successives dans un cœur (n₁) entouré d’une gaine (n₂ < n₁).',
       formulas: [
@@ -1009,11 +1009,11 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
           stepTheme: 'Documentation p. 10',
           stepTitle: 'Applications des fibres optiques en télécoms et en médecine',
           paragraphText:
-            'D’après la documentation (p. 10), la fibre optique sert aux **télécommunications** (liaisons urbaines, interurbaines et sous-marines), à l’**audiovisuel** (TV câblée) et en **médecine** : en **endoscopie** (éclairer et transmettre des images de l’intérieur du corps) et en **chirurgie laser** (calculs rénaux, tumeurs, rétine).',
+            'D’après la documentation, la fibre optique sert aux **télécommunications** (liaisons urbaines, interurbaines et sous-marines), à l’**audiovisuel** (TV câblée) et en **médecine** : en **endoscopie** (éclairer et transmettre des images de l’intérieur du corps) et en **chirurgie laser** (calculs rénaux, tumeurs, rétine).',
           exercise: {
             id: 'premiere_c_physique_l03_reflexion_refraction_lumiere_p06_q4',
             type: 'mcq',
-            prompt: 'En médecine, comment la fibre optique intervient-elle selon la documentation du cours (p. 10) ?',
+            prompt: 'En médecine, comment la fibre optique intervient-elle ?',
             options: [
               'En endoscopie pour éclairer et visualiser l’intérieur du corps, et associée au laser pour opérer (calculs rénaux, tumeurs, rétine)',
               'Uniquement pour réaliser des radiographies par rayons X',
@@ -1031,11 +1031,11 @@ export const PHYSIQUE_1RE_CD_L03_REFLEXION_REFRACTION_LUMIERE: CurriculumChapter
           stepTheme: 'Éclairage & Astronautique',
           stepTitle: 'Applications industrielles : éclairage, route, astronautique',
           paragraphText:
-            'Outre les télécoms et la médecine, le document (p. 10) cite l’**éclairage** (piscines, bassins, fontaines, enseignes), la **signalisation routière** (ronds-points, séparation de voies) et l’**astronautique** (cœur des systèmes de navigation des fusées et satellites).',
+            'Outre les télécoms et la médecine, le document cite l’**éclairage** (piscines, bassins, fontaines, enseignes), la **signalisation routière** (ronds-points, séparation de voies) et l’**astronautique** (cœur des systèmes de navigation des fusées et satellites).',
           exercise: {
             id: 'premiere_c_physique_l03_reflexion_refraction_lumiere_p06_q5',
             type: 'mcq',
-            prompt: 'Dans quel domaine de pointe mentionné à la fin du cours (p. 10) développe-t-on la fibre optique pour les systèmes de navigation des fusées et satellites ?',
+            prompt: 'Dans quel domaine de pointe développe-t-on la fibre optique pour les systèmes de navigation des fusées et satellites ?',
             options: [
               'L’astronautique',
               'La métallurgie lourde',

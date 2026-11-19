@@ -25,7 +25,7 @@ export const INTRO_MANAGEMENT_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Définition, approches et caractéristiques de l'organisation, management comme art et science, distinction Administration / Management / Gestion, les 10 rôles du manager selon Henry Mintzberg et différence manager / leader.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'INTRODUCTION AU MANAGEMENT ENTD 1 (Code 1MAN3152, Chapitre 1 & TD 1)',
+    source: 'INTRODUCTION AU MANAGEMENT ENTD 1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_management_ch1_p1',
@@ -45,7 +45,7 @@ export const INTRO_MANAGEMENT_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           "Retiens les 3 questions-clés : Administration = Pourquoi ? (Direction générale, stratégie), Management = Comment ? (Cadres, mobilisation des équipes), Gestion = Combien ? (Opérationnel, ressources et contrôle).",
         workedExample: {
-          title: 'TD 1 — Cas 1 : La startup numérique ENTD (Administration vs Management vs Gestion)',
+          title: 'Cas pratique 1 : La startup numérique ENTD (Administration vs Management vs Gestion)',
           statement:
             "ENTD est une startup spécialisée dans la conception de solutions numériques pour les PME. En votre qualité de stagiaire, classez les activités suivantes entre Administration, Management et Gestion : (a) décider en conseil de direction de conquérir le marché de la fintech UEMOA, (b) motiver et coordonner l'équipe commerciale pour signer 50 PME en 6 mois, (c) tenir la comptabilité, payer les fournisseurs et suivre les factures clients.",
           methodSteps: [
@@ -93,7 +93,7 @@ export const INTRO_MANAGEMENT_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_management_ch1_p1_q2',
               type: 'mcq',
               prompt:
-                'Que recouvre la dimension « Art » du management selon le cours ?',
+                'Que recouvre la dimension « Art » du management ?',
               options: [
                 'L’application mécanique de formules mathématiques immuables',
                 'La rédaction exclusive des statuts juridiques de la société',
@@ -126,7 +126,7 @@ export const INTRO_MANAGEMENT_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 0,
               explanation:
-                "C'est l'exemple exact du cours : la Direction Générale qui fixe la grande orientation (lancement d'une application) agit au niveau de l'Administration.",
+                "En effet : la Direction Générale qui fixe la grande orientation (lancement d'une application) agit au niveau de l'Administration.",
             },
           },
           {
@@ -141,7 +141,7 @@ export const INTRO_MANAGEMENT_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_management_ch1_p1_q4',
               type: 'mcq',
               prompt:
-                'À quelle question clé et à quel focus principal correspond la « Gestion » dans le tableau comparatif du cours ?',
+                'À quelle question clé et à quel focus principal correspond la « Gestion » en communication persuasive ?',
               options: [
                 '« Pourquoi ? » — L’ensemble de l’organisation',
                 '« Comment ? » — Les personnes et les processus',
@@ -222,12 +222,12 @@ export const INTRO_MANAGEMENT_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           "3 interpersonnels (Symbole, Leader, Agent de liaison) + 3 informationnels (Observateur, Diffuseur, Porte-parole) + 4 décisionnels (Entrepreneur, Régulateur, Distributeur de ressources, Négociateur) = 10 rôles de Mintzberg.",
         workedExample: {
-          title: "TD 1 — Cas 2 : Manager de classe organisant une « Journée de l'innovation »",
+          title: "Cas pratique 2 : Manager de classe organisant une « Journée de l'innovation »",
           statement:
-            "Vous êtes désigné manager de votre promotion ENTD 1 pour organiser une Journée de l'innovation à l'ESATIC. Donner un exemple concret pour chacune des 3 catégories de rôles de Mintzberg.",
+            "Vous êtes désigné manager de votre promotion ENTD 1 pour organiser une Journée de l'innovation à universitaire. Donner un exemple concret pour chacune des 3 catégories de rôles de Mintzberg.",
           methodSteps: [
             "Étape 1 (Rôles interpersonnels) : Prononcer le discours d'ouverture (Symbole) ; motiver les camarades bénévoles (Leader) ; contacter d'anciens étudiants et des startups partenaires (Agent de liaison).",
-            "Étape 2 (Rôles informationnels) : Recueillir les disponibilités des salles et intervenants (Observateur actif) ; partager le programme dans le groupe de classe (Diffuseur) ; présenter l'événement à la Direction de l'ESATIC et sur les réseaux sociaux (Porte-parole).",
+            "Étape 2 (Rôles informationnels) : Recueillir les disponibilités des salles et intervenants (Observateur actif) ; partager le programme dans le groupe de classe (Diffuseur) ; présenter l'événement à la Direction universitaire et sur les réseaux sociaux (Porte-parole).",
             "Étape 3 (Rôles décisionnels) : Proposer un hackathon inédit (Entrepreneur) ; remplacer en urgence un conférencier absent ou gérer une panne de projecteur (Régulateur) ; répartir le budget entre sonorisation et rafraîchissements (Distributeur de ressources) ; négocier un sponsoring avec un opérateur télécom (Négociateur).",
           ],
           conclusion:
@@ -337,12 +337,12 @@ export const INTRO_MANAGEMENT_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Distinction statutaire et relationnelle',
             stepTitle: 'Peut-on être leader sans être manager ?',
             paragraphText:
-              "Oui ! Selon le cours, le manager occupe une fonction formelle assortie d'objectifs de résultats, tandis que le leader est toute personne qui inspire et donne aux autres l'envie de la suivre. Le leadership est un ensemble de capacités que peut détenir un individu, qu'il soit manager ou non.",
+              "Oui ! le manager occupe une fonction formelle assortie d'objectifs de résultats, tandis que le leader est toute personne qui inspire et donne aux autres l'envie de la suivre. Le leadership est un ensemble de capacités que peut détenir un individu, qu'il soit manager ou non.",
             exercise: {
               id: 'lmd_entd_l1_intro_management_ch1_p2_q5',
               type: 'mcq',
               prompt:
-                'Quelle affirmation traduit fidèlement la distinction entre Manager et Leader enseignée dans le cours ?',
+                'Quelle affirmation traduit fidèlement la distinction entre Manager et Leader enseignée ?',
               options: [
                 'Le leader donne aux autres l’envie de le suivre grâce à son influence, même sans titre hiérarchique ; le manager a la charge formelle d’une unité et de ses résultats',
                 'Seul le PDG peut faire preuve de leadership',
@@ -396,7 +396,7 @@ export const INTRO_MANAGEMENT_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Contexte de la révolution industrielle, approche empirique et normative, postulats mécaniste et rationaliste, quatre principes classiques, OST de Taylor (et critiques), fonction administrative de Fayol et bureaucratie de Max Weber.",
     officialVolumeHours: 8,
     contentVersion: 2,
-    source: 'INTRODUCTION AU MANAGEMENT ENTD 1 (Code 1MAN3152, Chapitre 2)',
+    source: 'INTRODUCTION AU MANAGEMENT ENTD 1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_management_ch2_p1',
@@ -772,7 +772,7 @@ export const INTRO_MANAGEMENT_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "École des relations humaines (Mayo, Maslow, Herzberg), approches systémique et de la contingence, processus managérial (PODC), motivation, leadership et enjeux contemporains (transformation digitale, agilité, RSE).",
     officialVolumeHours: 8,
     contentVersion: 2,
-    source: 'INTRODUCTION AU MANAGEMENT ENTD 1 (Code 1MAN3152 — Sommaire Chapitres 2 à 5)',
+    source: 'INTRODUCTION AU MANAGEMENT ENTD 1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_management_ch3_p1',

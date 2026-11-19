@@ -1,6 +1,6 @@
 // ============================================================================
 // MODULE OFFICIEL : MATHÉMATIQUES 2de A — LEÇON 1 : CALCULS NUMÉRIQUES
-// Ministère de l'Éducation Nationale et de l'Alphabétisation (MENA - Côte d'Ivoire)
+// Programme structuré KONAN
 // Discipline : Numérique | Classe : Seconde A
 // Zéro code brut à l'écran : symboles universels purs (√, ×, ÷, ≠, ≈, ², ³, ⁻², ⁿ, −)
 // ============================================================================
@@ -15,7 +15,7 @@ export const maths2deACalculsNumeriquesChapter: CurriculumChapter = {
   officialVolumeHours: 12,
   title: 'Leçon 1 — Calculs numériques',
   summary:
-    'Maîtrise complète des opérations sur les quotients (fractions), puissances, radicaux (racines carrées), proportionnalité, pourcentages et approximations décimales selon le programme officiel MENA.',
+    'Maîtrise complète des opérations sur les quotients (fractions), puissances, radicaux (racines carrées), proportionnalité, pourcentages et approximations décimales programme.',
   points: [
     // ------------------------------------------------------------------------
     // MINI-LEÇON 1/6 : Opérations sur les quotients (Fractions)

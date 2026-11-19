@@ -974,7 +974,7 @@ export const PHILO_TLE_L02_COMMENTAIRE_TEXTE: CurriculumChapter = {
           "stepTitle": "Dépasser Hountondji",
           "stepTheme": "Dépasser Hountondji",
           "stepBadge": "Dépasser Hountondji",
-          "paragraphText": "Arguments pour la philosophie comme système :\n• Hegel : « Une philosophie qui n'est pas un système ne saurait rien avoir de scientifique. »\n• Descartes : la philosophie est un arbre dont les racines sont la métaphysique, le tronc la physique et les branches les autres sciences.\nPrécision : cette image de l'arbre vient des Principes de la philosophie, pas du Discours de la méthode comme l'écrit le PDF.",
+          "paragraphText": "Arguments pour la philosophie comme système :\n• Hegel : « Une philosophie qui n'est pas un système ne saurait rien avoir de scientifique. »\n• Descartes : la philosophie est un arbre dont les racines sont la métaphysique, le tronc la physique et les branches les autres sciences.\nPrécision : cette image de l'arbre vient des Principes de la philosophie, pas du Discours de la méthode comme l'écrit une erreur fréquente.",
           "exercise": {
             "id": "terminale_philo_methodologie_l02_commentaire_texte_p05_q2",
             "type": "mcq",

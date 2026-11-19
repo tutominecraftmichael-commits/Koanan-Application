@@ -22,7 +22,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       'Maîtriser le paramétrage d’un document professionnel sous Microsoft Word ou LibreOffice Writer : format A4, marges, en-têtes/pieds de page, page de garde, mise en forme des paragraphes et hiérarchisation par styles.',
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Fascicule de TD Traitement de texte (Microsoft Word, 2025-2026)',
+    source: 'ENTD L1 — Fascicule de TD Traitement de texte (Microsoft Word, 2025-2026)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_bureautique_ch1_p1',
@@ -36,7 +36,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Définir la mise en page (A4, Portrait, marges 2,5 cm, en-tête/pied de page) dès l’ouverture du document garantit une pagination stable et évite de décaler les objets en fin de travail.',
         formulas: [
           {
-            name: 'Standard rapport A4 (TD ENTD L1)',
+            name: 'Standard rapport A4',
             formula: 'Format A4 (21 × 29,7 cm) | Orientation : Portrait | Marges : 2,5 cm × 4',
             note: 'En-tête : texte gauche + texte droite ; Pied de page : numéro de page automatique centré.',
           },
@@ -332,7 +332,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           'Comprendre le rôle fondamental des styles pour uniformiser un document long et activer la navigation ainsi que la table des matières automatique.',
         conceptExplanation:
-          "Un style est un ensemble nommé de caractéristiques de mise en forme (police, taille, couleur, alignement, espacement, niveau hiérarchique) que l'on applique en un seul clic à un titre ou un paragraphe.\n\nDans un document professionnel, on ne met jamais en forme les titres « manuellement » (gras + taille 16 au hasard) :\n1. On applique les styles hiérarchiques intégrés : « Titre 1 » pour les grands chapitres/parties, « Titre 2 » pour les sous-parties, « Titre 3 » pour les sous-sections.\n2. Si l'on modifie la définition du style « Titre 1 » (par exemple sa couleur ou sa police Times New Roman), tous les titres portant ce style se mettent à jour instantanément dans tout le document.\n3. Les styles hiérarchiques alimentent automatiquement le Volet de navigation (onglet Affichage) et sont indispensables pour générer une table des matières automatique.\n4. On peut également créer des styles personnalisés (demandé en bonus dans le TD) pour les citations, encadrés ou légendes d'entreprise.",
+          "Un style est un ensemble nommé de caractéristiques de mise en forme (police, taille, couleur, alignement, espacement, niveau hiérarchique) que l'on applique en un seul clic à un titre ou un paragraphe.\n\nDans un document professionnel, on ne met jamais en forme les titres « manuellement » (gras + taille 16 au hasard) :\n1. On applique les styles hiérarchiques intégrés : « Titre 1 » pour les grands chapitres/parties, « Titre 2 » pour les sous-parties, « Titre 3 » pour les sous-sections.\n2. Si l'on modifie la définition du style « Titre 1 » (par exemple sa couleur ou sa police Times New Roman), tous les titres portant ce style se mettent à jour instantanément dans tout le document.\n3. Les styles hiérarchiques alimentent automatiquement le Volet de navigation (onglet Affichage) et sont indispensables pour générer une table des matières automatique.\n4. On peut également créer des styles personnalisés pour les citations, encadrés ou légendes d'entreprise.",
         keyRule:
           'Sans styles hiérarchiques (Titre 1, Titre 2…), Word ne reconnaît pas la structure du document et ne peut pas générer de table des matières automatique.',
         workedExample: {
@@ -428,7 +428,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Charte graphique',
             stepTitle: 'Créer un style personnalisé d’entreprise',
             paragraphText:
-              'Pour répondre à une charte graphique spécifique (bonus du TD), on peut créer un nouveau style (ex. « Encadré_INFOGEST » ou « Citation_Rapport ») via le lanceur du groupe Styles > « Nouveau style », en choisissant sa police, sa bordure, sa trame de fond et son style de paragraphe suivant.',
+              'Pour répondre à une charte graphique spécifique, on peut créer un nouveau style (ex. « Encadré_INFOGEST » ou « Citation_Rapport ») via le lanceur du groupe Styles > « Nouveau style », en choisissant sa police, sa bordure, sa trame de fond et son style de paragraphe suivant.',
             exercise: {
               id: 'lmd_entd_l1_bureautique_ch1_p3_q4',
               type: 'mcq',
@@ -483,7 +483,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       'Insérer des images légendées et des tableaux, automatiser la table des matières et les notes de bas de page, utiliser Rechercher/Remplacer, intégrer une bibliographie et exporter en PDF.',
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Fascicule de TD Traitement de texte (Partie II, 2025-2026)',
+    source: 'ENTD L1 — Fascicule de TD Traitement de texte (Partie II, 2025-2026)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_bureautique_ch2_p1',
@@ -492,7 +492,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           'Intégrer une image avec habillage et légende numérotée, et concevoir un tableau 3 × 3 lisible et cohérent.',
         conceptExplanation:
-          "Un rapport moderne combine texte structuré et objets visuels pour synthétiser l'information (Partie II.1 du TD).\n\n1. Images et habillage : On insère une image via « Insertion » > « Images ». On ajuste ensuite son « Habillage du texte » (Aligné sur le texte, Carré, Rapproché, Haut et bas) afin de contrôler comment le texte circule autour d'elle.\n2. Légendes automatiques : Plutôt que d'écrire manuellement « Figure 1 : ... », on fait un clic droit sur l'image > « Insérer une légende » (ou onglet « Références » > « Insérer une légende »). Word numérote automatiquement les figures (Figure 1, Figure 2…), ce qui permet même de générer une table des illustrations.\n3. Tableaux : Via « Insertion » > « Tableau », on définit le nombre de colonnes et de lignes (ex. 3 lignes × 3 colonnes : ligne d'en-tête grisée et centrée + lignes de données). On évite les cellules fusionnées inutiles et on active « Répéter les lignes d'en-tête » pour les tableaux longs.",
+          "Un rapport moderne combine texte structuré et objets visuels pour synthétiser l'information.\n\n1. Images et habillage : On insère une image via « Insertion » > « Images ». On ajuste ensuite son « Habillage du texte » (Aligné sur le texte, Carré, Rapproché, Haut et bas) afin de contrôler comment le texte circule autour d'elle.\n2. Légendes automatiques : Plutôt que d'écrire manuellement « Figure 1 : ... », on fait un clic droit sur l'image > « Insérer une légende » (ou onglet « Références » > « Insérer une légende »). Word numérote automatiquement les figures (Figure 1, Figure 2…), ce qui permet même de générer une table des illustrations.\n3. Tableaux : Via « Insertion » > « Tableau », on définit le nombre de colonnes et de lignes (ligne d'en-tête grisée et centrée + lignes de données). On évite les cellules fusionnées inutiles et on active « Répéter les lignes d'en-tête » pour les tableaux longs.",
         keyRule:
           'Toujours utiliser « Références > Insérer une légende » pour légender une image ou un tableau : la numérotation reste cohérente même si vous déplacez ou ajoutez un objet.',
         workedExample: {
@@ -632,7 +632,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           'Générer et mettre à jour une table des matières, insérer des notes de bas de page, exécuter des remplacements globaux et vérifier l’orthographe.',
         conceptExplanation:
-          "Les outils d'automatisation distinguent un utilisateur occasionnel d'un assistant administratif ou analyste rigoureux (Partie II.2 du TD) :\n\n1. Table des matières automatique : Onglet « Références » > « Table des matières » > « Table automatique 1 ou 2 ». Elle recense tous les paragraphes formatés en Titre 1, Titre 2, etc., avec leurs numéros de page exacts. Après toute modification du document, un clic sur « Mettre à jour la table » (toute la table ou uniquement les numéros de page) garantit son exactitude.\n2. Note de bas de page : Placée après un terme technique à expliciter (ex. le mot « données » dans le TD) via « Références » > « Insérer une note de bas de page » (raccourci Alt + Ctrl + F). Word insère un appel de note en exposant (1) et place la définition en bas de la même page.\n3. Rechercher et remplacer (Ctrl + H) : Permet de remplacer systématiquement un mot dans tout le document (ex. remplacer « entreprises » par « organisations »), avec possibilité de vérifier la casse ou le mot entier pour éviter les erreurs.\n4. Vérification orthographique et grammaticale : Onglet « Révision » > « Grammaire et orthographe » (touche F7), complétée par une relecture humaine (les homophones ou mots mal choisis échappent parfois au correcteur).",
+          "Les outils d'automatisation distinguent un utilisateur occasionnel d'un assistant administratif ou analyste rigoureux :\n\n1. Table des matières automatique : Onglet « Références » > « Table des matières » > « Table automatique 1 ou 2 ». Elle recense tous les paragraphes formatés en Titre 1, Titre 2, etc., avec leurs numéros de page exacts. Après toute modification du document, un clic sur « Mettre à jour la table » (toute la table ou uniquement les numéros de page) garantit son exactitude.\n2. Note de bas de page : Placée après un terme technique à expliciter via « Références » > « Insérer une note de bas de page » (raccourci Alt + Ctrl + F). Word insère un appel de note en exposant (1) et place la définition en bas de la même page.\n3. Rechercher et remplacer (Ctrl + H) : Permet de remplacer systématiquement un mot dans tout le document (ex. remplacer « entreprises » par « organisations »), avec possibilité de vérifier la casse ou le mot entier pour éviter les erreurs.\n4. Vérification orthographique et grammaticale : Onglet « Révision » > « Grammaire et orthographe » (touche F7), complétée par une relecture humaine (les homophones ou mots mal choisis échappent parfois au correcteur).",
         keyRule:
           'Ne jamais taper une table des matières ni des appels de notes à la main ; toujours lancer « Mettre à jour la table » et le correcteur (F7) avant l’export final.',
         formulas: [
@@ -779,7 +779,7 @@ export const BUREAUTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           'Ajouter une bibliographie structurée, appliquer un filigrane discret, nommer proprement le fichier .docx et l’exporter en PDF.',
         conceptExplanation:
-          "La finalisation d'un document professionnel (Parties II.3 et II.4 du TD) conditionne sa diffusion sans erreur de mise en page.\n\n1. Bibliographie : Word dispose d'un gestionnaire de sources (« Références » > « Gérer les sources » / « Insérer une citation » > « Bibliographie ») qui formate automatiquement les ouvrages, articles et sites web selon une norme (APA, ISO 690…). Pour un rapport court, on mentionne au minimum l'auteur, l'année, le titre et l'éditeur/URL.\n2. Filigrane (Bonus) : Accessible via « Conception » (ou Création) > « Filigrane », il affiche un texte semi-transparent en arrière-plan de chaque page (ex. « CONFIDENTIEL », « BROUILLON » ou « INFOGEST SARL ») pour marquer le statut du document.\n3. Convention de nommage : Un nom de fichier professionnel évite les accents, les espaces et les caractères spéciaux (ex. `Rapport_Transformation_Numerique.docx`), ce qui garantit la compatibilité entre systèmes d'exploitation et serveurs.\n4. Exportation PDF : Le format `.docx` sert à l'édition collaborative, tandis que le format `.pdf` (Portable Document Format, via « Fichier > Exporter > Créer un document PDF/XPS ») fige la mise en page, les polices et les marges sur n'importe quel écran ou imprimante.",
+          "La finalisation d'un document professionnel conditionne sa diffusion sans erreur de mise en page.\n\n1. Bibliographie : Word dispose d'un gestionnaire de sources (« Références » > « Gérer les sources » / « Insérer une citation » > « Bibliographie ») qui formate automatiquement les ouvrages, articles et sites web selon une norme (APA, ISO 690…). Pour un rapport court, on mentionne au minimum l'auteur, l'année, le titre et l'éditeur/URL.\n2. Filigrane (Bonus) : Accessible via « Conception » (ou Création) > « Filigrane », il affiche un texte semi-transparent en arrière-plan de chaque page (ex. « CONFIDENTIEL », « BROUILLON » ou « INFOGEST SARL ») pour marquer le statut du document.\n3. Convention de nommage : Un nom de fichier professionnel évite les accents, les espaces et les caractères spéciaux (ex. `Rapport_Transformation_Numerique.docx`), ce qui garantit la compatibilité entre systèmes d'exploitation et serveurs.\n4. Exportation PDF : Le format `.docx` sert à l'édition collaborative, tandis que le format `.pdf` (Portable Document Format, via « Fichier > Exporter > Créer un document PDF/XPS ») fige la mise en page, les polices et les marges sur n'importe quel écran ou imprimante.",
         keyRule:
           'Conserver toujours la version éditable (.docx) avec un nom normalisé et diffuser la version finale au format PDF pour verrouiller la mise en page.',
         formulas: [

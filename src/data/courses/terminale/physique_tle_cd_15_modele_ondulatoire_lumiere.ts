@@ -7,7 +7,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
   "summary": "Étude rigoureuse du caractère ondulatoire de la lumière : phénomène de diffraction par une fente ou un trou, écart angulaire theta = lambda/a, largeur de la tache centrale, interférences lumineuses à deux ondes (fentes d'Young), différence de marche géométrique delta = a.y/D, interfrange i = lambda.D/a, nature électromagnétique et spectre complet.",
   "officialVolumeHours": 8,
   "contentVersion": 2,
-  "source": "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC)",
+  "source": "Programme KONAN — ",
   "points": [
     {
       "id": "pt1_phenomene_diffraction_optique_geometrique",
@@ -1374,7 +1374,7 @@ export const PHYSIQUE_TLE_CD_L15_MODELE_ONDULATOIRE_LUMIERE: CurriculumChapter =
           "stepTitle": "Protocole de mesure sur n interfranges (règle des n intervalles)",
           "stepTheme": "Protocole métrologique",
           "stepBadge": "Méthode expérimentale",
-          "paragraphText": "Pour limiter l'erreur de parallaxe et l'incertitude liée à l'épaisseur de la pointe de repérage, on ne mesure jamais un seul interfrange. Le protocole rigoureux consiste à : 1. Repérer le milieu de la frange brillante d'ordre k₁. 2. Compter n intervalles d'interfranges pour atteindre la frange d'ordre k₂ = k₁ + n (ex. 5 à 10 franges). 3. Mesurer la distance totale L entre ces deux repères. 4. Calculer l'interfrange moyen : i = L / n. L'incertitude absolue sur i est ainsi divisée par n : Δi = ΔL / n.",
+          "paragraphText": "Pour limiter l'erreur de parallaxe et l'incertitude liée à l'épaisseur de la pointe de repérage, on ne mesure jamais un seul interfrange. Le protocole rigoureux consiste à : 1. Repérer le milieu de la frange brillante d'ordre k₁. 2. Compter n intervalles d'interfranges pour atteindre la frange d'ordre k₂ = k₁ + n. 3. Mesurer la distance totale L entre ces deux repères. 4. Calculer l'interfrange moyen : i = L / n. L'incertitude absolue sur i est ainsi divisée par n : Δi = ΔL / n.",
           "exercise": {
             "id": "phys_tle_cd_15_p5_s2_qcm",
             "type": "mcq",

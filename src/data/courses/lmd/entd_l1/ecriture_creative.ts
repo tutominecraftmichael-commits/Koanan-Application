@@ -23,7 +23,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     officialVolumeHours: 14,
     contentVersion: 2,
     source:
-      'ESATIC ENTD L1 — Écriture Créative et Communication (Cissé Souleymane Désiré Cédric, Introduction & Module 1.I)',
+      'ENTD L1 — Écriture Créative et Communication',
     points: [
       makePoint({
         id: 'lmd_entd_l1_ecriture_creative_ch1_p1',
@@ -60,7 +60,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_ecriture_creative_ch1_p1_q1',
               type: 'mcq',
               prompt:
-                'Selon le cours, quel est l’objectif principal de l’écriture créative pour un futur diplômé en Économie Numérique et Transformation Digitale ?',
+                'Quel est l’objectif principal de l’écriture créative pour un futur diplômé en Économie Numérique et Transformation Digitale ?',
               options: [
                 'Rédiger exclusivement des poèmes classiques en alexandrins',
                 'Marier la liberté créative et l’efficacité du message pour concevoir une véritable expérience utilisateur (UX) engageante',
@@ -108,7 +108,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_ecriture_creative_ch1_p1_q3',
               type: 'mcq',
               prompt:
-                'Dans la métaphore audiovisuelle du cours, à quoi correspond la structuration d’un texte de communication avant sa rédaction finale ?',
+                'Dans la métaphore audiovisuelle, à quoi correspond la structuration d’un texte de communication avant sa rédaction finale ?',
               options: [
                 'Au storyboard ou à la timeline de montage qui organise les séquences',
                 'Au générique de fin uniquement',
@@ -132,7 +132,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_ecriture_creative_ch1_p1_q4',
               type: 'mcq',
               prompt:
-                'Lequel de ces formats relève de la « non-fiction créative » citée dans le cours ?',
+                'Lequel de ces formats relève de la « non-fiction créative » de référence ?',
               options: [
                 'Un roman de science-fiction sur une planète imaginaire',
                 'Une pièce de théâtre fantastique',
@@ -177,7 +177,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           'Identifier les quatre facteurs psychologiques et méthodologiques du blocage rédactionnel et associer à chacun son remède adapté.',
         conceptExplanation:
-          "La page blanche n'est pas un manque de talent : c'est un problème de processus et de conflit entre le cerveau d'« auteur » (créateur) et le cerveau de « monteur » (critique). Tout comme le dérushage en vidéo sélectionne les meilleures prises après tournage, l'édition doit intervenir APRÈS la production de la matière brute.\n\nLes quatre causes principales du blocage et leurs remèdes (tableau de synthèse du cours) :\n1. Le perfectionnisme paralysant (censeur interne) : vouloir une première phrase parfaite -> auto-censure immédiate -> Remède : l'écriture automatique (flux brut sans corriger).\n2. Le déficit d'empathie ou de cible (flou stratégique) : absence de « Persona » -> impossible de choisir le bon « Tone of Voice » -> texte générique et froid -> Remède : définir clairement le Persona et ses émotions.\n3. La surcharge cognitive et le manque de structure : avoir « trop d'idées » sans storyboard -> digressions et perte de fil -> Remède : utiliser le Schéma Narratif pour canaliser la pensée.\n4. La peur de l'outil ou du support : pression liée aux codes d'un nouveau format (PWA, réseau social, script vidéo) -> blocage devant le clavier -> Remède : changer de support (écrire à la main sur papier).",
+          "La page blanche n'est pas un manque de talent : c'est un problème de processus et de conflit entre le cerveau d'« auteur » (créateur) et le cerveau de « monteur » (critique). Tout comme le dérushage en vidéo sélectionne les meilleures prises après tournage, l'édition doit intervenir APRÈS la production de la matière brute.\n\nLes quatre causes principales du blocage et leurs remèdes :\n1. Le perfectionnisme paralysant (censeur interne) : vouloir une première phrase parfaite -> auto-censure immédiate -> Remède : l'écriture automatique (flux brut sans corriger).\n2. Le déficit d'empathie ou de cible (flou stratégique) : absence de « Persona » -> impossible de choisir le bon « Tone of Voice » -> texte générique et froid -> Remède : définir clairement le Persona et ses émotions.\n3. La surcharge cognitive et le manque de structure : avoir « trop d'idées » sans storyboard -> digressions et perte de fil -> Remède : utiliser le Schéma Narratif pour canaliser la pensée.\n4. La peur de l'outil ou du support : pression liée aux codes d'un nouveau format (PWA, réseau social, script vidéo) -> blocage devant le clavier -> Remède : changer de support (écrire à la main sur papier).",
         keyRule:
           'Ne jamais faire travailler ensemble l’Auteur (qui produit le flux brut) et le Monteur (qui coupe et polit) : on capture d’abord, on édite ensuite.',
         formulas: [
@@ -283,7 +283,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_ecriture_creative_ch1_p2_q4',
               type: 'mcq',
               prompt:
-                'Selon le tableau de synthèse du cours, quel remède simple débloque un rédacteur paralysé par la « pression technique » devant son clavier ?',
+                'En pratique, quel remède simple débloque un rédacteur paralysé par la « pression technique » devant son clavier ?',
               options: [
                 'Acheter un nouvel écran plus grand',
                 'Doubler la longueur de son texte',
@@ -428,7 +428,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_ecriture_creative_ch1_p3_q4',
               type: 'mcq',
               prompt:
-                'En quoi consiste exactement la méthode « S+7 » (Jean Lescure) présentée dans le cours ?',
+                'En quoi consiste exactement la méthode « S+7 » (Jean Lescure) présentée ?',
               options: [
                 'Ajouter 7 points d’exclamation à chaque phrase',
                 'Écrire un texte de 7 pages en 7 minutes',
@@ -478,7 +478,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       'Maîtriser les piliers de la persuasion (triptyque d’Aristote, réduction de la charge cognitive), distinguer convaincre et persuader, structurer un récit (Schéma narratif, Voyage du Héros) et appliquer le « Show, Don’t Tell ».',
     officialVolumeHours: 14,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Écriture Créative et Communication (Module 1.II : L’architecture de la persuasion)',
+    source: 'ENTD L1 — Écriture Créative et Communication',
     points: [
       makePoint({
         id: 'lmd_entd_l1_ecriture_creative_ch2_p1',
@@ -660,7 +660,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_ecriture_creative_ch2_p2_q1',
               type: 'mcq',
               prompt:
-                'Quelles caractéristiques correspondent exactement au fait de « convaincre » dans le tableau comparatif du cours ?',
+                'Quelles caractéristiques correspondent exactement au fait de « convaincre » en communication persuasive ?',
               options: [
                 'Cible : l’affect | Moyen : métaphores | Adhésion chaude et rapide',
                 'Cible : l’intellect | Moyens : faits, chiffres, démonstrations | Adhésion froide et durable',
@@ -777,7 +777,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           'Construire un récit de marque structuré en 5 étapes, positionner l’utilisateur en Héros et la marque en Mentor, et rendre le texte immersif grâce aux cinq sens.',
         conceptExplanation:
-          "Le storytelling est l'équivalent du storyboard en montage vidéo : il structure l'information en une progression captivante pour éviter que l'utilisateur ne se perde.\n\n1. Le Schéma Narratif en 5 étapes (illustré dans l'étude de cas « Au-delà du clic ») :\n- Situation initiale : le contexte stable (ex. 8h30 dans une PME, le café fume, tout semble sous contrôle).\n- Élément perturbateur : le point de friction/problème (ex. 68 % d'abandon de panier silencieux).\n- Péripéties : la recherche de solutions et les obstacles.\n- Élément de résolution : l'intervention du produit ou de la solution UX.\n- Situation finale : le retour à l'équilibre enrichi d'une valeur ajoutée.\n2. Le Voyage du Héros appliqué au marketing moderne :\n- Le Héros = l'UTILISATEUR (et jamais la marque !) qui affronte des « monstres » (interfaces lentes, complexité).\n- Le Mentor = votre MARQUE ou expertise, qui guide sans faire à la place.\n- L'Outil Magique = votre SOLUTION intuitive qui réduit la charge cognitive.\n3. L'immersion sensorielle et le « Show, Don't Tell » (Montrer au lieu de dire) :\n- Au lieu de dire « Le site est lent », montrer : « L'utilisateur soupire, tapotant nerveusement son bureau alors que la barre de chargement semble figée à 99 %. »\n- Mobiliser les cinq sens (vue/couleurs symboliques comme l'orange incitant à l'achat, ouïe/rythme des phrases, toucher/sensation fluide du swipe ou du clic, goût, odorat) et soigner l'habillage (adjectif précis, métaphore).",
+          "Le storytelling est l'équivalent du storyboard en montage vidéo : il structure l'information en une progression captivante pour éviter que l'utilisateur ne se perde.\n\n1. Le Schéma Narratif en 5 étapes (illustré dans l'étude de cas « Au-delà du clic ») :\n- Situation initiale : le contexte stable.\n- Élément perturbateur : le point de friction/problème.\n- Péripéties : la recherche de solutions et les obstacles.\n- Élément de résolution : l'intervention du produit ou de la solution UX.\n- Situation finale : le retour à l'équilibre enrichi d'une valeur ajoutée.\n2. Le Voyage du Héros appliqué au marketing moderne :\n- Le Héros = l'UTILISATEUR (et jamais la marque !) qui affronte des « monstres » (interfaces lentes, complexité).\n- Le Mentor = votre MARQUE ou expertise, qui guide sans faire à la place.\n- L'Outil Magique = votre SOLUTION intuitive qui réduit la charge cognitive.\n3. L'immersion sensorielle et le « Show, Don't Tell » (Montrer au lieu de dire) :\n- Au lieu de dire « Le site est lent », montrer : « L'utilisateur soupire, tapotant nerveusement son bureau alors que la barre de chargement semble figée à 99 %. »\n- Mobiliser les cinq sens (vue/couleurs symboliques comme l'orange incitant à l'achat, ouïe/rythme des phrases, toucher/sensation fluide du swipe ou du clic, goût, odorat) et soigner l'habillage (adjectif précis, métaphore).",
         keyRule:
           'Dans le Voyage du Héros en communication, le Héros est TOUJOURS l’utilisateur ; la marque est le Mentor qui lui remet l’Outil Magique. Appliquez le « Show, Don’t Tell ».',
         formulas: [
@@ -811,7 +811,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_ecriture_creative_ch2_p3_q1',
               type: 'mcq',
               prompt:
-                'Dans l’étude de cas du cours (« Au-delà du clic »), que représente le constat soudain des « 68 % de clients qui abandonnent leur panier » ?',
+                'Dans l’étude de cas « Au-delà du clic », que représente le constat soudain des « 68 % de clients qui abandonnent leur panier » ?',
               options: [
                 'La situation finale',
                 'L’élément de résolution',
@@ -907,7 +907,7 @@ export const ECRITURE_CREATIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_ecriture_creative_ch2_p3_q5',
               type: 'mcq',
               prompt:
-                'Dans l’étude de cas du cours, quel procédé stylistique rend particulièrement marquante l’expression « un chiffre silencieux ronge votre croissance » ?',
+                'Dans cette étude de cas, quel procédé stylistique rend particulièrement marquante l’expression « un chiffre silencieux ronge votre croissance » ?',
               options: [
                 'Un simple tableau de données comptables',
                 'Une métaphore vivante qui transforme une statistique abstraite en menace visuelle et concrète',

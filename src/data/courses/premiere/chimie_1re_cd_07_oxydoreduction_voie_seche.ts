@@ -24,7 +24,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
       summary:
         'Observer et interpréter la combustion du ruban de magnésium dans le dioxygène comme un transfert d’électrons hors solution aqueuse.',
       conceptExplanation:
-        "Les feux d’artifice (Situation d’apprentissage p. 1) exploitent notamment la combustion très vive du **magnésium** ($\\mathrm{Mg}$) dans le **dioxygène** ($\\mathrm{O_2}$), produisant une lumière blanche intense et une fumée blanche solide d’**oxyde de magnésium** ($\\mathrm{MgO}$) :\n\n- **Structure ionique du produit** : $\\mathrm{MgO}$ est un solide ionique formé d’un empilement régulier de cations $\\mathrm{Mg^{2+}}$ et d’anions $\\mathrm{O^{2-}}$.\n- **Demi-équation d’oxydation (perte d’électrons)** : chaque atome de magnésium cède $2$ électrons :\n  $$\\mathrm{Mg \\longrightarrow Mg^{2+} + 2\\,e^-}$$\n- **Demi-équation de réduction (gain d’électrons)** : chaque molécule de dioxygène capte $4$ électrons :\n  $$\\mathrm{O_2 + 4\\,e^- \\longrightarrow 2\\,O^{2-}}$$\n- **Équation-bilan** :\n  $$2\\,\\mathrm{Mg} + \\mathrm{O_2} \\longrightarrow 2\\,\\mathrm{Mg^{2+}} + 2\\,\\mathrm{O^{2-}} \\quad (\\text{soit } 2\\,\\mathrm{MgO})$$\n\nComme ce transfert d’électrons entre les couples $\\mathrm{Mg^{2+}/Mg}$ et $\\mathrm{O_2/O^{2-}}$ a lieu **en dehors du milieu aqueux**, on parle d’**oxydoréduction par voie sèche**.",
+        "Les feux d’artifice exploitent notamment la combustion très vive du **magnésium** ($\\mathrm{Mg}$) dans le **dioxygène** ($\\mathrm{O_2}$), produisant une lumière blanche intense et une fumée blanche solide d’**oxyde de magnésium** ($\\mathrm{MgO}$) :\n\n- **Structure ionique du produit** : $\\mathrm{MgO}$ est un solide ionique formé d’un empilement régulier de cations $\\mathrm{Mg^{2+}}$ et d’anions $\\mathrm{O^{2-}}$.\n- **Demi-équation d’oxydation (perte d’électrons)** : chaque atome de magnésium cède $2$ électrons :\n $$\\mathrm{Mg \\longrightarrow Mg^{2+} + 2\\,e^-}$$\n- **Demi-équation de réduction (gain d’électrons)** : chaque molécule de dioxygène capte $4$ électrons :\n $$\\mathrm{O_2 + 4\\,e^- \\longrightarrow 2\\,O^{2-}}$$\n- **Équation-bilan** :\n $$2\\,\\mathrm{Mg} + \\mathrm{O_2} \\longrightarrow 2\\,\\mathrm{Mg^{2+}} + 2\\,\\mathrm{O^{2-}} \\quad (\\text{soit } 2\\,\\mathrm{MgO})$$\n\nComme ce transfert d’électrons entre les couples $\\mathrm{Mg^{2+}/Mg}$ et $\\mathrm{O_2/O^{2-}}$ a lieu **en dehors du milieu aqueux**, on parle d’**oxydoréduction par voie sèche**.",
       keyRule:
         'Une réaction d’oxydoréduction par voie sèche est un transfert d’électrons qui se produit en dehors de toute solution aqueuse : Mg perd des électrons (oxydation) et O₂ les capte (réduction).',
       formulas: [
@@ -284,7 +284,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
       summary:
         'Expliquer deux grandes réactions solides par voie sèche : la réduction de l’oxyde de cuivre II par le carbone et la réduction de l’oxyde ferrique par l’aluminium (aluminothermie).',
       conceptExplanation:
-        "Deux autres expériences fondamentales illustrent l’oxydoréduction par voie sèche entre solides :\n\n1. **Réduction de l’oxyde de cuivre II ($\\mathrm{CuO}$, noir) par le carbone ($\\mathrm{C}$)** (p. 2) :\n   - En chauffant fortement un mélange de poudre noire de $\\mathrm{CuO}$ et de charbon ($\\mathrm{C}$), on observe un **dépôt rouge brique de cuivre** ($\\mathrm{Cu}$) et un dégagement de **dioxyde de carbone** ($\\mathrm{CO_2}$) qui **trouble l’eau de chaux** :\n   $$2\\,\\mathrm{CuO} + \\mathrm{C} \\longrightarrow 2\\,\\mathrm{Cu} + \\mathrm{CO_2}$$\n   L’ion $\\mathrm{Cu^{2+}}$ de $\\mathrm{CuO}$ est réduit en $\\mathrm{Cu}$, tandis que le carbone $\\mathrm{C}$ est oxydé en $\\mathrm{CO_2}$.\n2. **Réduction de l’oxyde ferrique ($\\mathrm{Fe_2O_3}$) par l’aluminium ($\\mathrm{Al}$) — Aluminothermie** (p. 2–3) :\n   - Amorçage par un ruban de magnésium sur un mélange $\\mathrm{Fe_2O_3 + Al}$ : réaction très vive et exothermique donnant une **poudre blanche d’alumine** ($\\mathrm{Al_2O_3}$) et du **fer métallique** ($\\mathrm{Fe}$, attiré par un aimant).\n   - Demi-équations entre les ions des oxydes ioniques :\n     $$\\mathrm{Fe^{3+} + 3\\,e^- \\longrightarrow Fe} \\qquad \\text{et} \\qquad \\mathrm{Al \\longrightarrow Al^{3+} + 3\\,e^-}$$\n   - Bilan ionique : $\\mathrm{Fe^{3+} + Al \\longrightarrow Fe + Al^{3+}}$ (soit en oxydes : $\\mathrm{Fe_2O_3 + 2\\,Al \\longrightarrow 2\\,Fe + Al_2O_3}$).",
+        "Deux autres expériences fondamentales illustrent l’oxydoréduction par voie sèche entre solides :\n\n1. **Réduction de l’oxyde de cuivre II ($\\mathrm{CuO}$, noir) par le carbone ($\\mathrm{C}$)** :\n - En chauffant fortement un mélange de poudre noire de $\\mathrm{CuO}$ et de charbon ($\\mathrm{C}$), on observe un **dépôt rouge brique de cuivre** ($\\mathrm{Cu}$) et un dégagement de **dioxyde de carbone** ($\\mathrm{CO_2}$) qui **trouble l’eau de chaux** :\n $$2\\,\\mathrm{CuO} + \\mathrm{C} \\longrightarrow 2\\,\\mathrm{Cu} + \\mathrm{CO_2}$$\n L’ion $\\mathrm{Cu^{2+}}$ de $\\mathrm{CuO}$ est réduit en $\\mathrm{Cu}$, tandis que le carbone $\\mathrm{C}$ est oxydé en $\\mathrm{CO_2}$.\n2. **Réduction de l’oxyde ferrique ($\\mathrm{Fe_2O_3}$) par l’aluminium ($\\mathrm{Al}$) — Aluminothermie** :\n - Amorçage par un ruban de magnésium sur un mélange $\\mathrm{Fe_2O_3 + Al}$ : réaction très vive et exothermique donnant une **poudre blanche d’alumine** ($\\mathrm{Al_2O_3}$) et du **fer métallique** ($\\mathrm{Fe}$, attiré par un aimant).\n - Demi-équations entre les ions des oxydes ioniques :\n $$\\mathrm{Fe^{3+} + 3\\,e^- \\longrightarrow Fe} \\qquad \\text{et} \\qquad \\mathrm{Al \\longrightarrow Al^{3+} + 3\\,e^-}$$\n - Bilan ionique : $\\mathrm{Fe^{3+} + Al \\longrightarrow Fe + Al^{3+}}$ (soit en oxydes : $\\mathrm{Fe_2O_3 + 2\\,Al \\longrightarrow 2\\,Fe + Al_2O_3}$).",
       keyRule:
         'CuO + C donne du cuivre rouge et du CO₂ qui trouble l’eau de chaux (2 CuO + C → 2 Cu + CO₂) ; l’aluminothermie réduit Fe₂O₃ par Al en fer (attirable à l’aimant) et alumine Al₂O₃.',
       formulas: [
@@ -393,7 +393,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p02_q3',
             type: 'mcq',
-            prompt: 'Qu’appelle-t-on « aluminothermie » dans la leçon ?',
+            prompt: 'Qu’appelle-t-on « aluminothermie » ?',
             options: [
               'La réduction d’un oxyde métallique (tel que $\\mathrm{Fe_2O_3}$) par l’aluminium métallique',
               'La combustion de l’aluminium dans l’eau froide',
@@ -507,7 +507,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p02_q3',
           type: 'mcq',
-          prompt: 'Qu’appelle-t-on « aluminothermie » dans la leçon ?',
+          prompt: 'Qu’appelle-t-on « aluminothermie » ?',
           options: [
             'La réduction d’un oxyde métallique (tel que $\\mathrm{Fe_2O_3}$) par l’aluminium métallique',
             'La combustion de l’aluminium dans l’eau froide',
@@ -573,7 +573,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
       summary:
         'Définir le nombre d’oxydation (chiffre romain) et le calculer dans un corps pur simple, un ion monoatomique, un ion polyatomique et une molécule.',
       conceptExplanation:
-        "Le **nombre d’oxydation** (ou degré d’oxydation, noté $\\text{n.o.}$) d’un élément dans un composé est un **nombre algébrique** indiquant son état d’oxydation. Par convention, il s’écrit en **chiffre romain précédé du signe $+$ ou $-$** (ou $0$ s’il est nul).\n\n**Règles de détermination (p. 3) :**\n1. **Corps pur simple** : le $\\text{n.o.}$ d’un élément à l’état de corps pur simple est **nul** ($0$) : $\\text{n.o.}(\\mathrm{Na}) = 0$, $\\text{n.o.}(\\mathrm{Fe}) = 0$, $\\text{n.o.}(\\mathrm{Cu}) = 0$, $\\text{n.o.}(\\mathrm{O_2}) = 0$, $\\text{n.o.}(\\mathrm{H_2}) = 0$.\n2. **Ion monoatomique** : son $\\text{n.o.}$ est **égal à sa charge** en chiffre romain : $\\text{n.o.}(\\mathrm{Fe^{2+}}) = +\\text{II}$, $\\text{n.o.}(\\mathrm{Al^{3+}}) = +\\text{III}$, $\\text{n.o.}(\\mathrm{O^{2-}}) = -\\text{II}$.\n3. **Ion polyatomique** : la somme algébrique des $\\text{n.o.}$ de tous ses atomes est égale à la **charge globale** de l’ion. Ex. pour $\\mathrm{SO_4^{2-}}$ : $\\text{n.o.}(\\mathrm{S}) + 4\\,\\text{n.o.}(\\mathrm{O}) = -\\text{II}$.\n4. **Molécule neutre** : la somme algébrique des $\\text{n.o.}$ de tous ses atomes est **nulle** ($0$). Ex. pour $\\mathrm{H_2O}$ : $2\\,\\text{n.o.}(\\mathrm{H}) + \\text{n.o.}(\\mathrm{O}) = 0$.\n5. **Valeurs usuelles** :\n   - Sauf dans $\\mathrm{O_2}$ ($0$), l’élément oxygène a le plus souvent $\\text{n.o.}(\\mathrm{O}) = -\\text{II}$.\n   - Sauf dans $\\mathrm{H_2}$ ($0$), l’élément hydrogène a le plus souvent $\\text{n.o.}(\\mathrm{H}) = +\\text{I}$.",
+        "Le **nombre d’oxydation** (ou degré d’oxydation, noté $\\text{n.o.}$) d’un élément dans un composé est un **nombre algébrique** indiquant son état d’oxydation. Par convention, il s’écrit en **chiffre romain précédé du signe $+$ ou $-$** (ou $0$ s’il est nul).\n\n**Règles de détermination :**\n1. **Corps pur simple** : le $\\text{n.o.}$ d’un élément à l’état de corps pur simple est **nul** ($0$) : $\\text{n.o.}(\\mathrm{Na}) = 0$, $\\text{n.o.}(\\mathrm{Fe}) = 0$, $\\text{n.o.}(\\mathrm{Cu}) = 0$, $\\text{n.o.}(\\mathrm{O_2}) = 0$, $\\text{n.o.}(\\mathrm{H_2}) = 0$.\n2. **Ion monoatomique** : son $\\text{n.o.}$ est **égal à sa charge** en chiffre romain : $\\text{n.o.}(\\mathrm{Fe^{2+}}) = +\\text{II}$, $\\text{n.o.}(\\mathrm{Al^{3+}}) = +\\text{III}$, $\\text{n.o.}(\\mathrm{O^{2-}}) = -\\text{II}$.\n3. **Ion polyatomique** : la somme algébrique des $\\text{n.o.}$ de tous ses atomes est égale à la **charge globale** de l’ion. Ex. pour $\\mathrm{SO_4^{2-}}$ : $\\text{n.o.}(\\mathrm{S}) + 4\\,\\text{n.o.}(\\mathrm{O}) = -\\text{II}$.\n4. **Molécule neutre** : la somme algébrique des $\\text{n.o.}$ de tous ses atomes est **nulle** ($0$). Ex. pour $\\mathrm{H_2O}$ : $2\\,\\text{n.o.}(\\mathrm{H}) + \\text{n.o.}(\\mathrm{O}) = 0$.\n5. **Valeurs usuelles** :\n - Sauf dans $\\mathrm{O_2}$ ($0$), l’élément oxygène a le plus souvent $\\text{n.o.}(\\mathrm{O}) = -\\text{II}$.\n - Sauf dans $\\mathrm{H_2}$ ($0$), l’élément hydrogène a le plus souvent $\\text{n.o.}(\\mathrm{H}) = +\\text{I}$.",
       keyRule:
         'Le n.o. s’écrit en chiffre romain (+I, −II…). Il vaut 0 dans un corps pur simple, la charge pour un ion monoatomique, et la somme des n.o. d’une espèce vaut sa charge globale (0 pour une molécule) avec n.o.(O) = −II et n.o.(H) = +I.',
       formulas: [
@@ -584,7 +584,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Calculer le n.o. dans CO₂, Al₂O₃, H₂SO₄ et CH₄O (Activité p. 3 & Ex 4 p. 5)',
+        title: 'Calculer le n.o. dans CO₂, Al₂O₃, H₂SO₄ et CH₄O',
         statement:
           'Détermine le nombre d’oxydation de C dans $\\mathrm{CO_2}$ et $\\mathrm{CH_4O}$, de Al dans $\\mathrm{Al_2O_3}$ et de S dans $\\mathrm{H_2SO_4}$.',
         methodSteps: [
@@ -608,7 +608,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p03_q1',
             type: 'mcq',
-            prompt: 'Que vaut le nombre d’oxydation de l’élément dans un ion monoatomique (Ex 4 p. 5) ?',
+            prompt: 'Que vaut le nombre d’oxydation de l’élément dans un ion monoatomique ?',
             options: [
               'Il est égal à la charge portée par l’ion (avec son signe, en chiffre romain)',
               'Il est toujours égal à zéro',
@@ -723,7 +723,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p03_q6',
             type: 'mcq',
-            prompt: 'Parmi les couples formés avec $\\mathrm{H_3O^+}$, $\\mathrm{H_2}$ et $\\mathrm{H_2O}$ (Ex 4 p. 6), lequel N’est PAS un couple redox ?',
+            prompt: 'Parmi les couples formés avec $\\mathrm{H_3O^+}$, $\\mathrm{H_2}$ et $\\mathrm{H_2O}$, lequel N’est PAS un couple redox ?',
             options: [
               '$\\mathrm{H_3O^+/H_2O}$ (car le n.o. de H reste $+\\text{I}$ dans les deux espèces)',
               '$\\mathrm{H_3O^+/H_2}$',
@@ -740,7 +740,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p03_q1',
           type: 'mcq',
-          prompt: 'Que vaut le nombre d’oxydation de l’élément dans un ion monoatomique (Ex 4 p. 5) ?',
+          prompt: 'Que vaut le nombre d’oxydation de l’élément dans un ion monoatomique ?',
           options: [
             'Il est égal à la charge portée par l’ion (avec son signe, en chiffre romain)',
             'Il est toujours égal à zéro',
@@ -810,7 +810,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p03_q6',
           type: 'mcq',
-          prompt: 'Parmi les couples formés avec $\\mathrm{H_3O^+}$, $\\mathrm{H_2}$ et $\\mathrm{H_2O}$ (Ex 4 p. 6), lequel N’est PAS un couple redox ?',
+          prompt: 'Parmi les couples formés avec $\\mathrm{H_3O^+}$, $\\mathrm{H_2}$ et $\\mathrm{H_2O}$, lequel N’est PAS un couple redox ?',
           options: [
             '$\\mathrm{H_3O^+/H_2O}$ (car le n.o. de H reste $+\\text{I}$ dans les deux espèces)',
             '$\\mathrm{H_3O^+/H_2}$',
@@ -834,7 +834,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
       summary:
         'Reconnaître une réaction d’oxydoréduction par la variation des n.o. et identifier oxydation, réduction, oxydant et réducteur.',
       conceptExplanation:
-        "Le nombre d’oxydation fournit un critère universel pour analyser toute réaction chimique (p. 4–5) :\n\n1. **Reconnaître une réaction redox** : une transformation est une réaction d’oxydoréduction **si et seulement si au moins un élément change de nombre d’oxydation** entre les réactifs et les produits.\n2. **Oxydation et réducteur** : si le $\\text{n.o.}$ d’un élément **augmente**, cet élément subit une **oxydation** ; l’espèce chimique qui le contient est le **réducteur**.\n3. **Réduction et oxydant** : si le $\\text{n.o.}$ d’un élément **diminue**, cet élément subit une **réduction** ; l’espèce chimique qui le contient est l’**oxydant**.",
+        "Le nombre d’oxydation fournit un critère universel pour analyser toute réaction chimique :\n\n1. **Reconnaître une réaction redox** : une transformation est une réaction d’oxydoréduction **si et seulement si au moins un élément change de nombre d’oxydation** entre les réactifs et les produits.\n2. **Oxydation et réducteur** : si le $\\text{n.o.}$ d’un élément **augmente**, cet élément subit une **oxydation** ; l’espèce chimique qui le contient est le **réducteur**.\n3. **Réduction et oxydant** : si le $\\text{n.o.}$ d’un élément **diminue**, cet élément subit une **réduction** ; l’espèce chimique qui le contient est l’**oxydant**.",
       keyRule:
         'n.o. augmente ⟹ oxydation (le réactif est le réducteur). n.o. diminue ⟹ réduction (le réactif est l’oxydant). Si aucun n.o. ne varie, ce n’est pas une réaction redox.',
       formulas: [
@@ -845,7 +845,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Analyser 2 CuO + C → 2 Cu + CO₂ par les n.o. (Exercices 1 et 3 p. 5)',
+        title: 'Analyser 2 CuO + C → 2 Cu + CO₂ par les n.o.',
         statement:
           'Détermine les n.o. de chaque élément dans $2\\,\\mathrm{CuO} + \\mathrm{C} \\longrightarrow 2\\,\\mathrm{Cu} + \\mathrm{CO_2}$ puis identifie l’oxydation, la réduction, l’oxydant et le réducteur.',
         methodSteps: [
@@ -864,7 +864,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
           stepTheme: 'Augmentation du n.o.',
           stepTitle: 'Associer augmentation du n.o. et oxydation',
           paragraphText:
-            'Au cours d’une réaction redox, l’espèce chimique qui contient un élément dont le nombre d’oxydation augmente subit l’oxydation : c’est le réducteur (Ex 2 p. 5).',
+            'Au cours d’une réaction redox, l’espèce chimique qui contient un élément dont le nombre d’oxydation augmente subit l’oxydation : c’est le réducteur.',
           exercise: {
             id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p04_q1',
             type: 'mcq',
@@ -891,7 +891,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p04_q2',
             type: 'mcq',
-            prompt: 'La diminution du nombre d’oxydation d’un élément au cours d’une réaction chimique correspond à (Ex 4 p. 6) :',
+            prompt: 'La diminution du nombre d’oxydation d’un élément au cours d’une réaction chimique correspond à :',
             options: [
               'Sa réduction ; le réactif qui le contient est l’oxydant',
               'Son oxydation ; le réactif qui le contient est le réducteur',
@@ -937,7 +937,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p04_q4',
             type: 'mcq',
-            prompt: 'Dans $\\mathrm{Cr_2O_3 + 2\\,Al \\longrightarrow 2\\,Cr + Al_2O_3}$ (Situation p. 4), pourquoi s’agit-il d’une réaction redox et quel est l’oxydant ?',
+            prompt: 'Dans $\\mathrm{Cr_2O_3 + 2\\,Al \\longrightarrow 2\\,Cr + Al_2O_3}$, pourquoi s’agit-il d’une réaction redox et quel est l’oxydant ?',
             options: [
               '$\\text{n.o.(Cr)}$ passe de $+\\text{III}$ à $0$ et $\\text{n.o.(Al)}$ de $0$ à $+\\text{III}$ ; $\\mathrm{Cr_2O_3}$ est l’oxydant',
               '$\\text{n.o.(O)}$ passe de $0$ à $-\\text{II}$ ; $\\mathrm{Al}$ est l’oxydant',
@@ -1014,7 +1014,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p04_q2',
           type: 'mcq',
-          prompt: 'La diminution du nombre d’oxydation d’un élément au cours d’une réaction chimique correspond à (Ex 4 p. 6) :',
+          prompt: 'La diminution du nombre d’oxydation d’un élément au cours d’une réaction chimique correspond à :',
           options: [
             'Sa réduction ; le réactif qui le contient est l’oxydant',
             'Son oxydation ; le réactif qui le contient est le réducteur',
@@ -1042,7 +1042,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p04_q4',
           type: 'mcq',
-          prompt: 'Dans $\\mathrm{Cr_2O_3 + 2\\,Al \\longrightarrow 2\\,Cr + Al_2O_3}$ (Situation p. 4), pourquoi s’agit-il d’une réaction redox et quel est l’oxydant ?',
+          prompt: 'Dans $\\mathrm{Cr_2O_3 + 2\\,Al \\longrightarrow 2\\,Cr + Al_2O_3}$, pourquoi s’agit-il d’une réaction redox et quel est l’oxydant ?',
           options: [
             '$\\text{n.o.(Cr)}$ passe de $+\\text{III}$ à $0$ et $\\text{n.o.(Al)}$ de $0$ à $+\\text{III}$ ; $\\mathrm{Cr_2O_3}$ est l’oxydant',
             '$\\text{n.o.(O)}$ passe de $0$ à $-\\text{II}$ ; $\\mathrm{Al}$ est l’oxydant',
@@ -1094,7 +1094,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
       summary:
         'Appliquer la conservation algébrique des variations de nombre d’oxydation (Σ Δn.o. = 0) pour équilibrer des réactions complexes (C + H₂SO₄, Fe₂O₃ + CO).',
       conceptExplanation:
-        "Les réactions par voie sèche ou concentrées s’équilibrent très rapidement grâce à la méthode des **variations de nombre d’oxydation** (Exercices 5 et 6 p. 6–7) :\n\n**Méthode en 3 étapes :**\n1. **Calculer la variation $\\Delta\\text{n.o.} = \\text{n.o.}_{\\text{final}} - \\text{n.o.}_{\\text{initial}}$** pour chaque atome dont l’état d’oxydation change.\n2. **Égaliser l’augmentation totale et la diminution totale** : si $x$ atomes subissent $\\Delta\\text{n.o.}_1 > 0$ et $y$ atomes subissent $\\Delta\\text{n.o.}_2 < 0$, alors :\n   $$x\\,\\Delta\\text{n.o.}_1 + y\\,\\Delta\\text{n.o.}_2 = 0$$\n3. **Compléter les atomes non redox** ($\\mathrm{O}$ et $\\mathrm{H}$) à l’aide de $\\mathrm{H_2O}$ (et $\\mathrm{H^+}$ si besoin en milieu acide).\n\n- **Application 1 (Ex 5 p. 6)** : $\\mathrm{C + H_2SO_4 \\longrightarrow SO_2 + CO_2 + \\dots}$\n  - Pour C : $0 \\to +\\text{IV}$, soit $\\Delta\\text{n.o.(C)} = +4$. Pour S : $+\\text{VI} \\to +\\text{IV}$, soit $\\Delta\\text{n.o.(S)} = -2$.\n  - Conservation : $4x = 2y \\implies y = 2x$ ($x = 1$, $y = 2$), puis ajout de $2\\,\\mathrm{H_2O}$ à droite :\n  $$\\mathrm{C + 2\\,H_2SO_4 \\longrightarrow 2\\,SO_2 + CO_2 + 2\\,H_2O}$$\n- **Application 2 (Ex 6 p. 7)** : $\\mathrm{Fe_2O_3 + CO \\longrightarrow 2\\,Fe + CO_2}$\n  - Chaque atome Fe passe de $+\\text{III}$ à $0$ ($\\Delta = -3$, soit $-6$ pour $2\\,\\mathrm{Fe}$ dans $\\mathrm{Fe_2O_3}$). C dans CO passe de $+\\text{II}$ à $+\\text{IV}$ ($\\Delta = +2$).\n  - Il faut $3\\,\\mathrm{CO}$ pour compenser les $2$ atomes de fer ($3 \\times 2 = 6$) :\n  $$\\mathrm{Fe_2O_3 + 3\\,CO \\longrightarrow 2\\,Fe + 3\\,CO_2}$$",
+        "Les réactions par voie sèche ou concentrées s’équilibrent très rapidement grâce à la méthode des **variations de nombre d’oxydation** :\n\n**Méthode en 3 étapes :**\n1. **Calculer la variation $\\Delta\\text{n.o.} = \\text{n.o.}_{\\text{final}} - \\text{n.o.}_{\\text{initial}}$** pour chaque atome dont l’état d’oxydation change.\n2. **Égaliser l’augmentation totale et la diminution totale** : si $x$ atomes subissent $\\Delta\\text{n.o.}_1 > 0$ et $y$ atomes subissent $\\Delta\\text{n.o.}_2 < 0$, alors :\n $$x\\,\\Delta\\text{n.o.}_1 + y\\,\\Delta\\text{n.o.}_2 = 0$$\n3. **Compléter les atomes non redox** ($\\mathrm{O}$ et $\\mathrm{H}$) à l’aide de $\\mathrm{H_2O}$ (et $\\mathrm{H^+}$ si besoin en milieu acide).\n\n- **Application 1** : $\\mathrm{C + H_2SO_4 \\longrightarrow SO_2 + CO_2 + \\dots}$\n - Pour C : $0 \\to +\\text{IV}$, soit $\\Delta\\text{n.o.(C)} = +4$. Pour S : $+\\text{VI} \\to +\\text{IV}$, soit $\\Delta\\text{n.o.(S)} = -2$.\n - Conservation : $4x = 2y \\implies y = 2x$ ($x = 1$, $y = 2$), puis ajout de $2\\,\\mathrm{H_2O}$ à droite :\n $$\\mathrm{C + 2\\,H_2SO_4 \\longrightarrow 2\\,SO_2 + CO_2 + 2\\,H_2O}$$\n- **Application 2** : $\\mathrm{Fe_2O_3 + CO \\longrightarrow 2\\,Fe + CO_2}$\n - Chaque atome Fe passe de $+\\text{III}$ à $0$ ($\\Delta = -3$, soit $-6$ pour $2\\,\\mathrm{Fe}$ dans $\\mathrm{Fe_2O_3}$). C dans CO passe de $+\\text{II}$ à $+\\text{IV}$ ($\\Delta = +2$).\n - Il faut $3\\,\\mathrm{CO}$ pour compenser les $2$ atomes de fer ($3 \\times 2 = 6$) :\n $$\\mathrm{Fe_2O_3 + 3\\,CO \\longrightarrow 2\\,Fe + 3\\,CO_2}$$",
       keyRule:
         'Pour équilibrer par le n.o., on choisit les plus petits entiers x et y tels que la hausse totale de n.o. compense exactement la baisse totale (x·Δn.o.₁ + y·Δn.o.₂ = 0), puis on équilibre H et O avec H₂O.',
       formulas: [
@@ -1105,7 +1105,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Équilibrer Fe₂O₃ + CO → Fe + CO₂ étape par étape (Exercice 6 p. 7)',
+        title: 'Équilibrer Fe₂O₃ + CO → Fe + CO₂ étape par étape',
         statement:
           'Retrouve les coefficients stœchiométriques de la réduction de l’oxyde de fer III par le monoxyde de carbone à l’aide du nombre d’oxydation.',
         methodSteps: [
@@ -1353,9 +1353,9 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
       order: 6,
       title: 'Bilans molaires par voie sèche et sidérurgie (minerai → acier)',
       summary:
-        'Exploiter les bilans molaires (réactif limitant, masse de métal ou volume gazeux) dans les exercices du cours et décrire les étapes du haut fourneau.',
+        'Exploiter les bilans molaires (réactif limitant, masse de métal ou volume gazeux) en situation pratique et décrire les étapes du haut fourneau.',
       conceptExplanation:
-        "Une fois l’équation-bilan équilibrée, les proportions stœchiométriques permettent de calculer masses et volumes de gaz formés (Situation p. 4, Ex 5 p. 6, Ex 6 p. 7) :\n\n1. **Réactif limitant (Situation d’évaluation p. 4)** : pour $\\mathrm{Cr_2O_3 + 2\\,Al \\longrightarrow 2\\,Cr + Al_2O_3}$, on calcule séparément $n(\\mathrm{Cr_2O_3})$ et $\\frac{n(\\mathrm{Al})}{2}$ pour identifier le plus petit (limitant) avant de calculer $m(\\mathrm{Cr})$.\n2. **Volume gazeux formé (Ex 5 p. 6)** : dans $\\mathrm{C + 2\\,H_2SO_4 \\longrightarrow 2\\,SO_2 + CO_2 + 2\\,H_2O}$, $n(\\mathrm{CO_2}) = n(\\mathrm{C}) = \\frac{m_C}{M_C}$, d’où $V(\\mathrm{CO_2}) = n(\\mathrm{C})\\,V_m$.\n3. **Du minerai de fer à l’acier (Documentation p. 8)** :\n   - Dans un **haut fourneau**, on introduit par le gueulard du **minerai de fer** ($\\mathrm{Fe_2O_3}$ + gangue terreuse), du **coke** (carbone) et un **fondant**.\n   - Le coke forme du monoxyde de carbone $\\mathrm{CO}$, qui réduit $\\mathrm{Fe_2O_3}$ en fer ; le fondant s’unit à la gangue pour donner le **laitier**.\n   - On recueille la **fonte** liquide (riche en carbone et impuretés $\\mathrm{Si, Mn, S, P}$), puis on l’affine en **acier** par **soufflage d’air ou de dioxygène pur** qui oxyde ces impuretés plus oxydables que le fer.",
+        "Une fois l’équation-bilan équilibrée, les proportions stœchiométriques permettent de calculer masses et volumes de gaz formés :\n\n1. **Réactif limitant** : pour $\\mathrm{Cr_2O_3 + 2\\,Al \\longrightarrow 2\\,Cr + Al_2O_3}$, on calcule séparément $n(\\mathrm{Cr_2O_3})$ et $\\frac{n(\\mathrm{Al})}{2}$ pour identifier le plus petit (limitant) avant de calculer $m(\\mathrm{Cr})$.\n2. **Volume gazeux formé** : dans $\\mathrm{C + 2\\,H_2SO_4 \\longrightarrow 2\\,SO_2 + CO_2 + 2\\,H_2O}$, $n(\\mathrm{CO_2}) = n(\\mathrm{C}) = \\frac{m_C}{M_C}$, d’où $V(\\mathrm{CO_2}) = n(\\mathrm{C})\\,V_m$.\n3. **Du minerai de fer à l’acier** :\n - Dans un **haut fourneau**, on introduit par le gueulard du **minerai de fer** ($\\mathrm{Fe_2O_3}$ + gangue terreuse), du **coke** (carbone) et un **fondant**.\n - Le coke forme du monoxyde de carbone $\\mathrm{CO}$, qui réduit $\\mathrm{Fe_2O_3}$ en fer ; le fondant s’unit à la gangue pour donner le **laitier**.\n - On recueille la **fonte** liquide (riche en carbone et impuretés $\\mathrm{Si, Mn, S, P}$), puis on l’affine en **acier** par **soufflage d’air ou de dioxygène pur** qui oxyde ces impuretés plus oxydables que le fer.",
       keyRule:
         'Au haut fourneau, le coke produit CO qui réduit Fe₂O₃ en fer (fonte), le fondant élimine la gangue en laitier, puis le soufflage d’O₂ oxyde le carbone et les impuretés de la fonte pour produire l’acier.',
       formulas: [
@@ -1366,7 +1366,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
         },
       ],
       workedExample: {
-        title: 'Calculer la masse de chrome et le volume de CO₂ (Situation p. 4 & Ex 5 p. 6)',
+        title: 'Calculer la masse de chrome et le volume de CO₂',
         statement:
           '(1) On fait réagir $5{,}0\\text{ g}$ de $\\mathrm{Cr_2O_3}$ ($M = 152\\text{ g/mol}$) avec $8{,}5\\text{ g}$ d’aluminium ($M = 27\\text{ g/mol}$). Calcule la masse de chrome ($M = 52\\text{ g/mol}$) formée. (2) Calcule le volume de $\\mathrm{CO_2}$ ($V_m = 28\\text{ L/mol}$) obtenu avec $18\\text{ g}$ de carbone dans $\\mathrm{H_2SO_4}$ concentré.',
         methodSteps: [
@@ -1458,7 +1458,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
           exercise: {
             id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p06_q4',
             type: 'mcq',
-            prompt: 'Dans un haut fourneau (Documentation p. 8), à quoi sert le « fondant » ajouté avec le minerai et le coke ?',
+            prompt: 'Dans un haut fourneau, à quoi sert le « fondant » ajouté avec le minerai et le coke ?',
             options: [
               'Il se combine à la gangue terreuse pour former le laitier',
               'Il refroidit le métal pour empêcher sa fusion',
@@ -1563,7 +1563,7 @@ export const CHIMIE_1RE_CD_L07_OXYDOREDUCTION_VOIE_SECHE: CurriculumChapter = {
         {
           id: 'premiere_c_chimie_l07_oxydoreduction_voie_seche_p06_q4',
           type: 'mcq',
-          prompt: 'Dans un haut fourneau (Documentation p. 8), à quoi sert le « fondant » ajouté avec le minerai et le coke ?',
+          prompt: 'Dans un haut fourneau, à quoi sert le « fondant » ajouté avec le minerai et le coke ?',
           options: [
             'Il se combine à la gangue terreuse pour former le laitier',
             'Il refroidit le métal pour empêcher sa fusion',

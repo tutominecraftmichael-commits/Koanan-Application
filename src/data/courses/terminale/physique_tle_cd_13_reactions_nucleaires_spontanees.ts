@@ -7,7 +7,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
   "summary": "Étude complète et approfondie de la radioactivité naturelle et artificielle : structure du noyau atomique, équivalence masse-énergie, lois de conservation de Soddy, rayonnements alpha, bêta moins, bêta plus et gamma, loi de décroissance radioactive, période radioactive (demi-vie), activité en Becquerel et méthodes de datation.",
   "officialVolumeHours": 8,
   "contentVersion": 2,
-  "source": "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC)",
+  "source": "Programme KONAN — ",
   "points": [
     {
       "id": "pt1_structure_noyau_unite_masse",
@@ -1804,7 +1804,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
               "Pour éviter que le traceur ne soit éliminé par les urines"
             ],
             "correctAnswerIndex": 1,
-            "explanation": "Une demi-vie courte (ex. 6 h pour le Tc-99m) garantit qu'en quelques jours (10 demi-vies), la totalité de la radioactivité a disparu du corps du patient, ce qui limite considérablement l'irradiation cumulée sans altérer la qualité des images."
+            "explanation": "Une demi-vie courte garantit qu'en quelques jours (10 demi-vies), la totalité de la radioactivité a disparu du corps du patient, ce qui limite considérablement l'irradiation cumulée sans altérer la qualité des images."
           }
         },
         {
@@ -1922,7 +1922,7 @@ export const PHYSIQUE_TLE_CD_L13_REACTIONS_NUCLEAIRES_SPONTANEES: CurriculumChap
             "Pour éviter que le traceur ne soit éliminé par les urines"
           ],
           "correctAnswerIndex": 1,
-          "explanation": "Une demi-vie courte (ex. 6 h pour le Tc-99m) garantit qu'en quelques jours (10 demi-vies), la totalité de la radioactivité a disparu du corps du patient, ce qui limite considérablement l'irradiation cumulée sans altérer la qualité des images."
+          "explanation": "Une demi-vie courte garantit qu'en quelques jours (10 demi-vies), la totalité de la radioactivité a disparu du corps du patient, ce qui limite considérablement l'irradiation cumulée sans altérer la qualité des images."
         },
         {
           "id": "phys_tle_cd_13_p6_s5_qcm",

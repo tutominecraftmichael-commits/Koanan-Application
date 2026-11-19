@@ -11,7 +11,7 @@ export const SVT_1RE_D_L11_DIGESTION_ALIMENTS: CurriculumChapter = {
   "summary": "Hydrolyse enzymatique de l’amidon, des protéines et des lipides, rôle de la bile, mécanisme de l’action enzymatique (complexe enzyme-substrat, spécificité), influence du pH et de la température sur les enzymes.",
   "officialVolumeHours": 5,
   "contentVersion": 2,
-  "source": "SVT 1ère D_L11_ LA  DIGESTION DES ALIMENTS.pdf (Côte d’Ivoire – École numérique ; durée non indiquée)",
+  "source": "SVT 1ère D_L11_ LA DIGESTION DES ALIMENTS.pdf (Côte d’Ivoire – École numérique ; durée non indiquée)",
   "points": [
     {
       "id": "premiere_d_svt_l11_digestion_aliments_p01",

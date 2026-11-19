@@ -25,7 +25,7 @@ export const OGE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Définition, buts, objectifs et parties prenantes de l'entreprise, cinq approches d'analyse (production, répartition de la VA, système, décision, cellule sociale), culture, identité, projet d'entreprise et typologie économique en Côte d'Ivoire.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'OGE 2025-2026 (ESATIC ENTD 1, Chapitres 1, 2 et 3)',
+    source: 'OGE 2025-2026',
     points: [
       makePoint({
         id: 'lmd_entd_l1_oge_ch1_p1',
@@ -165,7 +165,7 @@ export const OGE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_oge_ch1_p1_q5',
               type: 'mcq',
               prompt:
-                'Que signifie précisément l’expression « l’entreprise est un système finalisé » (Quiz 1 du cours) ?',
+                'Que signifie précisément l’expression « l’entreprise est un système finalisé » ?',
               options: [
                 "Elle est créée en vue de réaliser des buts déterminés qui guident ses choix et décisions",
                 'Elle fonctionne en circuit fermé sans contact avec son environnement',
@@ -294,7 +294,7 @@ export const OGE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_oge_ch1_p2_q3',
               type: 'mcq',
               prompt:
-                'Quelles sont les trois fonctions de l’identité de l’entreprise selon le cours OGE ?',
+                'Quelles sont les trois fonctions de l’identité de l’entreprise ?',
               options: [
                 'Recrutement, comptabilité et fiscalité',
                 'Publicité, prestige et différenciation',
@@ -342,7 +342,7 @@ export const OGE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_oge_ch1_p2_q5',
               type: 'mcq',
               prompt:
-                "Selon le tableau du cours OGE, dans quelle catégorie classe-t-on une entreprise ivoirienne employant 85 salariés déclarés à la CNPS pour un chiffre d'affaires annuel de 600 millions FCFA ?",
+                "Selon la classification officielle des PME en Côte d’Ivoire, dans quelle catégorie classe-t-on une entreprise ivoirienne employant 85 salariés déclarés à la CNPS pour un chiffre d'affaires annuel de 600 millions FCFA ?",
               options: [
                 'Micro-entreprise',
                 'Petite entreprise',
@@ -396,7 +396,7 @@ export const OGE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Micro-environnement (5 forces de Porter) et macro-environnement (PESTEL), diagnostic contrainte / risque / opportunité, structures fonctionnelle, divisionnelle et matricielle, centralisation vs décentralisation et stratégie de franchise.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'OGE 2025-2026 (Chapitres 4 & 5) & Corrigé Examen Session 1 2025-2026 (M. SILUE YACOUBA)',
+    source: 'OGE 2025-2026 & Corrigé Examen Session 1 2025-2026',
     points: [
       makePoint({
         id: 'lmd_entd_l1_oge_ch2_p1',
@@ -767,7 +767,7 @@ export const OGE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Théories X et Y de McGregor, pyramide des besoins de Maslow, styles de direction (Likert / Hersey-Blanchard), objectifs de la fonction financière (rentabilité, solvabilité, liquidité) et modes de financement (autofinancement, capital, emprunt, leasing).",
     officialVolumeHours: 8,
     contentVersion: 2,
-    source: 'OGE 2025-2026 (Chapitres 6 & 7) & Corrigé Examen Session 1 2025-2026 (M. SILUE YACOUBA)',
+    source: 'OGE 2025-2026 & Corrigé Examen Session 1 2025-2026',
     points: [
       makePoint({
         id: 'lmd_entd_l1_oge_ch3_p1',
@@ -970,7 +970,7 @@ export const OGE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             "Une PME logistique veut acquérir 5 véhicules électriques pour 75 000 000 FCFA. Sa trésorerie disponible est de 20 000 000 FCFA et ses associés ne souhaitent pas ouvrir le capital à des tiers. Comparer l'autofinancement, l'emprunt bancaire et le leasing (crédit-bail).",
           methodSteps: [
             "Étape 1 (Autofinancement) : Insuffisant seul (20 M < 75 M) et viderait la trésorerie de sécurité, menaçant la liquidité à court terme.",
-            "Étape 2 (Emprunt bancaire) : Permet de financer une grande partie (ex. 60 M) tout en gardant l'indépendance du capital, mais exige des garanties bancaires et un apport initial.",
+            "Étape 2 (Emprunt bancaire) : Permet de financer une grande partie tout en gardant l'indépendance du capital, mais exige des garanties bancaires et un apport initial.",
             "Étape 3 (Crédit-bail / Leasing) : L'établissement financier achète les 5 véhicules et les loue à la PME contre des loyers mensuels, avec option d'achat en fin de contrat. Aucun apport massif immédiat : la liquidité est préservée et la flotte est modernisée rapidement.",
           ],
           conclusion:
@@ -1008,7 +1008,7 @@ export const OGE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Les deux grands objectifs',
             stepTitle: 'Rentabilité et solvabilité / liquidité',
             paragraphText:
-              "Selon le corrigé d'examen OGE 2025-2026, la fonction financière poursuit deux objectifs essentiels : assurer la rentabilité (optimiser l'utilisation des ressources pour maximiser les profits) et garantir la solvabilité ainsi que la liquidité (honorer les engagements à court, moyen et long terme).",
+              "La fonction financière poursuit deux objectifs essentiels : assurer la rentabilité (optimiser l'utilisation des ressources pour maximiser les profits) et garantir la solvabilité ainsi que la liquidité (honorer les engagements à court, moyen et long terme).",
             exercise: {
               id: 'lmd_entd_l1_oge_ch3_p2_q2',
               type: 'mcq',

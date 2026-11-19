@@ -12,7 +12,7 @@ const makePoint = (
 });
 
 // ============================================================================
-// ALGORITHMIQUE — ENTD LICENCE 1 (ESATIC)
+// ALGORITHMIQUE — ENTD LICENCE 1
 // Sources : Chp 1, Chp 2, Chap 3, Chap 4, Chap 5, Chap 7, Chap 8, TD Fonctions
 // ============================================================================
 
@@ -27,7 +27,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 1,
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Algorithmique (Chapitres 1, 2 et 3)',
+    source: 'ENTD L1 — Algorithmique',
     title: 'Chapitre 1 — Notions de base, instructions élémentaires et expressions',
     summary:
       'Structure d’un algorithme, variables, constantes, types de données, instructions élémentaires (affectation, lecture, écriture) et expressions numériques, booléennes et chaînes de caractères.',
@@ -231,7 +231,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Division euclidienne algorithmique',
             formula: 'a = b \\times (a \\text{ div } b) + (a \\text{ mod } b), \\quad 0 \\leqslant a \\text{ mod } b < b',
-            note: 'Exemple du cours : 32 div 5 = 6 et 32 mod 5 = 2.',
+            note: 'Exemple : 32 div 5 = 6 et 32 mod 5 = 2.',
           },
           {
             name: 'Priorité arithmétique',
@@ -520,7 +520,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'green',
             stepTitle: 'Utiliser une variable booléenne directement dans SI',
             paragraphText:
-              'Dans l’algorithme `ExprBooleennesV2` du cours, on stocke le résultat dans `estAdmis : BOOLEEN`, puis on écrit simplement `SI estAdmis ALORS ...` au lieu de `SI estAdmis = VRAI ALORS ...`, car les deux expressions booléennes sont rigoureusement équivalentes.',
+              'Dans un algorithme booléen bien écrit, on stocke le résultat dans `estAdmis : BOOLEEN`, puis on écrit simplement `SI estAdmis ALORS ...` au lieu de `SI estAdmis = VRAI ALORS ...`, car les deux expressions booléennes sont rigoureusement équivalentes.',
             exercise: {
               id: 'lmd_entd_l1_algo_ch1_p3_q4',
               type: 'mcq',
@@ -598,7 +598,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 2,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Algorithmique (Chapitres 4 et 5)',
+    source: 'ENTD L1 — Algorithmique',
     title: 'Chapitre 2 — Instructions de choix et instructions répétitives',
     summary:
       'Structures conditionnelles (SI/SINON, SI/SINONSI, SELON) et boucles itératives (TANTQUE, REPETER...JUSQUA, POUR) : mécanismes, traces et critères de choix.',
@@ -694,7 +694,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_algo_ch2_p1_q3',
               type: 'mcq',
-              prompt: 'Quels types sont autorisés pour le sélecteur d’une instruction `SELON` selon le cours ?',
+              prompt: 'Quels types sont autorisés pour le sélecteur d’une instruction `SELON` ?',
               options: [
                 'Uniquement les types énumérables : ENTIER ou CARACTERE.',
                 'Uniquement REEL et CHAINE.',
@@ -831,7 +831,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_algo_ch2_p2_q1',
               type: 'mcq',
-              prompt: 'Que fait la boucle du cours : `a ← 1 ; b ← a ; TANTQUE a < 100 FAIRE b ← b * 5 ; ECRIRE(b) ; FINTANTQUE` ?',
+              prompt: 'Que fait la boucle suivante : `a ← 1 ; b ← a ; TANTQUE a < 100 FAIRE b ← b * 5 ; ECRIRE(b) ; FINTANTQUE` ?',
               options: [
                 'Elle s’arrête après 3 itérations quand `b` vaut 125.',
                 'Elle ne s’exécute jamais.',
@@ -973,7 +973,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 3,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Algorithmique (Chapitres 7, 8 et TD Fonctions)',
+    source: 'ENTD L1 — Algorithmique',
     title: 'Chapitre 3 — Sous-programmes : fonctions, procédures et récursivité',
     summary:
       'Modularité, profil et appel de fonction, passage de paramètres (E, S, E/S) dans les procédures, variables locales et conception de fonctions récursives.',
@@ -999,7 +999,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Une fonction renvoie exactement un résultat (via `RETOURNER`) et son appel s’insère dans une expression ; les paramètres effectifs doivent correspondre en nombre, en ordre et en type aux paramètres formels.',
         workedExample: {
-          title: 'Fonction Moyenne et Maxquatre_2 (Chapitre 7 & TD Fonctions Ex. 1)',
+          title: 'Fonction Moyenne et Maxquatre_2',
           statement:
             'Écrire la fonction `moyenne(a, b : ENTIER) : REEL` qui renvoie la moyenne de deux entiers, puis montrer comment `Maxquatre_2` calcule le maximum de 4 entiers `a, b, c, d` à l’aide de `maxdeux`.',
           methodSteps: [
@@ -1022,7 +1022,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_algo_ch3_p1_q1',
               type: 'mcq',
-              prompt: 'Si un programme appelle la fonction prédéfinie `racine(x)` avec `x = -9`, qui est responsable de l’erreur selon le cours ?',
+              prompt: 'Si un programme appelle la fonction prédéfinie `racine(x)` avec `x = -9`, qui est responsable de l’erreur ?',
               options: [
                 'La bibliothèque mathématique qui aurait dû renvoyer 3.',
                 'L’algorithme appelant, qui n’a pas respecté la condition d’appel ($x \\geqslant 0$).',
@@ -1045,7 +1045,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_algo_ch3_p1_q2',
               type: 'mcq',
-              prompt: 'Quel est le profil de la fonction `moyenne(a, b : ENTIER) : REEL` du TD Fonctions ?',
+              prompt: 'Quel est le profil de la fonction `moyenne(a, b : ENTIER) : REEL` ?',
               options: [
                 '(REEL, REEL) → ENTIER',
                 '(ENTIER) → REEL',
@@ -1168,12 +1168,12 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           'Une **fonction récursive** est une fonction qui s’appelle elle-même sur un sous-problème plus petit, en comportant impérativement un **cas de base** (condition d’arrêt) qui garantit la terminaison.',
         formulas: [
           {
-            name: 'Somme récursive (TD Fonctions Ex. 2)',
+            name: 'Somme récursive',
             formula: '\\text{Somme}(0) = 0, \\quad \\text{Somme}(m) = m + \\text{Somme}(m - 1) \\quad (m \\geqslant 1)',
             note: 'Calcule 1 + 2 + ... + m sans boucle.',
           },
           {
-            name: 'Suite récursive (TD Fonctions Ex. 3)',
+            name: 'Suite récursive',
             formula: 'U(0) = 4, \\quad U(n) = 5 \\cdot U(n - 1) + 9 \\quad (n > 0)',
             note: 'Traduction directe d’une relation de récurrence mathématique.',
           },
@@ -1269,7 +1269,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'definition',
             stepBadge: 'Récursivité',
             stepTheme: 'blue',
-            stepTitle: 'Principe d’une fonction récursive (TD Ex. 2)',
+            stepTitle: 'Principe d’une fonction récursive',
             paragraphText:
               'Une fonction récursive calcule le résultat au rang $m$ en s’appelant elle-même au rang $m - 1$. Pour `Somme(m) = 1 + 2 + ... + m` : si `m = 0` (ou `m = 1`), on renvoie `0` (ou `1`) ; sinon on renvoie `m + Somme(m - 1)`.',
             formula: {
@@ -1296,7 +1296,7 @@ export const ALGORITHMIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'methode',
             stepBadge: 'Suite récursive',
             stepTheme: 'green',
-            stepTitle: 'Calculer un terme de suite récursive (TD Ex. 3)',
+            stepTitle: 'Calculer un terme de suite récursive',
             paragraphText:
               'Pour la suite définie par $U_0 = 4$ et $U_n = 5 U_{n-1} + 9$ pour $n > 0$, la fonction récursive s’écrit : `SI n = 0 ALORS RETOURNER(4) SINON RETOURNER(5 * U(n - 1) + 9) FINSI`.',
             exercise: {

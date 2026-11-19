@@ -212,7 +212,7 @@ export const CHIMIE_TLE_CD_L11_DOSAGES_SOLUTIONS_TAMPONS: CurriculumChapter = {
           "stepTitle": "Synthèse : la classification des 3 grands types de titrages",
           "stepTheme": "Les 3 titrages",
           "stepBadge": "Panorama",
-          "paragraphText": "Le programme officiel classe les dosages acido-basiques en 3 familles distinctes selon la force des espèces : 1° Acide fort par base forte (pHE = 7) ; 2° Acide faible par base forte (pHE > 7 basique) ; 3° Base faible par acide fort (pHE < 7 acide).",
+          "paragraphText": "On classe les dosages acido-basiques en 3 familles distinctes selon la force des espèces : 1° Acide fort par base forte (pHE = 7) ; 2° Acide faible par base forte (pHE > 7 basique) ; 3° Base faible par acide fort (pHE < 7 acide).",
           "exercise": {
             "id": "terminale_c_chimie_l11_dosages_solutions_tampons_p01_q7",
             "type": "mcq",

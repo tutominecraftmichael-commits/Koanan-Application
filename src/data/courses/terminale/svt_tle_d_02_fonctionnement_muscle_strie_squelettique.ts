@@ -10,7 +10,7 @@ export const SVT_TLE_D_L02_FONCTIONNEMENT_MUSCLE_STRIE_SQUELETTIQUE: CurriculumC
   summary: "Étude complète et approfondie de la motricité squelettique : organisation anatomique du muscle et ultrastructure du sarcomère, mécanisme moléculaire du glissement des myofilaments sous l'action du calcium et de l'ATP, analyse graphique des phénomènes électriques et mécaniques (myogramme, sommation, tétanos imparfait et parfait, fatigue musculaire), et biochimie métabolique des voies de régénération rapide et lente de l'ATP.",
   officialVolumeHours: 8,
   contentVersion: 2,
-  source: "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC) - SVT Terminale D",
+  source: "Programme KONAN — SVT Terminale D",
   points: [
     {
       id: "pt1_structure_myofibrille_sarcomere",

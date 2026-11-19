@@ -180,7 +180,7 @@ export const HIST_1RE_T1_L01_ESSOR_CAPITALISME: CurriculumChapter = {
               "Vraie seulement au XIXe siècle"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "C'est la question 1 de l'activité d'application du cours."
+            "explanation": "Cette notion est un point clé à retenir pour les évaluations."
           }
         }
       ],
@@ -274,7 +274,7 @@ export const HIST_1RE_T1_L01_ESSOR_CAPITALISME: CurriculumChapter = {
             "Vraie seulement au XIXe siècle"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "C'est la question 1 de l'activité d'application du cours."
+          "explanation": "Cette notion est un point clé à retenir pour les évaluations."
         }
       ]
     },
@@ -1375,7 +1375,7 @@ export const HIST_1RE_T1_L01_ESSOR_CAPITALISME: CurriculumChapter = {
               "Jules Ferry"
             ],
             "correctAnswerIndex": 0,
-            "explanation": "Le Manifeste date de 1848 (et non 1948, comme l'écrit une situation du cours)."
+            "explanation": "Le Manifeste date de 1848 (et non 1948)."
           }
         },
         {
@@ -1459,7 +1459,7 @@ export const HIST_1RE_T1_L01_ESSOR_CAPITALISME: CurriculumChapter = {
               "Fondements du capitalisme"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "C'est l'activité d'application n°2 du cours."
+            "explanation": "Cette notion est un point clé à maîtriser."
           }
         },
         {
@@ -1472,7 +1472,7 @@ export const HIST_1RE_T1_L01_ESSOR_CAPITALISME: CurriculumChapter = {
           "exercise": {
             "id": "premiere_a1_hg_histoire_t1_l01_essor_capitalisme_p06_q7",
             "type": "mcq",
-            "prompt": "Comment évolue l'économie capitaliste selon le cours ?",
+            "prompt": "Comment évolue l'économie capitaliste ?",
             "options": [
               "Elle progresse toujours sans crise",
               "Elle ne change jamais",
@@ -1509,7 +1509,7 @@ export const HIST_1RE_T1_L01_ESSOR_CAPITALISME: CurriculumChapter = {
             "Jules Ferry"
           ],
           "correctAnswerIndex": 0,
-          "explanation": "Le Manifeste date de 1848 (et non 1948, comme l'écrit une situation du cours)."
+          "explanation": "Le Manifeste date de 1848 (et non 1948)."
         },
         {
           "id": "premiere_a1_hg_histoire_t1_l01_essor_capitalisme_p06_q3",
@@ -1561,12 +1561,12 @@ export const HIST_1RE_T1_L01_ESSOR_CAPITALISME: CurriculumChapter = {
             "Fondements du capitalisme"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "C'est l'activité d'application n°2 du cours."
+          "explanation": "Cette notion est un point clé à maîtriser."
         },
         {
           "id": "premiere_a1_hg_histoire_t1_l01_essor_capitalisme_p06_q7",
           "type": "mcq",
-          "prompt": "Comment évolue l'économie capitaliste selon le cours ?",
+          "prompt": "Comment évolue l'économie capitaliste ?",
           "options": [
             "Elle progresse toujours sans crise",
             "Elle ne change jamais",

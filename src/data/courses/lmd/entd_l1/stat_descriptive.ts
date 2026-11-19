@@ -12,8 +12,8 @@ const makePoint = (
 });
 
 // ============================================================================
-// STATISTIQUE DESCRIPTIVE — ENTD LICENCE 1 (ESATIC)
-// Sources : CM Stat L1 (J.-M. Owo), Chap2 (Liaisons), statsL1_bivaries, TD1 ESATIC
+// STATISTIQUE DESCRIPTIVE — ENTD LICENCE 1
+// Programme structuré KONAN
 // ============================================================================
 
 export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
@@ -27,7 +27,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 1,
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Statistique Descriptive (CM Ch. 1–3 & TD 1)',
+    source: 'ENTD L1 — Statistique Descriptive',
     title: 'Chapitre 1 — Concepts fondamentaux, tableaux et représentations graphiques',
     summary:
       'Vocabulaire statistique, typologie des variables, tableaux d’effectifs et fréquences cumulées, fonction de répartition empirique $F(x)$, règle de Sturges et graphiques (secteurs, bâtons, histogramme des densités).',
@@ -58,9 +58,9 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Un code numérique (code postal, numéro de téléphone, `1 = Homme, 2 = Femme`) n’a aucune valeur de quantité : la variable reste **qualitative nominale** !',
         workedExample: {
-          title: 'Identification des variables de l’enquête ESATIC (TD 1 Ex. 1, 3 & 7)',
+          title: 'Identification des variables d’une enquête statistique',
           statement:
-            'Dans le TD 1 ESATIC, classer les caractères suivants : (1) le loisir préféré (`S, C, T, L`), (2) la mention au Baccalauréat, (3) le nombre de pêches abîmées par caissette de 9 pêches, (4) le loyer mensuel en F CFA des appartements à Abidjan.',
+            'Classer les caractères suivants : (1) le loisir préféré (`S, C, T, L`), (2) la mention au Baccalauréat, (3) le nombre de pêches abîmées par caissette de 9 pêches, (4) le loyer mensuel en F CFA des appartements à Abidjan.',
           methodSteps: [
             '(1) Loisir (`Sport, Cinéma, Théâtre, Lecture`) : catégories sans ordre naturel → **qualitative nominale**.',
             '(2) Mention au Bac (`Passable < Assez Bien < Bien < Très Bien`) : catégories hiérarchisées → **qualitative ordinale**.',
@@ -82,7 +82,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_stat_ch1_p1_q1',
               type: 'mcq',
-              prompt: 'Quelle est la mission propre de la **statistique descriptive** selon le cours ?',
+              prompt: 'Quelle est la mission propre de la **statistique descriptive** ?',
               options: [
                 'Recueillir, ordonner, réduire et condenser des données par des tableaux, graphiques et paramètres.',
                 'Généraliser obligatoirement un résultat d’échantillon à la population mondiale par lois de probabilités.',
@@ -161,7 +161,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 3,
               explanation:
-                'Les mentions sont des catégories non numériques mais naturellement hiérarchisées : c’est l’exemple type de variable qualitative ordinale du cours.',
+                'Les mentions sont des catégories non numériques mais naturellement hiérarchisées : c’est l’exemple type d’une variable qualitative ordinale.',
             },
           },
           {
@@ -175,7 +175,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_stat_ch1_p1_q5',
               type: 'mcq',
-              prompt: 'Dans le TD 1 Ex. 2 (nombre d’arrivées de clients au bureau de poste en 10 minutes) et Ex. 8 (masse en grammes des œufs pondus), quelles sont respectivement les natures de ces deux variables ?',
+              prompt: 'Soient deux variables : le nombre d’arrivées de clients au bureau de poste en 10 minutes et la masse en grammes des œufs pondus. Quelles sont respectivement leurs natures ?',
               options: [
                 'Quantitative discrète et quantitative continue.',
                 'Quantitative continue et quantitative discrète.',
@@ -194,7 +194,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'orange',
             stepTitle: 'Quand a-t-on le droit de calculer des fréquences cumulées ?',
             paragraphText:
-              'Dans le cours (diapo 12), un astérisque met en garde : les **fréquences cumulées** $F_j = f_1 + \\dots + f_j$ n’ont de sens **que si les modalités peuvent être ordonnées** (variables quantitatives discrètes/continues ou qualitatives **ordinales**). Pour une variable qualitative nominale (ex. loisirs), cumuler n’a aucun sens !',
+              'Attention : les **fréquences cumulées** $F_j = f_1 + \\dots + f_j$ n’ont de sens **que si les modalités peuvent être ordonnées** (variables quantitatives discrètes/continues ou qualitatives **ordinales**). Pour une variable qualitative nominale (ex. loisirs), cumuler n’a aucun sens !',
             keyRule: 'Fréquences cumulées interdites pour une variable qualitative nominale !',
             exercise: {
               id: 'lmd_entd_l1_stat_ch1_p1_q6',
@@ -224,7 +224,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         conceptExplanation:
           '• **Cumuls croissants et décroissants** : pour une variable discrète ordonnée $v_1 < \\dots < v_k$, la fréquence cumulée croissante est $F_j = \\sum_{i=1}^j f_i = p(X \\leqslant v_j)$, et la fréquence cumulée décroissante est $F_j^* = G_j = \\sum_{i=j}^k f_i = p(X \\geqslant v_j) = 1 - F_{j-1}$.\n' +
           '• **Fonction de répartition empirique $F(x)$** : définie sur $\\mathbb{R}$ à valeurs dans $[0, 1]$, $F(x) = p(X \\leqslant x)$. Pour une variable discrète, son graphe est une **courbe en escaliers** ; pour une variable continue en classes $[b_{j-1}, b_j[$ d’amplitude $a_j = b_j - b_{j-1}$ et de **densité** $d_j = f_j / a_j$, $F(x)$ est **affine par morceaux** : $F(x) = F_{j-1} + (x - b_{j-1}) d_j$. Dans les deux cas, $f_{]a, b]} = F(b) - F(a)$.\n' +
-          '• **Règle de Sturges** (TD 1 Ex. 5) : pour regrouper $n$ observations continues en $k$ classes, $k \\approx 1 + \\frac{10}{3} \\log_{10}(n)$ (ou $1 + \\log_2(n)$).\n' +
+          '• **Règle de Sturges** : pour regrouper $n$ observations continues en $k$ classes, $k \\approx 1 + \\frac{10}{3} \\log_{10}(n)$ (ou $1 + \\log_2(n)$).\n' +
           '• **Graphiques** : diagramme en secteurs (angle $= 360^\\circ \\times f_j$) et tuyaux d’orgue pour les qualitatives ; diagramme en bâtons pour les discrètes ; **histogramme des densités** (hauteur proportionnelle à $d_j = f_j / a_j$, aire du rectangle $= f_j$) pour les continues !',
         formulas: [
           {
@@ -241,9 +241,9 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Dans un histogramme à classes d’**amplitudes inégales**, on porte impérativement la **densité** $d_j = f_j / a_j$ (ou $n_j / a_j$) en ordonnée, afin que l’**aire** de chaque rectangle reste proportionnelle à la fréquence !',
         workedExample: {
-          title: 'Lecture de fréquences cumulées et densité d’histogramme (TD 1 Ex. 7 & Ex. 3)',
+          title: 'Lecture de fréquences cumulées et densité d’histogramme',
           statement:
-            '1) Dans le TD 1 Ex. 7 (100 caissettes), les effectifs du nombre de pêches abîmées sont : `0→12, 1→29, 2→31, 3→17, 4→5, 5→1, 6→2, 7→2, 8→0, 9→1`. Trouver le nombre de caissettes ayant au moins 3 pêches abîmées et la proportion en ayant au plus 4. 2) Pour la classe de loyer `[200 000 ; 300 000[` d’effectif $30$ sur $180$, calculer sa densité.',
+            '1) Avec 100 caissettes, les effectifs du nombre de pêches abîmées sont : `0→12, 1→29, 2→31, 3→17, 4→5, 5→1, 6→2, 7→2, 8→0, 9→1`. Trouver le nombre de caissettes ayant au moins 3 pêches abîmées et la proportion en ayant au plus 4. 2) Pour la classe de loyer `[200 000 ; 300 000[` d’effectif $30$ sur $180$, calculer sa densité.',
           methodSteps: [
             '1) Effectifs cumulés croissants : $N_0 = 12$, $N_1 = 41$, $N_2 = 72$, $N_3 = 89$, $N_4 = 94$.',
             'Caissettes ayant **au moins 3** pêches abîmées ($X \\geqslant 3$) : $N_3^* = 100 - N_2 = 100 - 72 = 28$ (vérification : $17 + 5 + 1 + 2 + 2 + 0 + 1 = 28$).',
@@ -265,7 +265,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             exercise: {
               id: 'lmd_entd_l1_stat_ch1_p2_q1',
               type: 'mcq',
-              prompt: 'Dans l’enquête sur 20 personnes (TD 1 Ex. 1), 5 personnes choisissent le Sport. Quel angle représente « Sport » sur un diagramme circulaire ($360^\\circ$) ?',
+              prompt: 'Dans l’enquête sur 20 personnes, 5 personnes choisissent le Sport. Quel angle représente « Sport » sur un diagramme circulaire ($360^\\circ$) ?',
               options: ['$45^\\circ$', '$90^\\circ$', '$72^\\circ$', '$180^\\circ$'],
               correctAnswerIndex: 1,
               explanation:
@@ -310,7 +310,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               ],
               correctAnswerIndex: 0,
               explanation:
-                'D’après le cours (diapo 18), le diagramme intégral d’une variable discrète est une courbe en escaliers avec des sauts égaux à $f_j$ aux abscisses $v_j$.',
+                ', le diagramme intégral d’une variable discrète est une courbe en escaliers avec des sauts égaux à $f_j$ aux abscisses $v_j$.',
             },
           },
           {
@@ -320,7 +320,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'orange',
             stepTitle: 'Classes d’amplitudes inégales : densité obligatoire !',
             paragraphText:
-              'Dans le TD 1 Ex. 3 (loyers à Abidjan), la classe `[150 000 ; 200 000[` a une amplitude de $50\\,000$ (effectif $50$), tandis que `[200 000 ; 300 000[` a une amplitude double de $100\\,000$ (effectif $30$). Pour comparer honnêtement leur concentration, il faut diviser chaque effectif (ou fréquence) par l’amplitude $a_j$ : c’est la **densité** $d_j$.',
+              'Avec loyers à Abidjan, la classe `[150 000 ; 200 000[` a une amplitude de $50\\,000$ (effectif $50$), tandis que `[200 000 ; 300 000[` a une amplitude double de $100\\,000$ (effectif $30$). Pour comparer honnêtement leur concentration, il faut diviser chaque effectif (ou fréquence) par l’amplitude $a_j$ : c’est la **densité** $d_j$.',
             keyRule: 'Amplitudes inégales $\\implies$ hauteur du rectangle $= d_j = \\frac{f_j}{a_j}$ (ou effectif corrigé $n_j / a_j$).',
             exercise: {
               id: 'lmd_entd_l1_stat_ch1_p2_q4',
@@ -342,9 +342,9 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'methode',
             stepBadge: 'Règle de Sturges',
             stepTheme: 'green',
-            stepTitle: 'Choisir le nombre de classes avec Sturges (TD 1 Ex. 5)',
+            stepTitle: 'Choisir le nombre de classes avec Sturges',
             paragraphText:
-              'Pour construire un tableau de classes sur $n = 40$ tailles d’étudiants (TD 1 Ex. 5), la règle de Sturges donne $k \\approx 1 + 3{,}322 \\log_{10}(40) \\approx 1 + 3{,}322 \\times 1{,}602 \\approx 6{,}32$, soit **6 classes**.',
+              'Pour construire un tableau de classes sur $n = 40$ tailles d’étudiants, la règle de Sturges donne $k \\approx 1 + 3{,}322 \\log_{10}(40) \\approx 1 + 3{,}322 \\times 1{,}602 \\approx 6{,}32$, soit **6 classes**.',
             exercise: {
               id: 'lmd_entd_l1_stat_ch1_p2_q5',
               type: 'mcq',
@@ -393,7 +393,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 2,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Statistique Descriptive (CM Ch. 3.2 & TD 1)',
+    source: 'ENTD L1 — Statistique Descriptive',
     title: 'Chapitre 2 — Résumés numériques : tendance centrale, dispersion et boxplots',
     summary:
       'Mode, moyenne arithmétique, médiane et quartiles (discret et continu par interpolation linéaire), variance (König-Huygens), écart-type, intervalle interquartile et boîte à moustaches.',
@@ -420,13 +420,13 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Interpolation linéaire de la médiane (et quartiles)',
             formula: 'Me = a + (b - a) \\times \\frac{0{,}5 - F(a)}{F(b) - F(a)}',
-            note: 'Formule utilisée dans le corrigé de Galton (statsL1_bivaries) et TD 1 ESATIC.',
+            note: 'Formule classique de Galton en statistique bivariée.',
           },
         ],
         keyRule:
           'Moyenne = sensible aux valeurs extrêmes ; Médiane = **robuste** ! Et pour trouver la classe modale avec amplitudes inégales, comparer toujours les **densités** $d_j = f_j / a_j$.',
         workedExample: {
-          title: 'Moyenne, classe modale et médiane des poids de 60 étudiants (TD 1 Ex. 6)',
+          title: 'Moyenne, classe modale et médiane des poids de 60 étudiants',
           statement:
             'Poids de $n = 60$ étudiants (classes d’amplitude égale $10$) : `[50,60[ : 7`, `[60,70[ : 25`, `[70,80[ : 21`, `[80,90[ : 2`, `[90,100] : 5`. Calculer la classe modale, la moyenne $\\bar{x}$ et la médiane $Me$.',
           methodSteps: [
@@ -481,9 +481,9 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepKind: 'piege',
             stepBadge: 'Robustesse',
             stepTheme: 'orange',
-            stepTitle: 'Sensibilité de la moyenne aux valeurs aberrantes (TD 1 Ex. 3)',
+            stepTitle: 'Sensibilité de la moyenne aux valeurs aberrantes',
             paragraphText:
-              'Dans le TD 1 Ex. 3 (loyers à Abidjan), la présence de quelques loyers très élevés (`[800 000 ; 1 500 000[`) tire la moyenne arithmétique vers le haut, alors que la médiane reste insensible à la valeur exacte des extrêmes. C’est pourquoi on publie souvent le **revenu médian** en économie !',
+              'Avec loyers à Abidjan, la présence de quelques loyers très élevés (`[800 000 ; 1 500 000[`) tire la moyenne arithmétique vers le haut, alors que la médiane reste insensible à la valeur exacte des extrêmes. C’est pourquoi on publie souvent le **revenu médian** en économie !',
             keyRule: 'Distribution étalée à droite (quelques très grandes valeurs) $\\implies \\text{Moyenne} > \\text{Médiane}$.',
             exercise: {
               id: 'lmd_entd_l1_stat_ch2_p1_q3',
@@ -530,7 +530,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'orange',
             stepTitle: 'Classe modale quand les amplitudes sont inégales',
             paragraphText:
-              'Dans le TD 1 Ex. 8 (masse des œufs), les classes `[48, 53[` ($a=5, n=74$), `[53, 58[` ($a=5, n=112$) et `[63, 73[` ($a=10, n=62$) n’ont pas la même amplitude. La classe modale est toujours celle dont la **densité** $n_j / a_j$ est maximale (ici `[53, 58[` avec $112/5 = 22{,}4$).',
+              'Avec masse des œufs, les classes `[48, 53[` ($a=5, n=74$), `[53, 58[` ($a=5, n=112$) et `[63, 73[` ($a=10, n=62$) n’ont pas la même amplitude. La classe modale est toujours celle dont la **densité** $n_j / a_j$ est maximale (ici `[53, 58[` avec $112/5 = 22{,}4$).',
             exercise: {
               id: 'lmd_entd_l1_stat_ch2_p1_q5',
               type: 'mcq',
@@ -617,7 +617,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'green',
             stepTitle: 'Calculer une variance par la formule développée',
             paragraphText:
-              'La formule de König-Huygens $V(X) = \\overline{X^2} - \\bar{X}^2$ évite les arrondis intermédiaires sur $(x_i - \\bar{x})$. C’est elle qui est utilisée dans le corrigé de l’exercice 3 (`statsL1_bivaries`) pour la pluie à Paris et dans l’exercice 2 de Galton.',
+              'La formule de König-Huygens $V(X) = \\overline{X^2} - \\bar{X}^2$ évite les arrondis intermédiaires sur $(x_i - \\bar{x})$. Elle s’applique directement aux séries statistiques bivariées classiques (pluviométrie, données de Galton).',
             exercise: {
               id: 'lmd_entd_l1_stat_ch2_p2_q1',
               type: 'mcq',
@@ -748,7 +748,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
     order: 3,
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC ENTD L1 — Statistique Descriptive (CM Ch. 4, Chap2 Liaisons & statsL1_bivaries)',
+    source: 'ENTD L1 — Statistique Descriptive (CM Ch. 4, Chap2 Liaisons & statsL1_bivaries)',
     title: 'Chapitre 3 — Séries statistiques bivariées, contingence et corrélation',
     summary:
       'Tableaux de contingence, distributions marginales et conditionnelles, nuage de points, covariance, corrélation linéaire de Bravais-Pearson $r$, corrélation de rangs de Spearman $r_S$ et pièges d’interprétation.',
@@ -780,7 +780,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           'Toujours identifier clairement le **dénominateur** demandé : « Parmi les utilisateurs de Mac, quelle proportion utilise Chrome ? » → on divise par le total **Mac** ($n_{\\text{Mac}}$), pas par l’effectif global $n$ !',
         workedExample: {
-          title: 'Navigateurs et systèmes d’exploitation sur 113 457 visiteurs (`statsL1_bivaries` Ex. 1)',
+          title: 'Navigateurs et systèmes d’exploitation sur 113 457 visiteurs',
           statement:
             'Sur $n = 113\\,457$ visiteurs d’un site web, $95\\,987$ sont sous Windows, $12\\,057$ sous Mac et $5\\,413$ sous Linux. Parmi les $7\\,084$ utilisateurs de Safari, $668$ sont sous Windows et $6\\,416$ sous Mac (0 sous Linux). Calculer $P(\\text{Safari})$, $P(\\text{Safari} \\mid \\text{Mac})$ et $P(\\text{Mac} \\mid \\text{Safari})$.',
           methodSteps: [
@@ -911,7 +911,7 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'slate',
             stepTitle: 'Extraire une distribution conditionnelle (Tableau de Galton)',
             paragraphText:
-              'Dans le tableau croisé de Galton (`statsL1_bivaries` Ex. 2), pour calculer la taille moyenne des enfants dont les parents mesurent entre $68$ et $70$ pouces, on extrait uniquement la ligne correspondante ($402$ enfants) et l’on calcule la moyenne pondérée sur cette sous-population ($68{,}30$ pouces).',
+              'Dans le tableau croisé de Galton, pour calculer la taille moyenne des enfants dont les parents mesurent entre $68$ et $70$ pouces, on extrait uniquement la ligne correspondante ($402$ enfants) et l’on calcule la moyenne pondérée sur cette sous-population ($68{,}30$ pouces).',
             exercise: {
               id: 'lmd_entd_l1_stat_ch3_p1_q6',
               type: 'mcq',
@@ -949,20 +949,20 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             name: 'Covariance et coefficient de corrélation linéaire r',
             formula: '\\operatorname{Cov}(X, Y) = \\frac{1}{n} \\sum_{i=1}^{n} x_i y_i - \\bar{x}\\bar{y}, \\qquad r(X, Y) = \\frac{\\operatorname{Cov}(X, Y)}{\\sigma_X \\sigma_Y} \\in [-1, 1]',
-            note: 'Exemples du cours : QI père/fils r = 0,6071 ; jours/hauteur de pluie à Paris r = 0,680.',
+            note: 'Exemple : QI père/fils r = 0,6071 ; jours/hauteur de pluie à Paris r = 0,680.',
           },
           {
             name: 'Coefficient de Spearman (sans ex-aequo)',
             formula: 'r_S(x, y) = 1 - \\frac{6 \\sum_{i=1}^{n} (x_i\' - y_i\')^2}{n(n^2 - 1)}',
-            note: 'En présence d’ex-aequo, on attribue le rang moyen (ex. 7,5 pour les rangs 7 et 8).',
+            note: 'En présence d’ex-aequo, on attribue le rang moyen.',
           },
         ],
         keyRule:
-          'Trois pièges majeurs du cours : (1) $r = 0$ ne prouve pas l’indépendance (liaison parabolique possible), (2) une corrélation globale peut être un artefact de **sous-groupes** (ex. taille vs longueur des cheveux chez Hommes/Femmes), (3) **corrélation n’est pas causalité** !',
+          'Trois pièges majeurs à éviter : (1) $r = 0$ ne prouve pas l’indépendance (liaison parabolique possible), (2) une corrélation globale peut être un artefact de **sous-groupes** (ex. taille vs longueur des cheveux chez Hommes/Femmes), (3) **corrélation n’est pas causalité** !',
         workedExample: {
-          title: 'Corrélation linéaire (pluie à Paris) et Spearman (QI père/fils) — Exemples du cours',
+          title: 'Corrélation linéaire (pluie à Paris) et Spearman (QI père/fils) — Applications',
           statement:
-            '1) Pour la pluie à Paris ($n = 8$, `statsL1_bivaries` Ex. 3), on a $\\bar{x} = 175{,}125$, $\\bar{y} = 658{,}75$, $\\sigma_X = 18{,}306$, $\\sigma_Y = 115{,}670$ et $\\frac{1}{8}\\sum x_i y_i = 116\\,804{,}375$. Calculer $\\operatorname{Cov}(X, Y)$ et $r$. 2) Pour les QI père/fils ($n = 12$), $\\sum (x_i\' - y_i\')^2 = 102$. Calculer $r_S$.',
+            '1) Pour la pluie à Paris, on a $\\bar{x} = 175{,}125$, $\\bar{y} = 658{,}75$, $\\sigma_X = 18{,}306$, $\\sigma_Y = 115{,}670$ et $\\frac{1}{8}\\sum x_i y_i = 116\\,804{,}375$. Calculer $\\operatorname{Cov}(X, Y)$ et $r$. 2) Pour les QI père/fils ($n = 12$), $\\sum (x_i\' - y_i\')^2 = 102$. Calculer $r_S$.',
           methodSteps: [
             '1) $\\operatorname{Cov}(X, Y) = 116\\,804{,}375 - 175{,}125 \\times 658{,}75 = 116\\,804{,}375 - 115\\,363{,}594 = 1\\,440{,}781$.',
             '$r = \\frac{1\\,440{,}781}{18{,}306 \\times 115{,}670} = \\frac{1\\,440{,}781}{2\\,117{,}455} \\approx 0{,}680$ : corrélation linéaire positive assez forte.',
@@ -1016,11 +1016,11 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           {
             stepNumber: 3,
             stepKind: 'piege',
-            stepBadge: 'Non-linéarité (Cours)',
+            stepBadge: 'Non-linéarité',
             stepTheme: 'orange',
             stepTitle: 'Corrélation linéaire nulle ($r = 0$) malgré une liaison parfaite !',
             paragraphText:
-              'Dans le Graphique 2-(4) du cours (`Chap2`), tous les points sont parfaitement alignés sur une **parabole** symétrique $Y = X^2$ (liaison fonctionnelle parfaite !), et pourtant le coefficient de corrélation linéaire vaut $r = 0$ car la relation n’est pas linéaire ni monotone.',
+              'Dans une distribution où tous les points sont parfaitement alignés sur une **parabole** symétrique $Y = X^2$ (liaison fonctionnelle parfaite !), et pourtant le coefficient de corrélation linéaire vaut $r = 0$ car la relation n’est pas linéaire ni monotone.',
             keyRule: 'Indépendance $\\implies r = 0$, mais $r = 0 \\not\\implies$ Indépendance (sauf pour un couple binormal) !',
             exercise: {
               id: 'lmd_entd_l1_stat_ch3_p2_q3',
@@ -1044,11 +1044,11 @@ export const STAT_DESCRIPTIVE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'orange',
             stepTitle: 'Attention aux sous-groupes cachés (Exemple taille / cheveux)',
             paragraphText:
-              'Dans le Graphique 4 du cours (emprunté à R. Rakotomalala), la corrélation globale entre taille et longueur de cheveux vaut $r = -0{,}6018$ (forte en apparence). Mais lorsqu’on sépare Hommes et Femmes, la corrélation disparaît dans chaque groupe ($r_H = -0{,}07$, $r_F = -0{,}14$) : le lien apparent était un artefact dû à la variable qualitative « sexe » !',
+              'Dans un cas classique d’effet de sous-groupes, la corrélation globale entre taille et longueur de cheveux vaut $r = -0{,}6018$ (forte en apparence). Mais lorsqu’on sépare Hommes et Femmes, la corrélation disparaît dans chaque groupe ($r_H = -0{,}07$, $r_F = -0{,}14$) : le lien apparent était un artefact dû à la variable qualitative « sexe » !',
             exercise: {
               id: 'lmd_entd_l1_stat_ch3_p2_q4',
               type: 'mcq',
-              prompt: 'Dans l’exemple du cours « taille vs longueur des cheveux », pourquoi la forte corrélation globale ($r = -0{,}60$) disparaît-elle chez les hommes seuls et chez les femmes seules ?',
+              prompt: 'Dans l’exemple « taille vs longueur des cheveux », pourquoi la forte corrélation globale ($r = -0{,}60$) disparaît-elle chez les hommes seuls et chez les femmes seules ?',
               options: [
                 'Parce que la formule de Pearson est fausse.',
                 'Parce que les cheveux poussent moins vite chez les grands.',

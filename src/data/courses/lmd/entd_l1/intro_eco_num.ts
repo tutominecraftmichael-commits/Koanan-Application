@@ -25,7 +25,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Comprendre l'évolution de la définition de la science économique, le fonctionnement du circuit économique traditionnel et les bases conceptuelles du numérique et de l'économie numérique.",
     officialVolumeHours: 6,
     contentVersion: 2,
-    source: 'ESATIC — UP Management — Intro à l’Éco Numérique (CHAPITRE 1.pptx)',
+    source: 'ENTD L1 — ENTD L1 — Intro à l’Éco Numérique',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_eco_num_ch1_p1',
@@ -52,12 +52,12 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Classer des acteurs ivoiriens par secteur institutionnel',
           statement:
-            "Classez les acteurs suivants dans les 6 secteurs institutionnels de la comptabilité nationale : un foyer d'Abidjan, la CIE, une banque commerciale, l'ESATIC (établissement public), une ONG locale et un fournisseur étranger basé en France.",
+            "Classez les acteurs suivants dans les 6 secteurs institutionnels de la comptabilité nationale : un foyer d'Abidjan, la CIE, une banque commerciale, une université publique (établissement public), une ONG locale et un fournisseur étranger basé en France.",
           methodSteps: [
             "Foyer d'Abidjan : fonction principale de consommation -> Ménages.",
             'CIE : production de biens/services marchands non financiers -> Sociétés non financières (SNF).',
             'Banque commerciale : services de crédit, dépôt et paiement -> Sociétés financières (SF).',
-            'ESATIC : service public non marchand financé par prélèvements obligatoires -> Administrations publiques (APu).',
+            'Université publique : service public non marchand financé par prélèvements obligatoires -> Administrations publiques (APu).',
             'ONG locale : service non marchand financé par dons et cotisations volontaires -> ISBL.',
             'Fournisseur basé en France : agent non-résident -> Reste du Monde (RDM).',
           ],
@@ -191,7 +191,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         conceptExplanation:
           "La science économique se décline en plusieurs grandes disciplines : la microéconomie (comportements individuels, demande, prix, théorie des jeux), la macroéconomie (phénomènes globaux : croissance, inflation, chômage, politiques monétaires et budgétaires), l'économie internationale (commerce mondial, taux de change, balance des paiements), l'économie publique (fiscalité, dépenses publiques, redistribution), ainsi que des branches spécialisées (mésoéconomie, économie du développement, industrielle, comportementale et économie numérique).\n\nLe numérique désigne tout ce qui est représenté par des données et informations codées sous forme binaire (0 et 1) : c'est la base de toute technologie informatique.\n\nL'économie numérique (aussi appelée économie digitale, nouvelle économie, économie d'internet ou économie de la connaissance) désigne l'ensemble des activités économiques qui reposent sur les technologies numériques pour créer de la valeur économique. Elle analyse les transformations induites par ces technologies sur les échanges, les entreprises et les marchés, grâce à l'écosystème Internet/appareils/Web, aux technologies émergentes (IA, Blockchain) et à l'IoT / analytique des Big Data.",
         keyRule:
-          "Retiens la métaphore du cours : le numérique est la brique élémentaire (l'outil binaire), tandis que l'économie numérique est l'édifice (la création de valeur construite avec ces briques).",
+          "Retiens cette métaphore clé : le numérique est la brique élémentaire (l'outil binaire), tandis que l'économie numérique est l'édifice (la création de valeur construite avec ces briques).",
         formulas: [
           {
             name: 'Distinction fondamentale',
@@ -271,7 +271,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_eco_num_ch1_p2_q3',
               type: 'mcq',
               prompt:
-                "Selon la synthèse du cours, quelle est l'image juste reliant « le numérique » et « l'économie du numérique » ?",
+                "Quelle est l'image juste reliant « le numérique » et « l'économie du numérique » ?",
               options: [
                 'Les deux termes sont strictement synonymes sans aucune nuance',
                 "L'économie numérique est le code binaire et le numérique est le commerce",
@@ -349,7 +349,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Retracer les quatre révolutions industrielles jusqu'à l'Industrie 4.0, mesurer le poids des TIC et maîtriser les lois de Moore, Metcalfe et Reed ainsi que la désintermédiation.",
     officialVolumeHours: 6,
     contentVersion: 2,
-    source: 'ESATIC — UP Management — Intro à l’Éco Numérique (CHAPITRE 2.pptx)',
+    source: 'ENTD L1 — ENTD L1 — Intro à l’Éco Numérique',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_eco_num_ch2_p1',
@@ -371,7 +371,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Ventiler des activités numériques selon les pôles TIC et contenus',
           statement:
-            "Classez les entreprises suivantes dans les catégories du cours (Production TIC, Distribution TIC, Services TIC, Contenus et supports) : un assembleur de cartes électroniques, un grossiste en serveurs, un opérateur télécom / hébergeur cloud et un studio de production vidéo diffusant sur le Web.",
+            "Classez les entreprises suivantes dans les catégories suivantes (Production TIC, Distribution TIC, Services TIC, Contenus et supports) : un assembleur de cartes électroniques, un grossiste en serveurs, un opérateur télécom / hébergeur cloud et un studio de production vidéo diffusant sur le Web.",
           methodSteps: [
             'Assembleur de cartes électroniques : fabrication matérielle -> Production des TIC.',
             'Grossiste en serveurs (B2B) : commerce de gros informatique -> Distribution des TIC.',
@@ -418,7 +418,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_eco_num_ch2_p1_q2',
               type: 'mcq',
               prompt:
-                'En quelle année le microprocesseur, composant central de la révolution micro-informatique, a-t-il été inventé selon le cours ?',
+                'En quelle année le microprocesseur, composant central de la révolution micro-informatique, a-t-il été inventé ?',
               options: ['1876', '1929', '1947', '1970'],
               correctAnswerIndex: 3,
               explanation:
@@ -480,7 +480,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_eco_num_ch2_p1_q5',
               type: 'mcq',
               prompt:
-                'Que représente le chiffre de 50 % dans les tendances mondiales CNUCED (2019) du cours ?',
+                'Que représente le chiffre de 50 % dans les tendances mondiales de l’économie numérique (CNUCED, 2019) ?',
               options: [
                 'La part du secteur TIC dans le PIB de la Côte d’Ivoire',
                 'La part des ventes B2C dans le PIB mondial',
@@ -814,7 +814,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Maîtriser la chaîne de valeur de Porter (cas Apple), les 6 grands modèles économiques numériques, les leviers PMF/traction/pivot et les modèles alternatifs (communs, open source, crowdfunding, don, coopérative).",
     officialVolumeHours: 6,
     contentVersion: 2,
-    source: 'ESATIC — UP Management — Intro à l’Éco Numérique (CHAPITRE 3.pptx)',
+    source: 'ENTD L1 — ENTD L1 — Intro à l’Éco Numérique',
     points: [
       makePoint({
         id: 'lmd_entd_l1_intro_eco_num_ch3_p1',
@@ -953,7 +953,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_eco_num_ch3_p1_q5',
               type: 'mcq',
               prompt:
-                "Selon le cours sur la chaîne de valeur, comment se mesure fondamentalement la valeur d'un produit ?",
+                "Dans l’analyse de la chaîne de valeur, comment se mesure fondamentalement la valeur d'un produit ?",
               options: [
                 'Uniquement par son poids en matières premières',
                 'Par une meilleure satisfaction du client et une démarcation par rapport aux concurrents',
@@ -1128,7 +1128,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         conceptExplanation:
           "À côté des modèles capitalistes classiques, l'économie numérique favorise cinq grands modèles alternatifs basés sur la collaboration, le partage et des modes de gouvernance ou de financement inédits :\n\n1. L'économie des communs : le numérique étant intangible avec un coût de copiage quasi nul, les communs remettent en question la propriété intellectuelle stricte au profit de licences de partage (Creative Commons, Wikinomics).\n\n2. Le libre et l'open source : omniprésents dans l'infrastructure du Web — navigateurs (Firefox, Chromium), serveurs réseaux (Linux) et bibliothèques de code — ils permettent d'étudier, modifier et redistribuer le code.\n\n3. Le crowdsourcing et financement participatif (crowdfunding / crowdlending) : mobilisation de la foule pour contribuer ou financer directement des TPE-PME sous forme de prêts (crowdlending) ou d'actionnariat/contreparties (crowdfunding).\n\n4. Le don : financement volontaire par les usagers et adhérents, complété par le bénévolat, à l'image de grandes structures numériques comme Wikipédia ou la fondation Mozilla (Firefox, Thunderbird).\n\n5. La coopérative numérique : entreprise démocratique (« 1 personne = 1 voix »), financée directement par les bénéficiaires du service, développant des solutions techniques ad hoc sans captation excessive de données ni asymétrie d'information entre la plateforme et ses membres.",
         keyRule:
-          "Retiens les 5 modèles alternatifs du cours : Communs (Creative Commons), Libre/Open Source (Linux, Firefox), Crowdsourcing/Crowdfunding-Crowdlending, Don (Wikipédia, Mozilla) et Coopérative (1 personne = 1 voix).",
+          "Retiens les 5 modèles alternatifs majeurs : Communs (Creative Commons), Libre/Open Source (Linux, Firefox), Crowdsourcing/Crowdfunding-Crowdlending, Don (Wikipédia, Mozilla) et Coopérative (1 personne = 1 voix).",
         formulas: [
           {
             name: 'Principe démocratique de la coopérative',
@@ -1139,7 +1139,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         workedExample: {
           title: 'Choisir un modèle alternatif pour une plateforme éducative africaine',
           statement:
-            "Des enseignants et étudiants veulent créer une encyclopédie libre de cours universitaires sans publicité intrusive ni revente de données personnelles. Quels modèles alternatifs du cours peuvent-ils combiner ?",
+            "Des enseignants et étudiants veulent créer une encyclopédie libre de cours universitaires sans publicité intrusive ni revente de données personnelles. Quels modèles alternatifs peuvent-ils combiner ?",
           methodSteps: [
             "Licence de contenu : adopter l'économie des communs avec des licences Creative Commons pour autoriser le partage légal (coût de copie nul).",
             'Infrastructure logicielle : bâtir la plateforme sur des technologies libres et open source (ex. serveurs Linux) pour réduire les coûts.',
@@ -1185,7 +1185,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_eco_num_ch3_p3_q2',
               type: 'mcq',
               prompt:
-                "Parmi les exemples suivants cités dans le cours, lequel appartient à l'écosystème du libre et de l'open source ?",
+                "Parmi les exemples suivants cités, lequel appartient à l'écosystème du libre et de l'open source ?",
               options: [
                 'Un logiciel propriétaire au code secret sous licence fermée',
                 'Une banque centrale',
@@ -1209,7 +1209,7 @@ export const INTRO_ECO_NUM_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_intro_eco_num_ch3_p3_q3',
               type: 'mcq',
               prompt:
-                'Quelle est la fonction principale des plateformes de crowdfunding et de crowdlending présentées dans le cours ?',
+                'Quelle est la fonction principale des plateformes de crowdfunding et de crowdlending présentées ?',
               options: [
                 'Financer directement des TPE-PME par des prêts ou de l’actionnariat en échange de contreparties',
                 'Collecter les impôts sur le revenu pour le Trésor public',

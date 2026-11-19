@@ -341,7 +341,7 @@ export const CHIMIE_TLE_CD_L01_ALCOOLS: CurriculumChapter = {
       },
       "visualSchema": {
         "type": "custom_svg",
-        "title": "Tableau des polyols remarquables du programme officiel",
+        "title": "Tableau des polyols remarquables du programme",
         "tableData": {
           "headers": [
             "Nom usuel",

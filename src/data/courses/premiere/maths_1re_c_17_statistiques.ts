@@ -32,7 +32,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
         { name: 'Densité d’une classe', formula: 'd_i = \\frac{n_i}{a_i} \\quad \\text{ou} \\quad d_i = \\frac{f_i}{a_i}' },
       ],
       workedExample: {
-        title: 'Calculer amplitudes et densités d’une production de cacao (p. 3)',
+        title: 'Calculer amplitudes et densités d’une production de cacao',
         statement:
           'Les productions (en tonnes) de $90$ coopératives sont réparties ainsi : $[0; 30[: 13$, $[30; 45[: 20$, $[45; 70[: 25$, $[70; 80[: 15$, $[80; 100[: 17$. Calcule l’amplitude, le centre et la densité de chaque classe.',
         methodSteps: [
@@ -96,7 +96,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
             id: 'premiere_c_maths_numerique_l17_statistiques_p01_q3',
             type: 'mcq',
             prompt:
-              'Dans le relevé bancaire (p. 2) regroupé en $[0; 300[$, $[300; 600[$, $[600; 900[$, $[900; 1200[$, $[1200; 1500[$, dans quelle classe range-t-on un versement égal à $900$ ?',
+              'Dans le relevé bancaire regroupé en $[0; 300[$, $[300; 600[$, $[600; 900[$, $[900; 1200[$, $[1200; 1500[$, dans quelle classe range-t-on un versement égal à $900$ ?',
             options: ['Dans $[600; 900[$', 'Dans $[900; 1200[$', 'Dans aucune des deux', 'Dans les deux à moitié'],
             correctAnswerIndex: 1,
             explanation: 'Comme l’intervalle $[600; 900[$ est ouvert en $900$ et $[900; 1200[$ est fermé en $900$, la valeur $900$ appartient à $[900; 1200[$.',
@@ -190,7 +190,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
           id: 'premiere_c_maths_numerique_l17_statistiques_p01_q3',
           type: 'mcq',
           prompt:
-            'Dans le relevé bancaire (p. 2) regroupé en $[0; 300[$, $[300; 600[$, $[600; 900[$, $[900; 1200[$, $[1200; 1500[$, dans quelle classe range-t-on un versement égal à $900$ ?',
+            'Dans le relevé bancaire regroupé en $[0; 300[$, $[300; 600[$, $[600; 900[$, $[900; 1200[$, $[1200; 1500[$, dans quelle classe range-t-on un versement égal à $900$ ?',
           options: ['Dans $[600; 900[$', 'Dans $[900; 1200[$', 'Dans aucune des deux', 'Dans les deux à moitié'],
           correctAnswerIndex: 1,
           explanation: 'Comme l’intervalle $[600; 900[$ est ouvert en $900$ et $[900; 1200[$ est fermé en $900$, la valeur $900$ appartient à $[900; 1200[$.',
@@ -250,7 +250,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
         { name: 'Moyenne avec fréquences', formula: '\\bar{x} = \\sum_{i=1}^{p} f_i c_i' },
       ],
       workedExample: {
-        title: 'Classe modale et moyenne de la production de cacao (p. 3-4)',
+        title: 'Classe modale et moyenne de la production de cacao',
         statement:
           'Pour les $90$ coopératives ($[0;30[:13$, $[30;45[:20$, $[45;70[:25$, $[70;80[:15$, $[80;100[:17$), détermine la classe modale et calcule la production moyenne $\\bar{x}$.',
         methodSteps: [
@@ -339,11 +339,11 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
           stepTheme: 'Diviser la somme des centres par le nombre de classes p',
           stepTitle: 'On divise toujours par l’effectif total N, jamais par le nombre de classes !',
           paragraphText:
-            'Dans l’exemple du sport (p. 10), il y a $6$ classes mais $N = 125$ élèves. On calcule $\\dfrac{4980}{125} = 39{,}84$ (et jamais $\\dfrac{\\sum c_i}{6}$).',
+            'Dans l’exemple du sport, il y a $6$ classes mais $N = 125$ élèves. On calcule $\\dfrac{4980}{125} = 39{,}84$ (et jamais $\\dfrac{\\sum c_i}{6}$).',
           exercise: {
             id: 'premiere_c_maths_numerique_l17_statistiques_p02_q5',
             type: 'mcq',
-            prompt: 'Pour les $125$ élèves pratiquant du sport (p. 10), on obtient $\\sum n_i c_i = 4980$ sur $6$ classes. Quelle est la moyenne $\\bar{x}$ ?',
+            prompt: 'Pour les $125$ élèves pratiquant du sport, on obtient $\\sum n_i c_i = 4980$ sur $6$ classes. Quelle est la moyenne $\\bar{x}$ ?',
             options: ['$830$', '$39{,}84$', '$50$', '$40{,}84$'],
             correctAnswerIndex: 1,
             explanation: 'On divise $\\sum n_i c_i = 4980$ par l’effectif total $N = 125$, ce qui donne $\\bar{x} = \\dfrac{4980}{125} = 39{,}84$.',
@@ -407,7 +407,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
         {
           id: 'premiere_c_maths_numerique_l17_statistiques_p02_q5',
           type: 'mcq',
-          prompt: 'Pour les $125$ élèves pratiquant du sport (p. 10), on obtient $\\sum n_i c_i = 4980$ sur $6$ classes. Quelle est la moyenne $\\bar{x}$ ?',
+          prompt: 'Pour les $125$ élèves pratiquant du sport, on obtient $\\sum n_i c_i = 4980$ sur $6$ classes. Quelle est la moyenne $\\bar{x}$ ?',
           options: ['$830$', '$39{,}84$', '$50$', '$40{,}84$'],
           correctAnswerIndex: 1,
           explanation: 'On divise $\\sum n_i c_i = 4980$ par l’effectif total $N = 125$, ce qui donne $\\bar{x} = \\dfrac{4980}{125} = 39{,}84$.',
@@ -442,7 +442,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
         { name: 'Interpolation linéaire', formula: '\\frac{Q - a}{b - a} = \\frac{R - N_a}{N_b - N_a}' },
       ],
       workedExample: {
-        title: 'Calculer Me, Q₁ et Q₃ pour les absences de 1re C (p. 4-6)',
+        title: 'Calculer Me, Q₁ et Q₃ pour les absences de 1re C',
         statement:
           'Les heures d’absences des $104$ élèves donnent : $[1;5[$ ($n=12$, ECC $12$), $[5;8[$ ($n=28$, ECC $40$), $[8;13[$ ($n=32$, ECC $72$), $[13;14[$ ($n=24$, ECC $96$), $[14;21[$ ($n=8$, ECC $104$). Calcule $Q_1$, $M_e$ et $Q_3$.',
         methodSteps: [
@@ -518,7 +518,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
           stepTheme: 'Interpolation lorsque Q₁ tombe dans la première classe',
           stepTitle: 'Ne pas oublier Nₐ = 0 à la borne gauche du tableau !',
           paragraphText:
-            'Dans l’exercice du sport (p. 12, $N = 125$), le rang de $Q_1$ est $31{,}25$, déjà inférieur à l’ECC $35$ de la toute première classe $[0; 20[$ : on prend alors $N_a = 0$ pour $x = 0$, soit $\\dfrac{Q_1 - 0}{20 - 0} = \\dfrac{31{,}25 - 0}{35 - 0}$.',
+            'Dans l’exercice du sport, le rang de $Q_1$ est $31{,}25$, déjà inférieur à l’ECC $35$ de la toute première classe $[0; 20[$ : on prend alors $N_a = 0$ pour $x = 0$, soit $\\dfrac{Q_1 - 0}{20 - 0} = \\dfrac{31{,}25 - 0}{35 - 0}$.',
           exercise: {
             id: 'premiere_c_maths_numerique_l17_statistiques_p03_q4',
             type: 'mcq',
@@ -559,12 +559,12 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
           stepTheme: 'Interpolation sur une valeur quelconque (non quartile)',
           stepTitle: 'Estimer la fréquence correspondant à x = 49,3 ou x = 50,5',
           paragraphText:
-            'La même interpolation linéaire permet de trouver la fréquence cumulée correspondant à n’importe quelle modalité $x \\in [a; b[$ : par exemple pour la Machine B (p. 14), dans $[49{,}2; 49{,}4[$ où la FCC passe de $5\\%$ à $12{,}5\\%$, $49{,}3$ est exactement au milieu donc donne $\\dfrac{5 + 12{,}5}{2} = 8{,}75\\%$.',
+            'La même interpolation linéaire permet de trouver la fréquence cumulée correspondant à n’importe quelle modalité $x \\in [a; b[$ : par exemple pour la Machine B, dans $[49{,}2; 49{,}4[$ où la FCC passe de $5\\%$ à $12{,}5\\%$, $49{,}3$ est exactement au milieu donc donne $\\dfrac{5 + 12{,}5}{2} = 8{,}75\\%$.',
           exercise: {
             id: 'premiere_c_maths_numerique_l17_statistiques_p03_q6',
             type: 'mcq',
             prompt:
-              'Pour la Machine A (p. 13-14), dans la classe $[49{,}2; 49{,}4[$, la FCC passe de $8{,}8\\%$ à $16{,}3\\%$. Quelle estimation obtient-on par interpolation linéaire en $x = 49{,}3$ ?',
+              'Pour la Machine A, dans la classe $[49{,}2; 49{,}4[$, la FCC passe de $8{,}8\\%$ à $16{,}3\\%$. Quelle estimation obtient-on par interpolation linéaire en $x = 49{,}3$ ?',
             options: ['$11{,}55\\%$', '$12{,}55\\%$', '$13{,}05\\%$', '$14{,}50\\%$'],
             correctAnswerIndex: 1,
             explanation: '$49{,}3$ est le milieu de $[49{,}2; 49{,}4[$, donc $b = 8{,}8 + \\dfrac{0{,}1}{0{,}2}(16{,}3 - 8{,}8) = 8{,}8 + 3{,}75 = 12{,}55\\%$.',
@@ -630,7 +630,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
           id: 'premiere_c_maths_numerique_l17_statistiques_p03_q6',
           type: 'mcq',
           prompt:
-            'Pour la Machine A (p. 13-14), dans la classe $[49{,}2; 49{,}4[$, la FCC passe de $8{,}8\\%$ à $16{,}3\\%$. Quelle estimation obtient-on par interpolation linéaire en $x = 49{,}3$ ?',
+            'Pour la Machine A, dans la classe $[49{,}2; 49{,}4[$, la FCC passe de $8{,}8\\%$ à $16{,}3\\%$. Quelle estimation obtient-on par interpolation linéaire en $x = 49{,}3$ ?',
           options: ['$11{,}55\\%$', '$12{,}55\\%$', '$13{,}05\\%$', '$14{,}50\\%$'],
           correctAnswerIndex: 1,
           explanation: '$49{,}3$ est le milieu de $[49{,}2; 49{,}4[$, donc $b = 8{,}8 + \\dfrac{0{,}1}{0{,}2}(16{,}3 - 8{,}8) = 8{,}8 + 3{,}75 = 12{,}55\\%$.',
@@ -656,7 +656,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
         { name: 'Fonction cumulative', formula: 'F(x) = 0 \\ (x \\le x_1), \\quad F(x) = N \\ (x \\ge x_{p+1})' },
       ],
       workedExample: {
-        title: 'Lire un histogramme par les aires (Exercice 4 p. 19)',
+        title: 'Lire un histogramme par les aires',
         statement:
           'Sur l’histogramme des recettes de $300$ commerçants, $1\\text{ cm}^2$ représente $60$ individus. La classe $[20; 25[$ a une base de $0{,}5\\text{ cm}$ et une hauteur de $1{,}5\\text{ cm}$, et la classe $[50; 60[$ a une base de $1\\text{ cm}$ et une hauteur de $0{,}833\\text{ cm}$ (ou une aire totale de $\\dfrac{5}{6}\\text{ cm}^2$). Quelle est l’aire correspondant à $45$ et $90$ individus ?',
         methodSteps: [
@@ -693,7 +693,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
           stepNumber: 2,
           stepKind: 'methode',
           stepBadge: 'Méthode',
-          stepTheme: 'Calculer une aire sur l’histogramme des fréquences (p. 7)',
+          stepTheme: 'Calculer une aire sur l’histogramme des fréquences',
           stepTitle: 'Compter en petits carreaux ou en pourcentages',
           paragraphText:
             'Sur l’histogramme de la page 7, un petit carreau mesure $0{,}5$ en abscisse et $0{,}02$ en ordonnée, soit une aire de $0{,}5 \\times 0{,}02 = 0{,}01 = 1\\%$. Ainsi, une classe de fréquence $35\\%$ occupe exactement $35$ petits carreaux.',
@@ -734,7 +734,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
           stepKind: 'methode',
           stepBadge: 'Méthode',
           stepTheme: 'Lire un effectif sur la courbe cumulative croissante',
-          stepTitle: 'Interpréter le polygone ECC et le polygone ECD (Exercice 3 p. 18)',
+          stepTitle: 'Interpréter le polygone ECC et le polygone ECD',
           paragraphText:
             'Le polygone des ECC donne pour toute valeur $x$ le nombre d’individus ayant une modalité **inférieure ou égale** à $x$, tandis que le polygone des ECD donne le nombre d’individus ayant une modalité **supérieure ou égale** à $x$.',
           exercise: {
@@ -887,7 +887,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
         { name: 'Écart interquartile', formula: '\\text{EIQ} = Q_3 - Q_1' },
       ],
       workedExample: {
-        title: 'Indicateurs de dispersion du temps de sport (p. 9-12)',
+        title: 'Indicateurs de dispersion du temps de sport',
         statement:
           'Pour $N = 125$ élèves, $\\bar{x} = 39{,}84$ min, $\\sum n_i c_i^2 = 322\\,000$, $\\sum n_i |c_i - \\bar{x}| = 2895{,}68$, $Q_1 = 17{,}86$ et $Q_3 = 51{,}83$. Calcule $V$, $\\sigma$, $e_m$ et $Q_3 - Q_1$.',
         methodSteps: [
@@ -1119,7 +1119,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
         { name: 'Proportion sur [α ; β]', formula: 'P([\\alpha; \\beta]) = F(\\beta) - F(\\alpha)' },
       ],
       workedExample: {
-        title: 'Choisir entre les machines A et B du COGES (Situation complexe p. 12-14)',
+        title: 'Choisir entre les machines A et B du COGES',
         statement:
           'Deux machines A et B remplissent $80$ sacs de $50\\text{ kg}$ en classes d’amplitude $0{,}2$ de $[49; 50{,}6[$. Une machine est retenue si : (1) $\\bar{x} \\in [49{,}7; 50{,}3]$ ; (2) $\\sigma < 0{,}5\\text{ kg}$ ; (3) au moins $85\\%$ des sacs sont dans $[49{,}3; 50{,}5]$. Quelle machine choisir ?',
         methodSteps: [
@@ -1239,7 +1239,7 @@ export const MATHS_1RE_C_L17_STATISTIQUES: CurriculumChapter = {
           stepTheme: 'Organiser les données brutes de la situation d’apprentissage',
           stepTitle: 'Partager 30 coureurs en 5 équipes équilibrées',
           paragraphText:
-            'Dans la situation d’apprentissage (p. 1-2), les $30$ coureurs ont des temps de $39$ min (Lamine) à $66$ min (Akalé). Regrouper par classes d’amplitude $6$ ou $5$ min, tracer l’histogramme puis déterminer $Q_1, M_e, Q_3$ permet de situer exactement chaque coureur.',
+            'Dans la situation d’apprentissage, les $30$ coureurs ont des temps de $39$ min (Lamine) à $66$ min (Akalé). Regrouper par classes d’amplitude $6$ ou $5$ min, tracer l’histogramme puis déterminer $Q_1, M_e, Q_3$ permet de situer exactement chaque coureur.',
           exercise: {
             id: 'premiere_c_maths_numerique_l17_statistiques_p06_q6',
             type: 'mcq',

@@ -1215,7 +1215,7 @@ export const MATHS_TLE_C_L06_NOMBRES_COMPLEXES: CurriculumChapter = {
     'Forme algébrique, conjugué, module, affixes dans le plan complexe, argument, formes trigonométrique et exponentielle, Moivre, Euler et linéarisation, équations du 2nd degré et degré 3, racines n-ièmes et géométrie.',
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: 'Programme officiel de Mathématiques — Terminale C (Côte d’Ivoire)',
+  source: 'Mathématiques — Terminale C',
   points: [
     {
       id: 'terminale_c_maths_numerique_l06_nombres_complexes_p01',

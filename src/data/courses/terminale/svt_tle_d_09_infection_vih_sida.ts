@@ -7,10 +7,10 @@ export const SVT_TLE_D_L09_INFECTION_VIH_SIDA: CurriculumChapter = {
   alsoForGrades: ["terminale_c"],
   order: 7,
   title: "L'infection de l'organisme par le VIH (Structure du rétrovirus, cycle de réplication, évolution clinique et SIDA)",
-  summary: "Étude complète et approfondie de l'infection par le Virus de l'Immunodéficience Humaine (VIH) selon le programme officiel de SVT Terminale D de Côte d'Ivoire : organisation ultrastructurale d'un rétrovirus enveloppé (ARN, gp120, gp41, capside p24, transcriptase inverse, intégrase, protéase), cycle réplicatif complet dans le lymphocyte T4 (CD4) de l'adsorption au bourgeonnement lytique, dynamique biologique et clinique des trois phases (primo-infection et séroconversion, phase asymptomatique de latence, phase symptomatique du SIDA avéré), effondrement de la coopération immunitaire, genèse des maladies opportunistes (tuberculose, sarcome de Kaposi) et stratégies médicales de prévention (PTME, préservatifs, trithérapies ARV).",
+  summary: "Étude complète et approfondie de l'infection par le Virus de l'Immunodéficience Humaine (VIH) : organisation ultrastructurale d'un rétrovirus enveloppé (ARN, gp120, gp41, capside p24, transcriptase inverse, intégrase, protéase), cycle réplicatif complet dans le lymphocyte T4 (CD4) de l'adsorption au bourgeonnement lytique, dynamique biologique et clinique des trois phases (primo-infection et séroconversion, phase asymptomatique de latence, phase symptomatique du SIDA avéré), effondrement de la coopération immunitaire, genèse des maladies opportunistes (tuberculose, sarcome de Kaposi) et stratégies médicales de prévention (PTME, préservatifs, trithérapies ARV).",
   officialVolumeHours: 10,
   contentVersion: 2,
-  source: "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC) - SVT Terminale D",
+  source: "Programme KONAN — SVT Terminale D",
   points: [
     {
       id: "pt1_structure_organisation_moleculaire_vih",

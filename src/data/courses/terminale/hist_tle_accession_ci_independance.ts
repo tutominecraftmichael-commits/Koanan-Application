@@ -633,10 +633,10 @@ export const HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE: CurriculumChapter = {
         {
           "stepNumber": 6,
           "stepKind": "piege",
-          "stepTitle": "Erreur dans le PDF : le secrétaire général du RDA",
-          "stepTheme": "Erreur dans le PDF : le secrétaire général du RDA",
-          "stepBadge": "Erreur dans le PDF : le secrétaire général du RDA",
-          "paragraphText": "Le PDF donne Fily Dabo Sissoko comme secrétaire général du RDA.\nEn réalité, Fily Dabo Sissoko n'a pas rejoint le RDA ; le secrétaire général était Gabriel d'Arboussier.\nRetiens surtout : président du RDA, Houphouët-Boigny.",
+          "stepTitle": "Point de vigilance : le secrétaire général du RDA",
+          "stepTheme": "Point de vigilance : le secrétaire général du RDA",
+          "stepBadge": "Point de vigilance : le secrétaire général du RDA",
+          "paragraphText": "Attention à une confusion historique fréquente concernant Fily Dabo Sissoko et le secrétariat général du RDA.\nEn réalité, Fily Dabo Sissoko n'a pas rejoint le RDA ; le secrétaire général était Gabriel d'Arboussier.\nRetiens surtout : président du RDA, Houphouët-Boigny.",
           "exercise": {
             "id": "terminale_hg_histoire_t2_l02_accession_ci_independance_p03_q6",
             "type": "mcq",
@@ -867,7 +867,7 @@ export const HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE: CurriculumChapter = {
           "exercise": {
             "id": "terminale_hg_histoire_t2_l02_accession_ci_independance_p04_q6",
             "type": "mcq",
-            "prompt": "Combien de morts fait la répression de 1949-1950 selon le cours ?",
+            "prompt": "Combien de morts fait la répression de 1949-1950 ?",
             "options": [
               "5",
               "520",
@@ -875,7 +875,7 @@ export const HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE: CurriculumChapter = {
               "3 000"
             ],
             "correctAnswerIndex": 2,
-            "explanation": "Le cours retient 52 morts ; le PDF parle aussi d'environ 3 000 blessés (d'autres sources parlent de 3 000 arrestations)."
+            "explanation": "Le bilan historique retient 52 morts ainsi qu'environ 3 000 blessés ou arrestations selon les estimations."
           }
         }
       ],
@@ -948,7 +948,7 @@ export const HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE: CurriculumChapter = {
         {
           "id": "terminale_hg_histoire_t2_l02_accession_ci_independance_p04_q6",
           "type": "mcq",
-          "prompt": "Combien de morts fait la répression de 1949-1950 selon le cours ?",
+          "prompt": "Combien de morts fait la répression de 1949-1950 ?",
           "options": [
             "5",
             "520",
@@ -956,7 +956,7 @@ export const HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE: CurriculumChapter = {
             "3 000"
           ],
           "correctAnswerIndex": 2,
-          "explanation": "Le cours retient 52 morts ; le PDF parle aussi d'environ 3 000 blessés (d'autres sources parlent de 3 000 arrestations)."
+          "explanation": "Le bilan historique retient 52 morts ainsi qu'environ 3 000 blessés ou arrestations selon les estimations."
         }
       ]
     },
@@ -1212,7 +1212,7 @@ export const HIST_TLE_T2_L02_ACCESSION_CI_INDEPENDANCE: CurriculumChapter = {
           "stepTitle": "La loi-cadre",
           "stepTheme": "La loi-cadre",
           "stepBadge": "La loi-cadre",
-          "paragraphText": "• Loi-cadre (23 juin 1956) : loi préparée par Gaston Defferre, ministre de la France d'outre-mer, qui donne aux colonies une autonomie politique et administrative.\n(Le PDF le présente à tort comme « ministre de l'administration territoriale ».)",
+          "paragraphText": "• Loi-cadre (23 juin 1956) : loi préparée par Gaston Defferre, ministre de la France d'outre-mer, qui donne aux colonies une autonomie politique et administrative.\n",
           "exercise": {
             "id": "terminale_hg_histoire_t2_l02_accession_ci_independance_p06_q1",
             "type": "mcq",

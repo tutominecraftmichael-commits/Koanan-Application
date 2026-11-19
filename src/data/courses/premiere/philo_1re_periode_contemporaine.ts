@@ -1087,7 +1087,7 @@ export const PHILO_1RE_L09_PERIODE_CONTEMPORAINE: CurriculumChapter = {
           "exercise": {
             "id": "premiere_philo_histoire_l09_periode_contemporaine_p05_q1",
             "type": "mcq",
-            "prompt": "Quelle est la définition de l'existentialisme donnée dans le cours sur la période contemporaine ?",
+            "prompt": "Quelle est la définition de l'existentialisme relative aux la période contemporaine ?",
             "options": [
               "Une doctrine selon laquelle une essence humaine précède l'existence",
               "Un courant qui considère que l'homme, en raison de sa liberté, est une valeur fondamentale et qui accorde la priorité à l'existence",
@@ -1229,7 +1229,7 @@ export const PHILO_1RE_L09_PERIODE_CONTEMPORAINE: CurriculumChapter = {
         {
           "id": "premiere_philo_histoire_l09_periode_contemporaine_p05_q1",
           "type": "mcq",
-          "prompt": "Quelle est la définition de l'existentialisme donnée dans le cours sur la période contemporaine ?",
+          "prompt": "Quelle est la définition de l'existentialisme relative aux la période contemporaine ?",
           "options": [
             "Une doctrine selon laquelle une essence humaine précède l'existence",
             "Un courant qui considère que l'homme, en raison de sa liberté, est une valeur fondamentale et qui accorde la priorité à l'existence",

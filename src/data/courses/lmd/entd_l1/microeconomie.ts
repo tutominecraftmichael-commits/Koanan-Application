@@ -25,7 +25,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Maîtriser la démarche microéconomique (guillotine de Hume, statique comparative, équilibre partiel), la Frontière des Possibilités de Production (FPP) et la stabilité de l'équilibre de marché.",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'ESATIC — Microéconomie Licence 1 (Dr Sylla N’Gomory Muhamed & Dr Libaud R.A. Doho)',
+    source: 'ENTD L1 — Microéconomie Licence 1',
     points: [
       makePoint({
         id: 'lmd_entd_l1_microeconomie_ch1_p1',
@@ -98,7 +98,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_microeconomie_ch1_p1_q2',
               type: 'mcq',
               prompt:
-                'Selon le tableau de la guillotine de Hume figurant dans le cours ESATIC, quelle série d’attributs caractérise l’économie POSITIVE ?',
+                'Selon le tableau de la guillotine de Hume en économie, quelle série d’attributs caractérise l’économie POSITIVE ?',
               options: [
                 'Devrait être, valeurs, subjectif, prescriptif',
                 'Bien/mal, art, jugement moral, norme',
@@ -170,7 +170,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_microeconomie_ch1_p1_q5',
               type: 'mcq',
               prompt:
-                'Quel trio définit l’objet principal de l’analyse microéconomique selon le support ESATIC ?',
+                'Quel trio définit l’objet principal de l’analyse microéconomique selon le support universitaire ?',
               options: [
                 'Analyse dynamique, économie normative et équilibre budgétaire',
                 'Statique comparative, équilibre partiel et économie positive',
@@ -299,7 +299,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_microeconomie_ch1_p2_q4',
               type: 'mcq',
               prompt:
-                'Que stipule la loi des rendements décroissants énoncée dans le cours ESATIC ?',
+                'Que stipule la loi des rendements décroissants ?',
               options: [
                 'La production totale devient immédiatement négative dès le deuxième travailleur',
                 'Les coûts de production baissent toujours lorsque la production augmente',
@@ -360,9 +360,9 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Déterminer l’équilibre d’un marché et analyser un déséquilibre (TD1)',
+          title: 'Déterminer l’équilibre d’un marché et analyser un déséquilibre',
           statement:
-            "Sur un marché, l'offre est Q^S = 4 000 + 400P et la demande est Q^D = 16 000 − 400P (correspondant au tableau du jeu d'échecs du TD1). Calculez le prix et la quantité d'équilibre, puis diagnostiquez la situation pour P = 20 €.",
+            "Sur un marché, l'offre est Q^S = 4 000 + 400P et la demande est Q^D = 16 000 − 400P. Calculez le prix et la quantité d'équilibre, puis diagnostiquez la situation pour P = 20 €.",
           methodSteps: [
             'Condition d’équilibre Q^S = Q^D : 4 000 + 400P* = 16 000 − 400P* ⇒ 800P* = 12 000 ⇒ P* = 15 €.',
             'Quantité d’équilibre : Q* = 4 000 + 400(15) = 10 000 unités (vérification : 16 000 − 400×15 = 10 000).',
@@ -511,7 +511,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Maîtriser les préférences, courbes d'indifférence, TMS, contrainte budgétaire, équilibre optimal du consommateur (Lagrangien) et les élasticités de la demande.",
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC — Microéconomie 1 (Partie I : Chap. I Préférences/Utilité, Chap. II Équilibre, Chap. III Demande)',
+    source: 'ENTD L1 — Microéconomie 1 (Partie I : Chap. I Préférences/Utilité, Chap. II Équilibre, Chap. III Demande)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_microeconomie_ch2_p1',
@@ -853,9 +853,9 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
           },
         ],
         workedExample: {
-          title: 'Calculer et commenter une élasticité-prix (TD1 — Marché du jeu d’échecs)',
+          title: 'Calculer et commenter une élasticité-prix',
           statement:
-            "Dans le TD1, lorsque le prix d'un jeu d'échecs passe de 15 € à 16 €, la quantité demandée passe de 10 000 à 9 600 unités. Calculez l'élasticité-prix directe, interprétez-la et indiquez l'impact sur le chiffre d'affaires.",
+            "Lorsque le prix d'un jeu d'échecs passe de 15 € à 16 €, la quantité demandée passe de 10 000 à 9 600 unités. Calculez l'élasticité-prix directe, interprétez-la et indiquez l'impact sur le chiffre d'affaires.",
           methodSteps: [
             'Variation relative de la quantité : ΔQ / Q = (9 600 − 10 000) / 10 000 = −400 / 10 000 = −0,04 (−4 %).',
             'Variation relative du prix : ΔP / P = (16 − 15) / 15 = +1 / 15 ≈ +0,0667 (+6,67 %).',
@@ -917,7 +917,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Élasticité-revenu',
             stepTitle: 'Classer un bien selon son élasticité-revenu e_R',
             paragraphText:
-              "Selon les trois cas significatifs de l'élasticité-revenu (TD1) : e_R < 0 caractérise un bien inférieur ; 0 < e_R < 1 caractérise un bien normal de première nécessité (sa part budgétaire diminue quand le revenu augmente) ; e_R > 1 caractérise un bien supérieur / de luxe (3e loi d'Engel : la part des dépenses de loisirs/santé/culture augmente avec le revenu).",
+              "Selon les trois cas significatifs de l'élasticité-revenu : e_R < 0 caractérise un bien inférieur ; 0 < e_R < 1 caractérise un bien normal de première nécessité (sa part budgétaire diminue quand le revenu augmente) ; e_R > 1 caractérise un bien supérieur / de luxe (3e loi d'Engel : la part des dépenses de loisirs/santé/culture augmente avec le revenu).",
             exercise: {
               id: 'lmd_entd_l1_microeconomie_ch2_p3_q3',
               type: 'mcq',
@@ -1000,7 +1000,7 @@ export const MICROECONOMIE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Maîtriser fonctions de production (PmL, isoquantes, TMST, rendements d'échelle), coûts (CT, CM, Cm) et équilibres de marché (concurrence pure et parfaite, monopole, oligopole).",
     officialVolumeHours: 12,
     contentVersion: 2,
-    source: 'ESATIC — Microéconomie 1 & 2 (Partie II : Offre des firmes & Partie III : Prix et organisation du marché)',
+    source: 'ENTD L1 — Microéconomie 1 & 2 (Partie II : Offre des firmes & Partie III : Prix et organisation du marché)',
     points: [
       makePoint({
         id: 'lmd_entd_l1_microeconomie_ch3_p1',

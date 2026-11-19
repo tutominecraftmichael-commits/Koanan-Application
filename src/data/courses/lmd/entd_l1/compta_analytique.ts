@@ -25,7 +25,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Définition et objectifs de la comptabilité analytique (CAGE), comparaison avec la comptabilité générale, valorisation des entrées et sorties de stocks (CUMP, FIFO, LIFO, NIFO) et différences d'inventaire (bonis et malis).",
     officialVolumeHours: 10,
     contentVersion: 2,
-    source: 'FASCICULE COMPTABILITE ANALYTIQUE (Dr HIEN Sié Clotaire, ESATIC ENTD 1, 2025-2026) & TD',
+    source: 'FASCICULE COMPTABILITE ANALYTIQUE & TD',
     points: [
       makePoint({
         id: 'lmd_entd_l1_compta_analytique_ch1_p1',
@@ -238,7 +238,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         keyRule:
           "FIFO = on sort les lots les plus ANCIENS (il reste les plus récents). LIFO = on sort les lots les plus RÉCENTS (il reste les plus anciens). SF réel < SF théorique = MALI (Crédit) ; SF réel > SF théorique = BONI (Débit).",
         workedExample: {
-          title: 'Application standard du cours (Dr HIEN) : CUMP, FIFO, LIFO et Mali d’inventaire',
+          title: 'Application standard : CUMP, FIFO, LIFO et Mali d’inventaire',
           statement:
             "Stock au 01/01 : 30 unités à 120 F. Entrées : 10/01 (20 u à 150 F), 17/01 (35 u à 110 F), 26/01 (15 u à 180 F). Sorties : 06/01 (15 u), 12/01 (25 u), 28/01 (35 u). L'inventaire physique au 31/01 constate 23 unités réelles. Calculer le CUMP de fin de période, le stock final en FIFO, en LIFO, et la différence d'inventaire.",
           methodSteps: [
@@ -259,7 +259,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Formule et calcul du CUMP',
             stepTitle: 'Calculer le CUMP de fin de période',
             paragraphText:
-              "Le CUMP de fin de période divise la somme (Valeur du Stock Initial + Valeur des Entrées) par la somme des quantités (Qté SI + Qté Entrées). Dans l'application du cours : 13 150 F ÷ 100 unités = 131,50 F par unité.",
+              "Le CUMP de fin de période divise la somme (Valeur du Stock Initial + Valeur des Entrées) par la somme des quantités (Qté SI + Qté Entrées). Par exemple : 13 150 F ÷ 100 unités = 131,50 F par unité.",
             exercise: {
               id: 'lmd_entd_l1_compta_analytique_ch1_p2_q1',
               type: 'mcq',
@@ -384,7 +384,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
               id: 'lmd_entd_l1_compta_analytique_ch1_p2_q6',
               type: 'mcq',
               prompt:
-                "En fin de mois (TD de juin), le stock final théorique est de 25 kg et l'inventaire physique réel trouve 21 kg (CUMP = 1 080 F/kg). Comment qualifie-t-on et où inscrit-on cet écart ?",
+                "En fin de mois, le stock final théorique est de 25 kg et l'inventaire physique réel trouve 21 kg (CUMP = 1 080 F/kg). Comment qualifie-t-on et où inscrit-on cet écart ?",
               options: [
                 "Un boni d'inventaire de 4 kg inscrit au débit",
                 "Un mali d'inventaire de 4 kg inscrit au débit",
@@ -606,7 +606,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           "Enchaîner rigoureusement les étapes de la méthode des coûts complets : CAMPA, CAMPC, CPPF, CPPV, coût hors production, coût de revient et résultat analytique.",
         conceptExplanation:
-          "Dans une entreprise industrielle, les coûts se forment par étapes successives qui suivent fidèlement le cycle d'exploitation (processus technico-commercial) :\n\n1) Coût d'achat des matières premières achetées (CAMPA) = Prix d'achat (PAMPA) + Charges directes et indirectes d'approvisionnement.\n2) Passant par le compte de stock de matières premières, on obtient le Coût d'achat des matières premières consommées (CAMPC) = CAMPA + Stock Initial MP − Stock Final MP (ou Quantités consommées × CUMP).\n3) Coût de production des produits fabriqués (CPPF) = CAMPC + Main-d'œuvre directe de fabrication + Charges indirectes des ateliers de production (+ encours initiaux − encours finals, et ajustements des déchets/rebuts ou produits dérivés).\n4) Passant par le compte de stock de produits finis, on obtient le Coût de production des produits vendus (CPPV) = CPPF + Stock Initial PF − Stock Final PF (ou Quantités vendues × CUMP des produits finis).\n5) Coût de revient (des produits vendus uniquement !) = CPPV + Coûts hors production (coûts de distribution : commissions commerciaux, publicité, facturation + quote-part d'administration générale).\n6) Résultat analytique = Chiffre d'affaires (Prix de vente) − Coût de revient.\n\nDans une entreprise purement commerciale (comme l'Exercice 3 du TD sur les tissus velours et satin), il n'y a pas de phase de production : on passe directement du Coût d'achat des marchandises vendues au Coût de revient en ajoutant les coûts de distribution.",
+          "Dans une entreprise industrielle, les coûts se forment par étapes successives qui suivent fidèlement le cycle d'exploitation (processus technico-commercial) :\n\n1) Coût d'achat des matières premières achetées (CAMPA) = Prix d'achat (PAMPA) + Charges directes et indirectes d'approvisionnement.\n2) Passant par le compte de stock de matières premières, on obtient le Coût d'achat des matières premières consommées (CAMPC) = CAMPA + Stock Initial MP − Stock Final MP (ou Quantités consommées × CUMP).\n3) Coût de production des produits fabriqués (CPPF) = CAMPC + Main-d'œuvre directe de fabrication + Charges indirectes des ateliers de production (+ encours initiaux − encours finals, et ajustements des déchets/rebuts ou produits dérivés).\n4) Passant par le compte de stock de produits finis, on obtient le Coût de production des produits vendus (CPPV) = CPPF + Stock Initial PF − Stock Final PF (ou Quantités vendues × CUMP des produits finis).\n5) Coût de revient (des produits vendus uniquement !) = CPPV + Coûts hors production (coûts de distribution : commissions commerciaux, publicité, facturation + quote-part d'administration générale).\n6) Résultat analytique = Chiffre d'affaires (Prix de vente) − Coût de revient.\n\nDans une entreprise purement commerciale, il n'y a pas de phase de production : on passe directement du Coût d'achat des marchandises vendues au Coût de revient en ajoutant les coûts de distribution.",
         formulas: [
           {
             name: 'Coût des matières consommées (CAMPC)',
@@ -671,7 +671,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
             stepTheme: 'Coût de production des produits fabriqués',
             stepTitle: 'Calculer le coût de production unitaire (Cas GTHOM)',
             paragraphText:
-              "Dans l'exercice d'application GTHOM du cours, les matières consommées valent 1 900 000 FCFA et les frais de fabrication (« processing ») pour 500 produits P s'élèvent à 500 000 FCFA. Le CPPF vaut 1 900 000 + 500 000 = 2 400 000 FCFA.",
+              "Dans le cas de l'entreprise GTHOM, les matières consommées valent 1 900 000 FCFA et les frais de fabrication (« processing ») pour 500 produits P s'élèvent à 500 000 FCFA. Le CPPF vaut 1 900 000 + 500 000 = 2 400 000 FCFA.",
             exercise: {
               id: 'lmd_entd_l1_compta_analytique_ch2_p2_q2',
               type: 'mcq',
@@ -802,7 +802,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
       "Distinction charges variables / charges fixes, marge sur coût variable, seuil de rentabilité et point mort, direct costing évolué, imputation rationnelle des charges fixes, coût marginal et analyse des écarts sur coûts standards.",
     officialVolumeHours: 8,
     contentVersion: 2,
-    source: 'FASCICULE COMPTABILITE ANALYTIQUE (Chapitres V à IX, Dr HIEN Sié Clotaire, ESATIC ENTD 1)',
+    source: 'FASCICULE COMPTABILITE ANALYTIQUE',
     points: [
       makePoint({
         id: 'lmd_entd_l1_compta_analytique_ch3_p1',
@@ -995,7 +995,7 @@ export const COMPTA_ANALYTIQUE_ENTD_L1_CHAPTERS: CurriculumChapter[] = [
         summary:
           "Neutraliser les variations d'activité par l'imputation rationnelle, utiliser le coût marginal (optimum technique et économique) et contrôler la performance par les écarts sur coûts standards.",
         conceptExplanation:
-          "Trois outils avancés complètent le programme d'ENTD 1 (Chapitres VII, VIII et IX du fascicule de Dr HIEN) :\n\n1) L'Imputation Rationnelle des Charges Fixes (IRCF) : dans les coûts complets classiques, une baisse saisonnière d'activité fait grimper artificiellement le coût unitaire à cause des charges fixes. L'IRCF neutralise cet effet en imputant aux coûts seulement une fraction des charges fixes proportionnelle au Coefficient d'Imputation Rationnelle (CIR = Activité réelle ÷ Activité normale) :\n   - CF imputées = CF réelles × CIR.\n   - Différence d'imputation rationnelle = CF réelles − CF imputées.\n   - Si Activité réelle < Activité normale (CIR < 1) : on constate un coût de sous-activité (mali de sous-activité), exclu du coût unitaire.\n   - Si Activité réelle > Activité normale (CIR > 1) : on constate un boni de suractivité.\n\n2) Le Coût Marginal (Cm) : c'est le coût supplémentaire engendré par la production d'une unité (ou d'un lot) additionnelle : Cm = ΔCT ÷ ΔQ. Deux optima majeurs guident le gestionnaire :\n   - L'Optimum technique : quantité où le Coût Moyen (CM) est minimum (atteint lorsque Cm = CM).\n   - L'Optimum économique : quantité qui maximise le profit total (atteint lorsque Recette Marginale Rm = Coût Marginal Cm ; en concurrence pure, Prix de vente = Cm).\n\n3) Les Coûts Préétablis (Coûts Standards) : calculés a priori sur une fiche standard (quantités standards × prix standards), ils servent de référence pour mesurer les écarts en fin de période : Écart global = Coût Réel − Coût Préétabli de la production réelle. Un écart positif (Réel > Standard) est DÉFAVORABLE ; un écart négatif (Réel < Standard) est FAVORABLE. L'écart sur charges directes se décompose en écart sur quantité et écart sur prix.",
+          "Trois outils avancés complètent le programme d'ENTD 1 (Chapitres VII, VIII et IX du fascicule de) :\n\n1) L'Imputation Rationnelle des Charges Fixes (IRCF) : dans les coûts complets classiques, une baisse saisonnière d'activité fait grimper artificiellement le coût unitaire à cause des charges fixes. L'IRCF neutralise cet effet en imputant aux coûts seulement une fraction des charges fixes proportionnelle au Coefficient d'Imputation Rationnelle (CIR = Activité réelle ÷ Activité normale) :\n - CF imputées = CF réelles × CIR.\n - Différence d'imputation rationnelle = CF réelles − CF imputées.\n - Si Activité réelle < Activité normale (CIR < 1) : on constate un coût de sous-activité (mali de sous-activité), exclu du coût unitaire.\n - Si Activité réelle > Activité normale (CIR > 1) : on constate un boni de suractivité.\n\n2) Le Coût Marginal (Cm) : c'est le coût supplémentaire engendré par la production d'une unité (ou d'un lot) additionnelle : Cm = ΔCT ÷ ΔQ. Deux optima majeurs guident le gestionnaire :\n - L'Optimum technique : quantité où le Coût Moyen (CM) est minimum (atteint lorsque Cm = CM).\n - L'Optimum économique : quantité qui maximise le profit total (atteint lorsque Recette Marginale Rm = Coût Marginal Cm ; en concurrence pure, Prix de vente = Cm).\n\n3) Les Coûts Préétablis (Coûts Standards) : calculés a priori sur une fiche standard (quantités standards × prix standards), ils servent de référence pour mesurer les écarts en fin de période : Écart global = Coût Réel − Coût Préétabli de la production réelle. Un écart positif (Réel > Standard) est DÉFAVORABLE ; un écart négatif (Réel < Standard) est FAVORABLE. L'écart sur charges directes se décompose en écart sur quantité et écart sur prix.",
         formulas: [
           {
             name: "Imputation rationnelle des charges fixes",

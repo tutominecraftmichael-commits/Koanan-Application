@@ -822,7 +822,7 @@ export const HIST_1RE_T3_L01_PREMIERE_GUERRE_MONDIALE: CurriculumChapter = {
           "stepTitle": "Les morts",
           "stepTheme": "Les morts",
           "stepBadge": "Les morts",
-          "paragraphText": "La Première Guerre mondiale a fait environ 9 millions de morts (8,5 millions selon le cours).",
+          "paragraphText": "La Première Guerre mondiale a fait environ 9 millions de morts (entre 8,5 et 9 millions).",
           "exercise": {
             "id": "premiere_a1_hg_histoire_t3_l01_premiere_guerre_mondiale_p04_q1",
             "type": "mcq",

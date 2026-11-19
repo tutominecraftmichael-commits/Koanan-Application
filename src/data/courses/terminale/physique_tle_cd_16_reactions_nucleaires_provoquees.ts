@@ -12,7 +12,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
   "summary": "Étude complète et approfondie des réactions nucléaires provoquées : défaut de masse et énergie de liaison du noyau, énergie de liaison par nucléon et courbe d'Aston, mécanisme de la fission de l'uranium 235 et réactions en chaîne dans les réacteurs nucléaires, fusion thermonucléaire stellaire et projet ITER, calcul rigoureux des bilans énergétiques par les masses et par les énergies de liaison, applications industrielles et médicales, et analyse des risques radiologiques majeurs (Fukushima, Tchernobyl).",
   "officialVolumeHours": 8,
   "contentVersion": 2,
-  "source": "École Numérique de Côte d'Ivoire - Direction de la Pédagogie et de la Formation Continue (DPFC) - Niveau Terminale CDE",
+  "source": "Programme KONAN — Niveau Terminale CDE",
   "points": [
     {
       "id": "pt1_defaut_masse_equivalence_einstein",
@@ -1840,7 +1840,7 @@ export const PHYSIQUE_TLE_CD_L16_REACTIONS_NUCLEAIRES_PROVOQUEES: CurriculumChap
         {
           "stepNumber": 7,
           "stepKind": "exemple",
-          "stepTitle": "Bilan global du cours et synthèse des acquis sur le nucléaire",
+          "stepTitle": "Bilan global et synthèse des acquis sur le nucléaire",
           "stepTheme": "Synthèse générale",
           "stepBadge": "Récapitulatif final",
           "paragraphText": "En conclusion de cette étude des réactions nucléaires provoquées : 1. La fission et la fusion exploitent l'énergie de liaison nucléaire en convertissant une fraction de la masse au repos en énergie utile (E = |Δm|.c²). 2. La fission de noyaux lourds est la technologie industrielle mature d'aujourd'hui, exigeant une maîtrise absolue du refroidissement permanent. 3. La fusion thermonucléaire de noyaux légers est l'énergie propre et inépuisable de demain, exempte de risques d'emballement et de déchets à vie longue. 4. Le physicien responsable maîtrise à la fois les équations mathématiques de Soddy, les calculs de bilans thermiques et les impératifs éthiques de radioprotection de la société.",
