@@ -80,7 +80,7 @@ export const ShopComingSoonModal: React.FC<{ gold: number; onClose: () => void }
           Comment gagner plus d’Or ?
         </p>
         <p className="m-0">
-          Lance une <b>quête d’XP en duo</b> chaque semaine avec un ami : récoltez <b>1 000 XP ensemble</b> avant dimanche 23h59 pour remporter <b>+50 Or chacun</b>.
+          Lance une <b>quête d’XP avec un ami</b> : vous avez <b>6 jours</b> à partir du départ pour atteindre votre objectif d’XP ensemble et remporter <b>100 à 500 Or chacun</b> selon la quête choisie.
         </p>
         <div className="pt-1.5 border-t border-slate-200 dark:border-white/[0.06] flex items-start gap-2 text-slate-600 dark:text-slate-400">
           <Lock className="w-3.5 h-3.5 mt-0.5 shrink-0 text-amber-500" />

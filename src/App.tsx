@@ -944,7 +944,7 @@ export function App() {
     const r = await respondFriendQuest(questId, accept);
     if (r.ok) {
       await reloadQuests();
-      showToast(accept ? 'C’est parti ! Ta quête en duo de 1 000 XP est lancée.' : 'Invitation de quête refusée sans pénalité.');
+      showToast(accept ? 'C’est parti ! Ta quête avec ton ami est lancée pour 6 jours.' : 'Invitation de quête refusée sans pénalité.');
     } else {
       showToast(questErrorMessage(r.error));
     }

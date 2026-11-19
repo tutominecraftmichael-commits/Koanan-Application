@@ -249,9 +249,10 @@ export default async function handler(req, res) {
       const db = await getDb();
       const questId = str(String(body.questId || ''), 120);
       const friendKonanId = str(String(body.friendKonanId || body.konanId || ''), 20);
+      const tierId = str(String(body.tierId || ''), 20);
       let out;
       if (body.action === 'quest_state') out = await getQuestState(db, uid);
-      else if (body.action === 'quest_propose') out = await proposeFriendQuest(db, uid, friendKonanId);
+      else if (body.action === 'quest_propose') out = await proposeFriendQuest(db, uid, friendKonanId, tierId || undefined);
       else if (body.action === 'quest_respond') out = await respondFriendQuest(db, uid, questId, body.accept === true);
       else if (body.action === 'quest_cancel') out = await cancelFriendQuest(db, uid, questId);
       else if (body.action === 'quest_claim') out = await claimQuestReward(db, uid, questId);

@@ -470,7 +470,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         fromAvatar: inv.partner.avatar || '',
         targetXp: inv.targetXp,
         rewardGold: inv.rewardGold,
-        message: `${inv.partner.name} te propose une quête en duo : récoltez ${inv.targetXp.toLocaleString('fr-FR')} XP ensemble cette semaine pour gagner +${inv.rewardGold} Or chacun !`,
+        message: `${inv.partner.name} te propose une quête de 6 jours : récoltez ${inv.targetXp.toLocaleString('fr-FR')} XP ensemble pour gagner +${inv.rewardGold} Or chacun !`,
         pending: true,
       });
     }

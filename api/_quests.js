@@ -1,29 +1,44 @@
 /**
- * OR (GOLD) & QUÊTES D'XP EN DUO ENTRE AMIS (hebdomadaires, synchronisées avec la Ligue).
+ * OR (GOLD) & QUÊTES D'XP EN DUO ENTRE AMIS (durée fixe de 6 jours dès le démarrage).
  *
  * - Monnaie virtuelle Or (gold) sur users/{uid} : 100 Or attribués automatiquement à tout nouveau
  *   compte ou compte existant n'ayant pas encore le champ `gold`.
- * - Quêtes hebdomadaires en duo dans friend_quests/{questId} :
+ * - Quêtes en duo dans friend_quests/{questId} :
+ *   - Durée fixe de 6 jours (QUEST_DURATION_MS) quel que soit le jour où la quête commence.
+ *   - Récompense de 100 à 500 pièces d'Or selon le palier de quête choisi (500 à 2 500 XP).
  *   - Double consentement obligatoire (« C'est parti » des deux amis) : tant que `status === 'pending'`,
  *     aucun XP n'est comptabilisé. Si l'ami refuse, la proposition passe en `declined` sans pénalité.
- *   - Cycle synchronisé avec la Ligue (lundi 00:00 UTC → dimanche 23:59 UTC).
  *   - Gel de Ligue : les XP gagnés dans les leçons et l'entraînement comptent toujours pour la quête en duo,
  *     même si la ligue est gelée (réputation <= 80 %) ; seul le classement de la ligue reste bloqué.
- *   - Objectif atteint avant `expiresAt` → `status: 'completed'`, chaque ami peut réclamer +50 Or.
- *   - Temps expiré → `status: 'expired'`, 0 Or, nouvelle quête possible la semaine suivante.
+ *   - Objectif atteint avant `expiresAt` → `status: 'completed'`, chaque ami peut réclamer sa récompense en Or.
+ *   - Temps expiré → `status: 'expired'`, 0 Or, nouvelle quête immédiatement possible.
  *   - Relance sociale (« Encourager / Relancer ») : notification cloche + push téléphone.
  */
 import { FieldValue } from 'firebase-admin/firestore';
-import { isFrozen, leagueCol, weekEndMs, weekIdOf } from './_leagueRules.js';
+import { isFrozen, leagueCol, weekIdOf } from './_leagueRules.js';
 import { publicCards, uidOfKonanId } from './_friends.js';
 import { sendPushToUser } from './_pushSend.js';
 
 export const INITIAL_GOLD = 100;
-export const QUEST_TARGET_XP = 1000;
-export const QUEST_REWARD_GOLD = 50;
+export const QUEST_DURATION_DAYS = 6;
+export const QUEST_DURATION_MS = QUEST_DURATION_DAYS * 24 * 60 * 60 * 1000;
+export const QUEST_TIERS = [
+  { id: 'bronze', label: 'Rapide', targetXp: 500, rewardGold: 100 },
+  { id: 'silver', label: 'Classique', targetXp: 1000, rewardGold: 200 },
+  { id: 'gold', label: 'Intensif', targetXp: 1750, rewardGold: 350 },
+  { id: 'diamond', label: 'Légende', targetXp: 2500, rewardGold: 500 },
+];
+export const DEFAULT_QUEST_TIER = QUEST_TIERS[1]; // Classique : 1 000 XP → 200 Or
+export const QUEST_TARGET_XP = DEFAULT_QUEST_TIER.targetXp;
+export const QUEST_REWARD_GOLD = DEFAULT_QUEST_TIER.rewardGold;
 export const NUDGE_COOLDOWN_MS = 2 * 60 * 60 * 1000; // 2 heures entre deux relances serveur
 const MAX_NOTICES = 20;
 const NOTICE_TTL_MS = 14 * 24 * 60 * 60 * 1000;
+
+export function resolveQuestTier(tierId) {
+  const clean = String(tierId || '').trim().toLowerCase();
+  return QUEST_TIERS.find((t) => t.id === clean) || DEFAULT_QUEST_TIER;
+}
 
 const questsCol = (db) => leagueCol(db, 'friend_quests');
 const inboxCol = (db) => leagueCol(db, 'quest_inbox');
@@ -81,7 +96,8 @@ function serializeQuest(doc, viewerUid, partnerFrozen = false) {
   const lastNudgeAt = Number(doc.lastNudgeBy?.[viewerUid]) || 0;
   return {
     id: doc.id,
-    weekId: doc.weekId,
+    weekId: doc.weekId || '',
+    tierId: doc.tierId || DEFAULT_QUEST_TIER.id,
     status: doc.status,
     targetXp: Number(doc.targetXp) || QUEST_TARGET_XP,
     rewardGold: Number(doc.rewardGold) || QUEST_REWARD_GOLD,
@@ -132,18 +148,22 @@ async function loadAndExpireUserQuests(db, uid, nowMs) {
   return docs;
 }
 
-/** Vérifie si un utilisateur a déjà une quête active ou terminée pour la semaine donnée. */
-async function hasActiveOrCompletedQuestForWeek(db, uid, weekId, nowMs) {
+/** Indique si une quête occupe actuellement le créneau actif de 6 jours d'un joueur. */
+const isOccupyingSlot = (q, nowMs) =>
+  (q.status === 'active' && Number(q.expiresAt) > nowMs)
+  || (q.status === 'completed' && Number(q.expiresAt) > nowMs);
+
+/** Vérifie si un utilisateur a déjà une quête active (ou complétée dans sa fenêtre de 6 jours). */
+async function hasActiveQuestSlot(db, uid, nowMs) {
   const docs = await loadAndExpireUserQuests(db, uid, nowMs);
-  return docs.some((q) => q.weekId === weekId && (q.status === 'active' || q.status === 'completed'));
+  return docs.some((q) => isOccupyingSlot(q, nowMs));
 }
 
 /**
- * État complet des quêtes hebdomadaires et du solde d'Or pour l'utilisateur connecté.
+ * État complet des quêtes (durée 6 jours) et du solde d'Or pour l'utilisateur connecté.
  */
 export async function getQuestState(db, uid, nowMs = Date.now()) {
   const weekId = weekIdOf(nowMs);
-  const weekEndsAt = weekEndMs(nowMs);
   const [gold, docs, lpSnap, inboxSnap] = await Promise.all([
     ensureUserGold(db, uid),
     loadAndExpireUserQuests(db, uid, nowMs),
@@ -155,24 +175,23 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
   const frozen = lp ? isFrozen(lp) : false;
   const reputation = lp && Number.isFinite(lp.reputation) ? Number(lp.reputation) : 100;
 
-  // Quête en cours (active ou terminée cette semaine) ou quête terminée la semaine dernière avec récompense non encore réclamée
-  const currentWeekActive = docs.find((q) => q.weekId === weekId && (q.status === 'active' || q.status === 'completed')) || null;
-  const unclaimedPast = !currentWeekActive
+  // Quête en cours (active ou terminée dans sa fenêtre de 6 jours) ou récompense non encore réclamée
+  const currentActive = docs.find((q) => isOccupyingSlot(q, nowMs)) || null;
+  const unclaimedPast = !currentActive
     ? docs.find((q) => q.status === 'completed' && !(Array.isArray(q.rewardClaimedBy) && q.rewardClaimedBy.includes(uid))) || null
     : null;
-  const activeRaw = currentWeekActive || unclaimedPast;
+  const activeRaw = currentActive || unclaimedPast;
 
-  const outgoingRaw = !currentWeekActive
-    ? docs.find((q) => q.weekId === weekId && q.status === 'pending' && q.userA?.uid === uid) || null
+  const outgoingRaw = !currentActive
+    ? docs.find((q) => q.status === 'pending' && Number(q.expiresAt) > nowMs && q.userA?.uid === uid) || null
     : null;
-  const incomingRaw = !currentWeekActive
-    ? docs.filter((q) => q.weekId === weekId && q.status === 'pending' && q.userB?.uid === uid)
+  const incomingRaw = !currentActive
+    ? docs.filter((q) => q.status === 'pending' && Number(q.expiresAt) > nowMs && q.userB?.uid === uid)
     : [];
   const expiredRaw = !activeRaw && !outgoingRaw && incomingRaw.length === 0
-    ? docs.find((q) => q.status === 'expired' && nowMs - (Number(q.expiresAt) || 0) <= 7 * 24 * 60 * 60 * 1000) || null
+    ? docs.find((q) => q.status === 'expired' && nowMs - (Number(q.expiresAt) || 0) <= QUEST_DURATION_MS) || null
     : null;
 
-  // Vérifier si le binôme de la quête active a sa ligue gelée
   let partnerFrozen = false;
   if (activeRaw) {
     const partnerUid = activeRaw.userA?.uid === uid ? activeRaw.userB?.uid : activeRaw.userA?.uid;
@@ -188,7 +207,6 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
   const rawNotices = inboxSnap.exists && Array.isArray(inboxSnap.data()?.notices) ? inboxSnap.data().notices : [];
   const questNotices = rawNotices
     .filter((n) => n && n.id && nowMs - (Number(n.at) || 0) <= NOTICE_TTL_MS)
-    // Ne plus afficher une vieille relance/invitation d'une quête déjà annulée ou expirée
     .filter((n) => !((n.kind === 'quest_invite' || n.kind === 'quest_nudge') && deadQuestIds.has(n.questId)))
     .map((n) => ({
       id: n.id,
@@ -201,7 +219,6 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
       message: n.message || '',
       targetXp: Number(n.targetXp) || QUEST_TARGET_XP,
       rewardGold: Number(n.rewardGold) || QUEST_REWARD_GOLD,
-      // Une invitation OU une relance liée à une quête encore en attente pour cet élève affiche les boutons Accepter / Refuser
       pending: (n.kind === 'quest_invite' || n.kind === 'quest_nudge') && pendingIncomingIds.has(n.questId),
     }));
 
@@ -220,7 +237,7 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
       fromName: who,
       fromKonanId: inv.userA?.konanId || '',
       fromAvatar: inv.userA?.avatar || '',
-      message: `${who} te propose une quête en duo : récoltez ${targetXp.toLocaleString('fr-FR')} XP ensemble cette semaine pour gagner +${rewardGold} Or chacun !`,
+      message: `${who} te propose une quête de ${QUEST_DURATION_DAYS} jours : récoltez ${targetXp.toLocaleString('fr-FR')} XP ensemble pour gagner +${rewardGold} Or chacun !`,
       targetXp,
       rewardGold,
       pending: true,
@@ -230,7 +247,7 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
   return {
     gold,
     weekId,
-    weekEndsAt,
+    weekEndsAt: activeRaw?.expiresAt || (nowMs + QUEST_DURATION_MS),
     isFrozen: frozen,
     reputation,
     activeQuest: activeRaw ? serializeQuest(activeRaw, uid, partnerFrozen) : null,
@@ -242,11 +259,14 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
 }
 
 /**
- * Propose une quête d'XP hebdomadaire à un ami (« C'est parti » de l'utilisateur A).
- * Si l'ami B avait déjà envoyé une proposition cette semaine, les deux ont cliqué sur « C'est parti » :
- * la quête passe immédiatement en `active` !
+ * Propose une quête d'XP de 6 jours à un ami (« C'est parti » de l'utilisateur A).
+ * Le palier (`tierId` : bronze=100 Or, silver=200 Or, gold=350 Or, diamond=500 Or) détermine l'objectif et la récompense.
  */
-export async function proposeFriendQuest(db, uid, friendKonanId, nowMs = Date.now()) {
+export async function proposeFriendQuest(db, uid, friendKonanId, tierIdOrNow = DEFAULT_QUEST_TIER.id, maybeNowMs) {
+  const tierId = typeof tierIdOrNow === 'number' ? DEFAULT_QUEST_TIER.id : tierIdOrNow;
+  const nowMs = typeof tierIdOrNow === 'number' ? tierIdOrNow : (maybeNowMs ?? Date.now());
+  const tier = resolveQuestTier(tierId);
+
   const targetUid = await uidOfKonanId(db, friendKonanId);
   if (!targetUid) return { error: 'NOT_FOUND' };
   if (targetUid === uid) return { error: 'SELF' };
@@ -256,31 +276,31 @@ export async function proposeFriendQuest(db, uid, friendKonanId, nowMs = Date.no
   if (!friends.includes(targetUid)) return { error: 'NOT_FRIENDS' };
 
   const weekId = weekIdOf(nowMs);
-  const expiresAt = weekEndMs(nowMs);
+  const expiresAt = nowMs + QUEST_DURATION_MS;
 
   const [myQuests, targetQuests] = await Promise.all([
     loadAndExpireUserQuests(db, uid, nowMs),
     loadAndExpireUserQuests(db, targetUid, nowMs),
   ]);
 
-  if (myQuests.some((q) => q.weekId === weekId && (q.status === 'active' || q.status === 'completed'))) {
+  if (myQuests.some((q) => isOccupyingSlot(q, nowMs))) {
     return { error: 'ALREADY_IN_QUEST' };
   }
-  if (targetQuests.some((q) => q.weekId === weekId && (q.status === 'active' || q.status === 'completed'))) {
+  if (targetQuests.some((q) => isOccupyingSlot(q, nowMs))) {
     return { error: 'PARTNER_BUSY' };
   }
 
-  // L'ami avait déjà proposé cette semaine → double consentement immédiat !
+  // L'ami avait déjà proposé → double consentement immédiat !
   const reversePending = myQuests.find(
-    (q) => q.weekId === weekId && q.status === 'pending' && q.userA?.uid === targetUid && q.userB?.uid === uid,
+    (q) => q.status === 'pending' && Number(q.expiresAt) > nowMs && q.userA?.uid === targetUid && q.userB?.uid === uid,
   );
   if (reversePending) {
     return respondFriendQuest(db, uid, reversePending.id, true, nowMs);
   }
 
-  // Déjà une proposition envoyée cette semaine ?
+  // Déjà une proposition envoyée en attente ?
   const existingOutgoing = myQuests.find(
-    (q) => q.weekId === weekId && q.status === 'pending' && q.userA?.uid === uid,
+    (q) => q.status === 'pending' && Number(q.expiresAt) > nowMs && q.userA?.uid === uid,
   );
   if (existingOutgoing) {
     if (existingOutgoing.userB?.uid === targetUid) return { error: 'ALREADY_PROPOSED' };
@@ -295,6 +315,7 @@ export async function proposeFriendQuest(db, uid, friendKonanId, nowMs = Date.no
   const doc = {
     id: questId,
     weekId,
+    tierId: tier.id,
     participants: [uid, targetUid],
     userA: {
       uid,
@@ -312,8 +333,8 @@ export async function proposeFriendQuest(db, uid, friendKonanId, nowMs = Date.no
       accepted: false,
       xpContributed: 0,
     },
-    targetXp: QUEST_TARGET_XP,
-    rewardGold: QUEST_REWARD_GOLD,
+    targetXp: tier.targetXp,
+    rewardGold: tier.rewardGold,
     status: 'pending',
     rewardClaimedBy: [],
     createdAt: nowMs,
@@ -334,14 +355,14 @@ export async function proposeFriendQuest(db, uid, friendKonanId, nowMs = Date.no
     fromName: who,
     fromKonanId: doc.userA.konanId,
     fromAvatar: doc.userA.avatar,
-    targetXp: QUEST_TARGET_XP,
-    rewardGold: QUEST_REWARD_GOLD,
-    message: `${who} te propose une quête en duo : récoltez ${QUEST_TARGET_XP.toLocaleString('fr-FR')} XP ensemble cette semaine pour gagner +${QUEST_REWARD_GOLD} Or chacun !`,
+    targetXp: tier.targetXp,
+    rewardGold: tier.rewardGold,
+    message: `${who} te propose une quête de ${QUEST_DURATION_DAYS} jours : récoltez ${tier.targetXp.toLocaleString('fr-FR')} XP ensemble pour gagner +${tier.rewardGold} Or chacun !`,
   });
 
   await sendPushToUser(db, targetUid, {
     title: 'Quête en duo proposée !',
-    body: `${who} t’invite à récolter ${QUEST_TARGET_XP} XP ensemble (+${QUEST_REWARD_GOLD} Or chacun). Clique sur « C’est parti » dans KONAN !`,
+    body: `${who} t’invite à récolter ${tier.targetXp} XP en ${QUEST_DURATION_DAYS} jours (+${tier.rewardGold} Or chacun). Clique sur « C’est parti » dans KONAN !`,
     tag: `konan-quest-invite-${questId}`,
   });
 
@@ -350,7 +371,7 @@ export async function proposeFriendQuest(db, uid, friendKonanId, nowMs = Date.no
 
 /**
  * Réponse de l'utilisateur B à une proposition de quête :
- * - `accept === true` (« C'est parti ») → passe la quête en `active` (double consentement atteint).
+ * - `accept === true` (« C'est parti ») → passe la quête en `active` et lance le compte à rebours fixe de 6 jours (`nowMs + 6j`).
  * - `accept === false` (« Refuser ») → passe la quête en `declined` sans pénalité.
  */
 export async function respondFriendQuest(db, uid, questId, accept, nowMs = Date.now()) {
@@ -369,6 +390,8 @@ export async function respondFriendQuest(db, uid, questId, accept, nowMs = Date.
 
   const userAUid = quest.userA?.uid;
   const partnerName = quest.userB?.name || 'Ton ami';
+  const targetXp = Number(quest.targetXp) || QUEST_TARGET_XP;
+  const rewardGold = Number(quest.rewardGold) || QUEST_REWARD_GOLD;
 
   if (!accept) {
     await ref.update({ status: 'declined', updatedAt: nowMs });
@@ -382,25 +405,27 @@ export async function respondFriendQuest(db, uid, questId, accept, nowMs = Date.
         fromName: partnerName,
         fromKonanId: quest.userB?.konanId || '',
         fromAvatar: quest.userB?.avatar || '',
-        message: `${partnerName} n’est pas disponible pour la quête cette semaine. Tu peux proposer à un autre ami !`,
+        message: `${partnerName} n’est pas disponible pour la quête. Tu peux proposer à un autre ami !`,
       });
       await sendPushToUser(db, userAUid, {
         title: 'Quête en duo déclinée',
-        body: `${partnerName} n’est pas disponible pour la quête cette semaine.`,
+        body: `${partnerName} n’est pas disponible pour la quête en ce moment.`,
         tag: `konan-quest-declined-${questId}`,
       });
     }
     return { status: 'declined' };
   }
 
-  // Vérifier qu'aucun des deux n'a déjà une autre quête active ou terminée cette semaine
+  // Vérifier qu'aucun des deux n'a déjà une autre quête en cours
   const [meBusy, partnerBusy] = await Promise.all([
-    hasActiveOrCompletedQuestForWeek(db, uid, quest.weekId, nowMs),
-    userAUid ? hasActiveOrCompletedQuestForWeek(db, userAUid, quest.weekId, nowMs) : Promise.resolve(false),
+    hasActiveQuestSlot(db, uid, nowMs),
+    userAUid ? hasActiveQuestSlot(db, userAUid, nowMs) : Promise.resolve(false),
   ]);
   if (meBusy) return { error: 'ALREADY_IN_QUEST' };
   if (partnerBusy) return { error: 'PARTNER_BUSY' };
 
+  // La quête dure toujours exactement 6 jours à compter de son démarrage effectif (double accord)
+  const startedExpiresAt = nowMs + QUEST_DURATION_MS;
   const updated = await db.runTransaction(async (tx) => {
     const fresh = await tx.get(ref);
     if (!fresh.exists) return { error: 'NOT_FOUND' };
@@ -410,6 +435,7 @@ export async function respondFriendQuest(db, uid, questId, accept, nowMs = Date.
       ...data,
       status: 'active',
       acceptedAt: nowMs,
+      expiresAt: startedExpiresAt,
       updatedAt: nowMs,
       userB: { ...data.userB, accepted: true },
     };
@@ -420,7 +446,7 @@ export async function respondFriendQuest(db, uid, questId, accept, nowMs = Date.
 
   await removeInviteNotice(db, uid, questId);
 
-  // Annuler les autres invitations en attente des deux joueurs pour cette semaine (1 seul binôme actif par semaine)
+  // Annuler les autres invitations en attente des deux joueurs (1 seul binôme actif à la fois)
   const [myOtherSnap, partnerOtherSnap] = await Promise.all([
     questsCol(db).where('participants', 'array-contains', uid).get(),
     userAUid ? questsCol(db).where('participants', 'array-contains', userAUid).get() : Promise.resolve({ docs: [] }),
@@ -429,7 +455,7 @@ export async function respondFriendQuest(db, uid, questId, accept, nowMs = Date.
   for (const d of [...myOtherSnap.docs, ...partnerOtherSnap.docs]) {
     if (d.id === questId) continue;
     const q = d.data();
-    if (q.weekId === quest.weekId && q.status === 'pending') toCancel.set(d.id, { ref: d.ref, data: q });
+    if (q.status === 'pending') toCancel.set(d.id, { ref: d.ref, data: q });
   }
   await Promise.all(
     [...toCancel.values()].map(async ({ ref: r, data: q }) => {
@@ -447,13 +473,13 @@ export async function respondFriendQuest(db, uid, questId, accept, nowMs = Date.
       fromName: partnerName,
       fromKonanId: quest.userB?.konanId || '',
       fromAvatar: quest.userB?.avatar || '',
-      targetXp: Number(quest.targetXp) || QUEST_TARGET_XP,
-      rewardGold: Number(quest.rewardGold) || QUEST_REWARD_GOLD,
-      message: `${partnerName} a cliqué sur « C’est parti » ! Votre quête de ${QUEST_TARGET_XP.toLocaleString('fr-FR')} XP est lancée.`,
+      targetXp,
+      rewardGold,
+      message: `${partnerName} a cliqué sur « C’est parti » ! Vous avez ${QUEST_DURATION_DAYS} jours pour récolter ${targetXp.toLocaleString('fr-FR')} XP (+${rewardGold} Or chacun).`,
     });
     await sendPushToUser(db, userAUid, {
-      title: 'C’est parti ! Quête en duo lancée',
-      body: `${partnerName} a accepté ta quête ! Récoltez ${QUEST_TARGET_XP} XP ensemble pour gagner +${QUEST_REWARD_GOLD} Or chacun.`,
+      title: 'C’est parti ! Quête lancée pour 6 jours',
+      body: `${partnerName} a accepté ta quête ! Récoltez ${targetXp} XP en ${QUEST_DURATION_DAYS} jours pour gagner +${rewardGold} Or chacun.`,
       tag: `konan-quest-active-${questId}`,
     });
   }
@@ -476,18 +502,17 @@ export async function cancelFriendQuest(db, uid, questId, nowMs = Date.now()) {
 }
 
 /**
- * Incrémente automatiquement `xpContributed` dans la quête `active` de la semaine en cours
- * lorsqu'un élève gagne des XP valides (NON gelés).
+ * Incrémente automatiquement `xpContributed` dans la quête `active` en cours (fenêtre de 6 jours)
+ * lorsqu'un élève gagne des XP dans une leçon ou une série d'entraînement.
  * Utilise `FieldValue.increment(xpEarned)` dans Firestore et bascule en `completed` dès que l'objectif est atteint.
  */
 export async function recordQuestXp(db, uid, xpEarned, nowMs = Date.now()) {
   const xp = Math.floor(Number(xpEarned) || 0);
   if (!uid || xp <= 0) return null;
-  const weekId = weekIdOf(nowMs);
   const snap = await questsCol(db).where('participants', 'array-contains', uid).get();
   const activeDoc = snap.docs.find((d) => {
     const q = d.data();
-    return q.weekId === weekId && q.status === 'active' && Number(q.expiresAt) > nowMs;
+    return q.status === 'active' && Number(q.expiresAt) > nowMs;
   });
   if (!activeDoc) return null;
 
@@ -553,7 +578,7 @@ export async function recordQuestXp(db, uid, xpEarned, nowMs = Date.now()) {
 }
 
 /**
- * Réclame la récompense en Or (+50 Or) d'une quête terminée (`status === 'completed'`).
+ * Réclame la récompense en Or (100 à 500 Or selon la quête) d'une quête terminée (`status === 'completed'`).
  * Atomique : impossible de réclamer deux fois.
  */
 export async function claimQuestReward(db, uid, questId, nowMs = Date.now()) {
@@ -633,8 +658,8 @@ export async function nudgeQuestPartner(db, uid, questId, nowMs = Date.now()) {
   const partnerName = partner?.name || 'ami';
 
   const message = q.status === 'pending'
-    ? `Eh ${partnerName}, clique sur « C’est parti » pour lancer notre quête de ${targetXp.toLocaleString('fr-FR')} XP sur KONAN et gagner +${reward} Or chacun ! ⚡🔥`
-    : `Eh ${partnerName}, il nous manque ${remainingXp.toLocaleString('fr-FR')} XP pour gagner notre Or sur KONAN cette semaine ! À toi de jouer ⚡🔥`;
+    ? `Eh ${partnerName}, clique sur « C’est parti » pour lancer notre quête de ${targetXp.toLocaleString('fr-FR')} XP (${QUEST_DURATION_DAYS} jours) sur KONAN et gagner +${reward} Or chacun ! ⚡🔥`
+    : `Eh ${partnerName}, il nous manque ${remainingXp.toLocaleString('fr-FR')} XP pour gagner nos +${reward} Or sur KONAN ! À toi de jouer ⚡🔥`;
 
   await ref.update({ [`lastNudgeBy.${uid}`]: nowMs, updatedAt: nowMs });
 

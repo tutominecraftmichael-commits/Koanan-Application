@@ -144,6 +144,23 @@ export async function saveFriendPrivacy(privacy: Partial<FriendsState['privacy']
 // ============================================================================
 
 export type FriendQuestStatus = 'pending' | 'active' | 'completed' | 'expired' | 'declined';
+export type QuestTierId = 'bronze' | 'silver' | 'gold' | 'diamond';
+
+export interface QuestTierOption {
+  id: QuestTierId;
+  label: string;
+  targetXp: number;
+  rewardGold: number;
+}
+
+export const QUEST_DURATION_DAYS = 6;
+
+export const QUEST_TIERS: QuestTierOption[] = [
+  { id: 'bronze', label: 'Rapide', targetXp: 500, rewardGold: 100 },
+  { id: 'silver', label: 'Classique', targetXp: 1000, rewardGold: 200 },
+  { id: 'gold', label: 'Intensif', targetXp: 1750, rewardGold: 350 },
+  { id: 'diamond', label: 'Légende', targetXp: 2500, rewardGold: 500 },
+];
 
 export interface FriendQuestParticipant {
   konanId: string;
@@ -157,6 +174,7 @@ export interface FriendQuestParticipant {
 export interface FriendQuest {
   id: string;
   weekId: string;
+  tierId?: QuestTierId;
   status: FriendQuestStatus;
   targetXp: number;
   rewardGold: number;
@@ -202,12 +220,12 @@ export const QUEST_ERRORS: Record<string, string> = {
   NOT_FOUND: 'Impossible de trouver cette quête ou cet ami.',
   SELF: 'Tu ne peux pas faire une quête en duo avec toi-même.',
   NOT_FRIENDS: 'Vous devez d’abord être amis pour lancer une quête ensemble.',
-  ALREADY_IN_QUEST: 'Tu participes déjà à une quête en duo cette semaine.',
-  PARTNER_BUSY: 'Cet ami participe déjà à une quête en duo cette semaine.',
-  ALREADY_PROPOSED: 'Tu as déjà envoyé une proposition à cet ami cette semaine.',
+  ALREADY_IN_QUEST: 'Tu participes déjà à une quête en cours.',
+  PARTNER_BUSY: 'Cet ami participe déjà à une quête en cours.',
+  ALREADY_PROPOSED: 'Tu as déjà envoyé une proposition à cet ami.',
   OUTGOING_EXISTS: 'Tu as déjà une proposition en attente. Annule-la d’abord pour choisir un autre ami.',
   QUEST_NOT_PENDING: 'Cette invitation n’est plus en attente.',
-  QUEST_EXPIRED: 'La semaine de cette quête est déjà terminée.',
+  QUEST_EXPIRED: 'Les 6 jours de cette quête sont déjà écoulés.',
   QUEST_NOT_ACTIVE: 'Cette quête n’est pas active.',
   NOT_COMPLETED: 'L’objectif d’XP n’est pas encore atteint.',
   ALREADY_CLAIMED: 'Tu as déjà réclamé ton Or pour cette quête.',
@@ -239,8 +257,8 @@ export async function fetchQuestState(): Promise<FriendApiResult<QuestState>> {
   };
 }
 
-export const proposeFriendQuest = (friendKonanId: string) =>
-  call<{ status: 'pending' | 'active'; quest?: FriendQuest }>({ action: 'quest_propose', friendKonanId });
+export const proposeFriendQuest = (friendKonanId: string, tierId?: QuestTierId) =>
+  call<{ status: 'pending' | 'active'; quest?: FriendQuest }>({ action: 'quest_propose', friendKonanId, tierId });
 
 export const respondFriendQuest = (questId: string, accept: boolean) =>
   call<{ status: 'active' | 'declined'; quest?: FriendQuest }>({ action: 'quest_respond', questId, accept });
