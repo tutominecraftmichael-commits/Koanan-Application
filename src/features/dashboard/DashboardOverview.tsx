@@ -16,6 +16,8 @@ import { formatMinutesToHours, getDaysRemaining, getSessionExamCountdown, parseT
 import { isExamPrepOpenFor } from '../../lib/featureFlags';
 import { ExamPrepPausedNotice } from '../../components/common/ExamPrepPausedNotice';
 import { FrostOverlay, IceStyles, Snowflake } from '../gamification/Ice';
+import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
+import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 import { 
   Sparkles, 
   Calendar, 
@@ -72,6 +74,10 @@ export interface DashboardOverviewProps {
   reputation?: number;
   /** Carte « Quête d'XP en duo entre amis » */
   friendQuestSlot?: React.ReactNode;
+  /** Avatar animé personnalisé de l'élève sur l'accueil */
+  avatarConfig?: AvatarConfig | null;
+  hasCustomizedAvatar?: boolean;
+  onOpenAvatarEditor?: () => void;
 }
 
 /** Pastille de la méthode, comme la maquette (« Pomodoro · 25 + 5 »). */
@@ -124,6 +130,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   leagueSummary = null,
   reputation,
   friendQuestSlot,
+  avatarConfig = null,
+  hasCustomizedAvatar = false,
+  onOpenAvatarEditor,
 }) => {
   // Préparation aux devoirs : ouverte pour 2nde A et 2nde C
   const EXAM_PREP_PAUSED = !isExamPrepOpenFor(preferences?.gradeLevel || academicLevel);
@@ -217,38 +226,57 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       
       {/* ACCUEIL (charte Excellence) : date en petites capitales dorées, salutation, puis la prochaine séance en grand */}
       <div className="space-y-4">
-        <div className="space-y-1.5">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="konan-kicker">{todayLongLabel}</span>
-            {(isCycleCompletedToday || isDayFullyComplete) && (
-              <Badge variant="emerald" size="sm" dot>
-                {isCycleCompletedToday ? "Cycle validé 100 %" : "Journée validée 100 %"}
-              </Badge>
-            )}
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-1.5 min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="konan-kicker">{todayLongLabel}</span>
+              {(isCycleCompletedToday || isDayFullyComplete) && (
+                <Badge variant="emerald" size="sm" dot>
+                  {isCycleCompletedToday ? "Cycle validé 100 %" : "Journée validée 100 %"}
+                </Badge>
+              )}
+            </div>
+            <h1 className="text-[28px] sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+              {greetingWord}, <span className={
+                planTier === 'plus'
+                  ? 'plus-multicolor-shimmer-text font-black'
+                  : planTier === 'pro'
+                  ? 'gold-shimmer-text font-black'
+                  : ''
+              }>{studentName}</span>.
+            </h1>
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
+              {isCycleCompletedToday ? (
+                <span><strong className="text-emerald-700 dark:text-emerald-300 font-semibold">Programme 100 % validé !</strong> Repos bien mérité, on reprend demain.</span>
+              ) : isDayFullyComplete ? (
+                <span><strong className="text-emerald-700 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
+              ) : (
+                <>
+                  {academicLevel && <>{academicLevel} · </>}
+                  {allTodaysStudySessions.length > 0
+                    ? `${allTodaysStudySessions.length} séance${allTodaysStudySessions.length > 1 ? 's' : ''} aujourd’hui · ${completedToday} terminée${completedToday > 1 ? 's' : ''}`
+                    : 'Journée libre : profites-en pour souffler.'}
+                </>
+              )}
+            </p>
           </div>
-          <h1 className="text-[28px] sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-            {greetingWord}, <span className={
-              planTier === 'plus'
-                ? 'plus-multicolor-shimmer-text font-black'
-                : planTier === 'pro'
-                ? 'gold-shimmer-text font-black'
-                : ''
-            }>{studentName}</span>.
-          </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
-            {isCycleCompletedToday ? (
-              <span><strong className="text-emerald-700 dark:text-emerald-300 font-semibold">Programme 100 % validé !</strong> Repos bien mérité, on reprend demain.</span>
-            ) : isDayFullyComplete ? (
-              <span><strong className="text-emerald-700 dark:text-emerald-300 font-semibold">Toutes les séances du jour sont validées !</strong> ({completedToday}/{allTodaysStudySessions.length} terminées).</span>
-            ) : (
-              <>
-                {academicLevel && <>{academicLevel} · </>}
-                {allTodaysStudySessions.length > 0
-                  ? `${allTodaysStudySessions.length} séance${allTodaysStudySessions.length > 1 ? 's' : ''} aujourd’hui · ${completedToday} terminée${completedToday > 1 ? 's' : ''}`
-                  : 'Journée libre : profites-en pour souffler.'}
-              </>
-            )}
-          </p>
+
+          <button
+            type="button"
+            onClick={() => onOpenAvatarEditor?.()}
+            title={hasCustomizedAvatar ? 'Personnaliser mon personnage' : 'Créer mon personnage'}
+            aria-label="Personnaliser mon personnage"
+            className="shrink-0 rounded-full cursor-pointer transition-transform hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+          >
+            <AnimatedAvatar
+              config={avatarConfig}
+              seed={_konanId || studentName}
+              size={58}
+              className="ring-2 ring-sky-400/60 shadow-lg shadow-sky-500/15"
+              showCustomizeBadge={!hasCustomizedAvatar}
+              alt={`Personnage de ${studentName}`}
+            />
+          </button>
         </div>
 
         {isCycleCompletedToday ? (

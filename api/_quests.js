@@ -88,12 +88,14 @@ async function removeInviteNotice(db, targetUid, questId) {
 }
 
 /** Formate un document `friend_quests` pour le client (sans exposer les UID Firebase internes). */
-function serializeQuest(doc, viewerUid, partnerFrozen = false) {
+function serializeQuest(doc, viewerUid, partnerFrozen = false, avatarMap = null) {
   const isA = doc.userA?.uid === viewerUid;
   const me = isA ? doc.userA : doc.userB;
   const partner = isA ? doc.userB : doc.userA;
   const claimedBy = Array.isArray(doc.rewardClaimedBy) ? doc.rewardClaimedBy : [];
   const lastNudgeAt = Number(doc.lastNudgeBy?.[viewerUid]) || 0;
+  const meAvatarConfig = (me?.uid && avatarMap?.get(me.uid)) || me?.avatarConfig || null;
+  const partnerAvatarConfig = (partner?.uid && avatarMap?.get(partner.uid)) || partner?.avatarConfig || null;
   return {
     id: doc.id,
     weekId: doc.weekId || '',
@@ -109,6 +111,7 @@ function serializeQuest(doc, viewerUid, partnerFrozen = false) {
       konanId: me?.konanId || '',
       name: me?.name || 'Toi',
       avatar: me?.avatar || '',
+      avatarConfig: meAvatarConfig,
       accepted: Boolean(me?.accepted),
       xpContributed: Number(me?.xpContributed) || 0,
     },
@@ -116,6 +119,7 @@ function serializeQuest(doc, viewerUid, partnerFrozen = false) {
       konanId: partner?.konanId || '',
       name: partner?.name || 'Ton ami',
       avatar: partner?.avatar || '',
+      avatarConfig: partnerAvatarConfig,
       accepted: Boolean(partner?.accepted),
       xpContributed: Number(partner?.xpContributed) || 0,
       frozen: Boolean(partnerFrozen),
@@ -269,16 +273,31 @@ export async function getQuestState(db, uid, nowMs = Date.now()) {
     });
   }
 
+  // Charger en un seul lot les avatars animés à jour des participants visibles
+  const visibleQuests = [activeRaw, outgoingRaw, ...incomingRaw, expiredRaw].filter(Boolean);
+  const participantUids = [...new Set(visibleQuests.flatMap((q) => [q.userA?.uid, q.userB?.uid]).filter(Boolean))];
+  const avatarMap = new Map();
+  if (participantUids.length) {
+    const userSnaps = await db.getAll(
+      ...participantUids.map((u) => db.collection('users').doc(u)),
+      { fieldMask: ['avatarConfig'] },
+    );
+    participantUids.forEach((u, i) => {
+      const cfg = userSnaps[i]?.exists ? userSnaps[i].data()?.avatarConfig : null;
+      if (cfg && typeof cfg === 'object') avatarMap.set(u, cfg);
+    });
+  }
+
   return {
     gold,
     weekId,
     weekEndsAt: activeRaw?.expiresAt || (nowMs + QUEST_DURATION_MS),
     isFrozen: frozen,
     reputation,
-    activeQuest: activeRaw ? serializeQuest(activeRaw, uid, partnerFrozen) : null,
-    outgoingQuest: outgoingRaw ? serializeQuest(outgoingRaw, uid, false) : null,
-    incomingQuests: incomingRaw.map((q) => serializeQuest(q, uid, false)),
-    expiredQuest: expiredRaw ? serializeQuest(expiredRaw, uid, false) : null,
+    activeQuest: activeRaw ? serializeQuest(activeRaw, uid, partnerFrozen, avatarMap) : null,
+    outgoingQuest: outgoingRaw ? serializeQuest(outgoingRaw, uid, false, avatarMap) : null,
+    incomingQuests: incomingRaw.map((q) => serializeQuest(q, uid, false, avatarMap)),
+    expiredQuest: expiredRaw ? serializeQuest(expiredRaw, uid, false, avatarMap) : null,
     questNotices,
   };
 }

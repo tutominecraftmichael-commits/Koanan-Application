@@ -26,38 +26,26 @@ import { soundFX } from '../../lib/audioEffects';
 import { timeLeftLabel } from './LeagueView';
 import { GoldCoinIcon } from './GoldCoin';
 import { Snowflake } from './Ice';
+import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
+import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 
-const AVATAR_COLORS = ['#1E3A5F', '#3B1F4A', '#1F4A3A', '#4A3A1F', '#1F3A4A', '#3A1F2A'];
 const fr = (n: number) => Math.max(0, Math.round(n)).toLocaleString('fr-FR');
 
-const QuestAvatar: React.FC<{ name: string; src?: string; size?: number; ring?: string }> = ({
+const QuestAvatar: React.FC<{ name: string; avatarConfig?: AvatarConfig | null; seed?: string; size?: number; ring?: string }> = ({
   name,
-  src,
+  avatarConfig,
+  seed,
   size = 40,
   ring = '',
-}) =>
-  src ? (
-    <img
-      src={src}
-      alt=""
-      referrerPolicy="no-referrer"
-      className={`rounded-full object-cover shrink-0 ${ring}`}
-      style={{ width: size, height: size }}
-    />
-  ) : (
-    <span
-      className={`rounded-full flex items-center justify-center font-extrabold text-white shrink-0 ${ring}`}
-      style={{
-        width: size,
-        height: size,
-        fontSize: Math.max(12, Math.round(size * 0.4)),
-        background:
-          AVATAR_COLORS[[...(name || '?')].reduce((h, c) => h + c.charCodeAt(0), 0) % AVATAR_COLORS.length],
-      }}
-    >
-      {(name || '?').slice(0, 1).toUpperCase()}
-    </span>
-  );
+}) => (
+  <AnimatedAvatar
+    config={avatarConfig}
+    seed={seed || name}
+    size={size}
+    className={ring}
+    alt={`Personnage de ${name}`}
+  />
+);
 
 function buildShareMessage(quest: FriendQuest): string {
   const total = quest.me.xpContributed + quest.partner.xpContributed;
@@ -285,8 +273,8 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-white/[0.07]">
           <div className="flex items-center gap-2.5 min-w-0 flex-1">
             <div className="flex -space-x-2 shrink-0">
-              <QuestAvatar name={quest.me.name} src={quest.me.avatar} size={36} ring="ring-2 ring-sky-400" />
-              <QuestAvatar name={quest.partner.name} src={quest.partner.avatar} size={36} ring="ring-2 ring-amber-400" />
+              <QuestAvatar name={quest.me.name} avatarConfig={quest.me.avatarConfig} seed={quest.me.konanId || quest.me.name} size={38} ring="ring-2 ring-sky-400" />
+              <QuestAvatar name={quest.partner.name} avatarConfig={quest.partner.avatarConfig} seed={quest.partner.konanId || quest.partner.name} size={38} ring="ring-2 ring-amber-400" />
             </div>
             <div className="min-w-0">
               <p className="m-0 text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
@@ -481,7 +469,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
                   className="p-3.5 rounded-2xl bg-sky-50/90 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-400/30 space-y-3"
                 >
                   <div className="flex items-center gap-3">
-                    <QuestAvatar name={inv.partner.name} src={inv.partner.avatar} size={42} ring="ring-2 ring-sky-400/60" />
+                    <QuestAvatar name={inv.partner.name} avatarConfig={inv.partner.avatarConfig} seed={inv.partner.konanId || inv.partner.name} size={42} ring="ring-2 ring-sky-400/60" />
                     <div className="min-w-0 flex-1">
                       <p className="m-0 text-sm font-extrabold text-slate-900 dark:text-white leading-snug">
                         {inv.partner.name} te propose une quête en duo !
@@ -521,7 +509,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
             <div className="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-400/30 space-y-3">
               <div className="flex items-center justify-between gap-2.5">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <QuestAvatar name={outgoingQuest.partner.name} src={outgoingQuest.partner.avatar} size={40} ring="ring-2 ring-amber-400/60" />
+                  <QuestAvatar name={outgoingQuest.partner.name} avatarConfig={outgoingQuest.partner.avatarConfig} seed={outgoingQuest.partner.konanId || outgoingQuest.partner.name} size={40} ring="ring-2 ring-amber-400/60" />
                   <div className="min-w-0">
                     <p className="m-0 text-sm font-extrabold text-slate-900 dark:text-white truncate">
                       En attente de {outgoingQuest.partner.name}
@@ -639,7 +627,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
                 /* 5. EXACTEMENT 1 AMI : PROPOSITION DIRECTE « C'EST PARTI » */
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <QuestAvatar name={friends[0].name} src={friends[0].avatar} size={42} ring="ring-2 ring-sky-400/40" />
+                    <QuestAvatar name={friends[0].name} avatarConfig={friends[0].avatarConfig} seed={friends[0].konanId || friends[0].name} size={42} ring="ring-2 ring-sky-400/40" />
                     <div className="min-w-0">
                       <p className="m-0 text-sm font-extrabold text-slate-900 dark:text-white truncate">
                         Faire la quête avec {friends[0].name} ?
@@ -679,7 +667,7 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
                               : 'bg-slate-50 border-slate-200 hover:border-slate-300 dark:bg-slate-950/50 dark:border-white/[0.08] dark:hover:border-white/20'
                           }`}
                         >
-                          <QuestAvatar name={f.name} src={f.avatar} size={34} />
+                          <QuestAvatar name={f.name} avatarConfig={f.avatarConfig} seed={f.konanId || f.name} size={36} />
                           <div className="min-w-0 flex-1">
                             <p className="m-0 text-xs font-extrabold text-slate-900 dark:text-white truncate">{f.name}</p>
                             <p className="m-0 text-[10px] font-mono text-slate-500 dark:text-slate-400">{f.konanId}</p>

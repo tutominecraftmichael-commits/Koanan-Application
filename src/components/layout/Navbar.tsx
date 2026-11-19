@@ -15,19 +15,19 @@ import {
   Check,
   CheckCircle2,
   X,
-  XCircle,
-  User
+  XCircle
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount, PlusInvitationNotification } from '../../types';
 import type { FriendCard, FriendNotice, FriendQuest, QuestNotice } from '../../services/friendsApi';
 import { GoldCoinIcon } from '../../features/gamification/GoldCoin';
+import { AnimatedAvatar } from '../../features/avatar/AnimatedAvatar';
+import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 import { Badge } from '../ui/Badge';
 import { KonanCube } from '../common/KonanCube';
 import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
 import { formatNotificationTime } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
-import { getDisplayAvatar } from '../../lib/avatar';
 import { isLocalAdminEnvironment } from '../../lib/adminAccess';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
 import { AdminGoogleLoginButton } from '../common/AdminGoogleLoginButton';
@@ -118,9 +118,7 @@ const FriendNoticeItem: React.FC<{ notice: FriendNotice; onRespond?: (konanId: s
   return (
     <div className={`w-full p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left ${tone}`}>
       <button type="button" onClick={onOpen} className="shrink-0 cursor-pointer" aria-label={`Voir ${who}`}>
-        {notice.from.avatar
-          ? <img src={notice.from.avatar} alt="" referrerPolicy="no-referrer" className="w-8 h-8 rounded-full object-cover" />
-          : <span className="w-8 h-8 rounded-full bg-sky-600 text-white text-xs font-black flex items-center justify-center">{who.slice(0, 1).toUpperCase()}</span>}
+        <AnimatedAvatar config={notice.from.avatarConfig} seed={notice.from.konanId || who} size={34} alt={who} />
       </button>
       <span className="min-w-0 flex-1">
         <span className="flex items-center justify-between gap-1">
@@ -197,13 +195,7 @@ const QuestNoticeItem: React.FC<{
   return (
     <div className={`w-full p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left ${tone}`}>
       <button type="button" onClick={onOpen} className="shrink-0 cursor-pointer" aria-label={`Ouvrir la quête avec ${who}`}>
-        {notice.fromAvatar ? (
-          <img src={notice.fromAvatar} alt="" referrerPolicy="no-referrer" className="w-8 h-8 rounded-full object-cover" />
-        ) : (
-          <span className="w-8 h-8 rounded-full bg-amber-500 text-slate-950 text-xs font-black flex items-center justify-center">
-            {who.slice(0, 1).toUpperCase()}
-          </span>
-        )}
+        <AnimatedAvatar seed={notice.fromKonanId || who} size={34} alt={who} />
       </button>
       <span className="min-w-0 flex-1">
         <span className="flex items-center justify-between gap-1">
@@ -286,6 +278,9 @@ export interface NavbarProps {
   onRespondFriend?: (konanId: string, accept: boolean) => Promise<void>;
   onOpenFriends?: () => void;
   onOpenProfile?: () => void;
+  /** Avatar animé personnalisé de l'élève */
+  avatarConfig?: AvatarConfig | null;
+  hasCustomizedAvatar?: boolean;
   /** Monnaie virtuelle Or (Gold) + notifications de quêtes en duo */
   gold?: number | null;
   onOpenShop?: () => void;
@@ -351,6 +346,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onRespondFriend,
   onOpenFriends,
   onOpenProfile,
+  avatarConfig = null,
+  hasCustomizedAvatar = false,
   gold = null,
   onOpenShop,
   questNotices = [],
@@ -573,7 +570,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Main Navbar Top Row */}
         <div className="flex items-center justify-between h-14 sm:h-[68px] gap-1.5 sm:gap-4">
           
-          {/* Téléphone, dans l'appli : photo de profil en haut à gauche (ouvre le profil et les paramètres) */}
+          {/* Téléphone, dans l'appli : avatar animé en haut à gauche (ouvre le profil et la personnalisation) */}
           {isAppView && userAccount?.isLoggedIn && (
             <button
               type="button"
@@ -581,13 +578,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               aria-label="Mon profil"
               className="lg:hidden shrink-0 rounded-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
             >
-              {getDisplayAvatar(userAccount) ? (
-                <img src={getDisplayAvatar(userAccount)} alt="Profil" className="w-9 h-9 rounded-full object-cover ring-2 ring-sky-400/60 dark:ring-sky-400/70 shadow-sm" />
-              ) : (
-                <span className="w-9 h-9 rounded-full bg-gradient-to-tr from-sky-400 to-cyan-400 ring-2 ring-sky-400/40 flex items-center justify-center text-sm font-bold text-white shadow-sm">
-                  {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
-                </span>
-              )}
+              <AnimatedAvatar
+                config={avatarConfig}
+                seed={_konanId || displayName}
+                size={36}
+                className="ring-2 ring-sky-400/70 shadow-sm"
+                showCustomizeBadge={!hasCustomizedAvatar}
+                alt="Mon personnage"
+              />
             </button>
           )}
 
@@ -1159,17 +1157,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                       title="Voir mon profil"
                       className="hidden lg:flex items-center gap-1 sm:gap-2 hover:opacity-90 transition-opacity cursor-pointer text-left shrink-0"
                     >
-                      {getDisplayAvatar(userAccount) ? (
-                        <img
-                          src={getDisplayAvatar(userAccount)}
-                          alt={displayName}
-                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-sky-400/40 shadow-xs shrink-0"
-                        />
-                      ) : (
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-sky-400 to-cyan-500 flex items-center justify-center text-white font-bold text-xs shadow-xs shrink-0 border border-sky-400/40">
-                          {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
-                        </div>
-                      )}
+                      <AnimatedAvatar
+                        config={avatarConfig}
+                        seed={_konanId || displayName}
+                        size={34}
+                        className="ring-1 ring-sky-400/50 shadow-xs shrink-0"
+                        showCustomizeBadge={!hasCustomizedAvatar}
+                        alt={displayName}
+                      />
                       <div className="hidden xl:block">
                         <p className={`text-xs font-bold leading-tight truncate max-w-[120px] ${
                           effectivePlan === 'plus'

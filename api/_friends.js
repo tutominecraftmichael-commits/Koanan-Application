@@ -9,6 +9,7 @@
  */
 import { leagueCol, publicName, cleanAvatar, DIVISIONS, clampDivision } from './_leagueRules.js';
 import { sendPushToUser } from './_pushSend.js';
+import { sanitizeAvatarConfig } from './_avatar.js';
 
 export const MAX_FRIENDS = 200;
 export const MAX_PENDING = 50;
@@ -62,7 +63,7 @@ export async function publicCards(db, uids) {
   if (!ids.length) return out;
   const [league, users, friendDocs] = await Promise.all([
     db.getAll(...ids.map((u) => leagueCol(db, 'league_players').doc(u))),
-    db.getAll(...ids.map((u) => db.collection('users').doc(u)), { fieldMask: ['konanId', 'studentName', 'planTier', 'userAccount.konanId', 'userAccount.name', 'userAccount.avatar', 'userAccount.customAvatar', 'userAccount.planTier'] }),
+    db.getAll(...ids.map((u) => db.collection('users').doc(u)), { fieldMask: ['konanId', 'studentName', 'planTier', 'avatarConfig', 'userAccount.konanId', 'userAccount.name', 'userAccount.avatar', 'userAccount.customAvatar', 'userAccount.planTier'] }),
     db.getAll(...ids.map((u) => fsCol(db).doc(u))),
   ]);
   ids.forEach((uid, i) => {
@@ -79,6 +80,7 @@ export async function publicCards(db, uids) {
       konanId: resolvedId,
       name: lp.displayName || publicName(us.studentName || us.userAccount?.name || ''),
       avatar: cleanAvatar(lp.avatar || us.userAccount?.customAvatar || us.userAccount?.avatar || ''),
+      avatarConfig: sanitizeAvatarConfig(us.avatarConfig) || sanitizeAvatarConfig(lp.avatarConfig) || null,
       tier: tierRaw === 'pro' || tierRaw === 'plus' ? tierRaw : 'free',
       totalXp: Number(lp.totalXp) || 0,
       division: lp.division ? DIVISIONS[clampDivision(lp.division) - 1].name : null,
@@ -92,7 +94,7 @@ export async function publicCards(db, uids) {
 
 /** Ce qu'un élève voit d'un autre (fiche publique), selon le lien entre eux et les réglages de l'autre. */
 function cardFor(card, relation) {
-  const base = { konanId: card.konanId, name: card.name, avatar: card.avatar, relation };
+  const base = { konanId: card.konanId, name: card.name, avatar: card.avatar, avatarConfig: card.avatarConfig || null, relation };
   // Profil réservé aux amis : un inconnu ne voit que le nom, la photo et l'ID
   if (card.profileVisibility === 'friends' && relation !== 'friend' && relation !== 'self') return { ...base, limited: true, canRequest: card.allowRequests && relation === 'none' };
   return { ...base, totalXp: card.totalXp, friendsCount: card.friendsCount, tier: card.tier, division: card.division, canRequest: card.allowRequests && relation === 'none' };

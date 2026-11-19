@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   Settings, 
@@ -13,8 +13,9 @@ import {
   GraduationCap,
   Save
 } from 'lucide-react';
-import { Zap, Sun, Moon, Camera, Crown } from 'lucide-react';
-import { getDisplayAvatar, resizeImageToAvatar } from '../../lib/avatar';
+import { Zap, Sun, Moon, Palette, Crown } from 'lucide-react';
+import { AnimatedAvatar } from '../../features/avatar/AnimatedAvatar';
+import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 import type { UserAccount, AcademicGoal } from '../../types';
 import { Button } from '../ui/Button';
 import { useLanguage, t } from '../../lib/i18n';
@@ -47,8 +48,10 @@ interface SettingsModalProps {
     phoneNumber?: string; 
     countryCode?: string 
   }) => void;
-  /** Nouvelle photo de profil (data URL), ou null pour revenir à la photo du compte. */
-  onUpdateAvatar?: (dataUrl: string | null) => void;
+  /** Configuration d'avatar animé personnalisé + bouton d'ouverture de l'éditeur */
+  avatarConfig?: AvatarConfig | null;
+  hasCustomizedAvatar?: boolean;
+  onOpenAvatarEditor?: () => void;
   onExportData?: () => void;
   onImportData?: () => void;
   onResetData?: () => void;
@@ -83,7 +86,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   isDemoMode,
   onLogout,
   onUpdateProfile,
-  onUpdateAvatar,
+  avatarConfig,
+  hasCustomizedAvatar = false,
+  onOpenAvatarEditor,
   onExportData,
   onImportData,
   onResetData,
@@ -110,9 +115,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [nameError, setNameError] = useState('');
   const [editFiliere, setEditFiliere] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [isAvatarBusy, setIsAvatarBusy] = useState(false);
-  const [avatarError, setAvatarError] = useState<string | null>(null);
-  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   const currentPlan = planTier || userAccount?.planTier || 'free';
 
@@ -128,24 +130,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   if (!isOpen) return null;
 
   const displayName = editName || studentName || userAccount?.name || 'Étudiant';
-  const currentAvatar = getDisplayAvatar(userAccount);
-
-  const handleAvatarFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = ''; // permet de rechoisir la même photo
-    if (!file || !onUpdateAvatar) return;
-    setAvatarError(null);
-    setIsAvatarBusy(true);
-    try {
-      const dataUrl = await resizeImageToAvatar(file);
-      onUpdateAvatar(dataUrl);
-      soundFX.playCheckmarkPop();
-    } catch (err) {
-      setAvatarError(err instanceof Error ? err.message : 'Impossible de changer la photo.');
-    } finally {
-      setIsAvatarBusy(false);
-    }
-  };
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -231,56 +215,36 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 dark:bg-slate-950/60 dark:border-slate-800/80 space-y-4">
               
-              {/* Profil (charte Excellence) : photo centrée, anneau doré pour Pro, nom en grand, classe et identifiant */}
+              {/* Profil : avatar animé centré, anneau doré pour Pro, nom, classe et bouton Personnaliser mon personnage */}
               <div className="flex flex-col items-center text-center gap-2 pb-4 border-b border-slate-200 dark:border-white/10">
-                <div className="flex flex-col items-center gap-1">
+                <div className="flex flex-col items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => avatarInputRef.current?.click()}
-                    disabled={!onUpdateAvatar || isAvatarBusy}
-                    aria-label="Changer la photo de profil"
-                    className={`relative w-[92px] h-[92px] rounded-full p-[3px] shrink-0 cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 disabled:cursor-default ${
+                    onClick={() => onOpenAvatarEditor?.()}
+                    disabled={!onOpenAvatarEditor}
+                    aria-label="Personnaliser mon personnage"
+                    className={`relative rounded-full p-[3px] shrink-0 cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 disabled:cursor-default ${
                       currentPlan === 'free' ? 'bg-slate-200 dark:bg-white/15' : 'bg-[conic-gradient(from_210deg,#F5C451,#FDE68A,#B7791F,#F5C451)]'
                     }`}
                   >
-                    {currentAvatar ? (
-                      <img
-                        src={currentAvatar}
-                        alt={displayName}
-                        className="w-full h-full rounded-full object-cover border-[3px] border-white dark:border-[#0A0F1C]"
-                      />
-                    ) : (
-                      <div className="w-full h-full rounded-full bg-slate-100 dark:bg-slate-900 border-[3px] border-white dark:border-[#0A0F1C] flex items-center justify-center text-slate-900 dark:text-white font-extrabold text-3xl">
-                        {displayName.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                    {isAvatarBusy && (
-                      <span className="absolute inset-[3px] rounded-full bg-black/40 flex items-center justify-center">
-                        <span className="w-6 h-6 rounded-full border-2 border-white/40 border-t-white animate-spin" />
-                      </span>
-                    )}
-                    {onUpdateAvatar && (
-                      <span className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-sky-400 text-slate-950 border-2 border-white dark:border-[#0A0F1C] flex items-center justify-center shadow group-hover:bg-sky-300 transition-colors">
-                        <Camera className="w-3.5 h-3.5" />
-                      </span>
-                    )}
+                    <AnimatedAvatar
+                      config={avatarConfig}
+                      seed={userAccount?.konanId || displayName}
+                      size={88}
+                      showCustomizeBadge={!hasCustomizedAvatar}
+                      alt={displayName}
+                    />
                   </button>
-                  {onUpdateAvatar && userAccount?.customAvatar && !isAvatarBusy && (
+                  {onOpenAvatarEditor && (
                     <button
                       type="button"
-                      onClick={() => { setAvatarError(null); onUpdateAvatar(null); }}
-                      className="text-[10px] font-semibold text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 cursor-pointer"
+                      onClick={onOpenAvatarEditor}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-black shadow-sm cursor-pointer transition-colors"
                     >
-                      Retirer ma photo
+                      <Palette className="w-3.5 h-3.5" />
+                      <span>Personnaliser mon personnage</span>
                     </button>
                   )}
-                  <input
-                    ref={avatarInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleAvatarFile}
-                  />
                 </div>
                 <h4 className={`text-[22px] font-extrabold tracking-tight leading-snug break-words ${
                   currentPlan === 'plus'
@@ -315,15 +279,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <span className="text-[17px] font-extrabold tabular-nums text-slate-900 dark:text-white">{totalXp.toLocaleString('fr-FR')}</span>
                   </div>
                 )}
-                {onUpdateAvatar && (
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Touche ta photo pour la changer.</p>
-                )}
               </div>
-              {avatarError && (
-                <p role="alert" className="-mt-2 text-xs font-medium text-rose-600 dark:text-rose-400">
-                  {avatarError}
-                </p>
-              )}
 
               {/* Formulaire d'édition STRICTE : 1. Nom, 2. Filière */}
               <form onSubmit={handleSaveProfile} className="space-y-3.5 pt-1">

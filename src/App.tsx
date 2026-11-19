@@ -71,6 +71,7 @@ import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
 import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy, lessonXp } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
 import {
+  fetchAvatarState,
   fetchFriends,
   fetchQuestState,
   friendErrorMessage,
@@ -81,7 +82,8 @@ import {
   type QuestState,
 } from './services/friendsApi';
 import { FriendQuestCard } from './features/gamification/FriendQuestCard';
-import { ShopComingSoonModal } from './features/gamification/GoldCoin';
+import type { AvatarConfig } from './lib/avatar/avatarCatalog';
+import type { EditorTab } from './features/avatar/AvatarEditorModal';
 import { ProfilePage, PublicProfileSheet } from './features/profile/ProfilePage';
 import { fetchSubscription, type SubscriptionInfo } from './services/subscriptionApi';
 import { LeaguePage } from './features/gamification/LeagueView';
@@ -118,6 +120,7 @@ const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashb
 const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
 const loadMiniGamesHubView = () => import('./features/gamification/MiniGamesHubView').then((m) => m.MiniGamesHubView);
 const MiniGamesHubView = lazyView(loadMiniGamesHubView);
+const AvatarEditorModal = lazyView(() => import('./features/avatar/AvatarEditorModal').then((m) => m.AvatarEditorModal));
 const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
 const PlansSheet = lazyView(() => import('./features/pro/PlansSheet').then((m) => m.PlansSheet));
 const AuthPage = lazyView(loadAuthPage);
@@ -898,17 +901,40 @@ export function App() {
   // Amis (2026-11-17) : état complet (amis, demandes reçues/envoyées, notifications cloche, confidentialité)
   const [friendsData, setFriendsData] = useState<FriendsState | null>(null);
   const [friendsError, setFriendsError] = useState('');
-  // Or (Gold) & Quêtes d'XP en duo hebdomadaires
+  // Or (Gold), Quêtes d'XP en duo & Avatars animés personnalisables
   const [questState, setQuestState] = useState<QuestState | null>(null);
   const [questLoading, setQuestLoading] = useState(false);
   const [userGold, setUserGold] = useState<number>(() => (typeof state.gold === 'number' && Number.isFinite(state.gold) ? state.gold : 100));
-  const [isShopModalOpen, setIsShopModalOpen] = useState(false);
+  const [avatarConfig, setAvatarConfig] = useState<AvatarConfig | null>(() => state.avatarConfig || null);
+  const [unlockedItems, setUnlockedItems] = useState<string[]>(() => (Array.isArray(state.unlockedItems) ? state.unlockedItems : []));
+  const [hasCustomizedAvatar, setHasCustomizedAvatar] = useState<boolean>(() => Boolean(state.avatarConfig));
+  const [avatarEditorTab, setAvatarEditorTab] = useState<EditorTab | null>(null);
 
   useEffect(() => {
     if (!questState && typeof state.gold === 'number' && Number.isFinite(state.gold)) {
       setUserGold(state.gold);
     }
   }, [state.gold, questState]);
+
+  const reloadAvatar = useCallback(async () => {
+    if (!subscriptionAccount || !auth?.currentUser) return;
+    const r = await fetchAvatarState();
+    if (r.ok) {
+      setAvatarConfig(r.data.avatarConfig || null);
+      setHasCustomizedAvatar(Boolean(r.data.hasCustomized && r.data.avatarConfig));
+      setUnlockedItems(Array.isArray(r.data.unlockedItems) ? r.data.unlockedItems : []);
+      if (typeof r.data.gold === 'number' && Number.isFinite(r.data.gold)) {
+        setUserGold(r.data.gold);
+      }
+    }
+  }, [subscriptionAccount]);
+
+  const openAvatarEditor = useCallback((tab: EditorTab = 'skin') => {
+    setAvatarEditorTab(tab);
+    if (subscriptionAccount && auth?.currentUser) {
+      reloadAvatar();
+    }
+  }, [subscriptionAccount, reloadAvatar]);
 
   const reloadFriends = useCallback(async () => {
     if (!subscriptionAccount || !auth?.currentUser) return;
@@ -966,28 +992,34 @@ export function App() {
       setFriendsError('');
       setQuestState(null);
       setUserGold(100);
+      setAvatarConfig(null);
+      setUnlockedItems([]);
+      setHasCustomizedAvatar(false);
       return;
     }
-    const refreshBoth = () => {
+    const refreshSocial = () => {
       reloadFriends();
       reloadQuests();
     };
-    const first = setTimeout(refreshBoth, 800);
+    const first = setTimeout(() => {
+      refreshSocial();
+      reloadAvatar();
+    }, 800);
     const every = setInterval(() => {
-      if (document.visibilityState === 'visible') refreshBoth();
+      if (document.visibilityState === 'visible') refreshSocial();
     }, 45 * 1000);
-    const onVisible = () => { if (document.visibilityState === 'visible') refreshBoth(); };
-    window.addEventListener('focus', refreshBoth);
-    window.addEventListener('online', refreshBoth);
+    const onVisible = () => { if (document.visibilityState === 'visible') refreshSocial(); };
+    window.addEventListener('focus', refreshSocial);
+    window.addEventListener('online', refreshSocial);
     document.addEventListener('visibilitychange', onVisible);
     return () => {
       clearTimeout(first);
       clearInterval(every);
-      window.removeEventListener('focus', refreshBoth);
-      window.removeEventListener('online', refreshBoth);
+      window.removeEventListener('focus', refreshSocial);
+      window.removeEventListener('online', refreshSocial);
       document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [subscriptionAccount, reloadFriends, reloadQuests]);
+  }, [subscriptionAccount, reloadFriends, reloadQuests, reloadAvatar]);
   const subscriptionPending = Boolean(subscriptionInfo?.status?.pending);
   const refreshSubscription = useCallback(async () => {
     if (!subscriptionAccount || !auth?.currentUser) return;
@@ -2138,29 +2170,6 @@ export function App() {
     if (!blockedUntil) showToast(`Nom et filière enregistrés : ${safeData.name} (${updated.academicLevel})`);
   };
 
-  /** Photo de profil choisie dans les réglages (null = revenir à la photo du compte Google). */
-  const handleUpdateAvatar = (dataUrl: string | null) => {
-    setState(prev => {
-      if (!prev.userAccount) return prev;
-      const next: AppState = {
-        ...prev,
-        profileUpdatedAt: new Date().toISOString(),
-        userAccount: {
-          ...prev.userAccount,
-          // Chaîne vide (et non undefined) : Firestore efface alors aussi l'ancienne photo sur les autres appareils
-          customAvatar: dataUrl || '',
-          lastSyncedAt: new Date().toISOString(),
-        },
-      };
-      saveAppState(next);
-      if (prev.userAccount.googleId && !prev.isDemoMode) {
-        saveUserState(prev.userAccount.googleId, next);
-      }
-      return next;
-    });
-    showToast(dataUrl ? 'Photo de profil mise à jour.' : 'Photo de profil retirée : retour à la photo de ton compte.');
-  };
-
   const handleRegeneratePlan = () => {
     setState(prev => {
       const freshPlan = generateOptimizedStudyPlan(prev.subjects, prev.classSlots, prev.preferences, effectivePlanTier);
@@ -2619,7 +2628,9 @@ export function App() {
           onRespondFriend={handleRespondFriend}
           onOpenFriends={() => setProfileScreen('friends')}
           gold={state.userAccount?.isLoggedIn ? userGold : null}
-          onOpenShop={() => setIsShopModalOpen(true)}
+          onOpenShop={() => openAvatarEditor('outfit')}
+          avatarConfig={avatarConfig}
+          hasCustomizedAvatar={hasCustomizedAvatar}
           questNotices={questState?.questNotices || []}
           incomingQuests={questState?.incomingQuests || []}
           onRespondQuest={handleRespondQuest}
@@ -2777,6 +2788,9 @@ export function App() {
             <DashboardOverview
               studentName={effectiveStudentName}
               academicLevel={effectiveClassLabel}
+              avatarConfig={avatarConfig}
+              hasCustomizedAvatar={hasCustomizedAvatar}
+              onOpenAvatarEditor={() => openAvatarEditor('skin')}
               subjects={state.subjects}
               classSlots={state.classSlots}
               studySessions={state.studySessions}
@@ -3124,15 +3138,15 @@ export function App() {
         </Suspense>
       )}
 
-      {/* Page Profil façon Duolingo (photo, XP, amis, abonnement, mode jour/nuit, paiement, amis par ID, confidentialité, paramètres) */}
+      {/* Page Profil façon Duolingo (avatar animé, XP, amis, boutique de skins, mode jour/nuit, confidentialité, paramètres) */}
       {profileScreen && (
         <ProfilePage
           initialScreen={profileScreen}
           onClose={() => setProfileScreen(null)}
           name={effectiveStudentName}
-          avatar={leagueAvatarSrc}
-          hasCustomAvatar={Boolean(state.userAccount?.customAvatar)}
-          onUpdateAvatar={state.userAccount ? handleUpdateAvatar : undefined}
+          avatarConfig={avatarConfig}
+          hasCustomizedAvatar={hasCustomizedAvatar}
+          onOpenAvatarEditor={(tab) => openAvatarEditor(tab || 'skin')}
           classLabel={effectiveClassLabel}
           konanId={friendsData?.me?.konanId || state.userAccount?.konanId || state.konanId || ''}
           planTier={effectivePlanTier}
@@ -3144,6 +3158,7 @@ export function App() {
             konanId: r.konanId!,
             name: r.name,
             avatar: r.avatar,
+            avatarConfig: r.avatarConfig || null,
             classLabel: r.classLabel,
             xp: r.xp,
             tier: r.tier,
@@ -3153,13 +3168,46 @@ export function App() {
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenPrivacyPolicy={() => setIsPrivacyModalOpen(true)}
           gold={userGold}
-          onOpenShop={() => setIsShopModalOpen(true)}
+          onOpenShop={() => openAvatarEditor('outfit')}
         />
       )}
 
-      {/* Aperçu Boutique — Bientôt disponible (monnaie virtuelle Or) */}
-      {isShopModalOpen && (
-        <ShopComingSoonModal gold={userGold} onClose={() => setIsShopModalOpen(false)} />
+      {/* Éditeur de personnage animé & Boutique de skins (Pièces d'or) */}
+      {avatarEditorTab !== null && (
+        <Suspense fallback={null}>
+          <AvatarEditorModal
+            initialConfig={avatarConfig}
+            unlockedItems={unlockedItems}
+            gold={userGold}
+            userSeed={friendsData?.me?.konanId || state.userAccount?.konanId || state.konanId || effectiveStudentName}
+            initialTab={avatarEditorTab}
+            onClose={() => setAvatarEditorTab(null)}
+            onSaved={(cfg) => {
+              setAvatarConfig(cfg);
+              setHasCustomizedAvatar(true);
+              setState((prev) => {
+                const next: AppState = { ...prev, avatarConfig: cfg };
+                saveAppState(next);
+                if (prev.userAccount?.googleId && !prev.isDemoMode) {
+                  saveUserState(prev.userAccount.googleId, next);
+                }
+                return next;
+              });
+              syncLeague();
+              reloadFriends();
+              reloadQuests();
+            }}
+            onPurchased={(nextGold, nextUnlocked) => {
+              setUserGold(nextGold);
+              setUnlockedItems(nextUnlocked);
+            }}
+            onOpenQuests={() => {
+              setProfileScreen(null);
+              setActiveView('league');
+            }}
+            onToast={showToast}
+          />
+        </Suspense>
       )}
 
       {/* Fiche publique d'un élève (ouverte en cliquant sur un joueur dans la Ligue) */}
@@ -3186,7 +3234,12 @@ export function App() {
         nameChangedAt={state.nameChangedAt}
         // Total de tous les XP : le plus grand entre le téléphone et le serveur de la ligue (tous appareils confondus)
         totalXp={gamificationEnabled ? Math.max(gamificationOf(state.gamification).xp, leagueBoard?.totalXp ?? 0) : undefined}
-        onUpdateAvatar={state.userAccount ? handleUpdateAvatar : undefined}
+        avatarConfig={avatarConfig}
+        hasCustomizedAvatar={hasCustomizedAvatar}
+        onOpenAvatarEditor={() => {
+          setIsSettingsOpen(false);
+          openAvatarEditor('skin');
+        }}
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}
         onResetData={() => { setProfileScreen(null); handleResetData(); }}

@@ -5,17 +5,18 @@
  * La fiche publique d'un élève (ligue, liste d'amis) est ici aussi.
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, Camera, Check, ChevronRight, Copy, CreditCard, Moon, Search, Settings, Shield, Store, Sun, UserCheck, UserPlus, Users, X } from 'lucide-react';
+import { ArrowLeft, Check, ChevronRight, Copy, CreditCard, Moon, Palette, Search, Settings, Shield, Store, Sun, UserCheck, UserPlus, Users, X } from 'lucide-react';
 import { GoldCoinIcon } from '../gamification/GoldCoin';
+import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
+import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
+import type { EditorTab } from '../avatar/AvatarEditorModal';
 import { useTheme } from '../../context/ThemeContext';
-import { resizeImageToAvatar } from '../../lib/avatar';
 import { soundFX } from '../../lib/audioEffects';
 import {
   fetchPublicProfile, friendErrorMessage, readLocalFriendPrivacy, removeFriend, respondFriendRequest, saveFriendPrivacy, sendFriendRequest,
   type FriendCard, type FriendsState,
 } from '../../services/friendsApi';
 
-const AVATAR_COLORS = ['#1E3A5F', '#3B1F4A', '#1F4A3A', '#4A3A1F', '#1F3A4A', '#3A1F2A'];
 export const tierLabel = (t?: string) => (t === 'pro' ? 'Pro' : t === 'plus' ? 'Plus' : 'Gratuit');
 const nameTone = (t?: string, limited?: boolean) =>
   limited ? 'text-slate-900 dark:text-white'
@@ -28,13 +29,24 @@ const tierTone = (t?: string) =>
       : 'text-slate-900 dark:text-white';
 const fr = (n?: number) => (n ?? 0).toLocaleString('fr-FR');
 
-export const Avatar: React.FC<{ name: string; src?: string; size?: number; ring?: string }> = ({ name, src, size = 44, ring = '' }) => (src ? (
-  <img src={src} alt="" referrerPolicy="no-referrer" className={`rounded-full object-cover shrink-0 ${ring}`} style={{ width: size, height: size }} />
-) : (
-  <span className={`rounded-full flex items-center justify-center font-extrabold text-white shrink-0 ${ring}`} style={{ width: size, height: size, fontSize: size * 0.4, background: AVATAR_COLORS[[...(name || '?')].reduce((h, c) => h + c.charCodeAt(0), 0) % AVATAR_COLORS.length] }}>
-    {(name || '?').slice(0, 1).toUpperCase()}
-  </span>
-));
+export const Avatar: React.FC<{
+  name: string;
+  src?: string;
+  avatarConfig?: AvatarConfig | null;
+  seed?: string;
+  size?: number;
+  ring?: string;
+  showCustomizeBadge?: boolean;
+}> = ({ name, avatarConfig, seed, size = 44, ring = '', showCustomizeBadge = false }) => (
+  <AnimatedAvatar
+    config={avatarConfig}
+    seed={seed || name}
+    size={size}
+    className={ring}
+    showCustomizeBadge={showCustomizeBadge}
+    alt={`Personnage de ${name}`}
+  />
+);
 
 /** ID KONAN avec bouton « copier » (pour le donner à un ami). */
 const KonanIdChip: React.FC<{ id: string }> = ({ id }) => {
@@ -169,7 +181,7 @@ export const PublicProfileSheet: React.FC<{ konanId: string; onClose: () => void
         ) : (
           <>
             <div className="flex flex-col items-center gap-2 text-center pt-1">
-              <Avatar name={card.name} src={card.avatar} size={84} ring="ring-4 ring-sky-400/40" />
+              <Avatar name={card.name} avatarConfig={card.avatarConfig} seed={card.konanId || card.name} size={84} ring="ring-4 ring-sky-400/40" />
               <h2 className={`m-0 text-[22px] font-extrabold leading-tight break-words max-w-full ${nameTone(card.tier, card.limited)}`}>{card.name}</h2>
               <KonanIdChip id={card.konanId} />
             </div>
@@ -194,7 +206,7 @@ export const PublicProfileSheet: React.FC<{ konanId: string; onClose: () => void
 const PersonRow: React.FC<{ card: FriendCard; onOpen: () => void; onChanged: () => void; hint?: string }> = ({ card, onOpen, onChanged, hint }) => (
   <li className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.08] space-y-2.5">
     <button type="button" onClick={onOpen} className="w-full flex items-center gap-3 text-left cursor-pointer">
-      <Avatar name={card.name} src={card.avatar} size={40} />
+      <Avatar name={card.name} avatarConfig={card.avatarConfig} seed={card.konanId || card.name} size={42} />
       <span className="min-w-0 flex-1">
         <span className={`block truncate text-sm font-extrabold ${nameTone(card.tier, card.limited)}`}>{card.name}</span>
         <span className="block text-[11px] font-mono text-slate-500 dark:text-slate-400">{card.konanId}{hint ? ` · ${hint}` : ''}</span>
@@ -221,9 +233,9 @@ const MenuItem: React.FC<{ icon: React.ReactNode; label: string; detail?: React.
 export interface ProfilePageProps {
   onClose: () => void;
   name: string;
-  avatar?: string;
-  hasCustomAvatar?: boolean;
-  onUpdateAvatar?: (dataUrl: string | null) => void;
+  avatarConfig?: AvatarConfig | null;
+  hasCustomizedAvatar?: boolean;
+  onOpenAvatarEditor?: (tab?: EditorTab) => void;
   classLabel?: string;
   konanId: string;
   planTier: 'free' | 'pro' | 'plus';
@@ -232,12 +244,12 @@ export interface ProfilePageProps {
   friends: FriendsState | null;
   friendsError?: string;
   /** Camarades du groupe de ligue actuel pour pouvoir les demander en ami en 1 clic */
-  leaguePeers?: Array<{ konanId: string; name: string; avatar?: string; classLabel?: string; xp?: number; tier?: 'free' | 'pro' | 'plus' }>;
+  leaguePeers?: Array<{ konanId: string; name: string; avatar?: string; avatarConfig?: AvatarConfig | null; classLabel?: string; xp?: number; tier?: 'free' | 'pro' | 'plus' }>;
   onReloadFriends: () => void;
   onOpenPlans: () => void;
   onOpenSettings: () => void;
   onOpenPrivacyPolicy: () => void;
-  /** Solde d'Or (Gold) + aperçu « Boutique — Bientôt disponible » */
+  /** Solde de pièces d'or + ouverture directe de la Boutique de skins */
   gold?: number;
   onOpenShop?: () => void;
   /** Ouvrir directement un écran (ex. « Ajouter des amis » depuis la cloche) */
@@ -246,7 +258,7 @@ export interface ProfilePageProps {
 
 export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   const {
-    onClose, name, avatar, hasCustomAvatar, onUpdateAvatar, classLabel, konanId, planTier,
+    onClose, name, avatarConfig, hasCustomizedAvatar = false, onOpenAvatarEditor, classLabel, konanId, planTier,
     totalXp, friends, friendsError, leaguePeers = [], onReloadFriends, onOpenPlans, onOpenSettings, onOpenPrivacyPolicy,
     gold, onOpenShop,
   } = props;
@@ -267,11 +279,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   const [privacyMsg, setPrivacyMsg] = useState('');
   const lastManualPrivacyAt = useRef(0);
 
-  // Changement direct de photo de profil depuis Mon profil
-  const [avatarBusy, setAvatarBusy] = useState(false);
-  const [avatarError, setAvatarError] = useState<string | null>(null);
-  const avatarInputRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
     if (props.initialScreen) setScreen(props.initialScreen);
   }, [props.initialScreen]);
@@ -286,23 +293,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
   }, [friends?.privacy]);
 
   useEffect(() => { onReloadFriends(); }, [onReloadFriends]);
-
-  const handleAvatarFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file || !onUpdateAvatar) return;
-    setAvatarError(null);
-    setAvatarBusy(true);
-    try {
-      const dataUrl = await resizeImageToAvatar(file);
-      onUpdateAvatar(dataUrl);
-      soundFX.playCheckmarkPop();
-    } catch (err) {
-      setAvatarError(err instanceof Error ? err.message : 'Impossible de changer la photo.');
-    } finally {
-      setAvatarBusy(false);
-    }
-  };
 
   // Aperçu automatique dès que l'élève saisit les 6 chiffres d'un ID KONAN (ex. 123456 ou KN-123456)
   useEffect(() => {
@@ -380,6 +370,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
       konanId: p.konanId,
       name: p.name,
       avatar: p.avatar,
+      avatarConfig: p.avatarConfig || null,
       tier: p.tier,
       totalXp: p.xp,
       relation: incomingIds.has(p.konanId) ? 'incoming' : outgoingIds.has(p.konanId) ? 'outgoing' : 'none',
@@ -418,45 +409,33 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 
         {screen === 'menu' && (
           <>
-            <div className="flex flex-col items-center gap-2 text-center">
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => onUpdateAvatar && avatarInputRef.current?.click()}
-                  disabled={!onUpdateAvatar || avatarBusy}
-                  aria-label="Changer ma photo de profil"
-                  className="relative rounded-full cursor-pointer disabled:cursor-default focus:outline-none"
-                >
-                  <Avatar name={name} src={avatar} size={96} ring="ring-4 ring-sky-400/40" />
-                  {avatarBusy && (
-                    <span className="absolute inset-0 rounded-full bg-black/45 flex items-center justify-center">
-                      <span className="w-6 h-6 rounded-full border-2 border-white/40 border-t-white animate-spin" />
-                    </span>
-                  )}
-                  {onUpdateAvatar && (
-                    <span className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-sky-400 text-slate-950 border-2 border-white dark:border-[#0A0F1C] flex items-center justify-center shadow">
-                      <Camera className="w-4 h-4" />
-                    </span>
-                  )}
-                </button>
-                <input
-                  ref={avatarInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleAvatarFile}
+            <div className="flex flex-col items-center gap-2.5 text-center">
+              <button
+                type="button"
+                onClick={() => onOpenAvatarEditor?.('skin')}
+                disabled={!onOpenAvatarEditor}
+                aria-label="Personnaliser mon personnage"
+                className="relative rounded-full cursor-pointer disabled:cursor-default focus:outline-none transition-transform hover:scale-[1.03] active:scale-95"
+              >
+                <Avatar
+                  name={name}
+                  avatarConfig={avatarConfig}
+                  seed={konanId || name}
+                  size={104}
+                  ring="ring-4 ring-sky-400/45 shadow-xl shadow-sky-500/15"
+                  showCustomizeBadge={!hasCustomizedAvatar}
                 />
-              </div>
-              {onUpdateAvatar && hasCustomAvatar && !avatarBusy && (
+              </button>
+              {onOpenAvatarEditor && (
                 <button
                   type="button"
-                  onClick={() => { setAvatarError(null); onUpdateAvatar(null); }}
-                  className="text-[11px] font-semibold text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-400 cursor-pointer"
+                  onClick={() => onOpenAvatarEditor('skin')}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-xs sm:text-sm font-black shadow-md shadow-sky-500/25 cursor-pointer transition-all active:scale-95"
                 >
-                  Retirer ma photo
+                  <Palette className="w-4 h-4" />
+                  <span>{hasCustomizedAvatar ? 'Personnaliser mon personnage' : 'Créer mon personnage'}</span>
                 </button>
               )}
-              {avatarError && <p className="m-0 text-xs font-bold text-rose-600 dark:text-rose-400">{avatarError}</p>}
               <h1 className={`m-0 text-[24px] font-extrabold leading-tight ${nameTone(planTier)}`}>{name}</h1>
               {classLabel && <p className="m-0 text-[13px] text-slate-600 dark:text-slate-400">{classLabel}</p>}
               <KonanIdChip id={konanId} />
@@ -479,24 +458,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = (props) => {
                 detail={<span className={`text-xs font-extrabold ${tierTone(planTier)}`}>{tierLabel(planTier)}</span>}
                 onClick={onOpenPlans}
               />
-              {onOpenShop && (
+              {(onOpenAvatarEditor || onOpenShop) && (
                 <MenuItem
                   icon={<Store className="w-[18px] h-[18px] text-amber-500" />}
-                  label="Boutique"
+                  label="Boutique de skins"
                   detail={
-                    <span className="inline-flex items-center gap-1.5">
-                      {typeof gold === 'number' && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/30 text-[11px] font-black tabular-nums text-amber-700 dark:text-amber-300">
-                          <GoldCoinIcon size={13} />
-                          {fr(gold)}
-                        </span>
-                      )}
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.08] text-slate-600 dark:text-slate-300">
-                        Bientôt
+                    typeof gold === 'number' ? (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/30 text-[11px] font-black tabular-nums text-amber-700 dark:text-amber-300">
+                        <GoldCoinIcon size={13} />
+                        {fr(gold)}
                       </span>
-                    </span>
+                    ) : undefined
                   }
-                  onClick={onOpenShop}
+                  onClick={() => (onOpenAvatarEditor ? onOpenAvatarEditor('outfit') : onOpenShop?.())}
                 />
               )}
               <MenuItem

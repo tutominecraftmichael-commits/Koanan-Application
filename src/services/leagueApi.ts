@@ -4,8 +4,9 @@
  */
 import { auth } from '../lib/firebase';
 import type { LeagueEvent } from '../types';
+import type { AvatarConfig } from '../lib/avatar/avatarCatalog';
 
-export interface LeagueRow { rank: number; name: string; classLabel: string; avatar?: string; xp: number; me: boolean; tier?: 'free' | 'pro' | 'plus'; /** ID KONAN public : ouvre la fiche de l'élève */ konanId?: string }
+export interface LeagueRow { rank: number; name: string; classLabel: string; avatar?: string; avatarConfig?: AvatarConfig | null; xp: number; me: boolean; tier?: 'free' | 'pro' | 'plus'; /** ID KONAN public : ouvre la fiche de l'élève */ konanId?: string }
 export interface LeagueBoard {
   eligible: boolean;
   /** Pourquoi l'élève n'est pas dans la ligue : réputation trop basse ou classe sans cours (LMD, BTS…) */

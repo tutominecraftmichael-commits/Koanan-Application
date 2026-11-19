@@ -3,11 +3,13 @@
  * Tout passe par le serveur (/api/league, actions « amis ») : il vérifie l'élève connecté et écrit seul.
  */
 import { auth } from '../lib/firebase';
+import type { AvatarConfig } from '../lib/avatar/avatarCatalog';
 
 export interface FriendCard {
   konanId: string;
   name: string;
   avatar?: string;
+  avatarConfig?: AvatarConfig | null;
   relation: 'self' | 'friend' | 'outgoing' | 'incoming' | 'none';
   /** Profil réservé aux amis : seuls le nom, la photo et l'ID sont visibles */
   limited?: boolean;
@@ -166,6 +168,7 @@ export interface FriendQuestParticipant {
   konanId: string;
   name: string;
   avatar?: string;
+  avatarConfig?: AvatarConfig | null;
   accepted: boolean;
   xpContributed: number;
   frozen?: boolean;
@@ -271,3 +274,51 @@ export const claimFriendQuestReward = (questId: string) =>
 
 export const nudgeFriendQuestPartner = (questId: string) =>
   call<{ status: string; message: string; lastNudgeAt: number }>({ action: 'quest_nudge', questId });
+
+// ============================================================================
+// AVATARS ANIMÉS PERSONNALISABLES & BOUTIQUE DE SKINS (PIÈCES D'OR)
+// ============================================================================
+
+export interface AvatarState {
+  gold: number;
+  avatarConfig: AvatarConfig | null;
+  unlockedItems: string[];
+  hasCustomized: boolean;
+}
+
+export const AVATAR_ERRORS: Record<string, string> = {
+  INVALID_ITEM: 'Cet objet n’existe plus dans la boutique.',
+  INSUFFICIENT_GOLD: 'Tu n’as pas assez de pièces d’or ! Complète des quêtes d’XP avec tes amis pour en gagner.',
+  ITEM_LOCKED: 'Achète d’abord ce skin avec tes pièces d’or avant de l’enregistrer sur ton profil.',
+  INVALID_CONFIG: 'Configuration d’avatar invalide.',
+};
+
+export const avatarErrorMessage = (code?: string) =>
+  AVATAR_ERRORS[code || ''] || 'Impossible d’enregistrer ton personnage pour le moment. Réessaie dans un instant.';
+
+export async function fetchAvatarState(): Promise<FriendApiResult<AvatarState>> {
+  const r = await call<Partial<AvatarState>>({ action: 'avatar_state' });
+  if (!r.ok) return r;
+  const raw = r.data || {};
+  return {
+    ok: true,
+    data: {
+      gold: typeof raw.gold === 'number' && Number.isFinite(raw.gold) ? raw.gold : 100,
+      avatarConfig: raw.avatarConfig || null,
+      unlockedItems: Array.isArray(raw.unlockedItems) ? raw.unlockedItems : [],
+      hasCustomized: Boolean(raw.hasCustomized || raw.avatarConfig),
+    },
+  };
+}
+
+export const buyAvatarItemApi = (itemId: string) =>
+  call<{ gold: number; unlockedItems: string[]; purchasedItemId?: string; alreadyOwned?: boolean; price?: number }>({
+    action: 'avatar_buy',
+    itemId,
+  });
+
+export const saveAvatarConfigApi = (avatarConfig: AvatarConfig) =>
+  call<{ avatarConfig: AvatarConfig }>({
+    action: 'avatar_save',
+    avatarConfig,
+  });
