@@ -48,14 +48,21 @@ export const ALLOWED_BG_COLORS = [
 ];
 
 export const FREE_HAIR_IDS = [
+  // Homme
   'hair_short_fade',
-  'hair_afro',
+  'hair_buzz',
+  'hair_curly',
+  'hair_quiff',
+  'hair_high_top',
+  // Femme
   'hair_braids',
-  'hair_locs',
   'hair_bun',
   'hair_bob',
-  'hair_curly',
   'hair_waves',
+  'hair_ponytail',
+  // Mixtes
+  'hair_afro',
+  'hair_locs',
 ];
 
 export const FREE_EYE_IDS = [
@@ -75,45 +82,110 @@ export const FREE_MOUTH_IDS = [
 ];
 
 export const FREE_OUTFIT_IDS = [
+  // Mixtes
   'outfit_tee_blue',
   'outfit_tee_dark',
   'outfit_school_polo',
-  'outfit_school_uniform',
   'outfit_hoodie_basic',
+  // Homme
+  'outfit_school_uniform',
+  'outfit_varsity',
+  // Femme
+  'outfit_school_girl',
+  'outfit_dress_chic',
 ];
 
-export const FREE_ACCESSORY_IDS = ['acc_none'];
+export const FREE_ACCESSORY_IDS = [
+  'acc_none',
+  'acc_beard_clean',
+  'acc_earrings_pearl',
+];
 
 /** Prix officiels (en pièces d'or) des skins et accessoires premium. */
 export const PREMIUM_ITEM_PRICES = {
   // Coiffures premium
   hair_cyber_fade: 50,
+  hair_gold_taper: 100,
   hair_crown_braids: 100,
   hair_star_puffs: 100,
   hair_flame_locs: 150,
   // Tenues spéciales premium
   outfit_boss_suit: 150,
+  outfit_boss_lady: 150,
   outfit_cyber_gamer: 150,
   outfit_kente_royal: 200,
   outfit_elite_gold: 250,
-  // Accessoires (lunettes & couvre-chefs) premium
+  // Accessoires (lunettes, bijoux, couvre-chefs) premium
   acc_glasses_smart: 50,
   acc_beanie: 50,
+  acc_earrings_gold: 50,
+  acc_headband_ribbon: 50,
   acc_shades_cool: 100,
   acc_cap_konan: 100,
+  acc_chain_gold: 100,
+  acc_glasses_cat: 100,
   acc_headband_gold: 150,
+  acc_necklace_gold: 150,
   acc_crown_boss: 250,
+  acc_tiara_queen: 250,
 };
 
-const PREMIUM_HAIR_IDS = ['hair_cyber_fade', 'hair_crown_braids', 'hair_star_puffs', 'hair_flame_locs'];
-const PREMIUM_OUTFIT_IDS = ['outfit_boss_suit', 'outfit_cyber_gamer', 'outfit_kente_royal', 'outfit_elite_gold'];
+/** Restriction de genre des items (les items absents de cette table sont mixtes). */
+export const ITEM_GENDER = {
+  // Coiffures Homme
+  hair_short_fade: 'male',
+  hair_buzz: 'male',
+  hair_curly: 'male',
+  hair_quiff: 'male',
+  hair_high_top: 'male',
+  hair_cyber_fade: 'male',
+  hair_gold_taper: 'male',
+  // Coiffures Femme
+  hair_braids: 'female',
+  hair_bun: 'female',
+  hair_bob: 'female',
+  hair_waves: 'female',
+  hair_ponytail: 'female',
+  hair_crown_braids: 'female',
+  hair_star_puffs: 'female',
+  // Tenues Homme
+  outfit_school_uniform: 'male',
+  outfit_varsity: 'male',
+  outfit_boss_suit: 'male',
+  // Tenues Femme
+  outfit_school_girl: 'female',
+  outfit_dress_chic: 'female',
+  outfit_boss_lady: 'female',
+  // Accessoires Homme
+  acc_beard_clean: 'male',
+  acc_beanie: 'male',
+  acc_chain_gold: 'male',
+  acc_headband_gold: 'male',
+  acc_crown_boss: 'male',
+  // Accessoires Femme
+  acc_earrings_pearl: 'female',
+  acc_earrings_gold: 'female',
+  acc_headband_ribbon: 'female',
+  acc_glasses_cat: 'female',
+  acc_necklace_gold: 'female',
+  acc_tiara_queen: 'female',
+};
+
+const PREMIUM_HAIR_IDS = ['hair_cyber_fade', 'hair_gold_taper', 'hair_crown_braids', 'hair_star_puffs', 'hair_flame_locs'];
+const PREMIUM_OUTFIT_IDS = ['outfit_boss_suit', 'outfit_boss_lady', 'outfit_cyber_gamer', 'outfit_kente_royal', 'outfit_elite_gold'];
 const PREMIUM_ACCESSORY_IDS = [
   'acc_glasses_smart',
   'acc_beanie',
+  'acc_earrings_gold',
+  'acc_headband_ribbon',
   'acc_shades_cool',
   'acc_cap_konan',
+  'acc_chain_gold',
+  'acc_glasses_cat',
   'acc_headband_gold',
+  'acc_necklace_gold',
   'acc_crown_boss',
+  'acc_tiara_queen',
 ];
 
 export const ALL_HAIR_IDS = [...FREE_HAIR_IDS, ...PREMIUM_HAIR_IDS];
@@ -132,19 +204,27 @@ export const DEFAULT_AVATAR_CONFIG = {
   bgColor: '#1E3A5F',
 };
 
-/** Nettoie et valide un objet avatarConfig (sans vérifier la propriété des items payants). */
+/** Nettoie et valide un objet avatarConfig en garantissant la cohérence genre ↔ items. */
 export function sanitizeAvatarConfig(raw) {
   if (!raw || typeof raw !== 'object') return null;
   const pick = (val, allowed, fallback) => (allowed.includes(val) ? val : fallback);
+  const gender = pick(String(raw.gender || ''), ALLOWED_GENDERS, DEFAULT_AVATAR_CONFIG.gender);
+  const pickGendered = (val, allowed, fallback) => {
+    const chosen = pick(val, allowed, fallback);
+    const restricted = ITEM_GENDER[chosen];
+    if (restricted && restricted !== gender) return fallback;
+    return chosen;
+  };
+  const defaultHair = gender === 'female' ? 'hair_braids' : DEFAULT_AVATAR_CONFIG.hair;
   return {
-    gender: pick(String(raw.gender || ''), ALLOWED_GENDERS, DEFAULT_AVATAR_CONFIG.gender),
+    gender,
     skinColor: pick(String(raw.skinColor || ''), ALLOWED_SKIN_COLORS, DEFAULT_AVATAR_CONFIG.skinColor),
-    hair: pick(String(raw.hair || ''), ALL_HAIR_IDS, DEFAULT_AVATAR_CONFIG.hair),
+    hair: pickGendered(String(raw.hair || ''), ALL_HAIR_IDS, defaultHair),
     hairColor: pick(String(raw.hairColor || ''), ALLOWED_HAIR_COLORS, DEFAULT_AVATAR_CONFIG.hairColor),
     eyes: pick(String(raw.eyes || ''), FREE_EYE_IDS, DEFAULT_AVATAR_CONFIG.eyes),
     mouth: pick(String(raw.mouth || ''), FREE_MOUTH_IDS, DEFAULT_AVATAR_CONFIG.mouth),
-    outfit: pick(String(raw.outfit || ''), ALL_OUTFIT_IDS, DEFAULT_AVATAR_CONFIG.outfit),
-    accessory: pick(String(raw.accessory || ''), ALL_ACCESSORY_IDS, DEFAULT_AVATAR_CONFIG.accessory),
+    outfit: pickGendered(String(raw.outfit || ''), ALL_OUTFIT_IDS, DEFAULT_AVATAR_CONFIG.outfit),
+    accessory: pickGendered(String(raw.accessory || ''), ALL_ACCESSORY_IDS, DEFAULT_AVATAR_CONFIG.accessory),
     bgColor: pick(String(raw.bgColor || ''), ALLOWED_BG_COLORS, DEFAULT_AVATAR_CONFIG.bgColor),
   };
 }

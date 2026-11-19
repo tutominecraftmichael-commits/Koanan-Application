@@ -127,6 +127,15 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
         return (
           <path d="M22 44 C22 20 78 20 78 44 C82 58 79 72 82 86 L18 86 C21 72 18 58 22 44 Z" fill={hairColor} />
         );
+      case 'hair_ponytail':
+        return (
+          <g>
+            {/* Queue de cheval fluide sur le côté droit */}
+            <path d="M64 24 C84 20 92 42 84 68 C80 74 74 72 74 63 C77 48 73 35 63 32 Z" fill={hairColor} />
+            <ellipse cx="66" cy="27" rx="4.5" ry="3" fill="#F5C451" transform="rotate(28 66 27)" />
+            <ellipse cx="50" cy="44" rx="24" ry="23" fill={hairColor} />
+          </g>
+        );
       case 'hair_curly':
         return (
           <g fill={hairColor}>
@@ -173,6 +182,39 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
             <path d="M48 83 L52 83 L53 98 L50 101 L47 98 Z" fill="#1E3A8A" />
           </g>
         );
+      case 'outfit_varsity':
+        return (
+          <g>
+            <path d={bodyPath} fill="#0F172A" />
+            {/* Manches claires style campus */}
+            <path d="M17 102 C17 85 24 79 33 78 L30 102 Z" fill="#E2E8F0" />
+            <path d="M83 102 C83 85 76 79 67 78 L70 102 Z" fill="#E2E8F0" />
+            <path d="M40 76 Q50 85 60 76" fill="none" stroke="#38BDF8" strokeWidth="2.8" />
+            <line x1="50" y1="81" x2="50" y2="102" stroke="#334155" strokeWidth="1.5" />
+            <circle cx="60" cy="90" r="4.2" fill="#38BDF8" />
+            <text x="60" y="92.3" textAnchor="middle" fontSize="6" fontWeight="900" fill="#0F172A">K</text>
+          </g>
+        );
+      case 'outfit_school_girl':
+        return (
+          <g>
+            <path d={bodyPath} fill="#1E3A8A" />
+            <path d="M39 76 L50 89 L61 76 Z" fill="#FFFFFF" />
+            {/* Ruban nœud papillon scolaire */}
+            <path d="M44 82 L50 86 L44 90 Z" fill="#E11D48" />
+            <path d="M56 82 L50 86 L56 90 Z" fill="#E11D48" />
+            <circle cx="50" cy="86" r="2.2" fill="#FB7185" />
+          </g>
+        );
+      case 'outfit_dress_chic':
+        return (
+          <g>
+            <path d={bodyPath} fill="#9D174D" />
+            <path d="M37 76 Q50 88 63 76" fill={c.skinColor} />
+            <path d="M37 76 Q50 88 63 76" fill="none" stroke="#F472B6" strokeWidth="2.2" />
+            <path d="M29 94 Q50 98 71 94" fill="none" stroke="#F5C451" strokeWidth="1.8" opacity="0.85" />
+          </g>
+        );
       case 'outfit_hoodie_basic':
         return (
           <g>
@@ -195,6 +237,19 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
             <rect x="61" y="88" width="6" height="2" rx="1" fill="#F5C451" />
           </g>
         );
+      case 'outfit_boss_lady':
+        return (
+          <g>
+            <path d={bodyPath} fill="#1E1B4B" />
+            {/* Blouse soie ivoire + revers blazer féminin */}
+            <path d="M40 76 L50 94 L60 76 Z" fill="#FFFBEB" />
+            <path d="M35 77 L47 95 L41 96 L31 83 Z" fill="#312E81" />
+            <path d="M65 77 L53 95 L59 96 L69 83 Z" fill="#312E81" />
+            {/* Broche dorée sur le revers */}
+            <circle cx="61" cy="87" r="2.6" fill="#F5C451" />
+            <circle cx="61" cy="87" r="1.1" fill="#FFFFFF" />
+          </g>
+        );
       case 'outfit_kente_royal':
         return (
           <g>
@@ -204,7 +259,15 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
             <path d="M66 77 L54 102 L66 102 L74 83 Z" fill="#F59E0B" />
             <path d="M32 84 L41 84 M35 90 L44 90 M37 96 L45 96" stroke="#DC2626" strokeWidth="2.4" />
             <path d="M68 84 L59 84 M65 90 L56 90 M63 96 L55 96" stroke="#DC2626" strokeWidth="2.4" />
-            <path d="M40 76 Q50 86 60 76" fill="none" stroke="#FDE047" strokeWidth="2.8" />
+            {isFemale ? (
+              <>
+                <path d="M39 76 Q50 88 61 76" fill={c.skinColor} />
+                <path d="M39 76 Q50 88 61 76" fill="none" stroke="#FDE047" strokeWidth="2.8" />
+                <circle cx="50" cy="84" r="2.2" fill="#F5C451" />
+              </>
+            ) : (
+              <path d="M40 76 Q50 86 60 76" fill="none" stroke="#FDE047" strokeWidth="2.8" />
+            )}
           </g>
         );
       case 'outfit_cyber_gamer':
@@ -356,6 +419,24 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
         return (
           <path d="M27 44 C27 24 73 24 73 44 C70 34 62 32 50 32 C38 32 30 34 27 44 Z" fill={hairColor} />
         );
+      case 'hair_buzz':
+        return (
+          <path d="M28 43 C28 26 72 26 72 43 C68 35 60 33.5 50 33.5 C40 33.5 32 35 28 43 Z" fill={hairColor} opacity="0.92" />
+        );
+      case 'hair_quiff':
+        return (
+          <g fill={hairColor}>
+            <path d="M26 44 C25 22 44 14 66 22 C74 25 75 36 73 44 C68 33 60 31 48 32 C38 33 30 36 26 44 Z" />
+            <path d="M36 23 Q50 18 65 24" fill="none" stroke={hairHighlight} strokeWidth="2" strokeLinecap="round" opacity="0.55" />
+          </g>
+        );
+      case 'hair_high_top':
+        return (
+          <g fill={hairColor}>
+            <rect x="29" y="16" width="42" height="20" rx="5" />
+            <path d="M27 43 C27 31 32 28 36 28 L64 28 C68 28 73 31 73 43 C69 35 61 33 50 33 C39 33 31 35 27 43 Z" />
+          </g>
+        );
       case 'hair_cyber_fade':
         return (
           <g>
@@ -363,6 +444,24 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
             {/* Éclair bleu KONAN sur la tempe */}
             <path d="M62 29 L67 34 L64 35 L69 40" fill="none" stroke="#38BDF8" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M38 25 Q50 22 62 25" fill="none" stroke={hairHighlight} strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+          </g>
+        );
+      case 'hair_gold_taper':
+        return (
+          <g>
+            <path d="M26 44 C26 20 74 20 74 44 C69 32 60 30.5 50 30.5 C40 30.5 31 32 26 44 Z" fill={hairColor} />
+            {/* Double ligne rasée dorée sur le côté */}
+            <path d="M62 29 L71 33" fill="none" stroke="#F5C451" strokeWidth="2" strokeLinecap="round" />
+            <path d="M64 33 L72 36.5" fill="none" stroke="#F5C451" strokeWidth="1.6" strokeLinecap="round" />
+          </g>
+        );
+      case 'hair_ponytail':
+        return (
+          <g fill={hairColor}>
+            <path d="M27 44 C27 24 73 24 73 44 C66 34 58 32 50 32 C42 32 34 34 27 44 Z" />
+            {/* Petites mèches fines sur les tempes */}
+            <path d="M28 42 Q26 48 29 52" fill="none" stroke={hairColor} strokeWidth="2" strokeLinecap="round" />
+            <path d="M72 42 Q74 48 71 52" fill="none" stroke={hairColor} strokeWidth="2" strokeLinecap="round" />
           </g>
         );
       case 'hair_afro':
@@ -477,6 +576,72 @@ export const AnimatedAvatar: React.FC<AnimatedAvatarProps> = memo(({
             <circle cx="50" cy="23.5" r="2.6" fill="#38BDF8" />
             <circle cx="39" cy="25" r="1.7" fill="#EF4444" />
             <circle cx="61" cy="25" r="1.7" fill="#10B981" />
+          </g>
+        );
+      case 'acc_beard_clean':
+        return (
+          <g fill={hairColor} opacity="0.92">
+            {/* Barbe soignée + moustache suivant la mâchoire masculine */}
+            <path d="M29.5 55 C30 67 39 73.5 50 73.5 C61 73.5 70 67 70.5 55 C68.5 62 61 68.5 50 68.5 C39 68.5 31.5 62 29.5 55 Z" />
+            <path d="M41.5 60.2 Q46 57.8 50 59.6 Q54 57.8 58.5 60.2 Q54 61.8 50 60.8 Q46 61.8 41.5 60.2 Z" />
+          </g>
+        );
+      case 'acc_chain_gold':
+        return (
+          <g fill="none">
+            <path d="M37 76 Q50 92 63 76" stroke="#F5C451" strokeWidth="3.2" strokeLinecap="round" strokeDasharray="3.2 1.8" />
+            <circle cx="50" cy="86" r="3.2" fill="#F5C451" stroke="#B45309" strokeWidth="1" />
+          </g>
+        );
+      case 'acc_earrings_pearl':
+        return (
+          <g>
+            <circle cx="25.8" cy="56.2" r="2.6" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="0.9" />
+            <circle cx="74.2" cy="56.2" r="2.6" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="0.9" />
+          </g>
+        );
+      case 'acc_earrings_gold':
+        return (
+          <g fill="none" stroke="#F5C451" strokeWidth="2">
+            <circle cx="25.2" cy="58.5" r="4.2" />
+            <circle cx="74.8" cy="58.5" r="4.2" />
+          </g>
+        );
+      case 'acc_headband_ribbon':
+        return (
+          <g>
+            <path d="M27 37 Q50 24 73 37" fill="none" stroke="#EC4899" strokeWidth="4" strokeLinecap="round" />
+            {/* Petit nœud sur le côté */}
+            <path d="M63 29 L70 25 L69 32 Z" fill="#F472B6" />
+            <path d="M63 29 L57 25 L58 32 Z" fill="#F472B6" />
+            <circle cx="63" cy="29" r="2.2" fill="#FDE047" />
+          </g>
+        );
+      case 'acc_glasses_cat':
+        return (
+          <g fill="none" stroke="#F5C451" strokeWidth="2">
+            <path d="M29.5 45.5 L45.5 46 C46.5 53 42 56 36.5 55.5 C31.5 55 29.5 51 29.5 45.5 Z" fill="#EC4899" fillOpacity="0.14" />
+            <path d="M70.5 45.5 L54.5 46 C53.5 53 58 56 63.5 55.5 C68.5 55 70.5 51 70.5 45.5 Z" fill="#EC4899" fillOpacity="0.14" />
+            <line x1="45.5" y1="48" x2="54.5" y2="48" />
+          </g>
+        );
+      case 'acc_necklace_gold':
+        return (
+          <g>
+            <path d="M39 74 Q50 84 61 74" fill="none" stroke="#F5C451" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M47.5 80.5 L50 85.5 L52.5 80.5 Z" fill="#FDE047" stroke="#B45309" strokeWidth="0.7" />
+            <circle cx="44" cy="78" r="1.2" fill="#FDE047" />
+            <circle cx="56" cy="78" r="1.2" fill="#FDE047" />
+          </g>
+        );
+      case 'acc_tiara_queen':
+        return (
+          <g>
+            <path d="M33 32 Q50 24 67 32 L63 22 L56 26 L50 15 L44 26 L37 22 Z" fill="#FDE047" stroke="#D97706" strokeWidth="1.2" strokeLinejoin="round" />
+            <circle cx="50" cy="23.5" r="2.4" fill="#EC4899" />
+            <circle cx="41" cy="26.5" r="1.5" fill="#38BDF8" />
+            <circle cx="59" cy="26.5" r="1.5" fill="#38BDF8" />
+            <circle cx="50" cy="14.8" r="1.5" fill="#FFFFFF" />
           </g>
         );
       case 'acc_none':

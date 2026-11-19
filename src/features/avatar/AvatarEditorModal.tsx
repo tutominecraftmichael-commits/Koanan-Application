@@ -22,9 +22,12 @@ import {
   MOUTH_OPTIONS,
   OUTFIT_OPTIONS,
   SKIN_TONES,
+  adaptAvatarForGender,
   defaultAvatarForSeed,
+  filterByGender,
   randomizeUnlockedAvatar,
   type AvatarConfig,
+  type AvatarGender,
   type AvatarItemOption,
 } from '../../lib/avatar/avatarCatalog';
 import {
@@ -74,10 +77,13 @@ export const AvatarEditorModal: React.FC<AvatarEditorModalProps> = ({
   onOpenQuests,
   onToast,
 }) => {
-  const [draft, setDraft] = useState<AvatarConfig>(() => ({
-    ...DEFAULT_AVATAR_CONFIG,
-    ...(initialConfig || defaultAvatarForSeed(userSeed)),
-  }));
+  const [draft, setDraft] = useState<AvatarConfig>(() => {
+    const base: AvatarConfig = {
+      ...DEFAULT_AVATAR_CONFIG,
+      ...(initialConfig || defaultAvatarForSeed(userSeed)),
+    };
+    return adaptAvatarForGender(base, base.gender);
+  });
   const [tab, setTab] = useState<EditorTab>(initialTab);
   const [extraOwned, setExtraOwned] = useState<string[]>([]);
   const [goldOverride, setGoldOverride] = useState<number | null>(null);
@@ -90,6 +96,18 @@ export const AvatarEditorModal: React.FC<AvatarEditorModalProps> = ({
   const currentGold = goldOverride !== null ? goldOverride : gold;
 
   const isOwned = (item: AvatarItemOption) => item.price === 0 || ownedSet.has(item.id);
+
+  const handleSwitchGender = (nextGender: AvatarGender) => {
+    if (draft.gender === nextGender) return;
+    soundFX.playCheckmarkPop();
+    setConfirmItem(null);
+    setErrorMsg('');
+    setDraft((p) => adaptAvatarForGender(p, nextGender));
+  };
+
+  const visibleHairs = useMemo(() => filterByGender(HAIR_OPTIONS, draft.gender), [draft.gender]);
+  const visibleOutfits = useMemo(() => filterByGender(OUTFIT_OPTIONS, draft.gender), [draft.gender]);
+  const visibleAccessories = useMemo(() => filterByGender(ACCESSORY_OPTIONS, draft.gender), [draft.gender]);
 
   // Vérifie si la prévisualisation contient un item premium non encore acheté
   const lockedSelectedItem = useMemo<AvatarItemOption | null>(() => {
@@ -262,7 +280,7 @@ export const AvatarEditorModal: React.FC<AvatarEditorModalProps> = ({
           <div className="inline-flex p-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xs">
             <button
               type="button"
-              onClick={() => { soundFX.playCheckmarkPop(); setDraft((p) => ({ ...p, gender: 'male' })); }}
+              onClick={() => handleSwitchGender('male')}
               className={`px-4 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
                 draft.gender === 'male'
                   ? 'bg-sky-500 text-white shadow-sm'
@@ -273,7 +291,7 @@ export const AvatarEditorModal: React.FC<AvatarEditorModalProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => { soundFX.playCheckmarkPop(); setDraft((p) => ({ ...p, gender: 'female' })); }}
+              onClick={() => handleSwitchGender('female')}
               className={`px-4 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
                 draft.gender === 'female'
                   ? 'bg-sky-500 text-white shadow-sm'
@@ -406,14 +424,14 @@ export const AvatarEditorModal: React.FC<AvatarEditorModalProps> = ({
                   })}
                 </div>
               </div>
-              {renderItemGrid('hair', HAIR_OPTIONS)}
+              {renderItemGrid('hair', visibleHairs)}
             </>
           )}
 
           {tab === 'eyes' && renderItemGrid('eyes', EYE_OPTIONS)}
           {tab === 'mouth' && renderItemGrid('mouth', MOUTH_OPTIONS)}
-          {tab === 'outfit' && renderItemGrid('outfit', OUTFIT_OPTIONS)}
-          {tab === 'accessory' && renderItemGrid('accessory', ACCESSORY_OPTIONS)}
+          {tab === 'outfit' && renderItemGrid('outfit', visibleOutfits)}
+          {tab === 'accessory' && renderItemGrid('accessory', visibleAccessories)}
         </div>
       </div>
 
