@@ -3,6 +3,7 @@ import { ArrowDown, ArrowUp, Info, Lock, ShieldCheck, Trophy, X } from 'lucide-r
 import type { LeagueBoard } from '../../services/leagueApi';
 import { DIVISION_STYLES } from '../../services/leagueApi';
 import { FallingSnow, FrostOverlay, IceStyles, Snowflake } from './Ice';
+import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
 
 /**
  * Ligue : carte du tableau de bord + écran du classement de la semaine.
@@ -11,8 +12,6 @@ import { FallingSnow, FrostOverlay, IceStyles, Snowflake } from './Ice';
 
 const DIVISION_ORDER = [1, 2, 3, 4, 5];
 /** Couleur pleine de chaque division (badge hexagonal de la maquette) */
-/** Fonds des initiales (comme la maquette) */
-const AVATAR_COLORS = ['#1E3A5F', '#3B1F4A', '#1F4A3A', '#4A3A1F', '#1F3A4A', '#3A1F2A'];
 const HEX_COLORS: Record<number, string> = { 1: '#B45309', 2: '#94A3B8', 3: '#F5C451', 4: '#38BDF8', 5: '#F472B6' };
 const ordinal = (n: number) => (n === 1 ? '1er' : `${n}e`);
 
@@ -149,14 +148,23 @@ export const LeaguePage: React.FC<{
   onRefresh: () => void;
   /** Toucher un élève du classement : sa fiche (ID KONAN) */
   onOpenPlayer?: (konanId: string) => void;
-}> = ({ board, localReputation, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh, onOpenPlayer }) => {
+  /** Quête d'XP hebdomadaire en duo entre amis */
+  questSection?: React.ReactNode;
+}> = ({ board, localReputation, hasCourses = true, offline, errorText, resultSeen, onDismissResult, onRefresh, onOpenPlayer, questSection }) => {
   React.useEffect(() => { onRefresh(); }, [onRefresh]);
   return (
     <div className="space-y-3 pb-24">
       {board?.lastResult && board.lastResult.weekId !== resultSeen && (
         <LeagueResultBanner board={board} onClose={() => onDismissResult(board.lastResult?.weekId || '')} />
       )}
-      {board?.eligible && hasCourses ? <LeagueView board={board} onOpenPlayer={onOpenPlayer} /> : <LeagueCard board={board} localReputation={localReputation} hasCourses={hasCourses} offline={offline} errorText={errorText} onOpen={onRefresh} />}
+      {board?.eligible && hasCourses ? (
+        <LeagueView board={board} onOpenPlayer={onOpenPlayer} questSection={questSection} />
+      ) : (
+        <div className="max-w-xl mx-auto space-y-4">
+          {questSection}
+          <LeagueCard board={board} localReputation={localReputation} hasCourses={hasCourses} offline={offline} errorText={errorText} onOpen={onRefresh} />
+        </div>
+      )}
     </div>
   );
 };
@@ -182,7 +190,7 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
   </div>
 );
 
-export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId: string) => void }> = ({ board, onOpenPlayer }) => {
+export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId: string) => void; questSection?: React.ReactNode }> = ({ board, onOpenPlayer, questSection }) => {
   const size = board.rows.length;
   const [showRules, setShowRules] = React.useState(false);
   const repTone = board.reputation > 80
@@ -239,6 +247,9 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
           </div>
         </div>
         {showRules && <LeagueRules reputation={board.reputation} />}
+
+        {/* Quête d'XP hebdomadaire en duo entre amis */}
+        {questSection}
 
         {/* Réputation de 80 % ou moins : ligue gelée (glace animée), XP gelés, comment dégeler */}
         <IceStyles />
@@ -301,13 +312,13 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
                   <button type="button" onClick={() => onOpenPlayer(row.konanId!)} aria-label={`Voir le profil de ${row.name}`} className="absolute inset-0 z-10 rounded-2xl cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400" />
                 )}
                 <span className={`w-6 text-center text-[15px] font-extrabold tabular-nums ${row.me ? 'text-sky-700 dark:text-sky-300' : rankColor(row.rank, zone)}`}>{row.rank}</span>
-                {row.avatar ? (
-                  <img src={row.avatar} alt="" loading="lazy" referrerPolicy="no-referrer" className={`w-9 h-9 rounded-full object-cover shrink-0 ${row.me ? 'ring-2 ring-sky-400' : 'ring-1 ring-slate-200 dark:ring-white/10'}`} />
-                ) : (
-                  <span className="w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-extrabold text-white shrink-0" style={{ background: AVATAR_COLORS[[...row.name].reduce((h, ch) => h + ch.charCodeAt(0), 0) % AVATAR_COLORS.length] }}>
-                    {row.name.slice(0, 1).toUpperCase()}
-                  </span>
-                )}
+                <AnimatedAvatar
+                  config={row.avatarConfig}
+                  seed={row.konanId || row.name}
+                  size={40}
+                  className={row.me ? 'ring-2 ring-sky-400' : 'ring-1 ring-slate-200 dark:ring-white/10'}
+                  alt={`Personnage de ${row.name}`}
+                />
                 <span className="min-w-0 flex-1">
                   {/* Nom jaune pour les abonnés Pro, multicolore pour Plus (sans mention de la formule) */}
                   <span className={`block truncate text-sm ${

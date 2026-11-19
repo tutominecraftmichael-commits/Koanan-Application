@@ -4,7 +4,7 @@
  *
  * Corps JSON : { events: [ { id, kind: 'lesson'|'series', amount, at, durationMinutes | level, questions, mistakes, seconds } ],
  *                reputation, displayName, classLabel, gradeLevel, avatar }
- * Réponse    : { success, accepted: [id], rejected: [{ id, reason }], board }
+ * Réponse    : { success, accepted: [id], rejected: [{ id, reason }], board, gold }
  *
  * Le serveur recompte et borne chaque gain d'XP (api/_leagueRules.js) : c'est LUI qui fait foi pour le
  * classement. Les collections league_* ne sont lisibles et modifiables que par le serveur.
@@ -18,6 +18,10 @@ import { nextNameChangeAt } from './_nameRules.js';
 import { serverPlanTier } from './_subscriptionStore.js';
 import { paymentsEnabled } from './_subscriptionRules.js';
 import { friendsState, konanIdFromUid, normalizeKonanId, publicProfile, removeFriend, respondFriendRequest, savePrivacy, sendFriendRequest } from './_friends.js';
+import {
+  cancelFriendQuest, claimQuestReward, ensureUserGold, getQuestState, nudgeQuestPartner, proposeFriendQuest, recordQuestXp, respondFriendQuest,
+} from './_quests.js';
+import { buyAvatarItem, getAvatarState, sanitizeAvatarConfig, saveAvatarConfig } from './_avatar.js';
 import {
   DIVISIONS, GROUP_SIZE, PROMOTE_COUNT, DEMOTE_COUNT, applyXpEvents, clampDivision, cleanAvatar, gradeInLeague,
   settleServerReputation, isFrozen, isParticipant, leagueCol, publicName, rankPlayers, weekEndMs, weekIdOf,
@@ -100,11 +104,12 @@ async function buildBoard(db, player, nowMs) {
     .map((s) => ({
       uid: s.id, weekXp: Number(s.get('weekXp')) || 0, xpReachedAt: Number(s.get('xpReachedAt')) || 0,
       name: s.get('displayName'), classLabel: s.get('classLabel'), avatar: s.get('avatar') || '',
+      avatarConfig: sanitizeAvatarConfig(s.get('avatarConfig')),
       tier: ['pro', 'plus'].includes(s.get('planTier')) ? s.get('planTier') : 'free',
       konanId: s.get('konanId') || konanIdFromUid(s.id),
     }));
   base.rows = rankPlayers(players).map((p, i) => ({
-    rank: i + 1, name: p.name || 'Élève KONAN', classLabel: p.classLabel || '', avatar: p.avatar, xp: p.weekXp, me: p.uid === player.uid, tier: p.tier, konanId: p.konanId,
+    rank: i + 1, name: p.name || 'Élève KONAN', classLabel: p.classLabel || '', avatar: p.avatar, avatarConfig: p.avatarConfig, xp: p.weekXp, me: p.uid === player.uid, tier: p.tier, konanId: p.konanId,
   }));
   return base;
 }
@@ -155,6 +160,7 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
       displayName,
       nameChangedAt,
       avatar,
+      avatarConfig: sanitizeAvatarConfig(user?.avatarConfig) || sanitizeAvatarConfig(prev.avatarConfig) || null,
       classLabel: str(body.classLabel, 20),
       gradeLevel: grade,
       // ID KONAN (public) : toucher un élève dans le classement ouvre sa fiche
@@ -164,8 +170,16 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
       updatedAt: new Date(nowMs).toISOString(),
     };
     tx.set(playerRef, next);
-    return { next, accepted: applied.accepted, rejected: applied.rejected };
+    // Quête en duo : tous les XP vérifiés (leçons et entraînement) comptent dans la quête active,
+    // même si la ligue est gelée (seul le classement de la ligue reste bloqué à <= 80 %).
+    const validQuestXp = Math.max(0, Number(applied.xpGained) || 0);
+    return { next, accepted: applied.accepted, rejected: applied.rejected, validQuestXp };
   });
+
+  // Quête d'XP en duo : les XP vérifiés (leçons + entraînement) incrémentent la quête active de la semaine
+  if (result.validQuestXp > 0) {
+    await recordQuestXp(db, uid, result.validQuestXp, nowMs).catch((e) => console.warn('[quests/xp]', e?.message || e));
+  }
 
   // Place dans un groupe : toute classe admise dans la ligue (quelle que soit la réputation)
   let player = result.next;
@@ -178,7 +192,11 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
       if (!isContention(e)) throw e;
     }
   }
-  return { accepted: result.accepted, rejected: result.rejected, board: await buildBoard(db, player, nowMs) };
+  const [board, gold] = await Promise.all([
+    buildBoard(db, player, nowMs),
+    ensureUserGold(db, uid).catch(() => 100),
+  ]);
+  return { accepted: result.accepted, rejected: result.rejected, board, gold };
 }
 
 /** Fonctions internes exposées pour les tests (base simulée ou collections de test). */
@@ -223,6 +241,52 @@ export default async function handler(req, res) {
       return send(res, 200, { success: true, ...out });
     } catch (err) {
       console.error('[league/amis]', err?.message || err);
+      return send(res, 500, { success: false, error: String(err?.message || 'SERVER_ERROR').slice(0, 120) });
+    }
+  }
+
+  // Quêtes d'XP entre amis & Or (Gold) : mêmes contrôles d'authentification, sans créer de nouvelle fonction Vercel
+  const QUEST_ACTIONS = ['quest_state', 'quest_propose', 'quest_respond', 'quest_cancel', 'quest_claim', 'quest_nudge'];
+  if (QUEST_ACTIONS.includes(body?.action)) {
+    try {
+      const db = await getDb();
+      const questId = str(String(body.questId || ''), 120);
+      const friendKonanId = str(String(body.friendKonanId || body.konanId || ''), 20);
+      const tierId = str(String(body.tierId || ''), 20);
+      let out;
+      if (body.action === 'quest_state') out = await getQuestState(db, uid);
+      else if (body.action === 'quest_propose') out = await proposeFriendQuest(db, uid, friendKonanId, tierId || undefined);
+      else if (body.action === 'quest_respond') out = await respondFriendQuest(db, uid, questId, body.accept === true);
+      else if (body.action === 'quest_cancel') out = await cancelFriendQuest(db, uid, questId);
+      else if (body.action === 'quest_claim') out = await claimQuestReward(db, uid, questId);
+      else out = await nudgeQuestPartner(db, uid, questId);
+      if (out?.error) {
+        const status = out.error === 'NOT_FOUND' ? 404 : out.error === 'FORBIDDEN' ? 403 : out.error === 'NUDGE_COOLDOWN' ? 429 : 400;
+        return send(res, status, { success: false, ...out });
+      }
+      return send(res, 200, { success: true, ...out });
+    } catch (err) {
+      console.error('[league/quests]', err?.message || err);
+      return send(res, 500, { success: false, error: String(err?.message || 'SERVER_ERROR').slice(0, 120) });
+    }
+  }
+
+  // Avatars animés & Boutique de skins (Pièces d'or) : mêmes contrôles d'authentification
+  const AVATAR_ACTIONS = ['avatar_state', 'avatar_buy', 'avatar_save'];
+  if (AVATAR_ACTIONS.includes(body?.action)) {
+    try {
+      const db = await getDb();
+      let out;
+      if (body.action === 'avatar_state') out = await getAvatarState(db, uid);
+      else if (body.action === 'avatar_buy') out = await buyAvatarItem(db, uid, str(String(body.itemId || ''), 60));
+      else out = await saveAvatarConfig(db, uid, body.avatarConfig);
+      if (out?.error) {
+        const status = out.error === 'INSUFFICIENT_GOLD' ? 402 : out.error === 'ITEM_LOCKED' ? 403 : 400;
+        return send(res, status, { success: false, ...out });
+      }
+      return send(res, 200, { success: true, ...out });
+    } catch (err) {
+      console.error('[league/avatar]', err?.message || err);
       return send(res, 500, { success: false, error: String(err?.message || 'SERVER_ERROR').slice(0, 120) });
     }
   }

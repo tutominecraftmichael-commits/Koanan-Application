@@ -9,6 +9,7 @@
  */
 import { leagueCol, publicName, cleanAvatar, DIVISIONS, clampDivision } from './_leagueRules.js';
 import { sendPushToUser } from './_pushSend.js';
+import { sanitizeAvatarConfig } from './_avatar.js';
 
 export const MAX_FRIENDS = 200;
 export const MAX_PENDING = 50;
@@ -62,7 +63,7 @@ export async function publicCards(db, uids) {
   if (!ids.length) return out;
   const [league, users, friendDocs] = await Promise.all([
     db.getAll(...ids.map((u) => leagueCol(db, 'league_players').doc(u))),
-    db.getAll(...ids.map((u) => db.collection('users').doc(u)), { fieldMask: ['konanId', 'studentName', 'planTier', 'userAccount.konanId', 'userAccount.name', 'userAccount.avatar', 'userAccount.customAvatar', 'userAccount.planTier'] }),
+    db.getAll(...ids.map((u) => db.collection('users').doc(u)), { fieldMask: ['konanId', 'studentName', 'planTier', 'avatarConfig', 'userAccount.konanId', 'userAccount.name', 'userAccount.avatar', 'userAccount.customAvatar', 'userAccount.planTier'] }),
     db.getAll(...ids.map((u) => fsCol(db).doc(u))),
   ]);
   ids.forEach((uid, i) => {
@@ -79,6 +80,7 @@ export async function publicCards(db, uids) {
       konanId: resolvedId,
       name: lp.displayName || publicName(us.studentName || us.userAccount?.name || ''),
       avatar: cleanAvatar(lp.avatar || us.userAccount?.customAvatar || us.userAccount?.avatar || ''),
+      avatarConfig: sanitizeAvatarConfig(us.avatarConfig) || sanitizeAvatarConfig(lp.avatarConfig) || null,
       tier: tierRaw === 'pro' || tierRaw === 'plus' ? tierRaw : 'free',
       totalXp: Number(lp.totalXp) || 0,
       division: lp.division ? DIVISIONS[clampDivision(lp.division) - 1].name : null,
@@ -92,7 +94,7 @@ export async function publicCards(db, uids) {
 
 /** Ce qu'un élève voit d'un autre (fiche publique), selon le lien entre eux et les réglages de l'autre. */
 function cardFor(card, relation) {
-  const base = { konanId: card.konanId, name: card.name, avatar: card.avatar, relation };
+  const base = { konanId: card.konanId, name: card.name, avatar: card.avatar, avatarConfig: card.avatarConfig || null, relation };
   // Profil réservé aux amis : un inconnu ne voit que le nom, la photo et l'ID
   if (card.profileVisibility === 'friends' && relation !== 'friend' && relation !== 'self') return { ...base, limited: true, canRequest: card.allowRequests && relation === 'none' };
   return { ...base, totalXp: card.totalXp, friendsCount: card.friendsCount, tier: card.tier, division: card.division, canRequest: card.allowRequests && relation === 'none' };
@@ -108,12 +110,21 @@ export async function friendsState(db, uid) {
   const me = await readDoc(null, db, uid);
   const cards = await publicCards(db, [uid, ...me.friends, ...me.incoming.map((x) => x.from), ...me.outgoing.map((x) => x.to), ...me.notices.map((n) => n.from)]);
   const card = (u, relation) => (cards.get(u) ? cardFor(cards.get(u), relation) : null);
+  const notices = me.notices.map((n) => ({ id: n.id, kind: n.kind, at: n.at, from: card(n.from, relationOf(me, n.from)) })).filter((n) => n.from);
+  // Garantie : chaque demande d'ami entrante non traitée figure dans la cloche avec les boutons Accepter / Refuser
+  const coveredIncomingIds = new Set(notices.filter((n) => n.kind === 'request' && n.from?.relation === 'incoming').map((n) => n.from.konanId));
+  for (const inc of me.incoming) {
+    const c = card(inc.from, 'incoming');
+    if (c && c.konanId && !coveredIncomingIds.has(c.konanId)) {
+      notices.unshift({ id: `request_${inc.from}_${inc.at || 0}`, kind: 'request', at: inc.at || Date.now(), from: c });
+    }
+  }
   return {
     me: { konanId: cards.get(uid)?.konanId || '', friendsCount: me.friends.length, totalXp: cards.get(uid)?.totalXp || 0 },
     friends: me.friends.map((u) => card(u, 'friend')).filter(Boolean),
     incoming: me.incoming.map((x) => ({ ...card(x.from, 'incoming'), at: x.at })).filter((x) => x.konanId),
     outgoing: me.outgoing.map((x) => ({ ...card(x.to, 'outgoing'), at: x.at })).filter((x) => x.konanId),
-    notices: me.notices.map((n) => ({ id: n.id, kind: n.kind, at: n.at, from: card(n.from, relationOf(me, n.from)) })).filter((n) => n.from),
+    notices,
     privacy: { allowRequests: me.allowRequests !== false, profileVisibility: me.profileVisibility === 'friends' ? 'friends' : 'all' },
   };
 }

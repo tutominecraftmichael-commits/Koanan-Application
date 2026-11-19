@@ -70,7 +70,20 @@ import { UltimateCompletionCelebrationModal } from './components/celebration/Ult
 import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
 import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy, lessonXp } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
-import { fetchFriends, respondFriendRequest, friendErrorMessage, type FriendsState } from './services/friendsApi';
+import {
+  fetchAvatarState,
+  fetchFriends,
+  fetchQuestState,
+  friendErrorMessage,
+  questErrorMessage,
+  respondFriendQuest,
+  respondFriendRequest,
+  type FriendsState,
+  type QuestState,
+} from './services/friendsApi';
+import { FriendQuestCard } from './features/gamification/FriendQuestCard';
+import type { AvatarConfig } from './lib/avatar/avatarCatalog';
+import type { EditorTab } from './features/avatar/AvatarEditorModal';
 import { ProfilePage, PublicProfileSheet } from './features/profile/ProfilePage';
 import { fetchSubscription, type SubscriptionInfo } from './services/subscriptionApi';
 import { LeaguePage } from './features/gamification/LeagueView';
@@ -105,8 +118,9 @@ const loadSubjectManager = () => import('./features/subjects/SubjectManager').th
 const loadPlannerView = () => import('./features/planner/PlannerView').then(m => m.PlannerView);
 const loadAnalyticsDashboard = () => import('./features/analytics/AnalyticsDashboard').then(m => m.AnalyticsDashboard);
 const loadFocusMode = () => import('./features/focus/FocusMode').then(m => m.FocusMode);
-const loadExerciseSeriesView = () => import('./features/gamification/ExerciseSeriesView').then((m) => m.ExerciseSeriesView);
-const ExerciseSeriesView = lazyView(loadExerciseSeriesView);
+const loadMiniGamesHubView = () => import('./features/gamification/MiniGamesHubView').then((m) => m.MiniGamesHubView);
+const MiniGamesHubView = lazyView(loadMiniGamesHubView);
+const AvatarEditorModal = lazyView(() => import('./features/avatar/AvatarEditorModal').then((m) => m.AvatarEditorModal));
 const SubscriptionView = lazyView(() => import('./features/pro/SubscriptionView').then((m) => m.SubscriptionView));
 const PlansSheet = lazyView(() => import('./features/pro/PlansSheet').then((m) => m.PlansSheet));
 const AuthPage = lazyView(loadAuthPage);
@@ -845,6 +859,7 @@ export function App() {
       setLeagueError(r.success ? '' : String(r.error || ''));
       if (!r.success) return;
       if (r.board) setLeagueBoard(r.board);
+      if (typeof r.gold === 'number') setUserGold(r.gold);
       // Gains refusés par le serveur : avant, ils disparaissaient sans un mot (« mes XP ne comptent pas »)
       const refused = r.rejected || [];
       if (refused.length) {
@@ -853,6 +868,7 @@ export function App() {
       }
       const done = [...(r.accepted || []), ...refused.map((x) => x.id)];
       if (done.length) updateGamification((prev) => clearPendingEvents(prev.gamification, done));
+      if ((r.accepted || []).length > 0) reloadQuestsRef.current();
     } finally {
       leagueBusy.current = false;
     }
@@ -885,6 +901,41 @@ export function App() {
   // Amis (2026-11-17) : état complet (amis, demandes reçues/envoyées, notifications cloche, confidentialité)
   const [friendsData, setFriendsData] = useState<FriendsState | null>(null);
   const [friendsError, setFriendsError] = useState('');
+  // Or (Gold), Quêtes d'XP en duo & Avatars animés personnalisables
+  const [questState, setQuestState] = useState<QuestState | null>(null);
+  const [questLoading, setQuestLoading] = useState(false);
+  const [userGold, setUserGold] = useState<number>(() => (typeof state.gold === 'number' && Number.isFinite(state.gold) ? state.gold : 100));
+  const [avatarConfig, setAvatarConfig] = useState<AvatarConfig | null>(() => state.avatarConfig || null);
+  const [unlockedItems, setUnlockedItems] = useState<string[]>(() => (Array.isArray(state.unlockedItems) ? state.unlockedItems : []));
+  const [hasCustomizedAvatar, setHasCustomizedAvatar] = useState<boolean>(() => Boolean(state.avatarConfig));
+  const [avatarEditorTab, setAvatarEditorTab] = useState<EditorTab | null>(null);
+
+  useEffect(() => {
+    if (!questState && typeof state.gold === 'number' && Number.isFinite(state.gold)) {
+      setUserGold(state.gold);
+    }
+  }, [state.gold, questState]);
+
+  const reloadAvatar = useCallback(async () => {
+    if (!subscriptionAccount || !auth?.currentUser) return;
+    const r = await fetchAvatarState();
+    if (r.ok) {
+      setAvatarConfig(r.data.avatarConfig || null);
+      setHasCustomizedAvatar(Boolean(r.data.hasCustomized && r.data.avatarConfig));
+      setUnlockedItems(Array.isArray(r.data.unlockedItems) ? r.data.unlockedItems : []);
+      if (typeof r.data.gold === 'number' && Number.isFinite(r.data.gold)) {
+        setUserGold(r.data.gold);
+      }
+    }
+  }, [subscriptionAccount]);
+
+  const openAvatarEditor = useCallback((tab: EditorTab = 'skin') => {
+    setAvatarEditorTab(tab);
+    if (subscriptionAccount && auth?.currentUser) {
+      reloadAvatar();
+    }
+  }, [subscriptionAccount, reloadAvatar]);
+
   const reloadFriends = useCallback(async () => {
     if (!subscriptionAccount || !auth?.currentUser) return;
     const r = await fetchFriends();
@@ -895,6 +946,35 @@ export function App() {
       setFriendsError(friendErrorMessage(r.error));
     }
   }, [subscriptionAccount]);
+
+  const reloadQuests = useCallback(async () => {
+    if (!subscriptionAccount || !auth?.currentUser) return;
+    setQuestLoading(true);
+    const r = await fetchQuestState();
+    setQuestLoading(false);
+    if (r.ok) {
+      setQuestState(r.data);
+      if (typeof r.data.gold === 'number' && Number.isFinite(r.data.gold)) {
+        setUserGold(r.data.gold);
+      }
+    }
+  }, [subscriptionAccount]);
+  const reloadQuestsRef = useRef(reloadQuests);
+  reloadQuestsRef.current = reloadQuests;
+  const handleRefreshLeagueAndQuests = useCallback(() => {
+    syncLeague();
+    reloadQuests();
+  }, [syncLeague, reloadQuests]);
+
+  const handleRespondQuest = useCallback(async (questId: string, accept: boolean) => {
+    const r = await respondFriendQuest(questId, accept);
+    if (r.ok) {
+      await reloadQuests();
+      showToast(accept ? 'C’est parti ! Ta quête avec ton ami est lancée pour 6 jours.' : 'Invitation de quête refusée sans pénalité.');
+    } else {
+      showToast(questErrorMessage(r.error));
+    }
+  }, [reloadQuests]);
 
   const handleRespondFriend = useCallback(async (konanId: string, accept: boolean) => {
     const r = await respondFriendRequest(konanId, accept);
@@ -910,18 +990,36 @@ export function App() {
     if (!subscriptionAccount) {
       setFriendsData(null);
       setFriendsError('');
+      setQuestState(null);
+      setUserGold(100);
+      setAvatarConfig(null);
+      setUnlockedItems([]);
+      setHasCustomizedAvatar(false);
       return;
     }
-    const first = setTimeout(reloadFriends, 1200);
-    const every = setInterval(reloadFriends, 2 * 60 * 1000);
-    const onVisible = () => { if (document.visibilityState === 'visible') reloadFriends(); };
+    const refreshSocial = () => {
+      reloadFriends();
+      reloadQuests();
+    };
+    const first = setTimeout(() => {
+      refreshSocial();
+      reloadAvatar();
+    }, 800);
+    const every = setInterval(() => {
+      if (document.visibilityState === 'visible') refreshSocial();
+    }, 45 * 1000);
+    const onVisible = () => { if (document.visibilityState === 'visible') refreshSocial(); };
+    window.addEventListener('focus', refreshSocial);
+    window.addEventListener('online', refreshSocial);
     document.addEventListener('visibilitychange', onVisible);
     return () => {
       clearTimeout(first);
       clearInterval(every);
+      window.removeEventListener('focus', refreshSocial);
+      window.removeEventListener('online', refreshSocial);
       document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [subscriptionAccount, reloadFriends]);
+  }, [subscriptionAccount, reloadFriends, reloadQuests, reloadAvatar]);
   const subscriptionPending = Boolean(subscriptionInfo?.status?.pending);
   const refreshSubscription = useCallback(async () => {
     if (!subscriptionAccount || !auth?.currentUser) return;
@@ -2072,29 +2170,6 @@ export function App() {
     if (!blockedUntil) showToast(`Nom et filière enregistrés : ${safeData.name} (${updated.academicLevel})`);
   };
 
-  /** Photo de profil choisie dans les réglages (null = revenir à la photo du compte Google). */
-  const handleUpdateAvatar = (dataUrl: string | null) => {
-    setState(prev => {
-      if (!prev.userAccount) return prev;
-      const next: AppState = {
-        ...prev,
-        profileUpdatedAt: new Date().toISOString(),
-        userAccount: {
-          ...prev.userAccount,
-          // Chaîne vide (et non undefined) : Firestore efface alors aussi l'ancienne photo sur les autres appareils
-          customAvatar: dataUrl || '',
-          lastSyncedAt: new Date().toISOString(),
-        },
-      };
-      saveAppState(next);
-      if (prev.userAccount.googleId && !prev.isDemoMode) {
-        saveUserState(prev.userAccount.googleId, next);
-      }
-      return next;
-    });
-    showToast(dataUrl ? 'Photo de profil mise à jour.' : 'Photo de profil retirée : retour à la photo de ton compte.');
-  };
-
   const handleRegeneratePlan = () => {
     setState(prev => {
       const freshPlan = generateOptimizedStudyPlan(prev.subjects, prev.classSlots, prev.preferences, effectivePlanTier);
@@ -2549,8 +2624,18 @@ export function App() {
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenProfile={(state.userAccount?.isLoggedIn || state.isDemoMode) ? () => setProfileScreen('menu') : undefined}
           friendNotices={friendsData?.notices || []}
+          incomingFriends={friendsData?.incoming || []}
           onRespondFriend={handleRespondFriend}
           onOpenFriends={() => setProfileScreen('friends')}
+          gold={state.userAccount?.isLoggedIn ? userGold : null}
+          onOpenShop={() => openAvatarEditor('outfit')}
+          avatarConfig={avatarConfig}
+          hasCustomizedAvatar={hasCustomizedAvatar}
+          questNotices={questState?.questNotices || []}
+          incomingQuests={questState?.incomingQuests || []}
+          onRespondQuest={handleRespondQuest}
+          onOpenQuest={() => setActiveView('league')}
+          onRefreshNotifications={() => { reloadFriends(); reloadQuests(); }}
           // LMD, BTS : pas de cours, donc pas d'entraînement ni d'énergie (ils gagnent leurs XP au chronomètre)
           energy={gamificationEnabled && gradeHasGuidedCourses ? {
             value: energyNow(state.gamification).energy,
@@ -2703,6 +2788,9 @@ export function App() {
             <DashboardOverview
               studentName={effectiveStudentName}
               academicLevel={effectiveClassLabel}
+              avatarConfig={avatarConfig}
+              hasCustomizedAvatar={hasCustomizedAvatar}
+              onOpenAvatarEditor={() => openAvatarEditor('skin')}
               subjects={state.subjects}
               classSlots={state.classSlots}
               studySessions={state.studySessions}
@@ -2732,6 +2820,19 @@ export function App() {
                 ? { rank: leagueBoard?.rows.find((r) => r.me)?.rank ?? null, divisionName: leagueBoard?.divisionName || 'Bronze', frozen: Boolean(leagueBoard?.frozen) }
                 : null}
               reputation={gamificationEnabled ? (leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) : undefined}
+              friendQuestSlot={subscriptionAccount ? (
+                <FriendQuestCard
+                  questState={questState}
+                  friends={friendsData?.friends || []}
+                  loading={questLoading}
+                  isFrozen={leagueBoard?.frozen ?? ((leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) <= 80)}
+                  reputation={leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation}
+                  onRefresh={reloadQuests}
+                  onGoldUpdated={setUserGold}
+                  onOpenFriends={() => setProfileScreen('friends')}
+                  onToast={showToast}
+                />
+              ) : null}
             />
             </>
           ) : (
@@ -2944,8 +3045,21 @@ export function App() {
               setLeagueResultSeen(id);
               try { localStorage.setItem('konan_league_result_seen', id); } catch { /* sans effet */ }
             }}
-            onRefresh={syncLeague}
+            onRefresh={handleRefreshLeagueAndQuests}
             onOpenPlayer={setPlayerCardId}
+            questSection={subscriptionAccount ? (
+              <FriendQuestCard
+                questState={questState}
+                friends={friendsData?.friends || []}
+                loading={questLoading}
+                isFrozen={leagueBoard?.frozen ?? ((leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation) <= 80)}
+                reputation={leagueBoard?.reputation ?? gamificationOf(state.gamification).reputation}
+                onRefresh={reloadQuests}
+                onGoldUpdated={setUserGold}
+                onOpenFriends={() => setProfileScreen('friends')}
+                onToast={showToast}
+              />
+            ) : null}
           />
         )}
 
@@ -2990,14 +3104,14 @@ export function App() {
         </ViewErrorBoundary>
       </main>
 
-      {/* Icône ronde d'exercices (10 QCM au hasard, énergie ⚡) */}
+      {/* Bouton flottant jaune des Mini-Jeux KONAN (XP à gogo, etc., avec charges ⚡) */}
       {gamificationEnabled && gradeHasGuidedCourses && !isExerciseOpen && ['dashboard', 'planner', 'subjects', 'schedule', 'analytics', 'league'].includes(activeView) && (
         <ExerciseFab gamification={state.gamification} planTier={exercisePlan} onOpen={() => setIsExerciseOpen(true)} />
       )}
       {isExerciseOpen && (
         <SeriesErrorBoundary onClose={() => setIsExerciseOpen(false)}>
         <Suspense fallback={<div className="fixed inset-0 z-[80] bg-slate-50 dark:bg-[#0A0F1C] flex items-center justify-center"><ViewLoader /></div>}>
-          <ExerciseSeriesView
+          <MiniGamesHubView
             userId={state.userAccount?.googleId || 'local_student'}
             gradeLevel={canonicalGradeLevel(tryResolveGradeLevel(studentGradeRaw))}
             gamification={state.gamification}
@@ -3024,15 +3138,15 @@ export function App() {
         </Suspense>
       )}
 
-      {/* Page Profil façon Duolingo (photo, XP, amis, abonnement, mode jour/nuit, paiement, amis par ID, confidentialité, paramètres) */}
+      {/* Page Profil façon Duolingo (avatar animé, XP, amis, boutique de skins, mode jour/nuit, confidentialité, paramètres) */}
       {profileScreen && (
         <ProfilePage
           initialScreen={profileScreen}
           onClose={() => setProfileScreen(null)}
           name={effectiveStudentName}
-          avatar={leagueAvatarSrc}
-          hasCustomAvatar={Boolean(state.userAccount?.customAvatar)}
-          onUpdateAvatar={state.userAccount ? handleUpdateAvatar : undefined}
+          avatarConfig={avatarConfig}
+          hasCustomizedAvatar={hasCustomizedAvatar}
+          onOpenAvatarEditor={(tab) => openAvatarEditor(tab || 'skin')}
           classLabel={effectiveClassLabel}
           konanId={friendsData?.me?.konanId || state.userAccount?.konanId || state.konanId || ''}
           planTier={effectivePlanTier}
@@ -3044,6 +3158,7 @@ export function App() {
             konanId: r.konanId!,
             name: r.name,
             avatar: r.avatar,
+            avatarConfig: r.avatarConfig || null,
             classLabel: r.classLabel,
             xp: r.xp,
             tier: r.tier,
@@ -3052,7 +3167,47 @@ export function App() {
           onOpenPlans={() => setIsPlansOpen(true)}
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenPrivacyPolicy={() => setIsPrivacyModalOpen(true)}
+          gold={userGold}
+          onOpenShop={() => openAvatarEditor('outfit')}
         />
+      )}
+
+      {/* Éditeur de personnage animé & Boutique de skins (Pièces d'or) */}
+      {avatarEditorTab !== null && (
+        <Suspense fallback={null}>
+          <AvatarEditorModal
+            initialConfig={avatarConfig}
+            unlockedItems={unlockedItems}
+            gold={userGold}
+            userSeed={friendsData?.me?.konanId || state.userAccount?.konanId || state.konanId || effectiveStudentName}
+            initialTab={avatarEditorTab}
+            onClose={() => setAvatarEditorTab(null)}
+            onSaved={(cfg) => {
+              setAvatarConfig(cfg);
+              setHasCustomizedAvatar(true);
+              setState((prev) => {
+                const next: AppState = { ...prev, avatarConfig: cfg };
+                saveAppState(next);
+                if (prev.userAccount?.googleId && !prev.isDemoMode) {
+                  saveUserState(prev.userAccount.googleId, next);
+                }
+                return next;
+              });
+              syncLeague();
+              reloadFriends();
+              reloadQuests();
+            }}
+            onPurchased={(nextGold, nextUnlocked) => {
+              setUserGold(nextGold);
+              setUnlockedItems(nextUnlocked);
+            }}
+            onOpenQuests={() => {
+              setProfileScreen(null);
+              setActiveView('league');
+            }}
+            onToast={showToast}
+          />
+        </Suspense>
       )}
 
       {/* Fiche publique d'un élève (ouverte en cliquant sur un joueur dans la Ligue) */}
@@ -3079,7 +3234,12 @@ export function App() {
         nameChangedAt={state.nameChangedAt}
         // Total de tous les XP : le plus grand entre le téléphone et le serveur de la ligue (tous appareils confondus)
         totalXp={gamificationEnabled ? Math.max(gamificationOf(state.gamification).xp, leagueBoard?.totalXp ?? 0) : undefined}
-        onUpdateAvatar={state.userAccount ? handleUpdateAvatar : undefined}
+        avatarConfig={avatarConfig}
+        hasCustomizedAvatar={hasCustomizedAvatar}
+        onOpenAvatarEditor={() => {
+          setIsSettingsOpen(false);
+          openAvatarEditor('skin');
+        }}
         onExportData={handleExportData}
         onImportData={() => fileInputRef.current?.click()}
         onResetData={() => { setProfileScreen(null); handleResetData(); }}

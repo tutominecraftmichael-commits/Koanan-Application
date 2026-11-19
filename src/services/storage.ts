@@ -1,4 +1,5 @@
 import type { Subject, ClassSlot, StudyPreferences, StudySession, StudyLog, UserAccount, UserStreak, PlanTier, AcademicGoal, PlusInvitationNotification, WeeklySummary, GamificationState } from '../types';
+import type { AvatarConfig } from '../lib/avatar/avatarCatalog';
 import { mergeGamification } from '../lib/gamification/gamification';
 import { ACADEMIC_PRESETS, DEFAULT_PREFERENCES } from '../lib/presets';
 import { generateId, isNonAcademicSubject } from '../lib/utils';
@@ -26,6 +27,12 @@ export interface AppState {
   streak?: UserStreak;
   /** XP et réputation (gamification) */
   gamification?: GamificationState;
+  /** Monnaie virtuelle Or (initialisée à 100 côté serveur et synchronisée depuis Firestore) */
+  gold?: number;
+  /** Configuration de l'avatar animé personnalisé */
+  avatarConfig?: AvatarConfig | null;
+  /** IDs des skins achetés avec les pièces d'or */
+  unlockedItems?: string[];
   planTier?: PlanTier;
   cycleCompletedDate?: string; // YYYY-MM-DD
   // Weekly Recap & Archiving fields
@@ -113,6 +120,7 @@ export function createEmptyUserState(
     studentName: user.name,
     academicLevel: user.academicLevel || 'Licence Universitaire',
     konanId: assignedKonanId,
+    gold: 100,
     privacyPolicyAccepted: user.privacyPolicyAccepted ?? false,
     privacyPolicyAcceptedAt: user.privacyPolicyAcceptedAt,
     userAccount: {

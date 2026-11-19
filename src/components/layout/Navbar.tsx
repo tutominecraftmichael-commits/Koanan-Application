@@ -15,18 +15,19 @@ import {
   Check,
   CheckCircle2,
   X,
-  XCircle,
-  User
+  XCircle
 } from 'lucide-react';
 import type { ActiveAppView, UserAccount, PlusInvitationNotification } from '../../types';
-import type { FriendNotice } from '../../services/friendsApi';
+import type { FriendCard, FriendNotice, FriendQuest, QuestNotice } from '../../services/friendsApi';
+import { GoldCoinIcon } from '../../features/gamification/GoldCoin';
+import { AnimatedAvatar } from '../../features/avatar/AnimatedAvatar';
+import type { AvatarConfig } from '../../lib/avatar/avatarCatalog';
 import { Badge } from '../ui/Badge';
 import { KonanCube } from '../common/KonanCube';
 import { FocusAudioPlayerWidget } from '../plus/FocusAudioPlayerWidget';
 import { useLanguage, t } from '../../lib/i18n';
 import { formatNotificationTime } from '../../lib/utils';
 import { soundFX } from '../../lib/audioEffects';
-import { getDisplayAvatar } from '../../lib/avatar';
 import { isLocalAdminEnvironment } from '../../lib/adminAccess';
 import { verifyAdminPassword, adminLoginErrorMessage } from '../../lib/adminAuth';
 import { AdminGoogleLoginButton } from '../common/AdminGoogleLoginButton';
@@ -117,9 +118,7 @@ const FriendNoticeItem: React.FC<{ notice: FriendNotice; onRespond?: (konanId: s
   return (
     <div className={`w-full p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left ${tone}`}>
       <button type="button" onClick={onOpen} className="shrink-0 cursor-pointer" aria-label={`Voir ${who}`}>
-        {notice.from.avatar
-          ? <img src={notice.from.avatar} alt="" referrerPolicy="no-referrer" className="w-8 h-8 rounded-full object-cover" />
-          : <span className="w-8 h-8 rounded-full bg-sky-600 text-white text-xs font-black flex items-center justify-center">{who.slice(0, 1).toUpperCase()}</span>}
+        <AnimatedAvatar config={notice.from.avatarConfig} seed={notice.from.konanId || who} size={34} alt={who} />
       </button>
       <span className="min-w-0 flex-1">
         <span className="flex items-center justify-between gap-1">
@@ -128,9 +127,118 @@ const FriendNoticeItem: React.FC<{ notice: FriendNotice; onRespond?: (konanId: s
         </span>
         <span className="block text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1">{text}</span>
         {pending && onRespond && (
-          <span className="flex gap-2 mt-2">
-            <button type="button" disabled={busy} onClick={async () => { setBusy(true); await onRespond(notice.from.konanId, true); setBusy(false); }} className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-black cursor-pointer disabled:opacity-50">Accepter</button>
-            <button type="button" disabled={busy} onClick={async () => { setBusy(true); await onRespond(notice.from.konanId, false); setBusy(false); }} className="px-3 py-1.5 rounded-lg bg-white text-slate-700 border border-slate-300 dark:bg-white/[0.06] dark:text-slate-200 dark:border-white/15 text-[11px] font-black cursor-pointer disabled:opacity-50">Refuser</button>
+          <span className="flex gap-2 mt-2.5">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setBusy(true);
+                await onRespond(notice.from.konanId, true);
+                setBusy(false);
+              }}
+              className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-1 shadow-sm"
+            >
+              <Check className="w-3.5 h-3.5" />
+              <span>{busy ? 'En cours…' : 'Accepter'}</span>
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setBusy(true);
+                await onRespond(notice.from.konanId, false);
+                setBusy(false);
+              }}
+              className="py-2 px-3 rounded-xl bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-300 dark:bg-white/[0.06] dark:text-slate-200 dark:border-white/15 text-xs font-black cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-1"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Refuser</span>
+            </button>
+          </span>
+        )}
+      </span>
+    </div>
+  );
+};
+
+/** Notification de quête en duo dans la cloche : invitation (« C'est parti ! » / « Refuser »), relance, réussite. */
+const QuestNoticeItem: React.FC<{
+  notice: QuestNotice;
+  onRespond?: (questId: string, accept: boolean) => Promise<void>;
+  onOpen?: () => void;
+}> = ({ notice, onRespond, onOpen }) => {
+  const [busy, setBusy] = useState(false);
+  const who = notice.fromName || 'Un ami';
+  const tone =
+    notice.kind === 'quest_declined'
+      ? 'bg-rose-50/80 border-rose-200 dark:bg-rose-950/40 dark:border-rose-500/30'
+      : notice.kind === 'quest_completed' || notice.kind === 'quest_accepted'
+        ? 'bg-emerald-50/80 border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-500/30'
+        : notice.kind === 'quest_nudge'
+          ? 'bg-amber-50/80 border-amber-200 dark:bg-amber-950/40 dark:border-amber-500/30'
+          : 'bg-sky-50/80 border-sky-200 dark:bg-sky-950/40 dark:border-sky-500/30';
+  const label =
+    notice.kind === 'quest_invite'
+      ? 'Invitation · Quête en duo'
+      : notice.kind === 'quest_accepted'
+        ? 'Quête lancée !'
+        : notice.kind === 'quest_declined'
+          ? 'Quête déclinée'
+          : notice.kind === 'quest_completed'
+            ? `Quête réussie · +${notice.rewardGold} pièces d’or`
+            : 'Encouragement · Quête';
+
+  return (
+    <div className={`w-full p-3 rounded-xl border flex items-start gap-2.5 shadow-sm text-left ${tone}`}>
+      <button type="button" onClick={onOpen} className="shrink-0 cursor-pointer" aria-label={`Ouvrir la quête avec ${who}`}>
+        <AnimatedAvatar seed={notice.fromKonanId || who} size={34} alt={who} />
+      </button>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-1">
+          <span className="text-[9px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-300">{label}</span>
+          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">
+            {formatNotificationTime(new Date(notice.at).toISOString())}
+          </span>
+        </span>
+        <button type="button" onClick={onOpen} className="block text-left w-full text-xs font-bold text-slate-900 dark:text-white leading-snug mt-1 cursor-pointer">
+          {notice.message}
+        </button>
+        {notice.pending && onRespond && (
+          <span className="flex gap-2 mt-2.5">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setBusy(true);
+                await onRespond(notice.questId, true);
+                setBusy(false);
+              }}
+              className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-1 shadow-sm"
+            >
+              <Check className="w-3.5 h-3.5" />
+              <span>{busy ? 'Lancement…' : 'C’est parti !'}</span>
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setBusy(true);
+                await onRespond(notice.questId, false);
+                setBusy(false);
+              }}
+              className="py-2 px-3 rounded-xl bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-300 dark:bg-white/[0.06] dark:text-slate-200 dark:border-white/15 text-xs font-black cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-1"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Refuser</span>
+            </button>
           </span>
         )}
       </span>
@@ -166,9 +274,22 @@ export interface NavbarProps {
   onOpenPaymentNotice?: () => void;
   /** Amis : demandes reçues et réponses (cloche), réponse directe, page Profil */
   friendNotices?: FriendNotice[];
+  incomingFriends?: FriendCard[];
   onRespondFriend?: (konanId: string, accept: boolean) => Promise<void>;
   onOpenFriends?: () => void;
   onOpenProfile?: () => void;
+  /** Avatar animé personnalisé de l'élève */
+  avatarConfig?: AvatarConfig | null;
+  hasCustomizedAvatar?: boolean;
+  /** Monnaie virtuelle Or (Gold) + notifications de quêtes en duo */
+  gold?: number | null;
+  onOpenShop?: () => void;
+  questNotices?: QuestNotice[];
+  incomingQuests?: FriendQuest[];
+  onRespondQuest?: (questId: string, accept: boolean) => Promise<void>;
+  onOpenQuest?: () => void;
+  /** Actualise immédiatement les notifications (amis + quêtes) à l'ouverture de la cloche */
+  onRefreshNotifications?: () => void;
   onAcceptInvitation?: (invitation: PlusInvitationNotification) => void;
   onDeclineInvitation?: (invitation: PlusInvitationNotification) => void;
   /** Énergie ⚡ affichée en haut à droite (null : pas d'icône d'exercices pour cet élève) */
@@ -221,9 +342,19 @@ export const Navbar: React.FC<NavbarProps> = ({
   paymentNotices = [],
   onOpenPaymentNotice,
   friendNotices = [],
+  incomingFriends = [],
   onRespondFriend,
   onOpenFriends,
   onOpenProfile,
+  avatarConfig = null,
+  hasCustomizedAvatar = false,
+  gold = null,
+  onOpenShop,
+  questNotices = [],
+  incomingQuests = [],
+  onRespondQuest,
+  onOpenQuest,
+  onRefreshNotifications,
   onAcceptInvitation,
   onDeclineInvitation,
   energy = null,
@@ -316,10 +447,60 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   });
 
+  // Fusion garantie : toute quête entrante et toute demande d'ami entrante a ses boutons Accepter / Refuser dans la cloche
+  const effectiveQuestNotices = React.useMemo<QuestNotice[]>(() => {
+    const pendingQuestIds = new Set(incomingQuests.map((q) => q.id));
+    const list = questNotices.map((n) => ({
+      ...n,
+      pending: n.pending || ((n.kind === 'quest_invite' || n.kind === 'quest_nudge') && pendingQuestIds.has(n.questId)),
+    }));
+    const covered = new Set(list.filter((n) => n.pending).map((n) => n.questId));
+    for (const inv of incomingQuests) {
+      if (covered.has(inv.id)) continue;
+      list.unshift({
+        id: `qinv_${inv.id}`,
+        kind: 'quest_invite',
+        questId: inv.id,
+        at: inv.createdAt || Date.now(),
+        fromName: inv.partner.name || 'Un ami',
+        fromKonanId: inv.partner.konanId || '',
+        fromAvatar: inv.partner.avatar || '',
+        targetXp: inv.targetXp,
+        rewardGold: inv.rewardGold,
+        message: `${inv.partner.name} te propose une quête de 6 jours : récoltez ${inv.targetXp.toLocaleString('fr-FR')} XP ensemble pour gagner +${inv.rewardGold} pièces d’or chacun !`,
+        pending: true,
+      });
+    }
+    return list;
+  }, [questNotices, incomingQuests]);
+
+  const effectiveFriendNotices = React.useMemo<FriendNotice[]>(() => {
+    const incomingIds = new Set(incomingFriends.map((f) => f.konanId));
+    const list = friendNotices.map((n) => (
+      n.kind === 'request' && incomingIds.has(n.from.konanId)
+        ? { ...n, from: { ...n.from, relation: 'incoming' as const } }
+        : n
+    ));
+    const covered = new Set(list.filter((n) => n.kind === 'request' && n.from.relation === 'incoming').map((n) => n.from.konanId));
+    for (const f of incomingFriends) {
+      if (!f.konanId || covered.has(f.konanId)) continue;
+      list.unshift({
+        id: `request_inc_${f.konanId}`,
+        kind: 'request',
+        at: f.at || Date.now(),
+        from: { ...f, relation: 'incoming' },
+      });
+    }
+    return list;
+  }, [friendNotices, incomingFriends]);
+
+  const totalPendingCount = activePendingInvitations.length + incomingQuests.length + incomingFriends.length;
+
   const hasUnreadNotifications = activePendingInvitations.some(inv => inv?.id && !seenNotificationIds.has(inv.id))
     || normalizedOwnerNotifications.some(notif => notif?.id && !seenNotificationIds.has(notif.id))
     || paymentNotices.some(n => n?.id && !seenNotificationIds.has(n.id))
-    || friendNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
+    || effectiveFriendNotices.some(n => n?.id && !seenNotificationIds.has(n.id))
+    || effectiveQuestNotices.some(n => n?.id && !seenNotificationIds.has(n.id));
 
   // Message non lu : la cloche bouge toute seule (toutes les 4 s) jusqu'à ce que l'élève ouvre l'onglet
   useEffect(() => {
@@ -344,7 +525,8 @@ export const Navbar: React.FC<NavbarProps> = ({
       activePendingInvitations.forEach(inv => inv?.id && next.add(inv.id));
       normalizedOwnerNotifications.forEach(notif => notif?.id && next.add(notif.id));
       paymentNotices.forEach(n => n?.id && next.add(n.id));
-      friendNotices.forEach(n => n?.id && next.add(n.id));
+      effectiveFriendNotices.forEach(n => n?.id && next.add(n.id));
+      effectiveQuestNotices.forEach(n => n?.id && next.add(n.id));
       try {
         localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(Array.from(next).slice(-200)));
       } catch {
@@ -352,7 +534,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
       return next;
     });
-  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices, friendNotices]);
+  }, [isNotificationsOpen, hasUnreadNotifications, activePendingInvitations, normalizedOwnerNotifications, paymentNotices, effectiveFriendNotices, effectiveQuestNotices]);
 
   const navItems = [
     { id: 'dashboard' as ActiveAppView, label: t('navDashboard', lang), component: AnimatedDashboardIcon, icon: AnimatedDashboardIcon },
@@ -388,7 +570,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Main Navbar Top Row */}
         <div className="flex items-center justify-between h-14 sm:h-[68px] gap-1.5 sm:gap-4">
           
-          {/* Téléphone, dans l'appli : photo de profil en haut à gauche (ouvre le profil et les paramètres) */}
+          {/* Téléphone, dans l'appli : avatar animé en haut à gauche (ouvre le profil et la personnalisation) */}
           {isAppView && userAccount?.isLoggedIn && (
             <button
               type="button"
@@ -396,13 +578,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               aria-label="Mon profil"
               className="lg:hidden shrink-0 rounded-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
             >
-              {getDisplayAvatar(userAccount) ? (
-                <img src={getDisplayAvatar(userAccount)} alt="Profil" className="w-9 h-9 rounded-full object-cover ring-2 ring-sky-400/60 dark:ring-sky-400/70 shadow-sm" />
-              ) : (
-                <span className="w-9 h-9 rounded-full bg-gradient-to-tr from-sky-400 to-cyan-400 ring-2 ring-sky-400/40 flex items-center justify-center text-sm font-bold text-white shadow-sm">
-                  {displayName ? displayName.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
-                </span>
-              )}
+              <AnimatedAvatar
+                config={avatarConfig}
+                seed={_konanId || displayName}
+                size={36}
+                className="ring-2 ring-sky-400/70 shadow-sm"
+                showCustomizeBadge={!hasCustomizedAvatar}
+                alt="Mon personnage"
+              />
             </button>
           )}
 
@@ -478,12 +661,26 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Controls */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Solde d'Or (Gold) permanent dans la barre supérieure */}
+            {isAppView && typeof gold === 'number' && (
+              <button
+                type="button"
+                onClick={() => { soundFX.playCheckmarkPop(); onOpenShop?.(); }}
+                aria-label={`Ton solde : ${gold.toLocaleString('fr-FR')} pièces d'or. Ouvrir l'aperçu Boutique`}
+                title="Tes pièces d'or (Boutique bientôt disponible)"
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-amber-50 border border-amber-300/80 text-amber-800 hover:bg-amber-100/80 dark:bg-amber-500/15 dark:border-amber-400/35 dark:text-amber-300 dark:hover:bg-amber-500/25 text-xs sm:text-sm font-black tabular-nums cursor-pointer active:scale-95 transition-all"
+              >
+                <GoldCoinIcon size={16} />
+                <span>{gold.toLocaleString('fr-FR')}</span>
+              </button>
+            )}
+
             {/* Énergie ⚡ des exercices (le mode jour / nuit est désormais dans les Paramètres) */}
             {isAppView && energy && (
               <button
                 type="button"
                 onClick={() => onOpenExercises?.()}
-                aria-label={`Énergie : ${energy.unlimited ? 'illimitée' : `${energy.value} sur 25`}. Ouvrir les exercices`}
+                aria-label={`Charges : ${energy.unlimited ? 'illimitées' : `${energy.value} sur 25`}. Ouvrir les mini-jeux`}
                 className="flex items-center gap-0.5 px-2.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 dark:bg-amber-500/10 dark:border-amber-400/30 dark:text-amber-300 text-sm font-black tabular-nums cursor-pointer active:scale-95"
               >
                 <Zap className="w-4 h-4 fill-current" />
@@ -594,7 +791,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setIsNotificationsOpen(prev => !prev);
+                      setIsNotificationsOpen(prev => {
+                        const next = !prev;
+                        if (next) onRefreshNotifications?.();
+                        return next;
+                      });
                       setIsBellRinging(true);
                       setTimeout(() => setIsBellRinging(false), 800);
                     }}
@@ -623,23 +824,27 @@ export const Navbar: React.FC<NavbarProps> = ({
                           <Bell className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                           Notifications & Invitations
                         </span>
-                        {activePendingInvitations.length > 0 && (
+                        {totalPendingCount > 0 && (
                           <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30 px-2 py-0.5 rounded-full">
-                            {activePendingInvitations.length} en attente
+                            {totalPendingCount} en attente
                           </span>
                         )}
                       </div>
 
-                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && friendNotices.length === 0 ? (
+                      {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && effectiveFriendNotices.length === 0 && effectiveQuestNotices.length === 0 ? (
                         <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                           <Bell className="w-6 h-6 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                           <p>Aucune notification pour le moment.</p>
                         </div>
                       ) : (
                         <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
+                          {/* Quêtes d'XP en duo : invitations, relances, réussites */}
+                          {effectiveQuestNotices.map((n) => (
+                            <QuestNoticeItem key={n.id} notice={n} onRespond={onRespondQuest} onOpen={() => { setIsNotificationsOpen(false); onOpenQuest?.(); }} />
+                          ))}
                           {/* Paiements KONAN Pro acceptés ou refusés */}
                           {/* Amis : demandes reçues, acceptées ou refusées */}
-                          {friendNotices.map((n) => (
+                          {effectiveFriendNotices.map((n) => (
                             <FriendNoticeItem key={n.id} notice={n} onRespond={onRespondFriend} onOpen={() => { setIsNotificationsOpen(false); onOpenFriends?.(); }} />
                           ))}
                           {paymentNotices.map((n) => (
@@ -784,9 +989,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                             Notifications & Invitations
                           </span>
                           <div className="flex items-center gap-2">
-                            {activePendingInvitations.length > 0 && (
+                            {totalPendingCount > 0 && (
                               <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/20 dark:border-amber-500/30 px-2 py-0.5 rounded-full">
-                                {activePendingInvitations.length} en attente
+                                {totalPendingCount} en attente
                               </span>
                             )}
                             <button
@@ -800,16 +1005,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </div>
                         </div>
 
-                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && friendNotices.length === 0 ? (
+                        {activePendingInvitations.length === 0 && normalizedOwnerNotifications.length === 0 && paymentNotices.length === 0 && effectiveFriendNotices.length === 0 && effectiveQuestNotices.length === 0 ? (
                           <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                             <Bell className="w-7 h-7 mx-auto text-slate-400 dark:text-slate-600 mb-2 opacity-50" />
                             <p>Aucune notification pour le moment.</p>
                           </div>
                         ) : (
                           <div className="space-y-2.5 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                            {/* Quêtes d'XP en duo : invitations, relances, réussites */}
+                            {effectiveQuestNotices.map((n) => (
+                              <QuestNoticeItem key={`mob-${n.id}`} notice={n} onRespond={onRespondQuest} onOpen={() => { setIsNotificationsOpen(false); onOpenQuest?.(); }} />
+                            ))}
                             {/* Paiements KONAN Pro acceptés ou refusés */}
                           {/* Amis : demandes reçues, acceptées ou refusées */}
-                          {friendNotices.map((n) => (
+                          {effectiveFriendNotices.map((n) => (
                             <FriendNoticeItem key={n.id} notice={n} onRespond={onRespondFriend} onOpen={() => { setIsNotificationsOpen(false); onOpenFriends?.(); }} />
                           ))}
                           {paymentNotices.map((n) => (
@@ -948,17 +1157,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                       title="Voir mon profil"
                       className="hidden lg:flex items-center gap-1 sm:gap-2 hover:opacity-90 transition-opacity cursor-pointer text-left shrink-0"
                     >
-                      {getDisplayAvatar(userAccount) ? (
-                        <img
-                          src={getDisplayAvatar(userAccount)}
-                          alt={displayName}
-                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-sky-400/40 shadow-xs shrink-0"
-                        />
-                      ) : (
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-sky-400 to-cyan-500 flex items-center justify-center text-white font-bold text-xs shadow-xs shrink-0 border border-sky-400/40">
-                          {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
-                        </div>
-                      )}
+                      <AnimatedAvatar
+                        config={avatarConfig}
+                        seed={_konanId || displayName}
+                        size={34}
+                        className="ring-1 ring-sky-400/50 shadow-xs shrink-0"
+                        showCustomizeBadge={!hasCustomizedAvatar}
+                        alt={displayName}
+                      />
                       <div className="hidden xl:block">
                         <p className={`text-xs font-bold leading-tight truncate max-w-[120px] ${
                           effectivePlan === 'plus'
