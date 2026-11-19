@@ -238,49 +238,48 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
 
     return (
       <div className="space-y-4">
-        {/* En-tête : compte à rebours (sans badge « Quête en duo · Active »), titre et récompense Or */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 space-y-1">
-            {(isCompleted || quest.expiresAt > 0) && (
-              <div className="flex flex-wrap items-center gap-1.5">
-                {isCompleted ? (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300">
-                    <Check className="w-3 h-3" />
-                    Quête réussie !
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 dark:text-slate-400">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" />
-                    Termine dans <b className="text-slate-800 dark:text-slate-200">{timeLeftLabel(quest.expiresAt)}</b>
-                  </span>
-                )}
-              </div>
-            )}
-            <h3 className="m-0 text-base sm:text-[17px] font-black text-slate-900 dark:text-white leading-snug">
-              Récoltez {fr(targetXp)} XP ensemble en {QUEST_DURATION_DAYS} jours
-            </h3>
+        {/* En-tête : compte à rebours + récompense sur la 1re ligne, titre en pleine largeur en dessous */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            {(isCompleted || quest.expiresAt > 0) ? (
+              isCompleted ? (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300">
+                  <Check className="w-3 h-3" />
+                  Quête réussie !
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400">
+                  <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <span>Termine dans <b className="text-slate-800 dark:text-slate-200">{timeLeftLabel(quest.expiresAt)}</b></span>
+                </span>
+              )
+            ) : <span />}
+
+            <div className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/35">
+              <GoldCoinIcon size={17} />
+              <span className="text-xs font-black tabular-nums text-amber-700 dark:text-amber-300 whitespace-nowrap">
+                +{quest.rewardGold} pièces d’or
+              </span>
+            </div>
           </div>
 
-          <div className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/35">
-            <GoldCoinIcon size={18} />
-            <span className="text-xs font-black tabular-nums text-amber-700 dark:text-amber-300 whitespace-nowrap">
-              +{quest.rewardGold} pièces d’or
-            </span>
-          </div>
+          <h3 className="m-0 text-base sm:text-[17px] font-black text-slate-900 dark:text-white leading-snug">
+            Récoltez {fr(targetXp)} XP ensemble en {QUEST_DURATION_DAYS} jours
+          </h3>
         </div>
 
-        {/* Binôme + bouton Encourager / Relancer à côté du nom de l'ami (passe à la ligne proprement sur petit écran) */}
-        <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-white/[0.07]">
-          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+        {/* Binôme + bouton Encourager / Relancer (empilé proprement sur mobile, côte à côte sur grand écran) */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-white/[0.07]">
+          <div className="flex items-center gap-3 min-w-0">
             <div className="flex -space-x-2 shrink-0">
-              <QuestAvatar name={quest.me.name} avatarConfig={quest.me.avatarConfig} seed={quest.me.konanId || quest.me.name} size={38} ring="ring-2 ring-sky-400" />
-              <QuestAvatar name={quest.partner.name} avatarConfig={quest.partner.avatarConfig} seed={quest.partner.konanId || quest.partner.name} size={38} ring="ring-2 ring-amber-400" />
+              <QuestAvatar name={quest.me.name} avatarConfig={quest.me.avatarConfig} seed={quest.me.konanId || quest.me.name} size={40} ring="ring-2 ring-sky-400" />
+              <QuestAvatar name={quest.partner.name} avatarConfig={quest.partner.avatarConfig} seed={quest.partner.konanId || quest.partner.name} size={40} ring="ring-2 ring-amber-400" />
             </div>
-            <div className="min-w-0">
-              <p className="m-0 text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
+            <div className="min-w-0 flex-1">
+              <p className="m-0 text-sm font-extrabold text-slate-900 dark:text-white truncate">
                 Toi &amp; {quest.partner.name}
               </p>
-              <p className="m-0 text-[11px] text-slate-500 dark:text-slate-400">
+              <p className="m-0 text-xs text-slate-500 dark:text-slate-400 leading-snug">
                 {isCompleted
                   ? 'Objectif atteint ensemble !'
                   : `Encore ${fr(remainingXp)} XP à récolter`}
@@ -293,9 +292,9 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
               type="button"
               disabled={busyAction === `nudge_${quest.id}`}
               onClick={() => handleNudge(quest)}
-              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-400/35 text-xs font-extrabold cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+              className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-400/35 text-xs font-extrabold cursor-pointer transition-all active:scale-95 disabled:opacity-50"
             >
-              <BellRing className="w-3.5 h-3.5" />
+              <BellRing className="w-3.5 h-3.5 shrink-0" />
               <span>{busyAction === `nudge_${quest.id}` ? 'Envoi…' : 'Encourager / Relancer'}</span>
             </button>
           )}
@@ -392,8 +391,8 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
         {isCompleted && (
           <div className="pt-1">
             {quest.claimedByMe ? (
-              <div className="w-full h-11 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-300 dark:border-emerald-500/35 text-emerald-800 dark:text-emerald-300 font-extrabold text-sm flex items-center justify-center gap-2">
-                <Check className="w-4 h-4" />
+              <div className="w-full min-h-[2.75rem] px-3 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-300 dark:border-emerald-500/35 text-emerald-800 dark:text-emerald-300 font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 text-center leading-snug">
+                <Check className="w-4 h-4 shrink-0" />
                 <span>+{quest.rewardGold} pièces d’or réclamées ! Prochaine quête disponible après la fin des {QUEST_DURATION_DAYS} jours</span>
               </div>
             ) : (
@@ -425,20 +424,20 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
       ) : (
         <div className="space-y-4">
           {/* En-tête commun hors quête active */}
-          <div className="flex items-start justify-between gap-3">
-            <div className="space-y-0.5">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
               <span className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-amber-600 dark:text-[#F5C451]">
-                <Users className="w-3.5 h-3.5" />
+                <Users className="w-3.5 h-3.5 shrink-0" />
                 Quête entre amis · {QUEST_DURATION_DAYS} jours
               </span>
-              <h3 className="m-0 text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight">
-                Récoltez {fr(selectedTier.targetXp)} XP ensemble en {QUEST_DURATION_DAYS} jours
-              </h3>
+              <div className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/30">
+                <GoldCoinIcon size={16} />
+                <span className="text-xs font-black text-amber-700 dark:text-amber-300 whitespace-nowrap">+{selectedTier.rewardGold} pièces d’or</span>
+              </div>
             </div>
-            <div className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-400/30">
-              <GoldCoinIcon size={16} />
-              <span className="text-xs font-black text-amber-700 dark:text-amber-300 whitespace-nowrap">+{selectedTier.rewardGold} pièces d’or</span>
-            </div>
+            <h3 className="m-0 text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug">
+              Récoltez {fr(selectedTier.targetXp)} XP ensemble en {QUEST_DURATION_DAYS} jours
+            </h3>
           </div>
 
           {/* Quête précédente expirée */}
@@ -686,9 +685,9 @@ export const FriendQuestCard: React.FC<FriendQuestCardProps> = ({
                       type="button"
                       disabled={Boolean(busyAction)}
                       onClick={() => handlePropose(chosenFriend.konanId)}
-                      className="w-full h-11 rounded-xl bg-sky-500 hover:bg-sky-400 text-white dark:bg-sky-400 dark:hover:bg-sky-300 dark:text-slate-950 font-black text-sm inline-flex items-center justify-center gap-2 shadow-sm cursor-pointer transition-all active:scale-[0.98] disabled:opacity-50"
+                      className="w-full min-h-[2.75rem] px-3 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white dark:bg-sky-400 dark:hover:bg-sky-300 dark:text-slate-950 font-black text-xs sm:text-sm inline-flex items-center justify-center gap-2 text-center leading-snug shadow-sm cursor-pointer transition-all active:scale-[0.98] disabled:opacity-50"
                     >
-                      <Send className="w-4 h-4" />
+                      <Send className="w-4 h-4 shrink-0" />
                       <span>
                         {busyAction ? 'Envoi de la proposition…' : `C’est parti avec ${chosenFriend.name} (+${selectedTier.rewardGold} pièces d’or)`}
                       </span>
