@@ -101,13 +101,16 @@ async function buildBoard(db, player, nowMs) {
   const weekId = base.weekId;
   const players = snaps
     .filter((s) => s.exists && s.get('weekId') === weekId && isParticipant(s.data()))
-    .map((s) => ({
-      uid: s.id, weekXp: Number(s.get('weekXp')) || 0, xpReachedAt: Number(s.get('xpReachedAt')) || 0,
-      name: s.get('displayName'), classLabel: s.get('classLabel'), avatar: s.get('avatar') || '',
-      avatarConfig: sanitizeAvatarConfig(s.get('avatarConfig')),
-      tier: ['pro', 'plus'].includes(s.get('planTier')) ? s.get('planTier') : 'free',
-      konanId: s.get('konanId') || konanIdFromUid(s.id),
-    }));
+    .map((s) => {
+      const tier = ['pro', 'plus'].includes(s.get('planTier')) ? s.get('planTier') : 'free';
+      return {
+        uid: s.id, weekXp: Number(s.get('weekXp')) || 0, xpReachedAt: Number(s.get('xpReachedAt')) || 0,
+        name: s.get('displayName'), classLabel: s.get('classLabel'), avatar: s.get('avatar') || '',
+        avatarConfig: sanitizeAvatarConfig(s.get('avatarConfig'), { isPro: tier === 'pro' || tier === 'plus' }),
+        tier,
+        konanId: s.get('konanId') || konanIdFromUid(s.id),
+      };
+    });
   base.rows = rankPlayers(players).map((p, i) => ({
     rank: i + 1, name: p.name || 'Élève KONAN', classLabel: p.classLabel || '', avatar: p.avatar, avatarConfig: p.avatarConfig, xp: p.weekXp, me: p.uid === player.uid, tier: p.tier, konanId: p.konanId,
   }));
@@ -160,7 +163,9 @@ export async function syncPlayer(db, uid, body, user, nowMs = Date.now(), opts =
       displayName,
       nameChangedAt,
       avatar,
-      avatarConfig: sanitizeAvatarConfig(user?.avatarConfig) || sanitizeAvatarConfig(prev.avatarConfig) || null,
+      avatarConfig: sanitizeAvatarConfig(user?.avatarConfig, { isPro: planTier === 'pro' || planTier === 'plus' })
+        || sanitizeAvatarConfig(prev.avatarConfig, { isPro: planTier === 'pro' || planTier === 'plus' })
+        || null,
       classLabel: str(body.classLabel, 20),
       gradeLevel: grade,
       // ID KONAN (public) : toucher un élève dans le classement ouvre sa fiche
@@ -281,7 +286,9 @@ export default async function handler(req, res) {
       else if (body.action === 'avatar_buy') out = await buyAvatarItem(db, uid, str(String(body.itemId || ''), 60));
       else out = await saveAvatarConfig(db, uid, body.avatarConfig);
       if (out?.error) {
-        const status = out.error === 'INSUFFICIENT_GOLD' ? 402 : out.error === 'ITEM_LOCKED' ? 403 : 400;
+        const status = out.error === 'INSUFFICIENT_GOLD' ? 402
+          : (out.error === 'ITEM_LOCKED' || out.error === 'PRO_REQUIRED' || out.error === 'PRO_ONLY_ITEM') ? 403
+            : 400;
         return send(res, status, { success: false, ...out });
       }
       return send(res, 200, { success: true, ...out });
