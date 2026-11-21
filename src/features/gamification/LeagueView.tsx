@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowDown, ArrowUp, Info, Lock, ShieldCheck, Trophy, X } from 'lucide-react';
 import type { LeagueBoard } from '../../services/leagueApi';
 import { DIVISION_STYLES } from '../../services/leagueApi';
-import { FallingSnow, FrostOverlay, IceStyles, Snowflake } from './Ice';
+import { FrostOverlay, IceStyles, Snowflake } from './Ice';
 import { AnimatedAvatar } from '../avatar/AnimatedAvatar';
 
 /**
@@ -255,7 +255,6 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
         <IceStyles />
         {board.frozen && (
           <div className="relative overflow-hidden rounded-2xl border-2 border-cyan-300 dark:border-cyan-300/50 bg-gradient-to-br from-cyan-50 to-sky-100 dark:from-cyan-400/10 dark:to-sky-500/10 p-3.5 flex items-start gap-3 text-cyan-950 dark:text-cyan-50">
-            <FallingSnow />
             <span className="relative shrink-0 w-10 h-10 rounded-full bg-white/80 dark:bg-cyan-300/15 border border-cyan-300 dark:border-cyan-300/40 flex items-center justify-center text-cyan-600 dark:text-cyan-200">
               <Snowflake size={24} />
             </span>
@@ -321,11 +320,10 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
                 />
                 <span className="min-w-0 flex-1">
                   {/* Nom jaune pour les abonnés Pro, multicolore pour Plus (sans mention de la formule) */}
-                  <span className={`block truncate text-sm ${
-                    row.tier === 'plus' ? 'plus-multicolor-shimmer-text font-black'
-                      : row.tier === 'pro' ? 'gold-shimmer-text font-black'
-                        : 'font-bold text-slate-900 dark:text-white'
-                  }`}>{row.me ? `Toi · ${row.name}` : row.name}</span>
+                  <span className={`block truncate text-sm ${row.tier === 'plus' ? 'plus-multicolor-shimmer-text font-black'
+                    : row.tier === 'pro' ? 'gold-shimmer-text font-black'
+                      : 'font-bold text-slate-900 dark:text-white'
+                    }`}>{row.me ? `Toi · ${row.name}` : row.name}</span>
                   <span className="block text-[11px] text-slate-500 dark:text-slate-400 truncate">
                     {row.classLabel}{row.me && gapToNext ? `${row.classLabel ? ' · ' : ''}encore ${gapToNext} XP pour la ${ordinal(row.rank - 1)} place` : ''}
                   </span>
