@@ -78,8 +78,18 @@ export type FriendApiResult<T> =
   | { ok: true; data: T; error?: string }
   | { ok: false; data?: undefined; error: string };
 
+async function waitForAuthUser() {
+  if (!auth) return null;
+  if (auth.currentUser) return auth.currentUser;
+  await Promise.race([
+    auth.authStateReady().catch(() => {}),
+    new Promise((r) => setTimeout(r, 4000)),
+  ]);
+  return auth.currentUser;
+}
+
 async function call<T>(body: Record<string, unknown>): Promise<FriendApiResult<T>> {
-  const user = auth?.currentUser;
+  const user = await waitForAuthUser();
   if (!user) return { ok: false, error: 'UNAUTHORIZED' };
   const attempt = async (refresh: boolean) => {
     const token = await user.getIdToken(refresh);
@@ -134,6 +144,7 @@ export const fetchPublicProfile = (konanId: string) => call<{ profile: FriendCar
 export const sendFriendRequest = (konanId: string) => call<{ status: 'sent' | 'friends'; profile?: FriendCard }>({ action: 'friend_request', konanId });
 export const respondFriendRequest = (konanId: string, accept: boolean) => call<{ status: string }>({ action: 'friend_respond', konanId, accept });
 export const removeFriend = (konanId: string) => call<{ status: string }>({ action: 'friend_remove', konanId });
+export const clearFriendNotices = () => call<{ status: string }>({ action: 'friend_clear_notices' });
 
 export async function saveFriendPrivacy(privacy: Partial<FriendsState['privacy']>): Promise<FriendApiResult<{ status: string; privacy: FriendsState['privacy'] }>> {
   const savedLocal = writeLocalFriendPrivacy(privacy);

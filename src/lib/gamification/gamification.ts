@@ -29,9 +29,9 @@ export function clearPendingEvents(g0: GamificationState | undefined, ids: strin
 export const REPUTATION_START = 100;
 export const REPUTATION_MISSED = -5;
 export const REPUTATION_DONE = 1;
-/** Pendant le gel (réputation de 80 % ou moins) : une leçon terminée rapporte +3 % pour aider à dégeler. */
-export const REPUTATION_DONE_FROZEN = 3;
-/** +1 % par leçon, ou +3 % tant que la réputation est à 80 % ou moins (ligue gelée). */
+/** Pendant le gel (réputation de 80 % ou moins) : une leçon terminée rapporte +5 % pour aider à dégeler. */
+export const REPUTATION_DONE_FROZEN = 5;
+/** +1 % par leçon, ou +5 % tant que la réputation est à 80 % ou moins (ligue gelée). */
 export const lessonReputationGain = (reputation: number) => (reputation <= 80 ? REPUTATION_DONE_FROZEN : REPUTATION_DONE);
 /** Série d'entraînement terminée : +1 %, au plus 5 séries comptées par jour (le serveur applique la même limite). */
 export const REPUTATION_TRAINING = 1;
@@ -290,7 +290,7 @@ export function awardCompletedSessions(
   if (!rewarded.length) return { gamification: g, gained: 0, sessions: [] };
   // Réputation : +1 % tout de suite par séance faite (le calcul du soir ne la recompte pas : clé « R_ »)
   for (const s of rewarded) done.add(REP_KEY + sessionKey(s));
-  // +1 % par séance, +3 % tant que la ligue est gelée (80 % ou moins)
+  // +1 % par séance, +5 % tant que la ligue est gelée (80 % ou moins)
   let reputation = g.reputation;
   for (let i = 0; i < rewarded.length; i++) reputation = clampReputation(reputation + lessonReputationGain(reputation));
   if (reputation !== g.reputation) {
@@ -366,7 +366,7 @@ export function settleReputation(
     }
     if (!dayMissed && !dayDone) continue;
     const before = reputation;
-    // Manquées d'abord, puis faites (+1 %, ou +3 % si la journée a fait passer à 80 % ou moins)
+    // Manquées d'abord, puis faites (+1 %, ou +5 % si la journée a fait passer à 80 % ou moins)
     reputation = clampReputation(reputation + dayMissed * REPUTATION_MISSED);
     for (let i = 0; i < dayDone; i++) reputation = clampReputation(reputation + lessonReputationGain(reputation));
     missed += dayMissed;

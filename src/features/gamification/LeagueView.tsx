@@ -181,7 +181,7 @@ const LeagueRules: React.FC<{ reputation: number }> = ({ reputation }) => (
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Ta réputation : {reputation} %</p>
-      <p>Séance de révision faite : <b>+1 %</b> tout de suite. Série d’entraînement terminée : <b>+1 %</b> (5 séries comptées par jour au plus). Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, ta ligue est <b>gelée</b> : tu vois toujours le classement, mais tes XP n’y comptent plus (ils restent dans ton total) et ta division ne bouge plus. Pour dégeler, chaque leçon terminée te rend <b>+3 %</b>.</p>
+      <p>Séance de révision faite : <b>+1 %</b> tout de suite. Série d’entraînement terminée : <b>+1 %</b> (5 séries comptées par jour au plus). Séance manquée et pas rattrapée avant minuit : <b>−5 %</b>. À 80 % ou moins, ta ligue est <b>gelée</b> : tu vois toujours le classement, mais tes XP n’y comptent plus (ils restent dans ton total) et ta division ne bouge plus. Pour dégeler, chaque leçon terminée te rend <b>+5 %</b>.</p>
     </div>
     <div className="space-y-1">
       <p className="font-extrabold text-slate-900 dark:text-white">Fin de semaine</p>
@@ -262,7 +262,7 @@ export const LeagueView: React.FC<{ board: LeagueBoard; onOpenPlayer?: (konanId:
             <span className="relative text-sm leading-snug">
               <b className="block text-[15px]">Ta ligue est gelée</b>
               Ta réputation est à {board.reputation} %. Tant qu’elle reste à 80 % ou moins, tes XP <b>ne comptent plus dans le classement</b> et tu ne peux pas monter de division.
-              <span className="block mt-1 font-bold">Pour dégeler : termine tes leçons, chacune te rend <span className="text-cyan-700 dark:text-cyan-200">+3 %</span> de réputation.</span>
+              <span className="block mt-1 font-bold">Pour dégeler : termine tes leçons, chacune te rend <span className="text-cyan-700 dark:text-cyan-200">+5 %</span> de réputation.</span>
             </span>
           </div>
         )}

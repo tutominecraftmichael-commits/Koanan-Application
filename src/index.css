@@ -132,6 +132,21 @@
   }
 }
 
+/* Schémas SVG pédagogiques sur feuille claire (même en mode sombre) :
+   force une encre foncée lisible pour tout texte/trait utilisant currentColor,
+   même si le <svg> embarque dark:text-slate-200 ou dark:text-white. */
+.konan-svg-sheet,
+.konan-svg-sheet svg,
+.dark .konan-svg-sheet,
+.dark .konan-svg-sheet svg {
+  color: #0f172a !important;
+}
+
+.konan-svg-sheet svg text[class*="dark:fill-"],
+.dark .konan-svg-sheet svg text[class*="dark:fill-"] {
+  fill: #0f172a !important;
+}
+
 /* Mobile Safe Area Utility Classes */
 .pt-safe {
   padding-top: max(0.75rem, env(safe-area-inset-top, 0px));

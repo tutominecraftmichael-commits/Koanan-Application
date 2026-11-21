@@ -71,6 +71,7 @@ import { checkAndPerformWeeklyRollover } from './services/weeklyRecapService';
 import { awardCompletedSessions, settleReputation, spendEnergy, finishSeries, loseSeries, clearPendingEvents, gamificationOf, energyNow, hasUnlimitedEnergy, lessonXp } from './lib/gamification/gamification';
 import { callLeague, type LeagueBoard } from './services/leagueApi';
 import {
+  clearFriendNotices,
   fetchAvatarState,
   fetchFriends,
   fetchQuestState,
@@ -896,7 +897,9 @@ export function App() {
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isPlansOpen, setIsPlansOpen] = useState(false);
   const [subscriptionPeriod, setSubscriptionPeriod] = useState<'mois' | 'semestre'>('mois');
-  const subscriptionAccount = state.userAccount?.isLoggedIn && !state.isDemoMode ? (state.userAccount.googleId || '') : '';
+  const subscriptionAccount = state.userAccount?.isLoggedIn && !state.isDemoMode
+    ? (state.userAccount.googleId || auth?.currentUser?.uid || '')
+    : '';
 
   // Amis (2026-11-17) : état complet (amis, demandes reçues/envoyées, notifications cloche, confidentialité)
   const [friendsData, setFriendsData] = useState<FriendsState | null>(null);
@@ -947,18 +950,18 @@ export function App() {
   }, [subscriptionAccount, reloadAvatar]);
 
   const reloadFriends = useCallback(async () => {
-    if (!subscriptionAccount || !auth?.currentUser) return;
+    if (!subscriptionAccount) return;
     const r = await fetchFriends();
     if (r.ok) {
       setFriendsData(r.data);
       setFriendsError('');
-    } else {
+    } else if (r.error !== 'UNAUTHORIZED') {
       setFriendsError(friendErrorMessage(r.error));
     }
   }, [subscriptionAccount]);
 
   const reloadQuests = useCallback(async () => {
-    if (!subscriptionAccount || !auth?.currentUser) return;
+    if (!subscriptionAccount) return;
     setQuestLoading(true);
     const r = await fetchQuestState();
     setQuestLoading(false);
@@ -996,6 +999,13 @@ export function App() {
     }
   }, [reloadFriends]);
 
+  const handleClearFriendNotices = useCallback(async () => {
+    const r = await clearFriendNotices();
+    if (r.ok) {
+      await reloadFriends();
+    }
+  }, [reloadFriends]);
+
   useEffect(() => {
     if (!subscriptionAccount) {
       setFriendsData(null);
@@ -1008,10 +1018,21 @@ export function App() {
       setServerAvatarIsPro(null);
       return;
     }
+    let alive = true;
     const refreshSocial = () => {
+      if (!alive) return;
       reloadFriends();
       reloadQuests();
     };
+    // Déclenche dès que la session Firebase est restaurée (corrige les délais réseau au démarrage)
+    const unsubAuth = auth
+      ? auth.onAuthStateChanged((user) => {
+          if (user && alive) {
+            refreshSocial();
+            reloadAvatar();
+          }
+        })
+      : null;
     const first = setTimeout(() => {
       refreshSocial();
       reloadAvatar();
@@ -1024,6 +1045,8 @@ export function App() {
     window.addEventListener('online', refreshSocial);
     document.addEventListener('visibilitychange', onVisible);
     return () => {
+      alive = false;
+      unsubAuth?.();
       clearTimeout(first);
       clearInterval(every);
       window.removeEventListener('focus', refreshSocial);
@@ -2643,6 +2666,7 @@ export function App() {
           friendNotices={friendsData?.notices || []}
           incomingFriends={friendsData?.incoming || []}
           onRespondFriend={handleRespondFriend}
+          onClearFriendNotices={handleClearFriendNotices}
           onOpenFriends={() => setProfileScreen('friends')}
           gold={state.userAccount?.isLoggedIn ? userGold : null}
           onOpenShop={() => openAvatarEditor('outfit')}

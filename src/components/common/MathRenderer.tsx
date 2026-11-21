@@ -1142,8 +1142,9 @@ export const VisualSchemaRenderer: React.FC<VisualSchemaProps> = ({ schema, clas
           className={isScene
             ? 'flex items-center justify-center rounded-xl overflow-hidden'
             // Schémas SVG : toujours sur une « feuille » claire (même en mode nuit), car leurs traits et
-            // textes sont dessinés en couleurs foncées fixes ; currentColor devient un gris très foncé.
-            : 'flex items-center justify-center py-2 bg-white text-slate-800 dark:bg-slate-100 rounded-xl border border-slate-200/70 dark:border-slate-700 overflow-x-auto'}
+            // textes sont dessinés en couleurs foncées fixes ; konan-svg-sheet force currentColor en encre foncée
+            // même si le <svg> embarque une classe dark:text-slate-200.
+            : 'konan-svg-sheet flex items-center justify-center py-2 bg-white text-slate-900 dark:bg-slate-100 rounded-xl border border-slate-200/70 dark:border-slate-700 overflow-x-auto'}
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       )}

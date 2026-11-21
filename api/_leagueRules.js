@@ -139,7 +139,7 @@ export function applyXpEvents(player0, events, { nowMs, planTier, enforceEnergy 
   //   Paiement éteint (Pro offert, formule écrite par l'appli) : les séries d'un élève Pro « offert » vu Gratuit
   //   par le serveur étaient refusées en silence (« plus d'énergie ») → ses XP d'entraînement ne comptaient pas.
   // frozen : réputation de 80 % ou moins → XP gardés dans le total, mais PAS dans le classement de la semaine.
-  // lessonRepCredit : crédit de réputation par séance (3 pendant le gel : +3 % par leçon pour dégeler).
+  // lessonRepCredit : crédit de réputation par séance (5 pendant le gel : +5 % par leçon pour dégeler).
   const player = {
     weekXp: 0, totalXp: 0, dayLessons: 0, daySeries: 0, seenIds: [], lastSeriesEndAt: 0,
     ...player0,
