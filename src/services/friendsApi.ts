@@ -82,7 +82,7 @@ async function waitForAuthUser() {
   if (!auth) return null;
   if (auth.currentUser) return auth.currentUser;
   await Promise.race([
-    auth.authStateReady().catch(() => {}),
+    auth.authStateReady().catch(() => { }),
     new Promise((r) => setTimeout(r, 4000)),
   ]);
   return auth.currentUser;
@@ -115,13 +115,13 @@ async function call<T>(body: Record<string, unknown>): Promise<FriendApiResult<T
 export async function fetchFriends(): Promise<FriendApiResult<FriendsState>> {
   const r = await call<Partial<FriendsState>>({ action: 'friends' });
   const localPriv = readLocalFriendPrivacy();
-  if (!r.ok) return r;
+  if (!r.ok) return { ok: false, error: r.error || 'UNKNOWN' };
   const raw = r.data || {};
   const privacy: FriendsState['privacy'] = raw.privacy && typeof raw.privacy === 'object'
     ? writeLocalFriendPrivacy({
-        allowRequests: raw.privacy.allowRequests !== false,
-        profileVisibility: raw.privacy.profileVisibility === 'friends' ? 'friends' : 'all',
-      })
+      allowRequests: raw.privacy.allowRequests !== false,
+      profileVisibility: raw.privacy.profileVisibility === 'friends' ? 'friends' : 'all',
+    })
     : localPriv;
   return {
     ok: true,
@@ -252,7 +252,7 @@ export const questErrorMessage = (code?: string) =>
 
 export async function fetchQuestState(): Promise<FriendApiResult<QuestState>> {
   const r = await call<Partial<QuestState>>({ action: 'quest_state' });
-  if (!r.ok) return r;
+  if (!r.ok) return { ok: false, error: r.error || 'UNKNOWN' };
   const raw = r.data || {};
   return {
     ok: true,
@@ -312,7 +312,7 @@ export const avatarErrorMessage = (code?: string) =>
 
 export async function fetchAvatarState(): Promise<FriendApiResult<AvatarState>> {
   const r = await call<Partial<AvatarState>>({ action: 'avatar_state' });
-  if (!r.ok) return r;
+  if (!r.ok) return { ok: false, error: r.error || 'UNKNOWN' };
   const raw = r.data || {};
   return {
     ok: true,
