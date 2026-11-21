@@ -1,6 +1,6 @@
 /**
  * Paquet de cours : lmd_entd_l1_eco_finance (LOT 2 — Économie, Numérique & Finance).
- * Filière ENTD Licence 1 (ESATIC / LMD Côte d'Ivoire).
+ * Filière ENTD Licence 1 (LMD).
  * Regroupe les 6 matières :
  * - Intro à l'Éco Numérique (lmd_intro_eco_num)
  * - Modèle de Développement en Économie Numérique (lmd_modele_dev_eco_num)
