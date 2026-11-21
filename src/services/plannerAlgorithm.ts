@@ -6,7 +6,7 @@ import type {
   SessionType, 
   DayOfWeek 
 } from '../types';
-import { parseTimeToMinutes, minutesToTimeString, generateId, getDaysRemaining, getDaysRemainingFrom, isNonAcademicSubject } from '../lib/utils';
+import { parseTimeToMinutes, minutesToTimeString, generateId, getDaysRemaining, getDaysRemainingFrom, isNonAcademicSubject, stripWeekAnnotations, normalizeSubjectKey } from '../lib/utils';
 import { getPacingStrategy } from '../lib/pacingStrategies';
 import { isExamPrepOpenFor, withoutPausedExamPrep } from '../lib/featureFlags';
 import { EXAM_PREP_DURATIONS, EXAM_PREP_HORIZON_DAYS, examPrepModeFor, examPrepSessionText } from '../lib/exam/examPrepRules';
@@ -51,7 +51,155 @@ export function getPlannerWorkload(): SubjectWorkloadMap {
 }
 
 /** Version des règles du planning : un planning fait avec une version plus ancienne est refait une fois. */
-export const PLANNER_VERSION = 2;
+export const PLANNER_VERSION = 3;
+
+/**
+ * Nettoie et fusionne automatiquement les matières et créneaux fixes pollués par des suffixes
+ * multi-semaines (ex: "Macroéconomie 3 — semaines 1", "Macroéconomie 3 — semaines 4", etc.)
+ * ou des doublons de matières, afin qu'une même discipline n'apparaisse qu'une seule fois.
+ */
+export function sanitizePollutedScheduleState(
+  rawSubjects: Subject[],
+  rawClassSlots: ClassSlot[],
+  rawStudySessions: StudySession[] = []
+): {
+  subjects: Subject[];
+  classSlots: ClassSlot[];
+  studySessions: StudySession[];
+  idMap: Map<string, string>;
+  hadPollution: boolean;
+} {
+  let hadPollution = false;
+  const canonicalByKey = new Map<string, Subject>();
+  const idMap = new Map<string, string>();
+
+  for (const sub of rawSubjects || []) {
+    const cleanName = stripWeekAnnotations(sub.name || '');
+    if (cleanName !== (sub.name || '').trim()) {
+      hadPollution = true;
+    }
+    if (!cleanName || isNonAcademicSubject(cleanName)) {
+      hadPollution = true;
+      continue;
+    }
+    const key = normalizeSubjectKey(cleanName);
+    if (!key) {
+      hadPollution = true;
+      continue;
+    }
+    const existing = canonicalByKey.get(key);
+    if (existing) {
+      hadPollution = true;
+      idMap.set(sub.id, existing.id);
+      if ((sub.coefficient || 0) > (existing.coefficient || 0)) {
+        existing.coefficient = sub.coefficient;
+      }
+      if ((sub.difficulty || 0) > (existing.difficulty || 0)) {
+        existing.difficulty = sub.difficulty;
+      }
+      if (!existing.examDate && sub.examDate) {
+        existing.examDate = sub.examDate;
+        existing.examType = sub.examType;
+        existing.examTime = sub.examTime;
+        existing.examChapterIds = sub.examChapterIds;
+      }
+      if ((!existing.topics || existing.topics.length === 0) && sub.topics && sub.topics.length > 0) {
+        existing.topics = sub.topics;
+      }
+      if (!existing.code && sub.code) {
+        existing.code = sub.code;
+      }
+    } else {
+      const canonicalSub: Subject = {
+        ...sub,
+        name: cleanName,
+      };
+      canonicalByKey.set(key, canonicalSub);
+      idMap.set(sub.id, canonicalSub.id);
+    }
+  }
+
+  const cleanSubjects = Array.from(canonicalByKey.values());
+  const validSubjectIds = new Set(cleanSubjects.map(s => s.id));
+
+  // Nettoyage et déduplication des créneaux de cours fixes (Source de Vérité)
+  const cleanClassSlots: ClassSlot[] = [];
+  for (const slot of rawClassSlots || []) {
+    const mappedSubId = idMap.get(slot.subjectId) || slot.subjectId;
+    if (!validSubjectIds.has(mappedSubId)) {
+      hadPollution = true;
+      continue;
+    }
+    if (mappedSubId !== slot.subjectId) {
+      hadPollution = true;
+    }
+    const curStart = parseTimeToMinutes(slot.startTime);
+    const curEnd = parseTimeToMinutes(slot.endTime);
+
+    const duplicate = cleanClassSlots.find(existing => {
+      if (existing.dayOfWeek !== slot.dayOfWeek || existing.subjectId !== mappedSubId) return false;
+      const extStart = parseTimeToMinutes(existing.startTime);
+      const extEnd = parseTimeToMinutes(existing.endTime);
+      return Math.abs(curStart - extStart) <= 15 && Math.abs(curEnd - extEnd) <= 15;
+    });
+
+    if (duplicate) {
+      hadPollution = true;
+      if (!duplicate.room && slot.room) duplicate.room = slot.room;
+      if (!duplicate.professor && slot.professor) duplicate.professor = slot.professor;
+      continue;
+    }
+
+    cleanClassSlots.push({
+      ...slot,
+      subjectId: mappedSubId,
+    });
+  }
+
+  // Nettoyage des sessions d'étude existantes
+  const cleanStudySessions: StudySession[] = [];
+  for (const sess of rawStudySessions || []) {
+    const mappedSubId = idMap.get(sess.subjectId) || sess.subjectId;
+    if (sess.subjectId && !validSubjectIds.has(mappedSubId)) {
+      hadPollution = true;
+      continue;
+    }
+    const cleanTitle = stripWeekAnnotations(sess.title || '');
+    if (cleanTitle !== (sess.title || '').trim() || mappedSubId !== sess.subjectId) {
+      hadPollution = true;
+    }
+    cleanStudySessions.push({
+      ...sess,
+      subjectId: mappedSubId,
+      title: cleanTitle,
+    });
+  }
+
+  return {
+    subjects: cleanSubjects,
+    classSlots: cleanClassSlots,
+    studySessions: cleanStudySessions,
+    idMap,
+    hadPollution,
+  };
+}
+
+/**
+ * Famille cognitive d'une matière pour favoriser l'alternance (Interleaving neurologique) :
+ * - 'quant' : Maths, Algèbre, Analyse, Microéconomie, Macroéconomie, Comptabilité, Finance, Statistique, Physique
+ * - 'tech'  : Algorithmique, Réseaux, Informatique, SVT, Chimie
+ * - 'verbal': Droit, Management, OGE, Marketing, Français, Philosophie, Histoire-Géo, Anglais, Communication
+ */
+function getCognitiveDomain(name: string): 'quant' | 'tech' | 'verbal' {
+  const lower = name.toLowerCase();
+  if (/(math|algebr|analys|micro|macro|econom|compta|financ|stat|physiq|logiq)/i.test(lower)) {
+    return 'quant';
+  }
+  if (/(algo|reseau|réseau|info|web|system|systèm|programm|svt|chimie|biolog)/i.test(lower)) {
+    return 'tech';
+  }
+  return 'verbal';
+}
 
 /**
  * Révisions espacées d'une matière dont toutes les mini-leçons sont faites, selon la méthode choisie :
@@ -77,12 +225,17 @@ export function generateOptimizedStudyPlan(
   options: { workload?: SubjectWorkloadMap; now?: Date } = {}
 ): StudySession[] {
   const workload = options.workload ?? currentWorkload;
+  // 0. Sanctuarisation anti-doublons : purge les suffixes "— semaines X" et fusionne les matières identiques
+  const sanitized = sanitizePollutedScheduleState(subjects, classes);
+  subjects = sanitized.subjects;
+  classes = sanitized.classSlots;
+
   // Préparation aux devoirs/examens ouverte seulement pour certaines classes (2nde A, 2nde C) :
   // ailleurs, les dates d'épreuve sont ignorées
   const examGrade = preferences.gradeLevel || preferences.academicLevel;
   subjects = withoutPausedExamPrep(subjects, examGrade);
 
-  // RÈGLE STRICTE : Exclure systématiquement toute matière non révisable (EPS, Sport, devoirs, permanence)
+  // RÈGLE STRICTE : Exclure systématiquement toute matière non révisable (EPS, Sport, Coaching, devoirs, permanence)
   const revisableSubjects = subjects.filter(sub => !isNonAcademicSubject(sub.name));
   if (revisableSubjects.length === 0) return [];
 
@@ -127,37 +280,59 @@ export function generateOptimizedStudyPlan(
   const sessionBlock = effectivePreferences.focusBlockDuration || pacingStrategy.focusBlockDuration;
   const breakBlock = effectivePreferences.breakBlockDuration || pacingStrategy.breakBlockDuration;
 
-  // 1. Calcul des scores académiques pondérés pour chaque matière
+  // Cartographie des cours fixes par matière (volume horaire hebdomadaire & jours d'enseignement)
+  // Permet la synchronisation neurologique J+0 (consolidation synaptique) et J-1 (anticipation de cours/TD)
+  const weeklyClassMinsBySubject = new Map<string, number>();
+  const taughtDaysBySubject = new Map<string, Set<DayOfWeek>>();
+  const classMinsByDay: Record<DayOfWeek, number> = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+
+  for (const c of classes) {
+    const dur = Math.max(0, parseTimeToMinutes(c.endTime) - parseTimeToMinutes(c.startTime));
+    classMinsByDay[c.dayOfWeek] = (classMinsByDay[c.dayOfWeek] || 0) + dur;
+    if (c.subjectId) {
+      weeklyClassMinsBySubject.set(c.subjectId, (weeklyClassMinsBySubject.get(c.subjectId) || 0) + dur);
+      if (!taughtDaysBySubject.has(c.subjectId)) {
+        taughtDaysBySubject.set(c.subjectId, new Set());
+      }
+      taughtDaysBySubject.get(c.subjectId)!.add(c.dayOfWeek);
+    }
+  }
+
+  // 1. Calcul des scores neuro-académiques pondérés pour chaque matière
   const subjectScores = revisableSubjects.map(sub => {
     let examUrgencyFactor = 1.0;
-    // L'adaptation et la sur-pondération aux examens/devoirs est EXCLUSIVE aux modèles PRO & PLUS
-    // et conditionnée à la présence explicite d'une date ET d'un type d'évaluation saisis par l'élève
     if (isExamFeatureAllowed && sub.examDate && sub.examType) {
       const daysUntilExam = getDaysRemaining(sub.examDate);
       if (daysUntilExam !== null) {
         if (daysUntilExam < 0) {
-          examUrgencyFactor = 1.0; // Épreuve déjà passée : la matière redevient une matière comme les autres
+          examUrgencyFactor = 1.0;
         } else if (daysUntilExam <= 3) {
-          examUrgencyFactor = 1.45; // Urgence J-3 : surpondération équilibrée
+          examUrgencyFactor = 1.45;
         } else if (daysUntilExam <= 7) {
-          examUrgencyFactor = 1.3; // Semaine d'épreuve J-7
+          examUrgencyFactor = 1.3;
         } else if (daysUntilExam <= 14) {
-          examUrgencyFactor = 1.15; // Quinzaine pré-examen J-14
+          examUrgencyFactor = 1.15;
         } else if (daysUntilExam <= 30) {
           examUrgencyFactor = 1.08;
         }
       }
     }
 
-    // Formule basée sur la difficulté cognitive, le coefficient et l'urgence des examens/devoirs (si Pro/Plus)
-    const rawScore = (Math.pow(sub.difficulty, 1.35) * Math.pow(sub.coefficient, 1.25)) * examUrgencyFactor;
-    // Où en est l'élève : nouvelles leçons à faire, ou tout est fait (révisions espacées), ou inconnu
+    // Prise en compte du volume horaire réel de la matière dans l'emploi du temps (fréquence des séances)
+    const weeklyClassHours = (weeklyClassMinsBySubject.get(sub.id) || 120) / 60;
+    const volumeFactor = Math.min(1.35, Math.max(0.85, 0.8 + (weeklyClassHours / 10)));
+
+    // Formule combinant difficulté cognitive, coefficient, volume horaire et urgence d'évaluation
+    const rawScore = (Math.pow(sub.difficulty, 1.3) * Math.pow(sub.coefficient, 1.2) * volumeFactor) * examUrgencyFactor;
     const w = workload[sub.id];
     const mode: 'new' | 'review' | 'free' = w?.hasCourse ? (w.newLessonsLeft > 0 ? 'new' : 'review') : 'free';
     return {
       subject: sub,
+      normKey: normalizeSubjectKey(sub.name),
+      domain: getCognitiveDomain(sub.name),
+      taughtDays: taughtDaysBySubject.get(sub.id) || new Set<DayOfWeek>(),
       score: rawScore,
-      targetSessions: 1, // Minimum 1 session garantie par matière
+      targetSessions: 1, // Minimum 1 session garantie par matière pour être prêt sur tout le programme
       scheduledCount: 0,
       lastScheduledDay: -999,
       topicIndex: 0,
@@ -177,32 +352,64 @@ export function generateOptimizedStudyPlan(
     ? [0, 1, 2, 3, 4, 5, 6] 
     : [0, 1, 2, 3, 4];
 
-  // Objectif de sessions par jour
+  // Objectif maximal de sessions par jour (plafond théorique sur journée libre)
   const targetSessionsPerDay = Math.min(
     preferences.maxSessionsPerDay || 4,
     Math.max(1, Math.round(preferences.targetDailyStudyMinutes / sessionBlock))
   );
 
-  const totalSessionsTarget = targetSessionsPerDay * daysToSchedule.length;
+  // Calcul réaliste de la capacité hebdomadaire selon la charge de cours de chaque jour (Anti-Burnout)
+  const computeDayMaxSessions = (day: DayOfWeek): { maxSessions: number; maxMinutes: number } => {
+    const classMins = classMinsByDay[day] || 0;
+    // Journée lourde (>= 5h de cours, ex: 7h30-17h00 à l'université ou au lycée) :
+    // Le cortex préfrontal a déjà absorbé 5h à 7h30 d'enseignement.
+    // On limite à 1 bloc long (75m) ou 2 blocs moyens/courts (25-45m) pour consolider sans burn-out.
+    if (classMins >= 300) {
+      return {
+        maxSessions: sessionBlock >= 60 ? 1 : Math.min(2, targetSessionsPerDay),
+        maxMinutes: sessionBlock >= 60 ? 75 : 90,
+      };
+    }
+    // Journée modérée (2h30 à 5h de cours, ex: demi-journée libre type Mercredi après-midi) :
+    if (classMins >= 150) {
+      return {
+        maxSessions: sessionBlock >= 60 ? Math.min(2, targetSessionsPerDay) : Math.min(3, targetSessionsPerDay),
+        maxMinutes: 150,
+      };
+    }
+    // Journée libre ou très légère (< 2h30 de cours, ex: Samedi, Dimanche ou jour off) :
+    return {
+      maxSessions: Math.min(targetSessionsPerDay, sessionBlock >= 60 ? 3 : 4),
+      maxMinutes: 225,
+    };
+  };
 
-  // Répartition proportionnelle des sessions cibles par matière, puis ajustée à la progression de l'élève :
-  // - tout est fait : seulement les révisions espacées de la méthode (2 ou 3 dans la semaine) ;
-  // - il reste N leçons : pas plus de séances qu'il n'en faut pour les faire, plus une révision ;
-  // - jamais plus d'une séance par jour (sauf s'il n'y a qu'une ou deux matières).
+  const realisticWeeklyCapacity = daysToSchedule.reduce<number>((sum, d) => sum + computeDayMaxSessions(d).maxSessions, 0);
+  const totalSessionsTarget = Math.max(revisableSubjects.length, realisticWeeklyCapacity);
+
+  // Répartition proportionnelle et équilibrée des sessions cibles par matière :
+  // - Chaque matière obtient au moins 1 séance (couverture à 100% pour éviter toute impasse aux évaluations) ;
+  // - Aucune matière ne peut monopoliser la semaine (plafond à 3 séances/semaine si >= 5 matières) ;
+  // - Jamais plus d'une séance de la même matière le même jour (sauf si l'étudiant n'a que 1 ou 2 matières).
   const review = reviewRhythmFor(effectivePreferences.pacing);
   const perSession = lessonsPerSession(sessionBlock);
   const onePerDay = revisableSubjects.length >= 3;
+  const maxPerSubjectPerWeek = revisableSubjects.length >= 6 ? 3 : revisableSubjects.length >= 4 ? 4 : daysToSchedule.length;
+
   subjectScores.forEach(item => {
     const ratio = totalScore > 0 ? item.score / totalScore : 1 / revisableSubjects.length;
     const computed = Math.round(ratio * totalSessionsTarget);
-    let target = Math.max(1, computed);
+    let target = Math.max(1, Math.min(maxPerSubjectPerWeek, computed));
     if (item.mode === 'review') target = Math.min(target, review.perWeek);
     else if (item.mode === 'new') target = Math.min(target, Math.ceil(item.newLessonsLeft / perSession) + 1);
     if (onePerDay) target = Math.min(target, daysToSchedule.length);
     item.targetSessions = Math.max(1, target);
-    // Écart minimal entre deux séances de la matière, pour étaler sur la semaine (2 séances : lundi et jeudi…)
-    item.minGap = item.mode === 'review' ? review.gaps[0] : Math.max(1, Math.min(3, Math.floor(daysToSchedule.length / item.targetSessions)));
-    // Révision : la première vient au bon moment après la dernière fois où la matière a été travaillée
+    // Écart minimal entre deux séances de la même matière (espacement d'Ebbinghaus : J+2 ou J+3)
+    item.minGap = item.mode === 'review'
+      ? review.gaps[0]
+      : item.targetSessions <= 1
+      ? 3
+      : Math.max(2, Math.min(3, Math.floor(daysToSchedule.length / item.targetSessions)));
     if (item.mode === 'review' && item.lastStudiedDaysAgo !== null) {
       item.nextAllowedAhead = Math.max(0, review.gaps[0] - item.lastStudiedDaysAgo);
     }
@@ -313,9 +520,10 @@ export function generateOptimizedStudyPlan(
     }
   });
 
-  // 3. Calcul de la date de référence (Lundi de la semaine courante ancré à midi pour éliminer tout décalage de fuseau horaire)
+  // 3. Calcul de la date et de l'heure de référence
   const referenceDate = options.now ? new Date(options.now) : new Date();
   const currentDayIndex = (referenceDate.getDay() + 6) % 7; // 0 = Lundi, 6 = Dimanche
+  const currentTimeMinutes = referenceDate.getHours() * 60 + referenceDate.getMinutes();
 
   const sessionTypeCycle: SessionType[] = [
     'spaced_review',
@@ -333,27 +541,57 @@ export function generateOptimizedStudyPlan(
   //    l'écart entre deux séances d'une même matière se compte en vrais jours.
   const chronologicalDays = [...daysToSchedule].sort((a, b) => ((a - currentDayIndex + 7) % 7) - ((b - currentDayIndex + 7) % 7));
   for (const day of chronologicalDays) {
-    const slots = dailyFreeSlots[day];
-    if (!slots || slots.length === 0) continue;
+    const rawSlots = dailyFreeSlots[day];
+    if (!rawSlots || rawSlots.length === 0) continue;
     const ahead = (day - currentDayIndex + 7) % 7; // 0 = aujourd'hui
 
-    // Si l'étudiant est du soir, ordonner les créneaux libres pour favoriser la fin d'après-midi / soirée
+    // RÈGLE CRITIQUE ANTI-FAUX-RATTRAPAGE :
+    // Pour aujourd'hui (ahead === 0), ne JAMAIS générer de nouvelles séances dans le passé (avant l'heure actuelle + 15 min),
+    // sinon le moteur de rattrapage les considère immédiatement comme « manquées à 12:35 / 14:05 / 15:35 » et les empile toutes le soir !
+    const minStartToday = ahead === 0 ? Math.ceil((currentTimeMinutes + 15) / 15) * 15 : 0;
+    const slots = rawSlots
+      .map(s => {
+        if (ahead !== 0) return s;
+        const clampedStart = Math.max(s.start, minStartToday);
+        return {
+          ...s,
+          start: clampedStart,
+          duration: Math.max(0, s.end - clampedStart),
+        };
+      })
+      .filter(s => s.duration >= Math.min(25, sessionBlock));
+
+    if (slots.length === 0) continue;
+
+    // Budget cognitif adaptatif du jour selon la charge réelle de cours fixes (Anti-Burnout)
+    const dayLimits = computeDayMaxSessions(day);
+    let dayMaxSessions = dayLimits.maxSessions;
+    let dayMaxMinutes = dayLimits.maxMinutes;
+    // Si l'élève génère son planning le soir même (>= 18h30), on limite ce premier soir à 1 séance ciblée
+    if (ahead === 0 && currentTimeMinutes >= 1110) {
+      dayMaxSessions = Math.min(dayMaxSessions, 1);
+      dayMaxMinutes = Math.min(dayMaxMinutes, 75);
+    }
+
+    // Priorisation intelligente des créneaux libres :
+    // 1. Exploiter en priorité les vraies fenêtres libres en journée (08h30-17h30, ex: après-midi sans cours ou week-end)
+    //    pour libérer les soirées et protéger le sommeil.
+    // 2. Respecter le chronotype sans jamais empiler toute la charge après 20h30.
     const sortedSlots = [...slots].sort((a, b) => {
-      if (preferences.chronotype === 'evening' || preferences.chronotype === 'night') {
-        const aIsEvening = a.start >= 1020 ? 1 : 0; // >= 17h
-        const bIsEvening = b.start >= 1020 ? 1 : 0;
-        if (aIsEvening !== bIsEvening) return bIsEvening - aIsEvening;
-      } else if (preferences.chronotype === 'morning') {
-        const aIsMorning = a.start < 780 ? 1 : 0; // < 13h
+      if (preferences.chronotype === 'morning') {
+        const aIsMorning = a.start < 780 ? 1 : 0;
         const bIsMorning = b.start < 780 ? 1 : 0;
         if (aIsMorning !== bIsMorning) return bIsMorning - aIsMorning;
+      } else if (preferences.chronotype === 'evening' || preferences.chronotype === 'night') {
+        // Favoriser la fin d'après-midi / début de soirée (16h30 - 20h30), mais préférer la journée à la nuit tardive (> 21h)
+        const scoreWindow = (start: number) => (start >= 990 && start <= 1230 ? 2 : start < 990 ? 1 : 0);
+        const diff = scoreWindow(b.start) - scoreWindow(a.start);
+        if (diff !== 0) return diff;
       }
       return a.start - b.start;
     });
 
     // Calcul propre et net de la date locale sans décalage pour ce jour de la semaine
-    // En calculant daysAhead (0 à 6 jours d'avance à partir d'aujourd'hui), la suite logique
-    // des jours est rigoureusement respectée : Dimanche = J-5, Lundi = J-4, Mardi = J-3, etc.
     const daysAhead = (day - currentDayIndex + 7) % 7;
     const sessionDate = new Date(referenceDate);
     sessionDate.setDate(referenceDate.getDate() + daysAhead);
@@ -364,30 +602,39 @@ export function generateOptimizedStudyPlan(
     const dateString = `${yyyy}-${mm}-${dd}`;
 
     let daySessionsCount = 0;
+    let dayScheduledMinutes = 0;
     const scheduledSubjectsToday = new Set<string>();
+    const scheduledNormKeysToday = new Set<string>();
     let lastSubjectToday: string | null = null;
+    let lastDomainToday: 'quant' | 'tech' | 'verbal' | null = null;
+    let lastEnergyToday: 'high' | 'medium' | 'low' | null = null;
+
+    const tomorrowDay = ((day + 1) % 7) as DayOfWeek;
+    const yesterdayDay = ((day + 6) % 7) as DayOfWeek;
 
     for (const slot of sortedSlots) {
-      if (daySessionsCount >= targetSessionsPerDay) break;
+      if (daySessionsCount >= dayMaxSessions || dayScheduledMinutes >= dayMaxMinutes) break;
 
       let slotCurrentStart = slot.start;
+      let sessionsInThisSlot = 0;
+      // Sur une journée avec plusieurs créneaux libres (ex. matin ET après-midi le week-end),
+      // ne pas empiler plus de 2 séances d'affilée dans le même bloc continu.
+      const maxPerContinuousSlot = sortedSlots.length >= 2 ? 2 : dayMaxSessions;
 
-      while (slotCurrentStart + 20 <= slot.end && daySessionsCount < targetSessionsPerDay) {
-        // Sélection optimale de la matière :
-        // 1. Éviter d'étudier deux fois la même matière le même jour (diversité cognitive)
-        // 2. RÈGLE STRICTE : INTERDICTION ABSOLUE de réviser une matière dont l'épreuve est déjà passée (daysToExam < 0) !
-        // 3. Priorité absolue aux épreuves imminentes (J-1 ou J-2) pour réviser avant l'épreuve
-        // 4. Si c'est le jour J de l'épreuve, ne pas réviser après l'heure de l'épreuve
-        // Matière qu'on peut placer ici ?
-        // - jour de l'épreuve : jamais après l'heure de l'épreuve (l'élève a déjà composé) ;
-        // - épreuve PASSÉE : la matière redevient normale (avant : elle était retirée du planning pour
-        //   toujours, et les créneaux se remplissaient avec une seule matière, 4 fois par jour) ;
-        // - préparation au devoir : une séance chaque jour, en priorité ;
-        // - sinon : pas plus que ce que demande la progression de l'élève, et pas avant le jour prévu
-        //   par l'espacement (révisions espacées, séances étalées dans la semaine).
+      while (
+        slotCurrentStart + 20 <= slot.end &&
+        daySessionsCount < dayMaxSessions &&
+        dayScheduledMinutes < dayMaxMinutes &&
+        sessionsInThisSlot < maxPerContinuousSlot
+      ) {
+        // Plafond horaire de fin de soirée en semaine chargée : après une journée de >= 5h de cours,
+        // on n'entame pas une nouvelle séance de routine après 21h45 (1305 min) pour préserver le sommeil profond.
+        if ((classMinsByDay[day] || 0) >= 300 && slotCurrentStart >= 1305) break;
+
         const isPrepToday = (item: (typeof subjectPool)[number]) => isExamFeatureAllowed
           && Boolean(item.subject.examDate && item.subject.examType)
           && examPrepModeFor(getDaysRemainingFrom(item.subject.examDate, sessionDate), item.subject) !== null;
+
         const canPlace = (item: (typeof subjectPool)[number], allowSecondToday: boolean): boolean => {
           const daysToExam = getDaysRemainingFrom(item.subject.examDate, sessionDate);
           if (daysToExam === 0) {
@@ -395,9 +642,11 @@ export function generateOptimizedStudyPlan(
             if (slotCurrentStart >= examMin) return false;
           }
           const prep = isPrepToday(item);
-          if (scheduledSubjectsToday.has(item.subject.id)) {
-            // 2e séance le même jour : seulement s'il n'y a qu'une ou deux matières, jamais deux fois de suite,
-            // jamais pour une préparation de devoir ni pour une révision espacée
+          const alreadyScheduledToday = scheduledSubjectsToday.has(item.subject.id) || scheduledNormKeysToday.has(item.normKey);
+          if (alreadyScheduledToday) {
+            // RÈGLE ABSOLUE DE DIVERSITÉ COGNITIVE :
+            // Jamais deux fois la même matière le même jour (sauf si l'étudiant n'a que 1 ou 2 matières au total,
+            // et même dans ce cas jamais deux séances consécutives).
             if (!allowSecondToday || prep || item.mode === 'review' || lastSubjectToday === item.subject.id) return false;
             return item.mode === 'free' || item.scheduledCount < item.targetSessions;
           }
@@ -406,15 +655,34 @@ export function generateOptimizedStudyPlan(
           return ahead >= item.nextAllowedAhead;
         };
 
+        // Score neurocognitif contextuel pour CE jour précis (Consolidation J+0/J+1, Anticipation J-1, Interleaving)
+        const computeNeuroDayScore = (item: (typeof subjectPool)[number]): number => {
+          let bonus = item.score;
+          // 1. Anticipation J-1 : la matière a cours ou TD demain -> être prêt pour toute interrogation surprise
+          if (item.taughtDays.has(tomorrowDay)) {
+            bonus += 18;
+          }
+          // 2. Consolidation synaptique J+0 / J+1 (courbe d'Ebbinghaus : encodage dans les 24h suivant le cours)
+          if (item.taughtDays.has(day) || item.taughtDays.has(yesterdayDay)) {
+            bonus += 12;
+          }
+          // 3. Alternance cognitive (Interleaving de Bjork) : après une séance à haute charge ou quantitative,
+          //    favoriser un domaine cognitif complémentaire ou une charge modérée pour éviter la saturation préfrontale.
+          if (lastDomainToday && item.domain !== lastDomainToday) {
+            bonus += 10;
+          }
+          if (lastEnergyToday === 'high' && item.subject.difficulty <= 3) {
+            bonus += 8;
+          }
+          return bonus;
+        };
+
         let bestCandidate = subjectPool
           .filter(item => canPlace(item, false))
           .sort((a, b) => {
             const aDaysToExam = getDaysRemainingFrom(a.subject.examDate, sessionDate);
             const bDaysToExam = getDaysRemainingFrom(b.subject.examDate, sessionDate);
 
-            // Préparation au devoir (J-14 à J-1) : une séance CHAQUE jour pour la matière concernée,
-            // la plus proche de son épreuve d'abord (cycle 2 jours de QCM puis 1 jour de sujet de 2 h),
-            // uniquement si la date ET le type d'évaluation ont été explicitement renseignés.
             const aHasExam = Boolean(a.subject.examDate && a.subject.examType);
             const bHasExam = Boolean(b.subject.examDate && b.subject.examType);
             const aPrep = isExamFeatureAllowed && aHasExam && examPrepModeFor(aDaysToExam, a.subject) !== null;
@@ -423,7 +691,7 @@ export function generateOptimizedStudyPlan(
             if (!aPrep && bPrep) return 1;
             if (aPrep && bPrep && aDaysToExam !== bDaysToExam) return aDaysToExam! - bDaysToExam!;
 
-            // Priorité absolue aux épreuves imminentes (J-1 ou J-2) par rapport à CE jour
+            // Priorité aux épreuves imminentes (J-1 ou J-2)
             const aIsImminent = aDaysToExam !== null && aDaysToExam >= 0 && aDaysToExam <= 2;
             const bIsImminent = bDaysToExam !== null && bDaysToExam >= 0 && bDaysToExam <= 2;
             if (aIsImminent && !bIsImminent) return -1;
@@ -432,32 +700,54 @@ export function generateOptimizedStudyPlan(
               return aDaysToExam! - bDaysToExam!;
             }
 
-            // RÈGLE FONDAMENTALE : Les devoirs et examens ne doivent JAMAIS supprimer ou empêcher les autres matières !
-            // Une matière n'ayant encore aucune session (scheduledCount === 0) est prioritaire sur les matières déjà planifiées
+            // RÈGLE FONDAMENTALE : Couverture de TOUTES les matières (aucune impasse).
+            // Toute matière à 0 séance planifiée passe avant une matière ayant déjà >= 1 séance.
             const aHasZero = a.scheduledCount === 0;
             const bHasZero = b.scheduledCount === 0;
             if (aHasZero && !bHasZero) return -1;
             if (!aHasZero && bHasZero) return 1;
 
-            // Priorité de déficit de quota hebdomadaire :
+            // Espacement minimal entre deux séances d'une même matière
+            const aDistance = ahead - a.lastScheduledDay;
+            const bDistance = ahead - b.lastScheduledDay;
+            const aWellSpaced = aDistance >= 2;
+            const bWellSpaced = bDistance >= 2;
+            if (aWellSpaced && !bWellSpaced) return -1;
+            if (!aWellSpaced && bWellSpaced) return 1;
+
+            // Déficit par rapport à la cible hebdomadaire
             const aDeficit = a.targetSessions - a.scheduledCount;
             const bDeficit = b.targetSessions - b.scheduledCount;
             if (aDeficit !== bDeficit) return bDeficit - aDeficit;
 
-            // Épreuves prévues dans les 14 jours (boost de révision sans écraser le quota des autres)
+            // Épreuves prévues dans les 14 jours
             const aIsExamSoon = aDaysToExam !== null && aDaysToExam >= 0 && aDaysToExam <= 14;
             const bIsExamSoon = bDaysToExam !== null && bDaysToExam >= 0 && bDaysToExam <= 14;
             if (aIsExamSoon && !bIsExamSoon) return -1;
             if (!aIsExamSoon && bIsExamSoon) return 1;
 
-            const aDistance = ahead - a.lastScheduledDay;
-            const bDistance = ahead - b.lastScheduledDay;
-            if (aDistance !== bDistance) return bDistance - aDistance;
+            // Pertinence neurocognitive pour CE jour (Anticipation J-1, Consolidation J+0/J+1, Interleaving)
+            const neuroDiff = computeNeuroDayScore(b) - computeNeuroDayScore(a);
+            if (Math.abs(neuroDiff) > 0.5) return neuroDiff;
 
+            if (aDistance !== bDistance) return bDistance - aDistance;
             return b.score - a.score;
           })[0];
 
-        // Une ou deux matières seulement : une 2e séance le même jour est permise (jamais deux fois de suite)
+        // Si toutes les matières ont atteint leur quota initial mais qu'il reste un créneau sur une journée légère,
+        // choisir une matière non encore étudiée aujourd'hui et bien espacée (sans jamais répéter la même matière le même jour).
+        if (!bestCandidate && onePerDay) {
+          bestCandidate = subjectPool
+            .filter(item =>
+              !scheduledSubjectsToday.has(item.subject.id) &&
+              !scheduledNormKeysToday.has(item.normKey) &&
+              item.mode !== 'review' &&
+              ahead - item.lastScheduledDay >= 2
+            )
+            .sort((a, b) => (a.scheduledCount - b.scheduledCount) || (computeNeuroDayScore(b) - computeNeuroDayScore(a)))[0];
+        }
+
+        // Une ou deux matières seulement au total dans tout le cursus : 2e séance permise si non consécutive
         if (!bestCandidate && !onePerDay) {
           bestCandidate = subjectPool
             .filter(item => canPlace(item, true))
@@ -469,7 +759,7 @@ export function generateOptimizedStudyPlan(
             })[0];
         }
 
-        // Rien d'utile à placer ici : le créneau reste libre (jamais de séance « pour remplir »)
+        // Rien d'utile à placer ici : le créneau reste libre (jamais de remplissage artificiel)
         if (!bestCandidate) break;
 
         const subject = bestCandidate.subject;
@@ -505,17 +795,17 @@ export function generateOptimizedStudyPlan(
           const hasTwoMin = chosen.find(p => p.id === 'two_minutes_rule');
 
           // Allocation cognitive intelligente :
-          // 1. Matière très difficile (diff >= 4) ou examen proche (<= 10 jours) -> Feynman si présente (assimilation profonde)
-          if ((subject.difficulty >= 4 || (daysUntilExamOnDate !== null && daysUntilExamOnDate >= 0 && daysUntilExamOnDate <= 10)) && hasFeynman) {
+          // 1. Fin de soirée (>= 20h00) ou après une première séance lourde -> Micro-session Pomodoro / 2-Min / Rappel actif
+          if ((slotCurrentStart >= 1200 || lastEnergyToday === 'high') && (hasPomodoro || hasTwoMin || hasActiveRecall)) {
+            sessionPacing = hasPomodoro || hasActiveRecall || hasTwoMin!;
+          }
+          // 2. Matière très difficile (diff >= 4) ou examen proche (<= 10 jours) -> Feynman si présente
+          else if ((subject.difficulty >= 4 || (daysUntilExamOnDate !== null && daysUntilExamOnDate >= 0 && daysUntilExamOnDate <= 10)) && hasFeynman) {
             sessionPacing = hasFeynman;
           }
-          // 2. Matière à fort coefficient (>= 5) avec créneau large -> Time Blocking si présent
-          else if (slot.end - slotCurrentStart >= 75 && subject.coefficient >= 5 && hasTimeBlocking) {
+          // 3. Matière à fort coefficient (>= 5) avec créneau large en journée ou début de soirée -> Time Blocking si présent
+          else if (slot.end - slotCurrentStart >= 75 && slotCurrentStart < 1200 && subject.coefficient >= 5 && hasTimeBlocking) {
             sessionPacing = hasTimeBlocking;
-          }
-          // 3. Fin d'après-midi / soirée (>= 18h) -> Micro-sessions Pomodoro ou 2-Minutes si présentes
-          else if (slotCurrentStart >= 1080 && (hasPomodoro || hasTwoMin)) {
-            sessionPacing = hasPomodoro || hasTwoMin!;
           }
           // 4. Session de révision espacée ou auto-test -> Active Recall si présent
           else if (hasActiveRecall && (sessionType === 'spaced_review' || sessionType === 'flashcards')) {
@@ -523,11 +813,18 @@ export function generateOptimizedStudyPlan(
           }
           // 5. Sinon, alternance harmonieuse équilibrée entre les méthodes choisies
           else {
-            sessionPacing = chosen[bestCandidate.scheduledCount % chosen.length];
+            sessionPacing = chosen[(bestCandidate.scheduledCount + daySessionsCount) % chosen.length];
           }
 
           sessionDuration = sessionPacing.focusBlockDuration;
           sessionBreak = sessionPacing.breakBlockDuration;
+        }
+
+        // Protection neurologique de fin de soirée : après 20h30 (1230 min), un bloc de 75 min est
+        // ramené à 45 min pour éviter l'épuisement nocturne et préserver la qualité du sommeil.
+        if (!examMode && slotCurrentStart >= 1230 && sessionDuration > 45) {
+          sessionDuration = 45;
+          sessionBreak = Math.max(10, sessionBreak);
         }
 
         // Durée d'une séance de préparation : 30 questions (repère 45 min), sujet complet (2 h), chrono (75 min)
@@ -535,6 +832,13 @@ export function generateOptimizedStudyPlan(
           sessionDuration = EXAM_PREP_DURATIONS[examMode];
           sessionBreak = Math.max(sessionBreak, 10);
         }
+
+        // Contexte pédagogique précis de la séance (Consolidation J+0, Anticipation J-1, Entraînement)
+        const pedagogicalGoal = bestCandidate.taughtDays.has(tomorrowDay)
+          ? 'Anticipation cours & TD de demain'
+          : bestCandidate.taughtDays.has(day)
+          ? 'Consolidation à chaud du cours du jour'
+          : topicName;
 
         // Titres et descriptions contextualisés selon la méthode d'étude retenue
         let sessionTitle = '';
@@ -544,7 +848,7 @@ export function generateOptimizedStudyPlan(
         const displaySubjectName = subject.name;
 
         if (sessionPacing.id === 'pomodoro') {
-          sessionTitle = `Pomodoro (25m) : ${displaySubjectName} - ${topicName}`;
+          sessionTitle = `Pomodoro (25m) : ${displaySubjectName} - ${pedagogicalGoal}`;
           sessionDescription = `Micro-session Pomodoro de 25 min à fond, coupure nette de 5 min de pause pour éviter la fatigue cérébrale.`;
           sessionObjectives = [
             '25 min à fond sans interruption ni distraction',
@@ -552,7 +856,7 @@ export function generateOptimizedStudyPlan(
             'Pause obligatoire de 5 min sans écran pour reposer le cerveau',
           ];
         } else if (sessionPacing.id === 'feynman') {
-          sessionTitle = `Technique de Feynman : ${displaySubjectName} - ${topicName}`;
+          sessionTitle = `Technique de Feynman : ${displaySubjectName} - ${pedagogicalGoal}`;
           sessionDescription = `Expliquer simplement pour comprendre à fond : vulgarisation avec des mots simples comme pour un enfant de 10 ans.`;
           sessionObjectives = [
             'Expliquer le cours avec des mots tellement simples qu’un enfant de 10 ans comprendrait',
@@ -560,15 +864,15 @@ export function generateOptimizedStudyPlan(
             'Reprendre le cours pour clarifier et éliminer définitivement ce point d’achoppement',
           ];
         } else if (sessionPacing.id === 'time_blocking') {
-          sessionTitle = `Time Blocking (${sessionDuration}m) : ${displaySubjectName}`;
-          sessionDescription = `Plage horaire fixe et obligatoire dédiée à 100% à cette matière. Plus besoin d'hésiter en ouvrant votre sac.`;
+          sessionTitle = `Time Blocking (${sessionDuration}m) : ${displaySubjectName} - ${pedagogicalGoal}`;
+          sessionDescription = `Plage horaire fixe et sanctuarisée dédiée à 100% à ${displaySubjectName} (${pedagogicalGoal}).`;
           sessionObjectives = [
             'Remplir ce bloc horaire sanctuarisé sans changer de sujet',
             `Attaquer directement sans délai le programme clé : ${topicName}`,
             'Résolution continue des exercices et validation des acquis du bloc',
           ];
         } else if (sessionPacing.id === 'two_minutes_rule') {
-          sessionTitle = `Règle des 2 Min & Sprint : ${displaySubjectName}`;
+          sessionTitle = `Règle des 2 Min & Sprint : ${displaySubjectName} - ${pedagogicalGoal}`;
           sessionDescription = `Vaincre la flemme immédiatement : amorçage de 2 minutes pour lancer le mouvement sans friction.`;
           sessionObjectives = [
             'Amorçage de 2 minutes chrono : ouvrir le document et préparer les fiches',
@@ -577,7 +881,7 @@ export function generateOptimizedStudyPlan(
           ];
         } else {
           // active_recall_spaced
-          sessionTitle = `${displaySubjectName} - ${topicName}`;
+          sessionTitle = `${displaySubjectName} - ${pedagogicalGoal}`;
           sessionDescription = `Ne pas juste relire, mais se tester de tête. Espacement dans le temps pour sceller l'information en mémoire longue.`;
           sessionObjectives = [
             'Fermer le cours et essayer de s’en souvenir de tête',
@@ -655,10 +959,15 @@ export function generateOptimizedStudyPlan(
           examChapterIds: examMode && examMode !== 'chrono75' ? subject.examChapterIds : undefined,
         });
 
-        // Mise à jour des compteurs
+        // Mise à jour des compteurs et de l'état neurocognitif journalier
         daySessionsCount++;
+        sessionsInThisSlot++;
+        dayScheduledMinutes += actualDuration;
         scheduledSubjectsToday.add(subject.id);
+        scheduledNormKeysToday.add(bestCandidate.normKey);
         lastSubjectToday = subject.id;
+        lastDomainToday = bestCandidate.domain;
+        lastEnergyToday = energy;
         bestCandidate.scheduledCount++;
         bestCandidate.lastScheduledDay = ahead; // en jours à partir d'aujourd'hui
         bestCandidate.topicIndex++;
